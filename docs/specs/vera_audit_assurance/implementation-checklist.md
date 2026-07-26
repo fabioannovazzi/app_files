@@ -141,7 +141,7 @@ or professional sample-design judgment.
   plus 8,105 journal unmatched rows. Preserve the case as non-promotional
   evidence.
 - [x] Migrate Concordato candidate arithmetic to exact money.
-- [x] Close Concordato reviewed formula authority, exact 25-file
+- [x] Close Concordato reviewed formula authority, exact 27-file
   implementation perimeter, all-row numeric-address ledger, physical output
   equality, review-successor chain, standalone replay, and rollback attacks;
   pass the fresh 104-test root re-audit.
@@ -186,10 +186,10 @@ transaction-generator, demo, and visual-audit checks.
     remediated source-membership outcome defect. The later additive-v7
     private-source diagnostic qualifies the complete reviewed date population
     and replays current outputs, but is still not blind promotion evidence for
-    either v5 or v7. Concordato now has bounded separate-
-    document support from an attester and judicial commissioners, but no
-    qualified independent reviewer has checked the full population or a
-    separately prepared workpaper.
+    either v5 or v7. Concordato Preventivo now has a source-bound semantic
+    case-model contract and representative synthetic plan-form tests, but no
+    qualified independent reviewer has adjudicated that model on a previously
+    unseen complete real case.
 - [x] Run focused workflow regressions: six isolated full workflow suites
   collected 1,220 cases without failures or errors; 89 Journal-Bank cases were
   dependency-gated skips.
@@ -206,11 +206,12 @@ transaction-generator, demo, and visual-audit checks.
   localized-date source family or its sibling statements. Until it passes, v7
   has bounded implementation and diagnostic evidence but no representative
   promotion.
-- [ ] Commission a qualified independent full-population Concordato review.
-  The source hashes, reviewer workpaper requirements, independence controls,
-  comparison protocol, and acceptance rule are ready in
-  `concordato-full-population-review-commission.md`; reviewer and custody
-  fields remain unassigned.
+- [ ] Commission a qualified independent semantic Concordato Preventivo
+  review on a previously unseen complete case. The reviewer must adjudicate
+  procedure, document authority, creditor perimeter and treatment,
+  plan-versus-liquidation basis, sources and uses, liquidity, feasibility
+  evidence, and open issues—not only the historical numerical candidate
+  population. Reviewer and custody fields remain unassigned.
 - [x] Run full test suite and coverage gate. The final uncapped importlib-mode
   run collected 7,373 tests: 7,364 passed, nine were dependency-gated skips,
   and there were no failures or errors (JUnit SHA-256

@@ -169,8 +169,8 @@ SPECS = (
     ),
     IconSpec(
         "concordato-plan-review",
-        "Revisione Piano Concordato",
-        "#31493C",
+        "Concordato Preventivo",
+        "#002060",
         "#B45F3D",
         "concordato",
     ),

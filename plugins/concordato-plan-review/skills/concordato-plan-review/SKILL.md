@@ -1,77 +1,142 @@
 ---
 name: concordato-plan-review
-description: Use when a user wants Codex to tie out the numerical section of an Italian concordato plan against bilancio, mastrini, adjusted DB schedules, tax/social-security debt details, or other accounting support, then produce auditor-oriented differences and going-concern criticalities.
+description: Use when a user wants Codex to organize and review an Italian concordato preventivo case across procedure, proposal, plan, attestation, creditors and treatment, liquidation alternative, sources and uses, liquidity, feasibility evidence, and accounting consistency. Numerical tie-out is an optional appendix.
 ---
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace, `static/shared`,
+`protected_downloads`, or any GitHub Pages/static-site folder unless the task
+is explicitly plugin packaging/release. For user-data runs, prefer a sibling
+`output/concordato-preventivo-<run-id>` directory next to the supplied input
+folder and pass it to every output argument.
 
-# Revisione Piano Concordato
+# Revisione del Concordato Preventivo
 
-Use this skill for a vertical review of an Italian concordato plan, especially when the user asks to compare a `piano CP` or `piano di concordato` with bilancio, mastrini, DB rettificato, dettagli debiti tributari/previdenziali, or other accounting evidence.
+Use this skill for the Italian legal and professional object **concordato
+preventivo**. Do not interpret “concordato” as an arbitrary workflow name or as
+synonym for a numerical tie-out.
 
-This is not a general report builder. Deterministic scripts support extraction, arithmetic, inventory, and candidate matching. Codex owns semantic review: deciding whether a number is historical, a rettifica, a riclassifica, a forward-looking assumption, unsupported, omitted, or critical for the auditor.
+The review covers the procedure, proposal, plan, professional attestation,
+document perimeter, creditor population and treatment, liquidation
+alternative, sources and uses, liquidity, milestones, assumptions,
+consistency, and open issues.
+
+This is not a general report builder, a legal-opinion engine, or a plan
+attestation. Codex proposes the semantic analysis; a qualified professional
+confirms or corrects it. The scripts validate and calculate only mechanically
+verifiable facts.
+
+## Core Boundary
+
+Use deterministic code for:
+
+- source capture, hashes, receipts, and closed output paths;
+- PDF/workbook extraction and precise evidence locators;
+- schema and evidence-reference validation;
+- exact decimal arithmetic;
+- creditor/class totals and recovery percentages;
+- plan-versus-liquidation differences;
+- sources-and-uses totals and funding gap;
+- period cash bridges and minimum liquidity;
+- exact amount matching as an optional appendix;
+- reproducible JSON, CSV, XLSX, DOCX, and review-session artifacts.
+
+Use Codex and professional judgment for:
+
+- governing law and its application;
+- document meaning and authoritative version;
+- creditor perimeter, priority, class, vote, and treatment;
+- whether evidence supports an assertion;
+- feasibility, materiality, sustainability, and going concern;
+- legal, tax, social-security, and accounting conclusions;
+- issue severity, follow-up, and professional conclusion.
+
+Never infer a semantic role from a file name. Never convert a passed arithmetic
+check into a legal or feasibility conclusion. If evidence is incomplete, keep
+`missing`, `partial`, `unclear`, `gap`, or an open issue visible.
 
 ## Codex-Native Run UX
 
-Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.
+Before write-heavy execution, identify the material choices that would change
+the review and establish only those not recoverable from the sources:
 
-Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Codex-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
+- input folder and intended procedure/case;
+- review cut-off or reference date;
+- working language and document language;
+- accountable professional/reviewer for confirmation;
+- any user-requested scope exclusion;
+- numerical tolerance only if a numerical appendix is needed.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Ask only those unresolved choices in chat and wait for the answer. Generate
+choices from the actual inputs; do not offer named frameworks, regulators,
+document types, issue categories, or output packages unless the facts cue them
+or the user must supply a missing custom value.
 
-Use Codex-native UI artifacts as part of the workflow, not as optional narration. At minimum:
+Do not ask the user to choose output files. Produce the complete normal package
+when dependencies and evidence permit.
 
-1. Start with a visible markdown run checklist. Track intake, dependency check, inspection, user decisions, deterministic run, Codex review, and delivery.
-2. Before helper scripts, show a Run Intake table with input paths, output folder, working language, document language, assumptions, and notification choice when the skill supports user run notifications.
-3. After inspection, show a compact Decision Table for missing mappings, filters, review choices, unsupported files, or evidence assumptions. Ask only unresolved decisions and update the working recipe or assumptions yourself.
-4. Before a long-running or write-heavy step, show an execution checkpoint or approval checkpoint with command intent, inputs, output folder, and expected artifacts. Ask for approval only when the step is external, destructive, approval-sensitive, or still depends on an unresolved material choice.
-5. During execution, update checklist statuses as steps complete.
-6. End with an Artifact Card listing output path, purpose, review status, unresolved items, and next action. When useful, create `codex_run_review.md` in the output folder from generated JSON/CSV/Markdown outputs; never edit plugin source or generated ZIPs during a run.
+Default output policy: the semantic case model, creditor and class schedules,
+sources and uses, liquidity, review workbook, Markdown, Word summary, audit
+records, and numerical appendix are not choices to propose when they are
+natural outputs of the case. Generate them whenever the evidence and declared
+dependencies permit.
 
-## Core Principle
+Use native Codex artifacts:
 
-The deterministic code is justified only for mechanically verifiable tasks: file inventory, PDF text extraction, workbook sheet inspection, number parsing, exact arithmetic, and candidate amount matching. It must not decide legal/tax framing, auditor conclusions, going-concern status, or whether a source semantically supports a plan claim. If deterministic matches and Codex judgment disagree on semantic support, prefer Codex/reviewer judgment unless a documented benchmark proves the rule is better.
+1. Show a short checklist: intake, dependency check, inspection, semantic
+   modeling, reviewer confirmation, deterministic schedules, review, delivery.
+2. Show a Run Intake table with source folder, output folder, cut-off,
+   languages, and explicit assumptions.
+3. After inspection, show a Decision Table only for material semantic
+   uncertainties or missing evidence.
+4. Before sealing the model, show an execution checkpoint with the procedure
+   identity, plan type, authoritative documents, creditor perimeter status, key
+   assumptions, open gaps, source folder, and output folder.
+5. Update the checklist during execution.
+6. End with an Artifact Card separating primary semantic outputs, numerical
+   appendix, unresolved issues, and next action. When useful, create
+   `codex_run_review.md` in the output folder from the persisted review
+   artifacts. Never edit plugin source or generated ZIPs during a case run.
 
-The user should not operate helper CLIs directly. Codex inspects the folder, confirms assumptions, runs scripts, reviews outputs, and explains limitations.
+Ask for explicit approval only when a step is external, destructive,
+approval-sensitive, or depends on an unresolved material choice. Ordinary
+local inspection, deterministic calculation, and artifact generation within
+the agreed output folder do not require ceremonial approval.
+
+The user should not have to operate helper CLIs. Codex runs them, reads the
+results, prepares the model, and explains the boundary.
 
 ## Inputs
 
 Required:
 
-- input folder containing the plan and accounting support files.
+- one folder containing the material supplied for the case.
 
-Typical files:
+The plugin does not require fixed file names or one fixed checklist. Depending
+on the case, useful material may include a proposal, plan, attestations,
+creditor schedules, liquidation analysis, cash-flow model, disposals,
+contributions, accounting records, tax/social-security schedules, court
+documents, or professional reports. Treat this as evidence discovered from the
+actual case, not a filename taxonomy.
 
-- `ExampleCo piano CP_2026.05.25.pdf` or other concordato plan PDF;
-- `BILANCIO 31-03-26 PROVVISORIO.pdf`;
-- `mastrini al 31-03-26.pdf`;
-- `DB_31.03.2026_21052026.xlsx`;
-- `Dettaglio ... Debiti tributari e previdenziali ... .xlsx`;
-- optional business-plan workbook or creditor schedules.
+Default currency is EUR unless a source or user states otherwise. The semantic
+model requires one consistent currency for its mechanical schedules.
 
-Ask only when missing or unclear:
+## Workflow
 
-- reference date or cut-off;
-- working language and document language;
-- which file is the authoritative plan if several plan-like files exist;
-- materiality/tolerance for differences.
+### 1. Check dependencies
 
-The default review scope includes the tie-out workpaper, Word summary, Codex reviewer memo, open items, missing evidence, and criticalities. Do not ask whether to stop at a thinner tie-out-only output unless the user explicitly requests a reduced run.
-
-## First Run Workflow
-
-1. Inventory the input folder and identify likely source roles from file names. Treat role detection as a suggestion for intake, not an authoritative mapping.
-2. Run dependency checks from the plugin directory before helper scripts:
+From the plugin directory:
 
 ```bash
 python scripts/check_dependencies.py
 ```
 
-If requirements are missing, install from `requirements.txt` only when the environment allows it. If installation is unavailable or requires approval, explain which declared capability is missing and stop before producing unreliable output.
+Install only declared `requirements.txt` dependencies when permitted. Stop
+before unreliable output if a required capability is unavailable.
 
-3. Run the deterministic inspection pass:
+### 2. Inspect in abstention
 
 ```bash
 python scripts/run_concordato_review.py /path/to/input \
@@ -82,38 +147,83 @@ python scripts/run_concordato_review.py /path/to/input \
   --tolerance 1
 ```
 
-This pass intentionally abstains from operative source roles, amount candidates,
-and matches. Filename-based roles are suggestions only.
+This captures sources and writes an unreviewed semantic template. It does not
+make filename-based roles operative and it does not grant reporting authority.
 
-4. Review `inventory.json`, `raw_amount_candidates.csv`, and
-`suggested_source_role_recipe.json`. Create a complete decisions JSON containing:
+Read at least:
 
-- `reviewer_ref` and ISO `reviewed_on`;
-- `source_roles`, keyed by every supported `relative_path`, with explicit
-  `role`, `currency`, and `unit`;
-- exactly one authoritative `concordato_plan`;
-- `candidate_dispositions`, keyed by every raw `candidate_id`, with
-  `candidate_amount` or `excluded_non_amount`.
+- `inventory.json`;
+- `source_pages.json`;
+- `suggested_concordato_case_model.json`;
+- extraction diagnostics;
+- `raw_amount_candidates.csv` only if a numerical appendix may be useful.
 
-Do not accept a default disposition for all numeric tokens. Account numbers,
-dates, years, percentages, page numbers, identifiers, and other non-amounts
-require an explicit exclusion.
+### 3. Build the semantic case model
 
-The review also authorizes the fixed `plan_amount - support_amount` formula,
-sign convention, reference period, tolerance, complete source/candidate
-perimeters, and current implementation receipts. These are exact mechanical
-bindings, not semantic conclusions. If any binding changes, repeat inspection
-and review before qualified parsing.
+Copy `suggested_concordato_case_model.json` to a working JSON file and fill it
+from inspected evidence. Preserve its exact schema:
 
-5. Seal the source-bound recipe:
+- `legal_framework`;
+- `procedure`;
+- `document_perimeter`;
+- `creditor_population`;
+- `sources_and_uses`;
+- `liquidity`;
+- `milestones`;
+- `review_questions`;
+- `assumptions`;
+- `issues`.
+
+For every semantic entry:
+
+- use captured `source_artifact_ref` values;
+- add precise locators when the schema provides them;
+- explain `judgment_basis`;
+- distinguish observed evidence from professional inference;
+- keep missing evidence and contradictions explicit.
+
+The required review areas are procedure identity, proposal/plan consistency,
+document perimeter, creditor perimeter/treatment, voting and homologation,
+liquidation alternative, feasibility/liquidity, attestation, accounting
+consistency, and tax/social-security matters.
+
+### 4. Obtain reviewer confirmation
+
+Present the completed model and unresolved issues to the accountable
+professional. Do not label Codex's unconfirmed draft as reviewed.
+
+After confirmation, seal the model:
+
+```bash
+python scripts/review_case_model.py /path/to/inspection \
+  /path/to/reviewer-confirmed-case-model.json \
+  --output /path/to/reviewed-semantic-recipe.json \
+  --reviewer-ref qualified-reviewer \
+  --reviewed-on 2026-07-26 \
+  --reference-date 2026-03-31
+```
+
+The helper normalizes the model and binds it to current source receipts. If the
+source perimeter or bytes change, repeat inspection and confirmation.
+
+### 5. Add a numerical appendix only when useful
+
+If the review requires a plan-to-accounting amount tie-out, prepare the
+separate source/token decision file and seal it with:
 
 ```bash
 python scripts/review_source_roles.py /path/to/inspection \
-  /path/to/source-role-decisions.json \
-  --output /path/to/reviewed-source-role-recipe.json
+  /path/to/numeric-decisions.json \
+  --output /path/to/reviewed-numeric-recipe.json
 ```
 
-6. Run the qualified deterministic pass against the same source bytes:
+This path requires an explicit disposition for every extracted numeric token
+and authorizes only the fixed amount-difference calculation. Do not run it
+merely because the capability once centered on a tie-out.
+
+### 6. Run the reviewed case
+
+Semantic review without the numerical appendix:
 
 ```bash
 python scripts/run_concordato_review.py /path/to/input \
@@ -122,125 +232,92 @@ python scripts/run_concordato_review.py /path/to/input \
   --language it \
   --document-language it \
   --tolerance 1 \
-  --recipe /path/to/reviewed-source-role-recipe.json
+  --semantic-recipe /path/to/reviewed-semantic-recipe.json
 ```
 
-If source bytes, candidate identities, role coverage, currencies, units, or
-dispositions changed, stop and repeat inspection/review. Never reseal changed
-sources into an old decision.
+When the numerical appendix is also authorized, add:
 
-7. Review generated files:
+```text
+--recipe /path/to/reviewed-numeric-recipe.json
+```
 
-- `inventory.json`;
-- `source_pages.json`;
-- `raw_amount_candidates.csv`;
-- `amount_candidates.csv`;
-- `exact_amount_matches.csv`;
-- `concordato_tie_out_workpaper.xlsx`;
-- `concordato_review_summary.docx`;
-- `review_packet.md`;
-- `run_audit.json`;
-- `run_intake.json`;
+### 7. Review primary outputs
+
+Read:
+
+- `concordato_case_model.json`;
+- `concordato_semantic_checks.json`;
+- `creditor_treatment.csv`;
+- `creditor_class_summary.csv`;
+- `sources_and_uses.csv`;
+- `liquidity_schedule.csv`;
+- `concordato_review_workpaper.xlsx`;
+- `concordato_semantic_review.md`;
+- `concordato_preventivo_review_summary.docx`;
 - `review_payload.json`;
-- `ui_decisions.json`;
-- `applied_decisions.json` after reviewer decisions are applied;
 - `assurance_envelope.json`;
-- `numeric_evidence_ledger.json`;
 - `workflow_output_closure.json`;
 - `final_artifacts.json`.
 
-8. Read `run_intake.json` and `review_payload.json`. Treat the review payload
-as the structured contract for reviewer-facing UI: source roles, extraction
-issues, candidate amount matches, unmatched plan amounts, generated artifacts,
-and the Codex memo placeholder.
-9. When the `concordatoPlanReviewWidgets` MCP server is available, call
-`validate_concordato_plan_review` with the complete `review_payload.json`
-object. If validation passes, call `render_concordato_plan_review` with the
-same payload and optional `run_intake`, `ui_decisions`, and `final_artifacts`
-objects. Do not hand-build another HTML page for the same review.
-10. When the reviewer records actions in the widget or Codex collects decisions
-through fallback review, call `save_concordato_plan_decisions` so
-`ui_decisions.json` is validated and persisted. When the reviewer is done, call
-`apply_concordato_plan_decisions` so `applied_decisions.json` and
-`final_artifacts.json` reflect accepted, edited, unclear, skipped, or
-document-requested items. Before any write, the MCP path must compare the
-submitted payload with the exact persisted JSON and replay the assurance
-envelope, numeric evidence ledger, and predecessor whole-output closure locally.
-The save or application is not committed until a successor closure is sealed
-and replayed.
-11. If MCP rendering is unavailable, continue by reading `review_payload.json`
-and reviewing through Markdown/chat. Keep review decisions pending unless they
-are recorded in `ui_decisions.json` and consumed into
-`applied_decisions.json`.
-12. Codex must then build the actual auditor review: inspect
-`concordato_review_summary.docx`, candidate matches, unmatched material plan
-amounts, distinguish historical data from rettifiche/riclassifiche/assumptions,
-and write `codex_run_review.md` with open items, missing evidence, and
-criticalities. If numbers match mechanically, say they match by amount and
-still require context review. If they do not match, say clearly which amount
-was not found and where it appears in the plan.
+Treat `concordato_tie_out_workpaper.xlsx` and
+`concordato_review_summary.docx` as numerical appendices.
 
-The deterministic workflow never sets `final_ready=true`. Applying review
-actions records the review but leaves semantic conclusion, reporting authority,
-and publication withheld. `reviewer_ref` is a recorded assertion, not
-cryptographically authenticated identity.
+### 8. Use the review surface
 
-Load `references/workflow-reference.md` when executing or auditing the
-two-pass authority, numeric evidence closure, whole-output closure, or replay
-contract. The workflow reference is normative for these mechanical controls.
+When `concordatoPlanReviewWidgets` is available:
 
-## MCP Review Handoff
+1. call `validate_concordato_plan_review` with the complete persisted payload;
+2. call `render_concordato_plan_review`;
+3. collect decisions;
+4. call `save_concordato_plan_decisions`;
+5. call `apply_concordato_plan_decisions` after reviewer completion.
 
-The UI handoff follows the OpenAI-style local MCP/widget pattern:
+Before any write, the MCP path replays the trusted payload, assurance envelope,
+and whole-output closure. If MCP is unavailable, review the same payload in
+Markdown/chat and keep decisions pending until recorded.
 
-1. Python writes bounded review-session JSON files and a replayable assurance
-envelope in the output folder.
-2. The local MCP server validates the `review_payload.json` schema and item
-types, compares caller input with the persisted payload, and invokes local
-assurance replay before writes.
-3. The MCP render tool returns `openai/outputTemplate` metadata for
-`ui://widget/concordato-plan-review.html`.
-4. The reusable HTML widget renders the payload with summary metrics, type
-filters, search, rows, and evidence detail.
-5. Codex saves reviewer actions with `save_concordato_plan_decisions`, applies
-them with `apply_concordato_plan_decisions`, and uses the reviewed payload plus
-applied decisions when writing the final `codex_run_review.md`.
+`ui_decisions.json` records the reviewer's pending or saved decisions.
+`applied_decisions.json` records only decisions actually applied to downstream
+artifacts. `final_artifacts.json` indexes the resulting output state and must
+remain consistent with both. Never describe an edit as applied merely because
+it appears in the review widget.
 
-## Review Method
+The review queue must lead with procedure, review questions, issues, creditor
+class treatment, and mechanical checks. Numerical amount rows follow as
+supporting evidence.
 
-Load `references/review-methodology.md` when classifying numbers or writing the auditor-oriented memo.
+### 9. Replay
 
-Expected final review dimensions:
+```bash
+python scripts/replay_assurance.py --output-dir /path/to/reviewed-output
+```
 
-- source traceability: where each relevant number was gathered;
-- plan-to-source difference: amount, source, delta, tolerance status;
-- plain-language status: `batte per importo`, `non batte`, or `da spiegare`;
-- evidence category: historical accounting data, rectification, reclassification, prospective assumption, unsupported or unclear;
-- financial statement effect: balance sheet, P&L, net equity, debt maturity, tax/social-security debt, cash flow;
-- going-concern implication: liquidity, debt sustainability, operational continuity, covenant/tax/social-security pressure, creditor treatment;
-- omissions or unsupported assertions;
-- reviewer follow-up questions and missing evidence requests.
+Use `references/workflow-reference.md` for the normative authority and replay
+contract and `references/review-methodology.md` for professional review
+sequence.
 
-## Deterministic Output Limits
+## Completion Standard
 
-Do not present `exact_amount_matches.csv` or the Word summary as final support.
-They are candidate outputs produced only after source-role and numeric-token
-review. Equal amounts can appear in unrelated places, and PDF extraction can
-fragment tables. Codex must review context and evidence sufficiency before
-marking a number as supported.
+A useful delivery states:
 
-Do not use deterministic keyword rules to choose legal topics, tax conclusions, or going-concern conclusions. Use the deterministic data as evidence collection only.
+- what was observed in the supplied evidence;
+- which semantic judgments were confirmed and by whom;
+- procedure and plan type;
+- document and creditor perimeter status;
+- treatment and liquidation-comparator results;
+- sources-and-uses and liquidity observations;
+- open questions, evidence gaps, assumptions, and limitations;
+- whether the optional numerical appendix ran;
+- why publication or professional conclusion remains withheld, if applicable.
 
-Synthetic and adversarial tests do not validate field performance. Before
-describing the workflow as validated on real corporate plans, run a previously
-unseen corporate-plan holdout and have a qualified reviewer compare the full
-candidate population, differences, omissions, and evidence requests with an
-independently prepared workpaper.
+Do not claim that synthetic tests prove real-case generality. Field validation
+requires a previously unseen real case and an independent qualified review.
 
 ## Plugin Improvement Feedback
 
-At the end of every completed or blocked plugin run, after reporting the deliverables, briefly identify concrete improvements that would have made this plugin run better. Base suggestions on the actual session, such as missing source formats, brittle PDF extraction, weak plan table detection, unclear source-role assumptions, missing creditor-class logic, output gaps, installation friction, or repeated manual steps.
-
+At the end of a completed or blocked run, mention concrete improvements
+revealed by the actual case—such as unsupported source formats, weak locators,
+missing semantic fields, difficult creditor schedules, or review friction.
 Keep the improvement note local to chat or run artifacts. Do not submit it to
 Mparanza automatically. When this workflow runs through Vera, use Vera's
 consent-based Plugin Improvement Feedback process for any transmission.

@@ -1,61 +1,106 @@
-# Revisione Piano Concordato
+# Revisione del Concordato Preventivo
 
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/concordato-plan-review) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
-Plugin Codex per il tie-out numerico e la review contabile di un piano di
-concordato rispetto a bilancio provvisorio, mastrini, database rettificato e
-dettagli di supporto.
+Plugin Codex per organizzare e riesaminare un caso italiano di **concordato
+preventivo**. Il significato del prodotto è quello giuridico e professionale
+del termine: procedura, proposta, piano, attestazione, creditori, trattamento,
+alternativa liquidatoria e fattibilità. Non è il nome arbitrario di un
+riconciliatore costruito per un singolo fascicolo.
 
-Il plugin non sostituisce il giudizio del revisore. Gli script catturano e
-inventariano le fonti, estraggono candidati numerici e, solo dopo una decisione
-revisionata e legata alle fonti, trovano match meccanici per importo e preparano
-workpaper rivedibili. Codex usa quei risultati per classificare differenze,
-chiedere evidenze mancanti e scrivere un report sintetico sulle criticita.
+Il plugin aiuta Codex e un professionista qualificato a costruire un modello
+riesaminabile del caso e a produrre workpaper riproducibili. Non emette un
+parere legale, non attesta il piano, non autentica il revisore e non decide se
+i requisiti di legge sono soddisfatti.
 
-## Cosa fa
+## Cosa riesamina
 
-- inventaria PDF e workbook forniti nel fascicolo;
-- estrae testo pagina-per-pagina dai PDF testuali;
-- ispeziona fogli Excel e celle numeriche rilevanti;
-- propone ruoli delle fonti dai nomi file, senza renderli operativi;
-- richiede la review del piano autorevole, del ruolo, della valuta e dell'unita
-  di ogni fonte supportata;
-- richiede una disposizione per ogni token numerico estratto, distinguendo un
-  importo candidato da un numero non monetario;
-- produce match deterministici per importo, con tolleranza configurabile, solo
-  dopo questa review;
-- prepara CSV, JSON, XLSX, Markdown e un Word riassuntivo per la review;
-- distingue nel Word i numeri che battono per importo da quelli non trovati,
-  senza chiamarli supporto semantico;
-- prepara un payload MCP/HTML rivedibile con fonti, importi del piano,
-  match candidati, importi non trovati, errori di estrazione e artifact finali;
-- guida Codex nella distinzione tra dato storico, rettifica, riclassifica, assunzione prospettica e dato non supportato.
+- quadro normativo applicabile e data di aggiornamento;
+- identità, fase, tribunale, riferimento e tipologia della procedura;
+- perimetro e versioni autorevoli di proposta, piano, attestazione e allegati;
+- popolazione dei creditori, prelazione, classi, voto, trattamento e tempi;
+- recupero proposto rispetto all'alternativa liquidatoria;
+- fonti e impieghi, apporti esterni, dismissioni e fabbisogno;
+- liquidità per periodo, distribuzioni, milestone e assunzioni;
+- coerenza fra proposta, piano, attestazione, contabilità e prospetti;
+- questioni aperte, contraddizioni, lacune documentali e follow-up.
 
-## Due passaggi obbligatori
+La classificazione semantica viene proposta da Codex e confermata o corretta
+da un professionista. Il codice valida il contratto e calcola soltanto ciò che
+è meccanicamente verificabile.
 
-Il primo passaggio e una ispezione in astensione: cattura i byte delle fonti e
-produce `inventory.json`, `raw_amount_candidates.csv` e
-`suggested_source_role_recipe.json`. I suggerimenti basati sul nome file non
-classificano alcuna fonte e non producono importi o match operativi.
+## Confine fra calcolo e giudizio
 
-Codex o il revisore prepara poi un file decisioni che:
+Il codice deterministico gestisce:
 
-- assegna esattamente una fonte al ruolo `concordato_plan`;
-- assegna a ogni fonte supportata ruolo, valuta e unita;
-- assegna a ogni `candidate_id` la disposizione `candidate_amount` oppure
-  `excluded_non_amount`;
-- registra `reviewer_ref` e `reviewed_on`.
+- cattura delle fonti, hash, ricevute e chiusura degli output;
+- schema, identità delle fonti e riferimenti di evidenza;
+- aritmetica decimale esatta;
+- aggregazioni per creditore e classe;
+- percentuali di recupero e confronto piano/liquidazione;
+- fonti e impieghi, funding gap e bridge di cassa;
+- produzione riproducibile di JSON, CSV, XLSX, DOCX e payload di review;
+- tie-out numerico per importo come controllo opzionale di appendice.
 
-Lo script seguente lega queste decisioni alle ricevute delle fonti e crea la
-recipe revisionata:
+Codex e il professionista mantengono il giudizio su:
+
+- diritto applicabile e significato dei documenti;
+- perimetro, prelazione, classi, voto e trattamento dei creditori;
+- sufficienza e pertinenza dell'evidenza;
+- fattibilità, sostenibilità, materialità e continuità;
+- profili legali, fiscali e previdenziali;
+- gravità delle questioni e conclusione professionale.
+
+Una formula esatta può provare un totale o una differenza. Non può provare che
+un trattamento sia legittimo, che una fonte sia sufficiente o che il piano sia
+fattibile.
+
+## Flusso in due decisioni indipendenti
+
+### 1. Ispezione
+
+Il primo passaggio cattura le fonti senza assegnare significato dai nomi file:
 
 ```bash
-python scripts/review_source_roles.py /path/to/inspection \
-  /path/to/source-role-decisions.json \
-  --output /path/to/reviewed-source-role-recipe.json
+python scripts/run_concordato_review.py /path/to/input \
+  --output-dir /path/to/inspection \
+  --reference-date 2026-03-31 \
+  --language it \
+  --document-language it \
+  --tolerance 1
 ```
 
-Il secondo passaggio rilegge le stesse fonti con la recipe:
+Fra gli output dell'ispezione:
+
+- `inventory.json` e ricevute delle fonti;
+- `suggested_concordato_case_model.json`, template semantico non riesaminato;
+- `raw_amount_candidates.csv`, solo per l'eventuale appendice numerica;
+- `suggested_source_role_recipe.json`, non operativo.
+
+`suggested` significa realmente non autorevole. Il nome di un file non
+classifica proposta, piano, attestazione o supporto contabile.
+
+### 2. Modello semantico riesaminato
+
+Codex legge le fonti e completa una copia del template con riferimenti di
+evidenza e basi di giudizio. Un professionista conferma o corregge il modello.
+Lo script seguente lo normalizza e lo lega ai byte correnti delle fonti:
+
+```bash
+python scripts/review_case_model.py /path/to/inspection \
+  /path/to/reviewer-confirmed-case-model.json \
+  --output /path/to/reviewed-semantic-recipe.json \
+  --reviewer-ref qualified-reviewer \
+  --reviewed-on 2026-07-26 \
+  --reference-date 2026-03-31
+```
+
+Il modello deve classificare ogni fonte catturata e deve includere tutte le
+aree professionali obbligatorie. Può registrare `missing`, `partial`,
+`unclear`, `gap` e questioni aperte: la validazione non trasforma una lacuna in
+una conclusione positiva.
+
+### 3. Esecuzione semantica
 
 ```bash
 python scripts/run_concordato_review.py /path/to/input \
@@ -64,70 +109,51 @@ python scripts/run_concordato_review.py /path/to/input \
   --language it \
   --document-language it \
   --tolerance 1 \
-  --recipe /path/to/reviewed-source-role-recipe.json
+  --semantic-recipe /path/to/reviewed-semantic-recipe.json
 ```
 
-Se i byte delle fonti, i candidati estratti, la recipe o gli artifact numerici
-non corrispondono alle ricevute, la replay fallisce. Anche dopo l'applicazione
-delle decisioni la consegna resta `final_ready=false`: il giudizio sulla
-sufficienza del supporto e la pubblicazione sono separati. `reviewer_ref`
-registra una dichiarazione locale; non autentica crittograficamente l'identita
-del revisore.
+Il run rilegge le stesse fonti. Una modifica dei byte o del perimetro rende la
+decisione obsoleta e blocca la review semantica.
 
-La ricevuta di calcolo autorizza esclusivamente la formula fissa
-`piano - supporto`, il valore assoluto della differenza e il confronto con la
-tolleranza. Lega formula, convenzione del segno, periodo, fonti, ruoli, valuta,
-unita, candidati e byte dell'implementazione. Una variazione richiede una nuova
-review prima del parsing qualificato.
+### 4. Appendice numerica opzionale
 
-Prima di importare codice locale, ogni comando Python verifica il set fisico
-esatto di 25 file di implementazione, configurazione, UI e assurance condivisa
-e disabilita la bytecode locale. Anche il server MCP chiude lo stesso set prima
-di leggere il manifest e avvia Python con import isolati e bytecode disabilitata.
-File, directory, cache, link o file speciali non dichiarati bloccano
-l'esecuzione. Queste ricevute provano coerenza e replay, non autenticano il
-publisher del pacchetto o il professionista.
+Quando il caso richiede un tie-out riga-per-riga, Codex può preparare anche la
+recipe numerica con `review_source_roles.py` e passarla con `--recipe`. Questa
+decisione autorizza solo classificazione dei token e formula
+`piano - supporto`; non sostituisce il modello del caso e non è necessaria per
+un run semantico.
 
-`numeric_evidence_ledger.json` riapre e verifica ogni indirizzo numerico
-materiale reso in CSV, XLSX e DOCX. `workflow_output_closure.json` chiude invece
-l'intero set di output con una allowlist esplicita e ricevute byte-per-byte:
-file mancanti, inattesi, modificati, link simbolici o file speciali bloccano la
-replay. Salvataggi e applicazioni di review producono una chiusura successiva
-legata crittograficamente alla precedente prima di sostituire l'output
-canonico.
+## Output principali
 
-Il dominio decimale canonico ammette al massimo 38 cifre significative e 18
-decimali. I valori eccedenti sono rifiutati prima dell'emissione di righe
-autorevoli; i calcoli usano un contesto locale e non dipendono dalla precisione
-globale Python. La replay rigenera inoltre gli output immutabili dalle fonti e
-dalle decisioni revisionate, quindi una narrativa alterata e semplicemente
-ri-firmata non viene accettata. Le azioni del revisore restano input di
-autorita, ma identita, azioni consentite e legame con `review_payload.json`
-sono verificati; effetti, blocker, conteggi, stati, azioni successive e
-`final_artifacts.json` vengono invece ricalcolati da tali input. Anche
-`review_handoff.md` viene rigenerato e confrontato dopo save e apply.
+- `concordato_case_model.json`;
+- `concordato_semantic_checks.json`;
+- `creditor_treatment.csv`;
+- `creditor_class_summary.csv`;
+- `sources_and_uses.csv`;
+- `liquidity_schedule.csv`;
+- `concordato_review_workpaper.xlsx`;
+- `concordato_semantic_review.md`;
+- `concordato_preventivo_review_summary.docx`.
 
-Il contratto completo e descritto in
-[`references/workflow-reference.md`](references/workflow-reference.md).
+Gli output numerici precedenti restano disponibili come appendice:
 
-## UI review MCP
+- `amount_candidates.csv`;
+- `exact_amount_matches.csv`;
+- `concordato_tie_out_workpaper.xlsx`;
+- `concordato_review_summary.docx`.
 
-La review UI segue il pattern locale OpenAI-style usato dagli altri plugin
-migrati:
+Il workbook principale separa Overview, Documents, Creditors, Classes,
+Sources Uses, Liquidity, Review Questions, Issues, Mechanical Checks e Numeric
+Tie-Out. La coda di review porta in testa procedura, domande professionali,
+questioni, trattamento delle classi e controlli meccanici.
 
-- lo script Python produce i file deterministici consentiti dallo stato di
-  review e
-  aggiunge `run_intake.json`, `review_payload.json`, `ui_decisions.json` e
-  `final_artifacts.json`;
-- il server MCP locale dichiarato in `.mcp.json` espone
-  `validate_concordato_plan_review` e `render_concordato_plan_review`;
-- il widget HTML riusabile `assets/concordato-plan-review-widget.html` rende
-  il payload con ricerca, filtri per tipo e dettaglio evidenza;
-- prima di ogni scrittura di review, il server ripete localmente la verifica di
-  payload, ricevute, ledger numerico, assurance envelope e chiusura completa
-  degli output;
-- se MCP non e disponibile, Codex legge `review_payload.json` e continua con
-  Markdown/chat senza promuovere lo stato di assurance.
+## Assurance e replay
+
+Il modello riesaminato è una decisione semantica source-bound. Le
+qualificazioni, i gate, le ricevute degli artifact e la chiusura completa degli
+output sono riproducibili. Un run semantico senza appendice numerica registra
+la riconciliazione come `not_applicable`; non finge che il tie-out sia stato
+eseguito.
 
 Per una replay indipendente:
 
@@ -135,31 +161,52 @@ Per una replay indipendente:
 python scripts/replay_assurance.py --output-dir /path/to/reviewed-output
 ```
 
-I test sintetici e avversariali verificano il contratto meccanico, ma non
-sostituiscono un holdout su un piano aziendale reale e mai visto, confrontato da
-un revisore con un workpaper preparato indipendentemente.
+Le ricevute provano coerenza e replay, non identità professionale, firma
+digitale, completezza del fascicolo o correttezza del giudizio. La
+pubblicazione rimane separata e trattenuta.
+
+Il contratto meccanico completo è in
+[`references/workflow-reference.md`](references/workflow-reference.md); il
+metodo professionale è in
+[`references/review-methodology.md`](references/review-methodology.md).
+
+## UI di review
+
+Il server MCP locale espone:
+
+- `validate_concordato_plan_review`;
+- `render_concordato_plan_review`;
+- `save_concordato_plan_decisions`;
+- `apply_concordato_plan_decisions`.
+
+La UI legge il payload chiuso prodotto dal run. Le modifiche del revisore
+restano decisioni esplicite; non alterano silenziosamente fonti, calcoli o
+modello riesaminato.
 
 ## Primo prompt
 
 ```text
-Usa Revisione Piano Concordato sulla cartella /percorso/fascicolo.
-Data di riferimento: 31/03/2026.
-Lingua: it.
-Confronta piano CP, bilancio provvisorio, mastrini, DB rettificato e dettaglio debiti; genera tabulato differenze e criticita per revisore.
+Usa Revisione del Concordato Preventivo sul fascicolo che indico.
+Ricostruisci procedura, documenti autorevoli, creditori e trattamento,
+alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte.
+Tieni il tie-out numerico come appendice quando i documenti lo rendono utile.
 ```
 
-## Sorgente
+## Sorgente e test
 
-La sorgente modificabile e solo:
+La sorgente modificabile è:
 
 ```text
 plugins/concordato-plan-review
 ```
 
-Dopo modifiche alla sorgente, ricostruire e verificare il pacchetto:
+Dopo modifiche:
 
 ```bash
 .venv/bin/python scripts/build_codex_plugin_zip.py concordato-plan-review
 .venv/bin/python scripts/build_codex_plugin_zip.py concordato-plan-review --check
-.venv/bin/python -m pytest tests/plugins/test_concordato_plan_review_plugin.py tests/plugins/test_codex_plugin_packages.py
+PYTHONDONTWRITEBYTECODE=1 .venv/bin/python -m pytest \
+  tests/plugins/test_concordato_preventivo_semantics.py \
+  tests/plugins/test_concordato_plan_review_plugin.py \
+  tests/plugins/test_codex_plugin_packages.py
 ```

@@ -20,10 +20,12 @@ const CONCORDATO_PLUGIN_IMPLEMENTATION_PATHS = [
   "scripts/apply_review_edits.py",
   "scripts/check_dependencies.py",
   "scripts/concordato_plan_core.py",
+  "scripts/concordato_semantic.py",
   "scripts/finalize_output_closure.py",
   "scripts/implementation_bootstrap.py",
   "scripts/output_closure.py",
   "scripts/replay_assurance.py",
+  "scripts/review_case_model.py",
   "scripts/review_session.py",
   "scripts/review_source_roles.py",
   "scripts/run_concordato_review.py",
@@ -91,6 +93,12 @@ const MAX_DECISION_TEXT_LENGTH = 10_000;
 const ITEM_TYPES = new Set([
   "source_inventory",
   "source_role_attention",
+  "semantic_case_status",
+  "procedure_identity",
+  "semantic_review_question",
+  "semantic_issue",
+  "creditor_class_treatment",
+  "mechanical_consistency_check",
   "candidate_amount_match",
   "unmatched_plan_amount",
   "extraction_error",
@@ -212,8 +220,8 @@ function toolUiMeta(resourceUri, toolName = null) {
     "openai/widgetAccessible": true,
   };
   if (toolName === TOOL_NAMES.renderReview) {
-    meta["openai/toolInvocation/invoking"] = "Rendering concordato plan review";
-    meta["openai/toolInvocation/invoked"] = "Rendered concordato plan review";
+    meta["openai/toolInvocation/invoking"] = "Rendering Concordato Preventivo review";
+    meta["openai/toolInvocation/invoked"] = "Rendered Concordato Preventivo review";
   }
   return meta;
 }
@@ -222,7 +230,7 @@ function widgetResourceMeta(uri) {
   return {
     ui: { resourceUri: uri },
     "openai/widgetDescription":
-      "Interactive Concordato Plan Review surface for source roles, candidate amount matches, unmatched plan numbers, extraction errors, and review artifacts.",
+      "Interactive Concordato Preventivo review for procedure, documents, creditor treatment, feasibility, issues, mechanical checks, and the numerical appendix.",
     "openai/widgetPrefersBorder": false,
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
@@ -280,9 +288,9 @@ function toolDefinitions() {
   return [
     {
       name: TOOL_NAMES.validateReview,
-      title: "Validate Concordato Plan Review payload",
+      title: "Validate Concordato Preventivo review payload",
       description:
-        "Validate the Concordato Plan Review payload before rendering. Call this first, then render_concordato_plan_review.",
+        "Validate the Concordato Preventivo review payload before rendering. Call this first, then render_concordato_plan_review.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -293,9 +301,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.renderReview,
-      title: "Render Concordato Plan Review",
+      title: "Render Concordato Preventivo review",
       description:
-        "Render a Concordato Plan Review payload as an MCP HTML widget for source, amount, exception, and artifact review.",
+        "Render a Concordato Preventivo payload for procedure, creditor treatment, feasibility, issues, evidence, and numerical appendices.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
@@ -307,9 +315,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.saveDecisions,
-      title: "Save Concordato Plan Review review decisions",
+      title: "Save Concordato Preventivo review decisions",
       description:
-        "Validate Concordato Plan Review review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+        "Validate Concordato Preventivo review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -320,9 +328,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.applyDecisions,
-      title: "Apply Concordato Plan Review review decisions",
+      title: "Apply Concordato Preventivo review decisions",
       description:
-        "Validate Concordato Plan Review review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+        "Validate Concordato Preventivo review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -339,9 +347,9 @@ function resources() {
     {
       uri: WIDGET_URI,
       name: "concordato_plan_review_widget",
-      title: "Concordato Plan Review widget",
+      title: "Concordato Preventivo review widget",
       description:
-        "Renders Concordato Plan Review payloads with searchable source, amount, exception, and artifact rows.",
+        "Renders Concordato Preventivo payloads with searchable procedure, creditor, issue, evidence, check, and appendix rows.",
       mimeType: WIDGET_MIME_TYPE,
       _meta: widgetResourceMeta(WIDGET_URI),
     },
@@ -349,7 +357,7 @@ function resources() {
 }
 
 function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown Concordato Plan Review widget resource: ${uri}`);
+  if (uri !== WIDGET_URI) throw new Error(`unknown Concordato Preventivo review widget resource: ${uri}`);
   return fs.readFileSync(
     path.join(PLUGIN_ROOT, "assets", "concordato-plan-review-widget.html"),
     "utf8",
@@ -439,7 +447,7 @@ function validateReviewPayload(inputArgs) {
     },
   };
   if (payloadBytes(payload) > MAX_PAYLOAD_BYTES) {
-    throw new Error(`concordato plan review widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
+    throw new Error(`Concordato Preventivo review payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
   }
   return payload;
 }
@@ -2138,11 +2146,19 @@ const CONCORDATO_INITIAL_OUTPUT_PATHS = new Set([
   "amount_candidates.csv",
   "assurance_envelope.json",
   "assurance_gates.json",
+  "concordato_case_model.json",
+  "concordato_preventivo_review_summary.docx",
   "concordato_review_summary.docx",
+  "concordato_review_workpaper.xlsx",
+  "concordato_semantic_checks.json",
+  "concordato_semantic_review.md",
   "concordato_tie_out_workpaper.xlsx",
+  "creditor_class_summary.csv",
+  "creditor_treatment.csv",
   "exact_amount_matches.csv",
   "final_artifacts.json",
   "inventory.json",
+  "liquidity_schedule.csv",
   "numeric_evidence_ledger.json",
   "raw_amount_candidates.csv",
   "review_handoff.md",
@@ -2154,6 +2170,8 @@ const CONCORDATO_INITIAL_OUTPUT_PATHS = new Set([
   "source_pages.json",
   "source_qualifications.json",
   "source_receipts.json",
+  "sources_and_uses.csv",
+  "suggested_concordato_case_model.json",
   "suggested_source_role_recipe.json",
   "ui_decisions.json",
   "workbook_sheets.json",
@@ -2711,8 +2729,8 @@ function validateConcordatoReviewTransaction(
         "ui_decisions.json",
       ),
       message: isSpanish(language)
-        ? `Se guardaron ${persistedUiDecisions?.decision_count} decisiones de Revisión del plan de concordato.`
-        : `Saved ${persistedUiDecisions?.decision_count} Concordato Plan Review decisions.`,
+        ? `Se guardaron ${persistedUiDecisions?.decision_count} decisiones de revisión del concordato preventivo.`
+        : `Saved ${persistedUiDecisions?.decision_count} Concordato Preventivo review decisions.`,
       ui_decisions: persistedUiDecisions,
     };
     if (!reviewResponseMatches(result, expectedResult)) {
@@ -2803,8 +2821,8 @@ function validateConcordatoReviewTransaction(
       ),
       run_intake_path: path.join(canonicalOutputDir, "run_intake.json"),
       message: isSpanish(language)
-        ? `Se aplicaron ${persistedAppliedDecisions.decision_count} decisiones de Revisión del plan de concordato.`
-        : `Applied ${persistedAppliedDecisions.decision_count} Concordato Plan Review decisions.`,
+        ? `Se aplicaron ${persistedAppliedDecisions.decision_count} decisiones de revisión del concordato preventivo.`
+        : `Applied ${persistedAppliedDecisions.decision_count} Concordato Preventivo review decisions.`,
       applied_decisions: persistedAppliedDecisions,
       final_artifacts: persistedFinalArtifacts,
     };
@@ -2943,8 +2961,8 @@ function saveDecisionPayloadWrites(inputArgs) {
     ui_decisions_path: persisted ? decisionOutputPath : null,
     message: persisted
       ? isSpanish(language)
-        ? `Se guardaron ${uiDecisions.decision_count} decisiones de Revisión del plan de concordato.`
-        : `Saved ${uiDecisions.decision_count} Concordato Plan Review decisions.`
+        ? `Se guardaron ${uiDecisions.decision_count} decisiones de revisión del concordato preventivo.`
+        : `Saved ${uiDecisions.decision_count} Concordato Preventivo review decisions.`
       : isSpanish(language)
         ? "Las decisiones son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
         : "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -3014,7 +3032,7 @@ const NATIVE_REGENERATION_EXTENSIONS = new Set([
 
 const DERIVED_NATIVE_REGENERATION_TARGETS = new Map([
   ["check_results.csv", ["check_results.xlsx"]],
-  ["codex_run_review.md", ["concordato_review_summary.docx"]],
+  ["codex_run_review.md", ["concordato_preventivo_review_summary.docx"]],
   ["reconciliation_matches.csv", ["journal_bank_reconciliation.xlsx"]],
 ]);
 
@@ -3772,7 +3790,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
   const shouldWrite = !existingText || (isSpanish(language) && !existingText.includes("Entrega para revisión"));
   if (shouldWrite) {
     const displayName = isSpanish(language)
-      ? "Revisión del plan de concordato"
+      ? "Revisión del concordato preventivo"
       : PLUGIN_MANIFEST.name || pluginName || "Review";
     const text = isSpanish(language)
       ? [
@@ -4140,8 +4158,8 @@ function applyDecisionPayloadWrites(inputArgs) {
     run_intake_path: runIntakePath,
     message: persisted
       ? isSpanish(language)
-        ? `Se aplicaron ${responseAppliedDecisions.decision_count} decisiones de Revisión del plan de concordato.`
-        : `Applied ${responseAppliedDecisions.decision_count} Concordato Plan Review decisions.`
+        ? `Se aplicaron ${responseAppliedDecisions.decision_count} decisiones de revisión del concordato preventivo.`
+        : `Applied ${responseAppliedDecisions.decision_count} Concordato Preventivo review decisions.`
       : isSpanish(language)
         ? "Las decisiones aplicadas son válidas. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
         : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -4182,7 +4200,8 @@ function pythonExecutable() {
   return "python3";
 }
 
-const CONCORDATO_CHILD_SUMMARY_DOCX = "concordato_review_summary.docx";
+const CONCORDATO_CHILD_SUMMARY_DOCX =
+  "concordato_preventivo_review_summary.docx";
 const CONCORDATO_CHILD_REGENERATE_ACTION =
   "Regenerate native DOCX/XLSX/PDF outputs before final handoff.";
 const CONCORDATO_CHILD_FINAL_HANDOFF_ACTION =
@@ -4756,7 +4775,9 @@ function hasWorkflowNativeRegenerationTarget(appliedDecisions) {
     if (!isPlainObject(effect)) return false;
     if (effect.action !== "edit") return false;
     if (!effect.requires_native_regeneration) return false;
-    return nativeRegenerationPathsForEffect(effect).includes("concordato_review_summary.docx");
+    return nativeRegenerationPathsForEffect(effect).includes(
+      "concordato_preventivo_review_summary.docx",
+    );
   });
 }
 
@@ -4771,8 +4792,8 @@ function callTool(name, args = {}) {
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
       message: isSpanish(languageFromArgs(args))
-        ? "Los datos de Revisión del plan de concordato son válidos. Puede ejecutar render_concordato_plan_review una vez."
-        : "Concordato Plan Review payload is valid. It is safe to call render_concordato_plan_review once.",
+        ? "Los datos de revisión del concordato preventivo son válidos. Puede ejecutar render_concordato_plan_review una vez."
+        : "The Concordato Preventivo review payload is valid. It is safe to call render_concordato_plan_review once.",
       review_payload: payload.review_payload,
     };
   }
@@ -4789,8 +4810,8 @@ function callTool(name, args = {}) {
   }
   throw new Error(
     isSpanish(languageFromArgs(args))
-      ? `herramienta desconocida del widget de Revisión del plan de concordato: ${name}`
-      : `unknown Concordato Plan Review widget tool: ${name}`,
+      ? `herramienta desconocida del widget de revisión del concordato preventivo: ${name}`
+      : `unknown Concordato Preventivo review widget tool: ${name}`,
   );
 }
 
@@ -4838,8 +4859,8 @@ function handleRpc(message) {
         },
         instructions:
           isSpanish(language)
-            ? "Use validate_concordato_plan_review antes de render_concordato_plan_review. Dé prioridad al widget MCP para la entrega de la Revisión del plan de concordato; use save_concordato_plan_decisions para guardar las acciones de revisión en ui_decisions.json y apply_concordato_plan_decisions para escribir applied_decisions.json y actualizar el estado de final_artifacts.json cuando se recopilen decisiones; recurra a la revisión Markdown o estática solo si MCP no está disponible."
-            : "Use validate_concordato_plan_review before render_concordato_plan_review. Prefer the MCP widget for Concordato Plan Review review handoff; use save_concordato_plan_decisions to persist reviewer actions to ui_decisions.json and apply_concordato_plan_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+            ? "Use validate_concordato_plan_review antes de render_concordato_plan_review. Dé prioridad al widget MCP para la entrega de la revisión del concordato preventivo; use save_concordato_plan_decisions para guardar las acciones en ui_decisions.json y apply_concordato_plan_decisions para escribir applied_decisions.json y actualizar final_artifacts.json; recurra a Markdown solo si MCP no está disponible."
+            : "Use validate_concordato_plan_review before render_concordato_plan_review. Prefer the MCP widget for the Concordato Preventivo review handoff; use save_concordato_plan_decisions to persist actions and apply_concordato_plan_decisions to update applied_decisions.json and final_artifacts.json; fall back to Markdown only when MCP is unavailable.",
       });
     }
     if (method === "notifications/initialized") return null;

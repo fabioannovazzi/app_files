@@ -406,7 +406,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == "AI companion for accountants"
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.36"
+    assert manifest["version"] == "0.1.37"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
@@ -420,9 +420,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "confermati e senza mescolare altri clienti."
     )
     approved_description = (
-        ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt"
-    ).read_text(encoding="utf-8").strip()
+        (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
+        .read_text(encoding="utf-8")
+        .strip()
+    )
     assert manifest["interface"]["longDescription"] == approved_description
+    assert "casi di concordato preventivo" in approved_description
     assert "richieste mirate per Deep Research" in approved_description
     assert "verifica le risposte rispetto alle fonti citate" in approved_description
     assert "Cerca la corrispondenza del cliente." in approved_description
@@ -3331,38 +3334,36 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
     ).read_text(encoding="utf-8")
 
     for snippet in (
-        "Revisione numeri di piano",
-        "Concordato Plan Review",
-        "Contrôler les chiffres du plan avant la position du réviseur.",
-        "Planzahlen prüfen, bevor der Prüfer Stellung nimmt.",
-        "Prompt pronti",
-        "Ready prompts",
-        "Controlla i numeri del piano",
-        "Check plan numbers before the reviewer takes a position.",
-        "schede rettificate",
-        "adjusted schedules",
-        "Tableaux ajustés",
-        "Angepasste Aufstellungen",
-        "Il ponte mostra cosa torna",
-        "The bridge shows what ties",
-        "How to set up the review",
-        "inventory.json",
-        "amount_candidates.csv",
-        "exact_amount_matches.csv",
+        "Riesamina il caso, non soltanto i numeri del piano.",
+        "Review the case, not only the plan numbers.",
+        "Examinez le dossier, pas seulement les chiffres du plan.",
+        "Prüfen Sie den Fall, nicht nur die Planzahlen.",
+        "Il significato viene prima del tie-out.",
+        "Meaning comes before the tie-out.",
+        "Le sens précède le rapprochement.",
+        "Die Bedeutung kommt vor dem Zahlenabgleich.",
+        "Giudizio e meccanica non si confondono.",
+        "Judgment and mechanics remain distinct.",
+        "concordato_case_model.json",
+        "creditor_treatment.csv",
+        "creditor_class_summary.csv",
+        "sources_and_uses.csv",
+        "liquidity_schedule.csv",
+        "concordato_review_workpaper.xlsx",
+        "concordato_semantic_review.md",
+        "concordato_preventivo_review_summary.docx",
         "concordato_tie_out_workpaper.xlsx",
-        "concordato_review_summary.docx",
-        "run_audit.json",
-        "codex_run_review.md",
         VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
     for stale_snippet in (
-        "Deterministic Python scripts",
-        "Codex reviews the bridge",
-        "Codex rivede il ponte",
-        "DB ajustée",
-        "angepasste DB",
+        "Revisione numeri di piano",
+        "Concordato Plan Review",
+        "schede rettificate",
+        "adjusted schedules",
+        "Tableaux ajustés",
+        "Angepasste Aufstellungen",
         "adjusted DB",
     ):
         assert stale_snippet not in page

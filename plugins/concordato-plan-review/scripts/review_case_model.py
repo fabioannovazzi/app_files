@@ -60,84 +60,68 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+import json
 import logging
 from pathlib import Path
+from typing import Any
 
-from concordato_plan_core import configure_logging, run_concordato_review
+from concordato_semantic import review_concordato_case_model
 
 LOGGER = logging.getLogger(__name__)
 
 
+def _read_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
 def main() -> int:
-    """Run the concordato plan deterministic review helper."""
+    """Seal a reviewer-confirmed semantic case model against source receipts."""
 
     parser = argparse.ArgumentParser(
         description=(
-            "Prepare a reviewed Concordato Preventivo case package with a "
-            "numerical tie-out appendix."
+            "Create a source-bound reviewed Concordato Preventivo semantic recipe."
         )
     )
-    parser.add_argument("input_dir", type=Path, help="Folder containing plan sources.")
     parser.add_argument(
-        "--output-dir",
+        "inventory",
         type=Path,
-        required=True,
-        help="Folder where review artifacts will be written.",
+        help="inventory.json written by the inspection run.",
     )
     parser.add_argument(
-        "--reference-date",
-        default="",
-        help="Reference date or cut-off, for example 2026-03-31.",
-    )
-    parser.add_argument("--language", default="it", help="Working language.")
-    parser.add_argument(
-        "--document-language",
-        default="auto",
-        help="Source document language, or auto.",
-    )
-    parser.add_argument(
-        "--tolerance",
-        default="1",
-        help="Maximum absolute difference for candidate amount matches.",
-    )
-    parser.add_argument(
-        "--recipe",
+        "case_model",
         type=Path,
-        help="Reviewed, source-bound role and numeric-disposition recipe.",
+        help="Reviewer-confirmed case model using the generated template schema.",
     )
-    parser.add_argument(
-        "--semantic-recipe",
-        type=Path,
-        help=("Reviewed, source-bound Concordato Preventivo semantic case recipe."),
-    )
-    parser.add_argument(
-        "--max-rows-per-sheet",
-        type=int,
-        default=5000,
-        help="Maximum rows to scan in each workbook sheet.",
-    )
-    parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")
+    parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--reviewer-ref", required=True)
+    parser.add_argument("--reviewed-on", required=True)
+    parser.add_argument("--reference-date", default="")
     args = parser.parse_args()
 
-    configure_logging(args.verbose)
-    run = run_concordato_review(
-        args.input_dir,
-        args.output_dir,
+    inventory = _read_json(args.inventory)
+    if not isinstance(inventory, list) or any(
+        not isinstance(row, dict) for row in inventory
+    ):
+        raise ValueError("inventory.json must contain an array of objects")
+    case_model = _read_json(args.case_model)
+    if not isinstance(case_model, dict):
+        raise ValueError("Case model must be a JSON object")
+    recipe = review_concordato_case_model(
+        inventory,
+        case_model,
+        reviewer_ref=args.reviewer_ref,
+        reviewed_on=args.reviewed_on,
         reference_date=args.reference_date,
-        language=args.language,
-        document_language=args.document_language,
-        tolerance=args.tolerance,
-        max_rows_per_sheet=args.max_rows_per_sheet,
-        recipe=args.recipe,
-        semantic_recipe=args.semantic_recipe,
     )
-    LOGGER.info("wrote review artifacts to %s", run.output_dir)
-    LOGGER.info("files_inspected=%s", len(run.inventory))
-    LOGGER.info("amount_candidates=%s", len(run.amount_candidates))
-    LOGGER.info("candidate_matches=%s", len(run.exact_matches))
-    LOGGER.info("semantic_status=%s", run.semantic_status)
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(
+        json.dumps(recipe, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    LOGGER.info("wrote reviewed semantic recipe to %s", args.output)
     return 0
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     raise SystemExit(main())

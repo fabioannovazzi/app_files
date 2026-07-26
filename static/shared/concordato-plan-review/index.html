@@ -2,129 +2,171 @@
 <html lang="it">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" id="meta-description" content="Nel perimetro italiano del concordato, Vera collega i numeri del piano a bilancio, mastrini e prospetti di supporto in una revisione leggibile.">
-  <meta property="og:type" content="website"><meta property="og:site_name" content="Mparanza"><meta property="og:title" id="og-title" content="Revisione Piano Concordato — Italia | Vera"><meta property="og:description" id="og-description" content="Workflow Italia: dal piano di concordato a una revisione che mostra che cosa torna davvero."><meta property="og:url" content="https://mparanza.com/static/shared/concordato-plan-review/index.html"><meta property="og:image" content="https://i.ytimg.com/vi/ndZQoJjwOpY/maxresdefault.jpg"><meta id="og-locale" property="og:locale" content="it_IT">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Vera organizza la revisione di un concordato preventivo: procedura, documenti, creditori, trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:title" content="Concordato Preventivo | Vera">
+  <meta property="og:description" content="Un workspace professionale per riesaminare il caso prima dell'appendice numerica.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/concordato-plan-review/index.html">
   <link rel="canonical" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
-  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
-  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
-  <title>Revisione Piano Concordato — Italia | Vera</title>
+  <title>Concordato Preventivo | Vera</title>
+  <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #002060;
-      --text: #183765;
-      --muted: #52698d;
+      color-scheme: light;
       --paper: #ffffff;
-      --surface: #ffffff;
-      --soft: #f3fbff;
-      --accent: #0070c0;
-      --accent-soft: #e8f6fd;
-      --line: #b7dded;
-      --line-strong: #7ec9e7;
-      --gold: #00b0f0;
-      --content: 1120px;
-      --shadow: none;
+      --ink: oklch(27% 0.105 255);
+      --text: oklch(37% 0.07 255);
+      --muted: oklch(50% 0.04 255);
+      --line: oklch(87% 0.025 245);
+      --line-strong: oklch(72% 0.06 242);
+      --blue: oklch(49% 0.16 247);
+      --cyan: oklch(68% 0.14 225);
+      --soft: oklch(97% 0.018 240);
+      --warning: oklch(49% 0.10 55);
+      --content: 72rem;
+      --space-xs: .5rem;
+      --space-sm: .75rem;
+      --space-md: 1.5rem;
+      --space-lg: 3rem;
+      --space-xl: 6rem;
     }
 
     * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
 
-    body {
-      margin: 0;
-      color: var(--text);
+    html {
       background: var(--paper);
-      font-family: "Instrument Sans", "Aptos", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.55;
+      scroll-behavior: smooth;
     }
 
-    a { color: inherit; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding-bottom: env(safe-area-inset-bottom);
+      color: var(--text);
+      background: var(--paper);
+      font-family: "Instrument Sans", "Segoe UI", sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      font-kerning: normal;
+    }
+
+    a {
+      color: inherit;
+      text-underline-offset: .2em;
+    }
+
+    a:focus-visible,
+    summary:focus-visible {
+      outline: 3px solid color-mix(in oklch, var(--cyan) 55%, transparent);
+      outline-offset: 4px;
+    }
+
+    .shell {
+      width: min(var(--content), calc(100% - 2rem));
+      margin-inline: auto;
+    }
 
     .topbar {
       position: sticky;
+      z-index: 10;
       top: 0;
-      z-index: 20;
+      padding-top: env(safe-area-inset-top);
       border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(14px);
+      background: var(--paper);
     }
 
-    .nav-shell {
-      width: min(var(--content), calc(100% - 40px));
-      min-height: 70px;
-      margin: 0 auto;
+    .nav {
+      min-height: 4.5rem;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 24px;
+      gap: var(--space-md);
     }
 
     .brand img {
       display: block;
-      width: 140px;
+      width: 8.75rem;
       height: auto;
     }
 
-    .nav-right,
-    .nav-links,
-    .lang-switch {
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-md);
+      color: var(--muted);
+      font-size: .875rem;
+    }
+
+    .nav-actions,
+    .language-switcher {
       display: flex;
       align-items: center;
+      gap: var(--space-md);
     }
 
-    .nav-right { gap: 20px; }
-    .nav-links { gap: 18px; color: var(--muted); font-size: 13px; }
-    .nav-links a { text-decoration: none; }
+    .language-switcher {
+      gap: .625rem;
+      color: var(--muted);
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .04em;
+    }
+
+    .language-switcher a {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .language-switcher a[aria-current="page"] {
+      color: var(--ink);
+      text-decoration: underline;
+      text-decoration-color: var(--cyan);
+      text-decoration-thickness: 2px;
+    }
+
+    .nav-links a {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
     .nav-links a:hover { color: var(--ink); }
 
-    .lang-switch {
-      gap: 4px;
-      padding: 3px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--surface);
-    }
-
-    .lang-switch button {
-      min-width: 34px;
-      min-height: 30px;
-      padding: 5px 9px;
-      border: 0;
-      border-radius: 999px;
-      background: transparent;
+    .breadcrumb {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+      padding-top: var(--space-md);
       color: var(--muted);
-      cursor: pointer;
-      font: inherit;
-      font-size: 12px;
+      font-size: .875rem;
     }
 
-    .lang-switch button.is-active {
-      background: var(--accent-soft);
-      color: var(--accent);
-    }
-
-    main {
-      width: min(var(--content), calc(100% - 40px));
-      margin: 0 auto;
-    }
+    .breadcrumb a { color: var(--blue); }
+    .breadcrumb strong { color: var(--ink); font-weight: 600; }
 
     .hero {
-      min-height: 560px;
-      padding: 76px 0 56px;
+      min-height: 38rem;
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-      gap: 54px;
+      grid-template-columns: minmax(0, 1.45fr) minmax(16rem, .55fr);
+      gap: clamp(2rem, 7vw, 7rem);
       align-items: end;
+      padding-block: clamp(4rem, 9vw, 8rem) var(--space-xl);
     }
 
     .eyebrow {
-      margin: 0 0 14px;
-      color: var(--accent);
-      font-size: 12px;
-      font-weight: 650;
-      letter-spacing: 0.08em;
+      margin: 0 0 var(--space-md);
+      color: var(--blue);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .09em;
       text-transform: uppercase;
     }
 
@@ -133,915 +175,924 @@
     h3 {
       margin: 0;
       color: var(--ink);
-      letter-spacing: 0;
-      line-height: 1.12;
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.08;
     }
 
     h1 {
-      max-width: 780px;
-      font-size: clamp(42px, 5vw, 58px);
-      font-weight: 620;
+      max-width: 15ch;
+      margin-left: -.04em;
+      font-size: var(--plugin-hero-title-size, 2.875rem);
     }
 
     h2 {
-      font-size: clamp(28px, 3.4vw, 42px);
-      font-weight: 620;
+      max-width: 20ch;
+      margin-left: -.025em;
+      font-size: clamp(2.15rem, 4vw, 4rem);
     }
 
     h3 {
-      font-size: 18px;
-      font-weight: 620;
+      font-size: 1.25rem;
+      letter-spacing: -.015em;
     }
 
     p { margin: 0; }
 
-    .subtitle {
-      max-width: 760px;
-      margin-top: 22px;
+    .lead {
+      max-width: 58ch;
+      margin-top: var(--space-md);
       color: var(--text);
-      font-size: clamp(19px, 2.3vw, 25px);
-      line-height: 1.38;
+      font-size: clamp(1.25rem, 2.2vw, 1.65rem);
+      line-height: 1.4;
     }
 
-    .hero-copy {
-      max-width: 760px;
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 17px;
+    .hero-note {
+      padding-top: var(--space-md);
+      border-top: 2px solid var(--ink);
     }
 
-    .action-row {
-      margin-top: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
+    .hero-note p + p { margin-top: var(--space-md); }
+
+    .hero-note strong {
+      display: block;
+      margin-bottom: var(--space-xs);
+      color: var(--ink);
+      font-weight: 600;
     }
 
-    .button {
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 16px;
-      border: 1px solid var(--accent);
-      border-radius: 8px;
-      background: var(--accent);
-      color: #f8fbfa;
-      font-size: 14px;
-      font-weight: 620;
-      text-decoration: none;
-    }
-
-    .button.secondary {
-      background: transparent;
-      color: var(--accent);
-    }
-
-    .hero-card,
-    .card,
-    .download-panel,
-    .review-panel {
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-    }
-
-    .hero-card {
-      padding: 26px;
-      box-shadow: var(--shadow);
-    }
-
-    .label {
-      margin-bottom: 14px;
-      color: var(--muted);
-      font-size: 13px;
-      font-weight: 620;
-    }
-
-    .hero-list,
-    .plain-list {
-      display: grid;
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .hero-list li,
-    .plain-list li {
-      padding-left: 20px;
-      position: relative;
-    }
-
-    .hero-list li::before,
-    .plain-list li::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      top: 0.72em;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--accent);
-    }
-
-    section {
-      padding: 54px 0;
+    .section {
+      padding-block: var(--space-xl);
       border-top: 1px solid var(--line);
-      scroll-margin-top: 88px;
+      scroll-margin-top: 5.5rem;
     }
 
     .section-head {
-      margin-bottom: 28px;
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(260px, 0.7fr);
-      gap: 40px;
+      grid-template-columns: minmax(0, 1.2fr) minmax(18rem, .8fr);
+      gap: clamp(2rem, 7vw, 7rem);
       align-items: end;
+      margin-bottom: var(--space-lg);
     }
 
     .section-head > p {
+      max-width: 54ch;
       color: var(--muted);
-      font-size: 16px;
     }
 
-    .split,
-    .usage-grid,
-    .download-panel {
+    .sequence {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-block: 2px solid var(--ink);
+    }
+
+    .sequence article {
+      min-height: 14rem;
+      padding: var(--space-md);
+      border-right: 1px solid var(--line);
+    }
+
+    .sequence article:first-child { padding-left: 0; }
+    .sequence article:last-child { border-right: 0; }
+
+    .number {
+      display: block;
+      margin-bottom: var(--space-lg);
+      color: var(--cyan);
+      font-size: .875rem;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+    }
+
+    .sequence p {
+      margin-top: var(--space-sm);
+      color: var(--muted);
+    }
+
+    .split {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 18px;
+      gap: clamp(2rem, 7vw, 7rem);
     }
 
-    pre {
-      margin: 0;
-      overflow-x: auto;
-      white-space: pre-wrap;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #182320;
-      color: #eef7f4;
-      padding: 20px;
-      font-size: 14px;
-      line-height: 1.55;
+    .boundary {
+      padding-top: var(--space-md);
+      border-top: 2px solid var(--ink);
     }
 
-    code {
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 0.92em;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
-    .card {
-      padding: 20px;
-    }
-
-    .card p {
-      margin-top: 9px;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .output-list {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin: 0;
+    .boundary ul,
+    .outputs {
+      margin: var(--space-md) 0 0;
       padding: 0;
       list-style: none;
     }
 
-    .output-list li {
-      padding: 16px 18px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: var(--surface);
-    }
-
-    .output-list strong {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--ink);
-      font-weight: 620;
-    }
-
-    .output-list span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .review-panel,
-    .download-panel {
-      padding: 24px;
-    }
-
-    .review-panel {
-      margin-top: 22px;
-      background: var(--surface);
-      border-left: 3px solid var(--gold);
-    }
-
-    .download-panel { background: var(--surface); }
-
-    .review-panel p,
-    .download-panel p {
-      margin-top: 10px;
-      color: var(--muted);
-    }
-
-    .step {
-      padding-top: 18px;
+    .boundary li {
+      padding-block: var(--space-sm);
       border-top: 1px solid var(--line);
     }
 
-    .step-label {
-      margin-bottom: 7px;
-      color: var(--accent);
-      font-size: 13px;
-      font-weight: 650;
-      letter-spacing: 0.04em;
+    .boundary li:first-child { border-top: 0; }
+
+    .boundary--judgment h3::after {
+      content: "Professionista";
+      float: right;
+      color: var(--warning);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .07em;
       text-transform: uppercase;
     }
 
-    .download-panel a:not(.button) { color: var(--accent); }
-
-    @media (max-width: 900px) {
-      .nav-shell {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 14px 0;
-      }
-
-      .nav-right {
-        width: 100%;
-        align-items: flex-start;
-        justify-content: space-between;
-      }
-
-      .nav-links { flex-wrap: wrap; }
-
-      .hero,
-      .section-head,
-      .split,
-      .usage-grid,
-      .download-panel,
-      .output-list {
-        grid-template-columns: 1fr;
-      }
-
-      .grid,
-      .grid.four {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+    .boundary--mechanics h3::after {
+      content: "Codice";
+      float: right;
+      color: var(--blue);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .07em;
+      text-transform: uppercase;
     }
 
-    @media (max-width: 640px) {
-      main,
-      .nav-shell {
-        width: min(var(--content), calc(100% - 28px));
+    .outputs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 2px solid var(--ink);
+    }
+
+    .outputs li {
+      min-height: 7.5rem;
+      padding: var(--space-md) var(--space-md) var(--space-md) 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .outputs li:nth-child(odd) {
+      border-right: 1px solid var(--line);
+    }
+
+    .outputs li:nth-child(even) {
+      padding-left: var(--space-md);
+    }
+
+    .outputs strong {
+      display: block;
+      color: var(--ink);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+    .outputs span {
+      display: block;
+      max-width: 50ch;
+      margin-top: var(--space-xs);
+      color: var(--muted);
+    }
+
+    .appendix {
+      margin-top: var(--space-lg);
+      padding: var(--space-md);
+      background: var(--soft);
+      border-block: 1px solid var(--line-strong);
+    }
+
+    .appendix strong { color: var(--ink); }
+
+    details {
+      border-block: 1px solid var(--line);
+    }
+
+    summary {
+      min-height: 4.5rem;
+      display: flex;
+      align-items: center;
+      color: var(--ink);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .prompt {
+      max-width: 66ch;
+      margin: 0 0 var(--space-lg);
+      padding: var(--space-md);
+      color: var(--ink);
+      background: var(--soft);
+      border-left: 3px solid var(--cyan);
+      white-space: pre-wrap;
+      font-family: "Instrument Sans", "Segoe UI", sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .limitations {
+      display: grid;
+      gap: var(--space-sm);
+      margin: 0;
+      padding: 0 0 var(--space-lg);
+      color: var(--muted);
+      list-style: none;
+    }
+
+    .limitations li::before {
+      content: "—";
+      margin-right: var(--space-sm);
+      color: var(--blue);
+    }
+
+    .cta {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: var(--space-lg);
+      padding-block: var(--space-xl);
+      border-top: 2px solid var(--ink);
+    }
+
+    .cta p {
+      max-width: 48ch;
+      margin-top: var(--space-sm);
+      color: var(--muted);
+    }
+
+    .button {
+      min-height: 2.75rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      padding: .75rem 1rem;
+      color: var(--paper);
+      background: var(--ink);
+      border: 1px solid var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .button:hover {
+      color: var(--ink);
+      background: var(--paper);
+    }
+
+    @media (max-width: 52rem) {
+      .hero,
+      .section-head,
+      .split {
+        grid-template-columns: 1fr;
       }
 
       .hero {
         min-height: auto;
-        padding: 48px 0 42px;
+        align-items: start;
       }
 
-      .grid,
-      .grid.four {
+      .sequence {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sequence article:nth-child(2) { border-right: 0; }
+      .sequence article:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .sequence article:nth-child(3) { padding-left: 0; }
+    }
+
+    @media (max-width: 38rem) {
+      .nav {
+        align-items: flex-start;
+        flex-direction: column;
+        padding-block: var(--space-sm);
+      }
+
+      .nav-actions {
+        width: 100%;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: var(--space-sm);
+      }
+
+      .nav-links { gap: var(--space-sm); }
+
+      .sequence,
+      .outputs {
         grid-template-columns: 1fr;
       }
 
-      .nav-right { flex-direction: column; }
+      .sequence article,
+      .sequence article:nth-child(2),
+      .outputs li:nth-child(odd) {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .sequence article,
+      .sequence article:nth-child(3),
+      .outputs li:nth-child(even) {
+        padding-left: 0;
+      }
+
+      .cta {
+        align-items: flex-start;
+        flex-direction: column;
+      }
     }
-  </style>
-  <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
-  <style>
-    .journey-breadcrumb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:26px 0 0;color:var(--muted);font-size:14px}.journey-breadcrumb a{color:var(--accent);text-decoration:none}.journey-breadcrumb strong{color:var(--ink);font-weight:600}.journey-hero-action{margin-top:24px}.journey-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}.journey-flow article{padding:22px 24px 24px 0;border-right:1px solid var(--line)}.journey-flow article+article{padding-left:24px}.journey-flow article:last-child{border-right:0}.journey-flow h3,.journey-step h3{margin:0 0 7px}.journey-flow p,.journey-step p{margin:0}.journey-steps{margin-top:28px;border-top:2px solid var(--ink)}.journey-step{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(0,1.3fr);gap:22px;padding:22px 0;border-bottom:1px solid var(--line)}.journey-step h3{margin:0}.journey-proof{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,72px);align-items:center;border-top:2px solid var(--ink);padding-top:30px}.journey-video{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr);color:var(--ink);border:1px solid var(--line);text-decoration:none}.journey-video__thumb{position:relative;aspect-ratio:16/9;background:var(--soft);overflow:hidden}.journey-video__thumb img{width:100%;height:100%;display:block;object-fit:cover}.journey-video__play{position:absolute;inset:auto auto 16px 16px;display:grid;place-items:center;width:44px;height:44px;color:#fff;background:var(--accent);border-radius:50%}.journey-video__body{display:flex;flex-direction:column;justify-content:center;padding:24px}.journey-video__body span{color:var(--accent);font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}.journey-video__body strong{margin-top:9px;font-size:1.25rem;line-height:1.25}.journey-related{padding:30px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}.journey-related__links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}.journey-related a{color:var(--ink);font-size:clamp(1.1rem,2.2vw,1.55rem);font-weight:620;line-height:1.18;text-decoration:none}.journey-related a:hover{color:var(--accent)}details.journey-spec{margin:64px 0;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}details.journey-spec>summary{padding:20px 0;color:var(--ink);cursor:pointer;font-weight:620}details.journey-spec>.journey-spec__body{padding-bottom:24px}.journey-cta{display:flex;justify-content:space-between;gap:28px;align-items:center;padding:clamp(28px,5vw,52px);background:var(--soft);border:1px solid var(--line)}.journey-cta h2{margin:0 0 8px}.journey-cta p{margin:0}@media(max-width:760px){.journey-flow,.journey-proof,.journey-video,.journey-related__links{grid-template-columns:1fr}.journey-flow article{border-right:0;border-bottom:1px solid var(--line);padding:20px 0}.journey-flow article+article{padding-left:0}.journey-flow article:last-child{border-bottom:0}.journey-step{grid-template-columns:1fr;gap:8px}.journey-cta{align-items:flex-start;flex-direction:column}}
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+
+    @media (pointer: coarse) {
+      .nav-links a,
+      .language-switcher a,
+      .button,
+      summary {
+        min-height: 3rem;
+      }
+    }
   </style>
 </head>
 <body>
   <header class="topbar">
-    <div class="nav-shell">
-      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza home">
+    <div class="shell nav">
+      <a class="brand" href="/" aria-label="Mparanza home">
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
-      <div class="nav-right">
-        <nav class="nav-links" aria-label="Sezioni della pagina" data-accessibility-label="sections">
-          <a href="#journey" data-journey="nav.overview">In breve</a><a href="#journey-workflow" data-journey="nav.workflow">Percorso</a><a href="#proof" data-journey="nav.proof">Guarda</a><a href="#related" data-journey="nav.next">Workflow Italia</a><a href="#prompt" data-journey="nav.prompt">Prompt</a>
+      <div class="nav-actions">
+        <nav class="nav-links" aria-label="Sezioni della pagina" data-copy-aria="nav.label">
+          <a href="#metodo" data-copy="nav.method">Metodo</a>
+          <a href="#confine" data-copy="nav.boundary">Responsabilità</a>
+          <a href="#output" data-copy="nav.outputs">Output</a>
+          <a href="#iniziare" data-copy="nav.start">Iniziare</a>
+        </nav>
+        <nav class="language-switcher" aria-label="Lingua" data-copy-aria="language.label">
+          <a href="?lang=it" data-language="it">IT</a>
+          <a href="?lang=en" data-language="en">EN</a>
+          <a href="?lang=fr" data-language="fr">FR</a>
+          <a href="?lang=de" data-language="de">DE</a>
         </nav>
       </div>
     </div>
   </header>
 
-  <main>
-    <nav class="journey-breadcrumb" aria-label="Percorso pagina" data-journey-aria="breadcrumbAria"><a href="../vera/index.html?lang=it" data-vera-link data-journey="breadcrumb.vera">Vera</a><span aria-hidden="true">/</span><span data-journey="breadcrumb.area">Pacchetto Italia</span><span aria-hidden="true">/</span><strong data-journey="breadcrumb.module">Piano di concordato</strong></nav>
-    <div class="hero" id="hero">
+  <main class="shell">
+    <nav class="breadcrumb" aria-label="Percorso pagina" data-copy-aria="breadcrumb.label">
+      <a href="../vera/index.html">Vera</a>
+      <span aria-hidden="true">/</span>
+      <span data-copy="breadcrumb.package">Pacchetto Italia</span>
+      <span aria-hidden="true">/</span>
+      <strong data-copy="breadcrumb.product">Concordato preventivo</strong>
+    </nav>
+
+    <section class="hero">
       <div>
-        <p class="eyebrow" data-i18n="hero.eyebrow">Pacchetto Italia · Revisione concordato</p>
-        <h1 data-i18n="hero.title">Controlla i numeri del piano prima della posizione del revisore.</h1>
-        <p class="subtitle" data-i18n="hero.subtitle">Nel perimetro italiano, collega i valori del piano a bilancio, mastrini, schede rettificate e dettagli tributari/previdenziali.</p>
-        <p class="hero-copy" data-i18n="hero.copy">Dagli piano, bilancio, mastrini e dettagli di supporto. Ottieni cosa torna, cosa è solo candidato e quali numeri restano da spiegare.</p>
+        <p class="eyebrow" data-copy="hero.eyebrow">Vera · Concordato preventivo</p>
+        <h1 data-copy="hero.title">Riesamina il caso, non soltanto i numeri del piano.</h1>
+        <p class="lead" data-copy="hero.lead">Procedura, proposta, piano, attestazione, creditori,
+          trattamento, alternativa liquidatoria e fattibilità in un unico
+          workpaper rivedibile.</p>
       </div>
-
-      <aside class="hero-card" aria-label="Problema risolto" data-accessibility-label="problem">
-        <div class="label" data-i18n="hero.cardLabel">Cosa dai / cosa ottieni</div>
-        <ul class="hero-list" id="hero-list"></ul>
+      <aside class="hero-note" aria-label="Principio del workflow" data-copy-aria="hero.noteLabel">
+        <p><strong data-copy="hero.codexTitle">Codex interpreta.</strong>
+          <span data-copy="hero.codexText">Legge le fonti, propone il modello del caso e rende esplicite le basi di giudizio.</span></p>
+        <p><strong data-copy="hero.professionalTitle">Il professionista conferma.</strong>
+          <span data-copy="hero.professionalText">Corregge procedura, perimetri, trattamento, evidenze e questioni.</span></p>
+        <p><strong data-copy="hero.codeTitle">Il codice calcola.</strong>
+          <span data-copy="hero.codeText">Totali, recuperi, fonti e impieghi, bridge di cassa e differenze restano esatti e riproducibili.</span></p>
       </aside>
-    </div>
+    </section>
 
-    <section id="journey"><div class="section-head"><div><p class="eyebrow" data-journey="overview.eyebrow">Il lavoro in breve</p><h2 data-journey="overview.title">Dal piano a una revisione che mostra che cosa torna davvero.</h2></div><p data-journey="overview.copy">Vera collega ogni numero alle evidenze disponibili e separa i valori riconciliati, i candidati e le differenze ancora da spiegare.</p></div><div class="journey-flow"><article><h3 data-journey="flow.provide.title">Fornisci</h3><p data-journey="flow.provide.copy">Piano, bilancio, mastrini e prospetti tributari o previdenziali.</p></article><article><h3 data-journey="flow.prepare.title">Vera prepara</h3><p data-journey="flow.prepare.copy">Collegamenti tra importi, fonti e differenze con una traccia leggibile.</p></article><article><h3 data-journey="flow.receive.title">Ricevi</h3><p data-journey="flow.receive.copy">Un tabulato Excel e una sintesi Word che partono dai punti aperti.</p></article></div></section>
-    <section id="journey-workflow"><div class="section-head"><div><p class="eyebrow" data-journey="workflow.eyebrow">Percorso</p><h2 data-journey="workflow.title">Quattro passaggi per leggere il piano contro le sue basi.</h2></div><p data-journey="workflow.copy">Il lavoro conserva importo, pagina, foglio e collegamento per ogni voce rilevante.</p></div><div class="journey-steps"><article class="journey-step"><h3 data-journey="workflow.one.title">Inventaria il fascicolo</h3><p data-journey="workflow.one.copy">Ordina piano, bilancio, mastrini e dettagli di supporto.</p></article><article class="journey-step"><h3 data-journey="workflow.two.title">Estrae gli importi</h3><p data-journey="workflow.two.copy">Porta valori e localizzatori in una base confrontabile.</p></article><article class="journey-step"><h3 data-journey="workflow.three.title">Costruisce il ponte</h3><p data-journey="workflow.three.copy">Collega le voci del piano alle evidenze e separa i candidati.</p></article><article class="journey-step"><h3 data-journey="workflow.four.title">Prepara la revisione</h3><p data-journey="workflow.four.copy">Raccoglie differenze, omissioni e domande in una vista pronta da percorrere.</p></article></div></section>
-
-    <details class="journey-spec"><summary data-journey="spec.summary">Specifiche tecniche, input e file prodotti</summary><div class="journey-spec__body">
-    <section id="cosa-fa">
+    <section class="section" id="metodo">
       <div class="section-head">
         <div>
-          <p class="eyebrow" data-i18n="what.eyebrow">Cosa fa</p>
-          <h2 data-i18n="what.title">Da fascicolo disordinato a tabulato per revisore</h2>
+          <p class="eyebrow" data-copy="method.eyebrow">Metodo</p>
+          <h2 data-copy="method.title">Il significato viene prima del tie-out.</h2>
         </div>
-        <p data-i18n="what.copy">Serve quando un piano di concordato va confrontato con bilancio, mastrini, schede rettificate e dettagli fiscali e previdenziali in un unico ponte documentato.</p>
+        <p data-copy="method.intro">“Concordato” qui ha il suo significato professionale italiano. Il
+          workflow non è costruito intorno a un nome azienda, un particolare file o una
+          singola riconciliazione.</p>
+      </div>
+
+      <div class="sequence">
+        <article>
+          <h3 data-copy="method.captureTitle">Cattura</h3>
+          <p data-copy="method.captureText">Inventaria le fonti e i localizzatori senza assegnare ruoli dai nomi file.</p>
+        </article>
+        <article>
+          <h3 data-copy="method.modelTitle">Modella</h3>
+          <p data-copy="method.modelText">Ricostruisce procedura, documenti, creditori, trattamento, liquidità e questioni.</p>
+        </article>
+        <article>
+          <h3 data-copy="method.confirmTitle">Conferma</h3>
+          <p data-copy="method.confirmText">Il professionista corregge e conferma il modello legato alle fonti correnti.</p>
+        </article>
+        <article>
+          <h3 data-copy="method.calculateTitle">Calcola</h3>
+          <p data-copy="method.calculateText">Produce schedule esatte e una coda di revisione centrata sui punti professionali.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="confine">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-copy="boundary.eyebrow">Responsabilità</p>
+          <h2 data-copy="boundary.title">Giudizio e meccanica non si confondono.</h2>
+        </div>
+        <p data-copy="boundary.intro">La riproducibilità è utile solo dove la correttezza è meccanicamente
+          verificabile. Per diritto, trattamento e fattibilità rimane
+          indispensabile il giudizio professionale.</p>
       </div>
 
       <div class="split">
-        <pre><code>input/
-  ExampleCo piano CP_2026.05.25.pdf
-  BILANCIO 31-03-26 PROVVISORIO.pdf
-  mastrini al 31-03-26.pdf
-  controllo pvc/
-    DB_31.03.2026_21052026.xlsx
-    Dettaglio ExampleCo Srl_Debiti tributari e previdenziali_Aggiornato.xlsx</code></pre>
+        <article class="boundary boundary--judgment">
+          <h3 data-copy="boundary.judgmentTitle">Giudizio</h3>
+          <ul>
+            <li data-copy="boundary.judgment1">Quadro normativo e versione autorevole dei documenti</li>
+            <li data-copy="boundary.judgment2">Perimetro, prelazione, classi, voto e trattamento dei creditori</li>
+            <li data-copy="boundary.judgment3">Sufficienza e pertinenza delle evidenze</li>
+            <li data-copy="boundary.judgment4">Alternativa liquidatoria, fattibilità e sostenibilità</li>
+            <li data-copy="boundary.judgment5">Conclusioni legali, fiscali, previdenziali e contabili</li>
+          </ul>
+        </article>
 
-        <pre><code>out/
-  inventory.json
-  amount_candidates.csv
-  exact_amount_matches.csv
-  concordato_tie_out_workpaper.xlsx
-  concordato_review_summary.docx
-  run_audit.json
-  codex_run_review.md</code></pre>
+        <article class="boundary boundary--mechanics">
+          <h3 data-copy="boundary.mechanicsTitle">Meccanica</h3>
+          <ul>
+            <li data-copy="boundary.mechanics1">Hash, ricevute, schemi e riferimenti alle fonti</li>
+            <li data-copy="boundary.mechanics2">Totali per creditore e classe</li>
+            <li data-copy="boundary.mechanics3">Recuperi e differenze piano/liquidazione</li>
+            <li data-copy="boundary.mechanics4">Fonti e impieghi, funding gap e bridge di cassa</li>
+            <li data-copy="boundary.mechanics5">CSV, workbook, Word e replay riproducibili</li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <section id="input">
+    <section class="section" id="output">
       <div class="section-head">
         <div>
-          <p class="eyebrow" data-i18n="inputs.eyebrow">Input</p>
-          <h2 data-i18n="inputs.title">Che cosa legge</h2>
+          <p class="eyebrow" data-copy="outputs.eyebrow">Output principali</p>
+          <h2 data-copy="outputs.title">Il caso resta ispezionabile, dal modello al report.</h2>
         </div>
-        <p data-i18n="inputs.copy">Lavora sui file già disponibili nel workspace Codex dello studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.</p>
+        <p data-copy="outputs.intro">Gli output mostrano i dati riesaminati, la provenienza, la base di
+          giudizio, i controlli meccanici e le lacune. Nessun “verde” aritmetico
+          sostituisce una conclusione professionale.</p>
       </div>
-      <div class="grid four" id="input-cards"></div>
+
+      <ul class="outputs">
+        <li><strong>concordato_case_model.json</strong><span data-copy="outputs.caseModel">Procedura, documenti, creditori, assunzioni e questioni source-bound.</span></li>
+        <li><strong>creditor_treatment.csv</strong><span data-copy="outputs.creditorTreatment">Prelazioni, classi, recuperi, tempi, voto ed evidenze per creditore.</span></li>
+        <li><strong>creditor_class_summary.csv</strong><span data-copy="outputs.classSummary">Aggregazioni esatte per classe e confronto con la liquidazione.</span></li>
+        <li><strong>sources_and_uses.csv</strong><span data-copy="outputs.sourcesUses">Fonti, impieghi, surplus o shortfall e fabbisogno.</span></li>
+        <li><strong>liquidity_schedule.csv</strong><span data-copy="outputs.liquidity">Bridge di cassa per periodo con differenze meccaniche visibili.</span></li>
+        <li><strong>concordato_review_workpaper.xlsx</strong><span data-copy="outputs.workpaper">Workbook principale: procedura, documenti, creditori, classi, liquidità, domande e questioni.</span></li>
+        <li><strong>concordato_semantic_review.md</strong><span data-copy="outputs.markdown">Revisione leggibile con stato del modello, assunzioni e limiti.</span></li>
+        <li><strong>concordato_preventivo_review_summary.docx</strong><span data-copy="outputs.word">Sintesi Word professionale con evidenze e punti aperti.</span></li>
+      </ul>
+
+      <p class="appendix"><strong data-copy="outputs.appendixTitle">Appendice numerica opzionale.</strong>
+        <span data-copy="outputs.appendixText">`concordato_tie_out_workpaper.xlsx` conserva il controllo riga-per-riga
+        quando serve. Un importo uguale resta evidenza candidata, non prova che
+        due affermazioni abbiano lo stesso significato.</span></p>
     </section>
 
-    <section id="output">
+    <section class="section" id="iniziare">
       <div class="section-head">
         <div>
-          <p class="eyebrow" data-i18n="outputs.eyebrow">Output</p>
-          <h2 data-i18n="outputs.title">Che cosa produce</h2>
+          <p class="eyebrow" data-copy="start.eyebrow">Per iniziare</p>
+          <h2 data-copy="start.title">Un fascicolo e una data di riferimento.</h2>
         </div>
-        <p data-i18n="outputs.copy">La cartella di lavoro separa inventario fonti, importi estratti, collegamenti candidati, tabulato Excel e sintesi Word. Il Word riassume cosa torna, cosa non torna e cosa resta da spiegare.</p>
+        <p data-copy="start.intro">Non occorre preparare nomi file speciali. Vera ispeziona prima,
+          propone il modello e chiede conferma soltanto sui giudizi materiali.</p>
       </div>
-      <ul class="output-list" id="output-list"></ul>
-      <div class="review-panel">
-        <h3 data-i18n="review.title">Il ponte mostra cosa torna, cosa è candidato e cosa manca</h3>
-        <p data-i18n="review.copy1">Il tabulato raccoglie importi, pagine, fogli, formule e collegamenti per importo. La sintesi spiega se una voce del piano è supportata, solo candidata o non spiegata.</p>
-        <p data-i18n="review.copy2">Il risultato porta al revisore differenze, omissioni, fonti deboli e punti da chiarire prima di assumere una posizione sul piano di concordato.</p>
-      </div>
+
+      <div class="prompt" role="region" aria-label="Prompt di esempio" data-copy-aria="start.promptLabel" data-copy="start.prompt">Usa Concordato Preventivo sul fascicolo /percorso/fascicolo.
+Ricostruisci procedura, documenti autorevoli, creditori e trattamento,
+alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte.
+Tieni il tie-out numerico come appendice quando è utile.</div>
+
+      <details>
+        <summary data-copy="start.limitationsTitle">Limiti professionali e di validazione</summary>
+        <ul class="limitations">
+          <li data-copy="start.limit1">Non emette un parere legale e non attesta il piano.</li>
+          <li data-copy="start.limit2">Non autentica crittograficamente l'identità del revisore.</li>
+          <li data-copy="start.limit3">Non trasforma evidenza mancante in una conclusione positiva.</li>
+          <li data-copy="start.limit4">I test sintetici provano il contratto; non provano generalità su casi reali.</li>
+          <li data-copy="start.limit5">La validazione sul campo richiede un caso mai visto e una review indipendente qualificata.</li>
+        </ul>
+      </details>
     </section>
 
-    <section id="uso">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow" data-i18n="use.eyebrow">Uso</p>
-          <h2 data-i18n="use.title">Come si imposta il controllo</h2>
-        </div>
-        <p data-i18n="use.copy">Apri la cartella cliente e conferma solo le scelte davvero necessarie: perimetro, data di riferimento, tolleranza e lingua del documento finale.</p>
+    <section class="cta" aria-label="Torna a Vera" data-copy-aria="cta.label">
+      <div>
+        <p class="eyebrow">Vera</p>
+        <h2 data-copy="cta.title">Il concordato preventivo è una parte del lavoro, non un caso isolato.</h2>
+        <p data-copy="cta.text">Vera riunisce workflow specialistici per revisione, riconciliazione e
+          lavoro professionale dello studio.</p>
       </div>
-      <div class="usage-grid" id="usage-grid"></div>
+      <a class="button" href="../vera/index.html" data-copy="cta.button">Torna a Vera</a>
     </section>
-    </div></details>
-
-    <section id="proof"><div class="journey-proof"><div><p class="eyebrow" data-journey="proof.eyebrow">Vera al lavoro</p><h2 data-journey="proof.title">Guarda il ponte tra il piano e le evidenze.</h2><p data-journey="proof.copy">La guida mostra come i valori del piano diventano riconciliati, candidati o ancora da spiegare.</p></div><a class="journey-video" href="https://youtu.be/ndZQoJjwOpY" target="_blank" rel="noopener noreferrer" data-proof-link><span class="journey-video__thumb"><img src="https://i.ytimg.com/vi/ndZQoJjwOpY/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-proof-thumb><span class="journey-video__play" aria-hidden="true">▶</span></span><span class="journey-video__body"><span data-journey="proof.kicker">Guida breve</span><strong data-journey="proof.videoTitle">Dal piano a una revisione che mostra che cosa batte davvero</strong></span></a></div></section>
-    <section id="related"><div class="journey-related"><p class="eyebrow" data-journey="related.eyebrow">Altri workflow Italia</p><p data-journey="related.copy">Vera usa lo stesso filo tra fascicolo, fonti e lavoro rivedibile anche negli altri workflow del pacchetto Italia.</p><div class="journey-related__links"><a href="../previdenza-inps/index.html?lang=it" data-related-link="inps" data-journey="related.inps">Previdenza INPS →</a><a href="../registro-imprese-sari/index.html?lang=it" data-related-link="registro" data-journey="related.registro">Registro Imprese e SARI →</a></div></div></section>
-
-    <section id="prompt">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow" data-journey="prompt.eyebrow">Per iniziare</p><h2 data-journey="prompt.title">Un prompt, poi la revisione.</h2>
-        </div>
-        <p data-journey="prompt.copy">Indica cartella e data di riferimento. Vera prepara il confronto.</p>
-      </div>
-      <pre><code id="prompt-example" data-journey="prompt.text">Usa Revisione Piano Concordato su /percorso/fascicolo. Data di riferimento: 31/03/2026. Collega piano, bilancio, mastrini e prospetti e prepara differenze e punti aperti.</code></pre><ul class="output-list" id="prompt-list"></ul>
-    </section>
-
   </main>
-
   <script>
-    const translations = {
+    const copy = {
       it: {
-        nav: { what: "A cosa serve", inputs: "File letti", outputs: "Output", use: "Come usarlo", prompts: "Prompt pronti", download: "Vera" },
+        meta: {
+          description: "Vera organizza la revisione di un concordato preventivo: procedura, documenti, creditori, trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte."
+        },
+        language: { label: "Lingua" },
+        nav: {
+          label: "Sezioni della pagina",
+          method: "Metodo",
+          boundary: "Responsabilità",
+          outputs: "Output",
+          start: "Iniziare"
+        },
+        breadcrumb: {
+          label: "Percorso pagina",
+          package: "Pacchetto Italia",
+          product: "Concordato preventivo"
+        },
         hero: {
-          eyebrow: "Pacchetto Italia · Revisione concordato",
-          title: "Controlla i numeri del piano prima della posizione del revisore.",
-          subtitle: "Nel perimetro italiano, collega i valori del piano a bilancio, mastrini, schede rettificate e dettagli tributari/previdenziali.",
-          copy: "Dagli piano, bilancio, mastrini e dettagli di supporto. Ottieni cosa torna, cosa è solo candidato e quali numeri restano da spiegare.",
-          primary: "Torna a Vera",
-          secondary: "Come funziona",
-          cardLabel: "Cosa dai / cosa ottieni",
-          bullets: [
-            "Dagli piano, bilancio, mastrini e schede di supporto.",
-            "Conferma data, perimetro, tolleranza e lingua del documento.",
-            "Ottieni tabulato Excel, sintesi Word e memo differenze."
-          ]
+          eyebrow: "Vera · Concordato preventivo",
+          title: "Riesamina il caso, non soltanto i numeri del piano.",
+          lead: "Procedura, proposta, piano, attestazione, creditori, trattamento, alternativa liquidatoria e fattibilità in un unico workpaper rivedibile.",
+          noteLabel: "Principio del workflow",
+          codexTitle: "Codex interpreta.",
+          codexText: "Legge le fonti, propone il modello del caso e rende esplicite le basi di giudizio.",
+          professionalTitle: "Il professionista conferma.",
+          professionalText: "Corregge procedura, perimetri, trattamento, evidenze e questioni.",
+          codeTitle: "Il codice calcola.",
+          codeText: "Totali, recuperi, fonti e impieghi, bridge di cassa e differenze restano esatti e riproducibili."
         },
-        what: {
-          eyebrow: "A cosa serve",
-          title: "Da fascicolo disordinato a tabulato per revisore",
-          copy: "Serve quando un piano di concordato va confrontato con bilancio, mastrini, schede rettificate e dettagli fiscali e previdenziali in un unico ponte documentato."
+        method: {
+          eyebrow: "Metodo",
+          title: "Il significato viene prima del tie-out.",
+          intro: "“Concordato” qui ha il suo significato professionale italiano. Il workflow non è costruito intorno a un nome azienda, un particolare file o una singola riconciliazione.",
+          captureTitle: "Cattura",
+          captureText: "Inventaria le fonti e i localizzatori senza assegnare ruoli dai nomi file.",
+          modelTitle: "Modella",
+          modelText: "Ricostruisce procedura, documenti, creditori, trattamento, liquidità e questioni.",
+          confirmTitle: "Conferma",
+          confirmText: "Il professionista corregge e conferma il modello legato alle fonti correnti.",
+          calculateTitle: "Calcola",
+          calculateText: "Produce schedule esatte e una coda di revisione centrata sui punti professionali."
         },
-        inputs: {
-          eyebrow: "File letti",
-          title: "Che cosa legge",
-          copy: "Lavora sui file già disponibili nel workspace Codex dello studio. I PDF non testuali o i fogli con formule rotte vengono evidenziati, non normalizzati forzatamente.",
-          cards: [
-            ["Piano di concordato", "Parte descrittiva e numerica del piano, PDF o Excel."],
-            ["Bilancio e mastrini", "Saldi e schede da usare come primo riscontro numerico."],
-            ["Schede rettificate", "Saldi rettificati, scenari di continuità o liquidazione e fogli di supporto."],
-            ["Debiti fiscali e previdenziali", "Dettagli tributari, previdenziali e altre schede da collegare al piano."]
-          ]
+        boundary: {
+          eyebrow: "Responsabilità",
+          title: "Giudizio e meccanica non si confondono.",
+          intro: "La riproducibilità è utile solo dove la correttezza è meccanicamente verificabile. Per diritto, trattamento e fattibilità rimane indispensabile il giudizio professionale.",
+          judgmentTitle: "Giudizio",
+          judgment1: "Quadro normativo e versione autorevole dei documenti",
+          judgment2: "Perimetro, prelazione, classi, voto e trattamento dei creditori",
+          judgment3: "Sufficienza e pertinenza delle evidenze",
+          judgment4: "Alternativa liquidatoria, fattibilità e sostenibilità",
+          judgment5: "Conclusioni legali, fiscali, previdenziali e contabili",
+          mechanicsTitle: "Meccanica",
+          mechanics1: "Hash, ricevute, schemi e riferimenti alle fonti",
+          mechanics2: "Totali per creditore e classe",
+          mechanics3: "Recuperi e differenze piano/liquidazione",
+          mechanics4: "Fonti e impieghi, funding gap e bridge di cassa",
+          mechanics5: "CSV, workbook, Word e replay riproducibili"
         },
         outputs: {
-          eyebrow: "Output",
-          title: "Che cosa produce",
-          copy: "La cartella di lavoro separa inventario fonti, importi estratti, collegamenti candidati, tabulato Excel e sintesi Word. Il Word riassume cosa torna, cosa non torna e cosa resta da spiegare.",
-          items: [
-            ["inventory.json", "Inventario fonti, ruoli suggeriti e limiti di lettura."],
-            ["amount_candidates.csv", "Numeri estratti da PDF, Excel e CSV con posizione di origine."],
-            ["exact_amount_matches.csv", "Collegamenti per importo tra piano e fonti di supporto, da validare nel contesto."],
-            ["concordato_tie_out_workpaper.xlsx", "Tabulato Excel rivedibile con differenze candidate e fogli sorgente."],
-            ["concordato_review_summary.docx", "Documento Word con sezioni torna, non torna e da spiegare."],
-            ["run_audit.json", "Parametri, conteggi e confine tra dati estratti e sintesi finale."],
-            ["codex_run_review.md", "Memo finale su differenze, criticità e prossimi chiarimenti."]
-          ]
+          eyebrow: "Output principali",
+          title: "Il caso resta ispezionabile, dal modello al report.",
+          intro: "Gli output mostrano i dati riesaminati, la provenienza, la base di giudizio, i controlli meccanici e le lacune. Nessun “verde” aritmetico sostituisce una conclusione professionale.",
+          caseModel: "Procedura, documenti, creditori, assunzioni e questioni legate alle fonti.",
+          creditorTreatment: "Prelazioni, classi, recuperi, tempi, voto ed evidenze per creditore.",
+          classSummary: "Aggregazioni esatte per classe e confronto con la liquidazione.",
+          sourcesUses: "Fonti, impieghi, surplus o shortfall e fabbisogno.",
+          liquidity: "Bridge di cassa per periodo con differenze meccaniche visibili.",
+          workpaper: "Workbook principale: procedura, documenti, creditori, classi, liquidità, domande e questioni.",
+          markdown: "Revisione leggibile con stato del modello, assunzioni e limiti.",
+          word: "Sintesi Word professionale con evidenze e punti aperti.",
+          appendixTitle: "Appendice numerica opzionale.",
+          appendixText: "`concordato_tie_out_workpaper.xlsx` conserva il controllo riga-per-riga quando serve. Un importo uguale resta evidenza candidata, non prova che due affermazioni abbiano lo stesso significato."
         },
-        review: {
-          title: "Il ponte mostra cosa torna, cosa è candidato e cosa manca",
-          copy1: "Il tabulato raccoglie importi, pagine, fogli, formule e collegamenti per importo. La sintesi spiega se una voce del piano è supportata, solo candidata o non spiegata.",
-          copy2: "Il risultato porta al revisore differenze, omissioni, fonti deboli e punti da chiarire prima di assumere una posizione sul piano di concordato."
+        start: {
+          eyebrow: "Per iniziare",
+          title: "Un fascicolo e una data di riferimento.",
+          intro: "Non occorre preparare nomi file speciali. Vera ispeziona prima, propone il modello e chiede conferma soltanto sui giudizi materiali.",
+          promptLabel: "Prompt di esempio",
+          prompt: "Usa Concordato Preventivo sul fascicolo /percorso/fascicolo.\nRicostruisci procedura, documenti autorevoli, creditori e trattamento,\nalternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte.\nTieni il tie-out numerico come appendice quando è utile.",
+          limitationsTitle: "Limiti professionali e di validazione",
+          limit1: "Non emette un parere legale e non attesta il piano.",
+          limit2: "Non autentica crittograficamente l'identità del revisore.",
+          limit3: "Non trasforma evidenza mancante in una conclusione positiva.",
+          limit4: "I test sintetici provano il contratto; non provano generalità su casi reali.",
+          limit5: "La validazione sul campo richiede un caso mai visto e una review indipendente qualificata."
         },
-        use: {
-          eyebrow: "Come usarlo",
-          title: "Come si imposta il controllo",
-          copy: "Apri la cartella cliente e conferma solo le scelte davvero necessarie: perimetro, data di riferimento, tolleranza e lingua del documento finale.",
-          steps: [
-            ["Preparazione", "Controllo materiali", "Verifica dipendenze, leggibilità dei file e fonti disponibili."],
-            ["Scelte", "Perimetro e assunzioni", "Se il fascicolo è ambiguo, conferma solo perimetro, data, tolleranza o fonte piano."],
-            ["Analisi", "Ponte numerico", "Estrae importi, fogli, pagine e collegamenti candidati."],
-            ["Revisione", "Sintesi per revisore", "Prepara il memo sulle differenze e sulle criticità per il revisore."]
-          ]
-        },
-        prompts: {
-          eyebrow: "Prompt pronti",
-          title: "Prompt pronti",
-          copy: "Parti da questi prompt e sostituisci il percorso della cartella. Codex chiederà prima di assumere scelte materiali non risolte dai file.",
-          items: [
-            ["Revisione completa", "Usa Revisione numeri di piano sulla cartella /path/fascicolo. Confronta piano, bilancio, mastrini, schede rettificate e dettaglio debiti tributari/previdenziali. Produci Excel, Word e memo differenze."],
-            ["Solo riscontro numerico", "Verifica se i numeri del piano tornano con bilancio e mastrini. Per ciò che non torna, cerca supporto nelle schede rettificate e nel dettaglio debiti. Elenca esempi concreti."],
-            ["Posizione revisore", "Dopo il controllo numerico, evidenzia criticità su continuità aziendale, effetti sul bilancio, dati non supportati, omissioni e richieste da inviare al cliente."]
-          ]
-        },
-        download: {
-          eyebrow: "Vera",
-          button: "Torna a Vera",
-          firstUseTitle: "Primo uso",
-          firstUseCopy: "In una chat Codex, indica la cartella del fascicolo, la data di riferimento, la lingua e la tolleranza importi.",
-          prompt: "Usa Revisione numeri di piano su /percorso/cartella.\nData di riferimento: 2026-03-31. Lingua documento: it.\nConfronta piano, bilancio, mastrini, schede rettificate e dettaglio debiti fiscali/previdenziali.\nProduci tabulato Excel, Word riassuntivo e memo delle differenze."
+        cta: {
+          label: "Torna a Vera",
+          title: "Il concordato preventivo è una parte del lavoro, non un caso isolato.",
+          text: "Vera riunisce workflow specialistici per revisione, riconciliazione e lavoro professionale dello studio.",
+          button: "Torna a Vera"
         }
       },
       en: {
-        nav: { what: "What it does", inputs: "Inputs", outputs: "Outputs", use: "Use", prompts: "Prompts", download: "Download" },
+        meta: {
+          description: "Vera organizes an Italian Concordato Preventivo review across procedure, documents, creditors, treatment, liquidation alternative, sources and uses, liquidity, and open issues."
+        },
+        language: { label: "Language" },
+        nav: {
+          label: "Page sections",
+          method: "Method",
+          boundary: "Responsibility",
+          outputs: "Outputs",
+          start: "Start"
+        },
+        breadcrumb: {
+          label: "Page path",
+          package: "Italy package",
+          product: "Concordato Preventivo"
+        },
         hero: {
-          eyebrow: "Italy pack · Concordato plan review",
-          title: "Check plan numbers before the reviewer takes a position.",
-          subtitle: "Within Italy’s Concordato procedure, tie plan values to the balance sheet, ledgers, adjusted schedules and tax/social-security debt detail.",
-          copy: "Give it the plan, balance, ledgers and support schedules. Get back what ties, what is only a candidate and which numbers still need explanation.",
-          primary: "Back to Vera",
-          secondary: "How to use it",
-          cardLabel: "Give it / get back",
-          bullets: [
-            "Give it the plan, balance, ledgers and support schedules.",
-            "Confirm date, scope, tolerance and document language.",
-            "Get back an Excel review file, Word summary and differences memo."
-          ]
+          eyebrow: "Vera · Concordato Preventivo",
+          title: "Review the case, not only the plan numbers.",
+          lead: "Procedure, proposal, plan, attestation, creditors, treatment, liquidation alternative, and feasibility in one reviewable workpaper.",
+          noteLabel: "Workflow principle",
+          codexTitle: "Codex interprets.",
+          codexText: "It reads the sources, proposes the case model, and makes each judgment basis explicit.",
+          professionalTitle: "The professional confirms.",
+          professionalText: "They correct the procedure, perimeters, treatment, evidence, and issues.",
+          codeTitle: "The code calculates.",
+          codeText: "Totals, recoveries, sources and uses, cash bridges, and differences remain exact and reproducible."
         },
-        what: {
-          eyebrow: "What it does",
-          title: "From scattered files to a reviewable Excel file",
-          copy: "Use it to compare a concordato plan with accounting support in one documented bridge from plan values to evidence."
+        method: {
+          eyebrow: "Method",
+          title: "Meaning comes before the tie-out.",
+          intro: "Here, “Concordato” has its Italian professional meaning. The workflow is not built around one company name, one particular file, or one reconciliation.",
+          captureTitle: "Capture",
+          captureText: "Inventory sources and locators without assigning roles from filenames.",
+          modelTitle: "Model",
+          modelText: "Structure the procedure, documents, creditors, treatment, liquidity, and issues.",
+          confirmTitle: "Confirm",
+          confirmText: "The professional corrects and confirms the model bound to the current sources.",
+          calculateTitle: "Calculate",
+          calculateText: "Produce exact schedules and a review queue centered on professional issues."
         },
-        inputs: {
-          eyebrow: "Inputs",
-          title: "What it reads",
-          copy: "Works with files already available in the firm's Codex workspace. Non-text PDFs and broken formulas are flagged for review rather than forced into a false match.",
-          cards: [
-            ["Concordato plan", "Descriptive and numerical plan sections, PDF or Excel."],
-            ["Balance and ledgers", "Account balances and schedules used as the first tie-out source."],
-            ["Adjusted schedules", "Adjusted balances, continuity or liquidation scenarios and support sheets."],
-            ["Tax and social debt detail", "Tax, social security and other schedules to tie back to the plan."]
-          ]
+        boundary: {
+          eyebrow: "Responsibility",
+          title: "Judgment and mechanics remain distinct.",
+          intro: "Reproducibility helps only where correctness is mechanically verifiable. Law, treatment, and feasibility still require professional judgment.",
+          judgmentTitle: "Judgment",
+          judgment1: "Legal framework and authoritative document versions",
+          judgment2: "Creditor perimeter, priority, classes, voting, and treatment",
+          judgment3: "Sufficiency and relevance of evidence",
+          judgment4: "Liquidation alternative, feasibility, and sustainability",
+          judgment5: "Legal, tax, social-security, and accounting conclusions",
+          mechanicsTitle: "Mechanics",
+          mechanics1: "Hashes, receipts, schemas, and source references",
+          mechanics2: "Creditor and class totals",
+          mechanics3: "Plan recoveries and plan-versus-liquidation differences",
+          mechanics4: "Sources and uses, funding gap, and cash bridge",
+          mechanics5: "Reproducible CSV, workbooks, Word files, and replay"
         },
         outputs: {
-          eyebrow: "Outputs",
-          title: "What it produces",
-          copy: "The work folder separates source inventory, extracted amounts, candidate matches, Excel review file and Word summary. The Word document states what ties, what does not tie and what still needs explanation.",
-          items: [
-            ["inventory.json", "Source inventory, suggested roles and read limitations."],
-            ["amount_candidates.csv", "Amounts extracted from PDF, Excel and CSV with origin context."],
-            ["exact_amount_matches.csv", "Amount matches between plan and supporting sources, to validate in context."],
-            ["concordato_tie_out_workpaper.xlsx", "Reviewable Excel file with candidate differences and source sheets."],
-            ["concordato_review_summary.docx", "Word summary with ties, does not tie and needs explanation sections."],
-            ["run_audit.json", "Parameters, counts and boundary between extracted data and final summary."],
-            ["codex_run_review.md", "Final memo on differences, critical issues and next clarifications."]
-          ]
+          eyebrow: "Primary outputs",
+          title: "The case stays inspectable, from model to report.",
+          intro: "Outputs show reviewed data, provenance, judgment bases, mechanical checks, and gaps. An arithmetic green light never replaces a professional conclusion.",
+          caseModel: "Source-bound procedure, documents, creditors, assumptions, and issues.",
+          creditorTreatment: "Priority, classes, recoveries, timing, voting, and evidence by creditor.",
+          classSummary: "Exact class aggregation and comparison with liquidation.",
+          sourcesUses: "Sources, uses, surplus or shortfall, and funding need.",
+          liquidity: "Period cash bridge with mechanical differences visible.",
+          workpaper: "Primary workbook for procedure, documents, creditors, classes, liquidity, questions, and issues.",
+          markdown: "Readable review with model status, assumptions, and limitations.",
+          word: "Professional Word summary with evidence and open points.",
+          appendixTitle: "Optional numerical appendix.",
+          appendixText: "`concordato_tie_out_workpaper.xlsx` retains row-level checks when useful. An equal amount remains candidate evidence; it does not prove that two statements have the same meaning."
         },
-        review: {
-          title: "The bridge shows what ties, what is candidate and what is missing",
-          copy1: "The Excel file collects amounts, pages, sheets, formulas and amount matches. The summary explains whether a plan line is supported, only a candidate match or unexplained.",
-          copy2: "The result gives the reviewer differences, omissions, weak sources and clarifications before a position is taken on the concordato plan."
+        start: {
+          eyebrow: "Start",
+          title: "One case folder and one reference date.",
+          intro: "No special filenames are required. Vera inspects first, proposes the model, and requests confirmation only for material judgments.",
+          promptLabel: "Example prompt",
+          prompt: "Use Concordato Preventivo on /path/to/case-folder.\nReconstruct the procedure, authoritative documents, creditors and treatment,\nliquidation alternative, sources and uses, liquidity, and open issues.\nKeep numerical tie-out as an appendix when it is useful.",
+          limitationsTitle: "Professional and validation limits",
+          limit1: "It does not issue a legal opinion or attest the plan.",
+          limit2: "It does not cryptographically authenticate the reviewer.",
+          limit3: "It does not turn missing evidence into a positive conclusion.",
+          limit4: "Synthetic tests prove the contract, not generality on real cases.",
+          limit5: "Field validation requires a previously unseen case and qualified independent review."
         },
-        use: {
-          eyebrow: "Use",
-          title: "How to set up the review",
-          copy: "Open the client folder and confirm only the material choices: perimeter, reference date, tolerance and final document language.",
-          steps: [
-            ["Setup", "Material check", "Verify dependencies, readable files and available sources."],
-            ["Choices", "Material choices", "If the file set is ambiguous, confirm only perimeter, date, tolerance or plan source."],
-            ["Analysis", "Numerical bridge", "Extract amounts, sheets, pages and candidate matches."],
-            ["Review", "Reviewer summary", "Prepare the memo on differences and critical issues for the reviewer."]
-          ]
-        },
-        prompts: {
-          eyebrow: "Prompts",
-          title: "Ready prompts",
-          copy: "Start from these prompts and replace the folder path. Codex will ask before assuming material choices not resolved by the files.",
-          items: [
-            ["Complete review", "Use Concordato Plan Review on /path/folder. Compare plan, balance, ledgers, adjusted schedules and tax/social debt detail. Produce Excel, Word and differences memo."],
-            ["Numerical tie-out only", "Check whether plan numbers tie to balance and ledgers. For what does not tie, look for support in the adjusted schedules and debt detail. List concrete examples."],
-            ["Reviewer position", "After tie-out, highlight going-concern, balance-sheet effects, unsupported data, omissions and requests to send to the client."]
-          ]
-        },
-        download: {
-          eyebrow: "Download",
-          button: "Back to Vera",
-          firstUseTitle: "First use",
-          firstUseCopy: "In a Codex chat, provide the file folder, reference date, language and amount tolerance.",
-          prompt: "Use Concordato Plan Review on /path/folder.\nReference date: 2026-03-31. Document language: en.\nCompare plan, balance, ledgers, adjusted schedules and tax/social debt detail.\nProduce Excel review file, Word summary and review of differences."
+        cta: {
+          label: "Back to Vera",
+          title: "Concordato Preventivo is part of the work, not an isolated case.",
+          text: "Vera brings together specialist workflows for assurance, reconciliation, and professional practice work.",
+          button: "Back to Vera"
         }
       },
       fr: {
-        nav: { what: "Objet", inputs: "Entrées", outputs: "Sorties", use: "Utilisation", prompts: "Prompts", download: "Vera" },
+        meta: {
+          description: "Vera organise la revue d’un concordato preventivo italien : procédure, documents, créanciers, traitement, alternative liquidative, sources et emplois, liquidité et questions ouvertes."
+        },
+        language: { label: "Langue" },
+        nav: {
+          label: "Sections de la page",
+          method: "Méthode",
+          boundary: "Responsabilité",
+          outputs: "Livrables",
+          start: "Démarrer"
+        },
+        breadcrumb: {
+          label: "Fil d’Ariane",
+          package: "Pack Italie",
+          product: "Concordato preventivo"
+        },
         hero: {
-          eyebrow: "Pack Italie · Revue du concordat",
-          title: "Contrôler les chiffres du plan avant la position du réviseur.",
-          subtitle: "Dans le cadre italien du concordat, reliez les valeurs du plan au bilan, aux grands livres, aux tableaux ajustés et au détail fiscal/social.",
-          copy: "Donnez le plan, le bilan, les grands livres et les tableaux de support. Obtenez ce qui concorde, ce qui reste candidat et les chiffres qui doivent encore être expliqués.",
-          primary: "Retour à Vera",
-          secondary: "Comment l'utiliser",
-          cardLabel: "Ce que vous donnez / obtenez",
-          bullets: [
-            "Donnez le plan, bilan, grands livres, tableaux ajustés et détail fiscal/social.",
-            "Confirmez date, périmètre, tolérance et langue du document.",
-            "Obtenez un tableau Excel, une synthèse Word et un mémo des écarts."
-          ]
+          eyebrow: "Vera · Concordato preventivo",
+          title: "Examinez le dossier, pas seulement les chiffres du plan.",
+          lead: "Procédure, proposition, plan, attestation, créanciers, traitement, alternative liquidative et faisabilité dans un dossier de travail révisable.",
+          noteLabel: "Principe du workflow",
+          codexTitle: "Codex interprète.",
+          codexText: "Il lit les sources, propose le modèle du dossier et explicite chaque fondement de jugement.",
+          professionalTitle: "Le professionnel confirme.",
+          professionalText: "Il corrige la procédure, les périmètres, le traitement, les preuves et les questions.",
+          codeTitle: "Le code calcule.",
+          codeText: "Les totaux, recouvrements, sources et emplois, ponts de trésorerie et écarts restent exacts et reproductibles."
         },
-        what: {
-          eyebrow: "Objet",
-          title: "Des pièces dispersées à un dossier de revue",
-          copy: "À utiliser pour comparer un plan de concordat aux éléments comptables dans un pont documenté entre chiffres et preuves."
+        method: {
+          eyebrow: "Méthode",
+          title: "Le sens précède le rapprochement.",
+          intro: "Ici, « concordato » conserve son sens professionnel italien. Le workflow ne dépend ni du nom d’une société, ni d’un fichier particulier, ni d’un rapprochement unique.",
+          captureTitle: "Capturer",
+          captureText: "Inventorier les sources et leurs localisateurs sans attribuer de rôles à partir des noms de fichiers.",
+          modelTitle: "Modéliser",
+          modelText: "Structurer la procédure, les documents, les créanciers, le traitement, la liquidité et les questions.",
+          confirmTitle: "Confirmer",
+          confirmText: "Le professionnel corrige et confirme le modèle lié aux sources courantes.",
+          calculateTitle: "Calculer",
+          calculateText: "Produire des tableaux exacts et une file de revue centrée sur les questions professionnelles."
         },
-        inputs: {
-          eyebrow: "Entrées",
-          title: "Ce qu'il lit",
-          copy: "Le contrôle travaille sur les fichiers déjà disponibles dans l'espace de travail Codex du cabinet. Les PDF non textuels et les formules cassées sont signalés pour revue.",
-          cards: [
-            ["Plan de concordat", "Parties descriptives et chiffrées du plan, PDF ou Excel."],
-            ["Bilan et grands livres", "Soldes et fiches utilisés comme première source de rapprochement."],
-            ["Tableaux ajustés", "Soldes ajustés, scénarios de continuité ou liquidation et feuilles de support."],
-            ["Détail fiscal et social", "Détails fiscaux, sociaux et autres tableaux à rapprocher du plan."]
-          ]
+        boundary: {
+          eyebrow: "Responsabilité",
+          title: "Le jugement et la mécanique restent distincts.",
+          intro: "La reproductibilité n’aide que lorsque l’exactitude est vérifiable mécaniquement. Le droit, le traitement et la faisabilité exigent toujours un jugement professionnel.",
+          judgmentTitle: "Jugement",
+          judgment1: "Cadre juridique et versions faisant autorité des documents",
+          judgment2: "Périmètre, rang, classes, vote et traitement des créanciers",
+          judgment3: "Suffisance et pertinence des preuves",
+          judgment4: "Alternative liquidative, faisabilité et soutenabilité",
+          judgment5: "Conclusions juridiques, fiscales, sociales et comptables",
+          mechanicsTitle: "Mécanique",
+          mechanics1: "Empreintes, reçus, schémas et références aux sources",
+          mechanics2: "Totaux par créancier et par classe",
+          mechanics3: "Recouvrements et écarts plan-liquidation",
+          mechanics4: "Sources et emplois, besoin de financement et pont de trésorerie",
+          mechanics5: "CSV, classeurs, documents Word et replay reproductibles"
         },
         outputs: {
-          eyebrow: "Sorties",
-          title: "Ce qu'il produit",
-          copy: "Le dossier de travail sépare inventaire des sources, montants extraits, correspondances candidates, tableau Excel et synthèse Word. Le Word indique ce qui concorde, ce qui ne concorde pas et ce qui reste à expliquer.",
-          items: [
-            ["inventory.json", "Inventaire des sources, rôles suggérés et limites de lecture."],
-            ["amount_candidates.csv", "Montants extraits des PDF, Excel et CSV avec contexte d'origine."],
-            ["exact_amount_matches.csv", "Correspondances par montant entre le plan et les sources de support."],
-            ["concordato_tie_out_workpaper.xlsx", "Tableau Excel révisable avec écarts candidats et feuilles source."],
-            ["concordato_review_summary.docx", "Synthèse Word avec sections concorde, ne concorde pas et à expliquer."],
-            ["run_audit.json", "Paramètres, décomptes et frontière entre données extraites et synthèse finale."],
-            ["codex_run_review.md", "Mémo final sur écarts, points critiques et prochaines clarifications."]
-          ]
+          eyebrow: "Livrables principaux",
+          title: "Le dossier reste vérifiable, du modèle au rapport.",
+          intro: "Les livrables montrent les données revues, leur provenance, les fondements de jugement, les contrôles mécaniques et les lacunes. Un voyant vert arithmétique ne remplace jamais une conclusion professionnelle.",
+          caseModel: "Procédure, documents, créanciers, hypothèses et questions liés aux sources.",
+          creditorTreatment: "Rang, classes, recouvrements, calendrier, vote et preuves par créancier.",
+          classSummary: "Agrégations exactes par classe et comparaison avec la liquidation.",
+          sourcesUses: "Sources, emplois, excédent ou déficit et besoin de financement.",
+          liquidity: "Pont de trésorerie par période avec écarts mécaniques visibles.",
+          workpaper: "Classeur principal : procédure, documents, créanciers, classes, liquidité, questions et points ouverts.",
+          markdown: "Revue lisible avec statut du modèle, hypothèses et limites.",
+          word: "Synthèse Word professionnelle avec preuves et points ouverts.",
+          appendixTitle: "Annexe numérique facultative.",
+          appendixText: "`concordato_tie_out_workpaper.xlsx` conserve les contrôles ligne par ligne lorsqu’ils sont utiles. Un montant identique reste une preuve candidate ; il ne démontre pas que deux affirmations ont le même sens."
         },
-        review: {
-          title: "Le rapprochement montre ce qui concorde, ce qui est candidat et ce qui manque",
-          copy1: "Le tableau collecte montants, pages, feuilles, formules et correspondances par montant. La synthèse explique si une ligne du plan est supportée, seulement candidate ou non expliquée.",
-          copy2: "Le résultat présente au réviseur les écarts, omissions, sources faibles et clarifications avant de prendre position sur le plan."
+        start: {
+          eyebrow: "Démarrer",
+          title: "Un dossier et une date de référence.",
+          intro: "Aucun nom de fichier spécial n’est requis. Vera inspecte d’abord, propose le modèle et ne demande confirmation que pour les jugements significatifs.",
+          promptLabel: "Exemple de prompt",
+          prompt: "Utilise Concordato Preventivo sur /chemin/vers/dossier.\nReconstitue la procédure, les documents faisant autorité, les créanciers et leur traitement,\nl’alternative liquidative, les sources et emplois, la liquidité et les questions ouvertes.\nGarde le rapprochement numérique en annexe lorsqu’il est utile.",
+          limitationsTitle: "Limites professionnelles et de validation",
+          limit1: "Il n’émet pas d’avis juridique et n’atteste pas le plan.",
+          limit2: "Il n’authentifie pas cryptographiquement l’identité du réviseur.",
+          limit3: "Il ne transforme pas une preuve manquante en conclusion positive.",
+          limit4: "Les tests synthétiques prouvent le contrat, pas sa généralité sur des cas réels.",
+          limit5: "La validation terrain exige un dossier inédit et une revue indépendante qualifiée."
         },
-        use: {
-          eyebrow: "Usage",
-          title: "Comment préparer le contrôle",
-          copy: "Ouvrez le dossier client et confirmez seulement les choix matériels : périmètre, date de référence, tolérance et langue du document final.",
-          steps: [
-            ["Setup", "Contrôle des matériaux", "Vérifiez dépendances, lisibilité des fichiers et sources disponibles."],
-            ["Choix", "Choix matériels", "Si le dossier est ambigu, confirmez uniquement périmètre, date, tolérance ou source du plan."],
-            ["Analyse", "Pont numérique", "Extrayez montants, feuilles, pages et correspondances candidates."],
-            ["Revue", "Synthèse pour réviseur", "Préparez le mémo des écarts et des points critiques pour le réviseur."]
-          ]
-        },
-        prompts: {
-          eyebrow: "Prompts",
-          title: "Prompts prêts",
-          copy: "Partez de ces prompts et remplacez le chemin du dossier. Codex demandera avant de retenir des choix matériels non résolus par les fichiers.",
-          items: [
-            ["Revue complète", "Utilise Révision du plan de concordat sur /chemin/dossier. Compare plan, bilan, grands livres, tableaux ajustés et détail fiscal/social. Produis Excel, Word et mémo des écarts."],
-            ["Rapprochement chiffré seul", "Vérifie si les chiffres du plan concordent avec bilan et grands livres. Pour les écarts, cherche le support dans les tableaux ajustés et le détail des dettes."],
-            ["Position du réviseur", "Après le rapprochement, souligne continuité d'exploitation, effets bilan, données non supportées, omissions et demandes à envoyer au client."]
-          ]
-        },
-        download: {
-          eyebrow: "Download",
-          button: "Retour à Vera",
-          firstUseTitle: "Premier usage",
-          firstUseCopy: "Dans une conversation Codex, indiquez le dossier, la date de référence, la langue et la tolérance des montants.",
-          prompt: "Utilise Révision du plan de concordat sur /chemin/dossier.\nDate de référence : 2026-03-31. Langue du document : fr.\nCompare plan, bilan, grands livres, tableaux ajustés et détail fiscal/social.\nProduis tableau Excel, synthèse Word et revue des écarts."
-        }
-      },
-      es: {
-        nav: { what: "Qué hace", inputs: "Entradas", outputs: "Salidas", use: "Uso", prompts: "Prompts", download: "Instalación" },
-        hero: {
-          eyebrow: "Paquete Italia · Revisión del plan de concordato",
-          title: "Compruebe las cifras del plan antes de que el revisor adopte una posición.",
-          subtitle: "En el procedimiento italiano de concordato, vincule los valores del plan con el balance, los mayores, los cuadros ajustados y el detalle de las deudas fiscales y de seguridad social.",
-          copy: "Proporcione el plan, el balance, los mayores y los cuadros de respaldo. Reciba lo que cuadra, lo que solo es candidato y las cifras que aún requieren explicación.",
-          primary: "Volver a Vera",
-          secondary: "Cómo utilizarlo",
-          cardLabel: "Lo que proporciona / lo que recibe",
-          bullets: [
-            "Proporcione el plan, el balance, los mayores y los cuadros de respaldo.",
-            "Confirme fecha, alcance, tolerancia e idioma del documento.",
-            "Reciba un archivo Excel de revisión, un resumen Word y un informe de diferencias."
-          ]
-        },
-        what: {
-          eyebrow: "Qué hace",
-          title: "De archivos dispersos a un Excel revisable",
-          copy: "Úselo para comparar un plan de concordato con el respaldo contable mediante un puente documentado entre las cifras del plan y las evidencias."
-        },
-        inputs: {
-          eyebrow: "Entradas",
-          title: "Qué lee",
-          copy: "Trabaja con los archivos ya disponibles en el espacio de trabajo Codex del despacho. Los PDF sin texto y las fórmulas rotas se señalan para revisión en lugar de forzar una coincidencia falsa.",
-          cards: [
-            ["Plan de concordato", "Secciones descriptivas y numéricas del plan, en PDF o Excel."],
-            ["Balance y mayores", "Saldos contables y cuadros utilizados como primera fuente de cuadre."],
-            ["Cuadros ajustados", "Saldos ajustados, escenarios de continuidad o liquidación y hojas de respaldo."],
-            ["Detalle fiscal y social", "Cuadros fiscales, de seguridad social y otros que deben cuadrarse con el plan."]
-          ]
-        },
-        outputs: {
-          eyebrow: "Salidas",
-          title: "Qué genera",
-          copy: "La carpeta de trabajo separa el inventario de fuentes, los importes extraídos, las coincidencias candidatas, el archivo Excel de revisión y el resumen Word. El documento Word indica qué cuadra, qué no cuadra y qué falta por explicar.",
-          items: [
-            ["inventory.json", "Inventario de fuentes, funciones sugeridas y limitaciones de lectura."],
-            ["amount_candidates.csv", "Importes extraídos de PDF, Excel y CSV con su contexto de origen."],
-            ["exact_amount_matches.csv", "Coincidencias por importe entre el plan y las fuentes de respaldo, que deben validarse en contexto."],
-            ["concordato_tie_out_workpaper.xlsx", "Archivo Excel revisable con diferencias candidatas y hojas fuente."],
-            ["concordato_review_summary.docx", "Resumen Word con secciones de cuadra, no cuadra y requiere explicación."],
-            ["run_audit.json", "Parámetros, recuentos y límite entre los datos extraídos y el resumen final."],
-            ["codex_run_review.md", "Informe final sobre diferencias, cuestiones críticas y próximas aclaraciones."]
-          ]
-        },
-        review: {
-          title: "El puente muestra qué cuadra, qué es candidato y qué falta",
-          copy1: "El archivo Excel reúne importes, páginas, hojas, fórmulas y coincidencias por importe. El resumen explica si una línea del plan está respaldada, es solo candidata o sigue sin explicación.",
-          copy2: "El resultado presenta al revisor diferencias, omisiones, fuentes débiles y aclaraciones antes de adoptar una posición sobre el plan de concordato."
-        },
-        use: {
-          eyebrow: "Uso",
-          title: "Cómo configurar la revisión",
-          copy: "Abra la carpeta del cliente y confirme solo las decisiones materiales: alcance, fecha de referencia, tolerancia e idioma del documento final.",
-          steps: [
-            ["Preparación", "Comprobación del material", "Verifique dependencias, archivos legibles y fuentes disponibles."],
-            ["Decisiones", "Decisiones materiales", "Si el conjunto de archivos es ambiguo, confirme únicamente alcance, fecha, tolerancia o fuente del plan."],
-            ["Análisis", "Puente numérico", "Extraiga importes, hojas, páginas y coincidencias candidatas."],
-            ["Revisión", "Resumen para el revisor", "Prepare el informe de diferencias y cuestiones críticas para el revisor."]
-          ]
-        },
-        prompts: {
-          eyebrow: "Prompts",
-          title: "Prompts listos",
-          copy: "Empiece con estos prompts y sustituya la ruta de la carpeta. Codex preguntará antes de asumir decisiones materiales que los archivos no resuelvan.",
-          items: [
-            ["Revisión completa", "Usa Revisión del plan de concordato en /ruta/carpeta. Compara el plan, el balance, los mayores, los cuadros ajustados y el detalle fiscal y social. Genera Excel, Word e informe de diferencias."],
-            ["Solo cuadre numérico", "Comprueba si las cifras del plan cuadran con el balance y los mayores. Para las que no cuadren, busca respaldo en los cuadros ajustados y el detalle de deudas. Enumera ejemplos concretos."],
-            ["Posición del revisor", "Después del cuadre, destaca continuidad, efectos en el balance, datos sin respaldo, omisiones y solicitudes que enviar al cliente."]
-          ]
-        },
-        download: {
-          eyebrow: "Instalación",
-          button: "Volver a Vera",
-          firstUseTitle: "Primer uso",
-          firstUseCopy: "En un chat de Codex, indique la carpeta del expediente, la fecha de referencia, el idioma y la tolerancia de importes.",
-          prompt: "Usa Revisión del plan de concordato en /ruta/carpeta.\nFecha de referencia: 2026-03-31. Idioma del documento: es.\nCompara el plan, el balance, los mayores, los cuadros ajustados y el detalle fiscal y social.\nGenera un archivo Excel de revisión, un resumen Word y una revisión de diferencias."
+        cta: {
+          label: "Retour à Vera",
+          title: "Le concordato preventivo fait partie du travail, ce n’est pas un cas isolé.",
+          text: "Vera réunit des workflows spécialisés pour l’audit, le rapprochement et le travail professionnel du cabinet.",
+          button: "Retour à Vera"
         }
       },
       de: {
-        nav: { what: "Leistung", inputs: "Eingaben", outputs: "Ergebnisse", use: "Nutzung", prompts: "Prompts", download: "Vera" },
+        meta: {
+          description: "Vera strukturiert die Prüfung eines italienischen Concordato Preventivo: Verfahren, Dokumente, Gläubiger, Behandlung, Liquidationsalternative, Mittelherkunft und -verwendung, Liquidität und offene Punkte."
+        },
+        language: { label: "Sprache" },
+        nav: {
+          label: "Seitenabschnitte",
+          method: "Methode",
+          boundary: "Verantwortung",
+          outputs: "Ergebnisse",
+          start: "Start"
+        },
+        breadcrumb: {
+          label: "Seitennavigation",
+          package: "Italien-Paket",
+          product: "Concordato Preventivo"
+        },
         hero: {
-          eyebrow: "Italien-Paket · Concordato-Planprüfung",
-          title: "Planzahlen prüfen, bevor der Prüfer Stellung nimmt.",
-          subtitle: "Im italienischen Concordato-Verfahren Planzahlen mit Bilanz, Hauptbüchern, angepassten Aufstellungen und Steuer-/Sozialschuldendetails verknüpfen.",
-          copy: "Geben Sie Plan, Bilanz, Hauptbücher und unterstützende Aufstellungen an. Sie erhalten Treffer, Kandidaten und Zahlen, die noch erklärt werden müssen.",
-          primary: "Zurück zu Vera",
-          secondary: "So wird es genutzt",
-          cardLabel: "Eingabe / Ergebnis",
-          bullets: [
-            "Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetails bereitstellen.",
-            "Stichtag, Umfang, Toleranz und Dokumentsprache bestätigen.",
-            "Excel-Workpaper, Word-Zusammenfassung und Differenzenmemo erhalten."
-          ]
+          eyebrow: "Vera · Concordato Preventivo",
+          title: "Prüfen Sie den Fall, nicht nur die Planzahlen.",
+          lead: "Verfahren, Vorschlag, Plan, Attestierung, Gläubiger, Behandlung, Liquidationsalternative und Durchführbarkeit in einer prüfbaren Arbeitsakte.",
+          noteLabel: "Workflow-Prinzip",
+          codexTitle: "Codex interpretiert.",
+          codexText: "Es liest die Quellen, schlägt das Fallmodell vor und macht jede Beurteilungsgrundlage sichtbar.",
+          professionalTitle: "Der Berufsträger bestätigt.",
+          professionalText: "Er korrigiert Verfahren, Abgrenzungen, Behandlung, Nachweise und offene Punkte.",
+          codeTitle: "Der Code berechnet.",
+          codeText: "Summen, Rückflüsse, Mittelherkunft und -verwendung, Liquiditätsbrücken und Differenzen bleiben exakt und reproduzierbar."
         },
-        what: {
-          eyebrow: "Leistung",
-          title: "Von verstreuten Unterlagen zum Prüfer-Workpaper",
-          copy: "Einsetzen, um einen Concordato-Plan in einer dokumentierten Brücke mit Buchhaltungsnachweisen zu vergleichen."
+        method: {
+          eyebrow: "Methode",
+          title: "Die Bedeutung kommt vor dem Zahlenabgleich.",
+          intro: "„Concordato“ hat hier seine italienische fachliche Bedeutung. Der Workflow ist weder auf einen Firmennamen noch auf eine bestimmte Datei oder einen einzelnen Abgleich zugeschnitten.",
+          captureTitle: "Erfassen",
+          captureText: "Quellen und Fundstellen inventarisieren, ohne Rollen aus Dateinamen abzuleiten.",
+          modelTitle: "Modellieren",
+          modelText: "Verfahren, Dokumente, Gläubiger, Behandlung, Liquidität und offene Punkte strukturieren.",
+          confirmTitle: "Bestätigen",
+          confirmText: "Der Berufsträger korrigiert und bestätigt das an die aktuellen Quellen gebundene Modell.",
+          calculateTitle: "Berechnen",
+          calculateText: "Exakte Tabellen und eine auf fachliche Fragen ausgerichtete Prüfliste erstellen."
         },
-        inputs: {
-          eyebrow: "Inputs",
-          title: "Was gelesen wird",
-          copy: "Die Prüfung arbeitet mit Dateien, die bereits im Codex-Workspace der Kanzlei verfügbar sind. Nicht-textuelle PDFs und fehlerhafte Formeln werden markiert, nicht künstlich normalisiert.",
-          cards: [
-            ["Concordato-Plan", "Beschreibende und numerische Planabschnitte, PDF oder Excel."],
-            ["Bilanz und Hauptbücher", "Salden und Karten als erste Tie-out-Quelle."],
-            ["Angepasste Aufstellungen", "Angepasste Salden, Fortführungs- oder Liquidationsszenarien und unterstützende Blätter."],
-            ["Steuer- und Sozialschuldendetail", "Steuer-, Sozial- und weitere Aufstellungen zum Abgleich mit dem Plan."]
-          ]
+        boundary: {
+          eyebrow: "Verantwortung",
+          title: "Beurteilung und Mechanik bleiben getrennt.",
+          intro: "Reproduzierbarkeit hilft nur dort, wo Richtigkeit mechanisch überprüfbar ist. Recht, Behandlung und Durchführbarkeit erfordern weiterhin fachliches Urteil.",
+          judgmentTitle: "Beurteilung",
+          judgment1: "Rechtsrahmen und maßgebliche Dokumentfassungen",
+          judgment2: "Gläubigerabgrenzung, Rang, Klassen, Abstimmung und Behandlung",
+          judgment3: "Ausreichendheit und Relevanz der Nachweise",
+          judgment4: "Liquidationsalternative, Durchführbarkeit und Tragfähigkeit",
+          judgment5: "Rechtliche, steuerliche, sozialversicherungsrechtliche und buchhalterische Schlussfolgerungen",
+          mechanicsTitle: "Mechanik",
+          mechanics1: "Hashes, Belege, Schemata und Quellenverweise",
+          mechanics2: "Summen je Gläubiger und Klasse",
+          mechanics3: "Rückflüsse und Plan-Liquidations-Differenzen",
+          mechanics4: "Mittelherkunft und -verwendung, Finanzierungslücke und Liquiditätsbrücke",
+          mechanics5: "Reproduzierbare CSV-, Arbeitsmappen-, Word- und Replay-Ergebnisse"
         },
         outputs: {
-          eyebrow: "Ergebnisse",
-          title: "Was erzeugt wird",
-          copy: "Der Arbeitsordner trennt Quelleninventar, extrahierte Beträge, mögliche Treffer, Excel-Arbeitsmappe und Word-Zusammenfassung. Das Word-Dokument zeigt, was belegt ist, was abweicht und was noch erklärt werden muss.",
-          items: [
-            ["inventory.json", "Quelleninventar, vorgeschlagene Rollen und Lesebeschränkungen."],
-            ["amount_candidates.csv", "Aus PDF, Excel und CSV extrahierte Beträge mit Herkunftskontext."],
-            ["exact_amount_matches.csv", "Betragsabgleiche zwischen Plan und Belegquellen, im Kontext zu validieren."],
-            ["concordato_tie_out_workpaper.xlsx", "Prüfbare Excel-Arbeitsmappe mit Kandidatendifferenzen und Quellblättern."],
-            ["concordato_review_summary.docx", "Word-Zusammenfassung mit belegten, abweichenden und noch zu erklärenden Beträgen."],
-            ["run_audit.json", "Parameter, Zählungen und Grenze zwischen extrahierten Daten und finaler Zusammenfassung."],
-            ["codex_run_review.md", "Finales Memo zu Differenzen, kritischen Punkten und Klärungen."]
-          ]
+          eyebrow: "Hauptergebnisse",
+          title: "Der Fall bleibt vom Modell bis zum Bericht prüfbar.",
+          intro: "Die Ergebnisse zeigen geprüfte Daten, Herkunft, Beurteilungsgrundlagen, mechanische Kontrollen und Lücken. Ein rechnerisches Grün ersetzt keine fachliche Schlussfolgerung.",
+          caseModel: "Quellengebundenes Verfahren, Dokumente, Gläubiger, Annahmen und offene Punkte.",
+          creditorTreatment: "Rang, Klassen, Rückflüsse, Zeitplan, Abstimmung und Nachweise je Gläubiger.",
+          classSummary: "Exakte Klassenaggregation und Vergleich mit der Liquidation.",
+          sourcesUses: "Mittelherkunft, Mittelverwendung, Überschuss oder Fehlbetrag und Finanzierungsbedarf.",
+          liquidity: "Periodische Liquiditätsbrücke mit sichtbaren mechanischen Differenzen.",
+          workpaper: "Hauptarbeitsmappe für Verfahren, Dokumente, Gläubiger, Klassen, Liquidität, Fragen und offene Punkte.",
+          markdown: "Lesbare Prüfung mit Modellstatus, Annahmen und Grenzen.",
+          word: "Fachliche Word-Zusammenfassung mit Nachweisen und offenen Punkten.",
+          appendixTitle: "Optionaler Zahlenanhang.",
+          appendixText: "`concordato_tie_out_workpaper.xlsx` bewahrt bei Bedarf zeilenbezogene Kontrollen. Ein gleicher Betrag bleibt ein möglicher Nachweis; er beweist nicht, dass zwei Aussagen dieselbe Bedeutung haben."
         },
-        review: {
-          title: "Der Abgleich zeigt Treffer, Kandidaten und fehlende Erklärungen",
-          copy1: "Die Arbeitsmappe sammelt Beträge, Seiten, Blätter, Formeln und Betragsmatches. Die Zusammenfassung erklärt, ob eine Planzeile gestützt, nur ein Kandidat oder ungeklärt ist.",
-          copy2: "Das Ergebnis legt dem Prüfer Differenzen, Auslassungen, schwache Quellen und offene Klärungen vor, bevor eine Position zum Plan eingenommen wird."
+        start: {
+          eyebrow: "Start",
+          title: "Eine Fallakte und ein Stichtag.",
+          intro: "Besondere Dateinamen sind nicht erforderlich. Vera prüft zuerst, schlägt das Modell vor und verlangt nur für wesentliche Beurteilungen eine Bestätigung.",
+          promptLabel: "Beispiel-Prompt",
+          prompt: "Verwende Concordato Preventivo für /pfad/zur/fallakte.\nRekonstruiere Verfahren, maßgebliche Dokumente, Gläubiger und Behandlung,\nLiquidationsalternative, Mittelherkunft und -verwendung, Liquidität und offene Punkte.\nBehalte den Zahlenabgleich als Anhang, wenn er nützlich ist.",
+          limitationsTitle: "Fachliche und Validierungsgrenzen",
+          limit1: "Es gibt kein Rechtsgutachten ab und attestiert den Plan nicht.",
+          limit2: "Es authentifiziert die Identität des Prüfers nicht kryptografisch.",
+          limit3: "Es macht aus fehlenden Nachweisen keine positive Schlussfolgerung.",
+          limit4: "Synthetische Tests belegen den Vertrag, nicht die Allgemeingültigkeit für reale Fälle.",
+          limit5: "Die Feldvalidierung erfordert einen bisher ungesehenen Fall und eine qualifizierte unabhängige Prüfung."
         },
-        use: {
-          eyebrow: "Nutzung",
-          title: "Prüfung einrichten",
-          copy: "Öffnen Sie den Mandantenordner und bestätigen Sie nur die wesentlichen Entscheidungen: Umfang, Stichtag, Toleranz und Sprache des Schlussdokuments.",
-          steps: [
-            ["Setup", "Materialprüfung", "Abhängigkeiten, lesbare Dateien und verfügbare Quellen prüfen."],
-            ["Entscheidungen", "Wesentliche Annahmen", "Bei unklarem Dossier nur Umfang, Datum, Toleranz oder Planquelle bestätigen."],
-            ["Analyse", "Zahlenbrücke", "Beträge, Blätter, Seiten und Kandidatenmatches extrahieren."],
-            ["Prüfung", "Zusammenfassung für Prüfer", "Memo zu Differenzen und kritischen Punkten für den Prüfer vorbereiten."]
-          ]
-        },
-        prompts: {
-          eyebrow: "Prompts",
-          title: "Prompts zur Nutzung",
-          copy: "Nutzen Sie diese Prompts und ersetzen Sie den Ordnerpfad. Codex fragt nach, bevor es wesentliche Annahmen trifft.",
-          items: [
-            ["Vollständige Prüfung", "Nutze Concordato-Plan prüfen für /pfad/ordner. Vergleiche Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetail. Erzeuge Excel, Word und Differenzenmemo."],
-            ["Nur Zahlenabgleich", "Prüfe, ob die Planzahlen mit Bilanz und Hauptbüchern übereinstimmen. Für Differenzen suche Belege in angepassten Aufstellungen und Schuldendetail. Nenne konkrete Beispiele."],
-            ["Prüferposition", "Nach dem Abgleich hebe Fortführung, Bilanzauswirkungen, nicht belegte Daten, Auslassungen und Kundenanfragen hervor."]
-          ]
-        },
-        download: {
-          eyebrow: "Download",
-          button: "Zurück zu Vera",
-          firstUseTitle: "Erste Nutzung",
-          firstUseCopy: "Geben Sie in einem Codex-Chat Ordner, Stichtag, Sprache und Betragstoleranz an.",
-          prompt: "Nutze Concordato-Plan prüfen für /pfad/ordner.\nStichtag: 2026-03-31. Dokumentsprache: de.\nVergleiche Plan, Bilanz, Hauptbücher, angepasste Aufstellungen und Steuer-/Sozialschuldendetail.\nErzeuge Excel-Workpaper, Word-Zusammenfassung und Prüfung der Differenzen."
+        cta: {
+          label: "Zurück zu Vera",
+          title: "Das Concordato Preventivo ist Teil der Arbeit, kein Einzelfall.",
+          text: "Vera vereint spezialisierte Workflows für Prüfung, Abstimmung und professionelle Kanzleiarbeit.",
+          button: "Zurück zu Vera"
         }
       }
     };
 
-    function renderPairs(containerId, pairs) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      pairs.forEach(([title, body]) => {
-        const item = document.createElement("li");
-        item.innerHTML = `<strong>${title}</strong><span>${body}</span>`;
-        container.appendChild(item);
-      });
-    }
+    const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+    const safeLang = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "it";
+    const t = copy[safeLang];
+    const lookup = (path) => path.split(".").reduce((value, key) => value[key], t);
 
-    function renderCards(cards) {
-      const container = document.getElementById("input-cards");
-      container.innerHTML = "";
-      cards.forEach(([title, body]) => {
-        const card = document.createElement("article");
-        card.className = "card";
-        card.innerHTML = `<h3>${title}</h3><p>${body}</p>`;
-        container.appendChild(card);
-      });
-    }
-
-    function renderSteps(steps) {
-      const container = document.getElementById("usage-grid");
-      container.innerHTML = "";
-      steps.forEach(([number, title, body]) => {
-        const step = document.createElement("article");
-        step.className = "step";
-        step.innerHTML = `<div class="step-label">${number}</div><h3>${title}</h3><p>${body}</p>`;
-        container.appendChild(step);
-      });
-    }
-
-    function renderBullets(items) {
-      const container = document.getElementById("hero-list");
-      container.innerHTML = "";
-      items.forEach((body) => {
-        const item = document.createElement("li");
-        item.textContent = body;
-        container.appendChild(item);
-      });
-    }
-
-    const accessibilityLabels = {
-      it: { sections: "Sezioni della pagina", language: "Lingua", problem: "Problema risolto" },
-      en: { sections: "Page sections", language: "Language", problem: "Problem solved" },
-      fr: { sections: "Sections de la page", language: "Langue", problem: "Problème résolu" },
-      de: { sections: "Seitenabschnitte", language: "Sprache", problem: "Gelöstes Problem" },
-      es: { sections: "Secciones de la página", language: "Idioma", problem: "Problema resuelto" }
-    };
-
-    function setLanguage() {
-      const safeLang = "it";
-      const t = translations[safeLang];
-      document.documentElement.lang = safeLang;
-      document.title = `${t.hero.title} | Vera`;
-      document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.querySelectorAll("[data-accessibility-label]").forEach((node) => {
-        node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
-      });
-      document.querySelectorAll("[data-i18n]").forEach((node) => {
-        const path = node.dataset.i18n.split(".");
-        const value = path.reduce((current, key) => current && current[key], t);
-        if (typeof value === "string") {
-          node.textContent = value;
-        }
-      });
-      renderBullets(t.hero.bullets);
-      renderCards(t.inputs.cards);
-      renderPairs("output-list", t.outputs.items);
-      renderSteps(t.use.steps);
-      renderPairs("prompt-list", t.prompts.items);
-      document.getElementById("prompt-example").textContent = t.download.prompt;
-      document.querySelectorAll(".lang-switch button").forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.lang === safeLang);
-      });
-      const url = new URL(window.location.href);
-      url.searchParams.set("lang", safeLang);
-      window.history.replaceState({}, "", url);
-    }
-
-    document.querySelectorAll(".lang-switch button").forEach((button) => {
-      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    document.documentElement.lang = safeLang;
+    document.title = `${t.hero.title} | Vera`;
+    document.querySelector('meta[name="description"]').content = t.meta.description;
+    document.querySelector('meta[property="og:title"]').content = document.title;
+    document.querySelector('meta[property="og:description"]').content = t.meta.description;
+    document.querySelectorAll("[data-copy]").forEach((element) => {
+      element.textContent = lookup(element.dataset.copy);
     });
-
-    setLanguage();
-  </script>
-  <script>
-    const journeyCopy={
-      it:{metaTitle:"Revisione Piano Concordato — Italia | Vera",metaDescription:"Nel perimetro italiano del concordato, Vera collega i numeri del piano a bilancio, mastrini e prospetti di supporto in una revisione leggibile.",breadcrumbAria:"Percorso pagina",videoId:"ndZQoJjwOpY",text:{"nav.overview":"In breve","nav.workflow":"Percorso","nav.proof":"Guarda","nav.next":"Workflow Italia","nav.prompt":"Prompt","breadcrumb.vera":"Vera","breadcrumb.area":"Pacchetto Italia","breadcrumb.module":"Piano di concordato","overview.eyebrow":"Il lavoro in breve","overview.title":"Dal piano a una revisione che mostra che cosa torna davvero.","overview.copy":"Vera collega ogni numero alle evidenze disponibili e separa i valori riconciliati, i candidati e le differenze ancora da spiegare.","flow.provide.title":"Fornisci","flow.provide.copy":"Piano, bilancio, mastrini e prospetti tributari o previdenziali.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Collegamenti tra importi, fonti e differenze con una traccia leggibile.","flow.receive.title":"Ricevi","flow.receive.copy":"Un tabulato Excel e una sintesi Word che partono dai punti aperti.","workflow.eyebrow":"Percorso","workflow.title":"Quattro passaggi per leggere il piano contro le sue basi.","workflow.copy":"Il lavoro conserva importo, pagina, foglio e collegamento per ogni voce rilevante.","workflow.one.title":"Inventaria il fascicolo","workflow.one.copy":"Ordina piano, bilancio, mastrini e dettagli di supporto.","workflow.two.title":"Estrae gli importi","workflow.two.copy":"Porta valori e localizzatori in una base confrontabile.","workflow.three.title":"Costruisce il ponte","workflow.three.copy":"Collega le voci del piano alle evidenze e separa i candidati.","workflow.four.title":"Prepara la revisione","workflow.four.copy":"Raccoglie differenze, omissioni e domande in una vista pronta da percorrere.","spec.summary":"Specifiche tecniche, input e file prodotti","proof.eyebrow":"Vera al lavoro","proof.title":"Guarda il ponte tra il piano e le evidenze.","proof.copy":"La guida mostra come i valori del piano diventano riconciliati, candidati o ancora da spiegare.","proof.kicker":"Guida breve · Narrazione italiana","proof.videoTitle":"Dal piano a una revisione che mostra che cosa batte davvero","related.eyebrow":"Altri workflow Italia","related.copy":"Vera usa lo stesso filo tra fascicolo, fonti e lavoro rivedibile anche negli altri workflow del pacchetto Italia.","related.inps":"Previdenza INPS →","related.registro":"Registro Imprese e SARI →","prompt.eyebrow":"Per iniziare","prompt.title":"Un prompt, poi la revisione.","prompt.copy":"Indica cartella e data di riferimento. Vera prepara il confronto.","prompt.text":"Usa Revisione Piano Concordato su /percorso/fascicolo. Data di riferimento: 31/03/2026. Collega piano, bilancio, mastrini e prospetti e prepara differenze e punti aperti."}},
-      en:{metaTitle:"Concordato Plan Review — Italy | Vera",metaDescription:"Within Italy’s Concordato procedure, Vera connects plan figures to balances, ledgers and supporting schedules in a readable review.",breadcrumbAria:"Page path",videoId:"LYNGc7XVmsI",text:{"nav.overview":"Overview","nav.workflow":"Workflow","nav.proof":"Watch","nav.next":"Italy workflows","nav.prompt":"Prompt","breadcrumb.vera":"Vera","breadcrumb.area":"Italy pack","breadcrumb.module":"Concordato plan","overview.eyebrow":"The work at a glance","overview.title":"From the plan to a review that shows what actually ties.","overview.copy":"Vera connects each figure to available evidence and separates reconciled values, candidates and differences still to explain.","flow.provide.title":"Provide","flow.provide.copy":"Plan, balances, ledgers and tax or social-security schedules.","flow.prepare.title":"Vera prepares","flow.prepare.copy":"Connections between figures, sources and differences with a readable trail.","flow.receive.title":"Receive","flow.receive.copy":"An Excel workpaper and Word summary that begin with open points.","workflow.eyebrow":"Workflow","workflow.title":"Four steps to read the plan against its foundations.","workflow.copy":"The work preserves amount, page, sheet and connection for each relevant item.","workflow.one.title":"Inventory the file","workflow.one.copy":"Organize plan, balances, ledgers and supporting detail.","workflow.two.title":"Extract figures","workflow.two.copy":"Bring values and locators into a comparable base.","workflow.three.title":"Build the bridge","workflow.three.copy":"Connect plan items to evidence and keep candidates separate.","workflow.four.title":"Prepare review","workflow.four.copy":"Gather differences, omissions and questions in a navigable view.","spec.summary":"Technical specification, inputs and produced files","proof.eyebrow":"Vera at work","proof.title":"Watch the bridge between the plan and its evidence.","proof.copy":"The guide shows how plan values become reconciled, candidate or still unexplained.","proof.kicker":"Short guide · English narration","proof.videoTitle":"From the plan to a review that shows what actually ties","related.eyebrow":"Other Italy workflows","related.copy":"Vera uses the same thread between case file, sources and reviewable work across other workflows in the Italy pack.","related.inps":"INPS Social Security Review →","related.registro":"Business Register and SARI →","prompt.eyebrow":"Get started","prompt.title":"One prompt, then the review.","prompt.copy":"Give the folder and reference date. Vera prepares the comparison.","prompt.text":"Use Concordato Plan Review on /path/case. Reference date: 31/03/2026. Connect the plan, balances, ledgers and schedules and prepare differences and open points."}},
-      fr:{metaTitle:"Revue du plan de concordat — Italie | Vera",metaDescription:"Dans le cadre italien du concordat, Vera relie les chiffres du plan au bilan, aux grands livres et aux tableaux justificatifs dans une revue lisible.",breadcrumbAria:"Parcours de la page",videoId:"Fmoaxshafhg",text:{"nav.overview":"En bref","nav.workflow":"Parcours","nav.proof":"Voir","nav.next":"Workflows Italie","nav.prompt":"Prompt","breadcrumb.vera":"Vera","breadcrumb.area":"Pack Italie","breadcrumb.module":"Plan de concordat","overview.eyebrow":"Le travail en bref","overview.title":"Du plan à une revue qui montre ce qui concorde vraiment.","overview.copy":"Vera relie chaque chiffre aux preuves disponibles et sépare valeurs rapprochées, candidates et écarts à expliquer.","flow.provide.title":"Vous fournissez","flow.provide.copy":"Plan, bilan, grands livres et tableaux fiscaux ou sociaux.","flow.prepare.title":"Vera prépare","flow.prepare.copy":"Les liens entre montants, sources et écarts avec une piste lisible.","flow.receive.title":"Vous recevez","flow.receive.copy":"Un tableau Excel et une synthèse Word qui commencent par les points ouverts.","workflow.eyebrow":"Parcours","workflow.title":"Quatre étapes pour lire le plan face à ses fondements.","workflow.copy":"Le travail conserve montant, page, feuille et lien pour chaque poste pertinent.","workflow.one.title":"Inventorier le dossier","workflow.one.copy":"Ordonner plan, bilan, grands livres et détails justificatifs.","workflow.two.title":"Extraire les montants","workflow.two.copy":"Placer valeurs et localisateurs dans une base comparable.","workflow.three.title":"Construire le pont","workflow.three.copy":"Relier les postes du plan aux preuves et isoler les candidats.","workflow.four.title":"Préparer la revue","workflow.four.copy":"Réunir écarts, omissions et questions dans une vue facile à parcourir.","spec.summary":"Spécifications techniques, entrées et fichiers produits","proof.eyebrow":"Vera au travail","proof.title":"Voyez le pont entre le plan et ses preuves.","proof.copy":"Le guide montre comment les valeurs deviennent rapprochées, candidates ou encore inexpliquées.","proof.kicker":"Guide court · Narration française","proof.videoTitle":"Du plan à une revue qui montre ce qui concorde vraiment","related.eyebrow":"Autres workflows Italie","related.copy":"Vera suit le même fil entre dossier, sources et travail révisable dans les autres workflows du pack Italie.","related.inps":"Revue de prévoyance INPS →","related.registro":"Registre des entreprises et SARI →","prompt.eyebrow":"Pour commencer","prompt.title":"Un prompt, puis la revue.","prompt.copy":"Indiquez dossier et date de référence. Vera prépare la comparaison.","prompt.text":"Utilise Revue du plan de concordat sur /chemin/dossier. Date de référence : 31/03/2026. Relie plan, bilan, grands livres et tableaux et prépare écarts et points ouverts."}},
-      es:{metaTitle:"Revisión del plan de concordato — Italia | Vera",metaDescription:"En el procedimiento italiano de concordato, Vera vincula las cifras del plan con el balance, los mayores y los cuadros de respaldo en una revisión legible.",breadcrumbAria:"Ruta de la página",videoId:"LYNGc7XVmsI",text:{"nav.overview":"Resumen","nav.workflow":"Recorrido","nav.proof":"Ver","nav.next":"Flujos de Italia","nav.prompt":"Prompt","breadcrumb.vera":"Vera","breadcrumb.area":"Paquete Italia","breadcrumb.module":"Plan de concordato","overview.eyebrow":"El trabajo de un vistazo","overview.title":"Del plan a una revisión que muestra qué cuadra realmente.","overview.copy":"Vera vincula cada cifra con las evidencias disponibles y separa los valores conciliados, los candidatos y las diferencias que aún deben explicarse.","flow.provide.title":"Proporcione","flow.provide.copy":"Plan, balance, mayores y cuadros fiscales o de seguridad social.","flow.prepare.title":"Vera prepara","flow.prepare.copy":"Conexiones entre importes, fuentes y diferencias con una trazabilidad legible.","flow.receive.title":"Reciba","flow.receive.copy":"Un archivo Excel y un resumen Word que parten de los puntos abiertos.","workflow.eyebrow":"Recorrido","workflow.title":"Cuatro pasos para leer el plan frente a sus fundamentos.","workflow.copy":"El trabajo conserva importe, página, hoja y conexión para cada partida relevante.","workflow.one.title":"Inventariar el expediente","workflow.one.copy":"Ordenar el plan, el balance, los mayores y el detalle de respaldo.","workflow.two.title":"Extraer los importes","workflow.two.copy":"Llevar valores y localizadores a una base comparable.","workflow.three.title":"Construir el puente","workflow.three.copy":"Vincular las partidas del plan con las evidencias y mantener separados los candidatos.","workflow.four.title":"Preparar la revisión","workflow.four.copy":"Reunir diferencias, omisiones y preguntas en una vista fácil de recorrer.","spec.summary":"Especificaciones técnicas, entradas y archivos generados","proof.eyebrow":"Vera en acción","proof.title":"Vea el puente entre el plan y sus evidencias.","proof.copy":"La guía muestra cómo los valores del plan pasan a estar conciliados, ser candidatos o seguir sin explicación.","proof.kicker":"Guía breve · Narración en inglés","proof.videoTitle":"Del plan a una revisión que muestra qué cuadra realmente","related.eyebrow":"Otros flujos de Italia","related.copy":"Vera utiliza el mismo hilo entre expediente, fuentes y trabajo revisable en los demás flujos del paquete Italia.","related.inps":"Seguridad Social INPS →","related.registro":"Registro Mercantil y SARI →","prompt.eyebrow":"Para empezar","prompt.title":"Un prompt y después la revisión.","prompt.copy":"Indique la carpeta y la fecha de referencia. Vera prepara la comparación.","prompt.text":"Usa Revisión del plan de concordato en /ruta/expediente. Fecha de referencia: 31/03/2026. Vincula el plan, el balance, los mayores y los cuadros y prepara las diferencias y los puntos abiertos."}},
-      de:{metaTitle:"Concordato-Plan prüfen — Italien | Vera",metaDescription:"Im italienischen Concordato-Verfahren verbindet Vera Planzahlen mit Bilanz, Hauptbüchern und unterstützenden Aufstellungen in einer lesbaren Prüfung.",breadcrumbAria:"Seitenpfad",videoId:"l_PI6K8fyPw",text:{"nav.overview":"Überblick","nav.workflow":"Ablauf","nav.proof":"Ansehen","nav.next":"Italien-Workflows","nav.prompt":"Prompt","breadcrumb.vera":"Vera","breadcrumb.area":"Italien-Paket","breadcrumb.module":"Concordato-Plan","overview.eyebrow":"Die Arbeit im Überblick","overview.title":"Vom Plan zur Prüfung, die zeigt, was wirklich stimmt.","overview.copy":"Vera verbindet jede Zahl mit verfügbaren Nachweisen und trennt abgestimmte Werte, Kandidaten und ungeklärte Differenzen.","flow.provide.title":"Sie liefern","flow.provide.copy":"Plan, Bilanz, Hauptbücher sowie Steuer- oder Sozialaufstellungen.","flow.prepare.title":"Vera bereitet vor","flow.prepare.copy":"Verbindungen zwischen Beträgen, Quellen und Differenzen mit lesbarer Spur.","flow.receive.title":"Sie erhalten","flow.receive.copy":"Ein Excel-Arbeitspapier und eine Word-Zusammenfassung, die bei offenen Punkten beginnen.","workflow.eyebrow":"Ablauf","workflow.title":"Vier Schritte, um den Plan an seinen Grundlagen zu lesen.","workflow.copy":"Betrag, Seite, Blatt und Verbindung bleiben für jede relevante Position erhalten.","workflow.one.title":"Akte inventarisieren","workflow.one.copy":"Plan, Bilanz, Hauptbücher und Nachweise ordnen.","workflow.two.title":"Beträge extrahieren","workflow.two.copy":"Werte und Fundstellen vergleichbar zusammenführen.","workflow.three.title":"Brücke bauen","workflow.three.copy":"Planpositionen mit Nachweisen verbinden und Kandidaten trennen.","workflow.four.title":"Prüfung vorbereiten","workflow.four.copy":"Differenzen, Lücken und Fragen in einer navigierbaren Sicht bündeln.","spec.summary":"Technische Spezifikation, Eingaben und erzeugte Dateien","proof.eyebrow":"Vera bei der Arbeit","proof.title":"Sehen Sie die Brücke zwischen Plan und Nachweisen.","proof.copy":"Die Anleitung zeigt, wie Planwerte abgestimmt, Kandidaten oder noch ungeklärt werden.","proof.kicker":"Kurzanleitung · Deutsche Sprecherstimme","proof.videoTitle":"Vom Plan zur Prüfung, die zeigt, was wirklich stimmt","related.eyebrow":"Weitere Italien-Workflows","related.copy":"Vera nutzt denselben Faden zwischen Akte, Quellen und prüfbarer Arbeit auch in den weiteren Workflows des Italien-Pakets.","related.inps":"INPS-Sozialversicherung prüfen →","related.registro":"Unternehmensregister und SARI →","prompt.eyebrow":"Start","prompt.title":"Ein Prompt, dann die Prüfung.","prompt.copy":"Ordner und Stichtag angeben. Vera bereitet den Vergleich vor.","prompt.text":"Nutze Concordato-Plan prüfen für /pfad/akte. Stichtag: 31.03.2026. Verbinde Plan, Bilanz, Hauptbücher und Aufstellungen und bereite Differenzen und offene Punkte vor."}}
-    };
-    function applyJourneyCopy(){const lang="it";const data=journeyCopy[lang];document.title=data.metaTitle;document.getElementById("meta-description").content=data.metaDescription;document.getElementById("og-title").content=data.metaTitle;document.getElementById("og-description").content=data.metaDescription;document.getElementById("og-locale").content="it_IT";document.querySelectorAll("[data-journey]").forEach(node=>{const value=data.text[node.dataset.journey];if(value)node.textContent=value});document.querySelectorAll("[data-journey-aria]").forEach(node=>node.setAttribute("aria-label",data[node.dataset.journeyAria]));const vera=document.querySelector("[data-vera-link]");const inps=document.querySelector('[data-related-link="inps"]');const registro=document.querySelector('[data-related-link="registro"]');const proof=document.querySelector("[data-proof-link]");const thumb=document.querySelector("[data-proof-thumb]");if(vera)vera.href="../vera/index.html?lang=it";if(inps)inps.href="../previdenza-inps/index.html";if(registro)registro.href="../registro-imprese-sari/index.html";if(proof)proof.href=`https://youtu.be/${data.videoId}`;if(thumb)thumb.src=`https://i.ytimg.com/vi/${data.videoId}/maxresdefault.jpg`}
-    document.querySelectorAll("[data-lang]").forEach(button=>button.addEventListener("click",()=>applyJourneyCopy(button.dataset.lang)));applyJourneyCopy(document.documentElement.lang.slice(0,2));
+    document.querySelectorAll("[data-copy-aria]").forEach((element) => {
+      element.setAttribute("aria-label", lookup(element.dataset.copyAria));
+    });
+    document.querySelectorAll("[data-language]").forEach((link) => {
+      if (link.dataset.language === safeLang) {
+        link.setAttribute("aria-current", "page");
+      }
+    });
+    document.querySelectorAll('a[href="../vera/index.html"]').forEach((link) => {
+      link.href = `../vera/index.html/?lang=${safeLang}`;
+    });
   </script>
 </body>
 </html>

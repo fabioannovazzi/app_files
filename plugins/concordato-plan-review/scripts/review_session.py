@@ -48,6 +48,9 @@ WORKFLOW_NAME = "concordato-plan-review"
 MAX_INVENTORY_ITEMS = 300
 MAX_PLAN_AMOUNT_ITEMS = 400
 MAX_EXTRACTION_ERROR_ITEMS = 100
+MAX_SEMANTIC_QUESTION_ITEMS = 100
+MAX_SEMANTIC_ISSUE_ITEMS = 200
+MAX_CREDITOR_CLASS_ITEMS = 200
 WORKPAPER_SHEET_HEADERS = {
     "Inventory": [
         "path",
@@ -318,9 +321,12 @@ def _format_amount(value: object) -> str:
 
 
 def _is_spanish(language: object) -> bool:
-    return (
-        str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
-    )
+    return _language_code(language) == "es"
+
+
+def _language_code(language: object) -> str:
+    code = str(language or "it").strip().lower().replace("_", "-").split("-", 1)[0]
+    return code if code in {"de", "en", "es", "fr", "it"} else "it"
 
 
 def _candidate_key(candidate: Any) -> tuple[str, str, str, Decimal]:
@@ -617,6 +623,167 @@ def _source_inventory_items(
     return items
 
 
+def _semantic_items(
+    *,
+    semantic_status: str,
+    case_model: Mapping[str, Any] | None,
+    semantic_derived: Mapping[str, Any],
+    semantic_error: str | None,
+    language: str,
+) -> list[dict[str, Any]]:
+    """Build review rows from professional meaning, not filename heuristics."""
+
+    spanish = _is_spanish(language)
+    items = [
+        _base_item(
+            "semantic-case-status",
+            "semantic_case_status",
+            (
+                "Estado del modelo del concordato preventivo"
+                if spanish
+                else "Stato del modello di concordato preventivo"
+            ),
+            output_path="concordato_case_model.json",
+            allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+            recommended_action=(
+                "accept" if semantic_status == "reviewed" else "mark_unclear"
+            ),
+            evidence=[],
+            data={
+                "status": semantic_status,
+                "error": semantic_error or "",
+                "review_note": (
+                    "El modelo revisado estructura procedimiento, documentos, acreedores, tratamiento, liquidez y cuestiones profesionales."
+                    if spanish
+                    else "Il modello riesaminato struttura procedura, documenti, creditori, trattamento, liquidità e questioni professionali."
+                ),
+            },
+        )
+    ]
+    if case_model is None:
+        return items
+
+    procedure = case_model["procedure"]
+    items.append(
+        _base_item(
+            "procedure-identity",
+            "procedure_identity",
+            (
+                f"{procedure.get('debtor_name') or 'Debitore non identificato'} · "
+                f"{procedure.get('plan_type')} · {procedure.get('stage')}"
+            ),
+            output_path="concordato_case_model.json",
+            allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+            recommended_action=(
+                "accept"
+                if procedure.get("identification_status") == "complete"
+                else "mark_unclear"
+            ),
+            data=dict(procedure),
+        )
+    )
+    for index, row in enumerate(
+        case_model["review_questions"][:MAX_SEMANTIC_QUESTION_ITEMS],
+        start=1,
+    ):
+        assessment = str(row.get("assessment") or "unclear")
+        items.append(
+            _base_item(
+                f"semantic-question-{index}",
+                "semantic_review_question",
+                str(row.get("question") or row.get("area") or f"Question {index}"),
+                output_path="concordato_semantic_review.md",
+                allowed_actions=(
+                    "accept",
+                    "edit",
+                    "mark_unclear",
+                    "request_more_documents",
+                    "skip",
+                ),
+                recommended_action=(
+                    "accept"
+                    if assessment in {"addressed", "not_applicable"}
+                    else (
+                        "request_more_documents"
+                        if assessment == "gap"
+                        else "mark_unclear"
+                    )
+                ),
+                evidence=list(row.get("evidence_refs") or []),
+                data=dict(row),
+            )
+        )
+    for index, row in enumerate(
+        case_model["issues"][:MAX_SEMANTIC_ISSUE_ITEMS],
+        start=1,
+    ):
+        items.append(
+            _base_item(
+                f"semantic-issue-{index}",
+                "semantic_issue",
+                str(row.get("statement") or f"Issue {index}"),
+                output_path="concordato_semantic_review.md",
+                allowed_actions=(
+                    "accept",
+                    "edit",
+                    "mark_unclear",
+                    "request_more_documents",
+                    "skip",
+                ),
+                recommended_action=(
+                    "accept"
+                    if row.get("status") == "resolved"
+                    else (
+                        "request_more_documents"
+                        if row.get("status") == "open"
+                        else "mark_unclear"
+                    )
+                ),
+                evidence=list(row.get("evidence_refs") or []),
+                data=dict(row),
+            )
+        )
+    for index, row in enumerate(
+        list(semantic_derived.get("classes") or [])[:MAX_CREDITOR_CLASS_ITEMS],
+        start=1,
+    ):
+        items.append(
+            _base_item(
+                f"creditor-class-{index}",
+                "creditor_class_treatment",
+                (
+                    f"{row.get('class_id')} · {row.get('priority')} · "
+                    f"{row.get('proposed_recovery_pct') or '—'}%"
+                ),
+                output_path="creditor_class_summary.csv",
+                allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+                recommended_action="mark_unclear",
+                data=dict(row)
+                | {
+                    "review_note": (
+                        "The aggregation is exact; class, priority, and treatment "
+                        "remain reviewer judgments."
+                    )
+                },
+            )
+        )
+    for index, row in enumerate(semantic_derived.get("checks") or [], start=1):
+        items.append(
+            _base_item(
+                f"mechanical-check-{index}",
+                "mechanical_consistency_check",
+                str(row.get("check_id") or f"Mechanical check {index}"),
+                output_path="concordato_semantic_checks.json",
+                allowed_actions=("accept", "edit", "mark_unclear", "skip"),
+                recommended_action=(
+                    "accept" if row.get("status") == "passed" else "mark_unclear"
+                ),
+                data=dict(row),
+            )
+        )
+    return items
+
+
 def _plan_amount_items(
     candidates: Sequence[Any],
     matches: Sequence[dict[str, Any]],
@@ -639,7 +806,7 @@ def _plan_amount_items(
         if match is None:
             requested_document = (
                 (
-                    "Justificante o anexo explicativo para el importe del plan de concordato "
+                    "Justificante o anexo explicativo para el importe del plan del concordato preventivo "
                     f"{_format_amount(candidate_data['amount'])} en "
                     f"{candidate_data['source_file']}, {candidate_data['location']}"
                 )
@@ -843,25 +1010,66 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
     spanish = _is_spanish(language)
     artifacts = [
         (
+            "semantic-review",
+            "review_artifact",
+            (
+                "Revisión semántica del concordato preventivo"
+                if spanish
+                else "Revisione semantica del concordato preventivo"
+            ),
+            "concordato_semantic_review.md",
+            "mark_unclear",
+        ),
+        (
+            "concordato-workpaper",
+            "review_artifact",
+            (
+                "Libro de trabajo del concordato preventivo"
+                if spanish
+                else "Workbook del concordato preventivo"
+            ),
+            "concordato_review_workpaper.xlsx",
+            "mark_unclear",
+        ),
+        (
             "review-packet",
             "review_artifact",
-            "Paquete de revisión en Markdown" if spanish else "Review packet markdown",
+            (
+                "Paquete de inspección y control"
+                if spanish
+                else "Pacchetto di ispezione e controllo"
+            ),
             "review_packet.md",
             "accept",
         ),
         (
             "tie-out-workpaper",
             "review_artifact",
-            "Papel de trabajo de conciliación" if spanish else "Tie-out workpaper",
+            (
+                "Anexo numérico de conciliación"
+                if spanish
+                else "Appendice numerica di tie-out"
+            ),
             "concordato_tie_out_workpaper.xlsx",
-            "accept",
+            "mark_unclear",
         ),
         (
             "summary-docx",
             "review_artifact",
-            "Resumen de conciliación en Word" if spanish else "Word tie-out summary",
+            (
+                "Resumen del concordato preventivo en Word"
+                if spanish
+                else "Sintesi del concordato preventivo in Word"
+            ),
+            "concordato_preventivo_review_summary.docx",
+            "mark_unclear",
+        ),
+        (
+            "numeric-summary-docx",
+            "review_artifact",
+            ("Resumen numérico en Word" if spanish else "Appendice numerica in Word"),
             "concordato_review_summary.docx",
-            "accept",
+            "mark_unclear",
         ),
         (
             "codex-review-memo",
@@ -869,7 +1077,7 @@ def _artifact_items(output_dir: Path, language: str) -> list[dict[str, Any]]:
             (
                 "Memorando de revisión de auditoría de Codex"
                 if spanish
-                else "Codex auditor review memo"
+                else "Memo di revisione professionale Codex"
             ),
             "codex_run_review.md",
             "mark_unclear",
@@ -918,6 +1126,8 @@ def _output_records(
     inventory: Sequence[dict[str, Any]],
     candidates: Sequence[Any],
     matches: Sequence[dict[str, Any]],
+    semantic_status: str,
+    semantic_derived: Mapping[str, Any],
 ) -> list[dict[str, Any]]:
     review_files = {
         "run_intake.json",
@@ -925,35 +1135,74 @@ def _output_records(
         "ui_decisions.json",
         "final_artifacts.json",
     }
-    is_spanish = audit.get("language") == "es"
+    language_code = _language_code(audit.get("language"))
+    packet_required_text = {
+        "it": [
+            "# Pacchetto di revisione del concordato preventivo",
+            "## Revisione professionale richiesta",
+            "## Appendice deterministica di tie-out",
+        ],
+        "es": [
+            "# Paquete de revisión del concordato preventivo",
+            "## Revisión profesional requerida",
+            "## Anexo determinista de conciliación numérica",
+        ],
+    }.get(
+        language_code,
+        [
+            "# Concordato Preventivo review packet",
+            "## Professional review required",
+            "## Deterministic numerical tie-out appendix",
+        ],
+    )
+    semantic_required_text = {
+        "it": [
+            "Revisione del concordato preventivo",
+            "Stato del modello semantico",
+            "Appendice di tie-out numerico",
+        ],
+        "en": [
+            "Concordato Preventivo Review",
+            "Semantic model status",
+            "Numerical tie-out appendix",
+        ],
+        "fr": [
+            "Revue du concordato preventivo",
+            "Statut du modèle sémantique",
+            "Annexe de rapprochement numérique",
+        ],
+        "de": [
+            "Prüfung des Concordato Preventivo",
+            "Status des semantischen Modells",
+            "Anhang zum Zahlenabgleich",
+        ],
+        "es": [
+            "Revisión del concordato preventivo",
+            "Estado del modelo semántico",
+            "Anexo de conciliación numérica",
+        ],
+    }[language_code]
     required_text_by_path = {
-        "review_packet.md": (
-            [
-                "# Paquete de revisión del plan de concordato",
-                "## Recuentos deterministas",
-                "## Revisión requerida por Codex",
-            ]
-            if is_spanish
-            else [
-                "# Concordato plan review packet",
-                "## Deterministic counts",
-                "## Codex review required",
-            ]
-        ),
+        "review_packet.md": packet_required_text,
+        "concordato_preventivo_review_summary.docx": semantic_required_text,
         "concordato_review_summary.docx": (
             [
-                "Revisión del plan de concordato: resumen de conciliación",
+                "Anexo numérico del concordato preventivo",
                 "Conclusión operativa",
                 "Aspectos que deben explicarse en el memorando de revisión",
                 "Archivos analizados",
             ]
-            if is_spanish
+            if language_code == "es"
             else [
-                "Revisione piano concordato - sintesi tie-out",
+                "Appendice numerica del concordato preventivo",
                 "Conclusione operativa",
                 "Da spiegare nel memo del revisore",
             ]
         ),
+        "concordato_semantic_review.md": [
+            f"#{'#' if index else ''} {text}"
+            for index, text in enumerate(semantic_required_text)
+        ],
     }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
@@ -970,7 +1219,7 @@ def _output_records(
         if relative == "concordato_tie_out_workpaper.xlsx":
             sheet_names = (
                 SPANISH_WORKPAPER_SHEET_NAMES
-                if is_spanish
+                if language_code == "es"
                 else {name: name for name in WORKPAPER_SHEETS}
             )
             output["required_sheets"] = [sheet_names[name] for name in WORKPAPER_SHEETS]
@@ -987,7 +1236,7 @@ def _output_records(
                 candidates=candidates,
                 matches=matches,
             )
-            if is_spanish:
+            if language_code == "es":
                 required_cells = {
                     name: {
                         cell: (
@@ -1010,6 +1259,51 @@ def _output_records(
                 "required_sheet_headers",
                 "required_cells",
             ]
+        elif relative == "concordato_review_workpaper.xlsx":
+            output["required_sheets"] = [
+                "Overview",
+                "Documents",
+                "Creditors",
+                "Classes",
+                "Sources Uses",
+                "Liquidity",
+                "Review Questions",
+                "Issues",
+                "Mechanical Checks",
+                "Numeric Tie-Out",
+            ]
+            output["required_sheet_headers"] = {
+                "Overview": ["metric", "value"],
+                "Documents": ["relative_path", "roles", "authoritative_for"],
+                "Creditors": ["creditor_id", "creditor_name", "claim_amount"],
+                "Classes": ["class_id", "priority", "creditor_count"],
+                "Sources Uses": ["item_id", "side", "category"],
+                "Liquidity": ["period_id", "period", "opening_cash"],
+                "Review Questions": ["question_id", "area", "question"],
+                "Issues": ["issue_id", "area", "statement"],
+                "Mechanical Checks": ["check_id", "status", "observation"],
+                "Numeric Tie-Out": [
+                    "plan_source_file",
+                    "plan_location",
+                    "plan_amount",
+                ],
+            }
+            output["required_cells"] = {
+                "Overview": {
+                    "A1": "metric",
+                    "B1": "value",
+                    "A2": "semantic_model_status",
+                    "B2": semantic_status,
+                }
+            }
+            output["qa_checks"] = [
+                "office_zip",
+                "workbook_xml",
+                "worksheet_xml",
+                "required_sheets",
+                "required_sheet_headers",
+                "required_cells",
+            ]
         elif relative == "exact_amount_matches.csv":
             output["row_count"] = int(audit.get("candidate_match_count", 0))
             output["required_columns"] = [
@@ -1017,6 +1311,40 @@ def _output_records(
                 "support_amount",
                 "difference",
                 "match_status",
+            ]
+        elif relative == "creditor_treatment.csv":
+            output["row_count"] = len(semantic_derived.get("creditors") or [])
+            output["required_columns"] = [
+                "creditor_id",
+                "claim_amount",
+                "class_id",
+                "proposed_total_amount",
+                "liquidation_recovery_amount",
+            ]
+        elif relative == "creditor_class_summary.csv":
+            output["row_count"] = len(semantic_derived.get("classes") or [])
+            output["required_columns"] = [
+                "class_id",
+                "priority",
+                "claim_amount",
+                "proposed_recovery_pct",
+            ]
+        elif relative == "sources_and_uses.csv":
+            output["row_count"] = len(semantic_derived.get("sources_and_uses") or [])
+            output["required_columns"] = [
+                "item_id",
+                "side",
+                "category",
+                "amount",
+            ]
+        elif relative == "liquidity_schedule.csv":
+            output["row_count"] = len(semantic_derived.get("liquidity") or [])
+            output["required_columns"] = [
+                "period_id",
+                "opening_cash",
+                "reported_closing_cash",
+                "calculated_closing_cash",
+                "bridge_difference",
             ]
         required_text = required_text_by_path.get(relative)
         if required_text:
@@ -1051,7 +1379,7 @@ def write_run_intake(
         "document_language": document_language,
         "input_paths": [input_dir.as_posix()],
         "output_dir": output_dir.as_posix(),
-        "inferred_task": "concordato_plan_support_review",
+        "inferred_task": "concordato_preventivo_review",
         "assumptions": {
             "reference_date": reference_date,
             "tolerance": decimal_text(_amount(tolerance)),
@@ -1077,9 +1405,9 @@ def write_run_intake(
             "hosted_notebook_execution_used": False,
             "notes": [
                 (
-                    "Los scripts de revisión del concordato inventarían y comparan los archivos justificativos locales de la carpeta de entrada."
+                    "Los scripts capturan el expediente local, validan un modelo semántico revisado y calculan anexos aritméticos reproducibles."
                     if spanish
-                    else "Concordato review scripts inventory and compare local support files from the input directory."
+                    else "Gli script catturano il fascicolo locale, convalidano un modello semantico riesaminato e calcolano appendici aritmetiche riproducibili."
                 ),
                 (
                     "De forma predeterminada no se utiliza ningún conector externo, ruta de carga, SQL remoto ni cuaderno alojado."
@@ -1112,6 +1440,10 @@ def write_review_session_artifacts(
     matches: Sequence[dict[str, Any]],
     extraction_errors: Sequence[dict[str, str]],
     audit: dict[str, Any],
+    semantic_status: str,
+    semantic_case_model: Mapping[str, Any] | None,
+    semantic_derived: Mapping[str, Any],
+    semantic_error: str | None,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact index."""
 
@@ -1123,6 +1455,15 @@ def write_review_session_artifacts(
         if _candidate_key(candidate) not in matched_keys
     )
     items: list[dict[str, Any]] = []
+    items.extend(
+        _semantic_items(
+            semantic_status=semantic_status,
+            case_model=semantic_case_model,
+            semantic_derived=semantic_derived,
+            semantic_error=semantic_error,
+            language=language,
+        )
+    )
     items.extend(_source_inventory_items(inventory, extraction_errors, language))
     items.extend(_plan_amount_items(candidates, matches, language))
     items.extend(_extraction_error_items(extraction_errors, language))
@@ -1137,7 +1478,7 @@ def write_review_session_artifacts(
         "language": language,
         "document_language": document_language,
         "source_paths": [input_dir.as_posix()],
-        "review_type": "concordato_plan_support_review",
+        "review_type": "concordato_preventivo_review",
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(language),
@@ -1149,13 +1490,23 @@ def write_review_session_artifacts(
             "amount_candidates": "amount_candidates.csv",
             "exact_amount_matches": "exact_amount_matches.csv",
             "workpaper": "concordato_tie_out_workpaper.xlsx",
-            "summary_docx": "concordato_review_summary.docx",
+            "summary_docx": "concordato_preventivo_review_summary.docx",
+            "numeric_summary_docx": "concordato_review_summary.docx",
             "review_packet": "review_packet.md",
             "run_audit": "run_audit.json",
             "assurance_envelope": "assurance_envelope.json",
             "assurance_gates": "assurance_gates.json",
             "source_qualifications": "source_qualifications.json",
             "numeric_evidence_ledger": "numeric_evidence_ledger.json",
+            "case_model_template": "suggested_concordato_case_model.json",
+            "case_model": "concordato_case_model.json",
+            "semantic_checks": "concordato_semantic_checks.json",
+            "creditor_treatment": "creditor_treatment.csv",
+            "creditor_class_summary": "creditor_class_summary.csv",
+            "sources_and_uses": "sources_and_uses.csv",
+            "liquidity_schedule": "liquidity_schedule.csv",
+            "semantic_workpaper": "concordato_review_workpaper.xlsx",
+            "semantic_review": "concordato_semantic_review.md",
             "workflow_output_closure": "workflow_output_closure.json",
         },
         "allowed_actions": [
@@ -1168,8 +1519,8 @@ def write_review_session_artifacts(
         ],
         "status": (
             "ready_for_review"
-            if audit.get("source_qualification_status") == "qualified"
-            else "source_review_required"
+            if semantic_status == "reviewed"
+            else "semantic_model_required"
         ),
         "assurance": {
             "envelope_path": "assurance_envelope.json",
@@ -1186,6 +1537,21 @@ def write_review_session_artifacts(
             "file_count": len(inventory),
             "supported_file_count": audit.get("supported_file_count", 0),
             "source_role_counts": _role_counts(inventory),
+            "semantic_model_status": semantic_status,
+            "procedure": (
+                dict(semantic_case_model["procedure"])
+                if semantic_case_model is not None
+                else None
+            ),
+            "semantic_summary": dict(semantic_derived.get("summary") or {}),
+            "semantic_check_count": len(semantic_derived.get("checks") or []),
+            "semantic_issue_count": (
+                len(semantic_case_model["issues"])
+                if semantic_case_model is not None
+                else 0
+            ),
+            "creditor_count": len(semantic_derived.get("creditors") or []),
+            "creditor_class_count": len(semantic_derived.get("classes") or []),
             "plan_amount_candidate_count": len(plan_candidates),
             "selected_plan_amount_count": min(
                 len(plan_candidates),
@@ -1232,9 +1598,9 @@ def write_review_session_artifacts(
         output_dir,
         run_id=run_id,
         title=(
-            "Revisión del plan de concordato"
+            "Revisión del concordato preventivo"
             if _is_spanish(language)
-            else "Concordato Plan Review"
+            else "Concordato Preventivo"
         ),
         validate_tool="validate_concordato_plan_review",
         render_tool="render_concordato_plan_review",
@@ -1248,6 +1614,8 @@ def write_review_session_artifacts(
         inventory=inventory,
         candidates=candidates,
         matches=matches,
+        semantic_status=semantic_status,
+        semantic_derived=semantic_derived,
     )
     outputs = [
         output
@@ -1276,9 +1644,14 @@ def write_review_session_artifacts(
             "outputs": outputs,
             "caveats": [
                 (
-                    "Las coincidencias exactas por importe son solo evidencias candidatas y todavía requieren revisión semántica."
+                    "El modelo semántico registra juicios profesionales revisados; no es un dictamen jurídico ni una atestación del plan."
                     if spanish
-                    else "Exact amount matches are candidate evidence only and still require semantic review."
+                    else "Il modello semantico registra giudizi professionali riesaminati; non è un parere legale né un'attestazione del piano."
+                ),
+                (
+                    "Las coincidencias exactas por importe son solo evidencias candidatas."
+                    if spanish
+                    else "Le corrispondenze esatte per importo sono soltanto evidenze candidate."
                 ),
                 (
                     "ui_decisions.json queda pendiente hasta que Codex, la interfaz MCP o la revisión alternativa registren las decisiones."
@@ -1298,9 +1671,9 @@ def write_review_session_artifacts(
                     else "Use accepted/edited decisions when writing codex_run_review.md."
                 ),
                 (
-                    "Clasifique los importes del plan sin coincidencia como no justificados, prospectivos, reclasificados o ajenos a las evidencias aportadas."
+                    "Revise procedimiento, acreedores, tratamiento, liquidez, preguntas y cuestiones antes del anexo numérico."
                     if spanish
-                    else "Classify unmatched plan amounts as unsupported, prospective, reclassified, or outside supplied evidence."
+                    else "Riesaminare procedura, creditori, trattamento, liquidità, domande e questioni prima dell'appendice numerica."
                 ),
             ],
             "status": "written_pending_review",

@@ -48,7 +48,7 @@ adapter contract.
 | Check Entries | Official illustrative FatturaPA XML from [Docs Italia](https://docs.italia.it/italia/18app/18app-esercenti-docs/it/bozza/linee-guida-fatturazione.html), paired with a separately sealed Journal Sampling entry | Fresh fictitious multi-line FatturaPA example authored independently from the implementation | Upstream-envelope replay, strong invoice identity, exact money, one-support-per-entry control | Deleted or stale upstream envelope, amount/date-only coincidence, wrong parties, currency mismatch, support reuse, unrelated sole PDF |
 | Journal–Bank | Fictitious bank CSV following one published bank export layout, paired with a public transaction slice | A different published bank CSV layout selected blind | Bounded v6 source adapters, receipt-bound day/month convention, LF/CRLF/CR transport equivalence, stable identities, source-bound direction vocabularies, explicit-reference or reviewed relationship matching, exact residuals, one-to-one use, and all-row native material-value closure | Ambiguous or unsupported CSV field delimiter, field-delimiter/numeric-separator confusion, stale v5 mapping receipt, mutated date convention, ambiguous or invalid populated date, incomplete or changed potential-monetary-column disposition, malformed or truncated record beyond the delimiter profile, missing date and reference, duplicate amount/date candidates, generic description token, evidence reuse, cross-currency, unmapped or sign-conflicting direction values, second-row/cell output mutation, source mutation |
 | Report Builder | Compact facts derived from one official [SEC Financial Statement Data Set](https://www.sec.gov/data-research/sec-markets-data/financial-statement-data-sets), checked against the related filing | A second issuer from another filing/quarter, selected blind | Stable source capture, exact source-to-prepared-to-XLSX/Markdown/DOCX closure, fresh output, duplicate-name isolation | Source mutation, changed unit/scale/period, duplicate table identity, missing fact, tampered rendered value, scanned PDF |
-| Concordato Plan Review | Wholly fictitious plan and support workbook authored from the workflow contract | Independently authored blind variant plus bounded real EVIVA plan, attester, and judicial-commissioner pages; full-population qualified review remains required before claiming real-source generality | Exact candidate arithmetic, provenance, limitations, and correct withholding of semantic support conclusions | Equal amounts in unrelated contexts, one-cent difference, fragmented table, missing or truncated support, prospective assumption presented as historical |
+| Concordato Preventivo Review | Fictitious direct-continuity case with multiple creditor classes, reviewed document roles, treatment, liquidation comparator, sources and uses, and liquidity bridge | Independently authored liquidation, indirect-continuity, and mixed cases; then one previously unseen real case reviewed by a qualified professional. The historical bounded EVIVA pages remain diagnostic evidence only | Source-bound procedure and document model; creditor and class treatment; exact plan-versus-liquidation, sources-and-uses, and liquidity calculations; replayable evidence and explicit withholding of legal or feasibility conclusions | Missing attestation or creditor evidence, equal amounts in unrelated contexts, one-cent difference, imbalance, broken cash bridge, stale source receipt, unsupported priority/class/treatment, prospective assumption presented as historical |
 
 ## Rights and privacy boundaries
 
@@ -104,12 +104,13 @@ adapter contract.
   Journal–Bank file passes with 89 dependency-gated skips. This remains exposed
   diagnostic evidence, not v5 or v7 promotion; the sibling statements cannot
   serve as an independent holdout for either contract.
-- Concordato now has bounded real-PDF evidence from a plan, a separately
-  authored attester's report, and a judicial commissioners' report. The three
-  selected pages expose a material adjustment and creditor-class reallocation
-  that aggregate matching alone would hide. The result is not broad
-  representative promotion: a qualified independent reviewer has not checked
-  the full candidate population or a separately prepared workpaper.
+- Concordato Preventivo Review now has a reusable semantic contract and
+  synthetic coverage across direct continuity, indirect continuity,
+  liquidation, and mixed plans. Historical bounded real-PDF evidence from an
+  EVIVA plan, attester's report, and judicial commissioners' report remains
+  useful only as a numerical diagnostic. It does not validate the semantic
+  capability. Promotion still requires one previously unseen complete case
+  modeled and adjudicated by a qualified independent reviewer.
 - The repository collection and runtime import boundaries are repaired in test
   code. The eight previously classified production or source-contract defects
   are remediated with focused negative and affected-file regressions. An

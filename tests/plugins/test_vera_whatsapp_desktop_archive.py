@@ -90,13 +90,16 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
     interface = manifest["interface"]
     approved_description = (
-        ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt"
-    ).read_text(encoding="utf-8").strip()
+        (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
+        .read_text(encoding="utf-8")
+        .strip()
+    )
 
-    assert manifest["version"] == "0.1.36"
+    assert manifest["version"] == "0.1.37"
     assert manifest["description"].startswith("Vera affianca il commercialista")
     assert interface["longDescription"] == approved_description
     assert "controlla i dati contabili" in interface["longDescription"]
+    assert "casi di concordato preventivo" in interface["longDescription"]
     assert "richieste mirate per Deep Research" in interface["longDescription"]
     assert "Cerca la corrispondenza del cliente." in interface["longDescription"]
     assert "giudizio professionale" in interface["longDescription"]
@@ -105,7 +108,9 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     assert "consiglia Codex Desktop" not in interface["longDescription"]
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
-    assert any("documenti del cliente" in prompt for prompt in interface["defaultPrompt"])
+    assert any(
+        "documenti del cliente" in prompt for prompt in interface["defaultPrompt"]
+    )
 
 
 def test_whatsapp_desktop_is_a_workstream_boundary_not_a_hosted_service() -> None:
