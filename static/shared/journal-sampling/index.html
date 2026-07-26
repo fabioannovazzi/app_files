@@ -534,7 +534,7 @@
     <section class="section-block" id="journey">
       <div class="section-head">
         <div><p class="eyebrow" data-journey="overview.eyebrow">Il lavoro in breve</p><h2 data-journey="overview.title">Dal giornale ricevuto a un campione che si può ripercorrere.</h2></div>
-        <p data-journey="overview.copy">Vera mette ordine nella popolazione, conserva le scelte di campionamento e prepara il passaggio al controllo delle scritture.</p>
+        <p data-journey="overview.copy">Vera qualifica il layout con il professionista, poi mette ordine nella popolazione, conserva le scelte di campionamento e prepara il controllo delle scritture.</p>
       </div>
       <div class="journey-flow">
         <article><h3 data-journey="flow.provide.title">Fornisci</h3><p data-journey="flow.provide.copy">Il giornale in Excel, CSV o PDF leggibile e il criterio di campionamento.</p></article>
@@ -546,8 +546,8 @@
     <section class="section-block" id="journey-workflow">
       <div class="section-head"><div><p class="eyebrow" data-journey="workflow.eyebrow">Percorso</p><h2 data-journey="workflow.title">Quattro passaggi, dalla popolazione alla selezione.</h2></div><p data-journey="workflow.copy">Le scelte che cambiano il campione restano visibili nel lavoro.</p></div>
       <div class="journey-steps">
-        <article class="journey-step"><h3 data-journey="workflow.one.title">Legge il giornale</h3><p data-journey="workflow.one.copy">Individua struttura, intestazioni e campi contabili utili.</p></article>
-        <article class="journey-step"><h3 data-journey="workflow.two.title">Rende coerente la popolazione</h3><p data-journey="workflow.two.copy">Uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.</p></article>
+        <article class="journey-step"><h3 data-journey="workflow.one.title">Qualifica il layout</h3><p data-journey="workflow.one.copy">Codex propone struttura e ruoli dei campi; il professionista li conferma. Se il layout non è affidabile, il lavoro si ferma.</p></article>
+        <article class="journey-step"><h3 data-journey="workflow.two.title">Rende coerente la popolazione</h3><p data-journey="workflow.two.copy">Dopo la conferma, il codice uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione.</p></article>
         <article class="journey-step"><h3 data-journey="workflow.three.title">Applica il metodo</h3><p data-journey="workflow.three.copy">Usa metodo, filtri, seed e dimensione concordati per selezionare il campione.</p></article>
         <article class="journey-step"><h3 data-journey="workflow.four.title">Prepara il controllo</h3><p data-journey="workflow.four.copy">Consegna le righe selezionate e il contesto necessario al controllo dei supporti.</p></article>
       </div>
@@ -562,7 +562,7 @@
           <p class="eyebrow" data-i18n="what.eyebrow">What it does</p>
           <h2 data-i18n="what.title">From mixed journals to a reviewable sample</h2>
         </div>
-        <p data-i18n="what.copy">Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex asks only for the few field choices that cannot be inferred safely.</p>
+        <p data-i18n="what.copy">Use it when a journal is readable but not standardized: good Excel, CSV, print-style Excel exported from PDF, or text PDF. Codex proposes a preparation recipe; the professional confirms the field roles before deterministic sampling begins. Unsupported layouts stop instead of producing plausible data.</p>
       </div>
 
       <div class="split">
@@ -1128,6 +1128,7 @@
         node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
       });
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
+      document.querySelector("[data-vera-link]").href = `../vera/index.html?lang=${safeLang}`;
 
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const path = node.getAttribute("data-i18n").split(".");
@@ -1259,6 +1260,37 @@
         }
       }
     };
+
+    Object.assign(journeyCopy.it.text, {
+      "overview.copy": "Vera qualifica il layout con il professionista, poi mette ordine nella popolazione, conserva le scelte di campionamento e prepara il controllo delle scritture.",
+      "workflow.one.title": "Qualifica il layout",
+      "workflow.one.copy": "Codex propone struttura e ruoli dei campi; il professionista li conferma. Se il layout non è affidabile, il lavoro si ferma.",
+      "workflow.two.copy": "Dopo la conferma, il codice uniforma colonne e valori mantenendo visibili le righe che chiedono attenzione."
+    });
+    Object.assign(journeyCopy.en.text, {
+      "overview.copy": "Vera qualifies the layout with the professional, then brings order to the population, preserves the sampling choices and prepares entry testing.",
+      "workflow.one.title": "Qualify the layout",
+      "workflow.one.copy": "Codex proposes the structure and field roles; the professional confirms them. If the layout is unreliable, the work stops.",
+      "workflow.two.copy": "After confirmation, code aligns columns and values while keeping attention rows visible."
+    });
+    Object.assign(journeyCopy.fr.text, {
+      "overview.copy": "Vera qualifie la mise en page avec le professionnel, puis ordonne la population, conserve les choix d’échantillonnage et prépare le contrôle des écritures.",
+      "workflow.one.title": "Qualifier la mise en page",
+      "workflow.one.copy": "Codex propose la structure et le rôle des champs ; le professionnel les confirme. Si la mise en page n’est pas fiable, le travail s’arrête.",
+      "workflow.two.copy": "Après confirmation, le code aligne colonnes et valeurs tout en gardant visibles les lignes à examiner."
+    });
+    Object.assign(journeyCopy.es.text, {
+      "overview.copy": "Vera califica el formato con el profesional, después ordena la población, conserva las decisiones de muestreo y prepara la comprobación de asientos.",
+      "workflow.one.title": "Calificar el formato",
+      "workflow.one.copy": "Codex propone la estructura y las funciones de los campos; el profesional las confirma. Si el formato no es fiable, el trabajo se detiene.",
+      "workflow.two.copy": "Tras la confirmación, el código alinea columnas y valores manteniendo visibles las líneas que requieren atención."
+    });
+    Object.assign(journeyCopy.de.text, {
+      "overview.copy": "Vera qualifiziert das Layout mit dem Prüfer, ordnet dann die Grundgesamtheit, dokumentiert die Stichprobenentscheidungen und bereitet die Buchungsprüfung vor.",
+      "workflow.one.title": "Layout qualifizieren",
+      "workflow.one.copy": "Codex schlägt Struktur und Feldrollen vor; der Prüfer bestätigt sie. Ist das Layout nicht verlässlich, stoppt die Arbeit.",
+      "workflow.two.copy": "Nach der Bestätigung gleicht der Code Spalten und Werte an und hält auffällige Zeilen sichtbar."
+    });
 
     const proofVideoIds = {
       it: "HW8amlcU0Lk",

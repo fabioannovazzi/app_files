@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.">
-  <meta property="og:image" content="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/vera/index.html?lang=it">
@@ -221,6 +221,48 @@
     .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
+
+    .assurance-sequence {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-block: 2px solid var(--navy);
+    }
+
+    .assurance-step {
+      min-height: 250px;
+      padding: 30px 30px 34px 0;
+      border-right: 1px solid var(--cyan);
+    }
+
+    .assurance-step + .assurance-step { padding-left: 30px; }
+    .assurance-step:last-child { border-right: 0; }
+
+    .assurance-step__number {
+      display: block;
+      margin-bottom: clamp(40px, 6vw, 72px);
+      color: var(--cyan);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .assurance-step h3 {
+      margin-bottom: 14px;
+      font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+    }
+
+    .assurance-step p { max-width: 46ch; color: var(--blue); }
+
+    .assurance-closing {
+      max-width: 890px;
+      margin-top: clamp(40px, 6vw, 68px);
+      padding-left: clamp(22px, 4vw, 40px);
+      border-left: 2px solid var(--cyan);
+      color: var(--navy);
+      font-size: clamp(1.2rem, 2.3vw, 1.65rem);
+      line-height: 1.38;
+      letter-spacing: -0.02em;
+    }
 
     .country-pack-head {
       display: grid;
@@ -465,6 +507,16 @@
       }
       .hero-install__actions { justify-content: flex-start; }
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
+      .assurance-sequence { grid-template-columns: 1fr; }
+      .assurance-step,
+      .assurance-step + .assurance-step {
+        min-height: 0;
+        padding: 28px 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--cyan);
+      }
+      .assurance-step:last-child { border-bottom: 0; }
+      .assurance-step__number { margin-bottom: 24px; }
       .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
       #data-boundary .section-head { grid-template-columns: 1fr; gap: 20px; }
       .data-routes__grid { grid-template-columns: 1fr; }
@@ -531,6 +583,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
+          <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
           <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
           <a href="#data-boundary" data-i18n="nav.data">Dati</a>
           <a href="#video" data-i18n="nav.videos">Video</a>
@@ -557,7 +610,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Codex per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca professionale.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Lavora con Vera in ChatGPT, oppure vai oltre con Codex.</h2>
@@ -619,22 +672,22 @@
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link>
               <h3 data-i18n="module.sampling.title">Campionamento del giornale</h3>
-              <p data-i18n="module.sampling">Estrae e normalizza il giornale contabile e costruisce un campione riproducibile.</p>
+              <p data-i18n="module.sampling">Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../check-entries/index.html#journey" data-module-link>
               <h3 data-i18n="module.entries.title">Controllo scritture</h3>
-              <p data-i18n="module.entries">Collega le scritture ai supporti disponibili e concentra il controllo sulle eccezioni.</p>
+              <p data-i18n="module.entries">Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link>
               <h3 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h3>
-              <p data-i18n="module.bank">Abbina estratti conto e giornale o mastrino in una riconciliazione verificabile.</p>
+              <p data-i18n="module.bank">Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link>
               <h3 data-i18n="module.reconciliation.title">Riconciliazione partite</h3>
-              <p data-i18n="module.reconciliation">Riunisce partite aperte, mastrini, banche e supporti in carte di lavoro Excel e Word.</p>
+              <p data-i18n="module.reconciliation">Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -649,7 +702,7 @@
           <div class="module-directory">
             <a class="module-row" href="../report-builder/index.html" data-module-link>
               <h3 data-i18n="module.report.title">Genera report</h3>
-              <p data-i18n="module.report">Trasforma Excel, CSV e PDF in un report Word con tabelle, fonti e controlli di lettura.</p>
+              <p data-i18n="module.report">Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../prompt-optimizer/index.html" data-module-link>
@@ -665,6 +718,36 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="section-block" id="assurance">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="section-index" data-i18n="assurance.index">Metodo di assurance</span>
+          <h2 data-i18n="assurance.title">Prima il significato. Poi il calcolo.</h2>
+        </div>
+        <p data-i18n="assurance.copy">Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.</p>
+      </div>
+
+      <div class="assurance-sequence">
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">01</span>
+          <h3 data-i18n="assurance.codex.title">Codex propone</h3>
+          <p data-i18n="assurance.codex.copy">Interpreta il lavoro e propone ruoli delle fonti, campi, relazioni e questioni da chiarire. Le ambiguità restano visibili.</p>
+        </article>
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">02</span>
+          <h3 data-i18n="assurance.professional.title">Il professionista conferma</h3>
+          <p data-i18n="assurance.professional.copy">Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.</p>
+        </article>
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">03</span>
+          <h3 data-i18n="assurance.code.title">Il codice esegue</h3>
+          <p data-i18n="assurance.code.copy">Su input qualificati applica calcoli esatti, campionamento, relazioni, controlli, ricevute e replay. Un layout non qualificato non produce dati plausibili.</p>
+        </article>
+      </div>
+
+      <p class="assurance-closing" data-i18n="assurance.closing">Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.</p>
     </section>
 
     <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
@@ -687,8 +770,8 @@
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Revisione Piano Concordato</h3>
-          <p>Verifica i numeri del piano rispetto a bilancio, mastrini e prospetti di supporto.</p>
+          <h3>Concordato Preventivo</h3>
+          <p>Riesamina procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte. Il tie-out numerico resta un’appendice opzionale.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
@@ -774,21 +857,21 @@
     <section class="section-block" id="video">
       <div class="section-head">
         <div class="section-head__title">
-          <span class="section-index" data-i18n="videos.index">Cinque storie dal Core</span>
+          <span class="section-index" data-i18n="videos.index">Metodo e casi di lavoro</span>
           <h2 data-i18n="videos.title">Vera al lavoro.</h2>
         </div>
-        <p data-i18n="videos.copy">Una panoramica e quattro esempi del lavoro che Vera prepara.</p>
+        <p data-i18n="videos.copy">Una panoramica del metodo e quattro esempi del lavoro che Vera prepara.</p>
       </div>
 
-      <a class="overview-video" href="https://youtu.be/2q4o2djeSmg" target="_blank" rel="noopener noreferrer" data-featured-video>
+      <a class="overview-video" href="https://youtu.be/2rJ0T5bZp2k" target="_blank" rel="noopener noreferrer" data-featured-video>
         <span class="overview-video__thumb" aria-hidden="true">
-          <img src="https://i.ytimg.com/vi/2q4o2djeSmg/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-featured-video-thumb>
+          <img src="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-featured-video-thumb>
           <span class="video-play">▶</span>
-          <span class="video-duration" data-featured-video-duration>0:54</span>
+          <span class="video-duration" data-featured-video-duration>1:07</span>
         </span>
         <span class="overview-video__body">
           <span class="video-kicker" data-i18n="videos.overview.kicker">Panoramica</span>
-          <strong data-i18n="videos.overview.title">Dal lavoro dello studio al prossimo passo preparato</strong>
+          <strong data-i18n="videos.overview.title">Dal lavoro dello studio a un risultato rivedibile</strong>
           <span class="video-meta" data-i18n="videos.open">Si apre su YouTube</span>
         </span>
       </a>
@@ -838,23 +921,24 @@
     </div>
   </footer>
 
-  <script src="../video-library.js?v=2026072402"></script>
+  <script src="../video-library.js?v=20260726-assurance"></script>
   <script>
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca, con workflow specifici per il lavoro italiano.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
+        "nav.assurance": "Metodo",
         "nav.jurisdiction": "Per l’Italia",
         "nav.data": "Dati",
         "nav.videos": "Video",
         "language.label": "Lingua",
         "hero.eyebrow": "Vera · Codex per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara controlli, riconciliazioni, fascicoli cliente, report e ricerca professionale.",
+        "hero.lead": "Prepara controlli, riconciliazioni, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
@@ -877,22 +961,32 @@
         "module.archive.title": "Archivio dello studio",
         "module.archive": "Chiedi a Vera di trovare cosa ti ha scritto un cliente. Gmail collegato può funzionare in ChatGPT o Codex; l’ispezione verificata di WhatsApp Desktop e l’archivio locale richiedono Codex.",
         "module.sampling.title": "Campionamento del giornale",
-        "module.sampling": "Estrae e normalizza il giornale contabile e costruisce un campione riproducibile.",
+        "module.sampling": "Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.",
         "module.entries.title": "Controllo scritture",
-        "module.entries": "Collega le scritture ai supporti disponibili e concentra il controllo sulle eccezioni.",
+        "module.entries": "Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.",
         "jurisdiction.index": "Lavoro specifico per l’Italia",
         "jurisdiction.title": "Workflow costruiti sulle fonti e procedure italiane.",
         "jurisdiction.copy": "Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.",
         "module.bank.title": "Riconciliazione banca-contabilità",
-        "module.bank": "Abbina estratti conto e giornale o mastrino in una riconciliazione verificabile.",
+        "module.bank": "Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.",
         "module.reconciliation.title": "Riconciliazione partite",
-        "module.reconciliation": "Riunisce partite aperte, mastrini, banche e supporti in carte di lavoro Excel e Word.",
+        "module.reconciliation": "Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.",
         "module.report.title": "Genera report",
-        "module.report": "Trasforma Excel, CSV e PDF in un report Word con tabelle, fonti e controlli di lettura.",
+        "module.report": "Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.",
         "module.prompt.title": "Ottimizza prompt",
         "module.prompt": "Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.",
         "module.research.title": "Valida Deep Research",
         "module.research": "Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.",
+        "assurance.index": "Metodo di assurance",
+        "assurance.title": "Prima il significato. Poi il calcolo.",
+        "assurance.copy": "Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.",
+        "assurance.codex.title": "Codex propone",
+        "assurance.codex.copy": "Interpreta il lavoro e propone ruoli delle fonti, campi, relazioni e questioni da chiarire. Le ambiguità restano visibili.",
+        "assurance.professional.title": "Il professionista conferma",
+        "assurance.professional.copy": "Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.",
+        "assurance.code.title": "Il codice esegue",
+        "assurance.code.copy": "Su input qualificati applica calcoli esatti, campionamento, relazioni, controlli, ricevute e replay. Un layout non qualificato non produce dati plausibili.",
+        "assurance.closing": "Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.",
         "privacy.index": "Dati · confini reali",
         "privacy.title": "Vera lavora sui dati reali del cliente.",
         "privacy.copy": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.",
@@ -912,11 +1006,11 @@
         "privacy.routes.hosted.copy": "Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.",
         "privacy.closing": "La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.",
         "privacy.dataLink": "Guarda il video sulla gestione dei dati",
-        "videos.index": "Cinque storie dal Core",
+        "videos.index": "Metodo e casi di lavoro",
         "videos.title": "Vera al lavoro.",
-        "videos.copy": "Una panoramica e quattro esempi del lavoro che Vera prepara.",
+        "videos.copy": "Una panoramica del metodo e quattro esempi del lavoro che Vera prepara.",
         "videos.overview.kicker": "Panoramica",
-        "videos.overview.title": "Dal lavoro dello studio al prossimo passo preparato",
+        "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
         "videos.open": "Si apre su YouTube",
         "videos.openGuide": "Apri la guida",
         "videos.all.index": "Catalogo video completo",
@@ -935,18 +1029,19 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera prepares checks, reconciliations, client files, reports and research, with document preparation for UK client work.",
+        "meta.description": "Vera prepares checks, reconciliations, client files and reports with qualified sources, exact calculations, visible exceptions and reviewable decisions.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
+        "nav.assurance": "Method",
         "nav.jurisdiction": "For the UK",
         "nav.data": "Data",
         "nav.videos": "Videos",
         "language.label": "Language",
         "hero.eyebrow": "Vera · Codex for accountants",
         "hero.title": "Vera",
-        "hero.lead": "Prepare checks, reconciliations, client files, reports and professional research.",
+        "hero.lead": "Prepare checks, reconciliations, client files and reports whose sources, calculations and decisions remain reviewable.",
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
         "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
@@ -969,22 +1064,32 @@
         "module.archive.title": "Studio archive",
         "module.archive": "Ask Vera to find what a client wrote to you. Connected Gmail can work in ChatGPT or Codex; verified WhatsApp Desktop inspection and the local archive require Codex.",
         "module.sampling.title": "Journal Sampling",
-        "module.sampling": "Extracts and normalizes the accounting journal and builds a reproducible sample.",
+        "module.sampling": "Qualifies the journal layout, then normalizes the population and builds a reproducible sample. Unreliable fields stop the run.",
         "module.entries.title": "Check Entries",
-        "module.entries": "Connects entries to available support and focuses the check on exceptions.",
+        "module.entries": "Connects entries and support only when the relationship is verifiable; weak candidates remain exceptions.",
         "jurisdiction.index": "Work available for the United Kingdom",
         "jurisdiction.title": "Prepare the first review of a UK client file.",
         "jurisdiction.copy": "Vera organizes the incoming tax folder, missing material, firm memo and client request.",
         "module.bank.title": "Journal-Bank Reconciliation",
-        "module.bank": "Matches bank statements with journal or ledger rows in a verifiable reconciliation.",
+        "module.bank": "Compares bank and accounting data after a confirmed mapping and closes only relationships that satisfy the reconciliation contract.",
         "module.reconciliation.title": "Open-item Reconciliation",
-        "module.reconciliation": "Brings open items, ledgers, banks and supporting records into Excel and Word workpapers.",
+        "module.reconciliation": "Brings open items, ledgers, banks and support into Excel and Word with relationships, residuals and evidence visible.",
         "module.report.title": "Build Report",
-        "module.report": "Turns Excel, CSV and PDF sources into a Word report with tables, sources and reading checks.",
+        "module.report": "Prepares Word and Markdown from confirmed tables and keeps every material number connected to its source and supporting check.",
         "module.prompt.title": "Optimize Prompt",
         "module.prompt": "Turns a legal, tax or compliance question into research with a defined scope, sources and checks.",
         "module.research.title": "Validate Deep Research",
         "module.research": "Checks claims against cited sources and prepares the consolidated material.",
+        "assurance.index": "Assurance method",
+        "assurance.title": "Meaning first. Calculation second.",
+        "assurance.copy": "Vera separates interpretation, professional confirmation and mechanical controls. A reproducible result does not automatically become a correct conclusion.",
+        "assurance.codex.title": "Codex proposes",
+        "assurance.codex.copy": "It interprets the work and proposes source roles, fields, relationships and questions to resolve. Ambiguities remain visible.",
+        "assurance.professional.title": "The professional confirms",
+        "assurance.professional.copy": "They confirm scope, meaning, mappings, materiality, evidence sufficiency and professional conclusions.",
+        "assurance.code.title": "Code executes",
+        "assurance.code.copy": "On qualified inputs it applies exact calculations, sampling, relationships, controls, receipts and replay. An unqualified layout produces no plausible data.",
+        "assurance.closing": "Source, preparation, reconciliation, review and publication remain separate states. Accepting a review cannot turn a failed control into a positive result.",
         "privacy.index": "Data · real boundaries",
         "privacy.title": "Vera works on real client data.",
         "privacy.copy": "Vera and Clara do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.",
@@ -1004,11 +1109,11 @@
         "privacy.routes.hosted.copy": "A hosted service is a separate boundary and is documented once at service level. Searches, connectors, portals, or sends chosen by the user instead follow the external service’s terms; they are not a third Mparanza category.",
         "privacy.closing": "The same rule applies to Vera and Clara: one map per workflow, one description per hosted service, and no prompt-by-prompt documentation.",
         "privacy.dataLink": "Watch the data-handling video",
-        "videos.index": "Five stories from the Core",
+        "videos.index": "Method and working cases",
         "videos.title": "Vera at work.",
-        "videos.copy": "One overview and four examples of the work Vera prepares.",
+        "videos.copy": "An overview of the method and four examples of the work Vera prepares.",
         "videos.overview.kicker": "Overview",
-        "videos.overview.title": "From the firm’s work to the next prepared step",
+        "videos.overview.title": "From the firm’s work to a reviewable result",
         "videos.open": "Opens on YouTube",
         "videos.openGuide": "Open guide",
         "videos.all.index": "Complete video catalog",
@@ -1027,18 +1132,19 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera prépare contrôles, rapprochements, dossiers clients, rapports et recherches, avec la préparation documentaire des dossiers genevois.",
+        "meta.description": "Vera prépare contrôles, rapprochements, dossiers clients et rapports avec des sources qualifiées, des calculs exacts, des exceptions visibles et des décisions révisables.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
+        "nav.assurance": "Méthode",
         "nav.jurisdiction": "Pour Genève",
         "nav.data": "Données",
         "nav.videos": "Vidéos",
         "language.label": "Langue",
         "hero.eyebrow": "Vera · Codex pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Préparez contrôles, rapprochements, dossiers clients, rapports et recherches professionnelles.",
+        "hero.lead": "Préparez contrôles, rapprochements, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
         "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
@@ -1061,22 +1167,32 @@
         "module.archive.title": "Archives du cabinet",
         "module.archive": "Demandez à Vera de retrouver ce qu’un client vous a écrit. Gmail connecté peut fonctionner dans ChatGPT ou Codex ; l’inspection vérifiée de WhatsApp Desktop et l’archive locale nécessitent Codex.",
         "module.sampling.title": "Échantillonnage du journal",
-        "module.sampling": "Extrait et normalise le journal comptable et construit un échantillon reproductible.",
+        "module.sampling": "Qualifie la structure du journal, puis normalise la population et construit un échantillon reproductible. Des champs non fiables arrêtent le traitement.",
         "module.entries.title": "Contrôle des écritures",
-        "module.entries": "Relie les écritures aux justificatifs disponibles et concentre le contrôle sur les exceptions.",
+        "module.entries": "Relie écritures et justificatifs uniquement lorsque la relation est vérifiable ; les candidats faibles restent des exceptions.",
         "jurisdiction.index": "Travail disponible pour Genève",
         "jurisdiction.title": "Préparez la première revue d’un dossier fiscal genevois.",
         "jurisdiction.copy": "Vera organise les documents reçus, les pièces manquantes, le mémo du cabinet et la demande au client.",
         "module.bank.title": "Rapprochement banque-comptabilité",
-        "module.bank": "Rapproche les relevés bancaires avec le journal ou le grand livre dans un résultat vérifiable.",
+        "module.bank": "Compare banque et comptabilité après confirmation du mapping et ne clôt que les relations conformes au contrat de rapprochement.",
         "module.reconciliation.title": "Rapprochement des postes ouverts",
-        "module.reconciliation": "Réunit postes ouverts, grands livres, banques et justificatifs dans des feuilles de travail Excel et Word.",
+        "module.reconciliation": "Réunit postes ouverts, grands livres, banques et justificatifs dans Excel et Word en rendant visibles relations, résiduels et preuves.",
         "module.report.title": "Générer un rapport",
-        "module.report": "Transforme les sources Excel, CSV et PDF en rapport Word avec tableaux, sources et contrôles de lecture.",
+        "module.report": "Prépare Word et Markdown à partir de tableaux confirmés et relie chaque chiffre significatif à sa source et au contrôle qui l’étaye.",
         "module.prompt.title": "Optimiser le prompt",
         "module.prompt": "Transforme une question juridique, fiscale ou de conformité en recherche avec périmètre, sources et contrôles définis.",
         "module.research.title": "Valider Deep Research",
         "module.research": "Contrôle les affirmations par rapport aux sources citées et prépare le matériel consolidé.",
+        "assurance.index": "Méthode d’assurance",
+        "assurance.title": "D’abord le sens. Ensuite le calcul.",
+        "assurance.copy": "Vera sépare interprétation, confirmation professionnelle et contrôles mécaniques. Un résultat reproductible ne devient pas automatiquement une conclusion correcte.",
+        "assurance.codex.title": "Codex propose",
+        "assurance.codex.copy": "Il interprète le travail et propose rôles des sources, champs, relations et questions à résoudre. Les ambiguïtés restent visibles.",
+        "assurance.professional.title": "Le professionnel confirme",
+        "assurance.professional.copy": "Il confirme périmètre, sens, mappings, matérialité, suffisance des preuves et conclusions professionnelles.",
+        "assurance.code.title": "Le code exécute",
+        "assurance.code.copy": "Sur des entrées qualifiées, il applique calculs exacts, échantillonnage, relations, contrôles, reçus et replay. Une structure non qualifiée ne produit aucune donnée plausible.",
+        "assurance.closing": "Sources, préparation, rapprochement, revue et publication restent des états distincts. Accepter une revue ne transforme pas un contrôle échoué en résultat positif.",
         "privacy.index": "Données · périmètres réels",
         "privacy.title": "Vera travaille sur les données réelles du client.",
         "privacy.copy": "Vera et Clara n’anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile.",
@@ -1096,11 +1212,11 @@
         "privacy.routes.hosted.copy": "Un service hébergé a un périmètre distinct et est documenté une fois au niveau du service. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe ; ils ne constituent pas une troisième catégorie Mparanza.",
         "privacy.closing": "La même règle s’applique à Vera et Clara : une cartographie par workflow, une description par service hébergé et aucune documentation prompt par prompt.",
         "privacy.dataLink": "Voir la vidéo sur le traitement des données",
-        "videos.index": "Cinq histoires du socle",
+        "videos.index": "Méthode et cas de travail",
         "videos.title": "Vera à l’œuvre.",
-        "videos.copy": "Une vue d’ensemble et quatre exemples du travail préparé par Vera.",
+        "videos.copy": "Une vue d’ensemble de la méthode et quatre exemples du travail préparé par Vera.",
         "videos.overview.kicker": "Vue d’ensemble",
-        "videos.overview.title": "Du travail du cabinet à la prochaine étape préparée",
+        "videos.overview.title": "Du travail du cabinet à un résultat révisable",
         "videos.open": "S’ouvre sur YouTube",
         "videos.openGuide": "Ouvrir le guide",
         "videos.all.index": "Catalogue vidéo complet",
@@ -1119,18 +1235,19 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Mandantenakten, Berichte und Recherchen vor, einschließlich der Dokumentvorbereitung für Zürcher Steuerakten.",
+        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Mandantenakten und Berichte mit qualifizierten Quellen, exakten Berechnungen, sichtbaren Ausnahmen und prüfbaren Entscheidungen vor.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
+        "nav.assurance": "Methode",
         "nav.jurisdiction": "Für Zürich",
         "nav.data": "Daten",
         "nav.videos": "Videos",
         "language.label": "Sprache",
         "hero.eyebrow": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Bereiten Sie Prüfungen, Abstimmungen, Mandantenakten, Berichte und professionelle Recherchen vor.",
+        "hero.lead": "Bereiten Sie Prüfungen, Abstimmungen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
         "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
@@ -1153,22 +1270,32 @@
         "module.archive.title": "Kanzleiarchiv",
         "module.archive": "Bitten Sie Vera, die Nachrichten eines Mandanten zu finden. Verbundenes Gmail funktioniert in ChatGPT oder Codex; die verifizierte WhatsApp-Desktop-Prüfung und das lokale Archiv erfordern Codex.",
         "module.sampling.title": "Journalstichprobe",
-        "module.sampling": "Extrahiert und normalisiert das Buchungsjournal und erstellt eine reproduzierbare Stichprobe.",
+        "module.sampling": "Qualifiziert das Journalformat, normalisiert danach die Grundgesamtheit und erstellt eine reproduzierbare Stichprobe. Unzuverlässige Felder stoppen den Lauf.",
         "module.entries.title": "Buchungen prüfen",
-        "module.entries": "Verknüpft Buchungen mit verfügbaren Belegen und konzentriert die Prüfung auf Ausnahmen.",
+        "module.entries": "Verknüpft Buchungen und Belege nur bei nachweisbarer Beziehung; schwache Kandidaten bleiben Ausnahmen.",
         "jurisdiction.index": "Arbeit für Zürich",
         "jurisdiction.title": "Bereiten Sie die erste Prüfung einer Zürcher Steuerakte vor.",
         "jurisdiction.copy": "Vera ordnet eingegangene Unterlagen, fehlende Nachweise, Kanzleivermerk und Mandantenanfrage.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
-        "module.bank": "Gleicht Kontoauszüge mit Journal- oder Hauptbuchzeilen in einer nachvollziehbaren Abstimmung ab.",
+        "module.bank": "Vergleicht Bank und Buchhaltung nach bestätigtem Mapping und schließt nur Beziehungen, die den Abstimmungsvertrag erfüllen.",
         "module.reconciliation.title": "Offene-Posten-Abstimmung",
-        "module.reconciliation": "Führt offene Posten, Hauptbücher, Banken und Nachweise in Excel- und Word-Arbeitspapieren zusammen.",
+        "module.reconciliation": "Führt offene Posten, Hauptbücher, Banken und Nachweise in Excel und Word mit sichtbaren Beziehungen, Restbeträgen und Belegen zusammen.",
         "module.report.title": "Bericht erstellen",
-        "module.report": "Überführt Excel-, CSV- und PDF-Quellen in einen Word-Bericht mit Tabellen, Quellen und Lesekontrollen.",
+        "module.report": "Erstellt Word und Markdown aus bestätigten Tabellen und verbindet jede wesentliche Zahl mit Quelle und stützendem Kontrollschritt.",
         "module.prompt.title": "Prompt optimieren",
         "module.prompt": "Überführt eine rechtliche, steuerliche oder Compliance-Frage in eine Recherche mit festgelegtem Umfang, Quellen und Prüfungen.",
         "module.research.title": "Deep Research prüfen",
         "module.research": "Prüft Aussagen gegen zitierte Quellen und erstellt das konsolidierte Material.",
+        "assurance.index": "Assurance-Methode",
+        "assurance.title": "Erst die Bedeutung. Dann die Berechnung.",
+        "assurance.copy": "Vera trennt Interpretation, fachliche Bestätigung und mechanische Kontrollen. Ein reproduzierbares Ergebnis ist nicht automatisch eine richtige Schlussfolgerung.",
+        "assurance.codex.title": "Codex schlägt vor",
+        "assurance.codex.copy": "Codex interpretiert die Arbeit und schlägt Quellenrollen, Felder, Beziehungen und offene Fragen vor. Mehrdeutigkeiten bleiben sichtbar.",
+        "assurance.professional.title": "Der Berufsträger bestätigt",
+        "assurance.professional.copy": "Er bestätigt Umfang, Bedeutung, Mappings, Wesentlichkeit, Nachweisstärke und fachliche Schlussfolgerungen.",
+        "assurance.code.title": "Der Code führt aus",
+        "assurance.code.copy": "Auf qualifizierten Eingaben führt er exakte Berechnungen, Stichproben, Beziehungen, Kontrollen, Belege und Replay aus. Ein nicht qualifiziertes Format erzeugt keine plausiblen Daten.",
+        "assurance.closing": "Quelle, Aufbereitung, Abstimmung, Review und Veröffentlichung bleiben getrennte Zustände. Eine angenommene Review kann aus einer fehlgeschlagenen Kontrolle kein positives Ergebnis machen.",
         "privacy.index": "Daten · tatsächliche Grenzen",
         "privacy.title": "Vera arbeitet mit echten Mandantendaten.",
         "privacy.copy": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist.",
@@ -1188,11 +1315,11 @@
         "privacy.routes.hosted.copy": "Ein gehosteter Dienst hat eine separate Grenze und wird einmal auf Dienstebene dokumentiert. Vom Nutzer gewählte Suchen, Connectoren, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes; sie sind keine dritte Mparanza-Kategorie.",
         "privacy.closing": "Für Vera und Clara gilt dieselbe Regel: eine Zuordnung pro Workflow, eine Beschreibung pro gehostetem Dienst und keine Dokumentation für jeden Prompt.",
         "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
-        "videos.index": "Fünf Geschichten aus dem Kern",
+        "videos.index": "Methode und Arbeitsfälle",
         "videos.title": "Vera bei der Arbeit.",
-        "videos.copy": "Ein Überblick und vier Beispiele der Arbeit, die Vera vorbereitet.",
+        "videos.copy": "Ein Überblick über die Methode und vier Beispiele der Arbeit, die Vera vorbereitet.",
         "videos.overview.kicker": "Überblick",
-        "videos.overview.title": "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt",
+        "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
         "videos.open": "Öffnet YouTube",
         "videos.openGuide": "Anleitung öffnen",
         "videos.all.index": "Vollständiger Videokatalog",
@@ -1211,18 +1338,19 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera prepara controles, conciliaciones, expedientes de clientes, informes e investigación profesional.",
+        "meta.description": "Vera prepara controles, conciliaciones, expedientes e informes con fuentes cualificadas, cálculos exactos, excepciones visibles y decisiones revisables.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
+        "nav.assurance": "Método",
         "nav.jurisdiction": "Trabajo local",
         "nav.data": "Datos",
         "nav.videos": "Vídeos",
         "language.label": "Idioma",
         "hero.eyebrow": "Vera · Codex para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Prepara controles, conciliaciones, expedientes de clientes, informes e investigación profesional.",
+        "hero.lead": "Prepara controles, conciliaciones, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
         "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
@@ -1245,22 +1373,32 @@
         "module.archive.title": "Archivo del despacho",
         "module.archive": "Pide a Vera que encuentre lo que te escribió un cliente. Gmail conectado puede funcionar en ChatGPT o Codex; la consulta verificada de WhatsApp Desktop y el archivo local requieren Codex.",
         "module.sampling.title": "Muestreo del diario",
-        "module.sampling": "Extrae y normaliza el diario contable y construye una muestra reproducible.",
+        "module.sampling": "Cualifica el formato del diario, normaliza después la población y construye una muestra reproducible. Los campos no fiables detienen la ejecución.",
         "module.entries.title": "Comprobar asientos",
-        "module.entries": "Relaciona los asientos con los justificantes disponibles y centra el control en las excepciones.",
+        "module.entries": "Relaciona asientos y justificantes solo cuando el vínculo es verificable; los candidatos débiles siguen siendo excepciones.",
         "jurisdiction.index": "Trabajo específico",
         "jurisdiction.title": "Capacidades adaptadas a una jurisdicción concreta.",
         "jurisdiction.copy": "Esta sección aparece cuando hay un flujo específico disponible para el mercado de esta página.",
         "module.bank.title": "Conciliación entre diario y banco",
-        "module.bank": "Concilia extractos bancarios con líneas del diario o del mayor en un resultado verificable.",
+        "module.bank": "Compara banco y contabilidad tras confirmar el mapeo y solo cierra relaciones que cumplen el contrato de conciliación.",
         "module.reconciliation.title": "Conciliación de partidas abiertas",
-        "module.reconciliation": "Reúne partidas abiertas, mayores, bancos y justificantes en papeles de trabajo de Excel y Word.",
+        "module.reconciliation": "Reúne partidas, mayores, bancos y justificantes en Excel y Word mostrando relaciones, residuales y evidencias.",
         "module.report.title": "Crear informe",
-        "module.report": "Convierte fuentes de Excel, CSV y PDF en un informe de Word con tablas, fuentes y controles de lectura.",
+        "module.report": "Prepara Word y Markdown a partir de tablas confirmadas y vincula cada cifra material con su fuente y el control que la respalda.",
         "module.prompt.title": "Optimizar prompt",
         "module.prompt": "Convierte una pregunta jurídica, fiscal o de cumplimiento en una investigación con ámbito, fuentes y comprobaciones definidos.",
         "module.research.title": "Validar Deep Research",
         "module.research": "Comprueba las afirmaciones frente a las fuentes citadas y prepara el material consolidado.",
+        "assurance.index": "Método de aseguramiento",
+        "assurance.title": "Primero el significado. Después el cálculo.",
+        "assurance.copy": "Vera separa interpretación, confirmación profesional y controles mecánicos. Un resultado reproducible no se convierte automáticamente en una conclusión correcta.",
+        "assurance.codex.title": "Codex propone",
+        "assurance.codex.copy": "Interpreta el trabajo y propone funciones de las fuentes, campos, relaciones y cuestiones por resolver. Las ambigüedades siguen visibles.",
+        "assurance.professional.title": "El profesional confirma",
+        "assurance.professional.copy": "Confirma alcance, significado, mapeos, materialidad, suficiencia de la evidencia y conclusiones profesionales.",
+        "assurance.code.title": "El código ejecuta",
+        "assurance.code.copy": "Sobre entradas cualificadas aplica cálculos exactos, muestreo, relaciones, controles, recibos y replay. Un formato no cualificado no produce datos plausibles.",
+        "assurance.closing": "Fuentes, preparación, conciliación, revisión y publicación siguen siendo estados separados. Aceptar una revisión no convierte un control fallido en un resultado positivo.",
         "privacy.index": "Datos · límites reales",
         "privacy.title": "Vera trabaja con datos reales del cliente.",
         "privacy.copy": "Vera y Clara no anonimizan automáticamente los datos. Pueden usar Python en local para filtrar o agregar información cuando resulte útil.",
@@ -1280,11 +1418,11 @@
         "privacy.routes.hosted.copy": "Un servicio alojado constituye un límite separado y se documenta una sola vez a nivel de servicio. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo; no forman una tercera categoría de Mparanza.",
         "privacy.closing": "La misma regla se aplica a Vera y Clara: un mapa por flujo de trabajo, una descripción por servicio alojado y ninguna documentación prompt por prompt.",
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
-        "videos.index": "Cinco historias del núcleo",
+        "videos.index": "Método y casos de trabajo",
         "videos.title": "Vera en acción.",
-        "videos.copy": "Una visión general y cuatro ejemplos del trabajo que prepara Vera.",
+        "videos.copy": "Una visión general del método y cuatro ejemplos del trabajo que prepara Vera.",
         "videos.overview.kicker": "Visión general",
-        "videos.overview.title": "Del trabajo del despacho al siguiente paso preparado",
+        "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
         "videos.open": "Se abre en YouTube",
         "videos.openGuide": "Abrir la guía",
         "videos.all.index": "Catálogo completo de vídeos",

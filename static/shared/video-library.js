@@ -267,8 +267,8 @@
   "vera": {
     "en": {
       "featured": {
-        "id": "Lqt3odBszD0",
-        "duration": "0:45"
+        "id": "2XTi99kdI-w",
+        "duration": "0:58"
       },
       "videos": [
         {
@@ -307,8 +307,8 @@
     },
     "it": {
       "featured": {
-        "id": "2q4o2djeSmg",
-        "duration": "0:54"
+        "id": "2rJ0T5bZp2k",
+        "duration": "1:07"
       },
       "videos": [
         {
@@ -324,8 +324,8 @@
           "title": "Vera | Dalle tabelle sorgente a un report Word rivedibile"
         },
         {
-          "id": "ndZQoJjwOpY",
-          "title": "Vera | Dal piano a una revisione che mostra che cosa batte davvero"
+          "id": "nhX0Wrixnbs",
+          "title": "Vera | Concordato Preventivo, dal fascicolo a una revisione strutturata"
         },
         {
           "id": "qsuHqT9KGBI",
@@ -359,8 +359,8 @@
     },
     "fr": {
       "featured": {
-        "id": "sjYBTUUguR4",
-        "duration": "0:51"
+        "id": "Z9NUMSKkYTQ",
+        "duration": "1:01"
       },
       "videos": [
         {
@@ -399,8 +399,8 @@
     },
     "de": {
       "featured": {
-        "id": "XV2KOGKZuYM",
-        "duration": "0:55"
+        "id": "XirJ4_iBrcw",
+        "duration": "1:08"
       },
       "videos": [
         {
@@ -439,8 +439,8 @@
     },
     "es": {
       "featured": {
-        "id": "BEiFYgK5Wew",
-        "duration": "0:51"
+        "id": "XbmQqWA5sYk",
+        "duration": "1:09"
       },
       "videos": [
         {
@@ -472,8 +472,8 @@
   }
 };
 
-  const catalogVersion = "4.2.0";
-  const lastVerifiedAt = "2026-07-24";
+  const catalogVersion = "4.3.0";
+  const lastVerifiedAt = "2026-07-26";
 
   const veraYoutubeDefinitions = Object.freeze([
     {
@@ -503,7 +503,7 @@
     {
       module: "concordato-plan-review", edition: "italy", scope: "country",
       jurisdiction: "IT", kind: "guide",
-      localizations: { it: "ndZQoJjwOpY" }
+      localizations: { it: "nhX0Wrixnbs" }
     },
     {
       module: "previdenza-inps", edition: "italy", scope: "country",
@@ -603,12 +603,12 @@
   const veraModuleCopy = {
     en: {
       "new-client": ["New Client", "Move from source documents to a working client file with connected actions and history."],
-      "journal-sampling": ["Journal Sampling", "Move from the full journal to a reproducible review sample."],
-      "check-entries": ["Check Entries", "Connect sampled entries to the evidence that supports them."],
-      "journal-bank-reconciliation": ["Bank reconciliation", "Bring bank and ledger movements into a reviewable reconciliation."],
-      "riconciliazione-partite": ["Open-item reconciliation", "Resolve open items in a workpaper that retains its evidence."],
-      "report-builder": ["Report Builder", "Carry source tables and citations into a structured Word report."],
-      "concordato-plan-review": ["Concordato review", "Show which plan figures tie to balances and supporting schedules."],
+      "journal-sampling": ["Journal Sampling", "Qualify the journal layout, preserve the population link and apply a reproducible sample."],
+      "check-entries": ["Check Entries", "Close entry-to-support relationships only when the confirmed evidence contract supports them."],
+      "journal-bank-reconciliation": ["Bank reconciliation", "Use confirmed mappings and exact relationship controls to separate matches, candidates and open rows."],
+      "riconciliazione-partite": ["Open-item reconciliation", "Keep relationships, residuals and supporting evidence visible in the workpaper."],
+      "report-builder": ["Report Builder", "Carry confirmed tables and every material number into traceable Word and Markdown outputs."],
+      "concordato-plan-review": ["Concordato Preventivo", "Review procedure, authoritative documents, creditor treatment, liquidation alternative, liquidity and open issues; numerical tie-out remains optional."],
       "previdenza-inps": ["INPS case review", "Organize contributory evidence into a readable case file."],
       "registro-imprese-sari": ["Business Register and SARI", "Prepare the practice from case facts and Chamber sources."],
       "dati-fiscali-strutturati": ["Structured fiscal data", "Turn tax forms into reviewable fields while preserving the source."],
@@ -620,12 +620,12 @@
     it: {
       "new-client": ["Nuovo cliente", "Dai documenti a un fascicolo di lavoro con azioni e storico collegati."],
       "studio-archive": ["Archivio dello studio", "Indicizza i documenti sul Mac e consulta Gmail o WhatsApp Desktop solo quando serve."],
-      "journal-sampling": ["Campionamento del giornale", "Dal giornale completo a un campione di revisione riproducibile."],
-      "check-entries": ["Controllo scritture", "Collega le scritture campionate alle evidenze che le supportano."],
-      "journal-bank-reconciliation": ["Riconciliazione banca", "Porta movimenti bancari e contabili in una riconciliazione rivedibile."],
-      "riconciliazione-partite": ["Riconciliazione partite", "Risolve le partite aperte in una carta di lavoro con le sue evidenze."],
-      "report-builder": ["Genera report", "Porta tabelle e fonti in un report Word strutturato."],
-      "concordato-plan-review": ["Revisione Concordato", "Mostra quali numeri del piano quadrano con bilancio e supporti."],
+      "journal-sampling": ["Campionamento del giornale", "Qualifica il layout, conserva il legame con la popolazione e applica un campione riproducibile."],
+      "check-entries": ["Controllo scritture", "Chiude relazioni scrittura-supporto solo quando il contratto di evidenza confermato le sostiene."],
+      "journal-bank-reconciliation": ["Riconciliazione banca", "Usa mapping confermati e controlli esatti per separare abbinamenti, candidati e righe aperte."],
+      "riconciliazione-partite": ["Riconciliazione partite", "Mantiene visibili nella carta di lavoro relazioni, residui ed evidenze di supporto."],
+      "report-builder": ["Genera report", "Porta tabelle confermate e ogni numero materiale in output Word e Markdown tracciabili."],
+      "concordato-plan-review": ["Concordato Preventivo", "Riesamina procedura, documenti autorevoli, trattamento dei creditori, alternativa liquidatoria, liquidità e questioni aperte; il tie-out numerico resta opzionale."],
       "previdenza-inps": ["Previdenza INPS", "Organizza le evidenze contributive in un fascicolo leggibile."],
       "registro-imprese-sari": ["Registro Imprese e SARI", "Prepara la pratica dai fatti del caso e dalle fonti camerali."],
       "dati-fiscali-strutturati": ["Dati fiscali strutturati", "Porta i moduli fiscali in campi controllabili conservando la fonte."],
@@ -636,12 +636,12 @@
     },
     fr: {
       "new-client": ["Nouveau client", "Des documents au dossier client de travail, avec actions et historique reliés."],
-      "journal-sampling": ["Échantillonnage du journal", "Du journal complet à un échantillon de revue reproductible."],
-      "check-entries": ["Contrôle des écritures", "Relie les écritures sélectionnées aux justificatifs correspondants."],
-      "journal-bank-reconciliation": ["Rapprochement bancaire", "Réunit mouvements bancaires et comptables dans un rapprochement révisable."],
-      "riconciliazione-partite": ["Rapprochement des postes", "Résout les postes ouverts dans un dossier de travail étayé."],
-      "report-builder": ["Générer un rapport", "Transforme tableaux et sources en rapport Word structuré."],
-      "concordato-plan-review": ["Revue Concordato", "Montre les chiffres du plan qui concordent avec les supports."],
+      "journal-sampling": ["Échantillonnage du journal", "Qualifie la structure, conserve le lien avec la population et applique un échantillon reproductible."],
+      "check-entries": ["Contrôle des écritures", "Clôt les relations écriture-justificatif uniquement lorsque le contrat de preuve confirmé les étaye."],
+      "journal-bank-reconciliation": ["Rapprochement bancaire", "Utilise des mappings confirmés et des contrôles exacts pour séparer rapprochements, candidats et lignes ouvertes."],
+      "riconciliazione-partite": ["Rapprochement des postes", "Maintient visibles relations, résiduels et preuves dans le dossier de travail."],
+      "report-builder": ["Générer un rapport", "Transporte tableaux confirmés et chaque chiffre significatif dans des sorties Word et Markdown traçables."],
+      "concordato-plan-review": ["Concordato Preventivo", "Examine procédure, documents faisant autorité, traitement des créanciers, alternative liquidative, liquidité et questions ouvertes ; le rapprochement numérique reste optionnel."],
       "previdenza-inps": ["Prévoyance INPS", "Organise les preuves contributives dans un dossier lisible."],
       "registro-imprese-sari": ["Registre et SARI", "Prépare la formalité à partir des faits et sources consulaires."],
       "dati-fiscali-strutturati": ["Données fiscales structurées", "Transforme les formulaires fiscaux en champs vérifiables en conservant la source."],
@@ -652,12 +652,12 @@
     },
     de: {
       "new-client": ["Neuer Mandant", "Von Quelldokumenten zur Arbeitsakte mit verknüpften Aufgaben und Historie."],
-      "journal-sampling": ["Journal-Stichprobe", "Vom vollständigen Journal zur reproduzierbaren Prüfstichprobe."],
-      "check-entries": ["Buchungen prüfen", "Verbindet ausgewählte Buchungen mit ihren Nachweisen."],
-      "journal-bank-reconciliation": ["Bankabstimmung", "Bringt Bank- und Buchungsbewegungen in eine prüfbare Abstimmung."],
-      "riconciliazione-partite": ["Offene Posten abstimmen", "Löst offene Posten in einem belegten Arbeitspapier."],
-      "report-builder": ["Bericht erstellen", "Überführt Tabellen und Quellen in einen strukturierten Word-Bericht."],
-      "concordato-plan-review": ["Concordato-Prüfung", "Zeigt, welche Planzahlen mit Salden und Nachweisen übereinstimmen."],
+      "journal-sampling": ["Journal-Stichprobe", "Qualifiziert das Format, erhält den Bezug zur Grundgesamtheit und führt eine reproduzierbare Stichprobe aus."],
+      "check-entries": ["Buchungen prüfen", "Schließt Buchungs-Beleg-Beziehungen nur, wenn der bestätigte Nachweisvertrag sie trägt."],
+      "journal-bank-reconciliation": ["Bankabstimmung", "Trennt mit bestätigten Mappings und exakten Kontrollen Treffer, Kandidaten und offene Zeilen."],
+      "riconciliazione-partite": ["Offene Posten abstimmen", "Hält Beziehungen, Restbeträge und Nachweise im Arbeitspapier sichtbar."],
+      "report-builder": ["Bericht erstellen", "Überführt bestätigte Tabellen und jede wesentliche Zahl in nachvollziehbare Word- und Markdown-Ausgaben."],
+      "concordato-plan-review": ["Concordato Preventivo", "Prüft Verfahren, maßgebliche Dokumente, Gläubigerbehandlung, Liquidationsalternative, Liquidität und offene Fragen; der Zahlenabgleich bleibt optional."],
       "previdenza-inps": ["INPS-Vorsorge", "Ordnet Beitragsnachweise in einer lesbaren Fallakte."],
       "registro-imprese-sari": ["Register und SARI", "Bereitet die Meldung aus Falldaten und Kammerquellen vor."],
       "dati-fiscali-strutturati": ["Strukturierte Steuerdaten", "Überführt Steuerformulare in prüfbare Felder und erhält den Quellenbezug."],
@@ -668,12 +668,12 @@
     },
     es: {
       "new-client": ["Nuevo cliente", "Pasa de los documentos fuente a un expediente operativo con acciones e historial vinculados."],
-      "journal-sampling": ["Muestreo del diario", "Pasa del diario completo a una muestra de revisión reproducible."],
-      "check-entries": ["Comprobación de asientos", "Vincula los asientos seleccionados con las evidencias que los respaldan."],
-      "journal-bank-reconciliation": ["Conciliación bancaria", "Reúne los movimientos bancarios y contables en una conciliación revisable."],
-      "riconciliazione-partite": ["Conciliación de partidas abiertas", "Resuelve partidas abiertas en un papel de trabajo que conserva sus evidencias."],
-      "report-builder": ["Generador de informes", "Traslada tablas fuente y citas a un informe Word estructurado."],
-      "concordato-plan-review": ["Revisión del Concordato", "Muestra qué cifras del plan cuadran con los saldos y los anexos."],
+      "journal-sampling": ["Muestreo del diario", "Cualifica el formato, conserva el vínculo con la población y aplica una muestra reproducible."],
+      "check-entries": ["Comprobación de asientos", "Cierra relaciones asiento-justificante solo cuando el contrato de evidencia confirmado las respalda."],
+      "journal-bank-reconciliation": ["Conciliación bancaria", "Usa mapeos confirmados y controles exactos para separar coincidencias, candidatos y líneas abiertas."],
+      "riconciliazione-partite": ["Conciliación de partidas abiertas", "Mantiene visibles en el papel de trabajo las relaciones, los residuales y las evidencias."],
+      "report-builder": ["Generador de informes", "Lleva tablas confirmadas y cada cifra material a resultados Word y Markdown trazables."],
+      "concordato-plan-review": ["Concordato Preventivo", "Revisa procedimiento, documentos autorizados, trato de acreedores, alternativa de liquidación, liquidez y cuestiones abiertas; el cuadre numérico sigue siendo opcional."],
       "previdenza-inps": ["Revisión de expedientes INPS", "Organiza las evidencias contributivas en un expediente legible."],
       "registro-imprese-sari": ["Registro Mercantil y SARI", "Prepara el trámite a partir de los hechos del caso y las fuentes camerales."],
       "dati-fiscali-strutturati": ["Datos fiscales estructurados", "Convierte formularios fiscales en campos revisables conservando la fuente."],
@@ -815,11 +815,11 @@
 
   const overviewCopy = {
     vera: {
-      it: ["Panoramica Vera", "Dal lavoro dello studio al prossimo passo preparato."],
-      en: ["Vera overview", "From the firm's work to a prepared next step."],
-      fr: ["Vue d’ensemble de Vera", "Du travail du cabinet à l’étape suivante préparée."],
-      de: ["Vera im Überblick", "Von der Kanzleiarbeit zum vorbereiteten nächsten Schritt."],
-      es: ["Resumen de Vera", "Del trabajo del despacho al siguiente paso preparado."]
+      it: ["Panoramica Vera", "Dal lavoro dello studio a un risultato rivedibile, senza confondere calcolo e giudizio."],
+      en: ["Vera overview", "From the firm's work to a reviewable result, without confusing calculation and judgment."],
+      fr: ["Vue d’ensemble de Vera", "Du travail du cabinet à un résultat révisable, sans confondre calcul et jugement."],
+      de: ["Vera im Überblick", "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis, ohne Berechnung und Beurteilung zu verwechseln."],
+      es: ["Resumen de Vera", "Del trabajo del despacho a un resultado revisable, sin confundir cálculo y criterio profesional."]
     },
     clara: {
       it: ["Panoramica Clara", "Dal materiale di progetto a un risultato pronto da condividere."],

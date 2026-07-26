@@ -10,6 +10,8 @@
   <meta property="og:description" content="Un workspace professionale per riesaminare il caso prima dell'appendice numerica.">
   <meta property="og:url" content="https://mparanza.com/static/shared/concordato-plan-review/index.html">
   <link rel="canonical" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
   <title>Concordato Preventivo | Vera</title>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -269,6 +271,22 @@
       color: var(--muted);
     }
 
+    .journey-flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-block: 2px solid var(--ink);
+    }
+
+    .journey-flow article {
+      min-height: 10rem;
+      padding: var(--space-md);
+      border-right: 1px solid var(--line);
+    }
+
+    .journey-flow article:first-child { padding-left: 0; }
+    .journey-flow article:last-child { border-right: 0; }
+    .journey-flow p { margin-top: var(--space-sm); color: var(--muted); }
+
     .split {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -383,6 +401,39 @@
       line-height: 1.5;
     }
 
+    .prompt code { white-space: inherit; font: inherit; }
+
+    .prompt-list {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0;
+      margin: 0 0 var(--space-lg);
+      padding: 0;
+      border-top: 2px solid var(--ink);
+      list-style: none;
+    }
+
+    .prompt-list li {
+      min-height: 9rem;
+      padding: var(--space-md);
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .prompt-list li:first-child { padding-left: 0; }
+    .prompt-list li:last-child { border-right: 0; }
+    .prompt-list strong { display: block; color: var(--ink); }
+    .prompt-list span { display: block; margin-top: var(--space-sm); color: var(--muted); }
+
+    .related-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-sm) var(--space-md);
+      margin-top: var(--space-md);
+    }
+
+    .related-links a { color: var(--blue); font-weight: 600; }
+
     .limitations {
       display: grid;
       gap: var(--space-sm);
@@ -448,6 +499,19 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
+      .journey-flow,
+      .prompt-list {
+        grid-template-columns: 1fr;
+      }
+
+      .journey-flow article,
+      .prompt-list li {
+        min-height: auto;
+        padding-left: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
       .sequence article:nth-child(2) { border-right: 0; }
       .sequence article:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
       .sequence article:nth-child(3) { padding-left: 0; }
@@ -510,7 +574,7 @@
 <body>
   <header class="topbar">
     <div class="shell nav">
-      <a class="brand" href="/" aria-label="Mparanza home">
+      <a class="brand" href="/?lang=it" aria-label="Mparanza home" data-home-link>
         <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
       </a>
       <div class="nav-actions">
@@ -525,6 +589,7 @@
           <a href="?lang=en" data-language="en">EN</a>
           <a href="?lang=fr" data-language="fr">FR</a>
           <a href="?lang=de" data-language="de">DE</a>
+          <a href="?lang=es" data-language="es">ES</a>
         </nav>
       </div>
     </div>
@@ -532,7 +597,7 @@
 
   <main class="shell">
     <nav class="breadcrumb" aria-label="Percorso pagina" data-copy-aria="breadcrumb.label">
-      <a href="../vera/index.html">Vera</a>
+      <a href="../vera/index.html?lang=it" data-vera-link>Vera</a>
       <span aria-hidden="true">/</span>
       <span data-copy="breadcrumb.package">Pacchetto Italia</span>
       <span aria-hidden="true">/</span>
@@ -555,6 +620,30 @@
         <p><strong data-copy="hero.codeTitle">Il codice calcola.</strong>
           <span data-copy="hero.codeText">Totali, recuperi, fonti e impieghi, bridge di cassa e differenze restano esatti e riproducibili.</span></p>
       </aside>
+    </section>
+
+    <section class="section" id="journey">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-copy="journey.eyebrow">Il lavoro in breve</p>
+          <h2 data-copy="journey.title">Dal fascicolo a una revisione che conserva significato e fonti.</h2>
+        </div>
+        <p data-copy="journey.intro">Il modello del caso viene confermato prima che i controlli numerici producano schedule e conclusioni intermedie.</p>
+      </div>
+      <div class="journey-flow">
+        <article>
+          <h3 data-copy="journey.provideTitle">Fornisci</h3>
+          <p data-copy="journey.provideText">Ricorso, proposta, piano, attestazione, allegati e data di riferimento.</p>
+        </article>
+        <article>
+          <h3 data-copy="journey.prepareTitle">Vera prepara</h3>
+          <p data-copy="journey.prepareText">Una mappa citabile di procedura, creditori, trattamento, liquidazione, liquidità e questioni.</p>
+        </article>
+        <article>
+          <h3 data-copy="journey.receiveTitle">Ricevi</h3>
+          <p data-copy="journey.receiveText">Un workpaper rivedibile con modello confermato, calcoli esatti, evidenze e punti aperti.</p>
+        </article>
+      </div>
     </section>
 
     <section class="section" id="metodo">
@@ -595,8 +684,8 @@
           <h2 data-copy="boundary.title">Giudizio e meccanica non si confondono.</h2>
         </div>
         <p data-copy="boundary.intro">La riproducibilità è utile solo dove la correttezza è meccanicamente
-          verificabile. Per diritto, trattamento e fattibilità rimane
-          indispensabile il giudizio professionale.</p>
+          verificabile. Diritto, trattamento e fattibilità richiedono
+          la valutazione del professionista.</p>
       </div>
 
       <div class="split">
@@ -635,7 +724,7 @@
           sostituisce una conclusione professionale.</p>
       </div>
 
-      <ul class="outputs">
+      <ul class="outputs" id="result">
         <li><strong>concordato_case_model.json</strong><span data-copy="outputs.caseModel">Procedura, documenti, creditori, assunzioni e questioni source-bound.</span></li>
         <li><strong>creditor_treatment.csv</strong><span data-copy="outputs.creditorTreatment">Prelazioni, classi, recuperi, tempi, voto ed evidenze per creditore.</span></li>
         <li><strong>creditor_class_summary.csv</strong><span data-copy="outputs.classSummary">Aggregazioni esatte per classe e confronto con la liquidazione.</span></li>
@@ -662,10 +751,12 @@
           propone il modello e chiede conferma soltanto sui giudizi materiali.</p>
       </div>
 
-      <div class="prompt" role="region" aria-label="Prompt di esempio" data-copy-aria="start.promptLabel" data-copy="start.prompt">Usa Concordato Preventivo sul fascicolo /percorso/fascicolo.
+      <ul class="prompt-list" id="prompt-list"></ul>
+
+      <div class="prompt" role="region" aria-label="Prompt di esempio" data-copy-aria="start.promptLabel"><code data-copy="start.prompt" data-journey="prompt.text">Usa Concordato Preventivo sul fascicolo /percorso/fascicolo.
 Ricostruisci procedura, documenti autorevoli, creditori e trattamento,
 alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte.
-Tieni il tie-out numerico come appendice quando è utile.</div>
+Tieni il tie-out numerico come appendice quando è utile.</code></div>
 
       <details>
         <summary data-copy="start.limitationsTitle">Limiti professionali e di validazione</summary>
@@ -685,8 +776,12 @@ Tieni il tie-out numerico come appendice quando è utile.</div>
         <h2 data-copy="cta.title">Il concordato preventivo è una parte del lavoro, non un caso isolato.</h2>
         <p data-copy="cta.text">Vera riunisce workflow specialistici per revisione, riconciliazione e
           lavoro professionale dello studio.</p>
+        <nav class="related-links" aria-label="Percorsi collegati" data-copy-aria="cta.relatedLabel">
+          <a href="../previdenza-inps/index.html?lang=it" data-copy="cta.previdenza">Previdenza INPS →</a>
+          <a href="../registro-imprese-sari/index.html?lang=it" data-copy="cta.registro">Registro Imprese e SARI →</a>
+        </nav>
       </div>
-      <a class="button" href="../vera/index.html" data-copy="cta.button">Torna a Vera</a>
+      <a class="button" href="../vera/index.html?lang=it" data-vera-link data-copy="cta.button">Torna a Vera</a>
     </section>
   </main>
   <script>
@@ -736,7 +831,7 @@ Tieni il tie-out numerico come appendice quando è utile.</div>
         boundary: {
           eyebrow: "Responsabilità",
           title: "Giudizio e meccanica non si confondono.",
-          intro: "La riproducibilità è utile solo dove la correttezza è meccanicamente verificabile. Per diritto, trattamento e fattibilità rimane indispensabile il giudizio professionale.",
+          intro: "La riproducibilità è utile solo dove la correttezza è meccanicamente verificabile. Diritto, trattamento e fattibilità richiedono la valutazione del professionista.",
           judgmentTitle: "Giudizio",
           judgment1: "Quadro normativo e versione autorevole dei documenti",
           judgment2: "Perimetro, prelazione, classi, voto e trattamento dei creditori",
@@ -1069,10 +1164,238 @@ Tieni il tie-out numerico come appendice quando è utile.</div>
       }
     };
 
+    copy.es = {
+      meta: {
+        description: "Vera organiza la revisión de un Concordato Preventivo italiano: procedimiento, documentos, acreedores, tratamiento, alternativa de liquidación, fuentes y usos, liquidez y cuestiones abiertas."
+      },
+      language: { label: "Idioma" },
+      nav: {
+        label: "Secciones de la página",
+        method: "Método",
+        boundary: "Responsabilidad",
+        outputs: "Resultados",
+        start: "Empezar"
+      },
+      breadcrumb: {
+        label: "Ruta de la página",
+        package: "Paquete Italia",
+        product: "Concordato Preventivo"
+      },
+      hero: {
+        eyebrow: "Vera · Concordato Preventivo",
+        title: "Revise el caso, no solo las cifras del plan.",
+        lead: "Procedimiento, propuesta, plan, informe de experto, acreedores, tratamiento, alternativa de liquidación y viabilidad en un papel de trabajo revisable.",
+        noteLabel: "Principio del flujo",
+        codexTitle: "Codex interpreta.",
+        codexText: "Lee las fuentes, propone el modelo del caso y hace explícita cada base de valoración.",
+        professionalTitle: "El profesional confirma.",
+        professionalText: "Corrige el procedimiento, los perímetros, el tratamiento, las evidencias y las cuestiones.",
+        codeTitle: "El código calcula.",
+        codeText: "Totales, recuperaciones, fuentes y usos, puentes de caja y diferencias permanecen exactos y reproducibles."
+      },
+      method: {
+        eyebrow: "Método",
+        title: "El significado precede al cuadre.",
+        intro: "Aquí, «Concordato» conserva su significado profesional italiano. El flujo no depende del nombre de una empresa, de un archivo concreto ni de una conciliación única.",
+        captureTitle: "Capturar",
+        captureText: "Inventariar fuentes y localizadores sin asignar funciones a partir de los nombres de archivo.",
+        modelTitle: "Modelar",
+        modelText: "Estructurar el procedimiento, los documentos, los acreedores, el tratamiento, la liquidez y las cuestiones.",
+        confirmTitle: "Confirmar",
+        confirmText: "El profesional corrige y confirma el modelo vinculado a las fuentes vigentes.",
+        calculateTitle: "Calcular",
+        calculateText: "Producir cuadros exactos y una cola de revisión centrada en las cuestiones profesionales."
+      },
+      boundary: {
+        eyebrow: "Responsabilidad",
+        title: "Valoración y mecánica permanecen separadas.",
+        intro: "La reproducibilidad ayuda cuando la exactitud puede verificarse mecánicamente. El derecho, el tratamiento y la viabilidad requieren la valoración del profesional.",
+        judgmentTitle: "Valoración",
+        judgment1: "Marco jurídico y versiones autorizadas de los documentos",
+        judgment2: "Perímetro, prelación, clases, voto y tratamiento de los acreedores",
+        judgment3: "Suficiencia y pertinencia de las evidencias",
+        judgment4: "Alternativa de liquidación, viabilidad y sostenibilidad",
+        judgment5: "Conclusiones jurídicas, fiscales, de seguridad social y contables",
+        mechanicsTitle: "Mecánica",
+        mechanics1: "Huellas, recibos, esquemas y referencias a las fuentes",
+        mechanics2: "Totales por acreedor y clase",
+        mechanics3: "Recuperaciones y diferencias entre plan y liquidación",
+        mechanics4: "Fuentes y usos, déficit de financiación y puente de caja",
+        mechanics5: "CSV, libros, documentos Word y replay reproducibles"
+      },
+      outputs: {
+        eyebrow: "Resultados principales",
+        title: "El caso sigue siendo inspeccionable, del modelo al informe.",
+        intro: "Los resultados muestran datos revisados, procedencia, bases de valoración, controles mecánicos y lagunas. Una señal aritmética positiva no convierte por sí sola una cuestión abierta en una conclusión.",
+        caseModel: "Procedimiento, documentos, acreedores, hipótesis y cuestiones vinculados a las fuentes.",
+        creditorTreatment: "Prelación, clases, recuperaciones, plazos, voto y evidencias por acreedor.",
+        classSummary: "Agregaciones exactas por clase y comparación con la liquidación.",
+        sourcesUses: "Fuentes, usos, superávit o déficit y necesidad de financiación.",
+        liquidity: "Puente de caja por periodo con diferencias mecánicas visibles.",
+        workpaper: "Libro principal: procedimiento, documentos, acreedores, clases, liquidez, preguntas y cuestiones.",
+        markdown: "Revisión legible con estado del modelo, hipótesis y límites.",
+        word: "Resumen Word profesional con evidencias y puntos abiertos.",
+        appendixTitle: "Apéndice numérico opcional.",
+        appendixText: "`concordato_tie_out_workpaper.xlsx` conserva los controles línea por línea cuando son útiles. Un importe idéntico sigue siendo una evidencia candidata; no demuestra que dos afirmaciones tengan el mismo significado."
+      },
+      start: {
+        eyebrow: "Empezar",
+        title: "Un expediente y una fecha de referencia.",
+        intro: "No se requieren nombres de archivo especiales. Vera inspecciona primero, propone el modelo y solicita confirmación para las valoraciones materiales.",
+        promptLabel: "Ejemplo de prompt",
+        prompt: "Usa Concordato Preventivo en /ruta/expediente.\nReconstruye el procedimiento, los documentos autorizados, los acreedores y su tratamiento,\nla alternativa de liquidación, las fuentes y usos, la liquidez y las cuestiones abiertas.\nMantén el cuadre numérico como apéndice cuando resulte útil.",
+        limitationsTitle: "Límites profesionales y de validación",
+        limit1: "No emite una opinión jurídica ni certifica el plan.",
+        limit2: "No autentica criptográficamente la identidad del revisor.",
+        limit3: "Una evidencia ausente permanece como cuestión abierta.",
+        limit4: "Las pruebas sintéticas demuestran el contrato, no la generalidad en casos reales.",
+        limit5: "La validación de campo requiere un caso no visto y una revisión independiente cualificada."
+      },
+      cta: {
+        label: "Volver a Vera",
+        title: "El Concordato Preventivo forma parte del trabajo, no es un caso aislado.",
+        text: "Vera reúne flujos especializados para revisión, conciliación y trabajo profesional del despacho.",
+        button: "Volver a Vera"
+      }
+    };
+
+    const journeyCopy = {
+      it: {
+        eyebrow: "Il lavoro in breve",
+        title: "Dal fascicolo a una revisione che conserva significato e fonti.",
+        intro: "Il modello del caso viene confermato prima che i controlli numerici producano schedule e conclusioni intermedie.",
+        provideTitle: "Fornisci",
+        provideText: "Ricorso, proposta, piano, attestazione, allegati e data di riferimento.",
+        prepareTitle: "Vera prepara",
+        prepareText: "Una mappa citabile di procedura, creditori, trattamento, liquidazione, liquidità e questioni.",
+        receiveTitle: "Ricevi",
+        receiveText: "Un workpaper rivedibile con modello confermato, calcoli esatti, evidenze e punti aperti."
+      },
+      en: {
+        eyebrow: "The work at a glance",
+        title: "From case file to a review that preserves meaning and sources.",
+        intro: "The case model is confirmed before numerical controls produce schedules and intermediate conclusions.",
+        provideTitle: "Provide",
+        provideText: "Application, proposal, plan, attestation, appendices and reference date.",
+        prepareTitle: "Vera prepares",
+        prepareText: "A citable map of procedure, creditors, treatment, liquidation, liquidity and issues.",
+        receiveTitle: "Receive",
+        receiveText: "A reviewable workpaper with confirmed model, exact calculations, evidence and open points."
+      },
+      fr: {
+        eyebrow: "Le travail en bref",
+        title: "Du dossier à une revue qui conserve le sens et les sources.",
+        intro: "Le modèle du dossier est confirmé avant que les contrôles numériques produisent tableaux et conclusions intermédiaires.",
+        provideTitle: "Vous fournissez",
+        provideText: "Requête, proposition, plan, attestation, annexes et date de référence.",
+        prepareTitle: "Vera prépare",
+        prepareText: "Une carte citée de la procédure, des créanciers, du traitement, de la liquidation, de la liquidité et des questions.",
+        receiveTitle: "Vous recevez",
+        receiveText: "Un dossier révisable avec modèle confirmé, calculs exacts, preuves et points ouverts."
+      },
+      de: {
+        eyebrow: "Die Arbeit im Überblick",
+        title: "Von der Fallakte zu einer Prüfung, die Bedeutung und Quellen erhält.",
+        intro: "Das Fallmodell wird bestätigt, bevor numerische Kontrollen Tabellen und Zwischenergebnisse erzeugen.",
+        provideTitle: "Sie liefern",
+        provideText: "Antrag, Vorschlag, Plan, Bestätigung, Anlagen und Stichtag.",
+        prepareTitle: "Vera bereitet vor",
+        prepareText: "Eine zitierfähige Karte von Verfahren, Gläubigern, Behandlung, Liquidation, Liquidität und Fragen.",
+        receiveTitle: "Sie erhalten",
+        receiveText: "Ein prüfbares Arbeitspapier mit bestätigtem Modell, exakten Berechnungen, Nachweisen und offenen Punkten."
+      },
+      es: {
+        eyebrow: "El trabajo de un vistazo",
+        title: "Del expediente a una revisión que conserva significado y fuentes.",
+        intro: "El modelo del caso se confirma antes de que los controles numéricos produzcan cuadros y conclusiones intermedias.",
+        provideTitle: "Proporcione",
+        provideText: "Solicitud, propuesta, plan, informe de experto, anexos y fecha de referencia.",
+        prepareTitle: "Vera prepara",
+        prepareText: "Un mapa citable del procedimiento, acreedores, tratamiento, liquidación, liquidez y cuestiones.",
+        receiveTitle: "Reciba",
+        receiveText: "Un papel de trabajo revisable con modelo confirmado, cálculos exactos, evidencias y puntos abiertos."
+      }
+    };
+    Object.entries(journeyCopy).forEach(([language, values]) => {
+      copy[language].journey = values;
+      Object.assign(copy[language].cta, {
+        relatedLabel: {
+          it: "Percorsi collegati",
+          en: "Related workflows",
+          fr: "Parcours associés",
+          de: "Verbundene Abläufe",
+          es: "Flujos relacionados"
+        }[language],
+        previdenza: "Previdenza INPS →",
+        registro: "Registro Imprese e SARI →"
+      });
+    });
+
+    const scenarioCopy = {
+      it: {
+        prompts: {
+          items: [
+            ["Revisione completa", "Ricostruisci procedura, documenti autorevoli, creditori, trattamento, alternativa liquidatoria, liquidità e punti aperti."],
+            ["Trattamento dei creditori", "Concentra il lavoro su prelazioni, classi, voto, recuperi, tempi, evidenze e differenze rispetto alla liquidazione."],
+            ["Liquidità e fattibilità", "Collega fonti e impieghi al bridge di cassa e porta in revisione assunzioni, shortfall e scadenze."]
+          ]
+        },
+      },
+      en: {
+        prompts: {
+          items: [
+            ["Full review", "Reconstruct procedure, authoritative documents, creditors, treatment, liquidation alternative, liquidity and open points."],
+            ["Creditor treatment", "Focus on priority, classes, voting, recoveries, timing, evidence and differences from liquidation."],
+            ["Liquidity and feasibility", "Connect sources and uses to the cash bridge and surface assumptions, shortfalls and deadlines for review."]
+          ]
+        },
+      },
+      fr: {
+        prompts: {
+          items: [
+            ["Revue complète", "Reconstituez procédure, documents faisant autorité, créanciers, traitement, alternative liquidative, liquidité et points ouverts."],
+            ["Traitement des créanciers", "Concentrez le travail sur rangs, classes, vote, recouvrements, délais, preuves et écarts avec la liquidation."],
+            ["Liquidité et faisabilité", "Reliez sources et emplois au pont de trésorerie et soumettez hypothèses, déficits et échéances à la revue."]
+          ]
+        },
+      },
+      de: {
+        prompts: {
+          items: [
+            ["Vollständige Prüfung", "Verfahren, maßgebliche Dokumente, Gläubiger, Behandlung, Liquidationsalternative, Liquidität und offene Punkte rekonstruieren."],
+            ["Gläubigerbehandlung", "Prioritäten, Klassen, Abstimmung, Quoten, Zeitplan, Nachweise und Unterschiede zur Liquidation prüfen."],
+            ["Liquidität und Machbarkeit", "Mittelherkunft und -verwendung mit der Liquiditätsbrücke verbinden und Annahmen, Fehlbeträge und Fristen prüfen."]
+          ]
+        },
+      },
+      es: {
+        prompts: {
+          items: [
+            ["Revisión completa", "Reconstruya procedimiento, documentos autorizados, acreedores, tratamiento, alternativa de liquidación, liquidez y puntos abiertos."],
+            ["Tratamiento de acreedores", "Centre el trabajo en prelación, clases, voto, recuperaciones, plazos, evidencias y diferencias frente a la liquidación."],
+            ["Liquidez y viabilidad", "Vincule fuentes y usos con el puente de caja y lleve a revisión hipótesis, déficits y vencimientos."]
+          ]
+        },
+      }
+    };
+
     const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
     const safeLang = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "it";
     const t = copy[safeLang];
+    t.prompts = scenarioCopy[safeLang].prompts;
     const lookup = (path) => path.split(".").reduce((value, key) => value[key], t);
+    const renderPairs = (id, items) => {
+      const list = document.getElementById(id);
+      list.replaceChildren(...items.map(([title, description]) => {
+        const item = document.createElement("li");
+        const heading = document.createElement("strong");
+        const body = document.createElement("span");
+        heading.textContent = title;
+        body.textContent = description;
+        item.append(heading, body);
+        return item;
+      }));
+    };
 
     document.documentElement.lang = safeLang;
     document.title = `${t.hero.title} | Vera`;
@@ -1090,8 +1413,10 @@ Tieni il tie-out numerico come appendice quando è utile.</div>
         link.setAttribute("aria-current", "page");
       }
     });
-    document.querySelectorAll('a[href="../vera/index.html"]').forEach((link) => {
-      link.href = `../vera/index.html/?lang=${safeLang}`;
+    renderPairs("prompt-list", t.prompts.items);
+    document.querySelector("[data-home-link]").href = `/?lang=${safeLang}`;
+    document.querySelectorAll("[data-vera-link]").forEach((link) => {
+      link.href = `../vera/index.html?lang=${safeLang}`;
     });
   </script>
 </body>

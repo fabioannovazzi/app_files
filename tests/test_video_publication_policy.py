@@ -29,7 +29,7 @@ ENGLISH_OUTWARD_IDS = {
     "6HCRTPbOanc",
     "LPjR9Off3sc",
     "KVGdOyK-Vmc",
-    "Lqt3odBszD0",
+    "2XTi99kdI-w",
     "Qn9YTSX388I",
     "VnOXN2SnqNE",
     "KfABIkftuoE",
@@ -57,7 +57,7 @@ CLARA_SPANISH_OUTWARD_IDS = {
     "oPTUz-FhB-A",
 }
 VERA_SPANISH_OUTWARD_IDS = {
-    "BEiFYgK5Wew",
+    "XbmQqWA5sYk",
     "ePe_bVrC-bs",
     "-TnYwnglpqE",
     "X3BOp9ZxiAQ",

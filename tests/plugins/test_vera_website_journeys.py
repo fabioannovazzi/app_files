@@ -1193,6 +1193,8 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     assert spec["remotePublish"] is True
     assert "renderedManifest" not in spec
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
+        ("vera-overview", "core"),
+        ("concordato-plan-review", "italy"),
         ("new-client", "italy"),
         ("studio-archive", "core"),
         ("journal-sampling", "core"),
@@ -1200,7 +1202,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
         ("check-entries", "italy-fatturapa"),
         ("data-handling", "core"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 21
+    assert sum(len(concept["localizations"]) for concept in concepts) == 27
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
@@ -1391,7 +1393,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
             assert phrase in narration
 
 
-def test_vera_video_catalog_v4_2_is_youtube_only_and_jurisdiction_native() -> None:
+def test_vera_video_catalog_v4_3_is_youtube_only_and_jurisdiction_native() -> None:
     node = shutil.which("node")
     if node is None:
         pytest.skip("node is required to execute the browser video catalog")
@@ -1412,7 +1414,7 @@ process.stdout.write(JSON.stringify(catalogs));
     )
     catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
-    assert all(catalog["version"] == "4.2.0" for catalog in catalogs.values())
+    assert all(catalog["version"] == "4.3.0" for catalog in catalogs.values())
     studio_archive = next(
         video
         for video in catalogs["it"]["videos"]
@@ -1434,7 +1436,7 @@ process.stdout.write(JSON.stringify(catalogs));
             video["module"] != "studio-archive"
             for video in catalogs[language]["videos"]
         )
-    assert catalogs["es"]["featured"]["id"] == "BEiFYgK5Wew"
+    assert catalogs["es"]["featured"]["id"] == "XbmQqWA5sYk"
     assert catalogs["es"]["featured"]["audioLanguage"] == "es"
     assert len(catalogs["es"]["videos"]) == 8
     assert {video["audioLanguage"] for video in catalogs["es"]["videos"]} == {"es"}
@@ -1496,3 +1498,76 @@ def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
         assert "https://youtu.be/" in page
         assert "video-production/rendered" not in page
         assert "transcript.txt" not in page
+
+
+def test_vera_assurance_message_is_consistent_across_public_surfaces() -> None:
+    hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    catalog = (SHARED_ROOT / "video-library.js").read_text(encoding="utf-8")
+    report = VERA_MODULE_PAGES["report-builder"].read_text(encoding="utf-8")
+    concordato = VERA_MODULE_PAGES["concordato-plan-review"].read_text(encoding="utf-8")
+
+    for phrase in (
+        "Codex propone",
+        "Il professionista conferma",
+        "Il codice esegue",
+        "Prima il significato. Poi il calcolo.",
+    ):
+        assert phrase in hub
+    assert "conferma contenuti e collocazione" in report
+    assert "Concordato Preventivo" in concordato
+    assert "Il significato viene prima del tie-out." in concordato
+    assert "alternativa liquidatoria" in concordato
+    assert "Il tie-out numerico resta un’appendice opzionale." in hub
+    assert "il tie-out numerico resta opzionale" in catalog
+    for obsolete_phrase in (
+        "Revisione Piano Concordato",
+        "Verifica i numeri del piano",
+        "Mostra quali numeri del piano quadrano",
+        "Dalla revisione del piano",
+    ):
+        assert obsolete_phrase not in hub
+        assert obsolete_phrase not in catalog
+        assert obsolete_phrase not in report
+
+
+def test_vera_replacement_video_sources_cover_assurance_and_concordato_semantics() -> (
+    None
+):
+    spec = json.loads(
+        (SHARED_ROOT / "video-production" / "vera-missing-guides.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_module = {concept["module"]: concept for concept in spec["concepts"]}
+
+    overview = by_module["vera-overview"]
+    assert set(overview["localizations"]) == {"it", "en", "fr", "de", "es"}
+    for localization in overview["localizations"].values():
+        narration = localization["narration"].casefold()
+        assert "codex" in narration
+        assert any(
+            word in narration
+            for word in (
+                "professional",
+                "professionista",
+                "professionnel",
+                "profesional",
+                "prüfer",
+            )
+        )
+        assert any(
+            word in narration
+            for word in ("code", "codice", "código", "le code", "der code")
+        )
+
+    concordato = by_module["concordato-plan-review"]["localizations"]["it"]["narration"]
+    for phrase in (
+        "procedura",
+        "creditori",
+        "alternativa liquidatoria",
+        "fonti e impieghi",
+        "liquidità",
+        "modello semantico",
+        "appendice utile",
+    ):
+        assert phrase in concordato
