@@ -3704,25 +3704,25 @@ def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
 @pytest.mark.parametrize(
     ("lang", "expected_lead"),
     (
-        ("en", "A Codex plugin for presentations and ongoing project work."),
+        ("en", "A specialist plugin for presentations and ongoing project work."),
         (
             "it",
-            "Un plugin Codex per creare presentazioni e dare continuità "
+            "Un plugin specialistico per creare presentazioni e dare continuità "
             "al lavoro sui progetti.",
         ),
         (
             "fr",
-            "Un plugin Codex pour créer des présentations et poursuivre "
+            "Un plugin spécialisé pour créer des présentations et poursuivre "
             "le travail sur les projets dans la durée.",
         ),
         (
             "de",
-            "Ein Codex-Plugin für Präsentationen und die fortlaufende "
+            "Ein spezialisiertes Plugin für Präsentationen und die fortlaufende "
             "Arbeit an Projekten.",
         ),
         (
             "es",
-            "Un plugin de Codex para presentaciones y trabajo continuo en proyectos.",
+            "Un plugin especializado para presentaciones y trabajo continuo en proyectos.",
         ),
     ),
 )
@@ -3750,21 +3750,21 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
     (
         (
             "en",
-            ("Codex for accountants", "Codex for consultants"),
+            ("For accountants", "For consultants"),
             ("For accountants", "For consultants"),
             ("Attribute Analysis", "Deck Toolkit"),
         ),
         (
             "it",
-            ("Codex per commercialisti", "Codex per consulenti"),
+            ("Per commercialisti", "Per consulenti"),
             ("Per commercialisti", "Per consulenti"),
             ("Analisi attributi", "Toolkit presentazioni"),
         ),
         (
             "fr",
             (
-                "Codex pour les experts-comptables",
-                "Codex pour les consultants",
+                "Pour les experts-comptables",
+                "Pour les consultants",
             ),
             ("Pour les experts-comptables", "Pour les consultants"),
             ("Analyse des attributs", "Toolkit deck"),
@@ -3772,8 +3772,8 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
         (
             "de",
             (
-                "Codex für Steuerberaterinnen und Steuerberater",
-                "Codex für Beraterinnen und Berater",
+                "Für Steuerberaterinnen und Steuerberater",
+                "Für Beraterinnen und Berater",
             ),
             (
                 "Für Steuerberaterinnen und Steuerberater",
@@ -3783,13 +3783,13 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
         ),
         (
             "es",
-            ("Codex para profesionales contables", "Codex para consultores"),
+            ("Para profesionales contables", "Para consultores"),
             ("Para profesionales contables", "Para consultores"),
             ("Análisis de atributos", "Herramientas de presentación"),
         ),
     ),
 )
-def test_homepage_only_exposes_codex_role_groups(
+def test_homepage_only_exposes_professional_role_groups(
     lang: str,
     expected_group_titles: tuple[str, str],
     expected_audiences: tuple[str, str],
@@ -3829,43 +3829,43 @@ def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
 
     expected_orders = (
         (
-            '"title": "Codex for accountants"',
+            '"title": "For accountants"',
             ("Vera",),
         ),
         (
-            '"title": "Codex for consultants"',
+            '"title": "For consultants"',
             ("Clara",),
         ),
         (
-            '"title": "Codex per commercialisti"',
+            '"title": "Per commercialisti"',
             ("Vera",),
         ),
         (
-            '"title": "Codex per consulenti"',
+            '"title": "Per consulenti"',
             ("Clara",),
         ),
         (
-            '"title": "Codex pour les experts-comptables"',
+            '"title": "Pour les experts-comptables"',
             ("Vera",),
         ),
         (
-            '"title": "Codex pour les consultants"',
+            '"title": "Pour les consultants"',
             ("Clara",),
         ),
         (
-            '"title": "Codex für Steuerberaterinnen und Steuerberater"',
+            '"title": "Für Steuerberaterinnen und Steuerberater"',
             ("Vera",),
         ),
         (
-            '"title": "Codex für Beraterinnen und Berater"',
+            '"title": "Für Beraterinnen und Berater"',
             ("Clara",),
         ),
         (
-            '"title": "Codex para profesionales contables"',
+            '"title": "Para profesionales contables"',
             ("Vera",),
         ),
         (
-            '"title": "Codex para consultores"',
+            '"title": "Para consultores"',
             ("Clara",),
         ),
     )
@@ -4149,7 +4149,7 @@ def test_homepage_tablet_header_reflows_before_mobile_breakpoint() -> None:
 @pytest.mark.parametrize(
     ("group_index", "expected_group_id"), ((0, "vera"), (1, "clara"))
 )
-def test_homepage_content_explains_codex_harness_and_each_plugin(
+def test_homepage_content_explains_specialist_method_and_each_plugin(
     lang: str,
     group_index: int,
     expected_group_id: str,
@@ -4166,9 +4166,11 @@ def test_homepage_content_explains_codex_harness_and_each_plugin(
     assert content["hero"]["subheadline"]
     assert content["hero"]["plugins_label"]
     assert "primary_cta" not in content["hero"]
-    assert "Codex" in content["hero"]["headline"]
+    assert "Codex" not in content["hero"]["headline"]
+    assert "ChatGPT Work" in content["hero"]["subheadline"]
     assert "Codex" in content["hero"]["subheadline"]
-    assert content["harness"]["id"] == "codex"
+    assert "Claude Cowork" in content["hero"]["subheadline"]
+    assert content["harness"]["id"] == "method"
     assert len(content["harness"]["layers"]) == 3
     assert "consequence" not in content["harness"]
     assert "consequence_label" not in content["harness"]
@@ -4251,47 +4253,47 @@ def test_homepage_vera_describes_the_task_without_literal_or_internal_language(
     (
         (
             "en",
-            "Codex plugins for professional work",
-            "AI has the power. Codex provides the control.",
+            "Plugins for professional work",
+            "AI has the power. The method provides the control.",
             "control",
             "professional decides",
             "hallucinations",
         ),
         (
             "it",
-            "Plugin Codex per il lavoro professionale",
-            "La potenza viene dall'AI. Il controllo, da Codex.",
+            "Plugin per il lavoro professionale",
+            "La potenza viene dall'AI. Il controllo, dal metodo.",
             "controllo",
             "professionista decide",
             "allucinazioni",
         ),
         (
             "fr",
-            "Plugins Codex pour les professionnels",
-            "L'IA apporte la puissance. Codex apporte le contrôle.",
+            "Plugins pour les professionnels",
+            "L'IA apporte la puissance. La méthode apporte le contrôle.",
             "contrôle",
             "professionnel décide",
             "hallucinations",
         ),
         (
             "de",
-            "Codex-Plugins für professionelle Arbeit",
-            "KI liefert die Leistung. Codex sorgt für Kontrolle.",
+            "Plugins für professionelle Arbeit",
+            "KI liefert die Leistung. Die Methode sorgt für Kontrolle.",
             "Kontrolle",
             "Fachperson entscheidet",
             "Halluzinationen",
         ),
         (
             "es",
-            "Plugins de Codex para el trabajo profesional",
-            "La IA aporta la potencia. Codex aporta el control.",
+            "Plugins para el trabajo profesional",
+            "La IA aporta la potencia. El método aporta el control.",
             "control",
             "el profesional decide",
             "alucinaciones",
         ),
     ),
 )
-def test_homepage_positions_control_as_the_codex_harness(
+def test_homepage_positions_control_as_the_specialist_method(
     lang: str,
     expected_eyebrow: str,
     expected_headline: str,
@@ -4310,7 +4312,7 @@ def test_homepage_positions_control_as_the_codex_harness(
     assert "Mparanza ·" not in content["hero"]["eyebrow"]
     assert content["hero"]["headline"] == expected_headline
     assert expected_control_term.casefold() in content["hero"]["headline"].casefold()
-    assert content["harness"]["id"] == "codex"
+    assert content["harness"]["id"] == "method"
     assert content["bridge"]["id"] == "plugins"
     assert rejected_fragment not in serialized_content
     assert rejected_consequence_fragment not in serialized_content
@@ -4322,32 +4324,32 @@ def test_homepage_positions_control_as_the_codex_harness(
     (
         (
             "en",
-            "Mparanza is Vera and Clara: two plugins that apply the same Codex "
-            "harness to two different professions.",
+            "Mparanza is Vera and Clara: two plugins that bring specialist methods "
+            "to two different professions.",
             "first two",
         ),
         (
             "it",
-            "Mparanza è Vera e Clara: due plugin che applicano lo stesso ambiente "
-            "operativo Codex a due professioni diverse.",
+            "Mparanza è Vera e Clara: due plugin che incorporano metodi specialistici "
+            "per due professioni diverse.",
             "primi due",
         ),
         (
             "fr",
-            "Mparanza, c'est Vera et Clara : deux plugins qui appliquent le même "
-            "environnement Codex à deux métiers différents.",
+            "Mparanza, c'est Vera et Clara : deux plugins qui intègrent des méthodes "
+            "spécialisées pour deux métiers différents.",
             "deux premiers",
         ),
         (
             "de",
-            "Mparanza, das sind Vera und Clara: zwei Plugins, die dieselbe "
-            "Codex-Arbeitsumgebung auf zwei Berufsgruppen ausrichten.",
+            "Mparanza, das sind Vera und Clara: zwei Plugins mit fachlichen Methoden "
+            "für zwei unterschiedliche Berufsgruppen.",
             "ersten beiden",
         ),
         (
             "es",
-            "Mparanza es Vera y Clara: dos plugins que aplican el mismo entorno de "
-            "Codex a dos profesiones distintas.",
+            "Mparanza es Vera y Clara: dos plugins que incorporan métodos "
+            "especializados para dos profesiones distintas.",
             "los dos primeros",
         ),
     ),
@@ -4372,33 +4374,34 @@ def test_homepage_presents_vera_and_clara_as_the_complete_pair(
     (
         (
             "en",
-            "A Codex plugin defines the specialist method and expected outputs.",
-            "Mparanza plugin supplies",
+            "Checks, review points, and expected outputs make the work reviewable.",
+            "Codex connects",
         ),
         (
             "it",
-            "Un plugin Codex definisce il metodo specialistico e i risultati da produrre.",
-            "plugin Mparanza fornisce",
+            "Verifiche, punti di revisione e risultati attesi rendono il lavoro rivedibile.",
+            "Codex collega",
         ),
         (
             "fr",
-            "Un plugin Codex définit la méthode spécialisée et les livrables à produire.",
-            "plugin Mparanza apporte",
+            "Les contrôles, les points de revue et les livrables attendus rendent le travail révisable.",
+            "Codex relie",
         ),
         (
             "de",
-            "Ein Codex-Plugin bringt die fachliche Methode mit und legt die zu "
-            "erstellenden Ergebnisse fest.",
-            "Mparanza-Plugin liefert",
+            "Prüfungen, Prüfpunkte und erwartete Ergebnisse machen die Arbeit "
+            "nachvollziehbar.",
+            "Codex verbindet",
         ),
         (
             "es",
-            "Un plugin de Codex define el método especializado y los resultados esperados.",
-            "el plugin de Mparanza aporta",
+            "Los controles, los puntos de revisión y los resultados esperados hacen "
+            "que el trabajo sea revisable.",
+            "Codex conecta",
         ),
     ),
 )
-def test_homepage_attributes_the_specialist_method_to_codex_plugins(
+def test_homepage_attributes_control_to_the_specialist_method(
     lang: str,
     expected_blurb: str,
     rejected_fragment: str,
@@ -4407,12 +4410,12 @@ def test_homepage_attributes_the_specialist_method_to_codex_plugins(
 
     from modules.pdp import api as pdp_api
 
-    professional_use_blurb = pdp_api._get_landing_page_content(lang)["harness"][
-        "layers"
-    ][2]["blurb"]
+    control_blurb = pdp_api._get_landing_page_content(lang)["harness"]["layers"][2][
+        "blurb"
+    ]
 
-    assert professional_use_blurb == expected_blurb
-    assert rejected_fragment not in professional_use_blurb
+    assert control_blurb == expected_blurb
+    assert rejected_fragment not in control_blurb
 
 
 def test_homepage_app_css_link_is_cache_busted() -> None:

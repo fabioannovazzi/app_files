@@ -2614,7 +2614,7 @@ def _static_asset_version(path: str) -> str:
 TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     "en": {
         "prompt": "Create a customised deep research prompt from your question.",
-        "prompt_optimizer_plugin": "Download the Codex plugin for legal, tax and compliance Deep Research prompt optimization: fact anchors, research posture, source strategy, citations and deterministic validation.",
+        "prompt_optimizer_plugin": "Download the plugin for legal, tax and compliance Deep Research prompt optimization: fact anchors, research posture, source strategy, citations and deterministic validation.",
         "deep_research_validator_plugin": "Validate Deep Research outputs: claim support, source checks, reasoning review, corrected Markdown, DOCX and audit trail.",
         "check_entries": "Verify journal entries by comparing them with supporting documents.",
         "product_attributes": "Explore product attribute data across retailers and categories, with filters and detailed records.",
@@ -2629,12 +2629,12 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_about": "Learn how the team behind Mparanza supports finance organisations.",
         "nav_why_us": "See why audit and revenue teams rely on Mparanza for AI-enabled reviews.",
         "new_client": "Open Vera's New Client workflow to prepare the client file, engagement, privacy, AML and monitoring in one source-linked journey.",
-        "riconciliazione_plugin": "Download the Codex plugin for open-item reconciliation: open items, ledgers, journals, bank statements, support documents and reviewable Excel/Word outputs.",
-        "journal_sampling_plugin": "Download the Codex plugin for journal sampling: variable journal extraction, column mapping, reproducible samples, diagnostics and audit trail.",
-        "check_entries_plugin": "Download the Codex plugin for entry support testing: selected entries, supporting PDFs, deterministic checks, exceptions and audit trail.",
-        "journal_bank_reconciliation_plugin": "Download the Codex plugin for journal-bank reconciliation: bank statements, journal or ledger rows, deterministic matching, exceptions and audit trail.",
-        "report_builder_plugin": "Download the Codex plugin for report building: variable Excel, CSV and PDF inputs, section mapping, Codex narrative, DOCX and audit trail.",
-        "concordato_plan_review_plugin": "Download the Codex plugin for concordato plan review: tie out plan numbers against balance, ledgers, adjusted DB and tax/social details, with Excel/Word outputs and audit trail.",
+        "riconciliazione_plugin": "Download the plugin for open-item reconciliation: open items, ledgers, journals, bank statements, support documents and reviewable Excel/Word outputs.",
+        "journal_sampling_plugin": "Download the plugin for journal sampling: variable journal extraction, column mapping, reproducible samples, diagnostics and audit trail.",
+        "check_entries_plugin": "Download the plugin for entry support testing: selected entries, supporting PDFs, deterministic checks, exceptions and audit trail.",
+        "journal_bank_reconciliation_plugin": "Download the plugin for journal-bank reconciliation: bank statements, journal or ledger rows, deterministic matching, exceptions and audit trail.",
+        "report_builder_plugin": "Download the plugin for report building: variable Excel, CSV and PDF inputs, section mapping, AI-assisted narrative, DOCX and audit trail.",
+        "concordato_plan_review_plugin": "Download the plugin for concordato plan review: tie out plan numbers against balance, ledgers, adjusted DB and tax/social details, with Excel/Word outputs and audit trail.",
         "audit_reconciliation_family": "Audit and reconciliation workflows: journal sampling, entry support testing, journal-bank matching, open-item reconciliation and plan tie-out.",
         "research_family": "Research workflows: optimize a Deep Research prompt before the run, then validate the answer against cited sources after the run.",
         "reporting_plugin": "Reporting workflow for selecting useful charts, tables and checks before drafting commentary tied to those outputs.",
@@ -2648,7 +2648,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     },
     "it": {
         "prompt": "Crea un prompt ottimizzato da sottoporre a Deep Research.",
-        "prompt_optimizer_plugin": "Scarica il plugin Codex per ottimizzare prompt Deep Research legali, fiscali e compliance: fatti, postura, fonti, citazioni e validazione deterministica.",
+        "prompt_optimizer_plugin": "Scarica il plugin per ottimizzare prompt Deep Research legali, fiscali e compliance: fatti, postura, fonti, citazioni e validazione deterministica.",
         "deep_research_validator_plugin": "Valida output Deep Research: supporto delle affermazioni, fonti, ragionamento, Markdown corretto, DOCX e audit trail.",
         "check_entries": "Verifica le registrazioni contabili confrontandole con i documenti di supporto.",
         "product_attributes": "Esplora gli attributi dei prodotti tra rivenditori e categorie con filtri e record dettagliati.",
@@ -2660,12 +2660,12 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "slides_editor": "Crea e modifica le slide direttamente dal browser.",
         "sales_by_dataset": "Esplora le vendite arricchite per attributo.",
         "new_client": "Apri il percorso Nuovo cliente di Vera per preparare fascicolo, incarico, privacy, AML e monitoraggio in un unico flusso collegato alle fonti.",
-        "riconciliazione_plugin": "Scarica il plugin Codex per la riconciliazione partite: partite, mastrini, giornale, banche, supporti esterni e output Excel/Word rivedibili.",
-        "journal_sampling_plugin": "Scarica il plugin Codex per il campionamento del giornale: estrazione da formati variabili, mapping colonne, campioni riproducibili, diagnostiche e audit trail.",
-        "check_entries_plugin": "Scarica il plugin Codex per il controllo scritture contabili: scritture selezionate, PDF di supporto, controlli deterministici, eccezioni e audit trail.",
-        "journal_bank_reconciliation_plugin": "Scarica il plugin Codex per la riconciliazione giornale-banca: estratti conto, righe giornale o mastrino, matching deterministico, eccezioni e audit trail.",
-        "report_builder_plugin": "Scarica il plugin Codex per la generazione report: Excel, CSV e PDF variabili, mapping sezioni, narrativa Codex, DOCX e audit trail.",
-        "concordato_plan_review_plugin": "Scarica il plugin Codex per la revisione del piano di concordato: controllo numerico contro bilancio, mastrini, prospetti rettificati e dettagli tributari/previdenziali, con output Excel/Word e audit trail.",
+        "riconciliazione_plugin": "Scarica il plugin per la riconciliazione partite: partite, mastrini, giornale, banche, supporti esterni e output Excel/Word rivedibili.",
+        "journal_sampling_plugin": "Scarica il plugin per il campionamento del giornale: estrazione da formati variabili, mapping colonne, campioni riproducibili, diagnostiche e audit trail.",
+        "check_entries_plugin": "Scarica il plugin per il controllo scritture contabili: scritture selezionate, PDF di supporto, controlli deterministici, eccezioni e audit trail.",
+        "journal_bank_reconciliation_plugin": "Scarica il plugin per la riconciliazione giornale-banca: estratti conto, righe giornale o mastrino, matching deterministico, eccezioni e audit trail.",
+        "report_builder_plugin": "Scarica il plugin per la generazione report: Excel, CSV e PDF variabili, mapping sezioni, testo narrativo assistito dall'AI, DOCX e audit trail.",
+        "concordato_plan_review_plugin": "Scarica il plugin per la revisione del piano di concordato: controllo numerico contro bilancio, mastrini, prospetti rettificati e dettagli tributari/previdenziali, con output Excel/Word e audit trail.",
         "audit_reconciliation_family": "Flussi di audit e riconciliazione: campionamento giornale, controllo scritture, matching banca-giornale, riconciliazione partite e tie-out del piano.",
         "research_family": "Flussi di ricerca: ottimizza il prompt Deep Research prima del run, poi valida la risposta contro le fonti citate.",
         "reporting_plugin": "Workflow di reporting per scegliere grafici, tabelle e controlli utili prima di scrivere commenti collegati agli output.",
@@ -2682,7 +2682,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     },
     "fr": {
         "prompt": "Créez un prompt de recherche personnalisé à partir de votre question.",
-        "prompt_optimizer_plugin": "Téléchargez le plugin Codex pour optimiser les prompts Deep Research juridiques, fiscaux et compliance : faits, posture, sources, citations et validation déterministe.",
+        "prompt_optimizer_plugin": "Téléchargez le plugin pour optimiser les prompts Deep Research juridiques, fiscaux et compliance : faits, posture, sources, citations et validation déterministe.",
         "deep_research_validator_plugin": "Validez les sorties Deep Research : support des affirmations, sources, raisonnement, Markdown corrigé, DOCX et audit trail.",
         "check_entries": "Vérifiez les écritures comptables en les comparant aux pièces justificatives.",
         "product_attributes": "Explorez les attributs produit par enseigne et par catégorie avec des filtres détaillés.",
@@ -2697,12 +2697,12 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_about": "Découvrez qui compose l’équipe Mparanza et son accompagnement des finances.",
         "nav_why_us": "Comprenez pourquoi les équipes d’audit et commerciales font confiance à Mparanza.",
         "new_client": "Ouvrez le parcours Nouveau client de Vera pour préparer dossier, mission, confidentialité, LCB-FT et suivi dans un même flux relié aux sources.",
-        "riconciliazione_plugin": "Téléchargez le plugin Codex pour le rapprochement des postes ouverts : postes, grands livres, journaux, relevés bancaires, justificatifs externes et sorties Excel/Word révisables.",
-        "journal_sampling_plugin": "Téléchargez le plugin Codex pour l'échantillonnage du journal : extraction de formats variables, mapping des colonnes, échantillons reproductibles, diagnostics et audit trail.",
-        "check_entries_plugin": "Téléchargez le plugin Codex pour le contrôle des écritures : écritures sélectionnées, PDF justificatifs, contrôles déterministes, exceptions et audit trail.",
-        "journal_bank_reconciliation_plugin": "Téléchargez le plugin Codex pour le rapprochement journal-banque : relevés bancaires, lignes journal ou grand livre, matching déterministe, exceptions et audit trail.",
-        "report_builder_plugin": "Téléchargez le plugin Codex pour générer des rapports : Excel, CSV et PDF variables, mapping des sections, narration Codex, DOCX et audit trail.",
-        "concordato_plan_review_plugin": "Téléchargez le plugin Codex pour réviser un plan de concordat : rapprochement des chiffres avec bilan, grands livres, DB ajustée et dettes fiscales/sociales, avec dossiers Excel/Word et audit trail.",
+        "riconciliazione_plugin": "Téléchargez le plugin pour le rapprochement des postes ouverts : postes, grands livres, journaux, relevés bancaires, justificatifs externes et sorties Excel/Word révisables.",
+        "journal_sampling_plugin": "Téléchargez le plugin pour l'échantillonnage du journal : extraction de formats variables, mapping des colonnes, échantillons reproductibles, diagnostics et audit trail.",
+        "check_entries_plugin": "Téléchargez le plugin pour le contrôle des écritures : écritures sélectionnées, PDF justificatifs, contrôles déterministes, exceptions et audit trail.",
+        "journal_bank_reconciliation_plugin": "Téléchargez le plugin pour le rapprochement journal-banque : relevés bancaires, lignes journal ou grand livre, matching déterministe, exceptions et audit trail.",
+        "report_builder_plugin": "Téléchargez le plugin pour générer des rapports : Excel, CSV et PDF variables, mapping des sections, narration assistée par l'IA, DOCX et audit trail.",
+        "concordato_plan_review_plugin": "Téléchargez le plugin pour réviser un plan de concordat : rapprochement des chiffres avec bilan, grands livres, DB ajustée et dettes fiscales/sociales, avec dossiers Excel/Word et audit trail.",
         "audit_reconciliation_family": "Workflows d'audit et de rapprochement : échantillonnage du journal, contrôle des écritures, rapprochement journal-banque, postes ouverts et contrôle du plan.",
         "research_family": "Workflows de recherche : optimisez le prompt Deep Research avant le run, puis validez la réponse contre les sources citées.",
         "reporting_plugin": "Workflow de reporting pour sélectionner les graphiques, tables et contrôles utiles avant de rédiger un commentaire relié aux sorties.",
@@ -2716,7 +2716,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     },
     "de": {
         "prompt": "Erstellen Sie aus Ihrer Frage ein optimiertes Deep-Research-Prompt.",
-        "prompt_optimizer_plugin": "Laden Sie das Codex-Plugin zur Optimierung von Deep-Research-Prompts für Recht, Steuern und Compliance herunter: Faktenanker, Posture, Quellen, Zitate und deterministische Validierung.",
+        "prompt_optimizer_plugin": "Laden Sie das Plugin zur Optimierung von Deep-Research-Prompts für Recht, Steuern und Compliance herunter: Faktenanker, Posture, Quellen, Zitate und deterministische Validierung.",
         "deep_research_validator_plugin": "Validieren Sie Deep-Research-Ausgaben: Aussagenbelege, Quellen, Logik, korrigiertes Markdown, DOCX und Audit-Trail.",
         "check_entries": "Prüfen Sie Buchungssätze, indem Sie sie mit Belegen vergleichen.",
         "product_attributes": "Analysieren Sie Produktattribute über Händler und Kategorien mit detaillierten Filtern.",
@@ -2731,12 +2731,12 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_about": "Erfahren Sie mehr über das Mparanza-Team und seine Unterstützung für Finanzabteilungen.",
         "nav_why_us": "Lesen Sie, warum Audit- und Vertriebsteams auf Mparanza setzen.",
         "new_client": "Öffnen Sie Veras Ablauf Neuer Mandant, um Akte, Auftrag, Datenschutz, AML und Monitoring in einem quellengebundenen Prozess vorzubereiten.",
-        "riconciliazione_plugin": "Laden Sie das Codex-Plugin für Offene-Posten-Abstimmung herunter: offene Posten, Hauptbücher, Journale, Kontoauszüge, externe Nachweise und prüfbare Excel/Word-Arbeitspapiere.",
-        "journal_sampling_plugin": "Laden Sie das Codex-Plugin für Journal-Stichproben herunter: variable Journalextraktion, Spalten-Mapping, reproduzierbare Stichproben, Diagnostik und Audit-Trail.",
-        "check_entries_plugin": "Laden Sie das Codex-Plugin für Buchungsprüfung herunter: ausgewählte Buchungen, Beleg-PDFs, deterministische Prüfungen, Ausnahmen und Audit-Trail.",
-        "journal_bank_reconciliation_plugin": "Laden Sie das Codex-Plugin für Journal-Bank-Abstimmung herunter: Kontoauszüge, Journal- oder Hauptbuchzeilen, deterministisches Matching, Ausnahmen und Audit-Trail.",
-        "report_builder_plugin": "Laden Sie das Codex-Plugin für Berichtserstellung herunter: variable Excel-, CSV- und PDF-Eingaben, Abschnittszuordnung, Codex-Narrative, DOCX und Audit-Trail.",
-        "concordato_plan_review_plugin": "Laden Sie das Codex-Plugin zur Prüfung eines Concordato-Plans herunter: Zahlenabgleich mit Bilanz, Hauptbüchern, angepasster DB und Steuer-/Sozialschulden, mit Excel/Word-Arbeitspapieren und Audit-Trail.",
+        "riconciliazione_plugin": "Laden Sie das Plugin für Offene-Posten-Abstimmung herunter: offene Posten, Hauptbücher, Journale, Kontoauszüge, externe Nachweise und prüfbare Excel/Word-Arbeitspapiere.",
+        "journal_sampling_plugin": "Laden Sie das Plugin für Journal-Stichproben herunter: variable Journalextraktion, Spalten-Mapping, reproduzierbare Stichproben, Diagnostik und Audit-Trail.",
+        "check_entries_plugin": "Laden Sie das Plugin für Buchungsprüfung herunter: ausgewählte Buchungen, Beleg-PDFs, deterministische Prüfungen, Ausnahmen und Audit-Trail.",
+        "journal_bank_reconciliation_plugin": "Laden Sie das Plugin für Journal-Bank-Abstimmung herunter: Kontoauszüge, Journal- oder Hauptbuchzeilen, deterministisches Matching, Ausnahmen und Audit-Trail.",
+        "report_builder_plugin": "Laden Sie das Plugin für Berichtserstellung herunter: variable Excel-, CSV- und PDF-Eingaben, Abschnittszuordnung, KI-gestützte Erläuterungen, DOCX und Audit-Trail.",
+        "concordato_plan_review_plugin": "Laden Sie das Plugin zur Prüfung eines Concordato-Plans herunter: Zahlenabgleich mit Bilanz, Hauptbüchern, angepasster DB und Steuer-/Sozialschulden, mit Excel/Word-Arbeitspapieren und Audit-Trail.",
         "audit_reconciliation_family": "Audit- und Abstimmungsworkflows: Journal-Stichproben, Buchungsprüfung, Journal-Bank-Abstimmung, offene Posten und Planabgleich.",
         "research_family": "Rechercheworkflows: Deep-Research-Prompt vor dem Lauf optimieren und die Antwort danach gegen zitierte Quellen validieren.",
         "reporting_plugin": "Reporting-Workflow zur Auswahl nützlicher Diagramme, Tabellen und Kontrollen vor dem Schreiben ausgabebezogener Kommentare.",
@@ -2750,7 +2750,7 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     },
     "es": {
         "prompt": "Crea un prompt de Deep Research personalizado a partir de tu pregunta.",
-        "prompt_optimizer_plugin": "Descarga el plugin de Codex para optimizar prompts de Deep Research jurídicos, fiscales y de cumplimiento: hechos de referencia, enfoque de investigación, estrategia de fuentes, citas y validación determinista.",
+        "prompt_optimizer_plugin": "Descarga el plugin para optimizar prompts de Deep Research jurídicos, fiscales y de cumplimiento: hechos de referencia, enfoque de investigación, estrategia de fuentes, citas y validación determinista.",
         "deep_research_validator_plugin": "Valida resultados de Deep Research: respaldo de afirmaciones, comprobación de fuentes, revisión del razonamiento, Markdown corregido, DOCX y pista de auditoría.",
         "check_entries": "Comprueba los asientos contables comparándolos con los documentos justificativos.",
         "product_attributes": "Explora datos de atributos de producto entre retailers y categorías, con filtros y registros detallados.",
@@ -2765,12 +2765,12 @@ TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
         "nav_about": "Conoce cómo el equipo de Mparanza ayuda a las organizaciones financieras.",
         "nav_why_us": "Descubre por qué los equipos de auditoría e ingresos confían en Mparanza para revisiones asistidas por IA.",
         "new_client": "Abre el flujo Nuevo cliente de Vera para preparar el expediente, el encargo, la privacidad, la prevención del blanqueo y el seguimiento en un recorrido vinculado a las fuentes.",
-        "riconciliazione_plugin": "Descarga el plugin de Codex para conciliar partidas abiertas: partidas, libros mayores, diarios, extractos bancarios, justificantes y resultados revisables en Excel y Word.",
-        "journal_sampling_plugin": "Descarga el plugin de Codex para muestreo del diario: extracción de diarios variables, asignación de columnas, muestras reproducibles, diagnósticos y pista de auditoría.",
-        "check_entries_plugin": "Descarga el plugin de Codex para comprobar justificantes de asientos: asientos seleccionados, PDF justificativos, comprobaciones deterministas, excepciones y pista de auditoría.",
-        "journal_bank_reconciliation_plugin": "Descarga el plugin de Codex para conciliar diario y banco: extractos bancarios, filas del diario o libro mayor, correspondencia determinista, excepciones y pista de auditoría.",
-        "report_builder_plugin": "Descarga el plugin de Codex para generar informes: entradas variables de Excel, CSV y PDF, asignación de secciones, narrativa de Codex, DOCX y pista de auditoría.",
-        "concordato_plan_review_plugin": "Descarga el plugin de Codex para revisar planes de concordato: concilia las cifras del plan con el balance, los libros mayores, los estados ajustados y el detalle fiscal y social, con resultados en Excel y Word y pista de auditoría.",
+        "riconciliazione_plugin": "Descarga el plugin para conciliar partidas abiertas: partidas, libros mayores, diarios, extractos bancarios, justificantes y resultados revisables en Excel y Word.",
+        "journal_sampling_plugin": "Descarga el plugin para muestreo del diario: extracción de diarios variables, asignación de columnas, muestras reproducibles, diagnósticos y pista de auditoría.",
+        "check_entries_plugin": "Descarga el plugin para comprobar justificantes de asientos: asientos seleccionados, PDF justificativos, comprobaciones deterministas, excepciones y pista de auditoría.",
+        "journal_bank_reconciliation_plugin": "Descarga el plugin para conciliar diario y banco: extractos bancarios, filas del diario o libro mayor, correspondencia determinista, excepciones y pista de auditoría.",
+        "report_builder_plugin": "Descarga el plugin para generar informes: entradas variables de Excel, CSV y PDF, asignación de secciones, narrativa asistida por IA, DOCX y pista de auditoría.",
+        "concordato_plan_review_plugin": "Descarga el plugin para revisar planes de concordato: concilia las cifras del plan con el balance, los libros mayores, los estados ajustados y el detalle fiscal y social, con resultados en Excel y Word y pista de auditoría.",
         "audit_reconciliation_family": "Flujos de auditoría y conciliación: muestreo del diario, comprobación de justificantes, conciliación diario-banco, partidas abiertas y conciliación del plan.",
         "research_family": "Flujos de investigación: optimiza un prompt de Deep Research antes de ejecutarlo y valida después la respuesta frente a las fuentes citadas.",
         "reporting_plugin": "Flujo de informes para seleccionar gráficos, tablas y comprobaciones útiles antes de redactar comentarios vinculados a esos resultados.",
@@ -2796,11 +2796,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex for accountants",
+                        "title": "For accountants",
                         "tooltip_key": "codex_accountants_group",
                         "audience": "For accountants",
                         "lead": (
-                            "A Codex plugin for client files, accounting checks, "
+                            "A specialist plugin for client files, accounting checks, "
                             "reconciliations and reporting."
                         ),
                         "description": (
@@ -2827,11 +2827,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     },
                     {
                         "id": "clara",
-                        "title": "Codex for consultants",
+                        "title": "For consultants",
                         "tooltip_key": "codex_consultants_group",
                         "audience": "For consultants",
                         "lead": (
-                            "A Codex plugin for presentations and ongoing project work."
+                            "A specialist plugin for presentations and ongoing project work."
                         ),
                         "description": (
                             "Clara brings documents, notes, interviews and recordings together "
@@ -2862,21 +2862,21 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "hero": {
             "id": "hero",
             "skip_label": "Skip to main content",
-            "plugins_label": "Codex plugins",
-            "eyebrow": "Codex plugins for professional work",
-            "headline": "AI has the power. Codex provides the control.",
+            "plugins_label": "Mparanza plugins",
+            "eyebrow": "Plugins for professional work",
+            "headline": "AI has the power. The method provides the control.",
             "subheadline": (
-                "Mparanza builds Codex plugins. Each gives Codex a "
-                "specialist way of working for professional tasks."
+                "Mparanza builds specialist methods into plugins for professional work. "
+                "For ChatGPT Work, Codex, and Claude Cowork."
             ),
         },
         "harness": {
-            "id": "codex",
-            "title": "The harness changes what AI can do.",
+            "id": "method",
+            "title": "The method turns AI capability into professional work.",
             "description": (
-                "AI provides the capabilities. Codex puts them in a working environment "
-                "that can use files, run tools, follow instructions and create outputs. "
-                "That harness is what we mean by control."
+                "AI can reason, analyze, and create. Each plugin gives those capabilities "
+                "a specialist method: defined sources, ordered steps, explicit checks, "
+                "review points, and expected outputs. That method is what we mean by control."
             ),
             "layers": [
                 {
@@ -2884,16 +2884,13 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "The model reasons, analyzes and creates.",
                 },
                 {
-                    "title": "Control",
-                    "blurb": (
-                        "Codex connects those capabilities to the files, tools and context "
-                        "of the task."
-                    ),
+                    "title": "Method",
+                    "blurb": "The plugin defines sources, steps, and professional criteria.",
                 },
                 {
-                    "title": "Professional use",
+                    "title": "Control",
                     "blurb": (
-                        "A Codex plugin defines the specialist method and expected outputs."
+                        "Checks, review points, and expected outputs make the work reviewable."
                     ),
                 },
             ],
@@ -2902,7 +2899,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Open by design.",
             "description": (
-                "Vera and Clara are open-source Codex plugins. "
+                "Vera and Clara are open-source plugins. "
                 "You can inspect the methods, controls, and code before using them—and "
                 "adapt them to your work."
             ),
@@ -2934,7 +2931,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "In ordinary Vera and Clara workflows, Mparanza does not receive your client work."
             ),
             "description": (
-                "Ordinary plugin workflows run inside your existing Codex environment. "
+                "Ordinary plugin workflows run inside the AI workspace you choose. "
                 "Your client prompts, files, and outputs do not pass through Mparanza."
             ),
             "cta_label": "See how your data is handled",
@@ -2943,12 +2940,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Compliant by design.",
-            "lead": ("Professional work may require Codex to read real client data."),
+            "lead": (
+                "Professional work may require the selected AI workspace to read real client data."
+            ),
             "description": (
                 "Vera and Clara do not automatically anonymise data. They may use "
                 "local Python to filter or aggregate information when useful. Data "
-                "supplied to the model is processed through the user's existing "
-                "ChatGPT plan."
+                "supplied to the model is processed under the terms and controls of "
+                "the AI workspace the user chooses."
             ),
             "principles": [
                 {
@@ -2961,7 +2960,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
                 {
                     "title": "Two processing categories",
-                    "blurb": "Ordinary plugin functions use the existing ChatGPT plan. Mparanza-hosted services form a separate processing boundary.",
+                    "blurb": "Ordinary plugin functions use the AI workspace the user chooses. Mparanza-hosted services form a separate processing boundary.",
                 },
             ],
             "closing": "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
@@ -2970,10 +2969,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Codex by design.",
+            "title": "A method for each profession.",
             "description": (
-                "Mparanza is Vera and Clara: two plugins that apply the same Codex "
-                "harness to two different professions."
+                "Mparanza is Vera and Clara: two plugins that bring specialist methods "
+                "to two different professions."
             ),
         },
     },
@@ -2988,11 +2987,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex per commercialisti",
+                        "title": "Per commercialisti",
                         "tooltip_key": "codex_accountants_group",
                         "audience": "Per commercialisti",
                         "lead": (
-                            "Un plugin Codex per lavorare su fascicoli, controlli contabili, "
+                            "Un plugin specialistico per lavorare su fascicoli, controlli contabili, "
                             "riconciliazioni e report."
                         ),
                         "description": (
@@ -3019,11 +3018,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     },
                     {
                         "id": "clara",
-                        "title": "Codex per consulenti",
+                        "title": "Per consulenti",
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Per consulenti",
                         "lead": (
-                            "Un plugin Codex per creare presentazioni e dare continuità "
+                            "Un plugin specialistico per creare presentazioni e dare continuità "
                             "al lavoro sui progetti."
                         ),
                         "description": (
@@ -3056,21 +3055,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "hero": {
             "id": "hero",
             "skip_label": "Vai al contenuto principale",
-            "plugins_label": "Plugin Codex",
-            "eyebrow": "Plugin Codex per il lavoro professionale",
-            "headline": "La potenza viene dall'AI. Il controllo, da Codex.",
+            "plugins_label": "Plugin Mparanza",
+            "eyebrow": "Plugin per il lavoro professionale",
+            "headline": "La potenza viene dall'AI. Il controllo, dal metodo.",
             "subheadline": (
-                "Mparanza crea plugin Codex. Ogni plugin dà a Codex "
-                "un metodo specialistico per il lavoro professionale."
+                "Mparanza incorpora metodi specialistici in plugin per il lavoro "
+                "professionale. Per ChatGPT Work, Codex e Claude Cowork."
             ),
         },
         "harness": {
-            "id": "codex",
-            "title": "L'ambiente operativo cambia ciò che l'AI può fare.",
+            "id": "method",
+            "title": "Il metodo trasforma le capacità dell'AI in lavoro professionale.",
             "description": (
-                "Le capacità vengono dall'AI. Codex le mette al lavoro in un ambiente "
-                "che può usare file e strumenti, seguire istruzioni e produrre risultati. "
-                "È questo ambiente operativo che intendiamo per controllo."
+                "L'AI può ragionare, analizzare e creare. Ogni plugin dà a queste capacità "
+                "un metodo specialistico: fonti definite, passaggi ordinati, verifiche "
+                "esplicite, punti di revisione e risultati attesi. È questo metodo che "
+                "intendiamo per controllo."
             ),
             "layers": [
                 {
@@ -3078,17 +3078,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Il modello ragiona, analizza e crea.",
                 },
                 {
-                    "title": "Controllo",
-                    "blurb": (
-                        "Codex collega queste capacità ai file, agli strumenti e al "
-                        "contesto del lavoro da svolgere."
-                    ),
+                    "title": "Metodo",
+                    "blurb": "Il plugin definisce fonti, passaggi e criteri professionali.",
                 },
                 {
-                    "title": "Utilità professionale",
+                    "title": "Controllo",
                     "blurb": (
-                        "Un plugin Codex definisce il metodo specialistico e i risultati "
-                        "da produrre."
+                        "Verifiche, punti di revisione e risultati attesi rendono il "
+                        "lavoro rivedibile."
                     ),
                 },
             ],
@@ -3097,7 +3094,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Aperti per scelta.",
             "description": (
-                "Vera e Clara sono plugin Codex open source. "
+                "Vera e Clara sono plugin open source. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
                 "adattarli al tuo lavoro."
             ),
@@ -3127,7 +3124,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "title": "Sicuri per scelta.",
             "lead": "Nei flussi ordinari di Vera e Clara, Mparanza non riceve il lavoro dei tuoi clienti.",
             "description": (
-                "I normali workflow dei plugin operano nell'ambiente Codex che già usi. "
+                "I normali workflow dei plugin operano nell'ambiente AI che scegli. "
                 "Prompt, file e risultati dei tuoi clienti non passano attraverso Mparanza."
             ),
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
@@ -3136,8 +3133,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Conformi per scelta.",
-            "lead": "Il lavoro professionale può richiedere a Codex di leggere dati reali dei clienti.",
-            "description": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile. I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall'utente.",
+            "lead": "Il lavoro professionale può richiedere che l'ambiente AI scelto legga dati reali dei clienti.",
+            "description": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile. I dati forniti al modello vengono trattati secondo i termini e i controlli dell'ambiente AI scelto dall'utente.",
             "principles": [
                 {
                     "title": "Usa Python in locale quando serve",
@@ -3149,7 +3146,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
                 {
                     "title": "Due categorie di trattamento",
-                    "blurb": "Le normali funzioni dei plugin usano il piano ChatGPT esistente. I servizi hosted di Mparanza hanno un confine di trattamento separato.",
+                    "blurb": "Le normali funzioni dei plugin usano l'ambiente AI scelto dall'utente. I servizi hosted di Mparanza hanno un confine di trattamento separato.",
                 },
             ],
             "closing": "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
@@ -3158,10 +3155,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Codex per scelta.",
+            "title": "Un metodo per ogni professione.",
             "description": (
-                "Mparanza è Vera e Clara: due plugin che applicano lo stesso ambiente "
-                "operativo Codex a due professioni diverse."
+                "Mparanza è Vera e Clara: due plugin che incorporano metodi specialistici "
+                "per due professioni diverse."
             ),
         },
     },
@@ -3176,11 +3173,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex pour les experts-comptables",
+                        "title": "Pour les experts-comptables",
                         "tooltip_key": "codex_accountants_group",
                         "audience": "Pour les experts-comptables",
                         "lead": (
-                            "Un plugin Codex pour les dossiers clients, les contrôles "
+                            "Un plugin spécialisé pour les dossiers clients, les contrôles "
                             "comptables, les rapprochements et les rapports."
                         ),
                         "description": (
@@ -3208,11 +3205,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     },
                     {
                         "id": "clara",
-                        "title": "Codex pour les consultants",
+                        "title": "Pour les consultants",
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Pour les consultants",
                         "lead": (
-                            "Un plugin Codex pour créer des présentations et poursuivre "
+                            "Un plugin spécialisé pour créer des présentations et poursuivre "
                             "le travail sur les projets dans la durée."
                         ),
                         "description": (
@@ -3245,22 +3242,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "hero": {
             "id": "hero",
             "skip_label": "Aller au contenu principal",
-            "plugins_label": "Plugins Codex",
-            "eyebrow": "Plugins Codex pour les professionnels",
-            "headline": "L'IA apporte la puissance. Codex apporte le contrôle.",
+            "plugins_label": "Plugins Mparanza",
+            "eyebrow": "Plugins pour les professionnels",
+            "headline": "L'IA apporte la puissance. La méthode apporte le contrôle.",
             "subheadline": (
-                "Mparanza crée des plugins Codex. Chacun donne à "
-                "Codex une méthode spécialisée pour le travail professionnel."
+                "Mparanza intègre des méthodes spécialisées dans des plugins pour le "
+                "travail professionnel. Pour ChatGPT Work, Codex et Claude Cowork."
             ),
         },
         "harness": {
-            "id": "codex",
-            "title": "L'environnement de travail change ce que l'IA peut faire.",
+            "id": "method",
+            "title": "La méthode transforme les capacités de l'IA en travail professionnel.",
             "description": (
-                "Les capacités viennent de l'IA. Codex les rend opérationnelles dans un "
-                "environnement qui peut utiliser des fichiers et des outils, suivre des "
-                "instructions et produire des livrables. C'est cet environnement de "
-                "travail que nous appelons le contrôle."
+                "L'IA peut raisonner, analyser et créer. Chaque plugin donne à ces "
+                "capacités une méthode spécialisée : sources définies, étapes ordonnées, "
+                "contrôles explicites, points de revue et livrables attendus. C'est cette "
+                "méthode que nous appelons le contrôle."
             ),
             "layers": [
                 {
@@ -3268,17 +3265,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Le modèle raisonne, analyse et crée.",
                 },
                 {
-                    "title": "Contrôle",
-                    "blurb": (
-                        "Codex relie les capacités du modèle aux fichiers, aux outils et au "
-                        "contexte de la tâche."
-                    ),
+                    "title": "Méthode",
+                    "blurb": "Le plugin définit les sources, les étapes et les critères professionnels.",
                 },
                 {
-                    "title": "Usage professionnel",
+                    "title": "Contrôle",
                     "blurb": (
-                        "Un plugin Codex définit la méthode spécialisée et les livrables "
-                        "à produire."
+                        "Les contrôles, les points de revue et les livrables attendus "
+                        "rendent le travail révisable."
                     ),
                 },
             ],
@@ -3287,7 +3281,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Ouverts par conception.",
             "description": (
-                "Vera et Clara sont des plugins Codex open source. Vous pouvez examiner "
+                "Vera et Clara sont des plugins open source. Vous pouvez examiner "
                 "leurs méthodes, leurs contrôles et leur code avant de les utiliser — "
                 "et les adapter à votre travail."
             ),
@@ -3321,7 +3315,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             ),
             "description": (
                 "Les workflows ordinaires des plugins fonctionnent dans l'environnement "
-                "Codex que vous utilisez déjà. Les prompts, fichiers et livrables de vos "
+                "d'IA que vous choisissez. Les prompts, fichiers et livrables de vos "
                 "clients ne transitent pas par Mparanza."
             ),
             "cta_label": "Voir comment vos données sont traitées",
@@ -3330,8 +3324,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Conformes par conception.",
-            "lead": "Le travail professionnel peut nécessiter que Codex lise de vraies données clients.",
-            "description": "Vera et Clara n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile. Les données fournies au modèle sont traitées dans le cadre de l'offre ChatGPT existante de l'utilisateur.",
+            "lead": "Le travail professionnel peut nécessiter que l'environnement d'IA choisi lise de vraies données clients.",
+            "description": "Vera et Clara n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile. Les données fournies au modèle sont traitées selon les conditions et les contrôles de l'environnement d'IA choisi par l'utilisateur.",
             "principles": [
                 {
                     "title": "Utiliser Python localement lorsque c'est utile",
@@ -3343,7 +3337,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
                 {
                     "title": "Deux catégories de traitement",
-                    "blurb": "Les fonctions ordinaires des plugins utilisent l'offre ChatGPT existante. Les services hébergés par Mparanza ont un périmètre de traitement distinct.",
+                    "blurb": "Les fonctions ordinaires des plugins utilisent l'environnement d'IA choisi par l'utilisateur. Les services hébergés par Mparanza ont un périmètre de traitement distinct.",
                 },
             ],
             "closing": "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
@@ -3352,10 +3346,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Codex par conception.",
+            "title": "Une méthode pour chaque métier.",
             "description": (
-                "Mparanza, c'est Vera et Clara : deux plugins qui appliquent le même "
-                "environnement Codex à deux métiers différents."
+                "Mparanza, c'est Vera et Clara : deux plugins qui intègrent des méthodes "
+                "spécialisées pour deux métiers différents."
             ),
         },
     },
@@ -3370,11 +3364,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex für Steuerberaterinnen und Steuerberater",
+                        "title": "Für Steuerberaterinnen und Steuerberater",
                         "tooltip_key": "codex_accountants_group",
                         "audience": "Für Steuerberaterinnen und Steuerberater",
                         "lead": (
-                            "Ein Codex-Plugin für Mandantendateien, Buchungsprüfungen, "
+                            "Ein spezialisiertes Plugin für Mandantendateien, Buchungsprüfungen, "
                             "Abstimmungen und Berichte."
                         ),
                         "description": (
@@ -3402,11 +3396,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     },
                     {
                         "id": "clara",
-                        "title": "Codex für Beraterinnen und Berater",
+                        "title": "Für Beraterinnen und Berater",
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Für Beraterinnen und Berater",
                         "lead": (
-                            "Ein Codex-Plugin für Präsentationen und die fortlaufende "
+                            "Ein spezialisiertes Plugin für Präsentationen und die fortlaufende "
                             "Arbeit an Projekten."
                         ),
                         "description": (
@@ -3439,22 +3433,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "hero": {
             "id": "hero",
             "skip_label": "Zum Hauptinhalt springen",
-            "plugins_label": "Codex-Plugins",
-            "eyebrow": "Codex-Plugins für professionelle Arbeit",
-            "headline": "KI liefert die Leistung. Codex sorgt für Kontrolle.",
+            "plugins_label": "Mparanza-Plugins",
+            "eyebrow": "Plugins für professionelle Arbeit",
+            "headline": "KI liefert die Leistung. Die Methode sorgt für Kontrolle.",
             "subheadline": (
-                "Mparanza entwickelt Codex-Plugins. Jedes gibt "
-                "Codex eine fachliche Arbeitsweise für professionelle Aufgaben."
+                "Mparanza verankert fachliche Methoden in Plugins für professionelle "
+                "Arbeit. Für ChatGPT Work, Codex und Claude Cowork."
             ),
         },
         "harness": {
-            "id": "codex",
-            "title": "Die Arbeitsumgebung verändert, was KI leisten kann.",
+            "id": "method",
+            "title": "Die Methode macht KI-Fähigkeiten für professionelle Arbeit nutzbar.",
             "description": (
-                "KI bringt die Fähigkeiten mit. Codex stellt eine Arbeitsumgebung "
-                "bereit, die Dateien verarbeiten, Werkzeuge einsetzen, Anweisungen "
-                "befolgen und Ergebnisse erzeugen kann. Diese Arbeitsumgebung meinen "
-                "wir, wenn wir von Kontrolle sprechen."
+                "KI kann analysieren, Schlussfolgerungen ziehen und Inhalte erstellen. "
+                "Jedes Plugin gibt diesen Fähigkeiten eine fachliche Methode: definierte "
+                "Quellen, geordnete Schritte, explizite Prüfungen, Prüfpunkte und erwartete "
+                "Ergebnisse. Diese Methode meinen wir, wenn wir von Kontrolle sprechen."
             ),
             "layers": [
                 {
@@ -3464,17 +3458,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     ),
                 },
                 {
-                    "title": "Kontrolle",
-                    "blurb": (
-                        "Codex verbindet diese Fähigkeiten mit den Dateien, Werkzeugen und "
-                        "dem Kontext der Aufgabe."
-                    ),
+                    "title": "Methode",
+                    "blurb": "Das Plugin legt Quellen, Schritte und fachliche Kriterien fest.",
                 },
                 {
-                    "title": "Professioneller Einsatz",
+                    "title": "Kontrolle",
                     "blurb": (
-                        "Ein Codex-Plugin bringt die fachliche Methode mit und legt die "
-                        "zu erstellenden Ergebnisse fest."
+                        "Prüfungen, Prüfpunkte und erwartete Ergebnisse machen die Arbeit "
+                        "nachvollziehbar."
                     ),
                 },
             ],
@@ -3483,7 +3474,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Offen konzipiert.",
             "description": (
-                "Vera und Clara sind Open-Source-Plugins für Codex. Sie können Methoden, "
+                "Vera und Clara sind Open-Source-Plugins. Sie können Methoden, "
                 "Kontrollen und Code vor der Verwendung prüfen und an Ihre Arbeit anpassen."
             ),
             "links_label": "Open-Source-Informationen",
@@ -3515,7 +3506,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "Bei normalen Vera- und Clara-Abläufen erhält Mparanza Ihre Mandantenarbeit nicht."
             ),
             "description": (
-                "Normale Plugin-Abläufe laufen in Ihrer bestehenden Codex-Umgebung. "
+                "Normale Plugin-Abläufe laufen in der von Ihnen gewählten KI-Arbeitsumgebung. "
                 "Prompts, Dateien und Ergebnisse Ihrer Mandanten laufen nicht über Mparanza."
             ),
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
@@ -3524,8 +3515,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "compliance": {
             "id": "compliance",
             "title": "Für Compliance konzipiert.",
-            "lead": "Professionelle Arbeit kann erfordern, dass Codex echte Mandantendaten liest.",
-            "description": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet.",
+            "lead": "Professionelle Arbeit kann erfordern, dass die gewählte KI-Arbeitsumgebung echte Mandantendaten liest.",
+            "description": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, werden nach den Bedingungen und Kontrollen der vom Nutzer gewählten KI-Arbeitsumgebung verarbeitet.",
             "principles": [
                 {
                     "title": "Python lokal einsetzen, wenn es nützt",
@@ -3537,7 +3528,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
                 {
                     "title": "Zwei Verarbeitungskategorien",
-                    "blurb": "Normale Plugin-Funktionen nutzen den bestehenden ChatGPT-Tarif. Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze.",
+                    "blurb": "Normale Plugin-Funktionen nutzen die vom Nutzer gewählte KI-Arbeitsumgebung. Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze.",
                 },
             ],
             "closing": "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
@@ -3546,10 +3537,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Für Codex konzipiert.",
+            "title": "Eine Methode für jede Profession.",
             "description": (
-                "Mparanza, das sind Vera und Clara: zwei Plugins, die dieselbe "
-                "Codex-Arbeitsumgebung auf zwei Berufsgruppen ausrichten."
+                "Mparanza, das sind Vera und Clara: zwei Plugins mit fachlichen Methoden "
+                "für zwei unterschiedliche Berufsgruppen."
             ),
         },
     },
@@ -3564,11 +3555,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "groups": [
                     {
                         "id": "vera",
-                        "title": "Codex para profesionales contables",
+                        "title": "Para profesionales contables",
                         "tooltip_key": "codex_accountants_group",
                         "audience": "Para profesionales contables",
                         "lead": (
-                            "Un plugin de Codex para expedientes de clientes, controles "
+                            "Un plugin especializado para expedientes de clientes, controles "
                             "contables, conciliaciones e informes."
                         ),
                         "description": (
@@ -3596,11 +3587,11 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     },
                     {
                         "id": "clara",
-                        "title": "Codex para consultores",
+                        "title": "Para consultores",
                         "tooltip_key": "codex_consultants_group",
                         "audience": "Para consultores",
                         "lead": (
-                            "Un plugin de Codex para presentaciones y trabajo continuo "
+                            "Un plugin especializado para presentaciones y trabajo continuo "
                             "en proyectos."
                         ),
                         "description": (
@@ -3633,21 +3624,22 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "hero": {
             "id": "hero",
             "skip_label": "Ir al contenido principal",
-            "plugins_label": "Plugins de Codex",
-            "eyebrow": "Plugins de Codex para el trabajo profesional",
-            "headline": "La IA aporta la potencia. Codex aporta el control.",
+            "plugins_label": "Plugins de Mparanza",
+            "eyebrow": "Plugins para el trabajo profesional",
+            "headline": "La IA aporta la potencia. El método aporta el control.",
             "subheadline": (
-                "Mparanza crea plugins de Codex. Cada uno proporciona a Codex una "
-                "forma de trabajo especializada para tareas profesionales."
+                "Mparanza incorpora métodos especializados en plugins para el trabajo "
+                "profesional. Para ChatGPT Work, Codex y Claude Cowork."
             ),
         },
         "harness": {
-            "id": "codex",
-            "title": "El entorno de trabajo cambia lo que la IA puede hacer.",
+            "id": "method",
+            "title": "El método convierte la capacidad de la IA en trabajo profesional.",
             "description": (
-                "La IA aporta las capacidades. Codex las sitúa en un entorno de trabajo "
-                "capaz de usar archivos, ejecutar herramientas, seguir instrucciones y "
-                "crear resultados. Ese entorno es lo que entendemos por control."
+                "La IA puede razonar, analizar y crear. Cada plugin da a esas capacidades "
+                "un método especializado: fuentes definidas, pasos ordenados, controles "
+                "explícitos, puntos de revisión y resultados esperados. Ese método es lo "
+                "que entendemos por control."
             ),
             "layers": [
                 {
@@ -3655,17 +3647,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "El modelo razona, analiza y crea.",
                 },
                 {
-                    "title": "Control",
-                    "blurb": (
-                        "Codex conecta esas capacidades con los archivos, las herramientas "
-                        "y el contexto de la tarea."
-                    ),
+                    "title": "Método",
+                    "blurb": "El plugin define las fuentes, los pasos y los criterios profesionales.",
                 },
                 {
-                    "title": "Uso profesional",
+                    "title": "Control",
                     "blurb": (
-                        "Un plugin de Codex define el método especializado y los resultados "
-                        "esperados."
+                        "Los controles, los puntos de revisión y los resultados esperados "
+                        "hacen que el trabajo sea revisable."
                     ),
                 },
             ],
@@ -3674,7 +3663,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Abiertos por diseño.",
             "description": (
-                "Vera y Clara son plugins open source para Codex. Puedes examinar "
+                "Vera y Clara son plugins open source. Puedes examinar "
                 "los métodos, los controles y el código antes de usarlos, y adaptarlos "
                 "a tu trabajo."
             ),
@@ -3706,8 +3695,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "En los flujos ordinarios de Vera y Clara, Mparanza no recibe el trabajo de tus clientes."
             ),
             "description": (
-                "Los flujos ordinarios de los plugins funcionan dentro de tu entorno de "
-                "Codex actual. Los prompts, archivos y resultados de tus clientes no "
+                "Los flujos ordinarios de los plugins funcionan dentro del entorno de "
+                "IA que elijas. Los prompts, archivos y resultados de tus clientes no "
                 "pasan por Mparanza."
             ),
             "cta_label": "Ver cómo se tratan tus datos",
@@ -3717,14 +3706,14 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Conformes por diseño.",
             "lead": (
-                "El trabajo profesional puede requerir que Codex lea datos reales de "
-                "clientes."
+                "El trabajo profesional puede requerir que el entorno de IA elegido lea "
+                "datos reales de clientes."
             ),
             "description": (
                 "Vera y Clara no anonimizan los datos automáticamente. Pueden usar Python "
                 "en local para filtrar o agregar información cuando resulte útil. Los datos "
-                "facilitados al modelo se tratan mediante el plan de ChatGPT que ya usa el "
-                "usuario."
+                "facilitados al modelo se tratan según las condiciones y los controles del "
+                "entorno de IA elegido por el usuario."
             ),
             "principles": [
                 {
@@ -3745,8 +3734,9 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 {
                     "title": "Dos categorías de tratamiento",
                     "blurb": (
-                        "Las funciones ordinarias de los plugins usan el plan de ChatGPT "
-                        "existente. Los servicios alojados por Mparanza constituyen un "
+                        "Las funciones ordinarias de los plugins usan el entorno de IA "
+                        "elegido por el usuario. Los servicios alojados por Mparanza "
+                        "constituyen un "
                         "límite de tratamiento separado."
                     ),
                 },
@@ -3759,10 +3749,10 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Codex por diseño.",
+            "title": "Un método para cada profesión.",
             "description": (
-                "Mparanza es Vera y Clara: dos plugins que aplican el mismo entorno de "
-                "Codex a dos profesiones distintas."
+                "Mparanza es Vera y Clara: dos plugins que incorporan métodos "
+                "especializados para dos profesiones distintas."
             ),
         },
     },

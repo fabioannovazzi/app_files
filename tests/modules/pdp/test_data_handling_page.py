@@ -168,35 +168,35 @@ def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:
             "Open by design.",
             "Free by design.",
             "Secure by design.",
-            "Codex by design.",
+            "A method for each profession.",
         ),
         (
             "it",
             "Aperti per scelta.",
             "Gratuiti per scelta.",
             "Sicuri per scelta.",
-            "Codex per scelta.",
+            "Un metodo per ogni professione.",
         ),
         (
             "fr",
             "Ouverts par conception.",
             "Gratuits par conception.",
             "Sécurisés par conception.",
-            "Codex par conception.",
+            "Une méthode pour chaque métier.",
         ),
         (
             "de",
             "Offen konzipiert.",
             "Kostenlos konzipiert.",
             "Sicher konzipiert.",
-            "Für Codex konzipiert.",
+            "Eine Methode für jede Profession.",
         ),
         (
             "es",
             "Abiertos por diseño.",
             "Gratuitos por diseño.",
             "Seguros por diseño.",
-            "Codex por diseño.",
+            "Un método para cada profesión.",
         ),
     ),
 )
@@ -253,37 +253,44 @@ def test_homepage_passes_complete_spanish_locale_context(
     )
 
 
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
+def test_homepage_download_tooltips_are_workspace_neutral(lang: str) -> None:
+    tooltips = pdp_api.TOOLTIP_CONTENT[lang]
+
+    assert "Codex" not in repr(tooltips)
+
+
 @pytest.mark.parametrize(
     ("lang", "subheadline"),
     (
         (
             "en",
-            "Mparanza builds Codex plugins. Each gives Codex a specialist way of "
-            "working for professional tasks.",
+            "Mparanza builds specialist methods into plugins for professional work. "
+            "For ChatGPT Work, Codex, and Claude Cowork.",
         ),
         (
             "it",
-            "Mparanza crea plugin Codex. Ogni plugin dà a Codex un metodo "
-            "specialistico per il lavoro professionale.",
+            "Mparanza incorpora metodi specialistici in plugin per il lavoro "
+            "professionale. Per ChatGPT Work, Codex e Claude Cowork.",
         ),
         (
             "fr",
-            "Mparanza crée des plugins Codex. Chacun donne à Codex une méthode "
-            "spécialisée pour le travail professionnel.",
+            "Mparanza intègre des méthodes spécialisées dans des plugins pour le "
+            "travail professionnel. Pour ChatGPT Work, Codex et Claude Cowork.",
         ),
         (
             "de",
-            "Mparanza entwickelt Codex-Plugins. Jedes gibt Codex eine fachliche "
-            "Arbeitsweise für professionelle Aufgaben.",
+            "Mparanza verankert fachliche Methoden in Plugins für professionelle "
+            "Arbeit. Für ChatGPT Work, Codex und Claude Cowork.",
         ),
         (
             "es",
-            "Mparanza crea plugins de Codex. Cada uno proporciona a Codex una "
-            "forma de trabajo especializada para tareas profesionales.",
+            "Mparanza incorpora métodos especializados en plugins para el trabajo "
+            "profesional. Para ChatGPT Work, Codex y Claude Cowork.",
         ),
     ),
 )
-def test_homepage_describes_mparanza_as_codex_plugins(
+def test_homepage_describes_mparanza_as_specialist_plugins(
     lang: str, subheadline: str
 ) -> None:
     content = _get_landing_page_content(lang)
@@ -301,7 +308,7 @@ def test_homepage_uses_the_approved_english_security_copy() -> None:
     )
     assert (
         security["description"]
-        == "Ordinary plugin workflows run inside your existing Codex environment. "
+        == "Ordinary plugin workflows run inside the AI workspace you choose. "
         "Your client prompts, files, and outputs do not pass through Mparanza."
     )
     assert security["cta_label"] == "See how your data is handled"
