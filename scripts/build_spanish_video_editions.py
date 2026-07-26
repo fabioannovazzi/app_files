@@ -86,7 +86,6 @@ EXCLUDED_SPANISH_SOURCE_KEYS = frozenset({"vera-client-intake-en"})
 SPANISH_SOURCE_KEYS = (
     "clara-advisory-document-en",
     "clara-attribute-reporting-en",
-    "clara-beautify-deck-en",
     "clara-brand-fit-en",
     "clara-claim-basis-en",
     "clara-deck-correction-en",
@@ -189,11 +188,11 @@ def _validate_source_key_coverage(
     videos: Mapping[str, Any],
     scene_sets: Mapping[str, Any],
 ) -> None:
-    """Require the exact 25 established English masters and selected 24."""
+    """Require the exact 24 established English masters and selected 23."""
 
     expected_english_keys = set(SPANISH_SOURCE_KEYS) | set(EXCLUDED_SPANISH_SOURCE_KEYS)
-    if len(SPANISH_SOURCE_KEYS) != 24 or len(set(SPANISH_SOURCE_KEYS)) != 24:
-        raise ValueError("The Spanish edition source list must contain 24 unique keys")
+    if len(SPANISH_SOURCE_KEYS) != 23 or len(set(SPANISH_SOURCE_KEYS)) != 23:
+        raise ValueError("The Spanish edition source list must contain 23 unique keys")
     if set(SPANISH_SOURCE_KEYS) & set(EXCLUDED_SPANISH_SOURCE_KEYS):
         raise ValueError(
             "Excluded source keys cannot appear in the Spanish source list"
@@ -215,7 +214,7 @@ def _validate_source_key_coverage(
 
 
 def load_source_catalog(source_root: Path) -> tuple[SourceAsset, ...]:
-    """Load and validate the exact 24 source masters from the pilot workspace."""
+    """Load and validate the exact 23 source masters from the pilot workspace."""
 
     source_root = source_root.resolve()
     narrations = _load_mapping_from_python(
@@ -281,7 +280,7 @@ def load_source_catalog(source_root: Path) -> tuple[SourceAsset, ...]:
             )
         )
 
-    if len(assets) != 24 or {asset.source_key for asset in assets} != set(
+    if len(assets) != 23 or {asset.source_key for asset in assets} != set(
         SPANISH_SOURCE_KEYS
     ):
         raise ValueError("The loaded Spanish source catalog is not complete")
@@ -370,7 +369,7 @@ def collect_catalog_scene_text(
     source_root: Path,
     assets: Sequence[SourceAsset],
 ) -> dict[str, SceneTextInventory]:
-    """Collect exact scene text for all 24 assets in one browser session."""
+    """Collect exact scene text for all 23 assets in one browser session."""
 
     inventories: dict[str, SceneTextInventory] = {}
     with sync_playwright() as playwright:
@@ -392,7 +391,7 @@ def collect_catalog_scene_text(
         finally:
             browser.close()
     if set(inventories) != set(SPANISH_SOURCE_KEYS):
-        raise ValueError("Scene text inventory does not cover all 24 source masters")
+        raise ValueError("Scene text inventory does not cover all 23 source masters")
     return inventories
 
 
@@ -775,7 +774,7 @@ def build_translation_bundle(
     cache_path: Path,
     request_translation: TranslationRequester = _request_translation,
 ) -> dict[str, Any]:
-    """Translate all 24 editions, reusing only fingerprint-matched cached items."""
+    """Translate all 23 editions, reusing only fingerprint-matched cached items."""
 
     translation_model = _translation_model()
     existing = _load_translation_cache(cache_path)
@@ -858,8 +857,8 @@ def build_translation_bundle(
         _write_json_atomic(cache_path, checkpoint)
 
     expected_targets = {_target_key(key) for key in SPANISH_SOURCE_KEYS}
-    if set(items) != expected_targets or len(items) != 24:
-        raise ValueError("Spanish translation bundle does not cover all 24 editions")
+    if set(items) != expected_targets or len(items) != 23:
+        raise ValueError("Spanish translation bundle does not cover all 23 editions")
     bundle = {
         "schemaVersion": TRANSLATION_CACHE_SCHEMA_VERSION,
         "promptVersion": TRANSLATION_PROMPT_VERSION,
@@ -1445,7 +1444,7 @@ def _render_all_assets(
     translation_bundle: Mapping[str, Any],
     api_key: str,
 ) -> list[dict[str, Any]]:
-    """Render and validate all 24 Spanish upload packages."""
+    """Render and validate all 23 Spanish upload packages."""
 
     ffmpeg = _required_tool("ffmpeg", "/opt/homebrew/bin/ffmpeg")
     ffprobe = _required_tool("ffprobe", "/opt/homebrew/bin/ffprobe")
@@ -1561,7 +1560,7 @@ def _render_all_assets(
         finally:
             browser.close()
 
-    if len(entries) != 24 or {entry["sourceKey"] for entry in entries} != set(
+    if len(entries) != 23 or {entry["sourceKey"] for entry in entries} != set(
         SPANISH_SOURCE_KEYS
     ):
         raise ValueError("Rendered Spanish upload packages are incomplete")
@@ -1577,8 +1576,8 @@ def _write_upload_manifest(
 
     expected_targets = [_target_key(key) for key in SPANISH_SOURCE_KEYS]
     actual_targets = [str(entry.get("key")) for entry in entries]
-    if len(entries) != 24 or actual_targets != expected_targets:
-        raise ValueError("YouTube upload manifest must contain the ordered 24 editions")
+    if len(entries) != 23 or actual_targets != expected_targets:
+        raise ValueError("YouTube upload manifest must contain the ordered 23 editions")
     manifest = {
         "schemaVersion": UPLOAD_MANIFEST_SCHEMA_VERSION,
         "generatedAt": datetime.now(UTC).replace(microsecond=0).isoformat(),
@@ -1635,7 +1634,7 @@ def build_spanish_video_editions(
 
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=("Build the 24 missing Spanish Clara and Vera YouTube editions."),
+        description=("Build the 23 missing Spanish Clara and Vera YouTube editions."),
     )
     parser.add_argument(
         "--source-root",

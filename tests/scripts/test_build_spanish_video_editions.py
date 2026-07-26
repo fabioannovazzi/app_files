@@ -84,11 +84,10 @@ def _all_assets_and_inventories() -> tuple[
     return assets, inventories
 
 
-def test_spanish_source_keys_are_the_exact_24_english_fallbacks() -> None:
+def test_spanish_source_keys_are_the_exact_23_english_fallbacks() -> None:
     assert builder.SPANISH_SOURCE_KEYS == (
         "clara-advisory-document-en",
         "clara-attribute-reporting-en",
-        "clara-beautify-deck-en",
         "clara-brand-fit-en",
         "clara-claim-basis-en",
         "clara-deck-correction-en",
@@ -112,11 +111,11 @@ def test_spanish_source_keys_are_the_exact_24_english_fallbacks() -> None:
         "vera-report-builder-en",
     )
     assert builder.EXCLUDED_SPANISH_SOURCE_KEYS == {"vera-client-intake-en"}
-    assert len(builder.SPANISH_SOURCE_KEYS) == 24
+    assert len(builder.SPANISH_SOURCE_KEYS) == 23
     assert "vera-client-intake-en" not in builder.SPANISH_SOURCE_KEYS
 
 
-def test_source_coverage_requires_the_24_plus_explicit_exclusion() -> None:
+def test_source_coverage_requires_the_23_plus_explicit_exclusion() -> None:
     expected = set(builder.SPANISH_SOURCE_KEYS) | set(
         builder.EXCLUDED_SPANISH_SOURCE_KEYS
     )
@@ -227,9 +226,9 @@ def test_translation_bundle_caches_each_validated_asset(
         request_translation=fake_request,
     )
 
-    assert len(requests) == 24
+    assert len(requests) == 23
     assert first["complete"] is True
-    assert first["assetCount"] == 24
+    assert first["assetCount"] == 23
 
     requests.clear()
 
@@ -549,6 +548,6 @@ def test_youtube_manifest_is_unlisted_complete_and_has_no_transcript_surface(
     serialized = json.dumps(manifest).lower()
     assert manifest["publicationTarget"] == "youtube"
     assert manifest["privacyStatus"] == "unlisted"
-    assert manifest["assetCount"] == 24
+    assert manifest["assetCount"] == 23
     assert manifest["voicePolicy"]["name"] == "cedar"
     assert "transcript" not in serialized

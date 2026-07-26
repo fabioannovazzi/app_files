@@ -112,11 +112,6 @@
       "required_signals": ["PPTX", "slide claim", "prior-slide claim", "ungrounded"]
     },
     {
-      "id": "deck-image2-beautify",
-      "prompt": "Use Clara to beautify this final editable PPTX with Image2 into a non-editable image PDF, check each slide twice for identical content, regenerate failed pages, and send only the editable PPTX plus the beautified PDF.",
-      "required_signals": ["Image2", "non-editable image PDF", "regenerate failed pages", "editable PPTX"]
-    },
-    {
       "id": "animated-html-deck-from-docx",
       "prompt": "Turn this approved Word document into a distinctive self-contained animated HTML presentation with speaker notes and a difficult publication URL.",
       "required_signals": ["Word document", "animated HTML presentation", "speaker notes", "publication URL"]

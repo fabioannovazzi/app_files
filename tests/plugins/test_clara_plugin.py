@@ -25,7 +25,6 @@ SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 @pytest.mark.parametrize(
     ("skill_name", "display_name", "old_skill_name"),
     [
-        ("beautify-deck", "Beautify Deck", "clara-beautify-deck"),
         ("claim-basis-map", "Claim Basis Map", "clara-claim-basis-map"),
         ("interview", "Interview", "clara-interview"),
         ("transcribe", "Transcribe", "clara-transcribe"),
@@ -780,7 +779,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.115"
+    assert manifest["version"] == "0.1.116"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
