@@ -95,13 +95,18 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
         .strip()
     )
 
-    assert manifest["version"] == "0.1.37"
+    assert manifest["version"] == "0.1.38"
     assert manifest["description"].startswith("Vera affianca il commercialista")
     assert interface["longDescription"] == approved_description
     assert "controlla i dati contabili" in interface["longDescription"]
     assert "casi di concordato preventivo" in interface["longDescription"]
     assert "richieste mirate per Deep Research" in interface["longDescription"]
-    assert "Cerca la corrispondenza del cliente." in interface["longDescription"]
+    assert "Raccoglie, ordina e ritrova i documenti del cliente" in (
+        interface["longDescription"]
+    )
+    assert "Cerca la corrispondenza del cliente." not in (
+        interface["longDescription"]
+    )
     assert "giudizio professionale" in interface["longDescription"]
     assert "New Client" not in interface["longDescription"]
     assert "indicizzare" not in interface["longDescription"]
