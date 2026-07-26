@@ -72,7 +72,7 @@ from replay_assurance import replay_assurance
 
 __all__ = ["apply_review_edits", "main"]
 
-SUMMARY_DOCX = "concordato_review_summary.docx"
+SUMMARY_DOCX = "concordato_preventivo_review_summary.docx"
 REGENERATE_NATIVE_OUTPUT_ACTION = (
     "Regenerate native DOCX/XLSX/PDF outputs before final handoff."
 )

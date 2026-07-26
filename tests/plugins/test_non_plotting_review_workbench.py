@@ -75,7 +75,7 @@ WORKBENCH_WIDGETS = [
     (
         "concordato-plan-review",
         "assets/concordato-plan-review-widget.html",
-        "Concordato Plan Review",
+        "Concordato Preventivo Review",
     ),
 ]
 

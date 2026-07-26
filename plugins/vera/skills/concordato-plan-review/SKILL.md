@@ -1,9 +1,9 @@
 ---
 name: concordato-plan-review
-description: Use when a user wants Codex to tie out the numerical section of an Italian concordato plan against bilancio, mastrini, adjusted DB schedules, tax/social-security debt details, or other accounting support, then produce auditor-oriented differences and going-concern criticalities.
+description: Use when a user wants Codex to organize and review an Italian concordato preventivo across procedure, proposal, plan, attestation, creditors and treatment, liquidation alternative, sources and uses, liquidity, evidence consistency, and open issues. Numerical tie-out is an optional appendix.
 ---
 
-# Revisione Piano Concordato
+# Revisione del Concordato Preventivo
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
