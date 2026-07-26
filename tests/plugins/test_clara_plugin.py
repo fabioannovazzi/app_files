@@ -780,7 +780,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.114"
+    assert manifest["version"] == "0.1.115"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -802,6 +802,15 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "clara supports commercial due-diligence preparation—market, customer, "
         "product, competitive, and operating evidence."
     ) in marketplace_copy
+    long_description = manifest["interface"]["longDescription"]
+    approved_description = (
+        ROOT / "docs" / "marketplace_copy" / "clara-long-description.txt"
+    ).read_text(encoding="utf-8").strip()
+    assert long_description == approved_description
+    assert "Clara helps consultants" in long_description
+    assert "presentations, reports and reviewable workpapers" in long_description
+    assert "internal Reporting Engine" not in long_description
+    assert "recommends Codex Desktop" not in long_description
     assert "commercial due-diligence preparation" in main_skill
     assert "Conversation Workflow Router" in main_skill
     assert "Hosted-interview bundles and Hosted Voice bundles" in main_skill

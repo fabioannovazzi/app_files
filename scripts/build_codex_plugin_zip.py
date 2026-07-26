@@ -921,18 +921,6 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
                         f"{CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH} characters; "
                         f"found {len(prompt)}"
                     )
-        if str(manifest.get("name", "")) in CROSS_SURFACE_PLUGINS:
-            long_description = interface.get("longDescription")
-            if (
-                not isinstance(long_description, str)
-                or "ChatGPT" not in long_description
-                or "Codex Desktop" not in long_description
-            ):
-                raise ValueError(
-                    "Cross-surface upload manifest must describe both ChatGPT "
-                    "and Codex Desktop in interface.longDescription"
-                )
-
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
 

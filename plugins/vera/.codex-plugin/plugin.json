@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -45,7 +45,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera lavora in ChatGPT sui materiali forniti nella conversazione: può analizzare evidenze, fare domande mirate, preparare bozze e revisioni e continuare il lavoro senza richiedere Codex. Dopo un primo risultato sostanziale, Vera consiglia Codex Desktop per lavorare direttamente nelle cartelle, conservare i file del progetto, eseguire strumenti e controlli locali e creare risultati durevoli, chiarendo che la conversazione può continuare in ChatGPT. Vera affianca il commercialista come collega AI e revisore operativo: prepara il percorso New Client, controlla evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato, istruisce casi previdenziali INPS e prepara pratiche Registro Imprese/DIRE da fonti tracciate. In ChatGPT o Codex può cercare la corrispondenza Gmail di un solo cliente quando il connector Gmail di OpenAI è collegato. In Codex Desktop può inoltre consultare una chat verificata nell'app WhatsApp Desktop locale tramite Computer Use e indicizzare una cartella condivisa dello studio. Vera rende fonti, passaggi, decisioni da confermare e risultati verificabili, mantenendo il commercialista al centro del lavoro.",
+    "longDescription": "Vera aiuta il commercialista a portare il lavoro del cliente dall'avvio alla revisione. Organizza il percorso New Client, controlla le evidenze contabili, esegue campionamenti e riconciliazioni, costruisce report, verifica piani di concordato e prepara pratiche INPS e Registro Imprese/DIRE da fonti tracciate. Cerca la corrispondenza del cliente. Può anche indicizzare una cartella condivisa dello studio separatamente per ogni professionista e citare i passaggi verificati. Fonti, questioni aperte e decisioni restano visibili; il commercialista mantiene il controllo.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
