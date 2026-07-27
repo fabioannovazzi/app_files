@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    "attribute-reporting",
+    "distribution-analysis",
+    "funnel-analysis",
+    "mix-contribution-analysis",
+    "period-comparison",
+    "scatter-bubble-analysis",
+    "set-overlap-analysis",
+    "statement-analysis",
+    "variance-analysis"
+  ]
+}

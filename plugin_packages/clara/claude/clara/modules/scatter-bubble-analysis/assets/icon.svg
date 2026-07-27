@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Scatter and Bubble Analysis" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#F28F3B"/>
+  <circle cx="51" cy="50" r="7" fill="#F28F3B"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M14 50h38M14 50V14" stroke="#F7F0DF" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="24" cy="39" r="4" fill="#F28F3B"/>
+  <circle cx="36" cy="31" r="7" fill="#8FD6C2"/>
+  <circle cx="48" cy="20" r="5" fill="#F7F0DF"/>
+  <circle cx="21" cy="24" r="3" fill="#D7E8BA"/>
+</svg>

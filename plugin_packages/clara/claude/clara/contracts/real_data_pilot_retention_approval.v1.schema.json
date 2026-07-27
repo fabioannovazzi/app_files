@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-retention-approval-v1.json",
+  "title": "Clara real-data pilot sanitized-summary retention approval",
+  "description": "An unauthenticated local declaration about retaining one sanitized error-class summary candidate. This record remains local and is represented in the retained summary only by fixed status fields and its digest; its presence does not prove human review, identity, or authority.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "execution_id",
+    "review_version",
+    "reviewed_on",
+    "reviewer_role",
+    "basis",
+    "mechanical_register_sha256",
+    "candidate_summary_sha256",
+    "status",
+    "decision",
+    "scope",
+    "prohibited_content",
+    "publication_status",
+    "report_ready"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_retention_approval.v1"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^execution-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "review_version": {
+      "type": "string",
+      "pattern": "^retention-review-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "reviewed_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "reviewer_role": {
+      "$ref": "#/$defs/nonblank_text"
+    },
+    "basis": {
+      "$ref": "#/$defs/nonblank_text"
+    },
+    "mechanical_register_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "candidate_summary_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "status": {
+      "const": "reviewed"
+    },
+    "decision": {
+      "const": "approved"
+    },
+    "scope": {
+      "const": "sanitized_error_class_summary_only"
+    },
+    "prohibited_content": {
+      "const": [
+        "account_or_entity_labels",
+        "amounts",
+        "error_messages_or_descriptions",
+        "file_paths",
+        "row_identifiers",
+        "reversible_identifier_encodings",
+        "semantic_findings"
+      ]
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "report_ready": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "nonblank_text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    }
+  }
+}

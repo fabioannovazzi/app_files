@@ -1,0 +1,5 @@
+polars
+plotly
+pillow
+openpyxl
+python-docx

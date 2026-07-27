@@ -1,0 +1,475 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara-reporting-evidence-handoff-receipt-v1.json",
+  "title": "Clara reporting and evidence handoff receipt",
+  "description": "A portable, mechanically validated receipt joining one replayed preparation, reviewed semantic policy, explicit render, complete serialized-HTML-cell closure, and sealed evidence bundle. It never authorizes publication.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "handoff_id",
+    "case_id",
+    "classification",
+    "contracts",
+    "prepared_snapshot",
+    "semantic",
+    "render",
+    "evidence",
+    "gates",
+    "handoff_ready_for_review",
+    "report_ready",
+    "publication_status",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.reporting_evidence_handoff_receipt.v1"
+    },
+    "handoff_id": {
+      "const": "wd40_fy2025_synthetic_monthly_pnl.statement_table"
+    },
+    "case_id": {
+      "const": "wd40-fy2025-synthetic-monthly-pnl"
+    },
+    "classification": {
+      "const": "synthetic_benchmark_only"
+    },
+    "contracts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preparation_audit_envelope",
+        "semantic_review_basis",
+        "semantic_layer",
+        "reporting_request",
+        "statement_recipe",
+        "handoff_schema",
+        "semantic_schema",
+        "selection_manifest",
+        "implementations"
+      ],
+      "properties": {
+        "preparation_audit_envelope": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "semantic_review_basis": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "semantic_layer": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "reporting_request": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "statement_recipe": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "handoff_schema": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "semantic_schema": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "selection_manifest": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "implementations": {
+          "$ref": "#/$defs/implementationReceipts"
+        }
+      }
+    },
+    "prepared_snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_contract_id",
+        "prepared_artifact",
+        "dataset_profile",
+        "profile_schema_version",
+        "snapshot_fingerprint",
+        "row_count",
+        "numeric_cell_count",
+        "address_set_sha256",
+        "value_set_sha256"
+      ],
+      "properties": {
+        "dataset_contract_id": {
+          "const": "wd40_fy2025_synthetic_monthly_pnl"
+        },
+        "prepared_artifact": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "dataset_profile": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "profile_schema_version": {
+          "const": "0.4"
+        },
+        "snapshot_fingerprint": {
+          "$ref": "#/$defs/sha256"
+        },
+        "row_count": {
+          "const": 168
+        },
+        "numeric_cell_count": {
+          "const": 168
+        },
+        "address_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "value_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "semantic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_layer_id",
+        "semantic_version",
+        "review_status",
+        "validation",
+        "snapshot_attachment",
+        "validation_status",
+        "readiness",
+        "compatibility_status",
+        "origin_snapshot_matches",
+        "analysis_id",
+        "policy_validity",
+        "capability_id"
+      ],
+      "properties": {
+        "semantic_layer_id": {
+          "const": "wd40_fy2025_synthetic_monthly_pnl.reporting_semantics"
+        },
+        "semantic_version": {
+          "const": 1
+        },
+        "review_status": {
+          "const": "model_reviewed"
+        },
+        "validation": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "snapshot_attachment": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "validation_status": {
+          "const": "contract_valid"
+        },
+        "readiness": {
+          "const": "ready_as_scoped_semantic_input"
+        },
+        "compatibility_status": {
+          "enum": [
+            "compatible",
+            "compatible_with_extensions"
+          ]
+        },
+        "origin_snapshot_matches": {
+          "const": true
+        },
+        "analysis_id": {
+          "const": "analysis.prepared_monthly_pnl_statement"
+        },
+        "policy_validity": {
+          "const": "conditional"
+        },
+        "capability_id": {
+          "const": "statement.pnl_table"
+        }
+      }
+    },
+    "render": {
+      "$ref": "#/$defs/renderSummary"
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bundle",
+        "bundle_schema_version",
+        "verified_artifact_count",
+        "serialized_html_numeric_domain",
+        "expected_cell_count",
+        "verified_cell_count",
+        "coverage_status",
+        "missing_cell_count",
+        "extra_cell_count",
+        "duplicate_cell_count",
+        "address_set_sha256",
+        "value_set_sha256",
+        "serialized_html_cells",
+        "publication_receipt"
+      ],
+      "properties": {
+        "bundle": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "bundle_schema_version": {
+          "const": "clara.evidence_bundle.v1"
+        },
+        "verified_artifact_count": {
+          "const": 4
+        },
+        "serialized_html_numeric_domain": {
+          "const": "Every serialized tbody td.num statement value cell, addressed by row_key, period, and scenario."
+        },
+        "expected_cell_count": {
+          "const": 168
+        },
+        "verified_cell_count": {
+          "const": 168
+        },
+        "coverage_status": {
+          "const": "exact"
+        },
+        "missing_cell_count": {
+          "const": 0
+        },
+        "extra_cell_count": {
+          "const": 0
+        },
+        "duplicate_cell_count": {
+          "const": 0
+        },
+        "address_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "value_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "serialized_html_cells": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "publication_receipt": {
+          "$ref": "#/$defs/artifactReceipt"
+        }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preparation",
+        "reconciliation",
+        "semantic_wiring",
+        "render_transport",
+        "serialized_html_cell_coverage",
+        "evidence_bundle",
+        "publication"
+      ],
+      "properties": {
+        "preparation": {
+          "const": "passed"
+        },
+        "reconciliation": {
+          "const": "passed"
+        },
+        "semantic_wiring": {
+          "const": "verified"
+        },
+        "render_transport": {
+          "const": "verified"
+        },
+        "serialized_html_cell_coverage": {
+          "const": "verified"
+        },
+        "evidence_bundle": {
+          "const": "verified"
+        },
+        "publication": {
+          "const": "withheld"
+        }
+      }
+    },
+    "handoff_ready_for_review": {
+      "const": true
+    },
+    "report_ready": {
+      "const": false
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "artifactReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "sha256",
+        "size_bytes"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "renderSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capability_id",
+        "adapter_id",
+        "component_name",
+        "request_sha256",
+        "input_sha256",
+        "normalized_effective_recipe_sha256",
+        "portable_outputs",
+        "portable_output_set_sha256",
+        "normalized_component_manifest_sha256",
+        "mechanical_compatibility_status",
+        "mechanical_compatibility_issues",
+        "reviewed_semantic_override_status",
+        "raw_manifest_validated",
+        "raw_manifest_portable"
+      ],
+      "properties": {
+        "capability_id": {
+          "const": "statement.pnl_table"
+        },
+        "adapter_id": {
+          "const": "reporting-engine.statement"
+        },
+        "component_name": {
+          "const": "statement-analysis"
+        },
+        "request_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "input_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalized_effective_recipe_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "portable_outputs": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "items": {
+            "$ref": "#/$defs/artifactReceipt"
+          }
+        },
+        "portable_output_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalized_component_manifest_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mechanical_compatibility_status": {
+          "const": "mechanically_incomplete"
+        },
+        "mechanical_compatibility_issues": {
+          "const": [
+            "requires_semantic_or_package_role"
+          ]
+        },
+        "reviewed_semantic_override_status": {
+          "const": "verified"
+        },
+        "raw_manifest_validated": {
+          "const": true
+        },
+        "raw_manifest_portable": {
+          "const": false
+        }
+      }
+    },
+    "implementationReceipts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_registry",
+        "check_compatibility",
+        "clara_manifest",
+        "evidence_bindings",
+        "handoff_builder",
+        "monthly_pnl_audit_adapter",
+        "preparation_contract_kernel",
+        "profile_dataset",
+        "render_capability",
+        "render_contract_registry",
+        "reporting_adapters",
+        "semantic_layer",
+        "statement_core",
+        "statement_manifest",
+        "statement_runner"
+      ],
+      "properties": {
+        "adapter_registry": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "check_compatibility": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "clara_manifest": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "evidence_bindings": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "handoff_builder": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "monthly_pnl_audit_adapter": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "preparation_contract_kernel": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "profile_dataset": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "render_capability": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "render_contract_registry": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "reporting_adapters": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "semantic_layer": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "statement_core": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "statement_manifest": {
+          "$ref": "#/$defs/artifactReceipt"
+        },
+        "statement_runner": {
+          "$ref": "#/$defs/artifactReceipt"
+        }
+      }
+    }
+  }
+}

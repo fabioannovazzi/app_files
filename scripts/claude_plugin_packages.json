@@ -22,6 +22,20 @@
         "professional-services",
         "cowork"
       ]
+    },
+    {
+      "plugin": "clara",
+      "source_target": "clara",
+      "output_directory": "plugin_packages/clara/claude/clara",
+      "output_zip": "plugin_packages/clara/clara-cowork-plugin.zip",
+      "category": "productivity",
+      "tags": [
+        "consulting",
+        "advisory",
+        "commercial-due-diligence",
+        "reporting",
+        "cowork"
+      ]
     }
   ]
 }

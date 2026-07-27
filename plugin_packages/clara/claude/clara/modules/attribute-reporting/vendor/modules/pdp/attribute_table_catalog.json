@@ -1,0 +1,166 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Artifact contracts for deterministic attribute report tables generated from retailer source packages.",
+  "execution_contract": {
+    "entry_point": "modules.pdp.attribute_table_templates.build_attribute_tables_from_package",
+    "cli": "scripts/build_attribute_table_artifacts.py",
+    "required_parameters": [
+      "package_dir"
+    ],
+    "optional_parameters": [
+      "output_dir",
+      "table_keys"
+    ],
+    "deterministic_boundary": "The table builder reads package CSVs, selects rows, formats values, writes CSV/HTML artifacts, and returns a manifest. The model chooses the table and interprets the rows, but does not compute or render the table."
+  },
+  "capabilities": [
+    {
+      "capability_id": "attributes.attribute_bundle_comparison_table",
+      "status": "available",
+      "object_type": "table",
+      "table_template": "attribute_bundle_comparison_table",
+      "description": "Compare selected attribute bundles across focus and baseline cohorts.",
+      "use_when": "Use when the report needs exact bundle support for winning-now or emerging-signal rows, including focus/baseline counts, shares, delta, index, and brand breadth.",
+      "avoid_when": "Do not use for shelf visibility decomposition or individual product validation; use the visibility or product table instead.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "source_files": [
+        "top_seller_pairs.csv",
+        "top_seller_triples.csv",
+        "innovation_pairs.csv",
+        "innovation_triples.csv"
+      ],
+      "outputs": [
+        {
+          "artifact_type": "table",
+          "formats": [
+            "csv",
+            "html"
+          ]
+        },
+        {
+          "artifact_type": "manifest",
+          "formats": [
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "capability_id": "attributes.attribute_bridge_table",
+      "status": "available",
+      "object_type": "table",
+      "table_template": "attribute_bridge_table",
+      "description": "Show whether selected bundles appear as current winners, emerging recent-product signals, or both.",
+      "use_when": "Use when the report needs to compare current winners with emerging signals and explicitly show alignment, divergence, or one-sided support.",
+      "avoid_when": "Do not use when only one cohort layer exists or when the question is about product examples rather than bundle alignment.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "source_files": [
+        "top_seller_pairs.csv",
+        "top_seller_triples.csv",
+        "innovation_pairs.csv",
+        "innovation_triples.csv"
+      ],
+      "outputs": [
+        {
+          "artifact_type": "table",
+          "formats": [
+            "csv",
+            "html"
+          ]
+        },
+        {
+          "artifact_type": "manifest",
+          "formats": [
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "capability_id": "attributes.rank_weighted_visibility_table",
+      "status": "available",
+      "object_type": "table",
+      "table_template": "rank_weighted_visibility_table",
+      "description": "Present selected web-shelf lanes with gross, incremental, cumulative, and robustness metrics.",
+      "use_when": "Use when the report needs to ground claims about rank-weighted shelf visibility, incremental lane contribution, or robustness across alpha assumptions.",
+      "avoid_when": "Do not use as sales, demand, or causality support; use it only as shelf-visibility support.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "source_files": [
+        "web_shelf_selected_shelves.csv",
+        "web_shelf_robustness_summary.csv"
+      ],
+      "outputs": [
+        {
+          "artifact_type": "table",
+          "formats": [
+            "csv",
+            "html"
+          ]
+        },
+        {
+          "artifact_type": "manifest",
+          "formats": [
+            "json"
+          ]
+        }
+      ]
+    },
+    {
+      "capability_id": "attributes.product_signal_evidence_table",
+      "status": "available",
+      "object_type": "table",
+      "table_template": "product_signal_evidence_table",
+      "description": "Link representative products to selected attribute signals with rank, review, image, and caveat fields.",
+      "use_when": "Use when the report needs product-level grounding for selected bundles, standout examples, or PDP/review reality checks; prefer image cards in the report narrative and this table as compact validation detail.",
+      "avoid_when": "Do not use to rank the category as a whole or to compare bundle prevalence; use the bundle comparison table for that.",
+      "required_parameters": [
+        "package_dir"
+      ],
+      "optional_parameters": [
+        "output_dir",
+        "table_keys"
+      ],
+      "source_files": [
+        "top_seller_pairs.csv",
+        "top_seller_triples.csv",
+        "innovation_pairs.csv",
+        "innovation_triples.csv",
+        "top_seller_products.csv",
+        "recent_products.csv"
+      ],
+      "outputs": [
+        {
+          "artifact_type": "table",
+          "formats": [
+            "csv",
+            "html"
+          ]
+        },
+        {
+          "artifact_type": "manifest",
+          "formats": [
+            "json"
+          ]
+        }
+      ]
+    }
+  ]
+}

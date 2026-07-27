@@ -1,0 +1,291 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-sanitized-error-class-summary-candidate-v1.json",
+  "title": "Clara real-data pilot sanitized error-class summary candidate",
+  "description": "The exact deterministic, path-free, prose-free candidate presented for a local retention declaration. Approval must bind this candidate's canonical SHA-256 digest. Its IDs and hashes remain pseudonymous and linkable, not proven anonymous.",
+  "$comment": "This schema validates portable structure. validate_real_data_pilot_sanitized_error_summary_candidate is authoritative for exact JSON integer representation, expected identity, binding equality, register digest, derived status, nonempty check coverage, and count reconciliation. Draft 2020-12 treats a mathematically integral JSON number such as 1.0 as an integer, while the runtime deliberately rejects that lexical form.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "execution_id",
+    "mechanical_register_sha256",
+    "bindings",
+    "mechanical_status",
+    "check_counts",
+    "error_count",
+    "class_counts",
+    "content_policy",
+    "publication_status",
+    "report_ready",
+    "does_not_establish"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_sanitized_error_class_summary_candidate.v1"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "execution_id": {
+      "$ref": "#/$defs/execution_id"
+    },
+    "mechanical_register_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "bindings": {
+      "$ref": "#/$defs/bindings"
+    },
+    "mechanical_status": {
+      "enum": [
+        "failed",
+        "incomplete",
+        "passed"
+      ]
+    },
+    "check_counts": {
+      "$ref": "#/$defs/check_counts"
+    },
+    "error_count": {
+      "$ref": "#/$defs/nonnegative_integer"
+    },
+    "class_counts": {
+      "$ref": "#/$defs/class_counts"
+    },
+    "content_policy": {
+      "const": {
+        "free_text_in_candidate": false,
+        "paths_in_candidate": false,
+        "row_level_values_in_candidate": false,
+        "semantic_findings_in_candidate": false
+      }
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "report_ready": {
+      "const": false
+    },
+    "does_not_establish": {
+      "const": [
+        "accounting_semantic_correctness",
+        "approval_or_review_authenticity",
+        "error_completeness",
+        "future_storage_or_copy_behavior",
+        "identifier_nonidentifiability_or_anonymization",
+        "mechanical_classification_correctness",
+        "publication_authorization",
+        "report_readiness",
+        "reviewer_identity_or_authority",
+        "unlinkability"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "check_counts": {
+            "properties": {
+              "failed": {
+                "minimum": 1
+              }
+            },
+            "required": [
+              "failed"
+            ]
+          }
+        },
+        "required": [
+          "check_counts"
+        ]
+      },
+      "then": {
+        "properties": {
+          "mechanical_status": {
+            "const": "failed"
+          },
+          "error_count": {
+            "minimum": 1
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "error_count": {
+            "const": 0
+          }
+        },
+        "if": {
+          "properties": {
+            "check_counts": {
+              "properties": {
+                "not_run": {
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "not_run"
+              ]
+            }
+          },
+          "required": [
+            "check_counts"
+          ]
+        },
+        "then": {
+          "properties": {
+            "mechanical_status": {
+              "const": "incomplete"
+            }
+          }
+        },
+        "else": {
+          "properties": {
+            "mechanical_status": {
+              "const": "passed"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^execution-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "nonnegative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_contract_sha256",
+        "intake_receipt_sha256",
+        "output_receipt_closure_sha256",
+        "producer_contract_sha256",
+        "producer_implementation_sha256",
+        "semantic_review_receipt_sha256"
+      ],
+      "properties": {
+        "case_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "output_receipt_closure_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "producer_contract_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "producer_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_review_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "check_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passed",
+        "failed",
+        "not_run"
+      ],
+      "properties": {
+        "passed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "failed": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "not_run": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "passed": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "failed": {
+              "minimum": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "not_run": {
+              "minimum": 1
+            }
+          }
+        }
+      ]
+    },
+    "class_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract",
+        "mapping_execution",
+        "numeric",
+        "output_integrity",
+        "period",
+        "reconciliation",
+        "replay",
+        "source_structure",
+        "storage"
+      ],
+      "properties": {
+        "contract": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "mapping_execution": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "numeric": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "output_integrity": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "period": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "reconciliation": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "replay": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "source_structure": {
+          "$ref": "#/$defs/nonnegative_integer"
+        },
+        "storage": {
+          "$ref": "#/$defs/nonnegative_integer"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Clara" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#002060"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#0070C0"/>
+  <circle cx="51" cy="50" r="7" fill="#0070C0"/>
+  <circle cx="51" cy="50" r="3" fill="#002060"/>
+
+  <circle cx="32" cy="22" r="8" fill="#FFFFFF"/>
+  <path d="M18 51c2.2-11 8.7-17 14-17s11.8 6 14 17" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M23 51h18" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round"/>
+  <path d="M45 20c3 2 5 5.5 5 9s-2 7-5 9" fill="none" stroke="#00B0F0" stroke-width="3" stroke-linecap="round"/>
+</svg>

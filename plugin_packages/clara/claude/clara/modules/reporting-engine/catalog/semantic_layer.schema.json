@@ -1,0 +1,932 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.2.json",
+  "title": "Reporting Engine dataset semantic layer",
+  "description": "Stable source-backed business semantics and analysis-validity rules for one explicit logical dataset identity across compatible snapshots. This contract does not choose a chart.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "semantic_layer_id",
+    "semantic_version",
+    "dataset_contract",
+    "scope",
+    "sources",
+    "evidence",
+    "metrics",
+    "dimensions",
+    "periods",
+    "period_rules",
+    "analysis_policies",
+    "open_questions",
+    "review",
+    "boundaries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "0.2"
+    },
+    "semantic_layer_id": {
+      "$ref": "#/$defs/id"
+    },
+    "semantic_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "dataset_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dataset_contract_id",
+        "contract_version",
+        "identity",
+        "origin_snapshot",
+        "unknown_column_policy"
+      ],
+      "properties": {
+        "dataset_contract_id": {
+          "$ref": "#/$defs/id"
+        },
+        "contract_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "method",
+            "value"
+          ],
+          "properties": {
+            "method": {
+              "enum": [
+                "caller_assigned",
+                "source_connector",
+                "project_configuration"
+              ]
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "origin_snapshot": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "profile_schema_version",
+            "snapshot_fingerprint"
+          ],
+          "properties": {
+            "profile_schema_version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "snapshot_fingerprint": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            }
+          }
+        },
+        "unknown_column_policy": {
+          "const": "allow_as_unclassified_extension"
+        }
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "business_area",
+        "purpose",
+        "coverage_level",
+        "included_subjects",
+        "excluded_subjects"
+      ],
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "business_area": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coverage_level": {
+          "$ref": "#/$defs/coverageLevel"
+        },
+        "included_subjects": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "excluded_subjects": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "metrics": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/metric"
+      }
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dimension"
+      }
+    },
+    "periods": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/period"
+      }
+    },
+    "period_rules": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/periodRule"
+      }
+    },
+    "analysis_policies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/analysisPolicy"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/openQuestion"
+      }
+    },
+    "review": {
+      "$ref": "#/$defs/review"
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_judgment_owner",
+        "deterministic_validation_scope",
+        "chart_selection_included",
+        "rendering_included"
+      ],
+      "properties": {
+        "semantic_judgment_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "deterministic_validation_scope": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chart_selection_included": {
+          "const": false
+        },
+        "rendering_included": {
+          "const": false
+        }
+      }
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "confidence": {
+      "enum": [
+        "high",
+        "medium",
+        "low",
+        "unknown"
+      ]
+    },
+    "conceptStatus": {
+      "enum": [
+        "defined",
+        "conditional",
+        "excluded",
+        "unknown"
+      ]
+    },
+    "coverageLevel": {
+      "enum": [
+        "unreviewed",
+        "limited",
+        "directional",
+        "strong",
+        "conflicted",
+        "blocked"
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_type",
+        "locator",
+        "authority",
+        "supports",
+        "caveats",
+        "last_checked"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authority": {
+          "enum": [
+            "canonical",
+            "corroborating",
+            "observed",
+            "mechanical",
+            "unverified"
+          ]
+        },
+        "supports": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "last_checked": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "source_id",
+        "locator",
+        "claim",
+        "confidence",
+        "status",
+        "notes"
+      ],
+      "properties": {
+        "evidence_id": {
+          "$ref": "#/$defs/id"
+        },
+        "source_id": {
+          "$ref": "#/$defs/id"
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "status": {
+          "enum": [
+            "supported",
+            "inferred",
+            "conflicted",
+            "unverified"
+          ]
+        },
+        "notes": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "metricBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_type",
+        "column",
+        "expression",
+        "input_metric_ids"
+      ],
+      "properties": {
+        "binding_type": {
+          "enum": [
+            "column",
+            "derived"
+          ]
+        },
+        "column": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "expression": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "input_metric_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "aggregation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "default",
+        "allowed",
+        "forbidden",
+        "weight_metric_id"
+      ],
+      "properties": {
+        "default": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowed": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "forbidden": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "weight_metric_id": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "unit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "currency",
+        "symbol"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "currency": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "symbol": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metric_id",
+        "label",
+        "binding",
+        "definition",
+        "metric_class",
+        "aggregation",
+        "unit",
+        "directionality",
+        "valid_period_grains",
+        "compatible_dimension_ids",
+        "forbidden_dimension_ids",
+        "status",
+        "confidence",
+        "rationale",
+        "evidence_ids",
+        "caveats",
+        "origin_profile_observation"
+      ],
+      "properties": {
+        "metric_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binding": {
+          "$ref": "#/$defs/metricBinding"
+        },
+        "definition": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "metric_class": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "aggregation": {
+          "$ref": "#/$defs/aggregation"
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "directionality": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valid_period_grains": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "compatible_dimension_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "forbidden_dimension_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "$ref": "#/$defs/conceptStatus"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "origin_profile_observation": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "dimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dimension_id",
+        "label",
+        "column",
+        "definition",
+        "semantic_type",
+        "valid_uses",
+        "hierarchy_parent_id",
+        "status",
+        "confidence",
+        "rationale",
+        "evidence_ids",
+        "caveats",
+        "origin_profile_observation"
+      ],
+      "properties": {
+        "dimension_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "column": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "semantic_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "valid_uses": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "hierarchy_parent_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "status": {
+          "$ref": "#/$defs/conceptStatus"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "origin_profile_observation": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period_id",
+        "label",
+        "column",
+        "definition",
+        "grain",
+        "calendar",
+        "timezone",
+        "status",
+        "confidence",
+        "rationale",
+        "evidence_ids",
+        "caveats",
+        "origin_profile_observation"
+      ],
+      "properties": {
+        "period_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "column": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "grain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "calendar": {
+          "type": "string",
+          "minLength": 1
+        },
+        "timezone": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "status": {
+          "$ref": "#/$defs/conceptStatus"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "origin_profile_observation": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "periodRuleParameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "window_length",
+        "fiscal_year_start_month",
+        "comparison_offset_years",
+        "requires_runtime_bounds"
+      ],
+      "properties": {
+        "window_length": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "fiscal_year_start_month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        },
+        "comparison_offset_years": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "requires_runtime_bounds": {
+          "type": "boolean"
+        }
+      }
+    },
+    "periodRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "period_rule_id",
+        "label",
+        "period_id",
+        "rule_type",
+        "scope_type",
+        "parameters",
+        "status",
+        "confidence",
+        "rationale",
+        "evidence_ids",
+        "caveats"
+      ],
+      "properties": {
+        "period_rule_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "period_id": {
+          "$ref": "#/$defs/id"
+        },
+        "rule_type": {
+          "enum": [
+            "all_available",
+            "latest_available_period",
+            "trailing_periods",
+            "current_ytd",
+            "current_vs_prior_year",
+            "current_ytd_vs_prior_ytd",
+            "caller_bounded"
+          ]
+        },
+        "scope_type": {
+          "enum": [
+            "single",
+            "comparison_pair",
+            "all_available"
+          ]
+        },
+        "parameters": {
+          "$ref": "#/$defs/periodRuleParameters"
+        },
+        "status": {
+          "$ref": "#/$defs/conceptStatus"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "roleBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "binding_type"
+      ],
+      "properties": {
+        "binding_type": {
+          "enum": [
+            "concept",
+            "concept_list",
+            "literal",
+            "derived",
+            "package",
+            "unresolved"
+          ]
+        },
+        "concept_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "concept_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "value": {},
+        "expression": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "input_roles": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "source_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "reason": {
+          "$ref": "#/$defs/nullableString"
+        }
+      }
+    },
+    "analysisPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "analysis_id",
+        "label",
+        "question_family",
+        "analysis_task_ids",
+        "selection_emphases",
+        "validity",
+        "business_purpose",
+        "role_bindings",
+        "period_rule_id",
+        "conditions",
+        "rationale",
+        "evidence_ids",
+        "confidence",
+        "caveats"
+      ],
+      "properties": {
+        "analysis_id": {
+          "$ref": "#/$defs/id"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "question_family": {
+          "type": "string",
+          "minLength": 1
+        },
+        "analysis_task_ids": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "selection_emphases": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "validity": {
+          "enum": [
+            "valid",
+            "conditional",
+            "invalid",
+            "unknown"
+          ]
+        },
+        "business_purpose": {
+          "type": "string"
+        },
+        "role_bindings": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/$defs/roleBinding"
+          }
+        },
+        "period_rule_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "conditions": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    },
+    "openQuestion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id",
+        "question",
+        "why_it_matters",
+        "owner_or_source",
+        "status"
+      ],
+      "properties": {
+        "question_id": {
+          "$ref": "#/$defs/id"
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1
+        },
+        "why_it_matters": {
+          "type": "string",
+          "minLength": 1
+        },
+        "owner_or_source": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "resolved",
+            "deferred"
+          ]
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "reviewed_by",
+        "reviewed_at",
+        "notes"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "draft",
+            "model_reviewed",
+            "human_reviewed"
+          ]
+        },
+        "reviewed_by": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "reviewed_at": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "notes": {
+          "$ref": "#/$defs/stringArray"
+        }
+      }
+    }
+  }
+}

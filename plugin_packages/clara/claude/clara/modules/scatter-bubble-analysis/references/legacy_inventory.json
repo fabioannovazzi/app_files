@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.1",
+  "plugin": "scatter-bubble-analysis",
+  "items": [
+    {
+      "legacy_id": "legacy.scatter.scatter",
+      "status": "mapped_active",
+      "legacy_function": "legacy_scatter_bubble_charting",
+      "target_capability_id": "scatter.scatter",
+      "related_capability_ids": [
+        "scatter.scatter"
+      ],
+      "reason": "The legacy scatter renderer is exposed as its own concrete chart capability."
+    },
+    {
+      "legacy_id": "legacy.scatter.bubble",
+      "status": "mapped_active",
+      "legacy_function": "legacy_scatter_bubble_charting",
+      "target_capability_id": "scatter.bubble",
+      "related_capability_ids": [
+        "scatter.bubble"
+      ],
+      "reason": "The legacy bubble renderer is exposed as its own concrete chart capability."
+    }
+  ]
+}

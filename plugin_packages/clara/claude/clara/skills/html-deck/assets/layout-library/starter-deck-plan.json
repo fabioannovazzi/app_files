@@ -1,0 +1,87 @@
+{
+  "schema_version": "clara.html_deck_plan.v1",
+  "allow_bespoke_html": false,
+  "slides": [
+    {
+      "id": "opening",
+      "layout_id": "editorial-cover",
+      "title": "REPLACE THIS with the governing decision",
+      "chapter": "opening",
+      "chapter_label": "Opening",
+      "tone": "dark",
+      "notes": "State the audience tension and the decision this talk must unlock.",
+      "source_refs": [],
+      "claim_refs": [],
+      "slots": {
+        "eyebrow": "Decision brief",
+        "title": "REPLACE THIS with the governing decision",
+        "subtitle": "Replace this promise with what the audience will understand or decide.",
+        "author": "Advisory team",
+        "source_note": "Replace with the evidence basis or approved judgement."
+      }
+    },
+    {
+      "id": "evidence",
+      "layout_id": "evidence-split",
+      "title": "REPLACE THIS with the evidence that changes the decision",
+      "chapter": "evidence",
+      "chapter_label": "Evidence",
+      "tone": "light",
+      "notes": "Separate what is observed from what the advisor concludes.",
+      "source_refs": [],
+      "claim_refs": [],
+      "slots": {
+        "eyebrow": "Evidence and implication",
+        "title": "REPLACE THIS with the evidence that changes the decision",
+        "evidence_label": "Observed",
+        "evidence_items": [
+          {
+            "label": "Evidence one",
+            "body": "Replace with a source-bound observation.",
+            "_fragment": 1
+          },
+          {
+            "label": "Evidence two",
+            "body": "Replace with a corroborating or contradictory observation.",
+            "_fragment": 2
+          }
+        ],
+        "takeaway_label": "Advisor implication",
+        "takeaway": "Replace with the judgement that follows from the observed evidence.",
+        "condition": "Name the missing evidence or condition that could change the position.",
+        "source_note": "Replace with source IDs represented in content-ledger.json."
+      }
+    },
+    {
+      "id": "decision",
+      "layout_id": "closing-decision",
+      "title": "REPLACE THIS with the decision the room must now own",
+      "chapter": "closing",
+      "chapter_label": "Closing",
+      "tone": "dark",
+      "notes": "End on ownership, the next evidence gate, and the immediate action.",
+      "source_refs": [],
+      "claim_refs": [],
+      "slots": {
+        "eyebrow": "Decision and next move",
+        "title": "REPLACE THIS with the decision the room must now own",
+        "actions": [
+          {
+            "verb": "Decide",
+            "body": "Replace with the immediate decision.",
+            "owner": "Named owner",
+            "_fragment": 1
+          },
+          {
+            "verb": "Evidence",
+            "body": "Replace with the next proof point or stop condition.",
+            "owner": "Named owner",
+            "_fragment": 2
+          }
+        ],
+        "closing_line": "Replace with the one sentence the audience should remember.",
+        "source_note": "Replace with the approved evidence or judgement basis."
+      }
+    }
+  ]
+}
