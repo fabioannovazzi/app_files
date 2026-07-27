@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/bootstrap_python_dependencies.py\"",
+            "timeout": 240
+          }
+        ]
+      }
+    ]
+  }
+}

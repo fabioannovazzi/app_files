@@ -3,11 +3,17 @@
   "workflow": "reporting-engine",
   "display_name": "Reporting Engine",
   "governed_paths": [
+    "requirements.txt",
+    "hooks/cowork-hooks.json",
+    "scripts/bootstrap_python_dependencies.py",
+    "scripts/check_dependencies.py",
+    "skills/clara/references/cowork-runtime.md",
     "skills/reporting-engine/SKILL.md",
     "contracts/reporting_evidence_handoff_receipt.v1.schema.json",
     "scripts/build_monthly_pnl_reporting_handoff.py",
     "modules/reporting-engine/README.md",
     "modules/reporting-engine/references",
+    "modules/reporting-engine/requirements.txt",
     "modules/reporting-engine/scripts"
   ],
   "codex_context": {
@@ -45,12 +51,27 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "declared-python-dependency-retrieval",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI)",
+      "purpose": "Install Clara's exact declared Python dependencies into the user-scoped Cowork plugin data directory when the fingerprinted dependency cache is absent or invalid",
+      "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or report content are sent",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The trusted SessionStart hook installs only requirements declared in the published Clara package.",
+        "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
+        "The bootstrap validates imports after installation, uses a requirements fingerprint for reuse, and fails open to file-based work."
+      ]
+    }
+  ],
   "security_controls": [],
   "review": {
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4ac42df94f15426285767885e33be06a6572da618bb6ddeac1627d8778aacd70"
+    "source_fingerprint": "6e084c87b97919046caf41f4f7bc4c345402e434741df921b234e54e41326148"
   }
 }

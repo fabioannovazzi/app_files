@@ -114,6 +114,35 @@ def selected_requirement_files(
     return deduplicated
 
 
+def _expanded_requirement_files(
+    paths: Sequence[Path],
+    *,
+    seen: set[Path] | None = None,
+) -> list[Path]:
+    """Return requirement files plus recursive local ``-r`` includes."""
+
+    visited = seen if seen is not None else set()
+    expanded: list[Path] = []
+    for path in paths:
+        resolved = path.resolve()
+        if resolved in visited:
+            continue
+        visited.add(resolved)
+        expanded.append(resolved)
+        included: list[Path] = []
+        for raw_line in resolved.read_text(encoding="utf-8").splitlines():
+            line = raw_line.split("#", 1)[0].strip()
+            include = ""
+            if line.startswith("-r "):
+                include = line[3:].strip()
+            elif line.startswith("--requirement "):
+                include = line[len("--requirement ") :].strip()
+            if include:
+                included.append(resolved.parent / include)
+        expanded.extend(_expanded_requirement_files(included, seen=visited))
+    return expanded
+
+
 def check_dependencies(requirements: Path | Sequence[Path]) -> list[str]:
     """Return package names whose import targets are unavailable."""
 
@@ -122,7 +151,7 @@ def check_dependencies(requirements: Path | Sequence[Path]) -> list[str]:
     )
     missing: list[str] = []
     seen_missing: set[str] = set()
-    for path in requirement_files:
+    for path in _expanded_requirement_files(requirement_files):
         for line in path.read_text(encoding="utf-8").splitlines():
             package = requirement_name(line)
             if package is None:

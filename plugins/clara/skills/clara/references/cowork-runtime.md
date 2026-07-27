@@ -11,11 +11,15 @@ publication.
 
 ## Cowork execution contract
 
-Use connected files first. A local script may be used only when it is callable
-and all declared dependencies are already available. Never install packages at
-runtime. Browser, computer-control, MCP, and local review-server capabilities
-are optional enhancements, never completion gates. When one is unavailable,
-continue with the useful file-based work and state the limitation.
+Use connected files first. Clara's trusted `SessionStart` hook installs the
+package's exact declared Python requirements into Clara's user-scoped plugin
+data directory and exposes that directory to the Cowork sandbox through
+`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
+run ad hoc package installation or install undeclared dependencies during a
+workflow. If the trusted bootstrap or dependency check fails, continue with the
+useful file-based work and state the limitation. Browser, computer-control,
+MCP, and local review-server capabilities are optional enhancements, never
+completion gates.
 
 Do not invoke Clara's hosted voice, external interview, transcription, deck
 feedback capture, plugin feedback, or custom update services. Do not claim
@@ -54,9 +58,12 @@ prepare a decision-oriented workpaper, and create reviewed client outputs.
 
 1. Inspect the connected folder and identify the case root, source materials,
    existing Clara records, requested output, and unresolved material choices.
-2. Run `python scripts/check_dependencies.py` only when local scripts are
-   callable. If dependencies are missing, continue with a transparent
-   file-first workflow.
+2. Run `python scripts/check_dependencies.py` before local Python helpers. The
+   trusted startup bootstrap should already have installed the declared
+   requirements in the user sandbox. If dependencies are still missing,
+   rerun `python scripts/bootstrap_python_dependencies.py`, then repeat the
+   check. If bootstrap fails, continue with a transparent file-first workflow
+   and record the affected capability.
 3. Initialize or validate the case with `scripts/init_case.py` and
    `scripts/validate_workspace.py` when appropriate.
 4. Register source material with `scripts/index_materials.py`. Preserve exact
