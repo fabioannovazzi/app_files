@@ -21,7 +21,11 @@ except ImportError:  # pragma: no cover - optional dependency
     Document = None  # type: ignore[assignment]
 
 try:
-    from .review_session import write_review_session_artifacts, write_run_intake
+    from .review_session import (
+        synchronize_final_artifact_sizes,
+        write_review_session_artifacts,
+        write_run_intake,
+    )
 except ImportError:  # pragma: no cover - supports direct script imports
     import importlib.util
 
@@ -34,6 +38,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
     _review_session = importlib.util.module_from_spec(_review_session_spec)
     sys.modules[_review_session_spec.name] = _review_session
     _review_session_spec.loader.exec_module(_review_session)
+    synchronize_final_artifact_sizes = _review_session.synchronize_final_artifact_sizes
     write_review_session_artifacts = _review_session.write_review_session_artifacts
     write_run_intake = _review_session.write_run_intake
 
@@ -385,6 +390,7 @@ def write_validation_package(
         "review_item_count": review_session.review_item_count,
     }
     _write_json(audit_path, audit)
+    synchronize_final_artifact_sizes(review_session.final_artifacts_path)
     return paths
 
 

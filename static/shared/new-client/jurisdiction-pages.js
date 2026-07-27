@@ -101,7 +101,7 @@
       download: {
         eyebrow: "Vera",
         title: "Continua in Codex Desktop",
-        button: "Torna a Vera",
+        button: "Vera",
       },
     },
     en: {

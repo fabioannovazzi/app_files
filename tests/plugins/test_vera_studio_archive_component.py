@@ -15,6 +15,11 @@ from typing import Any
 
 import pytest
 
+try:
+    import fitz as _fitz
+except ImportError:
+    _fitz = None
+
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENT_ROOT = ROOT / "plugins" / "studio-archive"
 ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
@@ -82,6 +87,14 @@ def _node_executable() -> str:
     if not candidates:
         pytest.skip("The Codex-bundled Node.js runtime is required.")
     return candidates[-1].as_posix()
+
+
+def _fitz_or_skip() -> ModuleType:
+    """Return the collection-stable PyMuPDF module used by PDF fixtures."""
+
+    if _fitz is None:
+        pytest.skip("PyMuPDF creates the test PDF.")
+    return _fitz
 
 
 def _mcp_request(
@@ -512,7 +525,7 @@ def test_pdf_search_preserves_physical_page_locator(
     tmp_path: Path,
     archive_core: ModuleType,
 ) -> None:
-    fitz = pytest.importorskip("fitz", reason="PyMuPDF creates the test PDF.")
+    fitz = _fitz_or_skip()
     archive_root = tmp_path / "Studio"
     client_root = archive_root / "Rossi"
     client_root.mkdir(parents=True)
@@ -551,7 +564,7 @@ def test_short_pdf_exposes_partial_status_and_ocr_limitation(
     tmp_path: Path,
     archive_core: ModuleType,
 ) -> None:
-    fitz = pytest.importorskip("fitz", reason="PyMuPDF creates the test PDF.")
+    fitz = _fitz_or_skip()
     archive_root = tmp_path / "Studio"
     client_root = archive_root / "Rossi"
     client_root.mkdir(parents=True)
@@ -591,7 +604,7 @@ def test_empty_ocr_result_does_not_erase_short_native_pdf_text(
     archive_core: ModuleType,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    fitz = pytest.importorskip("fitz", reason="PyMuPDF creates the test PDF.")
+    fitz = _fitz_or_skip()
     archive_root = tmp_path / "Studio"
     client_root = archive_root / "Rossi"
     client_root.mkdir(parents=True)
@@ -1189,7 +1202,6 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
     assert "studio-archive" in components["plugins"]
     assert "studio-archive" not in components["workflow_roles"]
     assert vera_mcp["mcpServers"]["veraStudioArchive"]["args"][-1] == "studio-archive"
-    assert manifest["version"] == "0.1.31"
     assert (
         ROOT / "plugins" / "vera" / "skills" / "studio-archive" / "SKILL.md"
     ).is_file()

@@ -380,6 +380,17 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     assert review_payload["summary"]["audit_status"] == "pass"
     assert ui_decisions["status"] == "pending_review"
     assert final_artifacts["status"] == "written_pending_review"
+    output_records = {output["path"]: output for output in final_artifacts["outputs"]}
+    assert (
+        output_records["validation_audit.json"]["size_bytes"]
+        == paths["validation_audit"].stat().st_size
+    )
+    for output in output_records.values():
+        if "size_bytes" in output:
+            assert (
+                output["size_bytes"]
+                == (tmp_path / "out" / output["path"]).stat().st_size
+            )
     handoff_output = next(
         output
         for output in final_artifacts["outputs"]
@@ -571,8 +582,9 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "validated_document.md",
         "validation_package.md",
         VERA_PRODUCT_PAGE_LINK,
-        "Torna a Vera",
-        "Volver a Vera",
+        'id="vera-link"',
+        "../vera/index.html?lang=it",
+        'document.getElementById("vera-link").href = `../vera/index.html?lang=${lang}`',
         "/?lang=${lang}",
     ):
         assert snippet in page

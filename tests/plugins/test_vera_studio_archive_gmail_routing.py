@@ -615,7 +615,7 @@ def test_privacy_manifest_records_marketplace_gmail_and_optional_local_registry(
     manifest = json.loads(PRIVACY_MANIFEST_PATH.read_text(encoding="utf-8"))
     boundary = next(
         item
-        for item in manifest["boundaries_beyond_codex"]
+        for item in manifest["external_boundaries"]
         if item["id"] == "codex-gmail-client-search"
     )
     controls = {item["id"]: item["control"] for item in manifest["security_controls"]}

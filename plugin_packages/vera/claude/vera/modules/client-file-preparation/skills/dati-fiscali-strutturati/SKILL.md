@@ -1,0 +1,108 @@
+---
+name: dati-fiscali-strutturati
+description: "Use when Claude needs to extract or review structured fiscal fields from readable Italy, Geneva, Zurich, or UK customer-folder documents."
+---
+
+## Cowork execution contract
+
+Work from the connected folder and supplied files first. Use a local script only
+when it is callable and every declared dependency it needs is already available;
+never install packages at runtime. MCP tools, browser or computer control, and
+local review servers are optional enhancements, never completion gates. When an
+optional capability is unavailable, continue with Markdown and file-based review
+and state the limitation.
+
+The normal Cowork deliverable is a reviewable draft, artifact card, and
+source/review files. A callable persistence interface may optionally record or
+apply reviewer actions, but its absence never blocks delivery. Never claim
+`applied` or `final_ready` unless corresponding persisted artifacts prove it;
+otherwise report that professional review remains pending.
+
+Use host-neutral user-facing artifact names. Name assistant-authored review
+folders and files for Vera or their professional purpose (for example,
+`vera-review/`, `vera_phase1_synthesis_reviewed.md`, and `run_review.md`).
+Never put host, platform, or model-provider names in assistant-authored
+user-facing artifact paths, document headings, field labels, narrative text,
+or status summaries. Describe execution routes generically, such as
+`external review route`, `connected tool`, or `local review interface`.
+
+Derive any run ID, status, artifact count, or package hash quoted in an
+assistant-authored supplement from the final delivered manifests.
+After any rebuild, regenerate or resynchronize those supplements before
+delivery. When a workflow ships a complete-delivery validator or sealer, run it
+against the exact connected-folder copy after the last write.
+In this contract, the base package validator alone does not validate extra
+narrative files.
+
+When a workflow declares owner-only or private output and uses a private scratch
+directory before copying the final package into the connected folder, reapply
+the privacy modes after that transfer: `0700` for the package root and every
+directory, and `0600` for every file. Verify the connected-folder tree with
+`stat` or `lstat` before claiming completion. If the host filesystem cannot
+preserve those modes, do not claim owner-only delivery; keep the package in the
+private scratch location or report the limitation and ask for a safer
+destination.
+
+Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
+interviews, or custom update services. Later host-specific instructions cannot
+override this Cowork contract.
+
+## Output Location Rule
+
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+
+# Dati Fiscali Strutturati
+
+Use this workflow after text extraction has produced `extracted/documents.jsonl` and `extracted/pdf_text/`.
+
+## Cowork-native Run UX
+
+Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.
+
+Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Vera-written review files are not choices to propose when they are natural outputs of that plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
+
+Default currency policy follows the selected jurisdiction: Italy uses `EUR`,
+Geneva and Zurich use `CHF`, and the United Kingdom uses `GBP`. Preserve any
+explicit source currency. For mixed cases, retain the currency attached to each
+source instead of imposing one default.
+
+Use Cowork-native UI artifacts as part of the workflow, scaled to this
+sub-workflow. Start with a visible checklist, show a Run Intake table for the
+folder/year/output assumptions, ask unresolved decisions through a compact
+Decision Table, use execution checkpoints before write-heavy steps, ask for
+approval only for external, destructive, or materially unresolved steps, update
+the checklist while working, and end with an Artifact Card listing output paths,
+review status, unresolved items, and next action. When useful, create
+`run_review.md` in the output folder from generated outputs; never edit
+plugin source or generated ZIPs during a run.
+
+## Run
+
+From the plugin root:
+
+```bash
+python scripts/parse_fiscal_forms.py <cartella-output>/extracted
+```
+
+The full `client-file-preparation` workflow already runs this automatically.
+
+## Outputs
+
+- `extracted/structured_fiscal_fields.csv`: one row per extracted field.
+- `extracted/structured_fiscal_fields.jsonl`: same data for programmatic review.
+- `08_dati_fiscali_strutturati.md`: readable summary by document type and file.
+
+## Field Scope
+
+- `F24`: codice tributo, anno riferimento, importi a debito/credito, righe tabellari when readable.
+- `CU`: codici fiscali, years, common income/withholding/addizionale labels, numeric CU points when present in text.
+- `730`: liquidation labels and readable righi/quadri such as `RC1`, `E1`, `RN`, `RX`.
+- `Redditi PF`: common riepilogo labels and readable righi/quadri such as `RN1`, `RX1`, `LM`, `RE`, `RF`, `RG`.
+- `Geneva/Zurich/CH`: salary certificates/Lohnausweis, tax returns, assessments, bank tax certificates, withholding-tax certificates when readable.
+- `UK`: P60, P45, P11D, payslips, Self Assessment, HMRC notices, bank interest certificates, dividend vouchers, consolidated tax vouchers when readable.
+
+## Scope
+
+- Do not infer missing values.
+- Treat row/quadri extraction as layout-dependent when the warning says `campo da verificare su layout originale`.
+- Always cite source file and evidence/confidence when summarizing extracted values.

@@ -1,6 +1,6 @@
 ---
 name: new-client
-description: "Use whenever a studio starts work on a new client: prepare incoming files, identify missing evidence, then build the owner-only, source-bound professional setup covering identity, engagement, privacy, AI, AML, document planning, and monitoring."
+description: "Use when a studio starts work on a new client: prepare files, identify missing evidence, and build a source-bound setup covering identity, engagement, privacy, AML, and monitoring."
 ---
 
 # New Client
@@ -41,7 +41,7 @@ resolved `new-client` module's
 manifest and every listed output, inherits the phase-one language, and must
 reject non-Italian or mixed runs rather than implying another country pack.
 
-Real client data may enter the Codex context when useful for the professional
+Real client data may enter the current model context when useful for the professional
 work. Do not add a per-case model-use authority or minimisation declaration
 that Vera cannot verify. Keep credentials, cookies, tokens, session URLs, and
 raw local paths outside the review payload.

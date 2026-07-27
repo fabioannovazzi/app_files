@@ -1,6 +1,6 @@
 ---
 name: dati-fiscali-strutturati
-description: "Use when Codex needs to extract or review structured fiscal fields from readable Italy, Geneva, Zurich, or UK customer-folder documents."
+description: "Use when extracting or reviewing structured fiscal fields from readable Italy, Geneva, Zurich, or UK customer-folder documents."
 ---
 
 # Dati fiscali strutturati

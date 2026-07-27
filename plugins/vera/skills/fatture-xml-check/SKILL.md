@@ -1,6 +1,6 @@
 ---
 name: fatture-xml-check
-description: "Use when formally checking Italian FatturaPA XML files in a customer folder: parse invoice metadata, create CSV summaries, identify malformed XML, date issues, and duplicate candidates."
+description: "Use when checking Italian FatturaPA XML files in a customer folder, summarizing invoice metadata, and identifying malformed XML, date issues, or duplicate candidates."
 ---
 
 # Fatture XML Check

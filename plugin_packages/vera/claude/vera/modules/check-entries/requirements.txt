@@ -1,0 +1,5 @@
+polars>=1.37.1
+fastexcel>=0.14
+openpyxl>=3.1
+pdfplumber>=0.11
+xlsxwriter>=3.2

@@ -18,7 +18,7 @@ __all__ = ["main", "validate_privacy_surfaces"]
 
 SKIP_DIRS = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", "__pycache__"}
 SKIP_SUFFIXES = {".pyc", ".pyo"}
-CODEX_CONTEXT_POLICY = "real_case_data_may_enter_codex_context"
+MODEL_CONTEXT_POLICY = "real_case_data_may_enter_selected_runtime_model_context"
 BOUNDARY_KINDS = {
     "public_research",
     "hosted_service",
@@ -31,15 +31,50 @@ ACCOUNT_REVIEW_ITEMS = [
     "model_training_data_controls",
     "retention_and_deletion_controls",
 ]
-ORDINARY_PROCESSING = {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": (
-        "existing_chatgpt_or_codex_account_selected_by_firm_or_user"
-    ),
-    "separate_vera_recipient": False,
-    "automatic_anonymization": False,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+ACCOUNT_BOUNDARY = {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": ACCOUNT_REVIEW_ITEMS,
+    "per_case_record_required": False,
 }
+EXPECTED_RUNTIME_PROFILES = {
+    "openai-codex": {
+        "provider": "OpenAI",
+        "runtime": "Codex",
+        "surfaces": ["codex"],
+        "account_boundary": ACCOUNT_BOUNDARY,
+        "model_processing": {
+            "scope": "ordinary_openai_codex_model_processing",
+            "destination": "OpenAI model processing used by Codex",
+            "account_arrangement": (
+                "existing_openai_codex_account_or_workspace_selected_by_firm_or_user"
+            ),
+            "separate_vera_recipient": False,
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+        },
+    },
+    "anthropic-cowork": {
+        "provider": "Anthropic",
+        "runtime": "Cowork",
+        "surfaces": ["cowork"],
+        "account_boundary": ACCOUNT_BOUNDARY,
+        "model_processing": {
+            "scope": "ordinary_anthropic_cowork_model_processing",
+            "destination": "Anthropic model processing used by Cowork",
+            "account_arrangement": (
+                "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user"
+            ),
+            "separate_vera_recipient": False,
+            "automatic_anonymization": False,
+            "local_only": False,
+            "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+        },
+    },
+}
+RUNTIME_PROFILE_IDS = list(EXPECTED_RUNTIME_PROFILES)
 
 
 def _vera_root() -> Path:
@@ -56,6 +91,49 @@ def _components(vera_root: Path) -> tuple[set[str], dict[str, dict[str, Any]]]:
 def _shared_services(vera_root: Path) -> set[str]:
     payload = json.loads((vera_root / "components.json").read_text(encoding="utf-8"))
     return set(payload.get("shared_services", []))
+
+
+def _runtime_profile_errors(vera_root: Path) -> list[str]:
+    path = vera_root / "privacy" / "runtime-profiles.json"
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"runtime-profiles: cannot read profile catalog: {exc}"]
+    if not isinstance(payload, dict):
+        return ["runtime-profiles: catalog must be an object"]
+    errors: list[str] = []
+    if payload.get("schema_version") != 1:
+        errors.append("runtime-profiles: schema_version must be 1")
+    profiles = payload.get("profiles")
+    if not isinstance(profiles, list):
+        return [*errors, "runtime-profiles: profiles must be an array"]
+    profile_ids = [
+        str(profile.get("id", "")) if isinstance(profile, dict) else ""
+        for profile in profiles
+    ]
+    if len(profile_ids) != len(set(profile_ids)):
+        errors.append("runtime-profiles: profile ids must be unique")
+    if profile_ids != RUNTIME_PROFILE_IDS:
+        errors.append(
+            "runtime-profiles: profiles must contain openai-codex and "
+            "anthropic-cowork in that order"
+        )
+    for index, profile in enumerate(profiles):
+        if not isinstance(profile, dict):
+            errors.append(f"runtime-profiles: profile[{index}] must be an object")
+            continue
+        profile_id = str(profile.get("id", ""))
+        expected = EXPECTED_RUNTIME_PROFILES.get(profile_id)
+        if expected is None:
+            errors.append(f"runtime-profiles: profile[{index}] has unknown id")
+            continue
+        actual = {key: value for key, value in profile.items() if key != "id"}
+        if actual != expected:
+            errors.append(
+                f"runtime-profiles: {profile_id} account or model-processing "
+                "boundary is inaccurate"
+            )
+    return errors
 
 
 def _component_root(vera_root: Path, workstream: str) -> Path:
@@ -262,12 +340,18 @@ def _boundary_errors(
     *,
     scope: str,
     allowed_kinds: set[str],
+    manifest_runtime_profiles: Any,
     require_retention: bool = False,
     require_activation: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     if not isinstance(boundaries, list):
-        return [f"{scope}: boundaries_beyond_codex must be an array"]
+        return [f"{scope}: external_boundaries must be an array"]
+    available_profiles = (
+        set(manifest_runtime_profiles)
+        if isinstance(manifest_runtime_profiles, list)
+        else set()
+    )
     boundary_ids: list[str] = []
     for index, boundary in enumerate(boundaries):
         if not isinstance(boundary, dict):
@@ -282,6 +366,7 @@ def _boundary_errors(
             "optional",
             "requires_confirmation",
             "controls",
+            "runtime_profiles",
         }
         text_fields = ["id", "destination", "purpose", "content"]
         if require_retention:
@@ -336,6 +421,21 @@ def _boundary_errors(
             or not all(isinstance(item, str) and item.strip() for item in controls)
         ):
             errors.append(f"{scope}: boundary[{index}] controls must be non-empty")
+        profiles = boundary.get("runtime_profiles")
+        if (
+            not isinstance(profiles, list)
+            or not profiles
+            or not all(isinstance(item, str) and item for item in profiles)
+        ):
+            errors.append(
+                f"{scope}: boundary[{index}] runtime_profiles must be non-empty strings"
+            )
+        elif len(profiles) != len(set(profiles)):
+            errors.append(f"{scope}: boundary[{index}] runtime_profiles must be unique")
+        elif not set(profiles) <= available_profiles:
+            errors.append(
+                f"{scope}: boundary[{index}] references a runtime outside the manifest"
+            )
     if len(boundary_ids) != len(set(boundary_ids)):
         errors.append(f"{scope}: boundary ids must be unique")
     return errors
@@ -403,6 +503,32 @@ def _security_control_errors(
     return errors
 
 
+def _runtime_profile_reference_errors(
+    profiles: Any,
+    *,
+    scope: str,
+    require_all: bool,
+) -> list[str]:
+    if (
+        not isinstance(profiles, list)
+        or not profiles
+        or not all(isinstance(item, str) and item for item in profiles)
+    ):
+        return [f"{scope}: runtime_profiles must be non-empty strings"]
+    errors: list[str] = []
+    if len(profiles) != len(set(profiles)):
+        errors.append(f"{scope}: runtime_profiles must be unique")
+    unknown = sorted(set(profiles) - set(RUNTIME_PROFILE_IDS))
+    if unknown:
+        errors.append(f"{scope}: unknown runtime_profiles: {', '.join(unknown)}")
+    if require_all and profiles != RUNTIME_PROFILE_IDS:
+        errors.append(
+            f"{scope}: every workstream must reference openai-codex and "
+            "anthropic-cowork in that order"
+        )
+    return errors
+
+
 def _manifest_errors(
     payload: dict[str, Any], *, workstream: str, expected_role: str
 ) -> list[str]:
@@ -413,18 +539,17 @@ def _manifest_errors(
         "display_name",
         "role",
         "governed_paths",
-        "codex_context",
-        "codex_account_boundary",
-        "ordinary_processing",
-        "boundaries_beyond_codex",
+        "runtime_profiles",
+        "model_context",
+        "external_boundaries",
         "security_controls",
         "review",
     }
     missing = sorted(required - payload.keys())
     if missing:
         return [f"{workstream}: missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != 2:
-        errors.append(f"{workstream}: schema_version must be 2")
+    if payload["schema_version"] != 3:
+        errors.append(f"{workstream}: schema_version must be 3")
     if payload["workstream"] != workstream:
         errors.append(f"{workstream}: manifest workstream does not match filename")
     if (
@@ -446,63 +571,59 @@ def _manifest_errors(
         isinstance(item, str) and item for item in shared_governed
     ):
         errors.append(f"{workstream}: governed_shared_paths must be strings")
-    context = payload["codex_context"]
+    errors.extend(
+        _runtime_profile_reference_errors(
+            payload["runtime_profiles"],
+            scope=workstream,
+            require_all=True,
+        )
+    )
+    context = payload["model_context"]
     if not isinstance(context, dict):
-        errors.append(f"{workstream}: codex_context must be an object")
+        errors.append(f"{workstream}: model_context must be an object")
     else:
-        if context.get("policy") != CODEX_CONTEXT_POLICY:
-            errors.append(f"{workstream}: unexpected Codex context policy")
+        if context.get("policy") != MODEL_CONTEXT_POLICY:
+            errors.append(f"{workstream}: unexpected model-context policy")
         classes = context.get("classes")
         if not isinstance(classes, list) or not classes:
-            errors.append(f"{workstream}: codex_context.classes must be non-empty")
+            errors.append(f"{workstream}: model_context.classes must be non-empty")
             classes = []
         context_ids: list[str] = []
         for index, item in enumerate(classes):
             if not isinstance(item, dict):
                 errors.append(
-                    f"{workstream}: codex_context.classes[{index}] must be an object"
+                    f"{workstream}: model_context.classes[{index}] must be an object"
                 )
                 continue
-            fields = {"id", "purpose", "content"}
+            fields = {"id", "purpose", "content", "runtime_profiles"}
             if fields - item.keys() or not all(
                 isinstance(item.get(field), str) and item[field].strip()
-                for field in fields
+                for field in ("id", "purpose", "content")
             ):
                 errors.append(
-                    f"{workstream}: codex_context.classes[{index}] is incomplete"
+                    f"{workstream}: model_context.classes[{index}] is incomplete"
+                )
+            profiles = item.get("runtime_profiles")
+            if (
+                not isinstance(profiles, list)
+                or not profiles
+                or not all(isinstance(value, str) and value for value in profiles)
+                or len(profiles) != len(set(profiles))
+                or not set(profiles) <= set(payload["runtime_profiles"])
+            ):
+                errors.append(
+                    f"{workstream}: model_context.classes[{index}] has invalid "
+                    "runtime_profiles"
                 )
             context_ids.append(str(item.get("id", "")))
         if len(context_ids) != len(set(context_ids)):
-            errors.append(f"{workstream}: codex_context ids must be unique")
-
-    account = payload["codex_account_boundary"]
-    if not isinstance(account, dict):
-        errors.append(f"{workstream}: codex_account_boundary must be an object")
-    else:
-        if account.get("selected_by") != "firm_or_user":
-            errors.append(f"{workstream}: account must be selected by the firm or user")
-        if account.get("vera_runtime_enforcement") != "none":
-            errors.append(
-                f"{workstream}: Vera cannot claim to enforce account settings"
-            )
-        if (
-            account.get("review_timing")
-            != "before_professional_use_and_when_account_or_terms_change"
-        ):
-            errors.append(f"{workstream}: account review timing is inaccurate")
-        if account.get("review_items") != ACCOUNT_REVIEW_ITEMS:
-            errors.append(f"{workstream}: incomplete Codex account boundary review")
-        if account.get("per_case_record_required") is not False:
-            errors.append(
-                f"{workstream}: account review must not require a per-case record"
-            )
-    if payload["ordinary_processing"] != ORDINARY_PROCESSING:
-        errors.append(f"{workstream}: ordinary Codex processing policy is inaccurate")
+            errors.append(f"{workstream}: model_context ids must be unique")
     errors.extend(
         _boundary_errors(
-            payload["boundaries_beyond_codex"],
+            payload["external_boundaries"],
             scope=workstream,
             allowed_kinds=BOUNDARY_KINDS,
+            manifest_runtime_profiles=payload["runtime_profiles"],
         )
     )
     errors.extend(
@@ -530,15 +651,16 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
         "service_id",
         "display_name",
         "governed_paths",
-        "boundaries_beyond_codex",
+        "runtime_profiles",
+        "external_boundaries",
         "security_controls",
         "review",
     }
     missing = sorted(required - payload.keys())
     if missing:
         return [f"{service_id}: missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != 1:
-        errors.append(f"{service_id}: schema_version must be 1")
+    if payload["schema_version"] != 2:
+        errors.append(f"{service_id}: schema_version must be 2")
     if payload["service_id"] != service_id:
         errors.append(f"{service_id}: manifest service_id does not match filename")
     if (
@@ -559,10 +681,18 @@ def _service_manifest_errors(payload: dict[str, Any], *, service_id: str) -> lis
     ):
         errors.append(f"{service_id}: governed_repository_paths must be strings")
     errors.extend(
+        _runtime_profile_reference_errors(
+            payload["runtime_profiles"],
+            scope=service_id,
+            require_all=False,
+        )
+    )
+    errors.extend(
         _boundary_errors(
-            payload["boundaries_beyond_codex"],
+            payload["external_boundaries"],
             scope=service_id,
             allowed_kinds=SERVICE_BOUNDARY_KINDS,
+            manifest_runtime_profiles=payload["runtime_profiles"],
             require_retention=True,
             require_activation=True,
         )
@@ -604,7 +734,7 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
     names, roles = _components(root)
     manifest_dir = root / "privacy" / "workstreams"
     manifests = {path.stem: path for path in manifest_dir.glob("*.json")}
-    errors: list[str] = []
+    errors = _runtime_profile_errors(root)
     for missing in sorted(names - manifests.keys()):
         errors.append(f"{missing}: registered workstream has no privacy manifest")
     for extra in sorted(manifests.keys() - names):

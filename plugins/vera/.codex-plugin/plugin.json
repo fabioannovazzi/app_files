@@ -1,13 +1,13 @@
 {
   "name": "vera",
-  "version": "0.1.41",
+  "version": "0.1.50",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/vera/index.html",
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -54,7 +54,7 @@
       "Write",
       "Analysis"
     ],
-    "websiteURL": "https://mparanza.com",
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",

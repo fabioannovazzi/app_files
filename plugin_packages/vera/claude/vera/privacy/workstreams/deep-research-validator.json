@@ -1,0 +1,63 @@
+{
+  "schema_version": 3,
+  "workstream": "deep-research-validator",
+  "display_name": "Deep Research Validator",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/deep-research-review-widget.html"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "report-and-source-review",
+        "purpose": "Judge claim support, reasoning quality, and proposed corrections",
+        "content": "Deep Research report; claims and surrounding text; citations; fetched or local source passages; diagnostics; proposed corrections and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "cited-url-fetch",
+      "kind": "public_research",
+      "destination": "Public hosts named by URLs cited in the report",
+      "purpose": "Retrieve cited source pages for claim-support review",
+      "content": "Each complete cited HTTP or HTTPS URL, request metadata, and the resulting public page response",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Fetch only URLs extracted from the supplied report inventory.",
+        "Read at most 1,000,000 response bytes per URL with a bounded timeout.",
+        "Use --no-fetch and local source files when network retrieval is unavailable or inappropriate."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written outside published repository paths."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "7979cdb2aefde853c9dd4326dcc7e9952c6bd65401571059d2b7c27dfb11bff0"
+  }
+}

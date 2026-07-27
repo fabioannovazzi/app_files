@@ -1,0 +1,3 @@
+Pillow>=10.0
+paddleocr>=3.0
+paddlepaddle>=3.0

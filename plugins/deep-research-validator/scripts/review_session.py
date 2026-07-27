@@ -10,6 +10,7 @@ from typing import Any, Sequence
 __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
+    "synchronize_final_artifact_sizes",
     "write_review_session_artifacts",
     "write_run_intake",
 ]
@@ -203,6 +204,27 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def synchronize_final_artifact_sizes(final_artifacts_path: Path) -> None:
+    """Refresh declared byte sizes after downstream artifacts reach final form."""
+
+    payload = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
+    outputs = payload.get("outputs")
+    if not isinstance(outputs, list):
+        raise ValueError("final_artifacts.json outputs must be a list")
+    output_dir = final_artifacts_path.parent.resolve()
+    for output in outputs:
+        if not isinstance(output, dict) or "size_bytes" not in output:
+            continue
+        relative = output.get("path")
+        if not isinstance(relative, str) or not relative.strip():
+            raise ValueError("final artifact output path must be a non-empty string")
+        artifact_path = (output_dir / relative).resolve()
+        if not artifact_path.is_relative_to(output_dir) or not artifact_path.is_file():
+            raise ValueError(f"final artifact output is missing: {relative}")
+        output["size_bytes"] = artifact_path.stat().st_size
+    _write_json(final_artifacts_path, payload)
 
 
 def _write_review_handoff_card(

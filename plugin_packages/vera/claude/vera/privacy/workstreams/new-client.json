@@ -1,0 +1,83 @@
+{
+  "schema_version": 3,
+  "workstream": "new-client",
+  "display_name": "New Client",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "schemas",
+    "assets/review-workbench-adapter.json",
+    "assets/new-client-review-widget.html"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "relationship-case-evidence",
+        "purpose": "Prepare identity, engagement, privacy, AI-applicability, AML, document, and monitoring proposals for professional review",
+        "content": "Byte-verified file-preparation outputs or registered standalone evidence; identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "current-source-research",
+      "kind": "public_research",
+      "destination": "Current primary and professional public sources selected for the case",
+      "purpose": "Verify the current source basis for legal and professional proposals",
+      "content": "Legal or professional research topics, public-source queries and selected source URLs; direct client identifiers are not used in the public research route",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Record retrieval, version, temporal scope, and reuse status for selected sources.",
+        "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "owner-only-package",
+      "control": "The dossier is written to an owner-only directory outside the repository."
+    },
+    {
+      "id": "upstream-package-integrity",
+      "control": "Before promotion, the workflow verifies the sealed phase-one source snapshot and every declared output's type, size, byte hash, and package binding; drift is rejected."
+    },
+    {
+      "id": "temporal-apply-gate",
+      "control": "Apply re-derives the earliest inclusive deadline from persisted evidence, identity, source, and template dates and rejects stale approval without writing final outputs."
+    },
+    {
+      "id": "review-persistence-binding",
+      "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
+    },
+    {
+      "id": "no-session-secrets",
+      "control": "Validators reject credentials, authentication codes, cookies, tokenized session URLs, and provider tokens from artifacts and model-review payloads."
+    },
+    {
+      "id": "whole-delivery-integrity",
+      "control": "After final copy, the workflow requires owner-only modes, validates host-neutral assistant-authored text and final run-ID consistency, and seals every delivered file except the manifest itself with size and SHA-256 receipts."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "5d0ac2a9d3ecbc244ceabff1f3166f96aa93d48c5651e6ceb7a77b5d3acfebbc"
+  }
+}

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Previdenza INPS" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#C58B47"/>
+  <circle cx="51" cy="50" r="7" fill="#C58B47"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M16 13h29l7 8v31H16z" fill="#F7F0DF"/>
+  <path d="M45 13v9h7" fill="#E1D6C3"/>
+  <path d="M23 25h17M23 33h12M23 41h10" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="43" cy="42" r="10" fill="#C58B47"/>
+  <path d="M43 36v6l4 3" fill="none" stroke="#171816" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M20 18h10" stroke="#C58B47" stroke-width="3" stroke-linecap="round"/>
+</svg>

@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "concordato-plan-review",
   "display_name": "Concordato Preventivo Review",
   "role": "workflow",
@@ -13,50 +13,52 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "procedure-and-document-evidence",
         "purpose": "Identify the concordato preventivo procedure, governing framework, authoritative proposal, plan, attestation, court material, and document perimeter",
-        "content": "User instructions; debtor and procedure identifiers; court and filing details; plan, proposal, attestation, professional and court documents; extracted text; document versions, roles, evidence locators, and reviewer judgment bases"
+        "content": "User instructions; debtor and procedure identifiers; court and filing details; plan, proposal, attestation, professional and court documents; extracted text; document versions, roles, evidence locators, and reviewer judgment bases",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       },
       {
         "id": "creditor-and-treatment-evidence",
         "purpose": "Reconstruct and review the creditor perimeter, priority, classes, voting treatment, recoveries, timing, disputes, and liquidation comparator",
-        "content": "Creditor names and identifiers; claim amounts and status; secured, privileged, unsecured, subordinated, tax, and social-security information; classes; vote and treatment data; proposed and liquidation recoveries; payment timing; evidence locators; professional assessments and follow-up"
+        "content": "Creditor names and identifiers; claim amounts and status; secured, privileged, unsecured, subordinated, tax, and social-security information; classes; vote and treatment data; proposed and liquidation recoveries; payment timing; evidence locators; professional assessments and follow-up",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       },
       {
         "id": "plan-economics-and-feasibility-evidence",
         "purpose": "Review sources and uses, liquidity, distributions, milestones, assumptions, consistency, and feasibility evidence",
-        "content": "Business-plan and accounting data; assets and disposals; financing and external contributions; procedure costs; cash flows and liquidity; distributions; milestones; assumptions; recalculations; inconsistencies; missing evidence; and reviewer findings"
+        "content": "Business-plan and accounting data; assets and disposals; financing and external contributions; procedure costs; cash flows and liquidity; distributions; milestones; assumptions; recalculations; inconsistencies; missing evidence; and reviewer findings",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       },
       {
         "id": "professional-review-decisions",
         "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material",
-        "content": "Semantic case-model decisions; judgment bases; open and resolved issues; severity and ownership; requested documents; reviewer notes and actions; generated workpapers, summaries, and review memos"
+        "content": "Semantic case-model decisions; judgment bases; open and resolved issues; severity and ownership; requested documents; reviewer notes and actions; generated workpapers, summaries, and review memos",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [],
+  "external_boundaries": [],
   "security_controls": [
     {
       "id": "private-output-root",
@@ -92,9 +94,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-26",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a9f54e3737108cfa8bf4cff26787b657e4682c812509d441416e82e61d692dee"
+    "source_fingerprint": "dc4913348aff1f7b87a89c9f2d2840990e420b73dbbf658027f5c147338c9906"
   }
 }

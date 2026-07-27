@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "new-client",
   "display_name": "New Client",
   "role": "workflow",
@@ -11,35 +11,25 @@
     "assets/review-workbench-adapter.json",
     "assets/new-client-review-widget.html"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "relationship-case-evidence",
         "purpose": "Prepare identity, engagement, privacy, AI-applicability, AML, document, and monitoring proposals for professional review",
-        "content": "Byte-verified file-preparation outputs or registered standalone evidence; identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state"
+        "content": "Byte-verified file-preparation outputs or registered standalone evidence; identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [
+  "external_boundaries": [
     {
       "id": "current-source-research",
       "kind": "public_research",
@@ -48,6 +38,10 @@
       "content": "Legal or professional research topics, public-source queries and selected source URLs; direct client identifiers are not used in the public research route",
       "optional": false,
       "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
       "controls": [
         "Record retrieval, version, temporal scope, and reuse status for selected sources.",
         "Keep credentials, authentication codes, cookies, screening-provider tokens, and direct client identifiers out of public research."
@@ -73,13 +67,17 @@
     },
     {
       "id": "no-session-secrets",
-      "control": "Validators reject credentials, authentication codes, cookies, tokenized session URLs, and provider tokens from artifacts and Codex review payloads."
+      "control": "Validators reject credentials, authentication codes, cookies, tokenized session URLs, and provider tokens from artifacts and model-review payloads."
+    },
+    {
+      "id": "whole-delivery-integrity",
+      "control": "After final copy, the workflow requires owner-only modes, validates host-neutral assistant-authored text and final run-ID consistency, and seals every delivered file except the manifest itself with size and SHA-256 receipts."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "332f8af0d4a33d95dd05ac44660291a9c50101ce0b3480c94fcc8792eca2904d"
+    "source_fingerprint": "acb96a8ac74aea06fe0351da2fdfb36a7b3d7ea61fc48e3dc39520f8edb90b98"
   }
 }

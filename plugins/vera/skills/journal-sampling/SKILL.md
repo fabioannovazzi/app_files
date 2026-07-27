@@ -1,6 +1,6 @@
 ---
 name: journal-sampling
-description: Use when a user wants Codex to qualify and extract accounting journal entries from reviewed CSV, Excel, or bounded print-friendly Excel layouts, normalize exact monetary rows, and generate reproducible audit samples with diagnostics and an audit trail.
+description: Use when qualifying accounting journal entries from reviewed CSV or Excel sources, normalizing exact monetary rows, and generating reproducible audit samples with diagnostics.
 ---
 
 # Journal Sampling

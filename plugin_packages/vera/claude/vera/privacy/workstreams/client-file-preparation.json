@@ -1,0 +1,56 @@
+{
+  "schema_version": 3,
+  "workstream": "client-file-preparation",
+  "display_name": "New Client · File Preparation",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/client-file-preparation-review-widget.html"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "client-file-evidence",
+        "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
+        "content": "Incoming client documents or extracted text; document names and evidence passages; structured fiscal fields; formal checks; extraction diagnostics; evidence locators; missing items; studio memo, client-email draft, review decisions, and package state",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "source-and-package-integrity",
+      "control": "The workflow does not follow source symlinks, binds extraction to a bounded SHA-256 source ledger, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
+    },
+    {
+      "id": "review-persistence-binding",
+      "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
+    },
+    {
+      "id": "draft-only-email",
+      "control": "The workflow writes a reviewable email draft and never sends it automatically."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Customer outputs are written outside the Git workspace and published folders."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "73f9f69645ba35f7de6783c99e94513463e649ead61979a32814c6f5e95ff110"
+  }
+}

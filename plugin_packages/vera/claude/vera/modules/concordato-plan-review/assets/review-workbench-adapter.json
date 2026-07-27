@@ -1,0 +1,215 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "concordato-plan-review",
+  "title": "Concordato Preventivo Review",
+  "reviewTitle": "Case and Plan Review",
+  "queueTitle": "Professional Review Items",
+  "detailTitle": "Evidence and Treatment",
+  "detailMode": "professional-review-desk",
+  "detailHelp": "Review procedure, creditor treatment, feasibility evidence, and open issues before the numerical appendix.",
+  "detailGroups": [
+    {
+      "title": "Procedure and Documents",
+      "variant": "draft",
+      "fields": [
+        "status",
+        "debtor_name",
+        "court",
+        "procedure_reference",
+        "stage",
+        "plan_type",
+        "roles",
+        "authoritative_for"
+      ],
+      "empty": "No procedure or document fields."
+    },
+    {
+      "title": "Creditor Treatment",
+      "variant": "source",
+      "fields": [
+        "class_id",
+        "priority",
+        "claim_amount",
+        "proposed_recovery_amount",
+        "proposed_recovery_pct",
+        "liquidation_recovery_amount",
+        "plan_vs_liquidation_delta",
+        "payment_timing"
+      ],
+      "empty": "No creditor-treatment fields."
+    },
+    {
+      "title": "Feasibility and Issues",
+      "variant": "finding",
+      "fields": [
+        "area",
+        "assessment",
+        "question",
+        "statement",
+        "severity",
+        "opening_cash",
+        "inflows",
+        "outflows",
+        "closing_cash",
+        "follow_up",
+        "review_note",
+        "observation"
+      ],
+      "empty": "No feasibility or issue fields."
+    }
+  ],
+  "panels": [
+    "Procedure and documents",
+    "Creditor treatment",
+    "Feasibility and issues"
+  ],
+  "localized": {
+    "es": {
+      "title": "Revisi\u00f3n del concordato preventivo",
+      "reviewTitle": "Revisi\u00f3n del caso y del plan",
+      "queueTitle": "Elementos de revisi\u00f3n profesional",
+      "detailTitle": "Evidencia y tratamiento",
+      "detailHelp": "Revise procedimiento, tratamiento de acreedores, viabilidad y cuestiones abiertas antes del anexo num\u00e9rico.",
+      "search": "Buscar procedimiento, acreedor, tratamiento, liquidez, cuesti\u00f3n, evidencia"
+    },
+    "it": {
+      "title": "Revisione del concordato preventivo",
+      "reviewTitle": "Revisione del caso e del piano",
+      "queueTitle": "Elementi di revisione professionale",
+      "detailTitle": "Evidenza e trattamento",
+      "detailHelp": "Riesamina procedura, trattamento dei creditori, fattibilit\u00e0 e questioni aperte prima dell'appendice numerica.",
+      "search": "Cerca procedura, creditore, trattamento, liquidit\u00e0, questione, evidenza"
+    },
+    "fr": {
+      "title": "Revue du concordato preventivo",
+      "reviewTitle": "Revue du dossier et du plan",
+      "queueTitle": "\u00c9l\u00e9ments de revue professionnelle",
+      "detailTitle": "Preuves et traitement",
+      "detailHelp": "Examinez la proc\u00e9dure, le traitement des cr\u00e9anciers, la faisabilit\u00e9 et les questions ouvertes avant l'annexe chiffr\u00e9e.",
+      "search": "Chercher proc\u00e9dure, cr\u00e9ancier, traitement, liquidit\u00e9, question, preuve"
+    },
+    "de": {
+      "title": "Pr\u00fcfung des Concordato Preventivo",
+      "reviewTitle": "Fall- und Planpr\u00fcfung",
+      "queueTitle": "Professionelle Pr\u00fcfpunkte",
+      "detailTitle": "Nachweise und Behandlung",
+      "detailHelp": "Pr\u00fcfen Sie Verfahren, Gl\u00e4ubigerbehandlung, Durchf\u00fchrbarkeit und offene Fragen vor dem Zahlenanhang.",
+      "search": "Verfahren, Gl\u00e4ubiger, Behandlung, Liquidit\u00e4t, Frage, Nachweis suchen"
+    }
+  },
+  "saveTool": "save_concordato_plan_decisions",
+  "applyTool": "apply_concordato_plan_decisions",
+  "widgetType": "concordato_plan_review",
+  "demo": {
+    "review_type": "concordato_preventivo_review",
+    "items": [
+      {
+        "id": "procedure-demo",
+        "item_type": "procedure_identity",
+        "title": "Northwind Restructuring S.p.A. \u00b7 mixed \u00b7 plan_filed",
+        "source_path": "procedure_bundle.pdf",
+        "output_path": "concordato_case_model.json",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "status": "complete",
+          "debtor_name": "Northwind Restructuring S.p.A.",
+          "court": "Tribunale competente",
+          "procedure_reference": "CP 17/2026",
+          "stage": "plan_filed",
+          "plan_type": "mixed",
+          "review_note": "Procedure identity and plan type were confirmed from the filed proposal and plan.",
+          "target_artifact": "run_review.md",
+          "target_id_field": "section",
+          "target_record_id": "procedure_identity",
+          "target_field": "review_notes",
+          "edit_hint": "Editing records reviewer context in run_review.md."
+        },
+        "evidence": [
+          {
+            "kind": "procedure_evidence",
+            "source": "procedure_bundle.pdf",
+            "locator": "proposal \u00a71 and plan cover"
+          }
+        ]
+      },
+      {
+        "id": "creditor-class-demo",
+        "item_type": "creditor_class_treatment",
+        "title": "Class C1 \u00b7 secured \u00b7 82.00%",
+        "source_path": "creditor_schedule.xlsx",
+        "output_path": "creditor_class_summary.csv",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "class_id": "C1",
+          "priority": "secured",
+          "claim_amount": "500000",
+          "proposed_recovery_amount": "410000",
+          "proposed_recovery_pct": "82",
+          "liquidation_recovery_amount": "365000",
+          "plan_vs_liquidation_delta": "45000",
+          "payment_timing": "two distributions by 2028-06-30",
+          "review_note": "The aggregation is exact; priority, class, and treatment remain professional judgments.",
+          "target_artifact": "run_review.md",
+          "target_id_field": "section",
+          "target_record_id": "creditor_class_C1",
+          "target_field": "review_notes",
+          "edit_hint": "Editing records reviewer context in run_review.md."
+        },
+        "evidence": [
+          {
+            "kind": "creditor_treatment",
+            "source": "creditor_schedule.xlsx",
+            "locator": "Classes!A2:H8"
+          }
+        ]
+      },
+      {
+        "id": "semantic-issue-demo",
+        "item_type": "semantic_issue",
+        "title": "Attestation does not address the revised disposal timing",
+        "source_path": "attestation.pdf",
+        "output_path": "concordato_semantic_review.md",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "area": "attestation",
+          "statement": "The attestation predates the revised disposal schedule used in the liquidity bridge.",
+          "severity": "high",
+          "status": "open",
+          "follow_up": "Obtain an updated attestation or documented professional assessment of the revision.",
+          "requested_document": "Updated attestation addressing the revised disposal timing",
+          "target_artifact": "run_review.md",
+          "target_id_field": "section",
+          "target_record_id": "attestation_revision",
+          "target_field": "review_notes",
+          "edit_hint": "Editing records reviewer context in run_review.md."
+        },
+        "evidence": [
+          {
+            "kind": "document_version_gap",
+            "source": "attestation.pdf",
+            "locator": "cover date and \u00a76"
+          }
+        ]
+      }
+    ]
+  }
+}

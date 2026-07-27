@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Use when a user wants Codex to turn a legal, tax, or compliance question into a source-backed Deep Research prompt, with fact preservation, research posture, source hierarchy, citation rules, and deterministic validation. Do not use for general copywriting unrelated to Deep Research.
+description: Use when turning a legal, tax, or compliance question into a source-backed Deep Research prompt with preserved facts, source hierarchy, citation rules, and validation.
 ---
 
 # Optimize Prompt

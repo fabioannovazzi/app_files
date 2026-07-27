@@ -1,6 +1,6 @@
 ---
 name: report-builder
-description: Use when a user wants Codex to inspect financial Excel/CSV/text-PDF inputs, map tables to report sections, write or refine the report narrative in Codex, and produce reviewable Markdown/DOCX/JSON outputs.
+description: Use when inspecting financial Excel, CSV, or text-PDF inputs, mapping tables to report sections, refining the narrative, and producing reviewable Markdown, DOCX, or JSON.
 ---
 
 # Build Report

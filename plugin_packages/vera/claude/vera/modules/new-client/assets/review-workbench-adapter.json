@@ -1,0 +1,275 @@
+{
+  "schemaVersion": "1.1",
+  "plugin": "new-client",
+  "title": "New Client Review",
+  "reviewTitle": "Professional Setup Review",
+  "queueTitle": "Setup Decisions",
+  "detailTitle": "Evidence, Basis, Decision",
+  "detailMode": "professional-setup-desk",
+  "detailHelp": "Review the professional fact, cited basis, and downstream dossier impact before recording a decision.",
+  "detailGroups": [
+    {
+      "title": "Client and Engagement",
+      "variant": "document",
+      "fields": [
+        "client_reference",
+        "fact_code",
+        "value",
+        "document_type",
+        "document_number",
+        "representative_reference",
+        "owner_reference",
+        "role",
+        "authority_basis",
+        "control_basis",
+        "service_id",
+        "description",
+        "purpose",
+        "legal_basis_code",
+        "relationship_kind",
+        "confirmation_status",
+        "verification_date",
+        "identity_verification_status"
+      ],
+      "empty": "No client or engagement fields."
+    },
+    {
+      "title": "AML and Applicability",
+      "variant": "finding",
+      "fields": [
+        "factor_code",
+        "score",
+        "proposed_value",
+        "risk_band",
+        "verification_type",
+        "rationale",
+        "basis"
+      ],
+      "empty": "No AML or applicability fields."
+    },
+    {
+      "title": "Evidence and Output Impact",
+      "variant": "checklist",
+      "fields": [
+        "evidence_status",
+        "screening_id",
+        "subject_reference",
+        "source_reference",
+        "screening_type",
+        "checked_at",
+        "outcome",
+        "resolution_status",
+        "source_ids",
+        "case_fact_ids",
+        "requested_document",
+        "target_artifact",
+        "edit_hint"
+      ],
+      "empty": "No evidence or output-impact fields."
+    }
+  ],
+  "panels": [
+    "Client and engagement",
+    "AML and applicability",
+    "Evidence and output impact"
+  ],
+  "localized": {
+    "es": {
+      "title": "Revisi\u00f3n de nuevo cliente",
+      "reviewTitle": "Revisi\u00f3n de la configuraci\u00f3n profesional",
+      "queueTitle": "Decisiones sobre la relaci\u00f3n",
+      "detailTitle": "Evidencia, fundamento y decisi\u00f3n",
+      "detailHelp": "Revise el hecho profesional, el fundamento citado y el impacto en el expediente antes de registrar la decisi\u00f3n.",
+      "search": "Buscar hecho, servicio, factor AML, documento, fuente, bloqueo",
+      "reviewerAlias": "Revisor",
+      "reviewerAliasHelp": "Use una referencia estable del profesional o de su cuenta. Se admite el nombre real del profesional. No introduzca credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "reviewerAliasInvalid": "La referencia del revisor puede tener un m\u00e1ximo de 160 caracteres y no debe contener credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "bulkProfessionalSkipped": "Se han aplicado {applied} recomendaciones seguras. {skipped} decisiones profesionales a\u00fan requieren una revisi\u00f3n individual."
+    },
+    "it": {
+      "title": "Revisione nuovo cliente",
+      "reviewTitle": "Revisione assetto professionale",
+      "queueTitle": "Decisioni sul rapporto",
+      "detailTitle": "Evidenza, base e decisione",
+      "detailHelp": "Rivedi il fatto professionale, la base citata e l'impatto sul dossier prima di registrare la decisione.",
+      "search": "Cerca fatto, servizio, fattore AML, documento, fonte, blocco",
+      "reviewerAlias": "Revisore",
+      "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. \u00c8 ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+      "reviewerAliasInvalid": "Il riferimento del revisore pu\u00f2 avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi.",
+      "bulkProfessionalSkipped": "Applicate {applied} raccomandazioni sicure. {skipped} decisioni professionali richiedono ancora una revisione individuale."
+    },
+    "fr": {
+      "title": "Revue nouveau client",
+      "reviewTitle": "Revue de la mise en place professionnelle",
+      "queueTitle": "Decisions sur la relation",
+      "detailTitle": "Preuve, fondement et decision",
+      "detailHelp": "Examinez le fait professionnel, le fondement cite et l'impact sur le dossier avant d'enregistrer la decision.",
+      "search": "Chercher fait, service, facteur AML, document, source, blocage",
+      "reviewerAlias": "R\u00e9viseur",
+      "reviewerAliasHelp": "Utilisez une r\u00e9f\u00e9rence stable du professionnel ou de son compte. Le nom r\u00e9el du professionnel est admis. Ne saisissez ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
+      "reviewerAliasInvalid": "La r\u00e9f\u00e9rence du r\u00e9viseur est limit\u00e9e \u00e0 160 caract\u00e8res et ne doit contenir ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
+      "bulkProfessionalSkipped": "{applied} recommandations sures appliquees. {skipped} decisions professionnelles exigent encore une revue individuelle."
+    },
+    "de": {
+      "title": "Review neuer Mandant",
+      "reviewTitle": "Professionelle Einrichtung pruefen",
+      "queueTitle": "Entscheidungen zum Mandat",
+      "detailTitle": "Nachweis, Grundlage und Entscheidung",
+      "detailHelp": "Beruflichen Sachverhalt, zitierte Grundlage und Dossierauswirkung vor der Entscheidung pruefen.",
+      "search": "Fakt, Leistung, AML-Faktor, Dokument, Quelle, Blocker suchen",
+      "reviewerAlias": "Pr\u00fcfer",
+      "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufstr\u00e4gers oder seines Kontos. Der echte Name des Berufstr\u00e4gers ist zul\u00e4ssig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+      "reviewerAliasInvalid": "Die Pr\u00fcferreferenz darf h\u00f6chstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten.",
+      "bulkProfessionalSkipped": "{applied} sichere Empfehlungen angewendet. {skipped} professionelle Entscheidungen muessen einzeln geprueft werden."
+    }
+  },
+  "saveTool": "save_new_client_decisions",
+  "applyTool": "apply_new_client_decisions",
+  "widgetType": "new_client_review",
+  "demo": {
+    "review_type": "new_client_professional_review",
+    "items": [
+      {
+        "id": "aml-client-geography",
+        "item_type": "aml_risk_factor",
+        "title": "AML factor: client geography",
+        "output_path": "aml_assessment_draft.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "mark_unclear",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "factor_code": "client_geography",
+          "score": 2,
+          "risk_band": "little_significant",
+          "rationale": "Proposed from the recorded operating territories; professional confirmation is pending.",
+          "evidence_status": "needs_professional_confirmation",
+          "source_ids": [
+            "CNDCEC-AML-GUIDANCE-2026"
+          ],
+          "case_fact_ids": [
+            "FACT-TERRITORY-01"
+          ],
+          "target_artifact": "aml_assessment_draft.json",
+          "target_records_key": "client_factors",
+          "target_id_field": "factor_code",
+          "target_record_id": "client_geography",
+          "target_field": "score",
+          "edit_hint": "Editing records a proposed replacement score and requires AML recalculation before acceptance."
+        },
+        "evidence": [
+          {
+            "kind": "source_bound_factor_proposal",
+            "source_ids": [
+              "CNDCEC-AML-GUIDANCE-2026"
+            ],
+            "case_fact_ids": [
+              "FACT-TERRITORY-01"
+            ],
+            "evidence_status": "needs_professional_confirmation"
+          }
+        ]
+      },
+      {
+        "id": "document-article28",
+        "item_type": "document_applicability",
+        "title": "Article 28 appointment applicability",
+        "output_path": "applicability_plan_validated.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "proposed_value": "not_applicable",
+          "rationale": "The role analysis is recorded as a proposal and must be confirmed for the actual service.",
+          "source_ids": [
+            "CNDCEC-PRIVACY-GUIDANCE-2025"
+          ],
+          "case_fact_ids": [
+            "SERVICE-BOOKKEEPING-01"
+          ],
+          "evidence_status": "source_bound_proposal"
+        },
+        "evidence": [
+          {
+            "kind": "applicability_basis",
+            "source_ids": [
+              "CNDCEC-PRIVACY-GUIDANCE-2025"
+            ],
+            "case_fact_ids": [
+              "SERVICE-BOOKKEEPING-01"
+            ]
+          }
+        ]
+      },
+      {
+        "id": "missing-identity-evidence",
+        "item_type": "missing_evidence",
+        "title": "Missing verified identity evidence for executor EXEC-01",
+        "output_path": "missing_evidence.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "mark_unclear",
+          "request_more_documents",
+          "skip"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "client_reference": "CLIENT-001",
+          "fact_code": "executor_identity",
+          "confirmation_status": "unknown",
+          "requested_document": "Readable identity evidence for executor EXEC-01",
+          "evidence_status": "missing",
+          "case_fact_ids": [
+            "EXEC-01"
+          ],
+          "target_artifact": "missing_evidence.json"
+        },
+        "evidence": [
+          {
+            "kind": "mechanical_completeness_gate",
+            "case_fact_ids": [
+              "EXEC-01"
+            ],
+            "evidence_status": "missing"
+          }
+        ]
+      }
+    ]
+  },
+  "persistDecisionTextInWidgetState": false,
+  "useDecisionRevision": true,
+  "bulkProtectedItemTypes": [
+    "party_profile",
+    "party_structure",
+    "engagement",
+    "engagement_service",
+    "screening_subject",
+    "screening_result",
+    "privacy_processing",
+    "marketing_consent",
+    "document_applicability",
+    "aml_risk_factor",
+    "aml_factor_section",
+    "aml_mandatory_trigger",
+    "aml_trigger_set",
+    "aml_assessment",
+    "missing_evidence",
+    "document_plan",
+    "monitoring_plan",
+    "official_source",
+    "client_file_preparation_binding"
+  ],
+  "requiresReviewerAlias": true
+}

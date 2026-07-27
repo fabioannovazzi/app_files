@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "report-builder",
   "display_name": "Report Builder",
   "role": "workflow",
@@ -14,35 +14,25 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "financial-report-evidence",
         "purpose": "Map source tables, write the report narrative, and review the generated report",
-        "content": "User instructions; spreadsheets, CSV files or extracted PDF text; table inventories and rows; mappings; calculations; diagnostics; draft narrative; report artifacts and review decisions"
+        "content": "User instructions; spreadsheets, CSV files or extracted PDF text; table inventories and rows; mappings; calculations; diagnostics; draft narrative; report artifacts and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [],
+  "external_boundaries": [],
   "security_controls": [
     {
       "id": "persisted-review-integrity-replay",
@@ -86,9 +76,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "58e5dfa72f0439d7643a3e9afe6a121e2697fd4e6d5117d70f291be8cd7864b6"
+    "source_fingerprint": "45ddd668e29a6b8c014d8fe910e66392315ac9f894253df11f506c870bbc9c0d"
   }
 }

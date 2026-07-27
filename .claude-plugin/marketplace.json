@@ -1,0 +1,45 @@
+{
+  "name": "mparanza",
+  "description": "Mparanza professional-work plugins for Claude Cowork.",
+  "owner": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "plugins": [
+    {
+      "name": "vera",
+      "displayName": "Vera",
+      "source": "./plugin_packages/vera/claude/vera",
+      "description": "Assistente AI per commercialisti. Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
+      "version": "0.1.50",
+      "author": {
+        "name": "Mparanza",
+        "email": "hello@mparanza.com",
+        "url": "https://mparanza.com"
+      },
+      "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+      "repository": "https://github.com/fabioannovazzi/app_files",
+      "license": "AGPL-3.0-only",
+      "keywords": [
+        "vera",
+        "commercialisti",
+        "accounting",
+        "audit",
+        "reconciliation",
+        "reporting",
+        "tax",
+        "compliance"
+      ],
+      "category": "productivity",
+      "tags": [
+        "accounting",
+        "audit",
+        "professional-services",
+        "cowork"
+      ],
+      "strict": true
+    }
+  ],
+  "version": "0.1.50"
+}

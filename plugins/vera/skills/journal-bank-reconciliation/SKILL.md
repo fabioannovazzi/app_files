@@ -1,6 +1,6 @@
 ---
 name: journal-bank-reconciliation
-description: Use when a user wants Codex to reconcile bank statements with journal or ledger exports, map variable customer formats, run deterministic exact amount/date and explicit-reference matching, and produce reviewable CSV/XLSX/JSON outputs.
+description: Use when reconciling bank statements with journal or ledger exports, mapping customer formats, matching exact amounts, dates, and references, and producing reviewable outputs.
 ---
 
 # Journal-Bank Reconciliation

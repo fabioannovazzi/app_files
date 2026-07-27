@@ -263,6 +263,31 @@ the current hash binding. Validation must fail until the package is regenerated
 and reviewed at a new revision. Preserve review history and use a new run
 directory for regenerated domain artifacts.
 
+After adding any assistant-authored review summary, client questions, or copied
+source-evidence files to the delivered dossier, seal the complete final folder:
+
+```bash
+python scripts/delivery_manifest.py seal \
+  --output-dir /private/path/new-client-delivery
+```
+
+Run this only after the last package rebuild, after the final copy to the
+delivery folder, and after applying owner-only modes. It validates the packaged
+New Client contract, requires `0700` on every directory and `0600` on every
+file, rejects host/provider names in assistant-authored user-facing text,
+rejects supplemental run IDs that differ from `final_artifacts.json`, and
+writes `delivery_manifest.json` with receipts for every other delivered file.
+Validate that exact delivered path independently after sealing:
+
+```bash
+python scripts/delivery_manifest.py validate \
+  --output-dir /private/path/new-client-delivery
+```
+
+Do not claim a complete delivered dossier until this command passes. If the
+package is rebuilt, regenerate the supplemental files or remove stale run
+metadata, then reseal.
+
 ### 5. Professional review
 
 The normal session contains `run_intake.json`, `review_payload.json`,

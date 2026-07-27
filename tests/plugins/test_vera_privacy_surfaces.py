@@ -19,15 +19,18 @@ VALIDATOR = (
     / "scripts"
     / "validate_privacy_surfaces.py"
 )
-CONTEXT_POLICY = "real_case_data_may_enter_codex_context"
-ORDINARY_PROCESSING = {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": (
-        "existing_chatgpt_or_codex_account_selected_by_firm_or_user"
-    ),
-    "separate_vera_recipient": False,
-    "automatic_anonymization": False,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work",
+CONTEXT_POLICY = "real_case_data_may_enter_selected_runtime_model_context"
+RUNTIME_PROFILE_IDS = ["openai-codex", "anthropic-cowork"]
+ACCOUNT_BOUNDARY = {
+    "selected_by": "firm_or_user",
+    "vera_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+        "account_or_workspace_plan",
+        "model_training_data_controls",
+        "retention_and_deletion_controls",
+    ],
+    "per_case_record_required": False,
 }
 
 
@@ -51,6 +54,13 @@ def _service_manifests() -> list[dict[str, Any]]:
         json.loads(path.read_text(encoding="utf-8"))
         for path in sorted((VERA_ROOT / "privacy" / "services").glob("*.json"))
     ]
+
+
+def _runtime_profiles() -> list[dict[str, Any]]:
+    payload = json.loads(
+        (VERA_ROOT / "privacy" / "runtime-profiles.json").read_text(encoding="utf-8")
+    )
+    return payload["profiles"]
 
 
 def test_vera_privacy_register_covers_current_workstreams_and_is_fresh() -> None:
@@ -79,6 +89,22 @@ def test_vera_privacy_manifests_match_the_published_schema() -> None:
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
 
 
+def test_vera_runtime_profiles_match_the_published_schema() -> None:
+    schema = json.loads(
+        (VERA_ROOT / "privacy" / "runtime-profiles.schema.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    payload = json.loads(
+        (VERA_ROOT / "privacy" / "runtime-profiles.json").read_text(encoding="utf-8")
+    )
+    validator = jsonschema.Draft202012Validator(schema)
+
+    errors = [error.message for error in validator.iter_errors(payload)]
+
+    assert errors == []
+
+
 def test_vera_shared_service_manifests_match_the_published_schema() -> None:
     schema = json.loads(
         (VERA_ROOT / "privacy" / "service-boundary.schema.json").read_text(
@@ -104,12 +130,12 @@ def test_vera_shared_services_separate_update_and_feedback() -> None:
         "plugin-update-check",
         "plugin-feedback",
     }
-    update_boundaries = manifests["plugin-update-check"]["boundaries_beyond_codex"]
+    update_boundaries = manifests["plugin-update-check"]["external_boundaries"]
     assert [boundary["id"] for boundary in update_boundaries] == [
         "automatic-version-check"
     ]
     assert update_boundaries[0]["activation"] == "automatic_session_start"
-    feedback_boundaries = manifests["plugin-feedback"]["boundaries_beyond_codex"]
+    feedback_boundaries = manifests["plugin-feedback"]["external_boundaries"]
     assert [boundary["id"] for boundary in feedback_boundaries] == [
         "automatic-feedback-status-poll",
         "approved-text-feedback-submission",
@@ -155,46 +181,45 @@ def test_vera_privacy_contract_allows_real_case_data_without_minimum_classifier(
     }
 
     for manifest in _manifests():
-        assert manifest["schema_version"] == 2
-        codex_context = manifest["codex_context"]
-        assert codex_context["policy"] == CONTEXT_POLICY
-        assert codex_context["classes"]
+        assert manifest["schema_version"] == 3
+        assert manifest["runtime_profiles"] == RUNTIME_PROFILE_IDS
+        model_context = manifest["model_context"]
+        assert model_context["policy"] == CONTEXT_POLICY
+        assert model_context["classes"]
         assert forbidden_fields.isdisjoint(manifest)
-        for context_class in codex_context["classes"]:
+        for context_class in model_context["classes"]:
             assert forbidden_fields.isdisjoint(context_class)
+            assert set(context_class["runtime_profiles"]) <= set(RUNTIME_PROFILE_IDS)
 
 
-def test_vera_account_boundary_is_explicit_and_not_a_per_case_form() -> None:
-    expected_items = [
-        "account_or_workspace_plan",
-        "model_training_data_controls",
-        "retention_and_deletion_controls",
-    ]
+def test_vera_account_boundary_is_shared_and_not_a_per_case_form() -> None:
+    profiles = _runtime_profiles()
 
-    for manifest in _manifests():
-        boundary = manifest["codex_account_boundary"]
-        assert boundary == {
-            "selected_by": "firm_or_user",
-            "vera_runtime_enforcement": "none",
-            "review_timing": "before_professional_use_and_when_account_or_terms_change",
-            "review_items": expected_items,
-            "per_case_record_required": False,
-        }
+    assert [profile["id"] for profile in profiles] == RUNTIME_PROFILE_IDS
+    assert all(profile["account_boundary"] == ACCOUNT_BOUNDARY for profile in profiles)
 
 
-def test_vera_ordinary_processing_has_no_extra_recipient_or_fake_anonymization() -> (
-    None
-):
-    for manifest in _manifests():
-        assert manifest["ordinary_processing"] == ORDINARY_PROCESSING
+def test_vera_model_processing_has_no_extra_recipient_or_fake_local_guarantee() -> None:
+    for profile in _runtime_profiles():
+        processing = profile["model_processing"]
+        assert processing["separate_vera_recipient"] is False
+        assert processing["automatic_anonymization"] is False
+        assert processing["local_only"] is False
+        assert (
+            processing["local_filtering_or_aggregation"]
+            == "only_when_useful_for_the_work"
+        )
 
 
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
     for manifest in _manifests():
-        assert isinstance(manifest["boundaries_beyond_codex"], list)
-        for boundary in manifest["boundaries_beyond_codex"]:
+        assert isinstance(manifest["external_boundaries"], list)
+        for boundary in manifest["external_boundaries"]:
             if boundary["requires_confirmation"]:
                 assert boundary["optional"] is True
+            assert set(boundary["runtime_profiles"]) <= set(
+                manifest["runtime_profiles"]
+            )
 
 
 def test_vera_workflow_wrappers_do_not_show_routine_privacy_notices() -> None:
@@ -210,20 +235,17 @@ def test_vera_workflow_wrappers_do_not_show_routine_privacy_notices() -> None:
         assert "commercialista_notice" not in text
 
 
-def test_vera_governance_uses_the_selected_account_boundary_without_double_confirmation() -> (
-    None
-):
-    readme = (VERA_ROOT / "README.md").read_text(encoding="utf-8")
-    umbrella = (VERA_ROOT / "skills" / "vera" / "SKILL.md").read_text(encoding="utf-8")
+def test_vera_governance_uses_runtime_profiles_without_double_confirmation() -> None:
+    profiles = _runtime_profiles()
     review = (VERA_ROOT / "skills" / "privacy-surface-review" / "SKILL.md").read_text(
         encoding="utf-8"
     )
 
-    assert "account boundary selected by the firm or user" in readme
-    assert "account boundary selected by the firm or user" in umbrella
-    assert "approved Codex" not in readme
-    assert "approved Codex" not in umbrella
-    assert "do not ask again" in umbrella
+    assert all(
+        profile["account_boundary"]["selected_by"] == "firm_or_user"
+        for profile in profiles
+    )
+    assert "approved Codex" not in review
     assert "do not ask again" in review
 
 
@@ -562,7 +584,7 @@ def test_vera_privacy_validator_rejects_confirmation_on_required_boundary(
         vera_root / "privacy" / "workstreams" / "deep-research-validator.json"
     )
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-    manifest["boundaries_beyond_codex"][0]["requires_confirmation"] = True
+    manifest["external_boundaries"][0]["requires_confirmation"] = True
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
 
     errors = validator.validate_privacy_surfaces(vera_root)

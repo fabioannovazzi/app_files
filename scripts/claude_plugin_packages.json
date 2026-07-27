@@ -1,0 +1,27 @@
+{
+  "marketplace": {
+    "name": "mparanza",
+    "description": "Mparanza professional-work plugins for Claude Cowork.",
+    "owner": {
+      "name": "Mparanza",
+      "email": "hello@mparanza.com",
+      "url": "https://mparanza.com"
+    },
+    "catalog_path": ".claude-plugin/marketplace.json"
+  },
+  "packages": [
+    {
+      "plugin": "vera",
+      "source_target": "vera",
+      "output_directory": "plugin_packages/vera/claude/vera",
+      "output_zip": "plugin_packages/vera/vera-cowork-plugin.zip",
+      "category": "productivity",
+      "tags": [
+        "accounting",
+        "audit",
+        "professional-services",
+        "cowork"
+      ]
+    }
+  ]
+}

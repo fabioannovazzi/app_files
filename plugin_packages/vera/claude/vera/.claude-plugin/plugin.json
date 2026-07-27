@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "vera",
+  "displayName": "Vera",
+  "version": "0.1.50",
+  "description": "Assistente AI per commercialisti. Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "accounting",
+    "audit",
+    "reconciliation",
+    "reporting",
+    "tax",
+    "compliance"
+  ],
+  "skills": "./skills/",
+  "agents": [
+    "./agents/vera.md"
+  ]
+}

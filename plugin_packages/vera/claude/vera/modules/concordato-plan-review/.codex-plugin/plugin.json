@@ -1,0 +1,50 @@
+{
+  "name": "concordato-plan-review",
+  "version": "0.1.30",
+  "description": "Professional review workspace for Italian concordato preventivo cases: procedure, documents, creditors, treatment, liquidation alternative, sources and uses, liquidity, issues, and exact supporting schedules.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/concordato-plan-review/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "concordato",
+    "audit",
+    "concordato-preventivo",
+    "creditors",
+    "restructuring",
+    "insolvency",
+    "feasibility",
+    "liquidation-alternative",
+    "professional-review"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Concordato Preventivo",
+    "shortDescription": "Riesamina procedura, piano, attestazione, creditori, trattamento, alternativa liquidatoria, liquidità e questioni aperte.",
+    "longDescription": "Workspace Claude per la revisione professionale di un concordato preventivo italiano. Organizza quadro normativo, procedura, proposta, piano, attestazione e documenti autorevoli; struttura creditori, prelazioni, classi, voto, recuperi e tempi; confronta il trattamento con l'alternativa liquidatoria; calcola esattamente fonti e impieghi, funding gap e bridge di liquidità; registra assunzioni, contraddizioni, lacune e follow-up. Il tie-out numerico resta un'appendice opzionale. Claude propone l'interpretazione semantica e il professionista la conferma: il codice non emette pareri legali né attesta la fattibilità.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Usa Concordato Preventivo sul fascicolo che indico.",
+      "Ricostruisci procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità, assunzioni e questioni aperte.",
+      "Fai confermare il modello semantico al professionista e usa il tie-out numerico soltanto come appendice quando è utile."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

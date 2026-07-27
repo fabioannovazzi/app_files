@@ -1,0 +1,75 @@
+{
+  "schema_version": 3,
+  "workstream": "journal-bank-reconciliation",
+  "display_name": "Journal-Bank Reconciliation",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/journal-bank-review-widget.html"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "bank-and-ledger-review",
+        "purpose": "Resolve mappings and review matched, unmatched, or ambiguous transactions",
+        "content": "User instructions; bank statements; journals or ledgers; normalized rows; controls; matches; exceptions; supporting evidence and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "qualified-source-and-reviewed-policy-binding",
+      "control": "Bank and journal sources emit movements only through bounded tabular adapters or source-bound reviewed mapping receipts. The default tabular-v6 contract remains unchanged; additive tabular-v7 is selected only by a current receipt that explicitly binds Italian textual-month date_locale or exact reviewed non-movement summary labels. The v7 parser accepts only the frozen full Italian month vocabulary and valid Gregorian dates, while summary exclusion requires an exact reviewed label, a blank mapped date, and no stable explicit reference. CSV profiling covers only comma, semicolon, tab, and pipe within fixed byte and row limits; profiling is transport evidence rather than semantic authority, non-default or conflicting delimiters require a current receipt, and ambiguous, unsupported, malformed, ragged, stale, or partly invalid sources emit zero rows. Reviewed mappings bind the field delimiter separately from numeric separators and bind the complete current potential-monetary-column list plus explicit exclusions. Non-canonical direction labels require a complete source-specific mapping to positive, negative, or zero that agrees with the exact signed amount, and the relationship policy is a separate reviewed-decision receipt bound to the current bank and journal artifact digests, currency, unit, entity, party, direction, tolerance, and date-window perimeter."
+    },
+    {
+      "id": "one-to-one-exact-reconciliation",
+      "control": "Relationship-v2 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, one-to-one evidence use, and balanced relationship ledgers; row order cannot award a contested target, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
+    },
+    {
+      "id": "bounded-trusted-memory-review-transaction",
+      "control": "MCP save and apply capture the complete regular single-link output tree, bytes, and root/directory/file modes in bounded parent-process memory before child execution; linked, aliased, special, over-count, over-file-size, and over-total-size trees fail before mutation, and rejected operations restore only from the trusted image with fixed path-free errors and no transaction residue."
+    },
+    {
+      "id": "independent-preflight-and-application-postcondition",
+      "control": "The MCP parent reconstructs and replays the persisted assurance baseline, validates the child file/mode delta against an explicit write set, derives every effect, count, path, gate transition, readiness status, limitation, next action, reviewed application decision, receipt bundle, and final reviewed envelope from trusted request and run state, and treats child stdout only as a bounded acknowledgement."
+    },
+    {
+      "id": "current-byte-workbook-replay",
+      "control": "A regenerated Journal–Bank XLSX must remain a bounded well-formed OOXML package with deterministic core and ZIP timestamps and member order, the exact entry and presentation contract, no duplicate, hidden, extra, traversal, formula, namespace, CRC, or XML content. Every visible worksheet must close cell-for-cell to the canonical CSV schedules, and every declared match or relationship-residual material value is replayed sequentially across the complete prepared, CSV, and read-only XLSX populations without random worksheet access."
+    },
+    {
+      "id": "current-byte-final-artifact-closure",
+      "control": "After the audit, review handoff, receipt bundle, and assurance envelope are written, a bounded fixed-point pass refreshes the final artifact manifest and execution trace, requires every listed output path and byte count to match the current files, and validates the current final-artifacts receipt without creating a recursive receipt for the receipt bundle itself."
+    },
+    {
+      "id": "sanitized-helper-and-rollback-failures",
+      "control": "Child startup, nonzero exit, oversized, empty, malformed, forged status-zero, preflight divergence, workbook tamper, and rollback failure paths return fixed bounded messages; helper stdout, tracebacks, absolute client paths, recovery paths, and unvalidated child fields are not copied into responses or execution traces."
+    },
+    {
+      "id": "reviewable-blocked-native-package",
+      "control": "A source-qualification or relationship-authority block emits no matches or material-value ledger, but still closes the exact reviewable initial package with normalized and unmatched partitions, empty match and residual schedules, a blocked relationship ledger, workbook, per-side source outcomes, audit, review payload, handoff, receipts, assurance envelope and final artifact manifest."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "564711b779aa8b35667b5e396e376f94e3d244682102e9d3a41b60e395891d75"
+  }
+}

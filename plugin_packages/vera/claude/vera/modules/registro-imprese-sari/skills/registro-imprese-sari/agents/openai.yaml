@@ -1,0 +1,4 @@
+interface:
+  display_name: "Registro Imprese e SARI"
+  short_description: "Prepara pratiche CCIAA da fonti ufficiali"
+  default_prompt: "Aiutami a impostare una pratica Registro Imprese con fonti SARI ufficiali e revisione professionale."
