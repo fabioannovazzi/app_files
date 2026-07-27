@@ -160,7 +160,7 @@ def test_vera_hero_consolidates_installation_and_localized_setup_video() -> None
     assert 'data-i18n="install.copy"' in hero
     assert 'data-i18n="install.button"' in hero
     assert 'data-i18n="install.coworkButton"' in hero
-    assert 'data-vera-cowork-download-link' in hero
+    assert "data-vera-cowork-download-link" in hero
     assert hero.count('id="vera-install-video-link"') == 1
     assert f'href="https://youtu.be/{SETUP_IDS["it"]}"' in install_video
     assert 'data-i18n-aria-label="install.video.title"' in install_video
@@ -213,6 +213,8 @@ def test_clara_hero_consolidates_installation_and_localized_setup_video() -> Non
     assert 'data-i18n="install.title"' in hero
     assert 'data-i18n="install.copy"' in hero
     assert 'data-i18n="install.button"' in hero
+    assert 'data-i18n="install.coworkButton"' in hero
+    assert "data-clara-cowork-download-link" in hero
     assert hero.count('id="clara-install-video-link"') == 1
     assert f'href="https://youtu.be/{SETUP_IDS["en"]}"' in install_video
     assert 'data-i18n-aria-label="install.video.title"' in install_video

@@ -71,11 +71,12 @@ p { margin: 0; }
   padding-top: 28px;
   display: grid;
   grid-template-areas:
-    "copy action"
-    "video video";
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 20px 32px;
+    "copy"
+    "action"
+    "video";
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 20px;
   border-top: 1px solid var(--cyan);
   scroll-margin-top: 92px;
 }
@@ -97,9 +98,28 @@ p { margin: 0; }
 
 .hero-install__actions {
   grid-area: action;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+  width: min(100%, 720px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 20px;
+}
+
+.install-option {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+}
+
+.install-option .button {
+  width: 100%;
+}
+
+.install-option__note {
+  max-width: 42ch;
+  color: var(--blue);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .hero-install__video {
@@ -407,7 +427,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
     grid-template-columns: 1fr;
     align-items: start;
   }
-  .hero-install__actions { justify-content: flex-start; }
+  .hero-install__actions { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 480px) {
