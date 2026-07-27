@@ -51,7 +51,7 @@ main {
 }
 
 h1, h2, h3 { margin: 0; color: var(--navy); line-height: 1.12; }
-h1 { max-width: 760px; font-size: clamp(58px, 8vw, 92px); font-weight: 650; letter-spacing: -0.055em; }
+h1 { max-width: 760px; font-size: clamp(64px, 10vw, 124px); font-weight: 650; letter-spacing: -0.06em; }
 h2 { font-size: clamp(30px, 4vw, 43px); font-weight: 650; letter-spacing: -0.035em; }
 h3 { font-size: 18px; font-weight: 650; letter-spacing: -0.015em; }
 p { margin: 0; }
@@ -174,10 +174,8 @@ p { margin: 0; }
   display: block;
   flex: initial;
   margin: 0;
-  padding: 18px;
-  border: 1px solid var(--cyan);
-  border-radius: 30px;
-  background: var(--white);
+  padding-left: clamp(32px, 5vw, 64px);
+  border-left: 1px solid var(--cyan);
 }
 
 .clara-mark img { display: block; width: 100%; height: auto; }

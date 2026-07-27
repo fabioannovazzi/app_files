@@ -3050,8 +3050,10 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Clara",
-        "Clara prepares the work. The judgment remains yours.",
-        "Clara prepara il lavoro. Il giudizio resta tuo.",
+        "Clara · Codex for consultants",
+        "Clara · Codex per consulenti",
+        "Clara works with you in ChatGPT Work and Codex, or in Claude Cowork.",
+        "Clara lavora con te in ChatGPT Work e Codex oppure in Claude Cowork.",
         "Create or correct a presentation in your corporate style",
         "Crea o correggi una presentazione nel tuo stile aziendale",
         "Choose the deck format",
@@ -3093,6 +3095,16 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     ):
         assert snippet in page
     for stale_snippet in (
+        "Clara prepares the work. The judgment remains yours.",
+        "Clara prepara il lavoro. Il giudizio resta tuo.",
+        "Clara prépare le travail. Le jugement reste le vôtre.",
+        "Clara bereitet die Arbeit vor. Das fachliche Urteil bleibt bei Ihnen.",
+        "Clara prepara el trabajo. El criterio sigue siendo tuyo.",
+        "Clara works with you inside Codex.",
+        "Lavora con te dentro Codex.",
+        "Elle travaille avec vous dans Codex.",
+        "Clara arbeitet mit Ihnen direkt in Codex.",
+        "Clara trabaja contigo dentro de Codex.",
         "Advisor Case Workspace",
         "A local Codex workspace for case materials, voice notes, judgement and reviewed outputs.",
         "Un workspace Codex locale per materiali, voce, judgement e output rivisti.",
@@ -3146,7 +3158,11 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         'data-clara-cowork-download-link data-i18n="install.coworkButton">'
         "Download for Claude Cowork</a>"
     ) in page
-    assert "font-size: clamp(58px, 8vw, 92px)" in styles
+    assert page.count('"hero.title": "Clara"') == 5
+    assert '<h1 data-i18n="hero.title">Clara</h1>' in page
+    assert "padding-left: clamp(32px, 5vw, 64px);" in styles
+    assert "border-left: 1px solid var(--cyan);" in styles
+    assert "font-size: clamp(64px, 10vw, 124px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
     assert "font-size: clamp(21px, 2.4vw, 27px)" in styles
 
