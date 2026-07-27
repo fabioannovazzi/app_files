@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "profiles": [
+    {
+      "id": "openai-codex",
+      "provider": "OpenAI",
+      "runtime": "Codex",
+      "surfaces": [
+        "codex"
+      ],
+      "account_boundary": {
+        "selected_by": "firm_or_user",
+        "vera_runtime_enforcement": "none",
+        "review_timing": "before_professional_use_and_when_account_or_terms_change",
+        "review_items": [
+          "account_or_workspace_plan",
+          "model_training_data_controls",
+          "retention_and_deletion_controls"
+        ],
+        "per_case_record_required": false
+      },
+      "model_processing": {
+        "scope": "ordinary_openai_codex_model_processing",
+        "destination": "OpenAI model processing used by Codex",
+        "account_arrangement": "existing_openai_codex_account_or_workspace_selected_by_firm_or_user",
+        "separate_vera_recipient": false,
+        "automatic_anonymization": false,
+        "local_only": false,
+        "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+      }
+    },
+    {
+      "id": "anthropic-cowork",
+      "provider": "Anthropic",
+      "runtime": "Cowork",
+      "surfaces": [
+        "cowork"
+      ],
+      "account_boundary": {
+        "selected_by": "firm_or_user",
+        "vera_runtime_enforcement": "none",
+        "review_timing": "before_professional_use_and_when_account_or_terms_change",
+        "review_items": [
+          "account_or_workspace_plan",
+          "model_training_data_controls",
+          "retention_and_deletion_controls"
+        ],
+        "per_case_record_required": false
+      },
+      "model_processing": {
+        "scope": "ordinary_anthropic_cowork_model_processing",
+        "destination": "Anthropic model processing used by Cowork",
+        "account_arrangement": "existing_anthropic_claude_account_or_workspace_selected_by_firm_or_user",
+        "separate_vera_recipient": false,
+        "automatic_anonymization": false,
+        "local_only": false,
+        "local_filtering_or_aggregation": "only_when_useful_for_the_work"
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: deep-research-validator
-description: Use when a user wants Codex to validate a Deep Research answer or report against cited sources, review material claims, identify unsupported or weak reasoning, propose corrections, and package a validated document. Do not use for creating Deep Research prompts.
+description: Use when validating a Deep Research report against cited sources, identifying unsupported claims or weak reasoning, proposing corrections, and packaging a reviewed document.
 ---
 
 # Validate Deep Research

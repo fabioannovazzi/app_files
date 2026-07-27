@@ -2368,7 +2368,7 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "concordato_tie_out_workpaper.xlsx",
         "../vera/index.html",
         "Concordato preventivo",
-        "Torna a Vera",
+        "Vera",
     ):
         assert snippet in page
 

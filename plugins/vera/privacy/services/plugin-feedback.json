@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "service_id": "plugin-feedback",
   "display_name": "Plugin improvement feedback",
   "governed_paths": [
@@ -8,7 +8,10 @@
     "scripts/change_requests.py",
     "skills/vera/SKILL.md"
   ],
-  "boundaries_beyond_codex": [
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [
     {
       "id": "automatic-feedback-status-poll",
       "kind": "hosted_service",
@@ -19,6 +22,9 @@
       "activation": "automatic_after_prior_submission",
       "optional": false,
       "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
       "controls": [
         "Polling occurs only when local state contains a receipt from an earlier user-approved submission.",
         "The initial request URL is restricted to Mparanza HTTPS, each batch is capped at 100 receipts, the response size is bounded, and the submitted request text is not included."
@@ -34,6 +40,9 @@
       "activation": "explicit_user_choice",
       "optional": true,
       "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
       "controls": [
         "Vera must show the exact proposed request and obtain separate explicit transmission consent before invoking the submission command.",
         "Vera's workflow instructs Codex to exclude client or customer material, source documents, run or case details, credentials, secrets, personal data, and identifying details; the client does not verify that semantic condition.",
@@ -50,6 +59,9 @@
       "activation": "explicit_user_choice",
       "optional": true,
       "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
       "controls": [
         "The route starts only after the user chooses the voice option; Vera's skill supplies a generic opportunity string rather than case context, although the client cannot semantically verify arbitrary direct CLI input.",
         "The interview is limited to one minute and instructs the participant not to share client, case, source, credential, secret, or identifying material.",
@@ -76,9 +88,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "a22c2dcdf1210c15f1365afd3323793df89be8f4d2690f6d75cb701f4306a3c4"
+    "source_fingerprint": "ccd5c4d11249df4c257f13bef1b442d261459dc6c8fd169b2369c4c7cc02a142"
   }
 }

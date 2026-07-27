@@ -1,0 +1,2 @@
+# Standard library only for required deterministic checks.
+# Optional DOCX export uses pypandoc or python-docx if available locally.

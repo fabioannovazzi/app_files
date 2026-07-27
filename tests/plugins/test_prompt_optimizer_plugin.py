@@ -311,6 +311,11 @@ Ask up to three clarifying questions if essential facts are missing.
 Structure the output with premises, analysis, conclusions and notes.
 Flag residual uncertainty.
 """
+    (tmp_path / "draft_prompt.md").write_text(prompt, encoding="utf-8")
+    (tmp_path / "draft_source_domains.txt").write_text(
+        "normattiva.it\nagenziaentrate.gov.it\neur-lex.europa.eu\n",
+        encoding="utf-8",
+    )
 
     paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -369,6 +374,16 @@ Flag residual uncertainty.
     assert ui_decisions["status"] == "pending_review"
     assert ui_decisions["decision_count"] == 0
     assert final_artifacts["status"] == "written_pending_review"
+    output_records = {output["path"]: output for output in final_artifacts["outputs"]}
+    assert "draft_prompt.md" not in output_records
+    assert "draft_source_domains.txt" not in output_records
+    assert (
+        output_records["prompt_audit.json"]["size_bytes"]
+        == paths["prompt_audit"].stat().st_size
+    )
+    for output in output_records.values():
+        if "size_bytes" in output:
+            assert output["size_bytes"] == (tmp_path / output["path"]).stat().st_size
     handoff_output = next(
         output
         for output in final_artifacts["outputs"]
@@ -726,12 +741,11 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "brief controllabile",
         "encargo revisable",
         "File prodotti",
-        "Torna a Vera",
-        "Back to Vera",
-        "Volver a Vera",
+        'id="vera-link"',
         "question_inventory.json",
         "prompt_audit.json",
-        "../vera/index.html",
+        "../vera/index.html?lang=it",
+        'document.getElementById("vera-link").href = `../vera/index.html?lang=${safeLang}`',
         "/?lang=${safeLang}",
     ):
         assert snippet in page

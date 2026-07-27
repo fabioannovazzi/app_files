@@ -404,11 +404,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
     assert manifest["interface"]["shortDescription"] == (
-        "Assistente AI x commercialisti"
+        "AI per commercialisti"
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.41"
+    assert manifest["version"] == "0.1.50"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti del cliente, separa fatti e valutazioni e "
@@ -1634,7 +1634,7 @@ def test_standard_accounting_bundle_marketplace_contains_public_plugins() -> Non
         ) in names
 
 
-def test_only_clara_and_vera_have_private_zip_artifacts() -> None:
+def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
     builder = load_builder()
     configured_targets = [*builder.load_packages(), *builder.load_bundles()]
     configured_zip_paths = sorted(
@@ -1654,11 +1654,19 @@ def test_only_clara_and_vera_have_private_zip_artifacts() -> None:
         .as_posix()
         for target in configured_targets
     }
+    claude_config = json.loads(
+        (ROOT / "scripts" / "claude_plugin_packages.json").read_text(encoding="utf-8")
+    )
+    allowed_claude_zip_paths = {
+        package["output_zip"] for package in claude_config["packages"]
+    }
 
     assert {target.target_name for target in configured_targets} == {"clara", "vera"}
     assert set(configured_zip_paths) == expected_install_zip_paths
     assert expected_install_zip_paths <= zip_paths
-    assert zip_paths <= expected_install_zip_paths | allowed_upload_zip_paths
+    assert zip_paths <= (
+        expected_install_zip_paths | allowed_upload_zip_paths | allowed_claude_zip_paths
+    )
 
 
 def test_repo_plugins_declare_distinct_icons() -> None:
@@ -3448,8 +3456,8 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/report-builder/index.html"
         ),
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
-        "vera": ("https://mparanza.com/static/shared/vera/index.html"),
-        "clara": ("https://mparanza.com/static/shared/clara/index.html"),
+        "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
+        "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),
     }
 
     assert set(expected_homepages) | REPORTING_ENGINE_PLUGIN_NAMES == (

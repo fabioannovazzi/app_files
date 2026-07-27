@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "service_id": "plugin-update-check",
   "display_name": "Plugin update check",
   "governed_paths": [
@@ -7,7 +7,10 @@
     "hooks/hooks.json",
     "scripts/check_for_update.py"
   ],
-  "boundaries_beyond_codex": [
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [
     {
       "id": "automatic-version-check",
       "kind": "hosted_service",
@@ -18,6 +21,9 @@
       "activation": "automatic_session_start",
       "optional": false,
       "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
       "controls": [
         "The trusted SessionStart hook starts from one fixed HTTPS manifest URL and uses a three-second timeout; a 24-hour local cache is used only when Codex supplies a plugin-data directory.",
         "The request has no query string or request body and is not built from case or conversation content."
@@ -26,9 +32,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "d2351eb670bf426d0e901a6a70c96775e99ce7c18f9b9d79b382c49f1b0e0d51"
+    "source_fingerprint": "af0c47bd7fb9c69057a17048879c1920db557cac79b5095df1a46c26d75f8fbf"
   }
 }

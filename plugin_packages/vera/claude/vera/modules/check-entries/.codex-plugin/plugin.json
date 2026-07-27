@@ -1,0 +1,49 @@
+{
+  "name": "check-entries",
+  "version": "0.1.29",
+  "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Claude.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/check-entries/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "audit",
+    "entries",
+      "supporting-documents",
+      "fatturapa",
+      "xml",
+    "pdf",
+    "accounting",
+    "deterministic"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Check Entries",
+    "shortDescription": "Match sampled entries to FatturaPA XMLs, connector exports, or targeted PDFs.",
+    "longDescription": "Claude workflow for checking selected journal entries against supporting documents. It first accepts a bulk FatturaPA XML ZIP, can record a local export produced by an authorized accounting-system connector, and then falls back to PDFs only for unresolved sampled entries. Deterministic scripts parse structured fields, require a unique multi-signal invoice match, compare PDF evidence, and export CSV/XLSX/JSON evidence, audit, diagnostics, and review notes. Supports it/en/fr/de/es and leaves ambiguous professional judgment to Claude and the reviewer.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Write",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Check Entries on the journal and the FatturaPA ZIP, authorized connector export, or PDF folder I provide.",
+      "Infer language and mappings where possible, ask only for essential ambiguities, then run deterministic checks and prepare the complete natural review package.",
+      "Do not make direct OpenAI API calls from the plugin scripts; use Claude for review judgment and deterministic scripts for extraction/comparison."
+    ],
+    "brandColor": "#355f6f",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

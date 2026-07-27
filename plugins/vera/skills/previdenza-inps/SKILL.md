@@ -1,6 +1,6 @@
 ---
 name: previdenza-inps
-description: Use when Vera must prepare an evidence-backed Italian INPS social-security case review from local documents or hash-bound official exports, with local OCR, conditional read-only portal capture, official-source research, approved arithmetic, and a draft for professional review.
+description: Use when Vera must review an Italian INPS social-security case from connected documents or official exports, validate sources and arithmetic, and prepare a professional-review draft.
 ---
 
 # Previdenza INPS

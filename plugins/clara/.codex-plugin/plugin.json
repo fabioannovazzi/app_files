@@ -1,13 +1,13 @@
 {
   "name": "clara",
-  "version": "0.1.116",
+  "version": "0.1.117",
   "description": "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
     "url": "https://mparanza.com"
   },
-  "homepage": "https://mparanza.com/static/shared/clara/index.html",
+  "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -54,7 +54,7 @@
       "Write",
       "Analysis"
     ],
-    "websiteURL": "https://mparanza.com/static/shared/clara/index.html",
+    "websiteURL": "https://mparanza.com/static/shared/clara/index.html?lang=en",
     "supportURL": "https://mparanza.com/support",
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",

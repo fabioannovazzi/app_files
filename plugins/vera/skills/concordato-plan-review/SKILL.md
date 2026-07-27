@@ -1,6 +1,6 @@
 ---
 name: concordato-plan-review
-description: Use when a user wants Codex to organize and review an Italian concordato preventivo across procedure, proposal, plan, attestation, creditors and treatment, liquidation alternative, sources and uses, liquidity, evidence consistency, and open issues. Numerical tie-out is an optional appendix.
+description: Use when reviewing an Italian concordato preventivo across procedure, proposal, plan, attestation, creditors, treatment, liquidity, evidence consistency, and open issues.
 ---
 
 # Revisione del Concordato Preventivo

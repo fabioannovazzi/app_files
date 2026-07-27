@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    "audit-reconciliation",
+    "client-file-preparation",
+    "new-client",
+    "journal-sampling",
+    "check-entries",
+    "journal-bank-reconciliation",
+    "report-builder",
+    "concordato-plan-review",
+    "prompt-optimizer",
+    "deep-research-validator",
+    "previdenza-inps",
+    "registro-imprese-sari"
+  ],
+  "shared_services": [],
+  "workflow_roles": {
+    "new-client": {
+      "kind": "workflow",
+      "internal_engines": [
+        "client-file-preparation"
+      ]
+    },
+    "client-file-preparation": {
+      "kind": "internal_engine",
+      "parent_workflow": "new-client"
+    }
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "schema_version": 3,
+  "workstream": "prompt-optimizer",
+  "display_name": "Prompt Optimizer",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/prompt-optimizer-review-widget.html"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "question-and-prompt",
+        "purpose": "Understand the case and write a source-backed Deep Research prompt",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred research framing; optimized prompt; source-domain sidecars; diagnostics and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "source-domain-research",
+      "kind": "public_research",
+      "destination": "Public official and reliable-source websites",
+      "purpose": "Curate qualified source domains for the confirmed legal framework and issue",
+      "content": "Legal or tax issue research terms and public-source URLs; queries can reflect case facts when the selected model runtime uses them",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The selected model runtime chooses domains from the confirmed framework; deterministic scripts do not choose legal sources.",
+        "The workflow does not request credentials or authenticated-source access."
+      ]
+    }
+  ],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "8451b978845ad7a45f70b0748c48f233729d6aaa961c5c25acbc657f344bd879"
+  }
+}

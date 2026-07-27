@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "check-entries",
   "display_name": "Check Entries",
   "role": "workflow",
@@ -13,43 +13,37 @@
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "entry-and-support-review",
         "purpose": "Map selected entries and resolve accounting-support checks",
-        "content": "User instructions; qualified journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions"
+        "content": "User instructions; qualified journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [
+  "external_boundaries": [
     {
       "id": "accounting-system-export",
       "kind": "external_connector",
       "destination": "User-selected accounting-system provider",
       "purpose": "Acquire an invoice ZIP or folder export when the user chooses connection instead of supplying local support",
-      "content": "Authorized read/export request for the selected client and period; the resulting export is stored and mechanically prepared locally, and relevant entries or evidence may enter Codex context",
+      "content": "Authorized read/export request for the selected client and period; the resulting export is stored and mechanically prepared locally, and relevant entries or evidence may enter the selected runtime's model context",
       "optional": true,
       "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
       "controls": [
         "Use only a callable provider-specific connector after the user chooses it and confirms access authority.",
         "Restrict the action to read/export for the selected client and period.",
@@ -88,9 +82,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "29b0c90237cbc46cc3a175c736c6a2e0ffd6d7034392b583f70d441e46d17e7d"
+    "source_fingerprint": "07c70ac32ec06acc9db7f7d378fe04f5102cafc15a877f69b972f8c68797dbfd"
   }
 }

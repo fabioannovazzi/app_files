@@ -1,6 +1,6 @@
 ---
 name: avviso-intake
-description: Use when creating a first intake memo for notices, agency communications, avvisi, cartelle, HMRC letters, or Swiss cantonal tax letters found in a customer folder, extracting practical references.
+description: Use when preparing a first intake memo for notices, avvisi, cartelle, HMRC letters, or Swiss cantonal tax letters found in a customer folder.
 ---
 
 # Avviso Intake

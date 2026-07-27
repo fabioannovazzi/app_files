@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "deep-research-validator",
   "display_name": "Deep Research Validator",
   "role": "workflow",
@@ -10,35 +10,25 @@
     "assets/review-workbench-adapter.json",
     "assets/deep-research-review-widget.html"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "report-and-source-review",
         "purpose": "Judge claim support, reasoning quality, and proposed corrections",
-        "content": "Deep Research report; claims and surrounding text; citations; fetched or local source passages; diagnostics; proposed corrections and review decisions"
+        "content": "Deep Research report; claims and surrounding text; citations; fetched or local source passages; diagnostics; proposed corrections and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [
+  "external_boundaries": [
     {
       "id": "cited-url-fetch",
       "kind": "public_research",
@@ -47,6 +37,10 @@
       "content": "Each complete cited HTTP or HTTPS URL, request metadata, and the resulting public page response",
       "optional": false,
       "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
       "controls": [
         "Fetch only URLs extracted from the supplied report inventory.",
         "Read at most 1,000,000 response bytes per URL with a bounded timeout.",
@@ -61,9 +55,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f2658a24faf70a01de75a0d8bf9466a2ef6fbb96e9548aa8baa0b31c45737170"
+    "source_fingerprint": "11d079cc400186c1021c50b3efacaeacbb8524dcef853bd561ac5d1fc05414a9"
   }
 }

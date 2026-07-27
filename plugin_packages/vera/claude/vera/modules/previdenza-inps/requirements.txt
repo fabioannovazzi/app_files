@@ -1,0 +1,4 @@
+openpyxl
+playwright>=1.48.0
+pypdf
+python-docx

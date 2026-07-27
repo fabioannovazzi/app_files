@@ -1,0 +1,67 @@
+{
+  "schema_version": 3,
+  "workstream": "audit-reconciliation",
+  "display_name": "Audit Reconciliation",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/audit-reconciliation-review-widget.html"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "accounting-evidence-and-review",
+        "purpose": "Map sources, review reconciliations, and explain exceptions",
+        "content": "User instructions; accounting files or extracted records; mappings; reconciliation results; exception evidence; workpapers and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "private-output-root",
+      "control": "Run artifacts are written to the user-selected private output directory rather than a published repository path."
+    },
+    {
+      "id": "local-review-service",
+      "control": "The review server binds to loopback and constrains review writes to the selected run folder."
+    },
+    {
+      "id": "qualified-source-and-relationship-controls",
+      "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close."
+    },
+    {
+      "id": "bounded-trusted-memory-review-transaction",
+      "control": "MCP review save and apply operations capture the bounded canonical output tree and modes in parent-process memory, run workflow helpers only against a detached working tree, reject linked, aliased, special, oversized, or unexpected entries, and restore exact trusted bytes and modes on every rejected commit without trusting child-accessible rollback material."
+    },
+    {
+      "id": "parent-owned-review-authorization",
+      "control": "The MCP parent derives the operative run, review payload, current decisions, final artifact state, authorized write set, effects, and readiness from the persisted trusted snapshot; caller copies must match exactly, helper output is acknowledgement-only, and parent replay plus current-byte postconditions must close before commit."
+    },
+    {
+      "id": "exact-implementation-and-successor-checkpoint",
+      "control": "Every assured Python and MCP entry validates the exact 25-file plugin and shared-assurance implementation tree before loading workflow logic; a later review requires the independently retained predecessor checkpoint, replays the archived predecessor rows, allocations and core checks, and rejects missing, wrong or self-resealed predecessor authority without mutating the canonical tree."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "be9d213b82d0ad2f95a0dc8aa0146d3b2cf64dfe2661c9049bec22166a7b28e9"
+  }
+}

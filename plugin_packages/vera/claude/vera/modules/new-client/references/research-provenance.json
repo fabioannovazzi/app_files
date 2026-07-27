@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Non-runtime provenance for external background material evaluated during workflow design. These entries are retained for audit history and are never loaded into a client review, treated as authority, or redistributed.",
+  "entries": [
+    {
+      "reference_id": "external_mandate_material",
+      "title": "Mandato professionale — downloadable draft materials",
+      "publisher": "mandatoprofessionale.it",
+      "url": "https://www.mandatoprofessionale.it/",
+      "role": "background_research_only",
+      "runtime_source": false,
+      "reuse_rights": "unknown",
+      "constraint": "Do not copy, populate, bundle, or present this material as an official source or a studio-approved template."
+    },
+    {
+      "reference_id": "external_fee_schedule_2026",
+      "title": "Onorari consigliati per l'anno 2026",
+      "publisher": "Associazione Nazionale Commercialisti Brescia",
+      "url": "https://www.abcbs.it/onorari-consigliati-per-lanno-2026.html",
+      "role": "background_research_only",
+      "runtime_source": false,
+      "constraint": "No tariff, price recommendation, coefficient, or default fee from this page is part of New Client."
+    }
+  ]
+}

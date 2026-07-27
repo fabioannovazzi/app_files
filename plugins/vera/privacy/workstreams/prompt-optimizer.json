@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "workstream": "prompt-optimizer",
   "display_name": "Prompt Optimizer",
   "role": "workflow",
@@ -10,54 +10,48 @@
     "assets/review-workbench-adapter.json",
     "assets/prompt-optimizer-review-widget.html"
   ],
-  "codex_context": {
-    "policy": "real_case_data_may_enter_codex_context",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
         "id": "question-and-prompt",
         "purpose": "Understand the case and write a source-backed Deep Research prompt",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred research framing; optimized prompt; source-domain sidecars; diagnostics and review decisions"
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred research framing; optimized prompt; source-domain sidecars; diagnostics and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
-  "codex_account_boundary": {
-    "selected_by": "firm_or_user",
-    "vera_runtime_enforcement": "none",
-    "review_timing": "before_professional_use_and_when_account_or_terms_change",
-    "review_items": [
-      "account_or_workspace_plan",
-      "model_training_data_controls",
-      "retention_and_deletion_controls"
-    ],
-    "per_case_record_required": false
-  },
-  "ordinary_processing": {
-    "scope": "ordinary_codex_model_processing",
-    "account_arrangement": "existing_chatgpt_or_codex_account_selected_by_firm_or_user",
-    "separate_vera_recipient": false,
-    "automatic_anonymization": false,
-    "local_filtering_or_aggregation": "only_when_useful_for_the_work"
-  },
-  "boundaries_beyond_codex": [
+  "external_boundaries": [
     {
       "id": "source-domain-research",
       "kind": "public_research",
       "destination": "Public official and reliable-source websites",
       "purpose": "Curate qualified source domains for the confirmed legal framework and issue",
-      "content": "Legal or tax issue research terms and public-source URLs; queries can reflect case facts when Codex uses them",
+      "content": "Legal or tax issue research terms and public-source URLs; queries can reflect case facts when the selected model runtime uses them",
       "optional": false,
       "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
       "controls": [
-        "Codex selects domains from the confirmed framework; deterministic scripts do not choose legal sources.",
+        "The selected model runtime chooses domains from the confirmed framework; deterministic scripts do not choose legal sources.",
         "The workflow does not request credentials or authenticated-source access."
       ]
     }
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-25",
+    "reviewed_at": "2026-07-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6467f04982a4f45764fd8e4e869abdb8b95b05a21bffb58480413029a21496b4"
+    "source_fingerprint": "02882e41f6e6b4305ff642b79f0b86d4d60bcdab8c983d2be45d584d517c8809"
   }
 }

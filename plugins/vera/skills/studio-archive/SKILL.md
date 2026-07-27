@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must search one client's connected Gmail, inspect one client's WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
+description: Use when Vera must search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
 ## Surface routing

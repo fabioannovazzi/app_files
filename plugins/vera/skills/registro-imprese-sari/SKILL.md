@@ -1,6 +1,6 @@
 ---
 name: registro-imprese-sari
-description: Use when Vera must prepare an Italian Registro Imprese, REA, Comunicazione Unica, or DIRE position-opening practice from current official SARI/CCIAA guidance, with distinct INPS, INAIL, SUAP, or IVASS/RUI checks and a professional-review draft.
+description: Use when Vera must prepare a Registro Imprese, REA, Comunicazione Unica, or DIRE practice from official guidance, keeping linked authority checks distinct for professional review.
 ---
 
 # Registro Imprese e SARI

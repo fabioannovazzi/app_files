@@ -1,0 +1,168 @@
+{
+  "schemaVersion": "1.0",
+  "plugin": "client-file-preparation",
+  "title": "New Client \u00b7 File Preparation",
+  "reviewTitle": "File Preparation Review",
+  "queueTitle": "Documents to Review",
+  "detailTitle": "Document Decision",
+  "detailMode": "intake-board",
+  "detailHelp": "Classify documents, confirm missing items, and capture the next client request.",
+  "detailGroups": [
+    {
+      "title": "Client Document",
+      "variant": "document",
+      "fields": [
+        "document",
+        "client",
+        "fiscal_year",
+        "status",
+        "source_path"
+      ],
+      "empty": "No document fields."
+    },
+    {
+      "title": "Required Evidence",
+      "variant": "checklist",
+      "fields": [
+        "requested_document",
+        "reason",
+        "status",
+        "confidence"
+      ],
+      "empty": "No required-evidence fields."
+    },
+    {
+      "title": "Memo / Email Impact",
+      "variant": "draft",
+      "fields": [
+        "memo_section",
+        "email_text",
+        "review_notes",
+        "reason"
+      ],
+      "empty": "No draft impact."
+    }
+  ],
+  "panels": [
+    "Client document",
+    "Required evidence",
+    "Preparation decision"
+  ],
+  "localized": {
+    "es": {
+      "title": "Nuevo cliente \u00b7 Preparaci\u00f3n de documentos",
+      "reviewTitle": "Revisi\u00f3n de la preparaci\u00f3n de documentos",
+      "queueTitle": "Documentos para revisar",
+      "detailTitle": "Decisi\u00f3n sobre el documento",
+      "detailHelp": "Clasifique los documentos, confirme los faltantes y registre la siguiente solicitud al cliente.",
+      "search": "Buscar documento, faltante, informe, correo, bloqueo",
+      "reviewerAlias": "Revisor",
+      "reviewerAliasHelp": "Use una referencia estable del profesional o de su cuenta. Se admite el nombre real del profesional. No introduzca credenciales, datos de sesi\u00f3n ni rutas locales sin depurar.",
+      "reviewerAliasInvalid": "La referencia del revisor puede tener un m\u00e1ximo de 160 caracteres y no debe contener credenciales, datos de sesi\u00f3n ni rutas locales sin depurar."
+    },
+    "it": {
+      "title": "Nuovo cliente \u00b7 Preparazione documenti",
+      "reviewTitle": "Revisione preparazione documenti",
+      "queueTitle": "Documenti da rivedere",
+      "detailTitle": "Decisione documento",
+      "detailHelp": "Classifica documenti, conferma mancanti e cattura la prossima richiesta cliente.",
+      "search": "Cerca documento, mancante, memo, email, blocco",
+      "reviewerAlias": "Revisore",
+      "reviewerAliasHelp": "Usa un riferimento stabile del professionista o del suo account. \u00c8 ammesso il nome reale del professionista. Non inserire credenziali, materiale di sessione o percorsi locali grezzi.",
+      "reviewerAliasInvalid": "Il riferimento del revisore pu\u00f2 avere al massimo 160 caratteri e non deve contenere credenziali, materiale di sessione o percorsi locali grezzi."
+    },
+    "fr": {
+      "title": "Nouveau client \u00b7 Preparation des documents",
+      "reviewTitle": "Revue de la preparation des documents",
+      "queueTitle": "Documents a revoir",
+      "detailTitle": "Decision document",
+      "detailHelp": "Classez les documents, confirmez les manquants et saisissez la prochaine demande client.",
+      "search": "Chercher document, manquant, memo, email, blocage",
+      "reviewerAlias": "R\u00e9viseur",
+      "reviewerAliasHelp": "Utilisez une r\u00e9f\u00e9rence stable du professionnel ou de son compte. Le nom r\u00e9el du professionnel est admis. Ne saisissez ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts.",
+      "reviewerAliasInvalid": "La r\u00e9f\u00e9rence du r\u00e9viseur est limit\u00e9e \u00e0 160 caract\u00e8res et ne doit contenir ni identifiants de connexion, ni donn\u00e9es de session, ni chemins locaux bruts."
+    },
+    "de": {
+      "title": "Neuer Mandant \u00b7 Unterlagen vorbereiten",
+      "reviewTitle": "Unterlagenvorbereitung pruefen",
+      "queueTitle": "Zu pruefende Dokumente",
+      "detailTitle": "Dokumententscheidung",
+      "detailHelp": "Dokumente klassifizieren, fehlende Punkte bestaetigen und naechste Mandantenanfrage erfassen.",
+      "search": "Dokument, fehlender Punkt, Memo, E-Mail, Blocker suchen",
+      "reviewerAlias": "Pr\u00fcfer",
+      "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des Berufstr\u00e4gers oder seines Kontos. Der echte Name des Berufstr\u00e4gers ist zul\u00e4ssig. Keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade eingeben.",
+      "reviewerAliasInvalid": "Die Pr\u00fcferreferenz darf h\u00f6chstens 160 Zeichen lang sein und keine Zugangsdaten, Sitzungsdaten oder unbereinigten lokalen Pfade enthalten."
+    }
+  },
+  "saveTool": "save_client_file_preparation_decisions",
+  "applyTool": "apply_client_file_preparation_decisions",
+  "widgetType": "client_file_preparation_review",
+  "demo": {
+    "review_type": "client_file_preparation_review",
+    "items": [
+      {
+        "id": "doc-1",
+        "item_type": "document_inventory",
+        "title": "CU 2025 - Example Client",
+        "source_path": "cliente/CU_2025.pdf",
+        "output_path": "document_inventory.json",
+        "allowed_actions": [
+          "accept",
+          "edit",
+          "mark_unclear",
+          "skip"
+        ],
+        "recommended_action": "accept",
+        "data": {
+          "document": "CU 2025",
+          "client": "Example Client",
+          "status": "classified",
+          "fiscal_year": "2025",
+          "target_artifact": "document_inventory.json",
+          "target_id_field": "document",
+          "target_record_id": "CU 2025",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this document row updates review_notes in document_inventory.json."
+        },
+        "evidence": [
+          {
+            "kind": "document_classification",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "id": "missing-1",
+        "item_type": "missing_document_request",
+        "title": "Missing: F24 payment receipt",
+        "source_path": "cliente/",
+        "output_path": "missing_documents.json",
+        "allowed_actions": [
+          "accept",
+          "reject",
+          "edit",
+          "request_more_documents"
+        ],
+        "recommended_action": "request_more_documents",
+        "data": {
+          "document": "F24 payment receipt",
+          "status": "missing",
+          "reason": "Required to reconcile tax payments.",
+          "requested_document": "F24 payment receipt",
+          "target_artifact": "missing_documents.json",
+          "target_id_field": "document",
+          "target_record_id": "F24 payment receipt",
+          "target_field": "review_notes",
+          "edit_hint": "Editing this missing-document row updates review_notes in missing_documents.json."
+        },
+        "evidence": [
+          {
+            "kind": "missing_document_queue",
+            "requested_document": "F24"
+          }
+        ]
+      }
+    ]
+  },
+  "requiresReviewerAlias": true
+}

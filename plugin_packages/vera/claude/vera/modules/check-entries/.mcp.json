@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "checkEntriesWidgets": {
+      "title": "Check Entries Widgets",
+      "description": "Validate and render Check Entries review-session payloads.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

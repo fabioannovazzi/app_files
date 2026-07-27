@@ -1,0 +1,84 @@
+{
+  "schema_version": 3,
+  "workstream": "report-builder",
+  "display_name": "Report Builder",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "references",
+    "scripts",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/report-builder-review-widget.html"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "financial-report-evidence",
+        "purpose": "Map source tables, write the report narrative, and review the generated report",
+        "content": "User instructions; spreadsheets, CSV files or extracted PDF text; table inventories and rows; mappings; calculations; diagnostics; draft narrative; report artifacts and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "persisted-review-integrity-replay",
+      "control": "For a persisted run, the MCP parent derives run, review, current decisions, final state, and protected files from the transaction's trusted image, exact-compares supplied copies, and replays current external-source, archive-container/member, review-payload, final-gallery, and output-byte receipts before review save or apply writes; stale state aborts before mutation."
+    },
+    {
+      "id": "bounded-trusted-memory-review-transaction",
+      "control": "MCP save and apply capture the bounded canonical output tree and modes in parent-process memory, execute helpers only against a detached working tree, reject linked, aliased, special, oversized, swapped, or unexpected entries, and restore exact trusted bytes and modes after any rejected commit."
+    },
+    {
+      "id": "parent-owned-integrity-and-authorization",
+      "control": "Helper JSON is acknowledgement-only: the MCP parent validates run, review, final-gallery and protected-file identity, authorizes the write set and effects, checks current source and archive derivation receipts, and independently reseals and revalidates review_integrity after every committed mutation."
+    },
+    {
+      "id": "allowlisted-public-gallery",
+      "control": "The final artifact gallery is rebuilt from an exact output allowlist with current byte counts and SHA-256 receipts; extracted inputs, private source state, integrity state and revision backups are excluded."
+    },
+    {
+      "id": "private-source-location-index",
+      "control": "Absolute source roots are retained only in the run-local private source index. Review payloads, final galleries, report data and public source receipts expose source file names or relative receipt paths instead."
+    },
+    {
+      "id": "review-write-containment",
+      "control": "Persisted review manifests use fixed names inside the selected run folder, editable artifact targets are resolved and checked against that folder before a write, and supported inputs or prior outputs that are symbolic links, hard links, or special files are rejected before read or mutation."
+    },
+    {
+      "id": "archive-member-identity",
+      "control": "ZIP members are normalized to one portable canonical identity, duplicate or symbolic-link members are rejected, extracted bytes are checked against the captured archive manifest, and later review replays the archive-to-member derivation receipts."
+    },
+    {
+      "id": "reviewed-numeric-public-surface",
+      "control": "Public table inventories and preview rows withhold raw numeric candidate cells; only source-bound reviewed ledger values may appear as totals, and generated spreadsheet strings are written as literal text rather than formulas."
+    },
+    {
+      "id": "sanitized-helper-failures",
+      "control": "MCP helper-process failures expose one terminal exception only; Python tracebacks and absolute local paths are removed before the message reaches the review surface."
+    },
+    {
+      "id": "exact-implementation-output-and-predecessor-continuity",
+      "control": "Public Python and MCP surfaces validate the exact transitive implementation tree, prepared-output receipts and physical file/directory set; every later review requires the prior integrity checkpoint supplied outside the candidate report tree, replays the archived predecessor transition, and rejects alternative honest predecessor substitution before mutation."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-27",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "b2c32a1fa5727f1f4f3fa19887b9859aef0fd08ffeda75d1f80645747567d610"
+  }
+}

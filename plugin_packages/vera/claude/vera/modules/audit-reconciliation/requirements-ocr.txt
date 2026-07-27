@@ -1,0 +1,5 @@
+# Optional OCR dependencies for scanned PDFs/images.
+# Install only when source PDFs are not text-extractable and no project OCR stack is available.
+paddleocr>=2.7
+paddlepaddle>=2.6
+opencv-python>=4.8

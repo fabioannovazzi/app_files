@@ -48,6 +48,16 @@ EXCLUDED_SUFFIXES = {
     ".pyc",
     ".pyo",
 }
+CODEX_PACKAGE_EXCLUDED_PREFIXES = (
+    (".claude-plugin",),
+    ("agents",),
+    ("submission",),
+    ("samples", "cowork"),
+)
+CODEX_PACKAGE_EXCLUDED_PATHS = {
+    ("skills", "studio-archive", "references", "cowork-runtime.md"),
+    ("skills", "vera", "references", "cowork-runtime.md"),
+}
 REQUIRED_DEPENDENCY_FILES = (
     "requirements.txt",
     "scripts/check_dependencies.py",
@@ -113,7 +123,7 @@ CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
-    "vera": "Assistente AI x commercialisti",
+    "vera": "AI per commercialisti",
 }
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
@@ -689,6 +699,15 @@ def should_skip(path: Path) -> bool:
     return path.suffix in EXCLUDED_SUFFIXES
 
 
+def should_skip_codex_source(path: Path) -> bool:
+    """Return whether a source path belongs only to another host package."""
+
+    parts = path.parts
+    return parts in CODEX_PACKAGE_EXCLUDED_PATHS or any(
+        parts[: len(prefix)] == prefix for prefix in CODEX_PACKAGE_EXCLUDED_PREFIXES
+    )
+
+
 def source_files(
     plugin_dir: Path, *, exclude_vendor_modules: bool = False
 ) -> list[Path]:
@@ -697,6 +716,7 @@ def source_files(
         for path in plugin_dir.rglob("*")
         if path.is_file()
         and not should_skip(path.relative_to(plugin_dir))
+        and not should_skip_codex_source(path.relative_to(plugin_dir))
         and not (
             exclude_vendor_modules
             and len(path.relative_to(plugin_dir).parts) >= 2

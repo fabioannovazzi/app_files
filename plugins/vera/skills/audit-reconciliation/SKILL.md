@@ -1,6 +1,6 @@
 ---
 name: audit-reconciliation
-description: Use when a user wants Codex to reconcile accounting evidence across open-item lists, ledgers, journals, bank statements, payment orders, factoring or advance evidence, and compensation evidence, then produce audit-ready Excel and Word workpapers with deterministic classifications and a documented Codex review layer.
+description: Use when reconciling accounting evidence across ledgers, statements, payments, factoring, advances, or compensation and producing reviewable Excel and Word workpapers.
 ---
 
 # Riconciliazione partite
