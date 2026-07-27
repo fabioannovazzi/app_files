@@ -403,9 +403,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
-    assert manifest["interface"]["shortDescription"] == (
-        "AI per commercialisti"
-    )
+    assert manifest["interface"]["shortDescription"] == ("AI per commercialisti")
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
     assert manifest["version"] == "0.1.50"
@@ -3080,12 +3078,17 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
         "No separate API key is required; model work uses your existing ChatGPT plan.",
         "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "Clara can analyze, draft, and review with you in ChatGPT.",
-        "Clara può analizzare, preparare bozze e revisionare il lavoro con te in ChatGPT.",
-        "Install Clara",
-        "Installa Clara",
+        "Choose where to work with Clara.",
+        "Scegli dove lavorare con Clara.",
+        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
+        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "Install for ChatGPT Work and Codex",
+        "Installa per ChatGPT Work e Codex",
+        "Download for Claude Cowork",
+        "Scarica per Claude Cowork",
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
         "data-clara-install-link",
+        "data-clara-cowork-download-link",
         "/?lang=${safeLang}",
     ):
         assert snippet in page
@@ -3136,7 +3139,12 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         '<a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2F'
         'plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" '
         'rel="noopener noreferrer" data-clara-install-link '
-        'data-i18n="install.button">Install Clara</a>'
+        'data-i18n="install.button">Install for ChatGPT Work and Codex</a>'
+    ) in page
+    assert (
+        '<a class="button" href="downloads/clara-cowork-plugin.zip" download '
+        'data-clara-cowork-download-link data-i18n="install.coworkButton">'
+        "Download for Claude Cowork</a>"
     ) in page
     assert "font-size: clamp(58px, 8vw, 92px)" in styles
     assert "font-size: clamp(30px, 4vw, 43px)" in styles
@@ -3960,14 +3968,14 @@ def test_companion_install_flow_routes_login_to_same_listing(
 @pytest.mark.parametrize(
     "localized_guidance",
     (
-        "Installing Codex is optional: you can continue in ChatGPT.",
-        "Installare Codex è facoltativo: puoi continuare in ChatGPT.",
-        "L’installation de Codex reste facultative : vous pouvez continuer dans ChatGPT.",
-        "Die Installation von Codex ist optional: Sie können in ChatGPT fortfahren.",
-        "Instalar Codex es opcional: puedes continuar en ChatGPT.",
+        "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
+        "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
+        "Installez Clara pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
+        "Installieren Sie Clara für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
+        "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
     ),
 )
-def test_clara_install_flow_localizes_optional_codex_handoff(
+def test_clara_install_flow_localizes_platform_choices(
     localized_guidance: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(

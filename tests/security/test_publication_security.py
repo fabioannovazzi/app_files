@@ -40,22 +40,22 @@ def test_sanitized_secret_example_contains_only_safe_values() -> None:
             assert value == ""
 
 
-def test_only_verified_vera_cowork_zip_is_public() -> None:
+def test_only_verified_cowork_zips_are_public() -> None:
     public_vera_zip = (
-        ROOT
-        / "static"
-        / "shared"
-        / "vera"
-        / "downloads"
-        / "vera-cowork-plugin.zip"
+        ROOT / "static" / "shared" / "vera" / "downloads" / "vera-cowork-plugin.zip"
     )
     release_vera_zip = ROOT / "plugin_packages" / "vera" / "vera-cowork-plugin.zip"
+    public_clara_zip = (
+        ROOT / "static" / "shared" / "clara" / "downloads" / "clara-cowork-plugin.zip"
+    )
+    release_clara_zip = ROOT / "plugin_packages" / "clara" / "clara-cowork-plugin.zip"
     retired_plugin_zips = (
         ROOT / "protected_downloads" / "vera" / "vera-plugin.zip",
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-plugin.zip",
     )
 
     assert public_vera_zip.read_bytes() == release_vera_zip.read_bytes()
+    assert public_clara_zip.read_bytes() == release_clara_zip.read_bytes()
     assert all(not path.exists() for path in retired_plugin_zips)
 
 
@@ -71,12 +71,21 @@ def test_public_pages_have_no_clara_or_vera_download_links() -> None:
 
 
 def test_vera_product_page_exposes_only_the_cowork_release_archive() -> None:
-    page = (
-        ROOT / "static" / "shared" / "vera" / "index.html"
-    ).read_text(encoding="utf-8")
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     assert page.count('href="downloads/vera-cowork-plugin.zip"') == 1
     assert page.count("data-vera-cowork-download-link") == 1
+
+
+def test_clara_product_page_exposes_only_the_cowork_release_archive() -> None:
+    page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert page.count('href="downloads/clara-cowork-plugin.zip"') == 1
+    assert page.count("data-clara-cowork-download-link") == 1
 
 
 def test_vera_cowork_release_archive_is_served() -> None:
@@ -85,15 +94,27 @@ def test_vera_cowork_release_archive_is_served() -> None:
     from src.fastapi_app_entry import app
 
     expected = (
-        ROOT
-        / "static"
-        / "shared"
-        / "vera"
-        / "downloads"
-        / "vera-cowork-plugin.zip"
+        ROOT / "static" / "shared" / "vera" / "downloads" / "vera-cowork-plugin.zip"
     ).read_bytes()
     response = TestClient(app).get(
         "/static/shared/vera/downloads/vera-cowork-plugin.zip"
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/zip"
+    assert response.content == expected
+
+
+def test_clara_cowork_release_archive_is_served() -> None:
+    from fastapi.testclient import TestClient
+
+    from src.fastapi_app_entry import app
+
+    expected = (
+        ROOT / "static" / "shared" / "clara" / "downloads" / "clara-cowork-plugin.zip"
+    ).read_bytes()
+    response = TestClient(app).get(
+        "/static/shared/clara/downloads/clara-cowork-plugin.zip"
     )
 
     assert response.status_code == 200
