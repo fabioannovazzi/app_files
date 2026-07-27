@@ -331,9 +331,7 @@ CLARA_COWORK_OMITTED_ROOT_SCRIPTS = frozenset(
         "verify_deck_revision_output.py",
     }
 )
-CLARA_COWORK_RUNTIME_REFERENCE = (
-    "skills/clara/references/cowork-runtime.md"
-)
+CLARA_COWORK_RUNTIME_REFERENCE = "skills/clara/references/cowork-runtime.md"
 CLARA_COWORK_README = """# Clara for Claude Cowork
 
 Clara prepares reviewable advisory work from files in the connected folder.
@@ -341,18 +339,26 @@ Use the `clara` skill for case work or the narrowest specialist skill for
 Retailer Signals, Brand Fit, reporting and charting, HTML presentations, or
 claim-basis review.
 
+At session start, Clara installs its exact declared Python requirements into
+its user-scoped plugin data directory and exposes them to the Cowork sandbox.
+If that trusted bootstrap fails, file-based work remains available and Clara
+must state which Python-backed capability is unavailable.
+
 This Cowork package does not include voice interviews, transcription, hosted
 deck capture, plugin feedback, custom updates, or image generation. The
 consultant retains professional judgement and approval.
 """
 CLARA_COWORK_EXECUTION_CONTRACT = """## Cowork execution contract
 
-Work from the connected folder and supplied files first. Use a local script only
-when it is callable and every declared dependency is already available; never
-install packages at runtime. MCP tools, browser or computer control, and local
-review servers are optional enhancements, never completion gates. When an
-optional capability is unavailable, continue with file-based work and state the
-limitation.
+Work from the connected folder and supplied files first. Clara's trusted
+`SessionStart` hook installs the package's exact declared Python requirements
+into Clara's user-scoped plugin data directory and exposes them through
+`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
+run ad hoc package installation or install undeclared dependencies during a
+workflow. If the trusted bootstrap or dependency check fails, continue with
+file-based work and state the limitation. MCP tools, browser or computer
+control, and local review servers are optional enhancements, never completion
+gates.
 
 Do not invoke hosted voice, external interview, transcription, deck-feedback
 capture, plugin feedback, or custom update services. Do not claim
@@ -584,6 +590,11 @@ def project_claude_manifest(
             if value is not None:
                 manifest[field] = value
     manifest["skills"] = "./skills/"
+    if isinstance(template, dict) and "hooks" in template:
+        hooks = template["hooks"]
+        if not isinstance(hooks, str) or not hooks:
+            raise ValueError("Claude manifest hooks must be a non-empty string")
+        manifest["hooks"] = hooks
     if include_agents:
         manifest["agents"] = (
             template.get("agents", ["./agents/vera.md"])
@@ -1343,7 +1354,7 @@ def _project_cowork_runtime_text(
     except UnicodeDecodeError as exc:
         raise ValueError(
             f"{relative_path}: expected UTF-8 Cowork runtime source"
-    ) from exc
+        ) from exc
     text = _project_natural_language_runtime(text)
     text = text.replace("local_codex_workspace", "cowork_connected_folder")
     return text.encode("utf-8")
@@ -1587,8 +1598,7 @@ def _project_clara_cowork_skill(
             count=1,
         )
         text = (
-            f"{frontmatter}\n\n"
-            f"{main_runtime_reference.decode('utf-8').strip()}\n"
+            f"{frontmatter}\n\n" f"{main_runtime_reference.decode('utf-8').strip()}\n"
         )
     else:
         text = _remove_optional_section(text, "## ChatGPT and Codex Runtime")
@@ -1682,6 +1692,7 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     if relative_path in {
         ".codex-plugin/plugin.json",
         "hooks/hooks.json",
+        "hooks/cowork-hooks.json",
         CLARA_COWORK_RUNTIME_REFERENCE,
     }:
         return True
@@ -1744,15 +1755,43 @@ def _validate_clara_cowork_entries(
     if "agents/clara.md" not in entries:
         raise ValueError("Clara Cowork is missing its Claude agent")
     forbidden_paths = {
-        "hooks/hooks.json",
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
     }
     present_forbidden = sorted(forbidden_paths & entries.keys())
     if present_forbidden:
+        raise ValueError(f"Clara Cowork retains forbidden paths: {present_forbidden}")
+    required_paths = {
+        "hooks/hooks.json",
+        "scripts/bootstrap_python_dependencies.py",
+    }
+    missing_required = sorted(required_paths - entries.keys())
+    if missing_required:
         raise ValueError(
-            f"Clara Cowork retains forbidden paths: {present_forbidden}"
+            f"Clara Cowork is missing dependency bootstrap paths: {missing_required}"
         )
+    hooks = json.loads(entries["hooks/hooks.json"])
+    expected_hooks = {
+        "hooks": {
+            "SessionStart": [
+                {
+                    "matcher": "startup|resume",
+                    "hooks": [
+                        {
+                            "type": "command",
+                            "command": (
+                                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/'
+                                'bootstrap_python_dependencies.py"'
+                            ),
+                            "timeout": 240,
+                        }
+                    ],
+                }
+            ]
+        }
+    }
+    if hooks != expected_hooks:
+        raise ValueError("Clara Cowork dependency bootstrap hook is not reviewed")
     for name in entries:
         if (
             "beautify-deck" in name
@@ -1766,9 +1805,7 @@ def _validate_clara_cowork_entries(
     for component in components:
         prefix = f"modules/{component}/"
         if not any(name.startswith(prefix) for name in entries):
-            raise ValueError(
-                f"Clara Cowork component was not vendored: {component}"
-            )
+            raise ValueError(f"Clara Cowork component was not vendored: {component}")
 
     for name, content in entries.items():
         is_instruction = (
@@ -1812,9 +1849,7 @@ def _clara_package_entries(
     if source_manifest is None:
         raise ValueError("clara: canonical manifest is missing")
     template_path = ROOT / "plugins" / "clara" / ".claude-plugin" / "plugin.json"
-    runtime_reference_path = (
-        ROOT / "plugins" / "clara" / CLARA_COWORK_RUNTIME_REFERENCE
-    )
+    runtime_reference_path = ROOT / "plugins" / "clara" / CLARA_COWORK_RUNTIME_REFERENCE
     if not template_path.is_file():
         raise FileNotFoundError(
             f"Claude manifest template does not exist: {template_path}"
@@ -1854,6 +1889,10 @@ def _clara_package_entries(
         include_agents=True,
         template_content=template_path.read_bytes(),
     )
+    cowork_hook_path = ROOT / "plugins" / "clara" / "hooks" / "cowork-hooks.json"
+    if not cowork_hook_path.is_file():
+        raise FileNotFoundError(f"Clara Cowork hook does not exist: {cowork_hook_path}")
+    entries["hooks/hooks.json"] = cowork_hook_path.read_bytes()
     _overlay_cowork_agents(entries, plugin="clara")
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
     components = builder.embedded_plugin_names(ROOT / "plugins" / "clara")

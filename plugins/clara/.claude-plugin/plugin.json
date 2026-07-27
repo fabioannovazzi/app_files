@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "clara",
   "displayName": "Clara",
-  "version": "0.1.118",
+  "version": "0.1.119",
   "description": "AI companion for consultants. Clara organizes evidence, analyzes business data, and prepares reviewable advisory work, reports, and presentations.",
   "author": {
     "name": "Mparanza",
@@ -23,6 +23,7 @@
     "data-analysis"
   ],
   "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
   "agents": [
     "./agents/clara.md"
   ]

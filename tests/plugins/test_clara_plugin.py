@@ -782,7 +782,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.118"
+    assert manifest["version"] == "0.1.119"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -806,8 +806,10 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     ) in marketplace_copy
     long_description = manifest["interface"]["longDescription"]
     approved_description = (
-        ROOT / "docs" / "marketplace_copy" / "clara-long-description.txt"
-    ).read_text(encoding="utf-8").strip()
+        (ROOT / "docs" / "marketplace_copy" / "clara-long-description.txt")
+        .read_text(encoding="utf-8")
+        .strip()
+    )
     assert long_description == approved_description
     assert "Clara helps consultants" in long_description
     assert "presentations, reports and reviewable workpapers" in long_description
@@ -3307,6 +3309,34 @@ def test_dependency_checker_checks_multiple_requirement_files(
 
     assert missing == []
     assert checked_imports == ["PIL", "paddle"]
+
+
+def test_dependency_checker_checks_recursive_requirement_includes(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checker = load_dependency_checker()
+    root_requirements = tmp_path / "requirements.txt"
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    nested_requirements = module_dir / "requirements.txt"
+    root_requirements.write_text(
+        "-r module/requirements.txt\n",
+        encoding="utf-8",
+    )
+    nested_requirements.write_text("polars>=1.0\n", encoding="utf-8")
+    checked_imports: list[str] = []
+
+    def fake_find_spec(import_target: str) -> object:
+        checked_imports.append(import_target)
+        return object()
+
+    monkeypatch.setattr(checker.importlib.util, "find_spec", fake_find_spec)
+
+    missing = checker.check_dependencies(root_requirements)
+
+    assert missing == []
+    assert checked_imports == ["polars"]
 
 
 def test_case_workspace_archive_excludes_local_runtime_dirs(tmp_path: Path) -> None:

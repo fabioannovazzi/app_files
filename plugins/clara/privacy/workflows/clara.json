@@ -4,7 +4,10 @@
   "display_name": "Clara Advisory Case",
   "governed_paths": [
     "README.md",
+    ".claude-plugin/plugin.json",
     ".codex-plugin/plugin.json",
+    "requirements.txt",
+    "hooks/cowork-hooks.json",
     "hooks/hooks.json",
     "skills/clara/SKILL.md",
     "contracts/preparation_audit_envelope.v2.schema.json",
@@ -122,6 +125,20 @@
         "The request uses a fixed HTTPS manifest URL and a three-second timeout.",
         "The check is rate-limited locally and fails open without blocking Clara."
       ]
+    },
+    {
+      "id": "declared-python-dependency-retrieval",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI)",
+      "purpose": "Install Clara's exact declared Python dependencies into the user-scoped Cowork plugin data directory when the fingerprinted dependency cache is absent or invalid",
+      "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The trusted SessionStart hook installs only requirements declared in the published Clara package.",
+        "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
+        "The bootstrap validates imports after installation, uses a requirements fingerprint for reuse, and fails open to file-based work."
+      ]
     }
   ],
   "security_controls": [
@@ -138,6 +155,6 @@
     "reviewed_at": "2026-07-24",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "89c9bb17018920ad1392f0115fffa06f4cfb504e273988d9e37f815d6c2912b5"
+    "source_fingerprint": "6559c1c42a1b941e3f355f23c70006fa49fa43c095b07be4dbfc87079d587eb0"
   }
 }

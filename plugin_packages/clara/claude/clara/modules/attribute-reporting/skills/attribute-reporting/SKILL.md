@@ -5,12 +5,15 @@ description: Use when a user wants Claude to run or continue the local retail sc
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Use a local script only
-when it is callable and every declared dependency is already available; never
-install packages at runtime. MCP tools, browser or computer control, and local
-review servers are optional enhancements, never completion gates. When an
-optional capability is unavailable, continue with file-based work and state the
-limitation.
+Work from the connected folder and supplied files first. Clara's trusted
+`SessionStart` hook installs the package's exact declared Python requirements
+into Clara's user-scoped plugin data directory and exposes them through
+`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
+run ad hoc package installation or install undeclared dependencies during a
+workflow. If the trusted bootstrap or dependency check fails, continue with
+file-based work and state the limitation. MCP tools, browser or computer
+control, and local review servers are optional enhancements, never completion
+gates.
 
 Do not invoke hosted voice, external interview, transcription, deck-feedback
 capture, plugin feedback, or custom update services. Do not claim
