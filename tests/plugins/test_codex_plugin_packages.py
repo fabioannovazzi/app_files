@@ -2657,6 +2657,32 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         in page
     )
     assert "data-vera-install-link" in page
+    assert 'href="downloads/vera-cowork-plugin.zip"' in page
+    assert "data-vera-cowork-download-link" in page
+    for localized_title in (
+        "Scegli dove lavorare con Vera.",
+        "Choose where to work with Vera.",
+        "Choisissez où travailler avec Vera.",
+        "Wählen Sie, wo Sie mit Vera arbeiten.",
+        "Elige dónde trabajar con Vera.",
+    ):
+        assert localized_title in page
+    for localized_chatgpt_button in (
+        "Installa per ChatGPT Work e Codex",
+        "Install for ChatGPT Work and Codex",
+        "Installer pour ChatGPT Work et Codex",
+        "Für ChatGPT Work und Codex installieren",
+        "Instalar para ChatGPT Work y Codex",
+    ):
+        assert localized_chatgpt_button in page
+    for localized_cowork_button in (
+        "Scarica per Claude Cowork",
+        "Download for Claude Cowork",
+        "Télécharger pour Claude Cowork",
+        "Für Claude Cowork herunterladen",
+        "Descargar para Claude Cowork",
+    ):
+        assert localized_cowork_button in page
     for stale_snippet in (
         "/downloads/vera",
         "data-download-link",

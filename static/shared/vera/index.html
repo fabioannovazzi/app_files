@@ -140,11 +140,12 @@
       padding-top: clamp(24px, 3vw, 32px);
       display: grid;
       grid-template-areas:
-        "copy action"
-        "video video";
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 20px clamp(32px, 7vw, 80px);
-      align-items: end;
+        "copy"
+        "action"
+        "video";
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
       border-top: 1px solid var(--cyan);
     }
 
@@ -156,11 +157,23 @@
     .hero-install__copy p { max-width: 650px; color: var(--blue); }
     .hero-install__actions {
       grid-area: action;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: flex-end;
-      gap: 12px 24px;
+      width: min(100%, 720px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+      gap: 20px;
+    }
+    .install-option {
+      display: grid;
+      align-content: start;
+      gap: 8px;
+    }
+    .install-option .button { width: 100%; }
+    .install-option__note {
+      max-width: 42ch;
+      color: var(--blue);
+      font-size: 0.82rem;
+      line-height: 1.45;
     }
     .hero-install__video {
       grid-area: video;
@@ -505,7 +518,6 @@
         grid-template-columns: 1fr;
         align-items: start;
       }
-      .hero-install__actions { justify-content: flex-start; }
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
       .assurance-sequence { grid-template-columns: 1fr; }
       .assurance-step,
@@ -530,6 +542,7 @@
         grid-template-columns: 1fr;
         padding-block: 64px 72px;
       }
+      .hero-install__actions { grid-template-columns: 1fr; }
       .vera-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
       .section-head { grid-template-columns: 1fr; gap: 20px; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
@@ -613,11 +626,18 @@
         <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
-            <h2 data-i18n="install.title">Lavora con Vera in ChatGPT, oppure vai oltre con Codex.</h2>
-            <p data-i18n="install.copy">Vera può analizzare, controllare e preparare bozze con te in ChatGPT. Codex aggiunge accesso diretto alle cartelle, file di progetto persistenti, strumenti e controlli locali e risultati durevoli. Installare Codex è facoltativo: puoi continuare in ChatGPT.</p>
+            <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
+            <p data-i18n="install.copy">Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork. In Codex e Cowork, Vera lavora dai file nella cartella di progetto e prepara risultati durevoli e rivedibili.</p>
           </div>
-          <div class="hero-install__actions">
-            <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa Vera</a>
+          <div class="hero-install__actions" role="group" aria-label="Opzioni di installazione di Vera" data-i18n-aria-label="install.actions.label">
+            <div class="install-option">
+              <a class="button" href="https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer" data-vera-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
+              <p class="install-option__note" data-i18n="install.chatgptHelp">Apre la pagina di installazione di Vera per ChatGPT Work e Codex.</p>
+            </div>
+            <div class="install-option">
+              <a class="button" href="downloads/vera-cowork-plugin.zip" download data-vera-cowork-download-link data-i18n="install.coworkButton">Scarica per Claude Cowork</a>
+              <p class="install-option__note" data-i18n="install.coworkHelp">Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.</p>
+            </div>
           </div>
           <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Da ChatGPT sul telefono a Vera o Clara in Codex" data-i18n-aria-label="install.video.title">
             <span class="overview-video__thumb" aria-hidden="true">
@@ -1018,9 +1038,13 @@
         "videos.all.copy": "Workflow generali e lavoro specifico per l’Italia, riuniti in un unico indice.",
         "videos.all.label": "Tutte le guide video di Vera",
         "videos.all.open": "Apri la guida",
-        "install.title": "Lavora con Vera in ChatGPT, oppure vai oltre con Codex.",
-        "install.copy": "Vera può analizzare, controllare e preparare bozze con te in ChatGPT. Codex aggiunge accesso diretto alle cartelle, file di progetto persistenti, strumenti e controlli locali e risultati durevoli. Installare Codex è facoltativo: puoi continuare in ChatGPT.",
-        "install.button": "Installa Vera",
+        "install.title": "Scegli dove lavorare con Vera.",
+        "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork. In Codex e Cowork, Vera lavora dai file nella cartella di progetto e prepara risultati durevoli e rivedibili.",
+        "install.actions.label": "Opzioni di installazione di Vera",
+        "install.button": "Installa per ChatGPT Work e Codex",
+        "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
+        "install.coworkButton": "Scarica per Claude Cowork",
+        "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
         "install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
         "footer.product": "Vera · Codex per commercialisti",
         "footer.linksLabel": "Informazioni",
@@ -1121,9 +1145,13 @@
         "videos.all.copy": "General workflows and the UK client-file preparation available from this page.",
         "videos.all.label": "All Vera video guides",
         "videos.all.open": "Open guide",
-        "install.title": "Work with Vera in ChatGPT—or go further with Codex.",
-        "install.copy": "Vera can analyze, check, and draft with you in ChatGPT. Codex adds direct folder access, persistent project files, local tools and checks, and durable deliverables. Installing Codex is optional: you can continue in ChatGPT.",
-        "install.button": "Install Vera",
+        "install.title": "Choose where to work with Vera.",
+        "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork. In Codex and Cowork, Vera works from the files in your project folder and prepares durable, reviewable outputs.",
+        "install.actions.label": "Vera installation options",
+        "install.button": "Install for ChatGPT Work and Codex",
+        "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
+        "install.coworkButton": "Download for Claude Cowork",
+        "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
         "install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
         "footer.product": "Vera · Codex for accountants",
         "footer.linksLabel": "Information",
@@ -1224,9 +1252,13 @@
         "videos.all.copy": "Les workflows généraux et la préparation des dossiers genevois disponibles depuis cette page.",
         "videos.all.label": "Tous les guides vidéo de Vera",
         "videos.all.open": "Ouvrir le guide",
-        "install.title": "Travaillez avec Vera dans ChatGPT, ou allez plus loin avec Codex.",
-        "install.copy": "Vera peut analyser, contrôler et rédiger avec vous dans ChatGPT. Codex ajoute l’accès direct aux dossiers, des fichiers de projet persistants, des outils et contrôles locaux et des livrables durables. L’installation de Codex reste facultative : vous pouvez continuer dans ChatGPT.",
-        "install.button": "Installer Vera",
+        "install.title": "Choisissez où travailler avec Vera.",
+        "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork. Dans Codex et Cowork, Vera travaille à partir des fichiers du dossier de projet et prépare des résultats durables et révisables.",
+        "install.actions.label": "Options d’installation de Vera",
+        "install.button": "Installer pour ChatGPT Work et Codex",
+        "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
+        "install.coworkButton": "Télécharger pour Claude Cowork",
+        "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
         "install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
         "footer.product": "Vera · Codex pour les experts-comptables",
         "footer.linksLabel": "Informations",
@@ -1327,9 +1359,13 @@
         "videos.all.copy": "Allgemeine Workflows und die Vorbereitung von Zürcher Steuerakten auf dieser Seite.",
         "videos.all.label": "Alle Vera-Videoanleitungen",
         "videos.all.open": "Anleitung öffnen",
-        "install.title": "Arbeiten Sie mit Vera in ChatGPT oder gehen Sie mit Codex weiter.",
-        "install.copy": "Vera kann mit Ihnen in ChatGPT analysieren, prüfen und entwerfen. Codex ergänzt direkten Ordnerzugriff, dauerhafte Projektdateien, lokale Werkzeuge und Prüfungen sowie beständige Ergebnisse. Die Installation von Codex ist optional: Sie können in ChatGPT fortfahren.",
-        "install.button": "Vera installieren",
+        "install.title": "Wählen Sie, wo Sie mit Vera arbeiten.",
+        "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter. In Codex und Cowork arbeitet Vera mit den Dateien im Projektordner und erstellt dauerhafte, prüfbare Ergebnisse.",
+        "install.actions.label": "Installationsoptionen für Vera",
+        "install.button": "Für ChatGPT Work und Codex installieren",
+        "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
+        "install.coworkButton": "Für Claude Cowork herunterladen",
+        "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
         "install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
         "footer.product": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "footer.linksLabel": "Informationen",
@@ -1430,9 +1466,13 @@
         "videos.all.copy": "Las guías publicadas con narración en español se reúnen en este índice.",
         "videos.all.label": "Todas las guías en vídeo de Vera",
         "videos.all.open": "Abrir la guía",
-        "install.title": "Trabaja con Vera en ChatGPT o ve más lejos con Codex.",
-        "install.copy": "Vera puede analizar, comprobar y redactar contigo en ChatGPT. Codex añade acceso directo a carpetas, archivos de proyecto persistentes, herramientas y controles locales y entregables duraderos. Instalar Codex es opcional: puedes continuar en ChatGPT.",
-        "install.button": "Instalar Vera",
+        "install.title": "Elige dónde trabajar con Vera.",
+        "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork. En Codex y Cowork, Vera trabaja con los archivos de la carpeta del proyecto y prepara resultados duraderos y revisables.",
+        "install.actions.label": "Opciones de instalación de Vera",
+        "install.button": "Instalar para ChatGPT Work y Codex",
+        "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
+        "install.coworkButton": "Descargar para Claude Cowork",
+        "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
         "install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
         "footer.product": "Vera · Codex para asesores fiscales y contables",
         "footer.linksLabel": "Información",
