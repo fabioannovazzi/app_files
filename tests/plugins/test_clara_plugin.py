@@ -64,7 +64,7 @@ def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
     assert 'hreflang="x-default"' in page
     assert 'const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);' in page
     assert 'es: "es_ES"' in page
-    assert '"hero.eyebrow": "Clara · Codex para consultores"' in page
+    assert '"hero.eyebrow": "AI companion para consultores"' in page
     assert '"hero.title": "Clara"' in page
     assert "Clara trabaja contigo en ChatGPT Work y Codex o en Claude Cowork." in page
     assert "Clara prepara el trabajo. El criterio sigue siendo tuyo." not in page
