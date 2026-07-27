@@ -2969,7 +2969,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "A method for each profession.",
+            "title": "Plugins by design.",
             "description": (
                 "Mparanza is Vera and Clara: two plugins that bring specialist methods "
                 "to two different professions."
@@ -3155,7 +3155,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Un metodo per ogni professione.",
+            "title": "Plugin per scelta.",
             "description": (
                 "Mparanza è Vera e Clara: due plugin che incorporano metodi specialistici "
                 "per due professioni diverse."
@@ -3346,7 +3346,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Une méthode pour chaque métier.",
+            "title": "Plugins par conception.",
             "description": (
                 "Mparanza, c'est Vera et Clara : deux plugins qui intègrent des méthodes "
                 "spécialisées pour deux métiers différents."
@@ -3537,7 +3537,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Eine Methode für jede Profession.",
+            "title": "Als Plugins konzipiert.",
             "description": (
                 "Mparanza, das sind Vera und Clara: zwei Plugins mit fachlichen Methoden "
                 "für zwei unterschiedliche Berufsgruppen."
@@ -3749,7 +3749,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         },
         "bridge": {
             "id": "plugins",
-            "title": "Un método para cada profesión.",
+            "title": "Plugins por diseño.",
             "description": (
                 "Mparanza es Vera y Clara: dos plugins que incorporan métodos "
                 "especializados para dos profesiones distintas."
