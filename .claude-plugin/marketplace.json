@@ -39,7 +39,40 @@
         "cowork"
       ],
       "strict": true
+    },
+    {
+      "name": "clara",
+      "displayName": "Clara",
+      "source": "./plugin_packages/clara/claude/clara",
+      "description": "AI companion for consultants. Clara organizes evidence, analyzes business data, and prepares reviewable advisory work, reports, and presentations.",
+      "version": "0.1.118",
+      "author": {
+        "name": "Mparanza",
+        "email": "hello@mparanza.com",
+        "url": "https://mparanza.com"
+      },
+      "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",
+      "repository": "https://github.com/fabioannovazzi/app_files",
+      "license": "AGPL-3.0-only",
+      "keywords": [
+        "clara",
+        "consulting",
+        "advisory",
+        "commercial-due-diligence",
+        "evidence",
+        "presentations",
+        "reporting",
+        "data-analysis"
+      ],
+      "category": "productivity",
+      "tags": [
+        "consulting",
+        "advisory",
+        "commercial-due-diligence",
+        "reporting",
+        "cowork"
+      ],
+      "strict": true
     }
-  ],
-  "version": "0.1.50"
+  ]
 }

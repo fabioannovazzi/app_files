@@ -1,0 +1,25 @@
+Date,Brand,Category,Region,SKU,Stage,Rank,Sales,Units,Share,MarginRate,SetName,StatementLine,funnel_stage,stage_start_count,stage_pass_count,statement_line,statement_value
+2025-01-01,Alpha,Color,North,Alpha-Color,Awareness,1,110.0,11,0.4,0.21,North,Revenue,Awareness,110,77,Revenue,110.0
+2025-01-01,Beta,Care,South,Beta-Care,Awareness,1,110.0,11,0.6,0.21,South,Revenue,Awareness,110,77,Revenue,110.0
+2025-02-01,Alpha,Color,North,Alpha-Color,Awareness,2,120.0,12,0.4,0.22,North,Revenue,Awareness,120,84,Gross profit,120.0
+2025-02-01,Beta,Care,South,Beta-Care,Awareness,2,120.0,12,0.6,0.22,South,Revenue,Awareness,120,84,Gross profit,120.0
+2025-03-01,Alpha,Color,North,Alpha-Color,Purchase,3,130.0,13,0.4,0.23,North,Revenue,Consideration,130,91,Operating expense,130.0
+2025-03-01,Beta,Care,South,Beta-Care,Purchase,3,130.0,13,0.6,0.23,South,Revenue,Consideration,130,91,Operating expense,130.0
+2025-04-01,Alpha,Color,North,Alpha-Color,Purchase,4,140.0,14,0.4,0.24,North,Revenue,Consideration,140,98,Gross profit,140.0
+2025-04-01,Beta,Care,South,Beta-Care,Purchase,4,140.0,14,0.6,0.24,South,Revenue,Consideration,140,98,Gross profit,140.0
+2025-05-01,Alpha,Color,North,Alpha-Color,Purchase,5,150.0,15,0.4,0.25,North,Revenue,Purchase,150,105,Revenue,150.0
+2025-05-01,Beta,Care,South,Beta-Care,Purchase,5,150.0,15,0.6,0.25,South,Revenue,Purchase,150,105,Revenue,150.0
+2025-06-01,Alpha,Color,North,Alpha-Color,Purchase,6,160.0,16,0.4,0.26,North,Revenue,Purchase,160,112,Operating expense,160.0
+2025-06-01,Beta,Care,South,Beta-Care,Purchase,6,160.0,16,0.6,0.26,South,Revenue,Purchase,160,112,Operating expense,160.0
+2026-01-01,Alpha,Color,North,Alpha-Color,Awareness,1,125.0,11,0.4,0.21,North,Revenue,Awareness,110,77,Revenue,125.0
+2026-01-01,Beta,Care,South,Beta-Care,Awareness,1,125.0,11,0.6,0.21,South,Revenue,Awareness,110,77,Revenue,125.0
+2026-02-01,Alpha,Color,North,Alpha-Color,Awareness,2,135.0,12,0.4,0.22,North,Revenue,Awareness,120,84,Gross profit,135.0
+2026-02-01,Beta,Care,South,Beta-Care,Awareness,2,135.0,12,0.6,0.22,South,Revenue,Awareness,120,84,Gross profit,135.0
+2026-03-01,Alpha,Color,North,Alpha-Color,Purchase,3,145.0,13,0.4,0.23,North,Revenue,Consideration,130,91,Operating expense,145.0
+2026-03-01,Beta,Care,South,Beta-Care,Purchase,3,145.0,13,0.6,0.23,South,Revenue,Consideration,130,91,Operating expense,145.0
+2026-04-01,Alpha,Color,North,Alpha-Color,Purchase,4,155.0,14,0.4,0.24,North,Revenue,Consideration,140,98,Gross profit,155.0
+2026-04-01,Beta,Care,South,Beta-Care,Purchase,4,155.0,14,0.6,0.24,South,Revenue,Consideration,140,98,Gross profit,155.0
+2026-05-01,Alpha,Color,North,Alpha-Color,Purchase,5,165.0,15,0.4,0.25,North,Revenue,Purchase,150,105,Revenue,165.0
+2026-05-01,Beta,Care,South,Beta-Care,Purchase,5,165.0,15,0.6,0.25,South,Revenue,Purchase,150,105,Revenue,165.0
+2026-06-01,Alpha,Color,North,Alpha-Color,Purchase,6,175.0,16,0.4,0.26,North,Revenue,Purchase,160,112,Operating expense,175.0
+2026-06-01,Beta,Care,South,Beta-Care,Purchase,6,175.0,16,0.6,0.26,South,Revenue,Purchase,160,112,Operating expense,175.0

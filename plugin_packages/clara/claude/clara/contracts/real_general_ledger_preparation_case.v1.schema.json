@@ -1,0 +1,290 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-general-ledger-preparation-case-v1.json",
+  "title": "Clara real general-ledger preparation case",
+  "description": "A reviewer-owned, hash-bound case contract for mechanically aggregating one declared commercial general ledger. It preserves normalized source-account-code identity only and does not perform statement mapping, interpretation, plotting, reporting, or publication.",
+  "$comment": "This schema validates portable structure and the frozen pilot decisions. run_real_general_ledger_pilot is authoritative for exact file hashes, receipt replay, Decimal controls, movement uniqueness, reviewed-year containment, and output closure.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "execution_id",
+    "case_status",
+    "reviewer_role",
+    "source",
+    "bindings",
+    "reviewed_period",
+    "reviewed_decisions",
+    "reported_controls",
+    "publication_status",
+    "report_ready"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_general_ledger_preparation_case.v1"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "execution_id": {
+      "$ref": "#/$defs/execution_id"
+    },
+    "case_status": {
+      "const": "reviewed"
+    },
+    "reviewer_role": {
+      "$ref": "#/$defs/canonical_text"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "declared_data_kind"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "declared_data_kind": {
+          "const": "commercial_general_ledger"
+        }
+      }
+    },
+    "bindings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_sha256",
+        "intake_receipt_sha256",
+        "semantic_review_receipt_sha256",
+        "semantic_decisions_sha256",
+        "parser_layout_sha256",
+        "parser_adapter_implementation_sha256",
+        "parser_implementation_sha256"
+      ],
+      "properties": {
+        "source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_review_receipt_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_decisions_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "parser_layout_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "parser_adapter_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "parser_implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "reviewed_period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "year"
+      ],
+      "properties": {
+        "year": {
+          "type": "integer",
+          "minimum": 1900,
+          "maximum": 2200
+        }
+      }
+    },
+    "reviewed_decisions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "account_identity",
+        "period",
+        "scope",
+        "currency_unit_fx",
+        "sign_convention",
+        "control_basis",
+        "tolerance",
+        "output_grain"
+      ],
+      "properties": {
+        "account_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "normalization",
+            "statement_mapping"
+          ],
+          "properties": {
+            "basis": {
+              "const": "source_account_code"
+            },
+            "normalization": {
+              "const": "remove_whitespace_within_reviewed_account_code"
+            },
+            "statement_mapping": {
+              "const": "not_performed"
+            }
+          }
+        },
+        "period": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "basis",
+            "calendar",
+            "grain",
+            "date_assignment"
+          ],
+          "properties": {
+            "basis": {
+              "const": "posting_date"
+            },
+            "calendar": {
+              "const": "gregorian"
+            },
+            "grain": {
+              "const": "calendar_month"
+            },
+            "date_assignment": {
+              "const": "nondecreasing_carried_forward_posting_date"
+            }
+          }
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dataset",
+            "eliminations",
+            "entity_basis",
+            "consolidation_status"
+          ],
+          "properties": {
+            "dataset": {
+              "const": "one_source_presented_export"
+            },
+            "eliminations": {
+              "const": "none_applied"
+            },
+            "entity_basis": {
+              "const": "export_level_source_scope_not_emitted"
+            },
+            "consolidation_status": {
+              "const": "not_assessed"
+            }
+          }
+        },
+        "currency_unit_fx": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "fx",
+            "currency"
+          ],
+          "properties": {
+            "unit": {
+              "const": "source_native_unit"
+            },
+            "fx": {
+              "const": "none"
+            },
+            "currency": {
+              "const": "not_asserted"
+            }
+          }
+        },
+        "sign_convention": {
+          "const": "debit_positive_credit_negative"
+        },
+        "control_basis": {
+          "const": "exact_extracted_final_debit_and_credit_controls"
+        },
+        "tolerance": {
+          "const": "0"
+        },
+        "output_grain": {
+          "const": "source_account_x_calendar_month"
+        }
+      }
+    },
+    "reported_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "debit",
+        "credit",
+        "journal_balance_required",
+        "monthly_balance_required",
+        "expected_calendar_months"
+      ],
+      "properties": {
+        "debit": {
+          "$ref": "#/$defs/nonnegative_decimal"
+        },
+        "credit": {
+          "$ref": "#/$defs/nonnegative_decimal"
+        },
+        "journal_balance_required": {
+          "const": true
+        },
+        "monthly_balance_required": {
+          "const": true
+        },
+        "expected_calendar_months": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 12,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-(?:0[1-9]|1[0-2])$(?![\\s\\S])"
+          }
+        }
+      }
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "report_ready": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "canonical_text": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\s)(?:[\\s\\S]*\\S)$"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^execution-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "nonnegative_decimal": {
+      "type": "string",
+      "pattern": "^(?:0|[1-9][0-9]*)(?:\\.[0-9]*[1-9])?$(?![\\s\\S])"
+    }
+  }
+}

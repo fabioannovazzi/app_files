@@ -1,0 +1,363 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-intake-v1.json",
+  "title": "Clara real-data pilot intake",
+  "description": "A developer-pilot declaration binding one exact commercial trial-balance file to a reviewed reuse purpose and fixed local/privacy/publication boundaries. Structural validation does not prove authorizer authority, legal permission, anonymization sufficiency, or accounting semantics.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "purpose",
+    "source",
+    "authorization",
+    "privacy",
+    "deidentification_review",
+    "semantic_review_plan",
+    "publication_status",
+    "report_ready"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_intake.v1"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "purpose": {
+      "const": "local_due_diligence_preparation_evaluation"
+    },
+    "source": {
+      "$ref": "#/$defs/source"
+    },
+    "authorization": {
+      "$ref": "#/$defs/authorization"
+    },
+    "privacy": {
+      "$ref": "#/$defs/privacy"
+    },
+    "deidentification_review": {
+      "$ref": "#/$defs/deidentification_review"
+    },
+    "semantic_review_plan": {
+      "$ref": "#/$defs/semantic_review_plan"
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "report_ready": {
+      "const": false
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "properties": {
+              "data_classification": {
+                "const": "anonymized_real"
+              }
+            },
+            "required": [
+              "data_classification"
+            ]
+          }
+        },
+        "required": [
+          "source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "deidentification_review": {
+            "properties": {
+              "status": {
+                "const": "reviewed"
+              },
+              "reidentification_risk_review_status": {
+                "const": "reviewed"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "source": {
+            "properties": {
+              "data_classification": {
+                "const": "consented_real"
+              }
+            },
+            "required": [
+              "data_classification"
+            ]
+          }
+        },
+        "required": [
+          "source"
+        ]
+      },
+      "then": {
+        "properties": {
+          "deidentification_review": {
+            "oneOf": [
+              {
+                "properties": {
+                  "status": {
+                    "const": "not_applicable"
+                  },
+                  "reidentification_risk_review_status": {
+                    "const": "not_applicable"
+                  }
+                }
+              },
+              {
+                "properties": {
+                  "status": {
+                    "const": "reviewed"
+                  },
+                  "reidentification_risk_review_status": {
+                    "const": "reviewed"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "source_id": {
+      "type": "string",
+      "pattern": "^source-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "nonblank_text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "date_or_null": {
+      "oneOf": [
+        {
+          "type": "string",
+          "format": "date"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "data_kind",
+        "data_classification",
+        "media_type",
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/source_id"
+        },
+        "data_kind": {
+          "const": "commercial_trial_balance"
+        },
+        "data_classification": {
+          "enum": [
+            "anonymized_real",
+            "consented_real"
+          ]
+        },
+        "media_type": {
+          "enum": [
+            "application/vnd.ms-excel",
+            "application/vnd.oasis.opendocument.spreadsheet",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "text/csv"
+          ]
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "authorization": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "authority_assertion",
+        "evidence_reference",
+        "authorizing_role",
+        "authorized_on",
+        "valid_from",
+        "valid_until",
+        "purpose",
+        "authorized_source_sha256",
+        "permitted_actions",
+        "prohibited_actions",
+        "terms_summary"
+      ],
+      "properties": {
+        "status": {
+          "const": "reviewed"
+        },
+        "basis": {
+          "enum": [
+            "explicit_authorized_user_instruction",
+            "public_owner_license",
+            "written_data_owner_permission"
+          ]
+        },
+        "authority_assertion": {
+          "const": "authorizer_has_right_to_permit_this_use"
+        },
+        "evidence_reference": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "authorizing_role": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "authorized_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "valid_from": {
+          "type": "string",
+          "format": "date"
+        },
+        "valid_until": {
+          "$ref": "#/$defs/date_or_null"
+        },
+        "purpose": {
+          "const": "local_due_diligence_preparation_evaluation"
+        },
+        "authorized_source_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "permitted_actions": {
+          "const": [
+            "codex_model_processing",
+            "local_deterministic_processing"
+          ]
+        },
+        "prohibited_actions": {
+          "const": [
+            "commit_raw_or_row_level_data",
+            "package_raw_or_row_level_data",
+            "publish_raw_or_row_level_data"
+          ]
+        },
+        "terms_summary": {
+          "$ref": "#/$defs/nonblank_text"
+        }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "codex_context_acknowledged",
+        "automatic_anonymization_claimed",
+        "clara_external_recipient_added",
+        "raw_and_row_level_storage",
+        "repository_recording_policy"
+      ],
+      "properties": {
+        "codex_context_acknowledged": {
+          "const": true
+        },
+        "automatic_anonymization_claimed": {
+          "const": false
+        },
+        "clara_external_recipient_added": {
+          "const": false
+        },
+        "raw_and_row_level_storage": {
+          "const": "local_run_root_only"
+        },
+        "repository_recording_policy": {
+          "const": "sanitized_summary_and_receipts_only"
+        }
+      }
+    },
+    "deidentification_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "reidentification_risk_review_status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_applicable",
+            "reviewed"
+          ]
+        },
+        "basis": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "reidentification_risk_review_status": {
+          "enum": [
+            "not_applicable",
+            "reviewed"
+          ]
+        }
+      }
+    },
+    "semantic_review_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "required_reviews",
+        "automatic_mapping_allowed",
+        "unresolved_blocking_issues_block_preparation"
+      ],
+      "properties": {
+        "status": {
+          "const": "pending"
+        },
+        "required_reviews": {
+          "const": [
+            "account_mapping",
+            "control_equivalence_and_tolerance",
+            "currency_unit_and_fx",
+            "dataset_identity_and_grain",
+            "period_calendar_and_value_basis",
+            "scope_entity_and_eliminations",
+            "sign_convention"
+          ]
+        },
+        "automatic_mapping_allowed": {
+          "const": false
+        },
+        "unresolved_blocking_issues_block_preparation": {
+          "const": true
+        }
+      }
+    }
+  }
+}

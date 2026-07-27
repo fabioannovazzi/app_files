@@ -243,7 +243,7 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert common_ids <= clara_services.keys()
 
     vera_update_boundaries = vera_services["plugin-update-check"][
-        "boundaries_beyond_codex"
+        "external_boundaries"
     ]
     clara_update_payloads = clara_services["plugin-update-check"]["data_sent"]
     assert [boundary["id"] for boundary in vera_update_boundaries] == [
@@ -256,7 +256,7 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert "HTTPS GET" in clara_update_payloads[0]["content"]
 
     vera_feedback_boundaries = vera_services["plugin-feedback"][
-        "boundaries_beyond_codex"
+        "external_boundaries"
     ]
     clara_feedback_payloads = clara_services["plugin-feedback"]["data_sent"]
     assert any(

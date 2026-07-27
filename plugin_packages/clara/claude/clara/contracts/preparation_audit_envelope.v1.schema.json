@@ -1,0 +1,1069 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/preparation-audit-envelope-v1.json",
+  "title": "Clara preparation audit envelope",
+  "description": "Audit-only normalization of mechanically verifiable preparation evidence. This contract records receipts, reviewed-decision content without interpreting it, exact numeric handling, reconciliation outcomes, and declared lineage. It does not define financial formulas, crosswalk rows, dataset relationships, semantic selection, an orchestrator, or establish report readiness.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "case",
+    "adapter",
+    "local_artifacts",
+    "remote_sources",
+    "reviewed_decisions",
+    "execution",
+    "numeric_policy",
+    "reconciliation",
+    "lineage",
+    "statuses",
+    "report_ready",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.preparation_audit_envelope.v1"
+    },
+    "case": {
+      "$ref": "#/$defs/case"
+    },
+    "adapter": {
+      "$ref": "#/$defs/adapter"
+    },
+    "local_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/local_artifact_receipt"
+      }
+    },
+    "remote_sources": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/remote_source_receipt"
+      }
+    },
+    "reviewed_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/reviewed_decision_receipt"
+      }
+    },
+    "execution": {
+      "$ref": "#/$defs/execution"
+    },
+    "numeric_policy": {
+      "$ref": "#/$defs/numeric_policy"
+    },
+    "reconciliation": {
+      "$ref": "#/$defs/reconciliation"
+    },
+    "lineage": {
+      "$ref": "#/$defs/lineage"
+    },
+    "statuses": {
+      "$ref": "#/$defs/statuses"
+    },
+    "report_ready": {
+      "const": false,
+      "description": "This audit envelope cannot establish report readiness; downstream interpretation and reporting remain separate."
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/limitation"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "statuses": {
+            "properties": {
+              "reconciliation": {
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              }
+            },
+            "required": [
+              "reconciliation"
+            ]
+          }
+        },
+        "required": [
+          "statuses"
+        ]
+      },
+      "then": {
+        "properties": {
+          "reconciliation": {
+            "properties": {
+              "checks": {
+                "items": {
+                  "properties": {
+                    "status": {
+                      "const": "passed"
+                    }
+                  }
+                }
+              },
+              "errors": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relative_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[^\\r\\n]+$"
+    },
+    "canonical_decimal": {
+      "type": "string",
+      "pattern": "^(?:0|-?[1-9][0-9]*|-?(?:0|[1-9][0-9]*)\\.[0-9]*[1-9])$"
+    },
+    "positive_canonical_decimal": {
+      "type": "string",
+      "pattern": "^(?:[1-9][0-9]*|(?:0|[1-9][0-9]*)\\.[0-9]*[1-9])$"
+    },
+    "id_array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "string_array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "case_kind",
+        "source_schema_version",
+        "case_artifact_ref"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/id"
+        },
+        "case_kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Case-owned label; the audit contract does not interpret or classify it."
+        },
+        "source_schema_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_artifact_ref": {
+          "$ref": "#/$defs/id"
+        }
+      }
+    },
+    "adapter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_id",
+        "adapter_version",
+        "implementation_sha256",
+        "normalization_scope"
+      ],
+      "properties": {
+        "adapter_id": {
+          "$ref": "#/$defs/id"
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalization_scope": {
+          "const": "audit_only"
+        }
+      }
+    },
+    "local_artifact_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "role",
+        "path",
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/id"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Case-owned artifact role with no financial meaning assigned by this contract."
+        },
+        "path": {
+          "$ref": "#/$defs/relative_path"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "media_type": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "remote_source_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "title",
+        "document_type",
+        "url",
+        "byte_count",
+        "sha256",
+        "receipt_scope"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/id"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document_type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "document_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "receipt_scope": {
+          "const": "declared_remote_receipt",
+          "description": "The receipt records declared metadata and does not by itself authenticate current remote content."
+        },
+        "metadata": {
+          "description": "Optional case-owned metadata preserved without semantic interpretation."
+        }
+      }
+    },
+    "reference_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_refs",
+        "source_refs",
+        "decision_refs",
+        "lineage_refs"
+      ],
+      "properties": {
+        "artifact_refs": {
+          "$ref": "#/$defs/id_array"
+        },
+        "source_refs": {
+          "$ref": "#/$defs/id_array"
+        },
+        "decision_refs": {
+          "$ref": "#/$defs/id_array"
+        },
+        "lineage_refs": {
+          "$ref": "#/$defs/id_array"
+        }
+      },
+      "anyOf": [
+        {
+          "properties": {
+            "artifact_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "source_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "decision_refs": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "lineage_refs": {
+              "minItems": 1
+            }
+          }
+        }
+      ]
+    },
+    "reviewed_decision_receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision_id",
+        "decision_kind",
+        "status",
+        "basis",
+        "content",
+        "content_digest_basis",
+        "content_sha256",
+        "evidence_refs"
+      ],
+      "properties": {
+        "decision_id": {
+          "$ref": "#/$defs/id"
+        },
+        "decision_kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Case-owned decision label; no decision taxonomy is imposed."
+        },
+        "status": {
+          "const": "reviewed"
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Optional because this receipt does not establish reviewer identity or authorization."
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content": {
+          "description": "Decision content retained as JSON and deliberately not interpreted by the audit contract."
+        },
+        "content_digest_basis": {
+          "const": "canonical_json_utf8"
+        },
+        "content_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_id",
+        "producer",
+        "producer_version",
+        "producer_sha256",
+        "mode",
+        "input_artifact_refs",
+        "output_artifact_refs"
+      ],
+      "properties": {
+        "execution_id": {
+          "$ref": "#/$defs/id"
+        },
+        "producer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "producer_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mode": {
+          "const": "deterministic_mechanical",
+          "description": "Fixed execution is justified here by reproducibility and mechanically verifiable auditability, not by semantic authority."
+        },
+        "input_artifact_refs": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/id_array"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        },
+        "output_artifact_refs": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/id_array"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        }
+      }
+    },
+    "numeric_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "representation",
+        "finite_only",
+        "binary_float_allowed",
+        "exponent_notation_allowed",
+        "canonical_serialization_required",
+        "case_constraints",
+        "case_constraints_sha256"
+      ],
+      "properties": {
+        "representation": {
+          "const": "decimal_string"
+        },
+        "finite_only": {
+          "const": true
+        },
+        "binary_float_allowed": {
+          "const": false
+        },
+        "exponent_notation_allowed": {
+          "const": false
+        },
+        "canonical_serialization_required": {
+          "const": true
+        },
+        "case_constraints": {
+          "description": "Case-owned precision, scale, increment, and comparison constraints preserved without imposing a universal financial rule."
+        },
+        "case_constraints_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "numeric_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value",
+        "unit"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {
+          "$ref": "#/$defs/canonical_decimal"
+        },
+        "unit": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reported_increment": {
+          "$ref": "#/$defs/positive_canonical_decimal"
+        }
+      }
+    },
+    "reconciliation_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "check_kind",
+        "required",
+        "status",
+        "references",
+        "numeric_evidence",
+        "details"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "#/$defs/id"
+        },
+        "check_kind": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Case-owned check label; no formula or assertion language is defined."
+        },
+        "required": {
+          "const": true
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "not_run"
+          ]
+        },
+        "references": {
+          "$ref": "#/$defs/reference_set"
+        },
+        "numeric_evidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/numeric_evidence"
+          }
+        },
+        "details": {
+          "description": "Optional check payload represented as uninterpreted JSON."
+        }
+      }
+    },
+    "reconciliation_error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "error_id",
+        "code",
+        "message",
+        "references",
+        "details"
+      ],
+      "properties": {
+        "error_id": {
+          "$ref": "#/$defs/id"
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "references": {
+          "$ref": "#/$defs/reference_set"
+        },
+        "details": {
+          "description": "Error-specific payload represented as uninterpreted JSON."
+        }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checks",
+        "errors"
+      ],
+      "properties": {
+        "checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reconciliation_check"
+          }
+        },
+        "errors": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/reconciliation_error"
+          }
+        }
+      }
+    },
+    "artifact_lineage_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineage_id",
+        "artifact_ref",
+        "references",
+        "details"
+      ],
+      "properties": {
+        "lineage_id": {
+          "$ref": "#/$defs/id"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "references": {
+          "$ref": "#/$defs/reference_set"
+        },
+        "details": {
+          "description": "Artifact-level provenance details preserved without interpreting relationships."
+        }
+      }
+    },
+    "aggregate_lineage_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineage_id",
+        "aggregate_id",
+        "output_artifact_ref",
+        "evidence_artifact_ref",
+        "evidence_json_pointer",
+        "aggregate_id_json_pointer",
+        "output_artifact_id_json_pointer",
+        "output_sha256_json_pointer",
+        "evidence_sha256",
+        "references",
+        "details"
+      ],
+      "properties": {
+        "lineage_id": {
+          "$ref": "#/$defs/id"
+        },
+        "aggregate_id": {
+          "$ref": "#/$defs/id"
+        },
+        "output_artifact_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "evidence_artifact_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "evidence_json_pointer": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "aggregate_id_json_pointer": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "output_artifact_id_json_pointer": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "output_sha256_json_pointer": {
+          "type": "string",
+          "pattern": "^(?:/(?:[^~/]|~[01])*)*$"
+        },
+        "evidence_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "references": {
+          "$ref": "#/$defs/reference_set"
+        },
+        "details": {
+          "description": "Adapter-declared aggregate metadata preserved without asserting semantic correctness or row-level derivation."
+        }
+      }
+    },
+    "row_lineage_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lineage_id",
+        "row_id",
+        "artifact_ref",
+        "references",
+        "details"
+      ],
+      "properties": {
+        "lineage_id": {
+          "$ref": "#/$defs/id"
+        },
+        "row_id": {
+          "$ref": "#/$defs/id"
+        },
+        "artifact_ref": {
+          "$ref": "#/$defs/id"
+        },
+        "references": {
+          "$ref": "#/$defs/reference_set"
+        },
+        "details": {
+          "description": "Row provenance details preserved without asserting cell-level lineage."
+        }
+      }
+    },
+    "artifact_lineage_level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared",
+        "records",
+        "limitations"
+      ],
+      "properties": {
+        "declared": {
+          "const": true
+        },
+        "records": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/artifact_lineage_record"
+          }
+        },
+        "limitations": {
+          "$ref": "#/$defs/string_array"
+        }
+      }
+    },
+    "aggregate_lineage_level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared",
+        "records",
+        "limitations"
+      ],
+      "properties": {
+        "declared": {
+          "type": "boolean"
+        },
+        "records": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/aggregate_lineage_record"
+          }
+        },
+        "limitations": {
+          "$ref": "#/$defs/string_array"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "declared": {
+                "const": true
+              }
+            },
+            "required": [
+              "declared"
+            ]
+          },
+          "then": {
+            "properties": {
+              "records": {
+                "minItems": 1
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "records": {
+                "maxItems": 0
+              },
+              "limitations": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "row_lineage_level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "declared",
+        "records",
+        "limitations"
+      ],
+      "properties": {
+        "declared": {
+          "const": false,
+          "description": "Row lineage is not established by the two M3 fixtures and cannot be claimed by this v1 envelope."
+        },
+        "records": {
+          "type": "array",
+          "maxItems": 0,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/row_lineage_record"
+          }
+        },
+        "limitations": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/string_array"
+            },
+            {
+              "minItems": 1
+            }
+          ]
+        }
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "aggregate",
+        "row"
+      ],
+      "properties": {
+        "artifact": {
+          "$ref": "#/$defs/artifact_lineage_level"
+        },
+        "aggregate": {
+          "$ref": "#/$defs/aggregate_lineage_level"
+        },
+        "row": {
+          "$ref": "#/$defs/row_lineage_level"
+        }
+      }
+    },
+    "mechanical_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_assessed",
+            "passed",
+            "failed",
+            "blocked"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "semantic_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "status": {
+          "const": "not_assessed"
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "source_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_assessed",
+            "receipt_only",
+            "failed",
+            "blocked"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "downstream_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "status": {
+          "const": "not_assessed"
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "publication_status": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_assessed",
+            "withheld",
+            "failed",
+            "blocked"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    },
+    "statuses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validation",
+        "preparation",
+        "reconciliation",
+        "semantic",
+        "source",
+        "downstream",
+        "publication"
+      ],
+      "properties": {
+        "validation": {
+          "$ref": "#/$defs/mechanical_status"
+        },
+        "preparation": {
+          "$ref": "#/$defs/mechanical_status"
+        },
+        "reconciliation": {
+          "$ref": "#/$defs/mechanical_status"
+        },
+        "semantic": {
+          "$ref": "#/$defs/semantic_status"
+        },
+        "source": {
+          "$ref": "#/$defs/source_status"
+        },
+        "downstream": {
+          "$ref": "#/$defs/downstream_status"
+        },
+        "publication": {
+          "$ref": "#/$defs/publication_status"
+        }
+      }
+    },
+    "limitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "limitation_id",
+        "scope",
+        "statement"
+      ],
+      "properties": {
+        "limitation_id": {
+          "$ref": "#/$defs/id"
+        },
+        "scope": {
+          "enum": [
+            "case",
+            "adapter",
+            "source",
+            "validation",
+            "preparation",
+            "numeric",
+            "reconciliation",
+            "semantic",
+            "lineage",
+            "downstream",
+            "publication"
+          ]
+        },
+        "statement": {
+          "type": "string",
+          "minLength": 1
+        },
+        "related_refs": {
+          "$ref": "#/$defs/reference_set"
+        }
+      }
+    }
+  }
+}

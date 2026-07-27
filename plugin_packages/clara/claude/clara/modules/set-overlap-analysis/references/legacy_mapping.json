@@ -1,0 +1,32 @@
+{
+  "plugin": "set-overlap-analysis",
+  "scope": "Venn and UpSet set-overlap chart family only",
+  "mapped_legacy_functions": [
+    {
+      "legacy_function": "modules.charting.upset_helpers.build_upset_matrix",
+      "plugin_usage": "Builds the boolean item-by-set membership matrix for UpSet rendering."
+    },
+    {
+      "legacy_function": "modules.charting.upset_plot.plot_upset",
+      "plugin_usage": "Renders the UpSet bar chart from the boolean membership matrix."
+    },
+    {
+      "legacy_function": "modules.data.misc_charts_data_prep.prepare_data_for_venn_plot",
+      "plugin_usage": "Same semantics: set names map to unique item sets."
+    },
+    {
+      "legacy_function": "modules.charting.draw_venn_upset.draw_venn_chart",
+      "plugin_usage": "Same limitation: Venn is only rendered for two or three sets."
+    }
+  ],
+  "not_used": [
+    {
+      "legacy_path": "modules.charting.draw_venn_upset.organize_venn_chart",
+      "reason": "UI-oriented Streamlit orchestration path. The plugin replaces it with a headless deterministic CLI path."
+    },
+    {
+      "legacy_path": "modules.charting.draw_venn_upset.render_upset_chart",
+      "reason": "UI-oriented wrapper. The plugin calls the deterministic matrix and plotting helpers directly."
+    }
+  ]
+}

@@ -1,0 +1,404 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-semantic-review-v1.json",
+  "title": "Clara real-data pilot semantic review",
+  "description": "A reviewer-owned record of required accounting decisions and semantic issues. Deterministic validation enforces structure and reviewer-declared blocking status but does not decide or certify accounting meaning.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "review_version",
+    "review_status",
+    "reviewed_on",
+    "reviewer_role",
+    "intake_receipt_sha256",
+    "evidence_registry",
+    "required_reviews",
+    "issues",
+    "mechanical_error_register_policy",
+    "publication_status",
+    "report_ready"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_semantic_review.v1"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "review_version": {
+      "$ref": "#/$defs/review_version"
+    },
+    "review_status": {
+      "const": "reviewed"
+    },
+    "reviewed_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "reviewer_role": {
+      "$ref": "#/$defs/nonblank_text"
+    },
+    "intake_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "evidence_registry": {
+      "type": "object",
+      "minProperties": 1,
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/evidence_record"
+      }
+    },
+    "required_reviews": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "$ref": "#/$defs/required_review"
+      },
+      "allOf": [
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-01"
+              },
+              "topic": {
+                "const": "account_mapping"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-02"
+              },
+              "topic": {
+                "const": "control_equivalence_and_tolerance"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-03"
+              },
+              "topic": {
+                "const": "currency_unit_and_fx"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-04"
+              },
+              "topic": {
+                "const": "dataset_identity_and_grain"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-05"
+              },
+              "topic": {
+                "const": "period_calendar_and_value_basis"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-06"
+              },
+              "topic": {
+                "const": "scope_entity_and_eliminations"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        },
+        {
+          "contains": {
+            "type": "object",
+            "required": [
+              "review_id",
+              "topic"
+            ],
+            "properties": {
+              "review_id": {
+                "const": "topic-review-07"
+              },
+              "topic": {
+                "const": "sign_convention"
+              }
+            }
+          },
+          "minContains": 1,
+          "maxContains": 1
+        }
+      ]
+    },
+    "issues": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/id"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/issue"
+      }
+    },
+    "mechanical_error_register_policy": {
+      "const": "producer_owned_separate_artifact"
+    },
+    "publication_status": {
+      "const": "withheld"
+    },
+    "report_ready": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$(?![\\s\\S])"
+    },
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "review_version": {
+      "type": "string",
+      "pattern": "^review-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "nonblank_text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "topic": {
+      "enum": [
+        "account_mapping",
+        "control_equivalence_and_tolerance",
+        "currency_unit_and_fx",
+        "dataset_identity_and_grain",
+        "period_calendar_and_value_basis",
+        "scope_entity_and_eliminations",
+        "sign_convention"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/id"
+      }
+    },
+    "relative_path": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        {
+          "pattern": "^(?!/)"
+        }
+      ]
+    },
+    "evidence_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "media_type",
+        "byte_count",
+        "sha256"
+      ],
+      "properties": {
+        "path": {
+          "$ref": "#/$defs/relative_path"
+        },
+        "media_type": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "byte_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "required_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "review_id",
+        "topic",
+        "status",
+        "decision",
+        "basis",
+        "evidence_refs"
+      ],
+      "properties": {
+        "review_id": {
+          "$ref": "#/$defs/id"
+        },
+        "topic": {
+          "$ref": "#/$defs/topic"
+        },
+        "status": {
+          "const": "reviewed"
+        },
+        "decision": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "basis": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidence_refs"
+        }
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "topic",
+        "status",
+        "blocking",
+        "description",
+        "basis",
+        "evidence_refs",
+        "resolution"
+      ],
+      "properties": {
+        "topic": {
+          "$ref": "#/$defs/topic"
+        },
+        "status": {
+          "enum": [
+            "accepted_limitation",
+            "open",
+            "resolved"
+          ]
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "description": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "basis": {
+          "$ref": "#/$defs/nonblank_text"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidence_refs"
+        },
+        "resolution": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/nonblank_text"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "open"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "resolution": {
+                "type": "null"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "blocking": {
+                "const": false
+              },
+              "resolution": {
+                "$ref": "#/$defs/nonblank_text"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

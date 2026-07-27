@@ -1,0 +1,8 @@
+polars
+plotly
+kaleido
+pillow
+python-docx
+openpyxl
+datashader
+scikit-learn

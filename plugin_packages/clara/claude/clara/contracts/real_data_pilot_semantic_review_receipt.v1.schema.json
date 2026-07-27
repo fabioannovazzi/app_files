@@ -1,0 +1,375 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/real-data-pilot-semantic-review-receipt-v1.json",
+  "title": "Clara real-data pilot semantic-review receipt",
+  "description": "A sanitized receipt for a hash-bound reviewer-owned semantic register. It records only counts and readiness for mechanical preparation, never semantic correctness or report readiness.",
+  "$comment": "This schema validates portable structure and every expressible constant. validate_real_data_pilot_semantic_review_receipt is authoritative for date ordering, current implementation/dependency hashes, and other runtime invariants.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "pilot_id",
+    "review_version",
+    "reviewed_on",
+    "validation_date",
+    "semantic_review_sha256",
+    "intake_receipt_sha256",
+    "review_summary",
+    "error_separation",
+    "readiness",
+    "validator"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "clara.real_data_pilot_semantic_review_receipt.v1"
+    },
+    "pilot_id": {
+      "$ref": "#/$defs/pilot_id"
+    },
+    "review_version": {
+      "$ref": "#/$defs/review_version"
+    },
+    "reviewed_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "validation_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "semantic_review_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "intake_receipt_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "review_summary": {
+      "$ref": "#/$defs/review_summary"
+    },
+    "error_separation": {
+      "$ref": "#/$defs/error_separation"
+    },
+    "readiness": {
+      "$ref": "#/$defs/readiness"
+    },
+    "validator": {
+      "$ref": "#/$defs/validator"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "required": [
+          "review_summary"
+        ],
+        "properties": {
+          "review_summary": {
+            "required": [
+              "issue_counts"
+            ],
+            "properties": {
+              "issue_counts": {
+                "required": [
+                  "open_blocking"
+                ],
+                "properties": {
+                  "open_blocking": {
+                    "const": 0
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "readiness": {
+            "properties": {
+              "status": {
+                "const": "ready_for_mechanical_preparation_only"
+              },
+              "mechanical_preparation_allowed": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "readiness": {
+            "properties": {
+              "status": {
+                "const": "blocked_by_reviewed_semantic_issues"
+              },
+              "mechanical_preparation_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "pilot_id": {
+      "type": "string",
+      "pattern": "^pilot-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "review_version": {
+      "type": "string",
+      "pattern": "^review-[0-9a-f]{16}$(?![\\s\\S])"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"
+    },
+    "nonnegative_integer": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "review_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_count",
+        "required_review_count",
+        "issue_counts"
+      ],
+      "properties": {
+        "evidence_count": {
+          "$ref": "#/$defs/positive_integer"
+        },
+        "required_review_count": {
+          "const": 7
+        },
+        "issue_counts": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "open_blocking",
+            "open_nonblocking",
+            "resolved",
+            "accepted_limitation"
+          ],
+          "properties": {
+            "open_blocking": {
+              "$ref": "#/$defs/nonnegative_integer"
+            },
+            "open_nonblocking": {
+              "$ref": "#/$defs/nonnegative_integer"
+            },
+            "resolved": {
+              "$ref": "#/$defs/nonnegative_integer"
+            },
+            "accepted_limitation": {
+              "$ref": "#/$defs/nonnegative_integer"
+            }
+          }
+        }
+      }
+    },
+    "error_separation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_register",
+        "mechanical_register",
+        "semantic_content_in_receipt",
+        "storage_location_check"
+      ],
+      "properties": {
+        "semantic_register": {
+          "const": "reviewer_owned_hash_bound_local_artifact"
+        },
+        "mechanical_register": {
+          "const": "producer_owned_separate_artifact"
+        },
+        "semantic_content_in_receipt": {
+          "const": false
+        },
+        "storage_location_check": {
+          "$ref": "#/$defs/storage_location_check"
+        }
+      }
+    },
+    "storage_location_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "semantic_register_relation",
+        "intake_receipt_relation",
+        "resolved_path_containment_enforced",
+        "git_ignore_required_inside_repository"
+      ],
+      "properties": {
+        "status": {
+          "const": "passed_at_validation"
+        },
+        "semantic_register_relation": {
+          "enum": [
+            "inside_repository_git_ignored",
+            "outside_repository_within_run_root"
+          ]
+        },
+        "intake_receipt_relation": {
+          "enum": [
+            "inside_repository_git_ignored",
+            "outside_repository_within_run_root"
+          ]
+        },
+        "resolved_path_containment_enforced": {
+          "const": true
+        },
+        "git_ignore_required_inside_repository": {
+          "const": true
+        }
+      }
+    },
+    "readiness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "mechanical_preparation_allowed",
+        "semantic_status_for_audit_envelope",
+        "publication_status",
+        "report_ready",
+        "execution_revalidation_required",
+        "does_not_establish"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "blocked_by_reviewed_semantic_issues",
+            "ready_for_mechanical_preparation_only"
+          ]
+        },
+        "mechanical_preparation_allowed": {
+          "type": "boolean"
+        },
+        "semantic_status_for_audit_envelope": {
+          "const": "not_assessed"
+        },
+        "publication_status": {
+          "const": "withheld"
+        },
+        "report_ready": {
+          "const": false
+        },
+        "execution_revalidation_required": {
+          "const": true
+        },
+        "does_not_establish": {
+          "const": [
+            "accounting_semantic_correctness",
+            "current_authorization_at_later_execution",
+            "downstream_compatibility",
+            "evidence_sufficiency",
+            "future_storage_or_copy_behavior",
+            "issue_completeness",
+            "publication_authorization",
+            "receipt_authenticity_or_signer_identity",
+            "retention_or_deletion",
+            "report_readiness",
+            "reviewer_identity_or_authority"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ready_for_mechanical_preparation_only"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "mechanical_preparation_allowed": {
+                "const": true
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "mechanical_preparation_allowed": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "validator": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "dependency_sha256",
+        "validator_id",
+        "validator_version",
+        "implementation_sha256",
+        "mode"
+      ],
+      "properties": {
+        "dependency_sha256": {
+          "$ref": "#/$defs/dependency_sha256"
+        },
+        "validator_id": {
+          "const": "real_data_pilot_semantic_review_validator.v1"
+        },
+        "validator_version": {
+          "const": "1.0.0"
+        },
+        "implementation_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mode": {
+          "const": "deterministic_mechanical"
+        }
+      }
+    },
+    "dependency_sha256": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "intake_receipt_schema",
+        "intake_schema",
+        "intake_validator",
+        "preparation_contract_kernel",
+        "semantic_review_receipt_schema",
+        "semantic_review_schema"
+      ],
+      "properties": {
+        "intake_receipt_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "intake_validator": {
+          "$ref": "#/$defs/sha256"
+        },
+        "preparation_contract_kernel": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_review_receipt_schema": {
+          "$ref": "#/$defs/sha256"
+        },
+        "semantic_review_schema": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    }
+  }
+}

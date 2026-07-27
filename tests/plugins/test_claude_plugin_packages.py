@@ -53,8 +53,9 @@ def load_privacy_validator():
 def configured():
     builder = load_builder()
     marketplace, packages = builder.load_configuration()
-    assert [package.plugin for package in packages] == ["vera"]
-    return builder, marketplace, packages[0]
+    assert [package.plugin for package in packages] == ["vera", "clara"]
+    vera_package = next(package for package in packages if package.plugin == "vera")
+    return builder, marketplace, vera_package
 
 
 @pytest.fixture(scope="module")
@@ -718,9 +719,10 @@ def test_claude_verifier_reports_directory_and_zip_drift(
 
 def test_configured_claude_outputs_match_canonical_source(configured) -> None:
     builder, marketplace, package = configured
+    _, packages = builder.load_configuration()
 
     assert builder.verify_package(package) == []
-    assert builder.verify_catalog(marketplace, [package]) == []
+    assert builder.verify_catalog(marketplace, packages) == []
 
 
 def test_project_claude_mcp_rejects_non_string_args() -> None:
