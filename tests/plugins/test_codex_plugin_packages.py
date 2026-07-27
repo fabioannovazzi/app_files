@@ -2665,6 +2665,14 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "Elige dónde trabajar con Vera.",
     ):
         assert localized_title in page
+    for localized_eyebrow in (
+        "AI companion per commercialisti",
+        "AI companion for accountants",
+        "AI companion pour les experts-comptables",
+        "AI companion für Steuerberaterinnen und Steuerberater",
+        "AI companion para asesores fiscales y contables",
+    ):
+        assert localized_eyebrow in page
     for localized_chatgpt_button in (
         "Installa per ChatGPT Work e Codex",
         "Install for ChatGPT Work and Codex",
@@ -2689,6 +2697,16 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "ZIP manuale",
         "ZIP manuel",
         "manuelle ZIP",
+        '"hero.eyebrow": "Vera · Codex per commercialisti"',
+        '"hero.eyebrow": "Vera · Codex for accountants"',
+        '"hero.eyebrow": "Vera · Codex pour les experts-comptables"',
+        '"hero.eyebrow": "Vera · Codex für Steuerberaterinnen und Steuerberater"',
+        '"hero.eyebrow": "Vera · Codex para asesores fiscales y contables"',
+        "In Codex e Cowork, Vera lavora dai file nella cartella di progetto e prepara risultati durevoli e rivedibili.",
+        "In Codex and Cowork, Vera works from the files in your project folder and prepares durable, reviewable outputs.",
+        "Dans Codex et Cowork, Vera travaille à partir des fichiers du dossier de projet et prépare des résultats durables et révisables.",
+        "In Codex und Cowork arbeitet Vera mit den Dateien im Projektordner und erstellt dauerhafte, prüfbare Ergebnisse.",
+        "En Codex y Cowork, Vera trabaja con los archivos de la carpeta del proyecto y prepara resultados duraderos y revisables.",
     ):
         assert stale_snippet not in page
 
@@ -3050,8 +3068,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
 
     for snippet in (
         "Clara",
-        "Clara · Codex for consultants",
-        "Clara · Codex per consulenti",
+        "AI companion for consultants",
+        "AI companion per consulenti",
         "Clara works with you in ChatGPT Work and Codex, or in Claude Cowork.",
         "Clara lavora con te in ChatGPT Work e Codex oppure in Claude Cowork.",
         "Create or correct a presentation in your corporate style",
@@ -3105,6 +3123,16 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Elle travaille avec vous dans Codex.",
         "Clara arbeitet mit Ihnen direkt in Codex.",
         "Clara trabaja contigo dentro de Codex.",
+        "Clara · Codex for consultants",
+        "Clara · Codex per consulenti",
+        "Clara · Codex pour les consultants",
+        "Clara · Codex für Beraterinnen und Berater",
+        "Clara · Codex para consultores",
+        "In Codex and Cowork, Clara works from the files in your project folder and prepares durable, reviewable outputs.",
+        "In Codex e Cowork, Clara lavora dai file nella cartella di progetto e prepara risultati durevoli e rivedibili.",
+        "Dans Codex et Cowork, Clara travaille à partir des fichiers du dossier de projet et prépare des résultats durables et révisables.",
+        "In Codex und Cowork arbeitet Clara mit den Dateien im Projektordner und erstellt dauerhafte, prüfbare Ergebnisse.",
+        "En Codex y Cowork, Clara trabaja con los archivos de la carpeta del proyecto y prepara resultados duraderos y revisables.",
         "Advisor Case Workspace",
         "A local Codex workspace for case materials, voice notes, judgement and reviewed outputs.",
         "Un workspace Codex locale per materiali, voce, judgement e output rivisti.",
