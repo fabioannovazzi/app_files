@@ -236,6 +236,22 @@ If the module skill requires optional requirements or input-specific arguments,
 run its own `scripts/check_dependencies.py` from the resolved module root with
 those arguments.
 
+For PDFs and images, use the selected module's input-aware dependency check.
+When it reports `OCR_SETUP_REQUIRED`, ask only:
+
+> PaddleOCR is required to read this document. Shall Claude install it now? The
+> download is about 500 MB.
+
+Do not ask the user to run pip, Python, Terminal, or any technical installation
+step. Wait for explicit approval. When approved, run the resolved module's
+`scripts/managed_ocr_runtime.py install` command yourself. After a successful
+setup, say `PaddleOCR is ready. Retrying the document now.` and automatically
+rerun the preflight and the interrupted PDF operation. This one-time runtime is
+persistent and shared with Clara, so reuse it without another prompt. If setup
+fails, show only `I couldn't install PaddleOCR right now. Shall I try the
+installation again?` unless the user asks for technical details. Never treat an
+image-only document as read when setup is declined or unsuccessful.
+
 ## Cowork-native Run UX
 
 Default output policy: produce the richest normal package for the selected
@@ -290,5 +306,6 @@ data permit them.
   with model inference.
 - Never write run outputs inside this Git workspace; use the user-selected
   customer or run output folder.
-- Do not install packages at runtime. Report missing requirements and let the
-  user decide how to update the environment.
+- Do not install packages at runtime except for the explicit, user-approved,
+  one-time managed PaddleOCR setup above. Report other missing requirements
+  without asking the user to run technical installation commands.

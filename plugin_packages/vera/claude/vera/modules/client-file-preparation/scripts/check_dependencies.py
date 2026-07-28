@@ -12,6 +12,7 @@ from check_environment import (  # noqa: E402
     OCR_DEPENDENCIES,
     Dependency,
     check_dependencies,
+    input_requires_ocr,
     main,
 )
 
@@ -20,6 +21,7 @@ __all__ = [
     "OCR_DEPENDENCIES",
     "Dependency",
     "check_dependencies",
+    "input_requires_ocr",
     "main",
 ]
 

@@ -143,8 +143,8 @@ The default scope is full intake: inventory, formal checks, structured fiscal
 fields, FatturaPA XML checks, missing/uncertain documents, avviso intake when
 present, studio memo, and client email draft. Do not ask which of these normal
 outputs to produce. Use OCR when dependencies are available and the folder
-contains scans or images; if OCR is unavailable, continue with the text-readable
-pass and report the limitation unless the run would be misleading without OCR.
+contains scans or images. If the shared OCR runtime is unavailable, use the
+managed approval flow below instead of silently continuing with a partial pass.
 
 Do not ask the user to edit JSON, YAML, or plugin files.
 
@@ -155,7 +155,8 @@ For a beta user's first run, guide the work in this order:
 1. Confirm the input folder and target year/campaign.
 2. Confirm output folder only when not inferable. Use OCR automatically when available and relevant.
 3. Run `python scripts/check_dependencies.py --folder <cartella-cliente>` from the plugin directory before helper scripts.
-4. If OCR is needed and optional dependencies are missing, continue with the text-readable pass, explain that scanned documents may remain unread, and record the limitation in the synthesis.
+4. If OCR setup is required, ask for approval, perform the managed installation,
+   and automatically retry as specified below.
 5. Run the deterministic intake script.
 6. Read the generated Markdown/CSV/JSONL evidence files before summarizing.
 7. Read `run_intake.json` and `review_payload.json`. Treat the review payload
@@ -198,21 +199,24 @@ Load `references/workflow-reference.md` for beta-facing starter prompts and full
 python scripts/check_dependencies.py --folder <cartella-cliente>
 ```
 
-If core PDF dependencies are missing, tell the user to run:
+If core PDF dependencies are missing, stop and say that document reading is not
+available in the current setup. Do not ask the user to run a technical
+installation command. Handle other declared requirements the same way.
 
-```bash
-python -m pip install -r requirements.txt
-```
+If the input-aware check reports `OCR_SETUP_REQUIRED`, ask only:
 
-If OCR dependencies are missing and the folder contains scans or images, record
-that scanned documents may remain unread and, when useful, suggest installing:
+> PaddleOCR is required to read this document. Shall Claude install it now? The
+> download is about 500 MB.
 
-```bash
-python -m pip install -r requirements-ocr.txt
-```
-
-Continue without OCR for the text-readable pass unless the user explicitly wants
-to pause and install OCR dependencies first.
+Do not ask the user to run pip, Python, Terminal, or any technical installation
+step. Wait for explicit approval. When approved, Claude runs
+`scripts/managed_ocr_runtime.py install` itself. On success, say `PaddleOCR is
+ready. Retrying the document now.` and automatically rerun this dependency check
+and the interrupted intake command. The managed runtime persists outside the
+plugin and is shared by Clara and Vera, so later OCR jobs reuse it without
+prompting. If setup fails, show only `I couldn't install PaddleOCR right now.
+Shall I try the installation again?` unless the user asks for technical details.
+Do not describe scanned evidence as read when setup is declined or unsuccessful.
 
 3. Run the deterministic intake script from the plugin root:
 
@@ -224,8 +228,8 @@ python scripts/build_file_preparation_outputs.py <cartella-cliente> \
   --out <cartella-output>
 ```
 
-Use `--no-ocr` only when OCR is not installed or the user explicitly wants a
-text-only pass.
+Use `--no-ocr` only when the user explicitly wants a text-only pass after
+declining managed OCR setup.
 
 `review_payload.json` includes bounded excerpts from every readable document in
 the selected folder, fiscal-field evidence snippets, and previews of the

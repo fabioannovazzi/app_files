@@ -9,6 +9,7 @@ import logging
 import re
 import stat
 import zipfile
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from email import policy
 from email.parser import BytesParser
@@ -17,6 +18,7 @@ from pathlib import Path
 from typing import Iterable, Sequence
 from xml.etree import ElementTree as ET
 
+from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
 from scan_folder import FileRecord
 
 __all__ = [
@@ -729,12 +731,8 @@ class _PaddleOcrSession:
             self.init_error = f"PaddleOCR non disponibile: {exc}"
             return
         try:
-            self.engine = PaddleOCR(lang=self.lang, show_log=False)
-        except TypeError:
-            try:
-                self.engine = PaddleOCR(lang=self.lang)
-            except Exception as exc:
-                self.init_error = f"PaddleOCR init fallito: {exc}"
+            # PaddleOCR 3 rejects the former ``show_log`` argument.
+            self.engine = PaddleOCR(lang=self.lang)
         except Exception as exc:
             self.init_error = f"PaddleOCR init fallito: {exc}"
 
@@ -744,18 +742,76 @@ class _PaddleOcrSession:
             return "", self.init_error or "PaddleOCR non disponibile"
 
         try:
-            result = self.engine.ocr(image)  # type: ignore[attr-defined]
+            predict = getattr(self.engine, "predict", None)
+            if callable(predict):
+                result = predict(image)
+            else:
+                ocr = getattr(self.engine, "ocr", None)
+                if not callable(ocr):
+                    raise RuntimeError(
+                        "nessun metodo PaddleOCR predict/ocr disponibile"
+                    )
+                try:
+                    result = ocr(image, cls=False)
+                except TypeError:
+                    result = ocr(image)
         except Exception as exc:
             return "", f"PaddleOCR fallito: {exc}"
 
-        lines: list[str] = []
-        for page in result or []:
-            for item in page or []:
-                if isinstance(item, (list, tuple)) and len(item) >= 2:
-                    text_part = item[1]
-                    if isinstance(text_part, (list, tuple)) and text_part:
-                        lines.append(str(text_part[0]))
+        lines = _paddle_ocr_lines(result)
         return "\n".join(lines), ""
+
+
+def _clean_ocr_line(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return " ".join(value.split())
+
+
+def _paddle_ocr_lines(raw: object) -> list[str]:
+    """Normalize current PaddleOCR mappings and legacy nested tuple results."""
+
+    lines: list[str] = []
+
+    def collect(value: object) -> None:
+        if value is None:
+            return
+        if isinstance(value, Mapping):
+            for key in ("rec_texts", "texts"):
+                nested = value.get(key)
+                if isinstance(nested, Sequence) and not isinstance(
+                    nested, (str, bytes, bytearray)
+                ):
+                    for item in nested:
+                        line = _clean_ocr_line(item)
+                        if line:
+                            lines.append(line)
+                    return
+            direct_text = _clean_ocr_line(value.get("text"))
+            if direct_text:
+                lines.append(direct_text)
+                return
+            for nested in value.values():
+                collect(nested)
+            return
+        if isinstance(value, Sequence) and not isinstance(
+            value, (str, bytes, bytearray)
+        ):
+            if (
+                len(value) >= 2
+                and isinstance(value[1], Sequence)
+                and not isinstance(value[1], (str, bytes, bytearray))
+                and value[1]
+            ):
+                legacy_text = _clean_ocr_line(value[1][0])
+                if legacy_text:
+                    lines.append(legacy_text)
+                    return
+            for nested in value:
+                collect(nested)
+
+    collect(raw)
+    return lines
 
 
 def _extract_pdf_ocr(
@@ -964,13 +1020,6 @@ def _extract_one(
             elif error_fitz:
                 notes.append(error_fitz)
         if path.stat().st_size <= MAX_PDF_BYTES and not _text_is_useful(text):
-            fallback_text, fallback_error = _plain_text_fallback(path)
-            if fallback_text:
-                text = fallback_text
-                method = "plain_text_fallback"
-            elif fallback_error:
-                notes.append(fallback_error)
-        if path.stat().st_size <= MAX_PDF_BYTES and not _text_is_useful(text):
             needs_ocr = True
             if enable_ocr:
                 ocr_text, ocr_pages, total_pages, ocr_error = _extract_pdf_ocr(
@@ -1062,6 +1111,10 @@ def extract_documents(
 
     root_path = Path(root)
     output_path = Path(output_dir)
+    if enable_ocr:
+        activate_ocr_runtime(
+            Path(__file__).resolve().parents[1] / "requirements-ocr.txt"
+        )
     output_path.mkdir(parents=True, exist_ok=True)
     evidence: list[DocumentEvidence] = []
     ocr_session = _PaddleOcrSession(lang)
@@ -1258,8 +1311,18 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
+    from check_environment import (
+        OCR_DEPENDENCIES,
+        check_dependencies,
+        input_requires_ocr,
+    )
     from scan_folder import scan_folder
 
+    if not args.no_ocr and input_requires_ocr(args.folder):
+        _, missing = check_dependencies(require_ocr=True)
+        if any(dependency in OCR_DEPENDENCIES for dependency in missing):
+            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
+            return 1
     records = scan_folder(args.folder, output_dir=args.out)
     out_dir = args.out or args.folder / "out" / "extracted"
     evidence = extract_documents(
