@@ -782,7 +782,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.120"
+    assert manifest["version"] == "0.1.121"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -3337,6 +3337,116 @@ def test_dependency_checker_checks_recursive_requirement_includes(
 
     assert missing == []
     assert checked_imports == ["polars"]
+
+
+def test_dependency_checker_image_input_requires_ocr(tmp_path: Path) -> None:
+    checker = load_dependency_checker()
+    image = tmp_path / "scan.png"
+    image.write_bytes(b"synthetic image placeholder")
+
+    requires_ocr = checker.input_requires_ocr([image])
+
+    assert requires_ocr is True
+
+
+def test_dependency_checker_text_pdf_does_not_require_ocr(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checker = load_dependency_checker()
+    pdf = tmp_path / "native-text.pdf"
+    pdf.write_bytes(b"%PDF synthetic native text")
+
+    class FakePage:
+        def get_text(self, _kind: str) -> str:
+            return "This native PDF text is substantive and does not require OCR."
+
+        def get_images(self, *, full: bool) -> list[object]:
+            assert full is True
+            return []
+
+        def get_drawings(self) -> list[object]:
+            return []
+
+    class FakeDocument(list[FakePage]):
+        def __enter__(self) -> FakeDocument:
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            return None
+
+    fake_fitz = types.ModuleType("fitz")
+    fake_fitz.open = lambda _path: FakeDocument([FakePage()])  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "fitz", fake_fitz)
+
+    requires_ocr = checker.input_requires_ocr([pdf])
+
+    assert requires_ocr is False
+
+
+def test_dependency_checker_visual_pdf_requires_ocr(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    checker = load_dependency_checker()
+    pdf = tmp_path / "visual-only.pdf"
+    pdf.write_bytes(b"%PDF synthetic visual page")
+
+    class FakePage:
+        def get_text(self, _kind: str) -> str:
+            return ""
+
+        def get_images(self, *, full: bool) -> list[object]:
+            assert full is True
+            return [object()]
+
+        def get_drawings(self) -> list[object]:
+            return []
+
+    class FakeDocument(list[FakePage]):
+        def __enter__(self) -> FakeDocument:
+            return self
+
+        def __exit__(self, *_args: object) -> None:
+            return None
+
+    fake_fitz = types.ModuleType("fitz")
+    fake_fitz.open = lambda _path: FakeDocument([FakePage()])  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "fitz", fake_fitz)
+
+    requires_ocr = checker.input_requires_ocr([pdf])
+
+    assert requires_ocr is True
+
+
+def test_dependency_checker_missing_ocr_uses_managed_setup_prompt(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    checker = load_dependency_checker()
+    source = tmp_path / "visual-only.pdf"
+    source.write_bytes(b"%PDF synthetic")
+    requirements = tmp_path / "requirements-ocr.txt"
+    requirements.write_text("paddleocr>=3.0\n", encoding="utf-8")
+    monkeypatch.setattr(checker, "input_requires_ocr", lambda _paths: True)
+    monkeypatch.setattr(checker, "activate_ocr_runtime", lambda _path: None)
+    monkeypatch.setattr(
+        checker,
+        "selected_requirement_files",
+        lambda _requirements, *, include_optional: [requirements],
+    )
+    monkeypatch.setattr(checker, "check_dependencies", lambda _files: ["paddleocr"])
+
+    return_code = checker.main(["--input", str(source)])
+
+    assert return_code == 1
+    assert "OCR_SETUP_REQUIRED" in caplog.text
+    assert (
+        "PaddleOCR is required to read this document. Shall Codex install it now? "
+        "The download is about 500 MB."
+    ) in caplog.text
+    assert "pip install" not in caplog.text
 
 
 def test_case_workspace_archive_excludes_local_runtime_dirs(tmp_path: Path) -> None:

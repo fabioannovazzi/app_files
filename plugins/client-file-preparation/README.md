@@ -144,6 +144,13 @@ python scripts/build_file_preparation_outputs.py \
   --out "/percorso/output/client-file-preparation"
 ```
 
+Il controllo dipendenze distingue i PDF con testo nativo dalle pagine
+scansionate. Quando serve OCR e il runtime condiviso non è ancora disponibile,
+Vera o Clara chiede in linguaggio semplice il consenso a scaricare circa 500 MB.
+Con il consenso, Codex esegue la configurazione una sola volta, conserva il
+runtime fuori dal plugin e riprova automaticamente il documento. L'utente non
+deve eseguire comandi tecnici.
+
 `--jurisdiction` accetta `italy`, `geneva`, `zurich`, `uk` o `mixed`;
 `--language` accetta `it`, `en`, `fr`, `de` o `es`. Il payload di review include per
 impostazione predefinita estratti limitati di ogni documento leggibile,

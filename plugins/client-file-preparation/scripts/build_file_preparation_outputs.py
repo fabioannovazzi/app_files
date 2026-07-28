@@ -32,7 +32,11 @@ def _ensure_local_review_session_import() -> None:
 _ensure_local_review_session_import()
 
 # isort: off
-from check_environment import check_dependencies  # noqa: E402
+from check_environment import (  # noqa: E402
+    OCR_DEPENDENCIES,
+    check_dependencies,
+    input_requires_ocr,
+)
 from detect_duplicates import (  # noqa: E402
     DuplicateCandidate,
     find_duplicate_candidates,
@@ -1766,10 +1770,7 @@ def build_file_preparation_outputs(
     out_dir.mkdir(parents=True, exist_ok=True)
     out_dir.chmod(0o700)
     client_name = _infer_client_name(root, target_year)
-    require_ocr = any(
-        record.extension.lower() in {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff"}
-        for record in records
-    )
+    require_ocr = input_requires_ocr(root)
     missing_dependency_count, _ = _write_environment_report(
         out_dir / "00_environment_check.md",
         require_ocr=require_ocr and enable_ocr,
@@ -2007,6 +2008,13 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
+    if not args.no_ocr and input_requires_ocr(args.folder):
+        _, missing = check_dependencies(require_ocr=True)
+        if any(dependency in OCR_DEPENDENCIES for dependency in missing):
+            from managed_ocr_runtime import OCR_SETUP_PROMPT
+
+            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
+            return 1
     result = build_file_preparation_outputs(
         args.folder,
         args.year,
