@@ -9,22 +9,24 @@ __all__ = [
     "LEGAL_EFFECTIVE_DATE",
     "LEGAL_PAGES",
     "SUPPORT_EMAIL",
+    "ZERO_RETENTION_EFFECTIVE_DATE",
     "get_legal_page",
 ]
 
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
 LEGAL_EFFECTIVE_DATE = "July 23, 2026"
+ZERO_RETENTION_EFFECTIVE_DATE = "July 28, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "zero-retention": {
         "title": "Zero Retention Policy",
         "eyebrow": "Mparanza LLC · Privacy notice",
-        "effective_date": LEGAL_EFFECTIVE_DATE,
+        "effective_date": ZERO_RETENTION_EFFECTIVE_DATE,
         "summary": (
             "Mparanza's products use two processing categories. Ordinary plugin "
-            "functions use your existing ChatGPT plan and Codex workspace. "
-            "Mparanza does "
+            "functions run in the OpenAI Codex or Anthropic Cowork account and "
+            "workspace you choose. Mparanza does "
             "not receive or retain Customer Content merely because you use those "
             "functions, and the plugin does not automatically anonymize that "
             "content. Mparanza-hosted services receive the content needed to "
@@ -43,8 +45,9 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "reports, comments, and workflow outputs submitted for processing."
                     ),
                     (
-                        "Ordinary plugin functions use your existing ChatGPT plan and "
-                        "Codex workspace without sending Customer Content to Mparanza. "
+                        "Ordinary plugin functions run in your selected OpenAI Codex "
+                        "or Anthropic Cowork account and workspace without sending "
+                        "Customer Content to Mparanza. "
                         "Mparanza-hosted services receive the content described for each "
                         "service and follow the retention and deletion arrangements below."
                     ),
@@ -68,7 +71,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Mparanza-controlled systems are systems that Mparanza "
                         "operates or can directly administer. Your own device, "
-                        "existing ChatGPT plan and Codex workspace, connected "
+                        "selected Codex or Cowork account and workspace, connected "
                         "services, email provider, "
                         "and other externally operated systems are not "
                         "Mparanza-controlled systems."
@@ -86,38 +89,39 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Ordinary Plugin Functions",
                 "paragraphs": [
                     (
-                        "Ordinary plugin functions use your existing ChatGPT plan "
-                        "and Codex workspace. Files, scripts, and outputs "
-                        "may stay on your computer, while content Codex reads can "
-                        "enter the model context under that plan. Mparanza does not "
+                        "Ordinary plugin functions run in your selected OpenAI Codex "
+                        "or Anthropic Cowork account and workspace. Files, scripts, "
+                        "and outputs may stay on your computer, while content the "
+                        "selected host reads can enter its model context under that "
+                        "account. Mparanza does not "
                         "receive, access, or retain that Customer Content merely "
                         "because you use the plugin, and the plugin does not "
                         "automatically anonymize it."
                     ),
                     (
-                        "Your ChatGPT plan, Codex workspace settings, connectors, and "
+                        "Your selected Codex or Cowork account, workspace settings, "
+                        "connectors, and "
                         "other services process information under their own "
                         "arrangements. If a plugin clearly invokes a Mparanza-hosted "
                         "service, that category is covered by the next section."
                     ),
                     (
-                        "Vera and Clara work in ChatGPT with material supplied in the "
-                        "conversation and with callable connected apps. They may recommend "
-                        "Codex Desktop for direct folder access, persistent project files, "
-                        "local tools, and durable deliverables after providing useful work. "
-                        "Installation is optional and the conversation can continue in "
-                        "ChatGPT."
+                        "Vera and Clara are available as plugins for Codex and Cowork. "
+                        "They work with material supplied in the session and with "
+                        "callable connected apps. Direct folder access, persistent "
+                        "project files, local tools, and durable deliverables depend "
+                        "on the selected host and its capabilities."
                     ),
                     (
                         "Vera's Studio Archive uses two non-hosted message routes. "
-                        "Gmail is searched from ChatGPT or Codex through OpenAI's "
-                        "separately connected Gmail connector. WhatsApp is inspected "
+                        "Gmail is searched through a separately connected Gmail "
+                        "connector in ChatGPT, Codex, or Cowork. WhatsApp is inspected "
                         "only from Codex Desktop with Computer Use in the WhatsApp "
                         "Desktop app already opened and authenticated by the "
                         "professional. Neither route creates a Gmail or WhatsApp "
-                        "message store on Mparanza-controlled systems. Screen text and "
-                        "images read by Codex may still enter the model context under "
-                        "the user's ChatGPT/Codex account."
+                        "message store on Mparanza-controlled systems. Content read by "
+                        "the selected host may still enter the model context under the "
+                        "user's OpenAI or Anthropic account."
                     ),
                 ],
             },
@@ -229,10 +233,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "bullets": [
                     (
                         "Ordinary plugin functions: Mparanza retention is zero for "
-                        "content Mparanza does not receive. Content that Codex reads "
-                        "is handled under the terms and data controls of your "
-                        "existing ChatGPT plan and Codex workspace; local storage "
-                        "is not anonymization."
+                        "content Mparanza does not receive. Content that Codex or "
+                        "Cowork reads is handled under the terms and data controls of "
+                        "your selected OpenAI or Anthropic account and workspace; "
+                        "local storage is not anonymization."
                     ),
                     (
                         "Plugin updates and feedback: startup checks request the public "
@@ -310,10 +314,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "External Services",
                 "paragraphs": [
                     (
-                        "Ordinary plugin functions use your existing ChatGPT plan "
-                        "and Codex workspace. Mparanza does not control that plan or "
-                        "workspace or make promises about its handling of data; its "
-                        "terms and data controls apply separately."
+                        "Ordinary plugin functions run in your selected OpenAI Codex "
+                        "or Anthropic Cowork account and workspace. Mparanza does not "
+                        "control that account or workspace or make promises about its "
+                        "handling of data; the relevant provider's terms and data "
+                        "controls apply separately."
                     ),
                     (
                         "When a Mparanza-hosted service uses an external service, the "
@@ -322,16 +327,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "and their terms apply separately."
                     ),
                     (
-                        "For Studio Archive, OpenAI's Gmail connector accesses the "
-                        "mailbox selected by the user in ChatGPT or Codex, while Codex "
-                        "Desktop Computer Use can inspect the WhatsApp Desktop interface "
-                        "on the user's own computer. The Gmail connector route can run "
-                        "in ChatGPT or Codex when connected; the WhatsApp route runs only "
-                        "in Codex Desktop. Gmail, WhatsApp, and OpenAI are external "
-                        "systems under their own terms and controls. The professional "
-                        "signs in to those services directly; Vera must not request "
-                        "passwords, QR codes, authentication cookies, tokens, or one-time "
-                        "codes through chat."
+                        "For Studio Archive, a separately connected Gmail connector "
+                        "accesses the mailbox selected by the user in ChatGPT, Codex, "
+                        "or Cowork, while Codex Desktop Computer Use can inspect the "
+                        "WhatsApp Desktop interface on the user's own computer. The "
+                        "WhatsApp route runs only in Codex Desktop. Gmail, WhatsApp, "
+                        "OpenAI, and Anthropic are external systems under their own "
+                        "terms and controls. The professional signs in to those "
+                        "services directly; Vera must not request passwords, QR codes, "
+                        "authentication cookies, tokens, or one-time codes through chat."
                     ),
                 ],
             },

@@ -63,7 +63,8 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert page["title"] == "Zero Retention Policy"
     assert "does not receive or retain Customer Content" in page["summary"]
     assert "two processing categories" in page["summary"]
-    assert "existing ChatGPT plan and Codex workspace" in str(page)
+    assert page["effective_date"] == "July 28, 2026"
+    assert "OpenAI Codex or Anthropic Cowork" in str(page)
     assert "does not automatically anonymize" in str(page)
     assert "Ordinary Plugin Functions" in str(page)
     assert "Mparanza-Hosted Services" in str(page)
@@ -72,13 +73,13 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "Token access expires after eight hours" in str(page)
     assert "WhatsApp Business connector is a hosted exception" not in str(page)
     assert "after their message timestamp passes 90 days" not in str(page)
-    assert "Vera and Clara work in ChatGPT" in str(page)
-    assert "Installation is optional" in str(page)
-    assert "Gmail is searched from ChatGPT or Codex" in str(page)
+    assert "Vera and Clara are available as plugins for Codex and Cowork" in str(page)
+    assert "Gmail is searched through a separately connected Gmail" in str(page)
+    assert "in ChatGPT, Codex, or Cowork" in str(page)
     assert "Codex Desktop with Computer Use" in str(page)
     assert "Neither route creates a Gmail or WhatsApp message store" in str(page)
-    assert "Screen text and images read by Codex may still enter" in str(page)
-    assert "Gmail, WhatsApp, and OpenAI are external systems" in str(page)
+    assert "user's OpenAI or Anthropic account" in str(page)
+    assert "Gmail, WhatsApp, OpenAI, and Anthropic are external systems" in str(page)
     assert context["active_legal_page"] == "zero-retention"
 
 
