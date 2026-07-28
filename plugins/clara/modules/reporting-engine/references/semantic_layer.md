@@ -23,6 +23,9 @@ are per-run artifacts. All must be saved outside the plugin and repository.
 - The first reviewed snapshot fingerprint as provenance, not as a reuse key.
 - Source inventory and claim-level evidence, including confidence and conflict
   status.
+- Explicit Sales, Discount, and COGS role mappings. Each role is recorded as
+  `mapped`, `absent`, `ambiguous`, or `unknown`, with rationale and
+  source-backed evidence when reviewed.
 - Reviewed metric definitions, metric classes, aggregation rules, units,
   directionality, period grains, and dimension restrictions.
 - Reviewed dimensions, entity meaning, valid uses, and hierarchy.
@@ -42,44 +45,50 @@ manifest still owns chart differences and tie-breakers.
 
 ## Workflow
 
-On the first upload, assign a stable dataset contract id and profile the
-snapshot. The same id must be supplied on later uploads:
+On the first CSV, XLSX, or Parquet upload, assign a stable dataset contract id
+and run intake. The same id must be supplied on later uploads:
 
 ```bash
-python scripts/profile_dataset.py <dataset.csv> \
-  --dataset-id retail_monthly \
-  --output <run>/dataset_profile.json
-```
-
-Create a scaffold:
-
-```bash
-python scripts/semantic_layer.py init \
-  --profile <run>/dataset_profile.json \
+python scripts/dataset_intake.py <dataset.csv> \
   --dataset-contract-id retail_monthly \
-  --identity-method caller_assigned \
-  --identity-value project.retail_monthly \
-  --output <run>/semantic_layer.json
+  --output-dir <run>
 ```
 
-Every generated concept has `status: unknown`. Profiler metric classes and
-aggregation guesses appear only under `origin_profile_observation`; they are not
-semantic assertions.
-
-Build the model-facing authoring context:
-
-```bash
-python scripts/semantic_layer.py context \
-  --profile <run>/dataset_profile.json \
-  --layer <run>/semantic_layer.json \
-  --output <run>/semantic_authoring_context.json
-```
+That one command writes `dataset_profile.json`, `semantic_layer.draft.json`,
+`semantic_authoring_context.json`, and `dataset_intake.json` in the new run
+directory. Every generated concept has `status: unknown`; Sales, Discount, and
+COGS also begin with `state: unknown`. Profiler metric classes, aggregation
+guesses, and column names appear only as observations and candidates. They are
+not semantic assertions and never select a canonical business role
+automatically.
 
 The context includes the full mechanical profile, the draft semantic layer,
-and all manifest analysis types with their required caller-bound roles. Codex
-or another reviewing model must inspect the dataset and authoritative business
-sources, then edit the semantic layer. It must preserve conflicts and unknowns
-rather than guessing.
+the three canonical business-role review instructions, and all manifest
+analysis types with their required caller-bound roles. Codex or another
+reviewing model must inspect the dataset and authoritative business sources,
+then author the semantic layer on the user's behalf. Do not ask the user to edit
+JSON. Preserve conflicts and unknowns rather than guessing; ask one focused
+business question only when the available evidence cannot resolve a material
+ambiguity.
+
+For each canonical role, record:
+
+- `mapped` when one reviewed metric is the role;
+- `absent` when authoritative evidence establishes that the dataset has no
+  separate measure for the role;
+- `ambiguous` when one or more plausible reviewed metrics remain but no choice
+  is supported;
+- `unknown` when review has not established any of the other states.
+
+For example, a `DiscountRate` field must not be silently treated as a separate
+discount amount, and a unit-cost field must not be silently treated as total
+COGS. Likewise, a file containing both gross and net revenue requires source
+evidence or a visible ambiguity; the profiler does not choose from the header
+text.
+
+Save the reviewed semantic layer as persistent project data outside the plugin
+and repository. The run directory keeps only the draft and per-snapshot
+artifacts.
 
 Validate the reviewed document:
 
@@ -97,18 +106,19 @@ metric definition or business judgment is true. `semantic_readiness` remains
 policies. A reviewed result is `ready_as_scoped_semantic_input`; every manifest
 selection emphasis without an explicit reviewed policy remains `unknown`.
 
-For every later upload, profile the new snapshot with the same stable id and
-attach it to the existing semantic version:
+For every later upload, run intake with the same stable id and reviewed semantic
+layer:
 
 ```bash
-python scripts/profile_dataset.py <new-snapshot.csv> \
-  --dataset-id retail_monthly \
-  --output <run>/new_snapshot_profile.json
-python scripts/semantic_layer.py attach \
-  --profile <run>/new_snapshot_profile.json \
-  --layer <run>/semantic_layer.json \
-  --output <run>/snapshot_attachment.json
+python scripts/dataset_intake.py <new-snapshot.parquet> \
+  --dataset-contract-id retail_monthly \
+  --semantic-layer <project-data>/retail_monthly.semantic.json \
+  --output-dir <run>
 ```
+
+The intake receipt reports whether the mapping was reused, review is still
+required, or the snapshot was rejected. It never overwrites the persistent
+semantic layer or silently initializes a replacement.
 
 `compatible` reuses the layer unchanged. `compatible_with_extensions` also
 reuses it but leaves new columns unclassified. `partially_compatible` reuses
@@ -119,15 +129,17 @@ dimension members do not by themselves change semantic compatibility.
 Logical identity is an explicit trust boundary. Equal schemas do not prove that
 two anonymous files are the same data asset. A generic upload with no stable id
 may be suggested as a candidate match, but this workflow will not attach it by
-schema similarity alone.
+schema similarity alone. Dataset intake is a local Clara/Codex command, not a
+FastAPI route.
 
 ## Simple Example
 
 Suppose the profile finds `Sales`, `MarginRate`, `Brand`, and `Date`.
-Mechanically, several charts can accept those columns. The semantic layer can
-add the facts that:
+Mechanically, several charts can accept those columns. The reviewed semantic
+layer can add the facts that:
 
-- `Sales` is additive USD value;
+- `Sales` is additive USD value and is the canonical Sales role;
+- the dataset contains no separate Discount or COGS measure;
 - `MarginRate` is non-additive and must use a sales-weighted mean;
 - `Brand` is a valid reporting entity;
 - `Date` is a calendar-month key;
@@ -154,9 +166,10 @@ The synthetic example under `fixtures/semantic_layer/` contains:
 - `retail_monthly_source_notes.md`: canonical source definitions;
 - `retail_monthly.semantic.json`: a human-reviewed semantic layer.
 
-The example defines four metrics, four dimensions, one calendar, three reusable
-period rules, nine valid analysis policies, and one invalid statement-analysis
-policy. It exists to test the contract and carries no customer or real-business
+The example defines four metrics, explicitly maps Sales, records Discount and
+COGS as absent, defines four dimensions, one calendar, three reusable period
+rules, nine valid analysis policies, and one invalid statement-analysis policy.
+It exists to test the contract and carries no customer or real-business
 semantics. `catalog/semantic_acceptance_summary.json` binds the validation to
 the exact packaged manifest, schema, snapshots, source notes, and semantic-layer
 digests. It proves that changed values, months, and members reuse version 1; a
@@ -169,10 +182,10 @@ Deterministic code is appropriate here for snapshot fingerprints, explicit
 dataset-id equality, JSON structure, reference integrity, column existence,
 period-rule arithmetic, manifest ids, role kinds, and required-role
 completeness. These checks are mechanically verifiable and reproducible. It is
-not appropriate for deciding what Sales
-means, whether MarginRate should be weighted, whether two dimensions make
-business sense together, or whether an analysis is useful. Those are
-source-backed model or human judgments.
+not appropriate for deciding which field is Sales, Discount, or COGS; whether
+a role is absent or ambiguous; what Sales means; whether MarginRate should be
+weighted; whether two dimensions make business sense together; or whether an
+analysis is useful. Those are source-backed model or human judgments.
 
 The source-inventory, evidence, coverage, conflict, and open-question
 conventions were informed by the current OpenAI Data Analytics

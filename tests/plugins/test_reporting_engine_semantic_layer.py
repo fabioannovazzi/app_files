@@ -91,6 +91,20 @@ def test_semantic_layer_scaffold_is_valid_but_explicitly_unreviewed() -> None:
     assert layer["semantic_version"] == 1
     assert "period_rules" in layer
     assert "period_scopes" not in layer
+    assert set(layer["business_metric_mappings"]) == {"sales", "discount", "cogs"}
+    assert all(
+        mapping
+        == {
+            "state": "unknown",
+            "metric_id": None,
+            "candidate_metric_ids": [],
+            "confidence": "unknown",
+            "rationale": "",
+            "evidence_ids": [],
+            "caveats": [],
+        }
+        for mapping in layer["business_metric_mappings"].values()
+    )
 
 
 def test_semantic_authoring_context_exposes_all_manifest_analysis_types() -> None:
@@ -107,6 +121,11 @@ def test_semantic_authoring_context_exposes_all_manifest_analysis_types() -> Non
     }
     assert all(record["required_role_sets"] for record in context["analysis_catalog"])
     assert context["semantic_layer_draft"]["review"]["status"] == "draft"
+    mapping_review = context["business_metric_mapping_review"]
+    assert set(mapping_review["role_guidance"]) == {"sales", "discount", "cogs"}
+    assert {
+        candidate["metric_id"] for candidate in mapping_review["metric_candidates"]
+    } == {metric["metric_id"] for metric in context["semantic_layer_draft"]["metrics"]}
     assert "not a classifier" in context["boundary"]
 
 
@@ -127,6 +146,19 @@ def test_reviewed_semantic_fixture_is_ready_and_fully_manifest_bound() -> None:
     assert report["counts"]["unknown_concepts"] == 0
     assert report["errors"] == []
     assert report["warnings"] == []
+    assert _reviewed_layer()["business_metric_mappings"]["sales"]["state"] == "mapped"
+    assert (
+        _reviewed_layer()["business_metric_mappings"]["sales"]["metric_id"]
+        == "metric.sales"
+    )
+    assert {
+        role: mapping["state"]
+        for role, mapping in _reviewed_layer()["business_metric_mappings"].items()
+    } == {
+        "sales": "mapped",
+        "discount": "absent",
+        "cogs": "absent",
+    }
     assert report["analysis_coverage"]["manifest_selection_emphasis_count"] == 48
     assert len(report["analysis_coverage"]["assessed_selection_emphases"]) == 10
     assert report["analysis_coverage"]["unlisted_policy_default"] == "unknown"
@@ -522,12 +554,136 @@ def test_semantic_schema_required_keys_match_generated_scaffold() -> None:
     layer = semantic.build_semantic_layer_scaffold(profile)
 
     assert set(schema["required"]) == set(layer)
-    assert schema["properties"]["schema_version"]["const"] == "0.2"
+    assert schema["properties"]["schema_version"]["const"] == "0.3"
     assert (
         schema["properties"]["boundaries"]["properties"]["chart_selection_included"][
             "const"
         ]
         is False
+    )
+
+
+def test_validator_rejects_business_metric_mapping_to_unknown_metric() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer["business_metric_mappings"]["sales"]["metric_id"] = "metric.not_present"
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert any(
+        error["path"] == "$.business_metric_mappings.sales.metric_id"
+        for error in report["errors"]
+    )
+
+
+def test_validator_accepts_evidenced_ambiguous_business_metric_mapping() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer["business_metric_mappings"]["sales"] = {
+        "state": "ambiguous",
+        "metric_id": None,
+        "candidate_metric_ids": ["metric.sales", "metric.sales_per_units"],
+        "confidence": "medium",
+        "rationale": (
+            "The reviewed evidence does not resolve whether the requested sales "
+            "role means invoiced sales or average selling price."
+        ),
+        "evidence_ids": ["evidence.sales", "evidence.average_selling_price"],
+        "caveats": ["A business owner must choose the intended sales definition."],
+    }
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_valid"
+    assert report["semantic_readiness"] == (
+        "reviewed_with_unresolved_business_metric_mappings"
+    )
+    assert report["business_metric_mapping_status"] == "review_required"
+    assert report["business_metric_mappings"]["sales"]["state"] == "ambiguous"
+
+
+def test_validator_rejects_non_string_ambiguous_metric_candidate() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer["business_metric_mappings"]["sales"] = {
+        "state": "ambiguous",
+        "metric_id": None,
+        "candidate_metric_ids": [{}],
+        "confidence": "medium",
+        "rationale": "The candidate list is malformed.",
+        "evidence_ids": ["evidence.sales"],
+        "caveats": [],
+    }
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert any(
+        error["code"] == "invalid_business_metric_candidate"
+        for error in report["errors"]
+    )
+
+
+def test_validator_rejects_business_metric_mapping_with_only_profile_evidence() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer["business_metric_mappings"]["sales"]["evidence_ids"] = [
+        "evidence.dataset_profile"
+    ]
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert any(
+        error["code"] == "semantic_assertion_only_mechanical_evidence"
+        and error["path"] == "$.business_metric_mappings.sales.evidence_ids"
+        for error in report["errors"]
+    )
+
+
+def test_validator_rejects_mapping_to_unreviewed_metric() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    sales_metric = next(
+        metric for metric in layer["metrics"] if metric["metric_id"] == "metric.sales"
+    )
+    sales_metric["status"] = "unknown"
+    sales_metric["confidence"] = "unknown"
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert any(
+        error["code"] == "business_metric_not_reviewed" for error in report["errors"]
+    )
+
+
+def test_validator_rejects_one_metric_mapped_to_multiple_business_roles() -> None:
+    profiler, semantic = _modules()
+    profile = _fixture_profile(profiler)
+    layer = _reviewed_layer()
+    layer["business_metric_mappings"]["discount"] = {
+        "state": "mapped",
+        "metric_id": "metric.sales",
+        "candidate_metric_ids": [],
+        "confidence": "low",
+        "rationale": "A deliberately invalid duplicate role mapping for validation.",
+        "evidence_ids": ["evidence.business_metric_roles"],
+        "caveats": [],
+    }
+
+    report = semantic.validate_semantic_layer(layer, profile, _manifest())
+
+    assert report["status"] == "contract_invalid"
+    assert any(
+        error["code"] == "duplicate_business_metric_mapping"
+        for error in report["errors"]
     )
 
 

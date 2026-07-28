@@ -185,7 +185,15 @@ def summarize_contract(root: Path | None = None) -> dict[str, Any]:
             ),
             "schema_id": semantic_layer_schema.get("$id"),
             "schema_sha256": _sha256_file(resolved_root / "semantic_layer.schema.json"),
+            "dataset_intake_script": "scripts/dataset_intake.py",
             "workflow_script": "scripts/semantic_layer.py",
+            "canonical_business_metric_roles": ["sales", "discount", "cogs"],
+            "business_metric_mapping_states": [
+                "mapped",
+                "absent",
+                "ambiguous",
+                "unknown",
+            ],
             "reviewed_fixture": (
                 "fixtures/semantic_layer/retail_monthly.semantic.json"
             ),

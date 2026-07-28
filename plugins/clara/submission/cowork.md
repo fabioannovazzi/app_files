@@ -48,17 +48,12 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.119
-- **Files:** 829
-- **Bytes:** 4,320,490
-- **SHA-256:** `d1d47ed3dffeec0e0847b3ce59840d97ddce89ca38f5a6fe65e368cd7d9aa5bc`
+- **Version:** 0.1.120
+- **Files:** 832
+- **Bytes:** 4,333,916
+- **SHA-256:** `3d0bada75999ab2c985a2da3791512e1d3e81d888500beb8164e4f51a4eb044d`
 - **ZIP integrity:** clean
 
-The exact archive above was installed as a local plugin in Claude Cowork. Cowork
-recognized Clara and all six reviewed skills, invoked Clara from a natural
-language task, read a synthetic evidence file from the connected folder, and
-created `clara-workpaper.md` in that folder. The workpaper preserved source
-references, separated supported facts from unsupported management claims,
-surfaced tensions and diligence questions, stated a bounded advisory position,
-and marked the output as a draft for professional review. No web search,
-connector, browser control, image generation, or external service was used.
+The generated directory and exact archive above pass the repository's package
+drift, layout, and ZIP-integrity checks. An end-to-end Cowork installation smoke
+test remains required before submitting this release candidate to Anthropic.

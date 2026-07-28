@@ -100,6 +100,13 @@
       "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
     },
     {
+      "id": "reporting-engine-business-metric-intake",
+      "prompt": "I uploaded a Parquet sales table. Use Clara to identify which metric, if any, represents Sales, Discount, and COGS before charting, and keep the reviewed mapping for refreshed files.",
+      "required_signals": ["Parquet", "Sales", "Discount", "COGS", "before charting", "reviewed mapping", "refreshed files"],
+      "expected_skill": "clara:reporting-engine",
+      "must_not_route_to": ["clara:interview", "clara:transcribe", "clara:deck-correction", "clara:attribute-reporting", "clara:brand-fit"]
+    },
+    {
       "id": "reporting-engine-recurring-snapshot",
       "prompt": "Use Clara to attach today's refreshed sales file to the existing dataset semantic contract and reuse its reviewed definitions.",
       "required_signals": ["Clara", "refreshed sales file", "existing dataset semantic contract", "reuse"],

@@ -1008,6 +1008,10 @@ def test_plotting_plugins_are_embedded_in_clara_package_only() -> None:
         in clara_entries
     )
     assert (
+        f"{component_prefix}/reporting-engine/scripts/dataset_intake.py"
+        in clara_entries
+    )
+    assert (
         f"{component_prefix}/reporting-engine/references/semantic_layer.md"
         in clara_entries
     )
@@ -1106,6 +1110,46 @@ def test_extracted_clara_semantic_fixture_validates(
     assert report["semantic_readiness"] == "ready_as_scoped_semantic_input"
     assert report["counts"]["analysis_validities"]["valid"] == 9
     assert report["errors"] == []
+
+
+def test_extracted_clara_dataset_intake_keeps_first_upload_unreviewed(
+    extracted_clara_plugin: Path,
+    tmp_path: Path,
+) -> None:
+    component_root = extracted_clara_plugin / "modules" / "reporting-engine"
+    fixture_root = component_root / "fixtures" / "semantic_layer"
+    output_dir = tmp_path / "dataset-intake"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(component_root / "scripts" / "dataset_intake.py"),
+            str(fixture_root / "retail_monthly.csv"),
+            "--dataset-contract-id",
+            "retail_monthly",
+            "--output-dir",
+            str(output_dir),
+        ],
+        cwd=tmp_path,
+        env=isolated_plugin_env(),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=60,
+    )
+
+    receipt = json.loads(
+        (output_dir / "dataset_intake.json").read_text(encoding="utf-8")
+    )
+    layer = json.loads(
+        (output_dir / "semantic_layer.draft.json").read_text(encoding="utf-8")
+    )
+    assert result.returncode == 0, result.stderr
+    assert receipt["status"] == "review_required"
+    assert all(
+        mapping["state"] == "unknown"
+        for mapping in layer["business_metric_mappings"].values()
+    )
 
 
 def test_extracted_clara_semantic_acceptance_cli(

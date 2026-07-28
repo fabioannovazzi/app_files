@@ -27,16 +27,19 @@ __all__ = [
     "assess_snapshot_compatibility",
     "build_semantic_acceptance_summary",
     "build_authoring_context",
+    "build_business_metric_authoring_context",
+    "build_business_metric_mapping_scaffold",
     "build_semantic_layer_scaffold",
     "build_snapshot_attachment",
     "canonical_profile_fingerprint",
     "canonical_snapshot_fingerprint",
     "main",
     "resolve_period_rules",
+    "summarize_business_metric_mappings",
     "validate_semantic_layer",
 ]
 
-SEMANTIC_LAYER_SCHEMA_VERSION = "0.2"
+SEMANTIC_LAYER_SCHEMA_VERSION = "0.3"
 REPORTING_ENGINE_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MANIFEST = REPORTING_ENGINE_ROOT / "catalog" / "selection_manifest.json"
 DEFAULT_SEMANTIC_SCHEMA = (
@@ -86,6 +89,40 @@ SNAPSHOT_COMPATIBILITY_STATUSES = {
     "compatible_with_extensions",
     "partially_compatible",
     "incompatible",
+}
+BUSINESS_METRIC_ROLES = ("sales", "discount", "cogs")
+BUSINESS_METRIC_MAPPING_STATES = {"mapped", "absent", "ambiguous", "unknown"}
+BUSINESS_METRIC_ROLE_GUIDANCE = {
+    "sales": {
+        "question": (
+            "Which reviewed metric is the dataset's primary reported sales or "
+            "revenue value, if one exists?"
+        ),
+        "distinctions": [
+            "Preserve whether the source defines the value as gross sales, net sales, revenue, or another basis.",
+            "Do not treat a matching header or a generic additive-value profile class as sufficient evidence.",
+        ],
+    },
+    "discount": {
+        "question": (
+            "Which reviewed metric is a separately reported discount, rebate, "
+            "or allowance measure, if one exists?"
+        ),
+        "distinctions": [
+            "Preserve whether the source reports a discount amount, rate, or another basis; do not substitute one for another.",
+            "Do not reconstruct a separate discount from sales that are already reported net.",
+        ],
+    },
+    "cogs": {
+        "question": (
+            "Which reviewed metric is total cost of goods sold or cost of sales, "
+            "if one exists?"
+        ),
+        "distinctions": [
+            "Do not assume that a unit cost is total COGS without a reviewed quantity relationship.",
+            "Do not infer a separately reported COGS amount from a margin rate alone.",
+        ],
+    },
 }
 
 
@@ -169,6 +206,106 @@ def _unique_id(prefix: str, label: str, used: set[str]) -> str:
         suffix += 1
     used.add(candidate)
     return candidate
+
+
+def build_business_metric_mapping_scaffold() -> dict[str, dict[str, Any]]:
+    """Return unresolved canonical business roles without guessing a metric."""
+
+    return {
+        role: {
+            "state": "unknown",
+            "metric_id": None,
+            "candidate_metric_ids": [],
+            "confidence": "unknown",
+            "rationale": "",
+            "evidence_ids": [],
+            "caveats": [],
+        }
+        for role in BUSINESS_METRIC_ROLES
+    }
+
+
+def summarize_business_metric_mappings(
+    layer: dict[str, Any],
+) -> dict[str, Any]:
+    """Summarize reviewed role states without adding semantic judgment."""
+
+    raw_mappings = layer.get("business_metric_mappings")
+    mappings = raw_mappings if isinstance(raw_mappings, dict) else {}
+    roles: dict[str, dict[str, Any]] = {}
+    state_counts = {state: 0 for state in ("mapped", "absent", "ambiguous", "unknown")}
+    for role in BUSINESS_METRIC_ROLES:
+        raw_mapping = mappings.get(role)
+        mapping = raw_mapping if isinstance(raw_mapping, dict) else {}
+        state = str(mapping.get("state") or "unknown")
+        if state not in BUSINESS_METRIC_MAPPING_STATES:
+            state = "unknown"
+        state_counts[state] += 1
+        raw_candidate_ids = mapping.get("candidate_metric_ids")
+        roles[role] = {
+            "state": state,
+            "metric_id": mapping.get("metric_id"),
+            "candidate_metric_ids": (
+                list(raw_candidate_ids) if isinstance(raw_candidate_ids, list) else []
+            ),
+            "confidence": mapping.get("confidence") or "unknown",
+        }
+    unresolved_roles = [
+        role
+        for role, mapping in roles.items()
+        if mapping["state"] in {"ambiguous", "unknown"}
+    ]
+    return {
+        "status": "resolved" if not unresolved_roles else "review_required",
+        "roles": roles,
+        "state_counts": state_counts,
+        "unresolved_roles": unresolved_roles,
+    }
+
+
+def build_business_metric_authoring_context(
+    semantic_layer: dict[str, Any],
+) -> dict[str, Any]:
+    """Expose every metric for model-led Sales, Discount, and COGS review."""
+
+    metrics = [
+        metric
+        for metric in semantic_layer.get("metrics") or []
+        if isinstance(metric, dict)
+    ]
+    metric_candidates = [
+        {
+            "metric_id": metric.get("metric_id"),
+            "label": metric.get("label"),
+            "binding": metric.get("binding"),
+            "definition": metric.get("definition"),
+            "metric_class": metric.get("metric_class"),
+            "status": metric.get("status"),
+            "confidence": metric.get("confidence"),
+            "origin_profile_observation": metric.get("origin_profile_observation")
+            or {},
+        }
+        for metric in metrics
+    ]
+    raw_mappings = semantic_layer.get("business_metric_mappings")
+    current_mappings = (
+        raw_mappings
+        if isinstance(raw_mappings, dict)
+        else build_business_metric_mapping_scaffold()
+    )
+    return {
+        "current_mappings": current_mappings,
+        "role_guidance": BUSINESS_METRIC_ROLE_GUIDANCE,
+        "metric_candidates": metric_candidates,
+        "review_rules": [
+            "Inspect the dataset and non-mechanical source evidence before changing a role from unknown.",
+            "Use mapped only for one reviewed metric id; update that metric's business definition, class, aggregation, status, rationale, and evidence too.",
+            "Use absent only when source-backed review establishes that the dataset has no separate measure for the role.",
+            "Use ambiguous when evidence supports one or more plausible metric ids but does not justify a single mapping.",
+            "Keep unknown when the available evidence supports neither a mapping, absence, nor a bounded ambiguity.",
+            "Do not rank, select, or reject candidates from column names or profiler hints alone.",
+        ],
+    }
 
 
 def _profile_source_locator(profile: dict[str, Any]) -> str:
@@ -396,6 +533,7 @@ def build_semantic_layer_scaffold(
                 "notes": [],
             }
         ],
+        "business_metric_mappings": build_business_metric_mapping_scaffold(),
         "metrics": _metric_scaffold(profile),
         "dimensions": _dimension_scaffold(profile),
         "periods": _period_scaffold(profile),
@@ -547,6 +685,9 @@ def build_authoring_context(
         "snapshot_fingerprint": canonical_snapshot_fingerprint(profile),
         "snapshot_profile": profile,
         "semantic_layer_draft": scaffold,
+        "business_metric_mapping_review": (
+            build_business_metric_authoring_context(scaffold)
+        ),
         "analysis_catalog": _analysis_catalog(manifest),
         "authoring_rules": [
             "Inspect source data and business evidence; profiler labels are candidates, not semantic facts.",
@@ -554,6 +695,7 @@ def build_authoring_context(
             "Do not copy row counts, values, members, available date bounds, or concrete run windows into stable semantics.",
             "Bind the layer to a caller-, connector-, or project-assigned dataset contract id; never infer logical identity from schema alone.",
             "Every valid, conditional, or invalid semantic assertion needs rationale and source-backed evidence.",
+            "Review Sales, Discount, and COGS explicitly; matching headers and profiler hints are not semantic evidence.",
             "Preserve conflicts and unknowns instead of guessing.",
             "Add analysis policies only for meaningful reusable analysis families; do not manufacture one policy per chart.",
             "Treat every manifest selection emphasis without a reviewed policy as unknown, not valid or invalid by default.",
@@ -712,6 +854,160 @@ def _check_assertion_evidence(
             f"{path}.evidence_ids",
             "The assertion cites conflicted evidence; preserve the conflict in status, rationale, or caveats.",
         )
+
+
+def _validate_business_metric_mappings(
+    layer: dict[str, Any],
+    *,
+    metric_index: dict[str, dict[str, Any]],
+    evidence_index: dict[str, dict[str, Any]],
+    source_index: dict[str, dict[str, Any]],
+    errors: list[dict[str, Any]],
+    warnings: list[dict[str, Any]],
+) -> dict[str, Any]:
+    """Validate role references and reviewed evidence without choosing a metric."""
+
+    raw_mappings = layer.get("business_metric_mappings")
+    if not isinstance(raw_mappings, dict):
+        _issue(
+            errors,
+            "invalid_type",
+            "business_metric_mappings",
+            "Expected an object.",
+        )
+        return summarize_business_metric_mappings(layer)
+
+    mapped_metric_roles: dict[str, str] = {}
+    for role in BUSINESS_METRIC_ROLES:
+        path = f"$.business_metric_mappings.{role}"
+        raw_mapping = raw_mappings.get(role)
+        if not isinstance(raw_mapping, dict):
+            _issue(
+                errors,
+                "missing_business_metric_mapping",
+                path,
+                f"A mapping record is required for {role}.",
+            )
+            continue
+        mapping = raw_mapping
+        state = mapping.get("state")
+        _check_enum(
+            state,
+            BUSINESS_METRIC_MAPPING_STATES,
+            f"{path}.state",
+            errors,
+        )
+        _check_enum(
+            mapping.get("confidence"),
+            CONFIDENCE_LEVELS,
+            f"{path}.confidence",
+            errors,
+        )
+        _check_assertion_evidence(
+            mapping,
+            status_key="state",
+            unknown_value="unknown",
+            path=path,
+            evidence_index=evidence_index,
+            source_index=source_index,
+            errors=errors,
+            warnings=warnings,
+        )
+
+        metric_id = mapping.get("metric_id")
+        raw_candidate_ids = mapping.get("candidate_metric_ids")
+        candidate_ids = raw_candidate_ids if isinstance(raw_candidate_ids, list) else []
+        if state == "mapped":
+            if not isinstance(metric_id, str) or metric_id not in metric_index:
+                _issue(
+                    errors,
+                    "unknown_business_metric",
+                    f"{path}.metric_id",
+                    f"Unknown mapped metric: {metric_id}",
+                )
+            else:
+                metric_status = metric_index[metric_id].get("status")
+                if metric_status not in {"defined", "conditional"}:
+                    _issue(
+                        errors,
+                        "business_metric_not_reviewed",
+                        f"{path}.metric_id",
+                        (
+                            f"Mapped metric {metric_id} must be defined or "
+                            "conditional, not "
+                            f"{metric_status!r}."
+                        ),
+                    )
+                previous_role = mapped_metric_roles.get(metric_id)
+                if previous_role is not None:
+                    _issue(
+                        errors,
+                        "duplicate_business_metric_mapping",
+                        f"{path}.metric_id",
+                        (
+                            f"Metric {metric_id} is already mapped to "
+                            f"{previous_role}; canonical roles require distinct "
+                            "reviewed mappings."
+                        ),
+                    )
+                else:
+                    mapped_metric_roles[metric_id] = role
+            if candidate_ids:
+                _issue(
+                    errors,
+                    "mapped_role_has_candidates",
+                    f"{path}.candidate_metric_ids",
+                    "A mapped role must not retain ambiguous candidates.",
+                )
+        elif state == "absent":
+            if metric_id is not None or candidate_ids:
+                _issue(
+                    errors,
+                    "absent_role_has_metric",
+                    path,
+                    "An absent role cannot reference a metric or candidates.",
+                )
+        elif state == "ambiguous":
+            if metric_id is not None:
+                _issue(
+                    errors,
+                    "ambiguous_role_has_mapping",
+                    f"{path}.metric_id",
+                    "An ambiguous role cannot choose one metric.",
+                )
+            if not candidate_ids:
+                _issue(
+                    errors,
+                    "ambiguous_role_without_candidates",
+                    f"{path}.candidate_metric_ids",
+                    "An ambiguous role needs at least one reviewed candidate.",
+                )
+            for candidate_id in candidate_ids:
+                if not isinstance(candidate_id, str):
+                    _issue(
+                        errors,
+                        "invalid_business_metric_candidate",
+                        f"{path}.candidate_metric_ids",
+                        "Metric candidate ids must be strings.",
+                    )
+                    continue
+                if candidate_id not in metric_index:
+                    _issue(
+                        errors,
+                        "unknown_business_metric_candidate",
+                        f"{path}.candidate_metric_ids",
+                        f"Unknown metric candidate: {candidate_id}",
+                    )
+        elif state == "unknown":
+            if metric_id is not None or candidate_ids:
+                _issue(
+                    errors,
+                    "unknown_role_has_assignment",
+                    path,
+                    "An unknown role cannot retain a mapping or candidates.",
+                )
+
+    return summarize_business_metric_mappings(layer)
 
 
 def _check_iso_date(value: Any, path: str, errors: list[dict[str, Any]]) -> None:
@@ -1529,6 +1825,7 @@ def build_snapshot_attachment(
         "dataset_contract_id": compatibility["dataset_contract_id"],
         "semantic_layer_id": layer.get("semantic_layer_id"),
         "semantic_version": layer.get("semantic_version"),
+        "business_metric_mappings": summarize_business_metric_mappings(layer),
         "snapshot": {
             "snapshot_id": f"snapshot.{fingerprint[:16]}",
             "snapshot_fingerprint": fingerprint,
@@ -1799,6 +2096,15 @@ def validate_semantic_layer(
                         f"{path}.{key}",
                         f"Unknown dimension: {dimension_id}",
                     )
+
+    business_metric_mapping_summary = _validate_business_metric_mappings(
+        layer,
+        metric_index=metric_index,
+        evidence_index=evidence_index,
+        source_index=source_index,
+        errors=errors,
+        warnings=warnings,
+    )
 
     for position, dimension in enumerate(dimensions):
         path = f"dimensions[{position}]"
@@ -2345,6 +2651,8 @@ def validate_semantic_layer(
         semantic_readiness = "contract_invalid"
     elif review_status == "draft":
         semantic_readiness = "draft_unreviewed"
+    elif business_metric_mapping_summary["status"] != "resolved":
+        semantic_readiness = "reviewed_with_unresolved_business_metric_mappings"
     elif usable_policy_count == 0:
         semantic_readiness = "reviewed_no_usable_analysis_policies"
     elif unknown_concepts:
@@ -2373,6 +2681,8 @@ def validate_semantic_layer(
             "dataset_contract_id": contract_id,
             "contract_version": dataset_contract.get("contract_version"),
         },
+        "business_metric_mappings": business_metric_mapping_summary["roles"],
+        "business_metric_mapping_status": business_metric_mapping_summary["status"],
         "snapshot": {
             "dataset_id": profile.get("dataset_id"),
             "snapshot_fingerprint": snapshot_fingerprint,
@@ -2391,6 +2701,9 @@ def validate_semantic_layer(
             "unassessed_selection_emphases": len(unassessed_selection_emphases),
             "open_questions": len(open_questions),
             "unknown_concepts": unknown_concepts,
+            "business_metric_mapping_states": business_metric_mapping_summary[
+                "state_counts"
+            ],
             "analysis_validities": validity_counts,
             "errors": len(errors),
             "warnings": len(warnings),
