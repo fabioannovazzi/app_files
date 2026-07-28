@@ -48,6 +48,14 @@
       "command": "node",
       "args": ["./scripts/run_component_mcp.cjs", "journal-bank-reconciliation"]
     },
+    "financialAnalysisContracts": {
+      "title": "Vera Financial Analysis",
+      "description": "Describe Vera's registered monthly P&L, working-capital, and customer-concentration contract workflow.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "financial-analysis"]
+    },
     "reportBuilderWidgets": {
       "title": "Build Report",
       "description": "Validate and render Build Report review-session payloads.",

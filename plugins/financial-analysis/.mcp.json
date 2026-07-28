@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "veraFinancialAnalysis": {
+      "title": "Vera Financial Analysis",
+      "description": "Describe Vera's registered financial-analysis packs and contract stack.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/server.cjs",
+        "--stdio"
+      ]
+    }
+  }
+}

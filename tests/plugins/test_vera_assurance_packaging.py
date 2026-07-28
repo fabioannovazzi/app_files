@@ -94,3 +94,18 @@ def test_staged_vera_assurance_tree_imports_without_repository_pythonpath(
     payload = json.loads(result.stdout)
     assert Path(payload["module"]).is_relative_to(module_root)
     assert payload["decimal"] == "1.2"
+
+
+def test_financial_analysis_vendors_its_dedicated_contract_module() -> None:
+    builder = _load_builder()
+    config = builder.load_vendor_module_config()["financial-analysis"]
+
+    entries = builder.shared_vendor_module_entries(config)
+
+    assert {
+        "vera_assurance/__init__.py",
+        "vera_assurance/money.py",
+        "vera_assurance/serialization.py",
+        "vera_financial_analysis/__init__.py",
+        "vera_financial_analysis/contracts.py",
+    } <= set(entries)

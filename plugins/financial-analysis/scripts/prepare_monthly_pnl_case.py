@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare an exact synthetic monthly P&L against reviewed public controls."""
+"""Prepare an exact monthly P&L against reviewed mappings and controls."""
 
 from __future__ import annotations
 
@@ -21,9 +21,9 @@ __all__ = ["main", "prepare_monthly_pnl_case"]
 
 LOGGER = logging.getLogger(__name__)
 
-CASE_SCHEMA = "clara.monthly_pnl_preparation_case.v1"
-RECONCILIATION_SCHEMA = "clara.reconciliation_result.v1"
-MANIFEST_SCHEMA = "clara.prepared_evidence_manifest.v1"
+CASE_SCHEMA = "vera.monthly_pnl_preparation_case.v1"
+RECONCILIATION_SCHEMA = "vera.monthly_pnl_reconciliation.v1"
+MANIFEST_SCHEMA = "vera.monthly_pnl_evidence_manifest.v1"
 RECIPE_ID = "monthly_pnl_from_reviewed_mapping.v1"
 ENGINE_VERSION = "1.0.0"
 SCENARIO = "SYN"
@@ -1842,6 +1842,7 @@ def _prepare_monthly_pnl_case_exact(
         "case_id": str(case["case_id"]),
         "preparation_status": "passed",
         "publication_status": "synthetic_benchmark_only",
+        "report_ready": False,
         "case_contract": {
             "path": case_path.name,
             "sha256": _sha256_file(case_path),

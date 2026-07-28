@@ -28,9 +28,9 @@ __all__ = ["main", "prepare_customer_concentration_case"]
 
 LOGGER = logging.getLogger(__name__)
 
-CASE_SCHEMA = "clara.customer_concentration_preparation_case.v1"
-RECONCILIATION_SCHEMA = "clara.customer_concentration_reconciliation.v1"
-MANIFEST_SCHEMA = "clara.prepared_evidence_manifest.v1"
+CASE_SCHEMA = "vera.customer_concentration_preparation_case.v1"
+RECONCILIATION_SCHEMA = "vera.customer_concentration_reconciliation.v1"
+MANIFEST_SCHEMA = "vera.customer_concentration_evidence_manifest.v1"
 RECIPE_ID = "customer_concentration_from_reviewed_public_disclosure.v1"
 ENGINE_VERSION = "1.0.0"
 

@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.50",
+  "version": "0.1.51",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -27,6 +27,9 @@
     "antiriciclaggio",
     "aml",
     "reconciliation",
+    "financial-analysis",
+    "working-capital",
+    "customer-concentration",
     "journal",
     "reporting",
     "concordato",
@@ -45,7 +48,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "La collega AI per istruttorie, controlli e carte di lavoro rivedibili.",
-    "longDescription": "Vera aiuta il commercialista a seguire il lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie, ordina e ritrova i documenti del cliente, controlla i dati contabili, seleziona campioni, riconcilia movimenti e prepara report. Aiuta anche a riesaminare casi di concordato preventivo e a preparare pratiche INPS e Registro Imprese/DIRE. Prepara richieste mirate per Deep Research su temi legali, fiscali e normativi e verifica le risposte rispetto alle fonti citate. Mostra le fonti, i punti da chiarire e le decisioni da prendere. Il giudizio professionale resta al commercialista.",
+    "longDescription": "Vera aiuta il commercialista a seguire il lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie, ordina e ritrova i documenti del cliente, controlla i dati contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie e report. Aiuta anche a riesaminare casi di concordato preventivo e a preparare pratiche INPS e Registro Imprese/DIRE. Prepara richieste mirate per Deep Research su temi legali, fiscali e normativi e verifica le risposte rispetto alle fonti citate. Mostra le fonti, i punti da chiarire e le decisioni da prendere. Il giudizio professionale resta al commercialista.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -59,7 +62,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
-      "Esamina questi documenti del cliente, separa fatti e valutazioni e prepara una bozza rivedibile.",
+      "Esamina questi documenti o dati contabili, separa fatti e valutazioni e prepara un risultato rivedibile.",
       "Controlla questa ricerca fiscale o normativa, verifica le fonti citate e segnala ciò che manca.",
       "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti."
     ],

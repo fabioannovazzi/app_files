@@ -1,0 +1,48 @@
+{
+  "plugin": "financial-analysis",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "monthly-pnl",
+      "prompt": "Prepare a source-bound monthly P&L from this trial balance and account mapping.",
+      "required_signals": [
+        "monthly P&L",
+        "trial balance",
+        "account mapping"
+      ]
+    },
+    {
+      "id": "working-capital",
+      "prompt": "Analyze working capital from the AR, AP, inventory and revenue files and reconcile the joins.",
+      "required_signals": [
+        "working capital",
+        "AR",
+        "AP",
+        "reconcile"
+      ]
+    },
+    {
+      "id": "customer-concentration",
+      "prompt": "Prepare customer revenue concentration and reconcile customer-parent mappings.",
+      "required_signals": [
+        "customer concentration",
+        "revenue",
+        "customer-parent"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "commercial-market-dd",
+      "prompt": "Assess market attractiveness and commercial growth opportunities."
+    },
+    {
+      "id": "journal-sampling",
+      "prompt": "Extract the accounting journal and select a reproducible audit sample."
+    },
+    {
+      "id": "write-report",
+      "prompt": "Turn these already prepared tables into a management report and DOCX."
+    }
+  ]
+}
