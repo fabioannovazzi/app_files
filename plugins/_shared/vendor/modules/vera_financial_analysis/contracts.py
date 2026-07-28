@@ -1036,7 +1036,7 @@ def validate_prepared_evidence_manifest(value: object) -> dict[str, Any]:
     payload = _mapping(value, label="prepared evidence manifest")
     content = _sealed_content(
         payload,
-        schema_version="vera.prepared_evidence_manifest.v1",
+        schema_version="vera.prepared_evidence_manifest.v2",
         required={
             "crosswalk_refs",
             "dataset_contract_refs",
@@ -1125,6 +1125,7 @@ def validate_prepared_evidence_manifest(value: object) -> dict[str, Any]:
                 "sha256": _sha256(output["sha256"], label=f"{label}.sha256"),
             }
         )
+    outputs.sort(key=lambda item: item["artifact_ref"])
     output_refs = [item["artifact_ref"] for item in outputs]
     if status == "passed" and not outputs:
         raise FinancialAnalysisContractError(
@@ -1135,7 +1136,7 @@ def validate_prepared_evidence_manifest(value: object) -> dict[str, Any]:
             "output_artifacts must have unique artifact_ref values"
         )
     normalized = {
-        "schema_version": "vera.prepared_evidence_manifest.v1",
+        "schema_version": "vera.prepared_evidence_manifest.v2",
         "manifest_id": _identifier(content["manifest_id"], label="manifest_id"),
         "request_ref": _identifier(content["request_ref"], label="request_ref"),
         "package_ref": _identifier(content["package_ref"], label="package_ref"),
@@ -1204,7 +1205,7 @@ def build_prepared_evidence_manifest(
     return validate_prepared_evidence_manifest(
         _seal(
             {
-                "schema_version": "vera.prepared_evidence_manifest.v1",
+                "schema_version": "vera.prepared_evidence_manifest.v2",
                 "manifest_id": manifest_id,
                 "request_ref": request_ref,
                 "package_ref": package_ref,

@@ -31,6 +31,7 @@ const CONTRACTS = [
   "reconciliation_result",
   "prepared_evidence_manifest",
   "fdd_preparation_case",
+  "fdd_calculation_result",
   "fdd_metric_receipt",
   "contingent_liability_register",
   "financial_issue_register",

@@ -384,7 +384,7 @@ def validate_case_contracts(
         "prepared_manifest": validated_prepared["content_sha256"],
     }
     audit_content = {
-        "schema_version": "vera.financial_analysis_contract_audit.v1",
+        "schema_version": "vera.financial_analysis_contract_audit.v2",
         "status": "passed",
         "pack_id": validated_request["pack_id"],
         "recipe_version": validated_request["recipe_version"],

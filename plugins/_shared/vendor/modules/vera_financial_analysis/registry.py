@@ -11,7 +11,7 @@ __all__ = [
     "FDD_PACK_RECIPES",
 ]
 
-FDD_ENGINE_VERSION = "1.0.0"
+FDD_ENGINE_VERSION = "1.1.0"
 FDD_OUTPUT_ROLES = (
     "fdd_line_items",
     "fdd_metrics",

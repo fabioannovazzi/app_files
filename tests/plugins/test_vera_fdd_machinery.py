@@ -278,6 +278,7 @@ def _working_capital_inputs() -> dict[str, Any]:
             }
         ],
         "selected_target": {
+            "economic_effect_id": "effect.nwc.target",
             "amount": "105",
             "basis": "Reviewed target.",
             "decision_ref": "decision.synthetic",
@@ -329,7 +330,7 @@ def _bundle(case: dict[str, Any]) -> dict[str, Any]:
     stack = case["contract_stack"]
     return _seal(
         {
-            "schema_version": "vera.fdd_execution_bundle.v1",
+            "schema_version": "vera.fdd_execution_bundle.v2",
             "package": stack["package"],
             "datasets": stack["datasets"],
             "relationships": stack["relationships"],
@@ -483,7 +484,7 @@ def test_fdd_calculation_packs_and_bridges_execute_exactly(
         )
         assert receipt["status"] == "passed"
         assert receipt["schema_version"] == (
-            "vera.financial_analysis_pack_execution.v2"
+            "vera.financial_analysis_pack_execution.v3"
         )
 
     assert set(PACKS) == {
@@ -562,13 +563,18 @@ def test_fdd_runner_closes_files_contracts_and_replay(tmp_path: Path) -> None:
         "fdd_line_items.json",
         "fdd_metrics.json",
         "fdd_result.json",
+        "financial_analysis_contract_audit.json",
         "prepared_evidence_manifest.json",
         "reconciliation.json",
     }
     manifest = json.loads(
         (first_dir / "prepared_evidence_manifest.json").read_text(encoding="utf-8")
     )
-    assert manifest["schema_version"] == "vera.prepared_evidence_manifest.v1"
+    line_items = json.loads(
+        (first_dir / "fdd_line_items.json").read_text(encoding="utf-8")
+    )
+    assert line_items["schema_version"] == "vera.fdd_line_items.v2"
+    assert manifest["schema_version"] == "vera.prepared_evidence_manifest.v2"
     assert manifest["report_ready"] is False
 
 
@@ -632,10 +638,29 @@ def test_mcp_pack_registry_matches_python_runner() -> None:
     server_text = (
         ROOT / "plugins" / "financial-analysis" / "mcp" / "server.cjs"
     ).read_text(encoding="utf-8")
-    match = re.search(r"const PACKS = (\[[\s\S]*?\]);", server_text)
+    pack_match = re.search(r"const PACKS = (\[[\s\S]*?\]);", server_text)
+    contract_match = re.search(r"const CONTRACTS = (\[[\s\S]*?\]);", server_text)
 
-    assert match is not None
-    assert re.findall(r'"([^"]+)"', match.group(1)) == list(PACKS)
+    assert pack_match is not None
+    assert re.findall(r'"([^"]+)"', pack_match.group(1)) == list(PACKS)
+    assert contract_match is not None
+    assert re.findall(r'"([^"]+)"', contract_match.group(1)) == [
+        "data_package_manifest",
+        "dataset_contract",
+        "relationship_contract",
+        "crosswalk_manifest",
+        "analysis_pack_request",
+        "reconciliation_result",
+        "prepared_evidence_manifest",
+        "fdd_preparation_case",
+        "fdd_calculation_result",
+        "fdd_metric_receipt",
+        "contingent_liability_register",
+        "financial_issue_register",
+    ]
+    vera_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
+    description = vera_mcp["mcpServers"]["financialAnalysisContracts"]["description"]
+    assert "financial due-diligence" in description
 
 
 def test_fdd_adversarial_contract_and_receipt_mutations_fail(
@@ -788,6 +813,8 @@ def test_registers_are_reviewed_evidence_not_completeness_or_deal_decisions(
         ],
     )
 
+    assert contingencies["schema_version"] == "vera.contingent_liability_register.v2"
+    assert issues["schema_version"] == "vera.financial_issue_register.v2"
     assert [item["contingency_id"] for item in contingencies["items"]] == [
         "contingency.a",
         "contingency.z",

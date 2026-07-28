@@ -50,7 +50,7 @@
     },
     "financialAnalysisContracts": {
       "title": "Vera Financial Analysis",
-      "description": "Describe Vera's registered monthly P&L, working-capital, and customer-concentration contract workflow.",
+      "description": "Describe Vera's registered accounting-analysis and financial due-diligence packs, contracts, and reviewed registers.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",

@@ -24,6 +24,12 @@ only over reviewed prepared inputs and decisions bound to that contract stack.
 They do not infer accounting classifications, assume fixed reporting years,
 or turn prepared evidence into a professional conclusion.
 
+FDD monetary inputs and calculated outputs are canonical Decimal strings
+limited to 38 digits and six decimal places; out-of-domain results fail closed
+rather than being rounded. A selected working-capital target includes an explicit reviewed
+economic-effect identity, so its contribution remains traceable in downstream
+bridge receipts even when there is no separate normalization adjustment.
+
 The module exposes eight registered recipes through the single named
 dispatcher `scripts/run_pack.py`. The engines preserve the exact
 calculation logic and fail-closed behavior of the evaluated preparation

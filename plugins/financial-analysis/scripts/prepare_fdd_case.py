@@ -11,16 +11,18 @@ from pathlib import Path
 from typing import Any
 
 from preparation_contract_kernel import (
+    PinnedDirectory,
     canonical_json_sha256,
     file_snapshot_beneath,
+    pinned_directory,
     resolve_local_file,
-    strict_json_load,
-    write_json,
+    strict_json_snapshot_beneath,
 )
 from validate_case_contracts import validate_case_contracts
 
 __all__ = [
     "ENGINE_VERSION",
+    "OUTPUT_NAMES",
     "OUTPUT_ROLES",
     "RECIPE_IDS",
     "main",
@@ -68,7 +70,16 @@ from vera_financial_analysis import (  # noqa: E402
 ENGINE_VERSION = FDD_ENGINE_VERSION
 RECIPE_IDS = FDD_PACK_RECIPES
 OUTPUT_ROLES = FDD_OUTPUT_ROLES
-_BUNDLE_SCHEMA = "vera.fdd_execution_bundle.v1"
+_BUNDLE_SCHEMA = "vera.fdd_execution_bundle.v2"
+_AUDIT_NAME = "financial_analysis_contract_audit.json"
+OUTPUT_NAMES = (
+    "fdd_result.json",
+    "fdd_metrics.json",
+    "fdd_line_items.json",
+    "reconciliation.json",
+    "prepared_evidence_manifest.json",
+    _AUDIT_NAME,
+)
 
 
 def _mapping(value: object, *, label: str) -> Mapping[str, Any]:
@@ -226,7 +237,7 @@ def _validate_bundle(
     )
     if set(package_sources) != set(case_sources):
         raise ValueError("FDD case artifacts do not match the data package")
-    source_paths = []
+    source_snapshots = []
     for artifact_ref, source in package_sources.items():
         case_source = case_sources[artifact_ref]
         for field in ("byte_count", "dataset_contract_ref", "sha256"):
@@ -239,7 +250,6 @@ def _validate_bundle(
             source["locator"],
             label=f"package source {artifact_ref}.locator",
         )
-        source_paths.append(source_path)
         byte_count, sha256 = file_snapshot_beneath(
             source_path,
             root=bundle_root,
@@ -248,6 +258,14 @@ def _validate_bundle(
             raise ValueError(f"package source {artifact_ref} file_name does not close")
         if byte_count != source["byte_count"] or sha256 != source["sha256"]:
             raise ValueError(f"package source {artifact_ref} file receipt is stale")
+        source_snapshots.append(
+            {
+                "artifact_ref": artifact_ref,
+                "path": source_path,
+                "byte_count": byte_count,
+                "sha256": sha256,
+            }
+        )
 
     return {
         "package": package,
@@ -256,7 +274,7 @@ def _validate_bundle(
         "crosswalks": crosswalks,
         "request": request,
         "case": case,
-        "source_paths": source_paths,
+        "source_snapshots": source_snapshots,
     }
 
 
@@ -269,13 +287,14 @@ def _seal_document(content: Mapping[str, Any]) -> dict[str, Any]:
 
 
 def _output_receipt(
-    path: Path,
+    output_boundary: PinnedDirectory,
+    name: str,
     *,
     artifact_ref: str,
     role: str,
     row_count: int,
 ) -> dict[str, Any]:
-    byte_count, sha256 = file_snapshot_beneath(path, root=path.parent)
+    byte_count, sha256 = output_boundary.snapshot_file(name)
     return {
         "artifact_ref": artifact_ref,
         "role": role,
@@ -285,32 +304,41 @@ def _output_receipt(
     }
 
 
-def prepare_fdd_case(
-    case_path: Path,
-    output_dir: Path,
+def _verify_terminal_inputs(
     *,
+    bundle_path: Path,
+    bundle_byte_count: int,
+    bundle_sha256: str,
+    bundle: Mapping[str, Any],
+) -> None:
+    current_count, current_sha256 = file_snapshot_beneath(
+        bundle_path,
+        root=bundle_path.parent,
+    )
+    if current_count != bundle_byte_count or current_sha256 != bundle_sha256:
+        raise ValueError("FDD execution bundle changed during execution")
+    for source in bundle["source_snapshots"]:
+        byte_count, sha256 = file_snapshot_beneath(
+            source["path"],
+            root=bundle_path.parent,
+        )
+        if byte_count != source["byte_count"] or sha256 != source["sha256"]:
+            raise ValueError(
+                f"package source {source['artifact_ref']} changed during execution"
+            )
+
+
+def _prepare_fdd_case_pinned(
+    *,
+    bundle_path: Path,
+    bundle_payload: Mapping[str, Any],
+    bundle_byte_count: int,
+    bundle_sha256: str,
+    output_boundary: PinnedDirectory,
     expected_pack_id: str,
 ) -> dict[str, Any]:
-    """Validate, execute, reconcile, and seal one FDD execution bundle."""
-
-    supplied_bundle_path = Path(case_path)
-    supplied_output_dir = Path(output_dir)
-    if supplied_bundle_path.is_symlink():
-        raise ValueError("FDD execution bundle cannot be a symlink")
-    if supplied_output_dir.is_symlink():
-        raise ValueError("FDD output directory cannot be a symlink")
-    bundle_path = supplied_bundle_path.resolve()
-    output_dir = supplied_output_dir.resolve()
-    if not bundle_path.is_file():
-        raise ValueError("FDD execution bundle must be a regular file")
-    if output_dir.exists():
-        if not output_dir.is_dir():
-            raise ValueError("FDD output path must be a directory")
-        if any(output_dir.iterdir()):
-            raise ValueError("FDD output directory must be fresh and empty")
-    output_dir.mkdir(parents=True, exist_ok=True)
     bundle = _validate_bundle(
-        strict_json_load(bundle_path),
+        bundle_payload,
         expected_pack_id=expected_pack_id,
         bundle_root=bundle_path.parent,
     )
@@ -320,31 +348,7 @@ def prepare_fdd_case(
     if first_result != replay_result:
         raise ValueError("FDD deterministic replay changed the result")
 
-    result_path = output_dir / "fdd_result.json"
-    metrics_path = output_dir / "fdd_metrics.json"
-    line_items_path = output_dir / "fdd_line_items.json"
-    reconciliation_path = output_dir / "reconciliation.json"
-    manifest_path = output_dir / "prepared_evidence_manifest.json"
-    output_paths = {
-        result_path,
-        metrics_path,
-        line_items_path,
-        reconciliation_path,
-        manifest_path,
-    }
-    protected_paths = {bundle_path, *bundle["source_paths"]}
-    collisions = sorted(
-        str(path) for path in output_paths.intersection(protected_paths)
-    )
-    if collisions:
-        raise ValueError(
-            "FDD outputs cannot overwrite the execution bundle or source "
-            f"evidence: {collisions}"
-        )
-    symlink_targets = sorted(str(path) for path in output_paths if path.is_symlink())
-    if symlink_targets:
-        raise ValueError(f"FDD output targets cannot be symlinks: {symlink_targets}")
-    write_json(result_path, first_result)
+    output_boundary.write_json_exclusive("fdd_result.json", first_result)
     metrics_document = _seal_document(
         {
             "schema_version": "vera.fdd_metrics.v1",
@@ -355,18 +359,24 @@ def prepare_fdd_case(
     )
     line_items_document = _seal_document(
         {
-            "schema_version": "vera.fdd_line_items.v1",
+            "schema_version": "vera.fdd_line_items.v2",
             "result_ref": first_result["result_id"],
             "line_items": [dict(item) for item in first_result["line_items"]],
             "report_ready": False,
         }
     )
-    write_json(metrics_path, metrics_document)
-    write_json(line_items_path, line_items_document)
+    output_boundary.write_json_exclusive("fdd_metrics.json", metrics_document)
+    output_boundary.write_json_exclusive(
+        "fdd_line_items.json",
+        line_items_document,
+    )
 
     evidence_refs = sorted(item["artifact_ref"] for item in case["source_artifacts"])
+    case_execution_ref = (
+        f"{case['case_id']}.{expected_pack_id}.{case['content_sha256']}"
+    )
     reconciliation = build_reconciliation_result(
-        reconciliation_id=f"{case['case_id']}.{expected_pack_id}.reconciliation",
+        reconciliation_id=f"{case_execution_ref}.reconciliation",
         request_ref=bundle["request"]["request_id"],
         status="passed",
         checks=[
@@ -405,36 +415,40 @@ def prepare_fdd_case(
             },
         ],
     )
-    write_json(reconciliation_path, reconciliation)
+    output_boundary.write_json_exclusive("reconciliation.json", reconciliation)
 
     output_artifacts = [
         _output_receipt(
-            line_items_path,
+            output_boundary,
+            "fdd_line_items.json",
             artifact_ref="fdd_line_items",
             role="fdd_line_items",
             row_count=len(first_result["line_items"]),
         ),
         _output_receipt(
-            metrics_path,
+            output_boundary,
+            "fdd_metrics.json",
             artifact_ref="fdd_metrics",
             role="fdd_metrics",
             row_count=len(first_result["metrics"]),
         ),
         _output_receipt(
-            result_path,
+            output_boundary,
+            "fdd_result.json",
             artifact_ref="fdd_result",
             role="fdd_result",
             row_count=1,
         ),
         _output_receipt(
-            reconciliation_path,
+            output_boundary,
+            "reconciliation.json",
             artifact_ref="reconciliation",
             role="reconciliation",
             row_count=len(reconciliation["checks"]),
         ),
     ]
     manifest = build_prepared_evidence_manifest(
-        manifest_id=f"{case['case_id']}.{expected_pack_id}.prepared",
+        manifest_id=f"{case_execution_ref}.prepared",
         request_ref=bundle["request"]["request_id"],
         package_ref=bundle["package"]["package_id"],
         dataset_contract_refs=bundle["request"]["dataset_refs"],
@@ -447,7 +461,7 @@ def prepare_fdd_case(
             "pack_id": expected_pack_id,
             "version": FDD_PACK_RECIPES[expected_pack_id],
             "implementation_refs": [
-                "prepare_fdd_case.v1",
+                "prepare_fdd_case.v2",
                 f"vera_financial_analysis.fdd.{FDD_ENGINE_VERSION}",
             ],
             "parameters_sha256": canonical_json_sha256(bundle["request"]["parameters"]),
@@ -460,7 +474,10 @@ def prepare_fdd_case(
             "output_set_sha256": canonical_json_sha256(output_artifacts),
         },
     )
-    write_json(manifest_path, manifest)
+    output_boundary.write_json_exclusive(
+        "prepared_evidence_manifest.json",
+        manifest,
+    )
     audit = validate_case_contracts(
         package=bundle["package"],
         datasets=bundle["datasets"],
@@ -470,9 +487,20 @@ def prepare_fdd_case(
         reconciliation=reconciliation,
         prepared_manifest=manifest,
     )
+    output_boundary.write_json_exclusive(_AUDIT_NAME, audit)
+    _verify_terminal_inputs(
+        bundle_path=bundle_path,
+        bundle_byte_count=bundle_byte_count,
+        bundle_sha256=bundle_sha256,
+        bundle=bundle,
+    )
+    output_boundary.verify_tracked()
+    if output_boundary.names() != sorted(OUTPUT_NAMES):
+        raise ValueError("FDD output directory contains an unsupported entry")
     return {
         "status": "passed",
         "pack_id": expected_pack_id,
+        "case_file_sha256": bundle_sha256,
         "result_sha256": first_result["content_sha256"],
         "manifest_sha256": manifest["content_sha256"],
         "contract_audit_sha256": audit["content_sha256"],
@@ -480,12 +508,100 @@ def prepare_fdd_case(
     }
 
 
+def _prepare_with_cleanup(
+    *,
+    bundle_path: Path,
+    bundle_payload: Mapping[str, Any],
+    bundle_byte_count: int,
+    bundle_sha256: str,
+    output_boundary: PinnedDirectory,
+    expected_pack_id: str,
+) -> dict[str, Any]:
+    try:
+        return _prepare_fdd_case_pinned(
+            bundle_path=bundle_path,
+            bundle_payload=bundle_payload,
+            bundle_byte_count=bundle_byte_count,
+            bundle_sha256=bundle_sha256,
+            output_boundary=output_boundary,
+            expected_pack_id=expected_pack_id,
+        )
+    except (OSError, RuntimeError, TypeError, ValueError) as exc:
+        try:
+            output_boundary.cleanup_tracked()
+        except (OSError, ValueError) as cleanup_error:
+            raise ValueError(
+                f"FDD preparation failed and partial-output cleanup failed: {exc}"
+            ) from cleanup_error
+        raise
+
+
+def prepare_fdd_case(
+    case_path: Path,
+    output_dir: Path,
+    *,
+    expected_pack_id: str,
+    output_boundary: PinnedDirectory | None = None,
+) -> dict[str, Any]:
+    """Validate, execute, reconcile, and seal one FDD execution bundle."""
+
+    supplied_bundle_path = Path(case_path)
+    supplied_output_dir = Path(output_dir)
+    if supplied_bundle_path.is_symlink():
+        raise ValueError("FDD execution bundle cannot be a symlink")
+    if supplied_output_dir.is_symlink():
+        raise ValueError("FDD output directory cannot be a symlink")
+    bundle_path = supplied_bundle_path.absolute()
+    resolved_output_dir = supplied_output_dir.absolute()
+    if not bundle_path.is_file():
+        raise ValueError("FDD execution bundle must be a regular file")
+    bundle_payload, bundle_byte_count, bundle_sha256 = strict_json_snapshot_beneath(
+        bundle_path,
+        root=bundle_path.parent,
+    )
+    if resolved_output_dir.exists() and not resolved_output_dir.is_dir():
+        raise ValueError("FDD output path must be a directory")
+    resolved_output_dir.mkdir(parents=True, exist_ok=True)
+
+    if output_boundary is not None:
+        if output_boundary.path != resolved_output_dir:
+            raise ValueError("FDD output boundary does not match output_dir")
+        if output_boundary.names():
+            raise ValueError("FDD output directory must be fresh and empty")
+        return _prepare_with_cleanup(
+            bundle_path=bundle_path,
+            bundle_payload=bundle_payload,
+            bundle_byte_count=bundle_byte_count,
+            bundle_sha256=bundle_sha256,
+            output_boundary=output_boundary,
+            expected_pack_id=expected_pack_id,
+        )
+
+    with pinned_directory(resolved_output_dir) as local_boundary:
+        if local_boundary.names():
+            raise ValueError("FDD output directory must be fresh and empty")
+        return _prepare_with_cleanup(
+            bundle_path=bundle_path,
+            bundle_payload=bundle_payload,
+            bundle_byte_count=bundle_byte_count,
+            bundle_sha256=bundle_sha256,
+            output_boundary=local_boundary,
+            expected_pack_id=expected_pack_id,
+        )
+
+
 def _runner(pack_id: str) -> Callable[[Path, Path], dict[str, Any]]:
-    def run(case_path: Path, output_dir: Path) -> dict[str, Any]:
+    def run(
+        case_path: Path,
+        output_dir: Path,
+        *,
+        output_boundary: PinnedDirectory | None = None,
+    ) -> dict[str, Any]:
         return prepare_fdd_case(
             case_path,
             output_dir,
             expected_pack_id=pack_id,
+            output_boundary=output_boundary,
         )
 
     return run

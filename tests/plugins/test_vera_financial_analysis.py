@@ -6,6 +6,7 @@ import importlib.util
 import json
 import shutil
 import sys
+from copy import deepcopy
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -495,6 +496,56 @@ def test_prepared_evidence_cannot_claim_report_readiness() -> None:
         match="cannot establish report readiness",
     ):
         validate_prepared_evidence_manifest(prepared)
+
+
+def test_prepared_evidence_rejects_noncanonical_output_order() -> None:
+    prepared = deepcopy(_case_contracts()["prepared_manifest"])
+    prepared["output_artifacts"].append(
+        {
+            "artifact_ref": "artifact.z",
+            "role": "reconciliation",
+            "row_count": 1,
+            "byte_count": 105,
+            "sha256": "e" * 64,
+        }
+    )
+    prepared["output_artifacts"].reverse()
+    prepared["replay"]["output_set_sha256"] = canonical_json_sha256(
+        prepared["output_artifacts"]
+    )
+    content = {key: value for key, value in prepared.items() if key != "content_sha256"}
+    prepared["content_sha256"] = canonical_json_sha256(content)
+
+    with pytest.raises(
+        FinancialAnalysisContractError,
+        match="prepared evidence manifest is not canonical",
+    ):
+        validate_prepared_evidence_manifest(prepared)
+
+
+def test_prepared_evidence_allows_multiple_artifacts_for_one_output_role() -> None:
+    prepared = deepcopy(_case_contracts()["prepared_manifest"])
+    prepared["output_artifacts"].append(
+        {
+            "artifact_ref": "artifact.z",
+            "role": "prepared_table",
+            "row_count": 1,
+            "byte_count": 105,
+            "sha256": "e" * 64,
+        }
+    )
+    prepared["replay"]["output_set_sha256"] = canonical_json_sha256(
+        prepared["output_artifacts"]
+    )
+    content = {key: value for key, value in prepared.items() if key != "content_sha256"}
+    prepared["content_sha256"] = canonical_json_sha256(content)
+
+    validated = validate_prepared_evidence_manifest(prepared)
+
+    assert [item["artifact_ref"] for item in validated["output_artifacts"]] == [
+        "artifact.prepared",
+        "artifact.z",
+    ]
 
 
 def test_case_validator_rejects_crosswalk_receipt_outside_package() -> None:
