@@ -18,6 +18,7 @@
     "scripts/launch_hosted_voice.py",
     "scripts/start_deck_feedback.py",
     "scripts/upload_hosted_audio.py",
+    "repository/modules/hosted_services/api.py",
     "repository/modules/case_notes_voice/api.py",
     "repository/modules/pdp/legal_content.py",
     "repository/static/js/case-notes-voice.js",
@@ -87,9 +88,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "20c80f9f47c11fa5fc4b25aecfd41e70587a0b9544194d50782204e8361a3a6d"
+    "source_fingerprint": "89680ad1f15dc8cd7eb54ce681008e8a49ccceb1c232f7682e16ddc340666c04"
   }
 }

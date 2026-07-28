@@ -115,7 +115,7 @@ def test_vera_current_surfaces_do_not_publish_the_competing_names() -> None:
         ROOT / "plugins" / "new-client" / "skills" / "new-client" / "SKILL.md",
         ROOT / "plugins" / "client-file-preparation" / ".codex-plugin" / "plugin.json",
         ROOT / "plugins" / "client-file-preparation" / "README.md",
-        ROOT / "modules" / "pdp" / "api.py",
+        ROOT / "modules" / "hosted_services" / "api.py",
         ROOT / "static" / "shared" / "vera" / "index.html",
         ROOT / "static" / "shared" / "new-client" / "index.html",
         ROOT / "static" / "shared" / "new-client" / "geneva.html",

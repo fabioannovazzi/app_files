@@ -7,7 +7,7 @@ import shutil
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Callable, Iterable, Sequence
+from typing import Any, Iterable, Sequence
 from urllib.parse import urljoin, urlparse
 
 import polars as pl
@@ -49,8 +49,8 @@ from modules.pdp.service import (
     summarize_batch,
     variants_to_frame,
 )
-from modules.pdp.store import PDPStore
 from modules.pdp.storage import EvidenceStorage
+from modules.pdp.store import PDPStore
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 from modules.utilities.utils import get_row_count
 
@@ -86,26 +86,6 @@ PARENT_LIST_COLUMNS = [
 VARIANT_LIST_COLUMNS = [
     name for name, dtype in VARIANT_SCHEMA.items() if isinstance(dtype, pl.List)
 ]
-
-_PDP_API_HELPERS: dict[str, Callable[..., Any]] | None = None
-
-
-def _load_pdp_api_helpers() -> dict[str, Callable[..., Any]]:
-    """Lazy-load heavy UI/API helpers used only for missing-image runs."""
-    global _PDP_API_HELPERS
-    if _PDP_API_HELPERS is None:
-        from modules.pdp.api import (  # local import by design
-            _gather_records,
-            _resolve_image_path,
-            list_review_categories,
-        )
-
-        _PDP_API_HELPERS = {
-            "_gather_records": _gather_records,
-            "_resolve_image_path": _resolve_image_path,
-            "list_review_categories": list_review_categories,
-        }
-    return _PDP_API_HELPERS
 
 
 def _emit_store_metrics(metrics: dict[str, int]) -> None:
@@ -200,11 +180,6 @@ def _parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "--human-pace",
         action="store_true",
         help="Throttle requests to mimic a Finnish analyst (weekdays 08:00–20:00, 30–90s per PDP).",
-    )
-    parser.add_argument(
-        "--only-missing-images",
-        action="store_true",
-        help="When set, reparse only products the review UI flags as 'Image unavailable'.",
     )
     return parser.parse_args(argv)
 
@@ -398,180 +373,6 @@ def _filter_existing_urls(
             continue
         filtered.append(url)
     return filtered, skipped
-
-
-def _sanitize_remote_url_ui(value: object | None) -> str | None:
-    """Match the catalog UI's remote URL guard: only HTTP(S), trimmed, non-empty."""
-    if value is None:
-        return None
-    text = str(value).strip()
-    if not text:
-        return None
-    lowered = text.lower()
-    if not (lowered.startswith("http://") or lowered.startswith("https://")):
-        return None
-    return text
-
-
-def _record_parent_id(record: dict[str, object]) -> str | None:
-    for key in ("product", "parent_product_id", "parent"):
-        value = record.get(key)
-        if value is None:
-            continue
-        text = str(value).strip()
-        if text:
-            return text
-    return None
-
-
-def _record_variant_id(record: dict[str, object]) -> str | None:
-    for key in ("variant", "variant_id"):
-        value = record.get(key)
-        if value is None:
-            continue
-        text = str(value).strip()
-        if text:
-            return text
-    return None
-
-
-def _has_image_like_ui(
-    record: dict[str, object],
-    *,
-    record_type: str,
-    cache: dict[str, bool],
-) -> bool:
-    """Replicate the UI's resolveCardImage logic."""
-    parent_id = _record_parent_id(record)
-    variant_id = _record_variant_id(record) if record_type == "variant" else None
-    hero_url = _sanitize_remote_url_ui(record.get("hero_image_url"))
-    swatch_url = _sanitize_remote_url_ui(record.get("swatch_image_url"))
-    remote_url = hero_url or swatch_url
-
-    cache_key = f"{parent_id or ''}::{variant_id or ''}"
-    if cache_key in cache:
-        return cache[cache_key]
-
-    if not parent_id:
-        if remote_url:
-            try:
-                response = requests.get(remote_url, timeout=10)
-            except requests.RequestException:
-                response = None
-            cache[cache_key] = bool(response and response.ok and response.content)
-            return cache[cache_key]
-        cache[cache_key] = False
-        return False
-
-    prefer_remote = bool(remote_url)
-    helpers = _load_pdp_api_helpers()
-    resolve_image_path = helpers["_resolve_image_path"]
-    try:
-        path = resolve_image_path(parent_id, variant_id, prefer_remote=prefer_remote)
-    except Exception:
-        path = None
-    if path and Path(path).exists():
-        cache[cache_key] = True
-        return True
-
-    if remote_url:
-        try:
-            response = requests.get(remote_url, timeout=10)
-        except requests.RequestException:
-            response = None
-        if response is not None and response.ok and response.content:
-            cache[cache_key] = True
-            return True
-
-    cache[cache_key] = False
-    return False
-
-
-def _load_missing_image_urls(
-    pdp_store_path: Path,
-    retailer: str,
-    categories: Sequence[str] | None = None,
-) -> list[tuple[str, list[str]]]:
-    """Return (pdp_url, categories) for parents whose cards would show 'Image unavailable' in the UI."""
-    enforce_default_pdp_store_path(pdp_store_path)
-    requested_categories = (
-        {
-            canonical_category_key(retailer, category)
-            for category in categories
-            if category
-        }
-        if categories
-        else None
-    )
-    helpers = _load_pdp_api_helpers()
-    list_review_categories = helpers["list_review_categories"]
-    gather_records = helpers["_gather_records"]
-    try:
-        category_items = list_review_categories(
-            retailer=retailer, brands=None
-        ).categories
-    except Exception:
-        return []
-    category_keys = [
-        item.key
-        for item in category_items
-        if item.key
-        and (
-            requested_categories is None
-            or canonical_category_key(retailer, item.key) in requested_categories
-        )
-    ]
-    if not category_keys:
-        return []
-
-    try:
-        records_response = gather_records(
-            retailer=retailer,
-            category_keys=category_keys,
-            brands=[],
-            record_type="parent",
-            filters=[],
-            limit=None,
-            download_all=True,
-            pareto_filter=[],
-            price_band_filter=[],
-        )
-        records = getattr(records_response, "records", None)
-        if records is None:
-            records = (
-                records_response.get("records", [])
-                if isinstance(records_response, dict)
-                else []
-            )
-    except Exception:
-        return []
-
-    missing: list[tuple[str, list[str]]] = []
-    cache: dict[str, bool] = {}
-    seen_parents: set[str] = set()
-
-    for record in records:
-        if not isinstance(record, dict):
-            continue
-        parent_id = _record_parent_id(record)
-        if not parent_id or parent_id in seen_parents:
-            continue
-
-        has_image = _has_image_like_ui(record, record_type="parent", cache=cache)
-        seen_parents.add(parent_id)
-        if has_image:
-            continue
-
-        pdp_url = str(record.get("pdp_url") or "").strip()
-        if not pdp_url:
-            continue
-        categories_for_record: list[str] = []
-        category_key = record.get("category_key")
-        if category_key:
-            categories_for_record.append(str(category_key))
-        missing.append((pdp_url, categories_for_record))
-
-    return missing
 
 
 def _write_csv(frame: pl.DataFrame, path: Path) -> None:
@@ -810,46 +611,15 @@ def _runs_from_args(args: argparse.Namespace) -> list[ProfileRun]:
             retailer=args.retailer,
             categories=requested,
         )
-        missing_image_urls: list[tuple[str, list[str]]] = []
-        if args.only_missing_images:
-            try:
-                missing_image_urls = _load_missing_image_urls(
-                    enforce_default_pdp_store_path(DEFAULT_PDP_STORE_PATH),
-                    args.retailer,
-                    categories=args.categories,
-                )
-            except Exception:
-                missing_image_urls = []
-        if args.only_missing_images:
-            total_missing = len(missing_image_urls)
-            sys.stdout.write(
-                f"Found {total_missing} parent(s) missing images for retailer '{args.retailer}'.\n"
-            )
-            sys.stdout.flush()
         runs: list[ProfileRun] = []
         for profile in profiles:
-            if args.only_missing_images:
-                seen_urls: set[str] = set()
-                urls = []
-                for url, _ in missing_image_urls:
-                    if not url or url in seen_urls:
-                        continue
-                    if _parent_id_from_url(profile, url):
-                        urls.append(url)
-                        seen_urls.add(url)
-                if not urls:
-                    continue
-                runs.append(
-                    ProfileRun(profile=profile, urls=urls, discovered_count=len(urls))
-                )
-            else:
-                category_key = _normalize_category(_profile_category_key(profile))
-                urls = links_by_category.get(category_key, [])
-                if not urls:
-                    urls = _discover_for_profile(profile, max_pages=args.max_pages)
-                runs.append(
-                    ProfileRun(profile=profile, urls=urls, discovered_count=len(urls))
-                )
+            category_key = _normalize_category(_profile_category_key(profile))
+            urls = links_by_category.get(category_key, [])
+            if not urls:
+                urls = _discover_for_profile(profile, max_pages=args.max_pages)
+            runs.append(
+                ProfileRun(profile=profile, urls=urls, discovered_count=len(urls))
+            )
         return runs
 
     profile_name = args.profile or "ulta_lipstick"
@@ -911,11 +681,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             urls = run.urls
             cache_key = run.profile.retailer.lower()
             run.skipped_existing = 0
-            if (
-                not args.only_missing_images
-                and not args.overwrite
-                and not args.reviews_only
-            ):
+            if not args.overwrite and not args.reviews_only:
                 existing_ids = existing_cache.setdefault(
                     cache_key,
                     store.existing_parent_ids(run.profile.retailer),

@@ -12,6 +12,7 @@
   "governed_paths": [
     "skills/interview/SKILL.md",
     "scripts/manage_hosted_interview.py",
+    "repository/modules/hosted_services/api.py",
     "repository/modules/hosted_interviews/api.py",
     "repository/modules/pdp/legal_content.py",
     "repository/static/js/hosted-interview.js",
@@ -78,9 +79,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "f942a2bd1239ccf5385267a5a8c1c059ad65815785ff799040a189aed0a76771"
+    "source_fingerprint": "a6d8130a763ed5a753d7c3172f9604458e8482f40f2e4a58abb5a310f841b16a"
   }
 }

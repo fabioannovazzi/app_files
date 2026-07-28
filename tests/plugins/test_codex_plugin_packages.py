@@ -2295,7 +2295,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
     from modules.auth.config import get_auth_config
     from modules.auth.google_identity import GoogleUserInfo
     from modules.auth.session import create_session_cookie
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
     from src.fastapi_app_entry import app
 
     pro_email = "pro@example.com"
@@ -2417,7 +2417,9 @@ def test_clara_downloads_and_removed_explainers_return_404(
 
 def test_clara_forbidden_page_has_no_vera_download() -> None:
     template = (ROOT / "templates" / "forbidden.html").read_text(encoding="utf-8")
-    api_source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    api_source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page_copy = f"{template}\n{api_source}"
 
     assert "Clara access" in template
@@ -2591,7 +2593,9 @@ def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
 
 
 def test_homepage_routes_accountant_plugins_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
 
     assert source.count('"href": "/static/shared/vera/index.html"') == 5
     assert source.count('"label": "Vera"') == 5
@@ -2942,7 +2946,9 @@ def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None
 
 
 def test_homepage_routes_deep_research_validator_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3037,7 +3043,9 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
 
 
 def test_homepage_routes_check_entries_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3087,7 +3095,9 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
 
 
 def test_homepage_routes_journal_bank_reconciliation_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3510,7 +3520,9 @@ def test_clara_public_page_localizes_two_category_data_policy(
 
 
 def test_homepage_routes_report_builder_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3561,7 +3573,9 @@ def test_concordato_plan_review_page_matches_plugin_site_pattern() -> None:
 
 
 def test_homepage_routes_concordato_plan_review_through_vera() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3853,7 +3867,9 @@ def test_companion_overview_video_follows_the_intended_product_story(
 
 
 def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
 
     assert '"href": "/static/shared/reporting/index.html"' not in source
     assert "/static/shared/pro-charting/index.html" not in source
@@ -3874,7 +3890,7 @@ def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
     consultant_links = content["sections"][0]["groups"][1]["links"]
@@ -3921,7 +3937,7 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     clara = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"][1]
 
@@ -3986,7 +4002,7 @@ def test_homepage_only_exposes_professional_role_groups(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
     sections = content["sections"]
@@ -4014,7 +4030,9 @@ def test_homepage_only_exposes_professional_role_groups(
 
 
 def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
 
     expected_orders = (
         (
@@ -4216,7 +4234,7 @@ def test_homepage_makes_open_source_explicit(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     open_source = pdp_api._get_landing_page_content(lang)["open_source"]
 
@@ -4275,7 +4293,7 @@ def test_homepage_makes_free_business_model_explicit(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     free = pdp_api._get_landing_page_content(lang)["free"]
 
@@ -4290,7 +4308,7 @@ def test_homepage_makes_free_business_model_explicit(
 def test_homepage_sections_omit_redundant_eyebrows(lang: str) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
 
@@ -4345,7 +4363,7 @@ def test_homepage_content_explains_specialist_method_and_each_plugin(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
     groups = content["sections"][0]["groups"]
@@ -4419,7 +4437,7 @@ def test_homepage_vera_describes_the_task_without_literal_or_internal_language(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     description = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"][0][
         "description"
@@ -4492,7 +4510,7 @@ def test_homepage_positions_control_as_the_specialist_method(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
     serialized_content = json.dumps(content, ensure_ascii=False)
@@ -4550,7 +4568,7 @@ def test_homepage_presents_vera_and_clara_as_the_complete_pair(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     description = pdp_api._get_landing_page_content(lang)["bridge"]["description"]
 
@@ -4597,7 +4615,7 @@ def test_homepage_attributes_control_to_the_specialist_method(
 ) -> None:
     _restore_application_import_path()
 
-    from modules.pdp import api as pdp_api
+    from modules.hosted_services import api as pdp_api
 
     control_blurb = pdp_api._get_landing_page_content(lang)["harness"]["layers"][2][
         "blurb"
@@ -4609,7 +4627,9 @@ def test_homepage_attributes_control_to_the_specialist_method(
 
 def test_homepage_app_css_link_is_cache_busted() -> None:
     base_template = (ROOT / "templates" / "base.html").read_text(encoding="utf-8")
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
 
     assert "/static/css/app.css?v={{ app_css_asset_version" in base_template
     assert (
@@ -4621,7 +4641,9 @@ def test_homepage_thesis_image_is_valid_and_cache_busted() -> None:
     from PIL import Image
 
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
     image_path = ROOT / "static" / "icons" / "power_control.png"
 
     assert image_path.read_bytes().startswith(b"\x89PNG\r\n\x1a\n")

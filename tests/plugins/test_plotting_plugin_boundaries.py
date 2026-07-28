@@ -319,7 +319,9 @@ def test_sales_app_no_longer_exposes_removed_duplicate_catalog_actions() -> None
 
 
 def test_sales_chart_route_and_legacy_sales_page_removed() -> None:
-    source = (ROOT / "modules" / "pdp" / "api.py").read_text(encoding="utf-8")
+    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
+        encoding="utf-8"
+    )
 
     assert '"/sales/charts"' not in source
     assert '"/legacy/review/sales"' not in source

@@ -1,6 +1,7 @@
 # mparanza_app
 
-FastAPI-first application for accounting data analysis with a Polars-first backend.
+Plugin-first professional-work repository with a narrow FastAPI hosted-services
+boundary and a Polars-first backend.
 
 ## Table of Contents
 - [Overview](#overview)
@@ -14,10 +15,7 @@ FastAPI-first application for accounting data analysis with a Polars-first backe
   - [Journal ingestion CLI](#journal-ingestion-cli)
   - [Bank statement QA & debug](#bank-statement-qa--debug)
   - [Add Attributes workflow](#add-attributes-workflow)
-- [Deep Research](#deep-research)
-  - [Usage](#usage)
-  - [Background mode](#background-mode)
-  - [Cancelling entry checks](#cancelling-entry-checks)
+- [Research and entry-check workflows](#research-and-entry-check-workflows)
 - [Development Setup](#development-setup)
 - [Running the Project](#running-the-project)
 - [Deployment](#deployment)
@@ -28,9 +26,12 @@ FastAPI-first application for accounting data analysis with a Polars-first backe
 
 ## Overview
 
-The app processes accounting documents, builds interactive visualisations and
-runs journal checks. Business logic lives under `src/` and FastAPI serves the
-primary web experience. FastAPI only serves `templates/` and `static/`.
+Vera and Clara run primarily as Codex plugins. Their deterministic Python
+components process documents and structured data, build analyses, and create
+reviewable outputs locally. FastAPI is limited to the public site and the
+hosted services that require a server boundary: authentication, interviews,
+voice capture, Attribute Reporting/Brand Fit evidence exchange, and plugin
+change requests.
 
 ## Codex Plugins
 
@@ -199,13 +200,14 @@ Advanced reconciliation options
 Staged reconciliation sequence
 ------------------------------
 
-PDP attribute review API
-------------------------
+Hosted services
+---------------
 
-The FastAPI service exposes the PDP attribute review workflow. See
-`docs/pdp_review_api.md` for setup instructions and endpoint details. Run it
-locally with `uvicorn src.fastapi_app_entry:app --reload`.
-A minimal HTML explorer is available at `http://127.0.0.1:8000/review/page`.
+The FastAPI service supports authentication, Hosted Interview, Hosted Voice,
+the Attribute Reporting/Brand Fit bridge, plugin change requests, and the
+public/static site. Dataset analysis, journal checking, slide work, and
+reporting run through the plugins and local deterministic scripts rather than
+web execution routes.
 
 The legacy Sample Entries web workflow has been retired. Journal sampling now
 runs through the Journal Sampling Codex plugin, where Codex handles variable
@@ -214,9 +216,7 @@ diagnostics, and audit trail.
 
 The accountant workflows are plugin-first. Public pages under `static/shared/`
 are install/onboarding pages for Codex plugins and downloadable ZIPs; they are
-not execution UIs. Any remaining protected web execution routes are legacy
-surfaces kept only for transition and should not receive new development unless
-explicitly requested.
+not execution UIs.
 
 Matching proceeds through these stages:
 
@@ -228,32 +228,6 @@ Matching proceeds through these stages:
 6. Beneficiary Name
 7. IBAN
 8. References (Invoice/CRO/TRN)
-
-### Slide editor workflow
-
-The `/slides/page` workspace is split into a toolbar, a left-hand list, and an
-editor/preview area. To view or edit slides:
-
-1. **Pick or upload a deck first.** Use the deck dropdown in the header or the
-   “Upload deck” button to import a PDF or image-based deck. Until a deck loads,
-   the rest of the module—including the slides list—remains empty.
-2. **Browse slides via the sidebar.** Once a deck is selected, the left panel is
-   populated with every slide in that deck. Click to select one slide at a time;
-   drag to reorder. Section headers appear with a different style and are locked
-   because they are generated automatically.
-3. **Edit and preview the active slide.** The main pane contains “Title HTML” and
-   “Body HTML” fields plus a live preview. Updates refresh the preview and mark
-   the deck as dirty until you click “Save deck.”
-4. **Use the toolbar actions.** Buttons allow you to add, delete, or rewrite the
-   current slide, or import slides from another deck. The status chip above the
-   editors reports success or errors.
-
-If the slides list stays blank, double-check that a deck is selected and that it
-contains slides; empty decks will show an empty list until you add content.
-
-Slide editor decks live under the `slide_decks/` directory. Finished decks for
-the presentations viewer live under `presentations/` and are served by the
-`/presentations/**` routes.
 
 ### PDP Attribute Workflow
 
@@ -269,24 +243,12 @@ Image/VLM enrichment belongs to `scripts/export_pdp_attributes.py --run-vlm`.
 
 
 
-## Deep Research
+## Research and entry-check workflows
 
-### Usage
-
-Deep Research runs in its own tab. Enter a question and press
-**Check Deep Research**. Five parallel runs execute simultaneously and the
-improved prompt is printed for inspection.
-
-### Background mode
-
-Queries run against OpenAI in the background. The app polls for completion and
-shows results when all runs finish. Batch requests can be enabled with the **Use
-OpenAI batch mode** checkbox to trade latency for lower API cost.
-
-### Cancelling entry checks
-
-When automatic journal entry checks run, a **Cancel** button appears next to the
-progress bar. Press it to stop processing and download the rows analysed so far.
+Deep Research prompt preparation and answer validation run through the
+Prompt Optimizer and Deep Research Validator plugins. Journal-entry support
+testing runs through the Check Entries plugin. These workflows are no longer
+served by the FastAPI application.
 
 ## Development Setup
 
@@ -309,13 +271,13 @@ cd ~/Documents/GitHub/app_files
 source .venv/bin/activate
 ```
 
-Run the FastAPI entrypoint locally (the supported default) with:
+Run the hosted-services boundary locally only when working on a hosted feature:
 
 ```bash
 uvicorn src.fastapi_app_entry:app --reload
 ```
 
-FastAPI is the canonical web surface.
+For ordinary Vera and Clara work, invoke the relevant plugin workflow instead.
 
 For Codex, explicitly use the local virtual environment at `.venv`; activate it
 first with `source .venv/bin/activate` before running Python commands.
@@ -394,11 +356,9 @@ records are stored in the local `AUTH_MAGIC_LINK_STORE_PATH` file so a normal si
 server restart does not invalidate unexpired links. Set `REDIS_URL` when every worker must
 share the same token store.
 
-With authentication enabled every FastAPI endpoint (including `/review`,
-`/check`, etc.) now requires a valid Google session cookie. Landing
-pages remain public, but the UI renders a Google login overlay before exposing
-any tooling links. All requests include `credentials: "include"` automatically
-after login.
+With authentication enabled, protected hosted-service endpoints require a
+valid session cookie. Public landing, legal, interview-participant, static, and
+change-request routes retain their route-specific access rules.
 
 ## Deployment
 
@@ -408,9 +368,10 @@ Run the FastAPI service with the default entrypoint:
 uvicorn src.fastapi_app_entry:app --host 0.0.0.0 --port 8000
 ```
 
-The entrypoint calls the FastAPI app factory in `modules/pdp/api.py:create_app`,
-which wires all page and API routers from `modules/*/api.py` along with shared
-middleware.
+The entrypoint calls `modules/hosted_services/api.py:create_app`, which mounts only the
+public site and the current hosted-service routers. Legacy review, sales,
+check-entry, hierarchy, column-identification, slide-editor, project, and
+presentation routes are intentionally not mounted.
 
 Set the same environment variables on your deployment target so the FastAPI
 processes share the configuration:
@@ -430,20 +391,6 @@ processes share the configuration:
 
 `GOOGLE_ALLOWED_DOMAINS` may be left empty to admit accounts from any domain,
 but `GOOGLE_CLIENT_ID` is always required when authentication is enabled.
-
-### Reverse proxy and presentation decks
-
-The `/presentations/**` routes **must** hit the FastAPI service because the
-router enforces permission checks from `permission_structure.json` before
-serving a deck. Remove any CDN/static-site rule that previously fetched
-presentation files directly and forward those requests to FastAPI instead (for
-example with an Nginx `location /presentations/ { proxy_pass http://api:8000; }`
-block). A longer example covering Nginx, Apache, and CloudFront behaviours
-lives in `docs/deployment/presentations_proxy.md`.
-
-API workers need read access to the `presentations/` directory so `FileResponse`
-can stream the files after authorization succeeds. On containerized deployments
-mount the directory into each worker (for example `- ./presentations:/app/presentations:ro`).
 
 To enable email notifications and magic-link delivery add:
 
@@ -465,10 +412,8 @@ that page or API. When a route prefix is mapped to a key in
 
 | `page_key` | Routes guarded | Purpose |
 | --- | --- | --- |
-| `attribute_analysis` | `/review/reports`, `/review/brand-reports`, `/review/product-hypotheses` | Generated attribute-analysis report surfaces. |
-| `deck_toolkit` | `/presentations`, `/slides` | Presentation downloads and the slide editor. |
-| `clara` | `/case-notes/voice`, `/case-notes/api/voice`, `/case-notes/api/attribute-reporting` | Clara voice notes and attribute-reporting APIs. |
-| `legacy_attribute_analysis` | `/review`, `/review/coverage`, `/review/explicit-rules`, `/review/issues` | Current attribute review, coverage, and governance interfaces. |
+| `clara` | `/case-notes/voice`, `/case-notes/api/voice` | Clara voice notes. |
+| `attribute_reporting` | `/case-notes/api/attribute-reporting` | Attribute Reporting and Brand Fit evidence exchange. |
 
 To grant access add the user’s Google address to the corresponding list. Use
 `"*"` to allow every authenticated user while retaining the route mapping for

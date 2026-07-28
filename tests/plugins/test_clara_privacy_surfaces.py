@@ -242,9 +242,7 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert common_ids <= vera_services.keys()
     assert common_ids <= clara_services.keys()
 
-    vera_update_boundaries = vera_services["plugin-update-check"][
-        "external_boundaries"
-    ]
+    vera_update_boundaries = vera_services["plugin-update-check"]["external_boundaries"]
     clara_update_payloads = clara_services["plugin-update-check"]["data_sent"]
     assert [boundary["id"] for boundary in vera_update_boundaries] == [
         "automatic-version-check"
@@ -255,9 +253,7 @@ def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
     assert "HTTP GET" in vera_update_boundaries[0]["content"]
     assert "HTTPS GET" in clara_update_payloads[0]["content"]
 
-    vera_feedback_boundaries = vera_services["plugin-feedback"][
-        "external_boundaries"
-    ]
+    vera_feedback_boundaries = vera_services["plugin-feedback"]["external_boundaries"]
     clara_feedback_payloads = clara_services["plugin-feedback"]["data_sent"]
     assert any(
         boundary["activation"] == "explicit_user_choice"
@@ -285,6 +281,7 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
             if boundary["requires_confirmation"]:
                 assert boundary["optional"] is True
                 assert boundary["id"] in {
+                    "approved-managed-ocr-runtime",
                     "consented-plugin-feedback",
                     "send-participant-link",
                 }

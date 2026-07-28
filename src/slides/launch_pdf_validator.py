@@ -9715,16 +9715,14 @@ def build_pdf_reading_payload_for_validation(
 ) -> dict[str, object]:
     """Build the same layout-plus-understanding payload used by the slide editor."""
 
-    from fastapi import HTTPException
-
-    from modules.slides.api import (
-        _build_slide_analysis_payload,
-        _normalize_layout_payload,
-        _render_pdf_deck,
+    from src.slides.analysis_payload import (
+        build_slide_analysis_payload,
+        normalize_layout_payload,
     )
     from src.slides.layout_service import build_deck_layout_payload
     from src.slides.ocr_payload import normalize_ocr_payload
     from src.slides.ocr_service import build_deck_ocr_payload
+    from src.slides.pdf_import import render_pdf_deck
     from src.slides.storage import DeckStorage
 
     deck_id = _reading_cache_deck_id(pdf_path)
@@ -9800,19 +9798,15 @@ def build_pdf_reading_payload_for_validation(
         deck_path,
     )
     render_started_at = time.perf_counter()
-    try:
-        _render_pdf_deck(
-            deck_id,
-            deck_path,
-            pdf_bytes,
-            storage,
-            prompt_style="uniform",
-            owner_email=None,
-            shared_with=[],
-        )
-    except HTTPException as exc:
-        detail = exc.detail if isinstance(exc.detail, str) else "Invalid PDF."
-        raise ValueError(detail) from exc
+    render_pdf_deck(
+        deck_id,
+        deck_path,
+        pdf_bytes,
+        storage,
+        prompt_style="uniform",
+        owner_email=None,
+        shared_with=[],
+    )
     LOGGER.info(
         "%s render finished in %.1fs",
         pdf_path.name,
@@ -9868,7 +9862,7 @@ def build_pdf_reading_payload_for_validation(
             "layout", done, total
         ),
     )
-    normalized_layout = _normalize_layout_payload(
+    normalized_layout = normalize_layout_payload(
         built_layout,
         deck_id=deck.deck_id,
         lang=lang,
@@ -9904,7 +9898,7 @@ def build_pdf_reading_payload_for_validation(
     )
     analysis_started_at = time.perf_counter()
     LOGGER.info("%s mapped slide analysis merge started", pdf_path.name)
-    merged_analysis = _build_slide_analysis_payload(
+    merged_analysis = build_slide_analysis_payload(
         normalized_layout,
         normalized_ocr,
         deck_id=deck.deck_id,

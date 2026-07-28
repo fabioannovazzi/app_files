@@ -1,7 +1,11 @@
 # PDP Explicit Declaration - Execution Checklist v1
 
-Status: Implementation snapshot (as of 2026-03-05)  
+Status: Archived implementation snapshot (as of 2026-03-05)
 Spec: [pdp-explicit-declaration-classifier.md](../../../docs/specs/pdp_explicit_declaration_classifier/pdp-explicit-declaration-classifier.md)
+
+The M5 FastAPI endpoints and M6 React review surface were retired on
+2026-07-28. Their file and route names remain below only as historical evidence;
+they are not current operating instructions.
 
 ## Status Legend
 1. `[x]` completed and verified.
@@ -110,10 +114,10 @@ Checklist:
 Gate M4:
 - [x] `pytest -q tests/modules/add_attributes/test_explicit_candidate_mining.py`
 
-## M5 FastAPI Review Endpoints (Completed)
+## M5 FastAPI Review Endpoints (Retired)
 Files:
-1. [modules/pdp/api.py](../../../modules/pdp/api.py)
-2. [modules/pdp/explicit_rules_api.py](../../../modules/pdp/explicit_rules_api.py)
+1. `modules/pdp/api.py` (retired)
+2. `modules/pdp/explicit_rules_api.py` (retired)
 3. PDP store adapter
 
 Checklist:
@@ -131,12 +135,12 @@ Gate M5:
 - [ ] Add focused endpoint coverage before release; no dedicated endpoint test
   file is currently tracked.
 
-## M6 React Review Surface (Completed, No Component Tests Yet)
+## M6 React Review Surface (Retired)
 Files:
-1. [src/review-react/index.jsx](../../../src/review-react/index.jsx)
-2. [src/review-react/coverage.jsx](../../../src/review-react/coverage.jsx)
-3. [src/review-react/explicit-rules.jsx](../../../src/review-react/explicit-rules.jsx)
-4. [templates/review_explicit_rules_react.html](../../../templates/review_explicit_rules_react.html)
+1. `src/review-react/index.jsx` (retired)
+2. `src/review-react/coverage.jsx` (retired)
+3. `src/review-react/explicit-rules.jsx` (retired)
+4. `templates/review_explicit_rules_react.html` (retired)
 
 Checklist:
 - [x] Add candidate filters and cards.
@@ -165,7 +169,8 @@ Checklist:
 ## Operator Quickstart (Empty Rules Config)
 1. Mine candidates:
    - `python scripts/mine_explicit_declaration_candidates.py --log-level INFO --min-sample-count 3`
-2. Review candidates at `/review/explicit-rules/page` (label: `Explicit attributes`).
+2. Review candidates through the current plugin/local artifact workflow; the
+   former `/review/explicit-rules/page` route is retired.
 3. Approve/reject candidates and publish config.
 4. Run export pipeline:
    - `python scripts/export_pdp_attributes.py --retailer ulta --category blush`

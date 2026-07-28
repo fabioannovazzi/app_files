@@ -12,6 +12,9 @@
     "skills/clara/SKILL.md",
     "scripts/change_requests.py",
     "scripts/check_for_update.py",
+    "repository/modules/change_requests/api.py",
+    "repository/modules/change_requests/store.py",
+    "repository/modules/hosted_services/api.py",
     "repository/modules/pdp/legal_content.py"
   ],
   "trigger": "A problem or suggestion is submitted only after the user sees and approves the exact sanitized request. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version notification.",
@@ -74,9 +77,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "8af4382d179bccdfc3cd76b3a3edcfed12414d8f468d753b64fb67434b9d627e"
+    "source_fingerprint": "0d4ffd37f7d43e1542f777c95ed5053e0fc2d3a487fbe851c8667ffd0abe3582"
   }
 }

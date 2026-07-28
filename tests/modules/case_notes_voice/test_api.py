@@ -2955,4 +2955,5 @@ def test_clara_permission_covers_server_workflows_but_not_downloads() -> None:
     assert "/static/shared/clara/downloads" not in structure["clara"]
     assert "/case-notes/voice" in structure["clara"]
     assert "/case-notes/api/voice" in structure["clara"]
-    assert "/case-notes/api/attribute-reporting" in structure["clara"]
+    assert "/case-notes/api/attribute-reporting" not in structure["clara"]
+    assert "/case-notes/api/attribute-reporting" in structure["attribute_reporting"]

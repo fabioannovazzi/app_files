@@ -73,7 +73,7 @@ and bolding LLM calls. Removed pieces include:
 
 - `modules/conversation/*`
 - the retired report-chat page template
-- the report-chat routes in `modules/pdp/api.py`
+- the former report-chat routes from the retired PDP FastAPI application
 - the report-chat language/nav copy in `modules/pdp/language.py`
 - the conversation-specific LLM router and batch wrapper paths
 - the report-chat query-step config entries

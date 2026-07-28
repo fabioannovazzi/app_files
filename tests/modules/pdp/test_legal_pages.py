@@ -11,8 +11,8 @@ from fastapi.testclient import (
 from starlette.responses import HTMLResponse
 
 from modules.auth.config import get_auth_config
-from modules.pdp import api as pdp_api
-from modules.pdp.api import app
+from modules.hosted_services import api as pdp_api
+from modules.hosted_services.api import app
 
 
 @pytest.fixture(autouse=True)
@@ -153,9 +153,7 @@ def test_support_page_is_public_when_auth_enabled(
         support_section_ids.index("request-help") + 1
     )
     improvement_section = next(
-        section
-        for section in support_sections
-        if section["id"] == "problems-and-ideas"
+        section for section in support_sections if section["id"] == "problems-and-ideas"
     )
     improvement_copy = " ".join(improvement_section["paragraphs"])
     assert improvement_section["title"] == "Problems and New Ideas"
