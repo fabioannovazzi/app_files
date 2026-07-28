@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Vera prepara conto economico mensile, capitale circolante e concentrazione clienti da dati contabili qualificati, con riconciliazioni e risultati riproducibili.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:title" content="Analisi finanziaria | Vera">
+  <meta property="og:description" content="Tre analisi finanziarie con fonti, mapping e riconciliazioni visibili.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/financial-analysis/index.html">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <link rel="canonical" href="https://mparanza.com/static/shared/financial-analysis/index.html">
+  <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/financial-analysis/index.html?lang=it">
+  <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/financial-analysis/index.html?lang=en">
+  <link rel="alternate" hreflang="fr" href="https://mparanza.com/static/shared/financial-analysis/index.html?lang=fr">
+  <link rel="alternate" hreflang="de" href="https://mparanza.com/static/shared/financial-analysis/index.html?lang=de">
+  <link rel="alternate" hreflang="es" href="https://mparanza.com/static/shared/financial-analysis/index.html?lang=es">
+  <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/financial-analysis/index.html">
+  <title>Analisi finanziaria | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
+  <link rel="stylesheet" href="../vera-journey.css?v=20260728-financial-analysis">
+  <style>
+    :root { --paper: #ffffff; }
+
+    .pack-name {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+    }
+
+    .pack-name span {
+      color: var(--vj-blue);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .control-boundary {
+      border-top: 2px solid var(--vj-ink);
+    }
+
+    .control-boundary .document-line:last-child {
+      border-bottom-color: var(--vj-line-strong);
+    }
+
+    .related-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    @media (max-width: 620px) {
+      .pack-name {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+    }
+  </style>
+</head>
+<body data-vera-module="financial-analysis">
+  <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Navigazione pagina" data-i18n-aria-label="aria.pageNav">
+          <a href="#packs" data-i18n="nav.packs">Tre analisi</a>
+          <a href="#method" data-i18n="nav.method">Come funziona</a>
+          <a href="#controls" data-i18n="nav.controls">Controlli</a>
+          <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
+        </nav>
+        <div class="lang-switch" aria-label="Lingua" data-i18n-aria-label="aria.language">
+          <button type="button" data-lang="it" aria-pressed="true">IT</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+          <button type="button" data-lang="de" aria-pressed="false">DE</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell" id="main-content">
+    <p class="breadcrumb">
+      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a><span>/</span>
+      <strong data-i18n="breadcrumb.current">Analisi finanziaria</strong>
+    </p>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Analisi finanziaria</p>
+        <h1 id="hero-title" data-i18n="hero.title">Tre analisi finanziarie, con numeri che tornano alla fonte.</h1>
+        <p class="lead" data-i18n="hero.lead">Prepara conto economico mensile, capitale circolante o concentrazione clienti da dati contabili qualificati. Perimetro, mapping, relazioni e riconciliazioni restano visibili.</p>
+        <div class="hero-actions">
+          <a class="button" href="#packs" data-i18n="hero.primary">Vedi le tre analisi</a>
+          <a class="button secondary" href="#prompt" data-i18n="hero.secondary">Usa il prompt</a>
+        </div>
+      </div>
+      <aside class="hero-ledger" aria-label="Sintesi del lavoro" data-i18n-aria-label="aria.summary">
+        <div><span data-i18n="hero.input.label">Fornisci</span><strong data-i18n="hero.input">Dati contabili, periodo, valuta e perimetro dell’analisi</strong></div>
+        <div><span data-i18n="hero.prepare.label">Vera prepara</span><strong data-i18n="hero.prepare">Un pack nominato con mapping confermati, controlli e riconciliazione</strong></div>
+        <div><span data-i18n="hero.output.label">Ricevi</span><strong data-i18n="hero.output">Evidenze preparate e riproducibili, pronte per la revisione professionale</strong></div>
+      </aside>
+    </section>
+
+    <section class="content-section" id="packs">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="packs.kicker">Tre pack, un solo metodo</p>
+          <h2 data-i18n="packs.title">Scegli l’analisi che risponde al lavoro.</h2>
+        </div>
+        <p data-i18n="packs.copy">Vera esegue un pack alla volta. Ogni pack usa un calcolo definito e si ferma quando dati, significato contabile o relazioni non sono sufficientemente chiari.</p>
+      </div>
+      <div class="document-lines">
+        <article class="document-line">
+          <div class="pack-name"><span>01</span><h3 data-i18n="pack.pnl.title">Conto economico mensile</h3></div>
+          <p data-i18n="pack.pnl.copy">Organizza ricavi e costi per mese da bilancio di verifica o libro giornale qualificato, con classificazioni contabili confermate e totali riconciliati.</p>
+        </article>
+        <article class="document-line">
+          <div class="pack-name"><span>02</span><h3 data-i18n="pack.workingCapital.title">Capitale circolante</h3></div>
+          <p data-i18n="pack.workingCapital.copy">Prepara crediti, debiti e altre componenti del capitale circolante da dataset e relazioni rivisti, mantenendo visibili periodo, valuta e regole di aggregazione.</p>
+        </article>
+        <article class="document-line">
+          <div class="pack-name"><span>03</span><h3 data-i18n="pack.customers.title">Concentrazione clienti</h3></div>
+          <p data-i18n="pack.customers.copy">Misura la concentrazione su ricavi o crediti dopo che identità cliente e gruppo, esclusioni e perimetro sono stati confermati in un crosswalk rivedibile.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="method">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="method.kicker">Il lavoro in breve</p>
+          <h2 data-i18n="method.title">Dai file contabili a evidenze che si possono rifare.</h2>
+        </div>
+        <p data-i18n="method.copy">Le decisioni che cambiano il risultato vengono confermate prima del calcolo. Il pack conserva poi gli input, la ricetta, i parametri e gli esiti dei controlli.</p>
+      </div>
+      <div class="exchange-flow">
+        <article class="exchange-step">
+          <p class="flow-label" data-i18n="method.input.label">Cosa fornisci</p>
+          <h3 data-i18n="method.input.title">File e contesto contabile</h3>
+          <p data-i18n="method.input.copy">Export, bilanci di verifica o giornali, insieme a entità, periodo, valuta e uso previsto.</p>
+        </article>
+        <article class="exchange-step">
+          <p class="flow-label" data-i18n="method.prepare.label">Cosa prepara Vera</p>
+          <h3 data-i18n="method.prepare.title">Contratti, mapping e un pack</h3>
+          <p data-i18n="method.prepare.copy">Qualifica colonne e significati, registra relazioni e crosswalk confermati, poi esegue una ricetta nominata.</p>
+        </article>
+        <article class="exchange-step">
+          <p class="flow-label" data-i18n="method.output.label">Cosa ricevi</p>
+          <h3 data-i18n="method.output.title">Tabelle, riconciliazione e ricevuta</h3>
+          <p data-i18n="method.output.copy">Evidenze preparate, totali di controllo, hash degli output e una ricevuta per ripetere la stessa esecuzione.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="content-section" id="controls">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="controls.kicker">Controlli prima delle conclusioni</p>
+          <h2 data-i18n="controls.title">Il calcolo parte solo dopo le scelte materiali.</h2>
+        </div>
+        <p data-i18n="controls.copy">Vera controlla ciò che il codice può verificare. Il professionista decide il significato contabile, il perimetro, i mapping, le tolleranze e le conclusioni.</p>
+      </div>
+      <div class="journey">
+        <article class="journey-step"><span>01</span><h3 data-i18n="controls.1.title">Qualifica le fonti</h3><p data-i18n="controls.1.copy">Identifica file, fogli, campi, granularità, chiavi, periodi, valute e unità. Se la struttura non regge, si ferma.</p></article>
+        <article class="journey-step"><span>02</span><h3 data-i18n="controls.2.title">Conferma i giudizi</h3><p data-i18n="controls.2.copy">Classificazioni contabili, identità cliente-gruppo e politiche di relazione entrano in mapping riveduti, non in inferenze nascoste.</p></article>
+        <article class="journey-step"><span>03</span><h3 data-i18n="controls.3.title">Esegue e riconcilia</h3><p data-i18n="controls.3.copy">Il pack verifica righe, duplicati, copertura delle relazioni, fan-out, totali conservati e tolleranze dichiarate.</p></article>
+        <article class="journey-step"><span>04</span><h3 data-i18n="controls.4.title">Consegna per la revisione</h3><p data-i18n="controls.4.copy">Il risultato resta evidenza preparata. Non diventa automaticamente una conclusione professionale o un report approvato.</p></article>
+      </div>
+
+      <details>
+        <summary data-i18n="technical.summary">Vedi i contratti e le evidenze tecniche</summary>
+        <ul class="technical-list">
+          <li>data_package_manifest.json</li>
+          <li>dataset_contract.json</li>
+          <li>relationship_contract.json</li>
+          <li>crosswalk_manifest.json</li>
+          <li>analysis_pack_request.json</li>
+          <li>reconciliation_result.json</li>
+          <li>prepared_evidence_manifest.json</li>
+          <li>financial_analysis_contract_audit.json</li>
+        </ul>
+      </details>
+    </section>
+
+    <section class="country-transition" id="boundary" aria-labelledby="boundary-title">
+      <div class="country-transition__head">
+        <p class="section-kicker" data-i18n="boundary.kicker">Responsabilità visibili</p>
+        <h2 id="boundary-title" data-i18n="boundary.title">Il codice controlla. Il professionista giudica.</h2>
+        <p data-i18n="boundary.copy">La riproducibilità non sostituisce la competenza contabile. Serve a rendere più chiaro che cosa è stato deciso, calcolato e riconciliato.</p>
+      </div>
+      <div class="country-transition__lines control-boundary">
+        <p><strong data-i18n="boundary.professional.title">Professionista</strong><span data-i18n="boundary.professional.copy">Perimetro, significato contabile, classificazioni, identità, materialità e conclusioni</span></p>
+        <p><strong data-i18n="boundary.code.title">Controlli</strong><span data-i18n="boundary.code.copy">Hash, chiavi, cardinalità, duplicati, quadrature, tolleranze e ripetibilità</span></p>
+        <p><strong data-i18n="boundary.result.title">Risultato</strong><span data-i18n="boundary.result.copy">Evidenza preparata e qualificata, non approvazione automatica del giudizio finanziario</span></p>
+      </div>
+    </section>
+
+    <section class="content-section" id="prompt">
+      <div class="prompt-layout">
+        <div class="prompt-copy">
+          <p class="section-kicker" data-i18n="prompt.kicker">Provalo in Vera</p>
+          <h2 data-i18n="prompt.title">Parti dalla cartella contabile e dalla domanda.</h2>
+          <p data-i18n="prompt.copy">Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.</p>
+        </div>
+        <pre><code id="prompt-example">Usa Vera per preparare l’analisi finanziaria di questa cartella. Identifica se serve conto economico mensile, capitale circolante o concentrazione clienti; qualifica fonti, periodo, valuta e perimetro; chiedimi di confermare i mapping e le relazioni materiali; esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Mantieni separati i risultati preparati dalle conclusioni professionali.</code></pre>
+      </div>
+    </section>
+
+    <section class="content-section" id="related">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="related.kicker">Nel percorso Vera</p>
+          <h2 data-i18n="related.title">Collega l’analisi ai controlli e al documento finale.</h2>
+        </div>
+        <div>
+          <p data-i18n="related.copy">Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.</p>
+          <div class="related-actions">
+            <a class="button secondary" href="../journal-bank-reconciliation/index.html?lang=it" data-localized-link data-i18n="related.bank">Riconcilia banca e contabilità</a>
+            <a class="button secondary" href="../report-builder/index.html?lang=it" data-localized-link data-i18n="related.report">Genera il report</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <div class="install-band">
+        <div>
+          <h2 data-i18n="install.title">Continua con Vera.</h2>
+          <p data-i18n="install.copy">Installa Vera o torna alla pagina principale per vedere l’intero percorso di lavoro.</p>
+        </div>
+        <a class="button" id="install-link" href="../vera/index.html?lang=it" data-i18n="install.button">Vera</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-shell">
+      <span>Vera · <span data-i18n="footer.scope">Analisi finanziaria</span></span>
+      <span class="footer-links">
+        <a id="footer-vera-link" href="../vera/index.html?lang=it" data-i18n="footer.vera">Tutte le funzioni</a>
+        <a id="data-link" href="/data-handling?lang=it" data-i18n="footer.data">Trattamento dati</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const copy = {
+      it: {
+        "meta.title": "Analisi finanziaria | Vera",
+        "meta.description": "Vera prepara conto economico mensile, capitale circolante e concentrazione clienti da dati contabili qualificati, con riconciliazioni e risultati riproducibili.",
+        "skip": "Vai al contenuto",
+        "nav.packs": "Tre analisi", "nav.method": "Come funziona", "nav.controls": "Controlli", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navigazione pagina", "aria.language": "Lingua", "aria.summary": "Sintesi del lavoro",
+        "breadcrumb.current": "Analisi finanziaria",
+        "hero.eyebrow": "Vera · Analisi finanziaria",
+        "hero.title": "Tre analisi finanziarie, con numeri che tornano alla fonte.",
+        "hero.lead": "Prepara conto economico mensile, capitale circolante o concentrazione clienti da dati contabili qualificati. Perimetro, mapping, relazioni e riconciliazioni restano visibili.",
+        "hero.primary": "Vedi le tre analisi", "hero.secondary": "Usa il prompt",
+        "hero.input.label": "Fornisci", "hero.input": "Dati contabili, periodo, valuta e perimetro dell’analisi",
+        "hero.prepare.label": "Vera prepara", "hero.prepare": "Un pack nominato con mapping confermati, controlli e riconciliazione",
+        "hero.output.label": "Ricevi", "hero.output": "Evidenze preparate e riproducibili, pronte per la revisione professionale",
+        "packs.kicker": "Tre pack, un solo metodo", "packs.title": "Scegli l’analisi che risponde al lavoro.",
+        "packs.copy": "Vera esegue un pack alla volta. Ogni pack usa un calcolo definito e si ferma quando dati, significato contabile o relazioni non sono sufficientemente chiari.",
+        "pack.pnl.title": "Conto economico mensile", "pack.pnl.copy": "Organizza ricavi e costi per mese da bilancio di verifica o libro giornale qualificato, con classificazioni contabili confermate e totali riconciliati.",
+        "pack.workingCapital.title": "Capitale circolante", "pack.workingCapital.copy": "Prepara crediti, debiti e altre componenti del capitale circolante da dataset e relazioni rivisti, mantenendo visibili periodo, valuta e regole di aggregazione.",
+        "pack.customers.title": "Concentrazione clienti", "pack.customers.copy": "Misura la concentrazione su ricavi o crediti dopo che identità cliente e gruppo, esclusioni e perimetro sono stati confermati in un crosswalk rivedibile.",
+        "method.kicker": "Il lavoro in breve", "method.title": "Dai file contabili a evidenze che si possono rifare.",
+        "method.copy": "Le decisioni che cambiano il risultato vengono confermate prima del calcolo. Il pack conserva poi gli input, la ricetta, i parametri e gli esiti dei controlli.",
+        "method.input.label": "Cosa fornisci", "method.input.title": "File e contesto contabile", "method.input.copy": "Export, bilanci di verifica o giornali, insieme a entità, periodo, valuta e uso previsto.",
+        "method.prepare.label": "Cosa prepara Vera", "method.prepare.title": "Contratti, mapping e un pack", "method.prepare.copy": "Qualifica colonne e significati, registra relazioni e crosswalk confermati, poi esegue una ricetta nominata.",
+        "method.output.label": "Cosa ricevi", "method.output.title": "Tabelle, riconciliazione e ricevuta", "method.output.copy": "Evidenze preparate, totali di controllo, hash degli output e una ricevuta per ripetere la stessa esecuzione.",
+        "controls.kicker": "Controlli prima delle conclusioni", "controls.title": "Il calcolo parte solo dopo le scelte materiali.",
+        "controls.copy": "Vera controlla ciò che il codice può verificare. Il professionista decide il significato contabile, il perimetro, i mapping, le tolleranze e le conclusioni.",
+        "controls.1.title": "Qualifica le fonti", "controls.1.copy": "Identifica file, fogli, campi, granularità, chiavi, periodi, valute e unità. Se la struttura non regge, si ferma.",
+        "controls.2.title": "Conferma i giudizi", "controls.2.copy": "Classificazioni contabili, identità cliente-gruppo e politiche di relazione entrano in mapping riveduti, non in inferenze nascoste.",
+        "controls.3.title": "Esegue e riconcilia", "controls.3.copy": "Il pack verifica righe, duplicati, copertura delle relazioni, fan-out, totali conservati e tolleranze dichiarate.",
+        "controls.4.title": "Consegna per la revisione", "controls.4.copy": "Il risultato resta evidenza preparata. Non diventa automaticamente una conclusione professionale o un report approvato.",
+        "technical.summary": "Vedi i contratti e le evidenze tecniche",
+        "boundary.kicker": "Responsabilità visibili", "boundary.title": "Il codice controlla. Il professionista giudica.",
+        "boundary.copy": "La riproducibilità non sostituisce la competenza contabile. Serve a rendere più chiaro che cosa è stato deciso, calcolato e riconciliato.",
+        "boundary.professional.title": "Professionista", "boundary.professional.copy": "Perimetro, significato contabile, classificazioni, identità, materialità e conclusioni",
+        "boundary.code.title": "Controlli", "boundary.code.copy": "Hash, chiavi, cardinalità, duplicati, quadrature, tolleranze e ripetibilità",
+        "boundary.result.title": "Risultato", "boundary.result.copy": "Evidenza preparata e qualificata, non approvazione automatica del giudizio finanziario",
+        "prompt.kicker": "Provalo in Vera", "prompt.title": "Parti dalla cartella contabile e dalla domanda.",
+        "prompt.copy": "Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.",
+        "prompt": "Usa Vera per preparare l’analisi finanziaria di questa cartella. Identifica se serve conto economico mensile, capitale circolante o concentrazione clienti; qualifica fonti, periodo, valuta e perimetro; chiedimi di confermare i mapping e le relazioni materiali; esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Mantieni separati i risultati preparati dalle conclusioni professionali.",
+        "related.kicker": "Nel percorso Vera", "related.title": "Collega l’analisi ai controlli e al documento finale.",
+        "related.copy": "Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.",
+        "related.bank": "Riconcilia banca e contabilità", "related.report": "Genera il report",
+        "install.title": "Continua con Vera.", "install.copy": "Installa Vera o torna alla pagina principale per vedere l’intero percorso di lavoro.", "install.button": "Vera",
+        "footer.scope": "Analisi finanziaria", "footer.vera": "Tutte le funzioni", "footer.data": "Trattamento dati"
+      },
+      en: {
+        "meta.title": "Financial analysis | Vera",
+        "meta.description": "Vera prepares monthly P&L, working-capital and customer-concentration evidence from qualified accounting data, with reconciliations and reproducible results.",
+        "skip": "Skip to content",
+        "nav.packs": "Three analyses", "nav.method": "How it works", "nav.controls": "Controls", "nav.prompt": "Prompt",
+        "aria.pageNav": "Page navigation", "aria.language": "Language", "aria.summary": "Work summary",
+        "breadcrumb.current": "Financial analysis",
+        "hero.eyebrow": "Vera · Financial analysis",
+        "hero.title": "Three financial analyses, with numbers that return to source.",
+        "hero.lead": "Prepare monthly P&L, working capital or customer concentration from qualified accounting data. Scope, mappings, relationships and reconciliations remain visible.",
+        "hero.primary": "See the three analyses", "hero.secondary": "Use the prompt",
+        "hero.input.label": "Provide", "hero.input": "Accounting data, period, currency and analysis scope",
+        "hero.prepare.label": "Vera prepares", "hero.prepare": "A named pack with confirmed mappings, controls and reconciliation",
+        "hero.output.label": "Receive", "hero.output": "Prepared, reproducible evidence ready for professional review",
+        "packs.kicker": "Three packs, one method", "packs.title": "Choose the analysis that fits the work.",
+        "packs.copy": "Vera runs one pack at a time. Each pack uses a defined calculation and stops when the data, accounting meaning or relationships are not sufficiently clear.",
+        "pack.pnl.title": "Monthly P&L", "pack.pnl.copy": "Organizes revenue and costs by month from a qualified trial balance or general ledger, with confirmed accounting classifications and reconciled totals.",
+        "pack.workingCapital.title": "Working capital", "pack.workingCapital.copy": "Prepares receivables, payables and other working-capital components from reviewed datasets and relationships while keeping period, currency and aggregation rules visible.",
+        "pack.customers.title": "Customer concentration", "pack.customers.copy": "Measures concentration on revenue or receivables after customer and parent identity, exclusions and scope have been confirmed in a reviewable crosswalk.",
+        "method.kicker": "The work at a glance", "method.title": "From accounting files to evidence that can be replayed.",
+        "method.copy": "Decisions that change the result are confirmed before calculation. The pack then preserves the inputs, recipe, parameters and control outcomes.",
+        "method.input.label": "What you provide", "method.input.title": "Files and accounting context", "method.input.copy": "Exports, trial balances or journals together with entity, period, currency and intended use.",
+        "method.prepare.label": "What Vera prepares", "method.prepare.title": "Contracts, mappings and one pack", "method.prepare.copy": "Qualifies columns and meanings, records confirmed relationships and crosswalks, then runs one named recipe.",
+        "method.output.label": "What you receive", "method.output.title": "Tables, reconciliation and receipt", "method.output.copy": "Prepared evidence, control totals, output hashes and a receipt that can replay the same run.",
+        "controls.kicker": "Controls before conclusions", "controls.title": "Calculation starts only after material choices.",
+        "controls.copy": "Vera checks what code can verify. The professional decides accounting meaning, scope, mappings, tolerances and conclusions.",
+        "controls.1.title": "Qualify the sources", "controls.1.copy": "Identify files, sheets, fields, grain, keys, periods, currencies and units. Stop if the structure does not hold.",
+        "controls.2.title": "Confirm judgments", "controls.2.copy": "Accounting classifications, customer-parent identity and relationship policies enter reviewed mappings, not hidden inferences.",
+        "controls.3.title": "Run and reconcile", "controls.3.copy": "The pack checks rows, duplicates, relationship coverage, fan-out, conserved totals and declared tolerances.",
+        "controls.4.title": "Deliver for review", "controls.4.copy": "The result remains prepared evidence. It does not automatically become a professional conclusion or approved report.",
+        "technical.summary": "See the technical contracts and evidence",
+        "boundary.kicker": "Visible responsibility", "boundary.title": "Code checks. The professional judges.",
+        "boundary.copy": "Reproducibility does not replace accounting expertise. It makes clearer what was decided, calculated and reconciled.",
+        "boundary.professional.title": "Professional", "boundary.professional.copy": "Scope, accounting meaning, classifications, identities, materiality and conclusions",
+        "boundary.code.title": "Controls", "boundary.code.copy": "Hashes, keys, cardinality, duplicates, tie-outs, tolerances and replayability",
+        "boundary.result.title": "Result", "boundary.result.copy": "Prepared and qualified evidence, not automatic approval of the financial judgment",
+        "prompt.kicker": "Try it in Vera", "prompt.title": "Start with the accounting folder and the question.",
+        "prompt.copy": "Vera identifies the relevant pack and asks only for unresolved choices that can change the result.",
+        "prompt": "Use Vera to prepare the financial analysis for this folder. Identify whether monthly P&L, working capital or customer concentration is needed; qualify sources, period, currency and scope; ask me to confirm material mappings and relationships; run one pack and deliver evidence, reconciliation and a reproducible receipt. Keep prepared results separate from professional conclusions.",
+        "related.kicker": "In the Vera workflow", "related.title": "Connect the analysis to controls and the final document.",
+        "related.copy": "Use an accounting reconciliation when relationships between sources must be closed first. Then carry confirmed tables into the report.",
+        "related.bank": "Reconcile bank and ledger", "related.report": "Build the report",
+        "install.title": "Continue with Vera.", "install.copy": "Install Vera or return to the main page to see the complete workflow.", "install.button": "Vera",
+        "footer.scope": "Financial analysis", "footer.vera": "All capabilities", "footer.data": "Data handling"
+      },
+      fr: {
+        "meta.title": "Analyse financière | Vera",
+        "meta.description": "Vera prépare compte de résultat mensuel, fonds de roulement et concentration clients à partir de données comptables qualifiées, avec rapprochements et résultats reproductibles.",
+        "skip": "Aller au contenu",
+        "nav.packs": "Trois analyses", "nav.method": "Fonctionnement", "nav.controls": "Contrôles", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navigation de la page", "aria.language": "Langue", "aria.summary": "Résumé du travail",
+        "breadcrumb.current": "Analyse financière",
+        "hero.eyebrow": "Vera · Analyse financière",
+        "hero.title": "Trois analyses financières, avec des chiffres reliés à leur source.",
+        "hero.lead": "Préparez compte de résultat mensuel, fonds de roulement ou concentration clients à partir de données comptables qualifiées. Périmètre, correspondances, relations et rapprochements restent visibles.",
+        "hero.primary": "Voir les trois analyses", "hero.secondary": "Utiliser le prompt",
+        "hero.input.label": "Vous fournissez", "hero.input": "Données comptables, période, devise et périmètre de l’analyse",
+        "hero.prepare.label": "Vera prépare", "hero.prepare": "Un pack nommé avec correspondances confirmées, contrôles et rapprochement",
+        "hero.output.label": "Vous recevez", "hero.output": "Des éléments préparés et reproductibles, prêts pour la revue professionnelle",
+        "packs.kicker": "Trois packs, une méthode", "packs.title": "Choisissez l’analyse adaptée au travail.",
+        "packs.copy": "Vera exécute un pack à la fois. Chaque pack applique un calcul défini et s’arrête si les données, le sens comptable ou les relations ne sont pas assez clairs.",
+        "pack.pnl.title": "Compte de résultat mensuel", "pack.pnl.copy": "Organise produits et charges par mois depuis une balance ou un grand livre qualifié, avec classifications comptables confirmées et totaux rapprochés.",
+        "pack.workingCapital.title": "Fonds de roulement", "pack.workingCapital.copy": "Prépare créances, dettes et autres composantes depuis des jeux de données et relations revus, en gardant visibles période, devise et règles d’agrégation.",
+        "pack.customers.title": "Concentration clients", "pack.customers.copy": "Mesure la concentration sur chiffre d’affaires ou créances après confirmation des identités client-groupe, exclusions et périmètre dans une table de correspondance révisable.",
+        "method.kicker": "Le travail en bref", "method.title": "Des fichiers comptables à des éléments reproductibles.",
+        "method.copy": "Les décisions qui changent le résultat sont confirmées avant le calcul. Le pack conserve ensuite entrées, recette, paramètres et résultats des contrôles.",
+        "method.input.label": "Ce que vous fournissez", "method.input.title": "Fichiers et contexte comptable", "method.input.copy": "Exports, balances ou journaux, avec entité, période, devise et usage prévu.",
+        "method.prepare.label": "Ce que Vera prépare", "method.prepare.title": "Contrats, correspondances et un pack", "method.prepare.copy": "Qualifie colonnes et sens, enregistre relations et tables de correspondance confirmées, puis exécute une recette nommée.",
+        "method.output.label": "Ce que vous recevez", "method.output.title": "Tableaux, rapprochement et reçu", "method.output.copy": "Éléments préparés, totaux de contrôle, empreintes des sorties et reçu permettant de rejouer la même exécution.",
+        "controls.kicker": "Contrôles avant conclusions", "controls.title": "Le calcul commence après les choix significatifs.",
+        "controls.copy": "Vera contrôle ce que le code peut vérifier. Le professionnel décide du sens comptable, du périmètre, des correspondances, tolérances et conclusions.",
+        "controls.1.title": "Qualifier les sources", "controls.1.copy": "Identifier fichiers, feuilles, champs, granularité, clés, périodes, devises et unités. S’arrêter si la structure ne tient pas.",
+        "controls.2.title": "Confirmer les jugements", "controls.2.copy": "Classifications comptables, identité client-groupe et politiques de relation entrent dans des correspondances revues, jamais dans des inférences cachées.",
+        "controls.3.title": "Exécuter et rapprocher", "controls.3.copy": "Le pack contrôle lignes, doublons, couverture des relations, démultiplication, totaux conservés et tolérances déclarées.",
+        "controls.4.title": "Livrer pour revue", "controls.4.copy": "Le résultat reste un élément préparé. Il ne devient pas automatiquement une conclusion professionnelle ou un rapport approuvé.",
+        "technical.summary": "Voir les contrats et éléments techniques",
+        "boundary.kicker": "Responsabilités visibles", "boundary.title": "Le code contrôle. Le professionnel juge.",
+        "boundary.copy": "La reproductibilité ne remplace pas l’expertise comptable. Elle clarifie ce qui a été décidé, calculé et rapproché.",
+        "boundary.professional.title": "Professionnel", "boundary.professional.copy": "Périmètre, sens comptable, classifications, identités, matérialité et conclusions",
+        "boundary.code.title": "Contrôles", "boundary.code.copy": "Empreintes, clés, cardinalité, doublons, quadratures, tolérances et reproductibilité",
+        "boundary.result.title": "Résultat", "boundary.result.copy": "Éléments préparés et qualifiés, sans approbation automatique du jugement financier",
+        "prompt.kicker": "Essayez dans Vera", "prompt.title": "Partez du dossier comptable et de la question.",
+        "prompt.copy": "Vera identifie le pack pertinent et ne demande que les choix non résolus susceptibles de changer le résultat.",
+        "prompt": "Utilise Vera pour préparer l’analyse financière de ce dossier. Détermine s’il faut un compte de résultat mensuel, un fonds de roulement ou une concentration clients ; qualifie les sources, la période, la devise et le périmètre ; demande-moi de confirmer les correspondances et relations significatives ; exécute un seul pack et livre les éléments, le rapprochement et un reçu reproductible. Sépare les résultats préparés des conclusions professionnelles.",
+        "related.kicker": "Dans le parcours Vera", "related.title": "Reliez l’analyse aux contrôles et au document final.",
+        "related.copy": "Utilisez un rapprochement comptable si les relations entre sources doivent d’abord être closes. Portez ensuite les tableaux confirmés dans le rapport.",
+        "related.bank": "Rapprocher banque et comptabilité", "related.report": "Générer le rapport",
+        "install.title": "Continuez avec Vera.", "install.copy": "Installez Vera ou revenez à la page principale pour voir le parcours complet.", "install.button": "Vera",
+        "footer.scope": "Analyse financière", "footer.vera": "Toutes les fonctions", "footer.data": "Traitement des données"
+      },
+      de: {
+        "meta.title": "Finanzanalyse | Vera",
+        "meta.description": "Vera bereitet monatliche GuV, Working Capital und Kundenkonzentration aus qualifizierten Buchhaltungsdaten mit Abstimmungen und reproduzierbaren Ergebnissen vor.",
+        "skip": "Zum Inhalt",
+        "nav.packs": "Drei Analysen", "nav.method": "So funktioniert es", "nav.controls": "Kontrollen", "nav.prompt": "Prompt",
+        "aria.pageNav": "Seitennavigation", "aria.language": "Sprache", "aria.summary": "Arbeitsübersicht",
+        "breadcrumb.current": "Finanzanalyse",
+        "hero.eyebrow": "Vera · Finanzanalyse",
+        "hero.title": "Drei Finanzanalysen, deren Zahlen zur Quelle zurückführen.",
+        "hero.lead": "Bereiten Sie monatliche GuV, Working Capital oder Kundenkonzentration aus qualifizierten Buchhaltungsdaten vor. Umfang, Zuordnungen, Beziehungen und Abstimmungen bleiben sichtbar.",
+        "hero.primary": "Drei Analysen ansehen", "hero.secondary": "Prompt verwenden",
+        "hero.input.label": "Sie liefern", "hero.input": "Buchhaltungsdaten, Zeitraum, Währung und Analyseumfang",
+        "hero.prepare.label": "Vera bereitet vor", "hero.prepare": "Ein benanntes Paket mit bestätigten Zuordnungen, Kontrollen und Abstimmung",
+        "hero.output.label": "Sie erhalten", "hero.output": "Vorbereitete, reproduzierbare Nachweise für die fachliche Prüfung",
+        "packs.kicker": "Drei Pakete, eine Methode", "packs.title": "Wählen Sie die Analyse passend zur Aufgabe.",
+        "packs.copy": "Vera führt jeweils ein Paket aus. Jedes Paket verwendet eine definierte Berechnung und stoppt, wenn Daten, buchhalterische Bedeutung oder Beziehungen nicht ausreichend klar sind.",
+        "pack.pnl.title": "Monatliche GuV", "pack.pnl.copy": "Ordnet Erlöse und Kosten nach Monaten aus qualifizierter Summen- und Saldenliste oder Hauptbuch, mit bestätigten Kontenzuordnungen und abgestimmten Summen.",
+        "pack.workingCapital.title": "Working Capital", "pack.workingCapital.copy": "Bereitet Forderungen, Verbindlichkeiten und weitere Working-Capital-Komponenten aus geprüften Datensätzen und Beziehungen vor; Zeitraum, Währung und Aggregationsregeln bleiben sichtbar.",
+        "pack.customers.title": "Kundenkonzentration", "pack.customers.copy": "Misst die Konzentration auf Umsatz oder Forderungen, nachdem Kunden- und Gruppenidentität, Ausschlüsse und Umfang in einer prüfbaren Zuordnung bestätigt wurden.",
+        "method.kicker": "Die Arbeit im Überblick", "method.title": "Von Buchhaltungsdateien zu reproduzierbaren Nachweisen.",
+        "method.copy": "Entscheidungen, die das Ergebnis ändern, werden vor der Berechnung bestätigt. Das Paket bewahrt anschließend Eingaben, Rezept, Parameter und Kontrollergebnisse.",
+        "method.input.label": "Was Sie liefern", "method.input.title": "Dateien und Buchhaltungskontext", "method.input.copy": "Exporte, Summen- und Saldenlisten oder Journale zusammen mit Einheit, Zeitraum, Währung und Verwendungszweck.",
+        "method.prepare.label": "Was Vera vorbereitet", "method.prepare.title": "Verträge, Zuordnungen und ein Paket", "method.prepare.copy": "Qualifiziert Spalten und Bedeutungen, erfasst bestätigte Beziehungen und Zuordnungstabellen und führt dann ein benanntes Rezept aus.",
+        "method.output.label": "Was Sie erhalten", "method.output.title": "Tabellen, Abstimmung und Beleg", "method.output.copy": "Vorbereitete Nachweise, Kontrollsummen, Output-Hashes und einen Beleg zur Wiederholung derselben Ausführung.",
+        "controls.kicker": "Kontrollen vor Schlussfolgerungen", "controls.title": "Die Berechnung beginnt nach den wesentlichen Entscheidungen.",
+        "controls.copy": "Vera prüft, was Code verifizieren kann. Der Profi entscheidet über buchhalterische Bedeutung, Umfang, Zuordnungen, Toleranzen und Schlussfolgerungen.",
+        "controls.1.title": "Quellen qualifizieren", "controls.1.copy": "Dateien, Blätter, Felder, Granularität, Schlüssel, Zeiträume, Währungen und Einheiten bestimmen. Stoppen, wenn die Struktur nicht trägt.",
+        "controls.2.title": "Urteile bestätigen", "controls.2.copy": "Kontenklassifikationen, Kunden-Gruppen-Identität und Beziehungsregeln gehen in geprüfte Zuordnungen ein, nicht in verborgene Annahmen.",
+        "controls.3.title": "Ausführen und abstimmen", "controls.3.copy": "Das Paket prüft Zeilen, Duplikate, Beziehungsabdeckung, Vervielfachung, erhaltene Summen und erklärte Toleranzen.",
+        "controls.4.title": "Zur Prüfung liefern", "controls.4.copy": "Das Ergebnis bleibt vorbereiteter Nachweis. Es wird nicht automatisch zur fachlichen Schlussfolgerung oder zum genehmigten Bericht.",
+        "technical.summary": "Technische Verträge und Nachweise ansehen",
+        "boundary.kicker": "Sichtbare Verantwortung", "boundary.title": "Code kontrolliert. Der Profi urteilt.",
+        "boundary.copy": "Reproduzierbarkeit ersetzt keine Buchhaltungsexpertise. Sie macht klarer, was entschieden, berechnet und abgestimmt wurde.",
+        "boundary.professional.title": "Profi", "boundary.professional.copy": "Umfang, buchhalterische Bedeutung, Klassifikationen, Identitäten, Wesentlichkeit und Schlussfolgerungen",
+        "boundary.code.title": "Kontrollen", "boundary.code.copy": "Hashes, Schlüssel, Kardinalität, Duplikate, Abstimmungen, Toleranzen und Wiederholbarkeit",
+        "boundary.result.title": "Ergebnis", "boundary.result.copy": "Vorbereitete und qualifizierte Nachweise, keine automatische Freigabe des Finanzurteils",
+        "prompt.kicker": "In Vera ausprobieren", "prompt.title": "Mit dem Buchhaltungsordner und der Frage beginnen.",
+        "prompt.copy": "Vera erkennt das passende Paket und fragt nur nach offenen Entscheidungen, die das Ergebnis ändern können.",
+        "prompt": "Verwende Vera, um die Finanzanalyse für diesen Ordner vorzubereiten. Bestimme, ob monatliche GuV, Working Capital oder Kundenkonzentration benötigt wird; qualifiziere Quellen, Zeitraum, Währung und Umfang; bitte mich, wesentliche Zuordnungen und Beziehungen zu bestätigen; führe ein Paket aus und liefere Nachweise, Abstimmung und einen reproduzierbaren Beleg. Halte vorbereitete Ergebnisse und fachliche Schlussfolgerungen getrennt.",
+        "related.kicker": "Im Vera-Ablauf", "related.title": "Analyse mit Kontrollen und Abschlussdokument verbinden.",
+        "related.copy": "Nutzen Sie eine Buchhaltungsabstimmung, wenn Beziehungen zwischen Quellen zuerst geschlossen werden müssen. Übernehmen Sie dann bestätigte Tabellen in den Bericht.",
+        "related.bank": "Bank und Buchhaltung abstimmen", "related.report": "Bericht erstellen",
+        "install.title": "Mit Vera fortfahren.", "install.copy": "Installieren Sie Vera oder kehren Sie zur Hauptseite zurück, um den vollständigen Ablauf zu sehen.", "install.button": "Vera",
+        "footer.scope": "Finanzanalyse", "footer.vera": "Alle Funktionen", "footer.data": "Datenverarbeitung"
+      },
+      es: {
+        "meta.title": "Análisis financiero | Vera",
+        "meta.description": "Vera prepara cuenta de resultados mensual, capital circulante y concentración de clientes a partir de datos contables cualificados, con conciliaciones y resultados reproducibles.",
+        "skip": "Ir al contenido",
+        "nav.packs": "Tres análisis", "nav.method": "Cómo funciona", "nav.controls": "Controles", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navegación de la página", "aria.language": "Idioma", "aria.summary": "Resumen del trabajo",
+        "breadcrumb.current": "Análisis financiero",
+        "hero.eyebrow": "Vera · Análisis financiero",
+        "hero.title": "Tres análisis financieros, con cifras que vuelven a la fuente.",
+        "hero.lead": "Prepare cuenta de resultados mensual, capital circulante o concentración de clientes a partir de datos contables cualificados. Alcance, mapeos, relaciones y conciliaciones permanecen visibles.",
+        "hero.primary": "Ver los tres análisis", "hero.secondary": "Usar el prompt",
+        "hero.input.label": "Proporcione", "hero.input": "Datos contables, periodo, moneda y alcance del análisis",
+        "hero.prepare.label": "Vera prepara", "hero.prepare": "Un paquete identificado con mapeos confirmados, controles y conciliación",
+        "hero.output.label": "Reciba", "hero.output": "Evidencia preparada y reproducible, lista para revisión profesional",
+        "packs.kicker": "Tres paquetes, un método", "packs.title": "Elija el análisis adecuado para el trabajo.",
+        "packs.copy": "Vera ejecuta un paquete cada vez. Cada paquete utiliza un cálculo definido y se detiene cuando los datos, el significado contable o las relaciones no están suficientemente claros.",
+        "pack.pnl.title": "Cuenta de resultados mensual", "pack.pnl.copy": "Organiza ingresos y costes por mes desde un balance de comprobación o libro mayor cualificado, con clasificaciones contables confirmadas y totales conciliados.",
+        "pack.workingCapital.title": "Capital circulante", "pack.workingCapital.copy": "Prepara cuentas a cobrar, cuentas a pagar y otros componentes desde conjuntos de datos y relaciones revisados, manteniendo visibles periodo, moneda y reglas de agregación.",
+        "pack.customers.title": "Concentración de clientes", "pack.customers.copy": "Mide la concentración sobre ingresos o cuentas a cobrar después de confirmar identidad cliente-grupo, exclusiones y alcance en una tabla de correspondencia revisable.",
+        "method.kicker": "El trabajo de un vistazo", "method.title": "De los archivos contables a evidencia reproducible.",
+        "method.copy": "Las decisiones que cambian el resultado se confirman antes del cálculo. El paquete conserva después entradas, receta, parámetros y resultados de control.",
+        "method.input.label": "Lo que proporciona", "method.input.title": "Archivos y contexto contable", "method.input.copy": "Exportaciones, balances o diarios junto con entidad, periodo, moneda y uso previsto.",
+        "method.prepare.label": "Lo que Vera prepara", "method.prepare.title": "Contratos, mapeos y un paquete", "method.prepare.copy": "Cualifica columnas y significados, registra relaciones y tablas de correspondencia confirmadas y ejecuta una receta identificada.",
+        "method.output.label": "Lo que recibe", "method.output.title": "Tablas, conciliación y recibo", "method.output.copy": "Evidencia preparada, totales de control, hashes de salida y un recibo para repetir la misma ejecución.",
+        "controls.kicker": "Controles antes de conclusiones", "controls.title": "El cálculo comienza después de las decisiones materiales.",
+        "controls.copy": "Vera controla lo que el código puede verificar. El profesional decide significado contable, alcance, mapeos, tolerancias y conclusiones.",
+        "controls.1.title": "Cualificar las fuentes", "controls.1.copy": "Identificar archivos, hojas, campos, granularidad, claves, periodos, monedas y unidades. Detenerse si la estructura no se sostiene.",
+        "controls.2.title": "Confirmar los juicios", "controls.2.copy": "Clasificaciones contables, identidad cliente-grupo y políticas de relación entran en mapeos revisados, no en inferencias ocultas.",
+        "controls.3.title": "Ejecutar y conciliar", "controls.3.copy": "El paquete verifica filas, duplicados, cobertura de relaciones, multiplicación, totales conservados y tolerancias declaradas.",
+        "controls.4.title": "Entregar para revisión", "controls.4.copy": "El resultado sigue siendo evidencia preparada. No se convierte automáticamente en conclusión profesional o informe aprobado.",
+        "technical.summary": "Ver los contratos y la evidencia técnica",
+        "boundary.kicker": "Responsabilidades visibles", "boundary.title": "El código controla. El profesional juzga.",
+        "boundary.copy": "La reproducibilidad no sustituye la experiencia contable. Aclara qué se decidió, calculó y concilió.",
+        "boundary.professional.title": "Profesional", "boundary.professional.copy": "Alcance, significado contable, clasificaciones, identidades, materialidad y conclusiones",
+        "boundary.code.title": "Controles", "boundary.code.copy": "Hashes, claves, cardinalidad, duplicados, cuadre, tolerancias y reproducibilidad",
+        "boundary.result.title": "Resultado", "boundary.result.copy": "Evidencia preparada y cualificada, no aprobación automática del juicio financiero",
+        "prompt.kicker": "Pruébelo en Vera", "prompt.title": "Empiece por la carpeta contable y la pregunta.",
+        "prompt.copy": "Vera identifica el paquete pertinente y pregunta solo por decisiones abiertas que pueden cambiar el resultado.",
+        "prompt": "Usa Vera para preparar el análisis financiero de esta carpeta. Identifica si se necesita cuenta de resultados mensual, capital circulante o concentración de clientes; cualifica fuentes, periodo, moneda y alcance; pídeme confirmar los mapeos y relaciones materiales; ejecuta un solo paquete y entrega evidencia, conciliación y un recibo reproducible. Mantén separados los resultados preparados y las conclusiones profesionales.",
+        "related.kicker": "En el recorrido de Vera", "related.title": "Conecte el análisis con los controles y el documento final.",
+        "related.copy": "Utilice una conciliación contable cuando primero deban cerrarse las relaciones entre fuentes. Lleve después las tablas confirmadas al informe.",
+        "related.bank": "Conciliar banco y contabilidad", "related.report": "Generar el informe",
+        "install.title": "Continúe con Vera.", "install.copy": "Instale Vera o vuelva a la página principal para ver el recorrido completo.", "install.button": "Vera",
+        "footer.scope": "Análisis financiero", "footer.vera": "Todas las funciones", "footer.data": "Tratamiento de datos"
+      }
+    };
+
+    const supported = new Set(Object.keys(copy));
+    const params = new URLSearchParams(window.location.search);
+    const localeNames = { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" };
+
+    function localizedHref(path, lang) {
+      const url = new URL(path, window.location.href);
+      url.searchParams.set("lang", lang);
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function setLanguage(requested, updateHistory = true) {
+      const lang = supported.has(requested) ? requested : "it";
+      const strings = copy[lang];
+      document.documentElement.lang = lang;
+      document.title = strings["meta.title"];
+      document.querySelector('meta[name="description"]').content = strings["meta.description"];
+      document.querySelector('meta[property="og:title"]').content = strings["meta.title"];
+      document.querySelector('meta[property="og:description"]').content = strings["meta.description"];
+      document.getElementById("og-locale").content = localeNames[lang];
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = strings[node.dataset.i18n];
+        if (value) node.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+        const value = strings[node.dataset.i18nAriaLabel];
+        if (value) node.setAttribute("aria-label", value);
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+      });
+
+      document.getElementById("prompt-example").textContent = strings.prompt;
+      document.getElementById("home-link").href = `/?lang=${lang}`;
+      document.getElementById("vera-link").href = localizedHref("../vera/index.html", lang);
+      document.getElementById("install-link").href = localizedHref("../vera/index.html", lang);
+      document.getElementById("footer-vera-link").href = localizedHref("../vera/index.html", lang);
+      document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
+      document.querySelectorAll("[data-localized-link]").forEach((link) => {
+        if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute("href");
+        link.href = localizedHref(link.dataset.baseHref, lang);
+      });
+
+      if (updateHistory) {
+        const next = new URL(window.location.href);
+        next.searchParams.set("lang", lang);
+        history.replaceState({}, "", `${next.pathname}${next.search}${next.hash}`);
+      }
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    setLanguage(params.get("lang") || "it", false);
+  </script>
+</body>
+</html>
