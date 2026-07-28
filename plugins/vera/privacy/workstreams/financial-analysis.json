@@ -1,0 +1,53 @@
+{
+  "schema_version": 3,
+  "workstream": "financial-analysis",
+  "display_name": "Financial Analysis",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_financial_analysis"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "financial-analysis-evidence",
+        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reconciliation posture, and review status needed to prepare financial-analysis evidence",
+        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue and customer files; source identities and hashes; dataset and relationship contracts; reviewed crosswalks; calculation parameters; reconciliation results; prepared tables; replay evidence; limitations and review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "sealed-case-contracts",
+      "control": "The workflow validates canonical hashes for the package, dataset, relationship, crosswalk, request, reconciliation, and prepared-evidence contracts and fails when a digest is stale or a reference does not close."
+    },
+    {
+      "id": "reviewed-judgmental-crosswalks",
+      "control": "Many-to-many and judgmental identity or classification mappings require an explicit reviewed crosswalk receipt rather than silent label-based inference."
+    },
+    {
+      "id": "prepared-evidence-boundary",
+      "control": "The prepared-evidence manifest and its contract audit are forced to report_ready=false so deterministic preparation cannot be presented as professional approval."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-28",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "119130d751ccb263039ad8cb0930cf225b74c6470999f6a5149db02deaebf212"
+  }
+}

@@ -12,6 +12,7 @@ const COMPONENTS = new Set([
   "journal-sampling",
   "check-entries",
   "journal-bank-reconciliation",
+  "financial-analysis",
   "report-builder",
   "concordato-plan-review",
   "prompt-optimizer",

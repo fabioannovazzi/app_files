@@ -41,6 +41,7 @@
     "vera": {
       "module_roots": [
         "vera_assurance",
+        "vera_financial_analysis",
         "vera_ocr"
       ]
     },
@@ -67,6 +68,12 @@
     "journal-bank-reconciliation": {
       "module_roots": [
         "vera_assurance"
+      ]
+    },
+    "financial-analysis": {
+      "module_roots": [
+        "vera_assurance",
+        "vera_financial_analysis"
       ]
     },
     "report-builder": {

@@ -48,10 +48,10 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 
-CASE_SCHEMA = "clara.working_capital_preparation_case.v1"
-POLICY_SCHEMA = "clara.reviewed_working_capital_policy.v1"
-RECONCILIATION_SCHEMA = "clara.working_capital_reconciliation.v1"
-MANIFEST_SCHEMA = "clara.working_capital_evidence_manifest.v1"
+CASE_SCHEMA = "vera.working_capital_preparation_case.v1"
+POLICY_SCHEMA = "vera.reviewed_working_capital_policy.v1"
+RECONCILIATION_SCHEMA = "vera.working_capital_reconciliation.v1"
+MANIFEST_SCHEMA = "vera.working_capital_evidence_manifest.v1"
 RECIPE_ID = "public_working_capital_from_reviewed_policy.v1"
 ENGINE_VERSION = "1.0.0"
 DE_CUMULATION_METHOD = "current_cumulative_minus_prior_cumulative_first_prior_zero"

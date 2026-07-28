@@ -19,6 +19,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "check-entries",
     "concordato-plan-review",
     "deep-research-validator",
+    "financial-analysis",
     "client-file-preparation",
     "new-client",
     "journal-bank-reconciliation",
@@ -406,11 +407,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == ("AI per commercialisti")
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.50"
+    assert manifest["version"] == "0.1.51"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Esamina questi documenti del cliente, separa fatti e valutazioni e "
-        "prepara una bozza rivedibile."
+        "Esamina questi documenti o dati contabili, separa fatti e valutazioni "
+        "e prepara un risultato rivedibile."
     )
     assert any(
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
@@ -789,6 +790,28 @@ def test_accounting_bundle_contains_only_vera_and_its_modules() -> None:
         module_path = f"/plugins/vera/modules/{module_name}/"
         assert any(module_path in name for name in standard_entries)
         assert not any(f"/plugins/{module_name}/" in name for name in standard_entries)
+
+
+def test_vera_package_owns_financial_analysis_engines() -> None:
+    builder = load_builder()
+    bundles = {bundle.name: bundle for bundle in builder.load_bundles()}
+    packages = {package.plugin: package for package in builder.load_packages()}
+    vera_entries = builder.expected_zip_entries(bundles["vera"])
+    clara_entries = builder.expected_zip_entries(packages["clara"])
+    engine_names = {
+        "prepare_monthly_pnl_case.py",
+        "prepare_working_capital_case.py",
+        "prepare_customer_concentration_case.py",
+    }
+
+    for engine_name in engine_names:
+        vera_path = (
+            "vera-codex-plugin/plugins/vera/modules/financial-analysis/scripts/"
+            f"{engine_name}"
+        )
+        clara_path = f"clara-codex-plugin/plugins/clara/scripts/{engine_name}"
+        assert vera_path in vera_entries
+        assert clara_path not in clara_entries
 
 
 def test_vera_routes_every_commercialista_module() -> None:
@@ -3564,6 +3587,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         ),
         "deep-research-validator": (
             "https://mparanza.com/static/shared/deep-research-validator/index.html"
+        ),
+        "financial-analysis": (
+            "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"

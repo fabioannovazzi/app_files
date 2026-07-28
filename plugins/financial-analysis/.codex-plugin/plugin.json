@@ -1,0 +1,45 @@
+{
+  "name": "financial-analysis",
+  "version": "0.1.0",
+  "description": "Source-bound financial-analysis preparation for Vera.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "financial-analysis",
+    "accounting",
+    "due-diligence",
+    "working-capital",
+    "customer-concentration"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Financial Analysis",
+    "shortDescription": "Prepare source-bound P&L, working-capital, and customer-concentration evidence.",
+    "longDescription": "Vera workflow for preparing financial-analysis evidence under explicit dataset, relationship, crosswalk, reconciliation, and reproducibility contracts. It recognizes three deterministic packs: monthly P&L, working capital, and customer concentration. Prepared evidence remains distinct from professional conclusions and report-ready claims.",
+    "developerName": "Fabio",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "capabilities": [
+      "Interactive",
+      "Analysis"
+    ],
+    "defaultPrompt": [
+      "Use Vera Financial Analysis on the accounting files I provide.",
+      "Choose the relevant monthly P&L, working-capital, or customer-concentration pack, establish the source and relationship contracts, and validate the prepared evidence.",
+      "Keep accounting judgments explicit and do not present prepared evidence as a professional conclusion."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

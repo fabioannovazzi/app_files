@@ -58,6 +58,17 @@ CODEX_PACKAGE_EXCLUDED_PATHS = {
     ("skills", "studio-archive", "references", "cowork-runtime.md"),
     ("skills", "vera", "references", "cowork-runtime.md"),
 }
+PLUGIN_CODEX_PACKAGE_EXCLUDED_PATHS = {
+    "clara": {
+        ("scripts", "build_customer_concentration_audit_envelope.py"),
+        ("scripts", "build_monthly_pnl_audit_envelope.py"),
+        ("scripts", "build_monthly_pnl_reporting_handoff.py"),
+        ("scripts", "build_working_capital_audit_envelope.py"),
+        ("scripts", "prepare_customer_concentration_case.py"),
+        ("scripts", "prepare_monthly_pnl_case.py"),
+        ("scripts", "prepare_working_capital_case.py"),
+    }
+}
 REQUIRED_DEPENDENCY_FILES = (
     "requirements.txt",
     "scripts/check_dependencies.py",
@@ -711,12 +722,17 @@ def should_skip_codex_source(path: Path) -> bool:
 def source_files(
     plugin_dir: Path, *, exclude_vendor_modules: bool = False
 ) -> list[Path]:
+    plugin_exclusions = PLUGIN_CODEX_PACKAGE_EXCLUDED_PATHS.get(
+        plugin_dir.name,
+        set(),
+    )
     return sorted(
         path
         for path in plugin_dir.rglob("*")
         if path.is_file()
         and not should_skip(path.relative_to(plugin_dir))
         and not should_skip_codex_source(path.relative_to(plugin_dir))
+        and path.relative_to(plugin_dir).parts not in plugin_exclusions
         and not (
             exclude_vendor_modules
             and len(path.relative_to(plugin_dir).parts) >= 2
