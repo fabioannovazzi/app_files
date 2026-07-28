@@ -6,6 +6,7 @@ import json
 import shutil
 import subprocess
 import sys
+import types
 import zipfile
 from pathlib import Path
 
@@ -23,6 +24,7 @@ MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 import extract_documents as extraction_module
 
 build_module = importlib.import_module("build_file_preparation_outputs")
+check_environment_module = importlib.import_module("check_environment")
 scan_module = importlib.import_module("scan_folder")
 from build_file_preparation_outputs import build_file_preparation_outputs
 from parse_fatturapa_xml import parse_fatturapa_file
@@ -122,6 +124,14 @@ def _write_invoice_xml(path: Path, date: str = "2025-06-15") -> None:
 """,
         encoding="utf-8",
     )
+
+
+def _write_text_pdf(path: Path, text: str) -> None:
+    from reportlab.pdfgen.canvas import Canvas
+
+    pdf = Canvas(str(path))
+    pdf.drawString(72, 720, text)
+    pdf.save()
 
 
 def _write_docx(path: Path, text: str) -> None:
@@ -341,15 +351,18 @@ def test_build_file_preparation_outputs_extracts_geneva_zurich_and_uk_fields(
 ) -> None:
     customer = tmp_path / "Clienti" / "International Client" / "2025"
     customer.mkdir(parents=True)
-    (customer / "Geneva_certificat_de_salaire_2025.pdf").write_text(
-        GENEVA_TEXT, encoding="utf-8"
+    _write_text_pdf(
+        customer / "Geneva_certificat_de_salaire_2025.pdf",
+        GENEVA_TEXT,
     )
-    (customer / "Zurich_Steuererklarung_2025.pdf").write_text(
-        ZURICH_TEXT, encoding="utf-8"
+    _write_text_pdf(
+        customer / "Zurich_Steuererklarung_2025.pdf",
+        ZURICH_TEXT,
     )
-    (customer / "UK_P60_2025.pdf").write_text(UK_P60_TEXT, encoding="utf-8")
-    (customer / "HMRC_Self_Assessment_2025.pdf").write_text(
-        UK_SELF_ASSESSMENT_TEXT, encoding="utf-8"
+    _write_text_pdf(customer / "UK_P60_2025.pdf", UK_P60_TEXT)
+    _write_text_pdf(
+        customer / "HMRC_Self_Assessment_2025.pdf",
+        UK_SELF_ASSESSMENT_TEXT,
     )
 
     result = build_file_preparation_outputs(customer, target_year=2025)
@@ -370,13 +383,13 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     customer = tmp_path / "Clienti" / "Example Client" / "2025"
     fatture = customer / "fatture"
     fatture.mkdir(parents=True)
-    (customer / "CU_Example_2025.pdf").write_text(CU_TEXT, encoding="utf-8")
-    (customer / "F24_giugno.pdf").write_text(F24_TEXT, encoding="utf-8")
-    (customer / "mutuo_contratto.pdf").write_text(MUTUO_TEXT, encoding="utf-8")
-    (customer / "spese_mediche_1.pdf").write_text(MEDICAL_TEXT, encoding="utf-8")
-    (customer / "avviso_agenzia.pdf").write_text(NOTICE_TEXT, encoding="utf-8")
-    (customer / "Precompilata_730.pdf").write_text(MODEL_730_TEXT, encoding="utf-8")
-    (customer / "Redditi_PF_2025.pdf").write_text(REDDITI_PF_TEXT, encoding="utf-8")
+    _write_text_pdf(customer / "CU_Example_2025.pdf", CU_TEXT)
+    _write_text_pdf(customer / "F24_giugno.pdf", F24_TEXT)
+    _write_text_pdf(customer / "mutuo_contratto.pdf", MUTUO_TEXT)
+    _write_text_pdf(customer / "spese_mediche_1.pdf", MEDICAL_TEXT)
+    _write_text_pdf(customer / "avviso_agenzia.pdf", NOTICE_TEXT)
+    _write_text_pdf(customer / "Precompilata_730.pdf", MODEL_730_TEXT)
+    _write_text_pdf(customer / "Redditi_PF_2025.pdf", REDDITI_PF_TEXT)
     _write_invoice_xml(fatture / "IT01234567890_001.xml")
     _write_invoice_xml(fatture / "IT01234567890_002.xml")
 
@@ -933,7 +946,7 @@ def test_ocr_page_limit_is_recorded_as_a_warning(
     monkeypatch.setattr(
         extraction_module,
         "_plain_text_fallback",
-        lambda _path: ("", "testo assente"),
+        lambda _path: pytest.fail("PDF binary bytes must never be decoded as text"),
     )
     monkeypatch.setattr(
         extraction_module,
@@ -956,6 +969,91 @@ def test_ocr_page_limit_is_recorded_as_a_warning(
     assert evidence[0].readable is True
     assert evidence[0].extraction_method == "paddle_ocr"
     assert "OCR limitato alle prime 2 di 5 pagine" in evidence[0].notes
+
+
+def test_ocr_preflight_visual_pdf_requires_ocr(tmp_path: Path) -> None:
+    fitz = pytest.importorskip("fitz", reason="PyMuPDF is a core dependency")
+    customer = tmp_path / "visual-pdf"
+    customer.mkdir()
+    document = fitz.open()
+    page = document.new_page()
+    page.draw_rect(fitz.Rect(72, 72, 300, 180))
+    document.save(customer / "scan.pdf")
+    document.close()
+
+    requires_ocr = check_environment_module.input_requires_ocr(customer)
+
+    assert requires_ocr is True
+
+
+def test_ocr_preflight_text_pdf_does_not_require_ocr(tmp_path: Path) -> None:
+    fitz = pytest.importorskip("fitz", reason="PyMuPDF is a core dependency")
+    customer = tmp_path / "text-pdf"
+    customer.mkdir()
+    document = fitz.open()
+    page = document.new_page()
+    page.insert_text(
+        (72, 72),
+        "Testo PDF nativo sufficientemente lungo per evitare una richiesta OCR.",
+    )
+    document.save(customer / "native.pdf")
+    document.close()
+
+    requires_ocr = check_environment_module.input_requires_ocr(customer)
+
+    assert requires_ocr is False
+
+
+def test_ocr_preflight_missing_paddle_uses_managed_setup_prompt(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    missing = [check_environment_module.OCR_DEPENDENCIES[1]]
+
+    check_environment_module._print_report([], missing, require_ocr=True)
+
+    output = capsys.readouterr().out
+    assert "OCR_SETUP_REQUIRED" in output
+    assert (
+        "PaddleOCR is required to read this document. Shall Codex install it now? "
+        "The download is about 500 MB."
+    ) in output
+    assert "pip install" not in output
+
+
+def test_paddle_session_normalizes_current_result_structure() -> None:
+    class FakePaddleEngine:
+        def predict(self, _image: object) -> list[dict[str, list[str]]]:
+            return [{"rec_texts": [" Riga uno ", "Riga due"]}]
+
+    session = extraction_module._PaddleOcrSession("it")
+    session.engine = FakePaddleEngine()
+    session.initialized = True
+
+    text, error = session.extract(object())
+
+    assert error == ""
+    assert text == "Riga uno\nRiga due"
+
+
+def test_paddle_session_initializes_without_legacy_show_log(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[dict[str, object]] = []
+    fake_module = types.ModuleType("paddleocr")
+
+    def fake_paddle_ocr(**kwargs: object) -> object:
+        calls.append(kwargs)
+        return object()
+
+    fake_module.PaddleOCR = fake_paddle_ocr  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "paddleocr", fake_module)
+    session = extraction_module._PaddleOcrSession("it")
+
+    session._initialize()
+
+    assert calls == [{"lang": "it"}]
+    assert session.engine is not None
+    assert session.init_error == ""
 
 
 def test_extraction_never_follows_symbolic_links_outside_customer_folder(

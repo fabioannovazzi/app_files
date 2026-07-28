@@ -371,10 +371,12 @@ or run `playwright install chromium` before browser QA.
 
 ## Typical Flow
 
-1. Run `scripts/check_dependencies.py`. When scanned PDFs, screenshots, or other
-   image-only evidence require local OCR, also run
-   `scripts/check_dependencies.py --requirements requirements.txt --requirements requirements-ocr.txt`
-   and install from `requirements-ocr.txt` if the environment allows it.
+1. Run `scripts/check_dependencies.py`. For PDFs, images, or folders containing
+   them, run `scripts/check_dependencies.py --input <file-or-folder>`. A scanned
+   document with no usable text layer starts the managed PaddleOCR first-use
+   flow. After user approval, Codex installs the roughly 500 MB dependency once
+   into a persistent runtime shared with Vera, then retries automatically.
+   Users are never asked to run package-manager or Terminal commands.
 2. Initialize a case workspace with `scripts/init_case.py`.
 3. Index source files with `scripts/index_materials.py`. Supported previews
    include Markdown/text, Word, PDF placeholders, and PowerPoint decks.

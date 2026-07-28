@@ -449,17 +449,34 @@ If dependencies are missing, install from `requirements.txt` only when the
 environment allows it. Otherwise explain which dependency is missing and which
 output is affected.
 
-For scanned PDFs, screenshots, or other image-only evidence that requires local
-OCR, check the optional OCR dependencies as well:
+Whenever the user supplies a PDF, image, or folder that may contain either,
+run the input-aware preflight:
 
 ```bash
-python scripts/check_dependencies.py --requirements requirements.txt --requirements requirements-ocr.txt
+python scripts/check_dependencies.py --input <file-or-folder>
 ```
 
-If OCR dependencies are missing and local OCR is required, install from
-`requirements-ocr.txt` only when the environment allows it. Otherwise use
-Codex/model visual OCR with explicit provenance and explain that deterministic
-local OCR was unavailable.
+The preflight mechanically distinguishes usable native PDF text from visual-only
+pages. If it reports `OCR_SETUP_REQUIRED`, ask only:
+
+> PaddleOCR is required to read this document. Shall Codex install it now? The
+> download is about 500 MB.
+
+Do not ask the user to run pip, Python, Terminal, or any technical installation
+step. Wait for explicit approval. When approved, Codex must run the managed
+one-time setup itself:
+
+```bash
+python scripts/managed_ocr_runtime.py install
+```
+
+After a successful setup, say `PaddleOCR is ready. Retrying the document now.`
+and automatically rerun the input preflight and the interrupted PDF operation.
+The runtime is persistent and shared with Vera; when the preflight finds it
+ready, reuse it without prompting. If setup fails, show only `I couldn't install
+PaddleOCR right now. Shall I try the installation again?` unless the user asks
+for technical details. Never treat image-only evidence as read when setup is
+declined or unsuccessful.
 
 2. Initialize the case workspace when the four case files do not exist:
 
