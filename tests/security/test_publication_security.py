@@ -30,6 +30,7 @@ def test_sanitized_secret_example_contains_only_safe_values() -> None:
     allowed_nonempty = {
         "AUTH_ENABLED": "false",
         "AUTH_COOKIE_SECURE": "true",
+        "AUTH_PUBLIC_BASE_URL": "https://mparanza.com",
         "PDP_STORE_BACKEND": "postgres",
     }
 

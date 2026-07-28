@@ -19,6 +19,8 @@ from typing import Any
 from vera_assurance.money import decimal_text, parse_canonical_decimal
 from vera_assurance.serialization import canonical_json_sha256
 
+from .registry import FDD_PACK_RECIPES
+
 __all__ = [
     "FinancialAnalysisContractError",
     "REGISTERED_ANALYSIS_PACKS",
@@ -48,6 +50,10 @@ REGISTERED_ANALYSIS_PACK_RECIPES: Mapping[str, frozenset[str]] = MappingProxyTyp
         "customer_concentration": frozenset(
             {"customer_concentration_from_reviewed_public_disclosure.v1"}
         ),
+        **{
+            pack_id: frozenset({recipe_id})
+            for pack_id, recipe_id in FDD_PACK_RECIPES.items()
+        },
     }
 )
 REGISTERED_ANALYSIS_PACKS = frozenset(REGISTERED_ANALYSIS_PACK_RECIPES)

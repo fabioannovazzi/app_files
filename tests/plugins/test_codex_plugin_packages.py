@@ -410,7 +410,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["interface"]["shortDescription"] == ("AI per commercialisti")
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.53"
+    assert manifest["version"] == "0.1.54"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti o dati contabili, separa fatti e valutazioni "
@@ -805,6 +805,7 @@ def test_vera_package_owns_financial_analysis_engines() -> None:
         "prepare_monthly_pnl_case.py",
         "prepare_working_capital_case.py",
         "prepare_customer_concentration_case.py",
+        "prepare_fdd_case.py",
     }
 
     for engine_name in engine_names:
@@ -2855,9 +2856,9 @@ def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
 
 
 def test_financial_analysis_page_explains_packs_controls_and_review_boundary() -> None:
-    page = (
-        ROOT / "static" / "shared" / "financial-analysis" / "index.html"
-    ).read_text(encoding="utf-8")
+    page = (ROOT / "static" / "shared" / "financial-analysis" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     for snippet in (
         "Analisi finanziaria | Vera",

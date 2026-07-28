@@ -12,7 +12,16 @@ const PLUGIN_MANIFEST = JSON.parse(
 const SERVER_NAME = "vera-financial-analysis";
 const SERVER_VERSION = PLUGIN_MANIFEST.version;
 const TOOL_NAME = "describe_vera_financial_analysis";
-const PACKS = ["monthly_pnl", "working_capital", "customer_concentration"];
+const PACKS = [
+  "monthly_pnl",
+  "working_capital",
+  "customer_concentration",
+  "quality_of_earnings",
+  "net_debt",
+  "normalized_working_capital",
+  "capex",
+  "deal_bridges",
+];
 const CONTRACTS = [
   "data_package_manifest",
   "dataset_contract",
@@ -21,6 +30,10 @@ const CONTRACTS = [
   "analysis_pack_request",
   "reconciliation_result",
   "prepared_evidence_manifest",
+  "fdd_preparation_case",
+  "fdd_metric_receipt",
+  "contingent_liability_register",
+  "financial_issue_register",
 ];
 
 function response(id, result) {
