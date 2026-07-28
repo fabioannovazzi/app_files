@@ -2789,6 +2789,7 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.entries.title",
         "module.bank.title",
         "module.reconciliation.title",
+        "module.financialAnalysis.title",
         "module.report.title",
         "module.prompt.title",
         "module.research.title",
@@ -2809,6 +2810,38 @@ def test_vera_page_localizes_every_module_title() -> None:
         "pacchetto corretto",
     ):
         assert untranslated_italian_copy not in page
+
+
+def test_vera_page_presents_financial_analysis_as_thirteenth_capability() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    financial_analysis = re.search(
+        r'<article[^>]+id="financial-analysis".*?</article>',
+        page,
+        flags=re.DOTALL,
+    )
+    assert financial_analysis is not None
+    assert "href=" not in financial_analysis.group(0)
+    assert "conto economico mensile" in page
+    assert "monthly P&L" in page
+    for localized_count in (
+        "Tredici funzioni",
+        "Thirteen capabilities",
+        "Treize fonctions",
+        "Dreizehn Funktionen",
+        "Trece funciones",
+    ):
+        assert localized_count in page
+    for stale_count in (
+        "Dodici funzioni",
+        "Twelve capabilities",
+        "Douze fonctions",
+        "Zwölf Funktionen",
+        "Doce funciones",
+    ):
+        assert stale_count not in page
 
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:
