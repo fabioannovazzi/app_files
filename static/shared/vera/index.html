@@ -234,8 +234,6 @@
     .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
-    .module-row--static:hover { color: inherit; transform: none; }
-
     .assurance-sequence {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -711,10 +709,11 @@
               <p data-i18n="module.reconciliation">Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <article class="module-row module-row--static" id="financial-analysis">
+            <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link>
               <h3 data-i18n="module.financialAnalysis.title">Analisi finanziaria</h3>
               <p data-i18n="module.financialAnalysis">Prepara conto economico mensile, capitale circolante e concentrazione clienti da dati contabili qualificati, con mapping confermati, riconciliazioni e risultati riproducibili.</p>
-            </article>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
           </div>
         </article>
 

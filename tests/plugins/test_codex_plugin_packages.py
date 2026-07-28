@@ -37,6 +37,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
+    Path("static/shared/financial-analysis/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
     Path("static/shared/journal-sampling/index.html"),
     Path("static/shared/new-client/geneva.html"),
@@ -251,6 +252,7 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "new-client" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
+    ROOT / "static" / "shared" / "financial-analysis" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "report-builder" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
@@ -266,6 +268,7 @@ PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
+    ROOT / "static" / "shared" / "financial-analysis" / "index.html",
     ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
     ROOT / "static" / "shared" / "new-client" / "index.html",
@@ -2679,6 +2682,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
+        "../financial-analysis/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -2693,8 +2697,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 9
-    assert core.count('class="module-row"') == 9
+    assert core.count(" data-module-link") == 10
+    assert core.count('class="module-row"') == 10
     assert italy.count('data-jurisdiction-item="it"') == 5
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -2812,18 +2816,20 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_presents_financial_analysis_as_thirteenth_capability() -> None:
+def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
 
     financial_analysis = re.search(
-        r'<article[^>]+id="financial-analysis".*?</article>',
+        r'<a[^>]+id="financial-analysis".*?</a>',
         page,
         flags=re.DOTALL,
     )
     assert financial_analysis is not None
-    assert "href=" not in financial_analysis.group(0)
+    assert 'href="../financial-analysis/index.html"' in financial_analysis.group(0)
+    assert "data-module-link" in financial_analysis.group(0)
+    assert "module-row__arrow" in financial_analysis.group(0)
     assert "conto economico mensile" in page
     assert "monthly P&L" in page
     for localized_count in (
@@ -2842,6 +2848,36 @@ def test_vera_page_presents_financial_analysis_as_thirteenth_capability() -> Non
         "Doce funciones",
     ):
         assert stale_count not in page
+
+
+def test_financial_analysis_page_explains_packs_controls_and_review_boundary() -> None:
+    page = (
+        ROOT / "static" / "shared" / "financial-analysis" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    for snippet in (
+        "Analisi finanziaria | Vera",
+        "Financial analysis | Vera",
+        "Analyse financière | Vera",
+        "Finanzanalyse | Vera",
+        "Análisis financiero | Vera",
+        "Conto economico mensile",
+        "Capitale circolante",
+        "Concentrazione clienti",
+        "Monthly P&L",
+        "working capital",
+        "customer concentration",
+        "data_package_manifest.json",
+        "dataset_contract.json",
+        "relationship_contract.json",
+        "crosswalk_manifest.json",
+        "analysis_pack_request.json",
+        "reconciliation_result.json",
+        "prepared_evidence_manifest.json",
+        'id="prompt-example"',
+        'href="../vera/index.html?lang=it"',
+    ):
+        assert snippet in page
 
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:
