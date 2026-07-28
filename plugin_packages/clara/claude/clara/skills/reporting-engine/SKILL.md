@@ -1,6 +1,6 @@
 ---
 name: reporting-engine
-description: Use when Clara needs chart capability evidence, dataset profiling, a source-backed dataset semantic layer, mechanical compatibility checks, or reporting contract inspection before chart/report selection.
+description: Use when Clara needs CSV/XLSX/Parquet dataset intake, Sales/Discount/COGS identification, chart capability evidence, dataset profiling, a source-backed dataset semantic layer, mechanical compatibility checks, or reporting contract inspection before chart/report selection.
 ---
 
 ## Cowork execution contract
@@ -63,6 +63,8 @@ Use this component to answer mechanical questions:
   that render;
 - what dataset columns are candidate periods, metrics, dimensions, or
   identifiers;
+- which reviewed metric, if any, represents Sales, Discount, or COGS, and
+  whether any role is absent or ambiguous;
 - whether a dataset is mechanically compatible with a chart;
 - how to create, review, and validate a dataset-specific semantic layer that
   defines metric meaning, aggregation, dimensions, periods, and valid analyses.
@@ -75,12 +77,14 @@ for evidence. Inspect the actual inputs first; ask only those unresolved choices
 Do not treat the generated scaffold or deterministic validator as semantic
 judgment. The scaffold marks every concept `unknown`. Claude or a human must
 inspect source evidence and author or review business meaning and analysis
-validity. Create semantics once for a stable caller-, connector-, or
-project-assigned dataset contract id. On later uploads, reuse that semantic
-version through snapshot compatibility; never regenerate semantics merely
-because values, rows, members, or date bounds changed. A `contract_valid`
-result proves coherent wiring only; it does not
-prove the semantic claims are true or choose the final chart.
+validity, including whether Sales, Discount, and COGS are mapped, absent,
+ambiguous, or still unknown. A matching header is not enough to promote a
+candidate automatically. Create semantics once for a stable caller-,
+connector-, or project-assigned dataset contract id. On later uploads, reuse
+that semantic version through snapshot compatibility; never regenerate
+semantics merely because values, rows, members, or date bounds changed. A
+`contract_valid` result proves coherent wiring only; it does not prove the
+semantic claims are true or choose the final chart.
 
 Local data and deterministic-script ownership are part of this workflow.
 Deterministic scripts own manifest loading, dataset profiling, role-candidate
@@ -108,6 +112,23 @@ below from `modules/reporting-engine`.
 For semantic-layer creation or review, read
 `references/semantic_layer.md` before authoring the dataset-specific JSON.
 
+Whenever the user supplies a CSV, XLSX, or Parquet dataset, run
+`scripts/dataset_intake.py` before chart compatibility or selection. On a first
+upload, inspect the generated authoring context, the actual data, and available
+source evidence; then author the semantic layer for the user. Explicitly review
+Sales, Discount, and COGS. Map a role only to a source-backed reviewed metric;
+record `absent` only when the evidence establishes no separate measure; record
+`ambiguous` when plausible candidates remain unresolved; otherwise keep
+`unknown`. Never ask the user to edit JSON. Ask one focused business question
+only after the available files and sources cannot resolve a material ambiguity.
+Save the reviewed layer as persistent project data outside the repository.
+
+On later uploads, pass the same stable contract id and persistent reviewed layer
+back to `dataset_intake.py`. Reuse an accepted mapping; do not infer identity
+from a similar schema, overwrite the persistent layer, or silently create a new
+contract after rejection. This workflow is local to Clara/Claude and does not
+depend on a FastAPI upload route.
+
 Useful commands:
 
 ```bash
@@ -115,6 +136,8 @@ python scripts/reporting_contract.py
 python scripts/reporting_adapters.py
 python scripts/reporting_adapters.py --capability period_comparison.trend --plan
 python scripts/reporting_contract.py --capability period_comparison.trend
+python scripts/dataset_intake.py <dataset.csv> --dataset-contract-id <stable-id> --output-dir <run>
+python scripts/dataset_intake.py <new-snapshot.parquet> --dataset-contract-id <stable-id> --semantic-layer <project-data>/semantic_layer.json --output-dir <run>
 python scripts/profile_dataset.py <dataset.csv> --output <run>/dataset_profile.json
 python scripts/semantic_layer.py init --profile <run>/dataset_profile.json --output <run>/semantic_layer.json
 python scripts/semantic_layer.py context --profile <run>/dataset_profile.json --layer <run>/semantic_layer.json --output <run>/semantic_authoring_context.json
@@ -141,6 +164,9 @@ Current boundary:
 - the chart-family components are embedded in Clara and called through the
   unified render entrypoint;
 - the profiler creates runtime dataset-side role candidates;
+- `scripts/dataset_intake.py` is the first local entrypoint for CSV, XLSX, and
+  Parquet files; it writes the profile, draft/context or compatibility
+  attachment, and an intake receipt without making hidden semantic decisions;
 - `catalog/semantic_layer.schema.json` defines a persisted stable dataset
   semantic contract with explicit identity and semantic version;
 - `scripts/semantic_layer.py` creates an unreviewed scaffold, packages all 48
@@ -155,6 +181,9 @@ Current boundary:
   join keys but do not contain or choose a final chart id;
 - `contract_valid` and `semantic_readiness` are separate: a mechanically valid
   draft remains `draft_unreviewed`;
+- canonical Sales, Discount, and COGS mappings remain `unknown` until
+  source-backed model or human review records them as mapped, absent, or
+  ambiguous;
 - unlisted manifest analysis emphases remain `unknown`; a reviewed semantic
   layer is ready only within its declared scope and does not need one policy per
   chart;
@@ -187,10 +216,11 @@ renderer must not infer cross-source joins.
 ## Cowork-native Run UX
 
 For any reporting-engine run, keep a short checklist in chat or in the run
-folder. The checklist should cover: inspect the manifest contract, profile the
-dataset when one is provided, create or load the dataset semantic layer, validate
-its evidence and role bindings, compare required chart roles with role candidates,
-write a Run Intake table, write a Decision Table, and create an Artifact Card.
+folder. The checklist should cover: inspect the manifest contract, run dataset
+intake when a tabular file is provided, create or load the dataset semantic
+layer, review Sales/Discount/COGS, validate its evidence and role bindings,
+compare required chart roles with role candidates, write a Run Intake table,
+write a Decision Table, and create an Artifact Card.
 
 Default output policy: write user artifacts outside this repository. Catalog
 changes, generated ZIPs, and package checks are allowed inside the repo only

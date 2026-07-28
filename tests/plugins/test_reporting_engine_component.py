@@ -82,8 +82,22 @@ def test_reporting_engine_catalog_summary_matches_packaged_manifest() -> None:
         "counts": {"component_executed": 48},
         "manifest_digest_matches": True,
     }
-    assert summary["semantic_layer"]["schema_version"] == "0.2"
+    assert summary["semantic_layer"]["schema_version"] == "0.3"
+    assert summary["semantic_layer"]["dataset_intake_script"] == (
+        "scripts/dataset_intake.py"
+    )
     assert summary["semantic_layer"]["workflow_script"] == ("scripts/semantic_layer.py")
+    assert summary["semantic_layer"]["canonical_business_metric_roles"] == [
+        "sales",
+        "discount",
+        "cogs",
+    ]
+    assert summary["semantic_layer"]["business_metric_mapping_states"] == [
+        "mapped",
+        "absent",
+        "ambiguous",
+        "unknown",
+    ]
     assert summary["semantic_layer"]["reviewed_fixture"] == (
         "fixtures/semantic_layer/retail_monthly.semantic.json"
     )
@@ -155,8 +169,12 @@ def test_reporting_engine_registry_exposes_semantic_snapshot_lifecycle() -> None
 
     runtime = registry["runtime_contract"]
 
+    assert runtime["dataset_intake"] == ("scripts/dataset_intake.py:run_dataset_intake")
     assert runtime["semantic_scaffold"] == (
         "scripts/semantic_layer.py:build_semantic_layer_scaffold"
+    )
+    assert runtime["business_metric_mapping_context"] == (
+        "scripts/semantic_layer.py:build_business_metric_authoring_context"
     )
     assert runtime["semantic_validator"] == (
         "scripts/semantic_layer.py:validate_semantic_layer"

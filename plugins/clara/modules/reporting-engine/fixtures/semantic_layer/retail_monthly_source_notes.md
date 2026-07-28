@@ -35,6 +35,17 @@ Higher sales, units, margin rate, and average selling price are descriptive
 increases in this fixture; the fixture does not assert that every increase is a
 business improvement.
 
+## Canonical Business Metric Roles
+
+- `Sales` is the canonical Sales role for this dataset contract. It represents
+  net invoiced sales, not gross sales before discount.
+- The dataset contains no separate Discount amount or Discount rate measure.
+  Discount is therefore absent as a distinct canonical business metric role;
+  it must not be reconstructed from net Sales.
+- The dataset contains no COGS or cost-of-sales measure. `MarginRate` alone does
+  not establish a separately reported COGS amount, so COGS is absent as a
+  distinct canonical business metric role.
+
 ## Dimensions
 
 - `Brand` is a reporting dimension and the parent entity for `SKU`.

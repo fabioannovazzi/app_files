@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.2.json",
+  "$id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.3.json",
   "title": "Reporting Engine dataset semantic layer",
   "description": "Stable source-backed business semantics and analysis-validity rules for one explicit logical dataset identity across compatible snapshots. This contract does not choose a chart.",
   "type": "object",
@@ -14,6 +14,7 @@
     "sources",
     "evidence",
     "metrics",
+    "business_metric_mappings",
     "dimensions",
     "periods",
     "period_rules",
@@ -24,7 +25,7 @@
   ],
   "properties": {
     "schema_version": {
-      "const": "0.2"
+      "const": "0.3"
     },
     "semantic_layer_id": {
       "$ref": "#/$defs/id"
@@ -148,6 +149,26 @@
       "type": "array",
       "items": {
         "$ref": "#/$defs/metric"
+      }
+    },
+    "business_metric_mappings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sales",
+        "discount",
+        "cogs"
+      ],
+      "properties": {
+        "sales": {
+          "$ref": "#/$defs/businessMetricMapping"
+        },
+        "discount": {
+          "$ref": "#/$defs/businessMetricMapping"
+        },
+        "cogs": {
+          "$ref": "#/$defs/businessMetricMapping"
+        }
       }
     },
     "dimensions": {
@@ -508,6 +529,158 @@
           "additionalProperties": true
         }
       }
+    },
+    "businessMetricMapping": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "metric_id",
+        "candidate_metric_ids",
+        "confidence",
+        "rationale",
+        "evidence_ids",
+        "caveats"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "mapped",
+            "absent",
+            "ambiguous",
+            "unknown"
+          ]
+        },
+        "metric_id": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidate_metric_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "evidence_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/id"
+          },
+          "uniqueItems": true
+        },
+        "caveats": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "oneOf": [
+        {
+          "properties": {
+            "state": {
+              "const": "mapped"
+            },
+            "metric_id": {
+              "$ref": "#/$defs/id"
+            },
+            "candidate_metric_ids": {
+              "maxItems": 0
+            },
+            "confidence": {
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "rationale": {
+              "minLength": 1
+            },
+            "evidence_ids": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "const": "absent"
+            },
+            "metric_id": {
+              "type": "null"
+            },
+            "candidate_metric_ids": {
+              "maxItems": 0
+            },
+            "confidence": {
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "rationale": {
+              "minLength": 1
+            },
+            "evidence_ids": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "const": "ambiguous"
+            },
+            "metric_id": {
+              "type": "null"
+            },
+            "candidate_metric_ids": {
+              "minItems": 1
+            },
+            "confidence": {
+              "enum": [
+                "high",
+                "medium",
+                "low"
+              ]
+            },
+            "rationale": {
+              "minLength": 1
+            },
+            "evidence_ids": {
+              "minItems": 1
+            }
+          }
+        },
+        {
+          "properties": {
+            "state": {
+              "const": "unknown"
+            },
+            "metric_id": {
+              "type": "null"
+            },
+            "candidate_metric_ids": {
+              "maxItems": 0
+            },
+            "confidence": {
+              "const": "unknown"
+            }
+          }
+        }
+      ]
     },
     "dimension": {
       "type": "object",

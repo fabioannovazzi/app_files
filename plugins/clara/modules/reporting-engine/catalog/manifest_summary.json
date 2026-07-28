@@ -83,10 +83,22 @@
     "manifest_digest_matches": true
   },
   "semantic_layer": {
-    "schema_version": "0.2",
-    "schema_id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.2.json",
-    "schema_sha256": "1a5e6640d2cf49d8d7b08d0eb7b39d69d8f230ea5905ed1610f719b4634433b6",
+    "schema_version": "0.3",
+    "schema_id": "https://mparanza.com/schemas/reporting-engine-semantic-layer-0.3.json",
+    "schema_sha256": "5b327671d4759aab7eecedbee02a79b06c2804bb13b10a02038f8383e7490f83",
+    "dataset_intake_script": "scripts/dataset_intake.py",
     "workflow_script": "scripts/semantic_layer.py",
+    "canonical_business_metric_roles": [
+      "sales",
+      "discount",
+      "cogs"
+    ],
+    "business_metric_mapping_states": [
+      "mapped",
+      "absent",
+      "ambiguous",
+      "unknown"
+    ],
     "reviewed_fixture": "fixtures/semantic_layer/retail_monthly.semantic.json",
     "judgment_owner": "model_or_human_review",
     "deterministic_scope": "Scaffolding, stable-id checks, snapshot compatibility, period-rule resolution, and contract validation only; semantic assertions remain source-backed model or human judgments.",

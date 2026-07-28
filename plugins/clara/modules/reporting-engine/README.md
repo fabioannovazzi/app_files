@@ -11,8 +11,11 @@ It owns:
 - Clara adapter registry for every chart family;
 - the stable dataset-contract semantic schema, scaffold, authoring context,
   snapshot compatibility, period-rule resolver, and deterministic validator;
-- local scripts for reading the contract, profiling user datasets, and rendering one
-  chosen capability through the adapter boundary.
+- a local dataset-intake entrypoint for CSV, XLSX, and Parquet uploads that
+  profiles the snapshot, prepares model-review context for the canonical Sales,
+  Discount, and COGS roles, and reuses reviewed mappings on later snapshots;
+- local scripts for reading the contract and rendering one chosen capability
+  through the adapter boundary.
 
 The current catalog contains 48 capabilities and 73 documented artifacts. A
 packaged synthetic acceptance suite profiles its datasets, checks compatibility,
@@ -42,6 +45,9 @@ artifacts belong in run storage, not in plugin source or the release ZIP.
 Reporting Engine owns the semantic-layer contract, not semantic truth. A model
 or human must inspect source evidence and author or review metric meaning,
 aggregation, valid dimensions, reusable period rules, and analysis validity.
+That review explicitly records whether each canonical business role—Sales,
+Discount, and COGS—is mapped, absent, ambiguous, or still unknown. Column names
+and profiler guesses are evidence for review, never automatic role decisions.
 `scripts/semantic_layer.py` deterministically checks that the resulting document
 is internally coherent, checks explicit dataset identity and snapshot
 compatibility, and resolves concrete period bounds from each snapshot. It does
@@ -66,26 +72,37 @@ result suitable for sealing into the HTML Deck evidence contract. A pre-existing
 artifact never counts as current-run by mere presence: each invocation renders
 inside a fresh isolated directory and publishes only that directory's files.
 
-To start a semantic layer for a profiled dataset:
+For the first CSV, XLSX, or Parquet upload, create the profile, draft semantic
+layer, model-facing authoring context, and intake receipt in one command:
 
 ```bash
-python scripts/semantic_layer.py init \
-  --profile /tmp/reporting-run/dataset_profile.json \
+python scripts/dataset_intake.py <dataset.csv> \
   --dataset-contract-id retail_monthly \
-  --output /tmp/reporting-run/semantic_layer.json
-python scripts/semantic_layer.py context \
-  --profile /tmp/reporting-run/dataset_profile.json \
-  --layer /tmp/reporting-run/semantic_layer.json \
-  --output /tmp/reporting-run/semantic_authoring_context.json
+  --output-dir /tmp/reporting-run
+```
+
+Codex or a human then reviews source evidence, authors the semantic document,
+and validates it:
+
+```bash
 python scripts/semantic_layer.py validate \
   --profile /tmp/reporting-run/dataset_profile.json \
-  --layer /tmp/reporting-run/semantic_layer.json \
+  --layer <project-data>/retail_monthly.semantic.json \
   --output /tmp/reporting-run/semantic_validation.json
-python scripts/semantic_layer.py attach \
-  --profile /tmp/reporting-run/new_snapshot_profile.json \
-  --layer /tmp/reporting-run/semantic_layer.json \
-  --output /tmp/reporting-run/snapshot_attachment.json
 ```
+
+For a later snapshot, supply the same stable dataset contract id and reviewed
+semantic layer. Intake validates compatibility and reuses the reviewed
+Sales/Discount/COGS mappings rather than regenerating them:
+
+```bash
+python scripts/dataset_intake.py <new-snapshot.parquet> \
+  --dataset-contract-id retail_monthly \
+  --semantic-layer <project-data>/retail_monthly.semantic.json \
+  --output-dir /tmp/reporting-refresh
+```
+
+This is a local Clara/Codex workflow, not a FastAPI upload route.
 
 See `references/semantic_layer.md` for the contract and review boundary.
 

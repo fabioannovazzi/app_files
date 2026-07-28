@@ -10,7 +10,7 @@
     },
     "semantic_schema": {
       "path": "catalog/semantic_layer.schema.json",
-      "sha256": "1a5e6640d2cf49d8d7b08d0eb7b39d69d8f230ea5905ed1610f719b4634433b6"
+      "sha256": "5b327671d4759aab7eecedbee02a79b06c2804bb13b10a02038f8383e7490f83"
     },
     "dataset": {
       "path": "fixtures/semantic_layer/retail_monthly.csv",
@@ -18,12 +18,12 @@
     },
     "semantic_layer": {
       "path": "fixtures/semantic_layer/retail_monthly.semantic.json",
-      "sha256": "38e15002322510e59409c1dd83f77feeb0f969c4116f793267a9d8807d9e4202"
+      "sha256": "94c43ebf419b91008034fdd15c1f3a401105daeeec31965e530bcc655fe67458"
     },
     "semantic_sources": [
       {
         "path": "fixtures/semantic_layer/retail_monthly_source_notes.md",
-        "sha256": "7d0343001f2c612d6bc69f411737a9671b1043da02925d9c46295422ab714ca7"
+        "sha256": "4ff2398b70225454aaadbce955ae20150151378385b0925a0b92c55432fac27c"
       }
     ],
     "snapshot_suite": {
@@ -62,7 +62,7 @@
     "semantic_readiness": "ready_as_scoped_semantic_input",
     "counts": {
       "sources": 2,
-      "evidence": 8,
+      "evidence": 9,
       "metrics": 4,
       "dimensions": 4,
       "periods": 1,
@@ -72,6 +72,12 @@
       "unassessed_selection_emphases": 38,
       "open_questions": 0,
       "unknown_concepts": 0,
+      "business_metric_mapping_states": {
+        "mapped": 1,
+        "absent": 2,
+        "ambiguous": 0,
+        "unknown": 0
+      },
       "analysis_validities": {
         "conditional": 0,
         "invalid": 1,

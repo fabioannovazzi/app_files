@@ -1,5 +1,5 @@
 {
-  "schema_version": "0.2",
+  "schema_version": "0.3",
   "semantic_layer_id": "retail_monthly.reporting_semantics",
   "semantic_version": 1,
   "dataset_contract": {
@@ -18,7 +18,7 @@
   "scope": {
     "title": "Synthetic monthly retail reporting semantics",
     "business_area": "Synthetic retail performance",
-    "purpose": "Define reviewed metric, dimension, period, and analysis-validity semantics for the packaged Reporting Engine fixture.",
+    "purpose": "Define reviewed canonical business-metric mappings, metric, dimension, period, and analysis-validity semantics for the packaged Reporting Engine fixture.",
     "coverage_level": "strong",
     "included_subjects": [
       "sales and units performance",
@@ -59,6 +59,7 @@
       "supports": [
         "row grain",
         "metric definitions and aggregation",
+        "canonical business metric mappings and role absence",
         "dimension meaning",
         "period scope",
         "reviewed analysis rules"
@@ -66,7 +67,7 @@
       "caveats": [
         "The source describes a synthetic test fixture, not a real business."
       ],
-      "last_checked": "2026-07-18"
+      "last_checked": "2026-07-28"
     }
   ],
   "evidence": [
@@ -145,8 +146,61 @@
       "confidence": "high",
       "status": "supported",
       "notes": []
+    },
+    {
+      "evidence_id": "evidence.business_metric_roles",
+      "source_id": "source.fixture_notes",
+      "locator": "Canonical Business Metric Roles",
+      "claim": "Sales is the canonical Sales metric; the dataset contains no separate Discount or COGS measure.",
+      "confidence": "high",
+      "status": "supported",
+      "notes": [
+        "MarginRate does not establish a separately reported COGS amount."
+      ]
     }
   ],
+  "business_metric_mappings": {
+    "sales": {
+      "state": "mapped",
+      "metric_id": "metric.sales",
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The canonical fixture notes identify net invoiced Sales as this dataset contract's Sales role.",
+      "evidence_ids": [
+        "evidence.business_metric_roles",
+        "evidence.sales"
+      ],
+      "caveats": [
+        "The mapped role is net invoiced sales, not a gross-sales measure."
+      ]
+    },
+    "discount": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The canonical fixture notes establish that the dataset contains no separate Discount amount or rate.",
+      "evidence_ids": [
+        "evidence.business_metric_roles"
+      ],
+      "caveats": [
+        "Do not reconstruct Discount from already-net Sales."
+      ]
+    },
+    "cogs": {
+      "state": "absent",
+      "metric_id": null,
+      "candidate_metric_ids": [],
+      "confidence": "high",
+      "rationale": "The canonical fixture notes establish that the dataset contains no COGS or cost-of-sales measure.",
+      "evidence_ids": [
+        "evidence.business_metric_roles"
+      ],
+      "caveats": [
+        "MarginRate alone does not establish a separately reported COGS amount."
+      ]
+    }
+  },
   "metrics": [
     {
       "metric_id": "metric.sales",
@@ -980,7 +1034,7 @@
   "review": {
     "status": "human_reviewed",
     "reviewed_by": "Reporting Engine fixture author",
-    "reviewed_at": "2026-07-18",
+    "reviewed_at": "2026-07-28",
     "notes": [
       "Review applies only to the synthetic fixture and its canonical source notes.",
       "Contract validation proves wiring, not the truth of semantic judgments in another dataset."
@@ -988,7 +1042,7 @@
   },
   "boundaries": {
     "semantic_judgment_owner": "model_or_human_review",
-    "deterministic_validation_scope": "Schema, identifiers, evidence references, profile bindings, manifest intent references, and required role coverage only.",
+    "deterministic_validation_scope": "Schema, identifiers, evidence references, business-metric mapping references, profile bindings, manifest intent references, and required role coverage only.",
     "chart_selection_included": false,
     "rendering_included": false
   }

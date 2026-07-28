@@ -77,12 +77,15 @@ one generic workflow:
 - Use `reporting-engine` when the user wants Clara to analyze a CSV/XLSX/Parquet
   dataset, choose and render a useful business chart, inspect chart
   capabilities, profile mechanical compatibility, or create and validate a
-  stable dataset semantic layer. Reuse one reviewed semantic version across
-  compatible recurring snapshots; changing values, rows, members, and date
-  bounds do not create new semantics. Codex selects the meaningful analysis
-  from the user's question, reviewed source-backed semantics, and actual fields;
-  deterministic components own profiling, contract checks, exact calculations,
-  and rendering.
+  stable dataset semantic layer. Route every supplied CSV/XLSX/Parquet file
+  through Reporting Engine dataset intake first so Codex can review which
+  metric, if any, represents Sales, Discount, and COGS before chart selection.
+  Reuse one reviewed semantic version across compatible recurring snapshots;
+  changing values, rows, members, and date bounds do not create new semantics.
+  Codex selects the meaningful analysis from the user's question, reviewed
+  source-backed semantics, and actual fields; deterministic components own
+  profiling, contract checks, exact calculations, and rendering. This is a
+  local Codex workflow, not a FastAPI upload route.
 
 The main `clara` skill resumes after Interview, Transcribe, or Deck Correction
 when retrieved or reviewed evidence must update a case workspace, evidence map,
