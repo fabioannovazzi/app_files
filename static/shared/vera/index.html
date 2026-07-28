@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -234,6 +234,7 @@
     .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
+    .module-row--static:hover { color: inherit; transform: none; }
 
     .assurance-sequence {
       display: grid;
@@ -623,7 +624,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
@@ -687,7 +688,7 @@
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.accounting.index">Area di lavoro 2 di 3</span>
             <h3 data-i18n="stream.accounting.title">Controlla numeri, movimenti e supporti</h3>
-            <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche e alle partite aperte.</p>
+            <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche, alle partite aperte e all’analisi finanziaria.</p>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link>
@@ -710,6 +711,10 @@
               <p data-i18n="module.reconciliation">Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
+            <article class="module-row module-row--static" id="financial-analysis">
+              <h3 data-i18n="module.financialAnalysis.title">Analisi finanziaria</h3>
+              <p data-i18n="module.financialAnalysis">Prepara conto economico mensile, capitale circolante e concentrazione clienti da dati contabili qualificati, con mapping confermati, riconciliazioni e risultati riproducibili.</p>
+            </article>
           </div>
         </article>
 
@@ -946,7 +951,7 @@
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
@@ -958,11 +963,11 @@
         "language.label": "Lingua",
         "hero.eyebrow": "AI companion per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara controlli, riconciliazioni, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
+        "hero.lead": "Prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
-        "work.index": "Dodici funzioni",
+        "work.index": "Tredici funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area di lavoro 1 di 3",
@@ -970,7 +975,7 @@
         "stream.clients.copy": "Dalla corrispondenza e dai documenti ricevuti a un primo fascicolo riutilizzabile.",
         "stream.accounting.index": "Area di lavoro 2 di 3",
         "stream.accounting.title": "Controlla numeri, movimenti e supporti",
-        "stream.accounting.copy": "Dal giornale alle scritture, alle banche e alle partite aperte.",
+        "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte e all’analisi finanziaria.",
         "stream.outputs.index": "Area di lavoro 3 di 3",
         "stream.outputs.title": "Costruisci risultati e ricerca",
         "stream.outputs.copy": "Dalle fonti al report, dal quesito alla validazione.",
@@ -991,6 +996,8 @@
         "module.bank": "Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.",
         "module.reconciliation.title": "Riconciliazione partite",
         "module.reconciliation": "Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.",
+        "module.financialAnalysis.title": "Analisi finanziaria",
+        "module.financialAnalysis": "Prepara conto economico mensile, capitale circolante e concentrazione clienti da dati contabili qualificati, con mapping confermati, riconciliazioni e risultati riproducibili.",
         "module.report.title": "Genera report",
         "module.report": "Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.",
         "module.prompt.title": "Ottimizza prompt",
@@ -1053,7 +1060,7 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera prepares checks, reconciliations, client files and reports with qualified sources, exact calculations, visible exceptions and reviewable decisions.",
+        "meta.description": "Vera prepares checks, reconciliations, financial analysis, client files and reports with qualified sources, exact calculations, visible exceptions and reviewable decisions.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
@@ -1065,11 +1072,11 @@
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
-        "hero.lead": "Prepare checks, reconciliations, client files and reports whose sources, calculations and decisions remain reviewable.",
+        "hero.lead": "Prepare checks, reconciliations, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
         "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
-        "work.index": "Twelve capabilities",
+        "work.index": "Thirteen capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Work area 1 of 3",
@@ -1077,7 +1084,7 @@
         "stream.clients.copy": "From live correspondence and incoming documents to a reusable work file.",
         "stream.accounting.index": "Work area 2 of 3",
         "stream.accounting.title": "Check figures, movements and support",
-        "stream.accounting.copy": "From the journal to entries, banks and open items.",
+        "stream.accounting.copy": "From the journal to entries, banks, open items and financial analysis.",
         "stream.outputs.index": "Work area 3 of 3",
         "stream.outputs.title": "Build outputs and research",
         "stream.outputs.copy": "From sources to a report, from the question to validation.",
@@ -1098,6 +1105,8 @@
         "module.bank": "Compares bank and accounting data after a confirmed mapping and closes only relationships that satisfy the reconciliation contract.",
         "module.reconciliation.title": "Open-item Reconciliation",
         "module.reconciliation": "Brings open items, ledgers, banks and support into Excel and Word with relationships, residuals and evidence visible.",
+        "module.financialAnalysis.title": "Financial Analysis",
+        "module.financialAnalysis": "Prepares monthly P&L, working-capital and customer-concentration analysis from qualified accounting data, with confirmed mappings, reconciliations and reproducible results.",
         "module.report.title": "Build Report",
         "module.report": "Prepares Word and Markdown from confirmed tables and keeps every material number connected to its source and supporting check.",
         "module.prompt.title": "Optimize Prompt",
@@ -1160,7 +1169,7 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera prépare contrôles, rapprochements, dossiers clients et rapports avec des sources qualifiées, des calculs exacts, des exceptions visibles et des décisions révisables.",
+        "meta.description": "Vera prépare contrôles, rapprochements, analyses financières, dossiers clients et rapports avec des sources qualifiées, des calculs exacts, des exceptions visibles et des décisions révisables.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
@@ -1172,11 +1181,11 @@
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Préparez contrôles, rapprochements, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
+        "hero.lead": "Préparez contrôles, rapprochements, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
         "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
-        "work.index": "Douze fonctions",
+        "work.index": "Treize fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine de travail 1 sur 3",
@@ -1184,7 +1193,7 @@
         "stream.clients.copy": "Des échanges et documents reçus à un dossier de travail réutilisable.",
         "stream.accounting.index": "Domaine de travail 2 sur 3",
         "stream.accounting.title": "Contrôler chiffres, mouvements et justificatifs",
-        "stream.accounting.copy": "Du journal aux écritures, aux banques et aux postes ouverts.",
+        "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts et à l’analyse financière.",
         "stream.outputs.index": "Domaine de travail 3 sur 3",
         "stream.outputs.title": "Construire les résultats et la recherche",
         "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
@@ -1205,6 +1214,8 @@
         "module.bank": "Compare banque et comptabilité après confirmation du mapping et ne clôt que les relations conformes au contrat de rapprochement.",
         "module.reconciliation.title": "Rapprochement des postes ouverts",
         "module.reconciliation": "Réunit postes ouverts, grands livres, banques et justificatifs dans Excel et Word en rendant visibles relations, résiduels et preuves.",
+        "module.financialAnalysis.title": "Analyse financière",
+        "module.financialAnalysis": "Prépare l’analyse du compte de résultat mensuel, du fonds de roulement et de la concentration clients à partir de données comptables qualifiées, avec mappings confirmés, rapprochements et résultats reproductibles.",
         "module.report.title": "Générer un rapport",
         "module.report": "Prépare Word et Markdown à partir de tableaux confirmés et relie chaque chiffre significatif à sa source et au contrôle qui l’étaye.",
         "module.prompt.title": "Optimiser le prompt",
@@ -1267,7 +1278,7 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Mandantenakten und Berichte mit qualifizierten Quellen, exakten Berechnungen, sichtbaren Ausnahmen und prüfbaren Entscheidungen vor.",
+        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Finanzanalysen, Mandantenakten und Berichte mit qualifizierten Quellen, exakten Berechnungen, sichtbaren Ausnahmen und prüfbaren Entscheidungen vor.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
@@ -1279,11 +1290,11 @@
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Bereiten Sie Prüfungen, Abstimmungen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
+        "hero.lead": "Bereiten Sie Prüfungen, Abstimmungen, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
         "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
-        "work.index": "Zwölf Funktionen",
+        "work.index": "Dreizehn Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Arbeitsbereich 1 von 3",
@@ -1291,7 +1302,7 @@
         "stream.clients.copy": "Von Korrespondenz und eingegangenen Dokumenten zur wiederverwendbaren Arbeitsakte.",
         "stream.accounting.index": "Arbeitsbereich 2 von 3",
         "stream.accounting.title": "Zahlen, Bewegungen und Belege prüfen",
-        "stream.accounting.copy": "Vom Journal zu Buchungen, Banken und offenen Posten.",
+        "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten und Finanzanalysen.",
         "stream.outputs.index": "Arbeitsbereich 3 von 3",
         "stream.outputs.title": "Ergebnisse und Recherche aufbauen",
         "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
@@ -1312,6 +1323,8 @@
         "module.bank": "Vergleicht Bank und Buchhaltung nach bestätigtem Mapping und schließt nur Beziehungen, die den Abstimmungsvertrag erfüllen.",
         "module.reconciliation.title": "Offene-Posten-Abstimmung",
         "module.reconciliation": "Führt offene Posten, Hauptbücher, Banken und Nachweise in Excel und Word mit sichtbaren Beziehungen, Restbeträgen und Belegen zusammen.",
+        "module.financialAnalysis.title": "Finanzanalyse",
+        "module.financialAnalysis": "Erstellt monatliche GuV-, Working-Capital- und Kundenkonzentrationsanalysen aus qualifizierten Buchhaltungsdaten mit bestätigten Zuordnungen, Abstimmungen und reproduzierbaren Ergebnissen.",
         "module.report.title": "Bericht erstellen",
         "module.report": "Erstellt Word und Markdown aus bestätigten Tabellen und verbindet jede wesentliche Zahl mit Quelle und stützendem Kontrollschritt.",
         "module.prompt.title": "Prompt optimieren",
@@ -1374,7 +1387,7 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera prepara controles, conciliaciones, expedientes e informes con fuentes cualificadas, cálculos exactos, excepciones visibles y decisiones revisables.",
+        "meta.description": "Vera prepara controles, conciliaciones, análisis financieros, expedientes e informes con fuentes cualificadas, cálculos exactos, excepciones visibles y decisiones revisables.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
@@ -1386,11 +1399,11 @@
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Prepara controles, conciliaciones, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
+        "hero.lead": "Prepara controles, conciliaciones, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
         "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
-        "work.index": "Doce funciones",
+        "work.index": "Trece funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área de trabajo 1 de 3",
@@ -1398,7 +1411,7 @@
         "stream.clients.copy": "De la correspondencia y los documentos recibidos a un expediente de trabajo reutilizable.",
         "stream.accounting.index": "Área de trabajo 2 de 3",
         "stream.accounting.title": "Comprobar cifras, movimientos y justificantes",
-        "stream.accounting.copy": "Del diario a los asientos, los bancos y las partidas abiertas.",
+        "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas y el análisis financiero.",
         "stream.outputs.index": "Área de trabajo 3 de 3",
         "stream.outputs.title": "Preparar resultados e investigación",
         "stream.outputs.copy": "De las fuentes al informe, de la pregunta a la validación.",
@@ -1419,6 +1432,8 @@
         "module.bank": "Compara banco y contabilidad tras confirmar el mapeo y solo cierra relaciones que cumplen el contrato de conciliación.",
         "module.reconciliation.title": "Conciliación de partidas abiertas",
         "module.reconciliation": "Reúne partidas, mayores, bancos y justificantes en Excel y Word mostrando relaciones, residuales y evidencias.",
+        "module.financialAnalysis.title": "Análisis financiero",
+        "module.financialAnalysis": "Prepara análisis mensuales de pérdidas y ganancias, capital circulante y concentración de clientes a partir de datos contables cualificados, con mapeos confirmados, conciliaciones y resultados reproducibles.",
         "module.report.title": "Crear informe",
         "module.report": "Prepara Word y Markdown a partir de tablas confirmadas y vincula cada cifra material con su fuente y el control que la respalda.",
         "module.prompt.title": "Optimizar prompt",
