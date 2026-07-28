@@ -678,8 +678,9 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
+    expected_core_module_count = 10
 
-    assert core.count('class="module-row"') == 9
+    assert core.count('class="module-row"') == expected_core_module_count
     assert jurisdiction.count('data-jurisdiction-item="it"') == 5
     assert jurisdiction.count('data-jurisdiction-item="en"') == 1
     assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
@@ -691,6 +692,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
+        "../financial-analysis/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -847,22 +849,22 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         (SHARED_ROOT / "clara" / "index.html", "Clara"),
     ),
 )
-def test_product_install_copy_explains_optional_codex_handoff(
+def test_product_install_copy_explains_chatgpt_codex_and_cowork_options(
     page_path: Path,
     product: str,
 ) -> None:
     page = page_path.read_text(encoding="utf-8")
     for phrase in (
-        f"{product} can analyze",
-        f"{product} può analizzare",
-        f"{product} peut analyser",
-        f"{product} kann mit Ihnen",
-        f"{product} puede analizar",
-        "Installing Codex is optional",
-        "Installare Codex è facoltativo",
-        "L’installation de Codex reste facultative",
-        "Die Installation von Codex ist optional",
-        "Instalar Codex es opcional",
+        f"Install {product} for ChatGPT Work and Codex",
+        f"Installa {product} per ChatGPT Work e Codex",
+        f"Installez {product} pour ChatGPT Work et Codex",
+        f"Installieren Sie {product} für ChatGPT Work und Codex",
+        f"Instala {product} para ChatGPT Work y Codex",
+        "download the package for Claude Cowork",
+        "scarica il pacchetto per Claude Cowork",
+        "téléchargez le paquet pour Claude Cowork",
+        "laden Sie das Paket für Claude Cowork herunter",
+        "descarga el paquete para Claude Cowork",
     ):
         assert phrase in page
 
@@ -1063,13 +1065,14 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
+    expected_module_link_count = 18
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
         page,
     )
 
-    assert len(module_hrefs) == 17
+    assert len(module_hrefs) == expected_module_link_count
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (hub_path.parent / target.path).resolve()

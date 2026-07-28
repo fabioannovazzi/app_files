@@ -2837,6 +2837,10 @@ def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
     assert "module-row__arrow" in financial_analysis.group(0)
     assert "conto economico mensile" in page
     assert "monthly P&L" in page
+    assert "Analisi finanziaria e due diligence" in page
+    assert "Financial analysis and due diligence" in page
+    assert "adjusted EBITDA" in page
+    assert "net debt" in page
     for localized_count in (
         "Tredici funzioni",
         "Thirteen capabilities",
@@ -2855,23 +2859,40 @@ def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
         assert stale_count not in page
 
 
-def test_financial_analysis_page_explains_packs_controls_and_review_boundary() -> None:
+def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
     page = (ROOT / "static" / "shared" / "financial-analysis" / "index.html").read_text(
         encoding="utf-8"
     )
 
     for snippet in (
-        "Analisi finanziaria | Vera",
-        "Financial analysis | Vera",
-        "Analyse financière | Vera",
-        "Finanzanalyse | Vera",
-        "Análisis financiero | Vera",
+        "Analisi finanziaria e due diligence | Vera",
+        "Financial analysis and due diligence | Vera",
+        "Analyse financière et due diligence | Vera",
+        "Finanzanalyse und Due Diligence | Vera",
+        "Análisis financiero y due diligence | Vera",
         "Conto economico mensile",
         "Capitale circolante",
         "Concentrazione clienti",
         "Monthly P&L",
         "working capital",
         "customer concentration",
+        'id="due-diligence"',
+        'href="#due-diligence"',
+        "Quality of Earnings e adjusted EBITDA",
+        "PFN e componenti debt-like",
+        "Capitale circolante normalizzato e target",
+        "Bridge EBITDA-to-cash ed Enterprise-to-Equity",
+        "Registro passività potenziali",
+        "Registro issue finanziarie",
+        "Quality of Earnings and adjusted EBITDA",
+        "Net debt and debt-like items",
+        "Normalized working capital and target",
+        "EBITDA-to-cash and Enterprise-to-Equity bridges",
+        "Contingent-liability register",
+        "Financial-issue register",
+        "Registre des passifs éventuels",
+        "Register der Eventualverbindlichkeiten",
+        "Registro de pasivos contingentes",
         "data_package_manifest.json",
         "dataset_contract.json",
         "relationship_contract.json",
@@ -2879,10 +2900,28 @@ def test_financial_analysis_page_explains_packs_controls_and_review_boundary() -
         "analysis_pack_request.json",
         "reconciliation_result.json",
         "prepared_evidence_manifest.json",
+        "fdd_result.json",
+        "fdd_metrics.json",
+        "pack_execution_receipt.json",
+        "contingent_liability_register.json",
+        "financial_issue_register.json",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
     ):
         assert snippet in page
+
+    visible_copy_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    for copy_key in visible_copy_keys:
+        assert page.count(f'"{copy_key}":') == 5, copy_key
+
+    for stale_snippet in (
+        "Tre analisi finanziarie",
+        "Three financial analyses",
+        "Trois analyses financières",
+        "Drei Finanzanalysen",
+        "Tres análisis financieros",
+    ):
+        assert stale_snippet not in page
 
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:
