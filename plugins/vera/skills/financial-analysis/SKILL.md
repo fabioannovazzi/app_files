@@ -1,6 +1,6 @@
 ---
 name: financial-analysis
-description: Use when preparing source-bound monthly P&L, working-capital, or customer-concentration evidence under Vera's accounting controls.
+description: Use when preparing controlled operating analysis or fixed financial due-diligence calculations under Vera's accounting controls.
 ---
 
 # Financial Analysis

@@ -29,6 +29,33 @@
         "revenue",
         "customer-parent"
       ]
+    },
+    {
+      "id": "quality-of-earnings",
+      "prompt": "Prepare Quality of Earnings and adjusted EBITDA from reviewed management adjustments and qualified accounting evidence.",
+      "required_signals": [
+        "Quality of Earnings",
+        "adjusted EBITDA",
+        "reviewed"
+      ]
+    },
+    {
+      "id": "net-debt",
+      "prompt": "Prepare a net-debt and debt-like-items schedule as of the reviewed closing date.",
+      "required_signals": [
+        "net debt",
+        "debt-like",
+        "closing date"
+      ]
+    },
+    {
+      "id": "deal-bridges",
+      "prompt": "Build EBITDA-to-cash and Enterprise-to-Equity bridges from sealed upstream FDD metrics.",
+      "required_signals": [
+        "EBITDA-to-cash",
+        "Enterprise-to-Equity",
+        "sealed"
+      ]
     }
   ],
   "should_not_trigger": [

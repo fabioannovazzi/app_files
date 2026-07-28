@@ -108,4 +108,6 @@ def test_financial_analysis_vendors_its_dedicated_contract_module() -> None:
         "vera_assurance/serialization.py",
         "vera_financial_analysis/__init__.py",
         "vera_financial_analysis/contracts.py",
+        "vera_financial_analysis/fdd.py",
+        "vera_financial_analysis/registry.py",
     } <= set(entries)

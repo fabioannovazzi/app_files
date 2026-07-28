@@ -115,11 +115,13 @@ deployment's actual account settings.
   authorized connector export, then targeted supporting PDFs for unresolved
   entries;
 - `journal-bank-reconciliation`: bank statements against journals or ledgers;
-- `financial-analysis`: source-bound monthly P&L, working-capital, and
-  customer-concentration preparation under explicit dataset, relationship,
-  crosswalk, reconciliation, and replay contracts. It validates prepared
-  evidence but does not infer judgmental mappings or establish a professional
-  conclusion;
+- `financial-analysis`: source-bound monthly P&L, working-capital, customer
+  concentration, Quality of Earnings, net debt, normalized working capital,
+  Capex, and deal-bridge preparation under explicit dataset, relationship,
+  crosswalk, reconciliation, and replay contracts, plus reviewed contingent-
+  liability and financial-issue registers. It validates prepared evidence but
+  does not infer judgmental mappings, establish source tie-out or completeness,
+  make deal decisions, or establish a professional conclusion;
 - `report-builder`: financial source files into reviewable reports;
 - `concordato-plan-review`: professional review of an Italian concordato
   preventivo across procedure, documents, creditors and treatment,

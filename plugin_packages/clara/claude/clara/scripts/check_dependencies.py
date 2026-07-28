@@ -11,9 +11,12 @@ import sys
 from collections.abc import Sequence
 from pathlib import Path
 
+from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
+
 __all__ = [
     "check_dependencies",
     "component_root",
+    "input_requires_ocr",
     "import_name",
     "main",
     "requirement_name",
@@ -42,6 +45,17 @@ PACKAGE_IMPORTS = {
     "python-docx": "docx",
     "python-pptx": "pptx",
 }
+IMAGE_EXTENSIONS = {
+    ".bmp",
+    ".gif",
+    ".heic",
+    ".jpeg",
+    ".jpg",
+    ".png",
+    ".tif",
+    ".tiff",
+}
+PDF_EXTENSION = ".pdf"
 
 
 def plugin_root() -> Path:
@@ -164,6 +178,78 @@ def check_dependencies(requirements: Path | Sequence[Path]) -> list[str]:
     return missing
 
 
+def _text_is_useful(text: str) -> bool:
+    """Return whether a native PDF text layer contains substantive text."""
+
+    compact = " ".join(text.split())
+    if len(compact) < 40:
+        return False
+    return sum(character.isalnum() for character in compact) >= 20
+
+
+def _pdf_requires_ocr(path: Path) -> bool:
+    """Detect visual PDF pages without useful native text.
+
+    Native text and visual page content are mechanically inspectable, so this
+    deterministic gate is more reliable than semantic or filename inference.
+    """
+
+    try:
+        import fitz  # type: ignore[import-not-found]
+    except ImportError:
+        return False
+
+    try:
+        with fitz.open(path) as document:
+            for page in document:
+                if _text_is_useful(page.get_text("text")):
+                    continue
+                if page.get_images(full=True) or page.get_drawings():
+                    return True
+    except (OSError, RuntimeError, ValueError):
+        return False
+    return False
+
+
+def _input_files(paths: Sequence[Path]) -> list[Path]:
+    """Return supported, non-symlink input files in stable order."""
+
+    files: list[Path] = []
+    for raw_path in paths:
+        path = raw_path.expanduser()
+        if path.is_symlink():
+            continue
+        if path.is_file():
+            files.append(path)
+            continue
+        if path.is_dir():
+            files.extend(
+                candidate
+                for candidate in path.rglob("*")
+                if candidate.is_file() and not candidate.is_symlink()
+            )
+    return sorted(
+        (
+            path
+            for path in files
+            if path.suffix.lower() in IMAGE_EXTENSIONS | {PDF_EXTENSION}
+        ),
+        key=lambda path: str(path).casefold(),
+    )
+
+
+def input_requires_ocr(paths: Sequence[Path]) -> bool:
+    """Return whether any supplied image or visual-only PDF requires OCR."""
+
+    for path in _input_files(paths):
+        extension = path.suffix.lower()
+        if extension in IMAGE_EXTENSIONS:
+            return True
+        if extension == PDF_EXTENSION and _pdf_requires_ocr(path):
+            return True
+    return False
+
+
 def main(argv: list[str] | None = None) -> int:
     """Run the dependency check CLI."""
 
@@ -184,6 +270,16 @@ def main(argv: list[str] | None = None) -> int:
         "--include-optional",
         action="store_true",
         help="Also inspect optional requirement files such as requirements-ocr.txt.",
+    )
+    parser.add_argument(
+        "--input",
+        type=Path,
+        action="append",
+        default=None,
+        help=(
+            "File or folder to inspect. Visual-only PDFs and images automatically "
+            "require the shared local OCR runtime."
+        ),
     )
     args, remaining = parser.parse_known_args(argv)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -208,18 +304,28 @@ def main(argv: list[str] | None = None) -> int:
         return completed.returncode
     if remaining:
         parser.error(f"unrecognized arguments: {' '.join(remaining)}")
+    ocr_required = input_requires_ocr(args.input or [])
+    if ocr_required:
+        activate_ocr_runtime(plugin_root() / "requirements-ocr.txt")
     requirement_files = selected_requirement_files(
         args.requirements,
-        include_optional=args.include_optional,
+        include_optional=args.include_optional or ocr_required,
     )
     missing = check_dependencies(requirement_files)
     if missing:
+        if ocr_required:
+            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
         LOGGER.error("Missing dependencies: %s", ", ".join(missing))
         LOGGER.error(
             "Checked requirement files: %s",
             ", ".join(str(path) for path in requirement_files),
         )
         return 1
+    if ocr_required:
+        LOGGER.info(
+            "OCR_REQUIRED: Visual-only input detected; the shared PaddleOCR "
+            "runtime is ready."
+        )
     LOGGER.info("All Clara dependencies are available.")
     return 0
 

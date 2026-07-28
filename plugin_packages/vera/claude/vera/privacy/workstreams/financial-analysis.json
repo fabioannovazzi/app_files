@@ -20,8 +20,8 @@
     "classes": [
       {
         "id": "financial-analysis-evidence",
-        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reconciliation posture, and review status needed to prepare financial-analysis evidence",
-        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue and customer files; source identities and hashes; dataset and relationship contracts; reviewed crosswalks; calculation parameters; reconciliation results; prepared tables; replay evidence; limitations and review decisions",
+        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reconciliation posture, and review status needed to prepare financial-analysis and financial due-diligence evidence",
+        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue and customer files; management adjustments; cash, debt, lease, factoring, fixed-asset and Capex records; working-capital targets; contingent-liability evidence; transaction definitions; EBITDA-to-cash and Enterprise-to-Equity bridge inputs; financial issues and deal-decision references; source identities and hashes; dataset and relationship contracts; reviewed crosswalks and decisions; calculation parameters; metric receipts; reconciliation results; prepared tables; replay evidence; limitations and review status",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -42,12 +42,28 @@
     {
       "id": "prepared-evidence-boundary",
       "control": "The prepared-evidence manifest and its contract audit are forced to report_ready=false so deterministic preparation cannot be presented as professional approval."
+    },
+    {
+      "id": "fixed-fdd-recipes",
+      "control": "Quality of Earnings, net debt, normalized working capital, Capex, and deal-bridge calculations accept only a sealed case with a closed contract stack and reviewed decision references; the engine applies fixed arithmetic recipes and does not infer accounting classifications or deal treatment."
+    },
+    {
+      "id": "sealed-upstream-metrics",
+      "control": "Deal bridges consume replay-validated metric receipts that embed their upstream cases, and included bridge rows must match the upstream value, multiplier, and economic-effect references; duplicate economic effects within a bridge are rejected."
+    },
+    {
+      "id": "reviewed-register-boundary",
+      "control": "Contingent-liability and financial-issue registers embed a validated case, close every evidence and decision reference, and force completeness.status=not_assessed and report_ready=false."
+    },
+    {
+      "id": "input-output-path-separation",
+      "control": "The FDD runner requires a fresh regular output directory, rejects symlink inputs and output directories, and prevents fixed output paths from colliding with the execution bundle or source-evidence files."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1d155b29194b27a46cac051e20ca938705c42f1482890c629d676f0b5672d8f0"
+    "source_fingerprint": "969a0a248fdb70d2fd3de55c994b542917c4ecd3406b50d79001e41d760ab995"
   }
 }

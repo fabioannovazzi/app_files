@@ -532,7 +532,7 @@ def project_claude_manifest(
     include_agents: bool,
     template_content: bytes | None = None,
 ) -> bytes:
-    """Project the canonical Codex metadata onto Anthropic's strict schema."""
+    """Project source metadata and the independently versioned Claude template."""
 
     source = json.loads(content.decode("utf-8"))
     if not isinstance(source, dict):
@@ -553,11 +553,10 @@ def project_claude_manifest(
     if template is not None and not isinstance(template, dict):
         raise ValueError("Claude plugin manifest template must be a JSON object")
     if isinstance(template, dict):
-        for field in ("name", "version"):
-            if template.get(field) != source[field]:
-                raise ValueError(
-                    f"Claude manifest {field} must match canonical manifest"
-                )
+        if template.get("name") != source["name"]:
+            raise ValueError("Claude manifest name must match canonical manifest")
+        if not template.get("version"):
+            raise ValueError("Claude plugin manifest template requires version")
         manifest = {
             "$schema": CLAUDE_PLUGIN_SCHEMA,
             **{
