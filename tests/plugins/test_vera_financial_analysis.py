@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import csv
 import hashlib
 import importlib.util
 import json
@@ -24,8 +25,8 @@ if str(FINANCIAL_SCRIPTS) not in sys.path:
     sys.path.insert(0, str(FINANCIAL_SCRIPTS))
 
 from vera_financial_analysis import (
-    REGISTERED_ANALYSIS_PACKS,
     REGISTERED_ANALYSIS_PACK_RECIPES,
+    REGISTERED_ANALYSIS_PACKS,
     FinancialAnalysisContractError,
     build_analysis_pack_request,
     build_crosswalk_manifest,
@@ -115,6 +116,95 @@ def _vera_case(
         encoding="utf-8",
     )
     return case_path
+
+
+def _retarget_customer_concentration_case(case_path: Path) -> None:
+    """Rewrite the benchmark as a shorter case with different fiscal years."""
+
+    case = json.loads(case_path.read_text(encoding="utf-8"))
+    year_map = {"2025": "2027", "2024": "2026"}
+    available_ar_source_years = ("2025",)
+
+    facts_path = case_path.parent / case["files"]["exact_extracted_facts"]["path"]
+    with facts_path.open("r", encoding="utf-8", newline="") as handle:
+        fact_rows = [
+            row for row in csv.DictReader(handle) if row["fiscal_year"] in year_map
+        ]
+    for row in fact_rows:
+        source_year = row["fiscal_year"]
+        target_year = year_map[source_year]
+        row["fiscal_year"] = target_year
+        row["fact_id"] = row["fact_id"].replace(
+            f"_{source_year}_", f"_{target_year}_", 1
+        )
+    with facts_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(fact_rows[0]),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(fact_rows)
+
+    control_facts_path = case_path.parent / case["files"]["exact_control_facts"]["path"]
+    with control_facts_path.open("r", encoding="utf-8", newline="") as handle:
+        source_control_rows = list(csv.DictReader(handle))
+    control_rows = []
+    for row in source_control_rows:
+        source_year = row["fiscal_year"]
+        if source_year not in year_map:
+            continue
+        if (
+            row["metric_id"] == "total_accounts_receivable"
+            and source_year not in available_ar_source_years
+        ):
+            continue
+        target_year = year_map[source_year]
+        row["fiscal_year"] = target_year
+        row["control_id"] = row["control_id"].replace(
+            f"_{source_year}_", f"_{target_year}_", 1
+        )
+        control_rows.append(row)
+    with control_facts_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(
+            handle,
+            fieldnames=list(control_rows[0]),
+            lineterminator="\n",
+        )
+        writer.writeheader()
+        writer.writerows(control_rows)
+
+    case["preparation_recipe"]["fiscal_years"] = list(year_map.values())
+    case["facts_contract"]["exact_row_count"] = len(fact_rows)
+    case["control_facts_contract"]["exact_row_count"] = len(control_rows)
+    case["reviewed_boundary"]["accounts_receivable_coverage_unavailable_years"] = [
+        "2026"
+    ]
+    available_year_metrics = {
+        "total_accounts_receivable",
+        "disclosed_accounts_receivable_subtotal",
+        "accounts_receivable_coverage_percent",
+    }
+    for metric_id, source_values in case["controls"].items():
+        source_years = (
+            available_ar_source_years
+            if metric_id in available_year_metrics
+            else tuple(year_map)
+        )
+        case["controls"][metric_id] = {
+            year_map[source_year]: source_values[source_year]
+            for source_year in source_years
+        }
+    case["files"]["exact_extracted_facts"]["sha256"] = hashlib.sha256(
+        facts_path.read_bytes()
+    ).hexdigest()
+    case["files"]["exact_control_facts"]["sha256"] = hashlib.sha256(
+        control_facts_path.read_bytes()
+    ).hexdigest()
+    case_path.write_text(
+        json.dumps(case, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _case_contracts(pack_id: str = "monthly_pnl") -> dict[str, Any]:
@@ -523,6 +613,65 @@ def test_registered_pack_engines_run_under_vera_and_are_byte_deterministic(
     )
     assert manifest["schema_version"] == manifest_schema
     assert manifest["report_ready"] is False
+
+
+def test_customer_concentration_uses_case_declared_fiscal_years(
+    tmp_path: Path,
+) -> None:
+    module = _load_pack_module()
+    source_case_path = (
+        ROOT
+        / "plugins/clara/evals/preparation/udc_fy2025_customer_concentration/case.json"
+    )
+    case_path = _vera_case(
+        source_case_path,
+        tmp_path / "case",
+        pack_id="customer_concentration",
+    )
+    _retarget_customer_concentration_case(case_path)
+    output_dir = tmp_path / "prepared"
+
+    result = module.run_pack(
+        pack_id="customer_concentration",
+        case_path=case_path,
+        output_dir=output_dir,
+    )
+
+    assert result["status"] == "passed"
+    reconciliation = json.loads(
+        (output_dir / "reconciliation.json").read_text(encoding="utf-8")
+    )
+    assert reconciliation["counts"] == {
+        "fact_rows": 12,
+        "control_fact_rows": 3,
+        "unique_fact_ids": 12,
+        "unique_natural_keys": 12,
+        "unique_control_ids": 3,
+        "unique_control_natural_keys": 3,
+        "summary_results": 10,
+        "exception_rows": 0,
+        "errors": 0,
+    }
+    assert reconciliation["availability_results"] == [
+        {
+            "summary_id": "udc_2026_accounts_receivable_coverage_percent",
+            "fiscal_year": "2026",
+            "metric_id": "accounts_receivable_coverage_percent",
+            "status": "unavailable",
+            "reason": (
+                "The frozen source-control set contains no 2026 total "
+                "accounts-receivable denominator."
+            ),
+        }
+    ]
+    with (output_dir / "customer_concentration_summary.csv").open(
+        "r", encoding="utf-8", newline=""
+    ) as handle:
+        summary_rows = list(csv.DictReader(handle))
+    assert {row["fiscal_year"] for row in summary_rows} == {"2027", "2026"}
+    assert {row["fiscal_year"] for row in summary_rows}.isdisjoint(
+        {"2025", "2024", "2023"}
+    )
 
 
 def test_pack_runner_rejects_unregistered_pack_before_execution(tmp_path: Path) -> None:

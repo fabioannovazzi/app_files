@@ -7,7 +7,9 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-__all__ = ["Dependency", "check_dependencies", "main"]
+from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
+
+__all__ = ["Dependency", "check_dependencies", "input_requires_ocr", "main"]
 
 
 PACKAGE_IMPORTS = {
@@ -57,23 +59,21 @@ OCR_DEPENDENCIES = (
         label="Pillow",
         module="PIL",
         required_for="gestione immagini OCR",
-        install_hint="python -m pip install -r requirements-ocr.txt",
     ),
     Dependency(
         label="PaddleOCR",
         module="paddleocr",
         required_for="OCR locale",
-        install_hint="python -m pip install -r requirements-ocr.txt",
     ),
     Dependency(
         label="PaddlePaddle",
         module="paddle",
         required_for="runtime OCR locale",
-        install_hint="python -m pip install -r requirements-ocr.txt",
     ),
 )
 
-PDF_EXTENSIONS = {".pdf", ".png", ".jpg", ".jpeg", ".tif", ".tiff", ".heic"}
+IMAGE_EXTENSIONS = {".jpeg", ".jpg", ".png", ".tif", ".tiff"}
+PDF_EXTENSION = ".pdf"
 
 
 def plugin_root() -> Path:
@@ -119,15 +119,72 @@ def selected_requirement_files(explicit_files: list[str]) -> list[Path]:
     return [path for path in files if path.exists()]
 
 
-def _folder_has_pdf_or_images(folder: Path | None) -> bool:
-    if folder is None:
+def _text_is_useful(text: str) -> bool:
+    """Return whether a native PDF text layer contains substantive text."""
+
+    compact = " ".join(text.split())
+    if len(compact) < 40:
         return False
-    if not folder.exists() or not folder.is_dir():
+    return sum(character.isalnum() for character in compact) >= 20
+
+
+def _pdf_requires_ocr(path: Path) -> bool:
+    """Detect visual PDF pages without useful native text.
+
+    Native text and visual page content are mechanically inspectable, so this
+    deterministic gate is more reliable than semantic or filename inference.
+    """
+
+    try:
+        import fitz  # type: ignore[import-not-found]
+    except ImportError:
         return False
-    return any(
-        path.is_file() and path.suffix.lower() in PDF_EXTENSIONS
-        for path in folder.rglob("*")
+
+    try:
+        with fitz.open(path) as document:
+            for page in document:
+                if _text_is_useful(page.get_text("text")):
+                    continue
+                if page.get_images(full=True) or page.get_drawings():
+                    return True
+    except (OSError, RuntimeError, ValueError):
+        return False
+    return False
+
+
+def _input_files(source: Path | None) -> list[Path]:
+    if source is None:
+        return []
+    root = source.expanduser()
+    if root.is_symlink() or not root.exists():
+        return []
+    if root.is_file():
+        return [root]
+    if not root.is_dir():
+        return []
+    return sorted(
+        (path for path in root.rglob("*") if path.is_file() and not path.is_symlink()),
+        key=lambda path: str(path).casefold(),
     )
+
+
+def input_requires_ocr(source: Path | None) -> bool:
+    """Return whether an input contains an image or visual-only PDF."""
+
+    for path in _input_files(source):
+        extension = path.suffix.lower()
+        if extension in IMAGE_EXTENSIONS:
+            return True
+        if extension == PDF_EXTENSION and _pdf_requires_ocr(path):
+            return True
+    return False
+
+
+def _activate_shared_ocr_runtime() -> None:
+    requirements_path = plugin_root() / "requirements-ocr.txt"
+    if not requirements_path.is_file():
+        return
+    activate_ocr_runtime(requirements_path)
 
 
 def check_dependencies(
@@ -136,6 +193,8 @@ def check_dependencies(
 ) -> tuple[list[Dependency], list[Dependency]]:
     """Return available and missing dependencies."""
 
+    if require_ocr:
+        _activate_shared_ocr_runtime()
     if requirement_files is not None:
         dependencies = dependencies_from_requirements(requirement_files)
     else:
@@ -152,7 +211,12 @@ def check_dependencies(
     return available, missing
 
 
-def _print_report(available: list[Dependency], missing: list[Dependency]) -> None:
+def _print_report(
+    available: list[Dependency],
+    missing: list[Dependency],
+    *,
+    require_ocr: bool = False,
+) -> None:
     print("# Controllo ambiente Client File Preparation")
     print()
     if available:
@@ -161,6 +225,11 @@ def _print_report(available: list[Dependency], missing: list[Dependency]) -> Non
             print(f"- {dependency.label} ({dependency.required_for})")
         print()
     if missing:
+        if require_ocr and any(
+            dependency in OCR_DEPENDENCIES for dependency in missing
+        ):
+            print(f"OCR_SETUP_REQUIRED: {OCR_SETUP_PROMPT}")
+            print()
         print("Mancanti:")
         for dependency in missing:
             print(f"- {dependency.label} ({dependency.required_for})")
@@ -178,6 +247,12 @@ def _print_report(available: list[Dependency], missing: list[Dependency]) -> Non
                 print(f"- {hint}")
             print()
     else:
+        if require_ocr:
+            print(
+                "OCR_REQUIRED: contenuto visivo senza testo rilevato; "
+                "il runtime PaddleOCR condiviso è pronto."
+            )
+            print()
         print("Ambiente pronto.")
 
 
@@ -189,7 +264,10 @@ def _parse_args() -> argparse.Namespace:
         "--folder",
         type=Path,
         default=None,
-        help="Cartella cliente. Se contiene PDF/immagini, viene richiesto OCR.",
+        help=(
+            "File o cartella cliente. Immagini e pagine PDF senza testo "
+            "utilizzabile richiedono automaticamente OCR."
+        ),
     )
     parser.add_argument(
         "--require-ocr",
@@ -216,9 +294,9 @@ def main() -> int:
         _print_report(available, missing)
         return 0 if not missing else 1
 
-    require_ocr = args.require_ocr or _folder_has_pdf_or_images(args.folder)
+    require_ocr = args.require_ocr or input_requires_ocr(args.folder)
     available, missing = check_dependencies(require_ocr=require_ocr)
-    _print_report(available, missing)
+    _print_report(available, missing, require_ocr=require_ocr)
 
     if not missing:
         return 0

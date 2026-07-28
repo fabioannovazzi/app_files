@@ -35,7 +35,6 @@ RECIPE_ID = "customer_concentration_from_reviewed_public_disclosure.v1"
 ENGINE_VERSION = "1.0.0"
 
 CUSTOMER_ALIASES = ("A", "B", "C")
-FISCAL_YEARS = ("2025", "2024", "2023")
 METRIC_IDS = ("revenue_share", "accounts_receivable")
 ALLOWED_OUTPUT_METRIC_IDS = (
     "total_revenue_control",
@@ -116,6 +115,7 @@ PRODUCER_OUTPUT_NAMES = (
 )
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 INTEGER_PATTERN = re.compile(r"^(?:0|[1-9][0-9]*)$")
+FISCAL_YEAR_PATTERN = re.compile(r"^[0-9]{4}$")
 
 
 def _mapping(value: Any, *, label: str) -> Mapping[str, Any]:
@@ -288,11 +288,24 @@ def _load_case(
         != CUSTOMER_ALIASES
     ):
         raise ContractValidationError("customer_aliases contract changed")
-    if (
-        _text_sequence(recipe["fiscal_years"], label="preparation_recipe.fiscal_years")
-        != FISCAL_YEARS
-    ):
-        raise ContractValidationError("fiscal_years contract changed")
+    fiscal_years = _text_sequence(
+        recipe["fiscal_years"], label="preparation_recipe.fiscal_years"
+    )
+    if not fiscal_years:
+        raise ContractValidationError(
+            "preparation_recipe.fiscal_years must not be empty"
+        )
+    if len(fiscal_years) != len(set(fiscal_years)):
+        raise ContractValidationError(
+            "preparation_recipe.fiscal_years must contain unique years"
+        )
+    invalid_fiscal_years = [
+        year for year in fiscal_years if FISCAL_YEAR_PATTERN.fullmatch(year) is None
+    ]
+    if invalid_fiscal_years:
+        raise ContractValidationError(
+            "preparation_recipe.fiscal_years must contain canonical four-digit years"
+        )
     if (
         _text_sequence(recipe["metric_ids"], label="preparation_recipe.metric_ids")
         != METRIC_IDS
@@ -332,8 +345,17 @@ def _load_case(
         facts_contract["natural_key"], label="facts_contract.natural_key"
     ) != ("customer_alias", "fiscal_year", "metric_id"):
         raise ContractValidationError("facts_contract.natural_key changed")
-    if facts_contract["exact_row_count"] != 18:
-        raise ContractValidationError("facts_contract.exact_row_count must be 18")
+    expected_fact_row_count = (
+        len(CUSTOMER_ALIASES) * len(fiscal_years) * len(METRIC_IDS)
+    )
+    if (
+        type(facts_contract["exact_row_count"]) is not int
+        or facts_contract["exact_row_count"] != expected_fact_row_count
+    ):
+        raise ContractValidationError(
+            "facts_contract.exact_row_count must equal "
+            f"{expected_fact_row_count} for the declared fiscal years"
+        )
     if facts_contract["exact_expected_set"] is not True:
         raise ContractValidationError("facts_contract must require an exact set")
     _text(facts_contract["numeric_contract"], label="facts_contract.numeric_contract")
@@ -366,33 +388,6 @@ def _load_case(
         label="control_facts_contract.natural_key",
     ) != ("fiscal_year", "metric_id"):
         raise ContractValidationError("control_facts_contract.natural_key changed")
-    if control_facts_contract["exact_row_count"] != 5:
-        raise ContractValidationError(
-            "control_facts_contract.exact_row_count must be 5"
-        )
-    if control_facts_contract["exact_expected_set"] is not True:
-        raise ContractValidationError(
-            "control_facts_contract must require an exact set"
-        )
-    _text(
-        control_facts_contract["numeric_contract"],
-        label="control_facts_contract.numeric_contract",
-    )
-    control_source_locators = _mapping(
-        control_facts_contract["source_locators"],
-        label="control_facts_contract.source_locators",
-    )
-    _exact_fields(
-        control_source_locators,
-        {"total_revenue", "total_accounts_receivable"},
-        label="control_facts_contract.source_locators",
-    )
-    for metric_id in ("total_revenue", "total_accounts_receivable"):
-        _text(
-            control_source_locators[metric_id],
-            label=f"control_facts_contract.source_locators.{metric_id}",
-        )
-
     boundary = _mapping(case["reviewed_boundary"], label="reviewed_boundary")
     _exact_fields(
         boundary,
@@ -451,11 +446,57 @@ def _load_case(
         != FORBIDDEN_CLAIM_IDS
     ):
         raise ContractValidationError("forbidden claim boundary changed")
-    if _text_sequence(
+    unavailable_ar_years = _text_sequence(
         boundary["accounts_receivable_coverage_unavailable_years"],
         label=("reviewed_boundary.accounts_receivable_coverage_unavailable_years"),
-    ) != ("2023",):
-        raise ContractValidationError("AR coverage availability boundary changed")
+    )
+    if len(unavailable_ar_years) != len(set(unavailable_ar_years)):
+        raise ContractValidationError(
+            "accounts_receivable_coverage_unavailable_years must be unique"
+        )
+    unknown_unavailable_ar_years = sorted(set(unavailable_ar_years) - set(fiscal_years))
+    if unknown_unavailable_ar_years:
+        raise ContractValidationError(
+            "accounts_receivable_coverage_unavailable_years must be a subset "
+            f"of fiscal_years; got {unknown_unavailable_ar_years}"
+        )
+    unavailable_ar_year_set = set(unavailable_ar_years)
+    available_ar_years = tuple(
+        year for year in fiscal_years if year not in unavailable_ar_year_set
+    )
+
+    expected_control_fact_row_count = len(fiscal_years) + len(available_ar_years)
+    if (
+        type(control_facts_contract["exact_row_count"]) is not int
+        or control_facts_contract["exact_row_count"] != expected_control_fact_row_count
+    ):
+        raise ContractValidationError(
+            "control_facts_contract.exact_row_count must equal "
+            f"{expected_control_fact_row_count} for the declared fiscal years "
+            "and AR availability boundary"
+        )
+    if control_facts_contract["exact_expected_set"] is not True:
+        raise ContractValidationError(
+            "control_facts_contract must require an exact set"
+        )
+    _text(
+        control_facts_contract["numeric_contract"],
+        label="control_facts_contract.numeric_contract",
+    )
+    control_source_locators = _mapping(
+        control_facts_contract["source_locators"],
+        label="control_facts_contract.source_locators",
+    )
+    _exact_fields(
+        control_source_locators,
+        {"total_revenue", "total_accounts_receivable"},
+        label="control_facts_contract.source_locators",
+    )
+    for metric_id in ("total_revenue", "total_accounts_receivable"):
+        _text(
+            control_source_locators[metric_id],
+            label=f"control_facts_contract.source_locators.{metric_id}",
+        )
 
     controls = _mapping(case["controls"], label="controls")
     _exact_fields(
@@ -471,32 +512,32 @@ def _load_case(
         label="controls",
     )
     normalized_controls = {
-        "total_revenue": _validate_control_map(controls, "total_revenue", FISCAL_YEARS),
+        "total_revenue": _validate_control_map(controls, "total_revenue", fiscal_years),
         "total_accounts_receivable": _validate_control_map(
             controls,
             "total_accounts_receivable",
-            ("2025", "2024"),
+            available_ar_years,
         ),
         "disclosed_top_three_revenue_share": _validate_control_map(
             controls,
             "disclosed_top_three_revenue_share",
-            FISCAL_YEARS,
+            fiscal_years,
         ),
         "disclosed_accounts_receivable_subtotal": _validate_control_map(
             controls,
             "disclosed_accounts_receivable_subtotal",
-            ("2025", "2024"),
+            available_ar_years,
         ),
         "accounts_receivable_coverage_percent": _validate_control_map(
             controls,
             "accounts_receivable_coverage_percent",
-            ("2025", "2024"),
+            available_ar_years,
             scale=scale,
         ),
         "reported_share_hhi_contribution": _validate_control_map(
             controls,
             "reported_share_hhi_contribution",
-            FISCAL_YEARS,
+            fiscal_years,
         ),
     }
 
@@ -664,6 +705,7 @@ def _read_and_validate_facts(
     facts_path: Path,
     *,
     recipe: Mapping[str, Any],
+    fiscal_years: tuple[str, ...],
     source_id: str,
     errors: list[dict[str, Any]],
 ) -> tuple[
@@ -676,12 +718,15 @@ def _read_and_validate_facts(
         columns=FACT_COLUMNS,
         label="exact extracted facts",
     )
-    if len(rows) != 18:
+    expected_row_count = len(CUSTOMER_ALIASES) * len(fiscal_years) * len(METRIC_IDS)
+    if len(rows) != expected_row_count:
         _add_error(
             errors,
             gate="exact_fact_set",
             code="unexpected_fact_row_count",
-            message=f"expected 18 fact rows and received {len(rows)}",
+            message=(
+                f"expected {expected_row_count} fact rows and received {len(rows)}"
+            ),
         )
 
     values: dict[tuple[str, str, str], int] = {}
@@ -709,7 +754,7 @@ def _read_and_validate_facts(
                 message=f"{fact_id} uses unsupported anonymous alias {alias}",
                 identifiers=(fact_id, alias),
             )
-        if year not in FISCAL_YEARS:
+        if year not in fiscal_years:
             _add_error(
                 errors,
                 gate="alias_period_metric_contract",
@@ -816,7 +861,7 @@ def _read_and_validate_facts(
 
     expected_keys = {
         (alias, year, metric_id)
-        for year in FISCAL_YEARS
+        for year in fiscal_years
         for alias in CUSTOMER_ALIASES
         for metric_id in METRIC_IDS
     }
@@ -844,6 +889,8 @@ def _read_and_validate_control_facts(
     control_facts_path: Path,
     *,
     control_contract: Mapping[str, Any],
+    fiscal_years: tuple[str, ...],
+    available_ar_years: tuple[str, ...],
     source_id: str,
     golden_controls: Mapping[str, Mapping[str, str]],
     errors: list[dict[str, Any]],
@@ -853,12 +900,16 @@ def _read_and_validate_control_facts(
         columns=CONTROL_FACT_COLUMNS,
         label="exact control facts",
     )
-    if len(rows) != 5:
+    expected_row_count = len(fiscal_years) + len(available_ar_years)
+    if len(rows) != expected_row_count:
         _add_error(
             errors,
             gate="exact_fact_set",
             code="unexpected_control_fact_row_count",
-            message=f"expected 5 control fact rows and received {len(rows)}",
+            message=(
+                f"expected {expected_row_count} control fact rows and "
+                f"received {len(rows)}"
+            ),
         )
     source_locators = _mapping(
         control_contract["source_locators"],
@@ -871,8 +922,8 @@ def _read_and_validate_control_facts(
         "total_accounts_receivable": {},
     }
     expected_keys = {
-        *(("total_revenue", year) for year in FISCAL_YEARS),
-        *(("total_accounts_receivable", year) for year in ("2025", "2024")),
+        *(("total_revenue", year) for year in fiscal_years),
+        *(("total_accounts_receivable", year) for year in available_ar_years),
     }
     for position, row in enumerate(rows, start=2):
         label = f"exact control facts row {position}"
@@ -1048,6 +1099,9 @@ def _derive_summary(
     values: Mapping[tuple[str, str, str], int],
     fact_ids_by_key: Mapping[tuple[str, str, str], str],
     *,
+    fiscal_years: tuple[str, ...],
+    available_ar_years: tuple[str, ...],
+    unavailable_ar_years: tuple[str, ...],
     source_controls: Mapping[str, Mapping[str, str]],
     golden_controls: Mapping[str, Mapping[str, str]],
     scale: int,
@@ -1071,7 +1125,7 @@ def _derive_summary(
             }
         )
 
-    for year in FISCAL_YEARS:
+    for year in fiscal_years:
         if year not in source_controls["total_revenue"]:
             continue
         append(
@@ -1086,7 +1140,7 @@ def _derive_summary(
             ),
             control_refs=(f"udc_{year}_total_revenue",),
         )
-    for year in ("2025", "2024"):
+    for year in available_ar_years:
         if year not in source_controls["total_accounts_receivable"]:
             continue
         append(
@@ -1102,7 +1156,7 @@ def _derive_summary(
             control_refs=(f"udc_{year}_total_accounts_receivable",),
         )
 
-    for year in FISCAL_YEARS:
+    for year in fiscal_years:
         keys = [(alias, year, "revenue_share") for alias in CUSTOMER_ALIASES]
         if not all(key in values and key in fact_ids_by_key for key in keys):
             continue
@@ -1160,7 +1214,7 @@ def _derive_summary(
             fact_ids=fact_ids,
         )
 
-    for year in ("2025", "2024"):
+    for year in available_ar_years:
         keys = [(alias, year, "accounts_receivable") for alias in CUSTOMER_ALIASES]
         if (
             not all(key in values and key in fact_ids_by_key for key in keys)
@@ -1239,27 +1293,30 @@ def _derive_summary(
             control_refs=(f"udc_{year}_total_accounts_receivable",),
         )
 
-    unavailable_year = "2023"
-    unavailable_keys = [
-        (alias, unavailable_year, "accounts_receivable") for alias in CUSTOMER_ALIASES
-    ]
-    append(
-        _summary_row(
-            unavailable_year,
-            "accounts_receivable_coverage_percent",
-            "",
-            unit="percent",
-            reported_increment=f"0.{('0' * (scale - 1))}1",
-            declared_scale=scale,
-            availability_status="unavailable",
-            characterization=(
-                "unavailable_without_frozen_total_accounts_receivable_control"
+    for unavailable_year in unavailable_ar_years:
+        unavailable_keys = [
+            (alias, unavailable_year, "accounts_receivable")
+            for alias in CUSTOMER_ALIASES
+        ]
+        append(
+            _summary_row(
+                unavailable_year,
+                "accounts_receivable_coverage_percent",
+                "",
+                unit="percent",
+                reported_increment=f"0.{('0' * (scale - 1))}1",
+                declared_scale=scale,
+                availability_status="unavailable",
+                characterization=(
+                    "unavailable_without_frozen_total_accounts_receivable_control"
+                ),
             ),
-        ),
-        fact_ids=[
-            fact_ids_by_key[key] for key in unavailable_keys if key in fact_ids_by_key
-        ],
-    )
+            fact_ids=[
+                fact_ids_by_key[key]
+                for key in unavailable_keys
+                if key in fact_ids_by_key
+            ],
+        )
 
     output_metric_ids = {row["metric_id"] for row in rows}
     forbidden_emitted = sorted(output_metric_ids & set(FORBIDDEN_CLAIM_IDS))
@@ -1285,7 +1342,7 @@ def _derive_summary(
     rows.sort(
         key=lambda row: (
             ALLOWED_OUTPUT_METRIC_IDS.index(row["metric_id"]),
-            FISCAL_YEARS.index(row["fiscal_year"]),
+            fiscal_years.index(row["fiscal_year"]),
         )
     )
     lineage.sort(key=lambda item: str(item["summary_id"]))
@@ -1361,10 +1418,23 @@ def prepare_customer_concentration_case(
 
     case, facts_path, control_facts_path, source, controls = _load_case(case_path)
     recipe = _mapping(case["preparation_recipe"], label="preparation_recipe")
+    fiscal_years = _text_sequence(
+        recipe["fiscal_years"], label="preparation_recipe.fiscal_years"
+    )
+    boundary = _mapping(case["reviewed_boundary"], label="reviewed_boundary")
+    unavailable_ar_years = _text_sequence(
+        boundary["accounts_receivable_coverage_unavailable_years"],
+        label=("reviewed_boundary.accounts_receivable_coverage_unavailable_years"),
+    )
+    unavailable_ar_year_set = set(unavailable_ar_years)
+    available_ar_years = tuple(
+        year for year in fiscal_years if year not in unavailable_ar_year_set
+    )
     errors: list[dict[str, Any]] = []
     fact_rows, values, fact_ids_by_key = _read_and_validate_facts(
         facts_path,
         recipe=recipe,
+        fiscal_years=fiscal_years,
         source_id=str(source["source_id"]),
         errors=errors,
     )
@@ -1374,6 +1444,8 @@ def prepare_customer_concentration_case(
             case["control_facts_contract"],
             label="control_facts_contract",
         ),
+        fiscal_years=fiscal_years,
+        available_ar_years=available_ar_years,
         source_id=str(source["source_id"]),
         golden_controls=controls,
         errors=errors,
@@ -1381,6 +1453,9 @@ def prepare_customer_concentration_case(
     summary_rows, summary_lineage = _derive_summary(
         values,
         fact_ids_by_key,
+        fiscal_years=fiscal_years,
+        available_ar_years=available_ar_years,
+        unavailable_ar_years=unavailable_ar_years,
         source_controls=source_controls,
         golden_controls=controls,
         scale=int(recipe["coverage_ratio_scale"]),
@@ -1456,15 +1531,16 @@ def prepare_customer_concentration_case(
         "summary_results": summary_rows,
         "availability_results": [
             {
-                "summary_id": "udc_2023_accounts_receivable_coverage_percent",
-                "fiscal_year": "2023",
+                "summary_id": f"udc_{year}_accounts_receivable_coverage_percent",
+                "fiscal_year": year,
                 "metric_id": "accounts_receivable_coverage_percent",
                 "status": "unavailable",
                 "reason": (
-                    "The frozen source-control set contains no 2023 total "
+                    f"The frozen source-control set contains no {year} total "
                     "accounts-receivable denominator."
                 ),
             }
+            for year in unavailable_ar_years
         ],
         "claim_abstention": {
             "status": "failed" if claim_abstention_failed else "passed",
