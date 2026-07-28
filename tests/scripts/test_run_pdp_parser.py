@@ -84,7 +84,6 @@ def test_runs_from_args_uses_links_before_discovery(
         reviews_only=False,
         locale="en-us",
         human_pace=False,
-        only_missing_images=False,
     )
 
     runs = _runs_from_args(args)

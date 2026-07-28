@@ -14,7 +14,10 @@ if str(PROJECT_ROOT) not in sys.path:
 
 import modules.llm.model_router as model_router
 import modules.utilities.config as config_module
-from modules.slides.api import _build_slide_analysis_payload, _normalize_layout_payload
+from src.slides.analysis_payload import (
+    build_slide_analysis_payload,
+    normalize_layout_payload,
+)
 from src.slides.layout_semantics import normalize_block_type
 from src.slides.layout_service import build_deck_layout_payload
 from src.slides.ocr_payload import normalize_ocr_payload
@@ -60,8 +63,12 @@ def _selected_slide_ids_from_args(
     page_numbers: list[int],
     slide_ids: list[str],
 ) -> list[str]:
-    selected_ids = {str(slide_id).strip() for slide_id in slide_ids if str(slide_id).strip()}
-    page_set = {int(page_number) for page_number in page_numbers if int(page_number) >= 1}
+    selected_ids = {
+        str(slide_id).strip() for slide_id in slide_ids if str(slide_id).strip()
+    }
+    page_set = {
+        int(page_number) for page_number in page_numbers if int(page_number) >= 1
+    }
     if page_set:
         for index, slide in enumerate(deck.slides, start=1):
             if index in page_set:
@@ -74,7 +81,9 @@ def _slide_id_from_payload(raw_slide: dict[str, object]) -> str:
 
 
 def _slide_has_unknown_block(raw_slide: dict[str, object]) -> bool:
-    raw_blocks = raw_slide.get("blocks") if isinstance(raw_slide.get("blocks"), list) else []
+    raw_blocks = (
+        raw_slide.get("blocks") if isinstance(raw_slide.get("blocks"), list) else []
+    )
     return any(
         isinstance(raw_block, dict)
         and normalize_block_type(raw_block.get("type")) == "unknown"
@@ -128,7 +137,8 @@ def _merge_layout_payload(
 ) -> dict[str, object]:
     existing_slides = (
         existing_payload.get("slides")
-        if isinstance(existing_payload, dict) and isinstance(existing_payload.get("slides"), list)
+        if isinstance(existing_payload, dict)
+        and isinstance(existing_payload.get("slides"), list)
         else []
     )
     updated_slides = (
@@ -149,11 +159,9 @@ def _merge_layout_payload(
             continue
         merged_by_id[slide_id] = raw_slide
     ordered_slides = [
-        merged_by_id[slide.id]
-        for slide in deck.slides
-        if slide.id in merged_by_id
+        merged_by_id[slide.id] for slide in deck.slides if slide.id in merged_by_id
     ]
-    return _normalize_layout_payload(
+    return normalize_layout_payload(
         {
             "deck_id": deck.deck_id,
             "lang": lang,
@@ -174,7 +182,8 @@ def _merge_ocr_payload(
 ) -> dict[str, object]:
     existing_slides = (
         existing_payload.get("slides")
-        if isinstance(existing_payload, dict) and isinstance(existing_payload.get("slides"), list)
+        if isinstance(existing_payload, dict)
+        and isinstance(existing_payload.get("slides"), list)
         else []
     )
     updated_slides = (
@@ -195,9 +204,7 @@ def _merge_ocr_payload(
             continue
         merged_by_id[slide_id] = raw_slide
     ordered_slides = [
-        merged_by_id[slide.id]
-        for slide in deck.slides
-        if slide.id in merged_by_id
+        merged_by_id[slide.id] for slide in deck.slides if slide.id in merged_by_id
     ]
     resolved_ocr_strategy = (
         updated_payload.get("ocr_strategy")
@@ -322,7 +329,7 @@ def main() -> int:
     )
     storage.save_ocr_payload(args.deck_id, merged_ocr)
     LOGGER.info("Step 3/3: rebuilding merged slide analysis.")
-    merged_analysis = _build_slide_analysis_payload(
+    merged_analysis = build_slide_analysis_payload(
         merged_layout,
         merged_ocr,
         deck_id=args.deck_id,

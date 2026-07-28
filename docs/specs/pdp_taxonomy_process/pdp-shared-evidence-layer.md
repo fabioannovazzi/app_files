@@ -1,6 +1,10 @@
 # PDP Shared Evidence Layer
 
-Status: Draft V1 evidence-layer assessment (as of 2026-03-13).
+Status: Archived V1 evidence-layer assessment (as of 2026-03-13).
+
+The FastAPI review application and its coverage UI were retired on 2026-07-28.
+References to those files below describe the historical implementation and are
+not current execution paths.
 
 ## 1. Purpose
 This document defines the shared evidence and indexing layer needed to support:
@@ -95,8 +99,8 @@ Core fields:
 
 Current sources:
 1. review tables loaded in [attribute_review_logic.py](../../../modules/pdp/attribute_review_logic.py)
-2. example record flows in [api.py](../../../modules/pdp/api.py)
-3. existing evidence display in [coverage.jsx](../../../src/review-react/coverage.jsx)
+2. historical example record flows in `modules/pdp/api.py` (retired)
+3. historical evidence display in `src/review-react/coverage.jsx` (retired)
 
 Assessment:
 1. enough exists for example-backed review
@@ -124,7 +128,7 @@ Core fields:
 Current sources:
 1. stage tables defined in PDP store adapter
 2. stage table loading in [attribute_review_logic.py](../../../modules/pdp/attribute_review_logic.py)
-3. overlay logic in [api.py](../../../modules/pdp/api.py)
+3. historical overlay logic in `modules/pdp/api.py` (retired)
 
 Assessment:
 1. enough exists now
@@ -173,8 +177,8 @@ Core fields:
 Current sources:
 1. `pdp_attribute_audit` and helpers in PDP store adapter
 2. stage fallback rows
-3. resolution ledger and consensus handling in [api.py](../../../modules/pdp/api.py)
-4. web/vision fill audit CSV fallback in [api.py](../../../modules/pdp/api.py)
+3. historical resolution-ledger and consensus handling in `modules/pdp/api.py`
+4. historical web/vision fill audit CSV fallback in `modules/pdp/api.py`
 
 Assessment:
 1. the evidence exists
@@ -207,9 +211,9 @@ Purpose:
 1. provide a temporary manual evidence surface before the full proposal system exists
 
 Current sources:
-1. taxonomy values and synonyms shown in [coverage.jsx](../../../src/review-react/coverage.jsx)
-2. deterministic scan shown in [coverage.jsx](../../../src/review-react/coverage.jsx)
-3. example records and attached audit shown in [coverage.jsx](../../../src/review-react/coverage.jsx)
+1. taxonomy values and synonyms shown in the retired `src/review-react/coverage.jsx`
+2. deterministic scan shown in that retired coverage UI
+3. example records and attached audit shown in that retired coverage UI
 
 Assessment:
 1. this is not the final workflow

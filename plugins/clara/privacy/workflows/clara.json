@@ -139,6 +139,20 @@
         "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
         "The bootstrap validates imports after installation, uses a requirements fingerprint for reuse, and fails open to file-based work."
       ]
+    },
+    {
+      "id": "approved-managed-ocr-runtime",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI)",
+      "purpose": "Install the optional shared PaddleOCR runtime after the user approves the roughly 500 MB first-use download",
+      "content": "Declared OCR package names and version constraints from Clara's published requirements-ocr.txt, plus ordinary package-index request metadata; no user files, document contents, prompts, case data, or advisory content are sent",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "The input preflight requests this setup only for images or visual-only PDFs that require local OCR.",
+        "The Clara skill requires explicit user approval before the managed installer runs.",
+        "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera."
+      ]
     }
   ],
   "security_controls": [
@@ -152,9 +166,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-24",
+    "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6559c1c42a1b941e3f355f23c70006fa49fa43c095b07be4dbfc87079d587eb0"
+    "source_fingerprint": "01e28a854642485590aea33d83be86bc75a0b41d64ac99bbd3b5c7e443efa222"
   }
 }

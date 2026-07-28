@@ -13339,13 +13339,13 @@ def test_build_pdf_reading_payload_for_validation_persists_cache_artifacts(
             )
         )
 
-    monkeypatch.setattr("modules.slides.api._render_pdf_deck", _fake_render_pdf_deck)
+    monkeypatch.setattr("src.slides.pdf_import.render_pdf_deck", _fake_render_pdf_deck)
     monkeypatch.setattr(
-        "modules.slides.api._normalize_layout_payload",
+        "src.slides.analysis_payload.normalize_layout_payload",
         lambda payload, *, deck_id, lang: payload,
     )
     monkeypatch.setattr(
-        "modules.slides.api._build_slide_analysis_payload",
+        "src.slides.analysis_payload.build_slide_analysis_payload",
         lambda layout_payload, ocr_payload, *, deck_id, lang: fake_analysis,
     )
     monkeypatch.setattr(
@@ -13543,13 +13543,13 @@ def test_build_pdf_reading_payload_for_validation_reuses_current_cache(
             )
         )
 
-    monkeypatch.setattr("modules.slides.api._render_pdf_deck", _fake_render_pdf_deck)
+    monkeypatch.setattr("src.slides.pdf_import.render_pdf_deck", _fake_render_pdf_deck)
     monkeypatch.setattr(
-        "modules.slides.api._normalize_layout_payload",
+        "src.slides.analysis_payload.normalize_layout_payload",
         lambda payload, *, deck_id, lang: payload,
     )
     monkeypatch.setattr(
-        "modules.slides.api._build_slide_analysis_payload",
+        "src.slides.analysis_payload.build_slide_analysis_payload",
         lambda layout_payload, ocr_payload, *, deck_id, lang: fake_analysis,
     )
     monkeypatch.setattr(
@@ -13566,7 +13566,7 @@ def test_build_pdf_reading_payload_for_validation_reuses_current_cache(
     def _unexpected_call(*args, **kwargs):
         raise AssertionError("reader cache should have been reused")
 
-    monkeypatch.setattr("modules.slides.api._render_pdf_deck", _unexpected_call)
+    monkeypatch.setattr("src.slides.pdf_import.render_pdf_deck", _unexpected_call)
     monkeypatch.setattr(
         "src.slides.layout_service.build_deck_layout_payload",
         _unexpected_call,
@@ -13576,7 +13576,7 @@ def test_build_pdf_reading_payload_for_validation_reuses_current_cache(
         _unexpected_call,
     )
     monkeypatch.setattr(
-        "modules.slides.api._build_slide_analysis_payload",
+        "src.slides.analysis_payload.build_slide_analysis_payload",
         _unexpected_call,
     )
 

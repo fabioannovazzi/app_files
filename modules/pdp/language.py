@@ -27,89 +27,12 @@ LANGUAGE_ORDER: List[str] = ["en", "it", "fr", "de", "es"]
 SUPPORTED_LANGUAGES = set(LANGUAGE_LABELS.keys())
 
 PAGE_LABELS = {
-    "/check/page": {
-        "en": "Check entries",
-        "it": "Verifica registrazioni contabili",
-        "fr": "Contrôler les écritures",
-        "de": "Buchungen prüfen",
-        "es": "Comprobar asientos",
-    },
-    "/presentations/page": {
-        "en": "Presentations",
-        "it": "Presentazioni",
-        "fr": "Présentations",
-        "de": "Präsentationen",
-        "es": "Presentaciones",
-    },
-    "/review/reports/page": {
-        "en": "Retailer signals",
-        "it": "Segnali dei retailer",
-        "fr": "Signaux retailers",
-        "de": "Retailer-Signale",
-        "es": "Señales de retailers",
-    },
-    "/review/brand-reports/page": {
-        "en": "Brand fit",
-        "it": "Fit del brand",
-        "fr": "Fit de marque",
-        "de": "Marken-Fit",
-        "es": "Afinidad de marca",
-    },
-    "/review/product-hypotheses/page": {
-        "en": "Product hints",
-        "it": "Spunti prodotto",
-        "fr": "Pistes produit",
-        "de": "Produkt-Hinweise",
-        "es": "Pistas de producto",
-    },
     "/auth/page": {
         "en": "Sign in",
         "it": "Accedi",
         "fr": "Se connecter",
         "de": "Anmelden",
         "es": "Iniciar sesión",
-    },
-    "/slides/page": {
-        "en": "Slide editor",
-        "it": "Editor diapositive",
-        "fr": "Éditeur de diapositives",
-        "de": "Folieneditor",
-        "es": "Editor de diapositivas",
-    },
-    "/review/page": {
-        "en": "Catalog",
-        "it": "Catalogo",
-        "fr": "Catalogue",
-        "de": "Katalog",
-        "es": "Catálogo",
-    },
-    "/review/react": {
-        "en": "Catalog",
-        "it": "Catalogo",
-        "fr": "Catalogue",
-        "de": "Katalog",
-        "es": "Catálogo",
-    },
-    "/review/coverage/page": {
-        "en": "Attribute coverage",
-        "it": "Copertura attributi",
-        "fr": "Couverture des attributs",
-        "de": "Attributabdeckung",
-        "es": "Cobertura de atributos",
-    },
-    "/review/explicit-rules/page": {
-        "en": "Explicit attributes",
-        "it": "Dichiarazioni PDP",
-        "fr": "Déclarations PDP",
-        "de": "PDP-Angaben",
-        "es": "Declaraciones de PDP",
-    },
-    "/review/issues/page": {
-        "en": "Attribute issues",
-        "it": "Problemi attributi",
-        "fr": "Problèmes d’attributs",
-        "de": "Attributprobleme",
-        "es": "Problemas de atributos",
     },
 }
 

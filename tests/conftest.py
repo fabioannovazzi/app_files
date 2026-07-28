@@ -163,7 +163,6 @@ def _reset_test_import_boundaries(next_module: Path) -> None:
     cleaned_path = [entry for entry in cleaned_path if entry != root_text]
     sys.path[:] = [root_text, *cleaned_path]
 
-    preserve_pdp_slides_stub = ROOT / "tests" / "modules" / "pdp" in next_module.parents
     names_to_drop: set[str] = set()
     for name, module in sys.modules.items():
         if name != "modules" and not name.startswith(("modules.", "src.")):
@@ -177,15 +176,12 @@ def _reset_test_import_boundaries(next_module: Path) -> None:
             if shared_vendor == resolved_file or shared_vendor in resolved_file.parents:
                 names_to_drop.add(name)
             continue
-        if _canonical_module_exists(name) and not (
-            preserve_pdp_slides_stub and name == "modules.slides.api"
-        ):
+        if _canonical_module_exists(name):
             names_to_drop.add(name)
 
     for name in sorted(names_to_drop, key=lambda value: value.count("."), reverse=True):
         _drop_imported_module(name)
-    excluded = {"modules.slides.api"} if preserve_pdp_slides_stub else set()
-    _restore_canonical_modules(excluded=excluded)
+    _restore_canonical_modules(excluded=set())
 
 
 def pytest_pycollect_makemodule(module_path: Path, parent: object) -> None:

@@ -12,8 +12,8 @@ from fastapi.testclient import (  # type: ignore  # pylint: disable=wrong-import
 from starlette.responses import HTMLResponse
 
 from modules.auth.config import get_auth_config
-from modules.pdp import api as pdp_api
-from modules.pdp.api import _get_landing_page_content, app
+from modules.hosted_services import api as pdp_api
+from modules.hosted_services.api import _get_landing_page_content, app
 from modules.pdp.data_handling_content import get_data_handling_content
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -247,9 +247,15 @@ def test_homepage_passes_complete_spanish_locale_context(
     assert context["language_order"] == ["en", "it", "fr", "de", "es"]
     assert context["language_names"]["es"] == "Español"
     assert context["language_labels"]["es"] == "Es"
-    assert set(context["language_tooltips"]) == set(pdp_api.TOOLTIP_CONTENT["en"])
-    assert context["language_tooltips"]["slides_editor"] == (
-        "Crea y edita diapositivas ejecutivas directamente en el navegador."
+    assert set(context["language_tooltips"]) == {
+        "clara_plugin",
+        "codex_accountants_group",
+        "codex_consultants_group",
+        "vera",
+    }
+    assert context["language_tooltips"]["clara_plugin"] == (
+        "Organiza materiales del caso, notas y valoraciones revisadas en entregables "
+        "que pueden compartirse con el cliente."
     )
 
 

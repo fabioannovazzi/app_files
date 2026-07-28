@@ -2996,7 +2996,7 @@ def test_store_explicit_correction_rejects_aba_state_change() -> None:
 
 
 def test_main_application_registers_attribute_reporting_bridge_routes() -> None:
-    from modules.pdp.api import create_app
+    from modules.hosted_services.api import create_app
 
     paths = {route.path for route in create_app().routes}
 

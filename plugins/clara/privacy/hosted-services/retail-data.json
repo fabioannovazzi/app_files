@@ -17,6 +17,9 @@
     "modules/attribute-reporting/skills/brand-fit/SKILL.md",
     "modules/attribute-reporting/scripts/server_bridge_client.py",
     "modules/attribute-reporting/scripts/project_pipeline.py",
+    "repository/modules/hosted_services/api.py",
+    "repository/modules/pdp/attribute_reporting_api.py",
+    "repository/modules/pdp/attribute_reporting_bridge.py",
     "repository/modules/pdp/legal_content.py"
   ],
   "trigger": "The user selects the installed current-database Retailer Signals workflow, the downstream Brand Fit workflow, or an explicit development fresh-scrape persistence path.",
@@ -93,9 +96,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-23",
+    "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "a9ecad304300fc1530f5e824b6deeeb507d3434625cb75b998514ce32e35453b"
+    "source_fingerprint": "1afad41eb33ce1530e1359c1e35052d67897c50b95b4680c9e9797651dc9e01d"
   }
 }

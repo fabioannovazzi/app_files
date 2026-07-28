@@ -1,6 +1,10 @@
 # PDP Explicit Declaration Stage Spec
 
-Status: Implemented baseline (as of 2026-03-05).
+Status: Classifier baseline retained; web-review sections archived.
+
+The FastAPI and React review surfaces described in sections 16–17 were retired
+on 2026-07-28. The deterministic classifier and pipeline contract remain
+active.
 
 ## 1. Objective
 Implement a new first-stage deterministic classifier that runs before the current deterministic logic in `export_pdp_attributes`.
@@ -24,7 +28,7 @@ In scope:
 2. Certainty rules loaded from JSON config files (no hard-coded idioms in code).
 3. Rule validation and fast-fail behavior for formally invalid config.
 4. Candidate mining workflow for building rules.
-5. Human review workflow (FastAPI + React) to approve/reject candidates.
+5. Human review of candidate artifacts before rules are published.
 6. Metrics based on explicit-stage positives for precision estimation.
 
 Out of scope:
@@ -269,8 +273,8 @@ No auto-publish.
 4. Draft config runs validator and preview classifier.
 5. Reviewer publishes new config version.
 
-## 16. FastAPI Contract (Review)
-Suggested endpoints:
+## 16. Historical FastAPI Contract (Retired)
+The retired endpoints were:
 1. `GET /review/explicit-rules/candidates`
 2. `POST /review/explicit-rules/candidates/{candidate_id}/approve`
 3. `POST /review/explicit-rules/candidates/{candidate_id}/reject`
@@ -279,18 +283,14 @@ Suggested endpoints:
 6. `POST /review/explicit-rules/config/publish`
 7. `GET /review/explicit-rules/audit`
 
-Route naming note:
-1. Backend route keeps `/review/explicit-rules/*`; navigation label shown to users is `Explicit attributes`.
-
 Minimal request/response expectations:
 1. Approve includes optional edited pattern and reviewer note.
 2. Reject includes mandatory rejection reason.
 3. Validate returns `valid: bool`, `errors[]`, `warnings[]`.
 4. Publish returns config `version`, `updated_at`, and diff summary.
 
-## 17. React Review Surface
-Location:
-1. `src/review-react/` (new page/component)
+## 17. Historical React Review Surface (Retired)
+The former implementation lived under `src/review-react/`.
 
 Must support:
 1. Candidate list with category/attribute/value filters.
@@ -356,8 +356,8 @@ All gates below are blockers. If any gate fails, the module is not acceptable.
 1. Phase 1: Engine + config loader/validator + pipeline ordering + tests.
 2. Phase 2: Persistence source separation + evidence capture + metrics.
 3. Phase 3: Candidate mining CLI.
-4. Phase 4: FastAPI review endpoints.
-5. Phase 5: React review page and publish workflow.
+4. Phase 4: FastAPI review endpoints (retired).
+5. Phase 5: React review page and publish workflow (retired).
 6. Phase 6: Gradual category-by-category rule expansion.
 
 ## 22. Known Limits
@@ -368,7 +368,8 @@ All gates below are blockers. If any gate fails, the module is not acceptable.
 ## 23. Day-0 Operations (No Rules Yet)
 1. Mine candidates from existing PDP text:
    - `python scripts/mine_explicit_declaration_candidates.py --log-level INFO --min-sample-count 3`
-2. Open `/review/explicit-rules/page` (label: `Explicit attributes`) and review `pending` candidates.
+2. Review `pending` candidate artifacts through the current plugin/local
+   workflow; the former `/review/explicit-rules/page` route is retired.
 3. Approve precise candidates, set `reviewed_samples` and `precision_estimate`, then publish config.
 4. Run export so the explicit stage is applied in production flow:
    - `python scripts/export_pdp_attributes.py --retailer ulta --category blush`

@@ -100,42 +100,21 @@ def test_spanish_is_registered_as_a_supported_language() -> None:
 
 
 def test_get_navigation_label_returns_locale_specific_text() -> None:
-    assert (
-        get_navigation_label("it", "/check/page") == "Verifica registrazioni contabili"
-    )
+    assert get_navigation_label("it", "/auth/page") == "Accedi"
 
 
-def test_get_navigation_label_handles_presentations_page() -> None:
-    assert get_navigation_label("de", "/presentations/page") == "Präsentationen"
-
-
-def test_get_navigation_label_uses_updated_attribute_analysis_labels() -> None:
-    assert get_navigation_label("en", "/review/reports/page") == "Retailer signals"
-    assert get_navigation_label("en", "/review/brand-reports/page") == "Brand fit"
-    assert (
-        get_navigation_label("en", "/review/product-hypotheses/page") == "Product hints"
-    )
-    assert (
-        get_navigation_label("it", "/review/product-hypotheses/page")
-        == "Spunti prodotto"
-    )
-    assert (
-        get_navigation_label("fr", "/review/product-hypotheses/page")
-        == "Pistes produit"
-    )
-    assert (
-        get_navigation_label("de", "/review/product-hypotheses/page")
-        == "Produkt-Hinweise"
-    )
+def test_get_navigation_label_omits_retired_web_pages() -> None:
+    assert get_navigation_label("en", "/check/page") is None
+    assert get_navigation_label("en", "/presentations/page") is None
+    assert get_navigation_label("en", "/review/reports/page") is None
 
 
 def test_get_navigation_label_returns_spanish_text() -> None:
-    assert get_navigation_label("es", "/check/page") == "Comprobar asientos"
-    assert get_navigation_label("es", "/presentations/page") == "Presentaciones"
+    assert get_navigation_label("es", "/auth/page") == "Iniciar sesión"
 
 
 def test_get_navigation_label_falls_back_to_english() -> None:
-    assert get_navigation_label("pt", "/check/page") == "Check entries"
+    assert get_navigation_label("pt", "/auth/page") == "Sign in"
 
 
 def test_get_page_copy_returns_nested_translations() -> None:

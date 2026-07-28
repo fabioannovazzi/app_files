@@ -7,7 +7,13 @@ from collections.abc import Awaitable, Callable
 import pytest
 from fastapi.testclient import TestClient
 
-from modules.pdp import api as pdp_api
+from modules.hosted_services import api as pdp_api
+
+
+def test_fastapi_entrypoint_reexports_single_app_instance() -> None:
+    from src.fastapi_app_entry import app as entrypoint_app
+
+    assert entrypoint_app is pdp_api.app
 
 
 def _event_handler(
@@ -18,9 +24,6 @@ def _event_handler(
 
 def test_create_app_startup_starts_voice_retention_cleanup(monkeypatch) -> None:
     calls: list[str] = []
-    monkeypatch.setattr(
-        pdp_api, "_mark_interrupted_background_jobs", lambda: calls.append("jobs")
-    )
     monkeypatch.setattr(
         pdp_api,
         "process_pending_notifications",
@@ -39,7 +42,7 @@ def test_create_app_startup_starts_voice_retention_cleanup(monkeypatch) -> None:
 
     asyncio.run(startup())
 
-    assert calls == ["jobs", "notifications", "sessions", "voice-retention"]
+    assert calls == ["notifications", "sessions", "voice-retention"]
 
 
 def test_create_app_shutdown_stops_voice_retention_cleanup(monkeypatch) -> None:
@@ -95,3 +98,56 @@ def test_create_app_does_not_mount_hosted_whatsapp_routes() -> None:
     assert not any(path.startswith("/whatsapp") for path in route_paths)
     assert "/.well-known/oauth-protected-resource" not in route_paths
     assert "/.well-known/oauth-authorization-server" not in route_paths
+
+
+def test_create_app_mounts_only_current_hosted_route_families() -> None:
+    app = pdp_api.create_app()
+    route_paths = {getattr(route, "path", "") for route in app.routes}
+    retired_prefixes = (
+        "/check",
+        "/hierarchy",
+        "/identify-columns",
+        "/presentations",
+        "/projects",
+        "/review",
+        "/slides",
+    )
+
+    assert len(route_paths) == 49
+    assert not any(path.startswith(retired_prefixes) for path in route_paths if path)
+    assert "/case-notes/interview/{token}" in route_paths
+    assert "/case-notes/api/voice/interviews" in route_paths
+    assert "/case-notes/api/attribute-reporting/evidence-packs" in route_paths
+    assert "/api/change-requests" in route_paths
+    assert "/auth/magic/request" in route_paths
+    assert app.docs_url is None
+    assert app.redoc_url is None
+    assert app.openapi_url is None
+
+
+@pytest.mark.parametrize(
+    ("method", "path"),
+    [
+        ("get", "/check/page"),
+        ("get", "/hierarchy/page"),
+        ("post", "/identify-columns/messages"),
+        ("get", "/presentations/page"),
+        ("get", "/projects/page"),
+        ("get", "/review/health"),
+        ("get", "/review/deterministic-policy/page"),
+        ("get", "/review/explicit-rules/page"),
+        ("get", "/review/issues/page"),
+        ("get", "/review/product-hypotheses/page"),
+        ("get", "/slides/page"),
+        ("get", "/docs"),
+        ("get", "/redoc"),
+        ("get", "/openapi.json"),
+    ],
+)
+def test_retired_fastapi_surfaces_return_json_404(method: str, path: str) -> None:
+    client = TestClient(pdp_api.create_app())
+
+    response = getattr(client, method)(path)
+
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Not Found"}

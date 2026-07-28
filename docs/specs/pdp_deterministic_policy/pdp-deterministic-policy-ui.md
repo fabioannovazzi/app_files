@@ -1,6 +1,10 @@
 # PDP Deterministic Policy UI Spec
 
-Status: Draft proposal (as of 2026-03-11).
+Status: Archived draft proposal (as of 2026-03-11).
+
+The FastAPI governance APIs and browser review UI described here were retired
+on 2026-07-28. This document is historical design context, not a current route
+or implementation contract.
 
 ## 1. Objective
 Define a review UI for deterministic trusted policy that is consistent with the existing explicit/certain review workflow.
@@ -293,8 +297,8 @@ The version history panel should show:
 Optional future enhancement:
 1. rollback or re-publish from a prior version
 
-## 12. API Shape
-Recommended sibling API surface to the existing explicit rules API:
+## 12. Historical API Shape (Retired)
+The proposal described these now-retired routes:
 1. `GET /review/taxonomy/config`
 2. `POST /review/taxonomy/config/validate`
 3. `POST /review/taxonomy/config/publish`
