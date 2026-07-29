@@ -6,6 +6,8 @@ import urllib.request
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from modules.utilities import config as utilities_config
+
 __all__ = [
     "DEFAULT_REALTIME_ENDPOINT",
     "DEFAULT_REALTIME_MODEL",
@@ -16,8 +18,9 @@ __all__ = [
     "create_realtime_call_with_metadata",
 ]
 
-DEFAULT_REALTIME_MODEL = "gpt-realtime-2.1"
-DEFAULT_REALTIME_TRANSCRIPTION_MODEL = "gpt-realtime-whisper"
+_NAMING_PARAMS = utilities_config.get_naming_params()
+DEFAULT_REALTIME_MODEL = _NAMING_PARAMS["gptRealtime"]
+DEFAULT_REALTIME_TRANSCRIPTION_MODEL = _NAMING_PARAMS["gptLiveTranscribe"]
 DEFAULT_REALTIME_ENDPOINT = "https://api.openai.com/v1/realtime/calls"
 
 

@@ -45,6 +45,7 @@ from modules.openai_realtime import (
     OpenAIRealtimeError,
     create_realtime_call_with_metadata,
 )
+from modules.utilities import config as utilities_config
 from modules.utilities.cache import get_cache_dir
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 
@@ -62,7 +63,9 @@ __all__ = [
 
 LOGGER = logging.getLogger(__name__)
 
-DEFAULT_UPLOAD_TRANSCRIPTION_MODEL = "gpt-4o-transcribe"
+DEFAULT_UPLOAD_TRANSCRIPTION_MODEL = utilities_config.get_naming_params()[
+    "gptTranscribe"
+]
 DEFAULT_LIVE_TRANSCRIPTION_DELAY = "low"
 POST_TRANSCRIPTION_PROCESSING_NOTE = (
     "After transcription, local Clara/Codex must assign speaker attribution from "
@@ -2128,7 +2131,7 @@ def _create_single_audio_transcription(
         include_case_context=include_case_context,
     )
     if language in SUPPORTED_TRANSCRIPTION_LANGUAGES:
-        fields["language"] = language
+        fields["languages[]"] = language
     body, boundary = _multipart_form_data(
         fields,
         files={
@@ -2931,7 +2934,7 @@ def _build_realtime_transcription_session_config(
 ) -> dict[str, Any]:
     transcription: dict[str, Any] = {
         "model": DEFAULT_REALTIME_TRANSCRIPTION_MODEL,
-        "language": language,
+        "languages": [language],
         "delay": DEFAULT_LIVE_TRANSCRIPTION_DELAY,
     }
     normalized_context = _normalize_case_context(case_context)
