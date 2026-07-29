@@ -2,8 +2,8 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "vera",
   "displayName": "Vera",
-  "version": "0.1.59",
-  "description": "Assistente AI per commercialisti. Vera prepara Plan vendite da Actual e assunzioni confermate, oltre a istruttorie, controlli e carte di lavoro rivedibili.",
+  "version": "0.1.60",
+  "description": "Assistente AI x commercialisti. Vera aiuta il commercialista a seguire il lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie, ordina e ritrova i documenti del cliente, controlla i dati contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie e report. Aiuta anche a riesaminare casi di concordato preventivo e a preparare pratiche INPS e Registro Imprese/DIRE. Prepara richieste mirate per Deep Research su temi legali, fiscali e normativi e verifica le risposte rispetto alle fonti citate. Mostra le fonti, i punti da chiarire e le decisioni da prendere. Il giudizio professionale resta al commercialista.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
