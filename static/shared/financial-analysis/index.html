@@ -278,15 +278,6 @@
       </div>
     </section>
 
-    <section id="install">
-      <div class="install-band">
-        <div>
-          <h2 data-i18n="install.title">Continua con Vera.</h2>
-          <p data-i18n="install.copy">Installa Vera o torna alla pagina principale per vedere l’intero percorso di lavoro.</p>
-        </div>
-        <a class="button" id="install-link" href="../vera/index.html?lang=it" data-i18n="install.button">Vera</a>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -352,7 +343,6 @@
         "related.kicker": "Nel percorso Vera", "related.title": "Collega l’analisi ai controlli e al documento finale.",
         "related.copy": "Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.",
         "related.bank": "Riconcilia banca e contabilità", "related.report": "Genera il report",
-        "install.title": "Continua con Vera.", "install.copy": "Installa Vera o torna alla pagina principale per vedere l’intero percorso di lavoro.", "install.button": "Vera",
         "footer.scope": "Analisi finanziaria e due diligence", "footer.vera": "Tutte le funzioni", "footer.data": "Trattamento dati"
       },
       en: {
@@ -406,7 +396,6 @@
         "related.kicker": "In the Vera workflow", "related.title": "Connect the analysis to controls and the final document.",
         "related.copy": "Use an accounting reconciliation when relationships between sources must be closed first. Then carry confirmed tables into the report.",
         "related.bank": "Reconcile bank and ledger", "related.report": "Build the report",
-        "install.title": "Continue with Vera.", "install.copy": "Install Vera or return to the main page to see the complete workflow.", "install.button": "Vera",
         "footer.scope": "Financial analysis and due diligence", "footer.vera": "All capabilities", "footer.data": "Data handling"
       },
       fr: {
@@ -460,7 +449,6 @@
         "related.kicker": "Dans le parcours Vera", "related.title": "Reliez l’analyse aux contrôles et au document final.",
         "related.copy": "Utilisez un rapprochement comptable si les relations entre sources doivent d’abord être closes. Portez ensuite les tableaux confirmés dans le rapport.",
         "related.bank": "Rapprocher banque et comptabilité", "related.report": "Générer le rapport",
-        "install.title": "Continuez avec Vera.", "install.copy": "Installez Vera ou revenez à la page principale pour voir le parcours complet.", "install.button": "Vera",
         "footer.scope": "Analyse financière et due diligence", "footer.vera": "Toutes les fonctions", "footer.data": "Traitement des données"
       },
       de: {
@@ -514,7 +502,6 @@
         "related.kicker": "Im Vera-Ablauf", "related.title": "Analyse mit Kontrollen und Abschlussdokument verbinden.",
         "related.copy": "Nutzen Sie eine Buchhaltungsabstimmung, wenn Beziehungen zwischen Quellen zuerst geschlossen werden müssen. Übernehmen Sie dann bestätigte Tabellen in den Bericht.",
         "related.bank": "Bank und Buchhaltung abstimmen", "related.report": "Bericht erstellen",
-        "install.title": "Mit Vera fortfahren.", "install.copy": "Installieren Sie Vera oder kehren Sie zur Hauptseite zurück, um den vollständigen Ablauf zu sehen.", "install.button": "Vera",
         "footer.scope": "Finanzanalyse und Due Diligence", "footer.vera": "Alle Funktionen", "footer.data": "Datenverarbeitung"
       },
       es: {
@@ -568,7 +555,6 @@
         "related.kicker": "En el recorrido de Vera", "related.title": "Conecte el análisis con los controles y el documento final.",
         "related.copy": "Utilice una conciliación contable cuando primero deban cerrarse las relaciones entre fuentes. Lleve después las tablas confirmadas al informe.",
         "related.bank": "Conciliar banco y contabilidad", "related.report": "Generar el informe",
-        "install.title": "Continúe con Vera.", "install.copy": "Instale Vera o vuelva a la página principal para ver el recorrido completo.", "install.button": "Vera",
         "footer.scope": "Análisis financiero y due diligence", "footer.vera": "Todas las funciones", "footer.data": "Tratamiento de datos"
       }
     };
@@ -608,7 +594,6 @@
       document.getElementById("prompt-example").textContent = strings.prompt;
       document.getElementById("home-link").href = `/?lang=${lang}`;
       document.getElementById("vera-link").href = localizedHref("../vera/index.html", lang);
-      document.getElementById("install-link").href = localizedHref("../vera/index.html", lang);
       document.getElementById("footer-vera-link").href = localizedHref("../vera/index.html", lang);
       document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
       document.querySelectorAll("[data-localized-link]").forEach((link) => {
