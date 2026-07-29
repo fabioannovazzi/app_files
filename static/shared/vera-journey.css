@@ -667,25 +667,6 @@ summary {
   font-size: 0.9rem;
 }
 
-.install-band {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 40px;
-  align-items: center;
-  padding: 48px 0;
-  border-top: 2px solid var(--vj-ink);
-}
-
-.install-band h2 {
-  max-width: 18ch;
-}
-
-.install-band p {
-  max-width: 58ch;
-  margin-top: 12px;
-  color: var(--vj-muted);
-}
-
 footer {
   border-top: 1px solid var(--vj-line);
 }
@@ -743,7 +724,6 @@ footer {
   .proof-layout,
   .next-workflow,
   .prompt-layout,
-  .install-band,
   .country-transition {
     grid-template-columns: 1fr;
   }

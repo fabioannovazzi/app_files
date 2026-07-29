@@ -772,6 +772,24 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     )
 
 
+@pytest.mark.parametrize(
+    "page_path",
+    (
+        SHARED_ROOT / "financial-analysis" / "index.html",
+        SHARED_ROOT / "new-client" / "index.html",
+    ),
+)
+def test_vera_function_page_does_not_publish_continue_with_vera_band(
+    page_path: Path,
+) -> None:
+    page = page_path.read_text(encoding="utf-8")
+
+    assert 'id="install"' not in page
+    assert 'class="install-band"' not in page
+    assert 'data-i18n="install.title"' not in page
+    assert 'href="#install"' not in page
+
+
 def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
