@@ -74,6 +74,8 @@ _CAPEX_CLASSIFICATIONS = {
     "unclassified",
 }
 _AMOUNT_STATUSES = {"exact", "range", "unquantified"}
+_MAX_DECIMAL_DIGITS = 38
+_MAX_DECIMAL_SCALE = 6
 
 
 class FDDContractError(ValueError):
@@ -164,9 +166,21 @@ def _iso_date(value: object, *, label: str) -> str:
 
 def _decimal(value: object, *, label: str) -> Decimal:
     try:
-        return parse_canonical_decimal(value, label=label)
+        amount = parse_canonical_decimal(value, label=label)
     except ValueError as exc:
         raise FDDContractError(str(exc)) from exc
+    parts = amount.as_tuple()
+    if len(parts.digits) > _MAX_DECIMAL_DIGITS:
+        raise FDDContractError(
+            f"{label} must contain at most {_MAX_DECIMAL_DIGITS} digits"
+        )
+    if not isinstance(parts.exponent, int):
+        raise FDDContractError(f"{label} must be finite")
+    if max(-parts.exponent, 0) > _MAX_DECIMAL_SCALE:
+        raise FDDContractError(
+            f"{label} must contain at most {_MAX_DECIMAL_SCALE} decimal places"
+        )
+    return amount
 
 
 def _non_negative_decimal(value: object, *, label: str) -> Decimal:
@@ -568,6 +582,11 @@ def _normalize_net_debt(
             raise FDDContractError(
                 f"{label}.as_of_date does not match inputs.as_of_date"
             )
+        included = _boolean(row["included"], label=f"{label}.included")
+        if included and classification == "excluded":
+            raise FDDContractError(
+                f"{label}.included must be false when classification is excluded"
+            )
         items.append(
             {
                 "item_id": _identifier(row["item_id"], label=f"{label}.item_id"),
@@ -581,7 +600,7 @@ def _normalize_net_debt(
                 "amount": decimal_text(
                     _non_negative_decimal(row["amount"], label=f"{label}.amount")
                 ),
-                "included": _boolean(row["included"], label=f"{label}.included"),
+                "included": included,
                 "decision_ref": _closed_decision_ref(
                     row["decision_ref"],
                     label=f"{label}.decision_ref",
@@ -752,9 +771,24 @@ def _normalize_working_capital(
     target = _mapping(inputs["selected_target"], label="inputs.selected_target")
     _exact_fields(
         target,
-        required={"amount", "basis", "decision_ref", "evidence_refs"},
+        required={
+            "amount",
+            "basis",
+            "decision_ref",
+            "economic_effect_id",
+            "evidence_refs",
+        },
         label="inputs.selected_target",
     )
+    target_effect_id = _identifier(
+        target["economic_effect_id"],
+        label="inputs.selected_target.economic_effect_id",
+    )
+    if target_effect_id in {item["economic_effect_id"] for item in adjustments}:
+        raise FDDContractError(
+            "inputs.selected_target.economic_effect_id duplicates a "
+            "normalization adjustment economic effect"
+        )
     return {
         "monthly_balances": balances,
         "normalization_adjustments": adjustments,
@@ -770,6 +804,7 @@ def _normalize_working_capital(
                 available_refs=available_refs,
                 decision_refs=decision_refs,
             ),
+            "economic_effect_id": target_effect_id,
             "basis": _text(target["basis"], label="inputs.selected_target.basis"),
         },
         "average_scale": average_scale,
@@ -816,6 +851,11 @@ def _normalize_capex(
         )
         if classification not in _CAPEX_CLASSIFICATIONS:
             raise FDDContractError(f"{label}.classification is unsupported")
+        included = _boolean(row["included"], label=f"{label}.included")
+        if included and classification == "excluded":
+            raise FDDContractError(
+                f"{label}.included must be false when classification is excluded"
+            )
         items.append(
             {
                 "capex_id": _identifier(row["capex_id"], label=f"{label}.capex_id"),
@@ -834,7 +874,7 @@ def _normalize_capex(
                 "amount": decimal_text(
                     _non_negative_decimal(row["amount"], label=f"{label}.amount")
                 ),
-                "included": _boolean(row["included"], label=f"{label}.included"),
+                "included": included,
                 "decision_ref": _closed_decision_ref(
                     row["decision_ref"],
                     label=f"{label}.decision_ref",
@@ -879,7 +919,7 @@ def _validate_fdd_calculation_result_structure(
 
     content = _sealed_content(
         value,
-        schema_version="vera.fdd_calculation_result.v1",
+        schema_version="vera.fdd_calculation_result.v2",
         required={
             "calculation_policy",
             "case_ref",
@@ -921,9 +961,12 @@ def _validate_fdd_calculation_result_structure(
     if content["report_ready"] is not False:
         raise FDDContractError("FDD calculation result cannot claim report readiness")
     case_ref = _identifier(content["case_ref"], label="case_ref")
+    case_sha256 = _sha256(content["case_sha256"], label="case_sha256")
     result_id = _identifier(content["result_id"], label="result_id")
-    if result_id != f"{case_ref}.{pack_id}.result":
-        raise FDDContractError("result_id does not close to case_ref and pack_id")
+    if result_id != f"{case_ref}.{pack_id}.{case_sha256}.result":
+        raise FDDContractError(
+            "result_id does not close to case_ref, pack_id, and case_sha256"
+        )
 
     metrics = []
     for index, raw_metric in enumerate(_sequence(content["metrics"], label="metrics")):
@@ -1019,10 +1062,10 @@ def _validate_fdd_calculation_result_structure(
     ):
         raise FDDContractError("FDD results must retain the source tie-out boundary")
     normalized = {
-        "schema_version": "vera.fdd_calculation_result.v1",
+        "schema_version": "vera.fdd_calculation_result.v2",
         "result_id": result_id,
         "case_ref": case_ref,
-        "case_sha256": _sha256(content["case_sha256"], label="case_sha256"),
+        "case_sha256": case_sha256,
         "pack_id": pack_id,
         "recipe_id": FDD_PACK_RECIPES[pack_id],
         "engine_version": FDD_ENGINE_VERSION,
@@ -1068,7 +1111,7 @@ def validate_fdd_metric_receipt(value: object) -> dict[str, Any]:
 
     content = _sealed_content(
         value,
-        schema_version="vera.fdd_metric_receipt.v1",
+        schema_version="vera.fdd_metric_receipt.v2",
         required={
             "case_ref",
             "case_sha256",
@@ -1122,7 +1165,7 @@ def validate_fdd_metric_receipt(value: object) -> dict[str, Any]:
         )
     recomputed_metric = matching[0]
     normalized = {
-        "schema_version": "vera.fdd_metric_receipt.v1",
+        "schema_version": "vera.fdd_metric_receipt.v2",
         "receipt_id": receipt_id,
         "result_ref": result_ref,
         "result_sha256": _sha256(content["result_sha256"], label="result_sha256"),
@@ -1194,7 +1237,7 @@ def build_fdd_metric_receipt(
     return validate_fdd_metric_receipt(
         _seal(
             {
-                "schema_version": "vera.fdd_metric_receipt.v1",
+                "schema_version": "vera.fdd_metric_receipt.v2",
                 "receipt_id": (f"{validated['result_id']}.{normalized_metric_id}"),
                 "result_ref": validated["result_id"],
                 "result_sha256": validated["content_sha256"],
@@ -1845,7 +1888,7 @@ def validate_fdd_case(
 
     content = _sealed_content(
         value,
-        schema_version="vera.fdd_preparation_case.v1",
+        schema_version="vera.fdd_preparation_case.v2",
         required={
             "case_id",
             "contract_refs",
@@ -1936,7 +1979,7 @@ def validate_fdd_case(
         unit=unit,
     )
     normalized = {
-        "schema_version": "vera.fdd_preparation_case.v1",
+        "schema_version": "vera.fdd_preparation_case.v2",
         "case_id": case_id,
         "scope_id": scope_id,
         "entity_refs": entity_refs,
@@ -2041,7 +2084,7 @@ def build_fdd_case(
     return validate_fdd_case(
         _seal(
             {
-                "schema_version": "vera.fdd_preparation_case.v1",
+                "schema_version": "vera.fdd_preparation_case.v2",
                 "case_id": normalized_case_id,
                 "scope_id": normalized_scope_id,
                 "entity_refs": normalized_entity_refs,
@@ -2093,7 +2136,16 @@ def _execute_quality_of_earnings(inputs: Mapping[str, Any]) -> dict[str, Any]:
             _metric("included_adjustments", included, included_effects),
             _metric("adjusted_ebitda", adjusted, included_effects),
         ],
-        "line_items": [dict(row) for row in inputs["adjustments"]],
+        "line_items": [
+            {
+                "line_type": "reported_ebitda_base",
+                **dict(inputs["reported_ebitda"]),
+            },
+            *[
+                {"line_type": "adjustment", **dict(row)}
+                for row in inputs["adjustments"]
+            ],
+        ],
         "checks": [
             {
                 "check_id": "adjusted_ebitda_identity",
@@ -2210,6 +2262,8 @@ def _execute_working_capital(inputs: Mapping[str, Any]) -> dict[str, Any]:
         effect for period in average_periods for effect in adjustment_effects[period]
     )
     closing_effects = sorted(adjustment_effects[inputs["closing_period"]])
+    target_effect = inputs["selected_target"]["economic_effect_id"]
+    closing_vs_target_effects = sorted([*closing_effects, target_effect])
     return {
         "metrics": [
             _metric(
@@ -2217,15 +2271,25 @@ def _execute_working_capital(inputs: Mapping[str, Any]) -> dict[str, Any]:
                 candidate_average,
                 average_effects,
             ),
-            _metric("selected_target_nwc", selected_target),
+            _metric("selected_target_nwc", selected_target, [target_effect]),
             _metric("closing_normalized_nwc", closing, closing_effects),
             _metric(
                 "closing_vs_target_adjustment",
                 closing_adjustment,
-                closing_effects,
+                closing_vs_target_effects,
             ),
         ],
-        "line_items": lines,
+        "line_items": [
+            *[{"line_type": "monthly_balance", **line} for line in lines],
+            *[
+                {"line_type": "normalization_adjustment", **dict(row)}
+                for row in inputs["normalization_adjustments"]
+            ],
+            {
+                "line_type": "selected_target",
+                **dict(inputs["selected_target"]),
+            },
+        ],
         "checks": [
             {
                 "check_id": "closing_vs_target_identity",
@@ -2374,6 +2438,11 @@ def _execute_deal_bridges(inputs: Mapping[str, Any]) -> dict[str, Any]:
                 {**dict(row), "bridge": "ebitda_to_cash"}
                 for row in inputs["cash_bridge_items"]
             ],
+            {
+                "line_type": "enterprise_value_base",
+                "bridge": "enterprise_to_equity",
+                **dict(inputs["enterprise_value"]),
+            },
             *[
                 {**dict(row), "bridge": "enterprise_to_equity"}
                 for row in inputs["equity_bridge_items"]
@@ -2416,8 +2485,10 @@ def execute_fdd_case(
     calculated = executors[case["pack_id"]](case["inputs"])
     calculation_policy = dict(calculated.pop("calculation_policy", {}))
     result = {
-        "schema_version": "vera.fdd_calculation_result.v1",
-        "result_id": f"{case['case_id']}.{case['pack_id']}.result",
+        "schema_version": "vera.fdd_calculation_result.v2",
+        "result_id": (
+            f"{case['case_id']}.{case['pack_id']}." f"{case['content_sha256']}.result"
+        ),
         "case_ref": case["case_id"],
         "case_sha256": case["content_sha256"],
         "pack_id": case["pack_id"],
@@ -2677,7 +2748,7 @@ def validate_contingent_liability_register(value: object) -> dict[str, Any]:
 
     content = _sealed_content(
         value,
-        schema_version="vera.contingent_liability_register.v1",
+        schema_version="vera.contingent_liability_register.v2",
         required={
             "case",
             "case_ref",
@@ -2715,7 +2786,7 @@ def validate_contingent_liability_register(value: object) -> dict[str, Any]:
         decision_refs=decision_refs,
     )
     normalized = {
-        "schema_version": "vera.contingent_liability_register.v1",
+        "schema_version": "vera.contingent_liability_register.v2",
         "register_id": _identifier(content["register_id"], label="register_id"),
         "case": case,
         "case_ref": case["case_id"],
@@ -2759,7 +2830,7 @@ def build_contingent_liability_register(
     return validate_contingent_liability_register(
         _seal(
             {
-                "schema_version": "vera.contingent_liability_register.v1",
+                "schema_version": "vera.contingent_liability_register.v2",
                 "register_id": _identifier(register_id, label="register_id"),
                 "case": validated_case,
                 "case_ref": validated_case["case_id"],
@@ -2913,7 +2984,7 @@ def validate_financial_issue_register(value: object) -> dict[str, Any]:
 
     content = _sealed_content(
         value,
-        schema_version="vera.financial_issue_register.v1",
+        schema_version="vera.financial_issue_register.v2",
         required={
             "case",
             "case_ref",
@@ -2995,7 +3066,7 @@ def validate_financial_issue_register(value: object) -> dict[str, Any]:
         metric_receipts=metric_index,
     )
     normalized = {
-        "schema_version": "vera.financial_issue_register.v1",
+        "schema_version": "vera.financial_issue_register.v2",
         "register_id": _identifier(content["register_id"], label="register_id"),
         "case": case,
         "case_ref": case_ref,
@@ -3045,7 +3116,7 @@ def build_financial_issue_register(
     return validate_financial_issue_register(
         _seal(
             {
-                "schema_version": "vera.financial_issue_register.v1",
+                "schema_version": "vera.financial_issue_register.v2",
                 "register_id": _identifier(register_id, label="register_id"),
                 "case": validated_case,
                 "case_ref": validated_case["case_id"],

@@ -19,7 +19,7 @@ import re
 import stat
 from collections.abc import Iterator, Mapping, Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date
 from decimal import Decimal, Inexact, InvalidOperation, Rounded, localcontext
 from pathlib import Path, PurePosixPath
@@ -30,6 +30,7 @@ __all__ = [
     "AUDIT_ENVELOPE_SCHEMA_V2",
     "ContractValidationError",
     "ExactDecimalPolicy",
+    "PinnedDirectory",
     "artifact_receipt",
     "canonical_json_bytes",
     "canonical_json_sha256",
@@ -41,6 +42,7 @@ __all__ = [
     "file_sha256",
     "is_on_increment",
     "parse_decimal",
+    "pinned_directory",
     "named_root_artifact_receipt",
     "read_exact_csv",
     "reference_set",
@@ -99,6 +101,319 @@ STATUS_FIELDS = frozenset(
 
 class ContractValidationError(ValueError):
     """Raised when a mechanical preparation contract is invalid."""
+
+
+@dataclass(frozen=True)
+class _TrackedFile:
+    identity: tuple[int, ...]
+    byte_count: int
+    sha256: str
+
+
+def _file_object_identity(
+    value: os.stat_result | tuple[int, ...],
+) -> tuple[int, int, int]:
+    if isinstance(value, os.stat_result):
+        return value.st_dev, value.st_ino, stat.S_IFMT(value.st_mode)
+    return value[0], value[1], stat.S_IFMT(value[2])
+
+
+@dataclass
+class PinnedDirectory:
+    """Create and verify files through one pinned, no-follow directory handle."""
+
+    path: Path
+    descriptor: int
+    _directory_identity: tuple[int, int, int]
+    _tracked: dict[str, _TrackedFile] = field(default_factory=dict)
+
+    @staticmethod
+    def _file_name(value: str) -> str:
+        name = str(value)
+        if not name or Path(name).name != name or name in {".", ".."}:
+            raise ContractValidationError(
+                "pinned-directory file names must be one plain path component"
+            )
+        return name
+
+    def verify_identity(self) -> None:
+        """Fail if the lexical output path no longer identifies this directory."""
+
+        try:
+            current = self.path.lstat()
+            pinned = os.fstat(self.descriptor)
+        except OSError as exc:
+            raise ContractValidationError(
+                f"output directory identity changed: {self.path}"
+            ) from exc
+        current_identity = (
+            current.st_dev,
+            current.st_ino,
+            stat.S_IFMT(current.st_mode),
+        )
+        pinned_identity = (
+            pinned.st_dev,
+            pinned.st_ino,
+            stat.S_IFMT(pinned.st_mode),
+        )
+        if (
+            current_identity != self._directory_identity
+            or pinned_identity != self._directory_identity
+        ):
+            raise ContractValidationError(
+                f"output directory identity changed: {self.path}"
+            )
+
+    def names(self) -> list[str]:
+        """Return the pinned directory's current entry names."""
+
+        self.verify_identity()
+        try:
+            names = sorted(os.listdir(self.descriptor))
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not list pinned output directory: {self.path}"
+            ) from exc
+        self.verify_identity()
+        return names
+
+    def _snapshot_name(self, name: str) -> _TrackedFile:
+        normalized_name = self._file_name(name)
+        self.verify_identity()
+        flags = os.O_RDONLY | os.O_NOFOLLOW
+        if hasattr(os, "O_CLOEXEC"):
+            flags |= os.O_CLOEXEC
+        descriptor: int | None = None
+        try:
+            descriptor = os.open(
+                normalized_name,
+                flags,
+                dir_fd=self.descriptor,
+            )
+            before = os.fstat(descriptor)
+            if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
+                raise ContractValidationError(
+                    f"output must be one non-linked regular file: {normalized_name}"
+                )
+            digest = hashlib.sha256()
+            byte_count = 0
+            while True:
+                chunk = os.read(descriptor, 1024 * 1024)
+                if not chunk:
+                    break
+                byte_count += len(chunk)
+                digest.update(chunk)
+            after = os.fstat(descriptor)
+            if (
+                _snapshot_identity(before) != _snapshot_identity(after)
+                or byte_count != after.st_size
+            ):
+                raise ContractValidationError(
+                    f"output changed while it was read: {normalized_name}"
+                )
+            current = os.stat(
+                normalized_name,
+                dir_fd=self.descriptor,
+                follow_symlinks=False,
+            )
+            if _snapshot_identity(after) != _snapshot_identity(current):
+                raise ContractValidationError(
+                    f"output path changed while it was read: {normalized_name}"
+                )
+            snapshot = _TrackedFile(
+                identity=_snapshot_identity(after),
+                byte_count=byte_count,
+                sha256=digest.hexdigest(),
+            )
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not safely open output file: {normalized_name}"
+            ) from exc
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+        self.verify_identity()
+        return snapshot
+
+    def snapshot_file(self, name: str, *, track: bool = False) -> tuple[int, str]:
+        """Hash one stable no-follow output, optionally tracking it for cleanup."""
+
+        normalized_name = self._file_name(name)
+        snapshot = self._snapshot_name(normalized_name)
+        if track:
+            previous = self._tracked.get(normalized_name)
+            if previous is not None and previous != snapshot:
+                raise ContractValidationError(
+                    f"tracked output changed: {normalized_name}"
+                )
+            self._tracked[normalized_name] = snapshot
+        return snapshot.byte_count, snapshot.sha256
+
+    def write_json_exclusive(self, name: str, value: Mapping[str, Any]) -> None:
+        """Create one JSON file atomically without following or replacing targets."""
+
+        normalized_name = self._file_name(name)
+        _validate_structured_value(value)
+        payload = (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        self.verify_identity()
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        if hasattr(os, "O_CLOEXEC"):
+            flags |= os.O_CLOEXEC
+        descriptor: int | None = None
+        created_object_identity: tuple[int, int, int] | None = None
+        try:
+            descriptor = os.open(
+                normalized_name,
+                flags,
+                0o600,
+                dir_fd=self.descriptor,
+            )
+            created = os.fstat(descriptor)
+            if not stat.S_ISREG(created.st_mode) or created.st_nlink != 1:
+                raise ContractValidationError(
+                    f"new output is not one regular file: {normalized_name}"
+                )
+            created_object_identity = _file_object_identity(created)
+            self._tracked[normalized_name] = _TrackedFile(
+                identity=_snapshot_identity(created),
+                byte_count=0,
+                sha256=hashlib.sha256(b"").hexdigest(),
+            )
+            offset = 0
+            while offset < len(payload):
+                written = os.write(descriptor, payload[offset:])
+                if written <= 0:
+                    raise OSError(f"short write for output {normalized_name}")
+                offset += written
+            os.fsync(descriptor)
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not exclusively create output file: {normalized_name}"
+            ) from exc
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+        snapshot = self._snapshot_name(normalized_name)
+        if (
+            created_object_identity is None
+            or _file_object_identity(snapshot.identity) != created_object_identity
+        ):
+            raise ContractValidationError(
+                f"new output path identity changed during creation: {normalized_name}"
+            )
+        expected = _TrackedFile(
+            identity=snapshot.identity,
+            byte_count=len(payload),
+            sha256=hashlib.sha256(payload).hexdigest(),
+        )
+        if snapshot != expected:
+            raise ContractValidationError(
+                f"new output bytes changed during creation: {normalized_name}"
+            )
+        self._tracked[normalized_name] = snapshot
+        self.verify_identity()
+
+    def verify_tracked(self) -> None:
+        """Verify every created/adopted output still has its exact recorded bytes."""
+
+        for name, expected in sorted(self._tracked.items()):
+            if self._snapshot_name(name) != expected:
+                raise ContractValidationError(f"tracked output changed: {name}")
+        self.verify_identity()
+
+    def cleanup_tracked(self) -> None:
+        """Remove only unchanged files that this boundary explicitly tracked."""
+
+        failures: list[str] = []
+        for name, expected in reversed(list(self._tracked.items())):
+            try:
+                current = os.stat(
+                    name,
+                    dir_fd=self.descriptor,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                continue
+            except OSError:
+                failures.append(name)
+                continue
+            if (
+                _file_object_identity(current)
+                != _file_object_identity(expected.identity)
+                or not stat.S_ISREG(current.st_mode)
+                or current.st_nlink != 1
+            ):
+                failures.append(name)
+                continue
+            try:
+                os.unlink(name, dir_fd=self.descriptor)
+            except OSError:
+                failures.append(name)
+        self._tracked.clear()
+        if failures:
+            raise ContractValidationError(
+                "could not safely remove changed partial outputs: "
+                f"{sorted(failures)}"
+            )
+
+
+@contextmanager
+def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
+    """Pin one existing output directory for no-follow descriptor operations."""
+
+    directory_path = Path(path).absolute()
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    descriptor: int | None = None
+    try:
+        descriptor = os.open(directory_path, flags)
+        current = directory_path.lstat()
+        pinned = os.fstat(descriptor)
+    except OSError as exc:
+        if descriptor is not None:
+            os.close(descriptor)
+        raise ContractValidationError(
+            f"could not pin output directory: {directory_path}"
+        ) from exc
+    if descriptor is None:
+        raise ContractValidationError(
+            f"could not pin output directory: {directory_path}"
+        )
+    identity = (
+        pinned.st_dev,
+        pinned.st_ino,
+        stat.S_IFMT(pinned.st_mode),
+    )
+    current_identity = (
+        current.st_dev,
+        current.st_ino,
+        stat.S_IFMT(current.st_mode),
+    )
+    if current_identity != identity or not stat.S_ISDIR(pinned.st_mode):
+        os.close(descriptor)
+        raise ContractValidationError(
+            f"output directory identity changed: {directory_path}"
+        )
+    boundary = PinnedDirectory(
+        path=directory_path,
+        descriptor=descriptor,
+        _directory_identity=identity,
+    )
+    try:
+        boundary.verify_identity()
+        yield boundary
+    finally:
+        os.close(descriptor)
 
 
 @dataclass(frozen=True)

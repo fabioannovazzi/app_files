@@ -9,6 +9,7 @@
     "mcp"
   ],
   "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
     "vendor/modules/vera_financial_analysis"
   ],
   "runtime_profiles": [
@@ -57,13 +58,17 @@
     },
     {
       "id": "input-output-path-separation",
-      "control": "The FDD runner requires a fresh regular output directory, rejects symlink inputs and output directories, and prevents fixed output paths from colliding with the execution bundle or source-evidence files."
+      "control": "The FDD runner requires a fresh regular output directory, pins its directory identity, and creates each fixed output through no-follow exclusive descriptor operations so an existing link or file cannot be overwritten."
+    },
+    {
+      "id": "execution-receipt-freshness",
+      "control": "The FDD runner snapshots the case and declared FDD recipe source set immediately before recipe invocation, verifies them and every source artifact again before completion, binds those snapshots in the execution receipt, and removes only inode-verified partial outputs after a failed run."
     }
   ],
   "review": {
     "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a550a5f4104fb73ef58f37fd0562b051ac2f02bfe748fcd0d3755b4d7b4d82c5"
+    "source_fingerprint": "fb75f671a6fd4dbb0cfebfbd487387f8d190b978c49909bc9e526614566f8a80"
   }
 }

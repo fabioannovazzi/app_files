@@ -94,6 +94,11 @@ The five due-diligence recipes calculate only over reviewed prepared inputs
 bound to the full case contract stack. They do not classify accounting items,
 create adjustments, select a target, or make a deal decision. Reporting periods
 and as-of dates come from the case; never assume fixed years such as 2023–2025.
+FDD monetary inputs and calculated outputs use canonical Decimal text with at
+most 38 digits and six decimal places; out-of-domain results fail closed rather
+than being rounded. A normalized-working-capital selected target must carry its own
+reviewed `economic_effect_id` so target-only bridge effects remain explicit and
+traceable.
 
 ## Boundary between checks and judgment
 
@@ -223,9 +228,9 @@ failure.
 
 When the work requires them, use the module's validated builders for:
 
-- `vera.contingent_liability_register.v1`, which binds reviewed contingent
+- `vera.contingent_liability_register.v2`, which binds reviewed contingent
   items to a validated FDD case, evidence, decisions, and review;
-- `vera.financial_issue_register.v1`, which binds reviewed financial issues to
+- `vera.financial_issue_register.v2`, which binds reviewed financial issues to
   the same case context, sealed metric receipts, evidence, owners, open
   questions, and deal implications.
 
