@@ -48,6 +48,10 @@ LEGACY_PLUGIN_MEKKO_PATH = (
     / "mekko_pipeline.py"
 )
 
+SERVER_ONLY_PLUGIN_CHARTING_API_PATH = (
+    ROOT / "plugins" / "_shared" / "vendor" / "modules" / "charting" / "api.py"
+)
+
 LEGACY_PLUGIN_PIPELINE_PATHS = (
     LEGACY_PLUGIN_MEKKO_PATH,
     ROOT
@@ -280,6 +284,10 @@ def test_plotting_plugins_do_not_import_deprecated_sales_app() -> None:
                 offenders.append(str(path.relative_to(ROOT)))
 
     assert offenders == []
+
+
+def test_portable_plotting_runtime_omits_server_only_charting_api() -> None:
+    assert not SERVER_ONLY_PLUGIN_CHARTING_API_PATH.exists()
 
 
 def test_non_plugin_mekko_pipeline_removed_but_plugin_legacy_copy_remains() -> None:

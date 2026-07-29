@@ -44,14 +44,14 @@ The marketplace source path is:
 
 The local smoke-test archive is:
 
-`plugin_packages/clara/clara-cowork-plugin.zip`
+`plugin_packages/clara/clara-claude-plugin.zip`
 
 ## Release candidate
 
-- **Version:** 0.1.120
-- **Files:** 832
-- **Bytes:** 4,333,916
-- **SHA-256:** `3d0bada75999ab2c985a2da3791512e1d3e81d888500beb8164e4f51a4eb044d`
+- **Version:** 0.1.121
+- **Files:** 821
+- **Bytes:** 4,255,288
+- **SHA-256:** `6ae738e4265c311320a18ae6af59f8e9340dc9f81fa654f49703dc4592ba6740`
 - **ZIP integrity:** clean
 
 The generated directory and exact archive above pass the repository's package

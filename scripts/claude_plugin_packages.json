@@ -14,7 +14,7 @@
       "plugin": "vera",
       "source_target": "vera",
       "output_directory": "plugin_packages/vera/claude/vera",
-      "output_zip": "plugin_packages/vera/vera-cowork-plugin.zip",
+      "output_zip": "plugin_packages/vera/vera-claude-plugin.zip",
       "category": "productivity",
       "tags": [
         "accounting",
@@ -27,7 +27,7 @@
       "plugin": "clara",
       "source_target": "clara",
       "output_directory": "plugin_packages/clara/claude/clara",
-      "output_zip": "plugin_packages/clara/clara-cowork-plugin.zip",
+      "output_zip": "plugin_packages/clara/clara-claude-plugin.zip",
       "category": "productivity",
       "tags": [
         "consulting",
