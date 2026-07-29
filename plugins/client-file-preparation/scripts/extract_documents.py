@@ -23,6 +23,7 @@ from scan_folder import FileRecord
 
 __all__ = [
     "DocumentEvidence",
+    "clear_extraction_checkpoint",
     "extract_documents",
     "write_documents_jsonl",
     "write_extraction_inventory_csv",
@@ -52,6 +53,8 @@ MAX_ARCHIVE_COMPRESSION_RATIO = 200
 MAX_EMAIL_BYTES = 30 * 1024 * 1024
 MAX_TEXT_BYTES = 20 * 1024 * 1024
 MAX_PDF_BYTES = 100 * 1024 * 1024
+EXTRACTION_CHECKPOINT_NAME = "extraction_checkpoint.json"
+EXTRACTION_CHECKPOINT_SCHEMA_VERSION = 1
 
 DIAGNOSTIC_PREFIX_COPY = {
     "percorso sorgente non locale o non normalizzato": {
@@ -358,6 +361,164 @@ class DocumentEvidence:
             "detected_fields_json": self.detected_fields_json,
             "notes": " | ".join(self.notes),
         }
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _checkpoint_settings(
+    *,
+    enable_ocr: bool,
+    lang: str,
+    max_pages: int,
+    language: str,
+) -> dict[str, object]:
+    return {
+        "enable_ocr": enable_ocr,
+        "ocr_language": lang,
+        "max_pages": max_pages,
+        "working_language": language,
+    }
+
+
+def _write_checkpoint(path: Path, payload: dict[str, object]) -> None:
+    """Atomically persist extraction progress inside the owner-only run folder."""
+
+    temporary_path = path.with_suffix(".tmp")
+    if path.is_symlink() or temporary_path.is_symlink():
+        raise ValueError("Il checkpoint di estrazione non può essere un link simbolico")
+    temporary_path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    temporary_path.replace(path)
+
+
+def _load_checkpoint(
+    path: Path,
+    *,
+    settings: dict[str, object],
+) -> dict[str, object]:
+    if not path.is_file() or path.is_symlink():
+        return {
+            "schema_version": EXTRACTION_CHECKPOINT_SCHEMA_VERSION,
+            "settings": settings,
+            "documents": {},
+        }
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        LOGGER.warning(
+            "Checkpoint di estrazione non leggibile; i documenti saranno riestratti"
+        )
+        return {
+            "schema_version": EXTRACTION_CHECKPOINT_SCHEMA_VERSION,
+            "settings": settings,
+            "documents": {},
+        }
+    if (
+        not isinstance(payload, dict)
+        or payload.get("schema_version") != EXTRACTION_CHECKPOINT_SCHEMA_VERSION
+        or payload.get("settings") != settings
+        or not isinstance(payload.get("documents"), dict)
+    ):
+        return {
+            "schema_version": EXTRACTION_CHECKPOINT_SCHEMA_VERSION,
+            "settings": settings,
+            "documents": {},
+        }
+    return payload
+
+
+def _document_evidence_from_json(payload: object) -> DocumentEvidence | None:
+    if not isinstance(payload, Mapping):
+        return None
+    try:
+        notes_value = payload["notes"]
+        if not isinstance(notes_value, list):
+            return None
+        return DocumentEvidence(
+            relative_path=str(payload["relative_path"]),
+            file_name=str(payload["file_name"]),
+            extension=str(payload["extension"]),
+            category=str(payload["category"]),
+            extraction_method=str(payload["extraction_method"]),
+            readable=bool(payload["readable"]),
+            needs_ocr=bool(payload["needs_ocr"]),
+            ocr_available=bool(payload["ocr_available"]),
+            page_count=int(payload["page_count"]),
+            char_count=int(payload["char_count"]),
+            text_path=str(payload["text_path"]),
+            confidence=str(payload["confidence"]),
+            detected_fields_json=str(payload["detected_fields_json"]),
+            notes=tuple(str(note) for note in notes_value),
+        )
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
+def _cached_evidence(
+    record: FileRecord,
+    checkpoint: dict[str, object],
+    output_dir: Path,
+) -> DocumentEvidence | None:
+    documents = checkpoint["documents"]
+    if not isinstance(documents, dict):
+        return None
+    entry = documents.get(record.relative_path)
+    if not isinstance(entry, Mapping) or entry.get("source_sha256") != record.sha256:
+        return None
+    evidence = _document_evidence_from_json(entry.get("evidence"))
+    if (
+        evidence is None
+        or evidence.relative_path != record.relative_path
+        or evidence.file_name != record.file_name
+        or evidence.extension != record.extension
+        or evidence.category != record.category
+    ):
+        return None
+    if evidence.needs_ocr and not evidence.readable:
+        return None
+    if not evidence.text_path:
+        return evidence
+    text_path = output_dir / evidence.text_path
+    try:
+        text_path.resolve(strict=True).relative_to(output_dir.resolve())
+    except (FileNotFoundError, OSError, ValueError):
+        return None
+    if text_path.is_symlink() or entry.get("text_sha256") != _sha256_file(text_path):
+        return None
+    return evidence
+
+
+def _checkpoint_entry(
+    record: FileRecord,
+    evidence: DocumentEvidence,
+    output_dir: Path,
+) -> dict[str, object]:
+    text_sha256 = ""
+    if evidence.text_path:
+        text_path = output_dir / evidence.text_path
+        text_sha256 = _sha256_file(text_path)
+    return {
+        "source_sha256": record.sha256,
+        "evidence": evidence.as_json(),
+        "text_sha256": text_sha256,
+    }
+
+
+def clear_extraction_checkpoint(output_dir: Path | str) -> None:
+    """Remove the partial-run checkpoint after the complete package is sealed."""
+
+    checkpoint_path = Path(output_dir) / EXTRACTION_CHECKPOINT_NAME
+    if checkpoint_path.is_symlink():
+        raise ValueError("Il checkpoint di estrazione non può essere un link simbolico")
+    checkpoint_path.unlink(missing_ok=True)
 
 
 def _safe_text_name(relative_path: str) -> str:
@@ -1118,18 +1279,38 @@ def extract_documents(
     output_path.mkdir(parents=True, exist_ok=True)
     evidence: list[DocumentEvidence] = []
     ocr_session = _PaddleOcrSession(lang)
+    checkpoint_path = output_path / EXTRACTION_CHECKPOINT_NAME
+    settings = _checkpoint_settings(
+        enable_ocr=enable_ocr,
+        lang=lang,
+        max_pages=max_pages,
+        language=language,
+    )
+    checkpoint = _load_checkpoint(checkpoint_path, settings=settings)
     for record in records:
-        evidence.append(
-            _extract_one(
-                record,
-                root_path,
-                output_path,
-                enable_ocr=enable_ocr,
-                ocr_session=ocr_session,
-                max_pages=max_pages,
-                language=language,
-            )
+        cached = _cached_evidence(record, checkpoint, output_path)
+        if cached is not None:
+            evidence.append(cached)
+            continue
+        extracted = _extract_one(
+            record,
+            root_path,
+            output_path,
+            enable_ocr=enable_ocr,
+            ocr_session=ocr_session,
+            max_pages=max_pages,
+            language=language,
         )
+        evidence.append(extracted)
+        documents = checkpoint["documents"]
+        if not isinstance(documents, dict):
+            raise TypeError("Checkpoint di estrazione non valido")
+        documents[record.relative_path] = _checkpoint_entry(
+            record,
+            extracted,
+            output_path,
+        )
+        _write_checkpoint(checkpoint_path, checkpoint)
     write_documents_jsonl(evidence, output_path / "documents.jsonl")
     write_extraction_inventory_csv(evidence, output_path / "document_extraction.csv")
     write_extraction_report(

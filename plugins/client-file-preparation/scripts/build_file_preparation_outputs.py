@@ -2,9 +2,10 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
+import json
 import logging
 import re
-import secrets
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -44,6 +45,7 @@ from detect_duplicates import (  # noqa: E402
 )
 from extract_documents import (  # noqa: E402
     DocumentEvidence,
+    clear_extraction_checkpoint,
     extract_documents,
 )
 from parse_fatturapa_xml import (  # noqa: E402
@@ -63,6 +65,7 @@ from parse_fiscal_forms import (  # noqa: E402
     write_fiscal_fields_summary,
 )
 from review_session import (  # noqa: E402
+    RunIntakeResult,
     write_review_session_artifacts,
     write_run_intake,
 )
@@ -872,8 +875,8 @@ def _protected_output_roots() -> tuple[Path, ...]:
     return tuple(dict.fromkeys(roots))
 
 
-def _validated_fresh_output_dir(value: Path) -> Path:
-    """Resolve a new/empty output directory without traversing symlinks."""
+def _validated_output_dir(value: Path) -> tuple[Path, bool]:
+    """Resolve a new or resumable output directory without traversing symlinks."""
 
     requested = value.expanduser().absolute()
     for component in (requested, *requested.parents):
@@ -890,12 +893,100 @@ def _validated_fresh_output_dir(value: Path) -> Path:
     if requested.exists():
         if not requested.is_dir():
             raise NotADirectoryError(f"Cartella output non valida: {requested}")
-        if next(requested.iterdir(), None) is not None:
+        entries = list(requested.iterdir())
+        if entries and (
+            not (requested / "run_intake.json").is_file()
+            or (requested / "final_artifacts.json").exists()
+        ):
             raise FileExistsError(
-                "La cartella output deve essere nuova o vuota; spostare il run "
-                f"precedente prima di continuare: {requested}"
+                "La cartella output deve essere nuova o vuota, oppure contenere "
+                f"un run parziale compatibile: {requested}"
             )
-    return resolved
+        return resolved, bool(entries)
+    return resolved, False
+
+
+def _source_snapshot(records: Sequence[FileRecord]) -> list[dict[str, object]]:
+    return [
+        {
+            "relative_path": record.relative_path,
+            "size_bytes": record.size_bytes,
+            "sha256": record.sha256,
+            "entry_type": ("regular_file" if record.sha256 else "symlink_not_followed"),
+        }
+        for record in records
+    ]
+
+
+def _load_resumable_run_intake(
+    output_dir: Path,
+    root: Path,
+    records: Sequence[FileRecord],
+    *,
+    target_year: int | None,
+    enable_ocr: bool,
+    ocr_lang: str,
+    jurisdiction: str,
+    language: str,
+) -> RunIntakeResult:
+    """Load a partial run only when its scope and source hashes still match."""
+
+    intake_path = output_dir / "run_intake.json"
+    try:
+        payload = json.loads(intake_path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise FileExistsError(
+            f"Il run parziale non ha un run_intake.json leggibile: {output_dir}"
+        ) from exc
+    assumptions = payload.get("assumptions")
+    source_snapshot = payload.get("source_snapshot")
+    expected_assumptions = {
+        "target_year": target_year,
+        "ocr_requested": enable_ocr,
+        "ocr_language": ocr_lang,
+        "working_language": language,
+        "jurisdiction": jurisdiction,
+        "file_count": len(records),
+    }
+    observed_assumptions = (
+        {key: assumptions.get(key) for key in expected_assumptions}
+        if isinstance(assumptions, dict)
+        else {}
+    )
+    observed_sources = (
+        source_snapshot.get("files") if isinstance(source_snapshot, dict) else None
+    )
+    normalized_sources = (
+        [
+            {
+                "relative_path": item.get("relative_path"),
+                "size_bytes": item.get("size_bytes"),
+                "sha256": item.get("sha256"),
+                "entry_type": item.get("entry_type"),
+            }
+            for item in observed_sources
+            if isinstance(item, dict)
+        ]
+        if isinstance(observed_sources, list)
+        else None
+    )
+    if (
+        payload.get("plugin") != "client-file-preparation"
+        or payload.get("workflow") != "client-file-preparation"
+        or payload.get("status") != "ready_for_extraction"
+        or payload.get("input_paths") != [root.as_posix()]
+        or payload.get("output_dir") != output_dir.as_posix()
+        or payload.get("language") != language
+        or payload.get("jurisdiction") != jurisdiction
+        or observed_assumptions != expected_assumptions
+        or normalized_sources != _source_snapshot(records)
+        or not isinstance(payload.get("run_id"), str)
+    ):
+        raise FileExistsError(
+            "Il run parziale non corrisponde più alla cartella sorgente o alle "
+            f"impostazioni richieste; usare una nuova cartella output: {output_dir}"
+        )
+    return RunIntakeResult(run_id=payload["run_id"], path=intake_path)
 
 
 def _load_template(name: str) -> Template:
@@ -1752,12 +1843,13 @@ def build_file_preparation_outputs(
     if max_pages < 1:
         raise ValueError("max_pages deve essere almeno 1")
     effective_ocr_lang = ocr_lang or OCR_LANGUAGE_BY_LANGUAGE[language]
+    stable_run_id = hashlib.sha256(root.as_posix().encode("utf-8")).hexdigest()[:16]
     requested_out_dir = (
         Path(output_dir)
         if output_dir
-        else root.parent / "output" / f"client-file-preparation-{secrets.token_hex(8)}"
+        else root.parent / "output" / f"client-file-preparation-{stable_run_id}"
     )
-    out_dir = _validated_fresh_output_dir(requested_out_dir)
+    out_dir, resume_partial_run = _validated_output_dir(requested_out_dir)
     records = scan_folder(
         root,
         target_year=target_year,
@@ -1767,28 +1859,40 @@ def build_file_preparation_outputs(
     )
     if not records:
         raise ValueError(f"La cartella cliente non contiene file da analizzare: {root}")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_dir.chmod(0o700)
     client_name = _infer_client_name(root, target_year)
     require_ocr = input_requires_ocr(root)
+    if resume_partial_run:
+        run_intake = _load_resumable_run_intake(
+            out_dir,
+            root,
+            records,
+            target_year=target_year,
+            enable_ocr=enable_ocr,
+            ocr_lang=effective_ocr_lang,
+            jurisdiction=jurisdiction,
+            language=language,
+        )
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dir.chmod(0o700)
     missing_dependency_count, _ = _write_environment_report(
         out_dir / "00_environment_check.md",
         require_ocr=require_ocr and enable_ocr,
         language=language,
     )
-    run_intake = write_run_intake(
-        out_dir,
-        root,
-        target_year=target_year,
-        client_name=client_name,
-        records=records,
-        missing_dependency_count=missing_dependency_count,
-        require_ocr=require_ocr,
-        enable_ocr=enable_ocr,
-        ocr_lang=effective_ocr_lang,
-        jurisdiction=jurisdiction,
-        language=language,
-    )
+    if not resume_partial_run:
+        run_intake = write_run_intake(
+            out_dir,
+            root,
+            target_year=target_year,
+            client_name=client_name,
+            records=records,
+            missing_dependency_count=missing_dependency_count,
+            require_ocr=require_ocr,
+            enable_ocr=enable_ocr,
+            ocr_lang=effective_ocr_lang,
+            jurisdiction=jurisdiction,
+            language=language,
+        )
     write_index_markdown(
         records,
         out_dir / "00_fascicolo_index.md",
@@ -1932,6 +2036,7 @@ def build_file_preparation_outputs(
         language=language,
     )
     verify_source_snapshot(records, root)
+    clear_extraction_checkpoint(out_dir / "extracted")
     write_review_session_artifacts(
         out_dir,
         root,
@@ -1978,7 +2083,8 @@ def _parse_args() -> argparse.Namespace:
         default=None,
         help=(
             "Cartella output. Default: cartella sorella "
-            "output/client-file-preparation-<id casuale>"
+            "output/client-file-preparation-<id stabile>; un run parziale compatibile "
+            "riprende automaticamente l'estrazione"
         ),
     )
     parser.add_argument("--no-ocr", action="store_true", help="Disabilita OCR locale.")
