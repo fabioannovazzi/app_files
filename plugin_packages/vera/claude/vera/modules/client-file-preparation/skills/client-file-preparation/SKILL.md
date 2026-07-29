@@ -231,6 +231,14 @@ python scripts/build_file_preparation_outputs.py <cartella-cliente> \
 Use `--no-ocr` only when the user explicitly wants a text-only pass after
 declining managed OCR setup.
 
+If execution stops after producing partial files, rerun the same command with
+the same `--out` path. The script validates the original source hashes and run
+settings, then reuses completed document extractions whose text integrity still
+matches. It rejects changed sources, incompatible settings, unrelated
+directories, and completed runs instead of overwriting them. Without `--out`,
+the default output ID is stable for the source folder so the same safe resume
+path is found automatically.
+
 `review_payload.json` includes bounded excerpts from every readable document in
 the selected folder, fiscal-field evidence snippets, and previews of the
 generated studio brief, memo, and client email by default. These may contain

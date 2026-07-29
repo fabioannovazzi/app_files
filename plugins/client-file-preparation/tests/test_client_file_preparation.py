@@ -740,6 +740,107 @@ def test_build_rejects_nonempty_output_without_mutating_prior_run(
     assert list(output_dir.iterdir()) == [stale_path]
 
 
+def test_build_resumes_partial_run_without_reextracting_completed_documents(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    customer = tmp_path / "resume-client"
+    customer.mkdir()
+    (customer / "a.txt").write_text(CU_TEXT, encoding="utf-8")
+    (customer / "b.txt").write_text(F24_TEXT, encoding="utf-8")
+    output_dir = tmp_path / "resume-output"
+    original_extract_one = extraction_module._extract_one
+
+    def interrupt_after_first_document(
+        record: object,
+        *args: object,
+        **kwargs: object,
+    ) -> object:
+        if getattr(record, "relative_path") == "b.txt":
+            raise TimeoutError("simulated execution deadline")
+        return original_extract_one(record, *args, **kwargs)
+
+    monkeypatch.setattr(
+        extraction_module,
+        "_extract_one",
+        interrupt_after_first_document,
+    )
+    with pytest.raises(TimeoutError, match="execution deadline"):
+        build_file_preparation_outputs(
+            customer,
+            output_dir=output_dir,
+            enable_ocr=False,
+        )
+
+    retried_paths: list[str] = []
+
+    def record_retry(
+        record: object,
+        *args: object,
+        **kwargs: object,
+    ) -> object:
+        retried_paths.append(str(getattr(record, "relative_path")))
+        return original_extract_one(record, *args, **kwargs)
+
+    monkeypatch.setattr(extraction_module, "_extract_one", record_retry)
+    result = build_file_preparation_outputs(
+        customer,
+        output_dir=output_dir,
+        enable_ocr=False,
+    )
+
+    assert retried_paths == ["b.txt"]
+    assert result.extracted_count == 2
+    assert not (
+        output_dir / "extracted" / extraction_module.EXTRACTION_CHECKPOINT_NAME
+    ).exists()
+
+
+def test_build_rejects_partial_run_after_source_change(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    customer = tmp_path / "changed-resume-client"
+    customer.mkdir()
+    first_source = customer / "a.txt"
+    first_source.write_text(CU_TEXT, encoding="utf-8")
+    (customer / "b.txt").write_text(F24_TEXT, encoding="utf-8")
+    output_dir = tmp_path / "changed-resume-output"
+    original_extract_one = extraction_module._extract_one
+
+    def interrupt_after_first_document(
+        record: object,
+        *args: object,
+        **kwargs: object,
+    ) -> object:
+        if getattr(record, "relative_path") == "b.txt":
+            raise TimeoutError("simulated execution deadline")
+        return original_extract_one(record, *args, **kwargs)
+
+    monkeypatch.setattr(
+        extraction_module,
+        "_extract_one",
+        interrupt_after_first_document,
+    )
+    with pytest.raises(TimeoutError, match="execution deadline"):
+        build_file_preparation_outputs(
+            customer,
+            output_dir=output_dir,
+            enable_ocr=False,
+        )
+    environment_path = output_dir / "00_environment_check.md"
+    environment_bytes = environment_path.read_bytes()
+    first_source.write_text(f"{CU_TEXT} Modificato.", encoding="utf-8")
+
+    with pytest.raises(FileExistsError, match="non corrisponde più"):
+        build_file_preparation_outputs(
+            customer,
+            output_dir=output_dir,
+            enable_ocr=False,
+        )
+    assert environment_path.read_bytes() == environment_bytes
+
+
 def test_build_rejects_symlinked_output_without_touching_target(
     tmp_path: Path,
 ) -> None:

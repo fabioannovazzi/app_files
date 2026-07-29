@@ -2,7 +2,7 @@
   "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
   "name": "vera",
   "displayName": "Vera",
-  "version": "0.1.56",
+  "version": "0.1.57",
   "description": "Assistente AI per commercialisti. Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",

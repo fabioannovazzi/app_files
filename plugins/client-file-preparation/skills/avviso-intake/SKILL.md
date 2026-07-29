@@ -46,6 +46,10 @@ The avviso intake is included in the full workflow:
 python ../../scripts/build_file_preparation_outputs.py <cartella-cliente> --year <anno>
 ```
 
+If the command is interrupted, rerun it with the same arguments and output
+folder. The workflow resumes integrity-checked extraction checkpoints for
+unchanged source files and rejects stale or incompatible partial runs.
+
 Review:
 
 - `avviso/avviso_intake_memo.md`
