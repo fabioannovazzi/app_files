@@ -1,0 +1,2401 @@
+#!/usr/bin/env python3
+"""Mechanical primitives for Vera Plan preparation contracts.
+
+The functions in this module are deterministic because their correctness is
+mechanically verifiable and auditability requires byte-for-byte reproduction.
+They validate syntax, exact Decimal handling, local file receipts, references,
+and status consistency. They deliberately do not select sources, interpret
+business meaning, approve reviewed decisions, choose tolerances, define
+commercial formulas, or decide whether a Plan is commercially valid.
+"""
+
+from __future__ import annotations
+
+import csv
+import hashlib
+import json
+import os
+import re
+import stat
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
+from dataclasses import dataclass, field
+from datetime import date
+from decimal import Decimal, Inexact, InvalidOperation, Rounded, localcontext
+from pathlib import Path, PurePosixPath
+from typing import Any
+
+__all__ = [
+    "AUDIT_ENVELOPE_SCHEMA",
+    "AUDIT_ENVELOPE_SCHEMA_V2",
+    "ContractValidationError",
+    "ExactDecimalPolicy",
+    "PinnedDirectory",
+    "artifact_receipt",
+    "canonical_json_bytes",
+    "canonical_json_sha256",
+    "decimal_text",
+    "difference_within_tolerance",
+    "exact_decimal_context",
+    "file_snapshot",
+    "file_snapshot_beneath",
+    "file_sha256",
+    "is_on_increment",
+    "parse_decimal",
+    "pinned_directory",
+    "named_root_artifact_receipt",
+    "read_exact_csv",
+    "reference_set",
+    "resolve_local_file",
+    "reviewed_decision_receipt",
+    "strict_json_load",
+    "strict_json_load_bytes",
+    "strict_json_snapshot",
+    "strict_json_snapshot_beneath",
+    "validate_audit_envelope",
+    "validate_audit_envelope_v2",
+    "validate_declared_source_receipt",
+    "write_json",
+]
+
+AUDIT_ENVELOPE_SCHEMA = "vera.preparation_audit_envelope.v1"
+AUDIT_ENVELOPE_SCHEMA_V2 = "vera.preparation_audit_envelope.v2"
+AUDIT_ARTIFACT_ROOT_IDS = frozenset({"pilot", "plugin"})
+AUTHORIZED_LOCAL_SOURCE_ROLE = "authorized_local_source"
+SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
+DECIMAL_PATTERN = re.compile(r"^-?(?:0|[1-9][0-9]*)(?:\.[0-9]+)?$")
+ID_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
+
+TOP_LEVEL_FIELDS = frozenset(
+    {
+        "schema_version",
+        "case",
+        "adapter",
+        "local_artifacts",
+        "remote_sources",
+        "reviewed_decisions",
+        "execution",
+        "numeric_policy",
+        "reconciliation",
+        "lineage",
+        "statuses",
+        "report_ready",
+        "limitations",
+    }
+)
+REFERENCE_FIELDS = frozenset(
+    {"artifact_refs", "source_refs", "decision_refs", "lineage_refs"}
+)
+STATUS_FIELDS = frozenset(
+    {
+        "validation",
+        "preparation",
+        "reconciliation",
+        "semantic",
+        "source",
+        "downstream",
+        "publication",
+    }
+)
+
+
+class ContractValidationError(ValueError):
+    """Raised when a mechanical preparation contract is invalid."""
+
+
+@dataclass(frozen=True)
+class _TrackedFile:
+    identity: tuple[int, ...]
+    byte_count: int
+    sha256: str
+
+
+def _file_object_identity(
+    value: os.stat_result | tuple[int, ...],
+) -> tuple[int, int, int]:
+    if isinstance(value, os.stat_result):
+        return value.st_dev, value.st_ino, stat.S_IFMT(value.st_mode)
+    return value[0], value[1], stat.S_IFMT(value[2])
+
+
+@dataclass
+class PinnedDirectory:
+    """Create and verify files through one pinned, no-follow directory handle."""
+
+    path: Path
+    descriptor: int
+    _directory_identity: tuple[int, int, int]
+    _tracked: dict[str, _TrackedFile] = field(default_factory=dict)
+
+    @staticmethod
+    def _file_name(value: str) -> str:
+        name = str(value)
+        if not name or Path(name).name != name or name in {".", ".."}:
+            raise ContractValidationError(
+                "pinned-directory file names must be one plain path component"
+            )
+        return name
+
+    def verify_identity(self) -> None:
+        """Fail if the lexical output path no longer identifies this directory."""
+
+        try:
+            current = self.path.lstat()
+            pinned = os.fstat(self.descriptor)
+        except OSError as exc:
+            raise ContractValidationError(
+                f"output directory identity changed: {self.path}"
+            ) from exc
+        current_identity = (
+            current.st_dev,
+            current.st_ino,
+            stat.S_IFMT(current.st_mode),
+        )
+        pinned_identity = (
+            pinned.st_dev,
+            pinned.st_ino,
+            stat.S_IFMT(pinned.st_mode),
+        )
+        if (
+            current_identity != self._directory_identity
+            or pinned_identity != self._directory_identity
+        ):
+            raise ContractValidationError(
+                f"output directory identity changed: {self.path}"
+            )
+
+    def names(self) -> list[str]:
+        """Return the pinned directory's current entry names."""
+
+        self.verify_identity()
+        try:
+            names = sorted(os.listdir(self.descriptor))
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not list pinned output directory: {self.path}"
+            ) from exc
+        self.verify_identity()
+        return names
+
+    def _snapshot_name(self, name: str) -> _TrackedFile:
+        normalized_name = self._file_name(name)
+        self.verify_identity()
+        flags = os.O_RDONLY | os.O_NOFOLLOW
+        if hasattr(os, "O_CLOEXEC"):
+            flags |= os.O_CLOEXEC
+        descriptor: int | None = None
+        try:
+            descriptor = os.open(
+                normalized_name,
+                flags,
+                dir_fd=self.descriptor,
+            )
+            before = os.fstat(descriptor)
+            if not stat.S_ISREG(before.st_mode) or before.st_nlink != 1:
+                raise ContractValidationError(
+                    f"output must be one non-linked regular file: {normalized_name}"
+                )
+            digest = hashlib.sha256()
+            byte_count = 0
+            while True:
+                chunk = os.read(descriptor, 1024 * 1024)
+                if not chunk:
+                    break
+                byte_count += len(chunk)
+                digest.update(chunk)
+            after = os.fstat(descriptor)
+            if (
+                _snapshot_identity(before) != _snapshot_identity(after)
+                or byte_count != after.st_size
+            ):
+                raise ContractValidationError(
+                    f"output changed while it was read: {normalized_name}"
+                )
+            current = os.stat(
+                normalized_name,
+                dir_fd=self.descriptor,
+                follow_symlinks=False,
+            )
+            if _snapshot_identity(after) != _snapshot_identity(current):
+                raise ContractValidationError(
+                    f"output path changed while it was read: {normalized_name}"
+                )
+            snapshot = _TrackedFile(
+                identity=_snapshot_identity(after),
+                byte_count=byte_count,
+                sha256=digest.hexdigest(),
+            )
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not safely open output file: {normalized_name}"
+            ) from exc
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+        self.verify_identity()
+        return snapshot
+
+    def snapshot_file(self, name: str, *, track: bool = False) -> tuple[int, str]:
+        """Hash one stable no-follow output, optionally tracking it for cleanup."""
+
+        normalized_name = self._file_name(name)
+        snapshot = self._snapshot_name(normalized_name)
+        if track:
+            previous = self._tracked.get(normalized_name)
+            if previous is not None and previous != snapshot:
+                raise ContractValidationError(
+                    f"tracked output changed: {normalized_name}"
+                )
+            self._tracked[normalized_name] = snapshot
+        return snapshot.byte_count, snapshot.sha256
+
+    def write_json_exclusive(self, name: str, value: Mapping[str, Any]) -> None:
+        """Create one JSON file atomically without following or replacing targets."""
+
+        normalized_name = self._file_name(name)
+        _validate_structured_value(value)
+        payload = (
+            json.dumps(
+                value,
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+                allow_nan=False,
+            )
+            + "\n"
+        ).encode("utf-8")
+        self.verify_identity()
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
+        if hasattr(os, "O_CLOEXEC"):
+            flags |= os.O_CLOEXEC
+        descriptor: int | None = None
+        created_object_identity: tuple[int, int, int] | None = None
+        try:
+            descriptor = os.open(
+                normalized_name,
+                flags,
+                0o600,
+                dir_fd=self.descriptor,
+            )
+            created = os.fstat(descriptor)
+            if not stat.S_ISREG(created.st_mode) or created.st_nlink != 1:
+                raise ContractValidationError(
+                    f"new output is not one regular file: {normalized_name}"
+                )
+            created_object_identity = _file_object_identity(created)
+            self._tracked[normalized_name] = _TrackedFile(
+                identity=_snapshot_identity(created),
+                byte_count=0,
+                sha256=hashlib.sha256(b"").hexdigest(),
+            )
+            offset = 0
+            while offset < len(payload):
+                written = os.write(descriptor, payload[offset:])
+                if written <= 0:
+                    raise OSError(f"short write for output {normalized_name}")
+                offset += written
+            os.fsync(descriptor)
+        except OSError as exc:
+            raise ContractValidationError(
+                f"could not exclusively create output file: {normalized_name}"
+            ) from exc
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+        snapshot = self._snapshot_name(normalized_name)
+        if (
+            created_object_identity is None
+            or _file_object_identity(snapshot.identity) != created_object_identity
+        ):
+            raise ContractValidationError(
+                f"new output path identity changed during creation: {normalized_name}"
+            )
+        expected = _TrackedFile(
+            identity=snapshot.identity,
+            byte_count=len(payload),
+            sha256=hashlib.sha256(payload).hexdigest(),
+        )
+        if snapshot != expected:
+            raise ContractValidationError(
+                f"new output bytes changed during creation: {normalized_name}"
+            )
+        self._tracked[normalized_name] = snapshot
+        self.verify_identity()
+
+    def verify_tracked(self) -> None:
+        """Verify every created/adopted output still has its exact recorded bytes."""
+
+        for name, expected in sorted(self._tracked.items()):
+            if self._snapshot_name(name) != expected:
+                raise ContractValidationError(f"tracked output changed: {name}")
+        self.verify_identity()
+
+    def cleanup_tracked(self) -> None:
+        """Remove only unchanged files that this boundary explicitly tracked."""
+
+        failures: list[str] = []
+        for name, expected in reversed(list(self._tracked.items())):
+            try:
+                current = os.stat(
+                    name,
+                    dir_fd=self.descriptor,
+                    follow_symlinks=False,
+                )
+            except FileNotFoundError:
+                continue
+            except OSError:
+                failures.append(name)
+                continue
+            if (
+                _file_object_identity(current)
+                != _file_object_identity(expected.identity)
+                or not stat.S_ISREG(current.st_mode)
+                or current.st_nlink != 1
+            ):
+                failures.append(name)
+                continue
+            try:
+                os.unlink(name, dir_fd=self.descriptor)
+            except OSError:
+                failures.append(name)
+        self._tracked.clear()
+        if failures:
+            raise ContractValidationError(
+                "could not safely remove changed partial outputs: "
+                f"{sorted(failures)}"
+            )
+
+
+@contextmanager
+def pinned_directory(path: Path) -> Iterator[PinnedDirectory]:
+    """Pin one existing output directory for no-follow descriptor operations."""
+
+    directory_path = Path(path).absolute()
+    flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    descriptor: int | None = None
+    try:
+        descriptor = os.open(directory_path, flags)
+        current = directory_path.lstat()
+        pinned = os.fstat(descriptor)
+    except OSError as exc:
+        if descriptor is not None:
+            os.close(descriptor)
+        raise ContractValidationError(
+            f"could not pin output directory: {directory_path}"
+        ) from exc
+    if descriptor is None:
+        raise ContractValidationError(
+            f"could not pin output directory: {directory_path}"
+        )
+    identity = (
+        pinned.st_dev,
+        pinned.st_ino,
+        stat.S_IFMT(pinned.st_mode),
+    )
+    current_identity = (
+        current.st_dev,
+        current.st_ino,
+        stat.S_IFMT(current.st_mode),
+    )
+    if current_identity != identity or not stat.S_ISDIR(pinned.st_mode):
+        os.close(descriptor)
+        raise ContractValidationError(
+            f"output directory identity changed: {directory_path}"
+        )
+    boundary = PinnedDirectory(
+        path=directory_path,
+        descriptor=descriptor,
+        _directory_identity=identity,
+    )
+    try:
+        boundary.verify_identity()
+        yield boundary
+    finally:
+        os.close(descriptor)
+
+
+@dataclass(frozen=True)
+class ExactDecimalPolicy:
+    """Apply optional case-owned bounds during exact Decimal handling."""
+
+    max_digits: int | None = None
+    max_scale: int | None = None
+    calculation_precision: int | None = None
+
+    def __post_init__(self) -> None:
+        if self.max_digits is not None and self.max_digits <= 0:
+            raise ValueError("max_digits must be positive")
+        if self.max_scale is not None and self.max_scale < 0:
+            raise ValueError("max_scale must not be negative")
+        if self.calculation_precision is not None and self.calculation_precision <= 0:
+            raise ValueError("calculation_precision must be positive")
+        if (
+            self.max_digits is not None
+            and self.calculation_precision is not None
+            and self.calculation_precision < self.max_digits
+        ):
+            raise ValueError(
+                "calculation_precision must be at least as large as max_digits"
+            )
+
+
+DEFAULT_DECIMAL_POLICY = ExactDecimalPolicy()
+
+
+def _mapping(value: Any, *, label: str) -> Mapping[str, Any]:
+    if not isinstance(value, Mapping):
+        raise ContractValidationError(f"{label} must be an object")
+    return value
+
+
+def _sequence(value: Any, *, label: str) -> list[Any]:
+    if not isinstance(value, Sequence) or isinstance(value, (str, bytes, bytearray)):
+        raise ContractValidationError(f"{label} must be a list")
+    return list(value)
+
+
+def _text(value: Any, *, label: str, allow_empty: bool = False) -> str:
+    if not isinstance(value, str):
+        raise ContractValidationError(f"{label} must be text")
+    if value != value.strip():
+        raise ContractValidationError(f"{label} must not contain edge whitespace")
+    if not value and not allow_empty:
+        raise ContractValidationError(f"{label} must be non-empty text")
+    return value
+
+
+def _identifier(value: Any, *, label: str) -> str:
+    result = _text(value, label=label)
+    if result != value or ID_PATTERN.fullmatch(result) is None:
+        raise ContractValidationError(f"{label} must be a canonical identifier")
+    return result
+
+
+def _sha256(value: Any, *, label: str) -> str:
+    result = _text(value, label=label)
+    if SHA256_PATTERN.fullmatch(result) is None:
+        raise ContractValidationError(f"{label} must be a lowercase SHA-256 digest")
+    return result
+
+
+def _iso_date(value: Any, *, label: str) -> str:
+    result = _text(value, label=label)
+    if re.fullmatch(r"[0-9]{4}-[0-9]{2}-[0-9]{2}", result) is None:
+        raise ContractValidationError(f"{label} must be an ISO date")
+    try:
+        date.fromisoformat(result)
+    except ValueError as exc:
+        raise ContractValidationError(f"{label} must be an ISO date") from exc
+    return result
+
+
+def _exact_fields(
+    value: Mapping[str, Any],
+    *,
+    required: frozenset[str],
+    optional: frozenset[str] = frozenset(),
+    label: str,
+) -> None:
+    actual = set(value)
+    missing = sorted(required - actual)
+    unexpected = sorted(actual - required - optional)
+    if missing:
+        raise ContractValidationError(f"{label} is missing fields: {missing}")
+    if unexpected:
+        raise ContractValidationError(
+            f"{label} contains unexpected fields: {unexpected}"
+        )
+
+
+def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+    result: dict[str, Any] = {}
+    for key, value in pairs:
+        if key in result:
+            raise ContractValidationError(f"duplicate JSON field {key!r}")
+        result[key] = value
+    return result
+
+
+def _reject_json_fraction(value: str) -> Any:
+    raise ContractValidationError(
+        f"JSON fractional or exponent number {value!r} is not permitted; "
+        "use a Decimal string"
+    )
+
+
+def _reject_json_constant(value: str) -> Any:
+    raise ContractValidationError(f"non-finite JSON value {value!r} is not permitted")
+
+
+def strict_json_load(path: Path) -> dict[str, Any]:
+    """Load one JSON object while rejecting duplicates and binary-float values."""
+
+    payload, _, _ = strict_json_snapshot(path)
+    return payload
+
+
+def strict_json_load_bytes(value: bytes, *, label: str) -> dict[str, Any]:
+    """Load one exact UTF-8 JSON byte snapshot with strict number/key handling."""
+
+    try:
+        text = value.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ContractValidationError(f"invalid UTF-8 JSON in {label}") from exc
+    try:
+        payload = json.loads(
+            text,
+            object_pairs_hook=_unique_json_object,
+            parse_float=_reject_json_fraction,
+            parse_constant=_reject_json_constant,
+        )
+    except json.JSONDecodeError as exc:
+        raise ContractValidationError(f"invalid JSON in {label}: {exc}") from exc
+    return dict(_mapping(payload, label=label))
+
+
+def _snapshot_identity(stat_result: os.stat_result) -> tuple[int, ...]:
+    return (
+        stat_result.st_dev,
+        stat_result.st_ino,
+        stat_result.st_mode,
+        stat_result.st_nlink,
+        stat_result.st_size,
+        stat_result.st_mtime_ns,
+        stat_result.st_ctime_ns,
+    )
+
+
+def _require_stable_path_snapshot(
+    path: Path,
+    *,
+    descriptor_before: os.stat_result,
+    descriptor_after: os.stat_result,
+) -> None:
+    if _snapshot_identity(descriptor_before) != _snapshot_identity(descriptor_after):
+        raise ContractValidationError(f"file changed while it was read: {path}")
+    try:
+        current = path.stat()
+    except OSError as exc:
+        raise ContractValidationError(
+            f"file path changed while it was read: {path}"
+        ) from exc
+    if _snapshot_identity(descriptor_after) != _snapshot_identity(current):
+        raise ContractValidationError(f"file path changed while it was read: {path}")
+
+
+def strict_json_snapshot(path: Path) -> tuple[dict[str, Any], int, str]:
+    """Read, validate, and hash one stable JSON snapshot exactly once."""
+
+    resolved = Path(path)
+    with resolved.open("rb") as handle:
+        descriptor_before = os.fstat(handle.fileno())
+        value = handle.read()
+        descriptor_after = os.fstat(handle.fileno())
+    _require_stable_path_snapshot(
+        resolved,
+        descriptor_before=descriptor_before,
+        descriptor_after=descriptor_after,
+    )
+    payload = strict_json_load_bytes(value, label=str(resolved))
+    return payload, len(value), hashlib.sha256(value).hexdigest()
+
+
+@contextmanager
+def _open_regular_file_beneath(
+    path: Path,
+    *,
+    root: Path,
+) -> Iterator[int]:
+    """Open a regular file through no-follow directory descriptors."""
+
+    root_path = Path(root).absolute()
+    lexical_path = Path(path).absolute()
+    try:
+        relative_path = lexical_path.relative_to(root_path)
+    except ValueError as exc:
+        raise ContractValidationError(
+            f"file must stay inside the declared root: {path}"
+        ) from exc
+    if not relative_path.parts:
+        raise ContractValidationError(f"file must be below the declared root: {path}")
+    if any(part in {"", ".", ".."} for part in relative_path.parts):
+        raise ContractValidationError(
+            f"file path must not traverse outside the declared root: {path}"
+        )
+
+    directory_flags = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
+    file_flags = os.O_RDONLY | os.O_NOFOLLOW
+    if hasattr(os, "O_CLOEXEC"):
+        directory_flags |= os.O_CLOEXEC
+        file_flags |= os.O_CLOEXEC
+
+    descriptors: list[int] = []
+    try:
+        current_descriptor = os.open(root_path, directory_flags)
+        descriptors.append(current_descriptor)
+        for part in relative_path.parts[:-1]:
+            current_descriptor = os.open(
+                part,
+                directory_flags,
+                dir_fd=current_descriptor,
+            )
+            descriptors.append(current_descriptor)
+        file_descriptor = os.open(
+            relative_path.parts[-1],
+            file_flags,
+            dir_fd=current_descriptor,
+        )
+        descriptors.append(file_descriptor)
+        descriptor_before = os.fstat(file_descriptor)
+        if not stat.S_ISREG(descriptor_before.st_mode):
+            raise ContractValidationError(f"path must identify one file: {path}")
+        if descriptor_before.st_nlink != 1:
+            raise ContractValidationError(f"file must not be hard linked: {path}")
+        yield file_descriptor
+
+        def verify_directory_chain() -> None:
+            try:
+                root_current = root_path.lstat()
+            except OSError as exc:
+                raise ContractValidationError(
+                    f"declared root changed while file was read: {path}"
+                ) from exc
+            root_pinned = os.fstat(descriptors[0])
+            if (
+                root_current.st_dev,
+                root_current.st_ino,
+                stat.S_IFMT(root_current.st_mode),
+            ) != (
+                root_pinned.st_dev,
+                root_pinned.st_ino,
+                stat.S_IFMT(root_pinned.st_mode),
+            ):
+                raise ContractValidationError(
+                    f"declared root changed while file was read: {path}"
+                )
+            for position, part in enumerate(relative_path.parts[:-1]):
+                try:
+                    current = os.stat(
+                        part,
+                        dir_fd=descriptors[position],
+                        follow_symlinks=False,
+                    )
+                except OSError as exc:
+                    raise ContractValidationError(
+                        f"directory path changed while file was read: {path}"
+                    ) from exc
+                pinned = os.fstat(descriptors[position + 1])
+                if (
+                    current.st_dev,
+                    current.st_ino,
+                    stat.S_IFMT(current.st_mode),
+                ) != (
+                    pinned.st_dev,
+                    pinned.st_ino,
+                    stat.S_IFMT(pinned.st_mode),
+                ):
+                    raise ContractValidationError(
+                        f"directory path changed while file was read: {path}"
+                    )
+
+        descriptor_after = os.fstat(file_descriptor)
+        if _snapshot_identity(descriptor_before) != _snapshot_identity(
+            descriptor_after
+        ):
+            raise ContractValidationError(f"file changed while it was read: {path}")
+        try:
+            current = os.stat(
+                relative_path.parts[-1],
+                dir_fd=current_descriptor,
+                follow_symlinks=False,
+            )
+        except OSError as exc:
+            raise ContractValidationError(
+                f"file path changed while it was read: {path}"
+            ) from exc
+        if _snapshot_identity(descriptor_after) != _snapshot_identity(current):
+            raise ContractValidationError(
+                f"file path changed while it was read: {path}"
+            )
+        try:
+            lexical_current = lexical_path.lstat()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"file path changed while it was read: {path}"
+            ) from exc
+        if _snapshot_identity(descriptor_after) != _snapshot_identity(lexical_current):
+            raise ContractValidationError(
+                f"file path changed while it was read: {path}"
+            )
+        verify_directory_chain()
+    except OSError as exc:
+        raise ContractValidationError(
+            f"could not safely open file below the declared root: {path}"
+        ) from exc
+    finally:
+        for descriptor in reversed(descriptors):
+            os.close(descriptor)
+
+
+def _read_descriptor_bytes(descriptor: int) -> bytes:
+    chunks: list[bytes] = []
+    while True:
+        chunk = os.read(descriptor, 1024 * 1024)
+        if not chunk:
+            return b"".join(chunks)
+        chunks.append(chunk)
+
+
+def strict_json_snapshot_beneath(
+    path: Path,
+    *,
+    root: Path,
+) -> tuple[dict[str, Any], int, str]:
+    """Read strict JSON through a race-resistant path below one root."""
+
+    with _open_regular_file_beneath(path, root=root) as descriptor:
+        value = _read_descriptor_bytes(descriptor)
+    payload = strict_json_load_bytes(value, label=str(path))
+    return payload, len(value), hashlib.sha256(value).hexdigest()
+
+
+def _resolve_json_pointer(value: Any, pointer: Any, *, label: str) -> Any:
+    """Resolve one RFC 6901 JSON Pointer without interpreting the located value."""
+
+    text = _text(pointer, label=label, allow_empty=True)
+    if text == "":
+        return value
+    if not text.startswith("/"):
+        raise ContractValidationError(f"{label} must be an absolute JSON Pointer")
+    current = value
+    for raw_token in text[1:].split("/"):
+        if re.search(r"~(?:[^01]|$)", raw_token):
+            raise ContractValidationError(f"{label} contains an invalid escape")
+        token = raw_token.replace("~1", "/").replace("~0", "~")
+        if isinstance(current, Mapping):
+            if token not in current:
+                raise ContractValidationError(f"{label} does not resolve")
+            current = current[token]
+            continue
+        if isinstance(current, Sequence) and not isinstance(
+            current, (str, bytes, bytearray)
+        ):
+            if re.fullmatch(r"0|[1-9][0-9]*", token) is None:
+                raise ContractValidationError(f"{label} has an invalid array index")
+            position = int(token)
+            if position >= len(current):
+                raise ContractValidationError(f"{label} does not resolve")
+            current = current[position]
+            continue
+        raise ContractValidationError(f"{label} does not resolve")
+    return current
+
+
+def _validate_structured_value(value: Any, *, label: str = "value") -> None:
+    if value is None or isinstance(value, (str, bool, int)):
+        return
+    if isinstance(value, float):
+        raise ContractValidationError(f"{label} contains a binary floating-point value")
+    if isinstance(value, Decimal):
+        raise ContractValidationError(
+            f"{label} contains Decimal; serialize it as a canonical string"
+        )
+    if isinstance(value, Mapping):
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ContractValidationError(f"{label} contains a non-text key")
+            _validate_structured_value(item, label=f"{label}.{key}")
+        return
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+        for position, item in enumerate(value):
+            _validate_structured_value(item, label=f"{label}[{position}]")
+        return
+    raise ContractValidationError(
+        f"{label} contains unsupported value type {type(value).__name__}"
+    )
+
+
+def canonical_json_bytes(value: Any) -> bytes:
+    """Return stable structured JSON bytes for hashing, not a universal standard."""
+
+    _validate_structured_value(value)
+    return json.dumps(
+        value,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+
+
+def canonical_json_sha256(value: Any) -> str:
+    """Return the SHA-256 of :func:`canonical_json_bytes`."""
+
+    return hashlib.sha256(canonical_json_bytes(value)).hexdigest()
+
+
+def write_json(path: Path, value: Mapping[str, Any]) -> None:
+    """Write stable, human-readable JSON with LF termination."""
+
+    _validate_structured_value(value)
+    Path(path).write_text(
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            indent=2,
+            sort_keys=True,
+            allow_nan=False,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+
+@contextmanager
+def exact_decimal_context(
+    policy: ExactDecimalPolicy = DEFAULT_DECIMAL_POLICY,
+    *,
+    minimum_precision: int | None = None,
+) -> Iterator[None]:
+    """Run exact arithmetic with explicit or operation-derived precision."""
+
+    precision = policy.calculation_precision
+    if precision is None:
+        if minimum_precision is None or minimum_precision <= 0:
+            raise ContractValidationError(
+                "exact Decimal arithmetic requires operation-derived precision "
+                "or an explicit case policy"
+            )
+        precision = minimum_precision
+    with localcontext() as context:
+        context.prec = precision
+        context.traps[Inexact] = True
+        context.traps[Rounded] = True
+        yield
+
+
+def _decimal_work_precision(*values: Decimal) -> int:
+    """Return sufficient precision for exact fixed-point arithmetic."""
+
+    if not values or any(not value.is_finite() for value in values):
+        raise ContractValidationError(
+            "exact Decimal arithmetic requires finite operands"
+        )
+    common_scale = 0
+    maximum_integer_digits = 1
+    for value in values:
+        parts = value.as_tuple()
+        if not isinstance(parts.exponent, int):
+            raise ContractValidationError(
+                "exact Decimal arithmetic requires finite operands"
+            )
+        common_scale = max(common_scale, max(-parts.exponent, 0))
+        maximum_integer_digits = max(
+            maximum_integer_digits,
+            max(len(parts.digits) + parts.exponent, 0),
+        )
+    return maximum_integer_digits + common_scale + 2
+
+
+def parse_decimal(
+    value: Any,
+    *,
+    label: str,
+    policy: ExactDecimalPolicy = DEFAULT_DECIMAL_POLICY,
+    positive: bool = False,
+    non_negative: bool = False,
+    canonical: bool = False,
+) -> Decimal:
+    """Parse one finite non-exponent Decimal under optional case-owned bounds."""
+
+    text = _text(value, label=label)
+    if DECIMAL_PATTERN.fullmatch(text) is None:
+        raise ContractValidationError(f"{label} must be a Decimal string")
+    try:
+        result = Decimal(text)
+    except InvalidOperation as exc:
+        raise ContractValidationError(f"{label} must be a Decimal string") from exc
+    if not result.is_finite():
+        raise ContractValidationError(f"{label} must be finite")
+    parts = result.as_tuple()
+    if not isinstance(parts.exponent, int):
+        raise ContractValidationError(f"{label} must be finite")
+    if policy.max_digits is not None and len(parts.digits) > policy.max_digits:
+        raise ContractValidationError(
+            f"{label} must contain at most {policy.max_digits} digits"
+        )
+    if policy.max_scale is not None and max(-parts.exponent, 0) > policy.max_scale:
+        raise ContractValidationError(
+            f"{label} must contain at most {policy.max_scale} decimal places"
+        )
+    if positive and result <= 0:
+        raise ContractValidationError(f"{label} must be positive")
+    if non_negative and result < 0:
+        raise ContractValidationError(f"{label} must not be negative")
+    if canonical and decimal_text(result) != text:
+        raise ContractValidationError(f"{label} must use canonical Decimal text")
+    return result
+
+
+def decimal_text(value: Decimal) -> str:
+    """Return a finite Decimal without exponent, trailing zeros, or negative zero."""
+
+    if not value.is_finite():
+        raise ContractValidationError("output Decimal values must be finite")
+    text = format(value, "f")
+    if "." in text:
+        text = text.rstrip("0").rstrip(".")
+    return "0" if text in {"", "-0"} else text
+
+
+def is_on_increment(
+    value: Decimal,
+    increment: Decimal,
+    *,
+    policy: ExactDecimalPolicy = DEFAULT_DECIMAL_POLICY,
+) -> bool:
+    """Return whether a value lies on a declared positive increment grid."""
+
+    minimum_precision = _decimal_work_precision(value, increment)
+    if increment <= 0:
+        raise ContractValidationError("increment must be positive")
+    with exact_decimal_context(
+        policy,
+        minimum_precision=minimum_precision,
+    ):
+        return value % increment == 0
+
+
+def difference_within_tolerance(
+    actual: Decimal,
+    expected: Decimal,
+    tolerance: Decimal,
+    *,
+    policy: ExactDecimalPolicy = DEFAULT_DECIMAL_POLICY,
+) -> bool:
+    """Apply, but never select, one declared non-negative tolerance."""
+
+    minimum_precision = _decimal_work_precision(actual, expected, tolerance)
+    if tolerance < 0:
+        raise ContractValidationError("tolerance must not be negative")
+    with exact_decimal_context(
+        policy,
+        minimum_precision=minimum_precision,
+    ):
+        return abs(actual - expected) <= tolerance
+
+
+def file_sha256(path: Path) -> str:
+    """Hash a local file without loading it wholly into memory."""
+
+    digest = hashlib.sha256()
+    with Path(path).open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def file_snapshot(path: Path) -> tuple[int, str]:
+    """Return byte count and digest from one stable file-descriptor snapshot."""
+
+    resolved = Path(path)
+    digest = hashlib.sha256()
+    byte_count = 0
+    with resolved.open("rb") as handle:
+        descriptor_before = os.fstat(handle.fileno())
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            byte_count += len(chunk)
+            digest.update(chunk)
+        descriptor_after = os.fstat(handle.fileno())
+    _require_stable_path_snapshot(
+        resolved,
+        descriptor_before=descriptor_before,
+        descriptor_after=descriptor_after,
+    )
+    if byte_count != descriptor_after.st_size:
+        raise ContractValidationError(f"file size changed while it was read: {path}")
+    return byte_count, digest.hexdigest()
+
+
+def file_snapshot_beneath(
+    path: Path,
+    *,
+    root: Path,
+) -> tuple[int, str]:
+    """Hash a stable regular file opened beneath one no-follow root."""
+
+    digest = hashlib.sha256()
+    byte_count = 0
+    with _open_regular_file_beneath(path, root=root) as descriptor:
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            byte_count += len(chunk)
+            digest.update(chunk)
+        descriptor_status = os.fstat(descriptor)
+        if byte_count != descriptor_status.st_size:
+            raise ContractValidationError(
+                f"file size changed while it was read: {path}"
+            )
+    return byte_count, digest.hexdigest()
+
+
+def resolve_local_file(root: Path, relative_path: Any, *, label: str) -> Path:
+    """Resolve one required file while preventing absolute and symlink escapes."""
+
+    root = Path(root).resolve()
+    relative = Path(_text(relative_path, label=label))
+    if relative.is_absolute():
+        raise ContractValidationError(f"{label} must be relative")
+    if "\\" in relative.as_posix():
+        raise ContractValidationError(f"{label} must use POSIX separators")
+    resolved = (root / relative).resolve()
+    if not resolved.is_relative_to(root):
+        raise ContractValidationError(f"{label} must stay inside the declared root")
+    if not resolved.is_file():
+        raise ContractValidationError(f"{label} does not exist: {relative.as_posix()}")
+    return resolved
+
+
+def artifact_receipt(
+    root: Path,
+    path: Path,
+    *,
+    artifact_id: str,
+    role: str,
+    media_type: str | None = None,
+) -> dict[str, Any]:
+    """Build one exact local artifact receipt using a root-relative path."""
+
+    root = Path(root).resolve()
+    resolved = Path(path).resolve()
+    if not resolved.is_relative_to(root) or not resolved.is_file():
+        raise ContractValidationError("artifact path must be a file inside root")
+    byte_count, digest = file_snapshot(resolved)
+    receipt: dict[str, Any] = {
+        "artifact_id": _identifier(artifact_id, label="artifact_id"),
+        "role": _text(role, label="artifact role"),
+        "path": resolved.relative_to(root).as_posix(),
+        "byte_count": byte_count,
+        "sha256": digest,
+    }
+    if media_type is not None:
+        receipt["media_type"] = _text(media_type, label="artifact media_type")
+    return receipt
+
+
+def _named_artifact_roots(
+    artifact_roots: Mapping[str, Path],
+) -> dict[str, Path]:
+    """Validate the two explicit roots used by local-source audit envelopes."""
+
+    roots = _mapping(artifact_roots, label="artifact_roots")
+    if set(roots) != set(AUDIT_ARTIFACT_ROOT_IDS):
+        raise ContractValidationError(
+            "artifact_roots must contain exactly the pilot and plugin roots"
+        )
+    normalized: dict[str, Path] = {}
+    identities: dict[str, tuple[int, int]] = {}
+    for root_id in sorted(AUDIT_ARTIFACT_ROOT_IDS):
+        raw_root = roots[root_id]
+        if not isinstance(raw_root, Path):
+            raise ContractValidationError(f"artifact_roots.{root_id} must be a Path")
+        lexical_root = raw_root.absolute()
+        try:
+            lexical_status = lexical_root.lstat()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify an existing directory"
+            ) from exc
+        if stat.S_ISLNK(lexical_status.st_mode):
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify a non-symlink directory"
+            )
+        root = lexical_root.resolve()
+        try:
+            root_status = root.stat()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify an existing directory"
+            ) from exc
+        if not stat.S_ISDIR(root_status.st_mode):
+            raise ContractValidationError(
+                f"artifact_roots.{root_id} must identify a non-symlink directory"
+            )
+        normalized[root_id] = root
+        identities[root_id] = (root_status.st_dev, root_status.st_ino)
+    pilot_root = normalized["pilot"]
+    plugin_root = normalized["plugin"]
+    if (
+        pilot_root == plugin_root
+        or identities["pilot"] == identities["plugin"]
+        or pilot_root.is_relative_to(plugin_root)
+        or plugin_root.is_relative_to(pilot_root)
+    ):
+        raise ContractValidationError(
+            "artifact_roots.pilot and artifact_roots.plugin must be "
+            "distinct and non-overlapping"
+        )
+    return normalized
+
+
+def _canonical_relative_artifact_path(value: Any, *, label: str) -> PurePosixPath:
+    text = _text(value, label=label)
+    if "\\" in text:
+        raise ContractValidationError(f"{label} must use POSIX separators")
+    relative = PurePosixPath(text)
+    if (
+        relative.is_absolute()
+        or relative.as_posix() != text
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        raise ContractValidationError(
+            f"{label} must be a canonical relative path below its named root"
+        )
+    return relative
+
+
+def named_root_artifact_receipt(
+    artifact_roots: Mapping[str, Path],
+    path: Path,
+    *,
+    root_id: str,
+    artifact_id: str,
+    role: str,
+    media_type: str | None = None,
+) -> dict[str, Any]:
+    """Build one no-follow receipt below a named ``plugin`` or ``pilot`` root."""
+
+    roots = _named_artifact_roots(artifact_roots)
+    selected_root_id = _identifier(root_id, label="root_id")
+    if selected_root_id not in roots:
+        raise ContractValidationError("root_id must be pilot or plugin")
+    root = roots[selected_root_id]
+    artifact_path = Path(path).absolute()
+    try:
+        relative_path = artifact_path.relative_to(root)
+    except ValueError as exc:
+        raise ContractValidationError(
+            "artifact path must stay below its named root"
+        ) from exc
+    relative = _canonical_relative_artifact_path(
+        relative_path.as_posix(),
+        label="artifact path",
+    )
+    byte_count, digest = file_snapshot_beneath(
+        root / Path(relative.as_posix()),
+        root=root,
+    )
+    receipt: dict[str, Any] = {
+        "artifact_id": _identifier(artifact_id, label="artifact_id"),
+        "root_id": selected_root_id,
+        "role": _text(role, label="artifact role"),
+        "path": relative.as_posix(),
+        "byte_count": byte_count,
+        "sha256": digest,
+    }
+    if media_type is not None:
+        receipt["media_type"] = _text(media_type, label="artifact media_type")
+    return receipt
+
+
+def read_exact_csv(
+    path: Path,
+    *,
+    columns: tuple[str, ...],
+    label: str,
+    require_rows: bool = True,
+) -> list[dict[str, str]]:
+    """Read exact ordered CSV columns and reject truncated or surplus cells."""
+
+    rows: list[dict[str, str]] = []
+    with Path(path).open("r", encoding="utf-8", newline="") as handle:
+        reader = csv.DictReader(handle)
+        if tuple(reader.fieldnames or ()) != columns:
+            raise ContractValidationError(f"{label} columns must equal {list(columns)}")
+        for position, raw_row in enumerate(reader, start=2):
+            if None in raw_row:
+                raise ContractValidationError(
+                    f"{label} row {position} contains surplus cells"
+                )
+            if any(value is None for value in raw_row.values()):
+                raise ContractValidationError(
+                    f"{label} row {position} contains truncated cells"
+                )
+            rows.append({column: str(raw_row[column]) for column in columns})
+    if require_rows and not rows:
+        raise ContractValidationError(f"{label} must contain at least one row")
+    return rows
+
+
+def reference_set(
+    *,
+    artifact_refs: Sequence[str] = (),
+    source_refs: Sequence[str] = (),
+    decision_refs: Sequence[str] = (),
+    lineage_refs: Sequence[str] = (),
+) -> dict[str, list[str]]:
+    """Build one sorted, duplicate-free reference set."""
+
+    result = {
+        "artifact_refs": sorted(
+            {_identifier(item, label="artifact reference") for item in artifact_refs}
+        ),
+        "source_refs": sorted(
+            {_identifier(item, label="source reference") for item in source_refs}
+        ),
+        "decision_refs": sorted(
+            {_identifier(item, label="decision reference") for item in decision_refs}
+        ),
+        "lineage_refs": sorted(
+            {_identifier(item, label="lineage reference") for item in lineage_refs}
+        ),
+    }
+    if not any(result.values()):
+        raise ContractValidationError("a reference set must not be empty")
+    return result
+
+
+def validate_declared_source_receipt(
+    value: Mapping[str, Any],
+    *,
+    label: str,
+) -> dict[str, Any]:
+    """Validate declared remote metadata without asserting source authenticity."""
+
+    source = _mapping(value, label=label)
+    _exact_fields(
+        source,
+        required=frozenset(
+            {
+                "source_id",
+                "title",
+                "document_type",
+                "url",
+                "byte_count",
+                "sha256",
+                "receipt_scope",
+            }
+        ),
+        optional=frozenset({"publisher", "document_date", "metadata"}),
+        label=label,
+    )
+    source_id = _identifier(source["source_id"], label=f"{label}.source_id")
+    url = _text(source["url"], label=f"{label}.url")
+    if not url.startswith("https://"):
+        raise ContractValidationError(f"{label}.url must use https")
+    byte_count = source["byte_count"]
+    if type(byte_count) is not int or byte_count <= 0:
+        raise ContractValidationError(f"{label}.byte_count must be positive")
+    if source["receipt_scope"] != "declared_remote_receipt":
+        raise ContractValidationError(
+            f"{label}.receipt_scope must be declared_remote_receipt"
+        )
+    normalized: dict[str, Any] = {
+        "source_id": source_id,
+        "title": _text(source["title"], label=f"{label}.title"),
+        "document_type": _text(source["document_type"], label=f"{label}.document_type"),
+        "url": url,
+        "byte_count": byte_count,
+        "sha256": _sha256(source["sha256"], label=f"{label}.sha256"),
+        "receipt_scope": "declared_remote_receipt",
+    }
+    if "publisher" in source:
+        normalized["publisher"] = _text(source["publisher"], label=f"{label}.publisher")
+    if "document_date" in source:
+        normalized["document_date"] = _iso_date(
+            source["document_date"], label=f"{label}.document_date"
+        )
+    if "metadata" in source:
+        _validate_structured_value(source["metadata"], label=f"{label}.metadata")
+        normalized["metadata"] = source["metadata"]
+    return normalized
+
+
+def reviewed_decision_receipt(
+    *,
+    decision_id: str,
+    decision_kind: str,
+    status: str,
+    reviewed_on: str | None,
+    basis: str,
+    content: Any,
+    evidence_refs: Mapping[str, Any],
+    version: str | None = None,
+    reviewer: str | None = None,
+) -> dict[str, Any]:
+    """Build a reviewed-decision presence receipt without interpreting content."""
+
+    _validate_structured_value(content, label="reviewed decision content")
+    if status != "reviewed":
+        raise ContractValidationError(
+            "reviewed decision receipt cannot promote a non-reviewed decision"
+        )
+    result: dict[str, Any] = {
+        "decision_id": _identifier(decision_id, label="decision_id"),
+        "decision_kind": _text(decision_kind, label="decision_kind"),
+        "status": status,
+        "basis": _text(basis, label="basis"),
+        "content": content,
+        "content_digest_basis": "canonical_json_utf8",
+        "content_sha256": canonical_json_sha256(content),
+        "evidence_refs": dict(evidence_refs),
+    }
+    if reviewed_on is not None:
+        result["reviewed_on"] = _iso_date(reviewed_on, label="reviewed_on")
+    if version is not None:
+        result["version"] = _text(version, label="decision version")
+    if reviewer is not None:
+        result["reviewer"] = _text(reviewer, label="reviewer")
+    return result
+
+
+def _require_unique_ids(
+    rows: Sequence[Mapping[str, Any]],
+    *,
+    field: str,
+    label: str,
+) -> set[str]:
+    identifiers: list[str] = [
+        _identifier(row.get(field), label=f"{label}[{position}].{field}")
+        for position, row in enumerate(rows)
+    ]
+    duplicates = sorted(
+        identifier
+        for identifier in set(identifiers)
+        if identifiers.count(identifier) > 1
+    )
+    if duplicates:
+        raise ContractValidationError(f"{label} contains duplicate IDs: {duplicates}")
+    if identifiers != sorted(identifiers):
+        raise ContractValidationError(f"{label} must be sorted by {field}")
+    return set(identifiers)
+
+
+def _validate_reference_set(
+    value: Any,
+    *,
+    label: str,
+    artifact_ids: set[str],
+    source_ids: set[str],
+    decision_ids: set[str],
+    lineage_ids: set[str],
+    allow_empty: bool = False,
+) -> None:
+    references = _mapping(value, label=label)
+    _exact_fields(references, required=REFERENCE_FIELDS, label=label)
+    targets = {
+        "artifact_refs": artifact_ids,
+        "source_refs": source_ids,
+        "decision_refs": decision_ids,
+        "lineage_refs": lineage_ids,
+    }
+    populated = False
+    for field, known in targets.items():
+        raw_items = _sequence(references[field], label=f"{label}.{field}")
+        items = [_identifier(item, label=f"{label}.{field}[]") for item in raw_items]
+        if items != sorted(items) or len(items) != len(set(items)):
+            raise ContractValidationError(
+                f"{label}.{field} must be sorted and duplicate-free"
+            )
+        unknown = sorted(set(items) - known)
+        if unknown:
+            raise ContractValidationError(
+                f"{label}.{field} contains unknown references: {unknown}"
+            )
+        populated = populated or bool(items)
+    if not populated and not allow_empty:
+        raise ContractValidationError(f"{label} must contain at least one reference")
+
+
+def _validate_artifacts(
+    values: Any,
+    *,
+    root: Path,
+) -> tuple[list[Mapping[str, Any]], set[str]]:
+    rows = [
+        _mapping(item, label=f"local_artifacts[{position}]")
+        for position, item in enumerate(_sequence(values, label="local_artifacts"))
+    ]
+    if not rows:
+        raise ContractValidationError("local_artifacts must not be empty")
+    artifact_ids = _require_unique_ids(
+        rows, field="artifact_id", label="local_artifacts"
+    )
+    for position, artifact in enumerate(rows):
+        label = f"local_artifacts[{position}]"
+        _exact_fields(
+            artifact,
+            required=frozenset({"artifact_id", "role", "path", "byte_count", "sha256"}),
+            optional=frozenset({"media_type"}),
+            label=label,
+        )
+        _text(artifact["role"], label=f"{label}.role")
+        path = resolve_local_file(root, artifact["path"], label=f"{label}.path")
+        byte_count = artifact["byte_count"]
+        if type(byte_count) is not int or byte_count < 0:
+            raise ContractValidationError(f"{label}.byte_count must not be negative")
+        actual_byte_count, actual_digest = file_snapshot(path)
+        if actual_byte_count != byte_count:
+            raise ContractValidationError(f"{label}.byte_count does not match file")
+        if actual_digest != _sha256(artifact["sha256"], label=f"{label}.sha256"):
+            raise ContractValidationError(f"{label}.sha256 does not match file")
+        if "media_type" in artifact:
+            _text(artifact["media_type"], label=f"{label}.media_type")
+    return rows, artifact_ids
+
+
+def _validate_named_root_artifacts(
+    values: Any,
+    *,
+    artifact_roots: Mapping[str, Path],
+) -> tuple[list[Mapping[str, Any]], set[str], dict[str, Path]]:
+    """Validate v2 artifacts through their named no-follow roots."""
+
+    roots = _named_artifact_roots(artifact_roots)
+    rows = [
+        _mapping(item, label=f"local_artifacts[{position}]")
+        for position, item in enumerate(_sequence(values, label="local_artifacts"))
+    ]
+    if not rows:
+        raise ContractValidationError("local_artifacts must not be empty")
+    artifact_ids = _require_unique_ids(
+        rows,
+        field="artifact_id",
+        label="local_artifacts",
+    )
+    artifact_paths: dict[str, Path] = {}
+    used_roots: set[str] = set()
+    for position, artifact in enumerate(rows):
+        label = f"local_artifacts[{position}]"
+        _exact_fields(
+            artifact,
+            required=frozenset(
+                {
+                    "artifact_id",
+                    "root_id",
+                    "role",
+                    "path",
+                    "byte_count",
+                    "sha256",
+                }
+            ),
+            optional=frozenset({"media_type"}),
+            label=label,
+        )
+        artifact_id = _identifier(
+            artifact["artifact_id"],
+            label=f"{label}.artifact_id",
+        )
+        root_id = _identifier(artifact["root_id"], label=f"{label}.root_id")
+        if root_id not in roots:
+            raise ContractValidationError(f"{label}.root_id must be pilot or plugin")
+        used_roots.add(root_id)
+        _text(artifact["role"], label=f"{label}.role")
+        relative = _canonical_relative_artifact_path(
+            artifact["path"],
+            label=f"{label}.path",
+        )
+        path = roots[root_id] / Path(relative.as_posix())
+        byte_count = artifact["byte_count"]
+        if type(byte_count) is not int or byte_count < 0:
+            raise ContractValidationError(f"{label}.byte_count must not be negative")
+        actual_byte_count, actual_digest = file_snapshot_beneath(
+            path,
+            root=roots[root_id],
+        )
+        if actual_byte_count != byte_count:
+            raise ContractValidationError(f"{label}.byte_count does not match file")
+        if actual_digest != _sha256(artifact["sha256"], label=f"{label}.sha256"):
+            raise ContractValidationError(f"{label}.sha256 does not match file")
+        if "media_type" in artifact:
+            _text(artifact["media_type"], label=f"{label}.media_type")
+        artifact_paths[artifact_id] = path
+    if used_roots != set(AUDIT_ARTIFACT_ROOT_IDS):
+        raise ContractValidationError(
+            "local_artifacts must bind at least one artifact under each named root"
+        )
+    return rows, artifact_ids, artifact_paths
+
+
+def _strict_json_artifact_snapshot(
+    artifact: Mapping[str, Any],
+    path: Path,
+    *,
+    root: Path | None,
+    label: str,
+) -> Any:
+    """Parse the same exact bytes bound by one local artifact receipt."""
+
+    if root is None:
+        payload, byte_count, digest = strict_json_snapshot(path)
+    else:
+        payload, byte_count, digest = strict_json_snapshot_beneath(
+            path,
+            root=root,
+        )
+    if byte_count != artifact["byte_count"] or digest != artifact["sha256"]:
+        raise ContractValidationError(
+            f"{label} bytes changed after artifact receipt validation"
+        )
+    return payload
+
+
+def _validate_sources(
+    values: Any,
+    *,
+    require_rows: bool = True,
+) -> tuple[list[dict[str, Any]], set[str]]:
+    rows = [
+        validate_declared_source_receipt(
+            _mapping(item, label=f"remote_sources[{position}]"),
+            label=f"remote_sources[{position}]",
+        )
+        for position, item in enumerate(_sequence(values, label="remote_sources"))
+    ]
+    if require_rows and not rows:
+        raise ContractValidationError("remote_sources must not be empty")
+    source_ids = (
+        _require_unique_ids(rows, field="source_id", label="remote_sources")
+        if rows
+        else set()
+    )
+    return rows, source_ids
+
+
+def _validate_decisions(
+    values: Any,
+) -> tuple[list[Mapping[str, Any]], set[str]]:
+    rows = [
+        _mapping(item, label=f"reviewed_decisions[{position}]")
+        for position, item in enumerate(_sequence(values, label="reviewed_decisions"))
+    ]
+    if not rows:
+        raise ContractValidationError("reviewed_decisions must not be empty")
+    decision_ids = _require_unique_ids(
+        rows, field="decision_id", label="reviewed_decisions"
+    )
+    for position, decision in enumerate(rows):
+        label = f"reviewed_decisions[{position}]"
+        _exact_fields(
+            decision,
+            required=frozenset(
+                {
+                    "decision_id",
+                    "decision_kind",
+                    "status",
+                    "basis",
+                    "content",
+                    "content_digest_basis",
+                    "content_sha256",
+                    "evidence_refs",
+                }
+            ),
+            optional=frozenset({"version", "reviewed_on", "reviewer"}),
+            label=label,
+        )
+        _text(decision["decision_kind"], label=f"{label}.decision_kind")
+        if decision["status"] != "reviewed":
+            raise ContractValidationError(f"{label}.status must be reviewed")
+        if "reviewed_on" in decision:
+            _iso_date(decision["reviewed_on"], label=f"{label}.reviewed_on")
+        _text(decision["basis"], label=f"{label}.basis")
+        _validate_structured_value(decision["content"], label=f"{label}.content")
+        if decision["content_digest_basis"] != "canonical_json_utf8":
+            raise ContractValidationError(
+                f"{label}.content_digest_basis must be canonical_json_utf8"
+            )
+        expected = canonical_json_sha256(decision["content"])
+        if (
+            _sha256(decision["content_sha256"], label=f"{label}.content_sha256")
+            != expected
+        ):
+            raise ContractValidationError(
+                f"{label}.content_sha256 does not match content"
+            )
+        if "version" in decision:
+            _text(decision["version"], label=f"{label}.version")
+        if "reviewer" in decision:
+            _text(decision["reviewer"], label=f"{label}.reviewer")
+    return rows, decision_ids
+
+
+def _lineage_rows(
+    lineage: Mapping[str, Any],
+) -> tuple[list[tuple[str, Mapping[str, Any]]], set[str]]:
+    _exact_fields(
+        lineage,
+        required=frozenset({"artifact", "aggregate", "row"}),
+        label="lineage",
+    )
+    collected: list[tuple[str, Mapping[str, Any]]] = []
+    identifiers: list[str] = []
+    for level in ("artifact", "aggregate", "row"):
+        level_value = _mapping(lineage[level], label=f"lineage.{level}")
+        _exact_fields(
+            level_value,
+            required=frozenset({"declared", "records", "limitations"}),
+            label=f"lineage.{level}",
+        )
+        if type(level_value["declared"]) is not bool:
+            raise ContractValidationError(f"lineage.{level}.declared must be boolean")
+        records = [
+            _mapping(item, label=f"lineage.{level}.records[{position}]")
+            for position, item in enumerate(
+                _sequence(level_value["records"], label=f"lineage.{level}.records")
+            )
+        ]
+        limitations = [
+            _text(item, label=f"lineage.{level}.limitations[]")
+            for item in _sequence(
+                level_value["limitations"], label=f"lineage.{level}.limitations"
+            )
+        ]
+        if level == "artifact" and not level_value["declared"]:
+            raise ContractValidationError("artifact lineage must be declared")
+        if level == "row" and level_value["declared"]:
+            raise ContractValidationError(
+                "row lineage is not supported by preparation audit envelopes"
+            )
+        if level_value["declared"] and not records:
+            raise ContractValidationError(
+                f"lineage.{level}.records must not be empty when declared"
+            )
+        if not level_value["declared"] and records:
+            raise ContractValidationError(
+                f"lineage.{level}.records must be empty when not declared"
+            )
+        if not level_value["declared"] and not limitations:
+            raise ContractValidationError(
+                f"lineage.{level}.limitations must explain unavailable lineage"
+            )
+        for record in records:
+            identifiers.append(
+                _identifier(
+                    record.get("lineage_id"),
+                    label=f"lineage.{level}.records[].lineage_id",
+                )
+            )
+            collected.append((level, record))
+    duplicates = sorted(
+        identifier
+        for identifier in set(identifiers)
+        if identifiers.count(identifier) > 1
+    )
+    if duplicates:
+        raise ContractValidationError(f"lineage contains duplicate IDs: {duplicates}")
+    if identifiers != sorted(identifiers):
+        raise ContractValidationError("lineage records must be globally ID-sorted")
+    return collected, set(identifiers)
+
+
+def _validate_audit_envelope_profile(
+    envelope: Mapping[str, Any],
+    *,
+    schema_version: str,
+    root: Path | None,
+    artifact_roots: Mapping[str, Path] | None,
+) -> dict[str, Any]:
+    """Validate one audit-envelope profile and its mechanical references."""
+
+    payload = _mapping(envelope, label="envelope")
+    _exact_fields(payload, required=TOP_LEVEL_FIELDS, label="envelope")
+    if payload["schema_version"] != schema_version:
+        raise ContractValidationError(f"schema_version must be {schema_version}")
+    local_source_profile = schema_version == AUDIT_ENVELOPE_SCHEMA_V2
+    if local_source_profile:
+        if root is not None or artifact_roots is None:
+            raise ContractValidationError(
+                "v2 validation requires named artifact_roots and no v1 root"
+            )
+        artifacts, artifact_ids, artifact_paths = _validate_named_root_artifacts(
+            payload["local_artifacts"],
+            artifact_roots=artifact_roots,
+        )
+    else:
+        if schema_version != AUDIT_ENVELOPE_SCHEMA:
+            raise ContractValidationError("unsupported audit envelope schema")
+        if root is None or artifact_roots is not None:
+            raise ContractValidationError(
+                "v1 validation requires one root and no named artifact_roots"
+            )
+        artifacts, artifact_ids = _validate_artifacts(
+            payload["local_artifacts"],
+            root=Path(root),
+        )
+        artifact_paths = {
+            str(artifact["artifact_id"]): resolve_local_file(
+                Path(root),
+                artifact["path"],
+                label=f"local artifact {artifact['artifact_id']}",
+            )
+            for artifact in artifacts
+        }
+    artifact_by_id = {str(artifact["artifact_id"]): artifact for artifact in artifacts}
+    schema_artifacts = [
+        artifact for artifact in artifacts if artifact["role"] == "audit_schema"
+    ]
+    if len(schema_artifacts) != 1:
+        raise ContractValidationError(
+            "exactly one audit_schema artifact must bind the envelope contract"
+        )
+    schema_artifact_id = str(schema_artifacts[0]["artifact_id"])
+    schema_path = artifact_paths[schema_artifact_id]
+    if local_source_profile:
+        schema_root_id = str(schema_artifacts[0]["root_id"])
+        if schema_root_id != "plugin":
+            raise ContractValidationError(
+                "v2 audit_schema artifact must use the plugin root"
+            )
+        if artifact_roots is None:
+            raise ContractValidationError("v2 artifact roots are unavailable")
+        schema_document = _strict_json_artifact_snapshot(
+            schema_artifacts[0],
+            schema_path,
+            root=_named_artifact_roots(artifact_roots)["plugin"],
+            label="audit schema artifact",
+        )
+    else:
+        schema_document = _strict_json_artifact_snapshot(
+            schema_artifacts[0],
+            schema_path,
+            root=None,
+            label="audit schema artifact",
+        )
+    try:
+        schema_identifier = schema_document["properties"]["schema_version"]["const"]
+    except (KeyError, TypeError) as exc:
+        raise ContractValidationError(
+            "audit_schema artifact does not declare the envelope schema version"
+        ) from exc
+    if schema_identifier != schema_version:
+        raise ContractValidationError(
+            "audit_schema artifact does not match schema_version"
+        )
+    _sources, source_ids = _validate_sources(
+        payload["remote_sources"],
+        require_rows=not local_source_profile,
+    )
+    if local_source_profile and payload["remote_sources"] != []:
+        raise ContractValidationError(
+            "v2 remote_sources must be empty; do not fabricate a remote receipt"
+        )
+    decisions, decision_ids = _validate_decisions(payload["reviewed_decisions"])
+
+    case = _mapping(payload["case"], label="case")
+    _exact_fields(
+        case,
+        required=frozenset(
+            {"case_id", "case_kind", "source_schema_version", "case_artifact_ref"}
+        ),
+        label="case",
+    )
+    _identifier(case["case_id"], label="case.case_id")
+    _text(case["case_kind"], label="case.case_kind")
+    _text(case["source_schema_version"], label="case.source_schema_version")
+    case_ref = _identifier(case["case_artifact_ref"], label="case.case_artifact_ref")
+    if case_ref not in artifact_ids:
+        raise ContractValidationError("case.case_artifact_ref is unknown")
+    if local_source_profile and artifact_by_id[case_ref]["root_id"] != "pilot":
+        raise ContractValidationError("v2 case artifact must use the pilot root")
+
+    adapter = _mapping(payload["adapter"], label="adapter")
+    _exact_fields(
+        adapter,
+        required=frozenset(
+            {
+                "adapter_id",
+                "adapter_version",
+                "implementation_sha256",
+                "normalization_scope",
+            }
+        ),
+        label="adapter",
+    )
+    _identifier(adapter["adapter_id"], label="adapter.adapter_id")
+    _text(adapter["adapter_version"], label="adapter.adapter_version")
+    adapter_sha = _sha256(
+        adapter["implementation_sha256"], label="adapter.implementation_sha256"
+    )
+    if adapter["normalization_scope"] != "audit_only":
+        raise ContractValidationError("adapter.normalization_scope must be audit_only")
+    matching_adapters = [
+        artifact
+        for artifact in artifacts
+        if artifact["role"] == "audit_adapter" and artifact["sha256"] == adapter_sha
+    ]
+    if len(matching_adapters) != 1:
+        raise ContractValidationError(
+            "adapter implementation must match exactly one audit_adapter artifact"
+        )
+    if local_source_profile and matching_adapters[0]["root_id"] != "plugin":
+        raise ContractValidationError(
+            "v2 audit_adapter artifact must use the plugin root"
+        )
+
+    execution = _mapping(payload["execution"], label="execution")
+    _exact_fields(
+        execution,
+        required=frozenset(
+            {
+                "execution_id",
+                "producer",
+                "producer_version",
+                "producer_sha256",
+                "mode",
+                "input_artifact_refs",
+                "output_artifact_refs",
+            }
+        ),
+        label="execution",
+    )
+    _identifier(execution["execution_id"], label="execution.execution_id")
+    _text(execution["producer"], label="execution.producer")
+    _text(execution["producer_version"], label="execution.producer_version")
+    producer_sha = _sha256(
+        execution["producer_sha256"], label="execution.producer_sha256"
+    )
+    if execution["mode"] != "deterministic_mechanical":
+        raise ContractValidationError("execution.mode must be deterministic_mechanical")
+    producer_matches = [
+        artifact
+        for artifact in artifacts
+        if artifact["sha256"] == producer_sha
+        and artifact["role"] in {"producer", "preparation_engine"}
+    ]
+    if len(producer_matches) != 1:
+        raise ContractValidationError(
+            "execution producer must match exactly one producer artifact"
+        )
+    if local_source_profile and producer_matches[0]["root_id"] != "plugin":
+        raise ContractValidationError("v2 producer artifact must use the plugin root")
+    execution_input_refs: frozenset[str] = frozenset()
+    execution_output_refs: frozenset[str] = frozenset()
+    for field in ("input_artifact_refs", "output_artifact_refs"):
+        refs = [
+            _identifier(item, label=f"execution.{field}[]")
+            for item in _sequence(execution[field], label=f"execution.{field}")
+        ]
+        if not refs or refs != sorted(refs) or len(refs) != len(set(refs)):
+            raise ContractValidationError(
+                f"execution.{field} must be non-empty, sorted, and duplicate-free"
+            )
+        unknown = sorted(set(refs) - artifact_ids)
+        if unknown:
+            raise ContractValidationError(
+                f"execution.{field} contains unknown artifacts: {unknown}"
+            )
+        if field == "input_artifact_refs":
+            execution_input_refs = frozenset(refs)
+        else:
+            execution_output_refs = frozenset(refs)
+    if local_source_profile and any(
+        artifact_by_id[artifact_id]["root_id"] != "pilot"
+        for artifact_id in execution_output_refs
+    ):
+        raise ContractValidationError("v2 execution outputs must use the pilot root")
+
+    numeric_policy = _mapping(payload["numeric_policy"], label="numeric_policy")
+    _exact_fields(
+        numeric_policy,
+        required=frozenset(
+            {
+                "representation",
+                "finite_only",
+                "binary_float_allowed",
+                "exponent_notation_allowed",
+                "canonical_serialization_required",
+                "case_constraints",
+                "case_constraints_sha256",
+            }
+        ),
+        label="numeric_policy",
+    )
+    expected_numeric_constants = {
+        "representation": "decimal_string",
+        "finite_only": True,
+        "binary_float_allowed": False,
+        "exponent_notation_allowed": False,
+        "canonical_serialization_required": True,
+    }
+    for field, expected in expected_numeric_constants.items():
+        if numeric_policy[field] != expected:
+            raise ContractValidationError(
+                f"numeric_policy.{field} must equal {expected!r}"
+            )
+    _validate_structured_value(
+        numeric_policy["case_constraints"],
+        label="numeric_policy.case_constraints",
+    )
+    if _sha256(
+        numeric_policy["case_constraints_sha256"],
+        label="numeric_policy.case_constraints_sha256",
+    ) != canonical_json_sha256(numeric_policy["case_constraints"]):
+        raise ContractValidationError(
+            "numeric_policy.case_constraints_sha256 does not match constraints"
+        )
+
+    lineage = _mapping(payload["lineage"], label="lineage")
+    lineage_rows, lineage_ids = _lineage_rows(lineage)
+
+    for position, decision in enumerate(decisions):
+        _validate_reference_set(
+            decision["evidence_refs"],
+            label=f"reviewed_decisions[{position}].evidence_refs",
+            artifact_ids=artifact_ids,
+            source_ids=source_ids,
+            decision_ids=decision_ids,
+            lineage_ids=lineage_ids,
+        )
+
+    for level, record in lineage_rows:
+        label = f"lineage.{level}.{record['lineage_id']}"
+        if level == "artifact":
+            _exact_fields(
+                record,
+                required=frozenset(
+                    {"lineage_id", "artifact_ref", "references", "details"}
+                ),
+                label=label,
+            )
+            primary_ref = _identifier(
+                record["artifact_ref"], label=f"{label}.artifact_ref"
+            )
+        elif level == "aggregate":
+            _exact_fields(
+                record,
+                required=frozenset(
+                    {
+                        "lineage_id",
+                        "aggregate_id",
+                        "output_artifact_ref",
+                        "evidence_artifact_ref",
+                        "evidence_json_pointer",
+                        "aggregate_id_json_pointer",
+                        "output_artifact_id_json_pointer",
+                        "output_sha256_json_pointer",
+                        "evidence_sha256",
+                        "references",
+                        "details",
+                    }
+                ),
+                label=label,
+            )
+            _identifier(record["aggregate_id"], label=f"{label}.aggregate_id")
+            primary_ref = _identifier(
+                record["output_artifact_ref"],
+                label=f"{label}.output_artifact_ref",
+            )
+            evidence_ref = _identifier(
+                record["evidence_artifact_ref"],
+                label=f"{label}.evidence_artifact_ref",
+            )
+            if evidence_ref not in artifact_ids:
+                raise ContractValidationError(
+                    f"{label} references unknown aggregate evidence artifact"
+                )
+            if primary_ref not in execution_output_refs:
+                raise ContractValidationError(
+                    f"{label} output artifact must be an execution output"
+                )
+            if evidence_ref not in execution_output_refs:
+                raise ContractValidationError(
+                    f"{label} evidence artifact must be an execution output"
+                )
+            evidence_artifact = artifact_by_id[evidence_ref]
+            if evidence_artifact["role"] != "aggregate_lineage_evidence":
+                raise ContractValidationError(
+                    f"{label} evidence artifact must have role "
+                    "aggregate_lineage_evidence"
+                )
+            evidence_path = artifact_paths[evidence_ref]
+            if local_source_profile:
+                if artifact_roots is None:
+                    raise ContractValidationError("v2 artifact roots are unavailable")
+                evidence_root_id = str(evidence_artifact["root_id"])
+                evidence_payload = _strict_json_artifact_snapshot(
+                    evidence_artifact,
+                    evidence_path,
+                    root=_named_artifact_roots(artifact_roots)[evidence_root_id],
+                    label=f"{label}.evidence_artifact",
+                )
+            else:
+                evidence_payload = _strict_json_artifact_snapshot(
+                    evidence_artifact,
+                    evidence_path,
+                    root=None,
+                    label=f"{label}.evidence_artifact",
+                )
+            evidence_value = _resolve_json_pointer(
+                evidence_payload,
+                record["evidence_json_pointer"],
+                label=f"{label}.evidence_json_pointer",
+            )
+            if _sha256(
+                record["evidence_sha256"],
+                label=f"{label}.evidence_sha256",
+            ) != canonical_json_sha256(evidence_value):
+                raise ContractValidationError(
+                    f"{label}.evidence_sha256 does not match located evidence"
+                )
+            evidence_aggregate_id = _resolve_json_pointer(
+                evidence_payload,
+                record["aggregate_id_json_pointer"],
+                label=f"{label}.aggregate_id_json_pointer",
+            )
+            if evidence_aggregate_id != record["aggregate_id"]:
+                raise ContractValidationError(
+                    f"{label} aggregate_id does not match located evidence"
+                )
+            evidence_output_id = _resolve_json_pointer(
+                evidence_payload,
+                record["output_artifact_id_json_pointer"],
+                label=f"{label}.output_artifact_id_json_pointer",
+            )
+            if evidence_output_id != primary_ref:
+                raise ContractValidationError(
+                    f"{label} output artifact does not match located evidence"
+                )
+            evidence_output_sha = _sha256(
+                _resolve_json_pointer(
+                    evidence_payload,
+                    record["output_sha256_json_pointer"],
+                    label=f"{label}.output_sha256_json_pointer",
+                ),
+                label=f"{label}.located_output_sha256",
+            )
+            if evidence_output_sha != artifact_by_id[primary_ref]["sha256"]:
+                raise ContractValidationError(
+                    f"{label} output digest does not match located evidence"
+                )
+            evidence_refs = _mapping(
+                record["references"],
+                label=f"{label}.references",
+            ).get("artifact_refs")
+            if evidence_ref not in _sequence(
+                evidence_refs,
+                label=f"{label}.references.artifact_refs",
+            ):
+                raise ContractValidationError(
+                    f"{label}.references must include its evidence artifact"
+                )
+            if primary_ref not in _sequence(
+                evidence_refs,
+                label=f"{label}.references.artifact_refs",
+            ):
+                raise ContractValidationError(
+                    f"{label}.references must include its output artifact"
+                )
+        else:
+            _exact_fields(
+                record,
+                required=frozenset(
+                    {"lineage_id", "row_id", "artifact_ref", "references", "details"}
+                ),
+                label=label,
+            )
+            _identifier(record["row_id"], label=f"{label}.row_id")
+            primary_ref = _identifier(
+                record["artifact_ref"], label=f"{label}.artifact_ref"
+            )
+        if primary_ref not in artifact_ids:
+            raise ContractValidationError(f"{label} references unknown artifact")
+        _validate_structured_value(record["details"], label=f"{label}.details")
+        _validate_reference_set(
+            record["references"],
+            label=f"{label}.references",
+            artifact_ids=artifact_ids,
+            source_ids=source_ids,
+            decision_ids=decision_ids,
+            lineage_ids=lineage_ids,
+        )
+
+    reconciliation = _mapping(payload["reconciliation"], label="reconciliation")
+    _exact_fields(
+        reconciliation,
+        required=frozenset({"checks", "errors"}),
+        label="reconciliation",
+    )
+    checks = [
+        _mapping(item, label=f"reconciliation.checks[{position}]")
+        for position, item in enumerate(
+            _sequence(reconciliation["checks"], label="reconciliation.checks")
+        )
+    ]
+    if not checks:
+        raise ContractValidationError("reconciliation.checks must not be empty")
+    _require_unique_ids(checks, field="check_id", label="reconciliation.checks")
+    for position, check in enumerate(checks):
+        label = f"reconciliation.checks[{position}]"
+        _exact_fields(
+            check,
+            required=frozenset(
+                {
+                    "check_id",
+                    "check_kind",
+                    "required",
+                    "status",
+                    "references",
+                    "numeric_evidence",
+                    "details",
+                }
+            ),
+            label=label,
+        )
+        _text(check["check_kind"], label=f"{label}.check_kind")
+        if check["required"] is not True:
+            raise ContractValidationError(f"{label}.required must be true")
+        if check["status"] not in {"passed", "failed", "not_run"}:
+            raise ContractValidationError(f"{label}.status is invalid")
+        _validate_reference_set(
+            check["references"],
+            label=f"{label}.references",
+            artifact_ids=artifact_ids,
+            source_ids=source_ids,
+            decision_ids=decision_ids,
+            lineage_ids=lineage_ids,
+        )
+        evidence_rows = [
+            _mapping(item, label=f"{label}.numeric_evidence[{evidence_position}]")
+            for evidence_position, item in enumerate(
+                _sequence(
+                    check["numeric_evidence"],
+                    label=f"{label}.numeric_evidence",
+                )
+            )
+        ]
+        for evidence_position, evidence in enumerate(evidence_rows):
+            evidence_label = f"{label}.numeric_evidence[{evidence_position}]"
+            _exact_fields(
+                evidence,
+                required=frozenset({"name", "value", "unit"}),
+                optional=frozenset({"reported_increment"}),
+                label=evidence_label,
+            )
+            _text(evidence["name"], label=f"{evidence_label}.name")
+            parse_decimal(
+                evidence["value"],
+                label=f"{evidence_label}.value",
+                canonical=True,
+            )
+            _text(evidence["unit"], label=f"{evidence_label}.unit")
+            if "reported_increment" in evidence:
+                parse_decimal(
+                    evidence["reported_increment"],
+                    label=f"{evidence_label}.reported_increment",
+                    positive=True,
+                    canonical=True,
+                )
+        _validate_structured_value(check["details"], label=f"{label}.details")
+
+    errors = [
+        _mapping(item, label=f"reconciliation.errors[{position}]")
+        for position, item in enumerate(
+            _sequence(reconciliation["errors"], label="reconciliation.errors")
+        )
+    ]
+    if errors:
+        _require_unique_ids(errors, field="error_id", label="reconciliation.errors")
+    for position, error in enumerate(errors):
+        label = f"reconciliation.errors[{position}]"
+        _exact_fields(
+            error,
+            required=frozenset(
+                {"error_id", "code", "message", "references", "details"}
+            ),
+            label=label,
+        )
+        _text(error["code"], label=f"{label}.code")
+        _text(error["message"], label=f"{label}.message")
+        _validate_reference_set(
+            error["references"],
+            label=f"{label}.references",
+            artifact_ids=artifact_ids,
+            source_ids=source_ids,
+            decision_ids=decision_ids,
+            lineage_ids=lineage_ids,
+        )
+        _validate_structured_value(error["details"], label=f"{label}.details")
+
+    statuses = _mapping(payload["statuses"], label="statuses")
+    _exact_fields(statuses, required=STATUS_FIELDS, label="statuses")
+    allowed_statuses = {
+        "validation": {"not_assessed", "passed", "failed", "blocked"},
+        "preparation": {"not_assessed", "passed", "failed", "blocked"},
+        "reconciliation": {"not_assessed", "passed", "failed", "blocked"},
+        "semantic": {"not_assessed"},
+        "source": (
+            {"local_receipt_only"}
+            if local_source_profile
+            else {"not_assessed", "receipt_only", "failed", "blocked"}
+        ),
+        "downstream": {"not_assessed"},
+        "publication": {
+            "not_assessed",
+            "withheld",
+            "failed",
+            "blocked",
+        },
+    }
+    for status_name in sorted(STATUS_FIELDS):
+        status = _mapping(statuses[status_name], label=f"statuses.{status_name}")
+        _exact_fields(
+            status,
+            required=frozenset({"status", "basis", "evidence_refs"}),
+            label=f"statuses.{status_name}",
+        )
+        if status_name == "publication" and status["status"] == "emitted":
+            raise ContractValidationError(
+                "an audit envelope cannot establish external publication"
+            )
+        if status["status"] not in allowed_statuses[status_name]:
+            raise ContractValidationError(f"statuses.{status_name}.status is invalid")
+        _text(status["basis"], label=f"statuses.{status_name}.basis")
+        _validate_reference_set(
+            status["evidence_refs"],
+            label=f"statuses.{status_name}.evidence_refs",
+            artifact_ids=artifact_ids,
+            source_ids=source_ids,
+            decision_ids=decision_ids,
+            lineage_ids=lineage_ids,
+        )
+
+    reconciliation_status = statuses["reconciliation"]["status"]
+    failed_checks = [check for check in checks if check["status"] != "passed"]
+    if reconciliation_status == "passed" and (failed_checks or errors):
+        raise ContractValidationError(
+            "passed reconciliation cannot contain failed checks or errors"
+        )
+    if reconciliation_status == "failed" and not (failed_checks or errors):
+        raise ContractValidationError(
+            "failed reconciliation must contain a failed check or error"
+        )
+    if statuses["source"]["status"] == "receipt_only" and not source_ids:
+        raise ContractValidationError("receipt_only source status requires receipts")
+    if local_source_profile:
+        local_source_artifacts = [
+            artifact
+            for artifact in artifacts
+            if artifact["role"] == AUTHORIZED_LOCAL_SOURCE_ROLE
+        ]
+        if not local_source_artifacts:
+            raise ContractValidationError(
+                "v2 requires at least one authorized_local_source artifact"
+            )
+        if any(artifact["root_id"] != "pilot" for artifact in local_source_artifacts):
+            raise ContractValidationError(
+                "authorized_local_source artifacts must use the pilot root"
+            )
+        local_source_ids = {
+            str(artifact["artifact_id"]) for artifact in local_source_artifacts
+        }
+        source_status_refs = set(
+            _sequence(
+                _mapping(
+                    statuses["source"]["evidence_refs"],
+                    label="statuses.source.evidence_refs",
+                )["artifact_refs"],
+                label="statuses.source.evidence_refs.artifact_refs",
+            )
+        )
+        if not local_source_ids.issubset(source_status_refs):
+            raise ContractValidationError(
+                "local_receipt_only source status must reference every "
+                "authorized_local_source artifact"
+            )
+        if not local_source_ids.issubset(execution_input_refs):
+            raise ContractValidationError(
+                "every authorized_local_source artifact must be an execution input"
+            )
+    if type(payload["report_ready"]) is not bool or payload["report_ready"]:
+        raise ContractValidationError(
+            "preparation audit envelopes cannot claim report readiness"
+        )
+    limitations = [
+        _mapping(item, label=f"limitations[{position}]")
+        for position, item in enumerate(
+            _sequence(payload["limitations"], label="limitations")
+        )
+    ]
+    if not limitations:
+        raise ContractValidationError("limitations must not be empty")
+    _require_unique_ids(limitations, field="limitation_id", label="limitations")
+    allowed_scopes = {
+        "case",
+        "adapter",
+        "source",
+        "validation",
+        "preparation",
+        "numeric",
+        "reconciliation",
+        "semantic",
+        "lineage",
+        "downstream",
+        "publication",
+    }
+    for position, limitation in enumerate(limitations):
+        label = f"limitations[{position}]"
+        _exact_fields(
+            limitation,
+            required=frozenset({"limitation_id", "scope", "statement"}),
+            optional=frozenset({"related_refs"}),
+            label=label,
+        )
+        if limitation["scope"] not in allowed_scopes:
+            raise ContractValidationError(f"{label}.scope is invalid")
+        _text(limitation["statement"], label=f"{label}.statement")
+        if "related_refs" in limitation:
+            _validate_reference_set(
+                limitation["related_refs"],
+                label=f"{label}.related_refs",
+                artifact_ids=artifact_ids,
+                source_ids=source_ids,
+                decision_ids=decision_ids,
+                lineage_ids=lineage_ids,
+            )
+
+    return dict(payload)
+
+
+def validate_audit_envelope(
+    envelope: Mapping[str, Any],
+    *,
+    root: Path,
+) -> dict[str, Any]:
+    """Validate the frozen v1 remote-receipt audit-envelope profile.
+
+    Successful validation proves only contract integrity. It does not prove
+    source authority, semantic correctness, reviewer authorization, report
+    readiness, or publication eligibility.
+    """
+
+    return _validate_audit_envelope_profile(
+        envelope,
+        schema_version=AUDIT_ENVELOPE_SCHEMA,
+        root=Path(root),
+        artifact_roots=None,
+    )
+
+
+def validate_audit_envelope_v2(
+    envelope: Mapping[str, Any],
+    *,
+    artifact_roots: Mapping[str, Path],
+) -> dict[str, Any]:
+    """Validate the v2 exact-local-source profile through two named roots.
+
+    The ``plugin`` and ``pilot`` roots are caller-supplied capabilities, not
+    paths recorded in the envelope. Every artifact is opened with no-follow
+    descriptor traversal. This proves exact local bytes at validation time,
+    not source authority, semantic correctness, or later file immutability.
+    """
+
+    return _validate_audit_envelope_profile(
+        envelope,
+        schema_version=AUDIT_ENVELOPE_SCHEMA_V2,
+        root=None,
+        artifact_roots=artifact_roots,
+    )

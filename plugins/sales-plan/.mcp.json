@@ -1,0 +1,23 @@
+{
+  "mcpServers": {
+    "veraSalesPlan": {
+      "title": "Vera Plan",
+      "description": "Describe Vera's reviewed Actual-to-Plan workflow and deterministic artifacts.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./mcp/server.cjs",
+        "--stdio"
+      ]
+    }
+  }
+}

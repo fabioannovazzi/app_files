@@ -20,6 +20,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "concordato-plan-review",
     "deep-research-validator",
     "financial-analysis",
+    "sales-plan",
     "client-file-preparation",
     "new-client",
     "journal-bank-reconciliation",
@@ -38,6 +39,7 @@ VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/financial-analysis/index.html"),
+    Path("static/shared/sales-plan/index.html"),
     Path("static/shared/journal-bank-reconciliation/index.html"),
     Path("static/shared/journal-sampling/index.html"),
     Path("static/shared/new-client/geneva.html"),
@@ -424,11 +426,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.58"
+    assert manifest["version"] == "0.1.59"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Esamina documenti o dati contabili oppure prepara uno scenario di piano, "
-        "separando fatti e assunzioni da confermare."
+        "Prepara un Plan vendite da questi Actual, mostrando prima le assunzioni "
+        "commerciali e valutarie interpretate."
     )
     assert any(
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
@@ -809,7 +811,7 @@ def test_accounting_bundle_contains_only_vera_and_its_modules() -> None:
         assert not any(f"/plugins/{module_name}/" in name for name in standard_entries)
 
 
-def test_vera_package_owns_financial_analysis_engines() -> None:
+def test_vera_package_separates_plan_from_financial_analysis_engines() -> None:
     builder = load_builder()
     bundles = {bundle.name: bundle for bundle in builder.load_bundles()}
     packages = {package.plugin: package for package in builder.load_packages()}
@@ -819,7 +821,6 @@ def test_vera_package_owns_financial_analysis_engines() -> None:
         "prepare_monthly_pnl_case.py",
         "prepare_working_capital_case.py",
         "prepare_customer_concentration_case.py",
-        "prepare_sales_plan_case.py",
         "prepare_fdd_case.py",
     }
 
@@ -831,6 +832,21 @@ def test_vera_package_owns_financial_analysis_engines() -> None:
         clara_path = f"clara-codex-plugin/plugins/clara/scripts/{engine_name}"
         assert vera_path in vera_entries
         assert clara_path not in clara_entries
+
+    plan_path = (
+        "vera-codex-plugin/plugins/vera/modules/sales-plan/scripts/"
+        "prepare_sales_plan_case.py"
+    )
+    legacy_financial_path = (
+        "vera-codex-plugin/plugins/vera/modules/financial-analysis/scripts/"
+        "prepare_sales_plan_case.py"
+    )
+    assert plan_path in vera_entries
+    assert legacy_financial_path not in vera_entries
+    assert (
+        "clara-codex-plugin/plugins/clara/scripts/prepare_sales_plan_case.py"
+        not in (clara_entries)
+    )
 
 
 def test_vera_routes_every_commercialista_module() -> None:
@@ -2702,6 +2718,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
+        "../sales-plan/index.html",
         "../financial-analysis/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
@@ -2717,8 +2734,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 10
-    assert core.count('class="module-row"') == 10
+    assert core.count(" data-module-link") == 11
+    assert core.count('class="module-row"') == 11
     assert italy.count('data-jurisdiction-item="it"') == 5
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -2813,6 +2830,7 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.entries.title",
         "module.bank.title",
         "module.reconciliation.title",
+        "module.plan.title",
         "module.financialAnalysis.title",
         "module.report.title",
         "module.prompt.title",
@@ -2836,10 +2854,21 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
+def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
+
+    plan = re.search(
+        r'<a[^>]+id="sales-plan".*?</a>',
+        page,
+        flags=re.DOTALL,
+    )
+    assert plan is not None
+    assert 'href="../sales-plan/index.html"' in plan.group(0)
+    assert "data-module-link" in plan.group(0)
+    assert "module-row__arrow" in plan.group(0)
+    assert "module.plan.title" in plan.group(0)
 
     financial_analysis = re.search(
         r'<a[^>]+id="financial-analysis".*?</a>',
@@ -2857,19 +2886,19 @@ def test_vera_page_links_financial_analysis_as_thirteenth_capability() -> None:
     assert "adjusted EBITDA" in page
     assert "net debt" in page
     for localized_count in (
+        "Quattordici funzioni",
+        "Fourteen capabilities",
+        "Quatorze fonctions",
+        "Vierzehn Funktionen",
+        "Catorce funciones",
+    ):
+        assert localized_count in page
+    for stale_count in (
         "Tredici funzioni",
         "Thirteen capabilities",
         "Treize fonctions",
         "Dreizehn Funktionen",
         "Trece funciones",
-    ):
-        assert localized_count in page
-    for stale_count in (
-        "Dodici funzioni",
-        "Twelve capabilities",
-        "Douze fonctions",
-        "Zwölf Funktionen",
-        "Doce funciones",
     ):
         assert stale_count not in page
 
@@ -2888,11 +2917,9 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Conto economico mensile",
         "Capitale circolante",
         "Concentrazione clienti",
-        "Scenario di piano vendite",
         "Monthly P&L",
         "working capital",
         "customer concentration",
-        "Sales-plan scenario",
         'id="due-diligence"',
         'href="#due-diligence"',
         "Quality of Earnings e adjusted EBITDA",
@@ -2919,15 +2946,10 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "prepared_evidence_manifest.json",
         "fdd_result.json",
         "fdd_metrics.json",
-        "sales_plan_scenario.csv",
-        "assumption_application_ledger.csv",
-        "scenario_summary.csv",
         "pack_execution_receipt.json",
         "contingent_liability_register.json",
         "financial_issue_register.json",
         'id="prompt-example"',
-        "In Cina le unità crescono dell’8%",
-        "Unit sales in China rise 8%",
         'href="../vera/index.html?lang=it"',
     ):
         assert snippet in page
@@ -2944,6 +2966,47 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Tres análisis financieros",
     ):
         assert stale_snippet not in page
+
+
+def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
+    page = (ROOT / "static" / "shared" / "sales-plan" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert page.count('"meta.title": "Plan | Vera"') == 5
+    for snippet in (
+        "<title>Plan | Vera</title>",
+        "Actual",
+        "Plan",
+        "Cina",
+        "China",
+        "USD",
+        "Scope",
+        "Periodo",
+        "Priority",
+        "sales_plan_scenario.csv",
+        "assumption_application_ledger.csv",
+        "scenario_summary.csv",
+        "reconciliation.json",
+        "prepared_evidence_manifest.json",
+        "plan_execution_receipt.json",
+        'id="prompt-example"',
+        'href="../vera/index.html?lang=it"',
+    ):
+        assert snippet in page
+
+    visible_copy_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    for copy_key in visible_copy_keys:
+        assert page.count(f'"{copy_key}":') == 5, copy_key
+
+    for forbidden_financial_analysis_copy in (
+        "Quality of Earnings",
+        "adjusted EBITDA",
+        "Net debt",
+        "Monthly P&L",
+        "Financial analysis and due diligence",
+    ):
+        assert forbidden_financial_analysis_copy not in page
 
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:
@@ -3736,6 +3799,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "financial-analysis": (
             "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
+        "sales-plan": ("https://mparanza.com/static/shared/sales-plan/index.html"),
         "prompt-optimizer": (
             "https://mparanza.com/static/shared/prompt-optimizer/index.html"
         ),

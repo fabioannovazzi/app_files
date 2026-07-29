@@ -63,9 +63,10 @@ The shared specialist workflows cover:
   AML, document planning, and monitoring;
 - accounting evidence reconciliation, journal sampling, entry checks, and
   journal-to-bank reconciliation;
-- source-bound financial analysis, including reviewed Actual-to-Plan sales
-  scenarios and fixed due-diligence recipes, plus reviewable financial reports
-  and concordato preventivo review;
+- forward-looking sales Plan scenarios from reviewed Actuals and confirmed
+  commercial or FX assumptions;
+- source-bound historical financial analysis and fixed due-diligence recipes,
+  plus reviewable financial reports and concordato preventivo review;
 - source-backed legal, tax, and compliance research prompts and validation;
 - evidence-backed INPS case review from supplied documents or official exports;
   and

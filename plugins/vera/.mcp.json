@@ -56,6 +56,14 @@
       "command": "node",
       "args": ["./scripts/run_component_mcp.cjs", "financial-analysis"]
     },
+    "veraSalesPlan": {
+      "title": "Vera Plan",
+      "description": "Describe the reviewed Actual-to-Plan workflow and its deterministic artifacts.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "sales-plan"]
+    },
     "reportBuilderWidgets": {
       "title": "Build Report",
       "description": "Validate and render Build Report review-session payloads.",

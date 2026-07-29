@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -13,21 +14,19 @@ from typing import Any
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
-ASSURANCE_ROOT = ROOT / "plugins" / "_shared" / "vendor" / "modules"
-FINANCIAL_SCRIPTS = ROOT / "plugins" / "financial-analysis" / "scripts"
-ENGINE_SCRIPT = FINANCIAL_SCRIPTS / "prepare_sales_plan_case.py"
-FIXTURE_ROOT = (
-    ROOT / "plugins" / "financial-analysis" / "evals" / "sales_plan_synthetic"
-)
-if str(ASSURANCE_ROOT) not in sys.path:
-    sys.path.insert(0, str(ASSURANCE_ROOT))
-if str(FINANCIAL_SCRIPTS) not in sys.path:
-    sys.path.insert(0, str(FINANCIAL_SCRIPTS))
+PLAN_ROOT = ROOT / "plugins" / "sales-plan"
+PLAN_SCRIPTS = PLAN_ROOT / "scripts"
+ENGINE_SCRIPT = PLAN_SCRIPTS / "prepare_sales_plan_case.py"
+RUNNER_SCRIPT = PLAN_SCRIPTS / "run_plan.py"
+MCP_SCRIPT = PLAN_ROOT / "mcp" / "server.cjs"
+FIXTURE_ROOT = PLAN_ROOT / "evals" / "synthetic"
+if str(PLAN_SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(PLAN_SCRIPTS))
 
 
 def _load_engine_module() -> ModuleType:
-    if str(FINANCIAL_SCRIPTS) not in sys.path:
-        sys.path.insert(0, str(FINANCIAL_SCRIPTS))
+    if str(PLAN_SCRIPTS) not in sys.path:
+        sys.path.insert(0, str(PLAN_SCRIPTS))
     spec = importlib.util.spec_from_file_location(
         "vera_sales_plan_preparation",
         ENGINE_SCRIPT,
@@ -38,6 +37,31 @@ def _load_engine_module() -> ModuleType:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _load_runner_module() -> ModuleType:
+    spec = importlib.util.spec_from_file_location(
+        "vera_sales_plan_runner",
+        RUNNER_SCRIPT,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _node_binary() -> str:
+    node_binary = shutil.which("node")
+    if node_binary is not None:
+        return node_binary
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
+    )
+    if not candidates:
+        pytest.skip("Node.js is required for the sales-plan MCP test.")
+    return candidates[-1].as_posix()
 
 
 def _copy_fixture(tmp_path: Path) -> Path:
@@ -249,3 +273,74 @@ def test_prepare_sales_plan_case_is_byte_deterministic(tmp_path: Path) -> None:
         for path in sorted(second_dir.iterdir())
     }
     assert first_hashes == second_hashes
+
+
+def test_run_plan_writes_a_standalone_execution_receipt(tmp_path: Path) -> None:
+    module = _load_runner_module()
+    case_path = _copy_fixture(tmp_path)
+    output_dir = tmp_path / "output"
+
+    receipt = module.run_plan(case_path=case_path, output_dir=output_dir)
+
+    assert receipt["schema_version"] == "vera.sales_plan_execution.v1"
+    assert receipt["workflow"] == "sales-plan"
+    assert receipt["recipe_id"] == "sales_plan_from_reviewed_actuals.v1"
+    assert receipt["status"] == "passed"
+    assert receipt["report_ready"] is False
+    assert {artifact["path"] for artifact in receipt["output_artifacts"]} == {
+        "assumption_application_ledger.csv",
+        "prepared_evidence_manifest.json",
+        "reconciliation.json",
+        "sales_plan_scenario.csv",
+        "scenario_summary.csv",
+    }
+    written_receipt = json.loads(
+        (output_dir / "plan_execution_receipt.json").read_text(encoding="utf-8")
+    )
+    assert written_receipt == receipt
+
+
+def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
+    requests = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {},
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "describe_vera_sales_plan",
+                "arguments": {},
+            },
+        },
+    ]
+
+    result = subprocess.run(
+        [_node_binary(), str(MCP_SCRIPT), "--stdio"],
+        input="\n".join(json.dumps(request) for request in requests) + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    responses = [json.loads(line) for line in result.stdout.splitlines()]
+    assert responses[0]["result"]["serverInfo"] == {
+        "name": "vera-sales-plan",
+        "version": "0.1.0",
+    }
+    payload = responses[1]["result"]["structuredContent"]
+    assert payload["workflow"] == "vera.sales_plan"
+    assert payload["recipe_id"] == "sales_plan_from_reviewed_actuals.v1"
+    assert payload["report_ready"] is False
+    assert payload["artifacts"] == [
+        "sales_plan_scenario.csv",
+        "assumption_application_ledger.csv",
+        "scenario_summary.csv",
+        "reconciliation.json",
+        "prepared_evidence_manifest.json",
+        "plan_execution_receipt.json",
+    ]

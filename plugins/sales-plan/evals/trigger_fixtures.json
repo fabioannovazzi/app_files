@@ -1,0 +1,41 @@
+{
+  "plugin": "sales-plan",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "china-units-usd",
+      "prompt": "Build a Plan from this monthly sales file: units in China rise 8%, while the USD weakens 5% against EUR.",
+      "required_signals": [
+        "Plan",
+        "monthly sales",
+        "China",
+        "USD",
+        "EUR"
+      ]
+    },
+    {
+      "id": "price-and-cogs",
+      "prompt": "Create an Actual-to-Plan scenario with prices up 3% in Germany and COGS up 2% from April.",
+      "required_signals": [
+        "Actual-to-Plan",
+        "prices",
+        "COGS",
+        "April"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "historical-analysis",
+      "prompt": "Explain why sales declined last quarter."
+    },
+    {
+      "id": "financial-due-diligence",
+      "prompt": "Prepare adjusted EBITDA and net debt for the acquisition."
+    },
+    {
+      "id": "cash-budget",
+      "prompt": "Build a treasury cash budget from payment due dates."
+    }
+  ]
+}
