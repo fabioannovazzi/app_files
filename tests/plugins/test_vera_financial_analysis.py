@@ -109,12 +109,11 @@ def test_financial_analysis_mcp_describes_all_registered_packs() -> None:
     )
 
     responses = [json.loads(line) for line in result.stdout.splitlines()]
-    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.2"
+    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.3"
     assert responses[1]["result"]["structuredContent"]["registered_packs"] == [
         "monthly_pnl",
         "working_capital",
         "customer_concentration",
-        "sales_plan",
         "quality_of_earnings",
         "net_debt",
         "normalized_working_capital",
@@ -157,7 +156,6 @@ def _vera_case(
         "monthly_pnl": "vera.monthly_pnl_preparation_case.v1",
         "working_capital": "vera.working_capital_preparation_case.v1",
         "customer_concentration": "vera.customer_concentration_preparation_case.v1",
-        "sales_plan": "vera.sales_plan_preparation_case.v1",
     }[pack_id]
     if pack_id == "working_capital":
         policy_receipt = case["files"]["reviewed_working_capital_policy"]
@@ -680,12 +678,6 @@ def test_cli_writes_deterministic_contract_audit(tmp_path: Path) -> None:
             / "plugins/clara/evals/preparation/udc_fy2025_customer_concentration/case.json",
             "vera.customer_concentration_evidence_manifest.v1",
             4,
-        ),
-        (
-            "sales_plan",
-            ROOT / "plugins/financial-analysis/evals/sales_plan_synthetic/case.json",
-            "vera.sales_plan_evidence_manifest.v1",
-            5,
         ),
     ],
 )

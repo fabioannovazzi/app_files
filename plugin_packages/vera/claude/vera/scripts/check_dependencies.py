@@ -20,6 +20,7 @@ COMPONENTS = (
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
+    "sales-plan",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",

@@ -1,0 +1,50 @@
+{
+  "schema_version": 3,
+  "workstream": "sales-plan",
+  "display_name": "Plan",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "sales-plan-evidence",
+        "purpose": "Interpret and review commercial and FX assumptions, then prepare a forward-looking sales Plan from reviewed Actuals",
+        "content": "User instructions; monthly Actual sales rows; product, customer, country, channel or other reviewed dimensions; units, prices, gross sales, discounts, COGS, transaction and reporting currencies, and FX rates; Actual-to-Plan period mappings; reviewed assumptions, scopes, priorities and rationale; source identities and hashes; Plan scenario rows; assumption ledger; scenario summary; reconciliation results; replay evidence; limitations and review status",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "reviewed-plan-assumptions",
+      "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping, and fails on unmatched scopes, unsupported drivers, ambiguous equal-priority overlaps, incompatible driver combinations, missing metrics, or stale source evidence."
+    },
+    {
+      "id": "fresh-pinned-plan-output",
+      "control": "The dispatcher requires a fresh regular output directory, pins its identity, records exact output hashes, and verifies the case and implementation source remain unchanged throughout execution."
+    },
+    {
+      "id": "prepared-plan-boundary",
+      "control": "The evidence manifest and execution receipt force report_ready=false so a reproducible Plan cannot be presented as professional approval of the assumptions or result."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-07-29",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "ed6483d6fe364ecc12175f6802170d59b36ac9764f3a6ca8f4ed5b1054fdfe64"
+  }
+}

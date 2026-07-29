@@ -42,9 +42,6 @@ from prepare_fdd_case import (
 from prepare_monthly_pnl_case import ENGINE_VERSION as MONTHLY_PNL_ENGINE_VERSION
 from prepare_monthly_pnl_case import RECIPE_ID as MONTHLY_PNL_RECIPE_ID
 from prepare_monthly_pnl_case import prepare_monthly_pnl_case
-from prepare_sales_plan_case import ENGINE_VERSION as SALES_PLAN_ENGINE_VERSION
-from prepare_sales_plan_case import RECIPE_ID as SALES_PLAN_RECIPE_ID
-from prepare_sales_plan_case import prepare_sales_plan_case
 from prepare_working_capital_case import (
     ENGINE_VERSION as WORKING_CAPITAL_ENGINE_VERSION,
 )
@@ -124,13 +121,6 @@ FDD_IMPLEMENTATION_FILES = (
     _vendor_assurance_path("serialization.py"),
 )
 
-SALES_PLAN_IMPLEMENTATION_FILES = (
-    _script_path("prepare_sales_plan_case.py"),
-    _script_path("run_pack.py"),
-    _script_path("preparation_contract_kernel.py"),
-)
-
-
 PACKS: Mapping[str, PackSpec] = {
     "monthly_pnl": PackSpec(
         MONTHLY_PNL_RECIPE_ID,
@@ -149,12 +139,6 @@ PACKS: Mapping[str, PackSpec] = {
         CUSTOMER_CONCENTRATION_ENGINE_VERSION,
         prepare_customer_concentration_case,
         (_script_path("prepare_customer_concentration_case.py"),),
-    ),
-    "sales_plan": PackSpec(
-        SALES_PLAN_RECIPE_ID,
-        SALES_PLAN_ENGINE_VERSION,
-        prepare_sales_plan_case,
-        SALES_PLAN_IMPLEMENTATION_FILES,
     ),
     "quality_of_earnings": PackSpec(
         FDD_RECIPE_IDS["quality_of_earnings"],

@@ -21,7 +21,7 @@ from decimal import ROUND_HALF_UP, Decimal, Inexact, Rounded, localcontext
 from pathlib import Path
 from typing import Any
 
-from preparation_contract_kernel import (
+from plan_contract_kernel import (
     ContractValidationError,
     ExactDecimalPolicy,
     canonical_json_sha256,

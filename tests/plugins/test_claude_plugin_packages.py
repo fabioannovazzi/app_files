@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.58"
+    assert manifest["version"] == "0.1.59"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -163,7 +163,7 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     )
     servers = payload["mcpServers"]
 
-    assert len(servers) == 14
+    assert len(servers) == 15
     for server in servers.values():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
@@ -594,7 +594,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-            "All 13 Vera modules are available.",
+            "All 14 Vera modules are available.",
         ),
         (
             isolated.output_directory

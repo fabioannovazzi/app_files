@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Vera Plan trasforma vendite Actual revisionate in uno scenario di piano applicando soltanto assunzioni commerciali e valutarie confermate.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Mparanza">
+  <meta property="og:title" content="Plan | Vera">
+  <meta property="og:description" content="Da Actual e assunzioni confermate a un Plan vendite rivedibile e riconciliato.">
+  <meta property="og:url" content="https://mparanza.com/static/shared/sales-plan/index.html">
+  <meta id="og-locale" property="og:locale" content="it_IT">
+  <link rel="canonical" href="https://mparanza.com/static/shared/sales-plan/index.html">
+  <title>Plan | Vera</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
+  <link rel="stylesheet" href="../vera-journey.css?v=20260729-plan">
+  <style>
+    :root { --paper: #ffffff; }
+
+    .plan-mark {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: clamp(16px, 3vw, 38px);
+      border-top: 2px solid var(--vj-ink);
+      border-bottom: 1px solid var(--vj-line-strong);
+      padding: clamp(22px, 4vw, 42px) 0;
+    }
+
+    .plan-mark div:last-child { text-align: right; }
+    .plan-mark span {
+      display: block;
+      color: var(--vj-blue);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .plan-mark strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--vj-ink);
+      font-size: clamp(1.7rem, 4vw, 3.7rem);
+      letter-spacing: -0.045em;
+    }
+    .plan-mark b {
+      color: var(--vj-blue);
+      font-size: clamp(1.3rem, 3vw, 2.4rem);
+      font-weight: 500;
+    }
+
+    .assumption-wrap {
+      overflow-x: auto;
+      border-top: 2px solid var(--vj-ink);
+    }
+    .assumption-table {
+      width: 100%;
+      min-width: 760px;
+      border-collapse: collapse;
+      color: var(--vj-ink);
+      font-size: 0.94rem;
+    }
+    .assumption-table th,
+    .assumption-table td {
+      padding: 16px 12px;
+      border-bottom: 1px solid var(--vj-line);
+      text-align: left;
+      vertical-align: top;
+    }
+    .assumption-table th {
+      color: var(--vj-blue);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .assumption-table td:nth-child(4),
+    .assumption-table td:nth-child(6) {
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .artifact-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 2px solid var(--vj-ink);
+    }
+    .artifact-list li {
+      padding: 17px 0;
+      border-bottom: 1px solid var(--vj-line);
+      color: var(--vj-ink);
+      list-style: none;
+    }
+    .artifact-list li:nth-child(odd) { padding-right: 24px; }
+
+    @media (max-width: 720px) {
+      .plan-mark { grid-template-columns: 1fr; }
+      .plan-mark div:last-child { text-align: left; }
+      .plan-mark b { transform: rotate(90deg); transform-origin: left center; }
+      .artifact-list { grid-template-columns: 1fr; }
+      .artifact-list li:nth-child(odd) { padding-right: 0; }
+    }
+  </style>
+</head>
+<body data-vera-module="sales-plan">
+  <a class="skip-link" href="#main-content" data-i18n="skip">Vai al contenuto</a>
+  <header class="topbar">
+    <div class="nav-shell">
+      <a class="brand" id="home-link" href="/?lang=it" aria-label="Mparanza">
+        <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
+      </a>
+      <div class="nav-right">
+        <nav class="nav-links" aria-label="Navigazione pagina" data-i18n-aria-label="aria.pageNav">
+          <a href="#method" data-i18n="nav.method">Come funziona</a>
+          <a href="#assumptions" data-i18n="nav.assumptions">Assunzioni</a>
+          <a href="#controls" data-i18n="nav.controls">Controlli</a>
+          <a href="#outputs" data-i18n="nav.outputs">Output</a>
+          <a href="#prompt" data-i18n="nav.prompt">Prompt</a>
+        </nav>
+        <div class="lang-switch" aria-label="Lingua" data-i18n-aria-label="aria.language">
+          <button type="button" data-lang="it" aria-pressed="true">IT</button>
+          <button type="button" data-lang="en" aria-pressed="false">EN</button>
+          <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+          <button type="button" data-lang="de" aria-pressed="false">DE</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell" id="main-content">
+    <p class="breadcrumb">
+      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a><span>/</span>
+      <strong data-i18n="breadcrumb.current">Plan</strong>
+    </p>
+
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Plan</p>
+        <h1 id="hero-title" data-i18n="hero.title">Dagli Actual a un Plan che mostra ogni assunzione.</h1>
+        <p class="lead" data-i18n="hero.lead">Vera legge i dati vendite, traduce le ipotesi del commercialista in regole precise e calcola lo scenario soltanto dopo la conferma di scope, periodo, driver, cambio e priorità.</p>
+        <div class="hero-actions">
+          <a class="button" href="#assumptions" data-i18n="hero.primary">Vedi la revisione</a>
+          <a class="button secondary" href="#prompt" data-i18n="hero.secondary">Prova il prompt</a>
+        </div>
+      </div>
+      <aside class="hero-ledger" aria-label="Sintesi del Plan" data-i18n-aria-label="aria.summary">
+        <div><span data-i18n="hero.input.label">Partenza</span><strong data-i18n="hero.input">Vendite mensili Actual revisionate</strong></div>
+        <div><span data-i18n="hero.prepare.label">Conferma</span><strong data-i18n="hero.prepare">Assunzioni commerciali e valutarie strutturate</strong></div>
+        <div><span data-i18n="hero.output.label">Risultato</span><strong data-i18n="hero.output">Plan, ledger delle assunzioni e riconciliazione</strong></div>
+      </aside>
+    </section>
+
+    <section class="content-section" id="method">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="method.kicker">Il passaggio</p>
+          <h2 data-i18n="method.title">Actual, decisioni, Plan. Tre stati distinti.</h2>
+        </div>
+        <p data-i18n="method.copy">Il motore non prevede la domanda e non inventa ipotesi. Conserva la forma temporale degli Actual e applica percentuali confermate alle righe che corrispondono allo scope.</p>
+      </div>
+      <div class="plan-mark" aria-label="Da Actual a Plan" data-i18n-aria-label="aria.actualToPlan">
+        <div><span data-i18n="method.actual.label">Scenario sorgente</span><strong>Actual</strong></div>
+        <b aria-hidden="true">→</b>
+        <div><span data-i18n="method.plan.label">Scenario risultante</span><strong>Plan</strong></div>
+      </div>
+    </section>
+
+    <section class="content-section" id="assumptions">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="assumptions.kicker">Prima del calcolo</p>
+          <h2 data-i18n="assumptions.title">Vera restituisce ciò che ha capito.</h2>
+        </div>
+        <p data-i18n="assumptions.copy">“Le vendite salgono” non basta. Vera distingue volumi, prezzo e ricavi; per i cambi esplicita coppia, direzione ed esposizione.</p>
+      </div>
+      <div class="assumption-wrap">
+        <table class="assumption-table">
+          <thead>
+            <tr>
+              <th data-i18n="table.id">ID</th>
+              <th data-i18n="table.driver">Driver</th>
+              <th data-i18n="table.scope">Scope esatto</th>
+              <th data-i18n="table.change">Variazione</th>
+              <th data-i18n="table.period">Periodo</th>
+              <th data-i18n="table.priority">Priorità</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>A1</td>
+              <td data-i18n="table.row1.driver">Unità</td>
+              <td><code>country=China</code></td>
+              <td>+8%</td>
+              <td data-i18n="table.row1.period">periodi Plan mappati</td>
+              <td>100</td>
+            </tr>
+            <tr>
+              <td>A2</td>
+              <td data-i18n="table.row2.driver">Cambio USD/EUR</td>
+              <td><code>transaction_currency=USD</code></td>
+              <td>−5%</td>
+              <td data-i18n="table.row2.period">periodi Plan mappati</td>
+              <td>100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="content-section" id="controls">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="controls.kicker">Controlli del Plan</p>
+          <h2 data-i18n="controls.title">Le ambiguità non diventano numeri.</h2>
+        </div>
+        <p data-i18n="controls.copy">Scope non trovati, dati cambiati, metriche mancanti e collisioni bloccano il calcolo invece di produrre un risultato plausibile.</p>
+      </div>
+      <div class="journey">
+        <article class="journey-step"><span>01</span><h3 data-i18n="controls.1.title">Lega la fonte</h3><p data-i18n="controls.1.copy">Il caso registra hash, colonne, valute, periodi e mapping Actual-to-Plan.</p></article>
+        <article class="journey-step"><span>02</span><h3 data-i18n="controls.2.title">Conferma le regole</h3><p data-i18n="controls.2.copy">Ogni assunzione ha driver, percentuale, scope, periodo, priorità e motivazione.</p></article>
+        <article class="journey-step"><span>03</span><h3 data-i18n="controls.3.title">Gestisce le collisioni</h3><p data-i18n="controls.3.copy">Le sovrapposizioni con stessa priorità o driver incompatibili falliscono in modo esplicito.</p></article>
+        <article class="journey-step"><span>04</span><h3 data-i18n="controls.4.title">Riconcilia il risultato</h3><p data-i18n="controls.4.copy">Scenario, riepilogo, ledger e ricevuta sono legati agli stessi input e controllati per replay.</p></article>
+      </div>
+    </section>
+
+    <section class="content-section" id="outputs">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="outputs.kicker">Consegna rivedibile</p>
+          <h2 data-i18n="outputs.title">Il Plan arriva con la sua spiegazione.</h2>
+        </div>
+        <p data-i18n="outputs.copy">Il file di scenario non viaggia da solo: il ledger mostra dove ogni assunzione è stata applicata, ignorata o superata.</p>
+      </div>
+      <ul class="artifact-list">
+        <li>sales_plan_scenario.csv</li>
+        <li>assumption_application_ledger.csv</li>
+        <li>scenario_summary.csv</li>
+        <li>reconciliation.json</li>
+        <li>prepared_evidence_manifest.json</li>
+        <li>plan_execution_receipt.json</li>
+      </ul>
+    </section>
+
+    <section class="country-transition" aria-labelledby="boundary-title">
+      <div class="country-transition__head">
+        <p class="section-kicker" data-i18n="boundary.kicker">Responsabilità</p>
+        <h2 id="boundary-title" data-i18n="boundary.title">Vera calcola il Plan. Il commercialista approva le ipotesi.</h2>
+        <p data-i18n="boundary.copy">Un’esecuzione esatta dimostra che le regole confermate sono state applicate in modo riproducibile. Non dimostra che le ipotesi siano prudenti, probabili o approvate dalla direzione.</p>
+      </div>
+    </section>
+
+    <section class="content-section" id="prompt">
+      <div class="prompt-layout">
+        <div class="prompt-copy">
+          <p class="section-kicker" data-i18n="prompt.kicker">Provalo in Vera</p>
+          <h2 data-i18n="prompt.title">Parla come parleresti con un collega.</h2>
+          <p data-i18n="prompt.copy">Vera prepara la tabella di assunzioni e chiede conferma prima del calcolo.</p>
+        </div>
+        <pre><code id="prompt-example">Prepara un Plan vendite da questo file Actual. In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro. Prima di calcolare, mostrami driver, scope, periodi, direzione del cambio e priorità che hai interpretato. Dopo la mia conferma, consegna scenario Plan, ledger delle assunzioni, riepilogo, riconciliazione e ricevuta riproducibile.</code></pre>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-shell">
+      <span>Vera · Plan</span>
+      <span class="footer-links">
+        <a id="footer-vera-link" href="../vera/index.html?lang=it" data-i18n="footer.vera">Tutte le funzioni</a>
+        <a id="data-link" href="/data-handling?lang=it" data-i18n="footer.data">Trattamento dati</a>
+      </span>
+    </div>
+  </footer>
+
+  <script>
+    const copy = {
+      it: {
+        "meta.title": "Plan | Vera", "meta.description": "Vera Plan trasforma vendite Actual revisionate in uno scenario di piano applicando soltanto assunzioni commerciali e valutarie confermate.",
+        "skip": "Vai al contenuto", "nav.method": "Come funziona", "nav.assumptions": "Assunzioni", "nav.controls": "Controlli", "nav.outputs": "Output", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navigazione pagina", "aria.language": "Lingua", "aria.summary": "Sintesi del Plan", "aria.actualToPlan": "Da Actual a Plan",
+        "breadcrumb.current": "Plan", "hero.eyebrow": "Vera · Plan", "hero.title": "Dagli Actual a un Plan che mostra ogni assunzione.",
+        "hero.lead": "Vera legge i dati vendite, traduce le ipotesi del commercialista in regole precise e calcola lo scenario soltanto dopo la conferma di scope, periodo, driver, cambio e priorità.",
+        "hero.primary": "Vedi la revisione", "hero.secondary": "Prova il prompt",
+        "hero.input.label": "Partenza", "hero.input": "Vendite mensili Actual revisionate", "hero.prepare.label": "Conferma", "hero.prepare": "Assunzioni commerciali e valutarie strutturate", "hero.output.label": "Risultato", "hero.output": "Plan, ledger delle assunzioni e riconciliazione",
+        "method.kicker": "Il passaggio", "method.title": "Actual, decisioni, Plan. Tre stati distinti.", "method.copy": "Il motore non prevede la domanda e non inventa ipotesi. Conserva la forma temporale degli Actual e applica percentuali confermate alle righe che corrispondono allo scope.", "method.actual.label": "Scenario sorgente", "method.plan.label": "Scenario risultante",
+        "assumptions.kicker": "Prima del calcolo", "assumptions.title": "Vera restituisce ciò che ha capito.", "assumptions.copy": "“Le vendite salgono” non basta. Vera distingue volumi, prezzo e ricavi; per i cambi esplicita coppia, direzione ed esposizione.",
+        "table.id": "ID", "table.driver": "Driver", "table.scope": "Scope esatto", "table.change": "Variazione", "table.period": "Periodo", "table.priority": "Priorità", "table.row1.driver": "Unità", "table.row1.period": "periodi Plan mappati", "table.row2.driver": "Cambio USD/EUR", "table.row2.period": "periodi Plan mappati",
+        "controls.kicker": "Controlli del Plan", "controls.title": "Le ambiguità non diventano numeri.", "controls.copy": "Scope non trovati, dati cambiati, metriche mancanti e collisioni bloccano il calcolo invece di produrre un risultato plausibile.",
+        "controls.1.title": "Lega la fonte", "controls.1.copy": "Il caso registra hash, colonne, valute, periodi e mapping Actual-to-Plan.", "controls.2.title": "Conferma le regole", "controls.2.copy": "Ogni assunzione ha driver, percentuale, scope, periodo, priorità e motivazione.", "controls.3.title": "Gestisce le collisioni", "controls.3.copy": "Le sovrapposizioni con stessa priorità o driver incompatibili falliscono in modo esplicito.", "controls.4.title": "Riconcilia il risultato", "controls.4.copy": "Scenario, riepilogo, ledger e ricevuta sono legati agli stessi input e controllati per replay.",
+        "outputs.kicker": "Consegna rivedibile", "outputs.title": "Il Plan arriva con la sua spiegazione.", "outputs.copy": "Il file di scenario non viaggia da solo: il ledger mostra dove ogni assunzione è stata applicata, ignorata o superata.",
+        "boundary.kicker": "Responsabilità", "boundary.title": "Vera calcola il Plan. Il commercialista approva le ipotesi.", "boundary.copy": "Un’esecuzione esatta dimostra che le regole confermate sono state applicate in modo riproducibile. Non dimostra che le ipotesi siano prudenti, probabili o approvate dalla direzione.",
+        "prompt.kicker": "Provalo in Vera", "prompt.title": "Parla come parleresti con un collega.", "prompt.copy": "Vera prepara la tabella di assunzioni e chiede conferma prima del calcolo.",
+        "prompt": "Prepara un Plan vendite da questo file Actual. In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro. Prima di calcolare, mostrami driver, scope, periodi, direzione del cambio e priorità che hai interpretato. Dopo la mia conferma, consegna scenario Plan, ledger delle assunzioni, riepilogo, riconciliazione e ricevuta riproducibile.",
+        "footer.vera": "Tutte le funzioni", "footer.data": "Trattamento dati"
+      },
+      en: {
+        "meta.title": "Plan | Vera", "meta.description": "Vera Plan turns reviewed Actual sales into a Plan using only confirmed commercial and FX assumptions.",
+        "skip": "Skip to content", "nav.method": "How it works", "nav.assumptions": "Assumptions", "nav.controls": "Controls", "nav.outputs": "Outputs", "nav.prompt": "Prompt",
+        "aria.pageNav": "Page navigation", "aria.language": "Language", "aria.summary": "Plan summary", "aria.actualToPlan": "From Actual to Plan",
+        "breadcrumb.current": "Plan", "hero.eyebrow": "Vera · Plan", "hero.title": "From Actuals to a Plan that shows every assumption.",
+        "hero.lead": "Vera reads sales data, translates the professional’s hypotheses into precise rules, and calculates only after scope, period, driver, FX direction and priority are confirmed.",
+        "hero.primary": "See the review", "hero.secondary": "Try the prompt",
+        "hero.input.label": "Starting point", "hero.input": "Reviewed monthly Actual sales", "hero.prepare.label": "Confirmation", "hero.prepare": "Structured commercial and FX assumptions", "hero.output.label": "Result", "hero.output": "Plan, assumption ledger and reconciliation",
+        "method.kicker": "The transition", "method.title": "Actual, decisions, Plan. Three distinct states.", "method.copy": "The engine does not forecast demand or invent assumptions. It preserves the Actual time shape and applies confirmed percentages only to rows matching the scope.", "method.actual.label": "Source scenario", "method.plan.label": "Resulting scenario",
+        "assumptions.kicker": "Before calculation", "assumptions.title": "Vera reads back what she understood.", "assumptions.copy": "“Sales go up” is not enough. Vera separates volume, price and revenue; for FX she states the pair, direction and exposure.",
+        "table.id": "ID", "table.driver": "Driver", "table.scope": "Exact scope", "table.change": "Change", "table.period": "Period", "table.priority": "Priority", "table.row1.driver": "Units", "table.row1.period": "mapped Plan periods", "table.row2.driver": "USD/EUR rate", "table.row2.period": "mapped Plan periods",
+        "controls.kicker": "Plan controls", "controls.title": "Ambiguities do not become numbers.", "controls.copy": "Unmatched scopes, changed data, missing metrics and collisions stop calculation instead of producing a plausible result.",
+        "controls.1.title": "Bind the source", "controls.1.copy": "The case records hashes, columns, currencies, periods and the Actual-to-Plan mapping.", "controls.2.title": "Confirm the rules", "controls.2.copy": "Every assumption has a driver, percentage, scope, period, priority and rationale.", "controls.3.title": "Handle collisions", "controls.3.copy": "Equal-priority overlaps or incompatible drivers fail explicitly.", "controls.4.title": "Reconcile the result", "controls.4.copy": "Scenario, summary, ledger and receipt bind to the same inputs and are replay-checked.",
+        "outputs.kicker": "Reviewable delivery", "outputs.title": "The Plan arrives with its explanation.", "outputs.copy": "The scenario file does not travel alone: the ledger shows where every assumption was applied, ignored or overridden.",
+        "boundary.kicker": "Responsibility", "boundary.title": "Vera calculates the Plan. The professional approves the assumptions.", "boundary.copy": "Exact execution proves that confirmed rules were applied reproducibly. It does not prove that assumptions are prudent, likely or management-approved.",
+        "prompt.kicker": "Try it in Vera", "prompt.title": "Speak as you would to a colleague.", "prompt.copy": "Vera prepares the assumption table and asks for confirmation before calculation.",
+        "prompt": "Create a sales Plan from this Actual file. Unit sales in China rise 8%, but the dollar weakens 5% against the euro. Before calculating, show me the driver, scope, periods, FX direction and priority you interpreted. After I confirm, deliver the Plan scenario, assumption ledger, summary, reconciliation and reproducible receipt.",
+        "footer.vera": "All capabilities", "footer.data": "Data handling"
+      },
+      fr: {
+        "meta.title": "Plan | Vera", "meta.description": "Vera Plan transforme les ventes réelles révisées en Plan avec uniquement des hypothèses commerciales et de change confirmées.",
+        "skip": "Aller au contenu", "nav.method": "Fonctionnement", "nav.assumptions": "Hypothèses", "nav.controls": "Contrôles", "nav.outputs": "Livrables", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navigation de la page", "aria.language": "Langue", "aria.summary": "Résumé du Plan", "aria.actualToPlan": "Du réel au Plan",
+        "breadcrumb.current": "Plan", "hero.eyebrow": "Vera · Plan", "hero.title": "Des données réelles à un Plan qui montre chaque hypothèse.",
+        "hero.lead": "Vera lit les données de ventes, traduit les hypothèses du professionnel en règles précises et ne calcule qu’après confirmation du périmètre, de la période, du facteur, du sens du change et de la priorité.",
+        "hero.primary": "Voir la revue", "hero.secondary": "Essayer le prompt",
+        "hero.input.label": "Point de départ", "hero.input": "Ventes mensuelles réelles révisées", "hero.prepare.label": "Confirmation", "hero.prepare": "Hypothèses commerciales et de change structurées", "hero.output.label": "Résultat", "hero.output": "Plan, registre des hypothèses et rapprochement",
+        "method.kicker": "Le passage", "method.title": "Réel, décisions, Plan. Trois états distincts.", "method.copy": "Le moteur ne prévoit pas la demande et n’invente pas d’hypothèses. Il conserve la forme temporelle du réel et applique les pourcentages confirmés aux seules lignes du périmètre.", "method.actual.label": "Scénario source", "method.plan.label": "Scénario résultant",
+        "assumptions.kicker": "Avant le calcul", "assumptions.title": "Vera restitue ce qu’elle a compris.", "assumptions.copy": "« Les ventes augmentent » ne suffit pas. Vera distingue volumes, prix et chiffre d’affaires ; pour le change, elle précise paire, sens et exposition.",
+        "table.id": "ID", "table.driver": "Facteur", "table.scope": "Périmètre exact", "table.change": "Variation", "table.period": "Période", "table.priority": "Priorité", "table.row1.driver": "Unités", "table.row1.period": "périodes Plan mappées", "table.row2.driver": "Taux USD/EUR", "table.row2.period": "périodes Plan mappées",
+        "controls.kicker": "Contrôles du Plan", "controls.title": "Les ambiguïtés ne deviennent pas des chiffres.", "controls.copy": "Périmètres sans correspondance, données modifiées, mesures manquantes et collisions arrêtent le calcul.",
+        "controls.1.title": "Lier la source", "controls.1.copy": "Le cas enregistre hachages, colonnes, devises, périodes et mapping Réel-vers-Plan.", "controls.2.title": "Confirmer les règles", "controls.2.copy": "Chaque hypothèse possède facteur, pourcentage, périmètre, période, priorité et justification.", "controls.3.title": "Gérer les collisions", "controls.3.copy": "Les chevauchements de même priorité ou les facteurs incompatibles échouent explicitement.", "controls.4.title": "Rapprocher le résultat", "controls.4.copy": "Scénario, synthèse, registre et reçu reposent sur les mêmes entrées et sont contrôlés pour replay.",
+        "outputs.kicker": "Livraison révisable", "outputs.title": "Le Plan arrive avec son explication.", "outputs.copy": "Le scénario n’est pas isolé : le registre montre où chaque hypothèse a été appliquée, ignorée ou remplacée.",
+        "boundary.kicker": "Responsabilité", "boundary.title": "Vera calcule le Plan. Le professionnel approuve les hypothèses.", "boundary.copy": "Une exécution exacte prouve l’application reproductible des règles confirmées, pas la prudence, la probabilité ou l’approbation managériale des hypothèses.",
+        "prompt.kicker": "Essayez dans Vera", "prompt.title": "Parlez comme à un collègue.", "prompt.copy": "Vera prépare la table des hypothèses et demande confirmation avant le calcul.",
+        "prompt": "Crée un Plan de ventes à partir de ce fichier réel. Les unités augmentent de 8 % en Chine, mais le dollar baisse de 5 % face à l’euro. Avant le calcul, montre le facteur, le périmètre, les périodes, le sens du change et la priorité interprétés. Après confirmation, livre le scénario Plan, le registre des hypothèses, la synthèse, le rapprochement et le reçu reproductible.",
+        "footer.vera": "Toutes les fonctions", "footer.data": "Traitement des données"
+      },
+      de: {
+        "meta.title": "Plan | Vera", "meta.description": "Vera Plan überführt geprüfte Ist-Umsätze mit bestätigten Vertriebs- und Währungsannahmen in einen Plan.",
+        "skip": "Zum Inhalt", "nav.method": "Funktionsweise", "nav.assumptions": "Annahmen", "nav.controls": "Kontrollen", "nav.outputs": "Ergebnisse", "nav.prompt": "Prompt",
+        "aria.pageNav": "Seitennavigation", "aria.language": "Sprache", "aria.summary": "Planübersicht", "aria.actualToPlan": "Von Ist zu Plan",
+        "breadcrumb.current": "Plan", "hero.eyebrow": "Vera · Plan", "hero.title": "Von Ist-Daten zu einem Plan, der jede Annahme zeigt.",
+        "hero.lead": "Vera liest Vertriebsdaten, übersetzt Hypothesen in präzise Regeln und berechnet erst nach Bestätigung von Umfang, Zeitraum, Treiber, Währungsrichtung und Priorität.",
+        "hero.primary": "Prüfung ansehen", "hero.secondary": "Prompt ausprobieren",
+        "hero.input.label": "Ausgangspunkt", "hero.input": "Geprüfte monatliche Ist-Umsätze", "hero.prepare.label": "Bestätigung", "hero.prepare": "Strukturierte Vertriebs- und Währungsannahmen", "hero.output.label": "Ergebnis", "hero.output": "Plan, Annahmenregister und Abstimmung",
+        "method.kicker": "Der Übergang", "method.title": "Ist, Entscheidungen, Plan. Drei getrennte Zustände.", "method.copy": "Die Engine prognostiziert keine Nachfrage und erfindet keine Annahmen. Sie bewahrt die zeitliche Ist-Struktur und wendet bestätigte Prozentsätze nur auf passende Zeilen an.", "method.actual.label": "Quellszenario", "method.plan.label": "Ergebnisszenario",
+        "assumptions.kicker": "Vor der Berechnung", "assumptions.title": "Vera gibt ihr Verständnis zurück.", "assumptions.copy": "„Der Umsatz steigt“ reicht nicht. Vera trennt Menge, Preis und Umsatz; beim Wechselkurs nennt sie Paar, Richtung und Exposition.",
+        "table.id": "ID", "table.driver": "Treiber", "table.scope": "Exakter Umfang", "table.change": "Änderung", "table.period": "Zeitraum", "table.priority": "Priorität", "table.row1.driver": "Einheiten", "table.row1.period": "zugeordnete Planzeiträume", "table.row2.driver": "USD/EUR-Kurs", "table.row2.period": "zugeordnete Planzeiträume",
+        "controls.kicker": "Plankontrollen", "controls.title": "Mehrdeutigkeiten werden nicht zu Zahlen.", "controls.copy": "Nicht passende Umfänge, geänderte Daten, fehlende Kennzahlen und Kollisionen stoppen die Berechnung.",
+        "controls.1.title": "Quelle binden", "controls.1.copy": "Der Fall erfasst Hashes, Spalten, Währungen, Zeiträume und die Ist-zu-Plan-Zuordnung.", "controls.2.title": "Regeln bestätigen", "controls.2.copy": "Jede Annahme hat Treiber, Prozentsatz, Umfang, Zeitraum, Priorität und Begründung.", "controls.3.title": "Kollisionen behandeln", "controls.3.copy": "Überlappungen gleicher Priorität oder unvereinbare Treiber schlagen explizit fehl.", "controls.4.title": "Ergebnis abstimmen", "controls.4.copy": "Szenario, Zusammenfassung, Register und Beleg sind an dieselben Eingaben gebunden und replay-geprüft.",
+        "outputs.kicker": "Prüfbare Übergabe", "outputs.title": "Der Plan kommt mit seiner Erklärung.", "outputs.copy": "Die Szenariodatei steht nicht allein: Das Register zeigt, wo jede Annahme angewendet, ignoriert oder überschrieben wurde.",
+        "boundary.kicker": "Verantwortung", "boundary.title": "Vera berechnet den Plan. Der Berufsträger genehmigt die Annahmen.", "boundary.copy": "Exakte Ausführung beweist die reproduzierbare Anwendung bestätigter Regeln, nicht Vorsicht, Wahrscheinlichkeit oder Managementfreigabe der Annahmen.",
+        "prompt.kicker": "In Vera ausprobieren", "prompt.title": "Sprechen Sie wie mit einem Kollegen.", "prompt.copy": "Vera bereitet die Annahmentabelle vor und bittet vor der Berechnung um Bestätigung.",
+        "prompt": "Erstelle aus dieser Ist-Datei einen Vertriebsplan. Die Einheiten in China steigen um 8 %, der Dollar verliert jedoch 5 % gegenüber dem Euro. Zeige vor der Berechnung Treiber, Umfang, Zeiträume, Währungsrichtung und Priorität. Liefere nach meiner Bestätigung Planszenario, Annahmenregister, Zusammenfassung, Abstimmung und reproduzierbaren Beleg.",
+        "footer.vera": "Alle Funktionen", "footer.data": "Datenverarbeitung"
+      },
+      es: {
+        "meta.title": "Plan | Vera", "meta.description": "Vera Plan convierte ventas reales revisadas en un Plan usando solo supuestos comerciales y de cambio confirmados.",
+        "skip": "Ir al contenido", "nav.method": "Cómo funciona", "nav.assumptions": "Supuestos", "nav.controls": "Controles", "nav.outputs": "Resultados", "nav.prompt": "Prompt",
+        "aria.pageNav": "Navegación de la página", "aria.language": "Idioma", "aria.summary": "Resumen del Plan", "aria.actualToPlan": "De Real a Plan",
+        "breadcrumb.current": "Plan", "hero.eyebrow": "Vera · Plan", "hero.title": "De los datos reales a un Plan que muestra cada supuesto.",
+        "hero.lead": "Vera lee los datos de ventas, traduce las hipótesis del profesional en reglas precisas y calcula solo tras confirmar ámbito, periodo, factor, dirección del cambio y prioridad.",
+        "hero.primary": "Ver la revisión", "hero.secondary": "Probar el prompt",
+        "hero.input.label": "Punto de partida", "hero.input": "Ventas reales mensuales revisadas", "hero.prepare.label": "Confirmación", "hero.prepare": "Supuestos comerciales y de cambio estructurados", "hero.output.label": "Resultado", "hero.output": "Plan, registro de supuestos y conciliación",
+        "method.kicker": "La transición", "method.title": "Real, decisiones, Plan. Tres estados distintos.", "method.copy": "El motor no pronostica la demanda ni inventa supuestos. Conserva la forma temporal real y aplica porcentajes confirmados solo a las filas del ámbito.", "method.actual.label": "Escenario fuente", "method.plan.label": "Escenario resultante",
+        "assumptions.kicker": "Antes del cálculo", "assumptions.title": "Vera devuelve lo que entendió.", "assumptions.copy": "«Las ventas suben» no basta. Vera separa volumen, precio e ingresos; para divisas explicita par, dirección y exposición.",
+        "table.id": "ID", "table.driver": "Factor", "table.scope": "Ámbito exacto", "table.change": "Variación", "table.period": "Periodo", "table.priority": "Prioridad", "table.row1.driver": "Unidades", "table.row1.period": "periodos Plan mapeados", "table.row2.driver": "Cambio USD/EUR", "table.row2.period": "periodos Plan mapeados",
+        "controls.kicker": "Controles del Plan", "controls.title": "Las ambigüedades no se convierten en cifras.", "controls.copy": "Ámbitos sin coincidencia, datos modificados, métricas ausentes y colisiones detienen el cálculo.",
+        "controls.1.title": "Vincular la fuente", "controls.1.copy": "El caso registra hashes, columnas, monedas, periodos y mapeo Real-a-Plan.", "controls.2.title": "Confirmar las reglas", "controls.2.copy": "Cada supuesto tiene factor, porcentaje, ámbito, periodo, prioridad y justificación.", "controls.3.title": "Gestionar colisiones", "controls.3.copy": "Los solapamientos con igual prioridad o factores incompatibles fallan explícitamente.", "controls.4.title": "Conciliar el resultado", "controls.4.copy": "Escenario, resumen, registro y recibo se vinculan a las mismas entradas y se verifican para replay.",
+        "outputs.kicker": "Entrega revisable", "outputs.title": "El Plan llega con su explicación.", "outputs.copy": "El escenario no viaja solo: el registro muestra dónde se aplicó, ignoró o sustituyó cada supuesto.",
+        "boundary.kicker": "Responsabilidad", "boundary.title": "Vera calcula el Plan. El profesional aprueba los supuestos.", "boundary.copy": "La ejecución exacta prueba que las reglas confirmadas se aplicaron de forma reproducible, no que los supuestos sean prudentes, probables o aprobados por dirección.",
+        "prompt.kicker": "Pruébalo en Vera", "prompt.title": "Habla como con un colega.", "prompt.copy": "Vera prepara la tabla de supuestos y solicita confirmación antes del cálculo.",
+        "prompt": "Crea un Plan de ventas a partir de este archivo real. Las unidades en China aumentan un 8 %, pero el dólar pierde un 5 % frente al euro. Antes de calcular, muestra el factor, ámbito, periodos, dirección del cambio y prioridad interpretados. Tras mi confirmación, entrega el escenario Plan, registro de supuestos, resumen, conciliación y recibo reproducible.",
+        "footer.vera": "Todas las funciones", "footer.data": "Tratamiento de datos"
+      }
+    };
+
+    const supported = new Set(Object.keys(copy));
+    const params = new URLSearchParams(window.location.search);
+    const localeNames = { it: "it_IT", en: "en_US", fr: "fr_FR", de: "de_DE", es: "es_ES" };
+
+    function localizedHref(path, lang) {
+      const url = new URL(path, window.location.href);
+      url.searchParams.set("lang", lang);
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function setLanguage(requested, updateHistory = true) {
+      const lang = supported.has(requested) ? requested : "it";
+      const strings = copy[lang];
+      document.documentElement.lang = lang;
+      document.title = strings["meta.title"];
+      document.querySelector('meta[name="description"]').content = strings["meta.description"];
+      document.querySelector('meta[property="og:title"]').content = strings["meta.title"];
+      document.querySelector('meta[property="og:description"]').content = strings["meta.description"];
+      document.getElementById("og-locale").content = localeNames[lang];
+
+      document.querySelectorAll("[data-i18n]").forEach((node) => {
+        const value = strings[node.dataset.i18n];
+        if (value) node.textContent = value;
+      });
+      document.querySelectorAll("[data-i18n-aria-label]").forEach((node) => {
+        const value = strings[node.dataset.i18nAriaLabel];
+        if (value) node.setAttribute("aria-label", value);
+      });
+      document.querySelectorAll("[data-lang]").forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.lang === lang));
+      });
+
+      document.getElementById("prompt-example").textContent = strings.prompt;
+      document.getElementById("home-link").href = `/?lang=${lang}`;
+      document.getElementById("vera-link").href = localizedHref("../vera/index.html", lang);
+      document.getElementById("footer-vera-link").href = localizedHref("../vera/index.html", lang);
+      document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
+
+      if (updateHistory) {
+        const next = new URL(window.location.href);
+        next.searchParams.set("lang", lang);
+        history.replaceState({}, "", `${next.pathname}${next.search}${next.hash}`);
+      }
+    }
+
+    document.querySelectorAll("[data-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.lang));
+    });
+
+    setLanguage(params.get("lang") || "it", false);
+  </script>
+</body>
+</html>
