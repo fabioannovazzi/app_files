@@ -133,9 +133,6 @@ CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
-CHATGPT_UPLOAD_SUBTITLE_OVERRIDES = {
-    "vera": "AI per commercialisti",
-}
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (
@@ -918,11 +915,6 @@ def project_chatgpt_manifest(content: bytes) -> bytes:
     if isinstance(interface, dict):
         for field in CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS:
             interface.pop(field, None)
-        subtitle_override = CHATGPT_UPLOAD_SUBTITLE_OVERRIDES.get(
-            str(manifest.get("name", ""))
-        )
-        if subtitle_override is not None:
-            interface["shortDescription"] = subtitle_override
         subtitle = interface.get("shortDescription")
         if not isinstance(subtitle, str):
             raise ValueError("ChatGPT upload shortDescription must be a string")

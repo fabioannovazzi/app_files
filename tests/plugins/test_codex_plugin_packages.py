@@ -380,6 +380,18 @@ def test_configured_plugin_zips_match_repo_source() -> None:
                 assert archive.read(name) == content
 
 
+def test_vera_source_manifest_uses_approved_subtitle() -> None:
+    manifest = json.loads(
+        (ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert manifest["interface"]["shortDescription"] == (
+        "Assistente AI x commercialisti"
+    )
+
+
 def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     builder = load_builder()
     vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
@@ -407,10 +419,12 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
-    assert manifest["interface"]["shortDescription"] == ("AI per commercialisti")
+    assert manifest["interface"]["shortDescription"] == (
+        "Assistente AI x commercialisti"
+    )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.55"
+    assert manifest["version"] == "0.1.56"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Esamina questi documenti o dati contabili, separa fatti e valutazioni "

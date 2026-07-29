@@ -3,7 +3,7 @@ Vera - pacchetto plugin per Codex
 Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera
 Licenza GNU AGPLv3: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
 
-Vera è la collega AI per il lavoro dello studio: prepara fascicoli, controlla
+Vera è l’assistente AI per il lavoro dello studio: prepara fascicoli, controlla
 evidenze e documenta i risultati in carte di lavoro rivedibili. Il giudizio
 professionale resta al commercialista.
 
