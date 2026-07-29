@@ -1,0 +1,5 @@
+source_row_id,period,country,product,transaction_currency,units,gross_sales_local,discount_local,cogs_local,fx_rate_to_reporting
+cn-bikes-2025-01,2025-01,China,Bikes,USD,100,1000,50,600,0.9
+cn-bikes-2025-02,2025-02,China,Bikes,USD,120,1200,60,720,0.92
+de-bikes-2025-01,2025-01,Germany,Bikes,EUR,80,800,40,480,1
+de-bikes-2025-02,2025-02,Germany,Bikes,EUR,90,900,45,540,1

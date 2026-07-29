@@ -1,8 +1,8 @@
 {
   "name": "vera",
   "displayName": "Vera",
-  "version": "0.1.57",
-  "description": "Assistente AI per commercialisti. Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
+  "version": "0.1.58",
+  "description": "Assistente AI per commercialisti. Vera affianca il commercialista in istruttorie, controlli, scenari di piano, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -17,6 +17,9 @@
     "accounting",
     "audit",
     "reconciliation",
+    "financial-analysis",
+    "sales-plan",
+    "scenario-planning",
     "reporting",
     "tax",
     "compliance"

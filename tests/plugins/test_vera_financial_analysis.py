@@ -5,6 +5,7 @@ import hashlib
 import importlib.util
 import json
 import shutil
+import subprocess
 import sys
 from copy import deepcopy
 from pathlib import Path
@@ -20,6 +21,7 @@ CASE_SCRIPT = (
 )
 FINANCIAL_SCRIPTS = ROOT / "plugins" / "financial-analysis" / "scripts"
 PACK_SCRIPT = FINANCIAL_SCRIPTS / "run_pack.py"
+MCP_SCRIPT = ROOT / "plugins" / "financial-analysis" / "mcp" / "server.cjs"
 if str(ASSURANCE_ROOT) not in sys.path:
     sys.path.insert(0, str(ASSURANCE_ROOT))
 if str(FINANCIAL_SCRIPTS) not in sys.path:
@@ -67,6 +69,60 @@ def _load_pack_module() -> ModuleType:
     return module
 
 
+def _node_binary() -> str:
+    node_binary = shutil.which("node")
+    if node_binary is not None:
+        return node_binary
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob("*/dependencies/node/bin/node")
+    )
+    if not candidates:
+        pytest.skip("Node.js is required for the financial-analysis MCP test.")
+    return candidates[-1].as_posix()
+
+
+def test_financial_analysis_mcp_describes_all_registered_packs() -> None:
+    requests = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "initialize",
+            "params": {},
+        },
+        {
+            "jsonrpc": "2.0",
+            "id": 2,
+            "method": "tools/call",
+            "params": {
+                "name": "describe_vera_financial_analysis",
+                "arguments": {},
+            },
+        },
+    ]
+
+    result = subprocess.run(
+        [_node_binary(), str(MCP_SCRIPT), "--stdio"],
+        input="\n".join(json.dumps(request) for request in requests) + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    responses = [json.loads(line) for line in result.stdout.splitlines()]
+    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.2"
+    assert responses[1]["result"]["structuredContent"]["registered_packs"] == [
+        "monthly_pnl",
+        "working_capital",
+        "customer_concentration",
+        "sales_plan",
+        "quality_of_earnings",
+        "net_debt",
+        "normalized_working_capital",
+        "capex",
+        "deal_bridges",
+    ]
+
+
 def _field(
     name: str,
     *,
@@ -101,6 +157,7 @@ def _vera_case(
         "monthly_pnl": "vera.monthly_pnl_preparation_case.v1",
         "working_capital": "vera.working_capital_preparation_case.v1",
         "customer_concentration": "vera.customer_concentration_preparation_case.v1",
+        "sales_plan": "vera.sales_plan_preparation_case.v1",
     }[pack_id]
     if pack_id == "working_capital":
         policy_receipt = case["files"]["reviewed_working_capital_policy"]
@@ -623,6 +680,12 @@ def test_cli_writes_deterministic_contract_audit(tmp_path: Path) -> None:
             / "plugins/clara/evals/preparation/udc_fy2025_customer_concentration/case.json",
             "vera.customer_concentration_evidence_manifest.v1",
             4,
+        ),
+        (
+            "sales_plan",
+            ROOT / "plugins/financial-analysis/evals/sales_plan_synthetic/case.json",
+            "vera.sales_plan_evidence_manifest.v1",
+            5,
         ),
     ],
 )

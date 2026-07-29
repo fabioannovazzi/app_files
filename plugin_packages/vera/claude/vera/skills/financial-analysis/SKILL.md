@@ -1,6 +1,6 @@
 ---
 name: financial-analysis
-description: Use when preparing controlled operating analysis or fixed financial due-diligence calculations under Vera's accounting controls.
+description: Use when preparing controlled operating analysis, reviewed sales-plan scenarios, or fixed financial due-diligence calculations under Vera's accounting controls.
 ---
 
 ## Cowork execution contract

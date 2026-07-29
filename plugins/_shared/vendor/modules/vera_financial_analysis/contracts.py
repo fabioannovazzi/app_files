@@ -50,6 +50,7 @@ REGISTERED_ANALYSIS_PACK_RECIPES: Mapping[str, frozenset[str]] = MappingProxyTyp
         "customer_concentration": frozenset(
             {"customer_concentration_from_reviewed_public_disclosure.v1"}
         ),
+        "sales_plan": frozenset({"sales_plan_from_reviewed_actuals.v1"}),
         **{
             pack_id: frozenset({recipe_id})
             for pack_id, recipe_id in FDD_PACK_RECIPES.items()

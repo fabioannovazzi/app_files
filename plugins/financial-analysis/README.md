@@ -1,13 +1,14 @@
 # Vera Financial Analysis
 
-This Vera workflow establishes the case-level control layer for eight runnable
+This Vera workflow establishes the case-level control layer for nine runnable
 financial-analysis packs.
 
-Accounting preparation:
+Accounting and planning preparation:
 
 - monthly P&L;
 - working capital;
-- customer concentration.
+- customer concentration;
+- reviewed Actual-to-Plan sales scenarios.
 
 Fixed financial due-diligence calculations:
 
@@ -30,12 +31,21 @@ rather than being rounded. A selected working-capital target includes an explici
 economic-effect identity, so its contribution remains traceable in downstream
 bridge receipts even when there is no separate normalization adjustment.
 
-The module exposes eight registered recipes through the single named
+The module exposes nine registered recipes through the single named
 dispatcher `scripts/run_pack.py`. The engines preserve the exact
 calculation logic and fail-closed behavior of the evaluated preparation
 workflows while emitting Vera-owned reconciliation and evidence-manifest
 schemas. A due-diligence result keeps `source_tie_out.status=not_assessed` and
 every prepared-evidence manifest keeps `report_ready=false`.
+
+The `sales_plan` recipe applies reviewed unit, price, gross-sales, discount,
+COGS, and FX-rate assumptions to a canonical monthly sales dataset. It keeps
+conversational interpretation outside the calculation engine, requires exact
+scope and period mappings, rejects ambiguous overlaps or unmatched
+assumptions, and emits an Actual/Plan scenario table, assumption ledger,
+summary, reconciliation, manifest, and replay receipt. Its v1 time profile
+preserves the mapped actual-period shape; it does not forecast demand or infer
+assumptions.
 
 Two additional reviewed contracts support the due-diligence workflow:
 

@@ -31,6 +31,17 @@
       ]
     },
     {
+      "id": "sales-plan",
+      "prompt": "Build a plan scenario from this monthly sales file: unit sales in China rise 8%, while the USD weakens 5% against EUR.",
+      "required_signals": [
+        "plan scenario",
+        "monthly sales",
+        "China",
+        "USD",
+        "EUR"
+      ]
+    },
+    {
       "id": "quality-of-earnings",
       "prompt": "Prepare Quality of Earnings and adjusted EBITDA from reviewed management adjustments and qualified accounting evidence.",
       "required_signals": [

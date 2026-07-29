@@ -28,11 +28,30 @@
       }
     ]
   },
-  "external_boundaries": [],
+  "external_boundaries": [
+    {
+      "id": "approved-managed-ocr-runtime",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) and PaddleOCR model-weight hosts",
+      "purpose": "Install and initialize the optional shared PaddleOCR runtime after the user approves the roughly 500 MB first-use download",
+      "content": "Declared OCR package names and version constraints from the published requirements-ocr.txt, requested OCR language and model files, plus ordinary package-host request metadata; no user files, document contents, prompts, client data, or extracted evidence are sent",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The input preflight requests setup only for images or visual-only PDFs that require OCR.",
+        "The workflow requires explicit user approval before installation and the automatic document retry that initializes missing OCR models.",
+        "The installer uses only the published OCR requirements and writes to a fingerprinted user-scoped runtime shared with Vera and Clara."
+      ]
+    }
+  ],
   "security_controls": [
     {
       "id": "source-and-package-integrity",
-      "control": "The workflow does not follow source symlinks, binds extraction to a bounded SHA-256 source ledger, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
+      "control": "The workflow does not follow source symlinks, binds extraction and resumable checkpoints to source and extracted-text hashes plus exact run settings, rejects source type, size, or byte drift, and seals reviewed outputs by hash."
     },
     {
       "id": "review-persistence-binding",
@@ -48,9 +67,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-07-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0164189cf41edbd10bbaed08d27e98f6dffa2c690807aaf700fdab5746f7b4f0"
+    "source_fingerprint": "f4924e00c243ce5b83f101d7711235ffc00c82d44a1e9ca8fa78d5a52f0f4e1f"
   }
 }
