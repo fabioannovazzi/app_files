@@ -424,11 +424,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.57"
+    assert manifest["version"] == "0.1.58"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Esamina questi documenti o dati contabili, separa fatti e valutazioni "
-        "e prepara un risultato rivedibile."
+        "Esamina documenti o dati contabili oppure prepara uno scenario di piano, "
+        "separando fatti e assunzioni da confermare."
     )
     assert any(
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
@@ -819,6 +819,7 @@ def test_vera_package_owns_financial_analysis_engines() -> None:
         "prepare_monthly_pnl_case.py",
         "prepare_working_capital_case.py",
         "prepare_customer_concentration_case.py",
+        "prepare_sales_plan_case.py",
         "prepare_fdd_case.py",
     }
 
@@ -2887,9 +2888,11 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Conto economico mensile",
         "Capitale circolante",
         "Concentrazione clienti",
+        "Scenario di piano vendite",
         "Monthly P&L",
         "working capital",
         "customer concentration",
+        "Sales-plan scenario",
         'id="due-diligence"',
         'href="#due-diligence"',
         "Quality of Earnings e adjusted EBITDA",
@@ -2916,10 +2919,15 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "prepared_evidence_manifest.json",
         "fdd_result.json",
         "fdd_metrics.json",
+        "sales_plan_scenario.csv",
+        "assumption_application_ledger.csv",
+        "scenario_summary.csv",
         "pack_execution_receipt.json",
         "contingent_liability_register.json",
         "financial_issue_register.json",
         'id="prompt-example"',
+        "In Cina le unità crescono dell’8%",
+        "Unit sales in China rise 8%",
         'href="../vera/index.html?lang=it"',
     ):
         assert snippet in page

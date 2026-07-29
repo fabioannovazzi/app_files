@@ -21,8 +21,8 @@
     "classes": [
       {
         "id": "financial-analysis-evidence",
-        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reconciliation posture, and review status needed to prepare financial-analysis and financial due-diligence evidence",
-        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue and customer files; management adjustments; cash, debt, lease, factoring, fixed-asset and Capex records; working-capital targets; contingent-liability evidence; transaction definitions; EBITDA-to-cash and Enterprise-to-Equity bridge inputs; financial issues and deal-decision references; source identities and hashes; dataset and relationship contracts; reviewed crosswalks and decisions; calculation parameters; metric receipts; reconciliation results; prepared tables; replay evidence; limitations and review status",
+        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reviewed scenario assumptions, reconciliation posture, and review status needed to prepare financial-analysis and financial due-diligence evidence",
+        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue, customer and monthly sales files; transaction and reporting currencies and FX-rate schedules; prospective commercial and FX assumptions; Actual and Plan scenario tables and assumption ledgers; management adjustments; cash, debt, lease, factoring, fixed-asset and Capex records; working-capital targets; contingent-liability evidence; transaction definitions; EBITDA-to-cash and Enterprise-to-Equity bridge inputs; financial issues and deal-decision references; source identities and hashes; dataset and relationship contracts; reviewed crosswalks and decisions; calculation parameters; metric receipts; reconciliation results; prepared tables; replay evidence; limitations and review status",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -43,6 +43,10 @@
     {
       "id": "prepared-evidence-boundary",
       "control": "The prepared-evidence manifest and its contract audit are forced to report_ready=false so deterministic preparation cannot be presented as professional approval."
+    },
+    {
+      "id": "reviewed-sales-plan-assumptions",
+      "control": "The sales-plan engine accepts only a reviewed assumption contract bound to the source hash and exact period mapping, and fails on unmatched scopes, unsupported drivers, ambiguous equal-priority overlaps, or stale source evidence."
     },
     {
       "id": "fixed-fdd-recipes",
@@ -66,9 +70,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-28",
+    "reviewed_at": "2026-07-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c2c9bb3beefd89b4b9ae4c37bb3cf1c6e5f0702382d5bce2375eabc582868137"
+    "source_fingerprint": "3e77cd32894d0749422025acb08db651658a82d47cf01969b87a12e9f7e91506"
   }
 }

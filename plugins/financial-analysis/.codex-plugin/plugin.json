@@ -1,7 +1,7 @@
 {
   "name": "financial-analysis",
-  "version": "0.2.1",
-  "description": "Source-bound financial-analysis preparation for Vera.",
+  "version": "0.2.2",
+  "description": "Source-bound financial analysis, reviewed sales plans, and due-diligence preparation for Vera.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -18,15 +18,17 @@
     "net-debt",
     "capex",
     "working-capital",
-    "customer-concentration"
+    "customer-concentration",
+    "sales-plan",
+    "scenario-planning"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Financial Analysis",
-    "shortDescription": "Prepare source-bound financial analysis and due-diligence evidence.",
-    "longDescription": "Vera workflow for preparing financial-analysis evidence under explicit dataset, relationship, crosswalk, reconciliation, and reproducibility contracts. It recognizes fixed packs for monthly P&L, working capital, customer concentration, Quality of Earnings, net debt, normalized working capital, Capex, and deal bridges, plus reviewed contingent-liability and financial-issue registers. Prepared evidence remains distinct from source tie-out, completeness, deal decisions, professional conclusions, and report-ready claims.",
+    "shortDescription": "Prepare controlled financial analysis, sales plans, and due diligence.",
+    "longDescription": "Vera workflow for preparing financial-analysis evidence under explicit dataset, relationship, crosswalk, assumption, reconciliation, and reproducibility contracts. It recognizes nine fixed packs: monthly P&L, working capital, customer concentration, reviewed Actual-to-Plan sales scenarios, Quality of Earnings, net debt, normalized working capital, Capex, and deal bridges, plus reviewed contingent-liability and financial-issue registers. Prepared evidence remains distinct from source tie-out, completeness, deal decisions, professional conclusions, and report-ready claims.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
@@ -38,7 +40,7 @@
     ],
     "defaultPrompt": [
       "Use Vera Financial Analysis on the accounting files I provide.",
-      "Choose the relevant operating-analysis or financial due-diligence pack, establish the source and relationship contracts, and validate the prepared evidence.",
+      "Choose an operating-analysis, sales-plan, or due-diligence pack; review its contracts and validate the evidence.",
       "Keep accounting judgments explicit and do not present prepared evidence as a professional conclusion."
     ],
     "brandColor": "#002060",

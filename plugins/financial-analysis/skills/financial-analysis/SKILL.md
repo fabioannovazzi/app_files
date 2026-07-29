@@ -1,6 +1,6 @@
 ---
 name: financial-analysis
-description: Use when Vera must prepare controlled accounting analysis or fixed financial due-diligence calculations from reviewed inputs. This workflow validates case-level contracts and reproducible calculations; it does not replace professional accounting or deal judgment.
+description: Use when Vera must prepare controlled accounting analysis, a reviewed sales-plan scenario, or fixed financial due-diligence calculations from reviewed inputs. This workflow validates case-level contracts and reproducible calculations; it does not replace professional accounting or deal judgment.
 ---
 
 ## Output Location Rule
@@ -22,7 +22,9 @@ Accounting preparation:
 - `working_capital`: working-capital analysis from reviewed accounting
   datasets and relationships;
 - `customer_concentration`: accounting/revenue/receivables concentration and
-  customer-parent identity preparation.
+  customer-parent identity preparation;
+- `sales_plan`: an Actual-to-Plan sales scenario from a canonical monthly sales
+  dataset and reviewed commercial and FX assumptions.
 
 Fixed financial due-diligence calculations:
 
@@ -42,7 +44,7 @@ reconciliation, and preparation controls.
 
 This is one financial-analysis workflow, not an orchestrator. Do not generate
 calculation code. Select one named and versioned deterministic recipe with
-explicit parameters. The component includes eight registered engines. They are
+explicit parameters. The component includes nine registered engines. They are
 deliberately narrow: input files must satisfy the exact reviewed case contract,
 and unsupported layouts or meanings fail closed.
 
@@ -104,6 +106,57 @@ them. Natural outputs are not choices to propose.
    action. When useful, write `codex_run_review.md` beside the run artifacts.
    Never edit plugin source or generated ZIPs during a user-data run.
 
+### Sales-plan assumption review
+
+Keep a small assumption set in chat. Inspect the source columns and actual
+dimension members before interpreting the request. Codex may translate the
+commercialista's language into the controlled case contract, but the
+deterministic script must receive only reviewed structured assumptions.
+
+For example, interpret:
+
+> In China unit sales go up 8%, but the dollar weakens 5% against the euro.
+
+as a draft read-back such as:
+
+| ID | Driver | Exact scope | Change | Effective periods | Priority |
+| --- | --- | --- | ---: | --- | ---: |
+| A1 | units | `country=China` | +8% | all mapped plan periods | 100 |
+| A2 | USD/EUR reporting-currency rate | `transaction_currency=USD` | -5% | all mapped plan periods | 100 |
+
+Show the matched source members and affected row count when inspection can
+establish them. Then ask the commercialista to confirm or correct the table.
+Do not treat conversational agreement with an earlier broad statement as
+review of a materially different structured read-back.
+
+Resolve only ambiguities that change the result:
+
+- For "sales increase", confirm whether the driver is units, unit price, or
+  gross sales, the percentage, and the effective periods. V1 accepts percentage
+  changes only. If the user gives an absolute amount or target value, do not
+  convert it silently; obtain a reviewed percentage or handle it outside this
+  recipe.
+- For an FX statement, confirm the currency pair, direction, and exposure.
+  This v1 recipe defines the rate as reporting-currency units per one
+  transaction-currency unit. A 5% weaker USD against EUR is therefore a `-5%`
+  change to the USD-to-EUR rate when EUR is the reporting currency. One
+  row-level FX rate translates all local-currency metrics in that row; V1 does
+  not apply separate sales and cost rates.
+- Confirm whether a rule applies to an exact dimension member, a transaction
+  currency, or the full perimeter. Never invent a dimension value or silently
+  broaden an unmatched scope.
+- When assumptions overlap, use an explicit priority. Equal-priority overlaps
+  fail closed. A direct gross-sales change may not overlap a unit or unit-price
+  change for the same row.
+- This v1 recipe uses only the mapped actual-period shape (`base`) as its time
+  profile. Do not promise flat, phased, or custom seasonality.
+
+The reviewed case must state the source hash, period mapping, scenario codes,
+reporting currency, dimension columns, default discount and COGS behavior, and
+professional-review receipt. For a large assumption set, prepare the same
+review table in a case JSON or Markdown artifact and review it in batches. A
+dedicated local assumption workbench is not part of v1.
+
 ## Run workflow
 
 1. Establish the pack, entity/perimeter, period, currencies, source files, and
@@ -131,7 +184,7 @@ python scripts/run_pack.py \
 ```
 
    Registered pack IDs are `monthly_pnl`, `working_capital`,
-   `customer_concentration`, `quality_of_earnings`, `net_debt`,
+   `customer_concentration`, `sales_plan`, `quality_of_earnings`, `net_debt`,
    `normalized_working_capital`, `capex`, and `deal_bridges`.
 
    Read `pack_execution_receipt.json`, `reconciliation.json`, and
@@ -201,6 +254,10 @@ not decide the transaction.
 - `financial_analysis_contract_audit.json`;
 - pack-specific prepared tables, ledgers, reconciliations, and replay evidence
   only when an implemented deterministic pack produced them;
+- for `sales_plan`: `sales_plan_scenario.csv`,
+  `assumption_application_ledger.csv`, `scenario_summary.csv`,
+  `reconciliation.json`, `prepared_evidence_manifest.json`, and the dispatcher
+  `pack_execution_receipt.json`;
 - for due-diligence packs, `fdd_result.json`, `fdd_metrics.json`,
   `fdd_line_items.json`, `reconciliation.json`, and
   `prepared_evidence_manifest.json`;

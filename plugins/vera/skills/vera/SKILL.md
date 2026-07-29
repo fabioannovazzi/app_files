@@ -116,12 +116,15 @@ deployment's actual account settings.
   entries;
 - `journal-bank-reconciliation`: bank statements against journals or ledgers;
 - `financial-analysis`: source-bound monthly P&L, working-capital, customer
-  concentration, Quality of Earnings, net debt, normalized working capital,
-  Capex, and deal-bridge preparation under explicit dataset, relationship,
-  crosswalk, reconciliation, and replay contracts, plus reviewed contingent-
-  liability and financial-issue registers. It validates prepared evidence but
-  does not infer judgmental mappings, establish source tie-out or completeness,
-  make deal decisions, or establish a professional conclusion;
+  concentration, reviewed Actual-to-Plan sales scenarios, Quality of Earnings,
+  net debt, normalized working capital, Capex, and deal-bridge preparation
+  under explicit dataset, relationship, crosswalk, assumption, reconciliation,
+  and replay contracts, plus reviewed contingent-liability and financial-issue
+  registers. Vera interprets commercial and FX language into a review table;
+  the deterministic sales-plan engine applies only confirmed exact scopes. The
+  workflow validates prepared evidence but does not infer judgmental mappings,
+  establish source tie-out or completeness, make deal decisions, or establish
+  a professional conclusion;
 - `report-builder`: financial source files into reviewable reports;
 - `concordato-plan-review`: professional review of an Italian concordato
   preventivo across procedure, documents, creditors and treatment,

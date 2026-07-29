@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara analisi contabili e financial due diligence: adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione, con evidenze riconciliate e riproducibili.">
+  <meta name="description" content="Vera prepara analisi contabili, scenari di piano vendite e financial due diligence con assunzioni rivedute, evidenze riconciliate e risultati riproducibili.">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:title" content="Analisi finanziaria e due diligence | Vera">
@@ -99,7 +99,7 @@
       <div>
         <p class="eyebrow" data-i18n="hero.eyebrow">Vera · Analisi finanziaria e due diligence</p>
         <h1 id="hero-title" data-i18n="hero.title">Analisi finanziaria e financial due diligence, con numeri che tornano alla fonte.</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara tre analisi contabili e cinque calcoli di due diligence: adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione. Mapping, relazioni, riconciliazioni e limiti restano visibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara quattro analisi contabili e di piano e cinque calcoli di due diligence: dagli scenari vendite all’adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione. Assunzioni, mapping, riconciliazioni e limiti restano visibili.</p>
         <div class="hero-actions">
           <a class="button" href="#due-diligence" data-i18n="hero.primary">Vedi la due diligence</a>
           <a class="button secondary" href="#packs" data-i18n="hero.secondary">Vedi le analisi contabili</a>
@@ -116,7 +116,7 @@
       <div class="section-head">
         <div class="section-title">
           <p class="section-kicker" data-i18n="packs.kicker">Analisi contabili</p>
-          <h2 data-i18n="packs.title">Tre pack per preparare e riconciliare i numeri.</h2>
+          <h2 data-i18n="packs.title">Quattro pack per preparare, pianificare e riconciliare i numeri.</h2>
         </div>
         <p data-i18n="packs.copy">Vera esegue un pack alla volta. Ogni pack usa un calcolo definito e si ferma quando dati, significato contabile o relazioni non sono sufficientemente chiari.</p>
       </div>
@@ -132,6 +132,10 @@
         <article class="document-line">
           <div class="pack-name"><span>03</span><h3 data-i18n="pack.customers.title">Concentrazione clienti</h3></div>
           <p data-i18n="pack.customers.copy">Misura la concentrazione su ricavi o crediti dopo che identità cliente e gruppo, esclusioni e perimetro sono stati confermati in un crosswalk rivedibile.</p>
+        </article>
+        <article class="document-line">
+          <div class="pack-name"><span>04</span><h3 data-i18n="pack.salesPlan.title">Scenario di piano vendite</h3></div>
+          <p data-i18n="pack.salesPlan.copy">Parte dai dati mensili Actual e applica solo assunzioni confermate su volumi, prezzi, sconti, COGS e cambi, con scope, periodi e priorità espliciti.</p>
         </article>
       </div>
     </section>
@@ -230,6 +234,9 @@
           <li>prepared_evidence_manifest.json</li>
           <li>fdd_result.json</li>
           <li>fdd_metrics.json</li>
+          <li>sales_plan_scenario.csv</li>
+          <li>assumption_application_ledger.csv</li>
+          <li>scenario_summary.csv</li>
           <li>pack_execution_receipt.json</li>
           <li>contingent_liability_register.json</li>
           <li>financial_issue_register.json</li>
@@ -258,7 +265,7 @@
           <h2 data-i18n="prompt.title">Parti dalla cartella contabile e dalla domanda.</h2>
           <p data-i18n="prompt.copy">Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.</p>
         </div>
-        <pre><code id="prompt-example">Usa Vera per preparare l’analisi finanziaria o la financial due diligence di questa cartella. Identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Chiedimi di confermare mapping, adjustment, classificazioni, target e relazioni che possono cambiare il risultato. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Se pertinente, prepara separatamente il registro delle passività potenziali o delle issue finanziarie. Mantieni le evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.</code></pre>
+        <pre><code id="prompt-example">Usa Vera per preparare l’analisi finanziaria, lo scenario di piano o la financial due diligence di questa cartella. Per il piano vendite puoi dirle, per esempio: “In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro.” Vera deve mostrarti scope, driver, periodo, cambio e priorità interpretati prima del calcolo. Per gli altri pack identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Mantieni assunzioni ed evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.</code></pre>
       </div>
     </section>
 
@@ -294,23 +301,24 @@
     const copy = {
       it: {
         "meta.title": "Analisi finanziaria e due diligence | Vera",
-        "meta.description": "Vera prepara analisi contabili e financial due diligence: adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione, con evidenze riconciliate e riproducibili.",
+        "meta.description": "Vera prepara analisi contabili, scenari di piano vendite e financial due diligence con assunzioni rivedute, evidenze riconciliate e risultati riproducibili.",
         "skip": "Vai al contenuto",
         "nav.packs": "Analisi contabili", "nav.dueDiligence": "Due diligence", "nav.method": "Come funziona", "nav.controls": "Controlli", "nav.prompt": "Prompt",
         "aria.pageNav": "Navigazione pagina", "aria.language": "Lingua", "aria.summary": "Sintesi del lavoro",
         "breadcrumb.current": "Analisi finanziaria e due diligence",
         "hero.eyebrow": "Vera · Analisi finanziaria e due diligence",
         "hero.title": "Analisi finanziaria e financial due diligence, con numeri che tornano alla fonte.",
-        "hero.lead": "Prepara tre analisi contabili e cinque calcoli di due diligence: adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione. Mapping, relazioni, riconciliazioni e limiti restano visibili.",
+        "hero.lead": "Prepara quattro analisi contabili e di piano e cinque calcoli di due diligence: dagli scenari vendite all’adjusted EBITDA, PFN, capitale circolante normalizzato, Capex e bridge di transazione. Assunzioni, mapping, riconciliazioni e limiti restano visibili.",
         "hero.primary": "Vedi la due diligence", "hero.secondary": "Vedi le analisi contabili",
         "hero.input.label": "Fornisci", "hero.input": "Dati contabili, periodo, valuta e perimetro dell’analisi",
         "hero.prepare.label": "Vera prepara", "hero.prepare": "Un pack nominato con mapping confermati, controlli e riconciliazione",
         "hero.output.label": "Ricevi", "hero.output": "Evidenze preparate e riproducibili, pronte per la revisione professionale",
-        "packs.kicker": "Analisi contabili", "packs.title": "Tre pack per preparare e riconciliare i numeri.",
+        "packs.kicker": "Analisi contabili", "packs.title": "Quattro pack per preparare, pianificare e riconciliare i numeri.",
         "packs.copy": "Vera esegue un pack alla volta. Ogni pack usa un calcolo definito e si ferma quando dati, significato contabile o relazioni non sono sufficientemente chiari.",
         "pack.pnl.title": "Conto economico mensile", "pack.pnl.copy": "Organizza ricavi e costi per mese da bilancio di verifica o libro giornale qualificato, con classificazioni contabili confermate e totali riconciliati.",
         "pack.workingCapital.title": "Capitale circolante", "pack.workingCapital.copy": "Prepara crediti, debiti e altre componenti del capitale circolante da dataset e relazioni rivisti, mantenendo visibili periodo, valuta e regole di aggregazione.",
         "pack.customers.title": "Concentrazione clienti", "pack.customers.copy": "Misura la concentrazione su ricavi o crediti dopo che identità cliente e gruppo, esclusioni e perimetro sono stati confermati in un crosswalk rivedibile.",
+        "pack.salesPlan.title": "Scenario di piano vendite", "pack.salesPlan.copy": "Parte dai dati mensili Actual e applica solo assunzioni confermate su volumi, prezzi, sconti, COGS e cambi, con scope, periodi e priorità espliciti.",
         "fdd.kicker": "Financial due diligence", "fdd.title": "Cinque calcoli e due registri per le domande che muovono il deal.",
         "fdd.copy": "Vera applica ricette fisse soltanto a input preparati e decisioni rivedute. Non inventa adjustment, non classifica voci, non sceglie il target e non prende decisioni di deal.",
         "fdd.qoe.title": "Quality of Earnings e adjusted EBITDA", "fdd.qoe.copy": "Parte dall’EBITDA reported e applica solo adjustment inclusi e riveduti, mantenendo visibili motivazione, evidenza ed effetto di ciascuno.",
@@ -339,7 +347,7 @@
         "boundary.result.title": "Risultato", "boundary.result.copy": "Evidenza preparata e qualificata, non approvazione automatica del giudizio finanziario o della decisione di deal",
         "prompt.kicker": "Provalo in Vera", "prompt.title": "Parti dalla cartella contabile e dalla domanda.",
         "prompt.copy": "Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.",
-        "prompt": "Usa Vera per preparare l’analisi finanziaria o la financial due diligence di questa cartella. Identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Chiedimi di confermare mapping, adjustment, classificazioni, target e relazioni che possono cambiare il risultato. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Se pertinente, prepara separatamente il registro delle passività potenziali o delle issue finanziarie. Mantieni le evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.",
+        "prompt": "Usa Vera per preparare l’analisi finanziaria, lo scenario di piano o la financial due diligence di questa cartella. Per il piano vendite puoi dirle, per esempio: “In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro.” Vera deve mostrarti scope, driver, periodo, cambio e priorità interpretati prima del calcolo. Per gli altri pack identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Mantieni assunzioni ed evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.",
         "related.kicker": "Nel percorso Vera", "related.title": "Collega l’analisi ai controlli e al documento finale.",
         "related.copy": "Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.",
         "related.bank": "Riconcilia banca e contabilità", "related.report": "Genera il report",
@@ -347,23 +355,24 @@
       },
       en: {
         "meta.title": "Financial analysis and due diligence | Vera",
-        "meta.description": "Vera prepares accounting analysis and financial due diligence: adjusted EBITDA, net debt, normalized working capital, Capex and deal bridges, with reconciled, reproducible evidence.",
+        "meta.description": "Vera prepares accounting analysis, reviewed sales-plan scenarios and financial due diligence with reconciled, reproducible evidence.",
         "skip": "Skip to content",
         "nav.packs": "Accounting analyses", "nav.dueDiligence": "Due diligence", "nav.method": "How it works", "nav.controls": "Controls", "nav.prompt": "Prompt",
         "aria.pageNav": "Page navigation", "aria.language": "Language", "aria.summary": "Work summary",
         "breadcrumb.current": "Financial analysis and due diligence",
         "hero.eyebrow": "Vera · Financial analysis and due diligence",
         "hero.title": "Financial analysis and financial due diligence, with numbers that return to source.",
-        "hero.lead": "Prepare three accounting analyses and five due-diligence calculations: adjusted EBITDA, net debt, normalized working capital, Capex and deal bridges. Mappings, relationships, reconciliations and limits remain visible.",
+        "hero.lead": "Prepare four accounting and planning analyses and five due-diligence calculations: from sales scenarios to adjusted EBITDA, net debt, normalized working capital, Capex and deal bridges. Assumptions, mappings, reconciliations and limits remain visible.",
         "hero.primary": "See due diligence", "hero.secondary": "See accounting analyses",
         "hero.input.label": "Provide", "hero.input": "Accounting data, period, currency and analysis scope",
         "hero.prepare.label": "Vera prepares", "hero.prepare": "A named pack with confirmed mappings, controls and reconciliation",
         "hero.output.label": "Receive", "hero.output": "Prepared, reproducible evidence ready for professional review",
-        "packs.kicker": "Accounting preparation", "packs.title": "Three packs to prepare and reconcile the numbers.",
+        "packs.kicker": "Accounting preparation", "packs.title": "Four packs to prepare, plan and reconcile the numbers.",
         "packs.copy": "Vera runs one pack at a time. Each pack uses a defined calculation and stops when the data, accounting meaning or relationships are not sufficiently clear.",
         "pack.pnl.title": "Monthly P&L", "pack.pnl.copy": "Organizes revenue and costs by month from a qualified trial balance or general ledger, with confirmed accounting classifications and reconciled totals.",
         "pack.workingCapital.title": "Working capital", "pack.workingCapital.copy": "Prepares receivables, payables and other working-capital components from reviewed datasets and relationships while keeping period, currency and aggregation rules visible.",
         "pack.customers.title": "Customer concentration", "pack.customers.copy": "Measures concentration on revenue or receivables after customer and parent identity, exclusions and scope have been confirmed in a reviewable crosswalk.",
+        "pack.salesPlan.title": "Sales-plan scenario", "pack.salesPlan.copy": "Starts from monthly Actual data and applies only confirmed volume, price, discount, COGS and FX assumptions with explicit scopes, periods and priorities.",
         "fdd.kicker": "Financial due diligence", "fdd.title": "Five calculations and two registers for the questions that move the deal.",
         "fdd.copy": "Vera applies fixed recipes only to prepared inputs and reviewed decisions. It does not invent adjustments, classify items, choose the target or make deal decisions.",
         "fdd.qoe.title": "Quality of Earnings and adjusted EBITDA", "fdd.qoe.copy": "Starts from reported EBITDA and applies only reviewed, included adjustments, keeping the rationale, evidence and effect visible for each one.",
@@ -392,7 +401,7 @@
         "boundary.result.title": "Result", "boundary.result.copy": "Prepared and qualified evidence, not automatic approval of the financial judgment or deal decision",
         "prompt.kicker": "Try it in Vera", "prompt.title": "Start with the accounting folder and the question.",
         "prompt.copy": "Vera identifies the relevant pack and asks only for unresolved choices that can change the result.",
-        "prompt": "Use Vera to prepare the financial analysis or financial due diligence for this folder. Identify the question — monthly P&L, working capital, customer concentration, Quality of Earnings and adjusted EBITDA, net debt, normalized working capital, Capex or deal bridges — and qualify sources, date or period, currency and scope. Ask me to confirm mappings, adjustments, classifications, targets and relationships that can change the result. Run one pack and deliver evidence, reconciliation and a reproducible receipt. When relevant, prepare the contingent-liability or financial-issue register separately. Keep prepared evidence separate from professional conclusions and deal decisions.",
+        "prompt": "Use Vera to prepare the financial analysis, plan scenario or financial due diligence for this folder. For a sales plan you can say, for example: “Unit sales in China rise 8%, but the dollar weakens 5% against the euro.” Vera must show the interpreted scope, driver, period, FX direction and priority before calculation. For other packs identify the question — monthly P&L, working capital, customer concentration, Quality of Earnings and adjusted EBITDA, net debt, normalized working capital, Capex or deal bridges — and qualify sources, date or period, currency and scope. Run one pack and deliver evidence, reconciliation and a reproducible receipt. Keep assumptions and prepared evidence separate from professional conclusions and deal decisions.",
         "related.kicker": "In the Vera workflow", "related.title": "Connect the analysis to controls and the final document.",
         "related.copy": "Use an accounting reconciliation when relationships between sources must be closed first. Then carry confirmed tables into the report.",
         "related.bank": "Reconcile bank and ledger", "related.report": "Build the report",
@@ -407,16 +416,17 @@
         "breadcrumb.current": "Analyse financière et due diligence",
         "hero.eyebrow": "Vera · Analyse financière et due diligence",
         "hero.title": "Analyse financière et due diligence financière, avec des chiffres reliés à leur source.",
-        "hero.lead": "Préparez trois analyses comptables et cinq calculs de due diligence : EBITDA ajusté, dette nette, fonds de roulement normalisé, Capex et passerelles de transaction. Correspondances, relations, rapprochements et limites restent visibles.",
+        "hero.lead": "Préparez quatre analyses comptables et de planification et cinq calculs de due diligence : des scénarios de ventes à l’EBITDA ajusté, la dette nette, le fonds de roulement normalisé, le Capex et les passerelles de transaction. Hypothèses, correspondances, rapprochements et limites restent visibles.",
         "hero.primary": "Voir la due diligence", "hero.secondary": "Voir les analyses comptables",
         "hero.input.label": "Vous fournissez", "hero.input": "Données comptables, période, devise et périmètre de l’analyse",
         "hero.prepare.label": "Vera prépare", "hero.prepare": "Un pack nommé avec correspondances confirmées, contrôles et rapprochement",
         "hero.output.label": "Vous recevez", "hero.output": "Des éléments préparés et reproductibles, prêts pour la revue professionnelle",
-        "packs.kicker": "Préparation comptable", "packs.title": "Trois packs pour préparer et rapprocher les chiffres.",
+        "packs.kicker": "Préparation comptable", "packs.title": "Quatre packs pour préparer, planifier et rapprocher les chiffres.",
         "packs.copy": "Vera exécute un pack à la fois. Chaque pack applique un calcul défini et s’arrête si les données, le sens comptable ou les relations ne sont pas assez clairs.",
         "pack.pnl.title": "Compte de résultat mensuel", "pack.pnl.copy": "Organise produits et charges par mois depuis une balance ou un grand livre qualifié, avec classifications comptables confirmées et totaux rapprochés.",
         "pack.workingCapital.title": "Fonds de roulement", "pack.workingCapital.copy": "Prépare créances, dettes et autres composantes depuis des jeux de données et relations revus, en gardant visibles période, devise et règles d’agrégation.",
         "pack.customers.title": "Concentration clients", "pack.customers.copy": "Mesure la concentration sur chiffre d’affaires ou créances après confirmation des identités client-groupe, exclusions et périmètre dans une table de correspondance révisable.",
+        "pack.salesPlan.title": "Scénario de plan des ventes", "pack.salesPlan.copy": "Part des données Actual mensuelles et applique uniquement des hypothèses confirmées de volumes, prix, remises, coûts des ventes et change, avec périmètres, périodes et priorités explicites.",
         "fdd.kicker": "Due diligence financière", "fdd.title": "Cinq calculs et deux registres pour les questions qui orientent la transaction.",
         "fdd.copy": "Vera applique des recettes fixes uniquement à des données préparées et à des décisions revues. Elle n’invente pas d’ajustements, ne classe pas les postes, ne choisit pas la cible et ne prend pas de décision de transaction.",
         "fdd.qoe.title": "Qualité des résultats et EBITDA ajusté", "fdd.qoe.copy": "Part de l’EBITDA publié et applique uniquement les ajustements inclus et revus, en gardant visibles la justification, les éléments probants et l’effet de chacun.",
@@ -445,7 +455,7 @@
         "boundary.result.title": "Résultat", "boundary.result.copy": "Éléments préparés et qualifiés, sans approbation automatique du jugement financier ni de la décision de transaction",
         "prompt.kicker": "Essayez dans Vera", "prompt.title": "Partez du dossier comptable et de la question.",
         "prompt.copy": "Vera identifie le pack pertinent et ne demande que les choix non résolus susceptibles de changer le résultat.",
-        "prompt": "Utilise Vera pour préparer l’analyse financière ou la due diligence financière de ce dossier. Identifie la question — compte de résultat mensuel, fonds de roulement, concentration clients, qualité des résultats et EBITDA ajusté, dette nette, fonds de roulement normalisé, Capex ou passerelles de transaction — puis qualifie les sources, la date ou période, la devise et le périmètre. Demande-moi de confirmer les correspondances, ajustements, classifications, cibles et relations susceptibles de changer le résultat. Exécute un seul pack et livre les éléments, le rapprochement et un reçu reproductible. Si pertinent, prépare séparément le registre des passifs éventuels ou des points financiers. Sépare les éléments préparés des conclusions professionnelles et des décisions de transaction.",
+        "prompt": "Utilise Vera pour préparer l’analyse financière, le scénario de plan ou la due diligence financière de ce dossier. Pour le plan des ventes, tu peux dire par exemple : « Les unités vendues en Chine augmentent de 8 %, mais le dollar recule de 5 % face à l’euro. » Vera doit présenter le périmètre, le moteur, la période, le sens du change et la priorité interprétés avant le calcul. Pour les autres packs, identifie la question — compte de résultat mensuel, fonds de roulement, concentration clients, qualité des résultats et EBITDA ajusté, dette nette, fonds de roulement normalisé, Capex ou passerelles de transaction — puis qualifie les sources, la date ou période, la devise et le périmètre. Exécute un seul pack et livre les éléments, le rapprochement et un reçu reproductible. Sépare les hypothèses et les éléments préparés des conclusions professionnelles et des décisions de transaction.",
         "related.kicker": "Dans le parcours Vera", "related.title": "Reliez l’analyse aux contrôles et au document final.",
         "related.copy": "Utilisez un rapprochement comptable si les relations entre sources doivent d’abord être closes. Portez ensuite les tableaux confirmés dans le rapport.",
         "related.bank": "Rapprocher banque et comptabilité", "related.report": "Générer le rapport",
@@ -460,16 +470,17 @@
         "breadcrumb.current": "Finanzanalyse und Due Diligence",
         "hero.eyebrow": "Vera · Finanzanalyse und Due Diligence",
         "hero.title": "Finanzanalyse und Financial Due Diligence – mit Zahlen, die zur Quelle zurückführen.",
-        "hero.lead": "Bereiten Sie drei Buchhaltungsanalysen und fünf feste Due-Diligence-Berechnungen vor: bereinigtes EBITDA, Nettoverschuldung, normalisiertes Working Capital, Capex und Transaktionsüberleitungen. Zuordnungen, Beziehungen, Abstimmungen und Grenzen bleiben sichtbar.",
+        "hero.lead": "Bereiten Sie vier Buchhaltungs- und Planungsanalysen sowie fünf feste Due-Diligence-Berechnungen vor: von Verkaufsszenarien bis zu bereinigtem EBITDA, Nettoverschuldung, normalisiertem Working Capital, Capex und Transaktionsüberleitungen. Annahmen, Zuordnungen, Abstimmungen und Grenzen bleiben sichtbar.",
         "hero.primary": "Due Diligence ansehen", "hero.secondary": "Buchhaltungsanalysen ansehen",
         "hero.input.label": "Sie liefern", "hero.input": "Buchhaltungsdaten, Zeitraum, Währung und Analyseumfang",
         "hero.prepare.label": "Vera bereitet vor", "hero.prepare": "Ein benanntes Paket mit bestätigten Zuordnungen, Kontrollen und Abstimmung",
         "hero.output.label": "Sie erhalten", "hero.output": "Vorbereitete, reproduzierbare Nachweise für die fachliche Prüfung",
-        "packs.kicker": "Buchhalterische Vorbereitung", "packs.title": "Drei Pakete zum Aufbereiten und Abstimmen der Zahlen.",
+        "packs.kicker": "Buchhalterische Vorbereitung", "packs.title": "Vier Pakete zum Aufbereiten, Planen und Abstimmen der Zahlen.",
         "packs.copy": "Vera führt jeweils ein Paket aus. Jedes Paket verwendet eine definierte Berechnung und stoppt, wenn Daten, buchhalterische Bedeutung oder Beziehungen nicht ausreichend klar sind.",
         "pack.pnl.title": "Monatliche GuV", "pack.pnl.copy": "Ordnet Erlöse und Kosten nach Monaten aus qualifizierter Summen- und Saldenliste oder Hauptbuch, mit bestätigten Kontenzuordnungen und abgestimmten Summen.",
         "pack.workingCapital.title": "Working Capital", "pack.workingCapital.copy": "Bereitet Forderungen, Verbindlichkeiten und weitere Working-Capital-Komponenten aus geprüften Datensätzen und Beziehungen vor; Zeitraum, Währung und Aggregationsregeln bleiben sichtbar.",
         "pack.customers.title": "Kundenkonzentration", "pack.customers.copy": "Misst die Konzentration auf Umsatz oder Forderungen, nachdem Kunden- und Gruppenidentität, Ausschlüsse und Umfang in einer prüfbaren Zuordnung bestätigt wurden.",
+        "pack.salesPlan.title": "Verkaufsplanszenario", "pack.salesPlan.copy": "Beginnt mit monatlichen Ist-Daten und wendet nur bestätigte Annahmen zu Volumen, Preisen, Rabatten, Umsatzkosten und Wechselkursen mit explizitem Umfang, Zeitraum und Priorität an.",
         "fdd.kicker": "Financial Due Diligence", "fdd.title": "Fünf Berechnungen und zwei Register für die transaktionsrelevanten Fragen.",
         "fdd.copy": "Vera wendet feste Rezepte nur auf vorbereitete Eingaben und geprüfte Entscheidungen an. Sie erfindet keine Anpassungen, klassifiziert keine Positionen, wählt keinen Zielwert und trifft keine Transaktionsentscheidungen.",
         "fdd.qoe.title": "Ergebnisqualität und bereinigtes EBITDA", "fdd.qoe.copy": "Beginnt mit dem berichteten EBITDA und berücksichtigt nur einbezogene, geprüfte Anpassungen; Begründung, Nachweis und Wirkung jeder Anpassung bleiben sichtbar.",
@@ -498,7 +509,7 @@
         "boundary.result.title": "Ergebnis", "boundary.result.copy": "Vorbereitete und qualifizierte Nachweise, keine automatische Freigabe des Finanzurteils oder der Transaktionsentscheidung",
         "prompt.kicker": "In Vera ausprobieren", "prompt.title": "Mit dem Buchhaltungsordner und der Frage beginnen.",
         "prompt.copy": "Vera erkennt das passende Paket und fragt nur nach offenen Entscheidungen, die das Ergebnis ändern können.",
-        "prompt": "Verwende Vera, um die Finanzanalyse oder Financial Due Diligence für diesen Ordner vorzubereiten. Bestimme die Fragestellung — monatliche GuV, Working Capital, Kundenkonzentration, Ergebnisqualität und bereinigtes EBITDA, Nettoverschuldung, normalisiertes Working Capital, Capex oder Transaktionsüberleitungen — und qualifiziere Quellen, Stichtag oder Zeitraum, Währung und Umfang. Bitte mich, Zuordnungen, Anpassungen, Klassifikationen, Zielwerte und Beziehungen zu bestätigen, die das Ergebnis ändern können. Führe ein Paket aus und liefere Nachweise, Abstimmung und einen reproduzierbaren Beleg. Bereite bei Bedarf das Register der Eventualverbindlichkeiten oder finanziellen Themen separat vor. Halte vorbereitete Nachweise von fachlichen Schlussfolgerungen und Transaktionsentscheidungen getrennt.",
+        "prompt": "Verwende Vera, um die Finanzanalyse, das Planszenario oder die Financial Due Diligence für diesen Ordner vorzubereiten. Für den Verkaufsplan kannst du zum Beispiel sagen: „Die Stückzahlen in China steigen um 8 %, aber der Dollar verliert 5 % gegenüber dem Euro.“ Vera muss den interpretierten Umfang, Treiber, Zeitraum, die Wechselkursrichtung und Priorität vor der Berechnung zeigen. Bestimme für andere Pakete die Fragestellung — monatliche GuV, Working Capital, Kundenkonzentration, Ergebnisqualität und bereinigtes EBITDA, Nettoverschuldung, normalisiertes Working Capital, Capex oder Transaktionsüberleitungen — und qualifiziere Quellen, Stichtag oder Zeitraum, Währung und Umfang. Führe ein Paket aus und liefere Nachweise, Abstimmung und einen reproduzierbaren Beleg. Halte Annahmen und vorbereitete Nachweise von fachlichen Schlussfolgerungen und Transaktionsentscheidungen getrennt.",
         "related.kicker": "Im Vera-Ablauf", "related.title": "Analyse mit Kontrollen und Abschlussdokument verbinden.",
         "related.copy": "Nutzen Sie eine Buchhaltungsabstimmung, wenn Beziehungen zwischen Quellen zuerst geschlossen werden müssen. Übernehmen Sie dann bestätigte Tabellen in den Bericht.",
         "related.bank": "Bank und Buchhaltung abstimmen", "related.report": "Bericht erstellen",
@@ -513,16 +524,17 @@
         "breadcrumb.current": "Análisis financiero y due diligence",
         "hero.eyebrow": "Vera · Análisis financiero y due diligence",
         "hero.title": "Análisis financiero y due diligence financiera, con cifras que vuelven a la fuente.",
-        "hero.lead": "Prepare tres análisis contables y cinco cálculos de due diligence: EBITDA ajustado, deuda neta, capital circulante normalizado, Capex y puentes de transacción. Mapeos, relaciones, conciliaciones y límites permanecen visibles.",
+        "hero.lead": "Prepara cuatro análisis contables y de planificación y cinco cálculos de due diligence: desde escenarios de ventas hasta EBITDA ajustado, deuda neta, capital circulante normalizado, Capex y puentes de transacción. Supuestos, mapeos, conciliaciones y límites permanecen visibles.",
         "hero.primary": "Ver la due diligence", "hero.secondary": "Ver los análisis contables",
         "hero.input.label": "Proporcione", "hero.input": "Datos contables, periodo, moneda y alcance del análisis",
         "hero.prepare.label": "Vera prepara", "hero.prepare": "Un paquete identificado con mapeos confirmados, controles y conciliación",
         "hero.output.label": "Reciba", "hero.output": "Evidencia preparada y reproducible, lista para revisión profesional",
-        "packs.kicker": "Preparación contable", "packs.title": "Tres paquetes para preparar y conciliar las cifras.",
+        "packs.kicker": "Preparación contable", "packs.title": "Cuatro paquetes para preparar, planificar y conciliar las cifras.",
         "packs.copy": "Vera ejecuta un paquete cada vez. Cada paquete utiliza un cálculo definido y se detiene cuando los datos, el significado contable o las relaciones no están suficientemente claros.",
         "pack.pnl.title": "Cuenta de resultados mensual", "pack.pnl.copy": "Organiza ingresos y costes por mes desde un balance de comprobación o libro mayor cualificado, con clasificaciones contables confirmadas y totales conciliados.",
         "pack.workingCapital.title": "Capital circulante", "pack.workingCapital.copy": "Prepara cuentas a cobrar, cuentas a pagar y otros componentes desde conjuntos de datos y relaciones revisados, manteniendo visibles periodo, moneda y reglas de agregación.",
         "pack.customers.title": "Concentración de clientes", "pack.customers.copy": "Mide la concentración sobre ingresos o cuentas a cobrar después de confirmar identidad cliente-grupo, exclusiones y alcance en una tabla de correspondencia revisable.",
+        "pack.salesPlan.title": "Escenario del plan de ventas", "pack.salesPlan.copy": "Parte de datos mensuales Actual y aplica solo supuestos confirmados de volumen, precio, descuentos, coste de ventas y tipo de cambio, con alcances, periodos y prioridades explícitos.",
         "fdd.kicker": "Due diligence financiera", "fdd.title": "Cinco cálculos y dos registros para las preguntas que mueven la operación.",
         "fdd.copy": "Vera aplica recetas fijas solo a entradas preparadas y decisiones revisadas. No inventa ajustes, clasifica partidas, elige el objetivo ni toma decisiones sobre la operación.",
         "fdd.qoe.title": "Calidad de resultados y EBITDA ajustado", "fdd.qoe.copy": "Parte del EBITDA reportado y aplica únicamente ajustes incluidos y revisados, manteniendo visibles la justificación, la evidencia y el efecto de cada uno.",
@@ -551,7 +563,7 @@
         "boundary.result.title": "Resultado", "boundary.result.copy": "Evidencia preparada y cualificada, no aprobación automática del juicio financiero ni de la decisión sobre la operación",
         "prompt.kicker": "Pruébelo en Vera", "prompt.title": "Empiece por la carpeta contable y la pregunta.",
         "prompt.copy": "Vera identifica el paquete pertinente y pregunta solo por decisiones abiertas que pueden cambiar el resultado.",
-        "prompt": "Usa Vera para preparar el análisis financiero o la due diligence financiera de esta carpeta. Identifica la pregunta — cuenta de resultados mensual, capital circulante, concentración de clientes, calidad de resultados y EBITDA ajustado, deuda neta, capital circulante normalizado, Capex o puentes de transacción — y cualifica fuentes, fecha o periodo, moneda y alcance. Pídeme confirmar mapeos, ajustes, clasificaciones, objetivos y relaciones que pueden cambiar el resultado. Ejecuta un solo paquete y entrega evidencia, conciliación y un recibo reproducible. Cuando corresponda, prepara por separado el registro de pasivos contingentes o de cuestiones financieras. Mantén la evidencia preparada separada de las conclusiones profesionales y de las decisiones sobre la operación.",
+        "prompt": "Usa Vera para preparar el análisis financiero, el escenario de plan o la due diligence financiera de esta carpeta. Para el plan de ventas puedes decir, por ejemplo: «Las unidades vendidas en China suben un 8 %, pero el dólar pierde un 5 % frente al euro». Vera debe mostrar el alcance, el driver, el periodo, la dirección del cambio y la prioridad interpretados antes del cálculo. Para los demás paquetes identifica la pregunta — cuenta de resultados mensual, capital circulante, concentración de clientes, calidad de resultados y EBITDA ajustado, deuda neta, capital circulante normalizado, Capex o puentes de transacción — y cualifica fuentes, fecha o periodo, moneda y alcance. Ejecuta un solo paquete y entrega evidencia, conciliación y un recibo reproducible. Mantén los supuestos y la evidencia preparada separados de las conclusiones profesionales y de las decisiones sobre la operación.",
         "related.kicker": "En el recorrido de Vera", "related.title": "Conecte el análisis con los controles y el documento final.",
         "related.copy": "Utilice una conciliación contable cuando primero deban cerrarse las relaciones entre fuentes. Lleve después las tablas confirmadas al informe.",
         "related.bank": "Conciliar banco y contabilidad", "related.report": "Generar el informe",

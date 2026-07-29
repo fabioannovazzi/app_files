@@ -16,6 +16,7 @@ const PACKS = [
   "monthly_pnl",
   "working_capital",
   "customer_concentration",
+  "sales_plan",
   "quality_of_earnings",
   "net_debt",
   "normalized_working_capital",

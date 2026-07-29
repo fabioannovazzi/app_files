@@ -1,0 +1,93 @@
+{
+  "schema_version": "vera.sales_plan_preparation_case.v1",
+  "case_id": "synthetic-china-growth-usd-decline",
+  "purpose": "Exercise reviewed China unit growth and USD-to-EUR translation assumptions on a synthetic monthly sales dataset.",
+  "preparation_recipe": {
+    "recipe_id": "sales_plan_from_reviewed_actuals.v1",
+    "engine_version": "1.0.0",
+    "arithmetic": "decimal_exact",
+    "source_scenario": "AC",
+    "target_scenario": "PL",
+    "reporting_currency": "EUR",
+    "unit": "EUR",
+    "time_profile": "base",
+    "period_mapping": [
+      {
+        "source_period": "2025-01",
+        "target_period": "2026-01"
+      },
+      {
+        "source_period": "2025-02",
+        "target_period": "2026-02"
+      }
+    ],
+    "dimension_columns": [
+      "country",
+      "product"
+    ],
+    "metric_columns": {
+      "source_row_id": "source_row_id",
+      "period": "period",
+      "transaction_currency": "transaction_currency",
+      "units": "units",
+      "gross_sales_local": "gross_sales_local",
+      "discount_local": "discount_local",
+      "cogs_local": "cogs_local",
+      "fx_rate_to_reporting": "fx_rate_to_reporting"
+    },
+    "default_discount_behavior": "proportional_to_sales",
+    "default_cogs_behavior": "proportional_to_sales",
+    "fx_rate_definition": "reporting_currency_per_transaction_currency"
+  },
+  "reviewed_assumptions": {
+    "status": "reviewed",
+    "reviewed_by": "synthetic-commercialista",
+    "reviewed_at": "2026-07-29",
+    "review_basis": "Synthetic truth fixture implementing the commercialista instruction that China units rise while USD weakens against EUR.",
+    "assumptions": [
+      {
+        "assumption_id": "china-units-growth",
+        "driver": "units_pct",
+        "change_pct": "8",
+        "scope": {
+          "country": [
+            "China"
+          ]
+        },
+        "effective_periods": [
+          "2026-01",
+          "2026-02"
+        ],
+        "priority": 100,
+        "rationale": "Reviewed assumption: China unit sales increase by eight percent."
+      },
+      {
+        "assumption_id": "usd-eur-translation",
+        "driver": "fx_rate_pct",
+        "change_pct": "-5",
+        "scope": {
+          "transaction_currency": [
+            "USD"
+          ]
+        },
+        "effective_periods": [
+          "2026-01",
+          "2026-02"
+        ],
+        "priority": 100,
+        "rationale": "Reviewed assumption: one USD translates into five percent fewer EUR."
+      }
+    ]
+  },
+  "files": {
+    "actual_sales": {
+      "path": "actual_sales.csv",
+      "sha256": "ad070c49df8d48801c299b0f7bda352d4afe636d226a1789f28fe763bff8198a"
+    }
+  },
+  "professional_boundary": {
+    "prospective_assumptions_are_not_source_facts": true,
+    "professional_approval_required": true,
+    "report_ready": false
+  }
+}
