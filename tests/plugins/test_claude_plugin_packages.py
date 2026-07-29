@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.60"
+    assert manifest["version"] == "0.1.61"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -586,7 +586,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
     isolated = replace(
         package,
         output_directory=tmp_path / "vera",
-        output_zip=tmp_path / "vera-cowork-plugin.zip",
+        output_zip=tmp_path / "vera-claude-plugin.zip",
     )
     builder.build_package(isolated)
 
@@ -683,7 +683,7 @@ def test_claude_build_is_deterministic_and_self_verifying(
     isolated = replace(
         package,
         output_directory=tmp_path / "vera",
-        output_zip=tmp_path / "vera-cowork-plugin.zip",
+        output_zip=tmp_path / "vera-claude-plugin.zip",
     )
 
     builder.build_package(isolated)
@@ -705,7 +705,7 @@ def test_claude_verifier_reports_directory_and_zip_drift(
     isolated = replace(
         package,
         output_directory=tmp_path / "vera",
-        output_zip=tmp_path / "vera-cowork-plugin.zip",
+        output_zip=tmp_path / "vera-claude-plugin.zip",
     )
     builder.build_package(isolated)
     skill_path = isolated.output_directory / "skills" / "vera" / "SKILL.md"
@@ -721,6 +721,7 @@ def test_configured_claude_outputs_match_canonical_source(configured) -> None:
     builder, marketplace, package = configured
     _, packages = builder.load_configuration()
 
+    assert package.output_zip.name == "vera-claude-plugin.zip"
     assert builder.verify_package(package) == []
     assert builder.verify_catalog(marketplace, packages) == []
 

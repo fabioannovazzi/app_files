@@ -45,11 +45,11 @@ def test_only_verified_cowork_zips_are_public() -> None:
     public_vera_zip = (
         ROOT / "static" / "shared" / "vera" / "downloads" / "vera-cowork-plugin.zip"
     )
-    release_vera_zip = ROOT / "plugin_packages" / "vera" / "vera-cowork-plugin.zip"
+    release_vera_zip = ROOT / "plugin_packages" / "vera" / "vera-claude-plugin.zip"
     public_clara_zip = (
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-cowork-plugin.zip"
     )
-    release_clara_zip = ROOT / "plugin_packages" / "clara" / "clara-cowork-plugin.zip"
+    release_clara_zip = ROOT / "plugin_packages" / "clara" / "clara-claude-plugin.zip"
     retired_plugin_zips = (
         ROOT / "protected_downloads" / "vera" / "vera-plugin.zip",
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-plugin.zip",

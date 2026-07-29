@@ -93,7 +93,7 @@ python -m pytest tests/plugins/test_claude_plugin_packages.py \
   -k 'not static_page_and_skill_match_plugin_contract' -q
 ```
 
-Upload `plugin_packages/vera/vera-cowork-plugin.zip` for a file-install smoke
+Upload `plugin_packages/vera/vera-claude-plugin.zip` for a file-install smoke
 test. The generated directory is the marketplace source referenced by
 `.claude-plugin/marketplace.json`.
 
@@ -104,11 +104,11 @@ so this pack does not claim that local CLI validation ran.
 
 ## Final candidate
 
-- **Version:** 0.1.50
-- **Archive:** `plugin_packages/vera/vera-cowork-plugin.zip`
-- **SHA-256:** `adb77194ba469a75e68cfd1868522a42960ecfb63f8822424d0a49b485d18c8b`
-- **Size:** 2,091,926 bytes
-- **Archive entries:** 352
+- **Version:** 0.1.61
+- **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
+- **SHA-256:** `ad446581ccd1a6073cb0deb28c84b2d136112d29a0eac3b7a4aac0a826f99d73`
+- **Size:** 2,302,999 bytes
+- **Archive entries:** 394
 
 Two consecutive builds produced the same SHA-256. The archive has a direct
 plugin root, deterministic timestamps, no duplicate or traversal paths, no
