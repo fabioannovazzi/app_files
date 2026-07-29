@@ -405,7 +405,7 @@ def test_realtime_transcription_session_uses_transcription_only_config(
     assert body["status"] == "ready"
     assert body["sdp"] == "answer-sdp"
     assert body["call_id"] == "call_live_asr"
-    assert body["transcription_model"] == "gpt-realtime-whisper"
+    assert body["transcription_model"] == "gpt-live-transcribe"
     assert captured["sdp"] == "offer-sdp"
     assert captured["safety_identifier"].startswith("case-notes-voice-")
     session_config = captured["session_config"]
@@ -415,8 +415,8 @@ def test_realtime_transcription_session_uses_transcription_only_config(
     assert "tracing" not in session_config
     assert session_config["audio"]["input"]["turn_detection"] is None
     assert session_config["audio"]["input"]["transcription"] == {
-        "model": "gpt-realtime-whisper",
-        "language": "it",
+        "model": "gpt-live-transcribe",
+        "languages": ["it"],
         "delay": "low",
     }
 
@@ -530,18 +530,18 @@ def test_create_audio_transcription_posts_small_audio_multipart(monkeypatch) -> 
     assert result.metadata["status"] == "complete"
     assert result.metadata["mode"] == "single"
     assert result.metadata["transcription_strategy"] == "clean_text_only"
-    assert result.metadata["transcription_model"] == "gpt-4o-transcribe"
+    assert result.metadata["transcription_model"] == "gpt-transcribe"
     assert result.metadata["source_duration_seconds"] == 12.0
     assert len(captured) == 1
     assert "multipart/form-data" in str(captured[0]["content_type"])
     assert b'name="model"' in upload_body
-    assert b"gpt-4o-transcribe" in upload_body
+    assert b"gpt-transcribe" in upload_body
     assert b"gpt-4o-transcribe-diarize" not in upload_body
     assert b"diarized_json" not in upload_body
     assert b'name="chunking_strategy"' not in upload_body
     assert b'name="temperature"' in upload_body
     assert b"\r\n0\r\n" in upload_body
-    assert b'name="language"' in upload_body
+    assert b'name="languages[]"' in upload_body
     assert b"\r\nes\r\n" in upload_body
     assert b'name="prompt"' in upload_body
     assert b"Preferred spellings / case glossary" in upload_body
@@ -1756,7 +1756,7 @@ def test_uploaded_audio_job_writes_bundle(tmp_path: Path, monkeypatch) -> None:
                 "status": "complete",
                 "mode": "single",
                 "transcription_strategy": "clean_text_only",
-                "transcription_model": "gpt-4o-transcribe",
+                "transcription_model": "gpt-transcribe",
                 "source_duration_seconds": 12.0,
                 "chunk_count": 1,
                 "coverage_complete": True,
@@ -1806,8 +1806,8 @@ def test_uploaded_audio_job_writes_bundle(tmp_path: Path, monkeypatch) -> None:
     assert "role" not in body["source_metadata"]
     assert "confidentiality" not in body["source_metadata"]
     assert body["audio_file_name"] == "meeting.wav"
-    assert body["model"] == "gpt-4o-transcribe"
-    assert body["transcription_model"] == "gpt-4o-transcribe"
+    assert body["model"] == "gpt-transcribe"
+    assert body["transcription_model"] == "gpt-transcribe"
     assert body["user_transcript"] == "Il passaggio richiede un mandato AD scritto."
     assert (
         body["transcript_text_prompted"]

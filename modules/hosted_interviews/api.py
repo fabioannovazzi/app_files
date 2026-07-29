@@ -1275,7 +1275,7 @@ def _build_realtime_session_config(
                 },
                 "transcription": {
                     "model": DEFAULT_TRANSCRIPTION_MODEL,
-                    "language": language,
+                    "languages": [language],
                 },
             },
             "output": {

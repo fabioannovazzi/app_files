@@ -110,7 +110,7 @@
   const sessionReady = document.body.dataset.sessionReady === "true";
   const transcriptionModel = document.body.dataset.transcriptionModel || "";
   const realtimeTranscriptionModel =
-    document.body.dataset.realtimeTranscriptionModel || "gpt-realtime-whisper";
+    document.body.dataset.realtimeTranscriptionModel || "";
   if (stopButton) {
     stopButton.textContent = "Stop & download";
   }

@@ -790,6 +790,10 @@ def test_public_session_uses_prepared_context(tmp_path: Path, monkeypatch) -> No
     assert isinstance(session_config, dict)
     assert api.DEFAULT_MODEL == "gpt-realtime-2.1"
     assert session_config["model"] == api.DEFAULT_MODEL
+    assert session_config["audio"]["input"]["transcription"] == {
+        "model": "gpt-live-transcribe",
+        "languages": ["it"],
+    }
     instructions = str(session_config["instructions"])
     assert "Production lead" in instructions
     assert "Do not ask family-political questions." in instructions
@@ -1574,7 +1578,7 @@ def test_post_call_mic_transcription_replaces_live_interviewee_transcript(
             "metadata": {
                 "status": "complete",
                 "coverage_complete": True,
-                "transcription_model": "gpt-4o-transcribe",
+                "transcription_model": "gpt-transcribe",
             },
             "audio_files": [
                 {
@@ -1657,7 +1661,7 @@ def test_post_call_mic_transcription_replaces_live_interviewee_transcript(
         completion["interviewee_audio_transcription"]["transcription_metadata"][
             "transcription_model"
         ]
-        == "gpt-4o-transcribe"
+        == "gpt-transcribe"
     )
     assert "post_call_interviewee_transcription_completed" in events_text
     assert [turn["speaker"] for turn in captured_review["dialog_turns"]] == [
