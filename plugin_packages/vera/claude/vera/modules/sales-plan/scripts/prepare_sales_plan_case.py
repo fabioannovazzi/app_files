@@ -50,7 +50,7 @@ CASE_SCHEMA = "vera.sales_plan_preparation_case.v2"
 RECONCILIATION_SCHEMA = "vera.sales_plan_reconciliation.v2"
 MANIFEST_SCHEMA = "vera.sales_plan_evidence_manifest.v2"
 RECIPE_ID = "sales_plan_from_reviewed_actuals.v2"
-ENGINE_VERSION = "1.1.0"
+ENGINE_VERSION = "1.1.1"
 
 SOURCE_SCENARIO = "AC"
 TARGET_SCENARIO = "PL"
@@ -675,6 +675,7 @@ def _read_source_rows(
     *,
     source_root: Path,
     expected_sha256: str,
+    reporting_currency: str,
     dimensions: Sequence[str],
     metrics: Mapping[str, str],
     period_mapping: Sequence[Mapping[str, str]],
@@ -767,6 +768,11 @@ def _read_source_rows(
             positive=True,
             canonical=True,
         )
+        if transaction_currency == reporting_currency and fx_rate != Decimal(1):
+            raise ContractValidationError(
+                f"actual sales row {position} fx_rate_to_reporting must equal 1 "
+                "when transaction currency equals reporting currency"
+            )
         group_key = tuple(
             [
                 *(dimension_values[dimension] for dimension in dimensions),
@@ -1156,6 +1162,7 @@ def _build_scenarios(
         discount_local = source_row["discount_local"]
         cogs_local = source_row["cogs_local"]
         fx_rate = source_row["fx_rate_to_reporting"]
+        transaction_currency = str(source_row["transaction_currency"])
 
         units_assumptions = selected.get("units_pct", [])
         price_assumptions = selected.get("unit_price_pct", [])
@@ -1164,9 +1171,7 @@ def _build_scenarios(
         cogs_assumptions = selected.get("cogs_pct", [])
         fx_assumptions = selected.get("fx_rate_pct", [])
 
-        if (units_assumptions or price_assumptions) and (
-            units is None or (price_assumptions and units == 0)
-        ):
+        if (units_assumptions or price_assumptions) and (units is None or units == 0):
             _add_error(
                 errors,
                 gate="metric_availability",
@@ -1246,6 +1251,21 @@ def _build_scenarios(
             cogs_assumption_base = None
             plan_cogs_local = None
         plan_fx_rate = fx_rate * fx_multiplier
+        if transaction_currency == reporting_currency and plan_fx_rate != Decimal(1):
+            _add_error(
+                errors,
+                gate="assumption_scope",
+                code="same_currency_fx_changed",
+                message=(
+                    f"{source_row_id} {target_period} changes the "
+                    f"{reporting_currency}-to-{reporting_currency} FX rate"
+                ),
+                identifiers=[
+                    source_row_id,
+                    target_period,
+                    *(str(item["assumption_id"]) for item in fx_assumptions),
+                ],
+            )
 
         driver_value_names = {
             "units_pct": "units",
@@ -1489,6 +1509,7 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
         source_path,
         source_root=case_path.parent,
         expected_sha256=expected_source_sha256,
+        reporting_currency=str(recipe["reporting_currency"]),
         dimensions=dimensions,
         metrics=metrics,
         period_mapping=period_mapping,

@@ -7,6 +7,7 @@ import json
 import shutil
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -266,6 +267,81 @@ def test_prepare_sales_plan_case_compounds_reviewed_same_driver_overlaps(
     assert {row["application_mode"] for row in ledger} == {"compound"}
 
 
+def test_prepare_sales_plan_case_compounds_arbitrary_dimension_intersections(
+    tmp_path: Path,
+) -> None:
+    module = _load_engine_module()
+    case_path = _copy_fixture(tmp_path)
+    case = _load_case(case_path)
+    case["preparation_recipe"]["dimension_columns"] = [
+        "market_code",
+        "route_class",
+    ]
+    _write_case(case_path, case)
+    _rewrite_source_and_bind(
+        case_path,
+        [
+            {
+                "source_row_id": "row-47",
+                "period": "2025-01",
+                "market_code": "Zone-47",
+                "route_class": "Path-Wholesale",
+                "transaction_currency": "GBP",
+                "units": "10",
+                "gross_sales_local": "100",
+                "discount_local": "10",
+                "cogs_local": "60",
+                "fx_rate_to_reporting": "0.9",
+            }
+        ],
+    )
+    case = _load_case(case_path)
+    case["preparation_recipe"]["same_driver_overlap_behavior"] = "compound"
+    case["reviewed_assumptions"]["assumptions"] = [
+        {
+            "assumption_id": "market-growth",
+            "driver": "gross_sales_pct",
+            "change_pct": "30",
+            "scope": {"market_code": ["Zone-47"]},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Synthetic arbitrary market assumption.",
+        },
+        {
+            "assumption_id": "route-decline",
+            "driver": "gross_sales_pct",
+            "change_pct": "-10",
+            "scope": {"route_class": ["Path-Wholesale"]},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Synthetic arbitrary route assumption.",
+        },
+        {
+            "assumption_id": "gbp-rise",
+            "driver": "fx_rate_pct",
+            "change_pct": "20",
+            "scope": {"transaction_currency": ["GBP"]},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Synthetic arbitrary currency assumption.",
+        },
+    ]
+    _write_case(case_path, case)
+    output_dir = tmp_path / "output"
+
+    result = module.prepare_sales_plan_case(case_path, output_dir)
+
+    assert result["status"] == "passed"
+    plan_row = next(
+        row
+        for row in _read_csv(output_dir / "sales_plan_scenario.csv")
+        if row["scenario"] == "PL"
+    )
+    assert plan_row["gross_sales_local"] == "117"
+    assert plan_row["fx_rate_to_reporting"] == "1.08"
+    assert plan_row["gross_sales_reporting"] == "126.36"
+
+
 def test_prepare_sales_plan_case_rejects_unmatched_scope(tmp_path: Path) -> None:
     module = _load_engine_module()
     case_path = _copy_fixture(tmp_path)
@@ -319,6 +395,135 @@ def test_prepare_sales_plan_case_rejects_stale_source_receipt(
 
     with pytest.raises(module.ContractValidationError, match="sha256 is stale"):
         module.prepare_sales_plan_case(case_path, tmp_path / "output")
+
+
+def test_prepare_sales_plan_case_rejects_non_unit_same_currency_fx(
+    tmp_path: Path,
+) -> None:
+    module = _load_engine_module()
+    case_path = _copy_fixture(tmp_path)
+    _rewrite_source_and_bind(
+        case_path,
+        [
+            {
+                "source_row_id": "same-currency-row",
+                "period": "2025-01",
+                "country": "Market-47",
+                "product": "Route-Direct",
+                "transaction_currency": "EUR",
+                "units": "10",
+                "gross_sales_local": "100",
+                "discount_local": "10",
+                "cogs_local": "60",
+                "fx_rate_to_reporting": "0.8",
+            }
+        ],
+    )
+    case = _load_case(case_path)
+    case["reviewed_assumptions"]["assumptions"] = [
+        {
+            "assumption_id": "no-change",
+            "driver": "gross_sales_pct",
+            "change_pct": "0",
+            "scope": {},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Keep the scenario unchanged.",
+        }
+    ]
+    _write_case(case_path, case)
+
+    with pytest.raises(
+        module.ContractValidationError,
+        match="must equal 1 when transaction currency equals reporting currency",
+    ):
+        module.prepare_sales_plan_case(case_path, tmp_path / "output")
+
+
+def test_prepare_sales_plan_case_rejects_fx_effect_on_reporting_currency(
+    tmp_path: Path,
+) -> None:
+    module = _load_engine_module()
+    case_path = _copy_fixture(tmp_path)
+    _rewrite_source_and_bind(
+        case_path,
+        [
+            {
+                "source_row_id": "same-currency-row",
+                "period": "2025-01",
+                "country": "Market-47",
+                "product": "Route-Direct",
+                "transaction_currency": "EUR",
+                "units": "10",
+                "gross_sales_local": "100",
+                "discount_local": "10",
+                "cogs_local": "60",
+                "fx_rate_to_reporting": "1",
+            }
+        ],
+    )
+    case = _load_case(case_path)
+    case["reviewed_assumptions"]["assumptions"] = [
+        {
+            "assumption_id": "global-fx-rise",
+            "driver": "fx_rate_pct",
+            "change_pct": "10",
+            "scope": {},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Exercise the same-currency FX invariant.",
+        }
+    ]
+    _write_case(case_path, case)
+
+    result = module.prepare_sales_plan_case(case_path, tmp_path / "output")
+
+    assert result["status"] == "failed"
+    assert {error["code"] for error in result["errors"]} == {"same_currency_fx_changed"}
+
+
+def test_prepare_sales_plan_case_rejects_units_effect_on_zero_units(
+    tmp_path: Path,
+) -> None:
+    module = _load_engine_module()
+    case_path = _copy_fixture(tmp_path)
+    _rewrite_source_and_bind(
+        case_path,
+        [
+            {
+                "source_row_id": "zero-unit-row",
+                "period": "2025-01",
+                "country": "Market-47",
+                "product": "Route-Direct",
+                "transaction_currency": "GBP",
+                "units": "0",
+                "gross_sales_local": "100",
+                "discount_local": "10",
+                "cogs_local": "60",
+                "fx_rate_to_reporting": "0.9",
+            }
+        ],
+    )
+    case = _load_case(case_path)
+    case["reviewed_assumptions"]["assumptions"] = [
+        {
+            "assumption_id": "unit-growth",
+            "driver": "units_pct",
+            "change_pct": "10",
+            "scope": {},
+            "effective_periods": ["2026-01"],
+            "priority": 100,
+            "rationale": "Exercise the positive-units invariant.",
+        }
+    ]
+    _write_case(case_path, case)
+
+    result = module.prepare_sales_plan_case(case_path, tmp_path / "output")
+
+    assert result["status"] == "failed"
+    assert {error["code"] for error in result["errors"]} == {
+        "units_required_for_volume_or_price_driver"
+    }
 
 
 def test_prepare_sales_plan_case_preserves_sparse_observed_grains(
@@ -547,6 +752,21 @@ def test_run_plan_writes_a_standalone_execution_receipt(tmp_path: Path) -> None:
     assert written_receipt == receipt
 
 
+def test_run_plan_canonicalizes_standard_macos_tempfile_paths() -> None:
+    module = _load_runner_module()
+    temp_root = Path(tempfile.mkdtemp(prefix="vera-plan-path-alias-"))
+    try:
+        case_path = _copy_fixture(temp_root)
+        output_dir = temp_root / "output"
+
+        receipt = module.run_plan(case_path=case_path, output_dir=output_dir)
+
+        assert receipt["status"] == "passed"
+        assert receipt["source_path"] == "actual_sales.csv"
+    finally:
+        shutil.rmtree(temp_root)
+
+
 def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
     requests = [
         {
@@ -577,7 +797,7 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
     responses = [json.loads(line) for line in result.stdout.splitlines()]
     assert responses[0]["result"]["serverInfo"] == {
         "name": "vera-sales-plan",
-        "version": "0.1.1",
+        "version": "0.1.2",
     }
     payload = responses[1]["result"]["structuredContent"]
     assert payload["workflow"] == "vera.sales_plan"

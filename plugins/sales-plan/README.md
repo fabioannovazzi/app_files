@@ -13,6 +13,11 @@ The reviewed v2 case contract makes three material choices explicit:
 - sparse Actual grains preserve observed rows without inventing zero-sales
   customer-months.
 
+The engine rejects volume or price effects on zero Units and enforces an FX
+rate of exactly `1` whenever transaction currency equals reporting currency.
+All dimension and currency members come from the supplied case; example markets
+and channels are not runtime rules.
+
 It is not a financial-analysis pack. Historical analysis and financial due
 diligence remain in `financial-analysis`.
 
