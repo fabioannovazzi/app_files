@@ -24,6 +24,7 @@ from prepare_sales_plan_case import (  # noqa: E402
     ENGINE_VERSION,
     RECIPE_ID,
     prepare_sales_plan_case,
+    snapshot_declared_actual_sales,
 )
 
 __all__ = ["PlanRunError", "main", "run_plan"]
@@ -110,6 +111,9 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
             case_path,
             root=case_path.parent,
         )
+        source_path, source_byte_count, source_sha256 = snapshot_declared_actual_sales(
+            case_path
+        )
         implementation_files = _implementation_snapshots()
         result = prepare_sales_plan_case(case_path, output_dir)
         status = str(result.get("status", "failed"))
@@ -122,10 +126,16 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
             sha256=case_sha256,
             label="case file",
         )
+        _require_unchanged_file(
+            source_path,
+            byte_count=source_byte_count,
+            sha256=source_sha256,
+            label="actual sales source",
+        )
         if _implementation_snapshots() != implementation_files:
             raise PlanRunError("Plan implementation changed during execution")
         content = {
-            "schema_version": "vera.sales_plan_execution.v1",
+            "schema_version": "vera.sales_plan_execution.v2",
             "workflow": "sales-plan",
             "recipe_id": RECIPE_ID,
             "engine_version": ENGINE_VERSION,
@@ -133,6 +143,9 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
             "implementation_files": implementation_files,
             "implementation_set_sha256": canonical_json_sha256(implementation_files),
             "case_sha256": case_sha256,
+            "source_path": source_path.relative_to(case_path.parent).as_posix(),
+            "source_byte_count": source_byte_count,
+            "source_sha256": source_sha256,
             "status": status,
             "output_artifacts": outputs,
             "output_set_sha256": canonical_json_sha256(outputs),
@@ -145,6 +158,12 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
             byte_count=case_byte_count,
             sha256=case_sha256,
             label="case file",
+        )
+        _require_unchanged_file(
+            source_path,
+            byte_count=source_byte_count,
+            sha256=source_sha256,
+            label="actual sales source",
         )
         if _implementation_snapshots() != implementation_files:
             raise PlanRunError("Plan implementation changed during execution")

@@ -4,6 +4,15 @@
 monthly Actual sales and applies only confirmed commercial and FX assumptions
 to produce a forward-looking Plan scenario.
 
+The reviewed v2 case contract makes three material choices explicit:
+
+- same-driver overlaps either use the highest reviewed priority or compound all
+  reviewed percentage effects;
+- explicit discount and COGS assumptions apply either to the Actual amount or
+  to the amount after the sales effect;
+- sparse Actual grains preserve observed rows without inventing zero-sales
+  customer-months.
+
 It is not a financial-analysis pack. Historical analysis and financial due
 diligence remain in `financial-analysis`.
 

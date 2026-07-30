@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import csv
 import hashlib
+import io
 import json
 import os
 import re
@@ -45,6 +46,7 @@ __all__ = [
     "pinned_directory",
     "named_root_artifact_receipt",
     "read_exact_csv",
+    "read_exact_csv_snapshot_beneath",
     "reference_set",
     "resolve_local_file",
     "reviewed_decision_receipt",
@@ -1202,6 +1204,34 @@ def named_root_artifact_receipt(
     return receipt
 
 
+def _parse_exact_csv(
+    handle: Any,
+    *,
+    columns: tuple[str, ...],
+    label: str,
+    require_rows: bool = True,
+) -> list[dict[str, str]]:
+    """Parse exact ordered CSV columns and reject truncated or surplus cells."""
+
+    rows: list[dict[str, str]] = []
+    reader = csv.DictReader(handle)
+    if tuple(reader.fieldnames or ()) != columns:
+        raise ContractValidationError(f"{label} columns must equal {list(columns)}")
+    for position, raw_row in enumerate(reader, start=2):
+        if None in raw_row:
+            raise ContractValidationError(
+                f"{label} row {position} contains surplus cells"
+            )
+        if any(value is None for value in raw_row.values()):
+            raise ContractValidationError(
+                f"{label} row {position} contains truncated cells"
+            )
+        rows.append({column: str(raw_row[column]) for column in columns})
+    if require_rows and not rows:
+        raise ContractValidationError(f"{label} must contain at least one row")
+    return rows
+
+
 def read_exact_csv(
     path: Path,
     *,
@@ -1211,24 +1241,38 @@ def read_exact_csv(
 ) -> list[dict[str, str]]:
     """Read exact ordered CSV columns and reject truncated or surplus cells."""
 
-    rows: list[dict[str, str]] = []
     with Path(path).open("r", encoding="utf-8", newline="") as handle:
-        reader = csv.DictReader(handle)
-        if tuple(reader.fieldnames or ()) != columns:
-            raise ContractValidationError(f"{label} columns must equal {list(columns)}")
-        for position, raw_row in enumerate(reader, start=2):
-            if None in raw_row:
-                raise ContractValidationError(
-                    f"{label} row {position} contains surplus cells"
-                )
-            if any(value is None for value in raw_row.values()):
-                raise ContractValidationError(
-                    f"{label} row {position} contains truncated cells"
-                )
-            rows.append({column: str(raw_row[column]) for column in columns})
-    if require_rows and not rows:
-        raise ContractValidationError(f"{label} must contain at least one row")
-    return rows
+        return _parse_exact_csv(
+            handle,
+            columns=columns,
+            label=label,
+            require_rows=require_rows,
+        )
+
+
+def read_exact_csv_snapshot_beneath(
+    path: Path,
+    *,
+    root: Path,
+    columns: tuple[str, ...],
+    label: str,
+    require_rows: bool = True,
+) -> tuple[list[dict[str, str]], int, str]:
+    """Parse and hash the same stable CSV bytes below one no-follow root."""
+
+    with _open_regular_file_beneath(path, root=root) as descriptor:
+        payload = _read_descriptor_bytes(descriptor)
+    try:
+        text = payload.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ContractValidationError(f"{label} must be valid UTF-8") from exc
+    rows = _parse_exact_csv(
+        io.StringIO(text, newline=""),
+        columns=columns,
+        label=label,
+        require_rows=require_rows,
+    )
+    return rows, len(payload), hashlib.sha256(payload).hexdigest()
 
 
 def reference_set(

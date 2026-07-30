@@ -18,7 +18,7 @@
       {
         "id": "sales-plan-evidence",
         "purpose": "Interpret and review commercial and FX assumptions, then prepare a forward-looking sales Plan from reviewed Actuals",
-        "content": "User instructions; monthly Actual sales rows; product, customer, country, channel or other reviewed dimensions; units, prices, gross sales, discounts, COGS, transaction and reporting currencies, and FX rates; Actual-to-Plan period mappings; reviewed assumptions, scopes, priorities and rationale; source identities and hashes; Plan scenario rows; assumption ledger; scenario summary; reconciliation results; replay evidence; limitations and review status",
+        "content": "User instructions; monthly Actual sales rows, including sparse observed grains; product, customer, country, channel or other reviewed dimensions; units, prices, gross sales, discounts, COGS, transaction and reporting currencies, and FX rates; Actual-to-Plan period mappings; reviewed assumptions, scopes, priorities, same-driver overlap behavior, discount and COGS assumption bases, and rationale; source identities and hashes; Plan scenario rows; assumption ledger; scenario summary; reconciliation results; replay evidence; limitations and review status",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -30,11 +30,11 @@
   "security_controls": [
     {
       "id": "reviewed-plan-assumptions",
-      "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping, and fails on unmatched scopes, unsupported drivers, ambiguous equal-priority overlaps, incompatible driver combinations, missing metrics, or stale source evidence."
+      "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping. The contract explicitly chooses priority or compound behavior for same-driver overlaps and the basis for discount and COGS assumptions. The engine fails on unmatched scopes, unsupported drivers, ambiguous priority winners, incompatible driver combinations, missing metrics, or stale source evidence."
     },
     {
       "id": "fresh-pinned-plan-output",
-      "control": "The dispatcher requires a fresh regular output directory, pins its identity, records exact output hashes, and verifies the case and implementation source remain unchanged throughout execution."
+      "control": "The dispatcher requires a fresh regular output directory, pins its identity, records exact output hashes, parses and hashes the same stable Actual-source bytes, and verifies the case, Actual source, and implementation remain unchanged throughout execution."
     },
     {
       "id": "prepared-plan-boundary",
@@ -42,9 +42,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-29",
+    "reviewed_at": "2026-07-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ed6483d6fe364ecc12175f6802170d59b36ac9764f3a6ca8f4ed5b1054fdfe64"
+    "source_fingerprint": "b8fa7fed845f78bd75552be0392455a47895676555374fa7ad728737bf6bfde6"
   }
 }

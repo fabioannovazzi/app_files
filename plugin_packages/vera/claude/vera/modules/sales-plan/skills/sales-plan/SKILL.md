@@ -72,7 +72,8 @@ The deterministic recipe can apply percentage assumptions to:
 
 Vera interprets the commercialista's request and prepares the structured
 assumption read-back. The commercialista confirms the meaning, scope, periods,
-currency direction, and priority. The engine owns exact arithmetic, collision
+currency direction, priority, same-driver overlap behavior, and the basis for
+explicit discount or COGS changes. The engine owns exact arithmetic, collision
 checks, reconciliation, output hashes, and replay evidence.
 
 ## Chat-first assumption review
@@ -97,14 +98,22 @@ structured assumption.
 Resolve only ambiguities that change the result:
 
 - “sales increase” must become units, unit price, or gross sales;
-- v1 accepts percentage changes only;
+- v2 accepts percentage changes only;
 - the FX rate is reporting-currency units per transaction-currency unit;
 - a 5% weaker USD against EUR is `-5%` for USD rows when EUR is reporting;
 - scopes must match exact source dimension members;
-- overlapping assumptions require explicit priority;
-- equal-priority overlaps fail closed;
+- same-driver overlaps require the reviewed case to choose `priority` or
+  `compound`;
+- `priority` applies only the highest-priority matching assumption and fails
+  closed when multiple winners have equal priority;
+- `compound` applies every matching same-driver assumption by multiplying each
+  reviewed percentage effect; priority and assumption ID make the ledger order
+  deterministic;
 - gross-sales changes cannot overlap unit or unit-price changes on one row;
-- v1 preserves the mapped Actual time profile and does not invent seasonality.
+- an explicit discount or COGS change must state whether it applies to the
+  `actual_amount` or the `sales_adjusted_amount`;
+- v2 preserves observed sparse Actual rows and does not impute zero sales,
+  missing customer-months, or seasonality.
 
 For a large assumption set, prepare the same review table in Markdown or case
 JSON and review it in batches. A separate HTML workbench is not part of v1.
@@ -113,11 +122,12 @@ JSON and review it in batches. A separate HTML workbench is not part of v1.
 
 Before running helper scripts, identify the material choices that would change
 the Plan: source scenario, target periods, reporting currency, dimensions,
-driver meaning, exact scope, FX direction, assumption priority, and review
-audience. Ask only those unresolved choices in chat and wait when their answer
-would materially change execution. Generate choices from the actual inputs;
-do not propose dimensions, drivers, currencies, planning rules, or output
-packages unless the facts cue them.
+driver meaning, exact scope, FX direction, assumption priority, same-driver
+overlap behavior, discount and COGS assumption bases, and review audience.
+Ask only those unresolved choices in chat and wait when their answer would
+materially change execution. Generate choices from the actual inputs; do not
+propose dimensions, drivers, currencies, planning rules, or output packages
+unless the facts cue them.
 
 Default output policy: produce the complete normal Plan scenario, assumption
 ledger, summary, reconciliation, evidence manifest, and execution receipt when
@@ -159,7 +169,8 @@ The declared `requirements.txt` is standard-library only. Do not install
 undeclared packages.
 3. Prepare the reviewed case contract. It must bind the source hash, period
    mapping, scenario codes, reporting currency, dimension columns, default
-   discount and COGS behavior, structured assumptions, and professional-review
+   discount and COGS behavior, same-driver overlap behavior, explicit discount
+   and COGS assumption bases, structured assumptions, and professional-review
    receipt.
 4. Run:
 
@@ -170,7 +181,8 @@ python scripts/run_plan.py \
 ```
 
 5. Stop on failed reconciliation or any unmatched scope, unsupported driver,
-   stale source hash, ambiguous collision, or missing metric.
+   stale or changed source, ambiguous priority collision, incompatible driver
+   combination, or missing metric.
 6. Deliver the Plan scenario and review artifacts. A passed run proves exact
    execution and reproducibility; it does not approve the assumptions or the
    resulting Plan.
