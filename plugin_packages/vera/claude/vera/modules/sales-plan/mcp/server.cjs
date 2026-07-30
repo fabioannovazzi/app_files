@@ -69,7 +69,7 @@ function handle(message) {
     const payload = {
       workflow: "vera.sales_plan",
       display_name: "Plan",
-      recipe_id: "sales_plan_from_reviewed_actuals.v1",
+      recipe_id: "sales_plan_from_reviewed_actuals.v2",
       artifacts: ARTIFACTS,
       report_ready: false,
       boundary:

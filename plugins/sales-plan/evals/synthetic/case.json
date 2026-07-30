@@ -1,10 +1,10 @@
 {
-  "schema_version": "vera.sales_plan_preparation_case.v1",
+  "schema_version": "vera.sales_plan_preparation_case.v2",
   "case_id": "synthetic-china-growth-usd-decline",
   "purpose": "Exercise reviewed China unit growth and USD-to-EUR translation assumptions on a synthetic monthly sales dataset.",
   "preparation_recipe": {
-    "recipe_id": "sales_plan_from_reviewed_actuals.v1",
-    "engine_version": "1.0.0",
+    "recipe_id": "sales_plan_from_reviewed_actuals.v2",
+    "engine_version": "1.1.0",
     "arithmetic": "decimal_exact",
     "source_scenario": "AC",
     "target_scenario": "PL",
@@ -37,6 +37,9 @@
     },
     "default_discount_behavior": "proportional_to_sales",
     "default_cogs_behavior": "proportional_to_sales",
+    "same_driver_overlap_behavior": "priority",
+    "discount_assumption_basis": "actual_amount",
+    "cogs_assumption_basis": "actual_amount",
     "fx_rate_definition": "reporting_currency_per_transaction_currency"
   },
   "reviewed_assumptions": {

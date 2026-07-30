@@ -28,8 +28,9 @@ from plan_contract_kernel import (
     decimal_text,
     exact_decimal_context,
     file_sha256,
+    file_snapshot_beneath,
     parse_decimal,
-    read_exact_csv,
+    read_exact_csv_snapshot_beneath,
     resolve_local_file,
     strict_json_load,
     write_json,
@@ -40,15 +41,16 @@ __all__ = [
     "RECIPE_ID",
     "main",
     "prepare_sales_plan_case",
+    "snapshot_declared_actual_sales",
 ]
 
 LOGGER = logging.getLogger(__name__)
 
-CASE_SCHEMA = "vera.sales_plan_preparation_case.v1"
-RECONCILIATION_SCHEMA = "vera.sales_plan_reconciliation.v1"
-MANIFEST_SCHEMA = "vera.sales_plan_evidence_manifest.v1"
-RECIPE_ID = "sales_plan_from_reviewed_actuals.v1"
-ENGINE_VERSION = "1.0.0"
+CASE_SCHEMA = "vera.sales_plan_preparation_case.v2"
+RECONCILIATION_SCHEMA = "vera.sales_plan_reconciliation.v2"
+MANIFEST_SCHEMA = "vera.sales_plan_evidence_manifest.v2"
+RECIPE_ID = "sales_plan_from_reviewed_actuals.v2"
+ENGINE_VERSION = "1.1.0"
 
 SOURCE_SCENARIO = "AC"
 TARGET_SCENARIO = "PL"
@@ -72,6 +74,8 @@ REQUIRED_METRICS = (
     "fx_rate_to_reporting",
 )
 DEFAULT_BEHAVIORS = frozenset({"proportional_to_sales", "unchanged"})
+SAME_DRIVER_OVERLAP_BEHAVIORS = frozenset({"compound", "priority"})
+ASSUMPTION_BASES = frozenset({"actual_amount", "sales_adjusted_amount"})
 CHECK_IDS = (
     "input_contract",
     "source_row_conservation",
@@ -123,6 +127,7 @@ LEDGER_COLUMNS = (
     "scope_json",
     "change_pct",
     "status",
+    "application_mode",
     "overridden_by",
     "driver_value_name",
     "before_value",
@@ -463,6 +468,7 @@ def _load_case(
 ) -> tuple[
     dict[str, Any],
     Path,
+    str,
     dict[str, Any],
     list[dict[str, Any]],
     list[dict[str, str]],
@@ -509,6 +515,9 @@ def _load_case(
                 "metric_columns",
                 "default_discount_behavior",
                 "default_cogs_behavior",
+                "same_driver_overlap_behavior",
+                "discount_assumption_basis",
+                "cogs_assumption_basis",
                 "fx_rate_definition",
             }
         ),
@@ -541,7 +550,7 @@ def _load_case(
     _text(recipe["unit"], label="preparation_recipe.unit")
     if recipe["time_profile"] != TIME_PROFILE:
         raise ContractValidationError(
-            "sales_plan_from_reviewed_actuals.v1 supports only base time profile"
+            "sales_plan_from_reviewed_actuals.v2 supports only base time profile"
         )
     if recipe["fx_rate_definition"] != FX_RATE_DEFINITION:
         raise ContractValidationError(
@@ -552,6 +561,17 @@ def _load_case(
             raise ContractValidationError(
                 f"preparation_recipe.{field} must be one of "
                 f"{sorted(DEFAULT_BEHAVIORS)}"
+            )
+    if recipe["same_driver_overlap_behavior"] not in SAME_DRIVER_OVERLAP_BEHAVIORS:
+        raise ContractValidationError(
+            "preparation_recipe.same_driver_overlap_behavior must be one of "
+            f"{sorted(SAME_DRIVER_OVERLAP_BEHAVIORS)}"
+        )
+    for field in ("discount_assumption_basis", "cogs_assumption_basis"):
+        if recipe[field] not in ASSUMPTION_BASES:
+            raise ContractValidationError(
+                f"preparation_recipe.{field} must be one of "
+                f"{sorted(ASSUMPTION_BASES)}"
             )
     period_mapping = _load_period_mapping(recipe["period_mapping"])
     dimensions = _unique_text_list(
@@ -596,8 +616,6 @@ def _load_case(
         raise ContractValidationError(
             "files.actual_sales.sha256 must be a lowercase SHA-256 digest"
         )
-    if file_sha256(actual_path) != expected_sha256:
-        raise ContractValidationError("files.actual_sales.sha256 is stale")
 
     boundary = _mapping(case["professional_boundary"], label="professional_boundary")
     _exact_fields(
@@ -623,6 +641,7 @@ def _load_case(
     return (
         case,
         actual_path,
+        expected_sha256,
         dict(recipe),
         assumptions,
         period_mapping,
@@ -654,15 +673,20 @@ def _source_columns(
 def _read_source_rows(
     path: Path,
     *,
+    source_root: Path,
+    expected_sha256: str,
     dimensions: Sequence[str],
     metrics: Mapping[str, str],
     period_mapping: Sequence[Mapping[str, str]],
-) -> list[dict[str, Any]]:
-    raw_rows = read_exact_csv(
+) -> tuple[list[dict[str, Any]], dict[str, int], dict[str, Any]]:
+    raw_rows, source_byte_count, source_sha256 = read_exact_csv_snapshot_beneath(
         path,
+        root=source_root,
         columns=_source_columns(dimensions, metrics),
         label="actual sales",
     )
+    if source_sha256 != expected_sha256:
+        raise ContractValidationError("files.actual_sales.sha256 is stale")
     source_periods = {item["source_period"] for item in period_mapping}
     source_row_ids: set[str] = set()
     group_periods: dict[tuple[str, ...], set[str]] = defaultdict(set)
@@ -769,13 +793,63 @@ def _read_source_rows(
             }
         )
     expected_periods = set(source_periods)
-    for group_key, observed_periods in group_periods.items():
-        if observed_periods != expected_periods:
-            raise ContractValidationError(
-                "each declared dimension grain must contain every source period; "
-                f"group {group_key!r} has {sorted(observed_periods)}"
-            )
-    return rows
+    missing_period_count = sum(
+        len(expected_periods - observed_periods)
+        for observed_periods in group_periods.values()
+    )
+    source_profile = {
+        "declared_grains": len(group_periods),
+        "sparse_grains": sum(
+            observed_periods != expected_periods
+            for observed_periods in group_periods.values()
+        ),
+        "missing_grain_periods": missing_period_count,
+    }
+    source_snapshot = {
+        "byte_count": source_byte_count,
+        "sha256": source_sha256,
+    }
+    return rows, source_profile, source_snapshot
+
+
+def _require_unchanged_source(
+    path: Path,
+    *,
+    source_root: Path,
+    byte_count: int,
+    sha256: str,
+) -> None:
+    current_byte_count, current_sha256 = file_snapshot_beneath(
+        path,
+        root=source_root,
+    )
+    if current_byte_count != byte_count or current_sha256 != sha256:
+        raise ContractValidationError(
+            "actual sales source changed during Plan execution"
+        )
+
+
+def snapshot_declared_actual_sales(case_path: Path) -> tuple[Path, int, str]:
+    """Resolve and snapshot the case-bound Actual sales source."""
+
+    resolved_case_path = Path(case_path).resolve()
+    (
+        _case,
+        source_path,
+        expected_sha256,
+        _recipe,
+        _assumptions,
+        _period_mapping,
+        _dimensions,
+        _metrics,
+    ) = _load_case(resolved_case_path)
+    byte_count, sha256 = file_snapshot_beneath(
+        source_path,
+        root=resolved_case_path.parent,
+    )
+    if sha256 != expected_sha256:
+        raise ContractValidationError("files.actual_sales.sha256 is stale")
+    return source_path, byte_count, sha256
 
 
 def _matches(
@@ -795,9 +869,13 @@ def _select_assumptions(
     row: Mapping[str, Any],
     *,
     target_period: str,
+    same_driver_overlap_behavior: str,
     errors: list[dict[str, Any]],
-) -> tuple[dict[str, Mapping[str, Any]], dict[str, list[Mapping[str, Any]]]]:
-    selected: dict[str, Mapping[str, Any]] = {}
+) -> tuple[
+    dict[str, list[Mapping[str, Any]]],
+    dict[str, list[Mapping[str, Any]]],
+]:
+    selected: dict[str, list[Mapping[str, Any]]] = {}
     candidates_by_driver: dict[str, list[Mapping[str, Any]]] = {}
     for driver in DRIVER_ORDER:
         candidates = [
@@ -808,6 +886,16 @@ def _select_assumptions(
         ]
         candidates_by_driver[driver] = candidates
         if not candidates:
+            continue
+        ordered_candidates = sorted(
+            candidates,
+            key=lambda item: (
+                -int(item["priority"]),
+                str(item["assumption_id"]),
+            ),
+        )
+        if same_driver_overlap_behavior == "compound":
+            selected[driver] = ordered_candidates
             continue
         highest_priority = max(int(item["priority"]) for item in candidates)
         winners = [
@@ -830,7 +918,7 @@ def _select_assumptions(
                 ],
             )
             continue
-        selected[driver] = winners[0]
+        selected[driver] = winners
     if "gross_sales_pct" in selected and (
         "units_pct" in selected or "unit_price_pct" in selected
     ):
@@ -863,6 +951,32 @@ def _multiplier(assumption: Mapping[str, Any] | None) -> Decimal:
         )
         / Decimal(100)
     )
+
+
+def _combined_multiplier(
+    assumptions: Sequence[Mapping[str, Any]],
+) -> Decimal:
+    """Multiply reviewed percentage effects with exact arithmetic."""
+
+    result = Decimal(1)
+    for assumption in assumptions:
+        result *= _multiplier(assumption)
+    return result
+
+
+def _application_stages(
+    base_value: Decimal | None,
+    assumptions: Sequence[Mapping[str, Any]],
+) -> dict[str, tuple[Decimal | None, Decimal | None]]:
+    """Record deterministic priority-and-ID ledger stages for compounded effects."""
+
+    stages: dict[str, tuple[Decimal | None, Decimal | None]] = {}
+    current = base_value
+    for assumption in assumptions:
+        after = None if current is None else current * _multiplier(assumption)
+        stages[str(assumption["assumption_id"])] = (current, after)
+        current = after
+    return stages
 
 
 def _derived_reporting_metrics(
@@ -941,6 +1055,7 @@ def _ledger_row(
     source_row_id: str,
     target_period: str,
     status: str,
+    application_mode: str,
     overridden_by: str,
     driver_value_name: str,
     before_value: Decimal | None,
@@ -963,6 +1078,7 @@ def _ledger_row(
         ),
         "change_pct": str(assumption["change_pct"]),
         "status": status,
+        "application_mode": application_mode,
         "overridden_by": overridden_by,
         "driver_value_name": driver_value_name,
         "before_value": "" if before_value is None else decimal_text(before_value),
@@ -1026,6 +1142,7 @@ def _build_scenarios(
             assumptions,
             source_row,
             target_period=target_period,
+            same_driver_overlap_behavior=str(recipe["same_driver_overlap_behavior"]),
             errors=errors,
         )
         for candidates in candidates_by_driver.values():
@@ -1040,15 +1157,15 @@ def _build_scenarios(
         cogs_local = source_row["cogs_local"]
         fx_rate = source_row["fx_rate_to_reporting"]
 
-        units_assumption = selected.get("units_pct")
-        price_assumption = selected.get("unit_price_pct")
-        direct_sales_assumption = selected.get("gross_sales_pct")
-        discount_assumption = selected.get("discount_pct")
-        cogs_assumption = selected.get("cogs_pct")
-        fx_assumption = selected.get("fx_rate_pct")
+        units_assumptions = selected.get("units_pct", [])
+        price_assumptions = selected.get("unit_price_pct", [])
+        direct_sales_assumptions = selected.get("gross_sales_pct", [])
+        discount_assumptions = selected.get("discount_pct", [])
+        cogs_assumptions = selected.get("cogs_pct", [])
+        fx_assumptions = selected.get("fx_rate_pct", [])
 
-        if (units_assumption is not None or price_assumption is not None) and (
-            units is None or (price_assumption is not None and units == 0)
+        if (units_assumptions or price_assumptions) and (
+            units is None or (price_assumptions and units == 0)
         ):
             _add_error(
                 errors,
@@ -1060,7 +1177,7 @@ def _build_scenarios(
                 ),
                 identifiers=[source_row_id, target_period],
             )
-        if discount_assumption is not None and discount_local is None:
+        if discount_assumptions and discount_local is None:
             _add_error(
                 errors,
                 gate="metric_availability",
@@ -1068,7 +1185,7 @@ def _build_scenarios(
                 message=f"{source_row_id} has a discount assumption but no discount value",
                 identifiers=[source_row_id, target_period],
             )
-        if cogs_assumption is not None and cogs_local is None:
+        if cogs_assumptions and cogs_local is None:
             _add_error(
                 errors,
                 gate="metric_availability",
@@ -1077,23 +1194,28 @@ def _build_scenarios(
                 identifiers=[source_row_id, target_period],
             )
 
-        units_multiplier = _multiplier(units_assumption)
-        price_multiplier = _multiplier(price_assumption)
-        direct_sales_multiplier = _multiplier(direct_sales_assumption)
-        discount_multiplier = _multiplier(discount_assumption)
-        cogs_multiplier = _multiplier(cogs_assumption)
-        fx_multiplier = _multiplier(fx_assumption)
+        units_multiplier = _combined_multiplier(units_assumptions)
+        price_multiplier = _combined_multiplier(price_assumptions)
+        direct_sales_multiplier = _combined_multiplier(direct_sales_assumptions)
+        discount_multiplier = _combined_multiplier(discount_assumptions)
+        cogs_multiplier = _combined_multiplier(cogs_assumptions)
+        fx_multiplier = _combined_multiplier(fx_assumptions)
 
         plan_units = units * units_multiplier if units is not None else None
-        if direct_sales_assumption is not None:
+        if direct_sales_assumptions:
             sales_multiplier = direct_sales_multiplier
         else:
             sales_multiplier = units_multiplier * price_multiplier
         plan_gross_sales_local = gross_sales_local * sales_multiplier
         if discount_local is not None:
+            discount_assumption_base = discount_local * (
+                sales_multiplier
+                if recipe["discount_assumption_basis"] == "sales_adjusted_amount"
+                else Decimal(1)
+            )
             plan_discount_local = (
-                discount_local * discount_multiplier
-                if discount_assumption is not None
+                discount_assumption_base * discount_multiplier
+                if discount_assumptions
                 else discount_local
                 * (
                     sales_multiplier
@@ -1102,11 +1224,17 @@ def _build_scenarios(
                 )
             )
         else:
+            discount_assumption_base = None
             plan_discount_local = None
         if cogs_local is not None:
+            cogs_assumption_base = cogs_local * (
+                sales_multiplier
+                if recipe["cogs_assumption_basis"] == "sales_adjusted_amount"
+                else Decimal(1)
+            )
             plan_cogs_local = (
-                cogs_local * cogs_multiplier
-                if cogs_assumption is not None
+                cogs_assumption_base * cogs_multiplier
+                if cogs_assumptions
                 else cogs_local
                 * (
                     sales_multiplier
@@ -1115,35 +1243,49 @@ def _build_scenarios(
                 )
             )
         else:
+            cogs_assumption_base = None
             plan_cogs_local = None
         plan_fx_rate = fx_rate * fx_multiplier
 
-        driver_values: dict[str, tuple[str, Decimal | None, Decimal | None]] = {
-            "units_pct": ("units", units, plan_units),
-            "unit_price_pct": (
-                "gross_sales_local_after_units_before_price",
-                gross_sales_local * units_multiplier,
-                gross_sales_local * units_multiplier * price_multiplier,
-            ),
-            "gross_sales_pct": (
-                "gross_sales_local",
-                gross_sales_local,
-                plan_gross_sales_local,
-            ),
+        driver_value_names = {
+            "units_pct": "units",
+            "unit_price_pct": "gross_sales_local_after_units_before_price",
+            "gross_sales_pct": "gross_sales_local",
             "discount_pct": (
-                "discount_local",
-                discount_local,
-                plan_discount_local,
+                "discount_local_after_sales"
+                if recipe["discount_assumption_basis"] == "sales_adjusted_amount"
+                else "discount_local"
             ),
-            "cogs_pct": ("cogs_local", cogs_local, plan_cogs_local),
-            "fx_rate_pct": (
-                "fx_rate_to_reporting",
-                fx_rate,
-                plan_fx_rate,
+            "cogs_pct": (
+                "cogs_local_after_sales"
+                if recipe["cogs_assumption_basis"] == "sales_adjusted_amount"
+                else "cogs_local"
             ),
+            "fx_rate_pct": "fx_rate_to_reporting",
+        }
+        application_stages = {
+            "units_pct": _application_stages(units, units_assumptions),
+            "unit_price_pct": _application_stages(
+                gross_sales_local * units_multiplier,
+                price_assumptions,
+            ),
+            "gross_sales_pct": _application_stages(
+                gross_sales_local,
+                direct_sales_assumptions,
+            ),
+            "discount_pct": _application_stages(
+                discount_assumption_base,
+                discount_assumptions,
+            ),
+            "cogs_pct": _application_stages(
+                cogs_assumption_base,
+                cogs_assumptions,
+            ),
+            "fx_rate_pct": _application_stages(fx_rate, fx_assumptions),
         }
         for driver in DRIVER_ORDER:
-            winner = selected.get(driver)
+            applied = selected.get(driver, [])
+            applied_ids = {str(assumption["assumption_id"]) for assumption in applied}
             candidates = candidates_by_driver[driver]
             for candidate in sorted(
                 candidates,
@@ -1153,16 +1295,19 @@ def _build_scenarios(
                 ),
             ):
                 candidate_id = str(candidate["assumption_id"])
-                if winner is not None and candidate_id == winner["assumption_id"]:
-                    value_name, before_value, after_value = driver_values[driver]
+                if candidate_id in applied_ids:
+                    before_value, after_value = application_stages[driver][candidate_id]
+                    value_name = driver_value_names[driver]
                     status = "applied"
+                    application_mode = "compound" if len(applied) > 1 else "single"
                     overridden_by = ""
                     assumption_counts[candidate_id]["applied_count"] += 1
                 else:
                     value_name, before_value, after_value = ("", None, None)
                     status = "overridden"
+                    application_mode = "overridden"
                     overridden_by = (
-                        "" if winner is None else str(winner["assumption_id"])
+                        "" if not applied else str(applied[0]["assumption_id"])
                     )
                     assumption_counts[candidate_id]["overridden_count"] += 1
                 ledger_rows.append(
@@ -1172,6 +1317,7 @@ def _build_scenarios(
                         source_row_id=source_row_id,
                         target_period=target_period,
                         status=status,
+                        application_mode=application_mode,
                         overridden_by=overridden_by,
                         driver_value_name=value_name,
                         before_value=before_value,
@@ -1332,20 +1478,35 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
     (
         case,
         source_path,
+        expected_source_sha256,
         recipe,
         assumptions,
         period_mapping,
         dimensions,
         metrics,
     ) = _load_case(case_path)
-    source_rows = _read_source_rows(
+    source_rows, source_profile, source_snapshot = _read_source_rows(
         source_path,
+        source_root=case_path.parent,
+        expected_sha256=expected_source_sha256,
         dimensions=dimensions,
         metrics=metrics,
         period_mapping=period_mapping,
     )
     errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
+    if source_profile["sparse_grains"]:
+        warnings.append(
+            {
+                "code": "sparse_source_time_profile",
+                "message": (
+                    f"{source_profile['sparse_grains']} source grain(s) omit "
+                    f"{source_profile['missing_grain_periods']} mapped period(s); "
+                    "the Plan preserves observed rows without imputing zero sales"
+                ),
+                "identifiers": [],
+            }
+        )
     scenario_rows, ledger_rows, assumption_counts = _build_scenarios(
         source_rows,
         dimensions=dimensions,
@@ -1399,6 +1560,12 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
             code="missing_total_sales_summary",
             message="scenario summary is missing total gross sales",
         )
+    _require_unchanged_source(
+        source_path,
+        source_root=case_path.parent,
+        byte_count=int(source_snapshot["byte_count"]),
+        sha256=str(source_snapshot["sha256"]),
+    )
 
     errors.sort(
         key=lambda item: (
@@ -1453,9 +1620,13 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
             "reporting_currency": str(recipe["reporting_currency"]),
             "unit": str(recipe["unit"]),
             "time_profile": TIME_PROFILE,
+            "same_driver_overlap_behavior": str(recipe["same_driver_overlap_behavior"]),
+            "discount_assumption_basis": str(recipe["discount_assumption_basis"]),
+            "cogs_assumption_basis": str(recipe["cogs_assumption_basis"]),
             "source_periods": [str(item["source_period"]) for item in period_mapping],
             "target_periods": [str(item["target_period"]) for item in period_mapping],
         },
+        "source_profile": source_profile,
         "status": status,
         "report_ready": False,
         "counts": {
@@ -1487,6 +1658,12 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
 
     if errors:
         write_json(output_paths["reconciliation"], reconciliation)
+        _require_unchanged_source(
+            source_path,
+            source_root=case_path.parent,
+            byte_count=int(source_snapshot["byte_count"]),
+            sha256=str(source_snapshot["sha256"]),
+        )
         return reconciliation
 
     scenario_columns = (
@@ -1544,9 +1721,9 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
         "inputs": [
             {
                 "artifact_id": "actual_sales",
-                "path": source_path.name,
-                "sha256": file_sha256(source_path),
-                "size_bytes": source_path.stat().st_size,
+                "path": source_path.relative_to(case_path.parent).as_posix(),
+                "sha256": str(source_snapshot["sha256"]),
+                "size_bytes": int(source_snapshot["byte_count"]),
             }
         ],
         "reviewed_assumptions": {
@@ -1565,12 +1742,16 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
             "arithmetic": "decimal_exact",
             "time_profile": TIME_PROFILE,
             "fx_rate_definition": FX_RATE_DEFINITION,
+            "same_driver_overlap_behavior": str(recipe["same_driver_overlap_behavior"]),
+            "discount_assumption_basis": str(recipe["discount_assumption_basis"]),
+            "cogs_assumption_basis": str(recipe["cogs_assumption_basis"]),
         },
         "lineage": {
             "grain": "source_row_and_mapped_target_period",
             "source_row_id_column": metrics["source_row_id"],
             "dimension_columns": list(dimensions),
             "period_mapping": list(period_mapping),
+            "source_profile": source_profile,
             "assumption_application_ledger": (
                 output_paths["assumption_application_ledger"].name
             ),
@@ -1588,6 +1769,12 @@ def _prepare_sales_plan_case_exact(case_path: Path, output_dir: Path) -> dict[st
         },
     }
     write_json(output_paths["prepared_evidence_manifest"], manifest)
+    _require_unchanged_source(
+        source_path,
+        source_root=case_path.parent,
+        byte_count=int(source_snapshot["byte_count"]),
+        sha256=str(source_snapshot["sha256"]),
+    )
     return reconciliation
 
 
