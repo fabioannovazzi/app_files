@@ -96,8 +96,8 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
         raise PlanRunError("case path must be a regular file")
     if supplied_output_dir.is_symlink():
         raise PlanRunError("Plan output directory cannot be a symlink")
-    case_path = supplied_case_path.absolute()
-    output_dir = supplied_output_dir.absolute()
+    case_path = supplied_case_path.resolve()
+    output_dir = supplied_output_dir.resolve()
     if not case_path.is_file():
         raise PlanRunError("case path must be a regular file")
     if output_dir.exists() and not output_dir.is_dir():

@@ -56,6 +56,8 @@ Resolve only ambiguities that change the result:
 - “sales increase” must become units, unit price, or gross sales;
 - v2 accepts percentage changes only;
 - the FX rate is reporting-currency units per transaction-currency unit;
+- source and Plan FX rates must remain exactly `1` when transaction currency
+  equals reporting currency;
 - a 5% weaker USD against EUR is `-5%` for USD rows when EUR is reporting;
 - scopes must match exact source dimension members;
 - same-driver overlaps require the reviewed case to choose `priority` or
@@ -66,13 +68,14 @@ Resolve only ambiguities that change the result:
   reviewed percentage effect; priority and assumption ID make the ledger order
   deterministic;
 - gross-sales changes cannot overlap unit or unit-price changes on one row;
+- unit and unit-price assumptions require a positive source Units value;
 - an explicit discount or COGS change must state whether it applies to the
   `actual_amount` or the `sales_adjusted_amount`;
 - v2 preserves observed sparse Actual rows and does not impute zero sales,
   missing customer-months, or seasonality.
 
 For a large assumption set, prepare the same review table in Markdown or case
-JSON and review it in batches. A separate HTML workbench is not part of v1.
+JSON and review it in batches. A separate HTML workbench is not part of v2.
 
 ## Codex-Native Run UX
 

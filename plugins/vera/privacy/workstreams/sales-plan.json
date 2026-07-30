@@ -30,7 +30,7 @@
   "security_controls": [
     {
       "id": "reviewed-plan-assumptions",
-      "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping. The contract explicitly chooses priority or compound behavior for same-driver overlaps and the basis for discount and COGS assumptions. The engine fails on unmatched scopes, unsupported drivers, ambiguous priority winners, incompatible driver combinations, missing metrics, or stale source evidence."
+      "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping. The contract explicitly chooses priority or compound behavior for same-driver overlaps and the basis for discount and COGS assumptions. The engine fails on unmatched scopes, unsupported drivers, ambiguous priority winners, incompatible driver combinations, missing or nonpositive driver metrics, impossible same-currency FX, or stale source evidence."
     },
     {
       "id": "fresh-pinned-plan-output",
@@ -45,6 +45,6 @@
     "reviewed_at": "2026-07-30",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fa884c9e87c81f2fb7d4dc9e5fab7e76bdc96704dbb9a9d225a9b00863989aca"
+    "source_fingerprint": "a35ca35bb594d41ab22a98d6ffc8e2934ea3a39f7f8e06f7076e19d5c2d9dc0e"
   }
 }

@@ -4,7 +4,7 @@
   "purpose": "Exercise reviewed China unit growth and USD-to-EUR translation assumptions on a synthetic monthly sales dataset.",
   "preparation_recipe": {
     "recipe_id": "sales_plan_from_reviewed_actuals.v2",
-    "engine_version": "1.1.0",
+    "engine_version": "1.1.1",
     "arithmetic": "decimal_exact",
     "source_scenario": "AC",
     "target_scenario": "PL",
