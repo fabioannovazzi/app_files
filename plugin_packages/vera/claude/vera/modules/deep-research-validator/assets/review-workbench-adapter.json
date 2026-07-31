@@ -1,12 +1,12 @@
 {
   "schemaVersion": "1.0",
   "plugin": "deep-research-validator",
-  "title": "Deep Research Review",
-  "reviewTitle": "Claim And Citation Review",
+  "title": "Answer Validation Review",
+  "reviewTitle": "Source Identity, Support, Reasoning, And Judgment Review",
   "queueTitle": "Claims",
   "detailTitle": "Claim Evidence",
   "detailMode": "claim-desk",
-  "detailHelp": "Compare the claim, cited source, and validation finding before deciding.",
+  "detailHelp": "Review source identity, semantic support, reasoning, issue treatment, and professional-judgment limits separately before deciding.",
   "detailGroups": [
     {
       "title": "Claim",
@@ -19,76 +19,97 @@
       "empty": "No claim text."
     },
     {
-      "title": "Citation / Source",
+      "title": "Source Identity & Access",
       "variant": "source",
       "fields": [
-        "citation",
-        "source_title",
-        "source_url",
-        "source_refs"
+        "source_checks",
+        "mechanical_source_observations"
       ],
-      "empty": "No citation fields."
+      "empty": "No source-identity assessment."
     },
     {
-      "title": "Source Support",
+      "title": "Semantic Source Support",
       "variant": "source",
       "fields": [
-        "source_quote",
-        "source_support",
-        "reasoning_review"
+        "support"
       ],
       "empty": "No source-support fields."
     },
     {
-      "title": "Validation Finding",
+      "title": "Reasoning",
       "variant": "finding",
       "fields": [
-        "verdict",
-        "finding",
-        "severity",
-        "review_notes",
+        "reasoning"
+      ],
+      "empty": "No reasoning assessment."
+    },
+    {
+      "title": "Professional Judgment",
+      "variant": "finding",
+      "fields": [
+        "professional_judgment"
+      ],
+      "empty": "No professional-judgment assessment."
+    },
+    {
+      "title": "Issues & Treatment",
+      "variant": "finding",
+      "fields": [
+        "issues",
         "proposed_fix"
       ],
       "empty": "No finding fields."
+    },
+    {
+      "title": "Disposition",
+      "variant": "finding",
+      "fields": [
+        "disposition",
+        "reviewer_action"
+      ],
+      "empty": "No disposition."
     }
   ],
   "panels": [
     "Claim",
-    "Citation / source",
-    "Source support",
-    "Finding"
+    "Source identity & access",
+    "Semantic source support",
+    "Reasoning",
+    "Professional judgment",
+    "Issues & treatment",
+    "Disposition"
   ],
   "localized": {
     "es": {
-      "title": "Revisi\u00f3n de Deep Research",
-      "reviewTitle": "Revisi\u00f3n de afirmaciones y citas",
+      "title": "Revisi\u00f3n de validaci\u00f3n de respuestas",
+      "reviewTitle": "Revisi\u00f3n de fuentes, razonamiento y juicio profesional",
       "queueTitle": "Afirmaciones",
       "detailTitle": "Evidencia de la afirmaci\u00f3n",
-      "detailHelp": "Compare la afirmaci\u00f3n, la fuente citada y el hallazgo de validaci\u00f3n antes de decidir.",
+      "detailHelp": "Revise por separado el respaldo de las fuentes, el razonamiento y los l\u00edmites del juicio profesional.",
       "search": "Buscar afirmaci\u00f3n, cita, fuente, gravedad, salida"
     },
     "it": {
-      "title": "Revisione Deep Research",
-      "reviewTitle": "Revisione claim e citazioni",
+      "title": "Revisione validazione risposta",
+      "reviewTitle": "Revisione fonti, ragionamento e giudizio professionale",
       "queueTitle": "Claim",
       "detailTitle": "Evidenza claim",
-      "detailHelp": "Confronta claim, fonte citata e rilievo di validazione prima della decisione.",
+      "detailHelp": "Rivedi separatamente supporto delle fonti, ragionamento e limiti del giudizio professionale.",
       "search": "Cerca claim, citazione, fonte, severita, output"
     },
     "fr": {
-      "title": "Revue Deep Research",
-      "reviewTitle": "Revue assertions et citations",
+      "title": "Revue de validation de r\u00e9ponse",
+      "reviewTitle": "Revue des sources, du raisonnement et du jugement professionnel",
       "queueTitle": "Assertions",
       "detailTitle": "Preuve de l'assertion",
-      "detailHelp": "Comparez l'assertion, la source citee et le constat de validation avant de decider.",
+      "detailHelp": "Examinez s\u00e9par\u00e9ment le support des sources, le raisonnement et les limites du jugement professionnel.",
       "search": "Chercher assertion, citation, source, severite, sortie"
     },
     "de": {
-      "title": "Deep Research Review",
-      "reviewTitle": "Aussagen- und Quellenreview",
+      "title": "Review der Antwortvalidierung",
+      "reviewTitle": "Quellen-, Begr\u00fcndungs- und Ermessensreview",
       "queueTitle": "Aussagen",
       "detailTitle": "Nachweis zur Aussage",
-      "detailHelp": "Aussage, zitierte Quelle und Validierungsfeststellung vor der Entscheidung vergleichen.",
+      "detailHelp": "Quellenst\u00fctzung, Begr\u00fcndung und professionellen Ermessensspielraum getrennt pr\u00fcfen.",
       "search": "Aussage, Zitat, Quelle, Schweregrad, Ausgabe suchen"
     }
   },
@@ -96,13 +117,13 @@
   "applyTool": "apply_deep_research_decisions",
   "widgetType": "deep_research_review",
   "demo": {
-    "review_type": "deep_research_validation_review",
+    "review_type": "answer_validation_review",
     "items": [
       {
         "id": "claim-1",
         "item_type": "supported_claim",
         "title": "Claim 4: tax residence follows center of vital interests",
-        "source_path": "deep_research.md",
+        "source_path": "answer.md",
         "output_path": "claims_review.json",
         "allowed_actions": [
           "accept",
@@ -113,11 +134,55 @@
         ],
         "recommended_action": "mark_unclear",
         "data": {
-          "claim": "Residence follows the taxpayer's center of vital interests.",
-          "citation": "OECD Model Commentary, Article 4",
-          "source_title": "OECD Model Tax Convention Commentary",
-          "source_quote": "Where an individual has a permanent home in both states, the centre of vital interests is considered.",
-          "source_support": "The quote supports treaty residence tie-breaker logic, not domestic filing deadlines.",
+          "claim_text": "Residence follows the taxpayer's center of vital interests.",
+          "source_checks": [
+            {
+              "source_ref": "source-001",
+              "identity_status": "matches_cited_source",
+              "identity_analysis": "The cited commentary and captured source are the same instrument.",
+              "cited_passage": "centre of vital interests"
+            }
+          ],
+          "support": {
+            "status": "partially_supported",
+            "analysis": "The passage supports treaty residence tie-breaker logic, not domestic filing deadlines."
+          },
+          "reasoning": {
+            "status": "partially_sound",
+            "analysis": "The treaty inference follows, but the answer extends it to an unsupported domestic deadline.",
+            "supported_premises": [
+              "Treaty tie-breaker premise"
+            ],
+            "missing_premises": [
+              "Domestic filing deadline rule"
+            ]
+          },
+          "professional_judgment": {
+            "status": "professional_judgment_required",
+            "analysis": "Applying the tie-breaker requires a fact-sensitive assessment.",
+            "factors": [
+              "Personal relations",
+              "Economic relations"
+            ],
+            "alternative_interpretations": [
+              "Either state may be the centre of vital interests"
+            ]
+          },
+          "issues": [
+            {
+              "type": "partial_or_overbroad_support",
+              "explanation": "The answer extends beyond the source.",
+              "treatment_action": "narrow_claim",
+              "treatment_status": "proposed",
+              "treatment_explanation": "Limit the claim to the treaty tie-breaker."
+            }
+          ],
+          "disposition": {
+            "status": "revise",
+            "analysis": "Narrow the claim.",
+            "revised_claim": "Treaty residence may turn on the centre of vital interests."
+          },
+          "reviewer_action": "edit",
           "status": "needs_evidence",
           "severity": "medium",
           "review_notes": "The citation supports treaty tie-breaker logic but not local filing deadlines.",
@@ -131,12 +196,16 @@
         },
         "evidence": [
           {
-            "kind": "claim_vs_citation",
-            "claim": "Residence follows center of vital interests.",
-            "citation": "OECD Model Commentary, Article 4",
-            "source_quote": "centre of vital interests",
-            "source_support": "Partial support for the claim scope",
-            "finding": "Partially supported"
+            "kind": "answer_validation_assessment",
+            "support": {
+              "status": "partially_supported"
+            },
+            "reasoning": {
+              "status": "partially_sound"
+            },
+            "professional_judgment": {
+              "status": "professional_judgment_required"
+            }
           }
         ]
       },

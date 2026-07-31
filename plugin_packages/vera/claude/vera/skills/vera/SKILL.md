@@ -141,8 +141,10 @@ do not ask again.
 - `concordato-plan-review`: professional review of an Italian concordato
   preventivo across procedure, documents, creditors and treatment,
   liquidation alternative, sources and uses, liquidity, and open issues;
-- `prompt-optimizer`: legal, tax, or compliance Deep Research prompts;
-- `deep-research-validator`: cited-claim validation of Deep Research outputs.
+- `prompt-optimizer`: internal answer-contract and generation-instruction planning
+  for legal, tax, or compliance questions;
+- `deep-research-validator`: claim, source-support, reasoning, and professional-
+  judgment-boundary review for generated answers and documents.
 - `previdenza-inps`: evidence-backed INPS case review from connected
   documents and official portal exports, with local OCR when callable,
   approved arithmetic, source validation, and professional-review
@@ -158,52 +160,73 @@ do not ask again.
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
 
-## Resumable Deep Research Journey
+## Question To Validated Answer Journey
 
-When the user asks Vera to research a legal, tax, or compliance question from
-start to finish, treat `prompt-optimizer` and `deep-research-validator` as one
-resumable journey rather than two unrelated module choices:
+When the user gives Vera a substantive legal, tax, or compliance question,
+start one question-to-validated-answer journey. Do not require the user to ask
+for prompt optimization, choose an internal module, or restate the question.
+Identify the professional intent semantically; do not route from keywords or a
+deterministic classifier.
 
-1. Route the question through `prompt-optimizer` and complete its intake,
-   jurisdiction confirmation, source curation, deterministic validation, and
-   review package.
-2. Present one concise native Deep Research handoff containing:
-   - the complete text of `optimized_prompt.md`, or a direct local link when the
-     current surface can open the file;
-   - the complete comma-separated contents of `source_domains_comma.txt`;
-   - a model-led recommendation for the native Deep Research site policy:
-     either restrict research to the listed sites or prioritize them while
-     allowing broader web research;
-   - the instruction to start the host's native Deep Research mode, place the first value in
-     the prompt field, place the second in the specific-sites field, and select
-     the recommended site policy.
-3. Choose the site policy from the confirmed framework, research objective,
-   source posture, and issue—not from keywords or a deterministic classifier.
-   Recommend restriction when the work must stay within a closed, authoritative
-   source universe or an expressly bounded evidentiary record. Recommend
-   prioritization with broader search when identifying contrary authority,
-   recent developments, cross-jurisdiction material, or material omissions
-   matters to the objective. State the recommendation and one-sentence reason.
-   Ask the user to choose only when the competing policies would materially
-   change the professional result and the confirmed posture does not resolve
-   the choice.
-4. Keep the handoff explicit: Vera cannot claim to start, monitor, interrupt,
-   or retrieve a native Deep Research run unless a
-   callable host tool expressly provides that capability in the current
-   session. Do not substitute an ordinary web-search run while describing it as
-   native Deep Research.
-5. End the handoff with one continuation instruction: return the completed
-   Deep Research report in the same conversation as Markdown, text, HTML,
-   readable PDF, or DOCX. Do not ask the user to restate the question,
-   jurisdiction, objective, or source posture.
-6. When the user returns a plausible completed report after that handoff,
-   infer continuation of the journey and route it directly through
-   `deep-research-validator`. Reuse the confirmed language, framework, research
-   lens, source posture, and material assumptions from the prompt-optimization
-   stage when they remain available in conversation or durable run artifacts.
-7. Run the validator's full default package, expose unavailable or gated
-   sources, collect any review decisions, and deliver the corrected document
-   and validation package as the end of the same journey.
+1. Route the question internally through `prompt-optimizer`. Complete only the
+   material intake, jurisdiction confirmation, source curation, answer
+   contract, generation instructions, and deterministic shape validation.
+2. Write `answer_contract.json` before generation. Keep generation route
+   separate from document type:
+   - `generation_route` is `codex_direct`, `chatgpt_deep_research`, or
+     `external_document`;
+   - `document_type` is the requested answer artifact, such as a research
+     report, legal memo, one-page letter, response letter, checklist, or
+     counsel brief.
+   Infer both with model-led judgment when the facts make them clear. Ask only
+   when an unresolved choice would materially change the answer.
+3. Use `codex_direct` when the requested answer can be generated to the
+   required standard in the current Claude workflow. Generate the draft, retain
+   its answer contract and sources, and continue directly to validation.
+4. Use `chatgpt_deep_research` when native Deep Research is materially needed.
+   Native Deep Research is available through the ChatGPT window, not as an
+   ordinary Claude or Work tool. Present one concise handoff containing:
+   - the complete text of `optimized_prompt.md`, or a direct local link;
+   - the complete contents of `source_domains_comma.txt`;
+   - the `answer_contract.json` document type and output requirements;
+   - a model-led recommendation to restrict research to the listed sites or
+     prioritize them while allowing broader web research.
+5. Choose the site policy from the confirmed framework, objective, source
+   posture, and issue—not from keywords or a deterministic classifier. Ask the
+   user only when competing policies would materially change the professional
+   result and the confirmed posture does not resolve the choice.
+6. Keep the Deep Research handoff explicit. Vera cannot claim to start,
+   monitor, interrupt, or retrieve a native run unless a callable host tool
+   expressly provides that capability. End with one instruction to return the
+   completed answer in the same conversation as Markdown, text, HTML, readable
+   PDF, or DOCX. Do not ask the user to restate confirmed context.
+7. When a generated or external answer is available, route it through
+   `deep-research-validator` with the same `answer_contract.json`. The validator
+   applies to short letters and other professional documents as well as
+   research reports.
+8. Keep the validation dimensions explicit and separate:
+   - mechanical observations: document/source access, exact identifier
+     resolution, exact passage presence in the specifically cited source
+     snapshot, and record shape;
+   - model-led source identity and semantic support: whether the captured item
+     is the authority actually cited and whether it entails, narrows, qualifies,
+     or contradicts the claim;
+   - model-led reasoning: whether the conclusion follows from supported premises
+     and which intermediate premises are missing;
+   - professional judgment: legal applicability, materiality, competing
+     interpretations, strategy, and uncertain outcomes.
+   Mechanical observations must never decide semantic support. A structurally
+   passing audit does not certify legal correctness.
+9. Review answer-contract conformance and whether all material claims were
+   selected, independently from the individual claim assessments. Treat source,
+   support, qualification, time/modality, reasoning, and judgment issues with
+   their issue-specific actions rather than a single pass/fail label.
+10. Correct support or reasoning defects when the evidence permits. Mark
+   judgment-dependent conclusions for professional review rather than
+   presenting them as validated facts. Deliver the corrected document,
+   validation record, unresolved issues, and final answer as the end of the
+   same journey. Recording a proposed fix is not correction: regenerate the
+   answer semantically and rerun packaging before it can be delivery-ready.
 
 If native Deep Research is unavailable to the user because of plan, country,
 workspace policy, or current-surface limitations, state that limitation.
@@ -213,7 +236,7 @@ product mode.
 
 This orchestration does not create a new external data route. The preparation
 stage remains governed by the `prompt-optimizer` workstream record, and the
-returned-report stage remains governed by the `deep-research-validator`
+answer-review stage remains governed by the `deep-research-validator`
 workstream record.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,

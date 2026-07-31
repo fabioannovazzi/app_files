@@ -1,4 +1,4 @@
-"""Inspect a Deep Research document before Codex validates it."""
+"""Inspect an answer document before Codex validates it."""
 
 from __future__ import annotations
 
@@ -197,7 +197,7 @@ def write_inspection(document_path: Path, output_dir: Path) -> dict[str, Path]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("document", type=Path, help="Deep Research document path.")
+    parser.add_argument("document", type=Path, help="Answer document path.")
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     if not args.document.exists():

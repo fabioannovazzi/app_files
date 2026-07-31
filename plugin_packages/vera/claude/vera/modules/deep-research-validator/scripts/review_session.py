@@ -19,11 +19,10 @@ SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "deep-research-validator"
 WORKFLOW_NAME = "deep-research-validator"
 MAX_CLAIM_ITEMS = 750
-MAX_SOURCE_LIMIT_ITEMS = 150
 
 _REVIEW_COPY: dict[str, dict[str, Any]] = {
     "en": {
-        "product_title": "Deep Research Validator",
+        "product_title": "Answer Validator",
         "handoff_title": "Review Handoff",
         "run_id": "Run ID",
         "review_payload": "Review payload",
@@ -52,12 +51,15 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ),
         "claim": "Claim",
         "untitled_claim": "Untitled claim",
-        "source_limit": "Source limit",
+        "answer_contract_review": "Answer-contract conformance",
+        "coverage_review": "Claim-selection coverage",
         "edit_hint": (
             "Editing this claim writes the reviewer correction to proposed_fix "
-            "in claims_review.json for the matching claim_index."
+            "in claims_review.json for the matching claim_index. It does not "
+            "regenerate the reviewed or corrected answer."
         ),
         "artifacts": {
+            "answer_contract": "Answer contract JSON",
             "claims_review": "Claims review JSON",
             "validation_audit": "Validation audit JSON",
             "validated_document": "Validated document Markdown",
@@ -65,9 +67,13 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "validation_package": "Validation package Markdown",
         },
         "package_required": [
-            "# Deep Research Validation Package",
+            "# Answer Validation Record",
+            "## Assurance Boundary",
+            "## Answer Contract",
+            "## Answer-Contract Review",
+            "## Review Coverage",
             "## Document Inventory",
-            "## Claims Review",
+            "## Claim Assessments",
         ],
         "dependency_note": "Claude should run scripts/check_dependencies.py before helper scripts.",
         "data_notes": [
@@ -76,18 +82,18 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "No external connector, upload path, remote SQL, or hosted notebook execution is used by default.",
         ],
         "caveats": [
-            "Semantic claim judgment is Claude-authored; deterministic checks validate structure, verdict fields, and exact quote matches where excerpts are available.",
+            "Source identity, semantic support, reasoning, and legal-judgment boundaries are model-authored; fixed checks validate only record structure and mechanical observations in the specifically cited source snapshot.",
             "The MCP review payload is bounded; use JSON and Markdown outputs as the complete validation evidence set.",
             "ui_decisions.json is pending until Claude, the MCP widget, or fallback review records decisions.",
         ],
         "next_actions": [
             "Call validate_deep_research_review, then render_deep_research_review when MCP is available.",
-            "Review unsupported, contradicted, partially supported, uncertain, and source-limited items before delivery.",
-            "Repair claims_review_draft.json and rerun packaging when validation_audit.json fails.",
+            "Review source-identity, semantic-support, reasoning, contract, coverage, and professional-judgment items before delivery.",
+            "Repair claims_review_draft.json or answer_contract.json and rerun packaging when validation_audit.json fails.",
         ],
     },
     "es": {
-        "product_title": "Validación de Deep Research",
+        "product_title": "Validación de respuestas",
         "handoff_title": "Entrega para revisión",
         "run_id": "ID de ejecución",
         "review_payload": "Datos de revisión",
@@ -117,12 +123,15 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ),
         "claim": "Afirmación",
         "untitled_claim": "Afirmación sin título",
-        "source_limit": "Limitación de la fuente",
+        "answer_contract_review": "Conformidad con el contrato de respuesta",
+        "coverage_review": "Cobertura de selección de afirmaciones",
         "edit_hint": (
             "Al editar esta afirmación, la corrección del revisor se escribe en "
-            "proposed_fix dentro de claims_review.json para el claim_index correspondiente."
+            "proposed_fix dentro de claims_review.json para el claim_index correspondiente. "
+            "Esto no regenera la respuesta revisada o corregida."
         ),
         "artifacts": {
+            "answer_contract": "JSON del contrato de respuesta",
             "claims_review": "JSON de revisión de afirmaciones",
             "validation_audit": "JSON de auditoría de validación",
             "validated_document": "Documento validado en Markdown",
@@ -130,9 +139,13 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "validation_package": "Paquete de validación en Markdown",
         },
         "package_required": [
-            "# Paquete de validación de Deep Research",
+            "# Registro de validación de la respuesta",
+            "## Límite de aseguramiento",
+            "## Contrato de respuesta",
+            "## Revisión del contrato de respuesta",
+            "## Cobertura de la revisión",
             "## Inventario del documento",
-            "## Revisión de afirmaciones",
+            "## Evaluaciones de las afirmaciones",
         ],
         "dependency_note": "Claude debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares.",
         "data_notes": [
@@ -141,13 +154,13 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "De forma predeterminada no se utilizan conectores externos, rutas de carga, SQL remoto ni cuadernos alojados.",
         ],
         "caveats": [
-            "El juicio semántico sobre las afirmaciones lo redacta Claude; los controles deterministas validan la estructura, los veredictos y las coincidencias exactas de citas cuando hay extractos disponibles.",
+            "La identidad de la fuente, el respaldo semántico, el razonamiento y los límites del juicio profesional los redacta el modelo; los controles fijos validan solo la estructura del registro y las observaciones mecánicas en la fuente citada.",
             "Los datos de revisión MCP están acotados; utilice las salidas JSON y Markdown como conjunto completo de evidencias de validación.",
             "ui_decisions.json permanece pendiente hasta que Claude, el widget MCP o la revisión alternativa registren las decisiones.",
         ],
         "next_actions": [
             "Ejecute validate_deep_research_review y, cuando MCP esté disponible, render_deep_research_review.",
-            "Revise antes de la entrega los elementos sin respaldo, contradictorios, parcialmente respaldados, inciertos o con fuentes limitadas.",
+            "Revise antes de la entrega la identidad de las fuentes, el respaldo semántico, el razonamiento, el contrato, la cobertura y el juicio profesional.",
             "Corrija claims_review_draft.json y vuelva a generar el paquete si validation_audit.json falla.",
         ],
     },
@@ -173,7 +186,7 @@ class RunIntakeResult:
 
 @dataclass(frozen=True)
 class ReviewSessionResult:
-    """Review-session artifacts for one Deep Research validation run."""
+    """Review-session artifacts for one answer-validation run."""
 
     run_id: str
     run_intake_path: Path
@@ -405,16 +418,6 @@ def _claim_item_type(verdict: str) -> str:
     return "claim_review"
 
 
-def _claim_action(verdict: str) -> str:
-    if verdict == "supported":
-        return "accept"
-    if verdict in {"not_supported", "contradicted"}:
-        return "reject"
-    if verdict in {"partially_supported", "uncertain"}:
-        return "mark_unclear"
-    return "mark_unclear"
-
-
 def _claim_title(claim: dict[str, Any], index: int, language: str) -> str:
     copy = _copy(language)
     claim_index = claim.get("claim_index") or index
@@ -424,16 +427,26 @@ def _claim_title(claim: dict[str, Any], index: int, language: str) -> str:
     return f"{copy['claim']} {claim_index}: {text or copy['untitled_claim']}"
 
 
-def _claim_items(claims_review: dict[str, Any], language: str) -> list[dict[str, Any]]:
+def _claim_items(
+    claims_review: dict[str, Any], audit: dict[str, Any], language: str
+) -> list[dict[str, Any]]:
     copy = _copy(language)
     claims = claims_review.get("claims", [])
     if not isinstance(claims, list):
         return []
+    observations = {
+        str(entry.get("claim_index")): entry
+        for entry in audit.get("claim_observations", [])
+        if isinstance(entry, dict)
+    }
     items: list[dict[str, Any]] = []
     for index, claim in enumerate(claims[:MAX_CLAIM_ITEMS], start=1):
         if not isinstance(claim, dict):
             continue
-        verdict = _clean_text(claim.get("verdict"))
+        support = claim.get("support")
+        support_status = (
+            _clean_text(support.get("status")) if isinstance(support, dict) else ""
+        )
         claim_data = dict(claim)
         claim_index = claim.get("claim_index") or index
         if claim.get("claim_index") is not None:
@@ -450,7 +463,7 @@ def _claim_items(claims_review: dict[str, Any], language: str) -> list[dict[str,
         items.append(
             _base_item(
                 f"claim-{claim_index}",
-                _claim_item_type(verdict),
+                _claim_item_type(support_status),
                 _claim_title(claim, index, language),
                 output_path="claims_review.json",
                 allowed_actions=(
@@ -461,16 +474,21 @@ def _claim_items(claims_review: dict[str, Any], language: str) -> list[dict[str,
                     "request_more_documents",
                     "skip",
                 ),
-                recommended_action=_claim_action(verdict),
+                recommended_action=_clean_text(claim.get("reviewer_action"))
+                or "mark_unclear",
                 evidence=[
                     {
-                        "kind": "claim_vs_citation",
+                        "kind": "answer_validation_assessment",
                         "claim_text": claim.get("claim_text"),
-                        "verdict": verdict,
-                        "source_refs": claim.get("source_refs"),
-                        "source_quote": claim.get("source_quote"),
-                        "source_support": claim.get("source_support"),
-                        "reasoning_review": claim.get("reasoning_review"),
+                        "source_checks": claim.get("source_checks"),
+                        "support": support,
+                        "reasoning": claim.get("reasoning"),
+                        "professional_judgment": claim.get("professional_judgment"),
+                        "issues": claim.get("issues"),
+                        "disposition": claim.get("disposition"),
+                        "mechanical_source_observations": observations.get(
+                            str(claim_index), {}
+                        ),
                         "proposed_fix": claim.get("proposed_fix"),
                     }
                 ],
@@ -480,58 +498,48 @@ def _claim_items(claims_review: dict[str, Any], language: str) -> list[dict[str,
     return items
 
 
-def _source_limit_items(
-    source_inventory: dict[str, Any], language: str
-) -> list[dict[str, Any]]:
+def _scope_items(claims_review: dict[str, Any], language: str) -> list[dict[str, Any]]:
+    """Expose model-authored contract and coverage decisions for review."""
+
     copy = _copy(language)
-    sources = source_inventory.get("sources", [])
-    if not isinstance(sources, list):
-        return []
-    limited_statuses = {
-        "listed_not_fetched",
-        "http_error",
-        "unreachable",
-        "too_short",
-        "access_barrier",
-        "empty",
-    }
     items: list[dict[str, Any]] = []
-    for index, source in enumerate(sources, start=1):
-        if not isinstance(source, dict):
+    for item_id, item_type, title_key, field in (
+        (
+            "answer-contract-review",
+            "answer_contract_review",
+            "answer_contract_review",
+            "contract_review",
+        ),
+        (
+            "claim-selection-coverage",
+            "coverage_review",
+            "coverage_review",
+            "coverage_review",
+        ),
+    ):
+        assessment = claims_review.get(field)
+        if not isinstance(assessment, dict):
             continue
-        status = _clean_text(source.get("status"))
-        if status not in limited_statuses:
-            continue
-        title = _clean_text(
-            source.get("url") or source.get("path") or source.get("name")
-        )
         items.append(
             _base_item(
-                f"source-limit-{index}",
-                "source_limit",
-                title or f"{copy['source_limit']} {index}",
-                output_path="source_inventory.json",
+                item_id,
+                item_type,
+                str(copy[title_key]),
+                output_path="claims_review.json",
                 allowed_actions=(
                     "accept",
+                    "reject",
                     "edit",
                     "mark_unclear",
                     "request_more_documents",
                     "skip",
                 ),
-                recommended_action="request_more_documents",
-                evidence=[
-                    {
-                        "kind": "source_availability",
-                        "status": status,
-                        "http_status": source.get("http_status"),
-                        "error": source.get("error"),
-                    }
-                ],
-                data=dict(source),
+                recommended_action=_clean_text(assessment.get("reviewer_action"))
+                or "mark_unclear",
+                evidence=[{"kind": item_type, "assessment": assessment}],
+                data={field: assessment},
             )
         )
-        if len(items) >= MAX_SOURCE_LIMIT_ITEMS:
-            break
     return items
 
 
@@ -633,9 +641,11 @@ def write_run_intake(
     document_inventory_path: Path,
     source_inventory_path: Path,
     claims_review_path: Path,
+    answer_contract_path: Path,
     document_inventory: dict[str, Any],
     source_inventory: dict[str, Any],
     claims_review: dict[str, Any],
+    answer_contract: dict[str, Any],
 ) -> RunIntakeResult:
     """Write run intake before validation package review."""
 
@@ -653,9 +663,10 @@ def write_run_intake(
             document_inventory_path.as_posix(),
             source_inventory_path.as_posix(),
             claims_review_path.as_posix(),
+            answer_contract_path.as_posix(),
         ],
         "output_dir": output_dir.as_posix(),
-        "inferred_task": "deep_research_validation_review_payload",
+        "inferred_task": "answer_validation_review_payload",
         "assumptions": {
             "document_source_name": document_inventory.get("source_name"),
             "document_word_count": document_inventory.get("word_count"),
@@ -663,6 +674,9 @@ def write_run_intake(
             "source_count": len(source_inventory.get("sources", []) or []),
             "claim_count": len(claims_review.get("claims", []) or []),
             "validation_objective": claims_review.get("validation_objective"),
+            "generation_route": answer_contract.get("generation_route"),
+            "document_type": answer_contract.get("document_type"),
+            "validation_profile": answer_contract.get("validation_profile"),
         },
         "unresolved_questions": [],
         "dependency_check": {
@@ -674,6 +688,7 @@ def write_run_intake(
                 document_inventory_path.as_posix(),
                 source_inventory_path.as_posix(),
                 claims_review_path.as_posix(),
+                answer_contract_path.as_posix(),
             ],
             "external_connectors_used": [],
             "upload_paths_used": [],
@@ -697,9 +712,11 @@ def write_review_session_artifacts(
     document_inventory_path: Path,
     source_inventory_path: Path,
     claims_review_path: Path,
+    answer_contract_path: Path,
     document_inventory: dict[str, Any],
     source_inventory: dict[str, Any],
     claims_review: dict[str, Any],
+    answer_contract: dict[str, Any],
     audit: dict[str, Any],
     paths: dict[str, Path],
 ) -> ReviewSessionResult:
@@ -709,8 +726,8 @@ def write_review_session_artifacts(
     copy = _copy(language)
     items: list[dict[str, Any]] = []
     items.extend(_audit_items(audit))
-    items.extend(_claim_items(claims_review, language))
-    items.extend(_source_limit_items(source_inventory, language))
+    items.extend(_scope_items(claims_review, language))
+    items.extend(_claim_items(claims_review, audit, language))
     items.extend(_artifact_items(paths, output_dir, language))
 
     review_payload = {
@@ -724,7 +741,7 @@ def write_review_session_artifacts(
             document_inventory.get("source_name"),
             *(document_inventory.get("urls", []) or []),
         ],
-        "review_type": "deep_research_validation_review",
+        "review_type": "answer_validation_review",
         "items": items,
         "item_count": len(items),
         "columns": _review_columns(language),
@@ -733,9 +750,16 @@ def write_review_session_artifacts(
             "document_inventory": document_inventory_path.as_posix(),
             "source_inventory": source_inventory_path.as_posix(),
             "claims_review_input": claims_review_path.as_posix(),
+            "answer_contract_input": answer_contract_path.as_posix(),
+            "answer_contract": _as_output_ref(
+                paths.get("answer_contract"),
+                output_dir,
+            ),
             "claims_review": _as_output_ref(paths.get("claims_review"), output_dir),
             "validation_audit": "validation_audit.json",
-            "validated_document": "validated_document.md",
+            "validated_document": _as_output_ref(
+                paths.get("validated_document"), output_dir
+            ),
             "validation_package": "validation_package.md",
         },
         "allowed_actions": [
@@ -748,15 +772,26 @@ def write_review_session_artifacts(
         ],
         "status": "ready_for_review",
         "summary": {
-            "audit_status": audit.get("status"),
+            "record_integrity_status": audit.get("record_integrity_status"),
+            "delivery_readiness": audit.get("delivery_readiness"),
             "failed_check_count": len(audit.get("failed_checks", []) or []),
             "claim_count": audit.get("claim_count", 0),
-            "attention_claim_count": len(
-                audit.get("attention_claim_indices", []) or []
+            "support_attention_count": len(
+                audit.get("support_attention_claim_indices", []) or []
             ),
             "source_count": audit.get("source_count", 0),
             "document_url_count": audit.get("document_url_count", 0),
-            "quote_match_count": len(audit.get("quote_matches", []) or []),
+            "source_identity_attention_count": len(
+                audit.get("source_identity_attention_claim_indices", []) or []
+            ),
+            "reasoning_attention_count": len(
+                audit.get("reasoning_attention_claim_indices", []) or []
+            ),
+            "judgment_dependent_count": len(
+                audit.get("judgment_dependent_claim_indices", []) or []
+            ),
+            "generation_route": answer_contract.get("generation_route"),
+            "document_type": answer_contract.get("document_type"),
         },
     }
     review_payload_path = _write_json(

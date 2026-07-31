@@ -8,7 +8,7 @@ For owner-only/private packages copied from scratch space, reapply and verify
 private delivery.
 Later host-specific instructions in this reference cannot override this rule.
 
-# Optimize Prompt Workflow Reference
+# Plan Answer Workflow Reference
 
 This reference expands the core workflow in `SKILL.md`. Load it when a run needs detailed wording guidance, source strategy, or validation interpretation.
 
@@ -67,6 +67,33 @@ run, and deliverables, then proceed. Ask for extra approval only when a material
 unresolved choice, external write, unsafe action, or reduced/debug output request
 changes the work. A later Default-mode execution run should use the confirmed
 handoff and should not re-ask unless the facts conflict.
+
+## Answer Contract And Generation Route
+
+Treat prompt optimization as an internal stage. The user supplies a legal, tax,
+or compliance question; do not ask whether they want a prompt optimized.
+
+Claude must write `answer_contract.json` before generation. Keep these decisions
+separate:
+
+- generation route: `codex_direct`, `chatgpt_deep_research`, or
+  `external_document`;
+- document type: the requested artifact, such as a research report, legal memo,
+  one-page letter, response letter, checklist, or counsel brief.
+- validation scope: all material claims by default, selected material claims
+  only when that limit is explicit, or a limited review;
+- correction policy: correct the answer when the evidence supports a correction,
+  or produce review findings only;
+- professional-judgment policy: flag judgment-dependent conclusions for
+  professional review rather than certifying them.
+
+Choose both with model-led judgment or user confirmation. Deterministic scripts
+only validate that the explicit contract has the required fields and allowed
+codes. They must not infer the route or document type from keywords.
+
+Native Deep Research is a ChatGPT-window handoff, not a Claude or Work tool.
+Direct Claude drafting skips that handoff but still carries the answer contract
+and source record into the validator.
 
 ## Output Language And Jurisdiction Scope
 

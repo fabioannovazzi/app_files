@@ -192,6 +192,7 @@ def apply_review_edits(
     package_path = output_dir / "prompt_package.md"
     source_domains_path = output_dir / "source_domains.txt"
     source_domains_comma_path = output_dir / "source_domains_comma.txt"
+    answer_contract_path = output_dir / "answer_contract.json"
 
     applied = _read_json(applied_decisions_path)
     final_artifacts = _read_json(final_artifacts_path)
@@ -214,13 +215,21 @@ def apply_review_edits(
         raise FileNotFoundError(prompt_path)
     if not audit_path.exists():
         raise FileNotFoundError(audit_path)
+    if not answer_contract_path.exists():
+        raise FileNotFoundError(answer_contract_path)
 
     run_intake = _read_json(run_intake_path)
     previous_audit = _read_json(audit_path)
+    answer_contract = _read_json(answer_contract_path)
     question_text = _question_text(output_dir, run_intake)
     prompt_text = prompt_path.read_text(encoding="utf-8").strip()
     language = _language(run_intake, previous_audit)
-    audit = validate_prompt_text(question_text, prompt_text, language=language)
+    audit = validate_prompt_text(
+        question_text,
+        prompt_text,
+        answer_contract=answer_contract,
+        language=language,
+    )
     audit["language"] = language
     if previous_audit.get("review_session"):
         audit["review_session"] = previous_audit["review_session"]

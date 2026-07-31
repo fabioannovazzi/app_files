@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
@@ -15,7 +14,6 @@ if str(SCRIPT_DIR) not in sys.path:
 from package_validation import (  # noqa: E402
     build_audit,
     render_validation_package,
-    try_write_docx,
 )
 
 __all__ = ["apply_review_edits", "main"]
@@ -24,6 +22,10 @@ FINAL_HANDOFF_ACTION = (
     "Use final_artifacts.json as the reviewed artifact gallery for handoff."
 )
 COMPLETE_REVIEW_ACTION = "Complete remaining review decisions before final handoff."
+REGENERATE_ANSWER_ACTION = (
+    "Regenerate the reviewed or corrected answer semantically from the accepted "
+    "claim dispositions, then rerun validation packaging."
+)
 VALIDATED_DOCUMENT_DOCX = "validated_document.docx"
 
 
@@ -74,13 +76,6 @@ def _pending_native_paths(effects: list[dict[str, Any]]) -> list[str]:
             if text:
                 paths.append(text)
     return list(dict.fromkeys(paths))
-
-
-def _effect_declares_native_path(effect: dict[str, Any], target_path: str) -> bool:
-    raw_paths = effect.get("derived_native_regeneration_paths")
-    if not isinstance(raw_paths, list):
-        return False
-    return target_path in {clean_text(path) for path in raw_paths}
 
 
 def _safe_item_id(value: object) -> str:
@@ -147,38 +142,11 @@ def _resolve_input_path(
     return output_candidate
 
 
-def _validated_document_text(output_dir: Path, claims_review: dict[str, Any]) -> str:
-    validated_document_path = output_dir / "validated_document.md"
-    if validated_document_path.exists():
-        return validated_document_path.read_text(encoding="utf-8")
-    return clean_text(claims_review.get("validated_document"))
-
-
-def _native_docx_requested(
-    output_dir: Path,
-    final_artifacts: dict[str, Any],
-    candidate_effects: list[dict[str, Any]],
-) -> bool:
-    if any(
-        _effect_declares_native_path(effect, VALIDATED_DOCUMENT_DOCX)
-        for effect in candidate_effects
-    ):
-        return True
-    if (output_dir / VALIDATED_DOCUMENT_DOCX).exists():
-        return True
-    outputs = final_artifacts.get("outputs")
-    if isinstance(outputs, list):
-        return any(
-            isinstance(output, dict)
-            and clean_text(output.get("path")) == VALIDATED_DOCUMENT_DOCX
-            for output in outputs
-        )
-    return False
-
-
 def _application_status(applied: dict[str, Any]) -> str:
     if int(applied.get("blocker_count") or 0) > 0:
         return "blocked"
+    if int(applied.get("semantic_regeneration_count") or 0) > 0:
+        return "revision_required"
     if int(applied.get("native_regeneration_count") or 0) > 0:
         return "partial_review_applied"
     if int(applied.get("decision_count") or 0) < int(applied.get("item_count") or 0):
@@ -192,51 +160,26 @@ def _next_actions(current: list[Any], status: str) -> list[str]:
         next_actions.append(FINAL_HANDOFF_ACTION)
     elif status == "partial_review_applied":
         next_actions.append(COMPLETE_REVIEW_ACTION)
+    elif status == "revision_required":
+        next_actions.append(REGENERATE_ANSWER_ACTION)
     return list(dict.fromkeys(next_actions))
 
 
 def _required_package_text(candidate_effects: list[dict[str, Any]]) -> list[str]:
     fragments = [
-        "# Deep Research Validation Package",
+        "# Answer Validation Record",
+        "## Assurance Boundary",
+        "## Answer Contract",
+        "## Answer-Contract Review",
+        "## Review Coverage",
         "## Document Inventory",
-        "## Claims Review",
+        "## Claim Assessments",
     ]
     for effect in candidate_effects:
         edit_value = clean_text(effect.get("edit_value"))
         if edit_value:
             fragments.append(edit_value)
     return list(dict.fromkeys(fragments))
-
-
-def _required_docx_text(candidate_effects: list[dict[str, Any]]) -> list[str]:
-    fragments = [
-        re.sub(r"^#+\s*", "", fragment)
-        for fragment in _required_package_text(candidate_effects)
-    ]
-    return list(dict.fromkeys(fragment for fragment in fragments if fragment))
-
-
-def _regenerate_validated_docx(
-    output_dir: Path,
-    candidate_effects: list[dict[str, Any]],
-    package_text: str,
-) -> list[dict[str, Any]]:
-    docx_path = output_dir / VALIDATED_DOCUMENT_DOCX
-    if not try_write_docx(package_text, docx_path):
-        return []
-    required_text = _required_docx_text(candidate_effects)
-    return [
-        {
-            "path": VALIDATED_DOCUMENT_DOCX,
-            "kind": "docx",
-            "status": "updated_from_review",
-            "native_regenerated": True,
-            "source_artifact": "validation_package.md",
-            "size_bytes": docx_path.stat().st_size,
-            "required_text": required_text,
-            "qa_checks": ["nonempty_text", "required_text"],
-        }
-    ]
 
 
 def apply_review_edits(
@@ -253,6 +196,7 @@ def apply_review_edits(
     claims_review_path = output_dir / "claims_review.json"
     validation_audit_path = output_dir / "validation_audit.json"
     validation_package_path = output_dir / "validation_package.md"
+    answer_contract_path = output_dir / "answer_contract.json"
 
     applied = _read_json(applied_decisions_path)
     final_artifacts = _read_json(final_artifacts_path)
@@ -266,13 +210,15 @@ def apply_review_edits(
         return {
             "ok": True,
             "updated_effect_count": 0,
-            "message": "No Deep Research package refresh was required.",
+            "message": "No answer-validation package refresh was required.",
         }
 
     if not run_intake_path.exists():
         raise FileNotFoundError(run_intake_path)
     if not claims_review_path.exists():
         raise FileNotFoundError(claims_review_path)
+    if not answer_contract_path.exists():
+        raise FileNotFoundError(answer_contract_path)
 
     run_intake = _read_json(run_intake_path)
     document_inventory_path = _resolve_input_path(
@@ -293,13 +239,46 @@ def apply_review_edits(
     document_inventory = _read_json(document_inventory_path)
     source_inventory = _read_json(source_inventory_path)
     claims_review = _read_json(claims_review_path)
-    audit = build_audit(document_inventory, source_inventory, claims_review)
+    answer_contract = _read_json(answer_contract_path)
+    unresolved_changes = [
+        clean_text(value)
+        for value in (
+            claims_review.get("document_revision", {}).get("unresolved_changes", [])
+            if isinstance(claims_review.get("document_revision"), dict)
+            else []
+        )
+        if clean_text(value)
+    ]
+    for effect in candidate_effects:
+        claim_ref = clean_text(effect.get("target_record_id")) or clean_text(
+            effect.get("item_id")
+        )
+        unresolved_changes.append(
+            f"Regenerate the answer to apply the reviewed correction for claim {claim_ref}."
+        )
+    claims_review["document_revision"] = {
+        "status": "required",
+        "summary": (
+            "Reviewer corrections are recorded, but the reviewed or corrected "
+            "answer has not yet been semantically regenerated."
+        ),
+        "unresolved_changes": list(dict.fromkeys(unresolved_changes)),
+    }
+    claims_review["validated_document"] = ""
+    _write_json(claims_review_path, claims_review)
+    audit = build_audit(
+        document_inventory,
+        source_inventory,
+        claims_review,
+        answer_contract,
+        source_base_dir=source_inventory_path.parent,
+    )
     package_text = render_validation_package(
         document_inventory,
         source_inventory,
         claims_review,
         audit,
-        _validated_document_text(output_dir, claims_review),
+        "",
     )
 
     backup_outputs: list[dict[str, Any]] = []
@@ -310,43 +289,28 @@ def apply_review_edits(
     )
     if backup:
         backup_outputs.append(backup)
-    native_docx_requested = _native_docx_requested(
-        output_dir,
-        final_artifacts,
-        candidate_effects,
-    )
-    if native_docx_requested:
+    for stale_name in ("validated_document.md", VALIDATED_DOCUMENT_DOCX):
         backup = _backup_file(
             output_dir,
             clean_text(candidate_effects[0].get("item_id")),
-            VALIDATED_DOCUMENT_DOCX,
+            stale_name,
         )
         if backup:
             backup_outputs.append(backup)
 
     _write_json(validation_audit_path, audit)
     validation_package_path.write_text(package_text, encoding="utf-8")
-    native_outputs = (
-        _regenerate_validated_docx(output_dir, candidate_effects, package_text)
-        if native_docx_requested
-        else []
-    )
-    native_regenerated_paths = [output["path"] for output in native_outputs]
-    native_pending = [
-        path
-        for path in _pending_native_paths(effects)
-        if path not in set(native_regenerated_paths)
-    ]
+    native_outputs: list[dict[str, Any]] = []
+    native_regenerated_paths: list[str] = []
+    native_pending = _pending_native_paths(effects)
 
     downstream_paths = ["validation_audit.json", "validation_package.md"]
     downstream_paths.extend(native_regenerated_paths)
     for effect in candidate_effects:
         effect["downstream_regeneration_status"] = "regenerated"
         effect["downstream_regenerated_paths"] = downstream_paths
-        if native_regenerated_paths:
-            effect["requires_native_regeneration"] = False
-            effect["native_regeneration_status"] = "regenerated"
-            effect["native_regenerated_paths"] = native_regenerated_paths
+        effect["semantic_regeneration_required"] = True
+        effect["semantic_regeneration_status"] = "required"
 
     applied["effects"] = effects
     applied["downstream_regenerated_count"] = len(candidate_effects)
@@ -355,6 +319,8 @@ def apply_review_edits(
     applied["native_regeneration_paths"] = native_pending
     applied["native_regenerated_count"] = len(native_regenerated_paths)
     applied["native_regenerated_paths"] = native_regenerated_paths
+    applied["semantic_regeneration_count"] = len(candidate_effects)
+    applied["semantic_regeneration_status"] = "required"
     original_backup_paths = list(applied.get("original_backup_paths") or [])
     for backup_output in backup_outputs:
         if backup_output["path"] not in original_backup_paths:
@@ -367,6 +333,12 @@ def apply_review_edits(
         for output in final_artifacts.get("outputs", [])
         if isinstance(output, dict)
     ]
+    for output in outputs:
+        if clean_text(output.get("path")) in {
+            "validated_document.md",
+            VALIDATED_DOCUMENT_DOCX,
+        }:
+            output["status"] = "superseded_requires_semantic_regeneration"
     _upsert_output(
         outputs,
         {
@@ -410,6 +382,10 @@ def apply_review_edits(
             "native_regenerated_count"
         ]
         review_application["native_regenerated_paths"] = native_regenerated_paths
+        review_application["semantic_regeneration_count"] = applied[
+            "semantic_regeneration_count"
+        ]
+        review_application["semantic_regeneration_status"] = "required"
         review_application["original_backup_paths"] = original_backup_paths
     final_artifacts["next_actions"] = _next_actions(
         list(final_artifacts.get("next_actions") or []),
@@ -432,7 +408,7 @@ def apply_review_edits(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Apply Deep Research review edits to downstream artifacts."
+        description="Apply answer-validation review edits to downstream artifacts."
     )
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--applied-decisions", type=Path, required=True)

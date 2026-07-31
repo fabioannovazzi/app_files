@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Use when a user wants Claude to turn a legal, tax, or compliance question into a source-backed Deep Research prompt, with fact preservation, research posture, source hierarchy, citation rules, and deterministic validation. Do not use for general copywriting or ordinary prompt polishing unrelated to Deep Research.
+description: Use internally when Vera or Claude receives a legal, tax, or compliance question and must define the answer contract, choose a model-led generation route, and prepare source-backed generation instructions. The user does not need to ask for prompt optimization. Do not use for unrelated copywriting or ordinary prompt polishing.
 ---
 
 ## Cowork execution contract
@@ -51,9 +51,16 @@ override this Cowork contract.
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
 
-# Optimize Prompt
+# Plan The Answer
 
-Use this skill when a legal, tax, or compliance question must be turned into a structured Deep Research prompt. The plugin is a guided Claude workflow: Claude inspects the question, confirms only essential assumptions, writes the optimized prompt, runs deterministic validation, repairs gaps, and delivers a reviewable prompt package.
+Use this skill as the internal planning stage of Vera's question-to-validated-
+answer journey. Claude inspects the question, confirms only essential
+assumptions, writes `answer_contract.json`, chooses the generation route with
+model-led judgment, prepares the generation instructions, runs deterministic
+shape validation, and delivers a reviewable handoff package.
+
+Do not ask the user whether to optimize a prompt. The user supplies the
+professional question; this workflow is internal orchestration.
 
 The workflow is not Italian-only. Support the same five working locales used by the Mparanza plugins: `it`, `en`, `fr`, `de`, and `es`. Keep artifact file names and JSON keys in English for stability, but speak to the user in the chosen working language.
 
@@ -110,11 +117,10 @@ Claude should respond like a careful lawyer doing intake. Do not recreate the
 old web form unless the user explicitly asks for a structured UI.
 
 Default output policy: produce the richest normal package for the workflow.
-`optimized_prompt.md`, source-domain sidecars, validation audit, prompt package,
-and human README are not choices to propose when they are natural outputs of
-the plugin; generate them whenever dependencies and source data permit. Ask
-only when an output is technically impossible, unsafe, or the user explicitly
-requests a reduced/debug run.
+`answer_contract.json`, `optimized_prompt.md`, source-domain sidecars,
+validation audit, prompt package, and human README are not choices to propose
+when they are natural outputs. Generate them whenever dependencies and source
+data permit.
 
 Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
 
@@ -155,10 +161,10 @@ Run UX:
 5. Ask only the material missing questions before drafting. Prefer 2-5
    numbered questions with a short "why this matters" phrase for each, unless
    a native widget is available for the same decision.
-6. Do not ask whether to package, validate, or write source-domain sidecars.
-   If output format materially changes the research logic, infer a complete
-   client-ready structure from the facts and ask only when that inference is
-   genuinely not possible.
+6. Do not ask whether to optimize, package, validate, or write source-domain
+   sidecars. Infer `generation_route` and `document_type` from the question
+   when they are clear. Ask only when the choice materially changes the answer
+   and cannot be inferred.
 7. After required choices are fixed, state a concise execution plan naming
    confirmed assumptions, remaining caveats, scripts to run, and deliverables,
    then proceed. Ask for extra approval only when a material unresolved choice,
@@ -222,9 +228,15 @@ The intake should feel like a lawyer narrowing the case:
 
 ## Core Principle
 
-Claude owns the reasoning and prompt writing: research posture, objective, scope, source strategy, fact summary, and final wording.
+Claude owns the reasoning and instruction writing: professional intent,
+generation route, document type, research posture, objective, scope, source
+strategy, fact summary, and final wording.
 
-Deterministic Python code owns only question inventory, anchor extraction, validation, and packaging. The plugin scripts must not make direct OpenAI API calls or other model API calls.
+Deterministic Python code owns only question inventory, anchor extraction,
+answer-contract shape validation, prompt validation, and packaging. It must not
+select a legal domain, generation route, document type, jurisdiction, audience,
+source strategy, or validation posture. Plugin scripts must not make direct OpenAI API calls
+or other model API calls.
 
 The user should not interact directly with CLI scripts. Treat scripts as internal tools Claude runs on behalf of the user.
 
@@ -268,6 +280,8 @@ Optional:
 - objective: `efficient`, `defensible_conservative`, or `balanced`;
 - scope: `domestic_only`, `domestic_plus_EU`, or `cross_border_multi_jurisdiction`;
 - source preferences or excluded sources.
+- desired document type or generation route when the user has already chosen
+  one.
 
 ## First Run Workflow
 
@@ -291,17 +305,53 @@ python scripts/inspect_question.py <question-file> --output-dir <output-dir> --l
 6. If `prompt_recipe.json["angle_confirmation"]["required"]` is true, resolve the general angle-confirmation step before domain-specific choices. In Default mode, state the preferred angle and pause for chat confirmation or tell the user they can switch to Plan mode for native choices. In Plan mode, use `request_user_input` when available. Do not draft before the angle is fixed.
 7. If `prompt_recipe.json["jurisdiction_confirmation"]["required"]` is true, resolve the legal-framework choice before drafting. In Default mode, state the framework cues and unresolved points, then pause for chat confirmation or invite Plan mode for native choices. In Plan mode, use `request_user_input` when available. Do not draft under an unconfirmed framework.
 8. Use `prompt_recipe.json["lawyer_intake"]` to ask a short conversational intake when material facts are missing. Ask no more than five questions. If Plan mode is active and a question is a discrete material choice, prefer native choices. If the user wants a fast draft, continue with explicit assumptions and caveats only after any required angle and jurisdiction confirmation is resolved.
-9. Write the optimized Deep Research prompt in Claude. It must preserve all material facts, dates, percentages, amounts, entities, chronology, and explicit questions from the source question. A name or other personal fact is not removed merely because it is personal; omit it only when it is professionally immaterial, and never describe that omission as anonymization of text already read by Claude. Include an explicit "Research lens" / "Lente di ricerca" section naming posture, objective, and scope, plus the selected or assumed output format. Include source hierarchy and citation rules, but keep concrete websites in the separate source-domain sidecar unless the user asks for a self-contained prompt. If Claude judges that the matter needs a phased workflow, include chronology, confidence, legal-realism, specialist scope-control, and anti-fabricated-authority instructions.
-10. Save the draft prompt in the work folder as `draft_prompt.md`.
-10a. Curate qualified source websites from the confirmed framework and actual issue, then save them in the work folder as `draft_source_domains.txt`. Do not copy domains from `prompt_recipe.json["source_domains"]`; that field is intentionally empty.
-11. Run deterministic validation:
+9. Write `draft_answer_contract.json` in Claude. It must contain:
+   - `schema_version`: `1.0`;
+   - `question_domain`: `legal`, `tax`, `compliance`, or `mixed`;
+   - `generation_route`: `codex_direct`, `chatgpt_deep_research`, or
+     `external_document`;
+   - free-text `document_type`, `purpose`, `audience`, `output_language`, and
+     `jurisdiction`;
+   - `jurisdiction_status`: `confirmed`, `assumed`, `unresolved`, or
+     `not_applicable`;
+   - `evidence_display`: `inline_citations`, `footnotes`,
+     `source_record_only`, `mixed`, or `not_specified`;
+   - `validation_profile`: `source_identity_support_reasoning_and_judgment`;
+   - `validation_scope`: `all_material_claims`, `selected_material_claims`, or
+     `limited`;
+   - `correction_policy`: `correct_when_supported` or `review_only`;
+   - `judgment_policy`: `flag_for_professional_review`.
+   These values are model-led or user-confirmed; helper scripts only validate
+   their shape.
+10. Write the optimized answer-generation instructions in Claude. They must
+   preserve all material facts, dates, percentages, amounts, entities,
+   chronology, and explicit questions. Include the selected document type,
+   audience, purpose, source hierarchy, citation or source-record rules, and
+   the research lens when research is required. If Claude judges that the
+   matter needs a phased workflow, include chronology, confidence,
+   legal-realism, specialist scope-control, and anti-fabricated-authority
+   instructions.
+11. Save the draft instructions in the work folder as `draft_prompt.md`.
+12. Curate qualified source websites from the confirmed framework and actual
+    issue, then save them in the work folder as
+    `draft_source_domains.txt`. Do not copy domains from
+    `prompt_recipe.json["source_domains"]`; that field is intentionally empty.
+13. Run deterministic validation:
 
 ```bash
-python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt
+python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt --answer-contract-file <output-dir>/draft_answer_contract.json
 ```
 
-12. Read `prompt_audit.json`. If any check fails, repair the prompt in Claude, overwrite `draft_prompt.md`, and rerun validation until the prompt passes or only explainable residual gaps remain.
-13. Deliver `optimized_prompt.md`, `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`, `README_HUMAN.md`, and `prompt_audit.json`. Tell the user that `optimized_prompt.md` goes into Deep Research and `source_domains_comma.txt` goes into the Deep Research websites field. Report any failed checks or assumptions explicitly.
+14. Read `prompt_audit.json`. If any check fails, repair
+   `draft_answer_contract.json` or `draft_prompt.md` in Claude and rerun
+   validation until the package passes or only explainable residual gaps
+   remain.
+15. Deliver `answer_contract.json`, `optimized_prompt.md`,
+   `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`,
+   `README_HUMAN.md`, and `prompt_audit.json`. For
+   `chatgpt_deep_research`, provide the ChatGPT-window handoff. For
+   `codex_direct`, use the instructions to generate the answer in Claude and
+   continue directly to answer validation.
 
 ## Prompt Requirements
 
@@ -311,15 +361,22 @@ The optimized prompt must require:
 - a user-facing jurisdiction assumption notice that distinguishes output language from legal jurisdiction;
 - a clear research posture, objective, and scope;
 - a selected or assumed output format;
+- an explicit generation route and answer contract;
+- an explicit validation scope, correction policy, and professional-judgment
+  policy for the later answer review;
 - source hierarchy favoring primary legislation, case law, official tax/administrative guidance, court portals, EU/international official portals where relevant, and professional doctrine;
 - a model-curated source hierarchy and an instruction to use the separate qualified website list;
-- numeric citations in the answer body and a final notes/source section;
+- source traceability appropriate to `evidence_display`; require numeric
+  citations and a final source section for research outputs, but permit a
+  source-backed internal validation record when the intended letter should not
+  display citations;
 - official, stable URLs and broken-link replacement or flagging;
 - cross-checking substantive claims against independent references;
 - explicit residual uncertainty;
 - no loss of source facts, numbers, dates, ownership percentages, entities, steps, chronology, or explicit questions;
 - up to three clarifying questions only when essential facts are missing;
-- client-ready structure such as premises, analysis, conclusions, notes, and caveats.
+- a structure appropriate to the contracted document type, audience, and
+  purpose.
 
 When Claude determines that the matter is broad or multi-specialist, the
 optimized prompt must additionally require:
@@ -337,6 +394,7 @@ optimized prompt must additionally require:
 
 - `question_inventory.json`;
 - `prompt_recipe.json`;
+- `answer_contract.json`;
 - `optimized_prompt.md`;
 - `prompt_audit.json`;
 - `prompt_package.md`.
@@ -349,7 +407,9 @@ optimized prompt must additionally require:
 - `applied_decisions.json` after reviewer decisions are applied;
 - `final_artifacts.json`.
 
-`draft_prompt.md` and `draft_source_domains.txt` are temporary working files during validation, not delivered outputs.
+`draft_answer_contract.json`, `draft_prompt.md`, and
+`draft_source_domains.txt` are temporary working files during validation, not
+delivered outputs.
 
 ## Cowork review handoff
 
@@ -384,17 +444,19 @@ If the user writes in a supported language, default to that working language. If
 Starter prompts:
 
 ```text
-IT: Usa Optimize Prompt su questo quesito fiscale/legale. Lingua output: it. Inventaria i possibili indizi di giurisdizione senza scegliere il diritto applicabile; conferma il framework con l'utente prima dell'esecuzione. Ispeziona i fatti, proponi postura/obiettivo/ambito, fai una breve intake da avvocato se mancano fatti materiali, scrivi un prompt Deep Research completo con fonti ufficiali, citazioni, note, controllo link e vincolo di preservazione dei fatti. Valida e ripara il prompt prima di consegnarlo.
-EN: Use Optimize Prompt on this legal/tax question. Output language: en. Inventory possible jurisdiction/framework cues without choosing governing law; confirm the framework with the user before execution. Inspect the facts, propose posture/objective/scope, run a short lawyer-style intake if material facts are missing, write a complete Deep Research prompt with official sources, citations, notes, link checks, and fact-preservation constraints. Validate and repair the prompt before delivery.
-FR: Utilise Optimize Prompt sur cette question juridique/fiscale. Langue de sortie: fr. Inventorie les indices possibles de juridiction/cadre juridique sans choisir le droit applicable; confirme le cadre avec l'utilisateur avant l'exécution. Inspecte les faits, propose posture/objectif/portee, fais une brève intake de juriste si des faits matériels manquent, redige un prompt Deep Research complet avec sources officielles, citations, notes, controle des liens et contrainte de preservation des faits. Valide et repare le prompt avant livraison.
-DE: Verwende Optimize Prompt fuer diese Rechts-/Steuerfrage. Ausgabesprache: de. Inventarisiere moegliche Hinweise auf Rechtsordnung/Framework, ohne das anwendbare Recht auszuwaehlen; bestaetige das Framework vor der Ausfuehrung mit dem Nutzer. Pruefe die Fakten, schlage Posture/Ziel/Scope vor, fuehre bei fehlenden wesentlichen Fakten eine kurze anwaltsartige Intake durch und schreibe einen vollstaendigen Deep-Research-Prompt mit offiziellen Quellen, Zitaten, Notizen, Linkpruefung und Faktenerhalt. Validiere und repariere den Prompt vor der Lieferung.
-ES: Usa Optimize Prompt con esta cuestión jurídica/fiscal. Idioma de salida: es. Identifica los posibles indicios de jurisdicción o marco jurídico sin elegir el derecho aplicable; confirma el marco con el usuario antes de ejecutar. Examina los hechos, propón postura, objetivo y alcance, realiza una breve entrevista jurídica si faltan hechos materiales y redacta un prompt completo para Deep Research con fuentes oficiales, citas, notas, comprobación de enlaces y preservación de los hechos. Valida y corrige el prompt antes de entregarlo.
+IT: Pianifica la risposta a questo quesito legale o fiscale. Lingua output: it. Comprendi semanticamente l'intento, proponi tipo di documento e percorso di generazione, conferma solo le scelte professionali irrisolte che cambiano materialmente la risposta, scrivi answer_contract.json e istruzioni complete per la generazione, quindi valida la forma del pacchetto.
+EN: Plan the answer to this legal or tax question. Output language: en. Understand the intent semantically, propose the document type and generation route, confirm only unresolved professional choices that materially change the answer, write answer_contract.json and complete generation instructions, then validate the package shape.
+FR: Planifie la réponse à cette question juridique ou fiscale. Langue de sortie: fr. Comprends l'intention sémantiquement, propose le type de document et le parcours de génération, confirme uniquement les choix professionnels non résolus qui changent matériellement la réponse, rédige answer_contract.json et les instructions complètes de génération, puis valide la forme du paquet.
+DE: Plane die Antwort auf diese Rechts- oder Steuerfrage. Ausgabesprache: de. Erfasse die Absicht semantisch, schlage Dokumenttyp und Generierungsweg vor, bestätige nur ungeklärte professionelle Entscheidungen, die die Antwort wesentlich ändern, erstelle answer_contract.json und vollständige Generierungsanweisungen und validiere anschließend die Paketstruktur.
+ES: Planifica la respuesta a esta cuestión jurídica o fiscal. Idioma de salida: es. Comprende semánticamente la intención, propón el tipo de documento y la ruta de generación, confirma solo las decisiones profesionales no resueltas que cambien materialmente la respuesta, redacta answer_contract.json y las instrucciones completas de generación y valida después la forma del paquete.
 ```
 
 ## Failure Modes
 
 - If the source question is empty, ask the user for the question before running scripts.
 - If deterministic validation flags missing fact anchors, repair the prompt rather than dismissing the warning.
-- If a source question asks for legal/tax advice directly, produce a research prompt, not the substantive legal/tax answer.
+- If a source question asks for a legal, tax, or compliance answer directly,
+  treat it as the start of the question-to-validated-answer journey. Do not ask
+  the user to request prompt optimization.
 - If the question requests evasion, concealment, forged evidence, or other unsafe conduct, refuse to optimize it and explain the boundary.
 - If the user wants a general marketing or writing prompt, do not use this plugin.
