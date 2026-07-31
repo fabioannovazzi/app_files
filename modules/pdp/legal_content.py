@@ -15,7 +15,7 @@ __all__ = [
 
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
-LEGAL_EFFECTIVE_DATE = "July 23, 2026"
+LEGAL_EFFECTIVE_DATE = "July 31, 2026"
 ZERO_RETENTION_EFFECTIVE_DATE = "July 28, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
@@ -473,10 +473,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "By accessing or using the Service, you agree to these "
-                        "Terms. If you use the Service on behalf of a company or "
-                        "other organization, you represent that you have authority "
-                        "to bind that organization, and the words you and your "
-                        "include that organization."
+                        "Terms. By downloading any plugin, software, file, or other "
+                        "part of the Service, you also agree to these Terms. If you "
+                        "use the Service on behalf of a company or other organization, "
+                        "you represent that you have authority to bind that "
+                        "organization, and the words you and your include that "
+                        "organization."
                     ),
                     (
                         "If you do not agree to these Terms, you must not access "
@@ -729,6 +731,19 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "id": "disclaimers",
                 "title": "Disclaimers",
                 "paragraphs": [
+                    (
+                        "Mparanza develops continuously and frequently releases "
+                        "new and changed functionality. Mparanza tests code and "
+                        "technical operation, but testing on real professional "
+                        "cases before release is limited or absent and is not "
+                        "representative of the range of facts, data, jurisdictions, "
+                        "requirements, or uses that may arise. Mparanza relies on "
+                        "users to test functionality in their own concrete work "
+                        "cases and to independently review and validate every "
+                        "output before using or relying on it. Functionality and "
+                        "output behavior may change between releases, and past "
+                        "results do not guarantee future performance."
+                    ),
                     (
                         "To the maximum extent permitted by law, the Service and "
                         "all outputs, materials, downloads, plugins, documentation, "

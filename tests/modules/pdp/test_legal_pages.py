@@ -107,6 +107,7 @@ def test_terms_page_is_public_when_auth_enabled(
     page = context["page"]
     assert isinstance(page, dict)
     assert page["title"] == "Terms of Service"
+    assert page["effective_date"] == "July 31, 2026"
     assert context["active_legal_page"] == "terms"
     terms_text = str(page)
     assert "https://mparanza.com/zero-retention" in terms_text
@@ -114,6 +115,12 @@ def test_terms_page_is_public_when_auth_enabled(
     assert "Mparanza receives no license" in terms_text
     assert "Ordinary plugin functions" in terms_text
     assert "Mparanza-hosted services" in terms_text
+    assert "By downloading any plugin, software, file" in terms_text
+    assert "testing on real professional cases before release is limited or absent" in (
+        terms_text
+    )
+    assert "Mparanza relies on users to test functionality" in terms_text
+    assert "past results do not guarantee future performance" in terms_text
     assert "improve, and develop" not in terms_text
     assert "OpenAI" not in terms_text
 
