@@ -115,6 +115,7 @@ def test_terms_page_is_public_when_auth_enabled(
     assert "Mparanza receives no license" in terms_text
     assert "Ordinary plugin functions" in terms_text
     assert "Mparanza-hosted services" in terms_text
+    assert terms_text.count("Claude Cowork on your Claude plan") == 3
     assert "By downloading any plugin, software, file" in terms_text
     assert "testing on real professional cases before release is limited or absent" in (
         terms_text
