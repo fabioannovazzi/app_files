@@ -791,6 +791,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "currently zero U.S. dollars."
                     ),
                     (
+                        "Nothing in these Terms excludes or limits liability for "
+                        "intentional misconduct, gross negligence, or any other "
+                        "liability that cannot lawfully be excluded or limited."
+                    ),
+                    (
                         "Some jurisdictions do not allow certain disclaimers or "
                         "limitations. In those jurisdictions, the limits in these "
                         "Terms apply to the greatest extent permitted by law."
@@ -849,20 +854,14 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Disputes",
                 "paragraphs": [
                     (
-                        "These Terms are governed by the laws of the United States "
-                        "and the laws of the State of New York, without regard to "
-                        "conflict-of-law rules. To the maximum extent permitted "
-                        "by law, you consent to exclusive jurisdiction and venue "
-                        "in the state and federal courts located in New York "
-                        "County, New York, except that Mparanza may seek injunctive "
-                        "or equitable relief in any court with jurisdiction."
-                    ),
-                    (
-                        "To the maximum extent permitted by law, disputes must be "
-                        "resolved only on an individual basis. You and Mparanza "
-                        "waive any right to a jury trial and any right to bring "
-                        "or participate in a class, collective, consolidated, "
-                        "private attorney general, or representative action."
+                        "These Terms are governed by the substantive laws of "
+                        "Switzerland, excluding its conflict-of-laws rules. To the "
+                        "maximum extent permitted by applicable law, the courts "
+                        "located in the Canton of Geneva, Switzerland have exclusive "
+                        "jurisdiction over disputes arising out of or relating to "
+                        "these Terms or the Service. This section does not limit "
+                        "any mandatory right or forum that cannot lawfully be "
+                        "excluded."
                     ),
                 ],
             },
