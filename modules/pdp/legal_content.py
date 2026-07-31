@@ -16,7 +16,7 @@ __all__ = [
 CONTACT_EMAIL = "fabio@mparanza.com"
 SUPPORT_EMAIL = "fabio@mparanza.com"
 LEGAL_EFFECTIVE_DATE = "July 31, 2026"
-ZERO_RETENTION_EFFECTIVE_DATE = "July 28, 2026"
+ZERO_RETENTION_EFFECTIVE_DATE = "July 31, 2026"
 
 LEGAL_PAGES: dict[str, dict[str, Any]] = {
     "zero-retention": {
@@ -24,12 +24,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "eyebrow": "Mparanza LLC · Privacy notice",
         "effective_date": ZERO_RETENTION_EFFECTIVE_DATE,
         "summary": (
-            "Mparanza's products use two processing categories. Ordinary plugin "
+            "Mparanza LLC's products use two processing categories. Ordinary plugin "
             "functions run in the OpenAI Codex or Anthropic Cowork account and "
-            "workspace you choose. Mparanza does "
+            "workspace you choose. Mparanza LLC does "
             "not receive or retain Customer Content merely because you use those "
             "functions, and the plugin does not automatically anonymize that "
-            "content. Mparanza-hosted services receive the content needed to "
+            "content. Mparanza LLC-hosted services receive the content needed to "
             "provide them under the retention rules below."
         ),
         "sections": [
@@ -39,7 +39,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "Zero retention is a design objective for Customer Content "
-                        "on systems that Mparanza controls, not a claim that every "
+                        "on systems that Mparanza LLC controls, not a claim that every "
                         "hosted service stores nothing. Customer Content means files, "
                         "datasets, prompts, instructions, recordings, transcripts, "
                         "reports, comments, and workflow outputs submitted for processing."
@@ -47,8 +47,8 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Ordinary plugin functions run in your selected OpenAI Codex "
                         "or Anthropic Cowork account and workspace without sending "
-                        "Customer Content to Mparanza. "
-                        "Mparanza-hosted services receive the content described for each "
+                        "Customer Content to Mparanza LLC. "
+                        "Mparanza LLC-hosted services receive the content described for each "
                         "service and follow the retention and deletion arrangements below."
                     ),
                     (
@@ -62,22 +62,22 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Scope",
                 "paragraphs": [
                     (
-                        "This policy applies to mparanza.com, Mparanza-hosted "
+                        "This policy applies to mparanza.com, Mparanza LLC-hosted "
                         "tools, downloadable plugins, authentication and download "
-                        "flows, support communications, and other Mparanza services "
+                        "flows, support communications, and other Mparanza LLC services "
                         "that link to it. It explains both retention and the wider "
                         "handling of personal information."
                     ),
                     (
-                        "Mparanza-controlled systems are systems that Mparanza "
+                        "Mparanza LLC-controlled systems are systems that Mparanza LLC "
                         "operates or can directly administer. Your own device, "
                         "selected Codex or Cowork account and workspace, connected "
                         "services, email provider, "
                         "and other externally operated systems are not "
-                        "Mparanza-controlled systems."
+                        "Mparanza LLC-controlled systems."
                     ),
                     (
-                        "If you use Mparanza for an organization, you are "
+                        "If you use Mparanza LLC for an organization, you are "
                         "responsible for giving required notices and obtaining "
                         "the rights and permissions needed for information you "
                         "choose to process."
@@ -93,7 +93,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "or Anthropic Cowork account and workspace. Files, scripts, "
                         "and outputs may stay on your computer, while content the "
                         "selected host reads can enter its model context under that "
-                        "account. Mparanza does not "
+                        "account. Mparanza LLC does not "
                         "receive, access, or retain that Customer Content merely "
                         "because you use the plugin, and the plugin does not "
                         "automatically anonymize it."
@@ -102,7 +102,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Your selected Codex or Cowork account, workspace settings, "
                         "connectors, and "
                         "other services process information under their own "
-                        "arrangements. If a plugin clearly invokes a Mparanza-hosted "
+                        "arrangements. If a plugin clearly invokes a Mparanza LLC-hosted "
                         "service, that category is covered by the next section."
                     ),
                     (
@@ -119,7 +119,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "only from Codex Desktop with Computer Use in the WhatsApp "
                         "Desktop app already opened and authenticated by the "
                         "professional. Neither route creates a Gmail or WhatsApp "
-                        "message store on Mparanza-controlled systems. Content read by "
+                        "message store on Mparanza LLC-controlled systems. Content read by "
                         "the selected host may still enter the model context under the "
                         "user's OpenAI or Anthropic account."
                     ),
@@ -127,11 +127,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
             },
             {
                 "id": "hosted-features",
-                "title": "Mparanza-Hosted Services",
+                "title": "Mparanza LLC-Hosted Services",
                 "paragraphs": [
                     (
-                        "When you explicitly use a Mparanza-hosted service, the "
-                        "content needed for that service reaches Mparanza-controlled "
+                        "When you explicitly use a Mparanza LLC-hosted service, the "
+                        "content needed for that service reaches Mparanza LLC-controlled "
                         "systems. Hosted processing may create uploads, temporary "
                         "files, session or job state, extracted content, generated "
                         "outputs, recordings, transcripts, or review artifacts."
@@ -147,7 +147,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "Closing a browser, completing a job, archiving a project, "
                         "or allowing a link to expire does not necessarily delete "
-                        "the underlying hosted data. Mparanza's product development "
+                        "the underlying hosted data. Mparanza LLC's product development "
                         "is focused on ordinary plugin functions and reducing these "
                         "hosted retention exceptions."
                     ),
@@ -157,7 +157,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "id": "information-we-retain",
                 "title": "Limited Information We Retain",
                 "paragraphs": [
-                    "Depending on how you use Mparanza, we may retain:",
+                    "Depending on how you use Mparanza LLC, we may retain:",
                 ],
                 "bullets": [
                     (
@@ -166,7 +166,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "Customer Content and feature state that you explicitly "
-                        "submit to or create with a Mparanza-hosted service;"
+                        "submit to or create with a Mparanza LLC-hosted service;"
                     ),
                     (
                         "limited download, transactional-message, and delivery "
@@ -209,13 +209,13 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Uses We Reject",
                 "paragraphs": [
                     (
-                        "Mparanza does not sell personal information, share it for "
+                        "Mparanza LLC does not sell personal information, share it for "
                         "cross-context behavioral advertising, or use Customer "
                         "Content to train a generalized AI model. We do not claim "
                         "ownership of Customer Content."
                     ),
                     (
-                        "Mparanza will not use Customer Content for a materially "
+                        "Mparanza LLC will not use Customer Content for a materially "
                         "different purpose unless that purpose is clearly disclosed "
                         "and separately authorized where required."
                     ),
@@ -232,8 +232,8 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 ],
                 "bullets": [
                     (
-                        "Ordinary plugin functions: Mparanza retention is zero for "
-                        "content Mparanza does not receive. Content that Codex or "
+                        "Ordinary plugin functions: Mparanza LLC retention is zero for "
+                        "content Mparanza LLC does not receive. Content that Codex or "
                         "Cowork reads is handled under the terms and data controls of "
                         "your selected OpenAI or Anthropic account and workspace; "
                         "local storage is not anonymization."
@@ -261,7 +261,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "Hosted Voice call capture: live video remains in the "
-                        "browser and is not uploaded to Mparanza. Uploaded audio, "
+                        "browser and is not uploaded to Mparanza LLC. Uploaded audio, "
                         "upload chunks, and transcription work files are deleted "
                         "before a completed package can be returned. On terminal "
                         "package retrieval, transcript and package job state are "
@@ -283,7 +283,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "not share that automatic schedule."
                     ),
                     (
-                        "Saved Mparanza-hosted content: slide projects, templates, "
+                        "Saved Mparanza LLC-hosted content: slide projects, templates, "
                         "and hosted interviews are retained until manual or "
                         "administrative deletion. Archiving a deck or expiration "
                         "of an interview link is not deletion."
@@ -315,15 +315,15 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "Ordinary plugin functions run in your selected OpenAI Codex "
-                        "or Anthropic Cowork account and workspace. Mparanza does not "
+                        "or Anthropic Cowork account and workspace. Mparanza LLC does not "
                         "control that account or workspace or make promises about its "
                         "handling of data; the relevant provider's terms and data "
                         "controls apply separately."
                     ),
                     (
-                        "When a Mparanza-hosted service uses an external service, the "
+                        "When a Mparanza LLC-hosted service uses an external service, the "
                         "content described for that hosted service may be transmitted "
-                        "to it. External systems are not Mparanza-controlled systems, "
+                        "to it. External systems are not Mparanza LLC-controlled systems, "
                         "and their terms apply separately."
                     ),
                     (
@@ -343,7 +343,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "id": "sharing",
                 "title": "When Information May Be Shared",
                 "paragraphs": [
-                    "Mparanza may share information only:",
+                    "Mparanza LLC may share information only:",
                 ],
                 "bullets": [
                     (
@@ -368,16 +368,16 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Deletion Requests and Privacy Rights",
                 "paragraphs": [
                     (
-                        "You may ask Mparanza to identify, access, correct, or "
+                        "You may ask Mparanza LLC to identify, access, correct, or "
                         "delete information associated with you. We may verify "
                         "your identity and ask for the feature, approximate date, "
                         "or identifier needed to locate the information."
                     ),
                     (
-                        "A deletion request covers Mparanza-controlled systems. "
+                        "A deletion request covers Mparanza LLC-controlled systems. "
                         "It does not remotely delete files in your workspace, "
                         "messages already delivered to recipients, recipient "
-                        "copies, or information held in systems that Mparanza "
+                        "copies, or information held in systems that Mparanza LLC "
                         "does not control. Limited information may also be retained "
                         "where required for law, security, fraud prevention, or "
                         "the protection of another person's rights."
@@ -391,7 +391,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "interests, consent, and compliance with legal obligations."
                     ),
                     (
-                        "For California residents, Mparanza does not sell personal "
+                        "For California residents, Mparanza LLC does not sell personal "
                         "information or share it for cross-context behavioral "
                         "advertising."
                     ),
