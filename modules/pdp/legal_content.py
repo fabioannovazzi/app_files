@@ -461,10 +461,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "summary": (
             "These Terms govern access to and use of mparanza.com, Mparanza web "
             "tools, downloadable plugins, and related services. Ordinary plugin "
-            "functions use your existing ChatGPT plan and Codex workspace, while "
-            "Mparanza-hosted services have the data lifecycles described in the "
-            "Zero Retention Policy. The Service is currently provided for free and "
-            "without service levels."
+            "functions run through your existing ChatGPT plan and Codex workspace "
+            "or through Claude Cowork on your Claude plan, while Mparanza-hosted "
+            "services have the data lifecycles described in the Zero Retention "
+            "Policy. The Service is currently provided for free and without "
+            "service levels."
         ),
         "sections": [
             {
@@ -536,11 +537,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "records, instructions, comments, and other content you "
                         "provide, which these Terms call User Content. Content "
                         "processed by an ordinary plugin function through your "
-                        "existing ChatGPT plan and Codex workspace is not submitted "
-                        "to Mparanza "
-                        "merely because the plugin reads or writes it. Mparanza "
-                        "receives no license to that content unless you direct it "
-                        "to a Mparanza-hosted service."
+                        "existing ChatGPT plan and Codex workspace or through "
+                        "Claude Cowork on your Claude plan is not submitted to "
+                        "Mparanza merely because the plugin reads or writes it. "
+                        "Mparanza receives no license to that content unless you "
+                        "direct it to a Mparanza-hosted service."
                     ),
                     (
                         "For User Content submitted to a Mparanza-hosted service, "
@@ -667,9 +668,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Third-Party Services",
                 "paragraphs": [
                     (
-                        "Ordinary plugin functions use your existing ChatGPT plan and "
-                        "any connectors or browser services you choose. Mparanza does "
-                        "not transmit that content merely because the plugin uses them."
+                        "Ordinary plugin functions run through your existing ChatGPT "
+                        "plan and Codex workspace or through Claude Cowork on your "
+                        "Claude plan, together with any connectors or browser services "
+                        "you choose. Mparanza does not transmit that content merely "
+                        "because the plugin uses them."
                     ),
                     (
                         "When a Mparanza-hosted service uses an external provider for "
