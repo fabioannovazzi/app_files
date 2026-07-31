@@ -254,10 +254,14 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "logs may occur."
                     ),
                     (
-                        "Check Entries: server working files are ordinarily removed "
-                        "through periodic cleanup after about seven days; some job "
-                        "metadata uses a shorter, event-triggered cleanup. Cleanup "
-                        "is not guaranteed to occur at an exact instant."
+                        "Check Entries: the workflow does not call a Mparanza LLC-hosted "
+                        "service and creates no working files on Mparanza LLC-controlled "
+                        "servers. It reads journal and supporting-document inputs and "
+                        "writes its outputs in the local folders available to your "
+                        "selected Codex or Cowork environment. If you use an optional "
+                        "authorized accounting-system connector, that provider "
+                        "materializes an export locally before Check Entries runs, and "
+                        "the provider's own terms and data controls apply."
                     ),
                     (
                         "Hosted Voice call capture: live video remains in the "
