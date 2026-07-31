@@ -19,6 +19,178 @@ MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 VERA_PRODUCT_PAGE_LINK = "../vera/index.html"
 
 
+def _answer_contract(
+    *,
+    generation_route: str = "chatgpt_deep_research",
+    document_type: str = "legal research report",
+    validation_scope: str = "all_material_claims",
+) -> dict[str, str]:
+    return {
+        "schema_version": "1.0",
+        "question_domain": "legal",
+        "generation_route": generation_route,
+        "document_type": document_type,
+        "purpose": "Answer the supplied legal question",
+        "audience": "Professional reviewer",
+        "output_language": "English",
+        "jurisdiction_status": "confirmed",
+        "jurisdiction": "Italian law",
+        "evidence_display": "inline_citations",
+        "validation_profile": "source_identity_support_reasoning_and_judgment",
+        "validation_scope": validation_scope,
+        "correction_policy": "correct_when_supported",
+        "judgment_policy": "flag_for_professional_review",
+    }
+
+
+def _no_issue() -> list[dict[str, str]]:
+    return [
+        {
+            "type": "none",
+            "explanation": "No defect identified.",
+            "treatment_action": "none",
+            "treatment_status": "not_needed",
+            "treatment_explanation": "No treatment is required.",
+        }
+    ]
+
+
+def _claim_review(
+    claim_text: str,
+    *,
+    claim_index: int = 1,
+    source_ref: str = "source-001",
+    cited_passage: str = "",
+    support_status: str = "supported",
+    support_analysis: str = "The source semantically supports the claim.",
+    reasoning_status: str = "sound",
+    reasoning_analysis: str = "The conclusion follows from the supported premise.",
+    judgment_status: str = "not_judgment_dependent",
+    judgment_analysis: str = "No additional professional judgment is required.",
+    issues: list[dict[str, str]] | None = None,
+    disposition_status: str = "retain",
+    revised_claim: str = "",
+    reviewer_action: str = "accept",
+    proposed_fix: str = "",
+) -> dict[str, object]:
+    return {
+        "claim_index": claim_index,
+        "claim_text": claim_text,
+        "claim_location": f"Section 1, claim {claim_index}",
+        "materiality": "material",
+        "source_checks": [
+            {
+                "source_ref": source_ref,
+                "identity_status": "matches_cited_source",
+                "identity_analysis": "The source reference identifies the cited authority.",
+                "cited_passage": cited_passage,
+            }
+        ],
+        "support": {"status": support_status, "analysis": support_analysis},
+        "reasoning": {
+            "status": reasoning_status,
+            "analysis": reasoning_analysis,
+            "supported_premises": ["The cited source establishes the premise."],
+            "missing_premises": (
+                [] if reasoning_status == "sound" else ["Application fact"]
+            ),
+        },
+        "professional_judgment": {
+            "status": judgment_status,
+            "analysis": judgment_analysis,
+            "factors": (
+                []
+                if judgment_status == "not_judgment_dependent"
+                else ["Fact-sensitive application"]
+            ),
+            "alternative_interpretations": (
+                []
+                if judgment_status == "not_judgment_dependent"
+                else ["A different application may be reasonable."]
+            ),
+        },
+        "issues": issues or _no_issue(),
+        "disposition": {
+            "status": disposition_status,
+            "analysis": "The claim disposition follows the recorded assessments.",
+            "revised_claim": revised_claim,
+        },
+        "reviewer_action": reviewer_action,
+        "proposed_fix": proposed_fix,
+    }
+
+
+def _claims_review(
+    claims: list[dict[str, object]],
+    *,
+    language: str = "en",
+    validated_document: str = "Validated text.",
+    coverage_scope: str = "all_material_claims",
+    document_revision_status: str = "not_required",
+) -> dict[str, object]:
+    return {
+        "schema_version": "2.0",
+        "language": language,
+        "validation_objective": "question_to_validated_answer",
+        "coverage_review": {
+            "selection_method": "model_led_materiality_review",
+            "scope": coverage_scope,
+            "reviewed_sections": ["Full answer"],
+            "omitted_sections": [],
+            "limitations": (
+                []
+                if coverage_scope == "all_material_claims"
+                else ["Review scope was limited."]
+            ),
+            "analysis": "The full answer was read and material claims were selected semantically.",
+            "reviewer_action": (
+                "accept" if coverage_scope == "all_material_claims" else "mark_unclear"
+            ),
+        },
+        "contract_review": {
+            "question_answered": {
+                "status": "conforms",
+                "analysis": "The question is answered.",
+            },
+            "document_type": {
+                "status": "conforms",
+                "analysis": "The document type conforms.",
+            },
+            "audience": {
+                "status": "conforms",
+                "analysis": "The answer suits the audience.",
+            },
+            "evidence_display": {
+                "status": "conforms",
+                "analysis": "The evidence display conforms.",
+            },
+            "issues": _no_issue(),
+            "reviewer_action": "accept",
+        },
+        "claims": claims,
+        "overall_assessment": {
+            "outcome": "no_material_defect_identified",
+            "analysis": "No material defect was identified in the reviewed scope.",
+            "residual_uncertainties": [],
+            "professional_review_items": [],
+        },
+        "document_revision": {
+            "status": document_revision_status,
+            "summary": (
+                "No revision is required."
+                if document_revision_status == "not_required"
+                else "Revision remains required."
+            ),
+            "unresolved_changes": (
+                []
+                if document_revision_status == "not_required"
+                else ["Regenerate the answer."]
+            ),
+        },
+        "validated_document": validated_document,
+    }
+
+
 def load_script(module_name: str, script_name: str):
     script_path = SCRIPTS_DIR / script_name
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -279,6 +451,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     document_inventory = tmp_path / "document_inventory.json"
     source_inventory = tmp_path / "source_inventory.json"
     claims_review = tmp_path / "claims_review_draft.json"
+    answer_contract = tmp_path / "answer_contract.json"
     document_inventory.write_text(
         json.dumps(
             {"character_count": 80, "word_count": 12, "urls": ["https://example.com"]}
@@ -291,6 +464,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
                 "sources": [
                     {
                         "kind": "url",
+                        "source_id": "source-001",
                         "url": "https://example.com",
                         "status": "available",
                         "excerpt": "The Italian VAT rule applies to the transaction.",
@@ -302,23 +476,19 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     )
     claims_review.write_text(
         json.dumps(
-            {
-                "language": "en",
-                "claims": [
-                    {
-                        "claim_index": 1,
-                        "claim_text": "The Italian VAT rule applies to the transaction.",
-                        "verdict": "supported",
-                        "source_refs": ["https://example.com"],
-                        "source_quote": "The Italian VAT rule applies",
-                        "source_support": "The source directly supports the claim.",
-                        "reasoning_review": "The inference is direct.",
-                        "proposed_fix": "",
-                    }
-                ],
-                "validated_document": "Validated text.",
-            }
+            _claims_review(
+                [
+                    _claim_review(
+                        "The Italian VAT rule applies to the transaction.",
+                        cited_passage="The Italian VAT rule applies",
+                    )
+                ]
+            )
         ),
+        encoding="utf-8",
+    )
+    answer_contract.write_text(
+        json.dumps(_answer_contract()),
         encoding="utf-8",
     )
 
@@ -327,6 +497,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         source_inventory,
         claims_review,
         tmp_path / "out",
+        answer_contract_path=answer_contract,
     )
     audit = json.loads(paths["validation_audit"].read_text(encoding="utf-8"))
     run_intake = json.loads(
@@ -342,19 +513,25 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         (tmp_path / "out" / "final_artifacts.json").read_text(encoding="utf-8")
     )
 
-    assert audit["status"] == "pass"
+    assert audit["status"] == "record_complete"
+    assert audit["delivery_readiness"] == "reviewed_answer_ready"
     assert audit["review_session"]["run_id"] == run_intake["run_id"]
-    assert audit["quote_matches"] == [{"claim_index": 1, "matched": True}]
+    assert (
+        audit["claim_observations"][0]["source_observations"][0][
+            "exact_passage_presence"
+        ]
+        == "present"
+    )
     assert (
         paths["validated_document"].read_text(encoding="utf-8").strip()
         == "Validated text."
     )
-    assert "Deep Research Validation Package" in paths["validation_package"].read_text(
+    assert "Answer Validation Record" in paths["validation_package"].read_text(
         encoding="utf-8"
     )
     assert review_payload["plugin"] == "deep-research-validator"
     assert review_payload["run_id"] == run_intake["run_id"]
-    assert review_payload["review_type"] == "deep_research_validation_review"
+    assert review_payload["review_type"] == "answer_validation_review"
     assert review_payload["item_count"] == len(review_payload["items"])
     item_types = {item["item_type"] for item in review_payload["items"]}
     assert {"supported_claim", "validation_artifact"} <= item_types
@@ -364,20 +541,25 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         if item["item_type"] == "supported_claim"
     )
     claim_evidence = claim_item["evidence"][0]
-    assert claim_evidence["kind"] == "claim_vs_citation"
+    assert claim_evidence["kind"] == "answer_validation_assessment"
     assert claim_evidence["claim_text"] == (
         "The Italian VAT rule applies to the transaction."
     )
-    assert claim_evidence["source_quote"] == "The Italian VAT rule applies"
-    assert claim_evidence["source_support"] == (
-        "The source directly supports the claim."
+    assert claim_evidence["source_checks"][0]["cited_passage"] == (
+        "The Italian VAT rule applies"
     )
+    assert claim_evidence["support"]["status"] == "supported"
+    assert claim_evidence["reasoning"]["status"] == "sound"
+    assert claim_evidence["professional_judgment"]["status"] == (
+        "not_judgment_dependent"
+    )
+    assert claim_evidence["issues"][0]["type"] == "none"
     assert claim_item["data"]["target_artifact"] == "claims_review.json"
     assert claim_item["data"]["target_records_key"] == "claims"
     assert claim_item["data"]["target_id_field"] == "claim_index"
     assert claim_item["data"]["target_record_id"] == "1"
     assert claim_item["data"]["target_field"] == "proposed_fix"
-    assert review_payload["summary"]["audit_status"] == "pass"
+    assert review_payload["summary"]["record_integrity_status"] == ("record_complete")
     assert ui_decisions["status"] == "pending_review"
     assert final_artifacts["status"] == "written_pending_review"
     output_records = {output["path"]: output for output in final_artifacts["outputs"]}
@@ -412,9 +594,13 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         if output["path"] == "validation_package.md"
     )
     assert package_output["required_text"] == [
-        "# Deep Research Validation Package",
+        "# Answer Validation Record",
+        "## Assurance Boundary",
+        "## Answer Contract",
+        "## Answer-Contract Review",
+        "## Review Coverage",
         "## Document Inventory",
-        "## Claims Review",
+        "## Claim Assessments",
     ]
     contract_report = validate_contract(
         tmp_path / "out",
@@ -434,6 +620,7 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
     document_inventory = tmp_path / "document_inventory.json"
     source_inventory = tmp_path / "source_inventory.json"
     claims_review = tmp_path / "claims_review_draft.json"
+    answer_contract = tmp_path / "answer_contract.json"
     document_inventory.write_text(
         json.dumps(
             {
@@ -451,6 +638,7 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
                 "sources": [
                     {
                         "kind": "url",
+                        "source_id": "source-001",
                         "url": "https://example.com/fuente",
                         "status": "available",
                         "excerpt": "La norma del IVA se aplica a la operación.",
@@ -462,24 +650,22 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
     )
     claims_review.write_text(
         json.dumps(
-            {
-                "language": "es-ES",
-                "claims": [
-                    {
-                        "claim_index": 1,
-                        "claim_text": "La norma del IVA se aplica a la operación.",
-                        "verdict": "supported",
-                        "source_refs": ["https://example.com/fuente"],
-                        "source_quote": "La norma del IVA se aplica",
-                        "source_support": "La fuente respalda directamente la afirmación.",
-                        "reasoning_review": "La inferencia es directa.",
-                        "proposed_fix": "",
-                    }
+            _claims_review(
+                [
+                    _claim_review(
+                        "La norma del IVA se aplica a la operación.",
+                        cited_passage="La norma del IVA se aplica",
+                    )
                 ],
-                "validated_document": "Texto validado.",
-            },
+                language="es-ES",
+                validated_document="Texto validado.",
+            ),
             ensure_ascii=False,
         ),
+        encoding="utf-8",
+    )
+    answer_contract.write_text(
+        json.dumps(_answer_contract()),
         encoding="utf-8",
     )
 
@@ -488,6 +674,7 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
         source_inventory,
         claims_review,
         tmp_path / "out",
+        answer_contract_path=answer_contract,
     )
 
     package_text = paths["validation_package"].read_text(encoding="utf-8")
@@ -512,9 +699,9 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
         if output["path"] == "validation_package.md"
     )
 
-    assert "# Paquete de validación de Deep Research" in package_text
+    assert "# Registro de validación de la respuesta" in package_text
     assert "## Inventario del documento" in package_text
-    assert "## Revisión de afirmaciones" in package_text
+    assert "## Evaluaciones de las afirmaciones" in package_text
     assert "### Afirmación 1" in package_text
     assert run_intake["language"] == "es"
     assert "Codex debe ejecutar" in run_intake["dependency_check"]["note"]
@@ -525,11 +712,15 @@ def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -
     assert "Entrega para revisión" in handoff_text
     assert "Revisión en Codex" in handoff_text
     assert package_output["required_text"] == [
-        "# Paquete de validación de Deep Research",
+        "# Registro de validación de la respuesta",
+        "## Límite de aseguramiento",
+        "## Contrato de respuesta",
+        "## Revisión del contrato de respuesta",
+        "## Cobertura de la revisión",
         "## Inventario del documento",
-        "## Revisión de afirmaciones",
+        "## Evaluaciones de las afirmaciones",
     ]
-    assert final_artifacts["caveats"][0].startswith("El juicio semántico")
+    assert final_artifacts["caveats"][0].startswith("La identidad de la fuente")
     assert final_artifacts["next_actions"][0].startswith("Ejecute")
     contract_report = validate_contract(
         tmp_path / "out",
@@ -550,13 +741,507 @@ def test_package_validation_flags_missing_review_fields(tmp_path: Path) -> None:
     source_inventory = {"sources": []}
     claims_review = {"claims": [{"claim_index": 1, "claim_text": "", "verdict": "bad"}]}
 
-    audit = package_mod.build_audit(document_inventory, source_inventory, claims_review)
+    audit = package_mod.build_audit(
+        document_inventory,
+        source_inventory,
+        claims_review,
+        _answer_contract(),
+    )
 
-    assert audit["status"] == "fail"
+    assert audit["status"] == "record_incomplete"
     assert "document_text_present" in audit["failed_checks"]
-    assert "valid_verdicts" in audit["failed_checks"]
-    assert "claim_text_present" in audit["failed_checks"]
-    assert "review_text_present" in audit["failed_checks"]
+    assert "review_schema_version" in audit["failed_checks"]
+    assert "coverage_review_complete" in audit["failed_checks"]
+    assert "contract_review_complete" in audit["failed_checks"]
+    assert "claim_assessments_complete" in audit["failed_checks"]
+    assert "issue_treatments_complete" in audit["failed_checks"]
+
+
+def test_quote_mismatch_does_not_override_semantic_support() -> None:
+    package_mod = load_script(
+        "deep_research_validator_semantic_boundary",
+        "package_validation.py",
+    )
+    claims_review = _claims_review(
+        [
+            _claim_review(
+                "This is a dog.",
+                cited_passage="This is a terrier.",
+                support_analysis=(
+                    "A terrier is a type of dog, so the source semantically "
+                    "supports the broader claim."
+                ),
+                reasoning_analysis=(
+                    "The taxonomic inference is directional and valid."
+                ),
+            )
+        ]
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "kind": "file",
+                    "status": "available",
+                    "excerpt": "The animal is a small terrier.",
+                }
+            ]
+        },
+        claims_review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["status"] == "record_complete"
+    assert (
+        audit["claim_observations"][0]["source_observations"][0][
+            "exact_passage_presence"
+        ]
+        == "absent"
+    )
+    assert audit["support_attention_claim_indices"] == []
+
+
+def test_audit_separates_reasoning_and_professional_judgment() -> None:
+    package_mod = load_script(
+        "deep_research_validator_reasoning_boundary",
+        "package_validation.py",
+    )
+    issues = [
+        {
+            "type": "reasoning_gap",
+            "explanation": "Application depends on unresolved facts.",
+            "treatment_action": "state_uncertainty",
+            "treatment_status": "applied",
+            "treatment_explanation": "The answer states the missing application facts.",
+        },
+        {
+            "type": "judgment_dependent",
+            "explanation": "Application is fact-sensitive.",
+            "treatment_action": "professional_review",
+            "treatment_status": "professional_review_required",
+            "treatment_explanation": "A legal professional must assess the facts.",
+        },
+    ]
+    claims_review = _claims_review(
+        [
+            _claim_review(
+                "The exception applies to this client.",
+                support_status="partially_supported",
+                support_analysis="The source establishes the exception but not its application.",
+                reasoning_status="uncertain",
+                reasoning_analysis="Application depends on unresolved facts.",
+                judgment_status="professional_judgment_required",
+                judgment_analysis="Materiality and application require legal review.",
+                issues=issues,
+                disposition_status="professional_review",
+                reviewer_action="mark_unclear",
+                proposed_fix="State the missing facts and avoid a final conclusion.",
+            )
+        ],
+        validated_document="The exception may apply, subject to professional review.",
+        document_revision_status="professional_review_required",
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 80, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "kind": "file",
+                    "status": "available",
+                    "excerpt": "The exception exists under specified conditions.",
+                }
+            ]
+        },
+        claims_review,
+        _answer_contract(document_type="one-page legal letter"),
+    )
+
+    assert audit["status"] == "record_complete"
+    assert audit["reasoning_attention_claim_indices"] == [1]
+    assert audit["judgment_dependent_claim_indices"] == [1]
+    assert (
+        "does not certify legal correctness"
+        in audit["assurance_boundary"]["record_integrity_meaning"]
+    )
+    assert audit["delivery_readiness"] == "professional_review_required"
+
+
+def test_source_capture_preserves_passage_beyond_preview(tmp_path: Path) -> None:
+    inspect_mod = load_script(
+        "deep_research_validator_full_source_capture",
+        "inspect_sources.py",
+    )
+    package_mod = load_script(
+        "deep_research_validator_full_source_audit",
+        "package_validation.py",
+    )
+    document_inventory_path = tmp_path / "document_inventory.json"
+    document_inventory_path.write_text(
+        json.dumps({"urls": [], "footnotes": [], "markdown_links": []}),
+        encoding="utf-8",
+    )
+    source_file = tmp_path / "authority.txt"
+    target_passage = "The decisive rule appears after the preview boundary."
+    source_file.write_text(("x" * 1400) + target_passage, encoding="utf-8")
+    output_dir = tmp_path / "out"
+
+    paths = inspect_mod.write_source_inventory(
+        document_inventory_path,
+        output_dir,
+        source_files=[source_file],
+        fetch_urls=False,
+    )
+    source_inventory = json.loads(paths["source_inventory"].read_text(encoding="utf-8"))
+
+    source = source_inventory["sources"][0]
+    assert source["source_id"] == "source-001"
+    assert target_passage not in source["excerpt"]
+    assert source["capture_scope"] == "complete_local_text"
+    assert target_passage in (output_dir / source["captured_text_path"]).read_text(
+        encoding="utf-8"
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        source_inventory,
+        _claims_review(
+            [
+                _claim_review(
+                    "The decisive rule applies.",
+                    cited_passage=target_passage,
+                )
+            ]
+        ),
+        _answer_contract(generation_route="codex_direct"),
+        source_base_dir=output_dir,
+    )
+
+    observation = audit["claim_observations"][0]["source_observations"][0]
+    assert observation["exact_passage_presence"] == "present"
+    assert observation["observation_scope"] == "complete_local_text"
+
+
+def test_exact_passage_is_not_searched_in_a_different_source() -> None:
+    package_mod = load_script(
+        "deep_research_validator_wrong_source_boundary",
+        "package_validation.py",
+    )
+    wrong_source_issue = {
+        "type": "wrong_source",
+        "explanation": "The cited source is not the authority containing the passage.",
+        "treatment_action": "replace_source",
+        "treatment_status": "proposed",
+        "treatment_explanation": "Replace the citation and reassess support.",
+    }
+    claim = _claim_review(
+        "The rule applies.",
+        cited_passage="The rule applies.",
+        support_status="uncertain",
+        support_analysis="Support cannot be assessed against the cited source.",
+        issues=[wrong_source_issue],
+        disposition_status="pending_source",
+        reviewer_action="request_more_documents",
+    )
+    source_checks = claim["source_checks"]
+    assert isinstance(source_checks, list)
+    source_checks[0]["identity_status"] = "different_source"
+    source_checks[0]["identity_analysis"] = "The passage belongs to source-002."
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "A different proposition appears here.",
+                },
+                {
+                    "source_id": "source-002",
+                    "status": "available",
+                    "excerpt": "The rule applies.",
+                },
+            ]
+        },
+        _claims_review([claim], document_revision_status="required"),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    observations = audit["claim_observations"][0]["source_observations"]
+    assert len(observations) == 1
+    assert observations[0]["source_id"] == "source-001"
+    assert observations[0]["exact_passage_presence"] == "absent"
+    assert audit["source_identity_attention_claim_indices"] == [1]
+
+
+def test_exact_overlap_does_not_override_semantic_contradiction() -> None:
+    package_mod = load_script(
+        "deep_research_validator_negation_boundary",
+        "package_validation.py",
+    )
+    contradiction_issue = {
+        "type": "source_contradiction",
+        "explanation": "Negation reverses the proposition.",
+        "treatment_action": "correct_claim",
+        "treatment_status": "applied",
+        "treatment_explanation": "The corrected answer preserves the negation.",
+    }
+    review = _claims_review(
+        [
+            _claim_review(
+                "This is a dog.",
+                cited_passage="This is not a dog.",
+                support_status="contradicted",
+                support_analysis="The source negates the claim.",
+                issues=[contradiction_issue],
+                disposition_status="revise",
+                revised_claim="This is not a dog.",
+                reviewer_action="edit",
+            )
+        ],
+        validated_document="This is not a dog.",
+        document_revision_status="completed",
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "This is not a dog.",
+                }
+            ]
+        },
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["status"] == "record_complete"
+    assert audit["support_attention_claim_indices"] == [1]
+    assert (
+        audit["claim_observations"][0]["source_observations"][0][
+            "exact_passage_presence"
+        ]
+        == "present"
+    )
+    assert review["claims"][0]["support"]["status"] == "contradicted"
+
+
+@pytest.mark.parametrize(
+    ("issue_type", "treatment_action", "treatment_status"),
+    [
+        ("source_unavailable", "obtain_source", "blocked"),
+        ("source_not_identified", "identify_source", "proposed"),
+        ("wrong_source", "replace_source", "proposed"),
+        ("wrong_source_version", "replace_source", "proposed"),
+        ("wrong_jurisdiction_or_period", "replace_source", "proposed"),
+        ("missing_source_support", "add_support", "proposed"),
+        ("partial_or_overbroad_support", "narrow_claim", "proposed"),
+        ("source_contradiction", "correct_claim", "proposed"),
+        ("qualification_or_scope_distortion", "restore_qualification", "proposed"),
+        ("temporal_or_modality_distortion", "correct_time_or_modality", "proposed"),
+        ("reasoning_gap", "add_reasoning", "proposed"),
+        (
+            "judgment_dependent",
+            "professional_review",
+            "professional_review_required",
+        ),
+        ("answer_contract_failure", "revise_answer_contract", "proposed"),
+    ],
+)
+def test_issue_categories_require_explicit_treatment(
+    issue_type: str,
+    treatment_action: str,
+    treatment_status: str,
+) -> None:
+    package_mod = load_script(
+        f"deep_research_validator_issue_{issue_type}",
+        "package_validation.py",
+    )
+    issue = {
+        "type": issue_type,
+        "explanation": f"The review identified {issue_type}.",
+        "treatment_action": treatment_action,
+        "treatment_status": treatment_status,
+        "treatment_explanation": f"Apply {treatment_action} before delivery.",
+    }
+    claim = _claim_review(
+        "A material claim.",
+        issues=[issue],
+        disposition_status=(
+            "professional_review"
+            if treatment_status == "professional_review_required"
+            else "revise"
+        ),
+        reviewer_action="mark_unclear",
+    )
+    if treatment_status == "professional_review_required":
+        judgment = claim["professional_judgment"]
+        assert isinstance(judgment, dict)
+        judgment["status"] = "professional_judgment_required"
+        judgment["analysis"] = "Professional application remains necessary."
+        judgment["factors"] = ["Application facts"]
+        judgment["alternative_interpretations"] = ["Alternative application"]
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "A source passage.",
+                }
+            ]
+        },
+        _claims_review([claim], document_revision_status="required"),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["status"] == "record_complete"
+    assert audit["invalid_issue_indices"] == []
+
+
+def test_issue_treatment_rejects_category_inappropriate_action() -> None:
+    package_mod = load_script(
+        "deep_research_validator_issue_action_contract",
+        "package_validation.py",
+    )
+    claim = _claim_review(
+        "A material claim.",
+        issues=[
+            {
+                "type": "wrong_source",
+                "explanation": "The cited authority is the wrong source.",
+                "treatment_action": "add_reasoning",
+                "treatment_status": "proposed",
+                "treatment_explanation": "This action cannot repair source identity.",
+            }
+        ],
+        disposition_status="revise",
+        reviewer_action="edit",
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "A source passage.",
+                }
+            ]
+        },
+        _claims_review([claim], document_revision_status="required"),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["invalid_issue_indices"] == [1]
+
+
+def test_contract_failure_and_limited_coverage_have_distinct_readiness() -> None:
+    package_mod = load_script(
+        "deep_research_validator_contract_and_coverage",
+        "package_validation.py",
+    )
+    source_inventory = {
+        "sources": [
+            {
+                "source_id": "source-001",
+                "status": "available",
+                "excerpt": "A source passage.",
+            }
+        ]
+    }
+    contract_failure = _claims_review(
+        [_claim_review("A material claim.")],
+        document_revision_status="required",
+    )
+    contract_review = contract_failure["contract_review"]
+    assert isinstance(contract_review, dict)
+    contract_review["question_answered"] = {
+        "status": "does_not_conform",
+        "analysis": "The document answers a different question.",
+    }
+    contract_review["issues"] = [
+        {
+            "type": "answer_contract_failure",
+            "explanation": "The answer addresses a different question.",
+            "treatment_action": "revise_answer_contract",
+            "treatment_status": "proposed",
+            "treatment_explanation": "Rewrite the answer to the contracted question.",
+        }
+    ]
+    contract_review["reviewer_action"] = "edit"
+
+    contract_audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        source_inventory,
+        contract_failure,
+        _answer_contract(generation_route="codex_direct"),
+    )
+    limited_audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        source_inventory,
+        _claims_review(
+            [_claim_review("A material claim.")],
+            coverage_scope="limited",
+        ),
+        _answer_contract(
+            generation_route="codex_direct",
+            validation_scope="limited",
+        ),
+    )
+
+    assert contract_audit["contract_attention_dimensions"] == ["question_answered"]
+    assert contract_audit["delivery_readiness"] == "revision_required"
+    assert limited_audit["coverage_scope"] == "limited"
+    assert limited_audit["delivery_readiness"] == "evidence_limited"
+
+
+def test_one_page_letter_can_validate_all_material_claims() -> None:
+    package_mod = load_script(
+        "deep_research_validator_one_page_letter",
+        "package_validation.py",
+    )
+    audit = package_mod.build_audit(
+        {"character_count": 120, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "The filing deadline is 30 days.",
+                }
+            ]
+        },
+        _claims_review(
+            [
+                _claim_review(
+                    "The filing deadline is 30 days.",
+                    cited_passage="The filing deadline is 30 days.",
+                )
+            ],
+            validated_document="The filing deadline is 30 days.",
+        ),
+        _answer_contract(
+            generation_route="codex_direct",
+            document_type="one-page legal letter",
+        ),
+    )
+
+    assert audit["record_integrity_status"] == "record_complete"
+    assert audit["coverage_scope"] == "all_material_claims"
+    assert audit["delivery_readiness"] == "reviewed_answer_ready"
 
 
 def test_static_page_and_skill_match_plugin_contract() -> None:
@@ -617,8 +1302,10 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
             {
                 "sources": [
                     {
+                        "source_id": "source-001",
                         "url": "https://example.com",
                         "title": "Example source",
+                        "status": "available",
                         "excerpt": "VAT rule applies in the cited transaction.",
                     }
                 ]
@@ -630,36 +1317,50 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     claims_review_path = tmp_path / "claims_review.json"
     claims_review_path.write_text(
         json.dumps(
-            {
-                "claims": [
-                    {
-                        "claim_index": 1,
-                        "claim_text": "VAT rule applies.",
-                        "verdict": "supported",
-                        "source_refs": ["https://example.com"],
-                        "source_quote": "VAT rule applies",
-                        "source_support": "Directly supported.",
-                        "reasoning_review": "The cited source matches.",
-                        "proposed_fix": "",
-                    }
+            _claims_review(
+                [
+                    _claim_review(
+                        "VAT rule applies.",
+                        cited_passage="VAT rule applies",
+                    )
                 ]
+            )
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "answer_contract.json").write_text(
+        json.dumps(_answer_contract()) + "\n",
+        encoding="utf-8",
+    )
+    (tmp_path / "validation_audit.json").write_text(
+        json.dumps(
+            {
+                "record_integrity_status": "record_complete",
+                "delivery_readiness": "reviewed_answer_ready",
+                "claim_count": 1,
+                "source_count": 1,
             }
         )
         + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "validation_audit.json").write_text(
-        json.dumps({"status": "pass", "claim_count": 1, "source_count": 1}) + "\n",
-        encoding="utf-8",
-    )
     (tmp_path / "validation_package.md").write_text(
         "\n".join(
             [
-                "# Deep Research Validation Package",
+                "# Answer Validation Record",
+                "",
+                "## Assurance Boundary",
+                "",
+                "## Answer Contract",
+                "",
+                "## Answer-Contract Review",
+                "",
+                "## Review Coverage",
                 "",
                 "## Document Inventory",
                 "",
-                "## Claims Review",
+                "## Claim Assessments",
                 "",
                 "Proposed fix:",
                 "",
@@ -669,7 +1370,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     )
     _write_docx(
         tmp_path / "validated_document.docx",
-        ["# Deep Research Validation Package", "Original proposed fix."],
+        ["Reviewed answer", "Original answer text."],
     )
     run_intake = {
         "schema_version": "1.0",
@@ -682,9 +1383,10 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
             "document_inventory.json",
             "source_inventory.json",
             "claims_review.json",
+            "answer_contract.json",
         ],
         "output_dir": tmp_path.as_posix(),
-        "inferred_task": "deep_research_validation_review_payload",
+        "inferred_task": "answer_validation_review_payload",
         "assumptions": {},
         "unresolved_questions": [],
         "dependency_check": {"status": "not_run"},
@@ -693,6 +1395,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "document_inventory.json",
                 "source_inventory.json",
                 "claims_review.json",
+                "answer_contract.json",
             ],
             "external_connectors_used": [],
             "upload_paths_used": [],
@@ -710,7 +1413,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
             "source_inventory.json",
             "claims_review.json",
         ],
-        "review_type": "deep_research_validation_review",
+        "review_type": "answer_validation_review",
         "items": [
             {
                 "id": "claim-1",
@@ -778,7 +1481,8 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         ],
         "status": "ready_for_review",
         "summary": {
-            "audit_status": "pass",
+            "record_integrity_status": "record_complete",
+            "delivery_readiness": "reviewed_answer_ready",
             "claim_count": 1,
             "attention_claim_count": 0,
             "source_count": 1,
@@ -824,9 +1528,13 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "kind": "md",
                 "status": "written",
                 "required_text": [
-                    "# Deep Research Validation Package",
+                    "# Answer Validation Record",
+                    "## Assurance Boundary",
+                    "## Answer Contract",
+                    "## Answer-Contract Review",
+                    "## Review Coverage",
                     "## Document Inventory",
-                    "## Claims Review",
+                    "## Claim Assessments",
                 ],
             },
             {
@@ -961,7 +1669,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     }
     assert "ui://widget/deep-research-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
-    assert "Deep Research Review" in widget_html
+    assert "Answer Validation Review" in widget_html
     save_result = responses[6]["result"]["structuredContent"]
     assert save_result["ok"] is True
     assert save_result["persisted"] is True
@@ -971,16 +1679,19 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     assert apply_result["run_intake_path"] == str(tmp_path / "run_intake.json")
     assert apply_result["structured_update_count"] == 1
     assert apply_result["native_regeneration_count"] == 0
-    assert apply_result["native_regenerated_count"] == 1
-    assert apply_result["application_status"] == "final_ready"
+    assert apply_result["native_regenerated_count"] == 0
+    assert apply_result["application_status"] == "revision_required"
     updated_claims = json.loads(claims_review_path.read_text(encoding="utf-8"))
     assert updated_claims["claims"][0]["proposed_fix"] == (
         "Narrow the claim to the cited VAT rule only."
     )
+    assert updated_claims["document_revision"]["status"] == "required"
+    assert updated_claims["validated_document"] == ""
     package_text = (tmp_path / "validation_package.md").read_text(encoding="utf-8")
     assert "Narrow the claim to the cited VAT rule only." in package_text
     docx_text = _docx_text(tmp_path / "validated_document.docx")
-    assert "Narrow the claim to the cited VAT rule only." in docx_text
+    assert "Original answer text." in docx_text
+    assert "Narrow the claim to the cited VAT rule only." not in docx_text
     applied = json.loads((tmp_path / "applied_decisions.json").read_text())
     assert applied["effects"][0]["structured_update"] == {
         "id_field": "claim_index",
@@ -993,22 +1704,19 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     assert applied["effects"][0]["downstream_regenerated_paths"] == [
         "validation_audit.json",
         "validation_package.md",
-        "validated_document.docx",
     ]
-    assert applied["effects"][0]["native_regeneration_status"] == "regenerated"
-    assert applied["effects"][0]["native_regenerated_paths"] == [
-        "validated_document.docx"
-    ]
+    assert applied["effects"][0]["semantic_regeneration_required"] is True
+    assert applied["effects"][0]["semantic_regeneration_status"] == "required"
     assert applied["downstream_regenerated_paths"] == [
         "validation_audit.json",
         "validation_package.md",
-        "validated_document.docx",
     ]
     assert applied["native_regeneration_count"] == 0
-    assert applied["native_regenerated_count"] == 1
-    assert applied["native_regenerated_paths"] == ["validated_document.docx"]
+    assert applied["native_regenerated_count"] == 0
+    assert applied["native_regenerated_paths"] == []
+    assert applied["semantic_regeneration_count"] == 1
     final_after_apply = json.loads((tmp_path / "final_artifacts.json").read_text())
-    assert final_after_apply["status"] == "final_ready"
+    assert final_after_apply["status"] == "revision_required"
     claims_output = next(
         output
         for output in final_after_apply["outputs"]
@@ -1032,19 +1740,16 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         for output in final_after_apply["outputs"]
         if output["path"] == "validated_document.docx"
     )
-    assert docx_output["status"] == "updated_from_review"
-    assert docx_output["native_regenerated"] is True
-    assert (
-        "Narrow the claim to the cited VAT rule only." in docx_output["required_text"]
-    )
+    assert docx_output["status"] == "superseded_requires_semantic_regeneration"
     assert final_after_apply["review_application"]["downstream_regenerated_paths"] == [
         "validation_audit.json",
         "validation_package.md",
-        "validated_document.docx",
     ]
-    assert final_after_apply["review_application"]["native_regenerated_paths"] == [
-        "validated_document.docx"
-    ]
+    assert final_after_apply["review_application"]["native_regenerated_paths"] == []
+    assert (
+        final_after_apply["review_application"]["semantic_regeneration_status"]
+        == "required"
+    )
     run_intake = json.loads((tmp_path / "run_intake.json").read_text())
     review_apply_steps = [
         step
@@ -1056,7 +1761,6 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "applied_decisions.json",
         "claims_review.json",
         "final_artifacts.json",
-        "validated_document.docx",
         "validation_audit.json",
         "validation_package.md",
         "ui_decisions.json",
@@ -1080,7 +1784,7 @@ def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
         "workflow": "deep-research-validator",
         "run_id": "deep-research-es",
         "language": "es_ES",
-        "review_type": "deep_research_validation_review",
+        "review_type": "answer_validation_review",
         "item_count": 1,
         "items": [
             {

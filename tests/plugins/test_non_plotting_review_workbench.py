@@ -35,7 +35,7 @@ WORKBENCH_WIDGETS = [
     (
         "deep-research-validator",
         "assets/deep-research-review-widget.html",
-        "Deep Research Review",
+        "Answer Validation Review",
     ),
     (
         "client-file-preparation",
@@ -749,23 +749,40 @@ def test_non_plotting_review_workbench_adapters_are_workflow_specific() -> None:
         for adapter in adapters
         if adapter["plugin"] == "deep-research-validator"
     )
+    source_identity_group = next(
+        group
+        for group in deep_research["detailGroups"]
+        if group["title"] == "Source Identity & Access"
+    )
+    assert source_identity_group["fields"] == [
+        "source_checks",
+        "mechanical_source_observations",
+    ]
     source_support_group = next(
         group
         for group in deep_research["detailGroups"]
-        if group["title"] == "Source Support"
+        if group["title"] == "Semantic Source Support"
     )
-    assert source_support_group["fields"] == [
-        "source_quote",
-        "source_support",
-        "reasoning_review",
-    ]
+    assert source_support_group["fields"] == ["support"]
+    reasoning_group = next(
+        group
+        for group in deep_research["detailGroups"]
+        if group["title"] == "Reasoning"
+    )
+    judgment_group = next(
+        group
+        for group in deep_research["detailGroups"]
+        if group["title"] == "Professional Judgment"
+    )
+    assert reasoning_group["fields"] == ["reasoning"]
+    assert judgment_group["fields"] == ["professional_judgment"]
     claim_demo_item = next(
         item
         for item in deep_research["demo"]["items"]
         if item["item_type"] == "supported_claim"
     )
-    assert claim_demo_item["evidence"][0]["kind"] == "claim_vs_citation"
-    assert claim_demo_item["data"]["source_quote"]
+    assert claim_demo_item["evidence"][0]["kind"] == ("answer_validation_assessment")
+    assert claim_demo_item["data"]["source_checks"]
     assert claim_demo_item["data"]["target_artifact"] == "claims_review.json"
     assert claim_demo_item["data"]["target_records_key"] == "claims"
     assert claim_demo_item["data"]["target_id_field"] == "claim_index"
@@ -1140,6 +1157,30 @@ def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
         "outputs": _demo_target_artifact_outputs(output_dir, review_payload),
         "status": "written_pending_review",
     }
+    if plugin == "prompt-optimizer":
+        (output_dir / "answer_contract.json").write_text(
+            json.dumps(
+                {
+                    "schema_version": "1.0",
+                    "question_domain": "tax",
+                    "generation_route": "codex_direct",
+                    "document_type": "legal research memo",
+                    "purpose": "Answer the supplied professional question",
+                    "audience": "Professional reviewer",
+                    "output_language": "English",
+                    "jurisdiction_status": "confirmed",
+                    "jurisdiction": "Swiss law",
+                    "evidence_display": "inline_citations",
+                    "validation_profile": "source_identity_support_reasoning_and_judgment",
+                    "validation_scope": "all_material_claims",
+                    "correction_policy": "correct_when_supported",
+                    "judgment_policy": "flag_for_professional_review",
+                },
+                indent=2,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
     run_intake = {
         "schema_version": "1.0",
         "plugin": plugin,

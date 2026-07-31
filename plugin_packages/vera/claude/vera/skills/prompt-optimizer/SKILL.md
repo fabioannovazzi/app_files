@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Use when turning a legal, tax, or compliance question into a source-backed Deep Research prompt with preserved facts, source hierarchy, citation rules, and validation.
+description: Use internally when a legal, tax, or compliance question needs an answer contract and source-backed generation instructions for either direct Claude drafting or a ChatGPT Deep Research handoff. The user does not need to ask for prompt optimization.
 ---
 
 ## Cowork execution contract
@@ -47,7 +47,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Optimize Prompt
+# Plan The Answer
 
 
 

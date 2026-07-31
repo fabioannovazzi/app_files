@@ -1,9 +1,9 @@
 ---
 name: prompt-optimizer
-description: Use when turning a legal, tax, or compliance question into a source-backed Deep Research prompt with preserved facts, source hierarchy, citation rules, and validation.
+description: Use internally when a legal, tax, or compliance question needs an answer contract and source-backed generation instructions for either direct Codex drafting or a ChatGPT Deep Research handoff. The user does not need to ask for prompt optimization.
 ---
 
-# Optimize Prompt
+# Plan The Answer
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 

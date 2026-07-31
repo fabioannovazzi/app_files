@@ -1,6 +1,6 @@
 ---
 name: deep-research-validator
-description: Use when validating a Deep Research report against cited sources, identifying unsupported claims or weak reasoning, proposing corrections, and packaging a reviewed document.
+description: Use when validating any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated.
 ---
 
 ## Cowork execution contract
@@ -47,7 +47,7 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-# Validate Deep Research
+# Validate Answer
 
 
 

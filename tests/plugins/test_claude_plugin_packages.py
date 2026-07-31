@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.63"
+    assert manifest["version"] == "0.1.65"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -653,7 +653,7 @@ def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:
     ]
     assert '"review_in_codex": "Professional Review"' in review_session
     assert '"execution_location": "cowork_connected_folder"' in review_session
-    assert "Claude-written Deep Research prompt" in validate_prompt
+    assert "Claude-written answer-generation instructions" in validate_prompt
 
 
 def test_marketplace_catalog_points_to_generated_vera_and_matches_manifest(

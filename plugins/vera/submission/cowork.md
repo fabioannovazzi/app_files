@@ -25,12 +25,17 @@ remain drafts for review by a qualified professional.
 > Assistente AI per commercialisti. Vera aiuta il commercialista a seguire il
 > lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie, ordina e
 > ritrova i documenti del cliente, controlla i dati contabili, seleziona
-> campioni, riconcilia movimenti e prepara report. Aiuta anche a riesaminare
-> casi di concordato preventivo e a preparare pratiche INPS e Registro
-> Imprese/DIRE. Prepara richieste mirate per Deep Research su temi legali,
-> fiscali e normativi e verifica le risposte rispetto alle fonti citate. Mostra
-> le fonti, i punti da chiarire e le decisioni da prendere. Il giudizio
-> professionale resta al commercialista.
+> campioni, riconcilia movimenti e prepara analisi finanziarie e report. Aiuta
+> anche a riesaminare casi di concordato preventivo e a preparare pratiche INPS
+> e Registro Imprese/DIRE. Quando riconosce una domanda legale, fiscale o
+> normativa, definisce internamente il tipo di risposta, il percorso di
+> generazione e il contratto di validazione, produce o coordina la risposta e la
+> controlla. La validazione distingue identità e accesso della fonte, supporto
+> semantico, ragionamento, trattamento del difetto e ciò che resta affidato al
+> giudizio professionale. La completezza del registro non certifica la
+> correttezza legale, e una correzione proposta deve essere applicata alla
+> risposta prima della consegna. Il giudizio professionale resta al
+> commercialista.
 
 ## Required review prompts
 
@@ -104,7 +109,7 @@ so this pack does not claim that local CLI validation ran.
 
 ## Final candidate
 
-- **Version:** 0.1.63
+- **Version:** 0.1.65
 - **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
 - **SHA-256:** `0c1193527026e6dbae2329c9a3bb1a441097325e8b649c7bf74cee60e3ecadc7`
 - **Size:** 2,305,055 bytes

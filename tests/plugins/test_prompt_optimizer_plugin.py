@@ -18,6 +18,32 @@ SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 
 
+def _answer_contract(
+    *,
+    document_type: str = "client-ready legal memo",
+    generation_route: str = "chatgpt_deep_research",
+    question_domain: str = "tax",
+    output_language: str = "English",
+    jurisdiction: str = "Italian law",
+) -> dict[str, str]:
+    return {
+        "schema_version": "1.0",
+        "question_domain": question_domain,
+        "generation_route": generation_route,
+        "document_type": document_type,
+        "purpose": "Answer the supplied professional question",
+        "audience": "Professional reviewer",
+        "output_language": output_language,
+        "jurisdiction_status": "confirmed",
+        "jurisdiction": jurisdiction,
+        "evidence_display": "inline_citations",
+        "validation_profile": "source_identity_support_reasoning_and_judgment",
+        "validation_scope": "all_material_claims",
+        "correction_policy": "correct_when_supported",
+        "judgment_policy": "flag_for_professional_review",
+    }
+
+
 def load_script(module_name: str, script_name: str):
     script_path = SCRIPTS_DIR / script_name
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -317,7 +343,13 @@ Flag residual uncertainty.
         encoding="utf-8",
     )
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(),
+        language="en",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
     run_intake = json.loads((tmp_path / "run_intake.json").read_text(encoding="utf-8"))
     review_payload = json.loads(
@@ -341,6 +373,8 @@ Flag residual uncertainty.
         "https://eur-lex.europa.eu/",
     ]
     assert audit["source_domain_policy"] == "model_curated_only"
+    assert audit["answer_contract"]["document_type"] == "client-ready legal memo"
+    assert paths["answer_contract"] == tmp_path / "answer_contract.json"
     assert (
         paths["source_domains"].read_text(encoding="utf-8")
         == "https://normattiva.it/\nhttps://agenziaentrate.gov.it/\nhttps://eur-lex.europa.eu/\n"
@@ -406,6 +440,7 @@ Flag residual uncertainty.
     )
     assert prompt_package_output["required_text"] == [
         "# Prompt Optimizer Package",
+        "## Answer Contract",
         "## Deterministic Research Lens",
         "## What to Use",
     ]
@@ -454,7 +489,16 @@ Structure the output with premises, analysis, conclusions and notes.
 Flag residual uncertainty.
 """
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(
+            document_type="response strategy memo",
+            jurisdiction="Swiss law and Canton of Geneva",
+        ),
+        language="en",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
 
     assert audit["status"] == "pass"
@@ -499,6 +543,11 @@ Incluya citas, conclusiones, límites y preguntas aclaratorias esenciales.
         question,
         prompt,
         tmp_path,
+        answer_contract=_answer_contract(
+            document_type="respuesta profesional",
+            output_language="español",
+            jurisdiction="Spanish law",
+        ),
         language="es",
         source_domains=["boe.es", "agenciatributaria.es"],
     )
@@ -561,6 +610,7 @@ Flag residual uncertainty.
         question,
         prompt,
         tmp_path,
+        answer_contract=_answer_contract(document_type="legal research brief"),
         language="en",
         source_domains=[
             "https://www.normattiva.it/",
@@ -582,6 +632,70 @@ Flag residual uncertainty.
         .read_text(encoding="utf-8")
         .startswith("# How to use these files")
     )
+
+
+def test_validate_prompt_supports_direct_one_page_letter_contract(
+    tmp_path: Path,
+) -> None:
+    validate_mod = load_script(
+        "prompt_optimizer_validate_direct_letter",
+        "validate_prompt.py",
+    )
+    question = (
+        "Italian company Alfa S.r.l. received a payment demand on 31/12/2025. "
+        "How should it respond?"
+    )
+    prompt = """
+You are an Italian lawyer. Mandatory output language: English.
+Jurisdiction assumption: use Italian law.
+Research lens: posture is defense_audit_dispute, objective is balanced, scope is domestic_only.
+Produce a one-page legal letter for the claimant explaining Alfa S.r.l.'s response.
+Preserve these facts: Italian company Alfa S.r.l.; payment demand; 31/12/2025.
+Answer the explicit question: How should it respond?
+Use official sources, primary legislation, case law and stable URLs.
+Maintain an internal source record for every material legal claim; do not show citations in the letter.
+Ask up to three clarifying questions if essential facts are missing.
+Flag residual uncertainty and avoid overstating judgment-dependent conclusions.
+"""
+    contract = _answer_contract(
+        document_type="one-page legal letter",
+        generation_route="codex_direct",
+        question_domain="legal",
+    )
+    contract["evidence_display"] = "source_record_only"
+
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=contract,
+        language="en",
+        source_domains=["normattiva.it"],
+    )
+    audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
+    readme = paths["readme_human"].read_text(encoding="utf-8")
+
+    assert audit["status"] == "pass"
+    assert audit["checks"]["citation_rules"] is True
+    assert audit["answer_contract"]["generation_route"] == "codex_direct"
+    assert "Use `optimized_prompt.md` as the instructions" in readme
+    assert "Paste `optimized_prompt.md` into Deep Research" not in readme
+
+
+def test_validate_answer_contract_rejects_unresolved_required_shape() -> None:
+    validate_mod = load_script(
+        "prompt_optimizer_validate_answer_contract",
+        "validate_prompt.py",
+    )
+    contract = _answer_contract()
+    contract["generation_route"] = "keyword_classifier"
+    contract["document_type"] = ""
+
+    audit = validate_mod.validate_answer_contract(contract)
+
+    assert audit["status"] == "fail"
+    assert audit["missing_fields"] == ["document_type"]
+    assert audit["invalid_fields"] == ["generation_route"]
 
 
 def test_validate_prompt_does_not_require_broad_matter_controls(
@@ -612,7 +726,13 @@ Structure the output with premises, analysis, conclusions and notes.
 Flag residual uncertainty.
 """
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(),
+        language="en",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
 
     assert audit["status"] == "pass"
@@ -653,7 +773,17 @@ Keep the trust section tightly scoped and do not overclaim jurisdiction over tru
 For tax, separate confirmed law, likely administrative practice, treaty-dependent or fact-dependent points, and missing facts.
 """
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(
+            document_type="phased legal memo and final synthesis",
+            question_domain="mixed",
+            jurisdiction="Swiss law and Canton of Geneva",
+        ),
+        language="en",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
 
     assert audit["status"] == "pass"
@@ -682,7 +812,13 @@ def test_validate_prompt_flags_missing_requirements(tmp_path: Path) -> None:
     )
     prompt = "Please research this."
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="en")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(),
+        language="en",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
 
     assert audit["status"] == "fail"
@@ -716,7 +852,17 @@ Structurez la réponse avec prémisses, analyse, conclusions et notes.
 Signalez l'incertitude résiduelle et les points incertains.
 """
 
-    paths = validate_mod.write_validation(question, prompt, tmp_path, language="fr")
+    paths = validate_mod.write_validation(
+        question,
+        prompt,
+        tmp_path,
+        answer_contract=_answer_contract(
+            document_type="mémo juridique client-ready",
+            output_language="français",
+            jurisdiction="Swiss law and Canton of Geneva",
+        ),
+        language="fr",
+    )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
 
     assert audit["status"] == "pass"
@@ -1026,7 +1172,13 @@ Ask up to three clarifying questions if essential facts are missing.
 Structure the output with premises, analysis, conclusions and notes.
 Flag residual uncertainty.
 """
-    validate_mod.write_validation(question, original_prompt, tmp_path, language="en")
+    validate_mod.write_validation(
+        question,
+        original_prompt,
+        tmp_path,
+        answer_contract=_answer_contract(),
+        language="en",
+    )
     run_intake = json.loads((tmp_path / "run_intake.json").read_text(encoding="utf-8"))
     review_payload = json.loads(
         (tmp_path / "review_payload.json").read_text(encoding="utf-8")

@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "prompt-optimizer",
-  "display_name": "Prompt Optimizer",
+  "display_name": "Answer Planner",
   "role": "workflow",
   "governed_paths": [
     "skills",
@@ -19,8 +19,8 @@
     "classes": [
       {
         "id": "question-and-prompt",
-        "purpose": "Understand the case and write a source-backed Deep Research prompt",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred research framing; optimized prompt; source-domain sidecars; diagnostics and review decisions",
+        "purpose": "Understand the professional question, define the answer and validation contract, and write route-specific generation instructions",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; source-domain sidecars; diagnostics and review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -49,9 +49,9 @@
   ],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-07-31",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8451b978845ad7a45f70b0748c48f233729d6aaa961c5c25acbc657f344bd879"
+    "source_fingerprint": "4b7f77a73cf233d300118cce2c8a247fc294e400a3a8623d3c0ca761e5d74a8f"
   }
 }

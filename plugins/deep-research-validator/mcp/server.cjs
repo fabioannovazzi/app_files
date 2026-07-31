@@ -45,6 +45,8 @@ const ITEM_TYPES = new Set([
   "contradicted_claim",
   "uncertain_claim",
   "claim_review",
+  "answer_contract_review",
+  "coverage_review",
   "source_limit",
   "audit_check",
   "validation_artifact",
@@ -60,11 +62,11 @@ const RUNTIME_COPY = {
     finalArtifacts: "Final artifacts",
     reviewInCodex: "Review In Codex",
     validationMessage:
-      "Deep Research review payload is valid. It is safe to call render_deep_research_review once.",
-    saved: (count) => `Saved ${count} Deep Research decisions.`,
+      "Answer-validation review payload is valid. It is safe to call render_deep_research_review once.",
+    saved: (count) => `Saved ${count} answer-validation decisions.`,
     saveNotWritten:
       "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
-    applied: (count) => `Applied ${count} Deep Research decisions.`,
+    applied: (count) => `Applied ${count} answer-validation decisions.`,
     applyNotWritten:
       "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
     blockers: "Resolve blocked review decisions before treating final artifacts as ready.",
@@ -72,7 +74,7 @@ const RUNTIME_COPY = {
     ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
     partial: "Complete remaining review decisions before final handoff.",
     instructions:
-      "Use validate_deep_research_review before render_deep_research_review. Prefer the MCP widget for Deep Research review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+      "Use validate_deep_research_review before render_deep_research_review. Prefer the MCP widget for answer-validation review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
   },
   es: {
     handoffTitle: "Entrega para revisión",
@@ -83,13 +85,13 @@ const RUNTIME_COPY = {
     finalArtifacts: "Artefactos finales",
     reviewInCodex: "Revisión en Codex",
     validationMessage:
-      "Los datos de revisión de Deep Research son válidos. Ya puede ejecutar render_deep_research_review.",
+      "Los datos de revisión de la validación de respuestas son válidos. Ya puede ejecutar render_deep_research_review.",
     saved: (count) =>
-      `Se ${count === 1 ? "ha" : "han"} guardado ${count} ${count === 1 ? "decisión" : "decisiones"} de Deep Research.`,
+      `Se ${count === 1 ? "ha" : "han"} guardado ${count} ${count === 1 ? "decisión" : "decisiones"} de validación de respuestas.`,
     saveNotWritten:
       "Las decisiones son válidas. No se ha proporcionado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
     applied: (count) =>
-      `Se ${count === 1 ? "ha" : "han"} aplicado ${count} ${count === 1 ? "decisión" : "decisiones"} de Deep Research.`,
+      `Se ${count === 1 ? "ha" : "han"} aplicado ${count} ${count === 1 ? "decisión" : "decisiones"} de validación de respuestas.`,
     applyNotWritten:
       "Las decisiones aplicadas son válidas. No se ha proporcionado run_intake.output_dir, por lo que no se ha escrito ningún archivo.",
     blockers: "Resuelva las decisiones bloqueadas antes de considerar listos los artefactos finales.",
@@ -97,7 +99,7 @@ const RUNTIME_COPY = {
     ready: "Utilice final_artifacts.json como galería revisada de artefactos para la entrega.",
     partial: "Complete las decisiones de revisión pendientes antes de la entrega final.",
     instructions:
-      "Ejecute validate_deep_research_review antes de render_deep_research_review. Utilice preferentemente el widget MCP para la entrega de la revisión de Deep Research; guarde las decisiones con save_deep_research_decisions y aplíquelas con apply_deep_research_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Utilice la revisión Markdown o estática solo cuando MCP no esté disponible.",
+      "Ejecute validate_deep_research_review antes de render_deep_research_review. Utilice preferentemente el widget MCP para la entrega de la validación de respuestas; guarde las decisiones con save_deep_research_decisions y aplíquelas con apply_deep_research_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Utilice la revisión Markdown o estática solo cuando MCP no esté disponible.",
   },
 };
 
@@ -179,8 +181,8 @@ function toolUiMeta(resourceUri, toolName = null) {
     "openai/widgetAccessible": true,
   };
   if (toolName === TOOL_NAMES.renderReview) {
-    meta["openai/toolInvocation/invoking"] = "Rendering Deep Research review";
-    meta["openai/toolInvocation/invoked"] = "Rendered Deep Research review";
+    meta["openai/toolInvocation/invoking"] = "Rendering answer-validation review";
+    meta["openai/toolInvocation/invoked"] = "Rendered answer-validation review";
   }
   return meta;
 }
@@ -189,7 +191,7 @@ function widgetResourceMeta(uri) {
   return {
     ui: { resourceUri: uri },
     "openai/widgetDescription":
-      "Interactive Deep Research validation review surface for claim verdicts, source limits, audit checks, and validation package artifacts.",
+      "Interactive answer-validation surface separating source support, reasoning, professional judgment, source limits, audit checks, and package artifacts.",
     "openai/widgetPrefersBorder": false,
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
@@ -247,9 +249,9 @@ function toolDefinitions() {
   return [
     {
       name: TOOL_NAMES.validateReview,
-      title: "Validate Deep Research review payload",
+      title: "Validate answer-review payload",
       description:
-        "Validate the Deep Research validation review-session payload before rendering. Call this first, then render_deep_research_review.",
+        "Validate the answer-validation review-session payload before rendering. Call this first, then render_deep_research_review.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -260,9 +262,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.renderReview,
-      title: "Render Deep Research review",
+      title: "Render answer-validation review",
       description:
-        "Render a Deep Research validation review-session payload as an MCP HTML widget for claim verdicts, source limits, audit checks, and artifacts.",
+        "Render an answer-validation review-session payload as an MCP HTML widget for source support, reasoning, professional judgment, source limits, audit checks, and artifacts.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
@@ -274,9 +276,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.saveDecisions,
-      title: "Save Deep Research review decisions",
+      title: "Save answer-validation decisions",
       description:
-        "Validate Deep Research review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+        "Validate answer-review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -287,9 +289,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.applyDecisions,
-      title: "Apply Deep Research review decisions",
+      title: "Apply answer-validation decisions",
       description:
-        "Validate Deep Research review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+        "Validate answer-review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -306,9 +308,9 @@ function resources() {
     {
       uri: WIDGET_URI,
       name: "deep_research_review_widget",
-      title: "Deep Research validation review widget",
+      title: "Answer-validation review widget",
       description:
-        "Renders Deep Research validation review-session payloads with searchable claims, source limits, audit checks, and artifacts.",
+        "Renders answer-validation review-session payloads with searchable claims, separate reasoning and judgment findings, source limits, audit checks, and artifacts.",
       mimeType: WIDGET_MIME_TYPE,
       _meta: widgetResourceMeta(WIDGET_URI),
     },
@@ -317,7 +319,7 @@ function resources() {
 
 function resourceText(uri) {
   if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Deep Research widget resource: ${uri}`);
+  throw new Error(`unknown answer-validation widget resource: ${uri}`);
   }
   return fs.readFileSync(
     path.join(PLUGIN_ROOT, "assets", "deep-research-review-widget.html"),
@@ -411,7 +413,7 @@ function validateReviewPayload(inputArgs) {
     },
   };
   if (payloadBytes(payload) > MAX_PAYLOAD_BYTES) {
-    throw new Error(`Deep Research widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
+    throw new Error(`Answer-validation widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
   }
   return payload;
 }
@@ -1617,7 +1619,7 @@ function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, fi
     throw new Error(
       completed.stderr ||
         completed.stdout ||
-        "Deep Research downstream artifact refresh failed.",
+        "Answer-validation downstream artifact refresh failed.",
     );
   }
   const output = completed.stdout.trim().split(/\r?\n/).filter(Boolean).pop();
@@ -1661,7 +1663,7 @@ function callTool(name, args = {}) {
   if (name === TOOL_NAMES.applyDecisions) {
     return applyDecisionPayload(args);
   }
-  throw new Error(`unknown Deep Research widget tool: ${name}`);
+  throw new Error(`unknown answer-validation widget tool: ${name}`);
 }
 
 function toolResult(payload, toolName) {

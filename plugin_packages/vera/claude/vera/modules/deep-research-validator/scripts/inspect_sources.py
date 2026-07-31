@@ -1,8 +1,9 @@
-"""Inspect cited sources for a Deep Research validation run."""
+"""Inspect cited sources for an answer-validation run."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import ipaddress
 import json
 import re
@@ -28,6 +29,7 @@ ACCESS_BARRIER_SNIPPETS = (
     "login",
 )
 _STANDARD_PORTS = {"http": 80, "https": 443}
+MAX_CAPTURE_BYTES = 1_000_000
 
 
 class UnsafePublicUrlError(ValueError):
@@ -124,13 +126,18 @@ def _extract_urls_from_inventory(path: Path) -> list[str]:
 
 def _source_file_record(path: Path) -> dict[str, Any]:
     text = path.read_text(encoding="utf-8", errors="ignore")
+    encoded = text.encode("utf-8")
     return {
         "kind": "file",
         "name": path.name,
         "path": str(path),
+        "origin_path": str(path.resolve()),
         "status": "available" if text.strip() else "empty",
         "character_count": len(text.strip()),
+        "content_hash": hashlib.sha256(encoded).hexdigest(),
+        "capture_scope": "complete_local_text",
         "excerpt": re.sub(r"\s+", " ", text.strip())[:1200],
+        "_captured_text": text,
     }
 
 
@@ -169,9 +176,19 @@ def _fetch_url_record(url: str, timeout: float) -> dict[str, Any]:
     opener = urllib.request.build_opener(_PublicRedirectHandler())
     try:
         with opener.open(request, timeout=timeout) as response:
-            raw = response.read(1_000_000)
+            raw = response.read(MAX_CAPTURE_BYTES + 1)
+            truncated = len(raw) > MAX_CAPTURE_BYTES
+            raw = raw[:MAX_CAPTURE_BYTES]
             text = raw.decode("utf-8", errors="ignore")
             status = int(getattr(response, "status", 0) or 0)
+            geturl = getattr(response, "geturl", None)
+            final_url = str(geturl()) if callable(geturl) else url
+            headers = getattr(response, "headers", None)
+            content_type = (
+                str(headers.get_content_type())
+                if headers is not None and hasattr(headers, "get_content_type")
+                else ""
+            )
     except UnsafePublicUrlError as exc:
         return {
             "kind": "url",
@@ -219,12 +236,54 @@ def _fetch_url_record(url: str, timeout: float) -> dict[str, Any]:
     return {
         "kind": "url",
         "url": url,
+        "requested_url": url,
+        "final_url": final_url,
         "status": parse_status,
         "http_status": status,
         "character_count": len(cleaned),
+        "content_type": content_type,
+        "content_hash": hashlib.sha256(raw).hexdigest(),
+        "capture_scope": (
+            f"first_{MAX_CAPTURE_BYTES}_response_bytes"
+            if truncated
+            else "complete_response"
+        ),
+        "capture_truncated": truncated,
         "excerpt": cleaned[:1200],
         "error": "",
+        "_captured_text": cleaned,
     }
+
+
+def _persist_source_captures(
+    records: list[dict[str, Any]],
+    *,
+    capture_dir: Path | None,
+    capture_base_dir: Path | None,
+) -> list[dict[str, Any]]:
+    """Assign stable IDs and optionally persist complete normalized snapshots."""
+
+    if capture_dir is not None:
+        capture_dir.mkdir(parents=True, exist_ok=True)
+    base_dir = (
+        (capture_base_dir or capture_dir).resolve()
+        if (capture_base_dir or capture_dir)
+        else None
+    )
+    out: list[dict[str, Any]] = []
+    for index, raw_record in enumerate(records, start=1):
+        record = dict(raw_record)
+        source_id = f"source-{index:03d}"
+        record["source_id"] = source_id
+        captured_text = str(record.pop("_captured_text", "") or "")
+        if capture_dir is not None and base_dir is not None and captured_text:
+            capture_path = capture_dir / f"{source_id}.txt"
+            capture_path.write_text(captured_text, encoding="utf-8")
+            record["captured_text_path"] = (
+                capture_path.resolve().relative_to(base_dir).as_posix()
+            )
+        out.append(record)
+    return out
 
 
 def inspect_sources(
@@ -233,6 +292,8 @@ def inspect_sources(
     source_files: list[Path] | None = None,
     timeout: float = 10.0,
     fetch_urls: bool = True,
+    capture_dir: Path | None = None,
+    capture_base_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Return deterministic source inventory."""
 
@@ -258,10 +319,15 @@ def inspect_sources(
         for path in (source_files or [])
         if path.exists() and path.is_file()
     ]
+    records = _persist_source_captures(
+        [*url_records, *file_records],
+        capture_dir=capture_dir,
+        capture_base_dir=capture_base_dir,
+    )
     return {
         "url_count": len(urls),
         "file_count": len(file_records),
-        "sources": [*url_records, *file_records],
+        "sources": records,
     }
 
 
@@ -279,6 +345,8 @@ def write_source_inventory(
         source_files=source_files,
         timeout=timeout,
         fetch_urls=fetch_urls,
+        capture_dir=output_dir / "sources",
+        capture_base_dir=output_dir,
     )
     path = output_dir / "source_inventory.json"
     path.write_text(

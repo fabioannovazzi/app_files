@@ -1,7 +1,7 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.33",
-  "description": "Validate Deep Research reports against cited sources with Codex-guided review and deterministic evidence checks.",
+  "version": "0.1.35",
+  "description": "Validate professional answers with separate source-identity, semantic-support, reasoning, treatment, coverage, and professional-judgment records.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -22,9 +22,9 @@
   "apps": "./.app.json",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "Validate Deep Research",
-    "shortDescription": "Review Deep Research outputs against cited sources and package validated findings in Italian, English, French, German, or Spanish.",
-    "longDescription": "Codex workflow for validating Deep Research answers and reports. Codex identifies material claims, reviews source support, checks reasoning, and writes corrections. Deterministic scripts only inspect document structure, extract citations and URLs, fetch or parse sources, match quoted passages, validate review JSON, and automatically package the natural full output set: Markdown, DOCX when tooling is available, validation audit, claim review, and validation package. The scripts do not make direct model API calls.",
+    "displayName": "Validate Answer",
+    "shortDescription": "Review reports, memos, and letters with explicit source identity, semantic support, reasoning, treatment, and judgment boundaries.",
+    "longDescription": "Codex workflow for validating generated or supplied professional answers, including Deep Research reports, memos, and one-page letters. Codex reviews answer-contract conformance and material-claim coverage, then assesses source identity, semantic support, inferential reasoning, issue-specific treatment, claim disposition, and professional-judgment dependencies. Deterministic scripts inspect document and source access, capture cited sources, resolve exact identifiers, record exact passage presence only within the specifically cited source snapshot, validate answer-contract and review-record shape, and package the review. Exact or fuzzy matching never decides semantic support. Record completeness does not certify legal correctness, and recording a proposed fix does not make an answer final: the reviewed or corrected answer must be regenerated semantically. The scripts do not make direct model API calls.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
@@ -36,9 +36,9 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Use Validate Deep Research on the report or answer I provide.",
-      "Inspect the document, collect citations and source URLs, review material claims against sources, flag unsupported or weak reasoning, and package the complete validated Markdown/DOCX result when tooling permits.",
-      "Do not make direct OpenAI API calls from plugin scripts; use Codex for claim judgment and deterministic scripts for inspection, fetching, quote matching, and packaging."
+      "Validate the professional answer, report, memo, or letter I provide.",
+      "Review answer-contract conformance and all material claims; separate source identity, semantic support, reasoning gaps, issue treatment, and professional-judgment dependencies; then package the reviewed or corrected answer.",
+      "Do not make direct OpenAI API calls from plugin scripts; use Codex for semantic judgment and deterministic scripts only for inspection, fetching, exact observations, shape validation, and packaging."
     ],
     "brandColor": "#4f6b78",
     "composerIcon": "./assets/icon.svg",

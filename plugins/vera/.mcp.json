@@ -81,7 +81,7 @@
       "args": ["./scripts/run_component_mcp.cjs", "concordato-plan-review"]
     },
     "promptOptimizerWidgets": {
-      "title": "Optimize Prompt",
+      "title": "Plan Answer",
       "description": "Validate and render Prompt Optimizer review-session payloads.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
@@ -89,7 +89,7 @@
       "args": ["./scripts/run_component_mcp.cjs", "prompt-optimizer"]
     },
     "deepResearchValidatorWidgets": {
-      "title": "Validate Deep Research",
+      "title": "Validate Answer",
       "description": "Validate and render Deep Research review-session payloads.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",

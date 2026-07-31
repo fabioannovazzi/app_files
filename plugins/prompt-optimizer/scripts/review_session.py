@@ -50,6 +50,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ),
         "artifacts": {
             "optimized_prompt": "Optimized prompt",
+            "answer_contract": "Answer contract JSON",
             "prompt_audit": "Prompt audit JSON",
             "prompt_package": "Prompt package Markdown",
             "source_domains": "Source domains",
@@ -58,12 +59,17 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         },
         "package_required": [
             "# Prompt Optimizer Package",
+            "## Answer Contract",
             "## Deterministic Research Lens",
             "## What to Use",
         ],
-        "readme_required": [
+        "readme_required_deep_research": [
             "# How to use these files",
             "Paste `optimized_prompt.md` into Deep Research.",
+        ],
+        "readme_required_direct": [
+            "# How to use these files",
+            "Use `optimized_prompt.md` as the instructions for generating the answer.",
         ],
         "dependency_note": "Codex should run scripts/check_dependencies.py before helper scripts.",
         "data_notes": [
@@ -112,6 +118,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ),
         "artifacts": {
             "optimized_prompt": "Prompt optimizado",
+            "answer_contract": "JSON del contrato de respuesta",
             "prompt_audit": "JSON de auditoría del prompt",
             "prompt_package": "Paquete del prompt en Markdown",
             "source_domains": "Dominios de las fuentes",
@@ -120,12 +127,17 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         },
         "package_required": [
             "# Paquete de optimización del prompt",
+            "## Contrato de respuesta",
             "## Enfoque determinista de la investigación",
             "## Cómo utilizar los archivos",
         ],
-        "readme_required": [
+        "readme_required_deep_research": [
             "# Cómo utilizar estos archivos",
             "Pegue `optimized_prompt.md` en Deep Research.",
+        ],
+        "readme_required_direct": [
+            "# Cómo utilizar estos archivos",
+            "Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
         ],
         "dependency_note": "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares.",
         "data_notes": [
@@ -432,6 +444,10 @@ def _artifact_items(
     artifact_copy = _copy(language, audit)["artifacts"]
     labels = {
         "optimized_prompt": ("prompt_artifact", artifact_copy["optimized_prompt"]),
+        "answer_contract": (
+            "review_artifact",
+            artifact_copy["answer_contract"],
+        ),
         "prompt_audit": ("review_artifact", artifact_copy["prompt_audit"]),
         "prompt_package": ("review_artifact", artifact_copy["prompt_package"]),
         "source_domains": ("source_domain_artifact", artifact_copy["source_domains"]),
@@ -503,9 +519,17 @@ def _output_records(
         "draft_source_domains.txt",
     }
     copy = _copy(language, audit)
+    answer_contract = audit.get("answer_contract")
+    deep_research = (
+        isinstance(answer_contract, dict)
+        and answer_contract.get("generation_route") == "chatgpt_deep_research"
+    )
+    readme_required_key = (
+        "readme_required_deep_research" if deep_research else "readme_required_direct"
+    )
     required_text_by_path = {
         "prompt_package.md": copy["package_required"],
-        "README_HUMAN.md": copy["readme_required"],
+        "README_HUMAN.md": copy[readme_required_key],
     }
     outputs: list[dict[str, Any]] = []
     for path in sorted(output_dir.rglob("*")):
@@ -537,6 +561,7 @@ def write_run_intake(
     prompt_text: str,
     language: str,
     source_domains: Sequence[str],
+    answer_contract: dict[str, Any],
 ) -> RunIntakeResult:
     """Write run intake before deterministic prompt validation."""
 
@@ -557,6 +582,9 @@ def write_run_intake(
             "prompt_character_count": len(prompt_text),
             "source_domain_count": len(source_domains),
             "language": language,
+            "generation_route": answer_contract.get("generation_route"),
+            "document_type": answer_contract.get("document_type"),
+            "validation_profile": answer_contract.get("validation_profile"),
         },
         "unresolved_questions": [],
         "dependency_check": {

@@ -1,4 +1,4 @@
-"""Validate and package a Codex-written Deep Research prompt."""
+"""Validate and package Codex-written answer-generation instructions."""
 
 from __future__ import annotations
 
@@ -50,9 +50,56 @@ except ImportError:  # pragma: no cover - supports direct script imports
 
 __all__ = [
     "render_prompt_package",
+    "validate_answer_contract",
     "validate_prompt_text",
     "write_validation",
 ]
+
+ANSWER_CONTRACT_REQUIRED_FIELDS = (
+    "schema_version",
+    "question_domain",
+    "generation_route",
+    "document_type",
+    "purpose",
+    "audience",
+    "output_language",
+    "jurisdiction_status",
+    "jurisdiction",
+    "evidence_display",
+    "validation_profile",
+    "validation_scope",
+    "correction_policy",
+    "judgment_policy",
+)
+ANSWER_CONTRACT_ENUMS = {
+    "question_domain": {"legal", "tax", "compliance", "mixed"},
+    "generation_route": {
+        "chatgpt_deep_research",
+        "codex_direct",
+        "external_document",
+    },
+    "jurisdiction_status": {
+        "confirmed",
+        "assumed",
+        "unresolved",
+        "not_applicable",
+    },
+    "evidence_display": {
+        "inline_citations",
+        "footnotes",
+        "source_record_only",
+        "mixed",
+        "not_specified",
+    },
+    "validation_profile": {"source_identity_support_reasoning_and_judgment"},
+    "validation_scope": {
+        "all_material_claims",
+        "selected_material_claims",
+        "limited",
+    },
+    "correction_policy": {"correct_when_supported", "review_only"},
+    "judgment_policy": {"flag_for_professional_review"},
+}
 
 LANGUAGE_LOCK_TERMS = {
     "it": ("lingua", "italiano"),
@@ -87,6 +134,15 @@ SOURCE_TERMS = (
     "url",
 )
 CITATION_TERMS = ("[1]", "[2]", "citation", "citazioni", "notes", "note", "footnote")
+SOURCE_RECORD_TERMS = (
+    "source record",
+    "source map",
+    "evidence record",
+    "validation record",
+    "registro delle fonti",
+    "mappa delle fonti",
+    "registro de fuentes",
+)
 CLARIFICATION_TERMS = (
     "clarifying question",
     "clarifying questions",
@@ -100,19 +156,6 @@ CLARIFICATION_TERMS = (
     "rueckfragen",
     "ruckfragen",
     "klarstellungsfragen",
-)
-STRUCTURE_TERMS = (
-    "premise",
-    "premises",
-    "analysis",
-    "conclusion",
-    "notes",
-    "premesse",
-    "analisi",
-    "conclusioni",
-    "note",
-    "analyse",
-    "schlussfolgerung",
 )
 UNCERTAINTY_TERMS = (
     "uncertainty",
@@ -376,10 +419,49 @@ def _missing_explicit_questions(question_text: str, prompt_text: str) -> list[st
     return missing
 
 
+def validate_answer_contract(answer_contract: dict[str, Any]) -> dict[str, Any]:
+    """Validate only the explicit handoff shape chosen by Codex or the user.
+
+    Deterministic validation is justified here because it checks a stable JSON
+    contract. It does not infer the legal domain, generation route, document
+    type, jurisdiction, audience, or evidentiary posture.
+    """
+
+    missing_fields = [
+        field
+        for field in ANSWER_CONTRACT_REQUIRED_FIELDS
+        if not isinstance(answer_contract.get(field), str)
+        or (
+            field != "jurisdiction"
+            and not str(answer_contract.get(field) or "").strip()
+        )
+    ]
+    invalid_fields = [
+        field
+        for field, allowed in ANSWER_CONTRACT_ENUMS.items()
+        if str(answer_contract.get(field) or "").strip() not in allowed
+    ]
+    jurisdiction_status = str(answer_contract.get("jurisdiction_status") or "").strip()
+    jurisdiction = str(answer_contract.get("jurisdiction") or "").strip()
+    if jurisdiction_status in {"confirmed", "assumed"} and not jurisdiction:
+        invalid_fields.append("jurisdiction")
+    invalid_fields = list(dict.fromkeys(invalid_fields))
+    return {
+        "status": "pass" if not missing_fields and not invalid_fields else "fail",
+        "missing_fields": missing_fields,
+        "invalid_fields": invalid_fields,
+        "policy": (
+            "shape_validation_only; document type, route, jurisdiction, and "
+            "validation posture are model-led or user-confirmed"
+        ),
+    }
+
+
 def validate_prompt_text(
     question_text: str,
     prompt_text: str,
     *,
+    answer_contract: dict[str, Any],
     language: str = "auto",
     source_domains: list[str] | None = None,
 ) -> dict[str, Any]:
@@ -391,27 +473,33 @@ def validate_prompt_text(
     jurisdiction_policy = jurisdiction_policy_for_question(
         language, inventory.language_hint, inventory.jurisdiction_hints
     )
-    structure_hits = [
-        term
-        for term in STRUCTURE_TERMS
-        if term.casefold() in normalized_prompt.casefold()
-    ]
     missing_anchors = _missing_anchors(question_text, normalized_prompt)
     missing_questions = _missing_explicit_questions(question_text, normalized_prompt)
+    answer_contract_audit = validate_answer_contract(answer_contract)
+    evidence_display = str(answer_contract.get("evidence_display") or "")
+    document_type = str(answer_contract.get("document_type") or "").strip()
+    citation_rules_present = _contains_any(normalized_prompt, CITATION_TERMS)
+    if evidence_display in {"source_record_only", "not_specified"}:
+        citation_rules_present = citation_rules_present or _contains_any(
+            normalized_prompt,
+            SOURCE_RECORD_TERMS,
+        )
     checks = {
         "non_empty_prompt": bool(normalized_prompt),
         "language_lock": _contains_any(normalized_prompt, language_terms),
         "source_requirements": _contains_any(normalized_prompt, SOURCE_TERMS),
-        "citation_rules": _contains_any(normalized_prompt, CITATION_TERMS),
+        "citation_rules": citation_rules_present,
         "jurisdiction_lock": _contains_all_term_groups(
             normalized_prompt, jurisdiction_policy["required_notice_terms"]
         ),
         "clarification_policy": _contains_any(normalized_prompt, CLARIFICATION_TERMS),
-        "output_structure": len(set(structure_hits)) >= 3,
+        "output_structure": bool(document_type)
+        and document_type.casefold() in normalized_prompt.casefold(),
         "uncertainty_policy": _contains_any(normalized_prompt, UNCERTAINTY_TERMS),
         "research_lens": _has_research_lens(normalized_prompt),
         "fact_anchors_preserved": not missing_anchors,
         "explicit_questions_preserved": not missing_questions,
+        "answer_contract": answer_contract_audit["status"] == "pass",
     }
     if inventory.requires_phased_workflow:
         checks.update(
@@ -463,6 +551,8 @@ def validate_prompt_text(
         "requires_phased_workflow": inventory.requires_phased_workflow,
         "missing_fact_anchors": missing_anchors,
         "missing_explicit_questions": missing_questions,
+        "answer_contract": answer_contract,
+        "answer_contract_audit": answer_contract_audit,
         "failed_checks": failed,
     }
 
@@ -478,6 +568,94 @@ def _package_markdown(
     failed_text = ", ".join(failed) if failed else ("ninguno" if spanish else "none")
     inventory = inspect_question_text(question_text)
     source_domains = audit.get("source_domains") or []
+    answer_contract = audit.get("answer_contract") or {}
+    deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
+    contract_labels = (
+        (
+            "Dominio de la pregunta",
+            "Ruta de generación",
+            "Tipo de documento",
+            "Finalidad",
+            "Destinatario",
+            "Estado de la jurisdicción",
+            "Jurisdicción",
+            "Presentación de las fuentes",
+            "Perfil de validación",
+            "Alcance de validación",
+            "Política de corrección",
+            "Política de juicio profesional",
+        )
+        if spanish
+        else (
+            "Question domain",
+            "Generation route",
+            "Document type",
+            "Purpose",
+            "Audience",
+            "Jurisdiction status",
+            "Jurisdiction",
+            "Evidence display",
+            "Validation profile",
+            "Validation scope",
+            "Correction policy",
+            "Professional-judgment policy",
+        )
+    )
+    contract_values = (
+        answer_contract.get("question_domain", ""),
+        answer_contract.get("generation_route", ""),
+        answer_contract.get("document_type", ""),
+        answer_contract.get("purpose", ""),
+        answer_contract.get("audience", ""),
+        answer_contract.get("jurisdiction_status", ""),
+        answer_contract.get("jurisdiction", "")
+        or ("sin resolver" if spanish else "unresolved"),
+        answer_contract.get("evidence_display", ""),
+        answer_contract.get("validation_profile", ""),
+        answer_contract.get("validation_scope", ""),
+        answer_contract.get("correction_policy", ""),
+        answer_contract.get("judgment_policy", ""),
+    )
+    contract_lines = [
+        f"- {label}: {value}"
+        for label, value in zip(contract_labels, contract_values, strict=True)
+    ]
+    if spanish:
+        use_lines = (
+            [
+                "- Pegue `optimized_prompt.md` en Deep Research.",
+                "- Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research.",
+            ]
+            if deep_research
+            else [
+                "- Use `optimized_prompt.md` como instrucciones para generar la respuesta.",
+                "- Conserve `source_domains.txt` como lista de fuentes para la generación.",
+            ]
+        )
+        use_lines.extend(
+            [
+                "- Conserve `answer_contract.json` con la respuesta generada.",
+                "- Considere `prompt_audit.json` como metadatos de validación legibles por máquina.",
+            ]
+        )
+    else:
+        use_lines = (
+            [
+                "- Paste `optimized_prompt.md` into Deep Research.",
+                "- Paste `source_domains_comma.txt` into the Deep Research websites field.",
+            ]
+            if deep_research
+            else [
+                "- Use `optimized_prompt.md` as the answer-generation instructions.",
+                "- Keep `source_domains.txt` as the source list for generation.",
+            ]
+        )
+        use_lines.extend(
+            [
+                "- Keep `answer_contract.json` with the generated answer.",
+                "- Treat `prompt_audit.json` as machine-readable validation metadata.",
+            ]
+        )
     source_domain_text = (
         "\n".join(f"- {domain}" for domain in source_domains)
         if source_domains
@@ -500,6 +678,8 @@ def _package_markdown(
             "# Paquete de optimización del prompt",
             f"Estado de la auditoría: {audit.get('status')}",
             f"Controles fallidos: {failed_text}",
+            "## Contrato de respuesta",
+            "\n".join(contract_lines),
             "## Enfoque determinista de la investigación",
             "\n".join(
                 [
@@ -518,14 +698,7 @@ def _package_markdown(
             "## Pregunta de origen",
             question_text.strip(),
             "## Cómo utilizar los archivos",
-            "\n".join(
-                [
-                    "- Pegue `optimized_prompt.md` en Deep Research.",
-                    "- Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research.",
-                    "- Use `source_domains.txt` solo si necesita la misma lista con un sitio por línea.",
-                    "- Considere `prompt_audit.json` como metadatos de validación legibles por máquina.",
-                ]
-            ),
+            "\n".join(use_lines),
             "## Ubicación del prompt optimizado",
             "`optimized_prompt.md`",
         ]
@@ -536,6 +709,8 @@ def _package_markdown(
                 "# Prompt Optimizer Package",
                 f"Audit status: {audit.get('status')}",
                 f"Failed checks: {failed_text}",
+                "## Answer Contract",
+                "\n".join(contract_lines),
                 "## Deterministic Research Lens",
                 "\n".join(
                     [
@@ -554,20 +729,7 @@ def _package_markdown(
                 "## Source Question",
                 question_text.strip(),
                 "## What to Use",
-                "\n".join(
-                    [
-                        "- Paste `optimized_prompt.md` into Deep Research.",
-                        (
-                            "- Paste `source_domains_comma.txt` into the Deep "
-                            "Research websites field."
-                        ),
-                        (
-                            "- Use `source_domains.txt` only when you want the "
-                            "same list one website per line."
-                        ),
-                        "- Treat `prompt_audit.json` as machine-readable validation metadata.",
-                    ]
-                ),
+                "\n".join(use_lines),
                 "## Optimized Prompt Location",
                 "`optimized_prompt.md`",
             ]
@@ -613,6 +775,7 @@ def write_validation(
     prompt_text: str,
     output_dir: Path,
     *,
+    answer_contract: dict[str, Any],
     language: str = "auto",
     source_domains: list[str] | None = None,
 ) -> dict[str, Path]:
@@ -630,21 +793,25 @@ def write_validation(
         prompt_text=prompt_text,
         language=language,
         source_domains=normalized_source_domains,
+        answer_contract=answer_contract,
     )
     audit = validate_prompt_text(
         question_text,
         prompt_text,
+        answer_contract=answer_contract,
         language=language,
         source_domains=normalized_source_domains,
     )
     audit["language"] = language
     prompt_path = output_dir / "optimized_prompt.md"
+    answer_contract_path = output_dir / "answer_contract.json"
     audit_path = output_dir / "prompt_audit.json"
     package_path = output_dir / "prompt_package.md"
     source_domains_path = output_dir / "source_domains.txt"
     source_domains_comma_path = output_dir / "source_domains_comma.txt"
     readme_path = output_dir / "README_HUMAN.md"
     prompt_path.write_text(prompt_text.strip() + "\n", encoding="utf-8")
+    write_json(answer_contract_path, answer_contract)
     write_json(audit_path, audit)
     source_domains_path.write_text(
         "\n".join(str(domain) for domain in audit.get("source_domains") or []) + "\n",
@@ -661,6 +828,7 @@ def write_validation(
     readme_path.write_text(_readme_markdown(audit), encoding="utf-8")
     paths = {
         "optimized_prompt": prompt_path,
+        "answer_contract": answer_contract_path,
         "prompt_audit": audit_path,
         "prompt_package": package_path,
         "source_domains": source_domains_path,
@@ -700,46 +868,70 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
     """Return a short human usage guide for the generated files."""
 
     source_domains = audit.get("source_domains") or []
+    answer_contract = audit.get("answer_contract") or {}
+    deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
     if _package_language(audit) == "es":
-        website_instruction = (
-            "2. Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research."
-            if source_domains
-            else (
-                "2. `source_domains_comma.txt` está vacío porque no se proporcionó "
-                "ni extrajo ninguna lista de sitios web."
+        if deep_research:
+            website_instruction = (
+                "2. Pegue `source_domains_comma.txt` en el campo de sitios web de Deep Research."
+                if source_domains
+                else (
+                    "2. `source_domains_comma.txt` está vacío porque no se proporcionó "
+                    "ni extrajo ninguna lista de sitios web."
+                )
             )
+        else:
+            website_instruction = (
+                "2. Use `source_domains.txt` como lista de fuentes para la generación."
+            )
+        first_instruction = (
+            "1. Pegue `optimized_prompt.md` en Deep Research."
+            if deep_research
+            else "1. Use `optimized_prompt.md` como instrucciones para generar la respuesta."
         )
         return "\n".join(
             [
                 "# Cómo utilizar estos archivos",
                 "",
-                "1. Pegue `optimized_prompt.md` en Deep Research.",
+                first_instruction,
                 website_instruction,
-                "3. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
+                "3. Conserve `answer_contract.json` con la respuesta para la validación.",
+                "4. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
                 (
-                    "4. Consulte `prompt_audit.json` solo para depurar la validación; "
+                    "5. Consulte `prompt_audit.json` solo para depurar la validación; "
                     "registra qué controles del plugin se superaron."
                 ),
                 "",
             ]
         )
-    website_instruction = (
-        "2. Paste `source_domains_comma.txt` into the Deep Research websites field."
-        if source_domains
-        else (
-            "2. `source_domains_comma.txt` is empty because no website list was "
-            "provided or extracted."
+    if deep_research:
+        website_instruction = (
+            "2. Paste `source_domains_comma.txt` into the Deep Research websites field."
+            if source_domains
+            else (
+                "2. `source_domains_comma.txt` is empty because no website list was "
+                "provided or extracted."
+            )
         )
+    else:
+        website_instruction = (
+            "2. Use `source_domains.txt` as the source list for generation."
+        )
+    first_instruction = (
+        "1. Paste `optimized_prompt.md` into Deep Research."
+        if deep_research
+        else "1. Use `optimized_prompt.md` as the instructions for generating the answer."
     )
     return "\n".join(
         [
             "# How to use these files",
             "",
-            "1. Paste `optimized_prompt.md` into Deep Research.",
+            first_instruction,
             website_instruction,
-            "3. Use `source_domains.txt` for the readable one-website-per-line list.",
+            "3. Keep `answer_contract.json` with the answer for validation.",
+            "4. Use `source_domains.txt` for the readable one-website-per-line list.",
             (
-                "4. Ignore `prompt_audit.json` unless you are debugging validation; "
+                "5. Ignore `prompt_audit.json` unless you are debugging validation; "
                 "it only records which plugin checks passed."
             ),
             "",
@@ -788,10 +980,22 @@ def main() -> int:
             "separated by commas, whitespace, or newlines."
         ),
     )
+    parser.add_argument(
+        "--answer-contract-file",
+        type=Path,
+        required=True,
+        help=(
+            "UTF-8 JSON object written by Codex with the selected answer type, "
+            "generation route, audience, jurisdiction status, and validation profile."
+        ),
+    )
     args = parser.parse_args()
 
     question_text = _read_text(args.question_file)
     prompt_text = _read_text(args.prompt_file)
+    answer_contract = json.loads(args.answer_contract_file.read_text(encoding="utf-8"))
+    if not isinstance(answer_contract, dict):
+        parser.error("answer_contract_file must contain a JSON object")
     if not question_text:
         parser.error("question_file is empty")
     if not prompt_text:
@@ -805,6 +1009,7 @@ def main() -> int:
         question_text,
         prompt_text,
         args.output_dir,
+        answer_contract=answer_contract,
         language=args.language,
         source_domains=source_domains,
     )
