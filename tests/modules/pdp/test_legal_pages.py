@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Iterator
 
 import pytest
@@ -112,15 +113,19 @@ def test_terms_page_is_public_when_auth_enabled(
     terms_text = str(page)
     assert "https://mparanza.com/zero-retention" in terms_text
     assert "https://mparanza.com/privacy" not in terms_text
-    assert "Mparanza receives no license" in terms_text
+    assert "Mparanza LLC receives no license" in terms_text
     assert "Ordinary plugin functions" in terms_text
-    assert "Mparanza-hosted services" in terms_text
+    assert "Mparanza LLC-hosted services" in terms_text
     assert terms_text.count("Claude Cowork on your Claude plan") == 3
     assert "By downloading any plugin, software, file" in terms_text
+    assert (
+        "These Terms are between you and Mparanza LLC, a Delaware limited liability "
+        "company that operates the Mparanza brand and services."
+    ) in terms_text
     assert "testing on real professional cases before release is limited or absent" in (
         terms_text
     )
-    assert "Mparanza relies on users to test functionality" in terms_text
+    assert "Mparanza LLC relies on users to test functionality" in terms_text
     assert "past results do not guarantee future performance" in terms_text
     assert "substantive laws of Switzerland" in terms_text
     assert "courts located in the Canton of Geneva" in terms_text
@@ -130,6 +135,7 @@ def test_terms_page_is_public_when_auth_enabled(
     assert "jury trial" not in terms_text
     assert "improve, and develop" not in terms_text
     assert "OpenAI" not in terms_text
+    assert re.search(r"\bMparanza\b(?! LLC| brand)", terms_text) is None
 
 
 def test_support_page_is_public_when_auth_enabled(

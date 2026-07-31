@@ -459,10 +459,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "eyebrow": "Mparanza LLC",
         "effective_date": LEGAL_EFFECTIVE_DATE,
         "summary": (
-            "These Terms govern access to and use of mparanza.com, Mparanza web "
+            "These Terms govern access to and use of mparanza.com, Mparanza LLC web "
             "tools, downloadable plugins, and related services. Ordinary plugin "
             "functions run through your existing ChatGPT plan and Codex workspace "
-            "or through Claude Cowork on your Claude plan, while Mparanza-hosted "
+            "or through Claude Cowork on your Claude plan, while Mparanza LLC-hosted "
             "services have the data lifecycles described in the Zero Retention "
             "Policy. The Service is currently provided for free and without "
             "service levels."
@@ -472,6 +472,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "id": "acceptance",
                 "title": "Acceptance",
                 "paragraphs": [
+                    (
+                        "These Terms are between you and Mparanza LLC, a Delaware "
+                        "limited liability company that operates the Mparanza brand "
+                        "and services."
+                    ),
                     (
                         "By accessing or using the Service, you agree to these "
                         "Terms. By downloading any plugin, software, file, or other "
@@ -493,7 +498,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "The Service is currently offered without charge. "
-                        "Mparanza may add, change, restrict, suspend, discontinue, "
+                        "Mparanza LLC may add, change, restrict, suspend, discontinue, "
                         "or charge for any part of the Service at any time. The "
                         "Service is not a backup, archive, or permanent record "
                         "system. You are responsible for downloading requested "
@@ -503,7 +508,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "There are no service levels, uptime commitments, support "
                         "commitments, backup or recovery commitments, availability "
                         "commitments, or professional-service commitments unless "
-                        "Mparanza signs a separate written agreement. This concerns "
+                        "Mparanza LLC signs a separate written agreement. This concerns "
                         "preservation and availability; it does not alter the data-"
                         "handling commitments in the Zero Retention Policy."
                     ),
@@ -521,10 +526,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "the Service through your account or device."
                     ),
                     (
-                        "Mparanza may refuse, suspend, or terminate access at any "
-                        "time, with or without notice, including if we believe "
+                        "Mparanza LLC may refuse, suspend, or terminate access at any "
+                        "time, with or without notice, including if Mparanza LLC believes "
                         "use of the Service may violate these Terms, create risk, "
-                        "or expose Mparanza or others to liability."
+                        "or expose Mparanza LLC or others to liability."
                     ),
                 ],
             },
@@ -539,13 +544,13 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "processed by an ordinary plugin function through your "
                         "existing ChatGPT plan and Codex workspace or through "
                         "Claude Cowork on your Claude plan is not submitted to "
-                        "Mparanza merely because the plugin reads or writes it. "
-                        "Mparanza receives no license to that content unless you "
-                        "direct it to a Mparanza-hosted service."
+                        "Mparanza LLC merely because the plugin reads or writes it. "
+                        "Mparanza LLC receives no license to that content unless you "
+                        "direct it to a Mparanza LLC-hosted service."
                     ),
                     (
-                        "For User Content submitted to a Mparanza-hosted service, "
-                        "you grant Mparanza and its service providers a limited, "
+                        "For User Content submitted to a Mparanza LLC-hosted service, "
+                        "you grant Mparanza LLC and its service providers a limited, "
                         "worldwide, non-exclusive, royalty-free license to host, "
                         "copy, transmit, process, format, display to you, and "
                         "generate requested outputs from that content solely as "
@@ -558,12 +563,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     (
                         "You represent that you have all rights, notices, consents, "
                         "and legal bases required to submit User Content to the "
-                        "Service and to permit its processing by Mparanza and "
+                        "Service and to permit its processing by Mparanza LLC and "
                         "relevant service providers. You are responsible for User "
                         "Content and for keeping independent backups."
                     ),
                     (
-                        "Mparanza does not acquire a right to sell User Content, "
+                        "Mparanza LLC does not acquire a right to sell User Content, "
                         "share it for cross-context behavioral advertising, or "
                         "use it to train a generalized AI model."
                     ),
@@ -589,7 +594,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "underlying content."
                     ),
                     (
-                        "Deletion from Mparanza-controlled active storage may not "
+                        "Deletion from Mparanza LLC-controlled active storage may not "
                         "immediately remove information from active memory, technical "
                         "logs, delivered messages, infrastructure backups, records "
                         "required for law or security, or systems operated by others. "
@@ -599,7 +604,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "Retrieve any content or output you wish to keep before its "
-                        "applicable deletion event. Mparanza does not guarantee that "
+                        "applicable deletion event. Mparanza LLC does not guarantee that "
                         "deleted content can be recovered."
                     ),
                 ],
@@ -653,7 +658,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                     ),
                     (
                         "resell, sublicense, rent, benchmark, or commercially "
-                        "exploit the Service without Mparanza's written permission;"
+                        "exploit the Service without Mparanza LLC's written permission;"
                     ),
                     (
                         "use outputs as the sole basis for decisions that could "
@@ -671,41 +676,41 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Ordinary plugin functions run through your existing ChatGPT "
                         "plan and Codex workspace or through Claude Cowork on your "
                         "Claude plan, together with any connectors or browser services "
-                        "you choose. Mparanza does not transmit that content merely "
+                        "you choose. Mparanza LLC does not transmit that content merely "
                         "because the plugin uses them."
                     ),
                     (
-                        "When a Mparanza-hosted service uses an external provider for "
+                        "When a Mparanza LLC-hosted service uses an external provider for "
                         "hosting, authentication, communications, model processing, or "
-                        "infrastructure, you direct and authorize Mparanza to transmit "
+                        "infrastructure, you direct and authorize Mparanza LLC to transmit "
                         "the content described for that hosted service."
                     ),
                     (
-                        "External systems are outside Mparanza's direct control. "
+                        "External systems are outside Mparanza LLC's direct control. "
                         "Their availability, processing, retention, and deletion "
-                        "may differ from Mparanza-controlled systems, and deleting "
-                        "content from Mparanza may not delete a copy held elsewhere. "
-                        "Mparanza is not responsible for external services, content, "
+                        "may differ from Mparanza LLC-controlled systems, and deleting "
+                        "content from Mparanza LLC may not delete a copy held elsewhere. "
+                        "Mparanza LLC is not responsible for external services, content, "
                         "failures, delays, suspensions, or changes."
                     ),
                 ],
             },
             {
                 "id": "mparanza-ip",
-                "title": "Mparanza Materials",
+                "title": "Mparanza LLC Materials",
                 "paragraphs": [
                     (
-                        "Mparanza and its licensors own the Service, software, "
+                        "Mparanza LLC and its licensors own the Service, software, "
                         "workflows, templates, interfaces, documentation, designs, "
                         "logos, trademarks, and other materials made available "
                         "through the Service, except for User Content and third-party "
-                        "materials. Subject to these Terms, Mparanza grants you a "
+                        "materials. Subject to these Terms, Mparanza LLC grants you a "
                         "limited, revocable, non-exclusive, non-transferable license "
                         "to access and use the Service for your internal lawful "
                         "purposes."
                     ),
                     (
-                        "If you provide feedback or suggestions, Mparanza may use "
+                        "If you provide feedback or suggestions, Mparanza LLC may use "
                         "them without restriction or compensation to you."
                     ),
                 ],
@@ -716,10 +721,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "The Zero Retention Policy at "
-                        "https://mparanza.com/zero-retention describes how Mparanza "
+                        "https://mparanza.com/zero-retention describes how Mparanza LLC "
                         "handles Customer Content and personal information, the "
                         "difference between ordinary plugin functions and "
-                        "Mparanza-hosted services, current retention behavior, and "
+                        "Mparanza LLC-hosted services, current retention behavior, and "
                         "available privacy rights."
                     ),
                     (
@@ -735,12 +740,12 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Disclaimers",
                 "paragraphs": [
                     (
-                        "Mparanza develops continuously and frequently releases "
-                        "new and changed functionality. Mparanza tests code and "
+                        "Mparanza LLC develops continuously and frequently releases "
+                        "new and changed functionality. Mparanza LLC tests code and "
                         "technical operation, but testing on real professional "
                         "cases before release is limited or absent and is not "
                         "representative of the range of facts, data, jurisdictions, "
-                        "requirements, or uses that may arise. Mparanza relies on "
+                        "requirements, or uses that may arise. Mparanza LLC relies on "
                         "users to test functionality in their own concrete work "
                         "cases and to independently review and validate every "
                         "output before using or relying on it. Functionality and "
@@ -755,7 +760,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "kind, whether express, implied, statutory, or otherwise."
                     ),
                     (
-                        "Mparanza disclaims all warranties, including warranties "
+                        "Mparanza LLC disclaims all warranties, including warranties "
                         "of title, non-infringement, merchantability, fitness for "
                         "a particular purpose, accuracy, availability, reliability, "
                         "security, uninterrupted operation, error-free operation, "
@@ -769,7 +774,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Limitation of Liability",
                 "paragraphs": [
                     (
-                        "To the maximum extent permitted by law, Mparanza and its "
+                        "To the maximum extent permitted by law, Mparanza LLC and its "
                         "owners, affiliates, officers, employees, contractors, "
                         "agents, suppliers, licensors, and service providers will "
                         "not be liable for indirect, incidental, special, "
@@ -782,11 +787,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "damages."
                     ),
                     (
-                        "To the maximum extent permitted by law, Mparanza's total "
+                        "To the maximum extent permitted by law, Mparanza LLC's total "
                         "aggregate liability for all claims relating to the Service "
                         "is limited to zero U.S. dollars because the Service is "
                         "currently free. If a court requires a monetary liability "
-                        "cap, the cap will be the amount you paid Mparanza for the "
+                        "cap, the cap will be the amount you paid Mparanza LLC for the "
                         "Service in the 12 months before the claim, which is "
                         "currently zero U.S. dollars."
                     ),
@@ -808,7 +813,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "paragraphs": [
                     (
                         "To the maximum extent permitted by law, you will defend, "
-                        "indemnify, and hold harmless Mparanza and its owners, "
+                        "indemnify, and hold harmless Mparanza LLC and its owners, "
                         "affiliates, officers, employees, contractors, agents, "
                         "suppliers, licensors, and service providers from and "
                         "against claims, losses, liabilities, damages, judgments, "
@@ -825,7 +830,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Termination",
                 "paragraphs": [
                     (
-                        "You may stop using the Service at any time. Mparanza may "
+                        "You may stop using the Service at any time. Mparanza LLC may "
                         "suspend or terminate access, delete hosted accounts or "
                         "content, or discontinue the Service at any time, with or "
                         "without notice, to the maximum extent permitted by law. "
@@ -836,11 +841,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "Hosted content is handled according to the Retention and "
                         "Deletion section and the Zero Retention Policy. Content "
                         "created or stored by ordinary plugin functions remains in "
-                        "your chosen workspace, and Mparanza cannot delete it "
+                        "your chosen workspace, and Mparanza LLC cannot delete it "
                         "remotely."
                     ),
                     (
-                        "The User Content license ends when Mparanza no longer holds "
+                        "The User Content license ends when Mparanza LLC no longer holds "
                         "or processes the relevant content, except that it continues "
                         "solely for permitted residual copies and only for the "
                         "purposes and duration described above. Provisions concerning "
@@ -870,7 +875,7 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                 "title": "Changes",
                 "paragraphs": [
                     (
-                        "Mparanza may update these Terms at any time. Updated "
+                        "Mparanza LLC may update these Terms at any time. Updated "
                         "Terms are effective when posted unless they say otherwise. "
                         "Your continued use of the Service after an update means "
                         "you accept the updated Terms."
@@ -885,10 +890,10 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "If any provision of these Terms is found unenforceable, "
                         "the remaining provisions will remain in effect, and the "
                         "unenforceable provision will be modified to the minimum "
-                        "extent necessary to make it enforceable. Mparanza's "
+                        "extent necessary to make it enforceable. Mparanza LLC's "
                         "failure to enforce a provision is not a waiver. You may "
-                        "not assign these Terms without Mparanza's consent. "
-                        "Mparanza may assign these Terms without restriction."
+                        "not assign these Terms without Mparanza LLC's consent. "
+                        "Mparanza LLC may assign these Terms without restriction."
                     ),
                 ],
             },
