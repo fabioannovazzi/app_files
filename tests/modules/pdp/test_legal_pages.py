@@ -122,6 +122,12 @@ def test_terms_page_is_public_when_auth_enabled(
     )
     assert "Mparanza relies on users to test functionality" in terms_text
     assert "past results do not guarantee future performance" in terms_text
+    assert "substantive laws of Switzerland" in terms_text
+    assert "courts located in the Canton of Geneva" in terms_text
+    assert "intentional misconduct, gross negligence" in terms_text
+    assert "liability that cannot lawfully be excluded or limited" in terms_text
+    assert "New York" not in terms_text
+    assert "jury trial" not in terms_text
     assert "improve, and develop" not in terms_text
     assert "OpenAI" not in terms_text
 
