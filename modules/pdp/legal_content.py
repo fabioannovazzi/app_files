@@ -278,13 +278,11 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
                         "and abandoned call-capture state after interrupted processing."
                     ),
                     (
-                        "Retail data bridge: Retailer Signals and Brand Fit evidence "
-                        "jobs expire after 30 days, mapping worksets after 7 days, and "
-                        "mapping submissions after 180 days. Product-image bytes and "
-                        "generated reports are not uploaded by the plugin. These periods "
-                        "cover bridge artifacts; central structured product records, "
-                        "taxonomy, and accepted mappings are durable service data and do "
-                        "not share that automatic schedule."
+                        "Retail data bridge: Scraped retailer evidence used by Retailer "
+                        "Signals and Brand Fit, together with mapping worksets, mapping "
+                        "submissions, structured product records, taxonomy, and accepted "
+                        "mappings, is retained as durable service data. Product-image "
+                        "bytes and generated reports are not uploaded by the plugin."
                     ),
                     (
                         "Saved Mparanza LLC-hosted content: slide projects, templates, "

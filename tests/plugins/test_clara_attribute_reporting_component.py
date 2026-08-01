@@ -62,7 +62,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.103"
+    assert manifest["version"] == "0.1.124"
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "Retailer Signals" in manifest["interface"]["longDescription"]
     assert "Clara exposes six distinct conversation workflows" in router
@@ -83,6 +83,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
 def test_clara_dependency_checker_delegates_to_attribute_component(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.syspath_prepend(str(CLARA_ROOT / "scripts"))
     checker = _load_module(
         "clara_component_dependency_checker",
         CLARA_ROOT / "scripts" / "check_dependencies.py",

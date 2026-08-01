@@ -73,7 +73,13 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert "does not call a Mparanza LLC-hosted service" in str(page)
     assert "creates no working files on Mparanza LLC-controlled servers" in str(page)
     assert "server working files are ordinarily removed" not in str(page)
-    assert "mapping worksets after 7 days" in str(page)
+    assert "Scraped retailer evidence used by Retailer Signals and Brand Fit" in str(
+        page
+    )
+    assert "is retained as durable service data" in str(page)
+    assert "evidence jobs expire after 30 days" not in str(page)
+    assert "mapping worksets after 7 days" not in str(page)
+    assert "mapping submissions after 180 days" not in str(page)
     assert "Token access expires after eight hours" in str(page)
     assert "WhatsApp Business connector is a hosted exception" not in str(page)
     assert "after their message timestamp passes 90 days" not in str(page)

@@ -199,11 +199,11 @@ def test_clara_hosted_records_use_source_backed_retention_and_cleanup() -> None:
         for item in voice["data_sent"]
     )
 
-    assert manifests["retail-data"]["retention"]["status"] == ("partially_documented")
+    assert manifests["retail-data"]["retention"]["status"] == "documented"
     retail_retention = manifests["retail-data"]["retention"]["statement"]
-    assert all(
-        period in retail_retention for period in ("30 days", "7 days", "180 days")
-    )
+    assert "durable service data" in retail_retention
+    assert "no age-based or event-triggered automatic deletion" in retail_retention
+    assert "reject new work without deleting retained artifacts" in retail_retention
 
 
 def test_clara_register_includes_non_case_automatic_network_boundaries() -> None:

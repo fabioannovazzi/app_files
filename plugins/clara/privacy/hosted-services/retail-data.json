@@ -78,8 +78,8 @@
     ]
   },
   "retention": {
-    "status": "partially_documented",
-    "statement": "The bridge prunes evidence jobs after 30 days, mapping worksets after 7 days, and mapping submissions after 180 days, subject to live dependency retention and actor quotas. Those periods do not apply to central structured product records, taxonomy, accepted mappings, retailer-presence data, or owned-catalogue data; their automatic retention schedule is not established by the reviewed source."
+    "status": "documented",
+    "statement": "The bridge retains Retailer Signals and Brand Fit evidence jobs, mapping worksets, mapping submissions, central structured product records, taxonomy, accepted mappings, retailer-presence data, and owned-catalogue data as durable service data. The reviewed runtime has no age-based or event-triggered automatic deletion path for these artifacts. Count and byte limits reject new work without deleting retained artifacts."
   },
   "security_controls": [
     {
@@ -96,9 +96,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-28",
+    "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "1afad41eb33ce1530e1359c1e35052d67897c50b95b4680c9e9797651dc9e01d"
+    "source_fingerprint": "8231a9eebf81883c409aace7b68e0c0cd18d43c4dd4a3e656c82c48cbcbce48b"
   }
 }
