@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Inspect and close Mparanza change requests from the server environment."""
+"""Inspect, triage, and close Mparanza change requests."""
 
 from __future__ import annotations
 
@@ -42,9 +42,25 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
 
     list_parser = commands.add_parser("list", help="List oldest open requests.")
     list_parser.add_argument("--limit", type=int, default=100)
+    list_parser.add_argument(
+        "--triage-state",
+        choices=("active", "considering", "all"),
+        default="active",
+        help="Select the open triage queue (default: active).",
+    )
 
     show_parser = commands.add_parser("show", help="Show one complete request.")
     show_parser.add_argument("change_request_id")
+
+    consider_parser = commands.add_parser(
+        "consider", help="Set an open request aside for future discussion."
+    )
+    consider_parser.add_argument("change_request_id")
+
+    activate_parser = commands.add_parser(
+        "activate", help="Return a considering request to the active queue."
+    )
+    activate_parser.add_argument("change_request_id")
 
     fixed_parser = commands.add_parser(
         "fixed", help="Mark a request fixed after its plugin version is published."
@@ -69,6 +85,7 @@ def _record_payload(
         "plugin_version": record.plugin_version,
         "kind": record.kind,
         "status": record.status,
+        "triage_state": record.triage_state,
         "interview_url": record.interview_url,
         "fixed_version": record.fixed_version,
         "install_url": record.install_url,
@@ -97,7 +114,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     store = ChangeRequestStore(sqlite_path=args.sqlite_path)
     try:
         if args.command == "list":
-            records = store.list_open(limit=args.limit)
+            records = store.list_open(
+                limit=args.limit,
+                triage_state=(
+                    None if args.triage_state == "all" else args.triage_state
+                ),
+            )
             _write_json(
                 [_record_payload(record, include_request=False) for record in records]
             )
@@ -107,6 +129,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             if record is None:
                 raise ChangeRequestNotFoundError("Unknown change request.")
             _write_json(_record_payload(record, include_request=True))
+            return 0
+        if args.command in {"consider", "activate"}:
+            record = store.set_triage_state(
+                args.change_request_id,
+                "considering" if args.command == "consider" else "active",
+            )
+            _write_json(_record_payload(record, include_request=False))
             return 0
         if args.command == "fixed":
             record = store.mark_fixed(

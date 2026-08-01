@@ -37,10 +37,12 @@ __all__ = [
     "ChangeRequestStore",
     "ChangeRequestStoreError",
     "ChangeRequestStoreUnavailableError",
+    "ChangeRequestTriageState",
     "get_change_request_store",
 ]
 
 ChangeRequestStatus = Literal["open", "fixed"]
+ChangeRequestTriageState = Literal["active", "considering"]
 
 _CHANGE_REQUEST_ID_PATTERN = re.compile(r"^CR-(?P<number>[1-9][0-9]*)$")
 _DEFAULT_MAX_RECORDS = 10_000
@@ -58,6 +60,8 @@ CREATE TABLE IF NOT EXISTS mparanza_change_requests (
     request_sha256 TEXT NOT NULL,
     status_token TEXT NOT NULL UNIQUE,
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'fixed')),
+    triage_state TEXT NOT NULL DEFAULT 'active'
+        CHECK (triage_state IN ('active', 'considering')),
     interview_url TEXT,
     interview_json TEXT,
     fixed_version TEXT,
@@ -79,6 +83,8 @@ CREATE TABLE IF NOT EXISTS mparanza_change_requests (
     request_sha256 TEXT NOT NULL,
     status_token TEXT NOT NULL UNIQUE,
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'fixed')),
+    triage_state TEXT NOT NULL DEFAULT 'active'
+        CHECK (triage_state IN ('active', 'considering')),
     interview_url TEXT,
     interview_json TEXT,
     fixed_version TEXT,
@@ -127,6 +133,7 @@ class ChangeRequestRecord:
     request_sha256: str
     status_token: str
     status: ChangeRequestStatus
+    triage_state: ChangeRequestTriageState
     interview_url: str | None
     interview_json: str | None
     fixed_version: str | None
@@ -303,9 +310,14 @@ class ChangeRequestStore:
             self._schema_ready = True
 
     def _ensure_optional_columns(self, connection: Any) -> None:
-        """Add interview columns when upgrading an existing development store."""
+        """Add optional columns when upgrading an existing store."""
 
         if self._use_postgres:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS triage_state TEXT NOT NULL "
+                "DEFAULT 'active' CHECK (triage_state IN ('active', 'considering'))"
+            )
             connection.execute(
                 "ALTER TABLE mparanza_change_requests "
                 "ADD COLUMN IF NOT EXISTS interview_url TEXT"
@@ -321,6 +333,12 @@ class ChangeRequestStore:
                 "PRAGMA table_info(mparanza_change_requests)"
             ).fetchall()
         }
+        if "triage_state" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN triage_state TEXT NOT NULL DEFAULT 'active' "
+                "CHECK (triage_state IN ('active', 'considering'))"
+            )
         if "interview_url" not in columns:
             connection.execute(
                 "ALTER TABLE mparanza_change_requests ADD COLUMN interview_url TEXT"
@@ -348,6 +366,11 @@ class ChangeRequestStore:
             raise ChangeRequestStoreUnavailableError(
                 "Stored change-request status is invalid."
             )
+        triage_state = str(values.get("triage_state") or "")
+        if triage_state not in {"active", "considering"}:
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request triage state is invalid."
+            )
         return ChangeRequestRecord(
             request_no=int(values["request_no"]),
             submission_id=str(values["submission_id"]),
@@ -358,6 +381,7 @@ class ChangeRequestStore:
             request_sha256=str(values["request_sha256"]),
             status_token=str(values["status_token"]),
             status=status,
+            triage_state=triage_state,
             interview_url=(
                 str(values["interview_url"])
                 if values.get("interview_url") is not None
@@ -595,23 +619,92 @@ class ChangeRequestStore:
                 results.append(record)
         return results
 
-    def list_open(self, *, limit: int = 100) -> list[ChangeRequestRecord]:
-        """Return the oldest open requests for operator processing."""
+    def list_open(
+        self,
+        *,
+        limit: int = 100,
+        triage_state: ChangeRequestTriageState | None = "active",
+    ) -> list[ChangeRequestRecord]:
+        """Return the oldest open requests in the requested triage queue."""
 
         self._ensure_schema()
         safe_limit = min(max(int(limit), 1), 1_000)
+        if triage_state not in {None, "active", "considering"}:
+            raise ValueError("Unknown change-request triage state.")
         try:
             with self._connect() as connection:
-                rows = connection.execute(
-                    """
-                    SELECT * FROM mparanza_change_requests
-                    WHERE status = 'open'
-                    ORDER BY request_no ASC
-                    LIMIT ?
-                    """,
-                    (safe_limit,),
-                ).fetchall()
+                if triage_state is None:
+                    rows = connection.execute(
+                        """
+                        SELECT * FROM mparanza_change_requests
+                        WHERE status = 'open'
+                        ORDER BY request_no ASC
+                        LIMIT ?
+                        """,
+                        (safe_limit,),
+                    ).fetchall()
+                else:
+                    rows = connection.execute(
+                        """
+                        SELECT * FROM mparanza_change_requests
+                        WHERE status = 'open' AND triage_state = ?
+                        ORDER BY request_no ASC
+                        LIMIT ?
+                        """,
+                        (triage_state, safe_limit),
+                    ).fetchall()
                 return [self._record_from_row(row) for row in rows]
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+
+    def set_triage_state(
+        self,
+        change_request_id: str,
+        triage_state: ChangeRequestTriageState,
+    ) -> ChangeRequestRecord:
+        """Move an open request between the active and considering queues."""
+
+        request_no = _request_number(change_request_id)
+        if triage_state not in {"active", "considering"}:
+            raise ValueError("Unknown change-request triage state.")
+        self._ensure_schema()
+        timestamp = _utc_now()
+        try:
+            with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                if current.fixed:
+                    raise ChangeRequestConflictError(
+                        "Fixed change requests cannot change triage queue."
+                    )
+                if current.triage_state == triage_state:
+                    return current
+                connection.execute(
+                    """
+                    UPDATE mparanza_change_requests
+                    SET triage_state = ?, updated_at = ?
+                    WHERE request_no = ? AND status = 'open'
+                    """,
+                    (triage_state, timestamp, request_no),
+                )
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                updated = self._record_from_row(row)
+                if updated.triage_state != triage_state:
+                    raise ChangeRequestConflictError(
+                        "Change-request triage state changed concurrently."
+                    )
+                return updated
         except (
             OSError,
             sqlite3.Error,
@@ -746,7 +839,8 @@ class ChangeRequestStore:
                 connection.execute(
                     """
                     UPDATE mparanza_change_requests
-                    SET status = 'fixed', fixed_version = ?, install_url = ?,
+                    SET status = 'fixed', triage_state = 'active',
+                        fixed_version = ?, install_url = ?,
                         fixed_at = ?, updated_at = ?
                     WHERE request_no = ? AND status = 'open'
                     """,

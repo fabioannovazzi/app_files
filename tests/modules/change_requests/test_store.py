@@ -74,6 +74,31 @@ def test_submit_retry_returns_same_change_request_and_status_token(
     assert store.list_open() == [first]
 
 
+def test_considering_request_is_removed_from_active_queue(tmp_path: Path) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission(kind="capability"))
+
+    considering = store.set_triage_state(record.change_request_id, "considering")
+
+    assert considering.status == "open"
+    assert considering.triage_state == "considering"
+    assert store.list_open() == []
+    assert store.list_open(triage_state="considering") == [considering]
+    assert store.list_open(triage_state=None) == [considering]
+
+
+def test_activate_restores_considering_request_to_active_queue(tmp_path: Path) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission(kind="capability"))
+    store.set_triage_state(record.change_request_id, "considering")
+
+    active = store.set_triage_state(record.change_request_id, "active")
+
+    assert active.status == "open"
+    assert active.triage_state == "active"
+    assert store.list_open() == [active]
+
+
 def test_submit_rejects_reused_submission_id_with_different_content(
     tmp_path: Path,
 ) -> None:
@@ -296,7 +321,8 @@ def test_mark_fixed_requires_exact_local_published_manifest(tmp_path: Path) -> N
 def test_existing_sqlite_store_adds_interview_columns(tmp_path: Path) -> None:
     database_path = tmp_path / "old.sqlite3"
     with sqlite3.connect(database_path) as connection:
-        connection.execute("""
+        connection.execute(
+            """
             CREATE TABLE mparanza_change_requests (
                 request_no INTEGER PRIMARY KEY AUTOINCREMENT,
                 submission_id TEXT NOT NULL UNIQUE,
@@ -313,13 +339,15 @@ def test_existing_sqlite_store_adds_interview_columns(tmp_path: Path) -> None:
                 updated_at TEXT NOT NULL,
                 fixed_at TEXT
             )
-            """)
+            """
+        )
     store = ChangeRequestStore(sqlite_path=database_path)
 
     record = store.submit(_submission(kind="capability"))
 
     assert record.interview_url is None
     assert record.interview_json is None
+    assert record.triage_state == "active"
     with sqlite3.connect(database_path) as connection:
         columns = {
             str(row[1])
@@ -327,4 +355,4 @@ def test_existing_sqlite_store_adds_interview_columns(tmp_path: Path) -> None:
                 "PRAGMA table_info(mparanza_change_requests)"
             ).fetchall()
         }
-    assert {"interview_url", "interview_json"}.issubset(columns)
+    assert {"triage_state", "interview_url", "interview_json"}.issubset(columns)

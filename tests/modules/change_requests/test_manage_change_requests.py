@@ -71,3 +71,69 @@ def test_cli_lists_shows_and_marks_a_published_fix(
     assert shown["request"]["request"]["observed"] == "Synthetic failure"
     assert fixed["status"] == "fixed"
     assert fixed["fixed_version"] == "1.1.0"
+
+
+def test_cli_consider_sets_request_aside(tmp_path: Path, capsys, monkeypatch) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    store = ChangeRequestStore(sqlite_path=database_path)
+    record = store.submit(_submission())
+
+    exit_code = manage_change_requests.main(
+        ["--sqlite-path", str(database_path), "consider", record.change_request_id]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["status"] == "open"
+    assert payload["triage_state"] == "considering"
+    assert store.list_open() == []
+
+
+def test_cli_lists_considering_requests(tmp_path: Path, capsys, monkeypatch) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    store = ChangeRequestStore(sqlite_path=database_path)
+    record = store.submit(_submission())
+    store.set_triage_state(record.change_request_id, "considering")
+
+    exit_code = manage_change_requests.main(
+        [
+            "--sqlite-path",
+            str(database_path),
+            "list",
+            "--triage-state",
+            "considering",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert [item["change_request_id"] for item in payload] == [record.change_request_id]
+    assert payload[0]["triage_state"] == "considering"
+
+
+def test_cli_activate_returns_request_to_active_queue(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    store = ChangeRequestStore(sqlite_path=database_path)
+    record = store.submit(_submission())
+    store.set_triage_state(record.change_request_id, "considering")
+
+    exit_code = manage_change_requests.main(
+        ["--sqlite-path", str(database_path), "activate", record.change_request_id]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["status"] == "open"
+    assert payload["triage_state"] == "active"
+    assert store.list_open() == [store.get(record.change_request_id)]
