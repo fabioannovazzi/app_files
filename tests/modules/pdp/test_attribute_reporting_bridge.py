@@ -8,7 +8,6 @@ import threading
 import zipfile
 from contextlib import contextmanager
 from copy import deepcopy
-from datetime import timedelta
 from pathlib import Path
 from typing import Any
 
@@ -1281,16 +1280,10 @@ def test_distinct_jobs_for_one_actor_do_not_build_concurrently(
     assert len(build_calls) == 2
 
 
-def test_expired_artifacts_are_pruned_before_quota_is_checked(
+def test_old_artifacts_are_retained_when_new_server_work_is_created(
     tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    clock = {"now": "2026-07-15T12:00:00+00:00"}
-    monkeypatch.setattr(bridge_module, "EVIDENCE_JOB_TTL", timedelta(seconds=1))
-    monkeypatch.setattr(bridge_module, "BRAND_FIT_JOB_TTL", timedelta(seconds=1))
-    monkeypatch.setattr(bridge_module, "WORKSET_TTL", timedelta(seconds=1))
-    monkeypatch.setattr(bridge_module, "SUBMISSION_TTL", timedelta(seconds=1))
-    monkeypatch.setattr(bridge_module, "MAX_ACTOR_EVIDENCE_JOBS", 1)
+    clock = {"now": "2020-01-01T12:00:00+00:00"}
     bridge = AttributeReportingBridge(
         tmp_path / "bridge",
         taxonomy_loader=_taxonomy,
@@ -1337,7 +1330,7 @@ def test_expired_artifacts_are_pruned_before_quota_is_checked(
         old_brand_fit_dir / "status.json",
         {"status": "pending"},
     )
-    clock["now"] = "2026-07-15T12:00:02+00:00"
+    clock["now"] = "2030-01-01T12:00:00+00:00"
 
     replacement = bridge.create_evidence_job(
         retailer="saksfifthavenue",
@@ -1347,113 +1340,11 @@ def test_expired_artifacts_are_pruned_before_quota_is_checked(
         actor_email=ACTOR,
     )
 
-    assert not (bridge.root / "evidence_jobs" / old_job["job_id"]).exists()
-    assert not old_workset_dir.exists()
-    assert not old_submission_dir.exists()
-    assert not old_brand_fit_dir.exists()
+    assert (bridge.root / "evidence_jobs" / old_job["job_id"]).is_dir()
+    assert old_workset_dir.is_dir()
+    assert old_submission_dir.is_dir()
+    assert old_brand_fit_dir.is_dir()
     assert (bridge.root / "evidence_jobs" / replacement["job_id"]).is_dir()
-
-
-def test_evidence_job_is_retained_while_live_workset_depends_on_it(
-    tmp_path: Path,
-) -> None:
-    clock = {"now": "2026-01-01T12:00:00+00:00"}
-    bridge = AttributeReportingBridge(
-        tmp_path / "bridge",
-        taxonomy_loader=_taxonomy,
-        package_builder=_package_builder,
-        mapping_engine=_FakeMappingEngine(),
-        mapping_apply_engine=_FakeApplyEngine(),
-        store_factory=lambda: _FakeStore(),
-        now=lambda: clock["now"],
-    )
-    snapshot = bridge.taxonomy_snapshot("cashmere_sweaters", actor_email=ACTOR)
-    source_job = bridge.create_evidence_job(
-        retailer="saksfifthavenue",
-        category_key="cashmere_sweaters",
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-    bridge.build_evidence_job(source_job["job_id"])
-    clock["now"] = "2026-01-30T12:00:00+00:00"
-    workset = bridge.create_mapping_workset(
-        evidence_job_id=source_job["job_id"],
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-
-    clock["now"] = "2026-02-01T12:00:00+00:00"
-    bridge.create_evidence_job(
-        retailer="saksfifthavenue",
-        category_key="cashmere_sweaters",
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-
-    assert (bridge.root / "evidence_jobs" / source_job["job_id"]).is_dir()
-    assert (bridge.root / "worksets" / workset["workset_id"]).is_dir()
-
-    clock["now"] = "2026-02-07T12:00:01+00:00"
-    bridge.create_evidence_job(
-        retailer="saksfifthavenue",
-        category_key="cashmere_sweaters",
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-
-    assert not (bridge.root / "evidence_jobs" / source_job["job_id"]).exists()
-    assert not (bridge.root / "worksets" / workset["workset_id"]).exists()
-
-
-def test_pending_submission_retains_expired_workset_and_source_evidence(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    clock = {"now": "2026-01-01T12:00:00+00:00"}
-    monkeypatch.setattr(bridge_module, "EVIDENCE_JOB_TTL", timedelta(seconds=1))
-    monkeypatch.setattr(bridge_module, "WORKSET_TTL", timedelta(seconds=1))
-    bridge = AttributeReportingBridge(
-        tmp_path / "bridge",
-        taxonomy_loader=_taxonomy,
-        package_builder=_package_builder,
-        mapping_engine=_FakeMappingEngine(),
-        mapping_apply_engine=_FakeApplyEngine(),
-        store_factory=lambda: _FakeStore(),
-        now=lambda: clock["now"],
-    )
-    snapshot, source_job = _ready_job(bridge)
-    workset = bridge.create_mapping_workset(
-        evidence_job_id=source_job["job_id"],
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-    pending_dir = bridge.root / "submissions" / ("d" * 64)
-    _write_json(
-        pending_dir / "metadata.json",
-        {
-            "submitted_by": ACTOR,
-            "submitted_at": clock["now"],
-            "workset_id": workset["workset_id"],
-            "status": "pending",
-        },
-    )
-    clock["now"] = "2026-01-01T12:00:02+00:00"
-
-    bridge.create_evidence_job(
-        retailer="saksfifthavenue",
-        category_key="cashmere_sweaters",
-        taxonomy_version=snapshot["version"],
-        taxonomy_sha256=snapshot["sha256"],
-        actor_email=ACTOR,
-    )
-
-    assert (bridge.root / "evidence_jobs" / source_job["job_id"]).is_dir()
-    assert (bridge.root / "worksets" / workset["workset_id"]).is_dir()
 
 
 @pytest.mark.parametrize(

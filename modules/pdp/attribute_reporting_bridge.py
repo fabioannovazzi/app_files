@@ -19,7 +19,7 @@ import uuid
 import zipfile
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
 from types import ModuleType
@@ -65,10 +65,6 @@ MAX_ACTOR_SUBMISSIONS = 100
 MAX_ACTOR_RETAINED_BYTES = 8 * 1024 * 1024 * 1024
 MAX_GLOBAL_RETAINED_BYTES = 64 * 1024 * 1024 * 1024
 MAX_GLOBAL_CONCURRENT_EVIDENCE_BUILDS = 2
-EVIDENCE_JOB_TTL = timedelta(days=30)
-BRAND_FIT_JOB_TTL = timedelta(days=30)
-WORKSET_TTL = timedelta(days=7)
-SUBMISSION_TTL = timedelta(days=180)
 REQUIRED_PRODUCT_CACHE_ENTRIES = (
     "parent_filtered",
     "variant_result",
@@ -1343,34 +1339,14 @@ class AttributeReportingBridge:
         return self.root / ".actor-locks" / f"{collection}-{actor_token}.lock"
 
     @staticmethod
-    def _retention_policy(
+    def _artifact_policy(
         collection: str,
-    ) -> tuple[str, str, str, timedelta]:
-        policies: dict[str, tuple[str, str, str, timedelta]] = {
-            "evidence_jobs": (
-                "request.json",
-                "requested_by",
-                "requested_at",
-                EVIDENCE_JOB_TTL,
-            ),
-            "brand_fit_jobs": (
-                "request.json",
-                "requested_by",
-                "requested_at",
-                BRAND_FIT_JOB_TTL,
-            ),
-            "worksets": (
-                "metadata.json",
-                "requested_by",
-                "created_at",
-                WORKSET_TTL,
-            ),
-            "submissions": (
-                "metadata.json",
-                "submitted_by",
-                "submitted_at",
-                SUBMISSION_TTL,
-            ),
+    ) -> tuple[str, str]:
+        policies: dict[str, tuple[str, str]] = {
+            "evidence_jobs": ("request.json", "requested_by"),
+            "brand_fit_jobs": ("request.json", "requested_by"),
+            "worksets": ("metadata.json", "requested_by"),
+            "submissions": ("metadata.json", "submitted_by"),
         }
         try:
             return policies[collection]
@@ -1379,133 +1355,6 @@ class AttributeReportingBridge:
                 "Unsupported bridge artifact collection."
             ) from exc
 
-    def _prune_expired_artifacts(self) -> None:
-        """Remove expired transient bridge artifacts under one cross-worker lock."""
-
-        with _nonblocking_file_lock(self.root / ".retention.lock") as acquired:
-            if not acquired:
-                return
-            now = _parse_timestamp(self.now())
-            for collection in (
-                "evidence_jobs",
-                "brand_fit_jobs",
-                "worksets",
-                "submissions",
-            ):
-                metadata_name, _owner_key, timestamp_key, ttl = self._retention_policy(
-                    collection
-                )
-                collection_root = self.root / collection
-                if not collection_root.is_dir():
-                    continue
-                for artifact_dir in sorted(collection_root.iterdir()):
-                    if artifact_dir.is_symlink() or not artifact_dir.is_dir():
-                        continue
-                    try:
-                        metadata = _load_json(artifact_dir / metadata_name)
-                        created_at = _parse_timestamp(metadata.get(timestamp_key))
-                    except (BridgeNotFoundError, BridgeValidationError):
-                        LOGGER.warning(
-                            "Skipping malformed Attribute Reporting retention artifact: %s",
-                            artifact_dir,
-                        )
-                        continue
-                    if now - created_at <= ttl:
-                        continue
-                    if collection in {"evidence_jobs", "brand_fit_jobs"}:
-                        if self._evidence_job_has_live_workset(
-                            artifact_dir.name,
-                            now=now,
-                        ):
-                            continue
-                        with _nonblocking_file_lock(
-                            artifact_dir / ".build.lock"
-                        ) as build_lock_acquired:
-                            if not build_lock_acquired:
-                                continue
-                            shutil.rmtree(artifact_dir)
-                    elif collection == "worksets":
-                        if self._workset_has_pending_submission(
-                            artifact_dir.name,
-                            now=now,
-                        ):
-                            continue
-                        shutil.rmtree(artifact_dir)
-                    else:
-                        shutil.rmtree(artifact_dir)
-
-    def _workset_has_pending_submission(
-        self,
-        workset_id: str,
-        *,
-        now: datetime,
-    ) -> bool:
-        """Retain repair inputs while a database submission may need recovery."""
-
-        submissions_root = self.root / "submissions"
-        if not submissions_root.is_dir():
-            return False
-        for submission_dir in submissions_root.iterdir():
-            if submission_dir.is_symlink() or not submission_dir.is_dir():
-                continue
-            try:
-                metadata = _load_json(submission_dir / "metadata.json")
-                submitted_at = _parse_timestamp(metadata.get("submitted_at"))
-            except (BridgeNotFoundError, BridgeValidationError):
-                continue
-            if (
-                metadata.get("status") == "pending"
-                and str(metadata.get("workset_id") or "") == workset_id
-                and now - submitted_at <= SUBMISSION_TTL
-            ):
-                return True
-        return False
-
-    def _evidence_job_has_live_workset(
-        self,
-        job_id: str,
-        *,
-        now: datetime,
-    ) -> bool:
-        """Keep source evidence while a non-expired workset still depends on it."""
-
-        worksets_root = self.root / "worksets"
-        if worksets_root.is_dir():
-            for workset_dir in worksets_root.iterdir():
-                if workset_dir.is_symlink() or not workset_dir.is_dir():
-                    continue
-                try:
-                    metadata = _load_json(workset_dir / "metadata.json")
-                    created_at = _parse_timestamp(metadata.get("created_at"))
-                except (BridgeNotFoundError, BridgeValidationError):
-                    continue
-                if str(metadata.get("evidence_job_id") or "") == job_id and (
-                    now - created_at <= WORKSET_TTL
-                    or self._workset_has_pending_submission(
-                        workset_dir.name,
-                        now=now,
-                    )
-                ):
-                    return True
-        brand_fit_root = self.root / "brand_fit_jobs"
-        if brand_fit_root.is_dir():
-            for brand_fit_dir in brand_fit_root.iterdir():
-                if brand_fit_dir.is_symlink() or not brand_fit_dir.is_dir():
-                    continue
-                try:
-                    request = _load_json(brand_fit_dir / "request.json")
-                    requested_at = _parse_timestamp(request.get("requested_at"))
-                    status = _load_json(brand_fit_dir / "status.json")
-                except (BridgeNotFoundError, BridgeValidationError):
-                    continue
-                if (
-                    str(request.get("source_evidence_job_id") or "") == job_id
-                    and status.get("status") in {"pending", "running"}
-                    and now - requested_at <= BRAND_FIT_JOB_TTL
-                ):
-                    return True
-        return False
-
     def _enforce_actor_quota(
         self,
         collection: str,
@@ -1513,9 +1362,7 @@ class AttributeReportingBridge:
         actor: str,
         maximum: int,
     ) -> None:
-        metadata_name, owner_key, _timestamp_key, _ttl = self._retention_policy(
-            collection
-        )
+        metadata_name, owner_key = self._artifact_policy(collection)
         collection_root = self.root / collection
         count = 0
         if collection_root.is_dir():
@@ -1530,8 +1377,8 @@ class AttributeReportingBridge:
                     count += 1
         if count >= maximum:
             raise BridgeConflictError(
-                "The per-user Attribute Reporting artifact quota is full; wait for "
-                "retention cleanup before creating more server work."
+                "The per-user Attribute Reporting artifact quota is full; contact the "
+                "service operator before creating more server work."
             )
 
     def _retained_artifact_bytes(
@@ -1549,9 +1396,7 @@ class AttributeReportingBridge:
             "worksets",
             "submissions",
         ):
-            metadata_name, owner_key, _timestamp_key, _ttl = self._retention_policy(
-                collection
-            )
+            metadata_name, owner_key = self._artifact_policy(collection)
             collection_root = self.root / collection
             if not collection_root.is_dir():
                 continue
@@ -1591,7 +1436,7 @@ class AttributeReportingBridge:
             if actor_bytes + additional_bytes > MAX_ACTOR_RETAINED_BYTES:
                 raise BridgeConflictError(
                     "The per-user Attribute Reporting retained-byte quota is full; "
-                    "wait for retention cleanup before creating more server work."
+                    "contact the service operator before creating more server work."
                 )
             global_bytes = self._retained_artifact_bytes(
                 actor=None,
@@ -1600,7 +1445,7 @@ class AttributeReportingBridge:
             if global_bytes + additional_bytes > MAX_GLOBAL_RETAINED_BYTES:
                 raise BridgeConflictError(
                     "The Attribute Reporting server retained-byte quota is full; "
-                    "try again after operator cleanup."
+                    "increase server storage capacity before creating more server work."
                 )
 
     def _assert_request_taxonomy_is_current(
@@ -1851,7 +1696,6 @@ class AttributeReportingBridge:
         """Register an immutable current-database evidence-pack build."""
 
         actor = _clean_actor(actor_email)
-        self._prune_expired_artifacts()
         self._enforce_retained_byte_quotas(actor=actor)
         self._enforce_actor_quota(
             "evidence_jobs",
@@ -2207,7 +2051,6 @@ class AttributeReportingBridge:
 
         actor = _clean_actor(actor_email)
         with _blocking_file_lock(self._actor_operation_lock("brand-fit-jobs", actor)):
-            self._prune_expired_artifacts()
             self._enforce_retained_byte_quotas(actor=actor)
             self._enforce_actor_quota(
                 "brand_fit_jobs",
@@ -2809,7 +2652,6 @@ class AttributeReportingBridge:
             raise BridgeValidationError(
                 "A correction reason is valid only for a correction workset."
             )
-        self._prune_expired_artifacts()
         self._enforce_retained_byte_quotas(actor=actor)
         self._enforce_actor_quota(
             "worksets",
@@ -3038,7 +2880,6 @@ class AttributeReportingBridge:
         """Validate and atomically accept one complete Codex mapping submission."""
 
         actor = _clean_actor(actor_email)
-        self._prune_expired_artifacts()
         self._enforce_retained_byte_quotas(actor=actor)
         artifact_sizes = [
             _assert_bounded_json(mapping_tasks, label="Mapping tasks"),
