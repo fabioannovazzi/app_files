@@ -7,21 +7,27 @@ import sys
 from copy import deepcopy
 from decimal import localcontext
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import pytest
+
+from tests.plugins._financial_analysis_test_loader import (
+    load_financial_analysis_scripts,
+)
 
 ROOT = Path(__file__).resolve().parents[2]
 MODULE_ROOT = ROOT / "plugins" / "_shared" / "vendor" / "modules"
 SCRIPT_ROOT = ROOT / "plugins" / "financial-analysis" / "scripts"
 if str(MODULE_ROOT) not in sys.path:
     sys.path.insert(0, str(MODULE_ROOT))
-if str(SCRIPT_ROOT) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_ROOT))
 
-from preparation_contract_kernel import canonical_json_sha256
-from prepare_fdd_case import prepare_fdd_case
-from run_pack import PACKS, PackRunError, run_pack
+FINANCIAL_SCRIPTS = load_financial_analysis_scripts(SCRIPT_ROOT)
+canonical_json_sha256 = FINANCIAL_SCRIPTS.kernel.canonical_json_sha256
+prepare_fdd_case = FINANCIAL_SCRIPTS.fdd_runner.prepare_fdd_case
+PACKS = FINANCIAL_SCRIPTS.pack_runner.PACKS
+PackRunError = FINANCIAL_SCRIPTS.pack_runner.PackRunError
+run_pack = FINANCIAL_SCRIPTS.pack_runner.run_pack
 from vera_financial_analysis import (
     FDDContractError,
     build_contingent_liability_register,
@@ -339,6 +345,22 @@ def _bundle(case: dict[str, Any]) -> dict[str, Any]:
             "fdd_case": case,
         }
     )
+
+
+def test_financial_script_loader_restores_existing_kernel_module(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    sentinel = ModuleType("preparation_contract_kernel")
+    monkeypatch.setitem(sys.modules, "preparation_contract_kernel", sentinel)
+
+    loaded = load_financial_analysis_scripts(SCRIPT_ROOT)
+
+    assert loaded.kernel is not sentinel
+    assert (
+        Path(loaded.kernel.__file__).resolve()
+        == (SCRIPT_ROOT / "preparation_contract_kernel.py").resolve()
+    )
+    assert sys.modules["preparation_contract_kernel"] is sentinel
 
 
 def test_fdd_calculation_packs_and_bridges_execute_exactly(
