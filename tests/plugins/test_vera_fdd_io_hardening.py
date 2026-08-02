@@ -3,20 +3,21 @@ from __future__ import annotations
 import hashlib
 import json
 import runpy
-import sys
 from pathlib import Path
 from typing import Any
 
 import pytest
 
+from tests.plugins._financial_analysis_test_loader import (
+    load_financial_analysis_scripts,
+)
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_ROOT = ROOT / "plugins" / "financial-analysis" / "scripts"
-if str(SCRIPT_ROOT) not in sys.path:
-    sys.path.insert(0, str(SCRIPT_ROOT))
-
-import preparation_contract_kernel as kernel
-import prepare_fdd_case as fdd_runner
-import run_pack as pack_runner
+FINANCIAL_SCRIPTS = load_financial_analysis_scripts(SCRIPT_ROOT)
+kernel = FINANCIAL_SCRIPTS.kernel
+fdd_runner = FINANCIAL_SCRIPTS.fdd_runner
+pack_runner = FINANCIAL_SCRIPTS.pack_runner
 
 FIXTURES = runpy.run_path(
     str(ROOT / "tests" / "plugins" / "test_vera_fdd_machinery.py")
