@@ -1,0 +1,289 @@
+{
+  "schema_version": "prompt_optimizer.fiscalprompt_benchmark_suite.v1",
+  "suite_id": "prompt-optimizer-vs-fiscalprompt-it-tax-2026-07",
+  "purpose": "Compare end-to-end prompt and answer quality for Prompt Optimizer and matched FiscalPrompt templates on identical synthetic Italian tax cases.",
+  "repeats_per_case": 2,
+  "controls": {
+    "paired_fresh_ephemeral_runs": true,
+    "same_model_and_reasoning_effort": true,
+    "concurrent_treatments_within_pair": true,
+    "randomized_treatment_launch_order": true,
+    "same_case_facts_and_as_of_date": true,
+    "treatment_isolation": true,
+    "blinded_a_b_review": true,
+    "purchased_pdf_and_extracted_templates_outside_git": true,
+    "semantic_judgment_owner": "independent_model_and_italian_tax_professional"
+  },
+  "reviewer_policy": {
+    "required_reviewer_types": [
+      "model",
+      "tax_professional"
+    ],
+    "fresh_thread_required": true,
+    "builder_cannot_review_own_outputs": true,
+    "labels_must_remain_blinded": true
+  },
+  "rubric": {
+    "score_min": 1,
+    "score_max": 5,
+    "prompt_dimensions": [
+      {
+        "id": "fact_preservation",
+        "weight": 0.2,
+        "description": "Preserves every material fact, date, amount, entity, and explicit question without distortion."
+      },
+      {
+        "id": "task_specificity",
+        "weight": 0.2,
+        "description": "Frames the actual professional decision instead of producing generic tax commentary."
+      },
+      {
+        "id": "authority_and_source_controls",
+        "weight": 0.25,
+        "description": "Requires appropriate primary and official authority, traceable citations, current-law checks, and anti-fabrication controls."
+      },
+      {
+        "id": "output_contract",
+        "weight": 0.2,
+        "description": "Requests a usable professional structure, calculations or options when relevant, and a clear answer to the case."
+      },
+      {
+        "id": "uncertainty_and_safety",
+        "weight": 0.15,
+        "description": "Surfaces missing evidence, residual uncertainty, professional-review boundaries, and unsupported-authority risk."
+      }
+    ],
+    "answer_dimensions": [
+      {
+        "id": "substantive_correctness",
+        "weight": 0.3,
+        "description": "Reaches legally and technically supportable conclusions under the governing Italian and applicable EU framework as of the case date."
+      },
+      {
+        "id": "authority_traceability",
+        "weight": 0.2,
+        "description": "Uses authoritative, current, verifiable sources and connects them to material claims."
+      },
+      {
+        "id": "fact_fidelity",
+        "weight": 0.15,
+        "description": "Uses the supplied facts accurately without inventing, omitting, or changing outcome-relevant details."
+      },
+      {
+        "id": "issue_coverage",
+        "weight": 0.15,
+        "description": "Addresses the material tax, procedural, evidentiary, calculation, and operational issues raised by the case."
+      },
+      {
+        "id": "professional_usefulness",
+        "weight": 0.1,
+        "description": "Gives a commercialista a clear, efficient next-step analysis rather than merely restating doctrine."
+      },
+      {
+        "id": "uncertainty_calibration",
+        "weight": 0.1,
+        "description": "Distinguishes verified law, interpretation, missing facts, and judgment-dependent conclusions without false certainty."
+      }
+    ],
+    "hard_failures": [
+      "fabricated_authority_or_url",
+      "material_legal_or_tax_error",
+      "wrong_jurisdiction_or_period",
+      "material_fact_loss_or_invention",
+      "unsupported_professional_certainty",
+      "failure_to_answer_the_case"
+    ]
+  },
+  "decision_policy": {
+    "minimum_complete_pairs": 16,
+    "answer_noninferiority_floor": -0.1,
+    "answer_superiority_margin": 0.2,
+    "maximum_additional_optimizer_hard_failures": 0,
+    "superiority_requires_positive_bootstrap_lower_bound": true,
+    "cost_is_reported_but_cannot_offset_quality_regression": true
+  },
+  "cases": [
+    {
+      "id": "iva-complex-software-supply",
+      "category": "IVA nazionale",
+      "fiscalprompt_template_id": "IVA-01",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia, con diritto UE applicabile",
+      "output_language": "it",
+      "question": "Alfa Servizi S.r.l. ha acquistato da un unico fornitore un progetto integrato di piattaforma software per EUR 240.000: licenza EUR 140.000, configurazione EUR 55.000, formazione EUR 20.000 e assistenza per dodici mesi EUR 25.000. Il contratto, firmato il 15/07/2026, prevede un unico collaudo e un corrispettivo complessivo, pur indicando questi valori interni. Il fornitore ha applicato IVA al 22% sull'intero importo. Preparare un memo per verificare se si tratta di un'operazione unica o di prestazioni autonome, se l'aliquota applicata è corretta, quali documenti servono e quali azioni adottare prima della registrazione definitiva della fattura.",
+      "fact_anchors": [
+        "Alfa Servizi S.r.l.",
+        "EUR 240.000",
+        "EUR 140.000",
+        "EUR 55.000",
+        "EUR 20.000",
+        "EUR 25.000",
+        "15/07/2026",
+        "22%"
+      ],
+      "review_focus": [
+        "qualificazione operazione unica o multipla",
+        "presupposti IVA e aliquota",
+        "documenti e rimedi operativi"
+      ]
+    },
+    {
+      "id": "iva-eu-b2b-consulting-workshop",
+      "category": "IVA servizi UE",
+      "fiscalprompt_template_id": "IVA-02",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia e Unione europea",
+      "output_language": "it",
+      "question": "Beta Consulting S.r.l., stabilita a Milano, ha fatturato EUR 85.000 a Handel GmbH, soggetto passivo tedesco con partita IVA valida nel VIES. L'incarico comprende consulenza strategica svolta da remoto e un workshop di due giorni tenuto a Milano il 9 e 10 giugno 2026, senza prezzo separato. La fattura del 30/06/2026 è stata emessa senza IVA con inversione contabile. Verificare territorialità, qualificazione B2B, trattamento del workshop, diciture di fattura e obblighi dichiarativi.",
+      "fact_anchors": [
+        "Beta Consulting S.r.l.",
+        "Handel GmbH",
+        "EUR 85.000",
+        "9 e 10 giugno 2026",
+        "30/06/2026",
+        "VIES"
+      ],
+      "review_focus": [
+        "regola generale e possibili deroghe di territorialità",
+        "trattamento della componente workshop",
+        "fatturazione e adempimenti transfrontalieri"
+      ]
+    },
+    {
+      "id": "iva-intra-eu-exw-transport-proof",
+      "category": "IVA cessioni intracomunitarie",
+      "fiscalprompt_template_id": "IVA-06",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia e Unione europea",
+      "output_language": "it",
+      "question": "Gamma Macchine S.p.A. ha ceduto beni per EUR 180.000 a Industrie SAS, cliente francese con partita IVA valida. La resa era EXW Torino e il trasporto è stato organizzato dall'acquirente. Gamma non dispone di CMR firmato, ma conserva ordine, fattura, bonifico, targa del vettore, pedaggi autostradali e ricevuta del magazzino francese datata 22/05/2026. La fattura del 18/05/2026 è stata emessa come non imponibile. Valutare requisiti sostanziali, prova del trasporto, rischi e documenti integrativi da ottenere.",
+      "fact_anchors": [
+        "Gamma Macchine S.p.A.",
+        "Industrie SAS",
+        "EUR 180.000",
+        "EXW Torino",
+        "22/05/2026",
+        "18/05/2026",
+        "CMR"
+      ],
+      "review_focus": [
+        "requisiti della cessione intracomunitaria",
+        "prova del trasporto in resa EXW",
+        "rischio e remediation documentale"
+      ]
+    },
+    {
+      "id": "crediti-compensazione-orizzontale",
+      "category": "Crediti d'imposta",
+      "fiscalprompt_template_id": "CI-25",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia",
+      "output_language": "it",
+      "question": "Delta Industria S.r.l. dichiara un credito ricerca e sviluppo di EUR 320.000 e un credito IRES di EUR 90.000. Nel 2026 ha già effettuato compensazioni orizzontali per EUR 1.650.000 e intende presentare il 20/08/2026 un F24 con ulteriori EUR 410.000. Il visto di conformità risulta apposto sulla dichiarazione relativa al credito ricerca e sviluppo ma non su quella IRES. Verificare disponibilità, limiti annuali, obblighi di visto, modalità di presentazione, rischi e possibili alternative operative.",
+      "fact_anchors": [
+        "Delta Industria S.r.l.",
+        "EUR 320.000",
+        "EUR 90.000",
+        "EUR 1.650.000",
+        "20/08/2026",
+        "EUR 410.000",
+        "visto di conformità"
+      ],
+      "review_focus": [
+        "natura e disponibilità distinta dei crediti",
+        "limiti e visto di conformità",
+        "rischio sanzionatorio e opzioni operative"
+      ]
+    },
+    {
+      "id": "accertamento-iva-ires-pvc",
+      "category": "Accertamento e contenzioso",
+      "fiscalprompt_template_id": "AC-01",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia",
+      "output_language": "it",
+      "question": "Epsilon Retail S.r.l. ha ricevuto il 14/07/2026 un avviso di accertamento relativo al 2021 per maggiore IVA e IRES pari a EUR 480.000, oltre sanzioni e interessi. L'atto richiama un PVC consegnato il 3/02/2026 senza allegarlo; il legale rappresentante dichiara di conoscerne solo una parte. La ripresa riguarda costi per servizi ritenuti inesistenti e detrazione IVA. Preparare una valutazione preliminare di vizi, onere della prova, documenti mancanti, termini, opzioni deflattive e strategia difensiva, senza redigere il ricorso.",
+      "fact_anchors": [
+        "Epsilon Retail S.r.l.",
+        "14/07/2026",
+        "2021",
+        "EUR 480.000",
+        "3/02/2026",
+        "PVC",
+        "servizi ritenuti inesistenti"
+      ],
+      "review_focus": [
+        "vizi formali e motivazione per relationem",
+        "onere della prova e fatture contestate",
+        "termini e alternative difensive"
+      ]
+    },
+    {
+      "id": "riduzione-capitale-riserve-sospensione",
+      "category": "Operazioni straordinarie",
+      "fiscalprompt_template_id": "OS-15",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia",
+      "output_language": "it",
+      "question": "Zeta S.p.A. valuta una riduzione volontaria del capitale da EUR 4.000.000 a EUR 2.500.000 con restituzione proporzionale ai soci. Il patrimonio netto comprende utili portati a nuovo per EUR 1.200.000 e una riserva in sospensione d'imposta per EUR 600.000. I soci sono due persone fisiche residenti e una holding italiana. Analizzare disciplina societaria e fiscale, tutela dei creditori, ordine di utilizzo delle riserve, effetti per società e soci, costo fiscale delle partecipazioni e documenti necessari prima della delibera.",
+      "fact_anchors": [
+        "Zeta S.p.A.",
+        "EUR 4.000.000",
+        "EUR 2.500.000",
+        "EUR 1.200.000",
+        "EUR 600.000",
+        "holding italiana"
+      ],
+      "review_focus": [
+        "riduzione volontaria e tutela creditori",
+        "riserve e sospensione d'imposta",
+        "effetti fiscali per categorie di soci"
+      ]
+    },
+    {
+      "id": "transfer-pricing-management-fees",
+      "category": "Imposte dirette",
+      "fiscalprompt_template_id": "ID-09",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia, Francia e standard OCSE applicabili",
+      "output_language": "it",
+      "question": "Eta Italia S.r.l., con ricavi 2025 di EUR 14.000.000, ha corrisposto EUR 950.000 alla controllante francese per servizi di management e IT applicando un cost plus dell'8%. Non è stato predisposto il local file; sono disponibili contratto infragruppo, fatture, email e timesheet incompleti. L'Agenzia delle Entrate ha avviato una verifica il 6/07/2026. Valutare deducibilità e inerenza, beneficio dei servizi, congruità del metodo, documentazione, sanzioni e piano immediato di risposta alla verifica.",
+      "fact_anchors": [
+        "Eta Italia S.r.l.",
+        "EUR 14.000.000",
+        "EUR 950.000",
+        "8%",
+        "local file",
+        "6/07/2026"
+      ],
+      "review_focus": [
+        "effettività e beneficio dei servizi",
+        "metodo e congruità del corrispettivo",
+        "documentazione e risposta alla verifica"
+      ]
+    },
+    {
+      "id": "iva-carousel-due-diligence",
+      "category": "IVA avanzata e frodi",
+      "fiscalprompt_template_id": "IVA-ADV-20",
+      "as_of_date": "2026-07-31",
+      "jurisdiction": "Italia e Unione europea",
+      "output_language": "it",
+      "question": "Theta Electronics S.r.l. ha acquistato nel primo semestre 2026 telefoni per EUR 1.100.000 da un nuovo fornitore italiano e li ha rivenduti rapidamente a clienti UE con margine medio dell'1,2%. Il fornitore aveva partita IVA e iscrizione VIES valide, chiedeva pagamenti entro 24 ore e usava un magazzino di terzi; a luglio è risultato irreperibile e non ha versato l'IVA. Theta conserva visure, controlli VIES, ordini, bonifici e prove di trasporto, ma non verbali di visita né informazioni sulla struttura del fornitore. Valutare rischio di contestazione della detrazione, standard di conoscenza o conoscibilità, adeguatezza della due diligence, documenti da acquisire e strategia difensiva.",
+      "fact_anchors": [
+        "Theta Electronics S.r.l.",
+        "EUR 1.100.000",
+        "primo semestre 2026",
+        "1,2%",
+        "24 ore",
+        "VIES",
+        "luglio"
+      ],
+      "review_focus": [
+        "diritto alla detrazione e frode a monte",
+        "conoscenza o conoscibilità",
+        "due diligence e strategia probatoria"
+      ]
+    }
+  ]
+}

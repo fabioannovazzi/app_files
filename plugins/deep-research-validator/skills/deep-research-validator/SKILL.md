@@ -181,6 +181,17 @@ Issue types are `none`, `source_unavailable`, `source_not_identified`,
 `answer_contract_failure`. Each non-`none` issue requires an explicit treatment
 action and status. Use `none` alone.
 
+Keep the coded review state internally consistent. Any non-supported support
+status, reasoning concern, source-identity concern, or judgment-dependent
+status requires a non-`none` issue and treatment. A `supported`,
+`partially_supported`, or `contradicted` assessment requires at least one
+identified source check. A `not_supported` or `contradicted` claim, or a claim
+with `unsound` reasoning, cannot be retained unchanged. Contract-conformance
+attention requires an `answer_contract_failure` treatment, and that treatment
+must not appear when every contract dimension conforms. Reviewer rejection,
+proposed treatment, blocked treatment, and professional-review requirements
+must remain unresolved in `delivery_readiness` until addressed.
+
 8. Package and audit the review:
 
 ```bash
@@ -190,8 +201,12 @@ python scripts/package_validation.py <output-dir>/document_inventory.json <outpu
 Add `--docx` whenever DOCX tooling is available. Do not ask whether to export DOCX; it is a natural deliverable of the validation package.
 
 9. Read `validation_audit.json`. `record_complete` means only that the required
-   assessments and treatments were recorded. Use `delivery_readiness` to find
-   whether answer revision, more evidence, or professional review remains.
+   assessments, treatments, and mechanically provable cross-field
+   relationships were recorded consistently. Use `delivery_readiness` to find
+   whether answer revision, more evidence, reviewer rejection, or professional
+   review remains. A completed revision must pair with the `corrected` overall
+   outcome; unresolved attention cannot pair with
+   `no_material_defect_identified`.
 10. If a reviewer edits `proposed_fix`, do not mark the answer final. Regenerate
     the reviewed or corrected answer semantically, update the disposition and
     document-revision record, then rerun packaging.

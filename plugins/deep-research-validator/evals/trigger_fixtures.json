@@ -16,6 +16,11 @@
       "id": "check-citations-reasoning",
       "prompt": "Review this research answer for unsupported citations, weak reasoning and overstated conclusions.",
       "required_signals": ["citations", "reasoning review", "unsupported claims"]
+    },
+    {
+      "id": "validate-one-page-letter",
+      "prompt": "Validate this one-page legal letter against the question, its source record and the intended client audience.",
+      "required_signals": ["one-page letter", "answer contract", "material claims"]
     }
   ],
   "should_not_trigger": [

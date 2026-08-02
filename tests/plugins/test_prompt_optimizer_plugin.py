@@ -44,6 +44,47 @@ def _answer_contract(
     }
 
 
+def _prompt_contract_review(
+    *,
+    attention_dimension: str | None = None,
+    attention_status: str = "does_not_conform",
+    reviewer_action: str | None = None,
+) -> dict[str, Any]:
+    dimensions = {
+        dimension: {
+            "status": (
+                attention_status if dimension == attention_dimension else "conforms"
+            ),
+            "analysis": (
+                "The optimized prompt conflicts with this contract dimension."
+                if dimension == attention_dimension
+                else "The optimized prompt semantically conforms."
+            ),
+        }
+        for dimension in (
+            "question_and_material_facts",
+            "generation_route",
+            "document_type",
+            "purpose",
+            "audience",
+            "output_language",
+            "jurisdiction",
+            "evidence_display",
+            "research_lens",
+            "validation_policy",
+            "source_strategy",
+        )
+    }
+    return {
+        "schema_version": "1.0",
+        "review_method": "model_led_semantic_conformance_review",
+        "dimensions": dimensions,
+        "overall_status": "does_not_conform" if attention_dimension else "conforms",
+        "reviewer_action": reviewer_action
+        or ("edit" if attention_dimension else "accept"),
+    }
+
+
 def load_script(module_name: str, script_name: str):
     script_path = SCRIPTS_DIR / script_name
     sys.path.insert(0, str(SCRIPTS_DIR))
@@ -100,7 +141,11 @@ def test_inspect_question_extracts_deterministic_anchors(tmp_path: Path) -> None
     assert any("1,250,000" in amount for amount in inventory["amounts"])
     assert "European Union" in inventory["jurisdiction_hints"]
     assert inventory["explicit_questions"] == ["What sources should be checked?"]
-    assert recipe["lens"]["scope"] == "domestic_plus_EU"
+    assert recipe["lens"] == {
+        "posture": "unconfirmed",
+        "objective": "unconfirmed",
+        "scope": "unconfirmed",
+    }
     assert recipe["jurisdiction_policy"]["default_jurisdiction"] == "unconfirmed"
     assert recipe["jurisdiction_policy"]["policy_source"] == "inventory_only"
     framework_labels = {
@@ -121,10 +166,10 @@ def test_inspect_question_extracts_deterministic_anchors(tmp_path: Path) -> None
         "explicit research lens with posture, objective, and scope"
         in recipe["required_prompt_elements"]
     )
-    assert recipe["lawyer_intake"]["mode"] == "ask_before_drafting_when_material"
+    assert recipe["lawyer_intake"]["mode"] == "model_led_ask_only_when_material"
 
 
-def test_inspect_question_requires_angle_before_domain_choices(
+def test_inspect_question_leaves_angle_and_confirmation_to_semantic_review(
     tmp_path: Path,
 ) -> None:
     inspect_mod = load_script(
@@ -140,30 +185,28 @@ def test_inspect_question_requires_angle_before_domain_choices(
     recipe = json.loads(paths["prompt_recipe"].read_text(encoding="utf-8"))
 
     angle_confirmation = recipe["angle_confirmation"]
-    assert angle_confirmation["required"] is True
-    assert angle_confirmation["mode"] == "structured_choice"
-    assert "research angle" in angle_confirmation["reason"]
-    angle_option_ids = {option["id"] for option in angle_confirmation["options"]}
-    assert "legal_status_classification" in angle_option_ids
-    assert "liability_risk_matrix" in angle_option_ids
-    assert "compliance_operating_model" in angle_option_ids
-    assert recipe["lawyer_intake"]["angle_confirmation_required"] is True
-    assert recipe["lawyer_intake"]["questions"][0]["id"] == "angle_confirmation"
+    assert angle_confirmation["required"] is False
+    assert angle_confirmation["mode"] == "model_led_confirmation_if_material"
+    assert angle_confirmation["decision_owner"] == "codex_or_user"
+    assert angle_confirmation["determination_status"] == (
+        "not_determined_by_inspection"
+    )
+    assert angle_confirmation["options"] == []
+    assert recipe["lawyer_intake"]["angle_confirmation_required"] is False
 
     assert recipe["jurisdiction_policy"]["default_jurisdiction"] == "unconfirmed"
     assert recipe["jurisdiction_policy"]["selection_status"] == "unconfirmed"
     jurisdiction_confirmation = recipe["jurisdiction_confirmation"]
-    assert jurisdiction_confirmation["required"] is True
-    assert jurisdiction_confirmation["mode"] == "structured_choice"
+    assert jurisdiction_confirmation["required"] is False
+    assert jurisdiction_confirmation["mode"] == "model_led_confirmation_if_material"
     assert "national law" in jurisdiction_confirmation["reason"]
     jurisdiction_option_ids = {
         option["id"] for option in jurisdiction_confirmation["options"]
     }
     assert "eu_law_baseline" in jurisdiction_option_ids
     assert "eu_plus_member_state" in jurisdiction_option_ids
-    assert recipe["lawyer_intake"]["jurisdiction_confirmation_required"] is True
-    intake_question_ids = {item["id"] for item in recipe["lawyer_intake"]["questions"]}
-    assert "jurisdiction_confirmation" in intake_question_ids
+    assert recipe["lawyer_intake"]["jurisdiction_confirmation_required"] is False
+    assert recipe["lawyer_intake"]["questions"] == []
 
 
 def test_inspect_question_sets_french_geneva_jurisdiction(
@@ -211,6 +254,25 @@ def test_inspect_question_keeps_jurisdiction_independent_from_output_language(
     assert recipe["jurisdiction_conflicts"] == []
     assert recipe["source_domains"] == []
     assert recipe["source_domain_policy"] == "model_curated_only"
+
+
+def test_explicit_italian_law_does_not_force_confirmation() -> None:
+    inspect_mod = load_script(
+        "prompt_optimizer_explicit_italian_framework", "inspect_question.py"
+    )
+    inventory = inspect_mod.inspect_question_text(
+        "Under Italian law, can Alfa S.r.l. terminate this agreement?"
+    )
+    policy = inspect_mod.jurisdiction_policy_for_question(
+        "en", inventory.language_hint, inventory.jurisdiction_hints
+    )
+
+    confirmation = inspect_mod.jurisdiction_confirmation_for_question(inventory, policy)
+
+    assert "Italy" in inventory.jurisdiction_hints
+    assert confirmation["required"] is False
+    assert confirmation["decision_owner"] == "codex_or_user"
+    assert confirmation["preferred_option_id"] is None
 
 
 def test_inspect_question_does_not_semantically_route_broad_legal_question(
@@ -295,16 +357,13 @@ def test_inspect_question_builds_lawyer_intake_for_dispute_letter(
     recipe = json.loads(paths["prompt_recipe"].read_text(encoding="utf-8"))
     intake = recipe["lawyer_intake"]
 
-    assert recipe["lens"]["posture"] == "defense_audit_dispute"
-    assert recipe["lens"]["objective"] == "balanced"
-    assert intake["mode"] == "ask_before_drafting_when_material"
-    assert intake["max_questions"] == 5
-    question_ids = {item["id"] for item in intake["questions"]}
-    assert "deadline_and_dates" in question_ids
-    assert "demands_and_sender" in question_ids
-    assert "parties_and_roles" in question_ids
-    assert "jurisdiction_confirmation" in question_ids
-    assert intake["output_format_options"][0]["id"] == "response_strategy"
+    assert recipe["lens"]["posture"] == "unconfirmed"
+    assert recipe["lens"]["objective"] == "unconfirmed"
+    assert intake["mode"] == "model_led_ask_only_when_material"
+    assert intake["max_questions"] == 3
+    assert intake["questions"] == []
+    assert intake["output_format_options"] == []
+    assert "Do not ask the user whether to optimize" in intake["instruction"]
 
 
 def test_inspect_question_rejects_empty_cli_input(tmp_path: Path) -> None:
@@ -348,6 +407,7 @@ Flag residual uncertainty.
         prompt,
         tmp_path,
         answer_contract=_answer_contract(),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -375,6 +435,10 @@ Flag residual uncertainty.
     assert audit["source_domain_policy"] == "model_curated_only"
     assert audit["answer_contract"]["document_type"] == "client-ready legal memo"
     assert paths["answer_contract"] == tmp_path / "answer_contract.json"
+    assert paths["prompt_contract_review"] == tmp_path / "prompt_contract_review.json"
+    assert audit["prompt_contract_review_audit"]["status"] == "pass"
+    assert "exact dates" in audit["assurance_boundary"]["mechanically_validated"]
+    assert "question meaning" in audit["assurance_boundary"]["model_led"]
     assert (
         paths["source_domains"].read_text(encoding="utf-8")
         == "https://normattiva.it/\nhttps://agenziaentrate.gov.it/\nhttps://eur-lex.europa.eu/\n"
@@ -441,7 +505,8 @@ Flag residual uncertainty.
     assert prompt_package_output["required_text"] == [
         "# Prompt Optimizer Package",
         "## Answer Contract",
-        "## Deterministic Research Lens",
+        "## Model-Led Research Lens",
+        "## Prompt-Contract Semantic Review",
         "## What to Use",
     ]
     readme_output = next(
@@ -497,6 +562,7 @@ Flag residual uncertainty.
             document_type="response strategy memo",
             jurisdiction="Swiss law and Canton of Geneva",
         ),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -548,6 +614,7 @@ Incluya citas, conclusiones, límites y preguntas aclaratorias esenciales.
             output_language="español",
             jurisdiction="Spanish law",
         ),
+        prompt_contract_review=_prompt_contract_review(),
         language="es",
         source_domains=["boe.es", "agenciatributaria.es"],
     )
@@ -611,6 +678,7 @@ Flag residual uncertainty.
         prompt,
         tmp_path,
         answer_contract=_answer_contract(document_type="legal research brief"),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
         source_domains=[
             "https://www.normattiva.it/",
@@ -669,6 +737,7 @@ Flag residual uncertainty and avoid overstating judgment-dependent conclusions.
         prompt,
         tmp_path,
         answer_contract=contract,
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
         source_domains=["normattiva.it"],
     )
@@ -731,6 +800,7 @@ Flag residual uncertainty.
         prompt,
         tmp_path,
         answer_contract=_answer_contract(),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -782,6 +852,7 @@ For tax, separate confirmed law, likely administrative practice, treaty-dependen
             question_domain="mixed",
             jurisdiction="Swiss law and Canton of Geneva",
         ),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -817,6 +888,7 @@ def test_validate_prompt_flags_missing_requirements(tmp_path: Path) -> None:
         prompt,
         tmp_path,
         answer_contract=_answer_contract(),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -827,7 +899,95 @@ def test_validate_prompt_flags_missing_requirements(tmp_path: Path) -> None:
     assert "jurisdiction_lock" in audit["failed_checks"]
     assert "research_lens" in audit["failed_checks"]
     assert "EUR 1,250,000" in audit["missing_fact_anchors"]
+    assert "Alfa S.r.l." in audit["missing_fact_anchors"]
     assert audit["missing_explicit_questions"] == ["What sources should be checked?"]
+    assert "explicit_questions_preserved" not in audit["failed_checks"]
+    assert audit["observations"]["literal_question_overlap_is_gating"] is False
+
+
+def test_model_led_contract_review_blocks_wrong_jurisdiction_prompt() -> None:
+    validate_mod = load_script(
+        "prompt_optimizer_semantic_jurisdiction_boundary", "validate_prompt.py"
+    )
+    question = "Under French law, what limitation period applies to the claim?"
+    prompt = """
+You are a lawyer. Mandatory output language: English.
+Legal framework: use French law.
+Research lens: posture is assessment, objective is advice, scope is the claim.
+Produce a client-ready legal memo.
+Preserve the supplied facts and answer which limitation period governs.
+Use official sources, legislation, case law, and stable URLs.
+Use citations [1] and a final notes section.
+Ask clarifying questions only if essential facts are missing.
+Structure the output with analysis and conclusions, and flag uncertainty.
+"""
+
+    audit = validate_mod.validate_prompt_text(
+        question,
+        prompt,
+        answer_contract=_answer_contract(jurisdiction="Italian law"),
+        prompt_contract_review=_prompt_contract_review(
+            attention_dimension="jurisdiction"
+        ),
+        language="en",
+    )
+
+    assert audit["answer_contract_audit"]["status"] == "pass"
+    assert audit["checks"]["jurisdiction_lock"] is True
+    assert audit["prompt_contract_review_audit"]["attention_dimensions"] == [
+        "jurisdiction"
+    ]
+    assert audit["status"] == "fail"
+    assert "prompt_contract_review" in audit["failed_checks"]
+
+
+def test_semantic_review_allows_faithful_question_paraphrase() -> None:
+    validate_mod = load_script(
+        "prompt_optimizer_semantic_paraphrase_boundary", "validate_prompt.py"
+    )
+    question = "Under Italian law, what sources should be checked?"
+    prompt = """
+You are a lawyer. Mandatory output language: English.
+Legal framework: use Italian law.
+Research lens: posture is assessment, objective is advice, scope is Italian law.
+Produce a client-ready legal memo.
+Identify the authoritative materials needed to resolve the matter.
+Use official sources, legislation, case law, and stable URLs.
+Use citations [1] and a final notes section.
+Ask clarifying questions only if essential facts are missing.
+Structure the output with analysis and conclusions, and flag uncertainty.
+"""
+
+    audit = validate_mod.validate_prompt_text(
+        question,
+        prompt,
+        answer_contract=_answer_contract(question_domain="legal"),
+        prompt_contract_review=_prompt_contract_review(),
+        language="en",
+    )
+
+    assert audit["missing_explicit_questions"] == [
+        "Under Italian law, what sources should be checked?"
+    ]
+    assert audit["observations"]["literal_explicit_questions_preserved"] is False
+    assert audit["status"] == "pass"
+
+
+def test_prompt_contract_evaluation_corpus_covers_material_boundaries() -> None:
+    corpus = json.loads(
+        (PLUGIN_ROOT / "evals" / "prompt_contract_cases.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    case_ids = {case["id"] for case in corpus["cases"]}
+
+    assert corpus["schema_version"] == "1.0"
+    assert {
+        "wrong-jurisdiction",
+        "faithful-paraphrase",
+        "omitted-legal-entity",
+        "wrong-generation-route",
+    } <= case_ids
 
 
 def test_validate_prompt_requires_french_geneva_jurisdiction(
@@ -861,6 +1021,7 @@ Signalez l'incertitude résiduelle et les points incertains.
             output_language="français",
             jurisdiction="Swiss law and Canton of Geneva",
         ),
+        prompt_contract_review=_prompt_contract_review(),
         language="fr",
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
@@ -901,8 +1062,8 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
     assert "must not use output language as a legal" in skill
     assert "angle_confirmation" in skill
     assert "jurisdiction_confirmation" in skill
-    assert "options in chat and wait" in skill
-    assert "choice in chat before drafting" in skill
+    assert "decision owner `codex_or_user`" in skill
+    assert "generate fact-specific options" in skill
     assert "continue in the same" in skill
     assert "Keep the improvement note local to chat or run artifacts." in skill
     assert "fill a form" in skill
@@ -911,6 +1072,8 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
     assert "render_prompt_optimizer_review" in skill
     assert "ui://widget/prompt-optimizer-review.html" in skill
     assert "native Plan-mode choices" in skill
+    assert "draft_prompt_contract_review.json" in skill
+    assert "--prompt-contract-review-file" in skill
 
 
 def test_mcp_review_server_validates_and_renders_prompt_payload() -> None:
@@ -1177,6 +1340,7 @@ Flag residual uncertainty.
         original_prompt,
         tmp_path,
         answer_contract=_answer_contract(),
+        prompt_contract_review=_prompt_contract_review(),
         language="en",
     )
     run_intake = json.loads((tmp_path / "run_intake.json").read_text(encoding="utf-8"))
@@ -1237,11 +1401,30 @@ Flag residual uncertainty.
     applied_result = apply_result["structuredContent"]
     assert applied_result["ok"] is True
     assert applied_result["target_update_count"] == 1
-    assert applied_result["application_status"] == "final_ready"
+    assert applied_result["application_status"] == "partial_review_applied"
     assert applied_result["run_intake_path"] == str(tmp_path / "run_intake.json")
     assert "oecd.org" in (tmp_path / "optimized_prompt.md").read_text(encoding="utf-8")
     audit = json.loads((tmp_path / "prompt_audit.json").read_text(encoding="utf-8"))
     assert "https://oecd.org/" in audit["source_domains"]
+    assert audit["status"] == "fail"
+    assert audit["prompt_contract_review_audit"]["attention_dimensions"] == [
+        "question_and_material_facts",
+        "generation_route",
+        "document_type",
+        "purpose",
+        "audience",
+        "output_language",
+        "jurisdiction",
+        "evidence_display",
+        "research_lens",
+        "validation_policy",
+        "source_strategy",
+    ]
+    semantic_review = json.loads(
+        (tmp_path / "prompt_contract_review.json").read_text(encoding="utf-8")
+    )
+    assert semantic_review["overall_status"] == "not_reviewed"
+    assert semantic_review["stale_reason"] == "optimized_prompt_edited_after_review"
     assert "https://oecd.org/" in (tmp_path / "prompt_package.md").read_text(
         encoding="utf-8"
     )
@@ -1265,10 +1448,11 @@ Flag residual uncertainty.
         "prompt_package.md",
         "source_domains.txt",
         "source_domains_comma.txt",
+        "prompt_contract_review.json",
     ]
 
     final_after_apply = json.loads((tmp_path / "final_artifacts.json").read_text())
-    assert final_after_apply["status"] == "final_ready"
+    assert final_after_apply["status"] == "partial_review_applied"
     prompt_output = next(
         output
         for output in final_after_apply["outputs"]
@@ -1290,7 +1474,11 @@ Flag residual uncertainty.
         "prompt_package.md",
         "source_domains.txt",
         "source_domains_comma.txt",
+        "prompt_contract_review.json",
     ]
+    assert any(
+        "semantic review" in action for action in final_after_apply["next_actions"]
+    )
     run_intake = json.loads((tmp_path / "run_intake.json").read_text())
     review_apply_steps = [
         step
@@ -1304,6 +1492,7 @@ Flag residual uncertainty.
         "optimized_prompt.md",
         "prompt_audit.json",
         "prompt_package.md",
+        "prompt_contract_review.json",
         "source_domains.txt",
         "source_domains_comma.txt",
         "ui_decisions.json",

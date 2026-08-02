@@ -51,6 +51,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
 __all__ = [
     "render_prompt_package",
     "validate_answer_contract",
+    "validate_prompt_contract_review",
     "validate_prompt_text",
     "write_validation",
 ]
@@ -99,6 +100,33 @@ ANSWER_CONTRACT_ENUMS = {
     },
     "correction_policy": {"correct_when_supported", "review_only"},
     "judgment_policy": {"flag_for_professional_review"},
+}
+PROMPT_CONTRACT_REVIEW_DIMENSIONS = (
+    "question_and_material_facts",
+    "generation_route",
+    "document_type",
+    "purpose",
+    "audience",
+    "output_language",
+    "jurisdiction",
+    "evidence_display",
+    "research_lens",
+    "validation_policy",
+    "source_strategy",
+)
+PROMPT_CONTRACT_REVIEW_STATUSES = {
+    "conforms",
+    "partially_conforms",
+    "does_not_conform",
+    "uncertain",
+    "not_reviewed",
+}
+PROMPT_CONTRACT_REVIEW_ACTIONS = {
+    "accept",
+    "reject",
+    "edit",
+    "mark_unclear",
+    "request_more_documents",
 }
 
 LANGUAGE_LOCK_TERMS = {
@@ -210,6 +238,11 @@ DOMAIN_RE = re.compile(
     r"(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,}"
     r"(?:/[^\s),\]}\"'`<>]*)?",
     re.IGNORECASE,
+)
+LEGAL_ENTITY_RE = re.compile(
+    r"\b[A-Z][A-Za-z0-9&.'-]*(?:\s+[A-Z][A-Za-z0-9&.'-]*){0,4}\s+"
+    r"(?:S\.r\.l\.|S\.p\.A\.|S\.a\.s\.|S\.n\.c\.|Ltd\.?|Limited|"
+    r"GmbH|AG|SARL|SAS|LLC|Inc\.?|Corp\.?)(?=\s|[,;:()]|$)"
 )
 SOURCE_DOMAIN_SECTION_TERMS = (
     "qualified source domains",
@@ -381,7 +414,13 @@ def _normalize_source_domains(source_domains: list[str]) -> list[str]:
 
 
 def _missing_anchors(question_text: str, prompt_text: str) -> list[str]:
-    """Return fact anchors found in the source question but missing in the prompt."""
+    """Return mechanically exact fact anchors missing from the prompt.
+
+    Dates, amounts, percentages, URLs, and company names carrying an explicit
+    legal-form suffix are stable strings whose omission can be observed without
+    interpreting legal meaning. Broader names and paraphrased facts remain part
+    of the model-led semantic conformance review.
+    """
 
     inventory = inspect_question_text(question_text)
     anchors = (
@@ -390,6 +429,7 @@ def _missing_anchors(question_text: str, prompt_text: str) -> list[str]:
         + inventory.amounts
         + inventory.percentages
         + inventory.urls
+        + list(dict.fromkeys(LEGAL_ENTITY_RE.findall(question_text)))
     )
     lowered_prompt = prompt_text.casefold()
     missing: list[str] = []
@@ -405,7 +445,7 @@ def _missing_anchors(question_text: str, prompt_text: str) -> list[str]:
 
 
 def _missing_explicit_questions(question_text: str, prompt_text: str) -> list[str]:
-    """Return explicit source questions not preserved verbatim or near-verbatim."""
+    """Observe literal question overlap without treating it as semantic proof."""
 
     inventory = inspect_question_text(question_text)
     lowered_prompt = prompt_text.casefold()
@@ -417,6 +457,90 @@ def _missing_explicit_questions(question_text: str, prompt_text: str) -> list[st
             continue
         missing.append(question)
     return missing
+
+
+def validate_prompt_contract_review(
+    prompt_contract_review: dict[str, Any],
+) -> dict[str, Any]:
+    """Validate the shape and recorded result of a model-led conformance review.
+
+    The semantic statuses and analyses are authored by Codex or a professional
+    reviewer. Fixed logic only checks that every required dimension was
+    actually reviewed and that the explicit overall action is internally
+    sufficient for acceptance.
+    """
+
+    missing_fields = [
+        field
+        for field in (
+            "schema_version",
+            "review_method",
+            "overall_status",
+            "reviewer_action",
+        )
+        if not isinstance(prompt_contract_review.get(field), str)
+        or not str(prompt_contract_review.get(field) or "").strip()
+    ]
+    invalid_fields: list[str] = []
+    if str(prompt_contract_review.get("schema_version") or "").strip() != "1.0":
+        invalid_fields.append("schema_version")
+    if (
+        str(prompt_contract_review.get("review_method") or "").strip()
+        != "model_led_semantic_conformance_review"
+    ):
+        invalid_fields.append("review_method")
+    overall_status = str(prompt_contract_review.get("overall_status") or "").strip()
+    if overall_status not in PROMPT_CONTRACT_REVIEW_STATUSES:
+        invalid_fields.append("overall_status")
+    reviewer_action = str(prompt_contract_review.get("reviewer_action") or "").strip()
+    if reviewer_action not in PROMPT_CONTRACT_REVIEW_ACTIONS:
+        invalid_fields.append("reviewer_action")
+
+    dimensions = prompt_contract_review.get("dimensions")
+    missing_dimensions: list[str] = []
+    invalid_dimensions: list[str] = []
+    attention_dimensions: list[str] = []
+    if not isinstance(dimensions, dict):
+        missing_fields.append("dimensions")
+        missing_dimensions.extend(PROMPT_CONTRACT_REVIEW_DIMENSIONS)
+    else:
+        for dimension in PROMPT_CONTRACT_REVIEW_DIMENSIONS:
+            assessment = dimensions.get(dimension)
+            if not isinstance(assessment, dict):
+                missing_dimensions.append(dimension)
+                continue
+            status = str(assessment.get("status") or "").strip()
+            analysis = str(assessment.get("analysis") or "").strip()
+            if status not in PROMPT_CONTRACT_REVIEW_STATUSES or not analysis:
+                invalid_dimensions.append(dimension)
+                continue
+            if status != "conforms":
+                attention_dimensions.append(dimension)
+
+    shape_valid = not (
+        missing_fields or invalid_fields or missing_dimensions or invalid_dimensions
+    )
+    conformance_accepted = (
+        shape_valid
+        and not attention_dimensions
+        and overall_status == "conforms"
+        and reviewer_action == "accept"
+    )
+    return {
+        "status": "pass" if conformance_accepted else "fail",
+        "record_status": "complete" if shape_valid else "incomplete",
+        "conformance_status": overall_status or "not_reviewed",
+        "missing_fields": list(dict.fromkeys(missing_fields)),
+        "invalid_fields": list(dict.fromkeys(invalid_fields)),
+        "missing_dimensions": missing_dimensions,
+        "invalid_dimensions": invalid_dimensions,
+        "attention_dimensions": attention_dimensions,
+        "reviewer_action": reviewer_action,
+        "policy": (
+            "shape_and_recorded-outcome_validation_only; semantic conformance is "
+            "model-led and must be accepted explicitly"
+        ),
+    }
 
 
 def validate_answer_contract(answer_contract: dict[str, Any]) -> dict[str, Any]:
@@ -462,10 +586,11 @@ def validate_prompt_text(
     prompt_text: str,
     *,
     answer_contract: dict[str, Any],
+    prompt_contract_review: dict[str, Any],
     language: str = "auto",
     source_domains: list[str] | None = None,
 ) -> dict[str, Any]:
-    """Return deterministic audit results for an optimized prompt."""
+    """Return mechanical checks plus the model-led conformance boundary."""
 
     normalized_prompt = prompt_text.strip()
     language_terms = LANGUAGE_LOCK_TERMS.get(language, LANGUAGE_LOCK_TERMS["auto"])
@@ -476,6 +601,9 @@ def validate_prompt_text(
     missing_anchors = _missing_anchors(question_text, normalized_prompt)
     missing_questions = _missing_explicit_questions(question_text, normalized_prompt)
     answer_contract_audit = validate_answer_contract(answer_contract)
+    prompt_contract_review_audit = validate_prompt_contract_review(
+        prompt_contract_review
+    )
     evidence_display = str(answer_contract.get("evidence_display") or "")
     document_type = str(answer_contract.get("document_type") or "").strip()
     citation_rules_present = _contains_any(normalized_prompt, CITATION_TERMS)
@@ -498,8 +626,8 @@ def validate_prompt_text(
         "uncertainty_policy": _contains_any(normalized_prompt, UNCERTAINTY_TERMS),
         "research_lens": _has_research_lens(normalized_prompt),
         "fact_anchors_preserved": not missing_anchors,
-        "explicit_questions_preserved": not missing_questions,
         "answer_contract": answer_contract_audit["status"] == "pass",
+        "prompt_contract_review": prompt_contract_review_audit["status"] == "pass",
     }
     if inventory.requires_phased_workflow:
         checks.update(
@@ -551,8 +679,35 @@ def validate_prompt_text(
         "requires_phased_workflow": inventory.requires_phased_workflow,
         "missing_fact_anchors": missing_anchors,
         "missing_explicit_questions": missing_questions,
+        "observations": {
+            "literal_explicit_questions_preserved": not missing_questions,
+            "literal_question_overlap_is_gating": False,
+            "meaning": (
+                "Literal overlap is an observation only; semantic preservation "
+                "is decided in prompt_contract_review.json."
+            ),
+        },
         "answer_contract": answer_contract,
         "answer_contract_audit": answer_contract_audit,
+        "prompt_contract_review": prompt_contract_review,
+        "prompt_contract_review_audit": prompt_contract_review_audit,
+        "assurance_boundary": {
+            "mechanically_validated": (
+                "answer-contract and review-record shape, exact dates, amounts, "
+                "percentages, URLs, legal-form entity names, explicit prompt "
+                "controls, source-domain parsing, and artifact packaging"
+            ),
+            "model_led": (
+                "question meaning, material fact preservation, generation route, "
+                "document type, purpose, audience, output language, jurisdiction, "
+                "evidence display, research lens, validation policy, and source "
+                "strategy"
+            ),
+            "not_certified": (
+                "A passing audit records an accepted semantic review and passing "
+                "mechanical controls; it does not certify legal correctness."
+            ),
+        },
         "failed_checks": failed,
     }
 
@@ -566,9 +721,10 @@ def _package_markdown(
     language = _package_language(audit)
     spanish = language == "es"
     failed_text = ", ".join(failed) if failed else ("ninguno" if spanish else "none")
-    inventory = inspect_question_text(question_text)
     source_domains = audit.get("source_domains") or []
     answer_contract = audit.get("answer_contract") or {}
+    contract_review = audit.get("prompt_contract_review") or {}
+    contract_review_audit = audit.get("prompt_contract_review_audit") or {}
     deep_research = answer_contract.get("generation_route") == "chatgpt_deep_research"
     contract_labels = (
         (
@@ -635,6 +791,7 @@ def _package_markdown(
         use_lines.extend(
             [
                 "- Conserve `answer_contract.json` con la respuesta generada.",
+                "- Conserve `prompt_contract_review.json` como revisión semántica del prompt.",
                 "- Considere `prompt_audit.json` como metadatos de validación legibles por máquina.",
             ]
         )
@@ -653,6 +810,7 @@ def _package_markdown(
         use_lines.extend(
             [
                 "- Keep `answer_contract.json` with the generated answer.",
+                "- Keep `prompt_contract_review.json` as the semantic prompt review.",
                 "- Treat `prompt_audit.json` as machine-readable validation metadata.",
             ]
         )
@@ -680,16 +838,23 @@ def _package_markdown(
             f"Controles fallidos: {failed_text}",
             "## Contrato de respuesta",
             "\n".join(contract_lines),
-            "## Enfoque determinista de la investigación",
+            "## Enfoque de investigación dirigido por el modelo",
             "\n".join(
                 [
-                    f"- Planteamiento: {inventory.posture_hint}",
-                    f"- Objetivo: {inventory.objective_hint}",
-                    f"- Alcance: {inventory.scope_hint}",
-                    f"- Temas: {', '.join(inventory.topic_flags) or 'ninguno'}",
+                    "- Responsable de la decisión: Codex o el usuario",
+                    "- La inspección mecánica no selecciona el planteamiento, el objetivo ni el alcance jurídico.",
+                    "- Las decisiones semánticas se documentan en el prompt y en su revisión de conformidad.",
+                ]
+            ),
+            "## Revisión semántica del contrato del prompt",
+            "\n".join(
+                [
+                    f"- Estado general: {contract_review.get('overall_status', 'not_reviewed')}",
+                    f"- Acción del revisor: {contract_review.get('reviewer_action', 'mark_unclear')}",
+                    f"- Estado de auditoría: {contract_review_audit.get('status', 'fail')}",
                     (
-                        "- Requiere un flujo por fases: "
-                        f"{inventory.requires_phased_workflow}"
+                        "- Dimensiones que requieren atención: "
+                        f"{', '.join(contract_review_audit.get('attention_dimensions') or []) or 'ninguna'}"
                     ),
                 ]
             ),
@@ -711,16 +876,23 @@ def _package_markdown(
                 f"Failed checks: {failed_text}",
                 "## Answer Contract",
                 "\n".join(contract_lines),
-                "## Deterministic Research Lens",
+                "## Model-Led Research Lens",
                 "\n".join(
                     [
-                        f"- Posture: {inventory.posture_hint}",
-                        f"- Objective: {inventory.objective_hint}",
-                        f"- Scope: {inventory.scope_hint}",
-                        f"- Topic flags: {', '.join(inventory.topic_flags) or 'none'}",
+                        "- Decision owner: Codex or the user",
+                        "- Mechanical inspection does not select posture, objective, or legal scope.",
+                        "- Semantic choices are documented in the prompt and its conformance review.",
+                    ]
+                ),
+                "## Prompt-Contract Semantic Review",
+                "\n".join(
+                    [
+                        f"- Overall status: {contract_review.get('overall_status', 'not_reviewed')}",
+                        f"- Reviewer action: {contract_review.get('reviewer_action', 'mark_unclear')}",
+                        f"- Audit status: {contract_review_audit.get('status', 'fail')}",
                         (
-                            "- Requires phased workflow: "
-                            f"{inventory.requires_phased_workflow}"
+                            "- Attention dimensions: "
+                            f"{', '.join(contract_review_audit.get('attention_dimensions') or []) or 'none'}"
                         ),
                     ]
                 ),
@@ -776,6 +948,7 @@ def write_validation(
     output_dir: Path,
     *,
     answer_contract: dict[str, Any],
+    prompt_contract_review: dict[str, Any],
     language: str = "auto",
     source_domains: list[str] | None = None,
 ) -> dict[str, Path]:
@@ -794,17 +967,20 @@ def write_validation(
         language=language,
         source_domains=normalized_source_domains,
         answer_contract=answer_contract,
+        prompt_contract_review=prompt_contract_review,
     )
     audit = validate_prompt_text(
         question_text,
         prompt_text,
         answer_contract=answer_contract,
+        prompt_contract_review=prompt_contract_review,
         language=language,
         source_domains=normalized_source_domains,
     )
     audit["language"] = language
     prompt_path = output_dir / "optimized_prompt.md"
     answer_contract_path = output_dir / "answer_contract.json"
+    prompt_contract_review_path = output_dir / "prompt_contract_review.json"
     audit_path = output_dir / "prompt_audit.json"
     package_path = output_dir / "prompt_package.md"
     source_domains_path = output_dir / "source_domains.txt"
@@ -812,6 +988,7 @@ def write_validation(
     readme_path = output_dir / "README_HUMAN.md"
     prompt_path.write_text(prompt_text.strip() + "\n", encoding="utf-8")
     write_json(answer_contract_path, answer_contract)
+    write_json(prompt_contract_review_path, prompt_contract_review)
     write_json(audit_path, audit)
     source_domains_path.write_text(
         "\n".join(str(domain) for domain in audit.get("source_domains") or []) + "\n",
@@ -829,6 +1006,7 @@ def write_validation(
     paths = {
         "optimized_prompt": prompt_path,
         "answer_contract": answer_contract_path,
+        "prompt_contract_review": prompt_contract_review_path,
         "prompt_audit": audit_path,
         "prompt_package": package_path,
         "source_domains": source_domains_path,
@@ -895,10 +1073,11 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
                 "",
                 first_instruction,
                 website_instruction,
-                "3. Conserve `answer_contract.json` con la respuesta para la validación.",
-                "4. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
+                "3. Verifique que `prompt_contract_review.json` tenga estado `conforms` y acción `accept`.",
+                "4. Conserve `answer_contract.json` con la respuesta para la validación.",
+                "5. Use `source_domains.txt` para consultar la lista con un sitio web por línea.",
                 (
-                    "5. Consulte `prompt_audit.json` solo para depurar la validación; "
+                    "6. Consulte `prompt_audit.json` solo para depurar la validación; "
                     "registra qué controles del plugin se superaron."
                 ),
                 "",
@@ -928,10 +1107,11 @@ def _readme_markdown(audit: dict[str, Any]) -> str:
             "",
             first_instruction,
             website_instruction,
-            "3. Keep `answer_contract.json` with the answer for validation.",
-            "4. Use `source_domains.txt` for the readable one-website-per-line list.",
+            "3. Verify that `prompt_contract_review.json` records `conforms` and `accept`.",
+            "4. Keep `answer_contract.json` with the answer for validation.",
+            "5. Use `source_domains.txt` for the readable one-website-per-line list.",
             (
-                "5. Ignore `prompt_audit.json` unless you are debugging validation; "
+                "6. Ignore `prompt_audit.json` unless you are debugging validation; "
                 "it only records which plugin checks passed."
             ),
             "",
@@ -965,8 +1145,8 @@ def main() -> int:
         required=True,
         help=(
             "Directory for optimized_prompt.md, prompt_audit.json, "
-            "prompt_package.md, source_domains.txt, source_domains_comma.txt, "
-            "and README_HUMAN.md."
+            "prompt_contract_review.json, prompt_package.md, source_domains.txt, "
+            "source_domains_comma.txt, and README_HUMAN.md."
         ),
     )
     parser.add_argument(
@@ -989,6 +1169,15 @@ def main() -> int:
             "generation route, audience, jurisdiction status, and validation profile."
         ),
     )
+    parser.add_argument(
+        "--prompt-contract-review-file",
+        type=Path,
+        required=True,
+        help=(
+            "UTF-8 JSON object containing Codex's model-led semantic review of "
+            "the optimized prompt against the question and answer contract."
+        ),
+    )
     args = parser.parse_args()
 
     question_text = _read_text(args.question_file)
@@ -996,6 +1185,11 @@ def main() -> int:
     answer_contract = json.loads(args.answer_contract_file.read_text(encoding="utf-8"))
     if not isinstance(answer_contract, dict):
         parser.error("answer_contract_file must contain a JSON object")
+    prompt_contract_review = json.loads(
+        args.prompt_contract_review_file.read_text(encoding="utf-8")
+    )
+    if not isinstance(prompt_contract_review, dict):
+        parser.error("prompt_contract_review_file must contain a JSON object")
     if not question_text:
         parser.error("question_file is empty")
     if not prompt_text:
@@ -1010,6 +1204,7 @@ def main() -> int:
         prompt_text,
         args.output_dir,
         answer_contract=answer_contract,
+        prompt_contract_review=prompt_contract_review,
         language=args.language,
         source_domains=source_domains,
     )

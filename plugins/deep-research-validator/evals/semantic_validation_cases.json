@@ -1,0 +1,71 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Human/model evaluation cases for semantic support, source identity, reasoning, and professional-judgment boundaries. Fixed code must not derive these labels from lexical overlap.",
+  "cases": [
+    {
+      "id": "taxonomy-entailment",
+      "claim": "This is a dog.",
+      "source_passage": "This is a terrier.",
+      "expected_support": "supported",
+      "expected_reasoning": "sound",
+      "boundary": "semantic_entailment",
+      "rationale": "A terrier is a dog even though the strings differ."
+    },
+    {
+      "id": "negation-contradiction",
+      "claim": "This is a dog.",
+      "source_passage": "This is not a dog.",
+      "expected_support": "contradicted",
+      "expected_reasoning": "unsound",
+      "boundary": "negation",
+      "rationale": "The source reverses the claim despite high lexical overlap."
+    },
+    {
+      "id": "future-modality",
+      "claim": "This is a dog.",
+      "source_passage": "This will be a dog.",
+      "expected_support": "not_supported",
+      "expected_reasoning": "unsound",
+      "boundary": "time_and_modality",
+      "rationale": "A future proposition does not establish the present claim."
+    },
+    {
+      "id": "past-time",
+      "claim": "This is a dog.",
+      "source_passage": "This was a dog.",
+      "expected_support": "not_supported",
+      "expected_reasoning": "unsound",
+      "boundary": "time_and_modality",
+      "rationale": "A past proposition does not establish the present claim."
+    },
+    {
+      "id": "qualification-loss",
+      "claim": "The taxpayer qualifies for the exemption.",
+      "source_passage": "The taxpayer may qualify if the independent-activity test is met.",
+      "expected_support": "partially_supported",
+      "expected_reasoning": "unsound",
+      "boundary": "qualification_and_missing_premise",
+      "rationale": "The answer removes a condition and certainty qualifier."
+    },
+    {
+      "id": "right-proposition-wrong-authority",
+      "claim": "The appeal period is 30 days.",
+      "source_passage": "The appeal period is 30 days.",
+      "expected_support": "uncertain",
+      "expected_reasoning": "uncertain",
+      "expected_source_identity": "different_source",
+      "boundary": "source_identity",
+      "rationale": "Matching words from a different jurisdiction or version do not validate the cited authority."
+    },
+    {
+      "id": "judgment-dependent-application",
+      "claim": "The conduct was reasonable in the circumstances.",
+      "source_passage": "Reasonableness depends on all relevant circumstances.",
+      "expected_support": "partially_supported",
+      "expected_reasoning": "uncertain",
+      "expected_judgment": "professional_judgment_required",
+      "boundary": "professional_judgment",
+      "rationale": "The legal standard is sourced, but applying it requires fact-sensitive professional judgment."
+    }
+  ]
+}

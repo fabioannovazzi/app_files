@@ -19,8 +19,8 @@
     "classes": [
       {
         "id": "question-and-prompt",
-        "purpose": "Understand the professional question, define the answer and validation contract, and write route-specific generation instructions",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; source-domain sidecars; diagnostics and review decisions",
+        "purpose": "Understand the professional question, define the answer and validation contract, write route-specific generation instructions, and review their semantic conformance",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -52,6 +52,6 @@
     "reviewed_at": "2026-07-31",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "303889b459dd57f1086b8e6dbde653fe20720888ce194b4b1bca3529882e2518"
+    "source_fingerprint": "b703b6f5bfdc75289cd20650907eac03641094f396a9d84d42c3de7f5e1e7ac9"
   }
 }

@@ -1,0 +1,38 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Human/model evaluation cases for prompt-to-question and prompt-to-answer-contract semantic conformance. Fixed code validates the review record but must not assign these labels.",
+  "cases": [
+    {
+      "id": "wrong-jurisdiction",
+      "question": "Under French law, what limitation period applies?",
+      "answer_contract_excerpt": {"jurisdiction": "French law"},
+      "prompt_excerpt": "Analyze the limitation period under Italian law.",
+      "expected_dimension": "jurisdiction",
+      "expected_status": "does_not_conform"
+    },
+    {
+      "id": "faithful-paraphrase",
+      "question": "What sources should be checked?",
+      "answer_contract_excerpt": {"purpose": "Identify authoritative sources"},
+      "prompt_excerpt": "Identify the authoritative materials needed to resolve the matter.",
+      "expected_dimension": "question_and_material_facts",
+      "expected_status": "conforms"
+    },
+    {
+      "id": "omitted-legal-entity",
+      "question": "Advise Alfa S.r.l. about the payment demand.",
+      "answer_contract_excerpt": {"document_type": "client-ready legal memo"},
+      "prompt_excerpt": "Advise the recipient about the payment demand.",
+      "expected_dimension": "question_and_material_facts",
+      "expected_status": "does_not_conform"
+    },
+    {
+      "id": "wrong-generation-route",
+      "question": "Write a one-page response letter.",
+      "answer_contract_excerpt": {"generation_route": "codex_direct", "document_type": "one-page legal letter"},
+      "prompt_excerpt": "Produce a comprehensive Deep Research report.",
+      "expected_dimension": "generation_route",
+      "expected_status": "does_not_conform"
+    }
+  ]
+}
