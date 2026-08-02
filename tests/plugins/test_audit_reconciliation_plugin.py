@@ -247,6 +247,7 @@ def test_review_session_writes_audit_reconciliation_contract(tmp_path: Path) -> 
         [
             "Indice",
             "Assunzioni",
+            "Problemi elaborazione fonti",
             "Dettaglio riconciliazione",
             "Sintesi",
             "Controlli",
@@ -265,6 +266,7 @@ def test_review_session_writes_audit_reconciliation_contract(tmp_path: Path) -> 
             "Indice": [
                 ["Assunzioni", 1],
                 ["Inventario fonti", 1],
+                ["Problemi elaborazione fonti", 0],
                 ["Righe normalizzate", 0],
                 ["Dettaglio riconciliazione", 3],
             ],
@@ -514,6 +516,7 @@ def test_review_session_writes_audit_reconciliation_contract(tmp_path: Path) -> 
     assert audit_output["required_sheets"] == [
         "Indice",
         "Assunzioni",
+        "Problemi elaborazione fonti",
         "Dettaglio riconciliazione",
         "Sintesi",
         "Controlli",
@@ -529,7 +532,7 @@ def test_review_session_writes_audit_reconciliation_contract(tmp_path: Path) -> 
             "A1": "Foglio",
             "B1": "Righe",
             "A2": "Assunzioni",
-            "A5": "Dettaglio riconciliazione",
+            "A6": "Dettaglio riconciliazione",
         },
         "Assunzioni": {
             "A1": "Campo",

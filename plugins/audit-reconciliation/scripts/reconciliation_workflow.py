@@ -313,6 +313,7 @@ def build_reconciliation_artifacts(
     source_artifact_root: str | Path | None = None,
     source_artifact_receipts: list[dict[str, Any]] | None = None,
     reviewed_source_decision_receipts: list[dict[str, Any]] | None = None,
+    extraction_errors: list[dict[str, Any]] | None = None,
     normalized_records: list[dict[str, Any]] | None = None,
     ledger_balance_rows: list[dict[str, Any]] | None = None,
     account_rollforward_check: list[dict[str, Any]] | None = None,
@@ -409,6 +410,7 @@ def build_reconciliation_artifacts(
             high_value_count=review_high_value_count,
             random_count=review_random_count,
             challenged_rows=challenged_rows,
+            priority_rows=review_signals,
         )
     )
     checks = [
@@ -421,6 +423,7 @@ def build_reconciliation_artifacts(
             high_value_count=review_high_value_count,
             random_count=review_random_count,
             challenged_rows=challenged_rows,
+            priority_rows=review_signals,
         ),
     ]
     if fail_on_check_errors and not checks_pass(checks):
@@ -436,6 +439,7 @@ def build_reconciliation_artifacts(
     sheets = build_audit_workbook_sheets(
         assumptions=assumptions,
         source_inventory=source_inventory or [],
+        extraction_errors=extraction_errors,
         normalized_records=normalized,
         reconciliation_rows=reconciliation_rows,
         bank_allocation_candidates=bank_candidates,
@@ -494,12 +498,32 @@ def build_reconciliation_artifacts(
     for office_path in (excel_path, accountant_report_path, word_path):
         _stabilize_office_package(Path(office_path))
 
+    source_processing = {
+        "extraction_errors": extraction_errors or [],
+        "ledger_balance_rows": ledger_balance_rows or [],
+        "journal_rollforward_rows": aggregate_rollforward_rows or [],
+        "journal_rollforward_summary": aggregate_rollforward_summary or [],
+    }
+    analyses = {
+        "aging_summary": aging_summary,
+        "bank_allocation_candidates": bank_candidates,
+        "cutoff_window_movements": cutoff_movements,
+        "document_source_map": source_map,
+        "evidence_concentration": evidence_concentration,
+        "external_evidence_detail": external_detail,
+        "external_evidence_summary": external_summary,
+        "post_cutoff_candidates": post_cutoff_candidates,
+        "reversal_candidates": reversal_candidates,
+        "review_signals": review_signals,
+    }
     result = {
         "excel_path": str(excel_path),
         "accountant_report_path": str(accountant_report_path),
         "word_path": str(word_path),
         "assumptions": assumptions,
         "source_qualifications": source_qualifications or [],
+        "source_processing": source_processing,
+        "analyses": analyses,
         "reconciliation_rows": reconciliation_rows,
         "bank_allocation_candidates": bank_candidates,
         "relationship_allocation_ledgers": relationship_allocation_ledgers,
@@ -547,6 +571,8 @@ def build_reconciliation_artifacts(
             checks=checks,
             review_rows=review,
             source_qualifications=source_qualifications or [],
+            source_processing=source_processing,
+            analyses=analyses,
             declared_outputs=[
                 Path(excel_path),
                 Path(accountant_report_path),

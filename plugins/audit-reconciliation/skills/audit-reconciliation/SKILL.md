@@ -130,6 +130,10 @@ Expected delivery artifacts are:
 - `riconciliazione_audit.xlsx`;
 - `scheda_operativa_commercialista.xlsx`;
 - `relazione_riconciliazione_audit.docx`;
+- `assurance_final_outputs/reconciliation_results.json` as the versioned
+  canonical machine-readable record. Its `source_processing` and `analyses`
+  sections contain the schedules rendered in the workbook; do not create one
+  standalone JSON file per schedule;
 - `source_pages.json`;
 - `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
   `final_artifacts.json` for browser/widget review handoff;
@@ -142,6 +146,10 @@ Expected delivery artifacts are:
 - `prepared_records.json`, `assurance_receipts.json`, `assurance_gates.json`,
   `final_output_inventory.json`, and the exact `assurance_final_outputs/`
   boundary for replayable mechanical assurance.
+
+Skipped sources, unsupported layouts, and parser failures must be visible as
+review items, on the workbook's `Source processing issues` sheet, and in
+`source_processing.extraction_errors` in the canonical record.
 
 ## Browser Review UI And MCP Widget
 
