@@ -143,6 +143,7 @@ from vera_assurance import (  # noqa: E402
     parse_canonical_decimal,
     validate_allocation_ledger,
     validate_artifact_receipt,
+    validate_client_engagement_context,
     validate_gate_register,
     validate_numeric_evidence_ledger,
     validate_reviewed_decision_receipt,
@@ -174,7 +175,7 @@ __all__ = [
     "validate_review_transition_history",
 ]
 
-ASSURANCE_SCHEMA_VERSION = "audit_reconciliation.assurance.v1"
+ASSURANCE_SCHEMA_VERSION = "audit_reconciliation.assurance.v2"
 SOURCE_DECISION_TYPE = "audit_reconciliation_source_mapping"
 SOURCE_DECISION_ADAPTER_VERSION = "2"
 FINAL_OUTPUT_DIRECTORY = "assurance_final_outputs"
@@ -182,7 +183,7 @@ FINAL_OUTPUT_INVENTORY = "final_output_inventory.json"
 RUN_TREE_SCHEMA_VERSION = "audit_reconciliation.run_tree.v1"
 REVIEW_TRANSITION_SCHEMA_VERSION = "audit_reconciliation.review_transition.v1"
 REVIEW_PAYLOAD_MAPPING_SCHEMA_VERSION = "audit_reconciliation.review_payload_mapping.v1"
-RECONCILIATION_RESULTS_SCHEMA_VERSION = "audit_reconciliation.reconciliation_results.v2"
+RECONCILIATION_RESULTS_SCHEMA_VERSION = "audit_reconciliation.reconciliation_results.v3"
 SOURCE_PROCESSING_FIELDS = frozenset(
     {
         "extraction_errors",
@@ -250,6 +251,7 @@ ASSURANCE_SEAL_FIELDS = frozenset(
         "schema_version",
         "run_id",
         "run_date",
+        "client_engagement",
         "source_root",
         "source_receipts",
         "reviewed_source_decisions",
@@ -1466,6 +1468,33 @@ def _validate_prepared_population(
             raise AssuranceRunError("source qualification emitted row count is stale")
 
 
+def _validated_client_engagement(
+    value: Mapping[str, Any] | None,
+    *,
+    output_dir: Path,
+    source_root: Path | None,
+) -> dict[str, Any] | None:
+    """Replay a client boundary and bind it to this source and run directory."""
+
+    if value is None:
+        return None
+    try:
+        normalized = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise AssuranceRunError(f"client engagement is invalid: {exc}") from exc
+    if Path(normalized["output_dir"]).resolve() != Path(output_dir).resolve():
+        raise AssuranceRunError(
+            "client engagement output_dir does not match the assurance run"
+        )
+    if source_root is not None and (
+        Path(normalized["input_dir"]).resolve() != Path(source_root).resolve()
+    ):
+        raise AssuranceRunError(
+            "client engagement input_dir does not match the receipted source root"
+        )
+    return normalized
+
+
 def prepare_assurance_run(
     *,
     output_dir: Path,
@@ -1476,6 +1505,7 @@ def prepare_assurance_run(
     source_receipts: Sequence[Mapping[str, Any]] = (),
     reviewed_source_decisions: Sequence[Mapping[str, Any]] = (),
     source_qualifications: Sequence[Mapping[str, Any]] = (),
+    client_engagement: Mapping[str, Any] | None = None,
     professional_review_authority: Mapping[str, Any] | None = None,
     expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
@@ -1492,6 +1522,11 @@ def prepare_assurance_run(
     normalized_sources = validate_receipt_set(roots, source_receipts)
     if source_receipts and source_root is not None:
         _validate_source_boundary(Path(source_root), normalized_sources)
+    normalized_client_engagement = _validated_client_engagement(
+        client_engagement,
+        output_dir=out_dir,
+        source_root=source_root,
+    )
     normalized_implementation = validate_receipt_set(roots, implementation_receipts)
     run_date = _run_date(assumptions)
     normalized_decisions = _validated_source_decisions(
@@ -1535,7 +1570,8 @@ def prepare_assurance_run(
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     prepared_payload = {
-        "schema_version": "audit_reconciliation.prepared_records.v1",
+        "schema_version": "audit_reconciliation.prepared_records.v2",
+        "client_engagement": normalized_client_engagement,
         "open_items": list(open_items),
         "evidence_rows": list(evidence_rows),
         "assumptions": prepared_assumptions,
@@ -1563,6 +1599,7 @@ def prepare_assurance_run(
         raise
     return {
         "schema_version": ASSURANCE_SCHEMA_VERSION,
+        "client_engagement": normalized_client_engagement,
         "source_root": str(Path(source_root).resolve()) if source_root else None,
         "source_receipts": normalized_sources,
         "reviewed_source_decisions": normalized_decisions,
@@ -5327,6 +5364,11 @@ def _finalize_assurance_run_in_place(
     source_root = context.get("source_root")
     if source_root:
         roots["source"] = Path(str(source_root)).resolve()
+    client_engagement = _validated_client_engagement(
+        context.get("client_engagement"),
+        output_dir=out_dir,
+        source_root=(Path(str(source_root)) if source_root else None),
+    )
     source_receipts = list(context.get("source_receipts") or [])
     run_date = _canonical_iso_date(
         context.get("run_date"),
@@ -5363,6 +5405,8 @@ def _finalize_assurance_run_in_place(
             "unqualified sources cannot produce reconciliation or final artifacts"
         )
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
+    if prepared.get("client_engagement") != client_engagement:
+        raise AssuranceRunError("client engagement changed after the prepared boundary")
     _validate_prepared_population(
         open_items=prepared["open_items"],
         evidence_rows=prepared["evidence_rows"],
@@ -5446,6 +5490,7 @@ def _finalize_assurance_run_in_place(
     )
     reconciliation_payload = {
         "schema_version": RECONCILIATION_RESULTS_SCHEMA_VERSION,
+        "client_engagement": client_engagement,
         "source_processing": normalized_source_processing,
         "reconciliation_rows": list(reconciliation_rows),
         "allocation_ledgers": normalized_allocations,
@@ -5718,6 +5763,7 @@ def _finalize_assurance_run_in_place(
         "schema_version": ASSURANCE_SCHEMA_VERSION,
         "run_id": _sealed_run_id(out_dir, professional_review),
         "run_date": run_date,
+        "client_engagement": client_engagement,
         "source_root": str(source_root) if source_root else None,
         "source_receipts": source_receipts,
         "reviewed_source_decisions": source_decisions,
@@ -6029,6 +6075,11 @@ def validate_assurance_run(
         _validate_source_boundary(Path(source_root), source_receipts)
     elif source_root is not None:
         raise AssuranceRunError("source_root is not allowed without source receipts")
+    client_engagement = _validated_client_engagement(
+        payload["client_engagement"],
+        output_dir=out_dir,
+        source_root=(Path(source_root) if source_root is not None else None),
+    )
 
     implementation_receipts = validate_receipt_set(
         roots,
@@ -6077,13 +6128,21 @@ def validate_assurance_run(
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
     if (
         set(prepared)
-        != {"schema_version", "open_items", "evidence_rows", "assumptions"}
-        or prepared["schema_version"] != "audit_reconciliation.prepared_records.v1"
+        != {
+            "schema_version",
+            "client_engagement",
+            "open_items",
+            "evidence_rows",
+            "assumptions",
+        }
+        or prepared["schema_version"] != "audit_reconciliation.prepared_records.v2"
         or not isinstance(prepared["open_items"], list)
         or not isinstance(prepared["evidence_rows"], list)
         or not isinstance(prepared["assumptions"], dict)
     ):
         raise AssuranceRunError("prepared record boundary has invalid fields")
+    if prepared["client_engagement"] != client_engagement:
+        raise AssuranceRunError("prepared client engagement is stale")
     if prepared["assumptions"].get("assurance_run_date") != run_date:
         raise AssuranceRunError("prepared run date is stale")
     if _validated_tolerance(
@@ -6119,6 +6178,7 @@ def validate_assurance_run(
     result = _read_json_mapping(result_path)
     result_fields = {
         "schema_version",
+        "client_engagement",
         "source_processing",
         "reconciliation_rows",
         "allocation_ledgers",
@@ -6132,6 +6192,8 @@ def validate_assurance_run(
         or result["schema_version"] != RECONCILIATION_RESULTS_SCHEMA_VERSION
     ):
         raise AssuranceRunError("sealed reconciliation result has invalid fields")
+    if result["client_engagement"] != client_engagement:
+        raise AssuranceRunError("sealed reconciliation client engagement is stale")
     for field in (
         "reconciliation_rows",
         "allocation_ledgers",

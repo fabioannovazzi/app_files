@@ -114,6 +114,29 @@ actions for every issue: `obtain_source`, `identify_source`, `replace_source`,
 status is `proposed`, `applied`, `blocked`, or
 `professional_review_required`; `none` uses `none` / `not_needed`.
 
+## Review-State Consistency
+
+The deterministic layer may reject contradictions among explicit review codes
+because that is record consistency, not semantic judgment:
+
+- any support, reasoning, source-identity, or professional-judgment attention
+  requires a non-`none` issue and treatment;
+- `supported`, `partially_supported`, and `contradicted` assessments require a
+  source check;
+- `not_supported`, `contradicted`, and `unsound` records cannot retain the
+  claim unchanged;
+- answer-contract attention and `answer_contract_failure` treatment must match
+  in both directions;
+- reviewer rejection, proposed or blocked treatment, and unresolved contract
+  attention cannot produce `reviewed_answer_ready`;
+- `document_revision.status: completed` requires
+  `overall_assessment.outcome: corrected`, while unresolved attention cannot
+  coexist with `no_material_defect_identified`.
+
+These rules do not decide whether a claim is supported, reasoning is sound, or
+professional judgment is required. They ensure only that the semantic
+reviewer's own recorded decisions do not contradict each other.
+
 ## Output Guidance
 
 The validation package is not a new substantive answer. It is a review record.

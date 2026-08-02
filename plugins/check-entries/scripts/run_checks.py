@@ -116,7 +116,12 @@ _scripts_module_root = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__f
 if _scripts_module_root not in sys.path:
     sys.path.insert(0, _scripts_module_root)
 
-from check_entries_core import add_common_args, configure_logging, run_entry_checks
+from check_entries_core import (
+    add_common_args,
+    configure_logging,
+    load_client_engagement_context,
+    run_entry_checks,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -138,6 +143,12 @@ def main() -> int:
         help="Folder where check outputs will be written.",
     )
     parser.add_argument("--recipe", type=Path, help="Optional recipe JSON.")
+    parser.add_argument(
+        "--client-engagement",
+        type=Path,
+        required=True,
+        help="Studio Archive client engagement context JSON.",
+    )
     parser.add_argument(
         "--amount-tolerance",
         default="0",
@@ -167,6 +178,7 @@ def main() -> int:
         language=args.language,
         document_language=args.document_language,
         connector_name=args.connector_name,
+        client_engagement=load_client_engagement_context(args.client_engagement),
     )
     LOGGER.info("checked_rows=%s", result.frame.height)
     LOGGER.info("status_counts=%s", result.audit["status_counts"])

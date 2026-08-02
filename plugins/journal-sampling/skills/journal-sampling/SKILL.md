@@ -5,7 +5,7 @@ description: Use when a user wants Codex to qualify and extract accounting journ
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive `client_engagement` context. Inspection and normalization use its `normalization` child; sampling uses its `sample` child. Do not invent a sibling output folder or run an unbound product CLI.
 
 # Journal Sampling
 
@@ -53,8 +53,9 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 ## First Run Workflow
 
-1. Ask for the input file or folder, working language, source-document language, and any known filters only if they are not already provided or inferable. Do not ask for output richness. If the audit plan does not specify sample size or method, default to the deterministic script baseline: `random`, size `25`, seed `42`, and record those assumptions in the audit trail.
-2. Run dependency checks from the plugin directory:
+1. Start with Studio Archive client intake. Call `list_studio_archive_clients`; do not infer the client from the journal filename. Resolve an existing registered client, explicitly register a confirmed existing scope, or create a client only after the user chooses New client. Explain that the original journal is preserved, obtain authorization for the controlled copy, and call `import_studio_client_document` with role `journal`. Use the returned imported path, `engagement_id`, `client_engagement`, and context path. If New Client onboarding is pending, preserve that status while preparing the journal; do not claim the relationship is active.
+2. Ask for working language, source-document language, and any known filters only if they are not already provided or inferable. Do not ask for output richness. If the audit plan does not specify sample size or method, default to the deterministic script baseline: `random`, size `25`, seed `42`, and record those assumptions in the audit trail.
+3. Run dependency checks from the plugin directory:
 
 ```bash
 python scripts/check_dependencies.py
@@ -62,18 +63,18 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-3. Run inspection to produce `inspection.json`, `suggested_recipe.json`, and
+4. Run inspection to produce `inspection.json`, `suggested_recipe.json`, and
    `qualification_review_payload.json`:
 
 ```bash
-python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_journal.py <imported-journal> --output-dir <client-run-output>/normalization --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-4. Read the inspection artifacts. Inspection never promotes a suggested mapping
+5. Read the inspection artifacts. Inspection never promotes a suggested mapping
    into the population. Review each source-family adapter, header/layout mapping,
    debit/credit or signed-amount convention, and localized number separators.
    Ask the user only for the smallest unresolved semantic decision.
-5. Record the reviewed recipe in the work folder, not plugin source. The
+6. Record the reviewed recipe in the work folder, not plugin source. The
    reviewed contract must explicitly bind the source artifact, adapter and
    version, field mapping, posting identity, carry-forward policy, currency,
    unit, and the disposition of every additional monetary-labelled or numeric
@@ -83,20 +84,20 @@ python scripts/inspect_journal.py <input-file-or-folder> --output-dir <output-di
    decision reference is not sufficient. If any bound field changes, rerun
    inspection with that recipe so a new digest is generated and review the new
    contract.
-6. Normalize rows:
+7. Normalize rows:
 
 ```bash
-python scripts/normalize_journal.py <input-file-or-folder> --output-dir <output-dir> --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/normalize_journal.py <imported-journal> --output-dir <client-run-output>/normalization --recipe <client-run-output>/normalization/suggested_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Require the complete normalization to retain the exact reviewed bytes as
 `normalization_recipe.json`, with matching captured and original-source
 receipts. Do not delete or replace the original reviewed recipe after the run.
 
-7. Run deterministic sampling:
+8. Run deterministic sampling:
 
 ```bash
-python scripts/run_sample.py <output-dir>/normalized_journal.csv --output-dir <output-dir>/sample --method random --size 25 --language <it|en|fr|de|es>
+python scripts/run_sample.py <client-run-output>/normalization/normalized_journal.csv --output-dir <client-run-output>/sample --client-engagement <client-engagement.json> --method random --size 25 --language <it|en|fr|de|es>
 ```
 
 The sample output folder must be absent or empty. Sampling stages every artifact
@@ -108,7 +109,7 @@ material field closes from its normalized row to its CSV row and XLSX cell, and
 the exact physical output allowlist closes. Do not treat a partial staging
 failure as a deliverable.
 
-8. Review `normalization_diagnostics.json`,
+9. Review `normalization_diagnostics.json`,
    `qualification_review_payload.json`, `reviewed_decisions.json`,
    `assurance_gates.json`, `assurance_envelope.json`, `sampling_audit.json`,
    `sample_reproducibility.json`, `sample_material_value_ledger.json`,

@@ -1,6 +1,6 @@
 {
   "name": "audit-reconciliation",
-  "version": "0.1.42",
+  "version": "0.1.44",
   "description": "Riconcilia partite aperte, mastrini, banche, distinte, factoring e compensazioni in workpaper Excel/Word rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -41,7 +41,7 @@
       "Analysis"
     ],
     "defaultPrompt": [
-      "Usa il plugin Riconciliazione partite sulla cartella che indico.",
+      "Usa Riconciliazione partite su una cartella del cliente collegata al suo scope Studio Archive.",
       "Inferisci periodo/cut-off, file popolazione, lingua e assunzioni sulle evidenze quando possibile; chiedimi solo le ambiguita sostanziali. Usa il default factoring salvo richiesta contraria.",
       "Prepara Excel/Word con dettaglio righe, scheda operativa per commercialista, evidenze citate, review Codex, richieste evidenze mancanti e punti da verificare."
     ],

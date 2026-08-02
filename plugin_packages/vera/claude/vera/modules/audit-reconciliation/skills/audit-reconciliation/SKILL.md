@@ -174,6 +174,10 @@ Expected delivery artifacts are:
 - `riconciliazione_audit.xlsx`;
 - `scheda_operativa_commercialista.xlsx`;
 - `relazione_riconciliazione_audit.docx`;
+- `assurance_final_outputs/reconciliation_results.json` as the versioned
+  canonical machine-readable record. Its `source_processing` and `analyses`
+  sections contain the schedules rendered in the workbook; do not create one
+  standalone JSON file per schedule;
 - `source_pages.json`;
 - `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
   `final_artifacts.json` for browser/widget review handoff;
@@ -186,6 +190,23 @@ Expected delivery artifacts are:
 - `prepared_records.json`, `assurance_receipts.json`, `assurance_gates.json`,
   `final_output_inventory.json`, and the exact `assurance_final_outputs/`
   boundary for replayable mechanical assurance.
+
+Skipped sources, unsupported layouts, and parser failures must be visible as
+review items, on the workbook's `Source processing issues` sheet, and in
+`source_processing.extraction_errors` in the canonical record.
+
+## Client boundary in Cowork
+
+Cowork v1 does not package the local Studio Archive index or its
+`get_studio_client_folder` tool, so it cannot issue a new client-folder binding.
+For connected-folder work, select and retain one explicit client folder and do
+not mix material from another client. Run `scripts/raw_input_runner.py` only
+when a digest-valid `vera.studio_client_folder.v2` binding was supplied by a
+compatible Vera Claude installation and its local paths are available in the
+current workspace. Otherwise continue with the useful connected-folder review
+and preparation that Cowork can perform, and state that the sealed local raw
+run remains pending. Never invent a scope ID or binding from a name or document
+content.
 
 ## Cowork review handoff
 
@@ -275,7 +296,9 @@ For generic runs, pass `scope_year` and `cutoff_date` through assumptions when t
 
 Useful helper scripts include:
 
-- `scripts/raw_input_runner.py`: input-folder orchestration where available;
+- `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
+  CLI requires `--client-folder-binding`, `--engagement-id`, `--input-dir`,
+  `--workspace-root`, and `--assumptions-json`;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.

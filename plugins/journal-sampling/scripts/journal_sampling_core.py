@@ -11,6 +11,7 @@ import shutil
 import stat
 import sys
 import tempfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 from decimal import Decimal, InvalidOperation
@@ -56,6 +57,7 @@ from vera_assurance import (  # noqa: E402
     parse_localized_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
+    validate_client_engagement_context,
     validate_reviewed_decision_receipt,
     validate_source_qualification,
 )
@@ -238,6 +240,7 @@ __all__ = [
     "SampleResult",
     "language_assumptions",
     "inspect_path",
+    "load_client_engagement_context",
     "normalize_language",
     "normalize_path",
     "prepare_sample_review_successor",
@@ -359,6 +362,82 @@ def read_json(path: Path | None) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"Recipe must be a JSON object: {path}")
     return payload
+
+
+def load_client_engagement_context(path: Path) -> dict[str, Any]:
+    """Load one exact client workflow context created by Studio Archive."""
+
+    try:
+        payload = read_json(path.expanduser().resolve(strict=True))
+        return validate_client_engagement_context(payload)
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+
+
+def _is_path_within(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def _validated_client_normalization_stage(
+    value: Mapping[str, Any] | None,
+    *,
+    input_path: Path,
+    output_dir: Path,
+) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    try:
+        context = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+    if context["workflow_id"] != "journal-sampling":
+        raise ValueError("Client engagement is not for Journal Sampling.")
+    resolved_input = input_path.expanduser().resolve(strict=True)
+    input_root = Path(context["input_dir"]).resolve(strict=True)
+    if not _is_path_within(resolved_input, input_root):
+        raise ValueError("Journal input is outside the selected client engagement.")
+    expected_output = Path(context["output_dir"]) / "normalization"
+    if output_dir.expanduser().resolve() != expected_output.resolve():
+        raise ValueError(
+            "Journal normalization output does not match the client engagement."
+        )
+    return context
+
+
+def _validated_client_sample_stage(
+    value: Mapping[str, Any] | None,
+    *,
+    normalized_csv: Path,
+    output_dir: Path,
+) -> dict[str, Any] | None:
+    if value is None:
+        return None
+    try:
+        context = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+    if context["workflow_id"] != "journal-sampling":
+        raise ValueError("Client engagement is not for Journal Sampling.")
+    expected_csv = (
+        Path(context["output_dir"]) / "normalization" / "normalized_journal.csv"
+    )
+    expected_output = Path(context["output_dir"]) / "sample"
+    if normalized_csv.expanduser().resolve(strict=True) != expected_csv.resolve(
+        strict=True
+    ):
+        raise ValueError(
+            "Normalized journal does not belong to the selected client engagement."
+        )
+    if output_dir.expanduser().resolve() != expected_output.resolve():
+        raise ValueError("Sample output does not match the client engagement.")
+    diagnostics = read_json(expected_csv.parent / "normalization_diagnostics.json")
+    if diagnostics.get("client_engagement") != context:
+        raise ValueError("Normalized journal client engagement is missing or stale.")
+    return context
 
 
 def _read_recipe_with_receipt(
@@ -3016,9 +3095,19 @@ def inspect_path(
     *,
     language: object | None = None,
     document_language: object | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> InspectionResult:
     """Inspect supported files and optionally write inspection artifacts."""
 
+    normalized_client_engagement = (
+        _validated_client_normalization_stage(
+            client_engagement,
+            input_path=input_path,
+            output_dir=output_dir,
+        )
+        if output_dir is not None
+        else None
+    )
     recipe, _, _, _ = _read_recipe_with_receipt(recipe_path)
     languages = language_assumptions(
         recipe, language=language, document_language=document_language
@@ -3058,6 +3147,7 @@ def inspect_path(
             {
                 "files": inspections,
                 "total_rows": total_rows,
+                "client_engagement": normalized_client_engagement,
                 **languages,
                 "qualification_review_payload": "qualification_review_payload.json",
             },
@@ -3077,9 +3167,15 @@ def normalize_path(
     *,
     language: object | None = None,
     document_language: object | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> NormalizationResult:
     """Normalize all supported files under a path and write canonical outputs."""
 
+    normalized_client_engagement = _validated_client_normalization_stage(
+        client_engagement,
+        input_path=input_path,
+        output_dir=output_dir,
+    )
     resolved_input = input_path.expanduser().resolve()
     output_dir = output_dir.expanduser().resolve()
     (
@@ -3319,6 +3415,7 @@ def normalize_path(
     )
     diagnostics_payload = {
         "schema_version": NORMALIZATION_SCHEMA_VERSION,
+        "client_engagement": normalized_client_engagement,
         "input": resolved_input.as_posix(),
         "source_root": source_root.as_posix(),
         "source_receipts": source_receipts,
@@ -3359,6 +3456,7 @@ def normalize_path(
         frame=frame,
         diagnostics={
             "schema_version": NORMALIZATION_SCHEMA_VERSION,
+            "client_engagement": normalized_client_engagement,
             "files": diagnostics,
             "source_qualifications": qualifications,
             "source_root": source_root.as_posix(),
@@ -6590,6 +6688,7 @@ def run_sample(
     keyword: str | None = None,
     language: object | None = None,
     normalization_diagnostics: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> SampleResult:
     """Run and atomically finalize a replayable, exactly closed sample stage."""
 
@@ -6598,6 +6697,11 @@ def run_sample(
     if unresolved_output_dir.is_symlink():
         raise ValueError("Sample output directory cannot be a symlink.")
     output_dir = unresolved_output_dir.resolve()
+    normalized_client_engagement = _validated_client_sample_stage(
+        client_engagement,
+        normalized_csv=normalized_csv,
+        output_dir=output_dir,
+    )
     method_key = method.strip().lower()
     if method_key in {"monetary unit", "monetary unit sampling"}:
         method_key = "mus"
@@ -6662,6 +6766,7 @@ def run_sample(
             keyword=keyword,
             language=language_code,
             declared_output_dir=output_dir,
+            client_engagement=normalized_client_engagement,
         )
         sample_csv = staging_dir / "journal_sample.csv"
         sample_xlsx = staging_dir / "journal_sample.xlsx"
@@ -6703,6 +6808,7 @@ def run_sample(
         }
         audit = {
             "schema_version": "journal_sampling.sample_audit.v1",
+            "client_engagement": normalized_client_engagement,
             "normalized_csv": normalized_csv.as_posix(),
             "language": language_code,
             "method": method_key,
@@ -6744,6 +6850,7 @@ def run_sample(
             run_intake_path=run_intake.path,
             sample=sample,
             audit=audit,
+            client_engagement=normalized_client_engagement,
         )
         if review_session.review_item_count != review_paths["review_item_count"]:
             raise ValueError("Sample review-item cardinality does not close.")

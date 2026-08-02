@@ -17,6 +17,11 @@ const MAX_OUTPUT_BYTES = 8_000_000;
 const TOOL_NAMES = {
   status: "studio_archive_status",
   clients: "list_studio_archive_clients",
+  clientFolder: "get_studio_client_folder",
+  createClient: "create_studio_archive_client",
+  importDocument: "import_studio_client_document",
+  engagements: "list_studio_client_engagements",
+  prepareWorkflow: "prepare_studio_client_workflow",
   configure: "configure_studio_archive",
   refresh: "refresh_studio_archive",
   search: "search_studio_archive",
@@ -61,6 +66,125 @@ function toolDefinitions() {
         "Read the private client identity profiles for current scopes and report orphaned profiles after folder changes. Call this before an explicit profile rebind.",
       inputSchema: objectSchema({}),
       annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.clientFolder,
+      title: "Get one Studio Archive client folder",
+      description:
+        "Return a digest-bound folder record for one stable registered client. Other Vera workflows use this record to reject cross-client inputs and namespace engagement runs.",
+      inputSchema: objectSchema(
+        {
+          client_id: {
+            type: "string",
+            pattern: "^client_[0-9a-f]{24}$",
+            description: "Stable client_id returned by Studio Archive.",
+          },
+        },
+        ["client_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.createClient,
+      title: "Create a new Studio Archive client",
+      description:
+        "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. This begins but does not complete Vera's New Client professional workflow.",
+      inputSchema: objectSchema(
+        {
+          legal_name: {
+            type: "string",
+            minLength: 1,
+            maxLength: 160,
+            description: "Confirmed client legal name; Vera derives the folder label.",
+          },
+          email_addresses: {
+            type: "array",
+            maxItems: 20,
+            items: { type: "string", minLength: 3, maxLength: 254 },
+            description: "Optional confirmed full email or PEC addresses.",
+          },
+          tax_identifiers: {
+            type: "array",
+            maxItems: 20,
+            items: { type: "string", minLength: 5, maxLength: 32 },
+            description: "Optional confirmed codice fiscale or partita IVA values.",
+          },
+        },
+        ["legal_name"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.importDocument,
+      title: "Import a document into one client engagement",
+      description:
+        "After the user confirms the exact client and copy action, preserve the original file, copy one regular file into a managed client engagement, receipt its bytes, and return the next client-bound workflow context.",
+      inputSchema: objectSchema(
+        {
+          client_id: {
+            type: "string",
+            pattern: "^client_[0-9a-f]{24}$",
+          },
+          source_path: {
+            type: "string",
+            minLength: 1,
+            maxLength: 4096,
+            description: "Absolute path to the user-selected journal or support file.",
+          },
+          role: {
+            type: "string",
+            enum: ["journal", "support"],
+          },
+          engagement_id: {
+            type: "string",
+            pattern: "^eng_[0-9a-f]{24}$",
+            description: "Required for support; omit for the first journal import.",
+          },
+          engagement_label: {
+            type: "string",
+            minLength: 1,
+            maxLength: 160,
+          },
+        },
+        ["client_id", "source_path", "role"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.engagements,
+      title: "List one client's Studio engagements",
+      description:
+        "List durable engagement IDs, imported-file receipts, persisted workflow contexts, and exact available output paths for one stable client so a later chat can resume the journal engagement without relying on chat history.",
+      inputSchema: objectSchema(
+        {
+          client_id: {
+            type: "string",
+            pattern: "^client_[0-9a-f]{24}$",
+          },
+        },
+        ["client_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.prepareWorkflow,
+      title: "Prepare a client-bound Vera workflow run",
+      description:
+        "Create and persist the only permitted run context and output path for Journal Sampling, Check Entries, or Audit Reconciliation under one existing engagement.",
+      inputSchema: objectSchema(
+        {
+          engagement_id: {
+            type: "string",
+            pattern: "^eng_[0-9a-f]{24}$",
+          },
+          workflow_id: {
+            type: "string",
+            enum: ["journal-sampling", "check-entries", "audit-reconciliation"],
+          },
+        },
+        ["engagement_id", "workflow_id"],
+      ),
+      annotations: annotations(false, false),
     },
     {
       name: TOOL_NAMES.configure,
@@ -154,9 +278,9 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.configureClient,
-      title: "Configure one Studio Archive client for Gmail",
+      title: "Register one existing Studio Archive client",
       description:
-        "Bind confirmed full email addresses, legal names, and tax identifiers to one exact archive scope in the private local registry. Vera stores no Gmail credentials, messages, or attachments.",
+        "Assign a stable client ID and bind confirmed legal names, full email addresses, and tax identifiers to one exact existing archive scope in the private local registry. Vera stores no Gmail credentials, messages, or attachments.",
       inputSchema: objectSchema(
         {
           scope_id: {
@@ -363,6 +487,122 @@ function commandForTool(name, rawArgs) {
   if (name === TOOL_NAMES.clients) {
     assertOnlyKeys(args, new Set());
     return ["clients"];
+  }
+  if (name === TOOL_NAMES.clientFolder) {
+    assertOnlyKeys(args, new Set(["client_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    return ["client-folder", "--client-id", clientId];
+  }
+  if (name === TOOL_NAMES.createClient) {
+    assertOnlyKeys(
+      args,
+      new Set(["legal_name", "email_addresses", "tax_identifiers"]),
+    );
+    const command = [
+      "create-client",
+      "--legal-name",
+      requireString(args.legal_name, "legal_name"),
+    ];
+    for (const value of optionalStringArray(
+      args.email_addresses,
+      "email_addresses",
+      20,
+      254,
+    )) {
+      command.push("--email-address", value);
+    }
+    for (const value of optionalStringArray(
+      args.tax_identifiers,
+      "tax_identifiers",
+      20,
+      32,
+    )) {
+      command.push("--tax-identifier", value);
+    }
+    return command;
+  }
+  if (name === TOOL_NAMES.importDocument) {
+    assertOnlyKeys(
+      args,
+      new Set([
+        "client_id",
+        "source_path",
+        "role",
+        "engagement_id",
+        "engagement_label",
+      ]),
+    );
+    const clientId = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    const role = requireString(args.role, "role");
+    if (!/^(?:journal|support)$/.test(role)) {
+      throw new Error("role must be journal or support.");
+    }
+    const command = [
+      "import-document",
+      "--client-id",
+      clientId,
+      "--source-path",
+      requireString(args.source_path, "source_path"),
+      "--role",
+      role,
+    ];
+    const engagementId = optionalString(
+      args.engagement_id,
+      "engagement_id",
+      28,
+    );
+    if (
+      engagementId !== null &&
+      !/^eng_[0-9a-f]{24}$/.test(engagementId)
+    ) {
+      throw new Error("engagement_id is invalid.");
+    }
+    if (engagementId !== null) {
+      command.push("--engagement-id", engagementId);
+    }
+    const label = optionalString(
+      args.engagement_label,
+      "engagement_label",
+      160,
+    );
+    if (label !== null) command.push("--engagement-label", label);
+    return command;
+  }
+  if (name === TOOL_NAMES.engagements) {
+    assertOnlyKeys(args, new Set(["client_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    return ["engagements", "--client-id", clientId];
+  }
+  if (name === TOOL_NAMES.prepareWorkflow) {
+    assertOnlyKeys(args, new Set(["engagement_id", "workflow_id"]));
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    const workflowId = requireString(args.workflow_id, "workflow_id");
+    if (
+      !/^(?:journal-sampling|check-entries|audit-reconciliation)$/.test(
+        workflowId,
+      )
+    ) {
+      throw new Error("workflow_id is unsupported.");
+    }
+    return [
+      "prepare-workflow",
+      "--engagement-id",
+      engagementId,
+      "--workflow-id",
+      workflowId,
+    ];
   }
   if (name === TOOL_NAMES.configure) {
     assertOnlyKeys(args, new Set(["archive_root"]));
@@ -621,7 +861,7 @@ function handleRpc(message) {
       serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
       capabilities: { tools: {} },
       instructions:
-        "Call studio_archive_status first. Search one exact archive scope and open every file result used as evidence. For Gmail, configure one client identity, plan one exact-scope search, use the connected Gmail read tools, and fail closed on ambiguous routing.",
+        "For client work, list registered clients first and ask the user to choose Existing or New when no exact client is established. Never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing.",
     });
   }
   if (message.method === "notifications/initialized") return null;

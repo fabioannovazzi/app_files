@@ -1227,6 +1227,7 @@ def write_run_intake(
     language: str = "it",
     source_hint: str | Path | None = None,
     dependency_check: dict[str, Any] | None = None,
+    client_engagement: dict[str, Any] | None = None,
     run_id: str | None = None,
 ) -> RunIntakeResult:
     """Write the durable run-intake artifact for audit reconciliation."""
@@ -1255,6 +1256,7 @@ def write_run_intake(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": active_run_id,
+        "client_engagement": client_engagement,
         "created_at": _utc_now(),
         "language": language,
         "input_paths": paths,
@@ -1361,6 +1363,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": result.get("client_engagement"),
         "created_at": _utc_now(),
         "language": language,
         "source_paths": source_path_refs,
@@ -1524,6 +1527,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
+            "client_engagement": result.get("client_engagement"),
             "completed_at": _utc_now(),
             "outputs": _output_records(
                 output_dir,

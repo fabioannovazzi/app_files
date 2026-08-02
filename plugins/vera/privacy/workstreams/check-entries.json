@@ -23,7 +23,7 @@
       {
         "id": "entry-and-support-review",
         "purpose": "Map selected entries and resolve accounting-support checks",
-        "content": "User instructions; qualified journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions",
+        "content": "User instructions; stable Studio Archive client ID and folder binding; engagement/workflow/run IDs and exact local input/output paths; qualified same-engagement journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -57,6 +57,10 @@
       "control": "The Journal Sampling assurance envelope and normalized receipt are replayed before and after support extraction; every support artifact is captured once and its receipt, bounded parser result, qualification, comparison, numeric ledger, and final assurance replay use the same bytes."
     },
     {
+      "id": "same-client-engagement-gate",
+      "control": "Every product CLI requires a digest-valid Check Entries client context, accepts support only below that engagement's managed support input, requires the normalized journal and diagnostics to carry a valid Journal Sampling context with the same stable client, engagement and workspace, and writes only to the exact inspection or checks child of the derived run path."
+    },
+    {
       "id": "complete-support-membership",
       "control": "A selected support directory is sealed as a complete canonical relative-path manifest; added, removed, replaced, Unicode/case aliases, temporary-prefixed files, symbolic links, hard-link aliases, and special filesystem entries fail closed."
     },
@@ -82,9 +86,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "07c70ac32ec06acc9db7f7d378fe04f5102cafc15a877f69b972f8c68797dbfd"
+    "source_fingerprint": "2513eaa236e745c25caaaf018eed575b43c0da43fad517c7e006dfd6f5c92b96"
   }
 }

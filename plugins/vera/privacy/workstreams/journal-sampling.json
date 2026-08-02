@@ -23,7 +23,7 @@
       {
         "id": "journal-and-sample-review",
         "purpose": "Resolve journal mappings and explain the sampling design and selected sample",
-        "content": "User instructions; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics and review decisions",
+        "content": "User instructions; the stable Studio Archive client ID, current client-folder binding, engagement/workflow/run IDs and exact local input/output paths; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics and review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -36,6 +36,10 @@
     {
       "id": "qualified-source-before-population",
       "control": "Only a bounded source-family adapter or complete source-bound reviewed mapping may emit canonical journal rows; every monetary candidate must be disposed, generic PDF layouts abstain, and failed or unsupported qualification emits no population for sampling."
+    },
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "Every product CLI requires a digest-valid Studio Archive client-engagement context, accepts the imported journal only inside that engagement input root, and writes normalization and sample artifacts only to the exact derived client/engagement/workflow/run paths. The context is sealed into diagnostics and review artifacts."
     },
     {
       "id": "sealed-population-and-implementation-replay",
@@ -55,9 +59,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "63c4c9be500f64f0aa52c8b44b762c3418b2b2a5bb17aa21c0066850a968bc2c"
+    "source_fingerprint": "116aa9ca89dedb19d7a59d6bc4a6688c76950f167fc699e6f0ac69c1721cb3f0"
   }
 }

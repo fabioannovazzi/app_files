@@ -85,19 +85,45 @@ legal judgment; the validator does not implement it as automatic redaction or a
 minimum-context classifier. It does not certify GDPR compliance or verify the
 deployment's actual account settings.
 
+## Client-first journal workflow in Codex
+
+When a professional starts with a journal file, route through Studio Archive
+before Journal Sampling. Do not infer the client from the filename and do not
+assume that a client is existing merely because a similarly named folder
+exists. List registered clients and unregistered scopes, resolve the intended
+client semantically with the user when needed, and retain the returned stable
+`client_id`. Register a confirmed existing scope or create a folder only after
+the user chooses New client. New folder creation starts but never completes
+the separate New Client professional workflow.
+
+Before copying the journal, tell the user that Vera preserves the original and
+creates one controlled engagement copy. After authorization, import it with
+role `journal` and pass the returned client-engagement context unchanged to
+Journal Sampling. When support arrives in a later chat, list the same client's
+durable engagements and persisted workflow runs. Select the exact engagement
+and normalized Journal Sampling run; ask if more than one could apply. Import
+ZIP/PDF support with role `support` into that engagement and pass the returned
+Check Entries context unchanged. Never rely on an archived chat to recover the
+handoff, and reject client, engagement, input, or output paths that do not
+close mechanically.
+
 ## Module routing
 
-- `studio-archive`: three independent routes for one client's Gmail, one
-  verified local WhatsApp Desktop chat, or an optional local document archive.
+- `studio-archive`: durable local client IDs and engagements plus three
+  independent evidence routes for one client's Gmail, one verified local
+  WhatsApp Desktop chat, or an optional local document archive.
   Gmail uses a callable read-only connector, task-scoped confirmed addresses,
   bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
   is capability-gated and excluded from Cowork v1; on another supported local
   runtime it requires one confirmed complete phone number and a verified
   one-to-one chat. Each professional may additionally keep a private SQLite
   index and client identity registry for one shared or synced studio folder.
-  The workflow never stores Gmail credentials or messages, modifies source
-  documents or mail, shares a local index, uses WhatsApp Web or an unofficial
-  API, or downloads OCR weights;
+  Search and indexing do not edit sources. After explicit user choice, the
+  intake route may create one derived client folder and may copy selected
+  journal/support files into a generated engagement subtree without
+  overwriting the originals. The workflow never stores Gmail credentials or
+  messages, modifies existing source documents or mail, shares a local index,
+  uses WhatsApp Web or an unofficial API, or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `new-client`: one path from incoming customer files to the reviewed
   professional setup. Its subordinate `client-file-preparation` engine handles

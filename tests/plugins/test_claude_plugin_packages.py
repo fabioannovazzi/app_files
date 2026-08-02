@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.65"
+    assert manifest["version"] == "0.1.68"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -501,6 +501,12 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     audit = cowork_instruction_docs[
         "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
     ]
+    journal = cowork_instruction_docs[
+        "modules/journal-sampling/skills/journal-sampling/SKILL.md"
+    ]
+    check_entries = cowork_instruction_docs[
+        "modules/check-entries/skills/check-entries/SKILL.md"
+    ]
     sari = cowork_instruction_docs[
         "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
     ]
@@ -511,6 +517,16 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "do not capture a live INPS browser session" in " ".join(main.split())
     assert "It does not support WhatsApp" in studio
     assert "## Cowork review handoff" in audit
+    assert "## Client boundary in Cowork" in audit
+    assert "cannot issue a new client-folder binding" in audit
+    assert "Never invent a scope ID" in audit
+    assert "Call `studio_archive_status`" not in audit
+    assert "Cowork cannot issue a Studio Archive client-engagement context" in journal
+    assert "sealed client-bound run remains pending" in journal
+    assert "Cowork cannot issue a Studio Archive Check Entries context" in check_entries
+    assert "sealed client-bound check remains pending" in check_entries
+    assert "import_studio_client_document" not in journal
+    assert "import_studio_client_document" not in check_entries
     assert "The normal Cowork completion point is delivery" in audit
     assert "Its absence never blocks delivery" in " ".join(audit.split())
     assert "### Optional public SARI lookup" in sari

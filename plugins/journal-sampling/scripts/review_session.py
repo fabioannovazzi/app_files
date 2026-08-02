@@ -660,6 +660,7 @@ def write_run_intake(
     keyword: str | None,
     language: str,
     declared_output_dir: Path | None = None,
+    client_engagement: dict[str, Any] | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic sample selection."""
 
@@ -671,6 +672,7 @@ def write_run_intake(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": client_engagement,
         "created_at": _utc_now(),
         "language": language_code,
         "input_paths": [normalized_csv.as_posix()],
@@ -719,6 +721,7 @@ def write_review_session_artifacts(
     run_intake_path: Path,
     sample: Any,
     audit: dict[str, Any],
+    client_engagement: dict[str, Any] | None = None,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
 
@@ -735,6 +738,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": client_engagement,
         "created_at": _utc_now(),
         "language": language,
         "source_paths": [audit.get("normalized_csv")],
@@ -824,6 +828,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
+            "client_engagement": client_engagement,
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": list(copy["caveats"]),

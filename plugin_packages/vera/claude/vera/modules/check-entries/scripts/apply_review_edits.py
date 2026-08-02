@@ -857,6 +857,7 @@ def _review_payload_material_projection(payload: dict[str, Any]) -> dict[str, An
             "schema_version",
             "plugin",
             "workflow",
+            "client_engagement",
             "language",
             "document_language",
             "source_paths",
@@ -878,6 +879,7 @@ def _run_intake_material_projection(value: dict[str, Any]) -> dict[str, Any]:
             "schema_version",
             "plugin",
             "workflow",
+            "client_engagement",
             "language",
             "document_language",
             "input_paths",
@@ -954,6 +956,12 @@ def _validate_rederived_material_state(
                 if audit.get("connector_name") is not None
                 else None
             ),
+            client_engagement=(
+                run_intake.get("client_engagement")
+                if isinstance(run_intake.get("client_engagement"), dict)
+                else None
+            ),
+            _enforce_client_output_path=False,
         )
         if (
             recipe_path is not None
@@ -1067,6 +1075,7 @@ def _validate_rederived_material_state(
 
         material_audit_fields = (
             "schema_version",
+            "client_engagement",
             "language",
             "document_language",
             "journal",

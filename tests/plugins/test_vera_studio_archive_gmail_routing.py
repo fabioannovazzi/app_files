@@ -130,7 +130,7 @@ def test_duplicate_exact_identifier_is_rejected_without_changing_registry(
 
     with pytest.raises(
         archive_core.ArchiveError,
-        match="assigned to more than one scope",
+        match="assigned to more than one client",
     ):
         archive_core.set_studio_client_identity(
             configured_clients.scopes["Bianchi"],

@@ -8,8 +8,10 @@ conclusions.
 
 from __future__ import annotations
 
+import hashlib
 import re
 from collections.abc import Mapping, Sequence
+from pathlib import Path
 from typing import Any
 
 from .money import MoneyValidationError, parse_canonical_decimal
@@ -17,12 +19,16 @@ from .serialization import canonical_json_sha256
 
 __all__ = [
     "AssuranceContractError",
+    "build_client_engagement_context",
     "build_gate_register",
     "build_numeric_evidence_ledger",
     "build_source_qualification",
+    "build_studio_client_folder_binding",
+    "validate_client_engagement_context",
     "validate_gate_register",
     "validate_numeric_evidence_ledger",
     "validate_source_qualification",
+    "validate_studio_client_folder_binding",
 ]
 
 _IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]*$")
@@ -55,6 +61,8 @@ _DEFAULT_GATE_DEPENDENCIES = {
     "reporting": ("reconciliation", "semantic_review"),
     "publication": ("reporting",),
 }
+_STUDIO_CLIENT_ID_RE = re.compile(r"^client_[0-9a-f]{24}$")
+_STUDIO_SCOPE_ID_RE = re.compile(r"^scope_[0-9a-f]{24}$")
 
 
 class AssuranceContractError(ValueError):
@@ -88,6 +96,15 @@ def _identifier(value: object, *, label: str) -> str:
     return text
 
 
+def _bounded_identifier(value: object, *, label: str, maximum: int = 120) -> str:
+    text = _identifier(value, label=label)
+    if len(text) > maximum:
+        raise AssuranceContractError(
+            f"{label} must contain at most {maximum} characters"
+        )
+    return text
+
+
 def _non_negative_int(value: object, *, label: str) -> int:
     if not isinstance(value, int) or isinstance(value, bool) or value < 0:
         raise AssuranceContractError(f"{label} must be a non-negative integer")
@@ -109,6 +126,231 @@ def _exact_fields(
             f"{label} fields invalid; missing={sorted(missing)}, "
             f"unexpected={sorted(unexpected)}"
         )
+
+
+def _absolute_path(value: object, *, label: str) -> str:
+    text = _text(value, label=label)
+    path = Path(text)
+    if (
+        not path.is_absolute()
+        or str(path) != text
+        or any(part in {".", ".."} for part in path.parts)
+    ):
+        raise AssuranceContractError(f"{label} must be a normalized absolute path")
+    return str(path)
+
+
+def _relative_scope_path(value: object) -> str:
+    text = _text(value, label="scope_relative_dir")
+    if text == ".":
+        raise AssuranceContractError(
+            "studio client folders must be immediate child scopes"
+        )
+    path = Path(text)
+    if (
+        path.is_absolute()
+        or path.as_posix() != text
+        or any(part in {"", ".", ".."} for part in path.parts)
+    ):
+        raise AssuranceContractError(
+            "scope_relative_dir must be a normalized relative path"
+        )
+    return text
+
+
+def _path_is_within(path: str, parent: str) -> bool:
+    try:
+        Path(path).relative_to(Path(parent))
+    except ValueError:
+        return False
+    return True
+
+
+def validate_studio_client_folder_binding(value: object) -> dict[str, Any]:
+    """Validate one exact Studio Archive scope as a portable client folder."""
+
+    payload = _mapping(value, label="studio client folder binding")
+    _exact_fields(
+        payload,
+        required={
+            "schema_version",
+            "studio_client_id",
+            "scope_id",
+            "archive_root",
+            "scope_relative_dir",
+            "client_root",
+            "display_name",
+            "content_sha256",
+        },
+        label="studio client folder binding",
+    )
+    if payload["schema_version"] != "vera.studio_client_folder.v2":
+        raise AssuranceContractError("unsupported studio client folder schema")
+    studio_client_id = _text(payload["studio_client_id"], label="studio_client_id")
+    if _STUDIO_CLIENT_ID_RE.fullmatch(studio_client_id) is None:
+        raise AssuranceContractError("studio_client_id must be a stable client ID")
+    scope_id = _text(payload["scope_id"], label="scope_id")
+    if _STUDIO_SCOPE_ID_RE.fullmatch(scope_id) is None:
+        raise AssuranceContractError("scope_id must be an exact archive scope ID")
+    archive_root = _absolute_path(payload["archive_root"], label="archive_root")
+    relative_dir = _relative_scope_path(payload["scope_relative_dir"])
+    client_root = _absolute_path(payload["client_root"], label="client_root")
+    expected_root = Path(archive_root) / Path(relative_dir)
+    if Path(client_root) != expected_root:
+        raise AssuranceContractError(
+            "client_root does not match archive_root and scope_relative_dir"
+        )
+    expected_scope_id = (
+        "scope_"
+        + hashlib.sha256(relative_dir.casefold().encode("utf-8")).hexdigest()[:24]
+    )
+    if scope_id != expected_scope_id:
+        raise AssuranceContractError("scope_id does not match scope_relative_dir")
+    content = {
+        "schema_version": "vera.studio_client_folder.v2",
+        "studio_client_id": studio_client_id,
+        "scope_id": scope_id,
+        "archive_root": archive_root,
+        "scope_relative_dir": relative_dir,
+        "client_root": client_root,
+        "display_name": _text(payload["display_name"], label="display_name"),
+    }
+    digest = _text(payload["content_sha256"], label="content_sha256")
+    expected_digest = canonical_json_sha256(content)
+    if digest != expected_digest:
+        raise AssuranceContractError("studio client folder content_sha256 is stale")
+    return {**content, "content_sha256": expected_digest}
+
+
+def build_studio_client_folder_binding(
+    *,
+    studio_client_id: str,
+    scope_id: str,
+    archive_root: str | Path,
+    scope_relative_dir: str,
+    client_root: str | Path,
+    display_name: str,
+) -> dict[str, Any]:
+    """Build a digest-bound client folder from one reviewed archive scope."""
+
+    content = {
+        "schema_version": "vera.studio_client_folder.v2",
+        "studio_client_id": studio_client_id,
+        "scope_id": scope_id,
+        "archive_root": str(archive_root),
+        "scope_relative_dir": scope_relative_dir,
+        "client_root": str(client_root),
+        "display_name": display_name,
+    }
+    return validate_studio_client_folder_binding(
+        {**content, "content_sha256": canonical_json_sha256(content)}
+    )
+
+
+def validate_client_engagement_context(value: object) -> dict[str, Any]:
+    """Validate one client, engagement, workflow, run, and path boundary."""
+
+    payload = _mapping(value, label="client engagement context")
+    _exact_fields(
+        payload,
+        required={
+            "schema_version",
+            "studio_client_folder",
+            "engagement_id",
+            "workflow_id",
+            "run_id",
+            "input_dir",
+            "workspace_root",
+            "output_dir",
+            "content_sha256",
+        },
+        label="client engagement context",
+    )
+    if payload["schema_version"] != "vera.client_engagement.v1":
+        raise AssuranceContractError("unsupported client engagement schema")
+    folder = validate_studio_client_folder_binding(payload["studio_client_folder"])
+    engagement_id = _bounded_identifier(payload["engagement_id"], label="engagement_id")
+    workflow_id = _bounded_identifier(
+        payload["workflow_id"], label="workflow_id", maximum=80
+    )
+    run_id = _bounded_identifier(payload["run_id"], label="run_id")
+    input_dir = _absolute_path(payload["input_dir"], label="input_dir")
+    workspace_root = _absolute_path(payload["workspace_root"], label="workspace_root")
+    output_dir = _absolute_path(payload["output_dir"], label="output_dir")
+    if not _path_is_within(input_dir, folder["client_root"]):
+        raise AssuranceContractError(
+            "input_dir must be inside the selected studio client folder"
+        )
+    if _path_is_within(workspace_root, folder["client_root"]):
+        raise AssuranceContractError(
+            "workspace_root must be outside the studio client evidence folder"
+        )
+    expected_output = (
+        Path(workspace_root)
+        / "clients"
+        / folder["studio_client_id"]
+        / "engagements"
+        / engagement_id
+        / "runs"
+        / workflow_id
+        / run_id
+    )
+    if Path(output_dir) != expected_output:
+        raise AssuranceContractError(
+            "output_dir does not match the client engagement run layout"
+        )
+    content = {
+        "schema_version": "vera.client_engagement.v1",
+        "studio_client_folder": folder,
+        "engagement_id": engagement_id,
+        "workflow_id": workflow_id,
+        "run_id": run_id,
+        "input_dir": input_dir,
+        "workspace_root": workspace_root,
+        "output_dir": output_dir,
+    }
+    digest = _text(payload["content_sha256"], label="content_sha256")
+    expected_digest = canonical_json_sha256(content)
+    if digest != expected_digest:
+        raise AssuranceContractError("client engagement content_sha256 is stale")
+    return {**content, "content_sha256": expected_digest}
+
+
+def build_client_engagement_context(
+    *,
+    studio_client_folder: Mapping[str, Any],
+    engagement_id: str,
+    workflow_id: str,
+    run_id: str,
+    input_dir: str | Path,
+    workspace_root: str | Path,
+) -> dict[str, Any]:
+    """Build the only permitted output path for a client-bound workflow run."""
+
+    folder = validate_studio_client_folder_binding(studio_client_folder)
+    output_dir = (
+        Path(workspace_root)
+        / "clients"
+        / folder["studio_client_id"]
+        / "engagements"
+        / engagement_id
+        / "runs"
+        / workflow_id
+        / run_id
+    )
+    content = {
+        "schema_version": "vera.client_engagement.v1",
+        "studio_client_folder": folder,
+        "engagement_id": engagement_id,
+        "workflow_id": workflow_id,
+        "run_id": run_id,
+        "input_dir": str(input_dir),
+        "workspace_root": str(workspace_root),
+        "output_dir": str(output_dir),
+    }
+    return validate_client_engagement_context(
+        {**content, "content_sha256": canonical_json_sha256(content)}
+    )
 
 
 def _validated_control(control: object, *, label: str) -> dict[str, Any]:

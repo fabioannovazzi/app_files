@@ -126,15 +126,6 @@ NATIONAL_LIABILITY_TERMS = (
     "tort",
 )
 
-PHASED_WORKFLOW_ELEMENTS = (
-    "phased workflow for broad multi-issue questions",
-    "mandatory chronology table for timing-sensitive disputes",
-    "anti-fabricated-authority instruction",
-    "confidence protocol for major conclusions",
-    "legal-realism categories: black-letter law, unsettled doctrine, cantonal practice, litigation strategy, and evidentiary dependency",
-    "tight scope controls for specialist subtopics such as trust and tax",
-)
-
 LEGAL_JURISDICTION_POLICIES = {
     "Italy": {
         "language": "jurisdiction",
@@ -262,15 +253,6 @@ LEGAL_JURISDICTION_POLICIES = {
     },
 }
 
-COUNTRY_LEVEL_JURISDICTIONS = {
-    "Italy",
-    "France",
-    "Germany",
-    "United States",
-    "United Kingdom",
-    "Switzerland",
-}
-
 
 @dataclass(frozen=True)
 class QuestionInventory:
@@ -382,69 +364,31 @@ def _jurisdiction_hints(text: str) -> list[str]:
 
 
 def _posture_hint(text: str) -> str:
-    """Infer a default research posture from surface cues."""
+    """Leave research posture to model-led review.
 
-    lowered = text.casefold()
-    if any(
-        term in lowered
-        for term in ("audit", "verifica", "contenzioso", "challenge", "dispute")
-    ):
-        return "defense_audit_dispute"
-    if any(
-        term in lowered
-        for term in (
-            "abmahnung",
-            "accus",
-            "cease and desist",
-            "claim letter",
-            "demand letter",
-            "diffida",
-            "enforcement",
-            "letter accusing",
-            "lawsuit",
-            "litigation",
-            "received a letter",
-        )
-    ):
-        return "defense_audit_dispute"
-    if any(
-        term in lowered
-        for term in ("planned", "planning", "before", "prima di", "strutturare")
-    ):
-        return "planning_ex_ante"
-    if any(
-        term in lowered for term in ("already", "completed", "gia", "fatto", "existing")
-    ):
-        return "assessment_ex_post"
-    return "compare_approaches"
+    Keyword routing produced false decisions when words such as ``before`` or
+    ``audit`` appeared in facts rather than in the user's requested posture.
+    Returning an explicit unresolved value is mechanically correct and keeps
+    the semantic decision with Claude or the user.
+    """
+
+    return "unconfirmed"
 
 
 def _objective_hint(text: str) -> str:
-    """Infer a default objective from surface cues."""
+    """Leave the professional objective to model-led review."""
 
-    lowered = text.casefold()
-    if any(
-        term in lowered
-        for term in ("conservative", "defensible", "risk", "robust", "difendibile")
-    ):
-        return "defensible_conservative"
-    if any(
-        term in lowered
-        for term in ("fast", "quick", "simple", "efficient", "rapido", "semplice")
-    ):
-        return "efficient"
-    return "balanced"
+    return "unconfirmed"
 
 
 def _scope_hint(jurisdictions: list[str]) -> str:
-    """Infer a scope hint from jurisdiction count."""
+    """Leave legal scope to model-led review.
 
-    countries = [item for item in jurisdictions if item in COUNTRY_LEVEL_JURISDICTIONS]
-    if len(countries) >= 2:
-        return "cross_border_multi_jurisdiction"
-    if "European Union" in jurisdictions:
-        return "domestic_plus_EU"
-    return "domestic_only"
+    Mentioned countries can be background facts rather than governing
+    frameworks. Counting them cannot determine legal research scope.
+    """
+
+    return "unconfirmed"
 
 
 def _legal_topic_flags(text: str, jurisdictions: list[str]) -> list[str]:
@@ -474,25 +418,15 @@ def _requires_phased_workflow(
     return False
 
 
-def _recommended_phases(topic_flags: list[str]) -> list[dict[str, Any]]:
-    """Return no deterministic phase suggestions."""
-
-    return []
-
-
 def _complexity_profile(inventory: QuestionInventory) -> dict[str, Any]:
-    """Return complexity guidance for the optimized prompt."""
+    """Record that deterministic inspection did not choose research phasing."""
 
-    profile: dict[str, Any] = {
+    return {
         "topic_flags": inventory.topic_flags,
         "requires_phased_workflow": inventory.requires_phased_workflow,
         "required_controls": [],
         "recommended_phases": [],
     }
-    if inventory.requires_phased_workflow:
-        profile["required_controls"] = list(PHASED_WORKFLOW_ELEMENTS)
-        profile["recommended_phases"] = _recommended_phases(inventory.topic_flags)
-    return profile
 
 
 def source_domains_for_question(
@@ -680,135 +614,27 @@ def _structured_choice_option(
     }
 
 
-def _angle_confirmation_reason(inventory: QuestionInventory) -> str | None:
-    """Return why the research angle should be confirmed before drafting."""
-
-    if inventory.requires_phased_workflow:
-        return (
-            "The matter is broad enough that the first decision is the research "
-            "angle and phase structure, not a single legal conclusion."
-        )
-    if inventory.posture_hint == "compare_approaches":
-        return (
-            "The question is open-ended, so the research angle controls whether "
-            "the prompt optimizes for classification, risk, controls, or action."
-        )
-    if inventory.objective_hint == "balanced" and len(inventory.explicit_questions) > 1:
-        return (
-            "The question asks multiple things, so the user should confirm the "
-            "main angle before the prompt chooses a structure."
-        )
-    return None
-
-
-def _angle_options(inventory: QuestionInventory) -> list[dict[str, str]]:
-    """Return three UI-ready angle options for the inferred posture."""
-
-    if inventory.posture_hint == "defense_audit_dispute":
-        return [
-            _structured_choice_option(
-                "response_strategy",
-                "Response strategy",
-                "Optimize for deadlines, defenses, escalation, and next actions.",
-                "Frame the prompt around response strategy and procedural risk.",
-            ),
-            _structured_choice_option(
-                "evidence_and_defenses",
-                "Evidence and defenses",
-                "Optimize for proof gaps, burden, defenses, and evidence requests.",
-                "Frame the prompt around evidence quality and available defenses.",
-            ),
-            _structured_choice_option(
-                "settlement_risk_matrix",
-                "Risk/options matrix",
-                "Optimize for settlement leverage, downside risk, and options.",
-                "Frame the prompt as a risk/options matrix for decision-making.",
-            ),
-        ]
-    if inventory.posture_hint == "planning_ex_ante":
-        return [
-            _structured_choice_option(
-                "compliance_design",
-                "Compliance design",
-                "Optimize for controls, contracts, notices, and operating model.",
-                "Frame the prompt around a compliant operating design.",
-            ),
-            _structured_choice_option(
-                "transaction_structure",
-                "Structure choice",
-                "Optimize for comparing structures before implementation.",
-                "Frame the prompt around structure options and tradeoffs.",
-            ),
-            _structured_choice_option(
-                "implementation_checklist",
-                "Implementation checklist",
-                "Optimize for concrete steps, owners, documents, and controls.",
-                "Frame the prompt as an implementation checklist with caveats.",
-            ),
-        ]
-    if inventory.posture_hint == "assessment_ex_post":
-        return [
-            _structured_choice_option(
-                "legal_effect_assessment",
-                "Legal effect",
-                "Optimize for what the existing facts legally mean.",
-                "Frame the prompt around legal effect and consequences.",
-            ),
-            _structured_choice_option(
-                "remediation_options",
-                "Remediation options",
-                "Optimize for fixes, correction windows, and risk reduction.",
-                "Frame the prompt around remediation options and priorities.",
-            ),
-            _structured_choice_option(
-                "evidence_gap_review",
-                "Evidence gaps",
-                "Optimize for missing proof, records, and verification steps.",
-                "Frame the prompt around evidence gaps and fact verification.",
-            ),
-        ]
-    return [
-        _structured_choice_option(
-            "legal_status_classification",
-            "Legal status",
-            "Optimize for classifying the entity, roles, duties, and boundaries.",
-            "Frame the prompt around legal status, roles, and duty boundaries.",
-        ),
-        _structured_choice_option(
-            "liability_risk_matrix",
-            "Liability risk matrix",
-            "Optimize for exposure, defenses, mitigants, and uncertainty.",
-            "Frame the prompt as a liability risk matrix with controls.",
-        ),
-        _structured_choice_option(
-            "compliance_operating_model",
-            "Compliance model",
-            "Optimize for policies, contracts, workflows, and safeguards.",
-            "Frame the prompt around a practical compliance operating model.",
-        ),
-    ]
-
-
 def angle_confirmation_for_question(inventory: QuestionInventory) -> dict[str, Any]:
-    """Return research-angle confirmation guidance for Claude."""
+    """Record that angle confirmation is a model-led decision."""
 
-    reason = _angle_confirmation_reason(inventory)
-    options = _angle_options(inventory)
     return {
-        "required": reason is not None,
-        "mode": "structured_choice",
-        "reason": reason or "The deterministic research angle appears specific enough.",
-        "question": "Confirm the research angle before drafting the optimized prompt.",
-        "preferred_option_id": options[0]["id"],
-        "options": options,
+        "required": False,
+        "decision_owner": "codex_or_user",
+        "determination_status": "not_determined_by_inspection",
+        "mode": "model_led_confirmation_if_material",
+        "reason": (
+            "Deterministic inspection does not decide the research angle or "
+            "whether confirmation is materially required."
+        ),
+        "question": "Claude should confirm the research angle only when materially unresolved.",
+        "preferred_option_id": None,
+        "options": [],
         "max_native_ui_options": 3,
         "allows_custom": True,
         "instruction": (
-            "When required is true, fix the research angle before domain-specific "
-            "choices such as jurisdiction or output format. In Default mode, "
-            "state the preferred option and wait for chat confirmation or a "
-            "custom angle. In Plan mode, use the native choice widget when "
-            "available."
+            "Claude must understand the question semantically, choose or propose "
+            "the research angle, and ask only when an unresolved choice would "
+            "materially change the answer. Generate any options from the facts."
         ),
     }
 
@@ -816,7 +642,7 @@ def angle_confirmation_for_question(inventory: QuestionInventory) -> dict[str, A
 def jurisdiction_confirmation_for_question(
     inventory: QuestionInventory, jurisdiction_policy: dict[str, Any]
 ) -> dict[str, Any]:
-    """Return UI-ready jurisdiction confirmation guidance for Claude."""
+    """Inventory framework cues without deciding whether confirmation is needed."""
 
     reason = _jurisdiction_confirmation_reason(inventory, jurisdiction_policy)
     options = []
@@ -884,242 +710,60 @@ def jurisdiction_confirmation_for_question(
         )
     )
     return {
-        "required": True,
-        "mode": "structured_choice",
+        "required": False,
+        "decision_owner": "codex_or_user",
+        "determination_status": "not_determined_by_inspection",
+        "mode": "model_led_confirmation_if_material",
         "reason": reason,
-        "question": "Confirm the legal framework before drafting the optimized prompt.",
-        "preferred_option_id": options[0]["id"],
+        "question": (
+            "Claude should confirm the legal framework only when the user's text "
+            "and context do not already resolve it."
+        ),
+        "preferred_option_id": None,
         "options": options,
         "max_native_ui_options": 3,
         "allows_custom": True,
         "instruction": (
-            "When required is true, do not draft until the user confirms one "
-            "option or supplies a custom jurisdiction. In Default mode, wait "
-            "for chat confirmation. In Plan mode, use the native choice widget "
-            "when available."
+            "Claude decides semantically whether the user's question already "
+            "confirms the framework. Ask only when a material governing-law or "
+            "source-framework choice remains unresolved."
         ),
     }
-
-
-def _intake_question(
-    question_id: str,
-    question: str,
-    why_it_matters: str,
-    affects: str,
-) -> dict[str, str]:
-    """Return one structured lawyer-intake question."""
-
-    return {
-        "id": question_id,
-        "question": question,
-        "why_it_matters": why_it_matters,
-        "affects": affects,
-    }
-
-
-def _output_format_options(posture: str) -> list[dict[str, str]]:
-    """Return output formats Claude can offer before drafting the prompt."""
-
-    common_options = [
-        {
-            "id": "client_memo",
-            "label": "client-ready legal memo",
-            "best_for": "a complete answer with premises, analysis, conclusions, sources, and caveats",
-        },
-        {
-            "id": "risk_options_matrix",
-            "label": "risk and options matrix",
-            "best_for": "comparing practical choices, legal risk, evidence gaps, and next actions",
-        },
-        {
-            "id": "local_counsel_brief",
-            "label": "brief for local counsel",
-            "best_for": "preparing facts, questions, and source requirements for a lawyer in the jurisdiction",
-        },
-    ]
-    if posture == "defense_audit_dispute":
-        return [
-            {
-                "id": "response_strategy",
-                "label": "response strategy memo",
-                "best_for": "deadlines, defenses, settlement posture, evidence checks, and escalation risk",
-            },
-            *common_options,
-        ]
-    if posture == "planning_ex_ante":
-        return [
-            {
-                "id": "planning_memo",
-                "label": "planning memo",
-                "best_for": "structuring a future transaction or action before implementation",
-            },
-            *common_options,
-        ]
-    return common_options
 
 
 def lawyer_intake_for_question(
     inventory: QuestionInventory, jurisdiction_policy: dict[str, Any]
 ) -> dict[str, Any]:
-    """Return a structured legal intake plan for Claude to ask the user."""
+    """Return the boundary for model-led legal intake.
+
+    Deterministic inspection cannot know whether a missing fact is material or
+    whether the question already implies the desired answer form. Claude should
+    ordinarily proceed from a legal question to an optimized generation
+    contract, asking only when semantic review identifies a consequential gap.
+    """
 
     angle_confirmation = angle_confirmation_for_question(inventory)
     jurisdiction_confirmation = jurisdiction_confirmation_for_question(
         inventory, jurisdiction_policy
     )
-    questions: list[dict[str, str]] = []
-    if angle_confirmation["required"]:
-        questions.append(
-            _intake_question(
-                "angle_confirmation",
-                (
-                    "Confirm the research angle before drafting: should Claude "
-                    "optimize for the suggested angle, another listed angle, or "
-                    "a custom framing?"
-                ),
-                (
-                    "The same facts can produce a classification answer, a risk "
-                    "matrix, a compliance design, or an action plan."
-                ),
-                "research lens, structure, and output emphasis",
-            )
-        )
-
-    if jurisdiction_confirmation["required"]:
-        questions.append(
-            _intake_question(
-                "jurisdiction_confirmation",
-                (
-                    "Confirm the legal framework before drafting: should Claude "
-                    "use one of the detected framework cues, a different named "
-                    "framework, or a custom combination?"
-                ),
-                (
-                    "The source hierarchy, deadlines, defenses, and procedural risk "
-                    "can change completely by jurisdiction."
-                ),
-                "scope and source hierarchy",
-            )
-        )
-
-    if inventory.posture_hint == "defense_audit_dispute":
-        questions.extend(
-            [
-                _intake_question(
-                    "deadline_and_dates",
-                    (
-                        "What deadline is in the letter or proceeding, when was it "
-                        "received, and when did the alleged event happen?"
-                    ),
-                    (
-                        "Response strategy often depends on short deadlines, "
-                        "limitation periods, and procedural urgency."
-                    ),
-                    "urgency, risk ranking, and immediate next actions",
-                ),
-                _intake_question(
-                    "demands_and_sender",
-                    (
-                        "Who sent the letter or claim, on whose behalf, and what "
-                        "exactly is demanded: payment, undertaking, signature, "
-                        "documents, deletion, or something else?"
-                    ),
-                    (
-                        "The remedy requested determines whether the prompt should "
-                        "focus on damages, injunctions, settlement, evidence, or all "
-                        "of them."
-                    ),
-                    "research questions and output format",
-                ),
-                _intake_question(
-                    "parties_and_roles",
-                    (
-                        "Who are the relevant people or entities, and what are their "
-                        "roles: recipient, alleged actor, account holder, owner of "
-                        "the device, family member, employee, guest, or minor?"
-                    ),
-                    (
-                        "Liability and evidentiary burdens often turn on who did "
-                        "what, who controlled the account/device, and the legal "
-                        "relationship between them."
-                    ),
-                    "fact preservation and legal issue spotting",
-                ),
-                _intake_question(
-                    "evidence_available",
-                    (
-                        "What evidence is attached or described, such as IP address, "
-                        "timestamp, contract/account records, screenshots, invoices, "
-                        "or technical logs?"
-                    ),
-                    (
-                        "A good research prompt should test the quality of proof, not "
-                        "only summarize legal rules."
-                    ),
-                    "source strategy and evidence checklist",
-                ),
-            ]
-        )
-    elif inventory.posture_hint == "planning_ex_ante":
-        questions.append(
-            _intake_question(
-                "planned_steps",
-                (
-                    "What future steps are planned, who will do them, and what result "
-                    "must be achieved or avoided?"
-                ),
-                (
-                    "Planning research needs a target structure, not only abstract "
-                    "rules."
-                ),
-                "recommended structure and risk controls",
-            )
-        )
-    elif inventory.posture_hint == "assessment_ex_post":
-        questions.append(
-            _intake_question(
-                "completed_steps",
-                (
-                    "What exactly has already happened, on what dates, and what "
-                    "documents or amounts prove it?"
-                ),
-                (
-                    "Ex-post assessment depends on chronology, evidence, and whether "
-                    "correction windows remain open."
-                ),
-                "chronology, risk analysis, and remediation options",
-            )
-        )
-
-    questions.append(
-        _intake_question(
-            "desired_output",
-            (
-                "What output should the Deep Research answer produce: client memo, "
-                "risk/options matrix, brief for local counsel, checklist, draft "
-                "response outline, or another format?"
-            ),
-            (
-                "The same legal research can be optimized for a decision, a client "
-                "explanation, a lawyer handoff, or a practical response plan."
-            ),
-            "final answer structure and level of detail",
-        )
-    )
-
     return {
-        "mode": "ask_before_drafting_when_material",
-        "max_questions": 5,
-        "questions": questions[:5],
+        "mode": "model_led_ask_only_when_material",
+        "decision_owner": "codex_or_user",
+        "max_questions": 3,
+        "questions": [],
         "angle_confirmation_required": angle_confirmation["required"],
         "jurisdiction_confirmation_required": jurisdiction_confirmation["required"],
-        "output_format_options": _output_format_options(inventory.posture_hint),
+        "output_format_options": [],
         "fast_path": (
-            "If the user asks for speed or the answer is already clear enough, "
-            "state the assumptions and continue without waiting. Do not use the "
-            "fast path when angle_confirmation_required or "
-            "jurisdiction_confirmation_required is true. If the user wants to "
-            "change required choices through UI, ask them to switch to Plan mode."
+            "Proceed from the legal question to an answer contract and optimized "
+            "prompt when the intended output and framework are semantically clear. "
+            "Ask only about a material ambiguity that would change the answer."
+        ),
+        "instruction": (
+            "Do not ask the user whether to optimize the prompt. Infer the likely "
+            "document type, generation route, research lens, and source strategy "
+            "semantically; surface assumptions and request confirmation only when "
+            "a consequential choice remains unresolved."
         ),
     }
 

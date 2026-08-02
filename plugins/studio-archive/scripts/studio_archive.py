@@ -13,10 +13,15 @@ from typing import Any
 from archive_core import (
     ArchiveError,
     configure_archive,
+    create_studio_client,
+    get_studio_client_folder,
+    import_studio_client_document,
+    list_studio_client_engagements,
     list_studio_client_identities,
     match_studio_email_client,
     open_archive_source,
     plan_gmail_client_search,
+    prepare_studio_client_workflow,
     refresh_archive,
     search_archive,
     set_studio_client_identity,
@@ -39,6 +44,34 @@ def _parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("status")
     subparsers.add_parser("clients")
+
+    client_folder = subparsers.add_parser("client-folder")
+    client_folder.add_argument("--client-id", required=True)
+
+    create_client = subparsers.add_parser("create-client")
+    create_client.add_argument("--legal-name", required=True)
+    create_client.add_argument("--email-address", action="append", default=[])
+    create_client.add_argument("--tax-identifier", action="append", default=[])
+
+    import_document = subparsers.add_parser("import-document")
+    import_document.add_argument("--client-id", required=True)
+    import_document.add_argument("--source-path", type=Path, required=True)
+    import_document.add_argument(
+        "--role", choices=["journal", "support"], required=True
+    )
+    import_document.add_argument("--engagement-id")
+    import_document.add_argument("--engagement-label")
+
+    engagements = subparsers.add_parser("engagements")
+    engagements.add_argument("--client-id", required=True)
+
+    prepare_workflow = subparsers.add_parser("prepare-workflow")
+    prepare_workflow.add_argument("--engagement-id", required=True)
+    prepare_workflow.add_argument(
+        "--workflow-id",
+        choices=["journal-sampling", "check-entries", "audit-reconciliation"],
+        required=True,
+    )
 
     configure_client = subparsers.add_parser("configure-client")
     configure_client.add_argument("--scope-id", required=True)
@@ -84,6 +117,29 @@ def main(argv: list[str] | None = None) -> int:
             result = studio_archive_status()
         elif args.command == "clients":
             result = list_studio_client_identities()
+        elif args.command == "client-folder":
+            result = get_studio_client_folder(args.client_id)
+        elif args.command == "create-client":
+            result = create_studio_client(
+                args.legal_name,
+                email_addresses=args.email_address,
+                tax_identifiers=args.tax_identifier,
+            )
+        elif args.command == "import-document":
+            result = import_studio_client_document(
+                args.client_id,
+                args.source_path,
+                args.role,
+                engagement_id=args.engagement_id,
+                engagement_label=args.engagement_label,
+            )
+        elif args.command == "engagements":
+            result = list_studio_client_engagements(args.client_id)
+        elif args.command == "prepare-workflow":
+            result = prepare_studio_client_workflow(
+                args.engagement_id,
+                args.workflow_id,
+            )
         elif args.command == "configure-client":
             result = set_studio_client_identity(
                 args.scope_id,

@@ -7,6 +7,12 @@ with Italian FatturaPA XMLs and supporting PDF documents.
 
 The plugin starts from a qualified prepared-evidence boundary:
 
+- Studio Archive must identify the stable client and engagement. In a later
+  chat, its engagement listing exposes persisted Journal Sampling contexts and
+  exact available normalized-journal paths. Support must be copied, with user
+  authorization and original preservation, into that same engagement. Both
+  product CLIs require the returned Check Entries context and reject
+  cross-client inputs or invented output paths.
 - Journal Sampling must first write `normalized_journal.csv` and adjacent
   sealed `normalization_diagnostics.json`. Check Entries replays the complete
   upstream assurance envelope, gate register, reviewed mapping decisions,

@@ -69,6 +69,7 @@ from journal_sampling_core import (
     add_common_args,
     comma_list,
     configure_logging,
+    load_client_engagement_context,
     run_sample,
 )
 
@@ -121,6 +122,12 @@ def main() -> int:
         ),
     )
     parser.add_argument("--keyword", help="Case-insensitive line-description filter.")
+    parser.add_argument(
+        "--client-engagement",
+        type=Path,
+        required=True,
+        help="Studio Archive client workflow context JSON.",
+    )
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
@@ -139,6 +146,7 @@ def main() -> int:
         keyword=args.keyword,
         language=args.language,
         normalization_diagnostics=args.normalization_diagnostics,
+        client_engagement=load_client_engagement_context(args.client_engagement),
     )
     LOGGER.info("sample_rows=%s", result.frame.height)
     LOGGER.info("wrote %s", args.output_dir / "journal_sample.csv")

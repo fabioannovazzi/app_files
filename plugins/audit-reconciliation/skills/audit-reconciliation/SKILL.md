@@ -151,6 +151,32 @@ Skipped sources, unsupported layouts, and parser failures must be visible as
 review items, on the workbook's `Source processing issues` sheet, and in
 `source_processing.extraction_errors` in the canonical record.
 
+## Client folder gate
+
+Every raw-input run must be bound to one exact Studio Archive client folder.
+Do not infer the client from a person's name, a filename, an engagement label,
+or the contents of an accounting file.
+
+1. Call `studio_archive_status`, select one exact client `scope_id`, and call
+   `get_studio_client_folder`. If Studio Archive reports that its top-level
+   scopes changed, refresh it before continuing.
+2. Pass the returned `client_folder` object unchanged to
+   `run_raw_input_reconciliation`, together with a canonical `engagement_id`,
+   the input directory inside that client folder, and an absolute private
+   `workspace_root` outside the evidence folder and this Git workspace.
+3. The runner derives the only permitted output path as
+   `clients/<studio-client-id>/engagements/<engagement-id>/runs/audit-reconciliation/<run-id>`.
+   Never substitute a freely chosen output directory.
+4. Stop when the input is outside the selected client folder, the binding is
+   stale or edited, or the workspace is inside the evidence folder. Do not
+   copy, merge, or relabel another client's files to make the validation pass.
+
+The same client/engagement context must appear in `run_intake.json`,
+`review_payload.json`, `run_manifest.json`, `prepared_records.json`, the
+canonical reconciliation record, and `assurance_receipts.json`. The portable
+folder binding intentionally excludes email addresses, legal names, tax
+identifiers, document content, and mailbox content.
+
 ## Browser Review UI And MCP Widget
 
 The primary review handoff is a local browser page backed by
@@ -307,7 +333,9 @@ For generic runs, pass `scope_year` and `cutoff_date` through assumptions when t
 
 Useful helper scripts include:
 
-- `scripts/raw_input_runner.py`: input-folder orchestration where available;
+- `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
+  CLI requires `--client-folder-binding`, `--engagement-id`, `--input-dir`,
+  `--workspace-root`, and `--assumptions-json`;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
