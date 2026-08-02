@@ -1539,6 +1539,54 @@ def test_codex_review_checks_fail_on_completed_review_pending_or_fail():
     )
 
 
+def test_review_signals_are_selected_and_checked_for_coverage():
+    helpers = load_helpers()
+    rows = [
+        {
+            "record_id": "signalled",
+            "document_key": "SIGNALLED|2026",
+            "amount": "10.00",
+            "reconciliation_status": "open_supported",
+            "rule_applied": "internal_booking_open_support",
+            "evidence_level": "moderate_internal",
+        },
+        {
+            "record_id": "other",
+            "document_key": "OTHER|2026",
+            "amount": "20.00",
+            "reconciliation_status": "open_supported",
+            "rule_applied": "internal_booking_open_support",
+            "evidence_level": "moderate_internal",
+        },
+    ]
+    priority_rows = [{"record_id": "signalled"}]
+
+    packet = helpers.build_codex_review_packet(
+        rows,
+        high_value_count=0,
+        random_count=0,
+        priority_rows=priority_rows,
+    )
+    checks = helpers.codex_review_checks(
+        rows,
+        packet,
+        high_value_count=0,
+        random_count=0,
+        priority_rows=priority_rows,
+    )
+
+    assert [row["record_id"] for row in packet] == ["signalled"]
+    assert packet[0]["review_selection_reason"] == "analysis_signal"
+    assert (
+        next(
+            check
+            for check in checks
+            if check["check"] == "codex_review_analysis_signal_coverage"
+        )["status"]
+        == "PASS"
+    )
+
+
 def test_additional_deterministic_analyses_explain_open_items():
     helpers = load_helpers()
     open_items = [

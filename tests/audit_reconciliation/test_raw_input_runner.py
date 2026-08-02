@@ -7,7 +7,7 @@ import sys
 import zipfile
 from pathlib import Path
 
-from openpyxl import Workbook
+from openpyxl import Workbook, load_workbook
 
 SCRIPTS = (
     Path(__file__).resolve().parents[2] / "plugins" / "audit-reconciliation" / "scripts"
@@ -825,7 +825,13 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
             "journal_rollforward_rows": [],
             "journal_rollforward_summary": [],
             "normalized_records": [],
-            "extraction_errors": [],
+            "extraction_errors": [
+                {
+                    "source_file": "unsupported.csv",
+                    "status": "unsupported_source_layout",
+                    "reason": "No reviewed adapter is available.",
+                }
+            ],
             "cache_dir": str(tmp_path / ".audit_reconciliation_cache"),
         }
 
@@ -851,6 +857,76 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     assert Path(manifest["accountant_report_path"]).exists()
     assert manifest["counts"]["source_pages"] == 1
     assert source_pages == extracted_pages
+    removed_sidecars = {
+        "aging_summary.json",
+        "bank_allocation_candidates.json",
+        "cutoff_window_movements.json",
+        "document_source_map.json",
+        "evidence_concentration.json",
+        "external_evidence_detail.json",
+        "external_evidence_summary.json",
+        "extraction_errors.json",
+        "journal_rollforward_rows.json",
+        "journal_rollforward_summary.json",
+        "ledger_balance_rows.json",
+        "post_cutoff_candidates.json",
+        "relationship_allocation_ledgers.json",
+        "reversal_candidates.json",
+        "review_signals.json",
+        "source_qualifications.json",
+    }
+    assert removed_sidecars.isdisjoint(
+        {path.name for path in output_dir.iterdir() if path.is_file()}
+    )
+
+    canonical_path = (
+        output_dir / "assurance_final_outputs" / "reconciliation_results.json"
+    )
+    assert manifest["assurance"]["canonical_data_path"] == str(canonical_path)
+    canonical = json.loads(canonical_path.read_text(encoding="utf-8"))
+    assert canonical["schema_version"] == (
+        "audit_reconciliation.reconciliation_results.v2"
+    )
+    assert canonical["source_processing"]["extraction_errors"] == [
+        {
+            "source_file": "unsupported.csv",
+            "status": "unsupported_source_layout",
+            "reason": "No reviewed adapter is available.",
+        }
+    ]
+    assert set(canonical["analyses"]) == {
+        "aging_summary",
+        "bank_allocation_candidates",
+        "cutoff_window_movements",
+        "document_source_map",
+        "evidence_concentration",
+        "external_evidence_detail",
+        "external_evidence_summary",
+        "post_cutoff_candidates",
+        "reversal_candidates",
+        "review_signals",
+    }
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    assert review_payload["summary"]["source_processing_issue_count"] == 1
+    assert any(
+        item["item_type"] == "source_processing_issue"
+        for item in review_payload["items"]
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    canonical_output = next(
+        output
+        for output in final_artifacts["outputs"]
+        if output.get("artifact_role") == "canonical_audit_data"
+    )
+    assert canonical_output["path"] == (
+        "assurance_final_outputs/reconciliation_results.json"
+    )
+    workbook = load_workbook(result["excel_path"], read_only=True)
+    assert "Problemi elaborazione fonti" in workbook.sheetnames
 
 
 def test_payment_order_zip_extracts_invoice_rows_and_batch_total(tmp_path):

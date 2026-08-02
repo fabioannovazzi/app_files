@@ -270,6 +270,8 @@ def finalize_case(
     review_status: str = "PASS",
     allocation_ledgers: list[dict[str, object]] | None = None,
     workbook_content: bytes | None = None,
+    source_processing: dict[str, object] | None = None,
+    analyses: dict[str, object] | None = None,
 ) -> tuple[object, Path, dict[str, object]]:
     assurance, _, output_dir, rows, context = prepared_case(tmp_path)
     workbook_path = output_dir / "audit.xlsx"
@@ -300,8 +302,66 @@ def finalize_case(
         source_qualifications=qualified_sources(assurance, context),
         declared_outputs=[workbook_path, report_path],
         workbook_name=workbook_path.name,
+        source_processing=source_processing,
+        analyses=analyses,
     )
     return assurance, output_dir, payload
+
+
+def test_canonical_result_consolidates_schedules_and_artifact_contract(tmp_path):
+    assurance = load_assurance()
+    source_processing = {field: [] for field in assurance.SOURCE_PROCESSING_FIELDS}
+    source_processing["extraction_errors"] = [
+        {
+            "source_file": "unsupported.csv",
+            "status": "unsupported_source_layout",
+        }
+    ]
+    analyses = {field: [] for field in assurance.ANALYSIS_FIELDS}
+    analyses["aging_summary"] = [{"aging_bucket": "0-30", "amount_total": "100.00"}]
+
+    _, output_dir, _ = finalize_case(
+        tmp_path,
+        source_processing=source_processing,
+        analyses=analyses,
+    )
+
+    canonical = json.loads(
+        (
+            output_dir / "assurance_final_outputs" / "reconciliation_results.json"
+        ).read_text(encoding="utf-8")
+    )
+    assert (
+        canonical["schema_version"] == assurance.RECONCILIATION_RESULTS_SCHEMA_VERSION
+    )
+    assert canonical["source_processing"] == source_processing
+    assert canonical["analyses"] == analyses
+    assert set(assurance.RUN_ROOT_ARTIFACT_CONTRACT) == set(
+        assurance.RUN_ROOT_FIXED_FILES
+    )
+    assert all(
+        record["audience"] and record["purpose"]
+        for record in assurance.RUN_ROOT_ARTIFACT_CONTRACT.values()
+    )
+    removed_sidecars = {
+        "aging_summary.json",
+        "bank_allocation_candidates.json",
+        "cutoff_window_movements.json",
+        "document_source_map.json",
+        "evidence_concentration.json",
+        "external_evidence_detail.json",
+        "external_evidence_summary.json",
+        "extraction_errors.json",
+        "journal_rollforward_rows.json",
+        "journal_rollforward_summary.json",
+        "ledger_balance_rows.json",
+        "post_cutoff_candidates.json",
+        "relationship_allocation_ledgers.json",
+        "reversal_candidates.json",
+        "review_signals.json",
+        "source_qualifications.json",
+    }
+    assert removed_sidecars.isdisjoint(assurance.RUN_ROOT_FIXED_FILES)
 
 
 def assured_browser_case(tmp_path: Path) -> tuple[object, Path, dict[str, object]]:

@@ -80,9 +80,17 @@ For audit workpapers, create Excel and Word outputs when useful:
   numeric_evidence_ledger.json
   final_output_inventory.json
   assurance_final_outputs/
+    reconciliation_results.json
 ```
 
 The workbook should preserve assumptions, source inventory, extracted source pages, normalized records, reconciliation detail, summary, checks, Codex review rows, bank allocation candidates, external evidence details, and ledger/journal controls where relevant.
+
+The sealed `assurance_final_outputs/reconciliation_results.json` is the
+versioned canonical machine-readable record. It contains source-processing
+diagnostics and analysis schedules in named sections built from the same rows
+as the workbook. Do not write a standalone JSON projection for each workbook
+sheet. Extraction failures must also appear in the review payload and the
+workbook's source-processing-issues sheet.
 
 Every row-level conclusion must show source reference, document number/date/amount, evidence type, deterministic rule, matched evidence reference, and missing evidence or next step when unresolved.
 

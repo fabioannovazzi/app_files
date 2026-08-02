@@ -70,7 +70,7 @@ Per un primo lavoro completo, Codex deve raccogliere e confermare questi element
 - lingua operativa e lingua dei documenti (`it`, `en`, `fr`, `de`, `es` o `auto` per documenti misti);
 - assunzioni sulle evidenze: eventi post cut-off, valore probatorio delle distinte, eventuale trattamento factoring/anticipo più restrittivo del default e compensazione;
 - controllo dipendenze con `python scripts/check_dependencies.py`;
-- output attesi: Excel audit, scheda operativa per commercialista, Word, `source_pages.json`, `run_intake.json`, `review_payload.json`, `ui_decisions.json`, `final_artifacts.json`, `artifact_card.md`, `review_ui.html`, review Codex e, se utile, richieste mirate di evidenza;
+- output attesi: Excel audit, scheda operativa per commercialista, Word, il record canonico `assurance_final_outputs/reconciliation_results.json`, `source_pages.json`, `run_intake.json`, `review_payload.json`, `ui_decisions.json`, `final_artifacts.json`, `artifact_card.md`, `review_ui.html`, review Codex e, se utile, richieste mirate di evidenza;
 - passaggio di review: controllare eccezioni, righe ad alto valore, evidenze obbligatorie e righe non chiuse.
 
 Lingue supportate per etichette e testi di output: italiano (`it`), inglese (`en`), francese (`fr`), tedesco (`de`) e spagnolo (`es`).
@@ -110,7 +110,11 @@ del manifest e prima di ogni superficie RPC pubblica.
 Gli output di assurance principali sono:
 
 - `prepared_records.json`, sigillato prima della riconciliazione;
-- `reconciliation_results.json`, incluso nel perimetro finale;
+- `assurance_final_outputs/reconciliation_results.json`, record canonico v2
+  incluso nel perimetro finale. Conserva qualifiche e allocazioni, la sezione
+  `source_processing` (problemi di estrazione e controlli mastro/giornale) e la
+  sezione `analyses` con le stesse analisi rese nel workbook. Il run non scrive
+  file JSON separati per ogni foglio o analisi;
 - `assurance_final_outputs/` e `final_output_inventory.json`, con uguaglianza
   esatta tra file dichiarati e file fisici e rifiuto di symlink, hardlink e
   file speciali;
@@ -188,6 +192,10 @@ La sequenza `validate_audit_reconciliation_review` -> `render_audit_reconciliati
 `run_intake.json` aggiorna automaticamente il campo `dependency_check` quando viene scritto: stato, timestamp, file requisiti controllati e pacchetti mancanti vengono conservati nel pacchetto audit. Quando le assunzioni indicano OCR o PDF scansionati, il controllo include anche `requirements-ocr.txt`.
 
 Per PDF lunghi, usare `verbose_extraction` e, se serve, `pdf_progress_every_pages` nelle assunzioni del run. L'estrazione emette messaggi di start file, avanzamento pagina, OCR pagina, cache hit e fine file, così è visibile quale PDF sta richiedendo tempo.
+
+File saltati, layout non supportati ed errori di parsing sono visibili nella
+review, nel foglio `Problemi elaborazione fonti` del workbook e nella sezione
+`source_processing.extraction_errors` del record canonico.
 
 ## Prompt di avvio per beta user
 

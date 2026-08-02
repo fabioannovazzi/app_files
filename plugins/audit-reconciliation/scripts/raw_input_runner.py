@@ -2988,6 +2988,7 @@ def run_raw_input_reconciliation(
         reviewed_source_decision_receipts=extracted.get(
             "reviewed_source_decision_receipts", []
         ),
+        extraction_errors=extracted["extraction_errors"],
         normalized_records=extracted["normalized_records"],
         ledger_balance_rows=extracted["ledger_balance_rows"],
         account_rollforward_check=extracted.get("account_rollforward_check", []),
@@ -3093,51 +3094,11 @@ def run_raw_input_reconciliation(
         "missing_evidence_requests_path": str(missing_evidence_requests_path),
     }
     write_json(out_dir / "run_manifest.json", manifest)
-    write_json(out_dir / "extraction_errors.json", extracted["extraction_errors"])
-    write_json(
-        out_dir / "source_qualifications.json",
-        extracted.get("source_qualifications", []),
-    )
     write_json(source_pages_path, extracted["source_pages"])
     write_json(out_dir / "normalized_records.json", extracted["normalized_records"])
     write_json(
-        out_dir / "bank_allocation_candidates.json",
-        result["bank_allocation_candidates"],
-    )
-    write_json(
-        out_dir / "relationship_allocation_ledgers.json",
-        result.get("relationship_allocation_ledgers", []),
-    )
-    write_json(
-        out_dir / "external_evidence_detail.json", result["external_evidence_detail"]
-    )
-    write_json(
-        out_dir / "external_evidence_summary.json", result["external_evidence_summary"]
-    )
-    write_json(out_dir / "ledger_balance_rows.json", extracted["ledger_balance_rows"])
-    write_json(
         out_dir / "account_rollforward_check.json",
         extracted.get("account_rollforward_check", []),
-    )
-    write_json(
-        out_dir / "journal_rollforward_rows.json", extracted["journal_rollforward_rows"]
-    )
-    write_json(
-        out_dir / "journal_rollforward_summary.json",
-        extracted["journal_rollforward_summary"],
-    )
-    write_json(
-        out_dir / "post_cutoff_candidates.json", result["post_cutoff_candidates"]
-    )
-    write_json(out_dir / "aging_summary.json", result["aging_summary"])
-    write_json(out_dir / "review_signals.json", result["review_signals"])
-    write_json(
-        out_dir / "evidence_concentration.json", result["evidence_concentration"]
-    )
-    write_json(out_dir / "document_source_map.json", result["document_source_map"])
-    write_json(out_dir / "reversal_candidates.json", result["reversal_candidates"])
-    write_json(
-        out_dir / "cutoff_window_movements.json", result["cutoff_window_movements"]
     )
     write_json(out_dir / "codex_review_packet.json", result["review_rows"])
     existing_review_session = result.get("review_session") or {}
@@ -3169,6 +3130,9 @@ def run_raw_input_reconciliation(
         "gates_path": str(out_dir / "assurance_gates.json"),
         "final_output_inventory_path": str(out_dir / "final_output_inventory.json"),
         "final_output_boundary": str(out_dir / "assurance_final_outputs"),
+        "canonical_data_path": str(
+            out_dir / "assurance_final_outputs" / "reconciliation_results.json"
+        ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
     result["assurance"] = finalize_assurance_run(
@@ -3179,6 +3143,8 @@ def run_raw_input_reconciliation(
         checks=result["checks"],
         review_rows=result["review_rows"],
         source_qualifications=extracted.get("source_qualifications", []),
+        source_processing=result["source_processing"],
+        analyses=result["analyses"],
         declared_outputs=[
             Path(result["excel_path"]),
             Path(result["accountant_report_path"]),

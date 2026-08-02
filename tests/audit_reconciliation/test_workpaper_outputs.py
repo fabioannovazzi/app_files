@@ -409,6 +409,7 @@ def test_spanish_workpapers_and_review_contract_are_fully_localized(tmp_path):
     assert audit_output["required_sheets"] == [
         "Índice",
         "Supuestos",
+        "Problemas de fuentes",
         "Detalle de conciliación",
         "Resumen",
         "Controles",

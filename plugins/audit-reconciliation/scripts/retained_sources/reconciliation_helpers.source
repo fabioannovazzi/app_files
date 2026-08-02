@@ -3847,11 +3847,13 @@ def build_codex_review_packet(
     high_value_count: int = 10,
     random_count: int = 20,
     challenged_rows: list[str] | tuple[str, ...] | set[str] | None = None,
+    priority_rows: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Build the mandatory Codex review packet for the deterministic result.
 
     The packet is advisory control data. It never changes the deterministic row
-    classification by itself.
+    classification by itself. Priority identities are selected mechanically so
+    the explicit analysis signals have reproducible review coverage.
     """
 
     reviewable = [row for row in reconciliation_rows if is_reviewable_row(row)]
@@ -3881,6 +3883,13 @@ def build_codex_review_packet(
         if row_matches_challenge(row, challenged_rows or []):
             add(row, "user_challenged")
 
+    priority_ids = {
+        review_identity(row) for row in priority_rows or [] if review_identity(row)
+    }
+    for row in reviewable:
+        if review_identity(row) in priority_ids:
+            add(row, "analysis_signal")
+
     remaining = [row for row in reviewable if review_identity(row) not in selected]
     for row in stable_review_sample(
         remaining,
@@ -3907,6 +3916,7 @@ def codex_review_checks(
     high_value_count: int = 10,
     random_count: int = 20,
     challenged_rows: list[str] | tuple[str, ...] | set[str] | None = None,
+    priority_rows: list[dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     checks: list[dict[str, Any]] = []
 
@@ -3943,6 +3953,14 @@ def codex_review_checks(
         if row_matches_challenge(row, challenged_rows or [])
     }
     risk_ids = {review_identity(row) for row in reviewable if codex_review_flags(row)}
+    priority_id_candidates = {
+        review_identity(row) for row in priority_rows or [] if review_identity(row)
+    }
+    priority_ids = {
+        review_identity(row)
+        for row in reviewable
+        if review_identity(row) in priority_id_candidates
+    }
     random_rows = [
         row for row in review_rows if "stable_random" in review_reason_tokens(row)
     ]
@@ -3951,7 +3969,13 @@ def codex_review_checks(
         max(
             0,
             len(reviewable)
-            - len(high_value_ids | mandatory_ids | challenged_ids | risk_ids),
+            - len(
+                high_value_ids
+                | mandatory_ids
+                | challenged_ids
+                | risk_ids
+                | priority_ids
+            ),
         ),
     )
     valid_statuses = {"PENDING", "PASS", "FAIL", "UNRESOLVED"}
@@ -3996,6 +4020,13 @@ def codex_review_checks(
         len(challenged_ids & review_ids),
         len(challenged_ids),
         "; ".join(sorted(challenged_ids - review_ids)[:10]),
+    )
+    add(
+        "codex_review_analysis_signal_coverage",
+        priority_ids.issubset(review_ids),
+        len(priority_ids & review_ids),
+        len(priority_ids),
+        "; ".join(sorted(priority_ids - review_ids)[:10]),
     )
     add(
         "codex_review_stable_random_minimum",
