@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import sys
 from decimal import Decimal
 from pathlib import Path
@@ -21,10 +22,12 @@ from vera_assurance import (  # noqa: E402
     artifact_receipt,
     build_allocation_ledger,
     build_assurance_envelope,
+    build_client_engagement_context,
     build_gate_register,
     build_numeric_evidence_ledger,
     build_reviewed_decision_receipt,
     build_source_qualification,
+    build_studio_client_folder_binding,
     canonical_json_bytes,
     canonical_json_sha256,
     decimal_text,
@@ -33,9 +36,11 @@ from vera_assurance import (  # noqa: E402
     parse_localized_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
+    validate_client_engagement_context,
     validate_numeric_evidence_ledger,
     validate_reviewed_decision_receipt,
     validate_source_qualification,
+    validate_studio_client_folder_binding,
 )
 
 
@@ -100,6 +105,74 @@ def _numeric_entry() -> dict[str, object]:
         "decision_ref": "decision.coa_mapping",
         "limitations": [],
     }
+
+
+def _client_folder(tmp_path: Path) -> dict[str, object]:
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Rossi"
+    client_root.mkdir(parents=True)
+    return build_studio_client_folder_binding(
+        studio_client_id="client_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        scope_id="scope_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        archive_root=archive_root,
+        scope_relative_dir="Rossi",
+        client_root=client_root,
+        display_name="Rossi",
+    )
+
+
+def test_client_engagement_accepts_only_selected_client_input(tmp_path: Path) -> None:
+    folder = _client_folder(tmp_path)
+    input_dir = Path(str(folder["client_root"])) / "audit-input"
+    input_dir.mkdir()
+    workspace_root = tmp_path / "Vera Work"
+
+    context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="audit-2026",
+        workflow_id="audit-reconciliation",
+        run_id="run-001",
+        input_dir=input_dir,
+        workspace_root=workspace_root,
+    )
+
+    assert context["output_dir"] == str(
+        workspace_root
+        / "clients"
+        / folder["studio_client_id"]
+        / "engagements"
+        / "audit-2026"
+        / "runs"
+        / "audit-reconciliation"
+        / "run-001"
+    )
+    assert validate_client_engagement_context(context) == context
+
+
+def test_client_engagement_rejects_other_client_input(tmp_path: Path) -> None:
+    folder = _client_folder(tmp_path)
+    other_client_input = tmp_path / "Studio" / "Bianchi" / "audit-input"
+    other_client_input.mkdir(parents=True)
+
+    with pytest.raises(AssuranceContractError, match="selected studio client"):
+        build_client_engagement_context(
+            studio_client_folder=folder,
+            engagement_id="audit-2026",
+            workflow_id="audit-reconciliation",
+            run_id="run-001",
+            input_dir=other_client_input,
+            workspace_root=tmp_path / "Vera Work",
+        )
+
+
+def test_client_folder_rejects_tampered_folder_scope_identity(tmp_path: Path) -> None:
+    folder = _client_folder(tmp_path)
+    folder["scope_id"] = "scope_000000000000000000000000"
+    content = {key: value for key, value in folder.items() if key != "content_sha256"}
+    folder["content_sha256"] = canonical_json_sha256(content)
+
+    with pytest.raises(AssuranceContractError, match="scope_relative_dir"):
+        validate_studio_client_folder_binding(folder)
 
 
 @pytest.mark.parametrize(

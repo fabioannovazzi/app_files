@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or configure and search a shared local studio document archive without mixing clients.
+description: Use when Vera must identify or create one client workspace, import journal/support files into a durable engagement, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
 ---
 
 ## Surface routing
@@ -54,10 +54,75 @@ ChatGPT web and mobile may run the connected Gmail route and may review material
 supplied in the conversation. They must not claim to control WhatsApp Desktop,
 index local folders, run local scripts, or create a persistent local archive.
 
-The source folder is read-only to this workflow. Immediate child directories
-become exact search scopes; supported root-level files receive their own root
-scope. Refresh detects and adopts top-level scope-folder changes; explicit
-configuration also repairs them. The index never follows symbolic links.
+Search, indexing, and source opening never edit existing source documents.
+Immediate child directories become exact search scopes; supported root-level
+files receive their own root scope. Two separately authorized intake actions
+may write: New client creates one safely derived top-level folder, and document
+import copies one user-selected regular file into that client's generated
+`Vera engagements/<engagement-id>/inputs` subtree. Neither action renames,
+deletes, or overwrites an existing file. Refresh detects and adopts top-level
+scope-folder changes; explicit configuration also repairs them. The index never
+follows symbolic links.
+
+## Client and engagement intake
+
+Studio Archive is the source of truth for Vera's durable client and engagement
+boundary in Codex. Folder names are labels; a private `client_...` ID is the
+stable identity, and a private `eng_...` ID connects the journal, sample,
+support, and later checks even after the initiating chat is archived. Never
+infer the client from the journal filename or silently create a client.
+
+Use this exact chat workflow when a professional starts with a journal file:
+
+1. Call `list_studio_archive_clients`. Compare the user's stated client with
+   registered identities and unregistered top-level scopes semantically; exact
+   IDs and path enforcement remain deterministic. If the intended client is
+   ambiguous, show the plausible choices and ask. Do not decide from filename
+   similarity.
+2. Ask whether the work is for an existing or new client only when the user's
+   wording and the listed records do not already establish that choice.
+   Before the first file copy, show the selected client and obtain the user's
+   confirmation.
+3. For an existing registered client, retain its `client_id`. For an existing
+   but unregistered scope, call `configure_studio_archive_client` with the
+   confirmed scope and at least one confirmed legal name, email/PEC address, or
+   tax identifier; retain the returned `client_id`.
+4. Only after the user chooses New client, call
+   `create_studio_archive_client` with the confirmed legal name. Vera derives a
+   safe folder label; the user does not need to invent a folder name. The
+   result starts the separate `new-client` workflow and must remain
+   `new_client_workflow_pending`; creating a folder does not say the commercial
+   relationship is active.
+5. Explain that import preserves the original and creates a controlled copy.
+   After the user authorizes that copy, call `import_studio_client_document`
+   with role `journal`. Retain the returned `engagement_id`, imported path,
+   `client_engagement`, and context path. Pass that context unchanged to
+   Journal Sampling.
+6. In a later chat, call `list_studio_client_engagements` for the selected
+   `client_id`. It returns imported-file receipts and persisted workflow runs,
+   including exact normalized-journal paths and mechanical availability. Ask
+   the user to select an engagement if more than one could match; never choose
+   from recency or filename alone.
+7. After the user authorizes the support-file copy, import each ZIP/PDF with
+   role `support` and the selected `engagement_id`. The returned Check Entries
+   context must have the same stable client and engagement as the selected
+   Journal Sampling run.
+
+Users do not operate the CLI. If Codex must use the internal fallback, the
+corresponding commands are `clients`, `configure-client`, `create-client`,
+`import-document`, `engagements`, and `prepare-workflow` in
+`scripts/studio_archive.py`.
+
+`get_studio_client_folder --client-id client_...` returns a digest-bound
+`vera.studio_client_folder.v2` object containing both the stable client ID and
+the current folder `scope_id`. It does not expose the private registry's email
+addresses, legal names, or tax identifiers. Pass it unchanged to consuming
+Vera workflows.
+
+If the folder was renamed or top-level scopes changed, refresh and explicitly
+rebind any orphaned private profile before exporting a new binding. Never edit
+the scope ID, paths, or digest to make a different client's input appear to
+belong to the selected client.
 
 Gmail remains in the user-selected Gmail account and is accessed only through
 the connected Gmail plugin during an active task. Studio Archive does not
@@ -116,8 +181,10 @@ uncertain history instead of guessing.
 Ask only those unresolved choices in chat that materially change the actual inputs or scope:
 
 - the absolute shared archive folder on first local configuration;
-- which returned scope matches the user's intended client, practice, or
-  internal area when that is not clear;
+- whether the journal belongs to a listed existing client or a new client when
+  that is not already established, and which exact client/engagement applies;
+- authorization to create a new client folder or copy a selected journal or
+  support file into the managed engagement;
 - whether the user truly wants a studio-wide search before using `scope_id:
   "all"`;
 - whether already-installed local OCR should be used for scans when that could

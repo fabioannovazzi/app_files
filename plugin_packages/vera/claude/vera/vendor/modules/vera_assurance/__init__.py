@@ -4,12 +4,16 @@ from __future__ import annotations
 
 from .contracts import (
     AssuranceContractError,
+    build_client_engagement_context,
     build_gate_register,
     build_numeric_evidence_ledger,
     build_source_qualification,
+    build_studio_client_folder_binding,
+    validate_client_engagement_context,
     validate_gate_register,
     validate_numeric_evidence_ledger,
     validate_source_qualification,
+    validate_studio_client_folder_binding,
 )
 from .decisions import (
     DecisionReceiptError,
@@ -53,10 +57,12 @@ __all__ = [
     "artifact_receipt",
     "build_allocation_ledger",
     "build_assurance_envelope",
+    "build_client_engagement_context",
     "build_gate_register",
     "build_numeric_evidence_ledger",
     "build_reviewed_decision_receipt",
     "build_source_qualification",
+    "build_studio_client_folder_binding",
     "canonical_json_bytes",
     "canonical_json_sha256",
     "decimal_text",
@@ -67,9 +73,11 @@ __all__ = [
     "validate_artifact_receipt",
     "validate_allocation_ledger",
     "validate_assurance_envelope",
+    "validate_client_engagement_context",
     "validate_gate_register",
     "validate_numeric_evidence_ledger",
     "validate_reviewed_decision_receipt",
     "validate_source_qualification",
+    "validate_studio_client_folder_binding",
     "write_json",
 ]

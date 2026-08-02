@@ -23,7 +23,7 @@
       {
         "id": "accounting-evidence-and-review",
         "purpose": "Map sources, review reconciliations, and explain exceptions",
-        "content": "User instructions; accounting files or extracted records; mappings; reconciliation results; exception evidence; workpapers and review decisions",
+        "content": "User instructions; the selected Studio Archive client-folder binding, including stable opaque client ID, current opaque scope ID and local paths; engagement, workflow and run identifiers; accounting files or extracted records; mappings; reconciliation results; exception evidence; workpapers and review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -35,7 +35,11 @@
   "security_controls": [
     {
       "id": "private-output-root",
-      "control": "Run artifacts are written to the user-selected private output directory rather than a published repository path."
+      "control": "Run artifacts are written to a derived client/engagement/workflow/run path under the user-selected private workspace root rather than inside the client evidence folder or a published repository path."
+    },
+    {
+      "id": "client-folder-isolation",
+      "control": "The raw runner requires a digest-valid v2 Studio Archive client-folder binding with a stable client ID and current folder scope ID, rejects input outside that client root, rejects a workspace inside the evidence folder, derives the output namespace from the stable client ID plus engagement, workflow, and run IDs, and seals the same context into intake, canonical, and assurance records."
     },
     {
       "id": "local-review-service",
@@ -59,9 +63,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ee88fc6001c11028fe107714255991e544ce415c3b7c064967c87caa59471d65"
+    "source_fingerprint": "eb8c6f80e30cde24cab7e109e3219f49f552f783af562c0f662fdf53a801085d"
   }
 }

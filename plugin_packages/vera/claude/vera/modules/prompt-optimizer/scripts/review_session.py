@@ -51,6 +51,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "artifacts": {
             "optimized_prompt": "Optimized prompt",
             "answer_contract": "Answer contract JSON",
+            "prompt_contract_review": "Prompt-contract semantic review JSON",
             "prompt_audit": "Prompt audit JSON",
             "prompt_package": "Prompt package Markdown",
             "source_domains": "Source domains",
@@ -60,7 +61,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "package_required": [
             "# Prompt Optimizer Package",
             "## Answer Contract",
-            "## Deterministic Research Lens",
+            "## Model-Led Research Lens",
+            "## Prompt-Contract Semantic Review",
             "## What to Use",
         ],
         "readme_required_deep_research": [
@@ -78,7 +80,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ],
         "caveats": [
             "Angle and jurisdiction choices remain Claude/user intake decisions; this widget reviews the generated package, not the pre-draft choices.",
-            "Deterministic validation checks structure, fact anchors, source-domain sidecars, and required prompt controls.",
+            "Prompt-to-question and prompt-to-contract conformance is model-led and recorded in prompt_contract_review.json.",
+            "Deterministic validation checks review-record shape, exact fact anchors, source-domain sidecars, and required prompt controls.",
             "ui_decisions.json is pending until Claude, the MCP widget, or fallback review records decisions.",
         ],
         "next_actions": [
@@ -119,6 +122,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "artifacts": {
             "optimized_prompt": "Prompt optimizado",
             "answer_contract": "JSON del contrato de respuesta",
+            "prompt_contract_review": "JSON de revisión semántica del contrato del prompt",
             "prompt_audit": "JSON de auditoría del prompt",
             "prompt_package": "Paquete del prompt en Markdown",
             "source_domains": "Dominios de las fuentes",
@@ -128,7 +132,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "package_required": [
             "# Paquete de optimización del prompt",
             "## Contrato de respuesta",
-            "## Enfoque determinista de la investigación",
+            "## Enfoque de investigación dirigido por el modelo",
+            "## Revisión semántica del contrato del prompt",
             "## Cómo utilizar los archivos",
         ],
         "readme_required_deep_research": [
@@ -146,7 +151,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         ],
         "caveats": [
             "El enfoque y la jurisdicción siguen siendo decisiones de Claude y del usuario; esta revisión comprueba el paquete generado, no las decisiones previas al borrador.",
-            "La validación determinista comprueba la estructura, los hechos, los archivos auxiliares de dominios y los controles obligatorios del prompt.",
+            "La conformidad del prompt con la pregunta y el contrato se revisa mediante el modelo y se registra en prompt_contract_review.json.",
+            "La validación determinista comprueba la forma del registro, los hechos exactos, los archivos auxiliares de dominios y los controles obligatorios del prompt.",
             "ui_decisions.json permanece pendiente hasta que Claude, el widget MCP o la revisión alternativa registren las decisiones.",
         ],
         "next_actions": [
@@ -448,6 +454,10 @@ def _artifact_items(
             "review_artifact",
             artifact_copy["answer_contract"],
         ),
+        "prompt_contract_review": (
+            "review_artifact",
+            artifact_copy["prompt_contract_review"],
+        ),
         "prompt_audit": ("review_artifact", artifact_copy["prompt_audit"]),
         "prompt_package": ("review_artifact", artifact_copy["prompt_package"]),
         "source_domains": ("source_domain_artifact", artifact_copy["source_domains"]),
@@ -562,6 +572,7 @@ def write_run_intake(
     language: str,
     source_domains: Sequence[str],
     answer_contract: dict[str, Any],
+    prompt_contract_review: dict[str, Any] | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic prompt validation."""
 
@@ -585,6 +596,11 @@ def write_run_intake(
             "generation_route": answer_contract.get("generation_route"),
             "document_type": answer_contract.get("document_type"),
             "validation_profile": answer_contract.get("validation_profile"),
+            "prompt_contract_review_status": (
+                prompt_contract_review.get("overall_status")
+                if isinstance(prompt_contract_review, dict)
+                else "not_supplied"
+            ),
         },
         "unresolved_questions": [],
         "dependency_check": {

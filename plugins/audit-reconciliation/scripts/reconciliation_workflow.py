@@ -94,6 +94,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 import re
 import sys
 import zipfile
+from collections.abc import Mapping
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -325,6 +326,8 @@ def build_reconciliation_artifacts(
     review_high_value_count: int = 10,
     review_random_count: int = 20,
     require_completed_review: bool = False,
+    client_engagement: Mapping[str, Any] | None = None,
+    run_id: str | None = None,
     metadata: dict[str, Any] | None = None,
     title: str | None = None,
     narrative: str = "",
@@ -354,6 +357,7 @@ def build_reconciliation_artifacts(
         source_receipts=source_artifact_receipts or [],
         reviewed_source_decisions=reviewed_source_decision_receipts or [],
         source_qualifications=source_qualifications or [],
+        client_engagement=client_engagement,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     review_authority = assurance_context.get("professional_review_authority")
@@ -365,6 +369,15 @@ def build_reconciliation_artifacts(
         and review_authority.get("run_id")
         else None
     )
+    normalized_client_engagement = assurance_context.get("client_engagement")
+    if (
+        isinstance(normalized_client_engagement, dict)
+        and successor_run_id is not None
+        and successor_run_id != normalized_client_engagement.get("run_id")
+    ):
+        raise ValueError(
+            "Successor review run ID does not match the client engagement run."
+        )
     run_intake = write_run_intake(
         out_dir,
         assumptions=assumptions,
@@ -376,7 +389,8 @@ def build_reconciliation_artifacts(
             if source_inventory
             else out_dir
         ),
-        run_id=successor_run_id,
+        client_engagement=normalized_client_engagement,
+        run_id=successor_run_id or run_id,
     )
 
     reconciliation_rows = reconcile_open_items(open_items, evidence_rows, assumptions)
@@ -521,6 +535,7 @@ def build_reconciliation_artifacts(
         "accountant_report_path": str(accountant_report_path),
         "word_path": str(word_path),
         "assumptions": assumptions,
+        "client_engagement": normalized_client_engagement,
         "source_qualifications": source_qualifications or [],
         "source_processing": source_processing,
         "analyses": analyses,

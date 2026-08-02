@@ -97,6 +97,264 @@ def _fitz_or_skip() -> ModuleType:
     return _fitz
 
 
+def test_client_folder_binding_uses_exact_scope_without_mutating_sources(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client_id = registration["client"]["client_id"]
+    before = {
+        path.relative_to(indexed_archive.root).as_posix(): path.read_bytes()
+        for path in indexed_archive.root.rglob("*")
+        if path.is_file()
+    }
+
+    result = archive_core.get_studio_client_folder(
+        client_id,
+        state_dir=indexed_archive.state,
+    )
+
+    binding = result["client_folder"]
+    after = {
+        path.relative_to(indexed_archive.root).as_posix(): path.read_bytes()
+        for path in indexed_archive.root.rglob("*")
+        if path.is_file()
+    }
+    assert binding["schema_version"] == "vera.studio_client_folder.v2"
+    assert binding["studio_client_id"] == client_id
+    assert binding["scope_id"] == indexed_archive.scopes["Rossi"]
+    assert binding["client_root"] == str(indexed_archive.root / "Rossi")
+    assert binding["scope_relative_dir"] == "Rossi"
+    assert len(binding["content_sha256"]) == 64
+    assert result["source_archive_mutated"] is False
+    assert after == before
+
+
+def test_archive_root_scope_cannot_be_exported_as_client_folder(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    with pytest.raises(archive_core.ArchiveError, match="not a client folder"):
+        archive_core.set_studio_client_identity(
+            indexed_archive.scopes["Studio"],
+            legal_names=["Studio"],
+            state_dir=indexed_archive.state,
+        )
+
+
+def test_client_folder_binding_excludes_private_identity_values(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    scope_id = indexed_archive.scopes["Rossi"]
+    registration = archive_core.set_studio_client_identity(
+        scope_id,
+        email_addresses=["amministrazione@example.com"],
+        legal_names=["Example Legal Name"],
+        tax_identifiers=["01234567890"],
+        state_dir=indexed_archive.state,
+    )
+
+    result = archive_core.get_studio_client_folder(
+        registration["client"]["client_id"],
+        state_dir=indexed_archive.state,
+    )
+
+    serialized = json.dumps(result["client_folder"])
+    assert "amministrazione@example.com" not in serialized
+    assert "Example Legal Name" not in serialized
+    assert "01234567890" not in serialized
+
+
+def test_existing_client_journal_and_support_share_one_engagement(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client_id = registration["client"]["client_id"]
+    journal = indexed_archive.root.parent / "giornale.xlsx"
+    journal_bytes = b"journal source bytes"
+    journal.write_bytes(journal_bytes)
+
+    # Act
+    journal_import = archive_core.import_studio_client_document(
+        client_id,
+        journal,
+        "journal",
+        engagement_label="2025 journal sample",
+        state_dir=indexed_archive.state,
+    )
+    engagement_id = journal_import["engagement"]["engagement_id"]
+    normalization_dir = (
+        Path(journal_import["client_engagement"]["output_dir"]) / "normalization"
+    )
+    normalization_dir.mkdir(parents=True)
+    (normalization_dir / "normalized_journal.csv").write_text(
+        "movement_number,amount_signed\nM-1,10\n",
+        encoding="utf-8",
+    )
+    (normalization_dir / "normalization_diagnostics.json").write_text(
+        "{}\n",
+        encoding="utf-8",
+    )
+    support = indexed_archive.root.parent / "fatture.zip"
+    support_bytes = b"support source bytes"
+    support.write_bytes(support_bytes)
+    support_import = archive_core.import_studio_client_document(
+        client_id,
+        support,
+        "support",
+        engagement_id=engagement_id,
+        state_dir=indexed_archive.state,
+    )
+    listed = archive_core.list_studio_client_engagements(
+        client_id,
+        state_dir=indexed_archive.state,
+    )
+
+    # Assert
+    assert journal.read_bytes() == journal_bytes
+    assert support.read_bytes() == support_bytes
+    assert Path(journal_import["imported_path"]).read_bytes() == journal_bytes
+    assert Path(support_import["imported_path"]).read_bytes() == support_bytes
+    assert journal_import["original_preserved"] is True
+    assert support_import["original_preserved"] is True
+    assert journal_import["client_engagement"]["workflow_id"] == "journal-sampling"
+    assert support_import["client_engagement"]["workflow_id"] == "check-entries"
+    assert (
+        journal_import["client_engagement"]["engagement_id"]
+        == support_import["client_engagement"]["engagement_id"]
+        == engagement_id
+    )
+    assert (
+        journal_import["client_engagement"]["studio_client_folder"]["studio_client_id"]
+        == support_import["client_engagement"]["studio_client_folder"][
+            "studio_client_id"
+        ]
+        == client_id
+    )
+    assert listed["engagement_count"] == 1
+    listed_engagement = listed["engagements"][0]
+    assert [item["role"] for item in listed_engagement["imports"]] == [
+        "journal",
+        "support",
+    ]
+    assert listed_engagement["workflow_run_count"] == 2
+    journal_runs = [
+        run
+        for run in listed_engagement["workflow_runs"]
+        if run["workflow_id"] == "journal-sampling"
+    ]
+    assert len(journal_runs) == 1
+    assert journal_runs[0]["normalization_available"] is True
+    assert journal_runs[0]["normalized_journal_path"] == str(
+        normalization_dir / "normalized_journal.csv"
+    )
+    assert Path(journal_runs[0]["client_engagement_path"]).is_file()
+
+
+def test_new_client_creation_derives_folder_and_defers_relationship_setup(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Studio"
+    archive_root.mkdir()
+    state_dir = tmp_path / "private-state"
+    archive_core.configure_archive(archive_root, state_dir=state_dir)
+
+    # Act
+    result = archive_core.create_studio_client(
+        "Zecca SPA",
+        tax_identifiers=["01234567890"],
+        state_dir=state_dir,
+    )
+
+    # Assert
+    assert result["status"] == "created"
+    assert result["client"]["client_id"].startswith("client_")
+    assert result["client"]["registration_status"] == "registered"
+    assert result["client_folder"]["scope_relative_dir"] == "Zecca SPA"
+    assert (archive_root / "Zecca SPA").is_dir()
+    assert result["relationship_setup_status"] == "new_client_workflow_pending"
+    assert result["next_workflow"] == "new-client"
+
+
+def test_support_import_rejects_another_clients_engagement(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    rossi = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]["client_id"]
+    bianchi = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Bianchi"],
+        legal_names=["Bianchi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]["client_id"]
+    journal = indexed_archive.root.parent / "journal.csv"
+    journal.write_text("entry\n", encoding="utf-8")
+    engagement_id = archive_core.import_studio_client_document(
+        rossi,
+        journal,
+        "journal",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
+    support = indexed_archive.root.parent / "invoice.pdf"
+    support.write_bytes(b"%PDF support")
+
+    # Act / Assert
+    with pytest.raises(archive_core.ArchiveError, match="another client"):
+        archive_core.import_studio_client_document(
+            bianchi,
+            support,
+            "support",
+            engagement_id=engagement_id,
+            state_dir=indexed_archive.state,
+        )
+    assert not any(
+        path.name == support.name for path in indexed_archive.root.rglob("*")
+    )
+
+
+def test_journal_import_rejects_source_from_another_client_scope(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    rossi = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]["client_id"]
+    bianchi_source = indexed_archive.root / "Bianchi" / "journal.xlsx"
+    source_bytes = b"Bianchi journal"
+    bianchi_source.write_bytes(source_bytes)
+
+    # Act / Assert
+    with pytest.raises(archive_core.ArchiveError, match="another Studio Archive scope"):
+        archive_core.import_studio_client_document(
+            rossi,
+            bianchi_source,
+            "journal",
+            state_dir=indexed_archive.state,
+        )
+    assert bianchi_source.read_bytes() == source_bytes
+    assert not (indexed_archive.root / "Rossi" / "Vera engagements").exists()
+
+
 def _mcp_request(
     payload: dict[str, Any],
     *,
@@ -960,7 +1218,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_nine_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_fourteen_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -975,6 +1233,11 @@ def test_mcp_lists_nine_strict_local_tools(tmp_path: Path) -> None:
     assert {tool["name"] for tool in tools} == {
         "studio_archive_status",
         "list_studio_archive_clients",
+        "get_studio_client_folder",
+        "create_studio_archive_client",
+        "import_studio_client_document",
+        "list_studio_client_engagements",
+        "prepare_studio_client_workflow",
         "configure_studio_archive",
         "refresh_studio_archive",
         "search_studio_archive",
@@ -1031,9 +1294,20 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
         state_dir=state_dir,
     )
     scope_id = configure["structuredContent"]["scopes"][0]["scope_id"]
+    registration = _mcp_tool(
+        "configure_studio_archive_client",
+        {"scope_id": scope_id, "legal_names": ["Rossi SRL"]},
+        state_dir=state_dir,
+    )
+    client_id = registration["structuredContent"]["client"]["client_id"]
     refresh = _mcp_tool(
         "refresh_studio_archive",
         {},
+        state_dir=state_dir,
+    )
+    client_folder = _mcp_tool(
+        "get_studio_client_folder",
+        {"client_id": client_id},
         state_dir=state_dir,
     )
     search = _mcp_tool(
@@ -1051,6 +1325,10 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
 
     assert configure["isError"] is False
     assert refresh["structuredContent"]["document_count"] == 1
+    assert client_folder["structuredContent"]["client_folder"]["client_root"] == str(
+        client_root
+    )
+    assert client_folder["structuredContent"]["source_archive_mutated"] is False
     assert search["structuredContent"]["result_count"] == 1
     assert result["isError"] is False
     assert result["structuredContent"]["source_verified"] is True

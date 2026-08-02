@@ -65,7 +65,12 @@ import argparse
 import logging
 from pathlib import Path
 
-from journal_sampling_core import add_common_args, configure_logging, normalize_path
+from journal_sampling_core import (
+    add_common_args,
+    configure_logging,
+    load_client_engagement_context,
+    normalize_path,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,6 +87,12 @@ def main() -> int:
         help="Folder where normalized_journal.csv and diagnostics will be written.",
     )
     parser.add_argument("--recipe", type=Path, help="Optional recipe JSON.")
+    parser.add_argument(
+        "--client-engagement",
+        type=Path,
+        required=True,
+        help="Studio Archive client workflow context JSON.",
+    )
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
@@ -92,6 +103,7 @@ def main() -> int:
         args.recipe,
         language=args.language,
         document_language=args.document_language,
+        client_engagement=load_client_engagement_context(args.client_engagement),
     )
     LOGGER.info("normalized_rows=%s", result.frame.height)
     LOGGER.info("wrote %s", args.output_dir / "normalized_journal.csv")

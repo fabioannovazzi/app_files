@@ -49,7 +49,12 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside the plugin installation or a published/static
+folder. Cowork cannot issue a Studio Archive Check Entries context. Use the
+context's exact inspection and checks paths only when a compatible local Vera
+installation supplied a digest-valid context whose local paths are available.
+Without it, write only useful connected-workspace support-review artifacts and
+state that the sealed client-bound run remains pending.
 
 # Check Entries
 
@@ -108,9 +113,13 @@ Required:
 
 - Journal Sampling `normalized_journal.csv` with adjacent
   `normalization_diagnostics.json`, a complete population status, qualified
-  source records, and a valid CSV receipt;
+  source records, a valid CSV receipt, and a persisted Journal Sampling client
+  context;
 - one support source: a FatturaPA ZIP/XML, a local export produced by an
-  authorized accounting-system connector, or a supporting PDF file/folder.
+  authorized accounting-system connector, or a supporting PDF file/folder,
+  imported into the same Studio Archive client and engagement;
+- a persisted Check Entries `client_engagement` context returned by that
+  support import.
 
 Optional:
 
@@ -124,7 +133,8 @@ there before Check Entries can run.
 
 ## First Run Workflow
 
-1. Apply this acquisition ladder: ask first for the ZIP containing all relevant
+1. Confirm one exact client and connected-folder scope. Cowork cannot list or resume local Studio engagements. Run the sealed Check Entries CLI only when a compatible local Vera installation supplied a digest-valid context, its same-engagement normalized journal, and available bound paths. Otherwise review the connected journal/support material and state that the sealed client-bound check remains pending.
+2. Apply this acquisition ladder: ask first for the ZIP containing all relevant
    FatturaPA XMLs; if unavailable, offer an authorized accounting-system
    connection that materializes a local ZIP/folder export; otherwise request
    PDFs only for unresolved sampled entries. Never request credentials, tokens,
@@ -137,7 +147,8 @@ there before Check Entries can run.
    If no connector for the named accounting system is callable, say so rather
    than simulating a connection; ask which provider must be integrated or move
    to the targeted-PDF fallback at the user's direction.
-2. Run dependency checks from the plugin directory:
+   When a compatible client-engagement context is present, use only support already materialized inside its managed support path. Without that context, inspect the smallest useful connected support scope for review only and keep the sealed run pending.
+3. Run dependency checks from the plugin directory:
 
 ```bash
 python scripts/check_dependencies.py
@@ -145,26 +156,26 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-3. Confirm that Journal Sampling produced a qualified complete population, then
+4. Confirm that Journal Sampling produced a qualified complete population, then
    run inspection to validate its closure and inventory support:
 
 ```bash
-python scripts/inspect_entries.py <normalized-journal.csv> <support-zip-xml-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_entries.py <same-engagement-normalized-journal.csv> <imported-support-path-or-support-folder> --output-dir <client-run-output>/inspection --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-4. Read `inspection.json` and `suggested_recipe.json`. If source qualification,
+5. Read `inspection.json` and `suggested_recipe.json`. If source qualification,
    diagnostics hash, receipt, row closure, or exact monetary closure fails, stop
    and return to Journal Sampling. Do not repair or infer preparation inside
    Check Entries.
-5. Record only Check Entries settings such as exact amount tolerance and date
+6. Record only Check Entries settings such as exact amount tolerance and date
    window in the work-folder recipe.
-6. Run deterministic checks:
+7. Run deterministic checks:
 
 ```bash
-python scripts/run_checks.py <normalized-journal.csv> <support-zip-xml-or-folder> --output-dir <output-dir>/checks --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/run_checks.py <same-engagement-normalized-journal.csv> <imported-support-path-or-support-folder> --output-dir <client-run-output>/checks --recipe <client-run-output>/inspection/suggested_recipe.json --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-7. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and `review_notes.md` before final delivery. Report support matching coverage, status counts, unresolved/manual-review rows, mismatches, and output paths.
+8. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and `review_notes.md` before final delivery. Report the stable client and engagement binding, support matching coverage, status counts, unresolved/manual-review rows, mismatches, and output paths.
 
 ## Prepared-Evidence Contract
 

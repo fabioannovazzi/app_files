@@ -1,6 +1,7 @@
 # Vera · Archivio dello Studio
 
-This Vera component has three independent routes. It searches one selected
+This Vera component also owns stable local client and engagement records for
+Codex workflows. Its three evidence routes search one selected
 client's Gmail correspondence in ChatGPT or Codex through the separately
 connected OpenAI Gmail connector. Codex Desktop additionally inspects one
 verified one-to-one chat in the local WhatsApp application through Computer Use
@@ -10,8 +11,11 @@ or central database.
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in Codex Desktop. Each computer builds its own
 derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the database,
-configuration, and ChatGPT history are not shared. Source documents remain in
-the studio folder and are never modified.
+configuration, and ChatGPT history are not shared. Search and indexing never
+modify existing source documents. After an explicit client choice, intake may
+create one derived top-level client folder and copy selected journal/support
+files into its generated `Vera engagements` subtree; originals are preserved
+and existing files are never overwritten.
 
 Gmail messages remain in Gmail. Vera stores no Gmail credentials, tokens,
 message bodies, attachments, or local mailbox copy. Confirmed addresses remain
@@ -80,6 +84,12 @@ available:
 python scripts/studio_archive.py configure --archive-root /absolute/path/to/Studio
 python scripts/studio_archive.py refresh
 python scripts/studio_archive.py status
+python scripts/studio_archive.py clients
+python scripts/studio_archive.py client-folder --client-id client_...
+python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
+python scripts/studio_archive.py import-document --client-id client_... --source-path /absolute/path/journal.xlsx --role journal
+python scripts/studio_archive.py engagements --client-id client_...
+python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id check-entries
 python scripts/studio_archive.py search --scope-id scope_... --query "cessione quote"
 python scripts/studio_archive.py open --source-id src_...
 python scripts/studio_archive.py configure-client --scope-id scope_... \
@@ -96,6 +106,13 @@ connected Gmail search/read tools. This is active-task retrieval, not
 background mail synchronization. It covers Gmail only; Outlook or PEC mailboxes
 require a separate compatible connector unless their messages are available in
 the selected Gmail account.
+
+`client-folder` returns a digest-bound v2 object containing the stable
+`client_id`, current folder `scope_id`, paths, and display name—not the private
+email/legal-name/tax-ID values. Engagement listing also returns persisted
+workflow contexts and exact mechanically available output paths, so a later
+chat can resume Journal Sampling or Check Entries without the earlier chat.
+Consuming workflows reject inputs and outputs outside that client engagement.
 
 After a client folder rename, refresh the archive, run `clients`, and explicitly
 rebind the listed orphaned profile to the new scope. Vera never guesses this

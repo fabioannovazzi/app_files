@@ -590,6 +590,52 @@ def _check_items(
     ]
 
 
+def _source_processing_issue_items(
+    extraction_errors: Sequence[dict[str, Any]], language: str
+) -> list[dict[str, Any]]:
+    """Expose skipped, unsupported, and failed source processing to reviewers."""
+
+    items: list[dict[str, Any]] = []
+    for index, row in enumerate(extraction_errors[:MAX_CHECK_ITEMS], start=1):
+        status = _clean_text(row.get("status")) or (
+            "error" if _clean_text(row.get("error")) else "unknown"
+        )
+        reason = _clean_text(row.get("reason") or row.get("error"))
+        source_file = _clean_text(row.get("source_file"))
+        is_skipped = status.lower() == "skipped"
+        title = (
+            f"Problema de fuente: {source_file or index}"
+            if _is_spanish(language)
+            else f"Source processing issue: {source_file or index}"
+        )
+        items.append(
+            _base_item(
+                f"source-processing-{index}",
+                "source_processing_issue",
+                title,
+                source_path=source_file or None,
+                output_path=("assurance_final_outputs/reconciliation_results.json"),
+                allowed_actions=(
+                    "accept",
+                    "mark_unclear",
+                    "request_more_documents",
+                    "skip",
+                ),
+                recommended_action="accept" if is_skipped else "mark_unclear",
+                evidence=[
+                    {
+                        "kind": "source_processing_status",
+                        "status": status,
+                        "reason": reason,
+                        "source_role_candidates": row.get("source_role_candidates"),
+                    }
+                ],
+                data=dict(row),
+            )
+        )
+    return items
+
+
 def _artifact_items(
     result: dict[str, Any],
     output_dir: Path,
@@ -690,6 +736,7 @@ def _audit_workpaper_required_sheets(language: str) -> list[str]:
         return [
             "Indice",
             "Assunzioni",
+            "Problemi elaborazione fonti",
             "Dettaglio riconciliazione",
             "Sintesi",
             "Controlli",
@@ -699,6 +746,7 @@ def _audit_workpaper_required_sheets(language: str) -> list[str]:
         return [
             "Índice",
             "Supuestos",
+            "Problemas de fuentes",
             "Detalle de conciliación",
             "Resumen",
             "Controles",
@@ -707,6 +755,7 @@ def _audit_workpaper_required_sheets(language: str) -> list[str]:
     return [
         "Index",
         "Assumptions",
+        "Source processing issues",
         "Reconciliation detail",
         "Summary",
         "Checks",
@@ -860,7 +909,7 @@ def _audit_workpaper_required_cells(
                 "A1": "Foglio",
                 "B1": "Righe",
                 "A2": "Assunzioni",
-                "A5": "Dettaglio riconciliazione",
+                "A6": "Dettaglio riconciliazione",
             },
             "Assunzioni": {"A1": "Campo", "B1": "Valore"},
         }
@@ -877,7 +926,7 @@ def _audit_workpaper_required_cells(
                 "A1": "Hoja",
                 "B1": "Líneas",
                 "A2": "Supuestos",
-                "A5": "Detalle de conciliación",
+                "A6": "Detalle de conciliación",
             },
             "Supuestos": {"A1": "Campo", "B1": "Valor"},
         }
@@ -893,7 +942,7 @@ def _audit_workpaper_required_cells(
             "A1": "Sheet",
             "B1": "Rows",
             "A2": "Assumptions",
-            "A5": "Reconciliation detail",
+            "A6": "Reconciliation detail",
         },
         "Assumptions": {"A1": "Field", "B1": "Value"},
     }
@@ -1178,6 +1227,7 @@ def write_run_intake(
     language: str = "it",
     source_hint: str | Path | None = None,
     dependency_check: dict[str, Any] | None = None,
+    client_engagement: dict[str, Any] | None = None,
     run_id: str | None = None,
 ) -> RunIntakeResult:
     """Write the durable run-intake artifact for audit reconciliation."""
@@ -1206,6 +1256,7 @@ def write_run_intake(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": active_run_id,
+        "client_engagement": client_engagement,
         "created_at": _utc_now(),
         "language": language,
         "input_paths": paths,
@@ -1271,8 +1322,19 @@ def write_review_session_artifacts(
         row for row in result.get("review_rows", []) if isinstance(row, dict)
     ]
     checks = [row for row in result.get("checks", []) if isinstance(row, dict)]
+    source_processing = result.get("source_processing")
+    extraction_errors = [
+        row
+        for row in (
+            source_processing.get("extraction_errors", [])
+            if isinstance(source_processing, dict)
+            else []
+        )
+        if isinstance(row, dict)
+    ]
     items: list[dict[str, Any]] = []
     items.extend(_review_row_items(review_rows, language))
+    items.extend(_source_processing_issue_items(extraction_errors, language))
     items.extend(_check_items(checks, language))
     items.extend(
         _artifact_items(
@@ -1301,6 +1363,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": result.get("client_engagement"),
         "created_at": _utc_now(),
         "language": language,
         "source_paths": source_path_refs,
@@ -1319,6 +1382,9 @@ def write_review_session_artifacts(
             "run_manifest": "run_manifest.json",
             "source_pages": "source_pages.json",
             "normalized_records": "normalized_records.json",
+            "canonical_audit_data": (
+                "assurance_final_outputs/reconciliation_results.json"
+            ),
             "missing_evidence_requests": _as_output_ref(
                 missing_evidence_requests_path
                 or result.get("missing_evidence_requests_path"),
@@ -1341,6 +1407,11 @@ def write_review_session_artifacts(
             "review_item_count": len(items),
             "checks_count": len(checks),
             "failed_check_count": len(failed_checks),
+            "source_processing_issue_count": len(extraction_errors),
+            "source_processing_blocking_issue_count": sum(
+                _clean_text(row.get("status")).lower() != "skipped"
+                for row in extraction_errors
+            ),
             "checks_pass": bool(result.get("checks_pass")),
             "reconciliation_status_counts": reconciliation_status_counts,
             "review_status_counts": review_status_counts,
@@ -1393,16 +1464,24 @@ def write_review_session_artifacts(
 
     if _is_spanish(language):
         caveats = [
-            "Los datos mostrados en el navegador están acotados; utilice el libro Excel y los diagnósticos JSON como conjunto completo de evidencias de auditoría.",
+            "Los datos mostrados en el navegador están acotados; utilice el libro Excel y reconciliation_results.json como conjunto completo de datos de auditoría.",
             "ui_decisions.json permanece pendiente hasta que el servidor local o el widget MCP registre las decisiones.",
             "Las clasificaciones deterministas de las filas siguen siendo autoritativas hasta que se corrijan las incidencias revisadas y se vuelva a ejecutar el flujo.",
         ]
     else:
         caveats = [
-            "The browser review payload is bounded; use the Excel workbook and JSON diagnostics as the complete audit evidence set.",
+            "The browser review payload is bounded; use the Excel workbook and reconciliation_results.json as the complete audit data set.",
             "ui_decisions.json is pending until the local browser review server or MCP widget records decisions.",
             "Deterministic row classifications remain authoritative until reviewed issues are fixed and the workflow is rerun.",
         ]
+    if extraction_errors:
+        caveats.append(
+            (
+                "Hay incidencias de procesamiento de fuentes; revíselas en la interfaz y en la hoja de problemas de fuentes del libro."
+                if _is_spanish(language)
+                else "Source-processing issues are present; review them in the interface and the workbook source-issues sheet."
+            )
+        )
     if rollforward_summary["exception_count"]:
         caveats.append(
             (
@@ -1448,6 +1527,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
+            "client_engagement": result.get("client_engagement"),
             "completed_at": _utc_now(),
             "outputs": _output_records(
                 output_dir,

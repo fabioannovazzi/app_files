@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import builtins
+import hashlib
 import importlib.util
 import json
 import sys
 import zipfile
 from pathlib import Path
 
+import pytest
 from openpyxl import Workbook, load_workbook
 
 SCRIPTS = (
@@ -24,6 +26,32 @@ def load_runner():
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def test_client_engagement_rejects_input_from_another_client(tmp_path: Path) -> None:
+    runner = load_runner()
+    archive_root = tmp_path / "Studio"
+    selected_root = archive_root / "Rossi"
+    other_input = archive_root / "Bianchi" / "input"
+    selected_root.mkdir(parents=True)
+    other_input.mkdir(parents=True)
+    binding = runner.build_studio_client_folder_binding(
+        studio_client_id="client_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        scope_id="scope_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        archive_root=archive_root,
+        scope_relative_dir="Rossi",
+        client_root=selected_root,
+        display_name="Rossi",
+    )
+
+    with pytest.raises(ValueError, match="selected studio client"):
+        runner.prepare_client_engagement_context(
+            client_folder=binding,
+            engagement_id="audit-2026",
+            input_dir=other_input,
+            workspace_root=tmp_path / "Vera Work",
+            run_id="audit-reconciliation-audit-2026-test",
+        )
 
 
 def reviewed_source_input(
@@ -797,9 +825,30 @@ def test_extract_pdf_pages_emits_ocr_progress_events(tmp_path, monkeypatch):
 
 def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     runner = load_runner()
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "out"
-    input_dir.mkdir()
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Rossi"
+    input_dir = client_root / "input"
+    workspace_root = tmp_path / "Vera Work"
+    input_dir.mkdir(parents=True)
+    client_folder = runner.build_studio_client_folder_binding(
+        studio_client_id="client_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        scope_id="scope_" + hashlib.sha256(b"rossi").hexdigest()[:24],
+        archive_root=archive_root,
+        scope_relative_dir="Rossi",
+        client_root=client_root,
+        display_name="Rossi",
+    )
+    run_id = "audit-reconciliation-audit-2023-test"
+    output_dir = (
+        workspace_root
+        / "clients"
+        / client_folder["studio_client_id"]
+        / "engagements"
+        / "audit-2023"
+        / "runs"
+        / "audit-reconciliation"
+        / run_id
+    )
 
     extracted_pages = [
         {
@@ -818,6 +867,9 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
             "source_inventory": [
                 {"source_file": "scan.pdf", "source_role": "open_items"}
             ],
+            "source_artifact_receipts": [],
+            "reviewed_source_decision_receipts": [],
+            "source_qualifications": [],
             "source_pages": extracted_pages,
             "open_items": [],
             "evidence_rows": [],
@@ -841,7 +893,10 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
 
     result = runner.run_raw_input_reconciliation(
         input_dir=input_dir,
-        output_dir=output_dir,
+        client_folder=client_folder,
+        engagement_id="audit-2023",
+        workspace_root=workspace_root,
+        run_id=run_id,
         assumptions={"scope_year": "2023", "cutoff_date": "2023-12-31"},
     )
 
@@ -885,8 +940,22 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     assert manifest["assurance"]["canonical_data_path"] == str(canonical_path)
     canonical = json.loads(canonical_path.read_text(encoding="utf-8"))
     assert canonical["schema_version"] == (
-        "audit_reconciliation.reconciliation_results.v2"
+        "audit_reconciliation.reconciliation_results.v3"
     )
+    assert canonical["client_engagement"] == result["client_engagement"]
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    prepared = json.loads(
+        (output_dir / "prepared_records.json").read_text(encoding="utf-8")
+    )
+    assurance = json.loads(
+        (output_dir / "assurance_receipts.json").read_text(encoding="utf-8")
+    )
+    assert manifest["client_engagement"] == result["client_engagement"]
+    assert run_intake["client_engagement"] == result["client_engagement"]
+    assert prepared["client_engagement"] == result["client_engagement"]
+    assert assurance["client_engagement"] == result["client_engagement"]
     assert canonical["source_processing"]["extraction_errors"] == [
         {
             "source_file": "unsupported.csv",
@@ -909,6 +978,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
+    assert review_payload["client_engagement"] == result["client_engagement"]
     assert review_payload["summary"]["source_processing_issue_count"] == 1
     assert any(
         item["item_type"] == "source_processing_issue"
@@ -917,6 +987,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
+    assert final_artifacts["client_engagement"] == result["client_engagement"]
     canonical_output = next(
         output
         for output in final_artifacts["outputs"]

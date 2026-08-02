@@ -69,6 +69,22 @@ them before the validated process starts, so this replay does not attest the
 host's initial executable selection. Arbitrary code already executing as the
 same operating-system user is likewise outside this in-process boundary.
 
+## Studio client and engagement boundary
+
+The raw-input entrypoint accepts no free output directory. It requires a
+digest-valid `vera.studio_client_folder.v2` object emitted for one exact current
+Studio Archive scope, plus an engagement ID, an input directory inside that
+client root, and an absolute workspace root outside the evidence folder and Git
+workspace. It derives the run directory as
+`clients/<studio-client-id>/engagements/<engagement-id>/runs/audit-reconciliation/<run-id>`.
+
+This rule is deterministic because path containment, scope-ID derivation,
+digest equality, and output-layout equality are mechanically verifiable. It
+does not decide client identity from names or document meaning. The exact
+context is repeated and sealed in intake, review, manifest, prepared,
+canonical, and assurance records so a later reviewer can detect cross-client
+or cross-engagement substitution.
+
 ## 3. Reconciliation boundary
 
 Match only compatible entity, party, currency, and unit perimeters. A row-level

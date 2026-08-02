@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
+description: Use when Vera must create or resume a durable client engagement, import a journal or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
 ## Surface routing
@@ -36,7 +36,8 @@ Choose the route before resolving any module:
    - If they are unavailable, say that the separately distributed OpenAI Gmail
      connector must be installed, enabled, and connected on the current surface.
      Do not use IMAP, browser scraping, or ask the user to save `.eml` files.
-3. When the user asks to configure, refresh, or search local studio documents,
+3. When the user asks to identify/create a client workspace, import or resume a
+   journal/support engagement, or configure, refresh, or search local studio documents,
    resolve `../../modules/studio-archive` from this skill directory when it
    exists; otherwise resolve `../../../studio-archive` in the repository. Read
    that module's `skills/studio-archive/SKILL.md` completely and follow it.

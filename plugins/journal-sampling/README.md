@@ -34,23 +34,30 @@ python -m pip install -r requirements.txt
 
 ## First Run Shape
 
-1. Confirm input file or folder, sample size, sampling method, working language, source-document language, and filters.
-2. Run `scripts/inspect_journal.py` to create `inspection.json`,
+1. In Studio Archive, list clients, resolve existing versus new without using
+   the filename as identity, register/create only after the user's choice, and
+   obtain authorization to copy the journal into one durable engagement. Use
+   the imported path and returned client-engagement context.
+2. Confirm sample size, sampling method, working language,
+   source-document language, and filters.
+3. Run `scripts/inspect_journal.py` with `--client-engagement` and the exact
+   context `normalization` output to create `inspection.json`,
    `suggested_recipe.json`, and `qualification_review_payload.json`.
-3. Resolve only essential mapping ambiguities, then bind the exact
+4. Resolve only essential mapping ambiguities, then bind the exact
    source-family mapping contract to its generated digest and a complete
    reviewed-decision receipt in the work-folder recipe. The contract includes
    posting identity, carry-forward, currency, unit, and the disposition of
    every monetary-labelled or numeric column.
-4. Run `scripts/normalize_journal.py`.
-5. Run `scripts/run_sample.py`; it verifies the adjacent normalization
+5. Run `scripts/normalize_journal.py` with the same context.
+6. Run `scripts/run_sample.py` with the same context and its exact `sample`
+   output; it verifies the adjacent normalization
    diagnostics, replayable assurance envelope, independent gates, qualified row
    closure, implementation receipts, original source receipts, retained
    reviewed-recipe bytes, and normalized CSV receipt. It then freshly reruns
    normalization from the raw journal and that exact recipe and requires a
    byte-identical canonical CSV and material preparation contract. The sample
    output folder must be absent or empty.
-6. Review diagnostics and deliver normalized rows, reviewed decisions,
+7. Review diagnostics and deliver normalized rows, reviewed decisions,
    sample-stage assurance gates and envelope, sample files, the all-row material
    value ledger, output receipts, audit trail, and MCP review handoff files.
 

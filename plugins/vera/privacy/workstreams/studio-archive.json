@@ -14,6 +14,7 @@
     "requirements-ocr.txt"
   ],
   "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr"
   ],
   "runtime_profiles": [
@@ -30,6 +31,22 @@
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "studio-client-folder-binding",
+        "purpose": "Bind Vera workflows to one stable registered client and current Studio Archive folder without copying the private identity registry",
+        "content": "The stable opaque client ID; current opaque folder scope ID; absolute archive and client-folder paths; archive-relative scope path and display name; and a deterministic content digest. The binding contains no email address, legal name, tax identifier, document content, Gmail content, or authentication material",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "studio-client-engagement-intake",
+        "purpose": "Create or resume one client-bound journal workflow across separate Codex chats",
+        "content": "The selected stable client ID and current folder binding; engagement, workflow and run IDs; absolute original and controlled-copy paths; import roles, original filenames, byte counts, SHA-256 receipts and timestamps; private context paths; exact workflow output paths; and mechanical normalization, sample or check availability. New-client identity values remain in the private local registry except when the user supplies them in the current chat",
+        "runtime_profiles": [
+          "openai-codex"
         ]
       },
       {
@@ -140,14 +157,26 @@
       "control": "The Gmail route keeps confirmed identities only in the current conversation and has no plugin-managed cross-conversation registry. Optional local Codex use may store confirmed full email or PEC addresses, legal names, and tax identifiers in an owner-only local registry outside the shared archive; its schema has no fields for Gmail credentials, tokens, cookies, message identifiers, bodies, or attachments."
     },
     {
+      "id": "exact-client-folder-binding",
+      "control": "A v2 client-folder binding can be emitted only for a registered stable client ID and its exact current configured scope after detecting top-level folder changes. It binds both IDs to normalized archive-relative and absolute paths with a content digest and excludes private identity values. Folder rename/relink retains the stable client ID only through an explicit orphan rebind."
+    },
+    {
+      "id": "controlled-client-engagement-import",
+      "control": "New-client creation and document import are separate explicit actions. Folder names are safely derived from a confirmed legal name while stable identity is random and independent; imports accept ordinary non-linked files only, preserve the original, hash during an identity-stable copy, never overwrite, write only below the generated engagement subtree, and reject both cross-client engagement use and a source already located in another configured client scope."
+    },
+    {
+      "id": "durable-workflow-resumption",
+      "control": "Owner-only digest-valid client-engagement contexts persist outside the shared archive. Engagement listing validates every stored context and returns exact prior workflow paths and mechanical artifact availability without selecting among multiple runs by recency or filename."
+    },
+    {
       "id": "fail-closed-gmail-client-routing",
       "control": "Only an exact match to one selected client's chat-confirmed full address, with a parseable From value, parseable returned recipient values, and no visible unknown or other-client external participant, can route a Gmail message automatically. Cc and Bcc are checked whenever exposed; an absent optional field alone is not incomplete, and routing cannot prove the absence of an undisclosed Bcc recipient. Zero-client, multi-client, missing-required-field, malformed, third-party, and mixed-client results fail closed or require model review; studio-wide Gmail search is rejected, while optional orphaned local profiles can move only through an explicit one-to-one rebind."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-02",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5a109ea512ef08c6054713a7a7c97a60add078ec832723bc21dfd045c25c77be"
+    "source_fingerprint": "d042e6a0b56215f0101575c2c40cc9d23cb5443c401ed0440bfcc6a3d35c56c9"
   }
 }

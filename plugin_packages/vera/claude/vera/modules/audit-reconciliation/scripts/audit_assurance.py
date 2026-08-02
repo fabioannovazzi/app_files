@@ -143,6 +143,7 @@ from vera_assurance import (  # noqa: E402
     parse_canonical_decimal,
     validate_allocation_ledger,
     validate_artifact_receipt,
+    validate_client_engagement_context,
     validate_gate_register,
     validate_numeric_evidence_ledger,
     validate_reviewed_decision_receipt,
@@ -174,7 +175,7 @@ __all__ = [
     "validate_review_transition_history",
 ]
 
-ASSURANCE_SCHEMA_VERSION = "audit_reconciliation.assurance.v1"
+ASSURANCE_SCHEMA_VERSION = "audit_reconciliation.assurance.v2"
 SOURCE_DECISION_TYPE = "audit_reconciliation_source_mapping"
 SOURCE_DECISION_ADAPTER_VERSION = "2"
 FINAL_OUTPUT_DIRECTORY = "assurance_final_outputs"
@@ -182,6 +183,29 @@ FINAL_OUTPUT_INVENTORY = "final_output_inventory.json"
 RUN_TREE_SCHEMA_VERSION = "audit_reconciliation.run_tree.v1"
 REVIEW_TRANSITION_SCHEMA_VERSION = "audit_reconciliation.review_transition.v1"
 REVIEW_PAYLOAD_MAPPING_SCHEMA_VERSION = "audit_reconciliation.review_payload_mapping.v1"
+RECONCILIATION_RESULTS_SCHEMA_VERSION = "audit_reconciliation.reconciliation_results.v3"
+SOURCE_PROCESSING_FIELDS = frozenset(
+    {
+        "extraction_errors",
+        "journal_rollforward_rows",
+        "journal_rollforward_summary",
+        "ledger_balance_rows",
+    }
+)
+ANALYSIS_FIELDS = frozenset(
+    {
+        "aging_summary",
+        "bank_allocation_candidates",
+        "cutoff_window_movements",
+        "document_source_map",
+        "evidence_concentration",
+        "external_evidence_detail",
+        "external_evidence_summary",
+        "post_cutoff_candidates",
+        "reversal_candidates",
+        "review_signals",
+    }
+)
 REVIEW_TRANSITION_HISTORY_DIRECTORY = "assurance_transition_history"
 PREDECESSOR_RUN_SNAPSHOT_DIRECTORY = "predecessor_run"
 REVIEW_TRANSITION_EVIDENCE_FILES = (
@@ -227,6 +251,7 @@ ASSURANCE_SEAL_FIELDS = frozenset(
         "schema_version",
         "run_id",
         "run_date",
+        "client_engagement",
         "source_root",
         "source_receipts",
         "reviewed_source_decisions",
@@ -288,46 +313,91 @@ RUN_CONTROL_PATHS = (
     "prepared_records.json",
     "reconciliation_results.json",
 )
-RUN_ROOT_FIXED_FILES = frozenset(
-    {
-        "account_rollforward_check.json",
-        "aging_summary.json",
-        "applied_decisions.json",
-        "artifact_card.md",
-        "assurance_gates.json",
-        "assurance_receipts.json",
-        "bank_allocation_candidates.json",
-        "codex_review_packet.json",
-        "cutoff_window_movements.json",
-        "document_source_map.json",
-        "evidence_concentration.json",
-        "external_evidence_detail.json",
-        "external_evidence_summary.json",
-        "extraction_errors.json",
-        "final_artifacts.json",
-        FINAL_OUTPUT_INVENTORY,
-        "journal_rollforward_rows.json",
-        "journal_rollforward_summary.json",
-        "ledger_balance_rows.json",
-        "normalized_records.json",
-        "numeric_evidence_ledger.json",
-        "post_cutoff_candidates.json",
-        "prepared_records.json",
-        "professional_review.json",
-        "reconciliation_results.json",
-        "relationship_allocation_ledgers.json",
-        "reversal_candidates.json",
-        "review_handoff.md",
-        "review_payload.json",
-        "review_signals.json",
-        "review_ui.html",
-        "run_intake.json",
-        "run_manifest.json",
-        "source_pages.json",
-        "source_qualifications.json",
-        "ui_decisions.json",
-    }
-)
+# This deterministic registry is justified because exact artifact paths,
+# audiences, and purposes are mechanically verifiable parts of the run contract.
+RUN_ROOT_ARTIFACT_CONTRACT = {
+    "account_rollforward_check.json": {
+        "audience": "accountant_reviewer",
+        "purpose": "Direct machine-readable account roll-forward exceptions.",
+    },
+    "applied_decisions.json": {
+        "audience": "review_engine",
+        "purpose": "Professional review decisions applied to a successor run.",
+    },
+    "artifact_card.md": {
+        "audience": "professional_reviewer",
+        "purpose": "Human-readable entry point to the review package.",
+    },
+    "assurance_gates.json": {
+        "audience": "assurance_validator",
+        "purpose": "Independent source, reconciliation, review, and reporting gates.",
+    },
+    "assurance_receipts.json": {
+        "audience": "assurance_validator",
+        "purpose": "Sealed receipts and content checkpoint for replay.",
+    },
+    "codex_review_packet.json": {
+        "audience": "professional_reviewer",
+        "purpose": "Writable row-level review authority and notes.",
+    },
+    "final_artifacts.json": {
+        "audience": "professional_reviewer",
+        "purpose": "Review handoff inventory, caveats, and readiness status.",
+    },
+    FINAL_OUTPUT_INVENTORY: {
+        "audience": "assurance_validator",
+        "purpose": "Exact inventory of sealed final deliverables.",
+    },
+    "normalized_records.json": {
+        "audience": "assurance_validator",
+        "purpose": "Traceable normalized source population used by the workflow.",
+    },
+    "numeric_evidence_ledger.json": {
+        "audience": "assurance_validator",
+        "purpose": "Source-to-output addresses for material reconciliation values.",
+    },
+    "prepared_records.json": {
+        "audience": "assurance_validator",
+        "purpose": "Sealed prepared population used for deterministic replay.",
+    },
+    "professional_review.json": {
+        "audience": "assurance_validator",
+        "purpose": "Persisted professional review authority for the run.",
+    },
+    "reconciliation_results.json": {
+        "audience": "assurance_publisher",
+        "purpose": "Staging copy of the canonical audit data before sealing.",
+    },
+    "review_handoff.md": {
+        "audience": "professional_reviewer",
+        "purpose": "Instructions for completing and persisting review decisions.",
+    },
+    "review_payload.json": {
+        "audience": "review_ui",
+        "purpose": "Bounded review items and source-processing issues for the UI.",
+    },
+    "review_ui.html": {
+        "audience": "professional_reviewer",
+        "purpose": "Static fallback surface for review when the local server is unavailable.",
+    },
+    "run_intake.json": {
+        "audience": "workflow_operator",
+        "purpose": "Run scope, assumptions, input paths, and data posture.",
+    },
+    "run_manifest.json": {
+        "audience": "workflow_operator",
+        "purpose": "Run counts, checks, and primary output paths.",
+    },
+    "source_pages.json": {
+        "audience": "assurance_validator",
+        "purpose": "Page-level extracted source text and provenance.",
+    },
+    "ui_decisions.json": {
+        "audience": "review_ui",
+        "purpose": "Pending or saved decisions emitted by the review surface.",
+    },
+}
+RUN_ROOT_FIXED_FILES = frozenset(RUN_ROOT_ARTIFACT_CONTRACT)
 RUN_CACHE_DIRECTORY = ".audit_reconciliation_cache"
 PERIMETER_FIELDS = {
     "entity_ref",
@@ -1398,6 +1468,33 @@ def _validate_prepared_population(
             raise AssuranceRunError("source qualification emitted row count is stale")
 
 
+def _validated_client_engagement(
+    value: Mapping[str, Any] | None,
+    *,
+    output_dir: Path,
+    source_root: Path | None,
+) -> dict[str, Any] | None:
+    """Replay a client boundary and bind it to this source and run directory."""
+
+    if value is None:
+        return None
+    try:
+        normalized = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise AssuranceRunError(f"client engagement is invalid: {exc}") from exc
+    if Path(normalized["output_dir"]).resolve() != Path(output_dir).resolve():
+        raise AssuranceRunError(
+            "client engagement output_dir does not match the assurance run"
+        )
+    if source_root is not None and (
+        Path(normalized["input_dir"]).resolve() != Path(source_root).resolve()
+    ):
+        raise AssuranceRunError(
+            "client engagement input_dir does not match the receipted source root"
+        )
+    return normalized
+
+
 def prepare_assurance_run(
     *,
     output_dir: Path,
@@ -1408,6 +1505,7 @@ def prepare_assurance_run(
     source_receipts: Sequence[Mapping[str, Any]] = (),
     reviewed_source_decisions: Sequence[Mapping[str, Any]] = (),
     source_qualifications: Sequence[Mapping[str, Any]] = (),
+    client_engagement: Mapping[str, Any] | None = None,
     professional_review_authority: Mapping[str, Any] | None = None,
     expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
@@ -1424,6 +1522,11 @@ def prepare_assurance_run(
     normalized_sources = validate_receipt_set(roots, source_receipts)
     if source_receipts and source_root is not None:
         _validate_source_boundary(Path(source_root), normalized_sources)
+    normalized_client_engagement = _validated_client_engagement(
+        client_engagement,
+        output_dir=out_dir,
+        source_root=source_root,
+    )
     normalized_implementation = validate_receipt_set(roots, implementation_receipts)
     run_date = _run_date(assumptions)
     normalized_decisions = _validated_source_decisions(
@@ -1467,7 +1570,8 @@ def prepare_assurance_run(
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     prepared_payload = {
-        "schema_version": "audit_reconciliation.prepared_records.v1",
+        "schema_version": "audit_reconciliation.prepared_records.v2",
+        "client_engagement": normalized_client_engagement,
         "open_items": list(open_items),
         "evidence_rows": list(evidence_rows),
         "assumptions": prepared_assumptions,
@@ -1495,6 +1599,7 @@ def prepare_assurance_run(
         raise
     return {
         "schema_version": ASSURANCE_SCHEMA_VERSION,
+        "client_engagement": normalized_client_engagement,
         "source_root": str(Path(source_root).resolve()) if source_root else None,
         "source_receipts": normalized_sources,
         "reviewed_source_decisions": normalized_decisions,
@@ -4104,6 +4209,50 @@ def _material_json_key(value: object) -> bool:
     return any(part in normalized for part in MATERIAL_VALUE_KEY_PARTS)
 
 
+def _validated_schedule_section(
+    value: Mapping[str, Any] | None,
+    *,
+    expected_fields: frozenset[str],
+    label: str,
+) -> dict[str, list[dict[str, Any]]]:
+    """Validate the exact mechanical schema for canonical schedule sections."""
+
+    active: Mapping[str, Any] = (
+        value if value is not None else {field: [] for field in expected_fields}
+    )
+    if set(active) != expected_fields:
+        raise AssuranceRunError(f"{label} has invalid schedule fields")
+    normalized: dict[str, list[dict[str, Any]]] = {}
+    for field in sorted(expected_fields):
+        rows = active[field]
+        if not isinstance(rows, list):
+            raise AssuranceRunError(f"{label}.{field} must be a list")
+        normalized_rows: list[dict[str, Any]] = []
+        for index, row in enumerate(rows):
+            if not isinstance(row, Mapping):
+                raise AssuranceRunError(f"{label}.{field}[{index}] must be an object")
+            normalized_rows.append(dict(row))
+        normalized[field] = normalized_rows
+    return normalized
+
+
+def _schedule_json_material_paths(
+    section_name: str,
+    schedules: Mapping[str, Sequence[Mapping[str, Any]]],
+) -> set[tuple[object, ...]]:
+    """Address numeric schedule cells already sealed in canonical result rows."""
+
+    paths: set[tuple[object, ...]] = set()
+    for schedule_name, rows in schedules.items():
+        for row_index, row in enumerate(rows):
+            for field, value in row.items():
+                if _material_json_key(field) and (
+                    _canonical_money(value) is not None or isinstance(value, float)
+                ):
+                    paths.add((section_name, schedule_name, row_index, str(field)))
+    return paths
+
+
 def _assert_json_material_values_addressed(
     payload: object,
     *,
@@ -4136,11 +4285,18 @@ def _assert_json_material_values_addressed(
 def _reconciliation_json_material_paths(
     reconciliation_rows: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
+    *,
+    review_rows: Sequence[Mapping[str, Any]] | None = None,
+    source_processing: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
+    analyses: Mapping[str, Sequence[Mapping[str, Any]]] | None = None,
 ) -> set[tuple[object, ...]]:
-    paths = {
-        ("reconciliation_rows", index, "amount")
-        for index, _ in enumerate(reconciliation_rows)
-    }
+    paths: set[tuple[object, ...]] = set()
+    for row_index, row in enumerate(reconciliation_rows):
+        for field, value in row.items():
+            if _material_json_key(field) and (
+                _canonical_money(value) is not None or isinstance(value, float)
+            ):
+                paths.add(("reconciliation_rows", row_index, str(field)))
     for ledger_index, ledger in enumerate(allocation_ledgers):
         for population in ("source_records", "target_records"):
             paths.update(
@@ -4168,6 +4324,19 @@ def _reconciliation_json_material_paths(
                     for index, _ in enumerate(ledger[population])
                 }
             )
+    if source_processing is not None:
+        paths.update(
+            _schedule_json_material_paths("source_processing", source_processing)
+        )
+    if analyses is not None:
+        paths.update(_schedule_json_material_paths("analyses", analyses))
+    if review_rows is not None:
+        for row_index, row in enumerate(review_rows):
+            for field, value in row.items():
+                if _material_json_key(field) and (
+                    _canonical_money(value) is not None or isinstance(value, float)
+                ):
+                    paths.add(("review_rows", row_index, str(field)))
     return paths
 
 
@@ -4191,6 +4360,33 @@ def _json_record_addresses(
                 )
             addresses[record_id] = _output_record_locator(index, record_id)
             allowed_paths.add(("reconciliation_rows", index, "amount"))
+        allocation_ledgers = payload.get("allocation_ledgers")
+        if isinstance(allocation_ledgers, list):
+            allowed_paths.update(
+                _reconciliation_json_material_paths(
+                    rows,
+                    [
+                        ledger
+                        for ledger in allocation_ledgers
+                        if isinstance(ledger, Mapping)
+                    ],
+                    review_rows=(
+                        payload.get("review_rows")
+                        if isinstance(payload.get("review_rows"), list)
+                        else None
+                    ),
+                    source_processing=(
+                        payload.get("source_processing")
+                        if isinstance(payload.get("source_processing"), Mapping)
+                        else None
+                    ),
+                    analyses=(
+                        payload.get("analyses")
+                        if isinstance(payload.get("analyses"), Mapping)
+                        else None
+                    ),
+                )
+            )
         _assert_json_material_values_addressed(
             payload,
             path_name=path.name,
@@ -5142,6 +5338,8 @@ def _finalize_assurance_run_in_place(
     source_qualifications: Sequence[Mapping[str, Any]],
     declared_outputs: Sequence[Path],
     workbook_name: str,
+    source_processing: Mapping[str, Any] | None = None,
+    analyses: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Replay the run, publish an exact final set, and write independent gates."""
 
@@ -5166,6 +5364,11 @@ def _finalize_assurance_run_in_place(
     source_root = context.get("source_root")
     if source_root:
         roots["source"] = Path(str(source_root)).resolve()
+    client_engagement = _validated_client_engagement(
+        context.get("client_engagement"),
+        output_dir=out_dir,
+        source_root=(Path(str(source_root)) if source_root else None),
+    )
     source_receipts = list(context.get("source_receipts") or [])
     run_date = _canonical_iso_date(
         context.get("run_date"),
@@ -5202,6 +5405,8 @@ def _finalize_assurance_run_in_place(
             "unqualified sources cannot produce reconciliation or final artifacts"
         )
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
+    if prepared.get("client_engagement") != client_engagement:
+        raise AssuranceRunError("client engagement changed after the prepared boundary")
     _validate_prepared_population(
         open_items=prepared["open_items"],
         evidence_rows=prepared["evidence_rows"],
@@ -5273,10 +5478,23 @@ def _finalize_assurance_run_in_place(
                 "material reconciliation rows lack a current source artifact "
                 f"reference: {unaddressed_rows[:10]}"
             )
+    normalized_source_processing = _validated_schedule_section(
+        source_processing,
+        expected_fields=SOURCE_PROCESSING_FIELDS,
+        label="source_processing",
+    )
+    normalized_analyses = _validated_schedule_section(
+        analyses,
+        expected_fields=ANALYSIS_FIELDS,
+        label="analyses",
+    )
     reconciliation_payload = {
-        "schema_version": "audit_reconciliation.reconciliation_results.v1",
+        "schema_version": RECONCILIATION_RESULTS_SCHEMA_VERSION,
+        "client_engagement": client_engagement,
+        "source_processing": normalized_source_processing,
         "reconciliation_rows": list(reconciliation_rows),
         "allocation_ledgers": normalized_allocations,
+        "analyses": normalized_analyses,
         "checks": list(checks),
         "review_rows": list(review_rows),
         "source_qualifications": normalized_qualifications,
@@ -5288,6 +5506,9 @@ def _finalize_assurance_run_in_place(
             allowed_paths=_reconciliation_json_material_paths(
                 reconciliation_rows,
                 normalized_allocations,
+                review_rows=review_rows,
+                source_processing=normalized_source_processing,
+                analyses=normalized_analyses,
             ),
         )
     reconciliation_path = _write_exact_json(
@@ -5448,6 +5669,31 @@ def _finalize_assurance_run_in_place(
         final_artifacts = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
         if not isinstance(final_artifacts, dict):
             raise AssuranceRunError("final_artifacts.json must contain an object")
+        outputs = final_artifacts.get("outputs")
+        if not isinstance(outputs, list) or any(
+            not isinstance(output, Mapping) for output in outputs
+        ):
+            raise AssuranceRunError("final_artifacts.json outputs must be a list")
+        canonical_relative_path = (
+            f"{FINAL_OUTPUT_DIRECTORY}/reconciliation_results.json"
+        )
+        canonical_path = out_dir / canonical_relative_path
+        final_artifacts["outputs"] = [
+            dict(output)
+            for output in outputs
+            if output.get("path") != canonical_relative_path
+        ]
+        final_artifacts["outputs"].append(
+            {
+                "path": canonical_relative_path,
+                "size_bytes": canonical_path.stat().st_size,
+                "kind": "json",
+                "status": "written",
+                "artifact_role": "canonical_audit_data",
+                "schema_version": RECONCILIATION_RESULTS_SCHEMA_VERSION,
+                "qa_checks": ["json_parse", "required_sections"],
+            }
+        )
         failed_gate_names = [
             name
             for name, gate in gates["gates"].items()
@@ -5517,6 +5763,7 @@ def _finalize_assurance_run_in_place(
         "schema_version": ASSURANCE_SCHEMA_VERSION,
         "run_id": _sealed_run_id(out_dir, professional_review),
         "run_date": run_date,
+        "client_engagement": client_engagement,
         "source_root": str(source_root) if source_root else None,
         "source_receipts": source_receipts,
         "reviewed_source_decisions": source_decisions,
@@ -5634,6 +5881,8 @@ def finalize_assurance_run(
     source_qualifications: Sequence[Mapping[str, Any]],
     declared_outputs: Sequence[Path],
     workbook_name: str,
+    source_processing: Mapping[str, Any] | None = None,
+    analyses: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build and replay the exact assurance tree under whole-run rollback."""
 
@@ -5650,6 +5899,8 @@ def finalize_assurance_run(
             source_qualifications=source_qualifications,
             declared_outputs=declared_outputs,
             workbook_name=workbook_name,
+            source_processing=source_processing,
+            analyses=analyses,
         )
     except (OSError, ValueError):
         _rollback_run_transaction(
@@ -5824,6 +6075,11 @@ def validate_assurance_run(
         _validate_source_boundary(Path(source_root), source_receipts)
     elif source_root is not None:
         raise AssuranceRunError("source_root is not allowed without source receipts")
+    client_engagement = _validated_client_engagement(
+        payload["client_engagement"],
+        output_dir=out_dir,
+        source_root=(Path(source_root) if source_root is not None else None),
+    )
 
     implementation_receipts = validate_receipt_set(
         roots,
@@ -5872,13 +6128,21 @@ def validate_assurance_run(
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
     if (
         set(prepared)
-        != {"schema_version", "open_items", "evidence_rows", "assumptions"}
-        or prepared["schema_version"] != "audit_reconciliation.prepared_records.v1"
+        != {
+            "schema_version",
+            "client_engagement",
+            "open_items",
+            "evidence_rows",
+            "assumptions",
+        }
+        or prepared["schema_version"] != "audit_reconciliation.prepared_records.v2"
         or not isinstance(prepared["open_items"], list)
         or not isinstance(prepared["evidence_rows"], list)
         or not isinstance(prepared["assumptions"], dict)
     ):
         raise AssuranceRunError("prepared record boundary has invalid fields")
+    if prepared["client_engagement"] != client_engagement:
+        raise AssuranceRunError("prepared client engagement is stale")
     if prepared["assumptions"].get("assurance_run_date") != run_date:
         raise AssuranceRunError("prepared run date is stale")
     if _validated_tolerance(
@@ -5914,17 +6178,22 @@ def validate_assurance_run(
     result = _read_json_mapping(result_path)
     result_fields = {
         "schema_version",
+        "client_engagement",
+        "source_processing",
         "reconciliation_rows",
         "allocation_ledgers",
+        "analyses",
         "checks",
         "review_rows",
         "source_qualifications",
     }
     if (
         set(result) != result_fields
-        or result["schema_version"] != "audit_reconciliation.reconciliation_results.v1"
+        or result["schema_version"] != RECONCILIATION_RESULTS_SCHEMA_VERSION
     ):
         raise AssuranceRunError("sealed reconciliation result has invalid fields")
+    if result["client_engagement"] != client_engagement:
+        raise AssuranceRunError("sealed reconciliation client engagement is stale")
     for field in (
         "reconciliation_rows",
         "allocation_ledgers",
@@ -5936,6 +6205,27 @@ def validate_assurance_run(
             raise AssuranceRunError(
                 f"sealed reconciliation result {field} must be a list"
             )
+    sealed_source_processing = _validated_schedule_section(
+        result["source_processing"],
+        expected_fields=SOURCE_PROCESSING_FIELDS,
+        label="sealed reconciliation result source_processing",
+    )
+    sealed_analyses = _validated_schedule_section(
+        result["analyses"],
+        expected_fields=ANALYSIS_FIELDS,
+        label="sealed reconciliation result analyses",
+    )
+    _assert_json_material_values_addressed(
+        result,
+        path_name="reconciliation_results.json",
+        allowed_paths=_reconciliation_json_material_paths(
+            result["reconciliation_rows"],
+            result["allocation_ledgers"],
+            review_rows=result["review_rows"],
+            source_processing=sealed_source_processing,
+            analyses=sealed_analyses,
+        ),
+    )
     if _review_projection(result["review_rows"]) != professional_review["records"]:
         raise AssuranceRunError(
             "sealed review rows do not match persisted professional review authority"

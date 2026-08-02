@@ -104,6 +104,19 @@ choice of a connector, hosted-service action, or send/publish action is enough;
 do not ask again.
 
 
+## Client-bound journal work in Cowork
+
+Cowork v1 omits the local Studio Archive module. It cannot list or register
+stable local clients, create client folders, copy files into managed
+engagements, or issue and resume client-engagement contexts. Confirm one exact
+connected client folder and continue with useful source review, mapping,
+sampling-plan preparation, or support review. Run the sealed Journal Sampling
+or Check Entries product CLI only when a digest-valid context was supplied by a
+compatible local Vera installation and every bound local path is available in
+the current workspace. Otherwise state that the client-bound local run remains
+pending. Never invent a client, scope, engagement, workflow, or run ID from a
+name, filename, folder, or document content.
+
 ## Module routing
 
 - `studio-archive`: connected-folder evidence and one client's callable, read-only Anthropic Gmail connector. Cowork v1 does not support WhatsApp or local archive indexing;
@@ -170,7 +183,11 @@ deterministic classifier.
 
 1. Route the question internally through `prompt-optimizer`. Complete only the
    material intake, jurisdiction confirmation, source curation, answer
-   contract, generation instructions, and deterministic shape validation.
+   contract, generation instructions, model-led prompt-to-question and prompt-
+   to-contract conformance review, and deterministic record/shape validation.
+   The inspection layer does not decide whether angle or jurisdiction
+   confirmation is needed; ask only when semantic review finds a consequential
+   ambiguity.
 2. Write `answer_contract.json` before generation. Keep generation route
    separate from document type:
    - `generation_route` is `codex_direct`, `chatgpt_deep_research`, or
@@ -227,6 +244,10 @@ deterministic classifier.
    validation record, unresolved issues, and final answer as the end of the
    same journey. Recording a proposed fix is not correction: regenerate the
    answer semantically and rerun packaging before it can be delivery-ready.
+   The packaging layer may reject mechanically contradictory review states—for
+   example a contradicted claim retained with no issue treatment, a rejected
+   claim marked ready, or a completed correction paired with a no-defect
+   outcome—but it must never assign the semantic support or reasoning status.
 
 If native Deep Research is unavailable to the user because of plan, country,
 workspace policy, or current-surface limitations, state that limitation.

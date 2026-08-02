@@ -23,6 +23,9 @@ FINAL_HANDOFF_ACTION = (
     "Use final_artifacts.json as the reviewed artifact gallery for handoff."
 )
 COMPLETE_REVIEW_ACTION = "Complete remaining review decisions before final handoff."
+RERUN_SEMANTIC_REVIEW_ACTION = (
+    "Rerun the model-led prompt-contract semantic review after editing the prompt."
+)
 
 
 def clean_text(value: object) -> str:
@@ -167,13 +170,36 @@ def _first_prompt_line(prompt_text: str) -> str:
 
 
 def _package_required_text(audit: dict[str, Any]) -> list[str]:
-    fragments = ["# Prompt Optimizer Package", "## What to Use"]
+    fragments = [
+        "# Prompt Optimizer Package",
+        "## Answer Contract",
+        "## Model-Led Research Lens",
+        "## Prompt-Contract Semantic Review",
+        "## What to Use",
+    ]
     fragments.extend(str(domain) for domain in audit.get("source_domains") or [])
     return list(
         dict.fromkeys(
             clean_text(fragment) for fragment in fragments if clean_text(fragment)
         )
     )
+
+
+def _invalidate_prompt_contract_review(review: dict[str, Any]) -> dict[str, Any]:
+    """Mark semantic conclusions stale after the reviewed prompt changes."""
+
+    dimensions = review.get("dimensions")
+    if isinstance(dimensions, dict):
+        for assessment in dimensions.values():
+            if isinstance(assessment, dict):
+                assessment["status"] = "not_reviewed"
+                assessment["analysis"] = (
+                    "The optimized prompt changed after this semantic review."
+                )
+    review["overall_status"] = "not_reviewed"
+    review["reviewer_action"] = "mark_unclear"
+    review["stale_reason"] = "optimized_prompt_edited_after_review"
+    return review
 
 
 def apply_review_edits(
@@ -193,6 +219,7 @@ def apply_review_edits(
     source_domains_path = output_dir / "source_domains.txt"
     source_domains_comma_path = output_dir / "source_domains_comma.txt"
     answer_contract_path = output_dir / "answer_contract.json"
+    prompt_contract_review_path = output_dir / "prompt_contract_review.json"
 
     applied = _read_json(applied_decisions_path)
     final_artifacts = _read_json(final_artifacts_path)
@@ -217,10 +244,15 @@ def apply_review_edits(
         raise FileNotFoundError(audit_path)
     if not answer_contract_path.exists():
         raise FileNotFoundError(answer_contract_path)
+    if not prompt_contract_review_path.exists():
+        raise FileNotFoundError(prompt_contract_review_path)
 
     run_intake = _read_json(run_intake_path)
     previous_audit = _read_json(audit_path)
     answer_contract = _read_json(answer_contract_path)
+    prompt_contract_review = _invalidate_prompt_contract_review(
+        _read_json(prompt_contract_review_path)
+    )
     question_text = _question_text(output_dir, run_intake)
     prompt_text = prompt_path.read_text(encoding="utf-8").strip()
     language = _language(run_intake, previous_audit)
@@ -228,6 +260,7 @@ def apply_review_edits(
         question_text,
         prompt_text,
         answer_contract=answer_contract,
+        prompt_contract_review=prompt_contract_review,
         language=language,
     )
     audit["language"] = language
@@ -244,12 +277,14 @@ def apply_review_edits(
         "prompt_package.md",
         "source_domains.txt",
         "source_domains_comma.txt",
+        "prompt_contract_review.json",
     ):
         backup = _backup_file(output_dir, item_id, target_name)
         if backup:
             backup_outputs.append(backup)
 
     write_json(audit_path, audit)
+    write_json(prompt_contract_review_path, prompt_contract_review)
     package_path.write_text(package_text, encoding="utf-8")
     source_domains_path.write_text("\n".join(source_domains) + "\n", encoding="utf-8")
     source_domains_comma_path.write_text(
@@ -261,6 +296,7 @@ def apply_review_edits(
         "prompt_package.md",
         "source_domains.txt",
         "source_domains_comma.txt",
+        "prompt_contract_review.json",
     ]
     for effect in candidate_effects:
         effect["downstream_regeneration_status"] = "regenerated"
@@ -274,7 +310,8 @@ def apply_review_edits(
         if backup_output["path"] not in original_backup_paths:
             original_backup_paths.append(backup_output["path"])
     applied["original_backup_paths"] = original_backup_paths
-    applied["application_status"] = _application_status(applied)
+    applied["application_status"] = "partial_review_applied"
+    applied["semantic_revalidation_required"] = True
 
     outputs = [
         output
@@ -323,6 +360,15 @@ def apply_review_edits(
                 "source_artifact": "optimized_prompt.md",
             },
         )
+    _upsert_output(
+        outputs,
+        {
+            "path": "prompt_contract_review.json",
+            "kind": "json",
+            "status": "semantic_revalidation_required",
+            "source_artifact": "optimized_prompt.md",
+        },
+    )
     for backup_output in backup_outputs:
         _upsert_output(outputs, backup_output)
     final_artifacts["outputs"] = outputs
@@ -340,6 +386,8 @@ def apply_review_edits(
         list(final_artifacts.get("next_actions") or []),
         applied["application_status"],
     )
+    if RERUN_SEMANTIC_REVIEW_ACTION not in final_artifacts["next_actions"]:
+        final_artifacts["next_actions"].append(RERUN_SEMANTIC_REVIEW_ACTION)
 
     _write_json(applied_decisions_path, applied)
     _write_json(final_artifacts_path, final_artifacts)

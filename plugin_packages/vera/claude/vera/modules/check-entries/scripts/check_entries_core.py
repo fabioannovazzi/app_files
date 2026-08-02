@@ -16,6 +16,7 @@ import sys
 import tempfile
 import unicodedata
 import zipfile
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal
@@ -61,6 +62,7 @@ from vera_assurance import (  # noqa: E402
     parse_localized_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
+    validate_client_engagement_context,
     validate_gate_register,
     validate_reviewed_decision_receipt,
     validate_source_qualification,
@@ -504,6 +506,7 @@ __all__ = [
     "add_common_args",
     "configure_logging",
     "inspect_entries",
+    "load_client_engagement_context",
     "normalize_language",
     "run_entry_checks",
     "write_json",
@@ -611,6 +614,95 @@ def read_json(path: Path | None) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"Recipe must be a JSON object: {path}")
     return payload
+
+
+def load_client_engagement_context(path: Path) -> dict[str, Any]:
+    """Load one exact client workflow context created by Studio Archive."""
+
+    try:
+        payload = read_json(path.expanduser().resolve(strict=True))
+        return validate_client_engagement_context(payload)
+    except (OSError, ValueError) as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+
+
+def _is_path_within(path: Path, parent: Path) -> bool:
+    try:
+        path.relative_to(parent)
+    except ValueError:
+        return False
+    return True
+
+
+def _validated_client_check_stage(
+    value: Mapping[str, Any] | None,
+    *,
+    journal: Path,
+    journal_diagnostics: Mapping[str, Any],
+    support: Path,
+    output_dir: Path,
+    stage: str,
+    enforce_output_path: bool,
+) -> dict[str, Any] | None:
+    """Close Check Entries to one upstream client engagement and support set."""
+
+    if value is None:
+        return None
+    try:
+        context = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+    if context["workflow_id"] != "check-entries":
+        raise ValueError("Client engagement is not for Check Entries.")
+    upstream_value = journal_diagnostics.get("client_engagement")
+    if not isinstance(upstream_value, Mapping):
+        raise ValueError(
+            "Normalized journal has no Journal Sampling client engagement."
+        )
+    try:
+        upstream = validate_client_engagement_context(upstream_value)
+    except ValueError as exc:
+        raise ValueError(
+            f"Normalized journal client engagement is invalid: {exc}"
+        ) from exc
+    if upstream["workflow_id"] != "journal-sampling":
+        raise ValueError(
+            "Normalized journal was not produced by a Journal Sampling engagement."
+        )
+    current_folder = context["studio_client_folder"]
+    upstream_folder = upstream["studio_client_folder"]
+    if (
+        current_folder["studio_client_id"] != upstream_folder["studio_client_id"]
+        or context["engagement_id"] != upstream["engagement_id"]
+        or context["workspace_root"] != upstream["workspace_root"]
+    ):
+        raise ValueError(
+            "Journal Sampling and Check Entries belong to different client engagements."
+        )
+    expected_journal = (
+        Path(upstream["output_dir"]) / "normalization" / "normalized_journal.csv"
+    )
+    if journal.expanduser().resolve(strict=True) != expected_journal.resolve(
+        strict=True
+    ):
+        raise ValueError(
+            "Normalized journal does not belong to the selected client engagement."
+        )
+    support_path = support.expanduser().resolve(strict=True)
+    support_root = Path(context["input_dir"]).resolve(strict=True) / "support"
+    if support_path != support_root and not _is_path_within(support_path, support_root):
+        raise ValueError(
+            "Support is outside the selected client engagement support folder."
+        )
+    if stage not in {"inspection", "checks"}:
+        raise ValueError("Unsupported Check Entries client workflow stage.")
+    if enforce_output_path:
+        expected_output = Path(context["output_dir"]) / stage
+        if output_dir.expanduser().resolve() != expected_output.resolve():
+            raise ValueError(
+                "Check Entries output does not match the client engagement."
+            )
+    return context
 
 
 def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
@@ -1646,7 +1738,7 @@ def _load_journal_entries(
         "debit_amount": "debit",
         "credit_amount": "credit",
     }
-    return frame, {
+    result = {
         "source_file": path.name,
         "source_preparation_status": "qualified",
         "normalization_schema_version": NORMALIZATION_SCHEMA_VERSION,
@@ -1665,6 +1757,9 @@ def _load_journal_entries(
         "preview": frame.head(20).to_dicts(),
         "missing_required_mapping": [],
     }
+    if "client_engagement" in diagnostics:
+        result["client_engagement"] = diagnostics["client_engagement"]
+    return frame, result
 
 
 def _missing_mapping(mapping: dict[str, Any]) -> list[str]:
@@ -2877,6 +2972,7 @@ def inspect_entries(
     *,
     language: object | None = None,
     document_language: object | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> InspectionResult:
     """Inspect journal entries and PDF/XML support, then write Claude artifacts."""
 
@@ -2889,6 +2985,15 @@ def inspect_entries(
         journal,
         recipe,
         source_bytes=journal_bytes,
+    )
+    normalized_client_engagement = _validated_client_check_stage(
+        client_engagement,
+        journal=journal,
+        journal_diagnostics=journal_diag,
+        support=pdf_path,
+        output_dir=output_dir,
+        stage="inspection",
+        enforce_output_path=True,
     )
     captured_support = _load_captured_support(pdf_path)
     _validate_support_captures(captured_support)
@@ -2943,6 +3048,11 @@ def inspect_entries(
         output_dir / "inspection.json",
         {
             **languages,
+            **(
+                {"client_engagement": normalized_client_engagement}
+                if normalized_client_engagement is not None
+                else {}
+            ),
             "source_preparation_status": "qualified",
             "execution_eligibility": "eligible",
             "journal": journal_diag,
@@ -4388,6 +4498,8 @@ def _build_entry_checks_run(
     language: object | None = None,
     document_language: object | None = None,
     connector_name: str | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
+    enforce_client_output_path: bool = True,
 ) -> CheckRunResult:
     """Build one Check Entries run in an otherwise empty output directory."""
 
@@ -4408,6 +4520,15 @@ def _build_entry_checks_run(
         journal,
         recipe,
         source_bytes=journal_bytes,
+    )
+    normalized_client_engagement = _validated_client_check_stage(
+        client_engagement,
+        journal=journal,
+        journal_diagnostics=journal_diag,
+        support=pdf_path,
+        output_dir=output_dir,
+        stage="checks",
+        enforce_output_path=enforce_client_output_path,
     )
     captured_support = _load_captured_support(pdf_path)
     support_receipts = [capture.receipt for capture in captured_support.captures]
@@ -4510,6 +4631,7 @@ def _build_entry_checks_run(
         pdf_count=len(pdfs),
         invoice_count=len(invoices),
         connector_name=connector_name,
+        client_engagement=normalized_client_engagement,
     )
     write_json(
         inventory_path,
@@ -4848,6 +4970,11 @@ def _build_entry_checks_run(
     audit = {
         "schema_version": "check_entries.audit.v2",
         **languages,
+        **(
+            {"client_engagement": normalized_client_engagement}
+            if normalized_client_engagement is not None
+            else {}
+        ),
         "run_id": run_intake.run_id,
         "journal": journal.as_posix(),
         "pdf_path": pdf_path.as_posix(),
@@ -4930,6 +5057,7 @@ def _build_entry_checks_run(
         result_rows=result_frame.to_dicts(),
         pdf_inventory=pdf_inventory,
         audit=audit,
+        client_engagement=normalized_client_engagement,
     )
     _validate_support_captures(captured_support)
     validate_assurance_envelope(
@@ -4966,6 +5094,8 @@ def run_entry_checks(
     language: object | None = None,
     document_language: object | None = None,
     connector_name: str | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
+    _enforce_client_output_path: bool = True,
 ) -> CheckRunResult:
     """Build a fresh run and restore the exact prior directory on failure.
 
@@ -5008,6 +5138,8 @@ def run_entry_checks(
             language=language,
             document_language=document_language,
             connector_name=connector_name,
+            client_engagement=client_engagement,
+            enforce_client_output_path=_enforce_client_output_path,
         )
         succeeded = True
         return result

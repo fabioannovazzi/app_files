@@ -77,11 +77,12 @@ research phasing, or source domains. It only inventories raw
 jurisdiction/framework cues from the question text. It must not use output language as a legal fallback, and it must not silently treat French as Geneva,
 German as Zurich, English as UK, or any language as a jurisdiction.
 
-Before writing the optimized prompt, tell the user the output language, the
-detected legal-framework cues, and that the governing framework is unconfirmed.
-If `prompt_recipe.json["jurisdiction_confirmation"]["required"]` is true, stop
-and get the user's framework choice in chat before drafting. Do not use the
-fast path for required jurisdiction confirmation.
+Before writing the optimized prompt, decide the legal framework semantically
+from the question and available context. The deterministic recipe only records
+possible cues and never decides whether confirmation is required. Ask the user
+only when a material governing-law, forum, or source-framework ambiguity would
+change the answer; otherwise record the framework as confirmed or explicitly
+assumed in `answer_contract.json` and proceed.
 
 ## Complexity And Phasing Policy
 
@@ -144,21 +145,21 @@ structured intake, but it cannot programmatically enter or leave that mode.
 
 Run UX:
 
-1. First check whether there is a material research-angle decision: the
+1. First check semantically whether there is a material research-angle decision: the
    controlling frame, decision lens, risk appetite, scope boundaries, audience,
    or source posture. Ask the choice in chat when a material research-angle
    decision is still unresolved.
-2. When `angle_confirmation.required` is true in Default mode, state the
-   inferred angle and preferred default, then pause for chat confirmation or ask
-   the user to switch to Plan mode if they want the native choices. In Plan
-   mode, use `request_user_input` when available.
-3. State the inferred jurisdiction cues, posture, objective, and scope in plain
-   language after the angle is fixed.
-4. When `jurisdiction_confirmation.required` is true, handle it as a
-   plugin-specific legal-framework choice before drafting. In Default mode,
-   state the framework cues and proposed default or unresolved status; in Plan
-   mode, use the native widget when available.
-5. Ask only the material missing questions before drafting. Prefer 2-5
+2. Treat `angle_confirmation.required` and
+   `jurisdiction_confirmation.required` as non-decisions from the inspection
+   layer. Their normal value is `false` with decision owner `codex_or_user`.
+   Claude—not keyword inspection—decides whether to ask.
+3. State the selected or assumed jurisdiction, posture, objective, and scope in
+   plain language when useful. Do not force a confirmation ceremony when the
+   question already resolves them.
+4. If semantic review finds a material unresolved choice, propose the most
+   likely default and ask in chat; in Plan mode, use the native widget when
+   available.
+5. Ask only the material missing questions before drafting. Prefer at most 3
    numbered questions with a short "why this matters" phrase for each, unless
    a native widget is available for the same decision.
 6. Do not ask whether to optimize, package, validate, or write source-domain
@@ -170,9 +171,8 @@ Run UX:
    then proceed. Ask for extra approval only when a material unresolved choice,
    external write, unsafe action, or reduced/debug output request changes the
    work.
-8. If the user wants speed, or the missing facts can be handled as caveats,
-   continue with explicit assumptions instead of blocking, except for required
-   angle or jurisdiction confirmation.
+8. If missing facts can be handled as caveats, continue with explicit
+   assumptions instead of blocking.
 9. End with concise artifact paths and unresolved assumptions.
 
 Use tables only when they make the answer easier to scan. Do not ask the user
@@ -194,9 +194,11 @@ choices generated from the actual inputs and facts, not the generic model. Do
 not offer named laws or regulators unless the facts cue them or the user must
 supply a missing custom value.
 
-If `angle_confirmation` or `jurisdiction_confirmation` is required, resolve it
-before drafting. Use native Plan-mode choices when available; otherwise ask the
-options in chat and wait. Do not draft under an unconfirmed angle or framework.
+The inspection artifact does not decide that angle or jurisdiction
+confirmation is required and does not provide generic preferred options. Claude
+must make that semantic determination from the actual matter. When confirmation
+is materially required, generate fact-specific options, use native Plan-mode
+choices when available, or ask in chat and wait.
 
 For repository-wide Claude UX compatibility, map the standard artifacts to this
 conversational flow: a checklist can be a short progress note; a Run Intake table
@@ -211,20 +213,20 @@ run.
 
 ## Conversational Lawyer Intake
 
-After deterministic inspection, read `prompt_recipe.json["lawyer_intake"]`.
-Use it as an intake guide, not as UI copy. Translate or adapt the questions to
-the user's language and facts.
+After deterministic inspection, read `prompt_recipe.json["lawyer_intake"]` as
+a decision boundary. It intentionally contains no keyword-generated intake
+questions or document options. Generate any question from the user's facts and
+ask only when the answer would materially change the work.
 
 The intake should feel like a lawyer narrowing the case:
 
-- explain the inferred angle: e.g. "This looks like a defensive response to a
-  past event, not future planning";
+- explain the selected or assumed angle when it helps the user understand the
+  answer plan;
 - ask the missing facts that change legal analysis, deadlines, evidence, or
   output format;
 - explain why each question matters in one short clause;
 - avoid generic administrative questions when the answer can be inferred;
-- keep the fast path available by stating assumptions and caveats, except where
-  `angle_confirmation_required` or `jurisdiction_confirmation_required` is true.
+- keep the fast path available by stating assumptions and caveats.
 
 ## Core Principle
 
@@ -232,8 +234,10 @@ Claude owns the reasoning and instruction writing: professional intent,
 generation route, document type, research posture, objective, scope, source
 strategy, fact summary, and final wording.
 
-Deterministic Python code owns only question inventory, anchor extraction,
-answer-contract shape validation, prompt validation, and packaging. It must not
+Deterministic Python code owns only question inventory, exact anchor checks,
+answer-contract and semantic-review record shape validation, prompt-control
+presence checks, cross-field consistency, and packaging. Claude owns prompt-to-
+question and prompt-to-contract semantic conformance. Deterministic code must not
 select a legal domain, generation route, document type, jurisdiction, audience,
 source strategy, or validation posture. Plugin scripts must not make direct OpenAI API calls
 or other model API calls.
@@ -285,7 +289,10 @@ Optional:
 
 ## First Run Workflow
 
-1. Ask for the question text only if it is missing. Do not ask for working language, jurisdiction, posture, objective, scope, or output format as form fields when they can be inferred, except that required angle and jurisdiction confirmations must be explicit.
+1. Ask for the question text only if it is missing. Do not ask whether to
+   optimize it. Infer working language, jurisdiction, posture, objective,
+   scope, document type, and generation route semantically when they are clear.
+   Ask only about a consequential ambiguity.
 2. Save the source question in the work folder as `question.md` or `question.txt`.
 3. Run dependency checks from the plugin directory:
 
@@ -301,10 +308,22 @@ If requirements are missing, install from `requirements.txt` only when the envir
 python scripts/inspect_question.py <question-file> --output-dir <output-dir> --language <auto|it|en|fr|de|es>
 ```
 
-5. Read `question_inventory.json` and `prompt_recipe.json`. Summarize key fact anchors, explicit questions, jurisdiction hints, possible frameworks, `policy_source`, inferred posture/objective/scope, `angle_confirmation`, and `jurisdiction_confirmation`. Tell the user the output language, detected legal-framework cues, inferred research lens, proposed defaults, and unresolved assumptions. Do not describe a deterministic jurisdiction, legal topic, phasing choice, or source-domain list as resolved.
-6. If `prompt_recipe.json["angle_confirmation"]["required"]` is true, resolve the general angle-confirmation step before domain-specific choices. In Default mode, state the preferred angle and pause for chat confirmation or tell the user they can switch to Plan mode for native choices. In Plan mode, use `request_user_input` when available. Do not draft before the angle is fixed.
-7. If `prompt_recipe.json["jurisdiction_confirmation"]["required"]` is true, resolve the legal-framework choice before drafting. In Default mode, state the framework cues and unresolved points, then pause for chat confirmation or invite Plan mode for native choices. In Plan mode, use `request_user_input` when available. Do not draft under an unconfirmed framework.
-8. Use `prompt_recipe.json["lawyer_intake"]` to ask a short conversational intake when material facts are missing. Ask no more than five questions. If Plan mode is active and a question is a discrete material choice, prefer native choices. If the user wants a fast draft, continue with explicit assumptions and caveats only after any required angle and jurisdiction confirmation is resolved.
+5. Read `question_inventory.json` and `prompt_recipe.json`. Treat dates,
+   amounts, percentages, URLs, entity strings, explicit questions, and legal-
+   framework mentions as inventory. Treat posture, objective, scope, legal
+   topic, phasing, document type, route, and source strategy as model-led
+   decisions. The recipe's confirmation records say only that deterministic
+   inspection did not make those decisions.
+6. Understand the question semantically and choose the research angle,
+   document type, generation route, audience, purpose, framework, evidence
+   display, validation scope, and source strategy. Ask only when an unresolved
+   choice would materially change the answer.
+7. If confirmation is materially required, generate choices from the actual
+   facts. In Plan mode, prefer `request_user_input`; otherwise ask in chat and
+   wait. Do not use generic keyword-generated choices.
+8. Proceed with explicit assumptions and caveats when the matter is clear
+   enough to answer. The default journey is question to answer to validated
+   answer, without requiring the user to manage the optimizer.
 9. Write `draft_answer_contract.json` in Claude. It must contain:
    - `schema_version`: `1.0`;
    - `question_domain`: `legal`, `tax`, `compliance`, or `mixed`;
@@ -332,21 +351,32 @@ python scripts/inspect_question.py <question-file> --output-dir <output-dir> --l
    legal-realism, specialist scope-control, and anti-fabricated-authority
    instructions.
 11. Save the draft instructions in the work folder as `draft_prompt.md`.
-12. Curate qualified source websites from the confirmed framework and actual
+12. Semantically review `draft_prompt.md` against the source question and
+    `draft_answer_contract.json`. Write `draft_prompt_contract_review.json`
+    with `schema_version: 1.0`,
+    `review_method: model_led_semantic_conformance_review`, an assessment for
+    every required dimension, `overall_status`, and `reviewer_action`. The
+    required dimensions are `question_and_material_facts`, `generation_route`,
+    `document_type`, `purpose`, `audience`, `output_language`, `jurisdiction`,
+    `evidence_display`, `research_lens`, `validation_policy`, and
+    `source_strategy`. Every dimension must be `conforms` before delivery.
+13. Curate qualified source websites from the confirmed framework and actual
     issue, then save them in the work folder as
     `draft_source_domains.txt`. Do not copy domains from
     `prompt_recipe.json["source_domains"]`; that field is intentionally empty.
-13. Run deterministic validation:
+14. Run deterministic validation:
 
 ```bash
-python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt --answer-contract-file <output-dir>/draft_answer_contract.json
+python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt --answer-contract-file <output-dir>/draft_answer_contract.json --prompt-contract-review-file <output-dir>/draft_prompt_contract_review.json
 ```
 
-14. Read `prompt_audit.json`. If any check fails, repair
-   `draft_answer_contract.json` or `draft_prompt.md` in Claude and rerun
-   validation until the package passes or only explainable residual gaps
-   remain.
-15. Deliver `answer_contract.json`, `optimized_prompt.md`,
+15. Read `prompt_audit.json`. If any check fails, repair
+   `draft_answer_contract.json` or `draft_prompt.md` in Claude, rerun the
+   model-led prompt-contract review, and then rerun validation. Literal
+   explicit-question overlap is observational, not gating; exact missing dates,
+   amounts, percentages, URLs, and legal-form entity names are gating.
+16. Deliver `answer_contract.json`, `optimized_prompt.md`,
+   `prompt_contract_review.json`,
    `source_domains_comma.txt`, `source_domains.txt`, `prompt_package.md`,
    `README_HUMAN.md`, and `prompt_audit.json`. For
    `chatgpt_deep_research`, provide the ChatGPT-window handoff. For
@@ -396,6 +426,7 @@ optimized prompt must additionally require:
 - `prompt_recipe.json`;
 - `answer_contract.json`;
 - `optimized_prompt.md`;
+- `prompt_contract_review.json`;
 - `prompt_audit.json`;
 - `prompt_package.md`.
 - `source_domains.txt`.
@@ -407,9 +438,9 @@ optimized prompt must additionally require:
 - `applied_decisions.json` after reviewer decisions are applied;
 - `final_artifacts.json`.
 
-`draft_answer_contract.json`, `draft_prompt.md`, and
-`draft_source_domains.txt` are temporary working files during validation, not
-delivered outputs.
+`draft_answer_contract.json`, `draft_prompt.md`,
+`draft_prompt_contract_review.json`, and `draft_source_domains.txt` are
+temporary working files during validation, not delivered outputs.
 
 ## Cowork review handoff
 

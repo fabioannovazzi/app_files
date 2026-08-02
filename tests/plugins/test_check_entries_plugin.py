@@ -29,6 +29,9 @@ APPLY_REVIEW_EDITS_PATH = SCRIPT_DIR / "apply_review_edits.py"
 MCP_SERVER_PATH = ROOT / "plugins" / "check-entries" / "mcp" / "server.cjs"
 JOURNAL_SAMPLING_SCRIPT_DIR = ROOT / "plugins" / "journal-sampling" / "scripts"
 JOURNAL_SAMPLING_CORE_PATH = JOURNAL_SAMPLING_SCRIPT_DIR / "journal_sampling_core.py"
+STUDIO_ARCHIVE_CORE_PATH = (
+    ROOT / "plugins" / "studio-archive" / "scripts" / "archive_core.py"
+)
 
 
 def _tree_snapshot(path: Path) -> dict[str, tuple[bytes, int]]:
@@ -244,6 +247,18 @@ def load_apply_review_edits() -> Any:
     return module
 
 
+def load_studio_archive_core() -> Any:
+    """Load the local Studio Archive implementation for integration tests."""
+
+    module_name = "studio_archive_core_for_check_entries"
+    spec = importlib.util.spec_from_file_location(module_name, STUDIO_ARCHIVE_CORE_PATH)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def _save_workbook(path: Path, rows: list[list[Any]]) -> None:
     workbook = openpyxl.Workbook()
     sheet = workbook.active
@@ -293,38 +308,49 @@ def _load_journal_sampling_core() -> Any:
 def _qualified_journal(
     root: Path,
     rows: list[dict[str, object]],
+    *,
+    source_path: Path | None = None,
+    normalization_name: str = "journal_normalization",
+    client_engagement: dict[str, Any] | None = None,
+    write_source: bool = True,
 ) -> Path:
     root.mkdir(parents=True, exist_ok=True)
-    source_path = root / "entries.xlsx"
-    normalization_dir = root / "journal_normalization"
-    _save_workbook(
-        source_path,
-        [
+    source_path = source_path or root / "entries.xlsx"
+    source_path.parent.mkdir(parents=True, exist_ok=True)
+    normalization_dir = root / normalization_name
+    if write_source:
+        _save_workbook(
+            source_path,
             [
-                "Data",
-                "Nr. Reg",
-                "Conto",
-                "Descrizione conto",
-                "Descrizione",
-                "Dare",
-                "Avere",
-            ],
-            *[
                 [
-                    row["date"],
-                    row.get("movement"),
-                    row.get("account", "4000"),
-                    row.get("account_desc", "Trade payable"),
-                    row.get("description"),
-                    row.get("debit"),
-                    row.get("credit"),
-                ]
-                for row in rows
+                    "Data",
+                    "Nr. Reg",
+                    "Conto",
+                    "Descrizione conto",
+                    "Descrizione",
+                    "Dare",
+                    "Avere",
+                ],
+                *[
+                    [
+                        row["date"],
+                        row.get("movement"),
+                        row.get("account", "4000"),
+                        row.get("account_desc", "Trade payable"),
+                        row.get("description"),
+                        row.get("debit"),
+                        row.get("credit"),
+                    ]
+                    for row in rows
+                ],
             ],
-        ],
-    )
+        )
     sampling_core = _load_journal_sampling_core()
-    sampling_core.inspect_path(source_path, normalization_dir)
+    sampling_core.inspect_path(
+        source_path,
+        normalization_dir,
+        client_engagement=client_engagement,
+    )
     recipe_path = normalization_dir / "suggested_recipe.json"
     recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
     for index, (source_name, entry) in enumerate(
@@ -389,9 +415,69 @@ def _qualified_journal(
         source_path,
         normalization_dir,
         recipe_path,
+        client_engagement=client_engagement,
     )
     assert normalized.diagnostics["population_status"] == "complete"
     return normalization_dir / "normalized_journal.csv"
+
+
+def _client_bound_check_inputs(
+    tmp_path: Path,
+    rows: list[dict[str, object]],
+) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
+    """Create one valid Journal Sampling -> Check Entries client boundary."""
+
+    from vera_assurance import (
+        build_client_engagement_context,
+        build_studio_client_folder_binding,
+    )
+
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Zecca SPA"
+    input_dir = client_root / "Vera engagements" / ("eng_" + "1" * 24) / "inputs"
+    journal_source = input_dir / "journal" / "entries.xlsx"
+    support = input_dir / "support"
+    journal_source.parent.mkdir(parents=True)
+    support.mkdir(parents=True)
+    workspace_root = tmp_path / "vera-client-work"
+    workspace_root.mkdir()
+    relative_dir = "Zecca SPA"
+    scope_id = (
+        "scope_"
+        + hashlib.sha256(relative_dir.casefold().encode("utf-8")).hexdigest()[:24]
+    )
+    folder = build_studio_client_folder_binding(
+        studio_client_id="client_" + "a" * 24,
+        scope_id=scope_id,
+        archive_root=archive_root,
+        scope_relative_dir=relative_dir,
+        client_root=client_root,
+        display_name=relative_dir,
+    )
+    journal_context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="eng_" + "1" * 24,
+        workflow_id="journal-sampling",
+        run_id="run_" + "2" * 24,
+        input_dir=input_dir,
+        workspace_root=workspace_root,
+    )
+    normalized = _qualified_journal(
+        Path(journal_context["output_dir"]),
+        rows,
+        source_path=journal_source,
+        normalization_name="normalization",
+        client_engagement=journal_context,
+    )
+    check_context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="eng_" + "1" * 24,
+        workflow_id="check-entries",
+        run_id="run_" + "3" * 24,
+        input_dir=input_dir,
+        workspace_root=workspace_root,
+    )
+    return normalized, support, journal_context, check_context
 
 
 def _fatturapa_xml(
@@ -3315,6 +3401,274 @@ def test_audit_hash_closes_and_professional_gate_stays_withheld(
         "withheld"
     )
     assert audit["assurance_gates"]["report_ready"] is False
+
+
+def test_check_entries_run_is_bound_to_journal_sampling_client_engagement(
+    tmp_path: Path,
+) -> None:
+    # Arrange
+    core = load_core()
+    journal, support, journal_context, check_context = _client_bound_check_inputs(
+        tmp_path,
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "M-1001",
+                "description": "Invoice payment",
+                "debit": "123.45",
+            }
+        ],
+    )
+    (support / "invoice.pdf").write_bytes(
+        _text_pdf_bytes(["Movement M-1001", "EUR 123.45", "02/01/2025"])
+    )
+    output_dir = Path(check_context["output_dir"])
+
+    # Act
+    inspection = core.inspect_entries(
+        journal,
+        support,
+        output_dir / "inspection",
+        client_engagement=check_context,
+    )
+    result = core.run_entry_checks(
+        journal,
+        support,
+        output_dir / "checks",
+        client_engagement=check_context,
+    )
+
+    # Assert
+    assert inspection.journal["client_engagement"] == journal_context
+    assert result.audit["client_engagement"] == check_context
+    for filename in (
+        "run_intake.json",
+        "review_payload.json",
+        "final_artifacts.json",
+    ):
+        payload = json.loads((output_dir / "checks" / filename).read_text())
+        assert payload["client_engagement"] == check_context
+
+
+def test_full_chat_workflow_resumes_sample_and_checks_in_same_engagement(
+    tmp_path: Path,
+) -> None:
+    # Arrange: a professional identifies an existing client and supplies a journal.
+    check_core = load_core()
+    archive_core = load_studio_archive_core()
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Zecca SPA"
+    client_root.mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = archive_core.configure_archive(archive_root, state_dir=state_dir)
+    scope_id = configured["scopes"][0]["scope_id"]
+    client_id = archive_core.set_studio_client_identity(
+        scope_id,
+        legal_names=["Zecca SPA"],
+        state_dir=state_dir,
+    )["client"]["client_id"]
+    rows = [
+        {
+            "date": "2025-01-02",
+            "movement": "M-1001",
+            "description": "Invoice payment",
+            "debit": "123.45",
+        }
+    ]
+    received = tmp_path / "received"
+    received.mkdir()
+    original_journal = received / "zecca-journal.xlsx"
+    _save_workbook(
+        original_journal,
+        [
+            [
+                "Data",
+                "Nr. Reg",
+                "Conto",
+                "Descrizione conto",
+                "Descrizione",
+                "Dare",
+                "Avere",
+            ],
+            [
+                "2025-01-02",
+                "M-1001",
+                "4000",
+                "Trade payable",
+                "Invoice payment",
+                "123.45",
+                None,
+            ],
+        ],
+    )
+    original_journal_bytes = original_journal.read_bytes()
+
+    # Act: the journal copy is sampled under the returned durable context.
+    journal_import = archive_core.import_studio_client_document(
+        client_id,
+        original_journal,
+        "journal",
+        engagement_label="Zecca 2025 journal",
+        state_dir=state_dir,
+    )
+    journal_context = journal_import["client_engagement"]
+    normalized = _qualified_journal(
+        Path(journal_context["output_dir"]),
+        rows,
+        source_path=Path(journal_import["imported_path"]),
+        normalization_name="normalization",
+        client_engagement=journal_context,
+        write_source=False,
+    )
+    sampling_core = _load_journal_sampling_core()
+    sampling_core.run_sample(
+        normalized,
+        Path(journal_context["output_dir"]) / "sample",
+        size=1,
+        client_engagement=journal_context,
+    )
+
+    # Act: a later chat resumes the engagement, imports support, and checks it.
+    resumed = archive_core.list_studio_client_engagements(
+        client_id,
+        state_dir=state_dir,
+    )
+    engagement = resumed["engagements"][0]
+    journal_run = next(
+        run
+        for run in engagement["workflow_runs"]
+        if run["workflow_id"] == "journal-sampling"
+    )
+    original_support = received / "invoice.pdf"
+    original_support.write_bytes(
+        _text_pdf_bytes(["Movement M-1001", "EUR 123.45", "02/01/2025"])
+    )
+    original_support_bytes = original_support.read_bytes()
+    support_import = archive_core.import_studio_client_document(
+        client_id,
+        original_support,
+        "support",
+        engagement_id=engagement["engagement_id"],
+        state_dir=state_dir,
+    )
+    check_context = support_import["client_engagement"]
+    check_output = Path(check_context["output_dir"])
+    check_core.inspect_entries(
+        Path(journal_run["normalized_journal_path"]),
+        Path(support_import["imported_path"]),
+        check_output / "inspection",
+        client_engagement=check_context,
+    )
+    result = check_core.run_entry_checks(
+        Path(journal_run["normalized_journal_path"]),
+        Path(support_import["imported_path"]),
+        check_output / "checks",
+        client_engagement=check_context,
+    )
+    completed = archive_core.list_studio_client_engagements(
+        client_id,
+        state_dir=state_dir,
+    )["engagements"][0]
+
+    # Assert
+    assert original_journal.read_bytes() == original_journal_bytes
+    assert original_support.read_bytes() == original_support_bytes
+    assert journal_run["normalization_available"] is True
+    assert journal_run["sample_available"] is True
+    assert (
+        result.audit["client_engagement"]["engagement_id"]
+        == engagement["engagement_id"]
+    )
+    assert (
+        result.audit["client_engagement"]["studio_client_folder"]["studio_client_id"]
+        == client_id
+    )
+    check_run = next(
+        run
+        for run in completed["workflow_runs"]
+        if run["workflow_id"] == "check-entries"
+    )
+    assert check_run["checks_available"] is True
+
+
+def test_check_entries_rejects_cross_client_context(tmp_path: Path) -> None:
+    # Arrange
+    core = load_core()
+    from vera_assurance import (
+        build_client_engagement_context,
+        build_studio_client_folder_binding,
+    )
+
+    journal, support, _, check_context = _client_bound_check_inputs(
+        tmp_path,
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "M-1001",
+                "description": "Invoice payment",
+                "debit": "123.45",
+            }
+        ],
+    )
+    other_root = tmp_path / "Studio" / "Other Client"
+    other_input = other_root / "Vera engagements" / ("eng_" + "4" * 24) / "inputs"
+    (other_input / "support").mkdir(parents=True)
+    other_relative = "Other Client"
+    other_folder = build_studio_client_folder_binding(
+        studio_client_id="client_" + "b" * 24,
+        scope_id="scope_"
+        + hashlib.sha256(other_relative.casefold().encode("utf-8")).hexdigest()[:24],
+        archive_root=tmp_path / "Studio",
+        scope_relative_dir=other_relative,
+        client_root=other_root,
+        display_name=other_relative,
+    )
+    other_context = build_client_engagement_context(
+        studio_client_folder=other_folder,
+        engagement_id="eng_" + "4" * 24,
+        workflow_id="check-entries",
+        run_id="run_" + "5" * 24,
+        input_dir=other_input,
+        workspace_root=Path(check_context["workspace_root"]),
+    )
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="different client engagements"):
+        core.inspect_entries(
+            journal,
+            support,
+            Path(other_context["output_dir"]) / "inspection",
+            client_engagement=other_context,
+        )
+
+
+def test_check_entries_rejects_support_outside_selected_engagement(
+    tmp_path: Path,
+) -> None:
+    # Arrange
+    core = load_core()
+    journal, _, _, check_context = _client_bound_check_inputs(
+        tmp_path,
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "M-1001",
+                "description": "Invoice payment",
+                "debit": "123.45",
+            }
+        ],
+    )
+    foreign_support = tmp_path / "received elsewhere"
+    foreign_support.mkdir()
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="outside the selected client engagement"):
+        core.inspect_entries(
+            journal,
+            foreign_support,
+            Path(check_context["output_dir"]) / "inspection",
+            client_engagement=check_context,
+        )
 
 
 def test_support_swap_attack_uses_captured_bytes_not_live_reread(

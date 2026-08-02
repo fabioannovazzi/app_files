@@ -829,6 +829,7 @@ def write_run_intake(
     pdf_count: int,
     invoice_count: int = 0,
     connector_name: str | None = None,
+    client_engagement: dict[str, Any] | None = None,
 ) -> RunIntakeResult:
     """Write the run intake contract for review and replay."""
 
@@ -845,6 +846,11 @@ def write_run_intake(
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
+        **(
+            {"client_engagement": client_engagement}
+            if client_engagement is not None
+            else {}
+        ),
         "run_id": run_id,
         "created_at": _utc_now(),
         "language": language,
@@ -951,6 +957,7 @@ def write_review_session_artifacts(
     result_rows: Sequence[dict[str, Any]],
     pdf_inventory: Sequence[dict[str, Any]],
     audit: dict[str, Any],
+    client_engagement: dict[str, Any] | None = None,
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact index."""
 
@@ -965,6 +972,11 @@ def write_review_session_artifacts(
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
+        **(
+            {"client_engagement": client_engagement}
+            if client_engagement is not None
+            else {}
+        ),
         "run_id": run_id,
         "created_at": _utc_now(),
         "language": language,
@@ -1038,6 +1050,11 @@ def write_review_session_artifacts(
             "schema_version": SCHEMA_VERSION,
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
+            **(
+                {"client_engagement": client_engagement}
+                if client_engagement is not None
+                else {}
+            ),
             "run_id": run_id,
             "decided_at": None,
             "decision_source": "not_collected",
@@ -1079,6 +1096,11 @@ def write_review_session_artifacts(
             "schema_version": SCHEMA_VERSION,
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
+            **(
+                {"client_engagement": client_engagement}
+                if client_engagement is not None
+                else {}
+            ),
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": outputs,

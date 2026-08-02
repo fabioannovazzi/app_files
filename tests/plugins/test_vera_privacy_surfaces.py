@@ -456,9 +456,16 @@ def test_privacy_fingerprint_governs_workflow_wrapper_references(
     plugins_root = tmp_path / "repository" / "plugins"
     vera_root = plugins_root / "vera"
     component_root = plugins_root / "studio-archive"
+    shared_assurance = (
+        plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
+    )
     shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "studio-archive", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
+        shared_assurance,
+    )
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
         shared_ocr,

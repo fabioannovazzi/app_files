@@ -39,7 +39,9 @@ esiste un adapter qualificato o una preparazione esterna riveduta.
 ## Primo prompt
 
 ```text
-Usa il plugin Riconciliazione partite sulla cartella /percorso/lavoro/input.
+Usa il plugin Riconciliazione partite sulla cartella
+/percorso/Studio/Cliente/input, collegata allo scope cliente selezionato in
+Studio Archive. Incarico: audit-2025. Workspace privato: /percorso/Vera-Work.
 Periodo 2025, cut-off 31/12/2025.
 Lingua: it.
 Chiedimi le assunzioni mancanti e prepara Excel/Word con dettaglio righe, evidenze, review Codex e punti da verificare.
@@ -64,6 +66,11 @@ se il collegamento alla banca è ambiguo.
 
 Per un primo lavoro completo, Codex deve raccogliere e confermare questi elementi prima di lanciare gli helper:
 
+- binding `client_folder` ottenuto da un unico `scope_id` corrente di Studio
+  Archive, ID canonico dell'incarico e `workspace_root` privato fuori dalla
+  cartella evidenze; il runner rifiuta input di altri clienti e deriva da questi
+  valori il percorso client/incarico/workflow/run senza accettare un output
+  arbitrario;
 - cartella input con partite aperte, mastrini, banche, distinte, factoring/anticipi e compensazioni disponibili;
 - periodo e cut-off della riconciliazione;
 - file che contiene la popolazione da riconciliare;
@@ -109,8 +116,9 @@ del manifest e prima di ogni superficie RPC pubblica.
 
 Gli output di assurance principali sono:
 
-- `prepared_records.json`, sigillato prima della riconciliazione;
-- `assurance_final_outputs/reconciliation_results.json`, record canonico v2
+- `prepared_records.json`, sigillato prima della riconciliazione e legato allo
+  stesso cliente, incarico, input e percorso run;
+- `assurance_final_outputs/reconciliation_results.json`, record canonico v3
   incluso nel perimetro finale. Conserva qualifiche e allocazioni, la sezione
   `source_processing` (problemi di estrazione e controlli mastro/giornale) e la
   sezione `analyses` con le stesse analisi rese nel workbook. Il run non scrive

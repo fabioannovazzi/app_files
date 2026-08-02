@@ -94,6 +94,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 import re
 import sys
 import zipfile
+from collections.abc import Mapping
 from functools import wraps
 from pathlib import Path
 from typing import Any
@@ -313,6 +314,7 @@ def build_reconciliation_artifacts(
     source_artifact_root: str | Path | None = None,
     source_artifact_receipts: list[dict[str, Any]] | None = None,
     reviewed_source_decision_receipts: list[dict[str, Any]] | None = None,
+    extraction_errors: list[dict[str, Any]] | None = None,
     normalized_records: list[dict[str, Any]] | None = None,
     ledger_balance_rows: list[dict[str, Any]] | None = None,
     account_rollforward_check: list[dict[str, Any]] | None = None,
@@ -324,6 +326,8 @@ def build_reconciliation_artifacts(
     review_high_value_count: int = 10,
     review_random_count: int = 20,
     require_completed_review: bool = False,
+    client_engagement: Mapping[str, Any] | None = None,
+    run_id: str | None = None,
     metadata: dict[str, Any] | None = None,
     title: str | None = None,
     narrative: str = "",
@@ -353,6 +357,7 @@ def build_reconciliation_artifacts(
         source_receipts=source_artifact_receipts or [],
         reviewed_source_decisions=reviewed_source_decision_receipts or [],
         source_qualifications=source_qualifications or [],
+        client_engagement=client_engagement,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     review_authority = assurance_context.get("professional_review_authority")
@@ -364,6 +369,15 @@ def build_reconciliation_artifacts(
         and review_authority.get("run_id")
         else None
     )
+    normalized_client_engagement = assurance_context.get("client_engagement")
+    if (
+        isinstance(normalized_client_engagement, dict)
+        and successor_run_id is not None
+        and successor_run_id != normalized_client_engagement.get("run_id")
+    ):
+        raise ValueError(
+            "Successor review run ID does not match the client engagement run."
+        )
     run_intake = write_run_intake(
         out_dir,
         assumptions=assumptions,
@@ -375,7 +389,8 @@ def build_reconciliation_artifacts(
             if source_inventory
             else out_dir
         ),
-        run_id=successor_run_id,
+        client_engagement=normalized_client_engagement,
+        run_id=successor_run_id or run_id,
     )
 
     reconciliation_rows = reconcile_open_items(open_items, evidence_rows, assumptions)
@@ -409,6 +424,7 @@ def build_reconciliation_artifacts(
             high_value_count=review_high_value_count,
             random_count=review_random_count,
             challenged_rows=challenged_rows,
+            priority_rows=review_signals,
         )
     )
     checks = [
@@ -421,6 +437,7 @@ def build_reconciliation_artifacts(
             high_value_count=review_high_value_count,
             random_count=review_random_count,
             challenged_rows=challenged_rows,
+            priority_rows=review_signals,
         ),
     ]
     if fail_on_check_errors and not checks_pass(checks):
@@ -436,6 +453,7 @@ def build_reconciliation_artifacts(
     sheets = build_audit_workbook_sheets(
         assumptions=assumptions,
         source_inventory=source_inventory or [],
+        extraction_errors=extraction_errors,
         normalized_records=normalized,
         reconciliation_rows=reconciliation_rows,
         bank_allocation_candidates=bank_candidates,
@@ -494,12 +512,33 @@ def build_reconciliation_artifacts(
     for office_path in (excel_path, accountant_report_path, word_path):
         _stabilize_office_package(Path(office_path))
 
+    source_processing = {
+        "extraction_errors": extraction_errors or [],
+        "ledger_balance_rows": ledger_balance_rows or [],
+        "journal_rollforward_rows": aggregate_rollforward_rows or [],
+        "journal_rollforward_summary": aggregate_rollforward_summary or [],
+    }
+    analyses = {
+        "aging_summary": aging_summary,
+        "bank_allocation_candidates": bank_candidates,
+        "cutoff_window_movements": cutoff_movements,
+        "document_source_map": source_map,
+        "evidence_concentration": evidence_concentration,
+        "external_evidence_detail": external_detail,
+        "external_evidence_summary": external_summary,
+        "post_cutoff_candidates": post_cutoff_candidates,
+        "reversal_candidates": reversal_candidates,
+        "review_signals": review_signals,
+    }
     result = {
         "excel_path": str(excel_path),
         "accountant_report_path": str(accountant_report_path),
         "word_path": str(word_path),
         "assumptions": assumptions,
+        "client_engagement": normalized_client_engagement,
         "source_qualifications": source_qualifications or [],
+        "source_processing": source_processing,
+        "analyses": analyses,
         "reconciliation_rows": reconciliation_rows,
         "bank_allocation_candidates": bank_candidates,
         "relationship_allocation_ledgers": relationship_allocation_ledgers,
@@ -547,6 +586,8 @@ def build_reconciliation_artifacts(
             checks=checks,
             review_rows=review,
             source_qualifications=source_qualifications or [],
+            source_processing=source_processing,
+            analyses=analyses,
             declared_outputs=[
                 Path(excel_path),
                 Path(accountant_report_path),

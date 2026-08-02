@@ -19,6 +19,7 @@ ASSURANCE_CONSUMERS = {
     "concordato-plan-review",
     "journal-bank-reconciliation",
     "report-builder",
+    "studio-archive",
 }
 ASSURANCE_FILES = {
     "vera_assurance/__init__.py",
