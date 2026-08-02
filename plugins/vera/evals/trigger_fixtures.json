@@ -38,6 +38,16 @@
       "required_signals": ["Vera", "Deep Research", "siti", "validalo"]
     },
     {
+      "id": "implicit-legal-question-journey",
+      "prompt": "Secondo il diritto italiano, quali rimedi ha il conduttore per questi vizi dell'immobile?",
+      "required_signals": ["quesito legale", "contratto di risposta", "risposta validata"]
+    },
+    {
+      "id": "implicit-one-page-letter-journey",
+      "prompt": "Scrivi una lettera di una pagina al cliente sulla contestazione allegata e verifica fonti, ragionamento e punti di giudizio professionale.",
+      "required_signals": ["lettera di una pagina", "validazione", "giudizio professionale"]
+    },
+    {
       "id": "vera-studio-archive",
       "prompt": "Vera, cerca nell'archivio condiviso dello studio i precedenti sulla cessione di quote e cita solo i passaggi verificati.",
       "required_signals": ["Vera", "archivio condiviso", "passaggi verificati"]

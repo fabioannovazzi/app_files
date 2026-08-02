@@ -1,6 +1,6 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Validate professional answers with separate source-identity, semantic-support, reasoning, treatment, coverage, and professional-judgment records.",
   "author": {
     "name": "Mparanza",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Validate Answer",
     "shortDescription": "Review reports, memos, and letters with explicit source identity, semantic support, reasoning, treatment, and judgment boundaries.",
-    "longDescription": "Codex workflow for validating generated or supplied professional answers, including Deep Research reports, memos, and one-page letters. Codex reviews answer-contract conformance and material-claim coverage, then assesses source identity, semantic support, inferential reasoning, issue-specific treatment, claim disposition, and professional-judgment dependencies. Deterministic scripts inspect document and source access, capture cited sources, resolve exact identifiers, record exact passage presence only within the specifically cited source snapshot, validate answer-contract and review-record shape, and package the review. Exact or fuzzy matching never decides semantic support. Record completeness does not certify legal correctness, and recording a proposed fix does not make an answer final: the reviewed or corrected answer must be regenerated semantically. The scripts do not make direct model API calls.",
+    "longDescription": "Codex workflow for validating generated or supplied professional answers, including Deep Research reports, memos, and one-page letters. Codex reviews answer-contract conformance and material-claim coverage, then assesses source identity, semantic support, inferential reasoning, issue-specific treatment, claim disposition, and professional-judgment dependencies. Deterministic scripts inspect document and source access, capture cited sources, resolve exact identifiers, record exact passage presence only within the specifically cited source snapshot, validate answer-contract and review-record shape, reject mechanically contradictory review states, and package the review. Exact or fuzzy matching never decides semantic support. Record completeness does not certify legal correctness, reviewer rejection cannot produce delivery readiness, and recording a proposed fix does not make an answer final: the reviewed or corrected answer must be regenerated semantically. The scripts do not make direct model API calls.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",

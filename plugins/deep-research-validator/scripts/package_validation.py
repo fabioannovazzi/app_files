@@ -479,6 +479,101 @@ def _issues_are_valid(value: object, *, allowed_types: set[str]) -> bool:
     return not ("none" in issue_types and len(issue_types) != 1)
 
 
+def _non_none_issues(value: object) -> list[dict[str, Any]]:
+    """Return recorded issue treatments other than the explicit no-issue marker."""
+
+    if not isinstance(value, list):
+        return []
+    return [
+        issue
+        for issue in value
+        if isinstance(issue, dict) and _clean_text(issue.get("type")) != "none"
+    ]
+
+
+def _claim_consistency_errors(claim: dict[str, Any]) -> list[str]:
+    """Return mechanically provable contradictions within one review record.
+
+    This function does not decide whether a source supports a claim or whether
+    legal reasoning is sound. It only prevents the validator from treating a
+    record as complete when the reviewer's own coded assessments conflict.
+    """
+
+    errors: list[str] = []
+    source_checks = claim.get("source_checks")
+    support = claim.get("support") if isinstance(claim.get("support"), dict) else {}
+    reasoning = (
+        claim.get("reasoning") if isinstance(claim.get("reasoning"), dict) else {}
+    )
+    judgment = (
+        claim.get("professional_judgment")
+        if isinstance(claim.get("professional_judgment"), dict)
+        else {}
+    )
+    disposition = (
+        claim.get("disposition") if isinstance(claim.get("disposition"), dict) else {}
+    )
+    support_status = _clean_text(support.get("status"))
+    reasoning_status = _clean_text(reasoning.get("status"))
+    judgment_status = _clean_text(judgment.get("status"))
+    disposition_status = _clean_text(disposition.get("status"))
+    non_none_issues = _non_none_issues(claim.get("issues"))
+
+    if support_status in {"supported", "partially_supported", "contradicted"} and not (
+        isinstance(source_checks, list) and source_checks
+    ):
+        errors.append("source_check_required_for_support_assessment")
+    identity_attention = isinstance(source_checks, list) and any(
+        isinstance(source_check, dict)
+        and _clean_text(source_check.get("identity_status")) != "matches_cited_source"
+        for source_check in source_checks
+    )
+    semantic_attention = support_status != "supported" or reasoning_status in {
+        "partially_sound",
+        "unsound",
+        "uncertain",
+    }
+    judgment_attention = judgment_status in {
+        "professional_judgment_required",
+        "contested",
+        "uncertain",
+    }
+    if (identity_attention or semantic_attention or judgment_attention) and not (
+        non_none_issues
+    ):
+        errors.append("attention_assessment_requires_issue_treatment")
+    if support_status in {"not_supported", "contradicted"} and (
+        disposition_status == "retain"
+    ):
+        errors.append("unsupported_or_contradicted_claim_cannot_be_retained")
+    if reasoning_status == "unsound" and disposition_status == "retain":
+        errors.append("unsound_reasoning_cannot_be_retained")
+    return errors
+
+
+def _contract_consistency_errors(contract_review: object) -> list[str]:
+    """Return contradictions between conformance statuses and contract issues."""
+
+    if not isinstance(contract_review, dict):
+        return []
+    attention = any(
+        isinstance(contract_review.get(dimension), dict)
+        and _clean_text(contract_review[dimension].get("status")) != "conforms"
+        for dimension in CONTRACT_REVIEW_DIMENSIONS
+    )
+    issue_types = {
+        _clean_text(issue.get("type"))
+        for issue in contract_review.get("issues", [])
+        if isinstance(issue, dict)
+    }
+    errors: list[str] = []
+    if attention and "answer_contract_failure" not in issue_types:
+        errors.append("contract_attention_requires_failure_treatment")
+    if not attention and "answer_contract_failure" in issue_types:
+        errors.append("contract_failure_treatment_requires_attention_status")
+    return errors
+
+
 def _delivery_readiness(
     *,
     record_integrity_status: str,
@@ -574,6 +669,10 @@ def build_audit(
     coverage_scope = (
         _clean_text(coverage.get("scope")) if isinstance(coverage, dict) else ""
     )
+    coverage_reviewer_rejected = (
+        isinstance(coverage, dict)
+        and _clean_text(coverage.get("reviewer_action")) == "reject"
+    )
     contract_scope = _clean_text(answer_contract.get("validation_scope"))
     if coverage_valid and coverage_scope != contract_scope:
         failed_checks.append("coverage_matches_answer_contract")
@@ -605,6 +704,13 @@ def build_audit(
             contract_review_valid = False
     if not contract_review_valid:
         failed_checks.append("contract_review_complete")
+    contract_reviewer_rejected = (
+        isinstance(contract_review, dict)
+        and _clean_text(contract_review.get("reviewer_action")) == "reject"
+    )
+    consistency_errors: list[dict[str, Any]] = []
+    for error in _contract_consistency_errors(contract_review):
+        consistency_errors.append({"scope": "contract_review", "error": error})
 
     invalid_claim_indices: list[int] = []
     invalid_source_check_indices: list[int] = []
@@ -730,6 +836,10 @@ def build_audit(
 
         if not (claim_valid and support_valid and reasoning_valid and judgment_valid):
             invalid_claim_indices.append(claim_index)
+        for error in _claim_consistency_errors(claim):
+            consistency_errors.append(
+                {"scope": "claim", "claim_index": claim_index, "error": error}
+            )
         claim_observations.append(
             {
                 "claim_index": claim_index,
@@ -747,6 +857,13 @@ def build_audit(
         failed_checks.append("claim_dispositions_complete")
     if invalid_reviewer_action_indices:
         failed_checks.append("reviewer_actions_valid")
+
+    rejected_claim_indices = [
+        _claim_index(claim.get("claim_index"), position)
+        for position, claim in enumerate(claims, start=1)
+        if isinstance(claim, dict)
+        and _clean_text(claim.get("reviewer_action")) == "reject"
+    ]
 
     overall = claims_review.get("overall_assessment")
     overall_valid = (
@@ -785,6 +902,76 @@ def build_audit(
     if not revision_valid:
         failed_checks.append("document_revision_complete")
 
+    overall_outcome = _clean_text(overall.get("outcome")) if overall_valid else ""
+    attention_recorded = any(
+        (
+            support_attention_claims,
+            reasoning_attention_claims,
+            judgment_dependent_claims,
+            source_identity_attention_claims,
+            pending_treatment_claims,
+            blocked_treatment_claims,
+            contract_attention,
+            rejected_claim_indices,
+            ["coverage"] if coverage_reviewer_rejected else [],
+            ["contract"] if contract_reviewer_rejected else [],
+        )
+    )
+    if attention_recorded and overall_outcome == "no_material_defect_identified":
+        consistency_errors.append(
+            {
+                "scope": "overall_assessment",
+                "error": "recorded_attention_conflicts_with_no_material_defect",
+            }
+        )
+    allowed_outcomes_by_revision = {
+        "not_required": {
+            "no_material_defect_identified",
+            "evidence_limited",
+            "uncertain",
+        },
+        "completed": {"corrected"},
+        "required": {
+            "correction_required",
+            "evidence_limited",
+            "professional_review_required",
+            "not_reliable",
+            "uncertain",
+        },
+        "blocked": {"evidence_limited", "not_reliable", "uncertain"},
+        "professional_review_required": {
+            "professional_review_required",
+            "uncertain",
+        },
+    }
+    if (
+        revision_status in allowed_outcomes_by_revision
+        and overall_outcome
+        and overall_outcome not in allowed_outcomes_by_revision[revision_status]
+    ):
+        consistency_errors.append(
+            {
+                "scope": "document_revision",
+                "error": "revision_status_conflicts_with_overall_outcome",
+            }
+        )
+    if revision_status == "not_required" and (
+        pending_treatment_claims
+        or blocked_treatment_claims
+        or contract_attention
+        or rejected_claim_indices
+        or coverage_reviewer_rejected
+        or contract_reviewer_rejected
+    ):
+        consistency_errors.append(
+            {
+                "scope": "document_revision",
+                "error": "unresolved_treatment_conflicts_with_no_revision",
+            }
+        )
+    if consistency_errors:
+        failed_checks.append("review_state_consistent")
+
     failed_checks = list(dict.fromkeys(failed_checks))
     record_integrity_status = (
         "record_complete" if not failed_checks else "record_incomplete"
@@ -794,11 +981,15 @@ def build_audit(
         revision_status=revision_status,
         judgment_dependent=bool(judgment_dependent_claims),
         evidence_limited=bool(evidence_limited_claims),
-        contract_attention=bool(contract_attention),
-        pending_treatments=bool(pending_treatment_claims),
+        contract_attention=bool(contract_attention or contract_reviewer_rejected),
+        pending_treatments=bool(
+            pending_treatment_claims
+            or rejected_claim_indices
+            or coverage_reviewer_rejected
+        ),
         blocked_treatments=bool(blocked_treatment_claims),
         coverage_limited=coverage_scope != "all_material_claims",
-        overall_outcome=_clean_text(overall.get("outcome")) if overall_valid else "",
+        overall_outcome=overall_outcome,
     )
     return {
         "status": record_integrity_status,
@@ -820,6 +1011,10 @@ def build_audit(
         "invalid_issue_indices": sorted(set(invalid_issue_indices)),
         "invalid_disposition_indices": sorted(set(invalid_disposition_indices)),
         "invalid_reviewer_action_indices": sorted(set(invalid_reviewer_action_indices)),
+        "rejected_claim_indices": sorted(set(rejected_claim_indices)),
+        "coverage_reviewer_rejected": coverage_reviewer_rejected,
+        "contract_reviewer_rejected": contract_reviewer_rejected,
+        "consistency_errors": consistency_errors,
         "contract_attention_dimensions": contract_attention,
         "coverage_scope": coverage_scope,
         "claim_observations": claim_observations,
@@ -831,7 +1026,8 @@ def build_audit(
             "mechanically_observed": (
                 "document and captured-source availability, exact identifier "
                 "resolution, exact passage presence in the cited source snapshot, "
-                "and review-record shape"
+                "review-record shape, and contradictions among explicit review "
+                "status fields"
             ),
             "semantically_assessed": (
                 "source identity and authority, claim meaning, entailment, "

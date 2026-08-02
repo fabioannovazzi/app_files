@@ -20,25 +20,23 @@ Use these codes in summaries and in any working notes:
 ## Conversational Lawyer Intake
 
 Codex should not recreate the old web form. After deterministic inspection,
-use the generated `lawyer_intake` recipe as a conversational guide:
+use the generated `lawyer_intake` recipe as a boundary: it intentionally does
+not supply semantic questions or choices. Codex should:
 
-- state the inferred research lens in plain language;
+- select or assume the research lens semantically and state it when useful;
 - in Default mode, state proposed defaults and unresolved assumptions before
   asking the user to confirm or switch to Plan mode for native choices;
 - in Plan mode, use `request_user_input` when it is available for unresolved
   discrete choices, with the recipe's preferred option as the default;
-- if `prompt_recipe.json["angle_confirmation"]["required"]` is true, resolve
-  the research-angle choice before legal-framework details or drafting;
-- if `prompt_recipe.json["jurisdiction_confirmation"]["required"]` is true,
-  resolve the listed legal-framework choice before drafting;
-- ask only material missing facts, normally 2-5 questions;
+- disregard the inspection layer as a confirmation decision maker; its
+  `required: false` values mean only that confirmation is model-led;
+- ask only material missing facts, normally no more than 3 questions;
 - explain briefly why each answer matters;
 - ask about output format only when it changes the prompt, such as client memo,
   risk/options matrix, local-counsel brief, checklist, or draft response
   outline;
 - continue with explicit assumptions when the user asks for speed or the
-  missing facts can be carried as caveats, but not when angle or jurisdiction
-  confirmation is marked required.
+  missing facts can be carried as caveats.
 
 ## Intake Confirmation
 
@@ -95,21 +93,17 @@ forum, or source-framework cues, but the confirmed framework and source
 strategy must come from Codex's model-led legal judgment after user
 confirmation.
 
-The final prompt must state both the output language and the user-confirmed
-legal/source framework before the research task. If no framework has been
-confirmed, stop and ask rather than drafting under a deterministic assumption.
+The final prompt must state both the output language and the selected legal or
+source framework before the research task. The framework may be user-confirmed
+or an explicit model-led assumption when the question is sufficiently clear.
+Ask only when a material ambiguity would change the answer.
 
-`prompt_recipe.json["angle_confirmation"]` is the deterministic guidance for
-general angle confirmation. When `required` is true, Codex must not draft until
-the user confirms the research angle or supplies a custom framing.
-
-`prompt_recipe.json["jurisdiction_confirmation"]` is the deterministic guidance
-for legal-framework confirmation. When `required` is true, Codex must not draft until the
-user confirms one of the possible framework cues or supplies a custom
-framework. Named laws, regulators, and issue categories are
-plugin-specific domain choices after the research angle is fixed; offer them
-only when the source facts cue them or the user must supply a missing custom
-value.
+`prompt_recipe.json["angle_confirmation"]` and
+`prompt_recipe.json["jurisdiction_confirmation"]` record that deterministic
+inspection did not make these semantic decisions. Codex determines whether
+confirmation is material and generates any choices from the facts. Named laws,
+regulators, and issue categories are plugin-specific domain choices; offer them
+only when the facts cue them or the user must supply a missing custom value.
 
 ## Complexity And Phasing
 
@@ -195,3 +189,13 @@ a legal conclusion. If it fails, repair mechanical issues such as missing
 facts, missing citations/notes instructions, missing jurisdiction notice, or
 missing output structure. Deterministic validation must not force legal topic,
 source-domain, or research-phasing choices.
+
+Before the deterministic audit can pass, Codex must write
+`prompt_contract_review.json` as a model-led semantic comparison of the source
+question, `answer_contract.json`, and the optimized prompt. It separately
+reviews question and material facts, generation route, document type, purpose,
+audience, language, jurisdiction, evidence display, research lens, validation
+policy, and source strategy. Deterministic code checks only that this review is
+complete and explicitly accepted. Literal question overlap is an observation,
+not a semantic proxy. Any later edit to the prompt makes the review stale and
+requires a new semantic review.

@@ -127,7 +127,18 @@ def _claims_review(
     validated_document: str = "Validated text.",
     coverage_scope: str = "all_material_claims",
     document_revision_status: str = "not_required",
+    overall_outcome: str | None = None,
 ) -> dict[str, object]:
+    resolved_outcome = (
+        overall_outcome
+        or {
+            "not_required": "no_material_defect_identified",
+            "completed": "corrected",
+            "required": "correction_required",
+            "blocked": "not_reliable",
+            "professional_review_required": "professional_review_required",
+        }[document_revision_status]
+    )
     return {
         "schema_version": "2.0",
         "language": language,
@@ -169,8 +180,8 @@ def _claims_review(
         },
         "claims": claims,
         "overall_assessment": {
-            "outcome": "no_material_defect_identified",
-            "analysis": "No material defect was identified in the reviewed scope.",
+            "outcome": resolved_outcome,
+            "analysis": f"The recorded overall outcome is {resolved_outcome}.",
             "residual_uncertainties": [],
             "professional_review_items": [],
         },
@@ -1242,6 +1253,230 @@ def test_one_page_letter_can_validate_all_material_claims() -> None:
     assert audit["record_integrity_status"] == "record_complete"
     assert audit["coverage_scope"] == "all_material_claims"
     assert audit["delivery_readiness"] == "reviewed_answer_ready"
+
+
+def test_contradicted_claim_cannot_be_ready_without_treatment() -> None:
+    package_mod = load_script(
+        "deep_research_validator_contradiction_consistency",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [
+            _claim_review(
+                "This is a dog.",
+                support_status="contradicted",
+                support_analysis="The source says the opposite.",
+            )
+        ]
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["delivery_readiness"] == "review_record_incomplete"
+    errors = {item["error"] for item in audit["consistency_errors"]}
+    assert "attention_assessment_requires_issue_treatment" in errors
+    assert "unsupported_or_contradicted_claim_cannot_be_retained" in errors
+
+
+def test_unsound_reasoning_cannot_be_ready_when_claim_is_retained() -> None:
+    package_mod = load_script(
+        "deep_research_validator_reasoning_consistency",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [
+            _claim_review(
+                "The exception applies.",
+                reasoning_status="unsound",
+                reasoning_analysis="A required premise is missing.",
+            )
+        ]
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    errors = {item["error"] for item in audit["consistency_errors"]}
+    assert audit["delivery_readiness"] == "review_record_incomplete"
+    assert "unsound_reasoning_cannot_be_retained" in errors
+
+
+def test_supported_claim_requires_an_identified_source_check() -> None:
+    package_mod = load_script(
+        "deep_research_validator_source_check_consistency",
+        "package_validation.py",
+    )
+    claim = _claim_review("The filing period is 30 days.")
+    claim["source_checks"] = []
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": []},
+        _claims_review([claim]),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["consistency_errors"] == [
+        {
+            "scope": "claim",
+            "claim_index": 1,
+            "error": "source_check_required_for_support_assessment",
+        }
+    ]
+
+
+def test_different_source_requires_an_issue_treatment() -> None:
+    package_mod = load_script(
+        "deep_research_validator_source_identity_consistency",
+        "package_validation.py",
+    )
+    claim = _claim_review("The filing period is 30 days.")
+    source_checks = claim["source_checks"]
+    assert isinstance(source_checks, list)
+    source_checks[0]["identity_status"] = "different_source"
+    source_checks[0]["identity_analysis"] = "The passage is from another authority."
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        _claims_review([claim]),
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["source_identity_attention_claim_indices"] == [1]
+    assert audit["delivery_readiness"] == "review_record_incomplete"
+    assert audit["consistency_errors"][0]["error"] == (
+        "attention_assessment_requires_issue_treatment"
+    )
+
+
+def test_rejected_claim_is_never_reported_ready_for_delivery() -> None:
+    package_mod = load_script(
+        "deep_research_validator_reviewer_rejection",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [_claim_review("A material claim.", reviewer_action="reject")],
+        document_revision_status="required",
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_complete"
+    assert audit["rejected_claim_indices"] == [1]
+    assert audit["delivery_readiness"] == "revision_required"
+
+
+def test_contract_attention_requires_matching_failure_treatment() -> None:
+    package_mod = load_script(
+        "deep_research_validator_contract_consistency",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [_claim_review("A material claim.")],
+        document_revision_status="required",
+    )
+    contract_review = review["contract_review"]
+    assert isinstance(contract_review, dict)
+    contract_review["question_answered"] = {
+        "status": "does_not_conform",
+        "analysis": "The answer addresses another question.",
+    }
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["consistency_errors"] == [
+        {
+            "scope": "contract_review",
+            "error": "contract_attention_requires_failure_treatment",
+        }
+    ]
+
+
+def test_contract_failure_treatment_requires_attention_status() -> None:
+    package_mod = load_script(
+        "deep_research_validator_contract_reverse_consistency",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [_claim_review("A material claim.")],
+        document_revision_status="required",
+    )
+    contract_review = review["contract_review"]
+    assert isinstance(contract_review, dict)
+    contract_review["issues"] = [
+        {
+            "type": "answer_contract_failure",
+            "explanation": "The contract requires revision.",
+            "treatment_action": "revise_answer_contract",
+            "treatment_status": "proposed",
+            "treatment_explanation": "Revise the answer contract.",
+        }
+    ]
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["consistency_errors"] == [
+        {
+            "scope": "contract_review",
+            "error": "contract_failure_treatment_requires_attention_status",
+        }
+    ]
+
+
+def test_professional_review_revision_cannot_claim_no_material_defect() -> None:
+    package_mod = load_script(
+        "deep_research_validator_revision_outcome_consistency",
+        "package_validation.py",
+    )
+    review = _claims_review(
+        [_claim_review("A material claim.")],
+        document_revision_status="professional_review_required",
+        overall_outcome="no_material_defect_identified",
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 20, "urls": []},
+        {"sources": [{"source_id": "source-001", "status": "available"}]},
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert audit["consistency_errors"] == [
+        {
+            "scope": "document_revision",
+            "error": "revision_status_conflicts_with_overall_outcome",
+        }
+    ]
 
 
 def test_static_page_and_skill_match_plugin_contract() -> None:
