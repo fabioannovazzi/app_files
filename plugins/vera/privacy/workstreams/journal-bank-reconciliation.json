@@ -28,6 +28,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "codex-residual-semantic-advisory",
+        "purpose": "Review bounded, mechanically eligible unresolved candidate components in a subordinate semantic pass",
+        "content": "Content-addressed candidate-component identities; transaction identifiers, dates, exact amounts, descriptions, beneficiaries, explicit references, movement numbers, accounts, currencies, units, entity and party fields, directions, source locators, deterministic edge evidence, and review instructions",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -40,6 +48,10 @@
     {
       "id": "one-to-one-exact-reconciliation",
       "control": "Relationship-v2 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, one-to-one evidence use, and balanced relationship ledgers; row order cannot award a contested target, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
+    },
+    {
+      "id": "codex-subordinate-semantic-advisory-boundary",
+      "control": "On the Codex-only route, preparation requires current artifact receipts and a valid material-value ledger replay before it emits bounded residual candidate components. Candidate edges must already satisfy the reviewed amount, date or explicit-reference, currency, unit, entity, party, and direction perimeter; deterministic discovery, component, row, edge, deferred-summary, graph-byte, and prompt-size caps defer oversized work. Codex keeps the main chat unchanged and invokes one separate Luna process only through a launcher pinned to the qualified macOS build, Codex CLI version and hash, Seatbelt and canary hashes, and deny-default profile hash. The launcher uses a mode-0700 ephemeral capsule, prompt stdin, bounded parent capture, a read-only inner sandbox, ignored project rules, absent-or-empty global Codex instructions, enumerated feature disables, and exact-read plus outside-read-denial canaries; its qualified boundary also denied hidden view_image access to an outside nonce image. The child can read exact Codex authentication and installation-ID files and use outbound network access, so the bounded packet is transmitted to the OpenAI Codex service; the narrow installation-ID write permission required by the pinned build is accepted only when its bytes remain unchanged. Response, JSONL, stderr, and a content-bound launch receipt publish only after packet, source, runtime-input, executable, and boundary replay. Validation rejects malformed event lifecycle, JSONL-visible forbidden items, unstable snapshots, stale graph hashes, unknown or reused rows, non-edge suggestions, incomplete coverage, and schema or size violations. JSONL visibility is incomplete and does not prove hidden-tool absence or independently attest model and effort, which remain requested rather than observed. Prior fixed-name artifacts are recoverably archived before a new preparation, validated generations remain terminal, and a failure status is written only while the current preparation closure still validates. Advisory sibling results cannot alter canonical matches, ledgers, receipts, assurance gates, review decisions, or report readiness, so every worker failure leaves the main Codex chat and deterministic reconciliation unchanged."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -67,7 +79,7 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
     "source_fingerprint": "0f421291d0933b613c5d2671d42026ae4d8d1cf5484937c795980ed5103dd84c"

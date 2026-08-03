@@ -181,6 +181,75 @@ none receives a row-order preference.
 Candidates outside the reviewed currency, unit, entity, party, or direction
 perimeter are never matched.
 
+## Codex-Only Residual Semantic Advisory
+
+After a qualified deterministic run, `semantic_review.py prepare` may project
+the unmatched partitions into a bounded bipartite candidate graph. Preparation
+first validates the current output receipts and material-value ledger replay.
+An edge exists only when the core candidate predicate accepts the exact amount
+and reviewed currency, unit, entity, party, and direction perimeter, and the
+pair also has either a shared stable explicit reference or two actual dates
+inside the reviewed date window. Description and beneficiary similarity cannot
+create an edge.
+
+The graph groups eligible rows into deterministic connected components. The
+preparer selects only components inside fixed bank-row, journal-row, edge,
+component-count, and prompt-byte limits, records why other components were
+deferred, and binds the selected packet to its source receipts, relationship
+policy, tolerance, and canonical graph digest. A one-bank/one-journal component
+that should already have been resolved by deterministic singleton matching is
+deferred rather than passed to a model. When no component is selected, the
+preparer reports `worker_required: false` and Codex does not launch a worker.
+
+Only the main Codex chat may orchestrate the optional model pass. It keeps its
+existing model and invokes `semantic_review.py run-worker`, which requests one
+separate ephemeral `gpt-5.6-luna` process at max reasoning for the complete
+selected packet. Never reconstruct or run the underlying `codex exec` command
+directly. The launcher is fail-closed to the pinned macOS build, Codex CLI and
+hash, Seatbelt and canary hashes, and deny-default profile hash. It uses a
+mode-`0700` capsule, prompt stdin, bounded parent capture, a read-only inner
+sandbox, ignored project rules, absent-or-empty global Codex instructions, and
+enumerated feature disables. Exact-read and outside-read-denial canaries run
+before the worker; the qualified boundary also denied the hidden `view_image`
+path access to an outside nonce image. Do not launch a worker per candidate,
+change the model of the current chat, or use Luna to run source qualification,
+matching, ledger replay, assurance, or final review.
+
+The boundary permits exact Codex authentication and installation-ID access and
+outbound network access, so the packet is transmitted to the OpenAI Codex
+service. The installation-ID file has the narrow write permission required by
+the pinned build but must remain byte-identical. The capsule is deleted after
+the turn. The response, JSONL, stderr, and content-bound launch receipt are
+published together only after packet, source, runtime-input, executable, and
+boundary checks replay successfully.
+
+Worker decisions are limited to `suggest_match`, `ambiguous`, `no_match`, and
+`needs_evidence`. A suggested journal row must be an existing graph neighbor;
+other verdicts cannot name a journal row. Validation requires the current graph
+digest, exactly one review of every selected component and bank row, global
+one-to-one journal use, bounded evidence and rationale fields, a strict
+thread/turn/item lifecycle, no JSONL-visible forbidden item, and equality
+between the final event message and retained response. Any violation rejects
+the entire response. JSONL visibility is incomplete and therefore cannot prove
+that no hidden tool path ran; the pinned outer filesystem boundary is the
+primary containment control. JSONL also does not attest the selected model or
+reasoning effort, so worker metadata records both as requested rather than
+observed and validation requires the launch receipt.
+
+Validated results live outside the canonical reconciliation directory in its
+real sibling named `semantic-review` as
+`semantic_suggestions_validated.json` and `semantic_worker_run.json`. They are
+advisory only. They cannot alter native matches, review decisions, ledgers,
+artifact receipts, assurance gates, or report readiness, and they do not satisfy
+the professional semantic-review gate. Converting a suggestion into an
+official match requires a future source-bound reviewed-pair receipt and full
+canonical replay contract. If the current preparation closure remains valid,
+worker unavailability or invalid output is recorded as `worker_failed`; source
+or packet tampering instead fails without writing a falsely bound status. A
+validated generation remains terminal until a new preparation archives its
+fixed-name artifacts under `semantic-review/history/`. In every failure mode,
+the main Codex chat and deterministic reconciliation remain unchanged.
+
 ## Source Qualification
 
 - Tabular files emit rows only after date and amount or debit/credit fields are
@@ -238,7 +307,7 @@ complete reviewable native package, including an empty
 Only `material_value_ledger.json` is absent when source qualification or
 relationship authority blocks, because material reconciliation never ran.
 
-The execution boundary closes an exact 23-file contract covering launcher
+The execution boundary closes an exact 24-file contract covering launcher
 configuration, UI assets, Python/Node code, and the shared assurance kernel.
 Supported Python entries validate the physical tree before local imports; MCP
 does so before manifest parsing and invokes Python with `-I -B`. Unowned

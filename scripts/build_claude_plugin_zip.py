@@ -1494,6 +1494,14 @@ def project_cowork_skill(
     elif relative_path == "modules/check-entries/skills/check-entries/SKILL.md":
         text = _project_check_entries_cowork_skill(text)
     elif (
+        relative_path == "modules/journal-bank-reconciliation/skills/"
+        "journal-bank-reconciliation/SKILL.md"
+    ):
+        text = _remove_optional_section(
+            text,
+            "## Optional Codex-Only Luna Max Residual Review",
+        )
+    elif (
         relative_path
         == "modules/client-file-preparation/skills/client-file-preparation/SKILL.md"
     ):
@@ -1541,6 +1549,14 @@ def _project_cowork_reference(
         == "modules/client-file-preparation/references/workflow-reference.md"
     ):
         text = _project_client_file_preparation_reference(text)
+    elif (
+        relative_path
+        == "modules/journal-bank-reconciliation/references/workflow-reference.md"
+    ):
+        text = _remove_optional_section(
+            text,
+            "## Codex-Only Residual Semantic Advisory",
+        )
     if "Cowork execution note" not in text:
         text = f"{COWORK_REFERENCE_CONTRACT.strip()}\n\n{text.lstrip()}"
     text = _project_natural_language_runtime(text)

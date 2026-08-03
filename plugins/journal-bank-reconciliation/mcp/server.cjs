@@ -95,6 +95,11 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "scripts/run_reconciliation.py",
   ],
   [
+    "implementation.plugin.scripts.semantic_review_py",
+    "implementation",
+    "scripts/semantic_review.py",
+  ],
+  [
     "implementation.shared.vera_assurance.init_py",
     "shared_implementation",
     "__init__.py",

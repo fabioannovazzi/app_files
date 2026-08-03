@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.71"
+    assert manifest["version"] == "0.1.72"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -571,6 +571,29 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
         normalized = " ".join(content.split())
         assert "Its absence never blocks delivery" in normalized, name
         assert "Never claim `applied` or `final_ready`" in normalized, name
+
+
+def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:
+    skill_name = (
+        "modules/journal-bank-reconciliation/skills/"
+        "journal-bank-reconciliation/SKILL.md"
+    )
+    reference_name = (
+        "modules/journal-bank-reconciliation/references/workflow-reference.md"
+    )
+    manifest_name = "modules/journal-bank-reconciliation/.codex-plugin/plugin.json"
+
+    for name in (skill_name, reference_name, manifest_name):
+        text = vera_entries[name].decode("utf-8")
+        assert "gpt-5.6-luna" not in text, name
+        assert "codex exec" not in text.lower(), name
+        assert "Luna Max" not in text, name
+    assert "Optional Claude-Only Luna Max Residual Review" not in vera_entries[
+        skill_name
+    ].decode("utf-8")
+    assert "Claude-Only Residual Semantic Advisory" not in vera_entries[
+        reference_name
+    ].decode("utf-8")
 
 
 def test_cowork_previdenza_keeps_official_export_path_only(vera_entries) -> None:

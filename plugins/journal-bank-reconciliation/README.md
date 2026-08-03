@@ -91,7 +91,7 @@ timestamps and ZIP ordering so identical inputs produce byte-identical XLSX
 receipts; duplicate package member names are rejected.
 
 Before importing local workflow code, every public Python command validates an
-exact 23-file implementation/configuration/UI/shared-assurance tree and
+exact 24-file implementation/configuration/UI/shared-assurance tree and
 disables local bytecode. The MCP server closes the same physical tree before
 reading the manifest and launches Python with isolated imports and bytecode
 disabled. Unowned files, directories, caches, links, or special files block
@@ -113,9 +113,21 @@ they do not rewrite or promote v5.
 - `scripts/check_dependencies.py`
 - `scripts/inspect_inputs.py`
 - `scripts/run_reconciliation.py`
+- `scripts/semantic_review.py`
 - `scripts/journal_bank_core.py`
 
 Users should invoke the plugin from Codex rather than running the scripts directly.
+
+The optional Codex-only residual review keeps the main reconciliation chat on
+its existing model. After deterministic qualification and matching, Codex may
+use `semantic_review.py prepare` and the pinned `run-worker` launcher to send
+one bounded unresolved candidate packet to a separate Luna Max process. The
+launcher is qualified only on its pinned macOS/Codex/Seatbelt environment,
+fails closed when those pins or its filesystem canaries do not match, and
+records a content-bound launch receipt. The bounded packet is transmitted to
+the OpenAI Codex service. Validated results remain advisory in a sibling
+directory and cannot change canonical matches, ledgers, receipts, gates,
+review decisions, or report readiness.
 
 ## Local MCP Review UI
 

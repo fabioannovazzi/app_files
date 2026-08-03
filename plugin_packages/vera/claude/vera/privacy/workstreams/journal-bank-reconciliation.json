@@ -28,6 +28,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "codex-residual-semantic-advisory",
+        "purpose": "Review bounded, mechanically eligible unresolved candidate components in a subordinate semantic pass",
+        "content": "Content-addressed candidate-component identities; transaction identifiers, dates, exact amounts, descriptions, beneficiaries, explicit references, movement numbers, accounts, currencies, units, entity and party fields, directions, source locators, deterministic edge evidence, and review instructions",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -40,6 +48,10 @@
     {
       "id": "one-to-one-exact-reconciliation",
       "control": "Relationship-v2 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, one-to-one evidence use, and balanced relationship ledgers; row order cannot award a contested target, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
+    },
+    {
+      "id": "codex-subordinate-semantic-advisory-boundary",
+      "control": "On the Codex-only route, preparation requires current artifact receipts and a valid material-value ledger replay before it emits bounded residual candidate components. Candidate edges must already satisfy the reviewed amount, date or explicit-reference, currency, unit, entity, party, and direction perimeter; deterministic discovery, component, row, edge, deferred-summary, graph-byte, and prompt-size caps defer oversized work. Codex launches the content-addressed packet from the sibling directory in a separate ephemeral read-only worker with project rules ignored and enumerated shell, unified execution, browser, computer, app, agent, hook, skill, and plugin features disabled; retained events are rejected if they contain tool use. Validation also rejects unstable file snapshots, stale graph hashes, unknown or reused rows, non-edge suggestions, incomplete coverage, and schema or size violations. Model and effort remain a requested launch configuration because JSONL does not independently attest them. Prior fixed-name worker artifacts are recoverably archived before a new preparation, both validated outputs are preflighted and staged as one generation, and failures receive a current status instead of exposing stale validation. Advisory sibling results cannot alter canonical matches, ledgers, receipts, assurance gates, review decisions, or report readiness, so worker failure leaves the main Codex chat and deterministic reconciliation unchanged."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -67,9 +79,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "bef6a751c0117c7174e343f82694df7754221df224f997dec0890134e6271d9a"
+    "source_fingerprint": "47ad441781b4fa81a40719f4c320f67372532bf17311cd76b63bcc42860c0f00"
   }
 }
