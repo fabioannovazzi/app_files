@@ -137,3 +137,85 @@ def test_cli_activate_returns_request_to_active_queue(
     assert payload["status"] == "open"
     assert payload["triage_state"] == "active"
     assert store.list_open() == [store.get(record.change_request_id)]
+
+
+def test_cli_needs_info_records_public_question(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    store = ChangeRequestStore(sqlite_path=database_path)
+    record = store.submit(_submission())
+
+    exit_code = manage_change_requests.main(
+        [
+            "--sqlite-path",
+            str(database_path),
+            "needs-info",
+            record.change_request_id,
+            "--question",
+            "Provide the exact sanitized response.",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["disposition"] == "needs_info"
+    assert payload["needs_info_question"] == "Provide the exact sanitized response."
+
+
+def test_cli_close_records_non_fix_disposition(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    record = ChangeRequestStore(sqlite_path=database_path).submit(_submission())
+
+    exit_code = manage_change_requests.main(
+        [
+            "--sqlite-path",
+            str(database_path),
+            "close",
+            record.change_request_id,
+            "--disposition",
+            "external",
+            "--note",
+            "Reproduced and routed to the external runtime owner.",
+        ]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["status"] == "open"
+    assert payload["disposition"] == "external"
+    assert payload["fixed_version"] is None
+
+
+def test_cli_reopen_restores_active_investigation(
+    tmp_path: Path, capsys, monkeypatch
+) -> None:
+    monkeypatch.setattr(
+        manage_change_requests, "load_env_from_secrets_file", lambda: {}
+    )
+    database_path = tmp_path / "change-requests.sqlite3"
+    store = ChangeRequestStore(sqlite_path=database_path)
+    record = store.submit(_submission())
+    store.close_without_fix(
+        record.change_request_id,
+        disposition="non_actionable",
+        note="Initial classification was unsupported.",
+    )
+
+    exit_code = manage_change_requests.main(
+        ["--sqlite-path", str(database_path), "reopen", record.change_request_id]
+    )
+    payload = json.loads(capsys.readouterr().out)
+
+    assert exit_code == 0
+    assert payload["disposition"] == "unresolved"
+    assert payload["triage_state"] == "active"
+    assert store.list_open() == [store.get(record.change_request_id)]
