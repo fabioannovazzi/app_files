@@ -107,9 +107,10 @@
       "optional": true,
       "requires_confirmation": true,
       "controls": [
-        "The Clara skill instructs Codex to show and sanitize the exact submission before invoking the helper; the helper itself accepts arbitrary bounded JSON.",
+        "Clara's host-specific instructions require the assistant to show and sanitize the exact submission before invoking the helper; the helper enforces the required bounded diagnostic schema for problems but cannot detect personal data.",
         "The skill instructs Codex to exclude client, source, case, credential, secret, and identifying material.",
-        "The skill requires separate consent for problem reports and suggestions; the command-line helper cannot prove that consent occurred."
+        "The skill requires separate consent for problem reports, follow-up evidence, and suggestions; the command-line helper cannot prove that consent occurred.",
+        "Claude Cowork stores opaque receipts under its user-scoped plugin data directory and polls them with a trusted SessionStart hook."
       ]
     },
     {
@@ -123,7 +124,8 @@
       "requires_confirmation": false,
       "controls": [
         "The request uses a fixed HTTPS manifest URL and a three-second timeout.",
-        "The check is rate-limited locally and fails open without blocking Clara."
+        "The check is rate-limited locally and fails open without blocking Clara.",
+        "This custom update check is included only in the OpenAI package, not the Claude Cowork package."
       ]
     },
     {
@@ -169,6 +171,6 @@
     "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8361920841a756540568dd0fe15a0f7930778754fe583dae5c999e49bf2ecc6f"
+    "source_fingerprint": "2aef05489d8e123da620a851b7c55d08905e3db99bcaa760a5e5892fb6d888ea"
   }
 }

@@ -11,19 +11,21 @@
   "governed_paths": [
     "skills/clara/SKILL.md",
     "scripts/change_requests.py",
+    "scripts/check_change_requests.py",
     "scripts/check_for_update.py",
+    "hooks/cowork-hooks.json",
     "repository/modules/change_requests/api.py",
     "repository/modules/change_requests/store.py",
     "repository/modules/hosted_services/api.py",
     "repository/modules/pdp/legal_content.py"
   ],
-  "trigger": "A sufficiently evidenced problem or suggestion is submitted only after the user sees and approves the exact sanitized request. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version or needs-information notification. Follow-up evidence is transmitted only after the user sees and separately approves it.",
+  "trigger": "In either the OpenAI or Claude Cowork Clara package, a sufficiently evidenced problem or a suggestion is submitted only after the user sees and approves the exact sanitized request. An incomplete problem is never created. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version or needs-information notification. Follow-up evidence is transmitted only after the user sees and separately approves it.",
   "automatic": true,
   "data_sent": [
     {
       "id": "approved-text-request",
       "when": "After explicit consent to transmit one sanitized problem or suggestion",
-      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded diagnostic evidence string. The helper enforces that mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file. The Clara skill requires Codex to show, sanitize, and obtain consent for the exact request."
+      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded diagnostic evidence string. The helper enforces that mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file. Clara's host-specific instructions require the assistant to show, sanitize, and obtain consent for the exact request."
     },
     {
       "id": "automatic-client-context",
@@ -64,12 +66,13 @@
     }
   ],
   "access": {
-    "arrangement": "The client submits to fixed Mparanza HTTPS endpoints and stores the returned opaque status token locally. Plugin source does not establish who inside Mparanza can access request content. Optional suggestion interviews use a returned Mparanza browser URL.",
+    "arrangement": "The client submits to fixed Mparanza HTTPS endpoints and stores the returned opaque status token locally. In Claude Cowork that state is stored under CLAUDE_PLUGIN_DATA; in the OpenAI package it uses the plugin's existing private local state. Plugin source does not establish who inside Mparanza can access request content. Optional suggestion interviews exist only in the OpenAI package and use a returned Mparanza browser URL.",
     "controls": [
       "Remote requests are restricted to HTTPS mparanza.com or www.mparanza.com outside local tests.",
       "Payload and response sizes are bounded.",
       "A durable idempotency record prevents a network retry from creating a second request.",
       "Problem files without the required bounded diagnostic shape are rejected before transmission.",
+      "Claude Cowork does not package the hosted voice interview or custom version-update client.",
       "Follow-up evidence requires the locally stored opaque status token and a separate idempotent update identifier.",
       "The skill requires separate consent for a problem report and a suggestion."
     ]
@@ -96,6 +99,6 @@
     "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "7333ff21618b35a2a348af72a74d7bd5f9b6d6bbe455fed8c09ac456921a11c6"
+    "source_fingerprint": "8a5278566b5c7ad9324b600838a2dc3acd1a67c9d21242b12fac65973871118f"
   }
 }

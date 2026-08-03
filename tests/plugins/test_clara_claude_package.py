@@ -54,8 +54,8 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.125"
-    assert template["version"] == manifest["version"] == "0.1.122"
+    assert source["version"] == "0.1.126"
+    assert template["version"] == manifest["version"] == "0.1.123"
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"
     assert manifest["homepage"].endswith("/clara/index.html?lang=en")
@@ -100,9 +100,10 @@ def test_clara_cowork_exposes_only_reviewed_root_skills(clara_entries) -> None:
         assert not any(name.startswith(f"skills/{omitted}/") for name in clara_entries)
 
 
-def test_clara_cowork_omits_host_specific_and_call_home_paths(clara_entries) -> None:
+def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
+    clara_entries,
+) -> None:
     forbidden_exact = {
-        "scripts/change_requests.py",
         "scripts/check_for_update.py",
         "scripts/launch_hosted_voice.py",
         "scripts/manage_hosted_interview.py",
@@ -110,6 +111,8 @@ def test_clara_cowork_omits_host_specific_and_call_home_paths(clara_entries) -> 
     }
 
     assert forbidden_exact.isdisjoint(clara_entries)
+    assert "scripts/change_requests.py" in clara_entries
+    assert "scripts/check_change_requests.py" in clara_entries
     assert not any(name.startswith("privacy/") for name in clara_entries)
     assert not any(name.endswith("/agents/openai.yaml") for name in clara_entries)
     assert not any(".codex-plugin/" in name for name in clara_entries)
@@ -123,16 +126,25 @@ def test_clara_cowork_bootstraps_declared_python_dependencies(
     clara_entries,
 ) -> None:
     hooks = json.loads(clara_entries["hooks/hooks.json"])
-    command_hook = hooks["hooks"]["SessionStart"][0]["hooks"][0]
+    command_hooks = hooks["hooks"]["SessionStart"][0]["hooks"]
 
-    assert command_hook == {
-        "type": "command",
-        "command": (
-            'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/'
-            'bootstrap_python_dependencies.py"'
-        ),
-        "timeout": 240,
-    }
+    assert command_hooks == [
+        {
+            "type": "command",
+            "command": (
+                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/'
+                'bootstrap_python_dependencies.py"'
+            ),
+            "timeout": 240,
+        },
+        {
+            "type": "command",
+            "command": (
+                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/check_change_requests.py"'
+            ),
+            "timeout": 10,
+        },
+    ]
     assert "scripts/bootstrap_python_dependencies.py" in clara_entries
     requirements = clara_entries["requirements.txt"].decode("utf-8")
     assert "-r modules/reporting-engine/requirements.txt" in requirements
@@ -171,11 +183,13 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
         "This package is for Claude Cowork" in instruction_docs["skills/clara/SKILL.md"]
     )
     assert "image-generation capability" in instruction_docs["skills/clara/SKILL.md"]
+    assert "## Plugin Improvement Feedback" in instruction_docs["skills/clara/SKILL.md"]
+    assert "If the occurred time" in instruction_docs["skills/clara/SKILL.md"]
+    assert "submit-problem" in instruction_docs["skills/clara/SKILL.md"]
     for marker in (
         "ChatGPT",
         "Codex",
         "OpenAI",
-        "Plugin Improvement Feedback",
         "developers.openai.com",
         "beautify-deck",
         "Beautify Deck",
@@ -216,7 +230,7 @@ def test_marketplace_catalog_contains_clara_and_vera(configured_clara) -> None:
 
     assert set(entries) == {"clara", "vera"}
     assert entries["clara"]["source"] == "./plugin_packages/clara/claude/clara"
-    assert entries["clara"]["version"] == "0.1.122"
+    assert entries["clara"]["version"] == "0.1.123"
     assert entries["clara"]["strict"] is True
     assert "version" not in catalog
     assert builder.verify_package(package) == []

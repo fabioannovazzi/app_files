@@ -103,9 +103,15 @@ def _concurrent_prompt_reservation_worker(
     result_queue.put(result["ask"])
 
 
-def write_plugin(root: Path, name: str, version: str = "1.2.3") -> Path:
+def write_plugin(
+    root: Path,
+    name: str,
+    version: str = "1.2.3",
+    *,
+    manifest_directory: str = ".codex-plugin",
+) -> Path:
     plugin_root = root / name
-    manifest_path = plugin_root / ".codex-plugin" / "plugin.json"
+    manifest_path = plugin_root / manifest_directory / "plugin.json"
     manifest_path.parent.mkdir(parents=True)
     manifest_path.write_text(
         json.dumps({"name": name, "version": version}), encoding="utf-8"
@@ -305,8 +311,41 @@ class _MemoryBioUrlopen:
         )
 
 
-def test_clara_and_vera_change_request_clients_stay_identical() -> None:
-    assert CLARA_CLIENT.read_bytes() == VERA_CLIENT.read_bytes()
+def test_clara_and_vera_change_request_clients_share_problem_validation() -> None:
+    clara_client = load_client()
+    vera_spec = importlib.util.spec_from_file_location(
+        "mparanza_vera_change_requests", VERA_CLIENT
+    )
+    assert vera_spec and vera_spec.loader
+    vera_client = importlib.util.module_from_spec(vera_spec)
+    sys.modules[vera_spec.name] = vera_client
+    vera_spec.loader.exec_module(vera_client)
+
+    assert clara_client._validate_problem_request(problem_report("failure")) == (
+        vera_client._validate_problem_request(problem_report("failure"))
+    )
+
+
+def test_claude_manifest_and_data_directory_support_public_prompt_reservation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    client = load_client()
+    plugin_data = tmp_path / "claude-plugin-data"
+    plugin_root = write_plugin(
+        tmp_path,
+        "clara",
+        manifest_directory=".claude-plugin",
+    )
+    monkeypatch.delenv("MPARANZA_CHANGE_REQUEST_DATA", raising=False)
+    monkeypatch.setenv("CLAUDE_PLUGIN_DATA", str(plugin_data))
+
+    receipt = client.reserve_suggestion_prompt(plugin_root, plugin_data=None)
+
+    assert receipt["ask"] is True
+    assert read_state(plugin_data / "change-requests" / "state.json")["plugin"] == (
+        "clara"
+    )
 
 
 def test_reserve_suggestion_prompt_cli_returns_machine_readable_decision(
@@ -514,12 +553,19 @@ def test_submit_problem_retries_with_same_persisted_submission_id(
     assert repeated == receipt
 
 
+@pytest.mark.parametrize("manifest_directory", [".codex-plugin", ".claude-plugin"])
 def test_submit_problem_rejects_missing_diagnostics_before_state_or_network(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    manifest_directory: str,
 ) -> None:
     client = load_client()
     stable_root = tmp_path / "stable"
-    plugin_root = write_plugin(tmp_path, "clara")
+    plugin_root = write_plugin(
+        tmp_path,
+        "clara",
+        manifest_directory=manifest_directory,
+    )
     request_path = tmp_path / "request.json"
     request_path.write_text(
         json.dumps(
