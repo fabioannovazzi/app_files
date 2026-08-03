@@ -3377,11 +3377,18 @@ def test_reference_stage_ignores_reference_like_description_words(
 
 
 @pytest.mark.parametrize(
-    ("tolerance", "expected_matches"),
-    [("0.01", 1), ("0.009", 0)],
+    ("journal_amount", "tolerance", "expected_matches"),
+    [
+        ("99.99", "0.01", 1),
+        ("100.01", "0.01", 1),
+        ("99.98", "0.01", 0),
+        ("100.02", "0.01", 0),
+        ("100.01", "0.009", 0),
+    ],
 )
 def test_exact_decimal_tolerance_honors_cent_boundary(
     tmp_path: Path,
+    journal_amount: str,
     tolerance: str,
     expected_matches: int,
 ) -> None:
@@ -3400,7 +3407,7 @@ def test_exact_decimal_tolerance_honors_cent_boundary(
         journal_path,
         [
             ["Date", "Amount"],
-            ["2025-03-10", "100.01"],
+            ["2025-03-10", journal_amount],
         ],
     )
     recipe_path = _prepare_reviewed_recipe(
@@ -3426,6 +3433,151 @@ def test_exact_decimal_tolerance_honors_cent_boundary(
         gates = json.loads((output_dir / "assurance_gates.json").read_text())
         assert result.audit["relationship_balanced"] is False
         assert gates["gates"]["reconciliation"]["status"] == "withheld"
+
+
+def test_indexed_matching_preserves_sparse_population_matches(
+    tmp_path: Path,
+) -> None:
+    # Arrange
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    expected_match_count = 32
+    decoy_count = 512
+    bank_rows = [
+        [
+            "2025-03-10",
+            f"{10_000 + row_number}.00",
+            f"MATCH-{10_000 + row_number}",
+            f"Bank target {row_number}",
+        ]
+        for row_number in range(expected_match_count)
+    ]
+    target_rows = [
+        [
+            "2025-03-10",
+            f"{10_000 + row_number}.00",
+            f"MATCH-{10_000 + row_number}",
+            f"Journal target {row_number}",
+        ]
+        for row_number in range(expected_match_count)
+    ]
+    decoy_rows = [
+        [
+            "2025-03-10",
+            f"{20_000 + row_number}.00",
+            f"DECOY-{20_000 + row_number}",
+            f"Journal decoy {row_number}",
+        ]
+        for row_number in range(decoy_count)
+    ]
+    headers = ["Date", "Amount", "Reference", "Description"]
+    _save_csv(bank_path, [headers, *bank_rows])
+    _save_csv(journal_path, [headers, *decoy_rows, *target_rows])
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    # Act
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "run",
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    # Assert
+    match_rows = result.matches.to_dicts()
+    assert len(match_rows) == expected_match_count
+    assert {row["stage"] for row in match_rows} == {"reference"}
+    assert {row["bank_description"] for row in match_rows} == {
+        f"Bank target {row_number}" for row_number in range(expected_match_count)
+    }
+    assert {row["journal_description"] for row in match_rows} == {
+        f"Journal target {row_number}" for row_number in range(expected_match_count)
+    }
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.height == decoy_count
+
+
+@pytest.mark.parametrize(
+    "journal_amount",
+    [
+        "1.2345678901234567890123456775",
+        "1.2345678901234567890123456785",
+    ],
+)
+def test_matching_preserves_ultra_precise_inclusive_boundaries(
+    tmp_path: Path,
+    journal_amount: str,
+) -> None:
+    # Arrange
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    recipe_dir = tmp_path / "recipe"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount"],
+            ["2025-03-10", "1.234567890123456789012345678"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount"],
+            ["2025-03-10", journal_amount],
+        ],
+    )
+    core.inspect_inputs(bank_path, journal_path, recipe_dir)
+    recipe_path = recipe_dir / "suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    receipts = json.loads(
+        (recipe_dir / "input_receipts.json").read_text(encoding="utf-8")
+    )["receipts"]
+    for side, source_path in (("bank", bank_path), ("journal", journal_path)):
+        _attach_current_mapping_receipt(
+            core,
+            recipe,
+            receipts,
+            side=side,
+            source_path=source_path,
+            decision_id=f"decision.mapping.{side}.precision-boundary",
+        )
+    recipe_path.write_text(
+        json.dumps(recipe, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    recipe_path = _seal_relationship_recipe(
+        core,
+        recipe_path,
+        recipe_dir / "input_receipts.json",
+        tolerance="0.0000000000000000000000000005",
+        date_window_days=0,
+    )
+
+    # Act
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        tmp_path / "run",
+        recipe_path,
+        tolerance="0.0000000000000000000000000005",
+        date_window_days=0,
+    )
+
+    # Assert
+    assert result.matches.height == 1
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.is_empty()
 
 
 @pytest.mark.parametrize(

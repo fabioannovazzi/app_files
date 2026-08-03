@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "description": "Deterministic journal-to-bank reconciliation guided by Claude.",
   "author": {
     "name": "Mparanza",
