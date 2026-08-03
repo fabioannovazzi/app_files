@@ -47,26 +47,53 @@ community, channel, broadcast, or ambiguous searches.
 
 ## Safe application control
 
-1. Use Computer Use to target the local application bundle
-   `net.whatsapp.WhatsApp`. Do not use a browser or WhatsApp Web.
-2. Read a fresh accessibility snapshot before every action. Identify the
-   sidebar search control by its role, accessible label, and location. Never
-   type merely because a text field is focused.
-3. Type only into a positively identified WhatsApp sidebar search control.
-   Never type into the message composer. Search first with the exact confirmed
-   international phone number; use the exact user-confirmed chat name only when
-   the number search cannot locate the chat.
-4. After every click or keystroke, refresh the accessibility state and confirm
-   the active control and selected chat. If text appears in the message
-   composer, select and clear that text without pressing Return, then stop and
-   report the focus failure.
-5. Open only a one-to-one result. Verify the chat header and, when needed, the
-   contact information panel against the exact confirmed number. If the number
-   cannot be verified, the result is a group, or more than one result remains
-   plausible, stop without reading message content.
-6. Once identity is verified, inspect only the visible messages needed for the
-   user's topic and date range. Scroll inside that chat only when necessary.
-   Do not use global message search across multiple chats.
+1. Use Computer Use to target the already-running local application bundle
+   `net.whatsapp.WhatsApp`. Check the application inventory first so reading
+   state cannot launch WhatsApp. Do not use a browser or WhatsApp Web.
+2. Resolve `scripts/whatsapp_desktop_guard.mjs` from the bundled Studio Archive
+   module. From this skill, try `../../modules/studio-archive` in an installed
+   Vera package and `../../../studio-archive` in the repository. Import that
+   guard in the same persistent `node_repl` session as Computer Use.
+3. Require both the sidebar search and message composer to be uniquely exposed
+   and empty. If either contains text, the send control is present, or either
+   control is ambiguous, stop without clearing or guessing at existing text.
+   Never type into the message composer.
+4. Call `guardedPhoneSearch({sky, confirmedPhone, expectedChatName})`. The guard
+   receives the exact confirmed international phone number, reads a fresh
+   accessibility snapshot before every action, and
+   requests the known chat-list Search control with Command-F, re-resolves and
+   clicks that exact indexed control, and enters the normalized phone one digit
+   at a time with `press_key`. When accessibility reports focus, it must name
+   that Search control; when WhatsApp omits focus metadata, the first single
+   digit is the bounded destination proof. A fresh full snapshot after every
+   digit must show the exact expected Search prefix, an empty composer, and no
+   send control. Never use `type_text`, paste, dictation, coordinates, or a
+   full-phone write for this search.
+5. If exactly one newly entered digit appears in the empty composer while the
+   Search value remains at the preceding verified prefix, the guard removes
+   only that proven digit through the fresh composer element, verifies that the
+   composer is empty without pressing Return, and stops. For any other state
+   transition it changes nothing and stops. Continue only when the sanitized
+   result is `ready_to_open_target` with one `targetResult.elementIndex`.
+6. Do not write, print, quote, or otherwise return raw pre-verification
+   accessibility state; it can contain unrelated sidebar previews. Keep raw
+   state inside the local JavaScript call and return only the guard's status,
+   counts, and element index.
+7. Immediately call `verifyAndOpenGuardedTarget(...)`, with no intervening
+   snapshot or action. It invokes only the exact result's exposed `More Info`
+   action, requires one contact-card heading equal to the confirmed chat name
+   and one phone equal to the normalized confirmed phone, dismisses that card,
+   re-resolves and opens the exact contact result, and clears only the proven
+   search query through `TokenizedSearchBar_DeleteButton`. It returns only a
+   sanitized verification result. If the number cannot be verified, the result
+   is a group, or more than one identity remains plausible, stop without
+   returning message content.
+8. Once identity is verified, use `extractVerifiedChatTable(...)` to isolate the
+   exact named `ChatMessagesTableView` subtree before returning any message
+   evidence. Inspect only the visible messages needed for the user's topic and
+   date range. Scroll inside that chat only when necessary; after each scroll,
+   isolate the verified target table again. Do not return unrelated chat-list
+   previews or use global message search across multiple chats.
 
 ## Read-only boundary
 
@@ -108,9 +135,11 @@ screen-visible review of one verified local chat.
 - Computer Use unavailable, WhatsApp Desktop unavailable, or app not already
   authenticated: stop and ask the user to open or sign in to the desktop app
   themselves.
-- Search control, focus, chat identity, or phone verification uncertain: stop.
-- Composer received text: clear it without sending, stop, and report the
-  failure.
+- Search or composer not uniquely exposed and empty, guarded prefix check
+  failed, target identity uncertain, or phone verification uncertain: stop.
+- One proven digit reached the previously empty composer: let the guard remove
+  only that digit, verify cleanup, stop, and report the failure. Unknown or
+  pre-existing composer content must not be changed. Never send.
 - Group, multi-client, studio-wide, or mixed identity: stop and ask for one
   exact client.
 - Requested send, reply, forward, reaction, deletion, download, or setting
