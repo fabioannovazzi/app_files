@@ -179,9 +179,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-02",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d042e6a0b56215f0101575c2c40cc9d23cb5443c401ed0440bfcc6a3d35c56c9"
+    "source_fingerprint": "c34a4e4721c86e1bdd0d4d8f2fe7eb05fa94d13396d952b24d7104fa2b1c8cda"
   }
 }
