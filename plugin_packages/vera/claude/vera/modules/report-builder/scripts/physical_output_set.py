@@ -85,6 +85,36 @@ def _canonical_relative_path(value: object) -> Path:
     return candidate
 
 
+def _source_root(output_dir: Path, value: str) -> Path:
+    """Resolve an absolute or managed run-relative private source root."""
+
+    candidate = Path(value)
+    if candidate.is_absolute():
+        return candidate.resolve()
+    relative = _canonical_relative_path(value)
+    run_root = output_dir.resolve()
+    while True:
+        context_path = run_root / "context.json"
+        try:
+            observed = context_path.lstat()
+        except FileNotFoundError:
+            observed = None
+        if (
+            observed is not None
+            and stat.S_ISREG(observed.st_mode)
+            and not stat.S_ISLNK(observed.st_mode)
+            and observed.st_nlink == 1
+        ):
+            resolved = (run_root / relative).resolve()
+            if resolved == run_root or not resolved.is_relative_to(run_root):
+                raise ValueError("Report Builder source root leaves the customer run.")
+            return resolved
+        parent = run_root.parent
+        if parent == run_root:
+            raise ValueError("Report Builder portable source root has no customer run.")
+        run_root = parent
+
+
 def _extracted_source_paths(output_dir: Path) -> set[str]:
     source_index = _read_object(output_dir / "source_index.json")
     raw_sources = source_index.get("sources")
@@ -106,7 +136,7 @@ def _extracted_source_paths(output_dir: Path) -> set[str]:
         receipt = source.get("receipt")
         if not isinstance(root_path, str) or not isinstance(receipt, Mapping):
             raise ValueError("Report Builder source index entry is malformed.")
-        source_root = Path(root_path).resolve()
+        source_root = _source_root(output_dir, root_path)
         if not source_root.is_relative_to(extracted_root):
             continue
         relative_root = source_root.relative_to(output_dir.resolve())

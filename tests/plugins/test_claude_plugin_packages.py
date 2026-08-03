@@ -332,7 +332,7 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     assert "`plugins/new-client`" not in new_client_skill
     assert "python scripts/delivery_manifest.py seal \\" in new_client_skill
     assert "python scripts/delivery_manifest.py validate \\" in new_client_skill
-    assert "--output-dir /private/path/new-client-delivery" in new_client_skill
+    assert "--output-dir <client-run-output>" in new_client_skill
 
 
 def test_cowork_projects_user_facing_artifact_names_and_review_actor(
@@ -388,6 +388,7 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
 def test_projected_client_file_preparation_emits_neutral_artifact_names(
     vera_entries,
     tmp_path: Path,
+    vera_workflow_workspace,
 ) -> None:
     module_prefix = "modules/client-file-preparation/"
     module_root = tmp_path / "client-file-preparation"
@@ -398,15 +399,9 @@ def test_projected_client_file_preparation_emits_neutral_artifact_names(
         destination.parent.mkdir(parents=True, exist_ok=True)
         destination.write_bytes(content)
 
-    input_dir = tmp_path / "input"
-    input_dir.mkdir()
-    (input_dir / "client.txt").write_text(
-        "Ragione sociale: Beta Esempio S.r.l.\n"
-        "Codice fiscale: 01234567890\n"
-        "Documento sintetico non firmato.\n",
-        encoding="utf-8",
-    )
-    output_dir = tmp_path / "output"
+    workspace = vera_workflow_workspace("client-file-preparation")
+    input_dir = workspace["input_dir"]
+    output_dir = workspace["output_dir"]
     script = module_root / "scripts" / "build_file_preparation_outputs.py"
 
     completed = subprocess.run(
@@ -415,6 +410,8 @@ def test_projected_client_file_preparation_emits_neutral_artifact_names(
             "-B",
             str(script),
             str(input_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
             "--out",
             str(output_dir),
             "--no-ocr",
@@ -518,15 +515,39 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "It does not support WhatsApp" in studio
     assert "## Cowork review handoff" in audit
     assert "## Client boundary in Cowork" in audit
-    assert "cannot issue a new client-folder binding" in audit
-    assert "Never invent a scope ID" in audit
+    assert "cannot prepare or start a customer-folder" in audit
+    assert "`vera.client_workflow_context.v2`" in audit
+    assert "Never invent a client, engagement, run, receipt" in " ".join(audit.split())
+    assert "vera.studio_client_folder.v2" not in audit
     assert "Call `studio_archive_status`" not in audit
     assert "Cowork cannot issue a Studio Archive client-engagement context" in journal
     assert "sealed client-bound run remains pending" in journal
     assert "Cowork cannot issue a Studio Archive Check Entries context" in check_entries
     assert "sealed client-bound check remains pending" in check_entries
-    assert "import_studio_client_document" not in journal
-    assert "import_studio_client_document" not in check_entries
+    assert "one exact immutable journal binding" in journal
+    for artifact_id in (
+        "prepared.normalized_journal",
+        "internal.normalization_diagnostics",
+        "prepared.journal_sample_csv",
+    ):
+        assert artifact_id in journal
+        assert artifact_id in check_entries
+    assert "check only the bound sample" in check_entries
+    for local_studio_action in (
+        "list_studio_archive_clients",
+        "import_studio_client_document",
+        "prepare_studio_client_workflow",
+        "start_studio_client_workflow",
+        "finalize_studio_client_workflow",
+        "complete_studio_client_workflow",
+    ):
+        for name, content in cowork_instruction_docs.items():
+            if name.startswith("modules/") and name.endswith("/SKILL.md"):
+                assert local_studio_action not in content, name
+    assert "cannot finalize, complete, fail, or cancel" in journal
+    assert "cannot finalize, complete, fail, or cancel" in check_entries
+    assert "move it to `ready_for_review`" in journal
+    assert "move it to `ready_for_review`" in check_entries
     assert "The normal Cowork completion point is delivery" in audit
     assert "Its absence never blocks delivery" in " ".join(audit.split())
     assert "### Optional public SARI lookup" in sari
@@ -690,9 +711,11 @@ def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:
     validate_prompt = runtime_entries[
         "modules/prompt-optimizer/scripts/validate_prompt.py"
     ]
+    review_server = runtime_entries["modules/prompt-optimizer/scripts/review_server.py"]
     assert '"review_in_codex": "Professional Review"' in review_session
     assert '"execution_location": "cowork_connected_folder"' in review_session
     assert "Claude-written answer-generation instructions" in validate_prompt
+    assert "REQUIRE_VERA_CUSTOMER_RUN = False" in review_server
 
 
 def test_marketplace_catalog_points_to_generated_vera_and_matches_manifest(

@@ -19,8 +19,9 @@ from openpyxl import Workbook, load_workbook
 sys.dont_write_bytecode = True
 sys.pycache_prefix = "/dev/null/audit-reconciliation-tests"
 
+ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = (
-    Path(__file__).resolve().parents[2] / "plugins" / "audit-reconciliation" / "scripts"
+    ROOT / "plugins" / "audit-reconciliation" / "scripts"
 )
 ASSURANCE_PATH = SCRIPTS / "audit_assurance.py"
 WORKFLOW_PATH = SCRIPTS / "reconciliation_workflow.py"
@@ -29,6 +30,42 @@ PLUGIN_ROOT = SCRIPTS.parent
 SHARED_ASSURANCE_ROOT = (
     PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules" / "vera_assurance"
 )
+
+
+def running_audit_context(tmp_path: Path) -> tuple[Path, dict[str, object]]:
+    ledger = load_script_module(
+        f"audit_reconciliation_customer_ledger_{tmp_path.name}",
+        ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py",
+    )
+    client_root = tmp_path / "Audit Customer"
+    client_root.mkdir()
+    client_id = "client_333333333333333333333333"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Audit review")
+    source = tmp_path / "audit-source.txt"
+    source.write_text("audit source\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "audit-reconciliation",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context_path = Path(running["run_root"]) / "context.json"
+    return context_path, running["context"]
 
 
 def load_assurance():
@@ -1640,6 +1677,12 @@ def test_isolated_successor_cli_requires_matching_external_checkpoint(
     tmp_path: Path,
 ) -> None:
     _, _, output_dir, decisions, _, _ = successor_lifecycle_case(tmp_path)
+    managed_root = tmp_path / "managed"
+    managed_root.mkdir()
+    context_path, client_engagement = running_audit_context(managed_root)
+    managed_output = Path(str(client_engagement["output_dir"]))
+    shutil.copytree(output_dir, managed_output, dirs_exist_ok=True)
+    output_dir = managed_output
     expected = str(decisions["expected_predecessor_checkpoint"])
     wrong = "f" * 64 if expected != "f" * 64 else "e" * 64
     environment = {
@@ -1654,6 +1697,8 @@ def test_isolated_successor_cli_requires_matching_external_checkpoint(
             "-I",
             "-B",
             ASSURANCE_PATH.as_posix(),
+            "--client-engagement",
+            context_path.as_posix(),
             "validate-run-json",
             output_dir.as_posix(),
         ],
@@ -1668,6 +1713,8 @@ def test_isolated_successor_cli_requires_matching_external_checkpoint(
             "-I",
             "-B",
             ASSURANCE_PATH.as_posix(),
+            "--client-engagement",
+            context_path.as_posix(),
             "validate-run-json",
             output_dir.as_posix(),
             "--expected-predecessor-checkpoint",
@@ -1684,6 +1731,8 @@ def test_isolated_successor_cli_requires_matching_external_checkpoint(
             "-I",
             "-B",
             ASSURANCE_PATH.as_posix(),
+            "--client-engagement",
+            context_path.as_posix(),
             "validate-run-json",
             output_dir.as_posix(),
             "--expected-predecessor-checkpoint",
@@ -1881,6 +1930,12 @@ def test_fully_resealed_contradictory_predecessor_is_rejected_by_isolated_cli(
     tmp_path: Path,
 ) -> None:
     _, output_dir, expected = fully_resealed_contradictory_predecessor(tmp_path)
+    managed_root = tmp_path / "managed"
+    managed_root.mkdir()
+    context_path, client_engagement = running_audit_context(managed_root)
+    managed_output = Path(str(client_engagement["output_dir"]))
+    shutil.copytree(output_dir, managed_output, dirs_exist_ok=True)
+    output_dir = managed_output
 
     completed = subprocess.run(
         [
@@ -1888,6 +1943,8 @@ def test_fully_resealed_contradictory_predecessor_is_rejected_by_isolated_cli(
             "-I",
             "-B",
             ASSURANCE_PATH.as_posix(),
+            "--client-engagement",
+            context_path.as_posix(),
             "validate-run-json",
             output_dir.as_posix(),
             "--expected-predecessor-checkpoint",

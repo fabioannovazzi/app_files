@@ -18,6 +18,7 @@ class FinancialAnalysisScripts(NamedTuple):
 
 
 _SCRIPT_MODULE_NAMES = (
+    "managed_case_inputs",
     "preparation_contract_kernel",
     "validate_case_contracts",
     "prepare_customer_concentration_case",

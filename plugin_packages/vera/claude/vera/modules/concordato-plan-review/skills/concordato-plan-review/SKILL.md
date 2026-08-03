@@ -49,11 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task
-is explicitly plugin packaging/release. For user-data runs, prefer a sibling
-`output/concordato-preventivo-<run-id>` directory next to the supplied input
-folder and pass it to every output argument.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Revisione del Concordato Preventivo
 
@@ -183,8 +192,9 @@ before unreliable output if a required capability is unavailable.
 ### 2. Inspect in abstention
 
 ```bash
-python scripts/run_concordato_review.py /path/to/input \
-  --output-dir /path/to/inspection \
+python scripts/run_concordato_review.py <managed-input-folder> \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/inspection \
   --reference-date 2026-03-31 \
   --language it \
   --document-language it \
@@ -239,9 +249,10 @@ professional. Do not label Claude's unconfirmed draft as reviewed.
 After confirmation, seal the model:
 
 ```bash
-python scripts/review_case_model.py /path/to/inspection \
-  /path/to/reviewer-confirmed-case-model.json \
-  --output /path/to/reviewed-semantic-recipe.json \
+python scripts/review_case_model.py <client-run-output>/inspection \
+  <client-run-output>/reviewer-confirmed-case-model.json \
+  --client-engagement <client_engagement_path> \
+  --output <client-run-output>/reviewed-semantic-recipe.json \
   --reviewer-ref qualified-reviewer \
   --reviewed-on 2026-07-26 \
   --reference-date 2026-03-31
@@ -256,9 +267,10 @@ If the review requires a plan-to-accounting amount tie-out, prepare the
 separate source/token decision file and seal it with:
 
 ```bash
-python scripts/review_source_roles.py /path/to/inspection \
-  /path/to/numeric-decisions.json \
-  --output /path/to/reviewed-numeric-recipe.json
+python scripts/review_source_roles.py <client-run-output>/inspection \
+  <client-run-output>/numeric-decisions.json \
+  --client-engagement <client_engagement_path> \
+  --output <client-run-output>/reviewed-numeric-recipe.json
 ```
 
 This path requires an explicit disposition for every extracted numeric token
@@ -270,13 +282,14 @@ merely because the capability once centered on a tie-out.
 Semantic review without the numerical appendix:
 
 ```bash
-python scripts/run_concordato_review.py /path/to/input \
-  --output-dir /path/to/reviewed-output \
+python scripts/run_concordato_review.py <managed-input-folder> \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/reviewed-output \
   --reference-date 2026-03-31 \
   --language it \
   --document-language it \
   --tolerance 1 \
-  --semantic-recipe /path/to/reviewed-semantic-recipe.json
+  --semantic-recipe <client-run-output>/reviewed-semantic-recipe.json
 ```
 
 When the numerical appendix is also authorized, add:
@@ -327,7 +340,9 @@ artifact card and final response.
 ### 9. Replay
 
 ```bash
-python scripts/replay_assurance.py --output-dir /path/to/reviewed-output
+python scripts/replay_assurance.py \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/reviewed-output
 ```
 
 Use `references/workflow-reference.md` for the normative authority and replay

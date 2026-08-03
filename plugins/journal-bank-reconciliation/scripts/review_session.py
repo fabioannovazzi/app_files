@@ -926,35 +926,64 @@ def write_run_intake(
     document_language: str,
     tolerance: str,
     date_window_days: int,
+    client_run_id: str | None = None,
+    client_run_root: Path | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic matching."""
 
-    run_id = _run_id(bank_path, journal_path)
+    run_id = client_run_id or _run_id(bank_path, journal_path)
     spanish = _is_spanish(language)
-    local_files_read = [bank_path.as_posix(), journal_path.as_posix()]
+
+    def run_reference(path_value: Path) -> str:
+        if client_run_root is None:
+            return path_value.as_posix()
+        run_root = client_run_root.expanduser().resolve()
+        try:
+            relative = path_value.expanduser().resolve().relative_to(run_root)
+        except ValueError as exc:
+            raise ValueError(
+                "Journal-Bank Reconciliation path is outside the run root."
+            ) from exc
+        if not relative.parts:
+            raise ValueError(
+                "Journal-Bank Reconciliation path must identify a run artifact."
+            )
+        return relative.as_posix()
+
+    bank_ref = run_reference(bank_path)
+    journal_ref = run_reference(journal_path)
+    sample_ref = run_reference(sample_path) if sample_path is not None else None
+    recipe_ref = run_reference(recipe_path) if recipe_path is not None else None
+    output_ref = run_reference(output_dir)
+    local_files_read = [bank_ref, journal_ref]
     if recipe_path is not None:
-        local_files_read.append(recipe_path.as_posix())
+        local_files_read.append(recipe_ref)
     if sample_path is not None:
-        local_files_read.append(sample_path.as_posix())
+        local_files_read.append(sample_ref)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        **(
+            {"path_reference": "run_root_relative"}
+            if client_run_root is not None
+            else {}
+        ),
         "created_at": _utc_now(),
         "language": language,
         "input_paths": [
-            bank_path.as_posix(),
-            journal_path.as_posix(),
-            *([sample_path.as_posix()] if sample_path else []),
+            bank_ref,
+            journal_ref,
+            *([sample_ref] if sample_ref else []),
         ],
-        "output_dir": output_dir.as_posix(),
+        "output_dir": output_ref,
         "inferred_task": "journal_bank_reconciliation_review_payload",
         "assumptions": {
-            "bank_path": bank_path.as_posix(),
-            "journal_path": journal_path.as_posix(),
-            "sample_path": sample_path.as_posix() if sample_path else None,
-            "recipe_path": recipe_path.as_posix() if recipe_path else None,
+            "bank_path": bank_ref,
+            "journal_path": journal_ref,
+            "sample_path": sample_ref,
+            "recipe_path": recipe_ref,
             "language": language,
             "document_language": document_language,
             "currency": "EUR",

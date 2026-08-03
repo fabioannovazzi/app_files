@@ -70,20 +70,50 @@ from journal_sampling_core import (
     replay_normalization_from_provenance,
     write_json,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     """Replay normalization and write one machine-readable receipt."""
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("normalized_csv", type=Path)
     parser.add_argument("--diagnostics", type=Path)
     parser.add_argument("--receipt-out", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument(
+        "--read-only-upstream",
+        action="store_true",
+        help=(
+            "Validate a finalized upstream run while writing only the caller's "
+            "private replay receipt."
+        ),
+    )
     parser.add_argument("--verbose", action="store_true")
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
     configure_logging(args.verbose)
+    input_paths = [args.normalized_csv]
+    if args.diagnostics is not None:
+        input_paths.append(args.diagnostics)
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="journal-sampling",
+            input_paths=input_paths,
+            output_dir=None if args.read_only_upstream else args.receipt_out,
+            allowed_statuses=(
+                ("ready_for_review", "completed")
+                if args.read_only_upstream
+                else ("running",)
+            ),
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     receipt = replay_normalization_from_provenance(
         args.normalized_csv,
         args.diagnostics,

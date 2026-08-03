@@ -73,7 +73,9 @@ exec(  # nosec B102
     compile(_bootstrap_source, _BOOTSTRAP_PATH, "exec"),
     _BOOTSTRAP_NAMESPACE,
 )
-_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](("locale_support",))
+_BOOTSTRAP_ROOTS = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
+    ("locale_support",)
+)
 _SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
 if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
@@ -89,6 +91,15 @@ from typing import Any
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
+
+_VERA_ASSURANCE_MODULE_ROOT = Path(str(_BOOTSTRAP_ROOTS["shared_assurance"])).parent
+if str(_VERA_ASSURANCE_MODULE_ROOT) not in sys.path:
+    sys.path.insert(0, str(_VERA_ASSURANCE_MODULE_ROOT))
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 try:
     from .locale_support import normalize_language
@@ -1175,10 +1186,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--counterparty-name", default="")
     parser.add_argument("--cutoff-date", default="")
     parser.add_argument("--language", default="it")
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     language = normalize_language(args.language)
+    output_dir = args.output_dir or default_output_dir(args.workbook)
+    output_path = output_dir / args.output_name
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="audit-reconciliation",
+            input_paths=[args.workbook],
+            output_dir=output_path,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     context = load_reconciliation_context(args.workbook)
     pack = build_missing_evidence_request_pack(
         context["reconciliation_rows"],
@@ -1189,8 +1212,7 @@ def main(argv: list[str] | None = None) -> int:
         cutoff_date=args.cutoff_date,
         language=language,
     )
-    output_dir = args.output_dir or default_output_dir(args.workbook)
-    output_path = write_missing_evidence_workbook(output_dir / args.output_name, pack)
+    output_path = write_missing_evidence_workbook(output_path, pack)
     LOGGER.info(text_for(language)["log_path"].format(path=output_path))
     for row in pack.summary:
         LOGGER.info(

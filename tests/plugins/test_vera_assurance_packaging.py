@@ -12,14 +12,22 @@ from types import ModuleType
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 ASSURANCE_CONSUMERS = {
-    "vera",
-    "journal-sampling",
     "audit-reconciliation",
     "check-entries",
+    "client-file-preparation",
     "concordato-plan-review",
+    "deep-research-validator",
+    "financial-analysis",
     "journal-bank-reconciliation",
+    "journal-sampling",
+    "new-client",
+    "previdenza-inps",
+    "prompt-optimizer",
+    "registro-imprese-sari",
     "report-builder",
+    "sales-plan",
     "studio-archive",
+    "vera",
 }
 ASSURANCE_FILES = {
     "vera_assurance/__init__.py",

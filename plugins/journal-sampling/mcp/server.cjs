@@ -387,6 +387,7 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
@@ -410,6 +411,7 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -417,7 +419,7 @@ function toolDefinitions() {
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["client_engagement", "review_payload", "decisions"],
   );
   return [
     {
@@ -573,6 +575,10 @@ function validateReviewPayload(inputArgs) {
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
   const payload = {
     widget_type: "journal_sampling_review",
+    client_engagement:
+      typeof inputArgs.client_engagement === "string"
+        ? inputArgs.client_engagement
+        : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -1513,10 +1519,8 @@ function withGeneratedReviewOutputTransaction(
 // END GENERATED REVIEW OUTPUT TRANSACTION
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -1723,9 +1727,42 @@ function journalAssurancePythonExecutable() {
   return "python3";
 }
 
+function journalCustomerRunPaths(outputDir) {
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    let observed = null;
+    try {
+      observed = fs.lstatSync(contextPath);
+    } catch (error) {
+      if (error?.code !== "ENOENT") {
+        throw new Error("Journal Sampling customer-run context is unavailable.");
+      }
+    }
+    if (
+      observed?.isFile() &&
+      !observed.isSymbolicLink() &&
+      observed.nlink === 1
+    ) {
+      return {
+        contextPath,
+        persistentOutputDir: path.join(candidate, "outputs"),
+      };
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) {
+      throw new Error("Journal Sampling customer-run context is unavailable.");
+    }
+    candidate = parent;
+  }
+}
+
 function runJournalAssuranceBridge(command, outputDir, kind = null) {
   const canonicalServer = path.join(PLUGIN_ROOT, "mcp", "server.cjs");
-  if (path.resolve(__filename) !== path.resolve(canonicalServer)) {
+  if (
+    command !== "context" &&
+    path.resolve(__filename) !== path.resolve(canonicalServer)
+  ) {
     throw new Error(
       "Journal Sampling assured review requires the receipted MCP implementation.",
     );
@@ -1735,7 +1772,16 @@ function runJournalAssuranceBridge(command, outputDir, kind = null) {
     "scripts",
     "review_successor.py",
   );
-  const args = [scriptPath, command, outputDir];
+  const customerRun = journalCustomerRunPaths(outputDir);
+  const args = [
+    scriptPath,
+    command,
+    outputDir,
+    "--client-engagement",
+    customerRun.contextPath,
+    "--persistent-output-dir",
+    customerRun.persistentOutputDir,
+  ];
   if (kind) args.push("--kind", kind);
   const completed = childProcess.spawnSync(
     journalAssurancePythonExecutable(),
@@ -1762,6 +1808,35 @@ function runJournalAssuranceBridge(command, outputDir, kind = null) {
   } catch {
     throw new Error(`Journal Sampling assurance ${command} returned invalid data.`);
   }
+}
+
+function requireMatchingJournalCustomerRun(inputArgs, outputDir) {
+  const boundary = runJournalAssuranceBridge("context", outputDir);
+  const persistedRunIntake = readJsonFileIfPresent(
+    path.join(outputDir, "run_intake.json"),
+  );
+  const persistedReviewPayload = readJsonFileIfPresent(
+    path.join(outputDir, "review_payload.json"),
+  );
+  const authorities = [
+    persistedRunIntake,
+    persistedReviewPayload,
+    inputArgs.run_intake,
+    inputArgs.review_payload,
+  ];
+  if (
+    typeof boundary.run_id !== "string" ||
+    authorities.some(
+      (authority) =>
+        !isPlainObject(authority) ||
+        authority.run_id !== boundary.run_id,
+    )
+  ) {
+    throw new Error(
+      "Journal Sampling review run does not match the customer-run context.",
+    );
+  }
+  return boundary;
 }
 
 function refreshJournalAssuredTransactionResult(
@@ -2220,6 +2295,7 @@ function workflowReviewTransactionOptions(kind, inputArgs, parentState) {
 function saveDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return saveDecisionPayloadWrites(inputArgs);
+  requireMatchingJournalCustomerRun(inputArgs, canonicalOutputDir);
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "save",
@@ -2322,8 +2398,50 @@ function saveDecisionPayloadWrites(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputReference) return null;
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : typeof runIntake?.client_engagement?.context_path === "string"
+        ? runIntake.client_engagement.context_path.trim()
+        : "";
+  if (!contextValue && path.isAbsolute(outputReference)) {
+    return path.resolve(outputReference);
+  }
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error("Journal Sampling persistence requires the current client_engagement context.");
+  }
+  const contextPath = path.resolve(contextValue);
+  if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
+    throw new Error("Journal Sampling client_engagement path is invalid.");
+  }
+  const contextStat = generatedReviewPathEntryStat(contextPath);
+  if (
+    !contextStat ||
+    !contextStat.isFile() ||
+    contextStat.isSymbolicLink() ||
+    contextStat.nlink !== 1
+  ) {
+    throw new Error("Journal Sampling client_engagement context is unavailable.");
+  }
+  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("Journal Sampling output reference is not run-root-relative.");
+  }
+  const runRoot = path.dirname(contextPath);
+  const resolved = path.isAbsolute(outputReference)
+    ? path.resolve(outputReference)
+    : path.resolve(runRoot, outputReference);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Journal Sampling output reference leaves the customer run.");
+  }
+  return resolved;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -3293,6 +3411,7 @@ function nextActionsWithReviewApplication(
 function applyDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return applyDecisionPayloadWrites(inputArgs);
+  requireMatchingJournalCustomerRun(inputArgs, canonicalOutputDir);
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "apply",

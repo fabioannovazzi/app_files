@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
+import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable
@@ -31,6 +32,21 @@ __all__ = ["package_case", "main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 VERDICTS = {
     "contradicted",
     "not_supported",
@@ -66,6 +82,23 @@ PACKAGE_GENERATED_ARTIFACTS = (
     "ui_decisions.json",
     "validation_audit.json",
 )
+
+
+def _run_reference_path(value: object, run_root: Path) -> Path:
+    """Resolve one portable run-relative artifact reference."""
+
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("run-relative artifact reference is missing")
+    relative = Path(value)
+    if relative.is_absolute():
+        raise ValueError("artifact reference must be run-root relative")
+    resolved_root = run_root.expanduser().resolve(strict=True)
+    resolved = (resolved_root / relative).resolve()
+    if not resolved.is_relative_to(resolved_root):
+        raise ValueError("artifact reference escapes the workflow run")
+    return resolved
+
+
 CALCULATION_GENERATED_ARTIFACTS = (
     "calculation_audit.json",
     "calculation_results.csv",
@@ -189,7 +222,9 @@ def _clear_prior_package_artifacts(
 
 
 def _audit_case_validation(
-    case_records_path: Path, case_records: dict[str, Any]
+    case_records_path: Path,
+    case_records: dict[str, Any],
+    run_root: Path,
 ) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     validation = case_records.get("validation")
@@ -264,10 +299,14 @@ def _audit_case_validation(
             }
         )
     validated_output = str(audit.get("validated_output_path", ""))
-    if (
-        not validated_output
-        or Path(validated_output).resolve() != case_records_path.resolve()
-    ):
+    try:
+        validated_output_matches = (
+            _run_reference_path(validated_output, run_root)
+            == case_records_path.resolve()
+        )
+    except ValueError:
+        validated_output_matches = False
+    if not validated_output_matches:
         issues.append(
             {
                 "code": "case_records_audit_path_mismatch",
@@ -284,6 +323,7 @@ def _audit_calculation_provenance(
     case_records_path: Path,
     claims_review_path: Path,
     output_dir: Path,
+    run_root: Path,
 ) -> list[dict[str, str]]:
     issues: list[dict[str, str]] = []
     if calculations_path.is_symlink():
@@ -335,11 +375,14 @@ def _audit_calculation_provenance(
                 "message": "Calculation audit must pass before results enter the memo.",
             }
         )
-    if (
-        str(audit.get("calculation_results_path", "")) == ""
-        or Path(str(audit.get("calculation_results_path", ""))).resolve()
-        != calculations_path.resolve()
-    ):
+    try:
+        results_path_matches = (
+            _run_reference_path(audit.get("calculation_results_path"), run_root)
+            == calculations_path.resolve()
+        )
+    except ValueError:
+        results_path_matches = False
+    if not results_path_matches:
         issues.append(
             {
                 "code": "calculation_results_path_mismatch",
@@ -358,8 +401,14 @@ def _audit_calculation_provenance(
             }
         )
     csv_path = output_dir / "calculation_results.csv"
-    recorded_csv_path = str(audit.get("calculation_results_csv_path", ""))
-    if not recorded_csv_path or Path(recorded_csv_path).resolve() != csv_path.resolve():
+    try:
+        csv_path_matches = (
+            _run_reference_path(audit.get("calculation_results_csv_path"), run_root)
+            == csv_path.resolve()
+        )
+    except ValueError:
+        csv_path_matches = False
+    if not csv_path_matches:
         issues.append(
             {
                 "code": "calculation_results_csv_path_mismatch",
@@ -405,10 +454,13 @@ def _audit_calculation_provenance(
             )
             continue
         recorded_path = str(record.get("path", ""))
-        if (
-            not recorded_path
-            or Path(recorded_path).resolve() != expected_path.resolve()
-        ):
+        try:
+            recorded_path_matches = (
+                _run_reference_path(recorded_path, run_root) == expected_path.resolve()
+            )
+        except ValueError:
+            recorded_path_matches = False
+        if not recorded_path_matches:
             issues.append(
                 {
                     "code": "calculation_input_path_mismatch",
@@ -434,9 +486,12 @@ def _audit_calculation_provenance(
             }
         )
     else:
-        recipe_path = Path(str(recipe_record.get("path", "")))
+        try:
+            recipe_path = _run_reference_path(recipe_record.get("path"), run_root)
+        except ValueError:
+            recipe_path = None
         if (
-            not str(recipe_record.get("path", ""))
+            recipe_path is None
             or not recipe_path.is_file()
             or recipe_path.is_symlink()
             or str(recipe_record.get("sha256", "")) != _file_sha256(recipe_path)
@@ -1373,7 +1428,11 @@ def _review_items(
 
 
 def _load_bound_run_intake(
-    output_dir: Path, case_records: dict[str, Any]
+    output_dir: Path,
+    case_records: dict[str, Any],
+    *,
+    run_root: Path | None = None,
+    expected_run_id: str | None = None,
 ) -> dict[str, Any]:
     path = output_dir / "run_intake.json"
     if not path.is_file() or path.is_symlink():
@@ -1393,11 +1452,20 @@ def _load_bound_run_intake(
     )
     if binding.get("run_id") and payload.get("run_id") != binding.get("run_id"):
         raise ValueError("run_intake.json does not match validated acquisition run")
+    if expected_run_id is not None and payload.get("run_id") != expected_run_id:
+        raise ValueError("run_intake.json does not match the customer workflow run")
     recorded_output = payload.get("output_dir")
-    if (
-        not isinstance(recorded_output, str)
-        or Path(recorded_output).resolve() != output_dir.resolve()
-    ):
+    try:
+        recorded_path = Path(str(recorded_output))
+        resolved_recorded_output = (
+            recorded_path.expanduser().resolve()
+            if recorded_path.is_absolute()
+            else _run_reference_path(recorded_output, run_root or output_dir.parent)
+        )
+        recorded_output_matches = resolved_recorded_output == output_dir.resolve()
+    except ValueError:
+        recorded_output_matches = False
+    if not recorded_output_matches:
         raise ValueError("run_intake.output_dir does not match the package directory")
     return payload
 
@@ -1411,8 +1479,15 @@ def _run_intake(
     calculations_path: Path | None,
     package_status: str,
     language: str,
+    run_root: Path | None = None,
+    expected_run_id: str | None = None,
 ) -> dict[str, Any]:
-    payload = _load_bound_run_intake(output_dir, case_records)
+    payload = _load_bound_run_intake(
+        output_dir,
+        case_records,
+        run_root=run_root,
+        expected_run_id=expected_run_id,
+    )
     primary_outputs = (
         ["studio_memo.md", "studio_memo.docx"]
         if package_status == "passed"
@@ -1467,6 +1542,8 @@ def package_case(
     output_dir: Path,
     *,
     calculations_path: Path | None = None,
+    run_root: Path | None = None,
+    expected_run_id: str | None = None,
 ) -> dict[str, Any]:
     """Validate and package model-led findings without changing their meaning."""
 
@@ -1476,13 +1553,19 @@ def package_case(
     calculations_payload = (
         _load_object(calculations_path) if calculations_path else None
     )
-    _load_bound_run_intake(output_dir, case_records)
+    portable_root = run_root or output_dir.parent
+    _load_bound_run_intake(
+        output_dir,
+        case_records,
+        run_root=portable_root,
+        expected_run_id=expected_run_id,
+    )
     fact_ids = {
         str(fact.get("fact_id"))
         for fact in _fact_rows(case_records)
         if fact.get("fact_id")
     }
-    issues = _audit_case_validation(case_records_path, case_records)
+    issues = _audit_case_validation(case_records_path, case_records, portable_root)
     issues.extend(_audit_fact_review_security(case_records))
     claims, claim_issues = _audit_claims(claims_payload, fact_ids)
     issues.extend(claim_issues)
@@ -1495,6 +1578,7 @@ def package_case(
                 case_records_path,
                 claims_review_path,
                 output_dir,
+                portable_root,
             )
         )
         if calculations_payload.get("status") != "passed" or not calculations:
@@ -1593,6 +1677,8 @@ def package_case(
         calculations_path=calculations_path,
         package_status=status,
         language=language,
+        run_root=portable_root,
+        expected_run_id=expected_run_id,
     )
     run_id = str(run_intake["run_id"])
     items = _review_items(
@@ -1800,17 +1886,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("claims_review", type=Path)
     parser.add_argument("--calculations", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        input_paths = [args.case_records, args.claims_review]
+        if args.calculations is not None:
+            input_paths.append(args.calculations)
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="previdenza-inps",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
         output_dir = ensure_safe_output_dir(args.output_dir, plugin_root=PLUGIN_ROOT)
         result = package_case(
             args.case_records,
             args.claims_review,
             output_dir,
             calculations_path=args.calculations,
+            run_root=Path(context["run_root"]),
+            expected_run_id=str(context["run_id"]),
         )
     except (
         FileNotFoundError,
+        AssuranceContractError,
         json.JSONDecodeError,
         PermissionError,
         ValueError,

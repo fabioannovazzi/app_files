@@ -49,7 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Validate Answer
 
@@ -141,13 +154,13 @@ If requirements are missing, install from `requirements.txt` only when the envir
 4. Inspect the document:
 
 ```bash
-python scripts/inspect_document.py <document-file> --output-dir <output-dir>
+python scripts/inspect_document.py <managed-document-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output>
 ```
 
 5. Inspect cited sources and optional local source files:
 
 ```bash
-python scripts/inspect_sources.py <output-dir>/document_inventory.json --output-dir <output-dir> [--source-file <path> ...]
+python scripts/inspect_sources.py <client-run-output>/document_inventory.json --client-engagement <client_engagement_path> --output-dir <client-run-output> [--source-file <managed-source-path> ...]
 ```
 
 Use `--no-fetch` if the environment cannot fetch URLs; then rely on listed references and local files.
@@ -239,7 +252,7 @@ must remain unresolved in `delivery_readiness` until addressed.
 8. Package and audit the review:
 
 ```bash
-python scripts/package_validation.py <output-dir>/document_inventory.json <output-dir>/source_inventory.json <output-dir>/claims_review_draft.json --answer-contract-file <output-dir>/answer_contract.json --output-dir <output-dir>
+python scripts/package_validation.py <client-run-output>/document_inventory.json <client-run-output>/source_inventory.json <client-run-output>/claims_review_draft.json --client-engagement <client_engagement_path> --answer-contract-file <client-run-output>/answer_contract.json --output-dir <client-run-output>
 ```
 
 Add `--docx` whenever DOCX tooling is available. Do not ask whether to export DOCX; it is a natural deliverable of the validation package.

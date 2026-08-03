@@ -5,7 +5,9 @@ description: Use when a user wants Codex to reconcile accounting evidence across
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive client/engagement run path described below; never
+choose a sibling output folder.
 
 # Audit Reconciliation
 
@@ -157,19 +159,25 @@ Every raw-input run must be bound to one exact Studio Archive client folder.
 Do not infer the client from a person's name, a filename, an engagement label,
 or the contents of an accounting file.
 
-1. Call `studio_archive_status`, select one exact client `scope_id`, and call
-   `get_studio_client_folder`. If Studio Archive reports that its top-level
-   scopes changed, refresh it before continuing.
-2. Pass the returned `client_folder` object unchanged to
-   `run_raw_input_reconciliation`, together with a canonical `engagement_id`,
-   the input directory inside that client folder, and an absolute private
-   `workspace_root` outside the evidence folder and this Git workspace.
-3. The runner derives the only permitted output path as
-   `clients/<studio-client-id>/engagements/<engagement-id>/runs/audit-reconciliation/<run-id>`.
-   Never substitute a freely chosen output directory.
-4. Stop when the input is outside the selected client folder, the binding is
-   stale or edited, or the workspace is inside the evidence folder. Do not
-   copy, merge, or relabel another client's files to make the validation pass.
+1. Call `studio_archive_status`, select one exact client and engagement, and
+   refresh first if Studio Archive reports changed top-level scopes.
+2. Import the reviewed sources into that engagement, then call
+   `prepare_studio_client_workflow` with workflow ID `audit-reconciliation`.
+   Pass its returned `client_engagement_path` unchanged as
+   `--client-engagement` to `raw_input_runner.py`.
+3. Start that run before executing the helper. The portable context fixes the
+   execution inputs as `Vera/engagements/<engagement-id>/runs/<run-id>/inputs`
+   and the only permitted output path as the sibling `outputs` directory in
+   the selected customer folder. Never substitute a freely chosen directory.
+4. Stop when the context, input receipt, execution copy, lifecycle, or customer
+   manifest is stale or edited. Do not copy, merge, or relabel another
+   customer's files to make validation pass.
+
+Call `finalize_studio_client_workflow` after the last output write and declare
+every physical file with a stable artifact ID, relative path, concrete purpose,
+audience, and media type. Review that closed declaration, then call
+`complete_studio_client_workflow`; record `failed` or explicitly cancel an
+abandoned run instead of treating a partial directory as a result.
 
 The same client/engagement context must appear in `run_intake.json`,
 `review_payload.json`, `run_manifest.json`, `prepared_records.json`, the
@@ -334,12 +342,25 @@ For generic runs, pass `scope_year` and `cutoff_date` through assumptions when t
 Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
-  CLI requires `--client-folder-binding`, `--engagement-id`, `--input-dir`,
-  `--workspace-root`, and `--assumptions-json`;
+  CLI requires the exact Studio Archive `--client-engagement` context and
+  `--assumptions-json`;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
 - `scripts/build_missing_evidence_requests.py`: post-run workbook of targeted missing-evidence requests that distinguishes evidence already acquired from the exact missing item per row, using localized operational labels instead of internal status/rule codes.
+
+Run every secondary helper with the same still-running portable context; each
+helper rejects an input or persistent output outside that run:
+
+```bash
+python -I -B scripts/audit_assurance.py \
+  --client-engagement <customer-run>/context.json \
+  validate-run-json <client-run-output>
+python scripts/build_review_sample.py <client-run-output>/riconciliazione_audit.xlsx \
+  --client-engagement <customer-run>/context.json
+python scripts/build_missing_evidence_requests.py <client-run-output>/riconciliazione_audit.xlsx \
+  --client-engagement <customer-run>/context.json
+```
 
 Normalization/matching and workpaper-output internals are retained source units
 loaded by the validated entrypoints; do not import or execute them directly.

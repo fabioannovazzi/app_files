@@ -94,6 +94,10 @@ from review_session import (  # noqa: E402
     build_output_records,
     refresh_review_payload,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["apply_review_edits", "main"]
 
@@ -229,6 +233,60 @@ def _backup_native(output_dir: Path, item_id: str, target_name: str) -> dict[str
         "source_artifact": target_name,
         "item_id": item_id,
     }
+
+
+def _load_cli_customer_context(
+    *,
+    client_engagement: Path,
+    output_dir: Path,
+    persistent_output_dir: Path | None,
+    input_paths: list[Path],
+) -> dict[str, Any]:
+    """Authorize either the canonical output or its MCP transaction copy."""
+
+    context = load_client_engagement_context_file(
+        client_engagement,
+        expected_workflow_id="report-builder",
+    )
+    expected_output = Path(str(context["output_dir"])).resolve()
+    persistent_output = (
+        persistent_output_dir.expanduser().resolve()
+        if persistent_output_dir is not None
+        else expected_output
+    )
+    if persistent_output != expected_output:
+        raise AssuranceContractError(
+            "persistent Report Builder output must be the customer run output root"
+        )
+    actual_output = output_dir.expanduser().resolve(strict=True)
+    if actual_output == expected_output or actual_output.is_relative_to(
+        expected_output
+    ):
+        return load_client_engagement_context_file(
+            client_engagement,
+            expected_workflow_id="report-builder",
+            input_paths=input_paths,
+            output_dir=actual_output,
+        )
+    try:
+        relative = actual_output.relative_to(Path(str(context["run_root"])))
+    except ValueError as exc:
+        raise AssuranceContractError(
+            "Report Builder output is outside the customer run"
+        ) from exc
+    if not (
+        len(relative.parts) == 2
+        and relative.parts[0].startswith(".generated-review-transaction-")
+        and relative.parts[1] == "working"
+        and all(
+            path.expanduser().resolve().is_relative_to(actual_output)
+            for path in input_paths
+        )
+    ):
+        raise AssuranceContractError(
+            "Report Builder output is outside the customer run and its review transaction"
+        )
+    return context
 
 
 def _application_status(
@@ -776,9 +834,26 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--applied-decisions", type=Path, required=True)
     parser.add_argument("--final-artifacts", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument("--persistent-output-dir", type=Path, help=argparse.SUPPRESS)
     parser.add_argument("--expected-applied-sha256", required=True)
     parser.add_argument("--expected-final-artifacts-sha256", required=True)
     args = parser.parse_args(argv)
+    try:
+        client_context = _load_cli_customer_context(
+            client_engagement=args.client_engagement,
+            output_dir=args.output_dir,
+            persistent_output_dir=args.persistent_output_dir,
+            input_paths=[args.applied_decisions, args.final_artifacts],
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+    for artifact_path in (args.applied_decisions, args.final_artifacts):
+        artifact = _read_json(artifact_path)
+        if str(artifact.get("run_id") or "") != str(client_context["run_id"]):
+            parser.error(
+                f"{artifact_path.name} run_id does not match the customer-run context"
+            )
     result = apply_review_edits(
         args.output_dir,
         args.applied_decisions,

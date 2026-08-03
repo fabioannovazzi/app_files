@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must create or resume a durable client engagement, import a journal or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
+description: Use when Vera must create or resume a durable client engagement, import a source, journal, or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
 ## Surface routing
@@ -14,6 +14,13 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 # Archivio dello Studio
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
+
+For the local client-work route, the customer folder is the portable source of
+truth. Client selection, engagement creation, immutable import, exact run
+preparation, start, bound execution, artifact finalization, review/completion,
+recovery, rename handling, and retention must remain separate explicit steps.
+The machine-local index and configuration are rebuildable aids, not the run
+ledger.
 
 Choose the route before resolving any module:
 
@@ -39,7 +46,7 @@ Choose the route before resolving any module:
      connector must be installed, enabled, and connected on the current surface.
      Do not use IMAP, browser scraping, or ask the user to save `.eml` files.
 3. When the user asks to identify/create a client workspace, import or resume a
-   journal/support engagement, or configure, refresh, or search local studio documents,
+   source/journal/support engagement, or configure, refresh, or search local studio documents,
    resolve `../../modules/studio-archive` from this skill directory when it
    exists; otherwise resolve `../../../studio-archive` in the repository. Read
    that module's `skills/studio-archive/SKILL.md` completely and follow it.

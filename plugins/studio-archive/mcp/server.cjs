@@ -19,9 +19,18 @@ const TOOL_NAMES = {
   clients: "list_studio_archive_clients",
   clientFolder: "get_studio_client_folder",
   createClient: "create_studio_archive_client",
+  createEngagement: "create_studio_client_engagement",
   importDocument: "import_studio_client_document",
   engagements: "list_studio_client_engagements",
   prepareWorkflow: "prepare_studio_client_workflow",
+  startWorkflow: "start_studio_client_workflow",
+  failWorkflow: "fail_studio_client_workflow",
+  cancelWorkflow: "cancel_studio_client_workflow",
+  finalizeWorkflow: "finalize_studio_client_workflow",
+  completeWorkflow: "complete_studio_client_workflow",
+  closeEngagement: "close_studio_client_engagement",
+  recoverLedger: "recover_studio_client_ledger",
+  retentionReport: "report_studio_client_retention",
   configure: "configure_studio_archive",
   refresh: "refresh_studio_archive",
   search: "search_studio_archive",
@@ -30,6 +39,22 @@ const TOOL_NAMES = {
   planGmail: "plan_studio_archive_gmail_search",
   matchEmail: "match_studio_archive_email",
 };
+const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
+  "audit-reconciliation",
+  "client-file-preparation",
+  "new-client",
+  "journal-sampling",
+  "check-entries",
+  "journal-bank-reconciliation",
+  "sales-plan",
+  "financial-analysis",
+  "report-builder",
+  "concordato-plan-review",
+  "prompt-optimizer",
+  "deep-research-validator",
+  "previdenza-inps",
+  "registro-imprese-sari",
+]);
 
 function objectSchema(properties, required = []) {
   return {
@@ -38,6 +63,22 @@ function objectSchema(properties, required = []) {
     required,
     additionalProperties: false,
   };
+}
+
+function runIdentityProperties() {
+  return {
+    client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+    engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+    run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
+  };
+}
+
+function runIdentitySchema() {
+  return objectSchema(runIdentityProperties(), [
+    "client_id",
+    "engagement_id",
+    "run_id",
+  ]);
 }
 
 function annotations(readOnly, idempotent = true) {
@@ -118,7 +159,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.importDocument,
       title: "Import a document into one client engagement",
       description:
-        "After the user confirms the exact client and copy action, preserve the original file, copy one regular file into a managed client engagement, receipt its bytes, and return the next client-bound workflow context.",
+        "After the user confirms the exact client and copy action, preserve the original file and copy one regular source, journal, or support file into a managed client engagement with a byte receipt.",
       inputSchema: objectSchema(
         {
           client_id: {
@@ -129,16 +170,32 @@ function toolDefinitions() {
             type: "string",
             minLength: 1,
             maxLength: 4096,
-            description: "Absolute path to the user-selected journal or support file.",
+            description: "Absolute path to the user-selected source, journal, or support file.",
           },
           role: {
             type: "string",
-            enum: ["journal", "support"],
+            enum: ["journal", "source", "support"],
           },
           engagement_id: {
             type: "string",
             pattern: "^eng_[0-9a-f]{24}$",
-            description: "Required for support; omit for the first journal import.",
+            description: "Exact engagement selected or created before this separate import action.",
+          },
+        },
+        ["client_id", "source_path", "role", "engagement_id"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.createEngagement,
+      title: "Create a Studio Archive client engagement",
+      description:
+        "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type.",
+      inputSchema: objectSchema(
+        {
+          client_id: {
+            type: "string",
+            pattern: "^client_[0-9a-f]{24}$",
           },
           engagement_label: {
             type: "string",
@@ -146,7 +203,7 @@ function toolDefinitions() {
             maxLength: 160,
           },
         },
-        ["client_id", "source_path", "role"],
+        ["client_id", "engagement_label"],
       ),
       annotations: annotations(false, false),
     },
@@ -170,7 +227,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.prepareWorkflow,
       title: "Prepare a client-bound Vera workflow run",
       description:
-        "Create and persist the only permitted run context and output path for Journal Sampling, Check Entries, or Audit Reconciliation under one existing engagement.",
+        "Prepare or replay one exact customer-folder run bound to selected immutable input receipts and upstream artifacts. A repeated request is idempotent; new_run must be explicit.",
       inputSchema: objectSchema(
         {
           engagement_id: {
@@ -179,12 +236,142 @@ function toolDefinitions() {
           },
           workflow_id: {
             type: "string",
-            enum: ["journal-sampling", "check-entries", "audit-reconciliation"],
+            enum: VERA_CLIENT_WORKFLOW_IDS,
+          },
+          input_ids: {
+            type: "array",
+            maxItems: 10000,
+            items: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+            description: "Exact imported input IDs selected for this run.",
+          },
+          upstream_artifacts: {
+            type: "array",
+            maxItems: 10000,
+            items: objectSchema(
+              {
+                run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
+                artifact_id: { type: "string", minLength: 1, maxLength: 120 },
+                role: { type: "string", minLength: 1, maxLength: 80 },
+              },
+              ["run_id", "artifact_id", "role"],
+            ),
+            description: "Exact completed same-engagement artifact references.",
+          },
+          label: { type: "string", minLength: 1, maxLength: 160 },
+          purpose: { type: "string", minLength: 1, maxLength: 500 },
+          idempotency_key: { type: "string", minLength: 1, maxLength: 200 },
+          new_run: {
+            type: "boolean",
+            description: "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run.",
           },
         },
         ["engagement_id", "workflow_id"],
       ),
-      annotations: annotations(false, false),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.startWorkflow,
+      title: "Start a Vera workflow run",
+      description:
+        "Move one exact prepared or failed run to running after its input receipts still validate.",
+      inputSchema: runIdentitySchema(),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.failWorkflow,
+      title: "Record a Vera workflow failure",
+      description:
+        "Retain a failed run and record a bounded reason instead of treating its output folder as available.",
+      inputSchema: objectSchema(
+        {
+          ...runIdentityProperties(),
+          reason: { type: "string", minLength: 1, maxLength: 1000 },
+        },
+        ["client_id", "engagement_id", "run_id", "reason"],
+      ),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.cancelWorkflow,
+      title: "Cancel a Vera workflow run",
+      description: "Explicitly cancel one abandoned non-terminal run without deleting it.",
+      inputSchema: runIdentitySchema(),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.finalizeWorkflow,
+      title: "Finalize Vera workflow artifacts",
+      description:
+        "Declare every physical output with its purpose, audience, and media type, hash the closed output tree, and mark the run ready for review.",
+      inputSchema: objectSchema(
+        {
+          ...runIdentityProperties(),
+          artifacts: {
+            type: "array",
+            minItems: 1,
+            maxItems: 20000,
+            items: objectSchema(
+              {
+                artifact_id: { type: "string", minLength: 1, maxLength: 120 },
+                path: { type: "string", minLength: 1, maxLength: 4096 },
+                purpose: { type: "string", minLength: 1, maxLength: 500 },
+                audience: {
+                  type: "string",
+                  enum: ["internal", "review", "deliverable"],
+                },
+                media_type: { type: "string", minLength: 1, maxLength: 160 },
+              },
+              ["artifact_id", "path", "purpose", "audience", "media_type"],
+            ),
+          },
+        },
+        ["client_id", "engagement_id", "run_id", "artifacts"],
+      ),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.completeWorkflow,
+      title: "Complete a Vera workflow run",
+      description:
+        "Mark a review-ready run completed only while every declared artifact still matches its receipt.",
+      inputSchema: runIdentitySchema(),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.closeEngagement,
+      title: "Close a Studio client engagement",
+      description:
+        "Close one engagement only after all prepared, running, or review-ready runs are completed or cancelled.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+        },
+        ["client_id", "engagement_id"],
+      ),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.recoverLedger,
+      title: "Recover Vera customer-folder ledger",
+      description:
+        "Rebuild private client pointers from portable customer manifests and verify all engagement, input, and run records.",
+      inputSchema: objectSchema({}),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.retentionReport,
+      title: "Review Vera retention candidates",
+      description:
+        "Build a non-destructive size, age, and lifecycle report. This tool never deletes customer files.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          older_than_days: { type: "integer", minimum: 0, maximum: 365000 },
+        },
+        ["client_id"],
+      ),
+      annotations: annotations(true),
     },
     {
       name: TOOL_NAMES.configure,
@@ -478,6 +665,34 @@ function optionalStringArray(value, name, maximumItems, maximumLength) {
   return value;
 }
 
+function runIdentityCommand(args, commandName, extraKeys = []) {
+  assertOnlyKeys(
+    args,
+    new Set(["client_id", "engagement_id", "run_id", ...extraKeys]),
+  );
+  const clientId = requireString(args.client_id, "client_id");
+  const engagementId = requireString(args.engagement_id, "engagement_id");
+  const runId = requireString(args.run_id, "run_id");
+  if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+    throw new Error("client_id is invalid.");
+  }
+  if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+    throw new Error("engagement_id is invalid.");
+  }
+  if (!/^run_[0-9a-f]{24}$/.test(runId)) {
+    throw new Error("run_id is invalid.");
+  }
+  return [
+    commandName,
+    "--client-id",
+    clientId,
+    "--engagement-id",
+    engagementId,
+    "--run-id",
+    runId,
+  ];
+}
+
 function commandForTool(name, rawArgs) {
   const args = requirePlainObject(rawArgs);
   if (name === TOOL_NAMES.status) {
@@ -532,7 +747,6 @@ function commandForTool(name, rawArgs) {
         "source_path",
         "role",
         "engagement_id",
-        "engagement_label",
       ]),
     );
     const clientId = requireString(args.client_id, "client_id");
@@ -540,8 +754,8 @@ function commandForTool(name, rawArgs) {
       throw new Error("client_id must be an exact registered client.");
     }
     const role = requireString(args.role, "role");
-    if (!/^(?:journal|support)$/.test(role)) {
-      throw new Error("role must be journal or support.");
+    if (!/^(?:journal|source|support)$/.test(role)) {
+      throw new Error("role must be journal, source, or support.");
     }
     const command = [
       "import-document",
@@ -552,27 +766,26 @@ function commandForTool(name, rawArgs) {
       "--role",
       role,
     ];
-    const engagementId = optionalString(
-      args.engagement_id,
-      "engagement_id",
-      28,
-    );
-    if (
-      engagementId !== null &&
-      !/^eng_[0-9a-f]{24}$/.test(engagementId)
-    ) {
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
       throw new Error("engagement_id is invalid.");
     }
-    if (engagementId !== null) {
-      command.push("--engagement-id", engagementId);
-    }
-    const label = optionalString(
-      args.engagement_label,
-      "engagement_label",
-      160,
-    );
-    if (label !== null) command.push("--engagement-label", label);
+    command.push("--engagement-id", engagementId);
     return command;
+  }
+  if (name === TOOL_NAMES.createEngagement) {
+    assertOnlyKeys(args, new Set(["client_id", "engagement_label"]));
+    const clientId = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    return [
+      "create-engagement",
+      "--client-id",
+      clientId,
+      "--engagement-label",
+      requireString(args.engagement_label, "engagement_label"),
+    ];
   }
   if (name === TOOL_NAMES.engagements) {
     assertOnlyKeys(args, new Set(["client_id"]));
@@ -583,26 +796,151 @@ function commandForTool(name, rawArgs) {
     return ["engagements", "--client-id", clientId];
   }
   if (name === TOOL_NAMES.prepareWorkflow) {
-    assertOnlyKeys(args, new Set(["engagement_id", "workflow_id"]));
+    assertOnlyKeys(
+      args,
+      new Set([
+        "engagement_id",
+        "workflow_id",
+        "input_ids",
+        "upstream_artifacts",
+        "label",
+        "purpose",
+        "idempotency_key",
+        "new_run",
+      ]),
+    );
     const engagementId = requireString(args.engagement_id, "engagement_id");
     if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
       throw new Error("engagement_id is invalid.");
     }
     const workflowId = requireString(args.workflow_id, "workflow_id");
-    if (
-      !/^(?:journal-sampling|check-entries|audit-reconciliation)$/.test(
-        workflowId,
-      )
-    ) {
+    if (!VERA_CLIENT_WORKFLOW_IDS.includes(workflowId)) {
       throw new Error("workflow_id is unsupported.");
     }
-    return [
+    const command = [
       "prepare-workflow",
       "--engagement-id",
       engagementId,
       "--workflow-id",
       workflowId,
     ];
+    for (const inputId of optionalStringArray(
+      args.input_ids,
+      "input_ids",
+      10000,
+      30,
+    )) {
+      if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
+        throw new Error("input_ids contains an invalid input ID.");
+      }
+      command.push("--input-id", inputId);
+    }
+    const upstream = args.upstream_artifacts ?? [];
+    if (!Array.isArray(upstream) || upstream.length > 10000) {
+      throw new Error("upstream_artifacts must be a bounded array.");
+    }
+    for (const reference of upstream) {
+      const value = requirePlainObject(reference);
+      assertOnlyKeys(value, new Set(["run_id", "artifact_id", "role"]));
+      const runId = requireString(value.run_id, "upstream run_id");
+      const artifactId = requireString(value.artifact_id, "artifact_id");
+      const role = requireString(value.role, "upstream role");
+      if (!/^run_[0-9a-f]{24}$/.test(runId)) {
+        throw new Error("upstream run_id is invalid.");
+      }
+      if (artifactId.includes(":") || role.includes(":")) {
+        throw new Error("artifact_id and role cannot contain a colon.");
+      }
+      command.push("--upstream-artifact", `${runId}:${artifactId}:${role}`);
+    }
+    for (const [key, flag, maximum] of [
+      ["label", "--label", 160],
+      ["purpose", "--purpose", 500],
+      ["idempotency_key", "--idempotency-key", 200],
+    ]) {
+      const value = optionalString(args[key], key, maximum);
+      if (value !== null) command.push(flag, value);
+    }
+    if (optionalBoolean(args.new_run, "new_run")) command.push("--new-run");
+    return command;
+  }
+  if (name === TOOL_NAMES.startWorkflow) {
+    return runIdentityCommand(args, "start-workflow");
+  }
+  if (name === TOOL_NAMES.failWorkflow) {
+    const command = runIdentityCommand(args, "fail-workflow", ["reason"]);
+    command.push("--reason", requireString(args.reason, "reason"));
+    return command;
+  }
+  if (name === TOOL_NAMES.cancelWorkflow) {
+    return runIdentityCommand(args, "cancel-workflow");
+  }
+  if (name === TOOL_NAMES.finalizeWorkflow) {
+    const command = runIdentityCommand(args, "finalize-workflow", ["artifacts"]);
+    if (
+      !Array.isArray(args.artifacts) ||
+      args.artifacts.length < 1 ||
+      args.artifacts.length > 20000
+    ) {
+      throw new Error("artifacts must be a non-empty bounded array.");
+    }
+    for (const rawArtifact of args.artifacts) {
+      const artifact = requirePlainObject(rawArtifact);
+      assertOnlyKeys(
+        artifact,
+        new Set(["artifact_id", "path", "purpose", "audience", "media_type"]),
+      );
+      requireString(artifact.artifact_id, "artifact_id");
+      requireString(artifact.path, "artifact path");
+      requireString(artifact.purpose, "artifact purpose");
+      if (!new Set(["internal", "review", "deliverable"]).has(artifact.audience)) {
+        throw new Error("artifact audience is invalid.");
+      }
+      requireString(artifact.media_type, "artifact media_type");
+    }
+    command.push("--artifacts-json", JSON.stringify(args.artifacts));
+    return command;
+  }
+  if (name === TOOL_NAMES.completeWorkflow) {
+    return runIdentityCommand(args, "complete-workflow");
+  }
+  if (name === TOOL_NAMES.closeEngagement) {
+    assertOnlyKeys(args, new Set(["client_id", "engagement_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id is invalid.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    return [
+      "close-engagement",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+    ];
+  }
+  if (name === TOOL_NAMES.recoverLedger) {
+    assertOnlyKeys(args, new Set());
+    return ["recover-ledger"];
+  }
+  if (name === TOOL_NAMES.retentionReport) {
+    assertOnlyKeys(args, new Set(["client_id", "older_than_days"]));
+    const clientId = requireString(args.client_id, "client_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id is invalid.");
+    }
+    const command = ["retention-report", "--client-id", clientId];
+    const days = optionalInteger(
+      args.older_than_days,
+      "older_than_days",
+      0,
+      365000,
+    );
+    if (days !== null) command.push("--older-than-days", String(days));
+    return command;
   }
   if (name === TOOL_NAMES.configure) {
     assertOnlyKeys(args, new Set(["archive_root"]));

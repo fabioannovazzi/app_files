@@ -76,6 +76,34 @@ Each workflow preserves its deterministic checks, evidence trail, and review
 surfaces. A host-specific adapter may gate a tool or interaction, but it does
 not fork the professional method.
 
+## Portable customer-folder runs in Codex
+
+When local Studio Archive capabilities are available, every Vera workflow uses
+one explicit customer-folder ledger. The customer folder—not ChatGPT history or
+a machine-local directory pointer—holds the stable client manifest,
+engagements, immutable input receipts, exact run input manifests, lifecycle,
+outputs, and artifact manifests.
+
+The flow is: identify or create the customer folder; create or select an
+engagement; import authorized files as immutable receipts; prepare an
+idempotent run from exact receipt IDs and upstream artifacts; start; execute
+only the bound run-local inputs; finalize every output with its purpose and
+audience; review; and complete. Failed and cancelled runs remain explicit.
+Folder renames and a fresh local installation recover from the portable
+manifests. Retention reporting never deletes data automatically.
+
+Journal Sampling declares its normalized population, diagnostics, and exact
+sample as artifacts. Each Check Entries support evidence batch is represented
+by a separate run bound to those exact Journal Sampling artifacts and its own
+immutable support receipts; an intentionally separate identical selection uses
+the explicit new-run option. It checks only the bound sample, and later imports
+do not expand an existing run.
+
+Cowork v1 does not package the local Studio Archive module. It may continue
+useful connected-folder work, but it must not claim to have created or advanced
+this local customer-folder lifecycle unless a compatible, valid context and
+paths were supplied.
+
 ## Runtime capability policy
 
 Skills select behavior from capabilities that are actually callable:

@@ -3,9 +3,12 @@ name: dati-fiscali-strutturati
 description: "Use when Codex needs to extract or review structured fiscal fields from readable Italy, Geneva, Zurich, or UK customer-folder documents."
 ---
 
-## Output Location Rule
+## Client workflow gate
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Resume the exact Studio Archive `client-file-preparation` run that produced the
+extracted documents. Read only from that engagement and write only inside its
+`output_dir`; pass its absolute context path as `--client-engagement`. Do not
+invent a sibling output folder.
 
 # Dati Fiscali Strutturati
 
@@ -37,7 +40,7 @@ plugin source or generated ZIPs during a run.
 From the plugin root:
 
 ```bash
-python scripts/parse_fiscal_forms.py <cartella-output>/extracted
+python scripts/parse_fiscal_forms.py <client-run-output>/extracted --client-engagement <client_engagement_path>
 ```
 
 The full `client-file-preparation` workflow already runs this automatically.

@@ -49,7 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Journal-Bank Reconciliation
 
@@ -141,7 +154,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_inputs.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Add `--sample <sample-file>` when a sample movement list is provided.
@@ -184,7 +197,7 @@ Add `--sample <sample-file>` when a sample movement list is provided.
 7. Run deterministic reconciliation:
 
 ```bash
-python scripts/run_reconciliation.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir>/reconciliation --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output>/reconciliation --recipe <client-run-output>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.

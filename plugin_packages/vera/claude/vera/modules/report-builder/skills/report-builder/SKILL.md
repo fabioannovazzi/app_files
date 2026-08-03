@@ -49,7 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Build Report
 
@@ -128,7 +141,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run deterministic inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_inputs.py <input-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
+python scripts/inspect_inputs.py <managed-input-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
 4. Read `inspection.json` and `suggested_recipe.json`. Summarize discovered tables, suggested section matches, low-confidence or unassigned tables, and extraction limitations.
@@ -151,9 +164,10 @@ python scripts/inspect_inputs.py <input-file-or-folder> --output-dir <output-dir
 
 ```bash
 python scripts/review_numeric_measures.py \
-  --inspection <output-dir>/inspection.json \
-  --recipe <output-dir>/suggested_recipe.json \
-  --output <output-dir>/reviewed_recipe.json \
+  --client-engagement <client_engagement_path> \
+  --inspection <client-run-output>/inspection.json \
+  --recipe <client-run-output>/suggested_recipe.json \
+  --output <client-run-output>/reviewed_recipe.json \
   --section <section-key> \
   --header-row <detected-one-based-row|none> \
   --columns <included-column[,included-column]|none> \
@@ -185,7 +199,7 @@ python scripts/review_numeric_measures.py \
 8. Run deterministic build:
 
 ```bash
-python scripts/build_report.py <input-file-or-folder> --output-dir <output-dir>/report --recipe <output-dir>/reviewed_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
+python scripts/build_report.py <managed-input-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output>/report --recipe <client-run-output>/reviewed_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
 9. Review `report_analysis.json`, `report_audit.json`, `report_draft.md`, and the styled `report.docx` before final delivery. Report assigned sections, missing sections, pending numeric-measure reviews, tables discovered, narrative sections filled by Claude, and output paths.

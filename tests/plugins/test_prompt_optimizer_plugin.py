@@ -18,6 +18,63 @@ SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 
 
+def _running_customer_output(
+    tmp_path: Path,
+) -> tuple[Path, Path, dict[str, Any]]:
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_prompt_optimizer_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir()
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Test engagement")
+    source = tmp_path / "managed-source.txt"
+    source.write_text("managed input\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "prompt-optimizer",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context = running["context"]
+    return (
+        Path(running["output_dir"]),
+        Path(context["context_path"]),
+        context,
+    )
+
+
+def _file_snapshot(root: Path) -> dict[str, bytes]:
+    """Return the exact relative file content below a test root."""
+
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
+
+
 def _answer_contract(
     *,
     document_type: str = "client-ready legal memo",
@@ -529,6 +586,116 @@ Flag residual uncertainty.
     assert contract_report.ok, contract_report.as_dict()
 
 
+def test_managed_prompt_writer_rejects_input_outside_run_without_writes(
+    tmp_path: Path,
+) -> None:
+    output_dir, _context_path, context = _running_customer_output(tmp_path)
+    validate_mod = load_script(
+        "prompt_optimizer_validate_prompt_managed_input_escape",
+        "validate_prompt.py",
+    )
+    outside_input = tmp_path / "outside-input.md"
+    outside_input.write_text("outside\n", encoding="utf-8")
+    before = _file_snapshot(tmp_path)
+
+    with pytest.raises(ValueError, match="outside the current run"):
+        validate_mod.write_validation(
+            "What should be checked?",
+            "Use official sources and cite every material claim.",
+            output_dir,
+            answer_contract=_answer_contract(),
+            prompt_contract_review=_prompt_contract_review(),
+            input_paths=[outside_input],
+            client_engagement=context,
+            client_run_id=str(context["run_id"]),
+        )
+
+    assert _file_snapshot(tmp_path) == before
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["save_prompt_optimizer_decisions", "apply_prompt_optimizer_decisions"],
+)
+@pytest.mark.parametrize(
+    "output_ref_kind", ["escape", "stale_absolute", "missing_context"]
+)
+def test_mcp_managed_output_reference_is_rejected_without_writes(
+    tmp_path: Path,
+    tool_name: str,
+    output_ref_kind: str,
+) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    old_client_root = Path(context["studio_client_folder"]["client_root"])
+    if output_ref_kind == "stale_absolute":
+        output_ref = output_dir.as_posix()
+        renamed_client_root = tmp_path / "Renamed Customer"
+        context_relative = context_path.relative_to(old_client_root)
+        old_client_root.rename(renamed_client_root)
+        context_path = renamed_client_root / context_relative
+    elif output_ref_kind == "escape":
+        output_ref = "../outside"
+    else:
+        output_ref = "outputs"
+    run_id = str(context["run_id"])
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "prompt-optimizer",
+        "workflow": "prompt-optimizer",
+        "run_id": run_id,
+        "path_reference": "run_root_relative",
+        "output_dir": output_ref,
+    }
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "prompt-optimizer",
+        "workflow": "prompt-optimizer",
+        "run_id": run_id,
+        "review_type": "prompt_optimizer_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "artifact-1",
+                "item_type": "review_artifact",
+                "title": "Prompt package",
+                "output_path": "prompt_package.md",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+    }
+    arguments: dict[str, Any] = {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "decisions": [{"item_id": "artifact-1", "action": "accept"}],
+    }
+    if output_ref_kind != "missing_context":
+        arguments["client_engagement"] = context_path.as_posix()
+    if tool_name.startswith("apply_"):
+        arguments["final_artifacts"] = {
+            "schema_version": "1.0",
+            "plugin": "prompt-optimizer",
+            "workflow": "prompt-optimizer",
+            "run_id": run_id,
+            "outputs": [],
+            "caveats": [],
+            "next_actions": [],
+            "status": "written_pending_review",
+        }
+    before = _file_snapshot(tmp_path)
+
+    result = _call_mcp_server(
+        "tools/call",
+        {"name": tool_name, "arguments": arguments},
+    )
+
+    assert result["isError"] is True
+    assert result["structuredContent"]["ok"] is False
+    assert _file_snapshot(tmp_path) == before
+    assert not (tmp_path / "outside").exists()
+
+
 def test_validate_prompt_accepts_english_output_for_swiss_geneva_law(
     tmp_path: Path,
 ) -> None:
@@ -672,6 +839,7 @@ Ask up to three clarifying questions if essential facts are missing.
 Structure the output with premises, analysis, conclusions and notes.
 Flag residual uncertainty.
 """
+    client_run_id = "run_" + "b" * 24
 
     paths = validate_mod.write_validation(
         question,
@@ -684,9 +852,14 @@ Flag residual uncertainty.
             "https://www.normattiva.it/",
             "agenziaentrate.gov.it",
         ],
+        client_run_id=client_run_id,
     )
     audit = json.loads(paths["prompt_audit"].read_text(encoding="utf-8"))
+    run_intake = json.loads(paths["run_intake"].read_text(encoding="utf-8"))
+    review_payload = json.loads(paths["review_payload"].read_text(encoding="utf-8"))
 
+    assert run_intake["run_id"] == client_run_id
+    assert review_payload["run_id"] == client_run_id
     assert audit["source_domains"] == [
         "https://www.normattiva.it/",
         "https://agenziaentrate.gov.it/",
@@ -1186,11 +1359,13 @@ def test_mcp_review_server_validates_and_renders_prompt_payload() -> None:
 def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
     tmp_path: Path,
 ) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    client_run_id = str(context["run_id"])
     review_payload = {
         "schema_version": "1.0",
         "plugin": "prompt-optimizer",
         "workflow": "prompt-optimizer",
-        "run_id": "prompt-optimizer-es",
+        "run_id": client_run_id,
         "language": "es-ES",
         "review_type": "prompt_optimizer_review",
         "item_count": 1,
@@ -1210,15 +1385,16 @@ def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
         "schema_version": "1.0",
         "plugin": "prompt-optimizer",
         "workflow": "prompt-optimizer",
-        "run_id": "prompt-optimizer-es",
+        "run_id": client_run_id,
         "language": "es",
-        "output_dir": tmp_path.as_posix(),
+        "path_reference": "run_root_relative",
+        "output_dir": "outputs",
     }
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": "prompt-optimizer",
         "workflow": "prompt-optimizer",
-        "run_id": "prompt-optimizer-es",
+        "run_id": client_run_id,
         "outputs": [],
         "caveats": [],
         "next_actions": [],
@@ -1273,6 +1449,7 @@ def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
             "name": "apply_prompt_optimizer_decisions",
             "arguments": {
                 "run_intake": run_intake,
+                "client_engagement": context_path.as_posix(),
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
                 "decisions": decisions,
@@ -1289,7 +1466,7 @@ def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
     assert applied["final_artifacts"]["next_actions"] == [
         "Utilice final_artifacts.json como galería revisada de artefactos para la entrega."
     ]
-    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
     assert "Entrega para revisión" in handoff
     assert "## Revisión en Codex" in handoff
     assert "<!-- review-contract: Review Handoff -->" in handoff
@@ -1299,6 +1476,8 @@ def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
 def test_mcp_apply_refreshes_prompt_package_after_prompt_edit(
     tmp_path: Path,
 ) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    client_run_id = str(context["run_id"])
     validate_mod = load_script(
         "prompt_optimizer_validate_prompt_apply",
         "validate_prompt.py",
@@ -1338,21 +1517,49 @@ Flag residual uncertainty.
     validate_mod.write_validation(
         question,
         original_prompt,
-        tmp_path,
+        output_dir,
         answer_contract=_answer_contract(),
         prompt_contract_review=_prompt_contract_review(),
         language="en",
+        input_paths=[Path(context["input_bindings"][0]["path"])],
+        client_engagement=context,
+        client_run_id=client_run_id,
     )
-    run_intake = json.loads((tmp_path / "run_intake.json").read_text(encoding="utf-8"))
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
     review_payload = json.loads(
-        (tmp_path / "review_payload.json").read_text(encoding="utf-8")
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
     ui_decisions = json.loads(
-        (tmp_path / "ui_decisions.json").read_text(encoding="utf-8")
+        (output_dir / "ui_decisions.json").read_text(encoding="utf-8")
     )
     final_artifacts = json.loads(
-        (tmp_path / "final_artifacts.json").read_text(encoding="utf-8")
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
+    audit_before_move = json.loads(
+        (output_dir / "prompt_audit.json").read_text(encoding="utf-8")
+    )
+    old_client_root = Path(context["studio_client_folder"]["client_root"])
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert all(not Path(value).is_absolute() for value in run_intake["input_paths"])
+    assert all(
+        not Path(value).is_absolute()
+        for key, value in audit_before_move["review_session"].items()
+        if key.endswith("_path")
+    )
+    assert all(
+        old_client_root.as_posix() not in path.read_text(encoding="utf-8")
+        for path in output_dir.glob("*.json")
+    )
+    renamed_client_root = tmp_path / "Renamed Customer"
+    context_relative = context_path.relative_to(old_client_root)
+    output_relative = output_dir.relative_to(old_client_root)
+    old_client_root.rename(renamed_client_root)
+    context_path = renamed_client_root / context_relative
+    output_dir = renamed_client_root / output_relative
+    assert not old_client_root.exists()
     prompt_item = next(
         item
         for item in review_payload["items"]
@@ -1375,6 +1582,7 @@ Flag residual uncertainty.
             "name": "save_prompt_optimizer_decisions",
             "arguments": {
                 "run_intake": run_intake,
+                "client_engagement": context_path.as_posix(),
                 "review_payload": review_payload,
                 "ui_decisions": ui_decisions,
                 "decisions": decisions,
@@ -1391,6 +1599,7 @@ Flag residual uncertainty.
             "name": "apply_prompt_optimizer_decisions",
             "arguments": {
                 "run_intake": run_intake,
+                "client_engagement": context_path.as_posix(),
                 "review_payload": review_payload,
                 "ui_decisions": ui_decisions,
                 "final_artifacts": final_artifacts,
@@ -1402,9 +1611,11 @@ Flag residual uncertainty.
     assert applied_result["ok"] is True
     assert applied_result["target_update_count"] == 1
     assert applied_result["application_status"] == "partial_review_applied"
-    assert applied_result["run_intake_path"] == str(tmp_path / "run_intake.json")
-    assert "oecd.org" in (tmp_path / "optimized_prompt.md").read_text(encoding="utf-8")
-    audit = json.loads((tmp_path / "prompt_audit.json").read_text(encoding="utf-8"))
+    assert applied_result["run_intake_path"] == str(output_dir / "run_intake.json")
+    assert "oecd.org" in (output_dir / "optimized_prompt.md").read_text(
+        encoding="utf-8"
+    )
+    audit = json.loads((output_dir / "prompt_audit.json").read_text(encoding="utf-8"))
     assert "https://oecd.org/" in audit["source_domains"]
     assert audit["status"] == "fail"
     assert audit["prompt_contract_review_audit"]["attention_dimensions"] == [
@@ -1421,21 +1632,21 @@ Flag residual uncertainty.
         "source_strategy",
     ]
     semantic_review = json.loads(
-        (tmp_path / "prompt_contract_review.json").read_text(encoding="utf-8")
+        (output_dir / "prompt_contract_review.json").read_text(encoding="utf-8")
     )
     assert semantic_review["overall_status"] == "not_reviewed"
     assert semantic_review["stale_reason"] == "optimized_prompt_edited_after_review"
-    assert "https://oecd.org/" in (tmp_path / "prompt_package.md").read_text(
+    assert "https://oecd.org/" in (output_dir / "prompt_package.md").read_text(
         encoding="utf-8"
     )
-    assert "https://oecd.org/" in (tmp_path / "source_domains.txt").read_text(
+    assert "https://oecd.org/" in (output_dir / "source_domains.txt").read_text(
         encoding="utf-8"
     )
-    assert "https://oecd.org/" in (tmp_path / "source_domains_comma.txt").read_text(
+    assert "https://oecd.org/" in (output_dir / "source_domains_comma.txt").read_text(
         encoding="utf-8"
     )
 
-    applied = json.loads((tmp_path / "applied_decisions.json").read_text())
+    applied = json.loads((output_dir / "applied_decisions.json").read_text())
     prompt_effect = next(
         effect
         for effect in applied["effects"]
@@ -1451,7 +1662,7 @@ Flag residual uncertainty.
         "prompt_contract_review.json",
     ]
 
-    final_after_apply = json.loads((tmp_path / "final_artifacts.json").read_text())
+    final_after_apply = json.loads((output_dir / "final_artifacts.json").read_text())
     assert final_after_apply["status"] == "partial_review_applied"
     prompt_output = next(
         output
@@ -1479,7 +1690,7 @@ Flag residual uncertainty.
     assert any(
         "semantic review" in action for action in final_after_apply["next_actions"]
     )
-    run_intake = json.loads((tmp_path / "run_intake.json").read_text())
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_apply_steps = [
         step
         for step in run_intake["execution_trace"]
@@ -1498,7 +1709,7 @@ Flag residual uncertainty.
         "ui_decisions.json",
     } <= set(review_apply_steps[0]["outputs"])
     contract_report = validate_contract(
-        tmp_path,
+        output_dir,
         strict_data_posture=True,
         strict_execution_trace=True,
         strict_output_paths=True,

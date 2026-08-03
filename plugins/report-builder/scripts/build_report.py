@@ -65,6 +65,10 @@ import argparse
 from pathlib import Path
 
 from report_builder_core import add_common_args, build_report, configure_logging
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 
 def main() -> int:
@@ -74,6 +78,7 @@ def main() -> int:
         description="Build report_analysis.json, report_draft.md, report.docx, and audit outputs."
     )
     add_common_args(parser)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument(
         "--recipe",
         type=Path,
@@ -82,6 +87,18 @@ def main() -> int:
     )
     args = parser.parse_args()
     configure_logging(args.verbose)
+    input_paths = [args.input_path]
+    if args.recipe is not None:
+        input_paths.append(args.recipe)
+    try:
+        client_context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="report-builder",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     result = build_report(
         args.input_path,
         args.output_dir,
@@ -89,6 +106,8 @@ def main() -> int:
         language=args.language,
         document_language=args.document_language,
         report_type=args.report_type,
+        run_id=str(client_context["run_id"]),
+        client_engagement=client_context,
     )
     print(
         "OK: built report draft; "

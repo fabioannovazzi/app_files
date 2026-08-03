@@ -49,7 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Plan The Answer
 
@@ -305,7 +318,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 4. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_question.py <question-file> --output-dir <output-dir> --language <auto|it|en|fr|de|es>
+python scripts/inspect_question.py <managed-question-file> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <auto|it|en|fr|de|es>
 ```
 
 5. Read `question_inventory.json` and `prompt_recipe.json`. Treat dates,
@@ -367,7 +380,7 @@ python scripts/inspect_question.py <question-file> --output-dir <output-dir> --l
 14. Run deterministic validation:
 
 ```bash
-python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt --answer-contract-file <output-dir>/draft_answer_contract.json --prompt-contract-review-file <output-dir>/draft_prompt_contract_review.json
+python scripts/validate_prompt.py <managed-question-file> <client-run-output>/draft_prompt.md --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <auto|it|en|fr|de|es> --source-domains-file <client-run-output>/draft_source_domains.txt --answer-contract-file <client-run-output>/draft_answer_contract.json --prompt-contract-review-file <client-run-output>/draft_prompt_contract_review.json
 ```
 
 15. Read `prompt_audit.json`. If any check fails, repair

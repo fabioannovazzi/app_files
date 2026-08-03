@@ -47,9 +47,17 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-## Output Location Rule
+## Client boundary in Cowork
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Avviso Intake
 
@@ -87,7 +95,7 @@ plugin source or generated ZIPs during a run.
 The avviso intake is included in the full workflow:
 
 ```bash
-python ../../scripts/build_file_preparation_outputs.py <cartella-cliente> --year <anno>
+python ../../scripts/build_file_preparation_outputs.py <managed-input-folder> --client-engagement <client_engagement_path> --year <anno>
 ```
 
 If the command is interrupted, rerun it with the same arguments and output

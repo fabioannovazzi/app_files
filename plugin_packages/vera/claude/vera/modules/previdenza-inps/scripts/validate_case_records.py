@@ -9,6 +9,7 @@ import hashlib
 import json
 import logging
 import re
+import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,21 @@ __all__ = ["validate_case_records", "main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 FACT_STATUSES = {"confirmed", "disputed", "pending"}
 DATE_PRECISIONS = {"day", "month", "year"}
 VALUE_TYPES = {"amount", "date", "number", "percentage", "text"}
@@ -43,6 +59,17 @@ AMBIGUOUS_NUMERIC_DATE_RE = re.compile(r"^\d{1,2}[/-]\d{1,2}[/-]\d{2,4}$")
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _run_relative_path(path: Path, run_root: Path) -> str:
+    """Return a portable path anchored to the current workflow run."""
+
+    resolved_root = run_root.expanduser().resolve(strict=True)
+    resolved_path = path.expanduser().resolve(strict=True)
+    try:
+        return resolved_path.relative_to(resolved_root).as_posix()
+    except ValueError as exc:
+        raise ValueError("workflow path is outside the current run") from exc
 
 
 def _load_object(path: Path) -> dict[str, Any]:
@@ -772,13 +799,18 @@ def _write_evidence_matrix(
 
 
 def validate_case_records(
-    records_path: Path, inventory_path: Path, output_dir: Path
+    records_path: Path,
+    inventory_path: Path,
+    output_dir: Path,
+    *,
+    run_root: Path | None = None,
 ) -> dict[str, Any]:
     """Validate record shape and provenance without interpreting legal meaning."""
 
     records = _load_object(records_path)
     inventory = _load_object(inventory_path)
     documents, fragments = _inventory_maps(inventory)
+    portable_root = run_root or output_dir.parent
     issues: list[dict[str, str]] = []
     acquisition_binding: dict[str, Any] | None = None
 
@@ -833,8 +865,9 @@ def validate_case_records(
         "plugin": "previdenza-inps",
         "status": "schema_error" if error_count else "passed",
         "validated_at": _utc_now(),
-        "records_path": records_path.resolve().as_posix(),
-        "inventory_path": inventory_path.resolve().as_posix(),
+        "path_reference": "run_root_relative",
+        "records_path": _run_relative_path(records_path, portable_root),
+        "inventory_path": _run_relative_path(inventory_path, portable_root),
         "error_count": error_count,
         "warning_count": warning_count,
         "issues": issues,
@@ -865,7 +898,7 @@ def validate_case_records(
     }
     validated_path = write_json(output_dir / "case_records_validated.json", validated)
     audit["source_records_sha256"] = source_records_sha256
-    audit["validated_output_path"] = validated_path.resolve().as_posix()
+    audit["validated_output_path"] = _run_relative_path(validated_path, portable_root)
     write_json(output_dir / "case_records_audit.json", audit)
     _write_timeline(output_dir / "timeline.csv", validated)
     _write_evidence_matrix(output_dir / "evidence_matrix.csv", validated, fragments)
@@ -879,11 +912,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("records", type=Path)
     parser.add_argument("inventory", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="previdenza-inps",
+            input_paths=[args.records, args.inventory],
+            output_dir=args.output_dir,
+        )
         output_dir = ensure_safe_output_dir(args.output_dir, plugin_root=PLUGIN_ROOT)
-        audit = validate_case_records(args.records, args.inventory, output_dir)
+        audit = validate_case_records(
+            args.records,
+            args.inventory,
+            output_dir,
+            run_root=Path(context["run_root"]),
+        )
     except (
+        AssuranceContractError,
         FileNotFoundError,
         json.JSONDecodeError,
         PermissionError,

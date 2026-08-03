@@ -14,6 +14,7 @@ import logging
 import os
 import re
 import stat
+import sys
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -30,6 +31,21 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 SCRIPT_PATH = Path(__file__).resolve()
 COMPONENT_ROOT = SCRIPT_PATH.parents[1]
+for _vendor_root in (
+    COMPONENT_ROOT / "vendor" / "modules",
+    COMPONENT_ROOT.parent.parent / "vendor" / "modules",
+    COMPONENT_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 MANIFEST_NAME = "manifest.json"
 MANIFEST_TYPE = "inps_official_portal_export_registration"
 SCHEMA_VERSION = "2.0"
@@ -722,6 +738,7 @@ def _build_parser() -> argparse.ArgumentParser:
     register.add_argument("source_files", nargs="+", type=Path)
     register.add_argument("--output-dir", required=True, type=Path)
     register.add_argument("--source-origin", required=True)
+    register.add_argument("--client-engagement", required=True, type=Path)
 
     verify = subparsers.add_parser("verify", help="Verify a registered export.")
     verify.add_argument("output_dir", type=Path)
@@ -741,12 +758,19 @@ def main(argv: list[str] | None = None) -> int:
                 len(manifest["artifacts"]),
             )
             return 0
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="previdenza-inps",
+            input_paths=args.source_files,
+            output_dir=args.output_dir,
+        )
+        args.output_dir.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
         manifest_path = register_portal_exports(
             args.source_files,
             args.output_dir,
             source_origin=args.source_origin,
         )
-    except (OSError, PortalExportError) as exc:
+    except (AssuranceContractError, OSError, PortalExportError) as exc:
         LOGGER.error("%s", exc)
         return 1
     LOGGER.info("Registered official INPS export manifest at %s.", manifest_path)

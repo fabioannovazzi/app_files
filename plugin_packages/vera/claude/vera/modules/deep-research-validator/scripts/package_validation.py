@@ -10,6 +10,22 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 try:
     import pypandoc  # type: ignore[import-not-found]
 except ImportError:  # pragma: no cover - optional dependency
@@ -1295,6 +1311,8 @@ def write_validation_package(
     answer_contract_path: Path,
     validated_document_path: Path | None = None,
     write_docx: bool = False,
+    client_engagement: dict[str, Any] | None = None,
+    client_run_id: str | None = None,
 ) -> dict[str, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     document_inventory = _read_json(document_inventory_path)
@@ -1311,6 +1329,8 @@ def write_validation_package(
         source_inventory=source_inventory,
         claims_review=claims_review,
         answer_contract=answer_contract,
+        client_engagement=client_engagement,
+        client_run_id=client_run_id,
     )
     validated_document = (
         validated_document_path.read_text(encoding="utf-8")
@@ -1378,13 +1398,32 @@ def write_validation_package(
         answer_contract=answer_contract,
         audit=audit,
         paths=paths,
+        client_engagement=client_engagement,
     )
+    run_root = (
+        Path(str(client_engagement["run_root"])).expanduser().resolve(strict=True)
+        if client_engagement is not None
+        else None
+    )
+
+    def persisted_path(path: Path) -> str:
+        if run_root is None:
+            return str(path)
+        try:
+            return (
+                path.expanduser().resolve(strict=True).relative_to(run_root).as_posix()
+            )
+        except ValueError as exc:
+            raise ValueError(
+                "Answer Validator review artifact is outside the current run."
+            ) from exc
+
     audit["review_session"] = {
         "run_id": review_session.run_id,
-        "run_intake_path": str(review_session.run_intake_path),
-        "review_payload_path": str(review_session.review_payload_path),
-        "ui_decisions_path": str(review_session.ui_decisions_path),
-        "final_artifacts_path": str(review_session.final_artifacts_path),
+        "run_intake_path": persisted_path(review_session.run_intake_path),
+        "review_payload_path": persisted_path(review_session.review_payload_path),
+        "ui_decisions_path": persisted_path(review_session.ui_decisions_path),
+        "final_artifacts_path": persisted_path(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }
     _write_json(audit_path, audit)
@@ -1404,9 +1443,27 @@ def main() -> int:
         help="JSON answer contract produced during question intake.",
     )
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--validated-document", type=Path)
     parser.add_argument("--docx", action="store_true")
     args = parser.parse_args()
+    input_paths = [
+        args.document_inventory,
+        args.source_inventory,
+        args.claims_review,
+        args.answer_contract_file,
+    ]
+    if args.validated_document is not None:
+        input_paths.append(args.validated_document)
+    try:
+        client_context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="deep-research-validator",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     write_validation_package(
         args.document_inventory,
         args.source_inventory,
@@ -1415,6 +1472,8 @@ def main() -> int:
         answer_contract_path=args.answer_contract_file,
         validated_document_path=args.validated_document,
         write_docx=args.docx,
+        client_engagement=client_context,
+        client_run_id=str(client_context["run_id"]),
     )
     return 0
 

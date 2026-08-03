@@ -1,6 +1,6 @@
 {
   "name": "audit-reconciliation",
-  "version": "0.1.44",
+  "version": "0.1.45",
   "description": "Riconcilia partite aperte, mastrini, banche, distinte, factoring e compensazioni in workpaper Excel/Word rivedibili.",
   "author": {
     "name": "Mparanza",

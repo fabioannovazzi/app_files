@@ -104,18 +104,18 @@ choice of a connector, hosted-service action, or send/publish action is enough;
 do not ask again.
 
 
-## Client-bound journal work in Cowork
+## Client-bound work in Cowork
 
 Cowork v1 omits the local Studio Archive module. It cannot list or register
 stable local clients, create client folders, copy files into managed
 engagements, or issue and resume client-engagement contexts. Confirm one exact
-connected client folder and continue with useful source review, mapping,
-sampling-plan preparation, or support review. Run the sealed Journal Sampling
-or Check Entries product CLI only when a digest-valid context was supplied by a
-compatible local Vera installation and every bound local path is available in
-the current workspace. Otherwise state that the client-bound local run remains
-pending. Never invent a client, scope, engagement, workflow, or run ID from a
-name, filename, folder, or document content.
+connected client folder and continue with useful work on its sources. Run a
+client-bound Vera product CLI only when a digest-valid running context for that
+exact workflow was supplied by a compatible local Vera installation and every
+bound local path is available in the current workspace. Otherwise state that
+the client-bound local run remains pending. Never invent a client, scope,
+engagement, workflow, or run ID from a name, filename, folder, or document
+content.
 
 ## Module routing
 
@@ -319,10 +319,37 @@ data permit them.
 5. End with an Artifact Card. When useful, create `run_review.md` in the
    output folder; never edit plugin source or generated ZIPs during a run.
 
+### Local DOCX visual review
+
+A structural DOCX check does not establish that pagination, tables, images,
+headers, footers, or page breaks render correctly. For every DOCX intended for
+delivery, complete a visual review when the current runtime can operate local
+applications.
+
+When Microsoft Word is installed on the user's computer, use Word as the
+preferred application and rendering reference for the final visual review.
+Open the exact generated DOCX through compatible local computer control,
+inspect the rendered document, and, when useful for page-by-page inspection,
+export or print it to a temporary PDF. Read-only opening and inspection do not
+require an extra confirmation; request confirmation only if an application or
+operating-system permission prompt requires it under the active computer-use
+policy.
+
+LibreOffice may be used only as a fallback when Word is unavailable or cannot
+be operated by the current runtime. A LibreOffice launch, conversion, or local
+permission failure is not evidence that visual review is impossible while Word
+remains available and untried. Do not stop at that failure or describe it as a
+terminal limitation. Attempt Word first, then report the applications actually
+tried and any remaining unverified visual properties. Never describe a DOCX as
+visually validated on the basis of structural inspection alone.
+
 ## Working rules
 
-- Keep source files and generated artifacts in the local workspace by default;
-  content the model reads may enter the current model context.
+- For a Studio Archive client-bound run, preserve imported source snapshots and
+  generated artifacts inside that customer folder's exact engagement/run
+  ledger. For an in-chat or connected-folder-only workflow without that local
+  capability, use the selected workspace and state that no portable Vera run
+  was created. Content the model reads may enter the current model context.
 - For Gmail, use a callable read-only Gmail connector, keep confirmed identities
   scoped to the current task, search exactly one client, and use read actions
   only. Never require a local archive or claim cross-task identity persistence.
@@ -356,8 +383,9 @@ data permit them.
   approval-sensitive, or materially unresolved steps.
 - Treat missing required evidence as `partial` or `blocked`; do not replace it
   with model inference.
-- Never write run outputs inside this Git workspace; use the user-selected
-  customer or run output folder.
+- Never write run outputs inside this Git workspace. For client-bound Claude
+  work, use only the prepared customer-folder run's exact `output_dir`; do not
+  invent a parallel output folder.
 - Do not install packages at runtime except for the explicit, user-approved,
   one-time managed PaddleOCR setup above. Report other missing requirements
   without asking the user to run technical installation commands.

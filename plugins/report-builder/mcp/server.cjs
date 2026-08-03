@@ -229,6 +229,7 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
@@ -258,6 +259,7 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -271,7 +273,7 @@ function toolDefinitions() {
           "Externally retained current integrity checkpoint. Required before applying a later review round.",
       },
     },
-    ["review_payload", "decisions"],
+    ["client_engagement", "review_payload", "decisions"],
   );
   return [
     {
@@ -433,6 +435,10 @@ function validateReviewPayload(inputArgs) {
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
   const payload = {
     widget_type: "report_builder_review",
+    client_engagement:
+      typeof inputArgs.client_engagement === "string"
+        ? inputArgs.client_engagement
+        : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -451,10 +457,8 @@ function validateReviewPayload(inputArgs) {
 }
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -631,6 +635,7 @@ function saveDecisionPayload(inputArgs) {
     );
   };
   if (!outputDir) return persist(inputArgs, null).result;
+  preflightClientWorkflowRun(outputDir, inputArgs?.review_payload?.run_id);
   validateReportBuilderTransactionInput(outputDir);
   return withGeneratedReviewOutputTransaction(
     outputDir,
@@ -664,8 +669,68 @@ function saveDecisionPayload(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputReference) return null;
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : "";
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error("Report Builder persistence requires the current client_engagement context.");
+  }
+  const contextPath = path.resolve(contextValue);
+  if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
+    throw new Error("Report Builder client_engagement path is invalid.");
+  }
+  const contextStat = generatedReviewPathEntryStat(contextPath);
+  if (
+    !contextStat ||
+    !contextStat.isFile() ||
+    contextStat.isSymbolicLink() ||
+    contextStat.nlink !== 1
+  ) {
+    throw new Error("Report Builder client_engagement context is unavailable.");
+  }
+  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("Report Builder output reference is not run-root-relative.");
+  }
+  const runRoot = path.dirname(contextPath);
+  const resolved = path.isAbsolute(outputReference)
+    ? path.resolve(outputReference)
+    : path.resolve(runRoot, outputReference);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Report Builder output reference leaves the customer run.");
+  }
+  return resolved;
+}
+
+function reportBuilderClientEngagementPath(outputDir) {
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    const contextStat = generatedReviewPathEntryStat(contextPath);
+    if (
+      contextStat &&
+      contextStat.isFile() &&
+      !contextStat.isSymbolicLink() &&
+      contextStat.nlink === 1
+    ) {
+      return contextPath;
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) return null;
+    candidate = parent;
+  }
+}
+
+function reportBuilderPersistentOutputDir(clientEngagement) {
+  return path.join(path.dirname(clientEngagement), "outputs");
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -1191,7 +1256,10 @@ function parentBoundReportBuilderArgs(
   if (
     persistedRunIntake &&
     (typeof persistedRunIntake.output_dir !== "string" ||
-      path.resolve(persistedRunIntake.output_dir) !== path.resolve(outputDir))
+      resolveRunOutputDir({
+        ...inputArgs,
+        run_intake: persistedRunIntake,
+      }) !== path.resolve(outputDir))
   ) {
     throw new Error(REPORT_BUILDER_AUTHORIZATION_FAILURE);
   }
@@ -1352,7 +1420,28 @@ function validateReportBuilderRelativeReceipt(outputDir, receipt) {
   }
 }
 
-function validateReportBuilderSourceRecord(record) {
+function reportBuilderSourceRoot(outputDir, rootPath) {
+  if (path.isAbsolute(rootPath)) return path.resolve(rootPath);
+  const relative = reportBuilderCanonicalRelativePath(rootPath);
+  const clientEngagement = reportBuilderClientEngagementPath(outputDir);
+  if (!clientEngagement) {
+    throw new Error("Report Builder portable source root has no customer run");
+  }
+  const runRoot = path.dirname(clientEngagement);
+  const resolved = path.resolve(runRoot, relative);
+  const containment = path.relative(runRoot, resolved);
+  if (
+    !containment ||
+    containment === ".." ||
+    containment.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(containment)
+  ) {
+    throw new Error("Report Builder source root leaves the customer run");
+  }
+  return resolved;
+}
+
+function validateReportBuilderSourceRecord(record, outputDir) {
   if (
     !reportBuilderExactFields(record, [
       "artifact_id",
@@ -1395,7 +1484,7 @@ function validateReportBuilderSourceRecord(record) {
     throw new Error("invalid Report Builder source receipt");
   }
   const sourcePath = reportBuilderContainedFile(
-    record.root_path,
+    reportBuilderSourceRoot(outputDir, record.root_path),
     receipt.path,
   );
   const snapshot = reportBuilderStableFileSnapshot(sourcePath);
@@ -1587,7 +1676,7 @@ function validateReportBuilderSourceIndex(outputDir) {
   }
   const sourcesById = new Map();
   for (const source of sourceIndex.sources) {
-    const validated = validateReportBuilderSourceRecord(source);
+    const validated = validateReportBuilderSourceRecord(source, outputDir);
     if (sourcesById.has(source.artifact_id)) {
       throw new Error("duplicate Report Builder source identity");
     }
@@ -2305,7 +2394,10 @@ function reportBuilderExpectedPhysicalPaths(outputDir) {
       ) {
         throw new Error("invalid Report Builder extracted source entry");
       }
-      const sourceRoot = path.resolve(source.root_path);
+      const sourceRoot = reportBuilderSourceRoot(
+        outputDir,
+        source.root_path,
+      );
       const rootRelative = path.relative(extractedRoot, sourceRoot);
       if (
         rootRelative === "" ||
@@ -4117,6 +4209,7 @@ function applyDecisionPayload(inputArgs) {
     });
   };
   if (!outputDir) return applyPrepared(prepareApplication(inputArgs), null);
+  preflightClientWorkflowRun(outputDir, inputArgs?.review_payload?.run_id);
   validateReportBuilderTransactionInput(outputDir);
   return withGeneratedReviewOutputTransaction(
     outputDir,
@@ -4430,6 +4523,82 @@ function pythonExecutable() {
   return "python3";
 }
 
+const CLIENT_WORKFLOW_PREFLIGHT = String.raw`
+import json
+import sys
+from pathlib import Path
+
+plugin_root = Path(sys.argv[1]).resolve()
+output_dir = Path(sys.argv[2])
+workflow_id = sys.argv[3]
+candidates = (
+    plugin_root.parent / "_shared" / "vendor" / "modules",
+    plugin_root / "vendor" / "modules",
+    plugin_root.parent.parent / "vendor" / "modules",
+)
+for candidate in candidates:
+    if (candidate / "vera_assurance").is_dir():
+        sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+from vera_assurance import load_client_workflow_context_for_output
+
+context = load_client_workflow_context_for_output(
+    output_dir,
+    expected_workflow_id=workflow_id,
+)
+print(json.dumps({
+    "ok": True,
+    "schema_version": context["schema_version"],
+    "workflow_id": context["workflow_id"],
+    "run_id": context["run_id"],
+}, separators=(",", ":")))
+`;
+
+function preflightClientWorkflowRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  const completed = spawnSync(
+    pythonExecutable(),
+    [
+      "-I",
+      "-B",
+      "-c",
+      CLIENT_WORKFLOW_PREFLIGHT,
+      PLUGIN_ROOT,
+      outputDir,
+      "report-builder",
+    ],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error(
+      "Report Builder persistence requires a running v2 customer-folder workflow run",
+    );
+  }
+  let result;
+  try {
+    result = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error(
+      "Report Builder customer-run preflight returned an invalid result",
+    );
+  }
+  if (
+    !isPlainObject(result) ||
+    result.ok !== true ||
+    result.schema_version !== "vera.client_workflow_context.v2" ||
+    result.workflow_id !== "report-builder" ||
+    result.run_id !== expectedRunId
+  ) {
+    throw new Error(
+      "Report Builder customer-run preflight returned an invalid result",
+    );
+  }
+  return result;
+}
+
 function sanitizedChildFailure(completed, fallback) {
   const output = [completed.stderr, completed.stdout]
     .filter((value) => typeof value === "string" && value.trim())
@@ -4461,6 +4630,10 @@ function applyWorkflowSpecificReviewApplication(
   const currentApplied = readJsonFileIfPresent(appliedOutputPath);
   if (!currentApplied) return null;
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const clientEngagement = reportBuilderClientEngagementPath(outputDir);
+  if (!clientEngagement) {
+    throw new Error("Report Builder customer-run context is unavailable.");
+  }
   const completed = spawnSync(
     pythonExecutable(),
     [
@@ -4477,6 +4650,10 @@ function applyWorkflowSpecificReviewApplication(
       expectedAppliedSha256,
       "--expected-final-artifacts-sha256",
       expectedFinalArtifactsSha256,
+      "--client-engagement",
+      clientEngagement,
+      "--persistent-output-dir",
+      reportBuilderPersistentOutputDir(clientEngagement),
     ],
     {
       cwd: PLUGIN_ROOT,

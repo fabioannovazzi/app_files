@@ -85,27 +85,49 @@ legal judgment; the validator does not implement it as automatic redaction or a
 minimum-context classifier. It does not certify GDPR compliance or verify the
 deployment's actual account settings.
 
-## Client-first journal workflow in Codex
+## Client-first workflow in Codex
 
-When a professional starts with a journal file, route through Studio Archive
-before Journal Sampling. Do not infer the client from the filename and do not
-assume that a client is existing merely because a similarly named folder
-exists. List registered clients and unregistered scopes, resolve the intended
-client semantically with the user when needed, and retain the returned stable
-`client_id`. Register a confirmed existing scope or create a folder only after
-the user chooses New client. New folder creation starts but never completes
-the separate New Client professional workflow.
+Every local Vera workflow run begins in Studio Archive, and the selected
+customer folder is its durable source of truth. Do not infer the client from a
+filename or assume that a similarly named folder is registered. Follow this
+explicit sequence:
 
-Before copying the journal, tell the user that Vera preserves the original and
-creates one controlled engagement copy. After authorization, import it with
-role `journal` and pass the returned client-engagement context unchanged to
-Journal Sampling. When support arrives in a later chat, list the same client's
-durable engagements and persisted workflow runs. Select the exact engagement
-and normalized Journal Sampling run; ask if more than one could apply. Import
-ZIP/PDF support with role `support` into that engagement and pass the returned
-Check Entries context unchanged. Never rely on an archived chat to recover the
-handoff, and reject client, engagement, input, or output paths that do not
-close mechanically.
+1. Identify an existing customer folder by its `Vera/client.json` identity, or
+   create a new folder only after the user chooses New client.
+2. Create or select one explicit engagement.
+3. After authorization, import each selected file as an immutable, receipted
+   input. Use role `source` generally, `journal` for Journal Sampling, and
+   `support` for Check Entries evidence. Import does not prepare or start a run.
+4. Prepare the selected workflow from the exact input IDs and exact finalized
+   same-engagement upstream artifacts it needs. The same request is idempotent;
+   a new run must be explicit.
+5. Start the run. Pass its `client_engagement_path` unchanged to the module's
+   `--client-engagement` entry points, execute only hydrated bound input paths,
+   and write only below the exact `output_dir`.
+6. Finalize by declaring every physical output with a stable artifact ID,
+   relative path, concrete purpose, audience, and media type. Review those
+   artifacts, then complete the run. Record failure or cancellation instead of
+   treating a partial directory as a result.
+
+The mechanical gate rejects another workflow, cross-client or cross-engagement
+inputs, edited or stale receipts, inputs added after preparation, and output
+outside the run. A later chat lists or recovers the customer-folder ledger
+rather than relying on archived chat history or a machine-local path pointer.
+Folder rename recovery uses the stable manifest identity and portable relative
+paths. Retention reporting is non-destructive, and an engagement closes only
+after active runs are completed or cancelled.
+
+New Client's subordinate Client File Preparation phase receives its own run
+under the same engagement. New Client may consume that prior run only through
+its verified final-artifact binding. Journal Sampling finalizes the exact
+normalized population, diagnostics, sample, and normalization assurance
+companions that Check Entries actually replays. Each Check Entries evidence
+batch receives a separate run bound to that complete exact handoff and its own
+support receipts; an intentionally separate identical selection uses the
+explicit new-run option. It checks only the sample and never discovers later
+engagement files implicitly.
+Reuse an explicit run's `idempotency_key` for safe retries and choose a new key
+for each intentionally distinct run.
 
 ## Module routing
 
@@ -117,10 +139,12 @@ close mechanically.
   is capability-gated and excluded from Cowork v1; on another supported local
   runtime it requires one confirmed complete phone number and a verified
   one-to-one chat. Each professional may additionally keep a private SQLite
-  index and client identity registry for one shared or synced studio folder.
-  Search and indexing do not edit sources. After explicit user choice, the
-  intake route may create one derived client folder and may copy selected
-  journal/support files into a generated engagement subtree without
+  search index, configuration, and optional private contact metadata for one
+  shared or synced studio folder. The portable client, engagement, input, run,
+  lifecycle, and artifact ledger stays in each customer folder. Search and
+  indexing do not edit sources. After explicit user choice, the intake route
+  may create one derived client folder and engagement and may copy selected
+  source, journal, or support files into its managed subtree without
   overwriting the originals. The workflow never stores Gmail credentials or
   messages, modifies existing source documents or mail, shares a local index,
   uses WhatsApp Web or an unofficial API, or downloads OCR weights;
@@ -327,10 +351,37 @@ data permit them.
 5. End with an Artifact Card. When useful, create `codex_run_review.md` in the
    output folder; never edit plugin source or generated ZIPs during a run.
 
+### Local DOCX visual review
+
+A structural DOCX check does not establish that pagination, tables, images,
+headers, footers, or page breaks render correctly. For every DOCX intended for
+delivery, complete a visual review when the current runtime can operate local
+applications.
+
+When Microsoft Word is installed on the user's computer, use Word as the
+preferred application and rendering reference for the final visual review.
+Open the exact generated DOCX through compatible local computer control,
+inspect the rendered document, and, when useful for page-by-page inspection,
+export or print it to a temporary PDF. Read-only opening and inspection do not
+require an extra confirmation; request confirmation only if an application or
+operating-system permission prompt requires it under the active computer-use
+policy.
+
+LibreOffice may be used only as a fallback when Word is unavailable or cannot
+be operated by the current runtime. A LibreOffice launch, conversion, or local
+permission failure is not evidence that visual review is impossible while Word
+remains available and untried. Do not stop at that failure or describe it as a
+terminal limitation. Attempt Word first, then report the applications actually
+tried and any remaining unverified visual properties. Never describe a DOCX as
+visually validated on the basis of structural inspection alone.
+
 ## Working rules
 
-- Keep source files and generated artifacts in the local workspace by default;
-  content the model reads may enter the current model context.
+- For a Studio Archive client-bound run, preserve imported source snapshots and
+  generated artifacts inside that customer folder's exact engagement/run
+  ledger. For an in-chat or connected-folder-only workflow without that local
+  capability, use the selected workspace and state that no portable Vera run
+  was created. Content the model reads may enter the current model context.
 - For Gmail, use a callable read-only Gmail connector, keep confirmed identities
   scoped to the current task, search exactly one client, and use read actions
   only. Never require a local archive or claim cross-task identity persistence.
@@ -370,8 +421,9 @@ data permit them.
   approval-sensitive, or materially unresolved steps.
 - Treat missing required evidence as `partial` or `blocked`; do not replace it
   with model inference.
-- Never write run outputs inside this Git workspace; use the user-selected
-  customer or run output folder.
+- Never write run outputs inside this Git workspace. For client-bound Codex
+  work, use only the prepared customer-folder run's exact `output_dir`; do not
+  invent a parallel output folder.
 - Do not install packages at runtime except for the explicit, user-approved,
   one-time managed PaddleOCR setup above. Report other missing requirements
   without asking the user to run technical installation commands.

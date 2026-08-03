@@ -8,8 +8,10 @@ from pathlib import Path
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     ensure_safe_output_dir,
     iso_now,
+    load_running_case_context,
     safe_identifier,
     validate_iso_date,
     write_private_json,
@@ -28,6 +30,7 @@ def initialize_case(
     reference_date: str,
     client_reference: str,
     language: str = "it",
+    client_engagement: Path | None = None,
 ) -> dict[str, Path]:
     """Create bounded empty drafts without choosing legal classifications."""
 
@@ -39,6 +42,23 @@ def initialize_case(
         raise ValueError("language must be a short language tag")
     spanish = language == "es" or language.startswith("es-")
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
+    output_reference = safe_output.as_posix()
+    context_reference = (
+        client_engagement.resolve().as_posix()
+        if client_engagement is not None
+        else None
+    )
+    path_reference = "absolute"
+    if client_engagement is not None:
+        context = load_running_case_context(
+            client_engagement,
+            output_dir=safe_output,
+        )
+        if str(context["run_id"]) != run_id:
+            raise ValueError("run_id must match the customer-folder workflow run")
+        output_reference = safe_output.relative_to(Path(context["run_root"])).as_posix()
+        context_reference = Path(client_engagement).name
+        path_reference = "run_root_relative"
     intake_path = safe_output / "case_intake_draft.json"
     plan_path = safe_output / "practice_plan_draft.json"
     run_path = safe_output / "run_intake.json"
@@ -122,8 +142,9 @@ def initialize_case(
             "reference_date": reference_date,
             "created_at": iso_now(),
             "language": language,
+            "path_reference": path_reference,
             "input_paths": [],
-            "output_dir": safe_output.as_posix(),
+            "output_dir": output_reference,
             "inferred_task": (
                 (
                     "Preparar un borrador respaldado por fuentes para la apertura "
@@ -177,9 +198,15 @@ def initialize_case(
                         "python",
                         "scripts/initialize_case.py",
                         "--output-dir",
-                        safe_output.as_posix(),
-                        "--run-id",
-                        run_id,
+                        output_reference,
+                        *(
+                            [
+                                "--client-engagement",
+                                context_reference,
+                            ]
+                            if client_engagement is not None
+                            else []
+                        ),
                         "--reference-date",
                         reference_date,
                         "--client-reference",
@@ -201,14 +228,25 @@ def initialize_case(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--reference-date", required=True)
     parser.add_argument("--client-reference", required=True)
     parser.add_argument("--language", default="it")
     args = parser.parse_args(argv)
     try:
-        paths = initialize_case(**vars(args))
-    except (OSError, ValueError) as exc:
+        context = load_running_case_context(
+            args.client_engagement,
+            output_dir=args.output_dir,
+        )
+        paths = initialize_case(
+            args.output_dir,
+            run_id=context["run_id"],
+            reference_date=args.reference_date,
+            client_reference=args.client_reference,
+            language=args.language,
+            client_engagement=args.client_engagement,
+        )
+    except (AssuranceContractError, OSError, ValueError) as exc:
         LOGGER.error("INITIALIZATION_BLOCKED: %s", exc)
         return 2
     LOGGER.info("Initialized case drafts in %s", paths["run_intake"].parent)

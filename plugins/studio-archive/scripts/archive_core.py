@@ -8,6 +8,7 @@ import json
 import os
 import re
 import secrets
+import shutil
 import sqlite3
 import stat
 import sys
@@ -21,7 +22,7 @@ from email.parser import BytesParser
 from email.utils import getaddresses
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any, Iterator, Sequence
+from typing import Any, Iterator, Mapping, Sequence
 
 
 def _add_vera_assurance_module_path() -> None:
@@ -41,18 +42,28 @@ def _add_vera_assurance_module_path() -> None:
 
 _add_vera_assurance_module_path()
 
+_SCRIPT_DIRECTORY = Path(__file__).resolve().parent
+if str(_SCRIPT_DIRECTORY) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIRECTORY))
+
+import client_ledger as ledger  # noqa: E402
 from vera_assurance import (  # noqa: E402
-    build_client_engagement_context,
+    VERA_CLIENT_WORKFLOW_IDS,
     build_studio_client_folder_binding,
-    validate_client_engagement_context,
 )
 
 __all__ = [
     "ArchiveError",
     "ArchiveNotConfiguredError",
     "SourceChangedError",
+    "cancel_studio_client_workflow",
+    "close_studio_client_engagement",
+    "complete_studio_client_workflow",
     "configure_archive",
+    "create_studio_client_engagement",
     "create_studio_client",
+    "fail_studio_client_workflow",
+    "finalize_studio_client_workflow",
     "get_studio_client_folder",
     "import_studio_client_document",
     "list_studio_client_engagements",
@@ -61,25 +72,24 @@ __all__ = [
     "open_archive_source",
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
+    "recover_studio_client_ledger",
     "refresh_archive",
+    "report_studio_client_retention",
     "search_archive",
     "set_studio_client_identity",
+    "start_studio_client_workflow",
     "studio_archive_status",
 ]
 
 SCHEMA_VERSION = "2"
 CONFIG_SCHEMA_VERSION = 1
 CLIENT_IDENTITIES_SCHEMA_VERSION = 2
-CLIENT_ENGAGEMENTS_SCHEMA_VERSION = 1
 STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
 DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
 CLIENT_IDENTITIES_FILENAME = "client-identities.json"
-CLIENT_ENGAGEMENTS_FILENAME = "client-engagements.json"
-WORKFLOW_CONTEXT_DIRECTORY = "workflow-contexts"
 DATABASE_FILENAME = "archive.sqlite3"
-CLIENT_WORKSPACE_DIRECTORY = "vera-client-work"
-MANAGED_ENGAGEMENTS_DIRECTORY = "Vera engagements"
+MANAGED_ENGAGEMENTS_DIRECTORY = ledger.LEDGER_DIRECTORY
 
 TEXT_SUFFIXES = {".txt", ".md", ".csv", ".json", ".xml"}
 PDF_SUFFIXES = {".pdf"}
@@ -123,11 +133,9 @@ MAX_CLIENT_IDENTITIES = 5_000
 MAX_CLIENT_EMAIL_ADDRESSES = 20
 MAX_CLIENT_LEGAL_NAMES = 20
 MAX_CLIENT_TAX_IDENTIFIERS = 20
-MAX_CLIENT_ENGAGEMENTS = 10_000
-MAX_ENGAGEMENT_IMPORTS = 1_000
-MAX_WORKFLOW_CONTEXTS = 50_000
 MAX_GMAIL_QUERY_IDENTITIES = 10
 MAX_GMAIL_TOPIC_CHARS = 200
+SUPPORTED_ENGAGEMENT_IMPORT_ROLES = {"journal", "source", "support"}
 IGNORED_NAMES = {
     ".DS_Store",
     ".git",
@@ -215,54 +223,6 @@ class ClientIdentity:
             "legal_names": list(self.legal_names),
             "tax_identifiers": list(self.tax_identifiers),
             "updated_at": self.updated_at,
-        }
-
-
-@dataclass(frozen=True)
-class EngagementImport:
-    """One immutable file copied into a managed client engagement."""
-
-    role: str
-    relative_path: str
-    original_name: str
-    byte_count: int
-    sha256: str
-    imported_at: str
-
-    def as_json(self) -> dict[str, Any]:
-        """Return the persisted import receipt."""
-
-        return {
-            "role": self.role,
-            "relative_path": self.relative_path,
-            "original_name": self.original_name,
-            "byte_count": self.byte_count,
-            "sha256": self.sha256,
-            "imported_at": self.imported_at,
-        }
-
-
-@dataclass(frozen=True)
-class ClientEngagement:
-    """One stable client engagement and its managed input receipts."""
-
-    engagement_id: str
-    client_id: str
-    label: str
-    workspace_root: str
-    created_at: str
-    imports: tuple[EngagementImport, ...]
-
-    def as_json(self) -> dict[str, Any]:
-        """Return the persisted engagement record."""
-
-        return {
-            "engagement_id": self.engagement_id,
-            "client_id": self.client_id,
-            "label": self.label,
-            "workspace_root": self.workspace_root,
-            "created_at": self.created_at,
-            "imports": [item.as_json() for item in self.imports],
         }
 
 
@@ -412,14 +372,6 @@ def _config_path(state_dir: Path) -> Path:
 
 def _client_identities_path(state_dir: Path) -> Path:
     return state_dir / CLIENT_IDENTITIES_FILENAME
-
-
-def _client_engagements_path(state_dir: Path) -> Path:
-    return state_dir / CLIENT_ENGAGEMENTS_FILENAME
-
-
-def _workflow_context_path(state_dir: Path, run_id: str) -> Path:
-    return state_dir / WORKFLOW_CONTEXT_DIRECTORY / f"{run_id}.json"
 
 
 def _database_path(state_dir: Path) -> Path:
@@ -854,253 +806,78 @@ def _normalize_engagement_label(value: str) -> str:
     return label
 
 
-def _validate_import_relative_path(value: object, engagement_id: str) -> str:
-    if not isinstance(value, str) or not value:
-        raise ArchiveError("Engagement import path is invalid.")
-    relative = Path(value)
-    required_prefix = Path(MANAGED_ENGAGEMENTS_DIRECTORY) / engagement_id / "inputs"
-    if (
-        relative.is_absolute()
-        or relative.as_posix() != value
-        or any(part in {"", ".", ".."} for part in relative.parts)
-        or not _path_is_within(relative, required_prefix)
-    ):
-        raise ArchiveError("Engagement import path escapes its managed input folder.")
-    return value
+def _discover_ledger_clients(config: ArchiveConfig) -> tuple[dict[str, Any], ...]:
+    """Read portable client IDs from exact top-level customer folders."""
 
-
-def _load_client_engagements(state_dir: Path) -> tuple[ClientEngagement, ...]:
-    path = _client_engagements_path(state_dir)
-    if not path.is_file():
-        return ()
-    _assert_private_file(path, "client engagement registry")
+    scoped_roots = [
+        (scope.scope_id, _resolve_scope_root(config.archive_root, scope))
+        for scope in config.scopes
+        if scope.relative_dir != "."
+    ]
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as exc:
-        raise ArchiveError(
-            f"Studio Archive client engagement registry is unreadable: {exc}"
-        ) from exc
-    if (
-        not isinstance(payload, dict)
-        or payload.get("schema_version") != CLIENT_ENGAGEMENTS_SCHEMA_VERSION
-        or not isinstance(payload.get("engagements"), list)
-        or len(payload["engagements"]) > MAX_CLIENT_ENGAGEMENTS
-    ):
-        raise ArchiveError("Studio Archive client engagement registry is malformed.")
-    records: list[ClientEngagement] = []
-    seen_ids: set[str] = set()
-    engagement_keys = {
-        "engagement_id",
-        "client_id",
-        "label",
-        "workspace_root",
-        "created_at",
-        "imports",
-    }
-    import_keys = {
-        "role",
-        "relative_path",
-        "original_name",
-        "byte_count",
-        "sha256",
-        "imported_at",
-    }
-    for item in payload["engagements"]:
-        if not isinstance(item, dict) or set(item) != engagement_keys:
-            raise ArchiveError("Studio Archive engagement record is malformed.")
-        engagement_id = item["engagement_id"]
-        client_id = item["client_id"]
-        workspace_root = item["workspace_root"]
-        imports = item["imports"]
-        if (
-            not isinstance(engagement_id, str)
-            or re.fullmatch(r"eng_[0-9a-f]{24}", engagement_id) is None
-            or engagement_id in seen_ids
-            or not isinstance(client_id, str)
-            or re.fullmatch(r"client_[0-9a-f]{24}", client_id) is None
-            or not isinstance(workspace_root, str)
-            or not Path(workspace_root).is_absolute()
-            or str(Path(workspace_root)) != workspace_root
-            or not isinstance(item["created_at"], str)
-            or not item["created_at"]
-            or not isinstance(imports, list)
-            or len(imports) > MAX_ENGAGEMENT_IMPORTS
-        ):
-            raise ArchiveError("Studio Archive engagement record is invalid.")
-        normalized_imports: list[EngagementImport] = []
-        seen_paths: set[str] = set()
-        for raw_import in imports:
-            if not isinstance(raw_import, dict) or set(raw_import) != import_keys:
-                raise ArchiveError("Studio Archive engagement import is malformed.")
-            role = raw_import["role"]
-            relative_path = _validate_import_relative_path(
-                raw_import["relative_path"], engagement_id
-            )
-            if (
-                role not in {"journal", "support"}
-                or relative_path in seen_paths
-                or not isinstance(raw_import["original_name"], str)
-                or not raw_import["original_name"]
-                or not isinstance(raw_import["byte_count"], int)
-                or isinstance(raw_import["byte_count"], bool)
-                or raw_import["byte_count"] < 0
-                or not isinstance(raw_import["sha256"], str)
-                or re.fullmatch(r"[0-9a-f]{64}", raw_import["sha256"]) is None
-                or not isinstance(raw_import["imported_at"], str)
-                or not raw_import["imported_at"]
-            ):
-                raise ArchiveError("Studio Archive engagement import is invalid.")
-            normalized_imports.append(
-                EngagementImport(
-                    role=role,
-                    relative_path=relative_path,
-                    original_name=raw_import["original_name"],
-                    byte_count=raw_import["byte_count"],
-                    sha256=raw_import["sha256"],
-                    imported_at=raw_import["imported_at"],
-                )
-            )
-            seen_paths.add(relative_path)
-        records.append(
-            ClientEngagement(
-                engagement_id=engagement_id,
-                client_id=client_id,
-                label=_normalize_engagement_label(item["label"]),
-                workspace_root=workspace_root,
-                created_at=item["created_at"],
-                imports=tuple(normalized_imports),
-            )
-        )
-        seen_ids.add(engagement_id)
-    return tuple(sorted(records, key=lambda record: record.engagement_id))
+        return ledger.find_client_manifests(scoped_roots)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
 
 
-def _write_client_engagements(
+def _synchronize_client_identities(
     state_dir: Path,
-    records: Sequence[ClientEngagement],
-) -> None:
-    if len(records) > MAX_CLIENT_ENGAGEMENTS or len(
-        {record.engagement_id for record in records}
-    ) != len(records):
-        raise ArchiveError("Studio Archive client engagement registry is invalid.")
-    _write_private_json(
-        _client_engagements_path(state_dir),
-        {
-            "schema_version": CLIENT_ENGAGEMENTS_SCHEMA_VERSION,
-            "engagements": [
-                record.as_json()
-                for record in sorted(records, key=lambda item: item.engagement_id)
-            ],
-        },
-    )
+    config: ArchiveConfig,
+) -> tuple[ClientIdentity, ...]:
+    """Rebuild the private scope pointer from portable customer manifests.
 
+    Email, PEC, legal-name, and tax-identifier values stay in the private
+    registry.  Only the opaque client ID is recovered from the shared folder.
+    """
 
-def _load_workflow_contexts(
-    state_dir: Path,
-) -> tuple[tuple[dict[str, Any], Path], ...]:
-    """Load every private, digest-valid workflow context for chat resumption."""
-
-    directory = state_dir / WORKFLOW_CONTEXT_DIRECTORY
-    if not directory.exists():
-        return ()
-    observed_directory = directory.lstat()
-    if directory.is_symlink() or not stat.S_ISDIR(observed_directory.st_mode):
-        raise ArchiveError("Studio Archive workflow context store is invalid.")
-    entries = sorted(directory.iterdir(), key=lambda item: item.name)
-    if len(entries) > MAX_WORKFLOW_CONTEXTS:
-        raise ArchiveError("Studio Archive workflow context store is too large.")
-    records: list[tuple[dict[str, Any], Path]] = []
-    seen_run_ids: set[str] = set()
-    for path in entries:
-        observed = path.lstat()
-        if (
-            path.is_symlink()
-            or not stat.S_ISREG(observed.st_mode)
-            or observed.st_nlink != 1
-            or path.suffix != ".json"
-            or re.fullmatch(r"run_[0-9a-f]{24}\.json", path.name) is None
-        ):
-            raise ArchiveError("Studio Archive workflow context entry is invalid.")
-        _assert_private_file(path, "workflow context")
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-            context = validate_client_engagement_context(payload)
-        except (OSError, json.JSONDecodeError, ValueError) as exc:
+    records = list(_load_client_identities(state_dir))
+    by_client = {record.client_id: record for record in records}
+    by_scope = {record.scope_id: record for record in records}
+    changed = False
+    for found in _discover_ledger_clients(config):
+        client_id = found["client_id"]
+        scope_id = found["scope_id"]
+        scope_owner = by_scope.get(scope_id)
+        if scope_owner is not None and scope_owner.client_id != client_id:
             raise ArchiveError(
-                f"Studio Archive workflow context is unreadable: {exc}"
-            ) from exc
-        if path.stem != context["run_id"] or context["run_id"] in seen_run_ids:
-            raise ArchiveError("Studio Archive workflow context identity is invalid.")
-        records.append((context, path))
-        seen_run_ids.add(context["run_id"])
-    return tuple(records)
-
-
-def _workflow_run_record(context: dict[str, Any], path: Path) -> dict[str, Any]:
-    """Return exact persisted paths and mechanical availability for one run."""
-
-    def ordinary_file_available(candidate: Path) -> bool:
-        try:
-            observed = candidate.lstat()
-        except FileNotFoundError:
-            return False
-        return stat.S_ISREG(observed.st_mode) and observed.st_nlink == 1
-
-    output_dir = Path(context["output_dir"])
-    artifacts: dict[str, Any]
-    if context["workflow_id"] == "journal-sampling":
-        normalization_dir = output_dir / "normalization"
-        sample_dir = output_dir / "sample"
-        normalized_journal = normalization_dir / "normalized_journal.csv"
-        normalization_diagnostics = normalization_dir / "normalization_diagnostics.json"
-        artifacts = {
-            "normalized_journal_path": str(normalized_journal),
-            "normalization_diagnostics_path": str(normalization_diagnostics),
-            "normalization_available": (
-                ordinary_file_available(normalized_journal)
-                and ordinary_file_available(normalization_diagnostics)
-            ),
-            "sample_output_dir": str(sample_dir),
-            "sample_available": (
-                ordinary_file_available(sample_dir / "sampling_audit.json")
-                and ordinary_file_available(sample_dir / "final_artifacts.json")
-            ),
-        }
-    elif context["workflow_id"] == "check-entries":
-        checks_dir = output_dir / "checks"
-        artifacts = {
-            "checks_output_dir": str(checks_dir),
-            "checks_available": (
-                ordinary_file_available(checks_dir / "check_audit.json")
-                and ordinary_file_available(checks_dir / "final_artifacts.json")
-            ),
-        }
-    else:
-        artifacts = {
-            "run_output_dir": str(output_dir),
-            "run_output_available": output_dir.is_dir(),
-        }
-    return {
-        "workflow_id": context["workflow_id"],
-        "run_id": context["run_id"],
-        "client_engagement_path": str(path),
-        "client_engagement": context,
-        **artifacts,
-    }
-
-
-def _client_workspace_root(state_dir: Path, archive_root: Path) -> Path:
-    root = (state_dir.parent / CLIENT_WORKSPACE_DIRECTORY).resolve()
-    if _path_is_within(root, archive_root) or _path_is_within(archive_root, root):
-        raise ArchiveError(
-            "The private client workspace and Studio Archive must not contain one another."
+                "A customer-folder manifest conflicts with the private client registry."
+            )
+        existing = by_client.get(client_id)
+        if existing is None:
+            replacement = ClientIdentity(
+                client_id=client_id,
+                scope_id=scope_id,
+                email_addresses=(),
+                legal_names=(),
+                tax_identifiers=(),
+                updated_at=_now_iso(),
+            )
+            records.append(replacement)
+            by_client[client_id] = replacement
+            by_scope[scope_id] = replacement
+            changed = True
+            continue
+        if existing.scope_id == scope_id:
+            continue
+        replacement = ClientIdentity(
+            client_id=existing.client_id,
+            scope_id=scope_id,
+            email_addresses=existing.email_addresses,
+            legal_names=existing.legal_names,
+            tax_identifiers=existing.tax_identifiers,
+            updated_at=_now_iso(),
         )
-    if root.is_symlink():
-        raise ArchiveError("The private client workspace cannot be a symbolic link.")
-    root.mkdir(parents=True, exist_ok=True, mode=0o700)
-    if os.name == "posix":
-        root.chmod(0o700)
-    return root
+        records = [
+            replacement if record.client_id == client_id else record
+            for record in records
+        ]
+        by_client[client_id] = replacement
+        by_scope.pop(existing.scope_id, None)
+        by_scope[scope_id] = replacement
+        changed = True
+    if changed:
+        _write_client_identities(state_dir, records)
+    return tuple(sorted(records, key=lambda record: record.client_id))
 
 
 def _client_record(
@@ -1141,7 +918,11 @@ def list_studio_client_identities(
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = _load_client_identities(private_state)
+    records = (
+        _load_client_identities(private_state)
+        if scopes_changed
+        else _synchronize_client_identities(private_state, config)
+    )
     records_by_scope = {record.scope_id: record for record in records}
     active_scope_ids = {scope.scope_id for scope in config.scopes}
     clients = [
@@ -1194,7 +975,7 @@ def get_studio_client_folder(
         raise ArchiveError(
             "Top-level archive scopes changed; refresh before selecting a client folder."
         )
-    identities = _load_client_identities(private_state)
+    identities = _synchronize_client_identities(private_state, config)
     identity = next(
         (item for item in identities if item.client_id == client_id),
         None,
@@ -1258,7 +1039,7 @@ def set_studio_client_identity(
             "The archive root scope is not a client folder; select one immediate "
             "top-level client directory."
         )
-    records = list(_load_client_identities(private_state))
+    records = list(_synchronize_client_identities(private_state, config))
     existing = next(
         (record for record in records if record.scope_id == scope_id),
         None,
@@ -1306,6 +1087,13 @@ def set_studio_client_identity(
         updated_records = [
             record for record in records if record.scope_id != replace_orphaned_scope_id
         ] + [replacement]
+        try:
+            ledger.create_client_manifest(
+                _resolve_scope_root(config.archive_root, scope),
+                replacement.client_id,
+            )
+        except ledger.LedgerError as exc:
+            raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
         _write_client_identities(private_state, updated_records)
         return {
             "status": "rebound",
@@ -1343,6 +1131,13 @@ def set_studio_client_identity(
         replacement
     ]
     _validate_identity_uniqueness(updated_records)
+    try:
+        ledger.create_client_manifest(
+            _resolve_scope_root(config.archive_root, scope),
+            replacement.client_id,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
     if not unchanged:
         _write_client_identities(private_state, updated_records)
     return {
@@ -1423,6 +1218,10 @@ def create_studio_client(
             tax_identifiers=normalized_tax_ids,
             updated_at=_now_iso(),
         )
+        try:
+            ledger.create_client_manifest(client_root, client_id)
+        except ledger.LedgerError as exc:
+            raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
         updated_records = [*records, record]
         _validate_identity_uniqueness(updated_records)
         updated_config = ArchiveConfig(
@@ -1437,10 +1236,7 @@ def create_studio_client(
             _write_private_json(_config_path(private_state), config.as_json())
             raise
     except (ArchiveError, OSError):
-        try:
-            client_root.rmdir()
-        except OSError:
-            pass
+        shutil.rmtree(client_root, ignore_errors=True)
         raise
     folder = get_studio_client_folder(client_id, state_dir=private_state)
     return {
@@ -1453,181 +1249,130 @@ def create_studio_client(
     }
 
 
-def _engagement_input_root(client_root: Path, engagement_id: str) -> Path:
-    return client_root / MANAGED_ENGAGEMENTS_DIRECTORY / engagement_id / "inputs"
+def create_studio_client_engagement(
+    client_id: str,
+    engagement_label: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Create one durable engagement inside the selected customer folder."""
 
-
-def _ensure_managed_directory(path: Path, *, client_root: Path) -> None:
-    current = client_root
-    for part in path.relative_to(client_root).parts:
-        current /= part
-        if current.exists() or current.is_symlink():
-            if current.is_symlink() or not current.is_dir():
-                raise ArchiveError("Managed engagement path is not a real directory.")
-            continue
-        current.mkdir()
-
-
-def _copy_regular_import(
-    source_path: Path,
-    destination_directory: Path,
-) -> tuple[Path, int, str, bool]:
-    """Copy one stable regular-file snapshot without overwriting client evidence."""
-
-    source = source_path.expanduser()
-    if not source.is_absolute() or source.is_symlink():
-        raise ArchiveError("Imported document must be an absolute non-symlink file.")
+    private_state = _state_dir(state_dir)
+    folder = get_studio_client_folder(client_id, state_dir=private_state)[
+        "client_folder"
+    ]
+    client_root = Path(folder["client_root"])
     try:
-        source_entry = source.lstat()
-    except OSError as exc:
-        raise ArchiveError(f"Imported document is unavailable: {exc}") from exc
-    if not stat.S_ISREG(source_entry.st_mode) or source_entry.st_nlink < 1:
-        raise ArchiveError("Imported document must be a regular file.")
-    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
-    source_descriptor = os.open(source, flags)
-    temporary: Path | None = None
+        engagement = ledger.create_engagement(
+            client_root,
+            client_id,
+            _normalize_engagement_label(engagement_label),
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
+    input_root = (
+        client_root
+        / ledger.LEDGER_DIRECTORY
+        / "engagements"
+        / engagement["engagement_id"]
+        / "inputs"
+    )
+    return {
+        "status": "created",
+        "client_id": client_id,
+        "engagement": {**engagement, "imports": []},
+        "input_dir": str(input_root.resolve(strict=True)),
+        "source_archive_mutated": True,
+    }
+
+
+def _workflow_version(workflow_id: str) -> str:
+    """Read the selected component version without inventing one in a run."""
+
+    component_root = Path(__file__).resolve().parents[2] / workflow_id
+    manifest_path = component_root / ".codex-plugin" / "plugin.json"
+    if not manifest_path.is_file():
+        return "unversioned"
     try:
-        before = os.fstat(source_descriptor)
-        identity = (
-            before.st_dev,
-            before.st_ino,
-            before.st_size,
-            before.st_mtime_ns,
-            before.st_ctime_ns,
-        )
-        if identity != (
-            source_entry.st_dev,
-            source_entry.st_ino,
-            source_entry.st_size,
-            source_entry.st_mtime_ns,
-            source_entry.st_ctime_ns,
-        ):
-            raise ArchiveError("Imported document changed before it was opened.")
-        descriptor, temporary_name = tempfile.mkstemp(
-            prefix=".vera-import-",
-            suffix=".tmp",
-            dir=destination_directory,
-        )
-        temporary = Path(temporary_name)
-        digest = hashlib.sha256()
-        byte_count = 0
-        with os.fdopen(descriptor, "wb") as target:
-            while True:
-                chunk = os.read(source_descriptor, 1024 * 1024)
-                if not chunk:
-                    break
-                target.write(chunk)
-                digest.update(chunk)
-                byte_count += len(chunk)
-        temporary.chmod(0o600)
-        after = os.fstat(source_descriptor)
-        final_entry = source.lstat()
-        final_identity = (
-            after.st_dev,
-            after.st_ino,
-            after.st_size,
-            after.st_mtime_ns,
-            after.st_ctime_ns,
-        )
-        if final_identity != identity or final_identity != (
-            final_entry.st_dev,
-            final_entry.st_ino,
-            final_entry.st_size,
-            final_entry.st_mtime_ns,
-            final_entry.st_ctime_ns,
-        ):
-            raise ArchiveError("Imported document changed during the copy.")
-        sha256 = digest.hexdigest()
-        destination = destination_directory / source.name
-        if destination.exists() or destination.is_symlink():
-            if (
-                destination.is_file()
-                and not destination.is_symlink()
-                and destination.stat().st_size == byte_count
-                and _sha256_file(destination) == sha256
-            ):
-                return destination, byte_count, sha256, False
-            destination = destination_directory / (
-                f"{source.stem}--{sha256[:12]}{source.suffix}"
-            )
-        if destination.exists() or destination.is_symlink():
-            if (
-                destination.is_file()
-                and not destination.is_symlink()
-                and destination.stat().st_size == byte_count
-                and _sha256_file(destination) == sha256
-            ):
-                return destination, byte_count, sha256, False
-            raise ArchiveError("Managed import destination has a conflicting file.")
-        try:
-            os.link(temporary, destination, follow_symlinks=False)
-        except FileExistsError as exc:
-            raise ArchiveError(
-                "Managed import destination changed concurrently."
-            ) from exc
-        temporary.unlink()
-        temporary = None
-        return destination, byte_count, sha256, True
-    finally:
-        os.close(source_descriptor)
-        if temporary is not None and temporary.exists():
-            temporary.unlink()
+        payload = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArchiveError(f"Workflow manifest is unreadable: {exc}") from exc
+    version = payload.get("version") if isinstance(payload, dict) else None
+    if not isinstance(version, str) or not version.strip():
+        raise ArchiveError("Workflow manifest has no valid version.")
+    return version.strip()
 
 
 def prepare_studio_client_workflow(
     engagement_id: str,
     workflow_id: str,
     *,
+    input_ids: Sequence[str] = (),
+    upstream_artifacts: Sequence[Mapping[str, Any]] = (),
+    label: str | None = None,
+    purpose: str | None = None,
+    idempotency_key: str | None = None,
+    new_run: bool = False,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Create one client-bound workflow context with a managed output path."""
+    """Prepare an exact, recoverable, idempotent customer-folder run."""
 
-    if workflow_id not in {
-        "journal-sampling",
-        "check-entries",
-        "audit-reconciliation",
-    }:
+    if workflow_id not in VERA_CLIENT_WORKFLOW_IDS:
         raise ArchiveError("Workflow is not supported by the client engagement gate.")
     private_state = _state_dir(state_dir)
-    engagements = _load_client_engagements(private_state)
-    engagement = next(
-        (item for item in engagements if item.engagement_id == engagement_id),
-        None,
-    )
-    if engagement is None:
-        raise ArchiveError("Client engagement was not found.")
-    folder_result = get_studio_client_folder(
-        engagement.client_id,
-        state_dir=private_state,
-    )
-    client_folder = folder_result["client_folder"]
-    input_root = _engagement_input_root(
-        Path(client_folder["client_root"]), engagement.engagement_id
-    ).resolve(strict=True)
-    workspace_root = Path(engagement.workspace_root)
-    if workspace_root.is_symlink() or not workspace_root.is_dir():
-        raise ArchiveError("Client engagement workspace is unavailable.")
-    existing_run_ids = {
-        context["run_id"] for context, _ in _load_workflow_contexts(private_state)
-    }
-    run_id = _new_private_id("run", existing_run_ids)
-    try:
-        context = build_client_engagement_context(
-            studio_client_folder=client_folder,
-            engagement_id=engagement.engagement_id,
-            workflow_id=workflow_id,
-            run_id=run_id,
-            input_dir=input_root,
-            workspace_root=workspace_root,
+    config = _load_config(private_state, validate_scope_roots=False)
+    current, scopes_changed = _current_scope_view(config)
+    if scopes_changed:
+        raise ArchiveError(
+            "Top-level archive scopes changed; refresh before preparing a run."
         )
-    except ValueError as exc:
-        raise ArchiveError(f"Client workflow context is invalid: {exc}") from exc
-    context_path = _workflow_context_path(private_state, run_id)
-    _write_private_json(context_path, context)
+    identities = _synchronize_client_identities(private_state, current)
+    matches: list[tuple[ClientIdentity, Scope]] = []
+    for identity in identities:
+        scope = next(
+            (item for item in current.scopes if item.scope_id == identity.scope_id),
+            None,
+        )
+        if scope is None:
+            continue
+        client_root = _resolve_scope_root(current.archive_root, scope)
+        try:
+            ledger.load_engagement_manifest(client_root, engagement_id)
+        except ledger.LedgerError:
+            continue
+        matches.append((identity, scope))
+    if not matches:
+        raise ArchiveError("Client engagement was not found.")
+    if len(matches) != 1:
+        raise ArchiveError(
+            "Client engagement identity is ambiguous across customer folders."
+        )
+    identity, scope = matches[0]
+    client_root = _resolve_scope_root(current.archive_root, scope)
+    try:
+        prepared = ledger.prepare_run(
+            client_root,
+            identity.client_id,
+            engagement_id,
+            workflow_id,
+            _workflow_version(workflow_id),
+            input_ids=input_ids,
+            upstream_artifacts=upstream_artifacts,
+            label=label,
+            purpose=purpose,
+            idempotency_key=idempotency_key,
+            new_run=new_run,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Client workflow run is invalid: {exc}") from exc
     return {
-        "status": "ready",
-        "client_engagement": context,
-        "client_engagement_path": str(context_path),
+        "status": prepared["status"],
+        "client_id": identity.client_id,
+        "engagement_id": engagement_id,
+        "run": prepared["run"],
+        "input_manifest": prepared["input_manifest"],
+        "client_engagement": prepared["context"],
+        "client_engagement_path": prepared["context_path"],
     }
 
 
@@ -1640,50 +1385,33 @@ def import_studio_client_document(
     engagement_label: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Copy one user-approved document into one stable client engagement."""
+    """Copy one authorized file into one explicit, immutable engagement input."""
 
-    if role not in {"journal", "support"}:
-        raise ArchiveError("Import role must be journal or support.")
+    if role not in SUPPORTED_ENGAGEMENT_IMPORT_ROLES:
+        raise ArchiveError("Import role must be journal, source, or support.")
+    if engagement_id is None:
+        raise ArchiveError(
+            "Select or create an engagement before importing a document."
+        )
+    if engagement_label is not None:
+        raise ArchiveError(
+            "Engagement creation and document import are separate actions."
+        )
     private_state = _state_dir(state_dir)
     folder = get_studio_client_folder(client_id, state_dir=private_state)[
         "client_folder"
     ]
-    records = list(_load_client_engagements(private_state))
-    existing_ids = {record.engagement_id for record in records}
-    engagement = (
-        next(
-            (record for record in records if record.engagement_id == engagement_id),
-            None,
-        )
-        if engagement_id is not None
-        else None
-    )
-    if engagement_id is not None and engagement is None:
-        raise ArchiveError("Selected client engagement was not found.")
-    if engagement is not None and engagement.client_id != client_id:
-        raise ArchiveError("Selected engagement belongs to another client.")
-    if engagement is None:
-        if role != "journal":
-            raise ArchiveError("Support must be imported into an existing engagement.")
-        new_engagement_id = _new_private_id("eng", existing_ids)
-        label = _normalize_engagement_label(engagement_label or "Journal sampling")
-        workspace_root = _client_workspace_root(
-            private_state, Path(folder["archive_root"])
-        )
-        engagement = ClientEngagement(
-            engagement_id=new_engagement_id,
-            client_id=client_id,
-            label=label,
-            workspace_root=str(workspace_root),
-            created_at=_now_iso(),
-            imports=(),
-        )
-    elif engagement_label is not None and (
-        _normalize_engagement_label(engagement_label) != engagement.label
-    ):
-        raise ArchiveError("Existing engagement label cannot be changed during import.")
     client_root = Path(folder["client_root"])
-    resolved_source = source_path.expanduser().resolve(strict=True)
+    try:
+        engagement = ledger.load_engagement_manifest(client_root, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
+    if engagement["client_id"] != client_id:
+        raise ArchiveError("Selected engagement belongs to another client.")
+    try:
+        resolved_source = source_path.expanduser().resolve(strict=True)
+    except OSError as exc:
+        raise ArchiveError(f"Selected import source is unavailable: {exc}") from exc
     archive_root = Path(folder["archive_root"])
     if _path_is_within(resolved_source, archive_root) and not _path_is_within(
         resolved_source, client_root
@@ -1691,78 +1419,26 @@ def import_studio_client_document(
         raise ArchiveError(
             "Selected import source belongs to another Studio Archive scope."
         )
-    destination_directory = (
-        _engagement_input_root(client_root, engagement.engagement_id) / role
-    )
-    _ensure_managed_directory(destination_directory, client_root=client_root)
-    destination, byte_count, sha256, copied = _copy_regular_import(
-        source_path, destination_directory
-    )
-    relative_path = destination.relative_to(client_root).as_posix()
-    existing_import = next(
-        (item for item in engagement.imports if item.relative_path == relative_path),
-        None,
-    )
-    if (
-        role == "journal"
-        and existing_import is None
-        and any(item.role == "journal" for item in engagement.imports)
-    ):
-        if copied:
-            destination.unlink()
-        raise ArchiveError("This engagement already has a different journal import.")
-    if existing_import is not None and (
-        existing_import.sha256 != sha256
-        or existing_import.byte_count != byte_count
-        or existing_import.role != role
-    ):
-        if copied:
-            destination.unlink()
-        raise ArchiveError(
-            "Existing engagement import receipt conflicts with the file."
+    try:
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement_id,
+            source_path,
+            role,
         )
-    if existing_import is None:
-        imported = EngagementImport(
-            role=role,
-            relative_path=relative_path,
-            original_name=source_path.name,
-            byte_count=byte_count,
-            sha256=sha256,
-            imported_at=_now_iso(),
-        )
-        engagement = ClientEngagement(
-            engagement_id=engagement.engagement_id,
-            client_id=engagement.client_id,
-            label=engagement.label,
-            workspace_root=engagement.workspace_root,
-            created_at=engagement.created_at,
-            imports=(*engagement.imports, imported),
-        )
-        updated_records = [
-            record
-            for record in records
-            if record.engagement_id != engagement.engagement_id
-        ] + [engagement]
-        try:
-            _write_client_engagements(private_state, updated_records)
-        except (ArchiveError, OSError):
-            if copied:
-                destination.unlink()
-            raise
-    workflow_id = "journal-sampling" if role == "journal" else "check-entries"
-    workflow = prepare_studio_client_workflow(
-        engagement.engagement_id,
-        workflow_id,
-        state_dir=private_state,
-    )
+        receipts = ledger.list_inputs(client_root, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Controlled document import failed: {exc}") from exc
     return {
-        "status": "imported" if copied else "already_imported",
+        "status": imported["status"],
         "client_id": client_id,
-        "engagement": engagement.as_json(),
-        "imported_path": str(destination),
+        "engagement": {**engagement, "imports": list(receipts)},
+        "input_receipt": imported["receipt"],
+        "input_id": imported["receipt"]["input_id"],
+        "imported_path": imported["imported_path"],
         "original_preserved": True,
-        "source_archive_mutated": copied,
-        **workflow,
+        "source_archive_mutated": imported["source_archive_mutated"],
     }
 
 
@@ -1771,28 +1447,113 @@ def list_studio_client_engagements(
     *,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """List the durable engagements for one exact registered client."""
+    """List recoverable engagements, exact receipts, lifecycle, and artifacts."""
 
     private_state = _state_dir(state_dir)
-    get_studio_client_folder(client_id, state_dir=private_state)
-    contexts_by_engagement: dict[str, list[dict[str, Any]]] = {}
-    for context, context_path in _load_workflow_contexts(private_state):
-        if context["studio_client_folder"]["studio_client_id"] != client_id:
-            continue
-        contexts_by_engagement.setdefault(context["engagement_id"], []).append(
-            _workflow_run_record(context, context_path)
-        )
-    engagements = []
-    for item in _load_client_engagements(private_state):
-        if item.client_id != client_id:
-            continue
-        workflow_runs = sorted(
-            contexts_by_engagement.get(item.engagement_id, []),
-            key=lambda value: (value["workflow_id"], value["run_id"]),
-        )
+    folder = get_studio_client_folder(client_id, state_dir=private_state)[
+        "client_folder"
+    ]
+    client_root = Path(folder["client_root"])
+    try:
+        stored_engagements = ledger.list_engagements(client_root, client_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
+    engagements: list[dict[str, Any]] = []
+    for engagement in stored_engagements:
+        engagement_id = engagement["engagement_id"]
+        try:
+            imports = list(ledger.list_inputs(client_root, engagement_id))
+            stored_runs = ledger.list_runs(
+                client_root, engagement_id, verify_inputs=False
+            )
+        except ledger.LedgerError as exc:
+            raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
+        workflow_runs: list[dict[str, Any]] = []
+        for loaded in stored_runs:
+            run = loaded["run"]
+            input_issue: str | None = None
+            artifact_issue: str | None = None
+            try:
+                ledger.load_run(client_root, engagement_id, run["run_id"])
+                inputs_valid = True
+            except ledger.LedgerError as exc:
+                inputs_valid = False
+                input_issue = str(exc)
+            artifacts = None
+            artifacts_valid = False
+            if run["status"] in {"ready_for_review", "completed"}:
+                try:
+                    artifacts = ledger.validate_run_artifacts(
+                        client_root, engagement_id, run["run_id"]
+                    )
+                    artifacts_valid = True
+                except ledger.LedgerError as exc:
+                    artifact_issue = str(exc)
+            available = (
+                inputs_valid
+                and artifacts_valid
+                and run["status"] in {"ready_for_review", "completed"}
+            )
+            context = loaded["context"]
+            output_dir = Path(loaded["output_dir"])
+            record: dict[str, Any] = {
+                "workflow_id": run["workflow_id"],
+                "workflow_version": run["workflow_version"],
+                "run_id": run["run_id"],
+                "label": run["label"],
+                "purpose": run["purpose"],
+                "status": run["status"],
+                "created_at": run["created_at"],
+                "updated_at": run["updated_at"],
+                "input_manifest": loaded["input_manifest"],
+                "inputs_valid": inputs_valid,
+                "input_issue": input_issue,
+                "artifacts_available": available,
+                "artifact_issue": artifact_issue,
+                "artifact_manifest": artifacts,
+                "run_output_dir": str(output_dir),
+                "run_output_available": available,
+                "client_engagement_path": loaded["context_path"],
+                "client_engagement": context,
+            }
+            if run["workflow_id"] == "journal-sampling":
+                record.update(
+                    {
+                        "normalized_journal_path": str(
+                            output_dir / "normalization" / "normalized_journal.csv"
+                        ),
+                        "normalization_diagnostics_path": str(
+                            output_dir
+                            / "normalization"
+                            / "normalization_diagnostics.json"
+                        ),
+                        "normalization_available": available
+                        and (
+                            output_dir / "normalization" / "normalized_journal.csv"
+                        ).is_file()
+                        and (
+                            output_dir
+                            / "normalization"
+                            / "normalization_diagnostics.json"
+                        ).is_file(),
+                        "sample_output_dir": str(output_dir / "sample"),
+                        "sample_available": available
+                        and (output_dir / "sample" / "journal_sample.csv").is_file(),
+                    }
+                )
+            elif run["workflow_id"] == "check-entries":
+                record.update(
+                    {
+                        "checks_output_dir": str(output_dir / "checks"),
+                        "checks_available": available
+                        and (output_dir / "checks" / "check_audit.json").is_file(),
+                    }
+                )
+            workflow_runs.append(record)
         engagements.append(
             {
-                **item.as_json(),
+                **engagement,
+                "imports": imports,
                 "workflow_run_count": len(workflow_runs),
                 "workflow_runs": workflow_runs,
             }
@@ -1801,6 +1562,213 @@ def list_studio_client_engagements(
         "client_id": client_id,
         "engagement_count": len(engagements),
         "engagements": engagements,
+    }
+
+
+def _selected_ledger_root(
+    client_id: str,
+    engagement_id: str,
+    *,
+    state_dir: Path,
+) -> Path:
+    folder = get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"]
+    client_root = Path(folder["client_root"])
+    try:
+        engagement = ledger.load_engagement_manifest(client_root, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
+    if engagement["client_id"] != client_id:
+        raise ArchiveError("Selected engagement belongs to another client.")
+    return client_root
+
+
+def start_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Mark one prepared run as running before executing helper scripts."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        loaded = ledger.start_run(root, engagement_id, run_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Workflow run could not start: {exc}") from exc
+    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+
+
+def fail_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    reason: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Record a failed run while retaining its evidence and diagnostics."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        loaded = ledger.fail_run(root, engagement_id, run_id, reason)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Workflow failure could not be recorded: {exc}") from exc
+    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+
+
+def cancel_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Cancel one abandoned run without deleting it."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        loaded = ledger.cancel_run(root, engagement_id, run_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Workflow run could not be cancelled: {exc}") from exc
+    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+
+
+def finalize_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    artifacts: Sequence[Mapping[str, Any]],
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Declare the purpose of every output and seal its exact bytes."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        loaded = ledger.finalize_run(root, engagement_id, run_id, artifacts)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Workflow artifacts could not be finalized: {exc}") from exc
+    return {
+        "status": loaded["run"]["status"],
+        "run": loaded["run"],
+        "artifact_manifest": loaded["artifact_manifest"],
+    }
+
+
+def complete_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Complete one review-ready run whose artifacts still validate."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        loaded = ledger.complete_run(root, engagement_id, run_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Workflow run could not be completed: {exc}") from exc
+    return {"status": loaded["run"]["status"], "run": loaded["run"]}
+
+
+def close_studio_client_engagement(
+    client_id: str,
+    engagement_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Close one engagement after every active run is resolved."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        engagement = ledger.close_engagement(root, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Engagement could not be closed: {exc}") from exc
+    return {"status": engagement["status"], "engagement": engagement}
+
+
+def report_studio_client_retention(
+    client_id: str,
+    *,
+    older_than_days: int | None = None,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Return a non-destructive retention inventory for professional review."""
+
+    private_state = _state_dir(state_dir)
+    folder = get_studio_client_folder(client_id, state_dir=private_state)[
+        "client_folder"
+    ]
+    try:
+        return ledger.retention_report(
+            Path(folder["client_root"]), older_than_days=older_than_days
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Retention report could not be built: {exc}") from exc
+
+
+def recover_studio_client_ledger(
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Rebuild private client pointers and verify all portable ledger records."""
+
+    private_state = _state_dir(state_dir)
+    stored = _load_config(private_state, validate_scope_roots=False)
+    current, scopes_changed = _current_scope_view(stored)
+    if scopes_changed:
+        raise ArchiveError("Refresh the archive before recovering customer folders.")
+    identities = _synchronize_client_identities(private_state, current)
+    engagement_count = 0
+    input_count = 0
+    run_count = 0
+    for identity in identities:
+        scope = next(
+            (item for item in current.scopes if item.scope_id == identity.scope_id),
+            None,
+        )
+        if scope is None:
+            continue
+        root = _resolve_scope_root(current.archive_root, scope)
+        client_manifest = root / ledger.LEDGER_DIRECTORY / "client.json"
+        if not client_manifest.is_file():
+            continue
+        try:
+            engagements = ledger.list_engagements(root, identity.client_id)
+            for engagement in engagements:
+                engagement_count += 1
+                input_count += len(
+                    ledger.list_inputs(root, engagement["engagement_id"])
+                )
+                runs = ledger.list_runs(root, engagement["engagement_id"])
+                for loaded in runs:
+                    if loaded["run"]["status"] in {
+                        "ready_for_review",
+                        "completed",
+                    }:
+                        ledger.validate_run_artifacts(
+                            root,
+                            engagement["engagement_id"],
+                            loaded["run"]["run_id"],
+                        )
+                run_count += len(runs)
+        except ledger.LedgerError as exc:
+            raise ArchiveError(f"Customer-folder recovery failed: {exc}") from exc
+    return {
+        "status": "recovered",
+        "client_count": len(_discover_ledger_clients(current)),
+        "engagement_count": engagement_count,
+        "input_count": input_count,
+        "run_count": run_count,
+        "private_identity_values_recovered": False,
     }
 
 
@@ -2424,6 +2392,26 @@ def _scope_entries(
             ) from exc
 
 
+def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
+    """Exclude technical manifests/runs while retaining canonical input evidence."""
+
+    try:
+        parts = path.relative_to(scope_root).parts
+    except ValueError:
+        return False
+    if not parts or parts[0] != ledger.LEDGER_DIRECTORY:
+        return False
+    if (
+        len(parts) >= 6
+        and parts[1] == "engagements"
+        and re.fullmatch(r"eng_[0-9a-f]{24}", parts[2]) is not None
+        and parts[3] == "inputs"
+        and re.fullmatch(r"input_[0-9a-f]{24}", parts[4]) is not None
+    ):
+        return parts[5] == "receipt.json" or len(parts) != 6
+    return True
+
+
 def _discover_files(
     config: ArchiveConfig,
 ) -> tuple[list[DiscoveredFile], list[ScanIssue]]:
@@ -2436,6 +2424,8 @@ def _discover_files(
     for scope in config.scopes:
         scope_root = _resolve_scope_root(config.archive_root, scope)
         for path, skip_reason in _scope_entries(scope_root, scope):
+            if _excluded_ledger_search_path(path, scope_root):
+                continue
             relative_path = path.relative_to(config.archive_root).as_posix()
             if relative_path in seen_paths:
                 raise ArchiveError(
@@ -3396,6 +3386,7 @@ def refresh_archive(
                 "count"
             ]
         )
+        recovered_clients = _synchronize_client_identities(private_state, config)
         return {
             "status": "refreshed",
             "last_refresh_at": indexed_at,
@@ -3405,6 +3396,13 @@ def refresh_archive(
             "ocr_enabled": enable_ocr,
             "document_count": document_count,
             "chunk_count": chunk_count,
+            "recovered_client_count": len(
+                [
+                    record
+                    for record in recovered_clients
+                    if any(scope.scope_id == record.scope_id for scope in config.scopes)
+                ]
+            ),
             **counts,
             **_scan_issue_status(connection),
             **_document_issue_status(connection),
@@ -3592,30 +3590,45 @@ def search_archive(
             raise ArchiveError(
                 "Archive configuration changed; refresh before searching."
             )
+        # Deduplicate before LIMIT so one document with many high-scoring chunks
+        # cannot mechanically hide other matching documents.
         if scope_id == "all":
             rows = connection.execute(
                 """
-                SELECT
-                    c.source_id,
-                    c.document_id,
-                    c.ordinal,
-                    c.locator_kind,
-                    c.locator_value,
-                    d.scope_id,
-                    d.relative_path,
-                    d.sha256,
-                    d.extraction_method,
-                    d.status,
-                    d.needs_ocr,
-                    d.limitations_json,
-                    d.indexed_at,
-                    bm25(chunk_fts) AS score,
-                    snippet(chunk_fts, 1, '[[', ']]', ' … ', 28) AS snippet
-                FROM chunk_fts
-                JOIN chunks AS c ON c.source_id = chunk_fts.source_id
-                JOIN documents AS d ON d.document_id = c.document_id
-                WHERE chunk_fts MATCH ?
-                ORDER BY score, d.relative_path, c.ordinal
+                WITH matches AS (
+                    SELECT
+                        c.source_id,
+                        c.document_id,
+                        c.ordinal,
+                        c.locator_kind,
+                        c.locator_value,
+                        d.scope_id,
+                        d.relative_path,
+                        d.sha256,
+                        d.extraction_method,
+                        d.status,
+                        d.needs_ocr,
+                        d.limitations_json,
+                        d.indexed_at,
+                        bm25(chunk_fts) AS score,
+                        snippet(chunk_fts, 1, '[[', ']]', ' … ', 28) AS snippet
+                    FROM chunk_fts
+                    JOIN chunks AS c ON c.source_id = chunk_fts.source_id
+                    JOIN documents AS d ON d.document_id = c.document_id
+                    WHERE chunk_fts MATCH ?
+                ), ranked AS (
+                    SELECT
+                        *,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY scope_id, sha256
+                            ORDER BY score, relative_path, ordinal
+                        ) AS content_rank
+                    FROM matches
+                )
+                SELECT *
+                FROM ranked
+                WHERE content_rank = 1
+                ORDER BY score, relative_path, ordinal
                 LIMIT ?
                 """,
                 (expression, int(limit)),
@@ -3623,58 +3636,79 @@ def search_archive(
         else:
             rows = connection.execute(
                 """
-                SELECT
-                    c.source_id,
-                    c.document_id,
-                    c.ordinal,
-                    c.locator_kind,
-                    c.locator_value,
-                    d.scope_id,
-                    d.relative_path,
-                    d.sha256,
-                    d.extraction_method,
-                    d.status,
-                    d.needs_ocr,
-                    d.limitations_json,
-                    d.indexed_at,
-                    bm25(chunk_fts) AS score,
-                    snippet(chunk_fts, 1, '[[', ']]', ' … ', 28) AS snippet
-                FROM chunk_fts
-                JOIN chunks AS c ON c.source_id = chunk_fts.source_id
-                JOIN documents AS d ON d.document_id = c.document_id
-                WHERE chunk_fts MATCH ?
-                  AND d.scope_id = ?
-                ORDER BY score, d.relative_path, c.ordinal
+                WITH matches AS (
+                    SELECT
+                        c.source_id,
+                        c.document_id,
+                        c.ordinal,
+                        c.locator_kind,
+                        c.locator_value,
+                        d.scope_id,
+                        d.relative_path,
+                        d.sha256,
+                        d.extraction_method,
+                        d.status,
+                        d.needs_ocr,
+                        d.limitations_json,
+                        d.indexed_at,
+                        bm25(chunk_fts) AS score,
+                        snippet(chunk_fts, 1, '[[', ']]', ' … ', 28) AS snippet
+                    FROM chunk_fts
+                    JOIN chunks AS c ON c.source_id = chunk_fts.source_id
+                    JOIN documents AS d ON d.document_id = c.document_id
+                    WHERE chunk_fts MATCH ?
+                      AND d.scope_id = ?
+                ), ranked AS (
+                    SELECT
+                        *,
+                        ROW_NUMBER() OVER (
+                            PARTITION BY scope_id, sha256
+                            ORDER BY score, relative_path, ordinal
+                        ) AS content_rank
+                    FROM matches
+                )
+                SELECT *
+                FROM ranked
+                WHERE content_rank = 1
+                ORDER BY score, relative_path, ordinal
                 LIMIT ?
                 """,
                 (expression, scope_id, int(limit)),
             ).fetchall()
-        results = [
-            {
-                "rank": index,
-                "source_id": str(row["source_id"]),
-                "document_id": str(row["document_id"]),
-                "scope_id": str(row["scope_id"]),
-                "relative_path": str(row["relative_path"]),
-                "locator_kind": str(row["locator_kind"]),
-                "locator_value": str(row["locator_value"]),
-                "citation": _citation(
-                    str(row["relative_path"]),
-                    str(row["locator_kind"]),
-                    str(row["locator_value"]),
-                ),
-                "snippet": str(row["snippet"]),
-                "extraction_method": str(row["extraction_method"]),
-                "document_status": str(row["status"]),
-                "needs_ocr": bool(row["needs_ocr"]),
-                "limitations": _decode_limitations(str(row["limitations_json"])),
-                "source_sha256": str(row["sha256"]),
-                "indexed_at": str(row["indexed_at"]),
-                "score": float(row["score"]),
-                "verification_required": True,
-            }
-            for index, row in enumerate(rows, start=1)
-        ]
+        results: list[dict[str, Any]] = []
+        seen_documents: set[tuple[str, str]] = set()
+        for row in rows:
+            content_key = (str(row["scope_id"]), str(row["sha256"]))
+            if content_key in seen_documents:
+                continue
+            seen_documents.add(content_key)
+            results.append(
+                {
+                    "rank": len(results) + 1,
+                    "source_id": str(row["source_id"]),
+                    "document_id": str(row["document_id"]),
+                    "scope_id": str(row["scope_id"]),
+                    "relative_path": str(row["relative_path"]),
+                    "locator_kind": str(row["locator_kind"]),
+                    "locator_value": str(row["locator_value"]),
+                    "citation": _citation(
+                        str(row["relative_path"]),
+                        str(row["locator_kind"]),
+                        str(row["locator_value"]),
+                    ),
+                    "snippet": str(row["snippet"]),
+                    "extraction_method": str(row["extraction_method"]),
+                    "document_status": str(row["status"]),
+                    "needs_ocr": bool(row["needs_ocr"]),
+                    "limitations": _decode_limitations(str(row["limitations_json"])),
+                    "source_sha256": str(row["sha256"]),
+                    "indexed_at": str(row["indexed_at"]),
+                    "score": float(row["score"]),
+                    "verification_required": True,
+                }
+            )
+            if len(results) == int(limit):
+                break
         return {
             "query": query,
             "scope_id": scope_id,

@@ -3,9 +3,11 @@ name: email-cliente
 description: Use when drafting a client email from first-intake missing documents and clarifications for an accounting studio, keeping the message operational.
 ---
 
-## Output Location Rule
+## Client workflow gate
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Resume the exact Studio Archive `client-file-preparation` run whose reviewed
+missing-items output supports the draft. Read only from that engagement and
+write drafts only inside its `output_dir`. Do not invent a sibling output folder.
 
 # Email Cliente
 

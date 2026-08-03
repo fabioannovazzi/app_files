@@ -11,9 +11,21 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPTS_DIR.parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from managed_case_inputs import declared_case_input_paths
 from preparation_contract_kernel import (
     PinnedDirectory,
     canonical_json_sha256,
@@ -49,6 +61,11 @@ from prepare_working_capital_case import RECIPE_ID as WORKING_CAPITAL_RECIPE_ID
 from prepare_working_capital_case import (
     prepare_working_capital_case,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = ["PACKS", "PackRunError", "main", "run_pack"]
 
@@ -67,9 +84,6 @@ class PackSpec(NamedTuple):
     engine_version: str
     runner: Callable[..., dict[str, Any]]
     implementation_files: tuple[Path, ...]
-
-
-PLUGIN_ROOT = SCRIPTS_DIR.parent
 
 
 def _script_path(name: str) -> Path:
@@ -105,6 +119,7 @@ def _vendor_assurance_path(name: str) -> Path:
 
 FDD_IMPLEMENTATION_FILES = (
     _script_path("prepare_fdd_case.py"),
+    _script_path("managed_case_inputs.py"),
     _script_path("run_pack.py"),
     _script_path("preparation_contract_kernel.py"),
     _script_path("validate_case_contracts.py"),
@@ -126,19 +141,28 @@ PACKS: Mapping[str, PackSpec] = {
         MONTHLY_PNL_RECIPE_ID,
         MONTHLY_PNL_ENGINE_VERSION,
         prepare_monthly_pnl_case,
-        (_script_path("prepare_monthly_pnl_case.py"),),
+        (
+            _script_path("prepare_monthly_pnl_case.py"),
+            _script_path("managed_case_inputs.py"),
+        ),
     ),
     "working_capital": PackSpec(
         WORKING_CAPITAL_RECIPE_ID,
         WORKING_CAPITAL_ENGINE_VERSION,
         prepare_working_capital_case,
-        (_script_path("prepare_working_capital_case.py"),),
+        (
+            _script_path("prepare_working_capital_case.py"),
+            _script_path("managed_case_inputs.py"),
+        ),
     ),
     "customer_concentration": PackSpec(
         CUSTOMER_CONCENTRATION_RECIPE_ID,
         CUSTOMER_CONCENTRATION_ENGINE_VERSION,
         prepare_customer_concentration_case,
-        (_script_path("prepare_customer_concentration_case.py"),),
+        (
+            _script_path("prepare_customer_concentration_case.py"),
+            _script_path("managed_case_inputs.py"),
+        ),
     ),
     "quality_of_earnings": PackSpec(
         FDD_RECIPE_IDS["quality_of_earnings"],
@@ -355,14 +379,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--pack", choices=sorted(PACKS), required=True)
     parser.add_argument("--case", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="financial-analysis",
+            input_paths=[args.case],
+            output_dir=args.output_dir,
+        )
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="financial-analysis",
+            input_paths=declared_case_input_paths(args.case, args.pack),
+            output_dir=args.output_dir,
+        )
         receipt = run_pack(
             pack_id=args.pack,
             case_path=args.case,
             output_dir=args.output_dir,
         )
-    except (KeyError, OSError, PackRunError, TypeError, ValueError) as exc:
+    except (
+        AssuranceContractError,
+        KeyError,
+        OSError,
+        PackRunError,
+        TypeError,
+        ValueError,
+    ) as exc:
         LOGGER.error("FAILED: %s", exc)
         return 2
     LOGGER.info(

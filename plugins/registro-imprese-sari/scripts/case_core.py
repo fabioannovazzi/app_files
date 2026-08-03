@@ -6,21 +6,25 @@ import hashlib
 import json
 import re
 import stat
+import sys
 import urllib.parse
 from datetime import date, datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any
+from typing import Any, Sequence
 
 __all__ = [
     "PLUGIN_NAME",
+    "AssuranceContractError",
     "PrivacyError",
     "assert_generic_public_query",
     "ensure_safe_output_dir",
     "iso_now",
+    "load_running_case_context",
     "load_json_object",
     "mark_private_file",
     "normalize_html_text",
+    "require_case_artifact_run",
     "safe_identifier",
     "sha256_bytes",
     "sha256_file",
@@ -32,6 +36,7 @@ __all__ = [
 ]
 
 PLUGIN_NAME = "registro-imprese-sari"
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 MAX_JSON_BYTES = 5_000_000
 SAFE_IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$")
 EMAIL_RE = re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)
@@ -51,9 +56,58 @@ OFFICIAL_EXACT_HOSTS = {
     "www.unioncamere.gov.it",
 }
 
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
+
 
 class PrivacyError(ValueError):
     """Raised when a public-source query appears to contain a direct identifier."""
+
+
+def load_running_case_context(
+    client_engagement: Path,
+    *,
+    input_paths: Sequence[Path] = (),
+    output_dir: Path,
+    additional_output_paths: Sequence[Path] = (),
+) -> dict[str, Any]:
+    """Load one exact running customer-ledger context for a mutating stage."""
+
+    context = load_client_engagement_context_file(
+        client_engagement,
+        expected_workflow_id=PLUGIN_NAME,
+        input_paths=input_paths,
+        output_dir=output_dir,
+    )
+    for path in additional_output_paths:
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id=PLUGIN_NAME,
+            output_dir=path,
+        )
+    return context
+
+
+def require_case_artifact_run(path: Path, *, run_id: str) -> dict[str, Any]:
+    """Require one existing JSON artifact to belong to the exact ledger run."""
+
+    payload = load_json_object(path)
+    if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
+        raise ValueError(f"case artifact belongs to another plugin run: {path}")
+    return payload
 
 
 class _TextExtractor(HTMLParser):

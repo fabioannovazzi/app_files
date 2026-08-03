@@ -33,6 +33,10 @@
   "external_boundaries": [],
   "security_controls": [
     {
+      "id": "client-engagement-path-isolation",
+      "control": "The public pack dispatcher requires a digest-valid Studio Archive financial-analysis context, accepts the reviewed case and source artifacts only from that engagement, and writes only to the context's run output root or a descendant."
+    },
+    {
       "id": "sealed-case-contracts",
       "control": "The workflow validates canonical hashes for the package, dataset, relationship, crosswalk, request, reconciliation, and prepared-evidence contracts and fails when a digest is stale or a reference does not close."
     },
@@ -66,9 +70,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-29",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "11d90cbcb517fa551d0b2bdd9794f873df2ee3fbc3b235c8614a9cb531301e4a"
+    "source_fingerprint": "6517821ed65a187bd0c2f3be15d7dd7640e383ce1927fa9cb44d719b1cf648d0"
   }
 }

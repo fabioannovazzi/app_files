@@ -33,6 +33,10 @@ def _activate_assurance() -> None:
 
 _activate_assurance()
 
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 from vera_financial_analysis import (  # noqa: E402
     FinancialAnalysisContractError,
     canonical_json_sha256,
@@ -442,9 +446,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reconciliation", type=Path, required=True)
     parser.add_argument("--prepared-manifest", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
 
     try:
+        input_paths = [
+            args.package,
+            *args.dataset,
+            *args.relationship,
+            *args.crosswalk,
+            args.request,
+            args.reconciliation,
+            args.prepared_manifest,
+        ]
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="financial-analysis",
+            input_paths=input_paths,
+            output_dir=args.output,
+        )
         audit = validate_case_contracts(
             package=_read_json(args.package),
             datasets=[_read_json(path) for path in args.dataset],
@@ -456,6 +476,7 @@ def main(argv: list[str] | None = None) -> int:
         )
         _write_json(args.output, audit)
     except (
+        AssuranceContractError,
         FinancialAnalysisCaseError,
         FinancialAnalysisContractError,
         json.JSONDecodeError,

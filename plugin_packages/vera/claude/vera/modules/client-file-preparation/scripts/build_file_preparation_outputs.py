@@ -13,6 +13,24 @@ from string import Template
 from typing import Iterable, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
+
+
+def _add_vera_assurance_module_path() -> None:
+    candidates = (
+        PLUGIN_ROOT / "vendor" / "modules",
+        PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+        PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+    )
+    for candidate in candidates:
+        if (candidate / "vera_assurance").is_dir():
+            if str(candidate) not in sys.path:
+                sys.path.insert(0, str(candidate))
+            return
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+
+_add_vera_assurance_module_path()
 
 
 def _ensure_local_review_session_import() -> None:
@@ -68,6 +86,10 @@ from review_session import (  # noqa: E402
     RunIntakeResult,
     write_review_session_artifacts,
     write_run_intake,
+)
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
 )
 from scan_folder import (  # noqa: E402
     CATEGORY_730,
@@ -928,6 +950,7 @@ def _load_resumable_run_intake(
     ocr_lang: str,
     jurisdiction: str,
     language: str,
+    run_root: Path | None = None,
 ) -> RunIntakeResult:
     """Load a partial run only when its scope and source hashes still match."""
 
@@ -970,12 +993,21 @@ def _load_resumable_run_intake(
         if isinstance(observed_sources, list)
         else None
     )
+    expected_input = root.as_posix()
+    expected_output = output_dir.as_posix()
+    expected_path_reference = "absolute"
+    if run_root is not None:
+        normalized_run_root = run_root.expanduser().resolve()
+        expected_input = root.relative_to(normalized_run_root).as_posix()
+        expected_output = output_dir.relative_to(normalized_run_root).as_posix()
+        expected_path_reference = "run_root_relative"
     if (
         payload.get("plugin") != "client-file-preparation"
         or payload.get("workflow") != "client-file-preparation"
         or payload.get("status") != "ready_for_extraction"
-        or payload.get("input_paths") != [root.as_posix()]
-        or payload.get("output_dir") != output_dir.as_posix()
+        or payload.get("path_reference", "absolute") != expected_path_reference
+        or payload.get("input_paths") != [expected_input]
+        or payload.get("output_dir") != expected_output
         or payload.get("language") != language
         or payload.get("jurisdiction") != jurisdiction
         or observed_assumptions != expected_assumptions
@@ -1820,6 +1852,8 @@ def build_file_preparation_outputs(
     jurisdiction: str = "italy",
     language: str = "it",
     max_pages: int = 50,
+    run_id: str | None = None,
+    run_root: Path | None = None,
 ) -> BuildResult:
     """Run the prototype first-intake workflow on a customer folder."""
 
@@ -1871,7 +1905,12 @@ def build_file_preparation_outputs(
             ocr_lang=effective_ocr_lang,
             jurisdiction=jurisdiction,
             language=language,
+            run_root=run_root,
         )
+        if run_id is not None and run_intake.run_id != run_id:
+            raise ValueError(
+                "The partial run does not match the customer-folder run ID"
+            )
     out_dir.mkdir(parents=True, exist_ok=True)
     out_dir.chmod(0o700)
     missing_dependency_count, _ = _write_environment_report(
@@ -1883,6 +1922,7 @@ def build_file_preparation_outputs(
         run_intake = write_run_intake(
             out_dir,
             root,
+            run_id=run_id,
             target_year=target_year,
             client_name=client_name,
             records=records,
@@ -1892,6 +1932,7 @@ def build_file_preparation_outputs(
             ocr_lang=effective_ocr_lang,
             jurisdiction=jurisdiction,
             language=language,
+            run_root=run_root,
         )
     write_index_markdown(
         records,
@@ -2076,15 +2117,15 @@ def _parse_args() -> argparse.Namespace:
         description="Genera l'istruttoria clienti a partire da un fascicolo cliente."
     )
     parser.add_argument("folder", type=Path, help="Cartella cliente.")
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--year", type=int, default=None, help="Anno fiscale target.")
     parser.add_argument(
         "--out",
         type=Path,
         default=None,
         help=(
-            "Cartella output. Default: cartella sorella "
-            "output/client-file-preparation-<id stabile>; un run parziale compatibile "
-            "riprende automaticamente l'estrazione"
+            "Cartella output dentro il run Client File Preparation. "
+            "Default: output_dir del contesto client-engagement."
         ),
     )
     parser.add_argument("--no-ocr", action="store_true", help="Disabilita OCR locale.")
@@ -2114,6 +2155,17 @@ def _parse_args() -> argparse.Namespace:
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
+    try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="client-file-preparation",
+            input_paths=[args.folder],
+            output_dir=args.out,
+        )
+    except AssuranceContractError as exc:
+        LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 2
+    args.out = args.out or Path(context["output_dir"])
     if not args.no_ocr and input_requires_ocr(args.folder):
         _, missing = check_dependencies(require_ocr=True)
         if any(dependency in OCR_DEPENDENCIES for dependency in missing):
@@ -2130,6 +2182,8 @@ def main() -> int:
         jurisdiction=args.jurisdiction,
         language=args.language,
         max_pages=args.max_pages,
+        run_id=str(context["run_id"]),
+        run_root=Path(context["run_root"]),
     )
     LOGGER.info("Output creati in %s", result.output_dir)
     LOGGER.info(

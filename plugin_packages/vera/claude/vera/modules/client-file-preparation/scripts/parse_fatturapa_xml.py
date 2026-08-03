@@ -4,6 +4,7 @@ import argparse
 import csv
 import json
 import logging
+import sys
 
 # XML is parsed only through _safe_xml_root, which rejects declarations.
 import xml.etree.ElementTree as ET  # nosec B405
@@ -11,6 +12,23 @@ from dataclasses import asdict, dataclass
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 from typing import Iterable, Sequence
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = [
     "InvoiceXmlRecord",
@@ -608,16 +626,27 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--out",
         type=Path,
-        default=None,
-        help="Cartella output. Default: <folder>/out/fatture",
+        required=True,
+        help="Cartella output dentro il run Client File Preparation.",
     )
+    parser.add_argument("--client-engagement", required=True, type=Path)
     return parser.parse_args()
 
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
-    out_dir = args.out or args.folder / "out" / "fatture"
+    out_dir = args.out
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="client-file-preparation",
+            input_paths=[args.folder],
+            output_dir=out_dir,
+        )
+    except AssuranceContractError as exc:
+        LOGGER.error("%s", exc)
+        return 2
     records = parse_xml_files(args.folder.rglob("*.xml"), args.folder, args.year)
     write_summary_csv(records, out_dir / "fatture_summary.csv")
     write_summary_jsonl(records, out_dir / "fatture_summary.jsonl")

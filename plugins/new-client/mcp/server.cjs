@@ -2,6 +2,7 @@
 "use strict";
 
 const crypto = require("node:crypto");
+const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
@@ -44,6 +45,101 @@ const TOOL_NAMES = {
   save: "save_new_client_decisions",
   apply: "apply_new_client_decisions",
 };
+
+function pythonExecutable() {
+  const virtualEnvironmentPython = process.env.VIRTUAL_ENV
+    ? path.join(
+        process.env.VIRTUAL_ENV,
+        process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+      )
+    : "";
+  const repositoryPython = path.resolve(
+    PLUGIN_ROOT,
+    "..",
+    "..",
+    ".venv",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+  );
+  const candidates = [
+    process.env.VERA_CLIENT_WORKFLOW_PYTHON,
+    process.env.PYTHON,
+    virtualEnvironmentPython,
+    repositoryPython,
+    "python3",
+    "python",
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    return candidate;
+  }
+  return "python3";
+}
+
+const CLIENT_WORKFLOW_PREFLIGHT = String.raw`
+import json
+import sys
+from pathlib import Path
+
+plugin_root = Path(sys.argv[1]).resolve()
+output_dir = Path(sys.argv[2])
+workflow_id = sys.argv[3]
+candidates = (
+    plugin_root.parent / "_shared" / "vendor" / "modules",
+    plugin_root / "vendor" / "modules",
+    plugin_root.parent.parent / "vendor" / "modules",
+)
+for candidate in candidates:
+    if (candidate / "vera_assurance").is_dir():
+        sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+from vera_assurance import load_client_workflow_context_for_output
+
+context = load_client_workflow_context_for_output(
+    output_dir,
+    expected_workflow_id=workflow_id,
+)
+print(json.dumps({
+    "ok": True,
+    "schema_version": context["schema_version"],
+    "workflow_id": context["workflow_id"],
+    "run_id": context["run_id"],
+}, separators=(",", ":")))
+`;
+
+function preflightClientWorkflowRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  // Run ownership and lifecycle state are exact audit properties, so every
+  // persistence boundary reuses the shared v2 validator immediately before write.
+  const completed = spawnSync(
+    pythonExecutable(),
+    ["-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error(
+      "New Client persistence requires a running v2 customer-folder workflow run",
+    );
+  }
+  let result;
+  try {
+    result = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error("New Client customer-run preflight returned an invalid result");
+  }
+  if (
+    !isObject(result)
+    || result.ok !== true
+    || result.schema_version !== "vera.client_workflow_context.v2"
+    || result.workflow_id !== PLUGIN_NAME
+    || result.run_id !== expectedRunId
+  ) {
+    throw new Error("New Client customer-run preflight returned an invalid result");
+  }
+  return result;
+}
 
 // These are the complete public review vocabularies. Domain classification remains
 // upstream/model-led; this server only validates the resulting review contract.
@@ -491,6 +587,7 @@ function toolDefinitions() {
   );
   const reviewInput = objectSchema(
     {
+      client_engagement: { type: "string" },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -515,6 +612,7 @@ function toolDefinitions() {
   );
   const decisionInput = objectSchema(
     {
+      client_engagement: { type: "string" },
       run_intake: { type: "object", description: "Optional run_intake.json with output_dir for persistence." },
       persistence_token: {
         type: "string",
@@ -1880,7 +1978,8 @@ function issuePersistenceToken(input, payload) {
   reservePersistenceContextSlot();
   const token = crypto.randomBytes(32).toString("base64url");
   PERSISTENCE_CONTEXTS.set(token, {
-    outputDir,
+    outputReference: input.run_intake.output_dir,
+    pathReference: input.run_intake.path_reference,
     runId: payload.review_payload.run_id,
     reviewHash: payload.review_payload_sha256,
     expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
@@ -1906,7 +2005,11 @@ function resolvePersistentOutputDir(input, payload) {
     throw new Error("persistence_token does not match this review run");
   }
   const outputDir = resolveOutputDir({
-    run_intake: { output_dir: context.outputDir },
+    ...input,
+    run_intake: {
+      output_dir: context.outputReference,
+      path_reference: context.pathReference,
+    },
   });
   const directOutputDir = resolveOutputDir(input);
   if (directOutputDir && directOutputDir !== outputDir) {
@@ -1971,7 +2074,36 @@ function isInsideOrEqual(candidate, parent) {
 function resolveOutputDir(input) {
   const raw = isObject(input.run_intake) ? input.run_intake.output_dir : null;
   if (typeof raw !== "string" || !raw.trim()) return null;
-  const requested = path.resolve(raw.trim());
+  let requested;
+  if (path.isAbsolute(raw.trim())) {
+    requested = path.resolve(raw.trim());
+  } else {
+    if (input.run_intake.path_reference !== "run_root_relative") {
+      throw new Error("relative run output requires path_reference=run_root_relative");
+    }
+    const contextValue =
+      typeof input.client_engagement === "string"
+        ? input.client_engagement.trim()
+        : "";
+    if (!contextValue || !path.isAbsolute(contextValue)) {
+      throw new Error(
+        "client_engagement is required to resolve the portable run output",
+      );
+    }
+    const contextPath = path.resolve(contextValue);
+    const contextStat = fs.lstatSync(contextPath);
+    if (!contextStat.isFile() || contextStat.isSymbolicLink()) {
+      throw new Error("client_engagement must identify a regular context file");
+    }
+    if (fs.realpathSync(contextPath) !== contextPath) {
+      throw new Error("client_engagement may not traverse symlinks");
+    }
+    const runRoot = path.dirname(contextPath);
+    requested = path.resolve(runRoot, raw.trim());
+    if (requested === runRoot || !isInsideOrEqual(requested, runRoot)) {
+      throw new Error("run output reference leaves the customer run");
+    }
+  }
   if (!fs.existsSync(requested)) {
     throw new Error("run_intake.output_dir must identify an existing directory");
   }
@@ -2277,11 +2409,16 @@ function verifyLocalArtifactBindings(outputDir, review, reviewHash, finalArtifac
   }
 
   const storedRunIntake = readJsonIfPresent(path.join(outputDir, "run_intake.json"));
+  const storedOutputReference = String(storedRunIntake.output_dir || "").trim();
+  const storedOutputMatches = path.isAbsolute(storedOutputReference)
+    ? path.resolve(storedOutputReference) === outputDir
+    : storedRunIntake.path_reference === "run_root_relative"
+      && storedOutputReference === path.basename(outputDir);
   if (
     storedRunIntake.plugin !== PLUGIN_NAME
     || storedRunIntake.workflow !== review.workflow
     || storedRunIntake.run_id !== review.run_id
-    || path.resolve(storedRunIntake.output_dir || "") !== outputDir
+    || !storedOutputMatches
   ) {
     throw new Error("stored run_intake.json does not bind this review to the output directory");
   }
@@ -2477,6 +2614,10 @@ function saveDecisions(input) {
       payload.review_payload,
       payload.review_payload_sha256,
       uiDecisions,
+    );
+    preflightClientWorkflowRun(
+      persistent.outputDir,
+      payload.review_payload.run_id,
     );
     writeJsonBatchAtomic(persistent.outputDir, {
       "ui_decisions.json": uiDecisions,
@@ -2811,6 +2952,7 @@ function applyDecisions(input) {
       },
     };
     validateExportGate(finalArtifacts.export_gate, review);
+    preflightClientWorkflowRun(outputDir, review.run_id);
     writeJsonBatchAtomic(outputDir, {
       "ui_decisions.json": uiDecisions,
       "applied_decisions.json": appliedDecisions,

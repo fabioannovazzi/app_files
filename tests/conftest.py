@@ -1,17 +1,20 @@
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import sys
 import types
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 
 import pytest
 
 # Exact plugin execution-boundary tests require a clean source tree.  Keep
-# pytest imports from creating unreceipted local bytecode during collection.
+# pytest and its subprocesses from creating unreceipted local bytecode during
+# collection or execution.
 sys.dont_write_bytecode = True
+os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -27,6 +30,140 @@ _RUNTIME_IMPORT_SNAPSHOTS: dict[
     str,
     tuple[dict[str, types.ModuleType], list[str], dict[str, str]],
 ] = {}
+
+
+@pytest.fixture
+def vera_workflow_workspace(
+    tmp_path: Path,
+) -> Callable[[str], dict[str, Any]]:
+    """Build one real running v2 customer-folder context for Vera CLI tests."""
+
+    created = 0
+    engagements: dict[str, str] = {}
+
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "pytest_vera_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+
+    client_root = tmp_path / "Test Client"
+    client_root.mkdir(mode=0o700)
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+
+    def create(
+        workflow_id: str,
+        *,
+        engagement_id: str | None = None,
+        input_files: dict[str, str] | None = None,
+        upstream_workspace: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
+        nonlocal created
+        created += 1
+        engagement_key = engagement_id or f"engagement-{created}"
+        actual_engagement_id = engagements.get(engagement_key)
+        if actual_engagement_id is None:
+            engagement = ledger.create_engagement(
+                client_root,
+                client_id,
+                engagement_key,
+            )
+            actual_engagement_id = engagement["engagement_id"]
+            engagements[engagement_key] = actual_engagement_id
+
+        input_ids: list[str] = []
+        upstream_artifacts: list[dict[str, str]] = []
+        if upstream_workspace is not None:
+            upstream_output = Path(upstream_workspace["output_dir"])
+            declarations = [
+                {
+                    "artifact_id": f"pytest_artifact_{index:04d}",
+                    "path": path.relative_to(upstream_output).as_posix(),
+                    "purpose": "Exercise the exact upstream workflow handoff.",
+                    "audience": "internal",
+                    "media_type": "application/octet-stream",
+                }
+                for index, path in enumerate(
+                    sorted(
+                        candidate
+                        for candidate in upstream_output.rglob("*")
+                        if candidate.is_file()
+                    )
+                )
+            ]
+            finalized = ledger.finalize_run(
+                client_root,
+                actual_engagement_id,
+                upstream_workspace["run_id"],
+                declarations,
+            )
+            upstream_artifacts = [
+                {
+                    "run_id": upstream_workspace["run_id"],
+                    "artifact_id": artifact["artifact_id"],
+                    "role": "source",
+                }
+                for artifact in finalized["artifact_manifest"]["artifacts"]
+            ]
+        else:
+            supplied = input_files or {
+                f"source-{created}.txt": (
+                    "Ragione sociale: Beta Esempio S.r.l.\n"
+                    "Codice fiscale: 01234567890\n"
+                    "Certificazione Unica 2025.\n"
+                )
+            }
+            staging = tmp_path / "fixture-sources" / str(created)
+            staging.mkdir(parents=True, mode=0o700)
+            for filename, content in supplied.items():
+                assert Path(filename).name == filename
+                source = staging / filename
+                source.write_text(content, encoding="utf-8")
+                imported = ledger.import_document(
+                    client_root,
+                    client_id,
+                    actual_engagement_id,
+                    source.resolve(),
+                    "source",
+                )
+                input_ids.append(imported["receipt"]["input_id"])
+
+        prepared = ledger.prepare_run(
+            client_root,
+            client_id,
+            actual_engagement_id,
+            workflow_id,
+            "test-version",
+            input_ids=input_ids,
+            upstream_artifacts=upstream_artifacts,
+            idempotency_key=f"pytest:{created}",
+        )
+        running = ledger.start_run(
+            client_root,
+            actual_engagement_id,
+            prepared["run"]["run_id"],
+        )
+        context = running["context"]
+        input_paths = [Path(binding["path"]) for binding in context["input_bindings"]]
+        return {
+            "context": context,
+            "context_path": Path(running["context_path"]),
+            "input_dir": Path(context["input_dir"]),
+            "input_paths": input_paths,
+            "input_by_name": {path.name: path for path in input_paths},
+            "output_dir": Path(running["output_dir"]),
+            "client_root": client_root,
+            "client_id": client_id,
+            "engagement_id": actual_engagement_id,
+            "run_id": running["run"]["run_id"],
+        }
+
+    return create
 
 
 def _drop_imported_module(name: str) -> None:

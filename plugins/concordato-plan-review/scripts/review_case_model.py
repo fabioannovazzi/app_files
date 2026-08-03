@@ -66,6 +66,10 @@ from pathlib import Path
 from typing import Any
 
 from concordato_semantic import review_concordato_case_model
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -93,10 +97,21 @@ def main() -> int:
         help="Reviewer-confirmed case model using the generated template schema.",
     )
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--reviewer-ref", required=True)
     parser.add_argument("--reviewed-on", required=True)
     parser.add_argument("--reference-date", default="")
     args = parser.parse_args()
+
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="concordato-plan-review",
+            input_paths=[args.inventory, args.case_model],
+            output_dir=args.output,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
 
     inventory = _read_json(args.inventory)
     if not isinstance(inventory, list) or any(

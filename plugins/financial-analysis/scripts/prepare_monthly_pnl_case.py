@@ -9,6 +9,7 @@ import hashlib
 import json
 import logging
 import re
+import sys
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
@@ -16,6 +17,25 @@ from datetime import date
 from decimal import Decimal, Inexact, InvalidOperation, Rounded, localcontext
 from pathlib import Path
 from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from managed_case_inputs import declared_case_input_paths  # noqa: E402
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = ["main", "prepare_monthly_pnl_case"]
 
@@ -1926,8 +1946,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         type=Path,
         help="Directory for deterministic preparation outputs",
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
-    result = prepare_monthly_pnl_case(args.case, args.output_dir)
+    try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="financial-analysis",
+            input_paths=[args.case],
+            output_dir=args.output_dir,
+        )
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="financial-analysis",
+            input_paths=declared_case_input_paths(args.case, "monthly_pnl"),
+            output_dir=args.output_dir,
+        )
+        result = prepare_monthly_pnl_case(args.case, args.output_dir)
+    except (AssuranceContractError, OSError, TypeError, ValueError) as exc:
+        LOGGER.error("%s", exc)
+        return 2
     LOGGER.info(
         "Monthly P&L preparation %s with %s error(s)",
         result["status"],

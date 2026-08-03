@@ -10,9 +10,12 @@ from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     ensure_safe_output_dir,
     iso_now,
     load_json_object,
+    load_running_case_context,
+    require_case_artifact_run,
     sha256_file,
     write_private_json,
     write_private_text,
@@ -22,6 +25,7 @@ __all__ = ["package_practice", "main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+
 DISCLAIMER = "BOZZA PER REVISIONE PROFESSIONALE — NON PRONTA PER IL DEPOSITO"
 SPANISH_DISCLAIMER = (
     "BORRADOR PARA REVISIÓN PROFESIONAL — NO ESTÁ LISTO PARA SU PRESENTACIÓN"
@@ -531,6 +535,11 @@ def _update_run_intake(
     trace = payload.get("execution_trace")
     if not isinstance(trace, list):
         trace = []
+    output_reference = (
+        "outputs"
+        if payload.get("path_reference") == "run_root_relative"
+        else output_dir.as_posix()
+    )
     trace.append(
         {
             "step_id": f"package_practice_{len(trace) + 1}",
@@ -539,7 +548,7 @@ def _update_run_intake(
                 "python",
                 "scripts/package_practice.py",
                 "--output-dir",
-                output_dir.as_posix(),
+                output_reference,
             ],
             "execution_location": "local_python",
             "status": "passed",
@@ -787,10 +796,31 @@ def package_practice(output_dir: Path) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        input_paths = [
+            args.output_dir / name
+            for name in (
+                "run_intake.json",
+                "case_intake_validated.json",
+                "practice_plan_validated.json",
+                "official_sources.json",
+                "practice_validation_audit.json",
+            )
+        ]
+        inventory_path = args.output_dir / "local_evidence_inventory.json"
+        if inventory_path.exists():
+            input_paths.append(inventory_path)
+        context = load_running_case_context(
+            args.client_engagement,
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+        for path in input_paths:
+            require_case_artifact_run(path, run_id=context["run_id"])
         result = package_practice(args.output_dir)
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (AssuranceContractError, OSError, ValueError, json.JSONDecodeError) as exc:
         LOGGER.error("PACKAGING_BLOCKED: %s", exc)
         return 2
     LOGGER.info(

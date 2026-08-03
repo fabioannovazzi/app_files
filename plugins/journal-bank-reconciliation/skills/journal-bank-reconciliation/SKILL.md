@@ -5,7 +5,24 @@ description: Use when a user wants Codex to reconcile qualified bank statements 
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import the bank and
+journal/ledger sources into its managed inputs, then call
+`prepare_studio_client_workflow` with workflow ID
+`journal-bank-reconciliation`. Pass the returned `client_engagement_path` as
+`--client-engagement` to inspection and reconciliation. Use only the context's
+run folder; cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before inspection. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Journal-Bank Reconciliation
 
@@ -97,7 +114,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 3. Run inspection to produce `inspection.json` and `suggested_recipe.json`:
 
 ```bash
-python scripts/inspect_inputs.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Add `--sample <sample-file>` when a sample movement list is provided.
@@ -140,7 +157,7 @@ Add `--sample <sample-file>` when a sample movement list is provided.
 7. Run deterministic reconciliation:
 
 ```bash
-python scripts/run_reconciliation.py <bank-file-or-folder> <journal-file-or-folder> --output-dir <output-dir>/reconciliation --recipe <output-dir>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output>/reconciliation --recipe <client-run-output>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.

@@ -8,8 +8,19 @@ from pathlib import Path
 from typing import Any, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
 
 from new_client_core import (  # noqa: E402
     AML_A_FACTOR_IDS,
@@ -23,6 +34,10 @@ from new_client_core import (  # noqa: E402
     ensure_private_output_directory,
     validate_new_client_input,
     write_private_json,
+)
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
 )
 
 __all__ = ["build_parser", "build_template", "initialize_case", "main"]
@@ -307,6 +322,7 @@ def build_parser() -> argparse.ArgumentParser:
         description="Initialize a private Vera new-client case intake."
     )
     parser.add_argument("--case-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument("--client-reference", required=True)
     parser.add_argument(
         "--client-type",
@@ -328,6 +344,11 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = build_parser().parse_args(argv)
     try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="new-client",
+            output_dir=args.case_dir,
+        )
         path = initialize_case(
             args.case_dir,
             client_reference=args.client_reference,
@@ -338,7 +359,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             language=args.language,
             overwrite=args.overwrite,
         )
-    except ValidationError as exc:
+    except (AssuranceContractError, ValidationError) as exc:
         sys.stdout.write(json.dumps({"status": "error", "error": str(exc)}) + "\n")
         return 2
     sys.stdout.write(

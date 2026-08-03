@@ -66,6 +66,10 @@ import logging
 from pathlib import Path
 
 from journal_bank_core import add_common_args, configure_logging, inspect_inputs
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -82,11 +86,25 @@ def main() -> int:
         required=True,
         help="Folder where inspection.json and suggested_recipe.json will be written.",
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--sample", type=Path, help="Optional sample movements file.")
     parser.add_argument("--recipe", type=Path, help="Optional existing recipe JSON.")
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
+
+    input_paths = [args.bank, args.journal]
+    input_paths.extend(path for path in (args.sample, args.recipe) if path is not None)
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="journal-bank-reconciliation",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 2
 
     result = inspect_inputs(
         args.bank,

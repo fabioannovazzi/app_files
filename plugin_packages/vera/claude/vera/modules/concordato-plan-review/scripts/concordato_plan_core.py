@@ -12,7 +12,7 @@ from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal, InvalidOperation, localcontext
 from io import BytesIO
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any, Iterable, Mapping, Sequence
 
 import openpyxl
@@ -431,6 +431,8 @@ def _capture_source(
 
 def _file_inventory(
     input_dir: Path,
+    *,
+    path_ref_root: str | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, bytes], list[dict[str, Any]]]:
     files: list[dict[str, Any]] = []
     source_bytes: dict[str, bytes] = {}
@@ -440,8 +442,14 @@ def _file_inventory(
             continue
         suffix = path.suffix.lower()
         relative_path = path.relative_to(input_dir).as_posix()
+        if path_ref_root is None:
+            persisted_path = str(path)
+        elif Path(path_ref_root).is_absolute():
+            persisted_path = str(Path(path_ref_root) / Path(relative_path))
+        else:
+            persisted_path = (PurePosixPath(path_ref_root) / relative_path).as_posix()
         row: dict[str, Any] = {
-            "path": str(path),
+            "path": persisted_path,
             "relative_path": relative_path,
             "name": path.name,
             "suffix": suffix,
@@ -2196,6 +2204,8 @@ def _expected_material_output_addresses(
 def _reconstruct_numeric_authority(
     root: Path,
     decision_content: Mapping[str, Any],
+    *,
+    source_root: Path | None = None,
 ) -> tuple[list[AmountCandidate], list[AmountCandidate], list[dict[str, Any]], Decimal]:
     """Rebuild numeric inputs from current source bytes and reviewed authority."""
 
@@ -2303,8 +2313,15 @@ def _reconstruct_numeric_authority(
     )
     if not isinstance(input_paths, list) or len(input_paths) != 1:
         raise ValueError("Run intake source root is unavailable")
-    source_root = Path(str(input_paths[0])).resolve()
-    inventory, _, _ = _file_inventory(source_root)
+    effective_source_root = (
+        source_root.resolve()
+        if source_root is not None
+        else Path(str(input_paths[0])).resolve()
+    )
+    inventory, _, _ = _file_inventory(
+        effective_source_root,
+        path_ref_root=str(input_paths[0]),
+    )
     supported_refs: list[str] = []
     for item in inventory:
         if not item["supported"] or item.get("capture_status") != "captured":
@@ -2343,6 +2360,7 @@ def validate_numeric_evidence_closure(
     *,
     language: str | None = None,
     calculation_decision: Mapping[str, Any] | None = None,
+    source_root: Path | None = None,
 ) -> dict[str, Any]:
     """Reopen and verify every declared CSV, workbook, and Word numeric address."""
 
@@ -2414,7 +2432,11 @@ def validate_numeric_evidence_closure(
         selected_candidates,
         authoritative_inventory,
         reviewed_tolerance,
-    ) = _reconstruct_numeric_authority(root, decision_content)
+    ) = _reconstruct_numeric_authority(
+        root,
+        decision_content,
+        source_root=source_root,
+    )
     expected_matches = find_exact_amount_matches(
         selected_candidates,
         tolerance=reviewed_tolerance,
@@ -3138,6 +3160,9 @@ def run_concordato_review(
     max_rows_per_sheet: int = 5000,
     recipe: Path | Mapping[str, Any] | None = None,
     semantic_recipe: Path | Mapping[str, Any] | None = None,
+    run_id: str | None = None,
+    input_path_ref: str | None = None,
+    output_path_ref: str | None = None,
 ) -> ReviewRun:
     """Run semantic Concordato review preparation and numeric appendix controls."""
 
@@ -3148,6 +3173,9 @@ def run_concordato_review(
     if max_rows_per_sheet <= 0:
         raise ValueError("max_rows_per_sheet must be positive")
     output_dir.mkdir(parents=True, exist_ok=True)
+    recorded_input = input_path_ref or input_dir.as_posix()
+    recorded_output = output_path_ref or output_dir.as_posix()
+    display_input_dir = Path(recorded_input)
     language = normalize_language(language, default="it")
     document_language = normalize_language(
         document_language, default=language, allow_auto=True
@@ -3156,7 +3184,10 @@ def run_concordato_review(
     if tolerance_value < 0:
         raise ValueError("amount tolerance must not be negative")
 
-    inventory, captured_sources, source_receipts = _file_inventory(input_dir)
+    inventory, captured_sources, source_receipts = _file_inventory(
+        input_dir,
+        path_ref_root=recorded_input,
+    )
     semantic_decision: dict[str, Any] | None = None
     semantic_case_model: dict[str, Any] | None = None
     semantic_review_error: str | None = None
@@ -3506,6 +3537,9 @@ def run_concordato_review(
     run_intake = write_run_intake(
         output_dir,
         input_dir,
+        run_id=run_id,
+        input_path_ref=recorded_input,
+        output_path_ref=recorded_output,
         reference_date=reference_date,
         language=language,
         document_language=document_language,
@@ -3515,7 +3549,7 @@ def run_concordato_review(
     )
     audit = {
         "run_id": run_intake.run_id,
-        "input_dir": str(input_dir),
+        "input_dir": recorded_input,
         "reference_date": reference_date,
         "language": language,
         "document_language": document_language,
@@ -3684,7 +3718,7 @@ def run_concordato_review(
     )
     _write_summary_docx(
         output_dir / "concordato_review_summary.docx",
-        input_dir=input_dir,
+        input_dir=display_input_dir,
         reference_date=reference_date,
         tolerance=tolerance_value,
         inventory=inventory,
@@ -3695,7 +3729,7 @@ def run_concordato_review(
     )
     _write_review_packet(
         output_dir / "review_packet.md",
-        input_dir=input_dir,
+        input_dir=display_input_dir,
         reference_date=reference_date,
         language=language,
         document_language=document_language,
@@ -3843,6 +3877,7 @@ def run_concordato_review(
             numeric_ledger,
             language=language,
             calculation_decision=calculation_decision,
+            source_root=input_dir,
         )
     numeric_ledger_receipt = artifact_receipt(
         output_dir,
@@ -4161,6 +4196,7 @@ def run_concordato_review(
         output_dir,
         input_dir,
         run_id=run_intake.run_id,
+        input_path_ref=recorded_input,
         run_intake_path=run_intake.path,
         reference_date=reference_date,
         language=language,
@@ -4193,6 +4229,7 @@ def run_concordato_review(
         output_dir,
         input_dir,
         run_id=run_intake.run_id,
+        input_path_ref=recorded_input,
         run_intake_path=run_intake.path,
         reference_date=reference_date,
         language=language,

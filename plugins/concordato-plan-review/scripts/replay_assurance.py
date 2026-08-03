@@ -86,7 +86,13 @@ from output_closure import (
     validate_final_artifact_index,
     validate_output_closure,
 )
-from vera_assurance import canonical_json_sha256, validate_assurance_envelope
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    canonical_json_sha256,
+    load_client_engagement_context_file,
+    validate_assurance_envelope,
+    validate_client_workflow_run,
+)
 
 
 def _read_object(path: Path) -> dict[str, Any]:
@@ -99,11 +105,130 @@ def _read_object(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _load_cli_customer_context(
+    *,
+    client_engagement: Path,
+    output_dir: Path,
+    persistent_output_dir: Path | None,
+) -> dict[str, Any]:
+    """Authorize either the canonical output or its MCP transaction copy."""
+
+    context = load_client_engagement_context_file(
+        client_engagement,
+        expected_workflow_id="concordato-plan-review",
+    )
+    expected_output = Path(str(context["output_dir"])).resolve()
+    persistent_output = (
+        persistent_output_dir.expanduser().resolve()
+        if persistent_output_dir is not None
+        else expected_output
+    )
+    if persistent_output != expected_output:
+        raise AssuranceContractError(
+            "persistent Concordato output must be the customer run output root"
+        )
+    actual_output = output_dir.expanduser().resolve(strict=True)
+    if actual_output == expected_output or actual_output.is_relative_to(
+        expected_output
+    ):
+        load_client_engagement_context_file(
+            client_engagement,
+            expected_workflow_id="concordato-plan-review",
+            output_dir=actual_output,
+        )
+        return context
+    try:
+        relative = actual_output.relative_to(Path(str(context["run_root"])))
+    except ValueError as exc:
+        raise AssuranceContractError(
+            "Concordato output is outside the customer run"
+        ) from exc
+    if not (
+        len(relative.parts) == 2
+        and relative.parts[0].startswith(".generated-review-transaction-")
+        and relative.parts[1] == "working"
+    ):
+        raise AssuranceContractError(
+            "Concordato output is outside the customer run and its review transaction"
+        )
+    return context
+
+
 def _read_regular_bytes(path: Path) -> bytes:
     observed = path.lstat()
     if path.is_symlink() or not path.is_file() or observed.st_nlink != 1:
         raise ValueError(f"{path.name} must be one unlinked regular file")
     return path.read_bytes()
+
+
+def _current_source_root(
+    output_dir: Path,
+    run_intake: Mapping[str, Any],
+    client_context: Mapping[str, Any] | None,
+) -> Path:
+    """Resolve a persisted source reference against the current customer run."""
+
+    source_paths = run_intake.get("input_paths")
+    if not isinstance(source_paths, list) or len(source_paths) != 1:
+        raise ValueError("run_intake.input_paths must contain exactly one source root")
+    if client_context is None:
+        source_ref = Path(str(source_paths[0]))
+        if not source_ref.is_absolute():
+            raise ValueError(
+                "Portable Concordato source references require a client engagement context"
+            )
+        return source_ref.resolve()
+    if run_intake.get("run_id") != client_context.get("run_id"):
+        raise ValueError("Concordato run identity does not match the customer ledger")
+    # A fixed lexical path gate is justified here because containment is a
+    # mechanically verifiable security property, not a semantic judgment.
+    raw_source_ref = source_paths[0]
+    if not isinstance(raw_source_ref, str):
+        raise ValueError(
+            "Managed Concordato source reference must be run-root-relative"
+        )
+    source_ref = PurePosixPath(raw_source_ref)
+    if (
+        not raw_source_ref
+        or source_ref.is_absolute()
+        or source_ref.as_posix() != raw_source_ref
+        or not source_ref.parts
+        or ".." in source_ref.parts
+        or "\\" in raw_source_ref
+    ):
+        raise ValueError(
+            "Managed Concordato source reference must be run-root-relative"
+        )
+    run_root = Path(str(client_context["run_root"])).resolve()
+    source_root = (run_root / Path(*source_ref.parts)).resolve()
+    managed_input = Path(str(client_context["input_dir"])).resolve()
+    if not (source_root == managed_input or source_root.is_relative_to(managed_input)):
+        raise ValueError("Persisted Concordato source reference leaves the run inputs")
+    validate_client_workflow_run(
+        client_context,
+        expected_workflow_id="concordato-plan-review",
+        input_paths=[source_root],
+    )
+    output_ref = run_intake.get("output_dir")
+    if not isinstance(output_ref, str) or not output_ref:
+        raise ValueError("run_intake.output_dir is unavailable")
+    persisted_output = PurePosixPath(output_ref)
+    if (
+        persisted_output.is_absolute()
+        or persisted_output.as_posix() != output_ref
+        or not persisted_output.parts
+        or ".." in persisted_output.parts
+        or "\\" in output_ref
+    ):
+        raise ValueError("Persisted Concordato output reference is not portable")
+    managed_output = Path(str(client_context["output_dir"])).resolve()
+    resolved_persisted_output = (run_root / Path(*persisted_output.parts)).resolve()
+    if not (
+        resolved_persisted_output == managed_output
+        or resolved_persisted_output.is_relative_to(managed_output)
+    ):
+        raise ValueError("Persisted Concordato output reference is not portable")
+    return source_root
 
 
 def _decision_by_type(
@@ -890,6 +1015,9 @@ def _validate_independent_outputs(
             max_rows_per_sheet=int(assumptions.get("max_rows_per_sheet") or 0),
             recipe=recipe,
             semantic_recipe=semantic_recipe,
+            run_id=str(run_intake.get("run_id") or ""),
+            input_path_ref=str(run_intake.get("input_paths", [source_root])[0]),
+            output_path_ref=str(run_intake.get("output_dir") or baseline),
         )
 
         exact_paths = {
@@ -1055,6 +1183,7 @@ def replay_assurance(
     output_dir: Path,
     *,
     require_output_closure: bool = True,
+    client_context: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Replay receipts and optionally require the current whole-output seal."""
 
@@ -1063,9 +1192,7 @@ def replay_assurance(
     review_payload = _read_object(output_dir / "review_payload.json")
     envelope = _read_object(output_dir / "assurance_envelope.json")
     reviewed = _read_object(output_dir / "reviewed_decisions.json")
-    source_paths = run_intake.get("input_paths")
-    if not isinstance(source_paths, list) or len(source_paths) != 1:
-        raise ValueError("run_intake.input_paths must contain exactly one source root")
+    source_root = _current_source_root(output_dir, run_intake, client_context)
     content_digest = review_payload.pop("content_sha256", None)
     expected_review_digest = canonical_json_sha256(review_payload)
     if content_digest != expected_review_digest:
@@ -1073,7 +1200,7 @@ def replay_assurance(
     validated = validate_assurance_envelope(
         envelope,
         artifact_roots={
-            "source": Path(str(source_paths[0])).resolve(),
+            "source": source_root,
             "run": output_dir,
             "implementation": COMPONENT_ROOT,
             "assurance_implementation": ASSURANCE_IMPLEMENTATION_ROOT,
@@ -1111,10 +1238,14 @@ def replay_assurance(
         )
     numeric_ledger = _read_object(output_dir / "numeric_evidence_ledger.json")
     if numeric_ledger.get("schema_version") == "concordato.numeric_evidence_ledger.v2":
-        validate_numeric_evidence_closure(output_dir, numeric_ledger)
+        validate_numeric_evidence_closure(
+            output_dir,
+            numeric_ledger,
+            source_root=source_root,
+        )
     _validate_independent_outputs(
         output_dir,
-        Path(str(source_paths[0])).resolve(),
+        source_root,
         run_intake,
         reviewed,
         require_final_state=require_output_closure,
@@ -1142,10 +1273,20 @@ def replay_assurance(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument("--persistent-output-dir", type=Path, help=argparse.SUPPRESS)
     args = parser.parse_args()
     try:
-        result = replay_assurance(args.output_dir)
-    except (OSError, ValueError) as exc:
+        client_context = _load_cli_customer_context(
+            client_engagement=args.client_engagement,
+            output_dir=args.output_dir,
+            persistent_output_dir=args.persistent_output_dir,
+        )
+        result = replay_assurance(
+            args.output_dir,
+            client_context=client_context,
+        )
+    except (AssuranceContractError, OSError, ValueError) as exc:
         sys.stdout.write(json.dumps({"ok": False, "error": str(exc)}) + "\n")
         return 1
     sys.stdout.write(json.dumps(result) + "\n")

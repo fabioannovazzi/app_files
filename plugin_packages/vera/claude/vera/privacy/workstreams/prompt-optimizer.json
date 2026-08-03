@@ -10,6 +10,9 @@
     "assets/review-workbench-adapter.json",
     "assets/prompt-optimizer-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -47,11 +50,16 @@
       ]
     }
   ],
-  "security_controls": [],
+  "security_controls": [
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "Question inspection and prompt validation require a digest-valid Studio Archive prompt-optimizer context, accept the question and working artifacts only from that engagement, and write only to the context's run output root or a descendant."
+    }
+  ],
   "review": {
-    "reviewed_at": "2026-07-31",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c2cb370af5f7f54a76ac0cee4e6128653de98ab9f3e363b694613601a3bc3a3d"
+    "source_fingerprint": "5a02f0c84b7136c7943a536cd9c3a679cf9ed0cf5f7124829f8c3bd4d9cc9a44"
   }
 }

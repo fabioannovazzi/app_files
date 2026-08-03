@@ -1,21 +1,72 @@
 # Vera · Archivio dello Studio
 
-This Vera component also owns stable local client and engagement records for
-Codex workflows. Its three evidence routes search one selected
-client's Gmail correspondence in ChatGPT or Codex through the separately
-connected OpenAI Gmail connector. Codex Desktop additionally inspects one
-verified one-to-one chat in the local WhatsApp application through Computer Use
-or makes one shared studio folder searchable without a shared ChatGPT account
-or central database.
+This Vera component owns the portable customer-folder ledger used by local
+Codex workflows. Its three evidence routes search one selected client's Gmail
+correspondence in ChatGPT or Codex through the separately connected OpenAI
+Gmail connector. Codex Desktop additionally inspects one verified one-to-one
+chat in the local WhatsApp application through Computer Use or makes one shared
+studio folder searchable without a shared ChatGPT account or central database.
 
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in Codex Desktop. Each computer builds its own
-derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the database,
-configuration, and ChatGPT history are not shared. Search and indexing never
-modify existing source documents. After an explicit client choice, intake may
-create one derived top-level client folder and copy selected journal/support
-files into its generated `Vera engagements` subtree; originals are preserved
-and existing files are never overwritten.
+derived SQLite FTS5 index under `~/.mparanza/vera-studio-archive`; the index,
+configuration, private contact metadata, and ChatGPT history are not shared.
+They are not the operational source of truth. Search and indexing never modify
+existing source documents. After an explicit client choice, intake may create
+one derived top-level customer folder, create durable engagements, and copy
+selected source, journal, or support files into that folder's `Vera/` subtree;
+originals are preserved and existing files are never overwritten.
+
+## Portable customer-folder workflow
+
+The complete run record travels with the customer folder:
+
+```text
+<customer-folder>/
+  Vera/client.json
+  Vera/engagements/<engagement-id>/
+    engagement.json
+    inputs/<input-id>/<original-file>
+    inputs/<input-id>/receipt.json
+    runs/<run-id>/
+      run.json
+      input_manifest.json
+      context.json
+      inputs/                 # closed execution view of selected inputs only
+      outputs/                # workflow artifacts
+      artifact_manifest.json
+```
+
+Every file has a specific role: customer and engagement manifests preserve
+identity; input receipts preserve the exact imported bytes; the run and input
+manifests preserve lifecycle, purpose, and the exact selected inputs; the
+run-local input view prevents a workflow from accidentally consuming later
+files; the artifact manifest states why every output exists, who it is for, and
+which exact bytes are presented for review. Absolute machine paths are hydrated at runtime, so
+the folder can be renamed or opened from another configured computer.
+
+The explicit flow is:
+
+1. Identify an existing customer folder or create one only after the user
+   chooses New client.
+2. Create or select one engagement.
+3. Import each authorized source as an immutable receipt. Import does not
+   create or start a run.
+4. Prepare a run from exact input IDs and, when needed, exact finalized
+   same-engagement upstream artifacts. Repeating the same request is
+   idempotent; a separate run must be explicit.
+5. Start the prepared run, execute only its bound input paths, and write only
+   below its `outputs/` directory.
+6. Finalize by declaring every physical output with an artifact ID, purpose,
+   audience, and media type. Then review and complete it. Record failures or
+   cancellations instead of treating partial folders as results.
+
+A later chat reads this ledger instead of relying on chat history.
+`recover-ledger` rebuilds machine-local pointers from `Vera/client.json` and
+verifies the ledger.
+A folder rename retains the same client identity. The retention report is
+non-destructive; closing an engagement requires every active run to be
+completed or cancelled.
 
 Gmail messages remain in Gmail. Vera stores no Gmail credentials, tokens,
 message bodies, attachments, or local mailbox copy. Confirmed addresses remain
@@ -87,9 +138,17 @@ python scripts/studio_archive.py status
 python scripts/studio_archive.py clients
 python scripts/studio_archive.py client-folder --client-id client_...
 python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
-python scripts/studio_archive.py import-document --client-id client_... --source-path /absolute/path/journal.xlsx --role journal
+python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 analysis"
+python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/source.xlsx --role source
+python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
 python scripts/studio_archive.py engagements --client-id client_...
-python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id check-entries
+python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id journal-sampling --input-id input_...
+python scripts/studio_archive.py start-workflow --client-id client_... --engagement-id eng_... --run-id run_...
+python scripts/studio_archive.py finalize-workflow --client-id client_... --engagement-id eng_... --run-id run_... --artifacts-json '[{"artifact_id":"deliverable.result","path":"result.pdf","purpose":"Reviewed client deliverable","audience":"deliverable","media_type":"application/pdf"}]'
+python scripts/studio_archive.py complete-workflow --client-id client_... --engagement-id eng_... --run-id run_...
+python scripts/studio_archive.py close-engagement --client-id client_... --engagement-id eng_...
+python scripts/studio_archive.py recover-ledger
+python scripts/studio_archive.py retention-report --client-id client_... --older-than-days 365
 python scripts/studio_archive.py search --scope-id scope_... --query "cessione quote"
 python scripts/studio_archive.py open --source-id src_...
 python scripts/studio_archive.py configure-client --scope-id scope_... \
@@ -107,16 +166,18 @@ background mail synchronization. It covers Gmail only; Outlook or PEC mailboxes
 require a separate compatible connector unless their messages are available in
 the selected Gmail account.
 
-`client-folder` returns a digest-bound v2 object containing the stable
+`client-folder` returns a digest-bound v2 identity object containing the stable
 `client_id`, current folder `scope_id`, paths, and display name—not the private
-email/legal-name/tax-ID values. Engagement listing also returns persisted
-workflow contexts and exact mechanically available output paths, so a later
-chat can resume Journal Sampling or Check Entries without the earlier chat.
-Consuming workflows reject inputs and outputs outside that client engagement.
+email/legal-name/tax-ID values. An executable workflow uses the separate
+prepared run context, not this folder object as a substitute. Engagement
+listing reads the customer-folder ledger and returns immutable input receipts,
+run lifecycle, exact bound inputs, declared artifacts, and current mechanically
+available paths. Consuming workflows reject unbound inputs and outputs outside
+the exact run.
 
-After a client folder rename, refresh the archive, run `clients`, and explicitly
-rebind the listed orphaned profile to the new scope. Vera never guesses this
-mapping.
+After a customer-folder rename, refresh and run `recover-ledger` when a full
+verification is useful. The stable `client_id` in `Vera/client.json` lets Vera
+adopt the new path without guessing from the folder label.
 
 Set `VERA_STUDIO_ARCHIVE_STATE_DIR` to an absolute private directory only when
 the default state location is unsuitable. Never put that directory inside the

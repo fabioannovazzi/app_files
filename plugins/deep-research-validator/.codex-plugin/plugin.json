@@ -1,6 +1,6 @@
 {
   "name": "deep-research-validator",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Validate professional answers with separate source-identity, semantic-support, reasoning, treatment, coverage, and professional-judgment records.",
   "author": {
     "name": "Mparanza",

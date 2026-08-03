@@ -337,7 +337,11 @@ def _validate_numeric_outputs(
         "report.docx",
     ):
         shutil.copy2(output_dir / name, numeric_replay / name)
-    replayed = core.write_numeric_evidence_ledger(numeric_replay, analysis)
+    replayed = core.write_numeric_evidence_ledger(
+        numeric_replay,
+        analysis,
+        source_context_dir=output_dir,
+    )
     if replayed is None:
         if any(present):
             raise ValueError("Report Builder numeric evidence is unexpectedly present.")

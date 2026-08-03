@@ -797,7 +797,7 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
     responses = [json.loads(line) for line in result.stdout.splitlines()]
     assert responses[0]["result"]["serverInfo"] == {
         "name": "vera-sales-plan",
-        "version": "0.1.2",
+        "version": "0.1.3",
     }
     payload = responses[1]["result"]["structuredContent"]
     assert payload["workflow"] == "vera.sales_plan"

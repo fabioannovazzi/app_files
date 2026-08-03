@@ -5,7 +5,23 @@ description: Use internally when Vera or Codex receives a legal, tax, or complia
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import or materialize the
+question in its managed inputs, then call `prepare_studio_client_workflow` with
+workflow ID `prompt-optimizer`. Pass the returned `client_engagement_path` as
+`--client-engagement` to inspection and validation. Cross-engagement inputs
+and arbitrary outputs are rejected.
+
+Start the prepared run before inspection. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Plan The Answer
 
@@ -261,7 +277,7 @@ If requirements are missing, install from `requirements.txt` only when the envir
 4. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_question.py <question-file> --output-dir <output-dir> --language <auto|it|en|fr|de|es>
+python scripts/inspect_question.py <managed-question-file> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <auto|it|en|fr|de|es>
 ```
 
 5. Read `question_inventory.json` and `prompt_recipe.json`. Treat dates,
@@ -323,7 +339,7 @@ python scripts/inspect_question.py <question-file> --output-dir <output-dir> --l
 14. Run deterministic validation:
 
 ```bash
-python scripts/validate_prompt.py <question-file> <output-dir>/draft_prompt.md --output-dir <output-dir> --language <auto|it|en|fr|de|es> --source-domains-file <output-dir>/draft_source_domains.txt --answer-contract-file <output-dir>/draft_answer_contract.json --prompt-contract-review-file <output-dir>/draft_prompt_contract_review.json
+python scripts/validate_prompt.py <managed-question-file> <client-run-output>/draft_prompt.md --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <auto|it|en|fr|de|es> --source-domains-file <client-run-output>/draft_source_domains.txt --answer-contract-file <client-run-output>/draft_answer_contract.json --prompt-contract-review-file <client-run-output>/draft_prompt_contract_review.json
 ```
 
 15. Read `prompt_audit.json`. If any check fails, repair
@@ -406,7 +422,11 @@ choices.
 When the local MCP server is available after validation:
 
 1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the output folder.
+   `final_artifacts.json` from the output folder. Pass the current absolute
+   `client_engagement_path` as `client_engagement` with every MCP call that
+   includes `run_intake`. If the customer folder moved, use the `context.json`
+   path under its current location; never reuse a previously recorded absolute
+   path.
 2. Call `validate_prompt_optimizer_review` with `review_payload` before
    rendering.
 3. If validation succeeds, call `render_prompt_optimizer_review` with the same

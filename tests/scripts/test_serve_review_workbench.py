@@ -132,6 +132,19 @@ def _fixture_output_dir(tmp_path: Path) -> Path:
     return output_dir
 
 
+def test_vera_review_server_rejects_output_outside_customer_run(
+    tmp_path: Path,
+) -> None:
+    server = load_server_module()
+    workbench = server.LocalReviewWorkbench(
+        plugin_dir=ROOT / "plugins" / "check-entries",
+        output_dir=_fixture_output_dir(tmp_path),
+    )
+
+    with pytest.raises(ValueError, match="portable customer-folder"):
+        server._validate_vera_customer_run(workbench)
+
+
 def _fixture_client_file_preparation_output_dir(tmp_path: Path) -> tuple[Path, str]:
     output_dir = tmp_path / "phase-one-private-run"
     output_dir.mkdir()

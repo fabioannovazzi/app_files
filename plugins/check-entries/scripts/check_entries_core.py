@@ -58,11 +58,13 @@ from vera_assurance import (  # noqa: E402
     canonical_json_sha256,
     decimal_text,
     difference_within_tolerance,
+    load_client_engagement_context_file,
     parse_canonical_decimal,
     parse_localized_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
     validate_client_engagement_context,
+    validate_client_workflow_run,
     validate_gate_register,
     validate_reviewed_decision_receipt,
     validate_source_qualification,
@@ -113,6 +115,19 @@ DIRECTION_ADAPTER_ID = "check_entries.direction"
 DIRECTION_ADAPTER_VERSION = "1"
 NORMALIZED_JOURNAL_ARTIFACT_ID = "source.normalized_journal"
 NORMALIZATION_SCHEMA_VERSION = "journal_sampling.normalization.v2"
+JOURNAL_HANDOFF_ARTIFACT_PATHS = frozenset(
+    {
+        "normalization/normalized_journal.csv",
+        "normalization/normalization_diagnostics.json",
+        "normalization/normalization_recipe.json",
+        "normalization/suggested_recipe.json",
+        "normalization/reviewed_decisions.json",
+        "normalization/assurance_gates.json",
+        "normalization/assurance_envelope.json",
+        "normalization/qualification_review_payload.json",
+        "sample/journal_sample.csv",
+    }
+)
 JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     (
         "implementation",
@@ -620,8 +635,10 @@ def load_client_engagement_context(path: Path) -> dict[str, Any]:
     """Load one exact client workflow context created by Studio Archive."""
 
     try:
-        payload = read_json(path.expanduser().resolve(strict=True))
-        return validate_client_engagement_context(payload)
+        return load_client_engagement_context_file(
+            path.expanduser().resolve(strict=True),
+            expected_workflow_id="check-entries",
+        )
     except (OSError, ValueError) as exc:
         raise ValueError(f"Client engagement context is invalid: {exc}") from exc
 
@@ -632,6 +649,112 @@ def _is_path_within(path: Path, parent: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _managed_check_reference(
+    path_value: Path,
+    client_engagement: Mapping[str, Any] | None,
+) -> str:
+    """Return a run-relative reference for one managed Check Entries path."""
+
+    if client_engagement is None:
+        return path_value.as_posix()
+    run_root_value = client_engagement.get("run_root")
+    if not isinstance(run_root_value, str) or not run_root_value.strip():
+        return path_value.as_posix()
+    run_root = Path(run_root_value).expanduser().resolve()
+    resolved = path_value.expanduser().resolve()
+    try:
+        relative = resolved.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError("Check Entries path is outside the run root.") from exc
+    if not relative.parts or ".." in relative.parts:
+        raise ValueError("Check Entries path must identify a run artifact.")
+    return relative.as_posix()
+
+
+def _portable_client_engagement_context(
+    client_engagement: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Return the path-free identity persisted in managed workflow artifacts."""
+
+    if (
+        not isinstance(client_engagement, Mapping)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return (
+            dict(client_engagement) if isinstance(client_engagement, Mapping) else None
+        )
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
+def _bound_upstream_journal_execution(
+    journal: Path,
+    value: Mapping[str, Any] | None,
+) -> Path:
+    """Validate and return the run-local v2 normalized-journal copy.
+
+    Both the upstream artifact and this run's execution copy are checked
+    against the ledger identity.  Execution remains closed to the latter.
+    """
+
+    if value is None:
+        return journal
+    try:
+        context = validate_client_engagement_context(value)
+    except ValueError as exc:
+        raise ValueError(f"Client engagement context is invalid: {exc}") from exc
+    if context["schema_version"] != "vera.client_workflow_context.v2":
+        return journal
+    bindings = [
+        item
+        for item in context["input_bindings"]
+        if item["kind"] == "upstream_artifact"
+        and item["upstream_workflow_id"] == "journal-sampling"
+        and item["upstream_artifact_id"] == "prepared.normalized_journal"
+    ]
+    if len(bindings) != 1:
+        return journal
+    binding = bindings[0]
+    requested = journal.expanduser().resolve(strict=True)
+    execution = Path(binding["path"]).resolve(strict=True)
+    source = Path(binding["source_path"]).resolve(strict=True)
+    if requested != execution:
+        raise ValueError(
+            "Check Entries must use the run-local normalized-journal input copy."
+        )
+    expected_bytes = binding["byte_count"]
+    expected_sha256 = binding["sha256"]
+    for candidate in (execution, source):
+        payload = _stable_regular_bytes(
+            candidate,
+            label="Bound Journal Sampling normalized journal",
+        )
+        if (
+            len(payload) != expected_bytes
+            or hashlib.sha256(payload).hexdigest() != expected_sha256
+        ):
+            raise ValueError(
+                "Bound Journal Sampling normalized journal no longer matches its "
+                "ledger receipt."
+            )
+    return execution
 
 
 def _validated_client_check_stage(
@@ -669,31 +792,152 @@ def _validated_client_check_stage(
         raise ValueError(
             "Normalized journal was not produced by a Journal Sampling engagement."
         )
-    current_folder = context["studio_client_folder"]
-    upstream_folder = upstream["studio_client_folder"]
+    current_client_id = (
+        context["client_id"]
+        if context["schema_version"] == "vera.client_workflow_context.v2"
+        else context["studio_client_folder"]["studio_client_id"]
+    )
+    upstream_client_id = (
+        upstream["client_id"]
+        if upstream["schema_version"] == "vera.client_workflow_context.v2"
+        else upstream["studio_client_folder"]["studio_client_id"]
+    )
     if (
-        current_folder["studio_client_id"] != upstream_folder["studio_client_id"]
+        current_client_id != upstream_client_id
         or context["engagement_id"] != upstream["engagement_id"]
-        or context["workspace_root"] != upstream["workspace_root"]
     ):
         raise ValueError(
             "Journal Sampling and Check Entries belong to different client engagements."
         )
-    expected_journal = (
-        Path(upstream["output_dir"]) / "normalization" / "normalized_journal.csv"
-    )
-    if journal.expanduser().resolve(strict=True) != expected_journal.resolve(
-        strict=True
-    ):
+    if context["schema_version"] == "vera.client_workflow_context.v2":
+        journal_sampling_bindings = [
+            item
+            for item in context["input_bindings"]
+            if item["kind"] == "upstream_artifact"
+            and item["upstream_workflow_id"] == "journal-sampling"
+        ]
+        if not journal_sampling_bindings or {
+            item["upstream_run_id"] for item in journal_sampling_bindings
+        } != {upstream["run_id"]}:
+            raise ValueError(
+                "Check Entries requires Journal Sampling artifacts from one exact "
+                "upstream run."
+            )
+        required_artifact_ids = {
+            "prepared.normalized_journal",
+            "internal.normalization_diagnostics",
+            "prepared.journal_sample_csv",
+        }
+        binding_by_artifact_id = {
+            item["upstream_artifact_id"]: item
+            for item in journal_sampling_bindings
+            if item["upstream_artifact_id"] in required_artifact_ids
+        }
+        if set(binding_by_artifact_id) != required_artifact_ids:
+            raise ValueError(
+                "Check Entries requires the exact normalized journal, normalization "
+                "diagnostics, and sampled CSV from one Journal Sampling run."
+            )
+        upstream_output_root = (
+            Path("Vera")
+            / "engagements"
+            / context["engagement_id"]
+            / "runs"
+            / upstream["run_id"]
+            / "outputs"
+        )
+        try:
+            handoff_paths = {
+                Path(item["source_relative_path"])
+                .relative_to(upstream_output_root)
+                .as_posix()
+                for item in journal_sampling_bindings
+            }
+        except ValueError as exc:
+            raise ValueError(
+                "Journal Sampling artifact paths do not match the upstream run."
+            ) from exc
+        if handoff_paths != JOURNAL_HANDOFF_ARTIFACT_PATHS:
+            raise ValueError(
+                "Check Entries requires the complete exact Journal Sampling "
+                "normalization assurance handoff and sampled CSV."
+            )
+        journal_binding = binding_by_artifact_id["prepared.normalized_journal"]
+        diagnostics_binding = binding_by_artifact_id[
+            "internal.normalization_diagnostics"
+        ]
+        execution_journal = Path(journal_binding["path"]).resolve(strict=True)
+        expected_journal = execution_journal
+        diagnostics_value = journal_diagnostics.get("normalization_diagnostics")
+        if not isinstance(diagnostics_value, str) or not diagnostics_value.strip():
+            raise ValueError(
+                "Normalized journal has no exact normalization diagnostics path."
+            )
+        expected_diagnostics = Path(diagnostics_binding["path"]).resolve(strict=True)
+        if (
+            Path(diagnostics_value).expanduser().resolve(strict=True)
+            != expected_diagnostics
+        ):
+            raise ValueError(
+                "Normalization diagnostics do not belong to the selected "
+                "Journal Sampling run."
+            )
+        import_bindings = [
+            item for item in context["input_bindings"] if item["kind"] == "import"
+        ]
+        if not import_bindings or any(
+            item["role"] != "support" for item in import_bindings
+        ):
+            raise ValueError(
+                "Check Entries evidence inputs must all be imported with role support."
+            )
+        support_path = support.expanduser().resolve(strict=True)
+        selected_support_paths = {
+            Path(item["path"]).resolve(strict=True) for item in import_bindings
+        }
+        if support_path.is_file():
+            support_selection = {support_path}
+        elif support_path.is_dir() and not support_path.is_symlink():
+            support_selection = {
+                path
+                for path in selected_support_paths
+                if path.is_relative_to(support_path)
+            }
+        else:
+            raise ValueError(
+                "Check Entries support must be a receipted file or closed folder."
+            )
+        if not support_selection or support_selection != selected_support_paths:
+            raise ValueError(
+                "Check Entries support selection must close over all and only this "
+                "run's support receipts."
+            )
+        try:
+            validate_client_workflow_run(
+                context,
+                expected_workflow_id="check-entries",
+                input_paths=[execution_journal.parent, support],
+                output_dir=output_dir if enforce_output_path else None,
+            )
+        except ValueError as exc:
+            raise ValueError(f"Check Entries input binding is invalid: {exc}") from exc
+    else:
+        expected_journal = (
+            Path(upstream["output_dir"]) / "normalization" / "normalized_journal.csv"
+        ).resolve(strict=True)
+    if journal.expanduser().resolve(strict=True) != expected_journal:
         raise ValueError(
             "Normalized journal does not belong to the selected client engagement."
         )
     support_path = support.expanduser().resolve(strict=True)
-    support_root = Path(context["input_dir"]).resolve(strict=True) / "support"
-    if support_path != support_root and not _is_path_within(support_path, support_root):
-        raise ValueError(
-            "Support is outside the selected client engagement support folder."
-        )
+    if context["schema_version"] != "vera.client_workflow_context.v2":
+        support_root = Path(context["input_dir"]).resolve(strict=True) / "support"
+        if support_path != support_root and not _is_path_within(
+            support_path, support_root
+        ):
+            raise ValueError(
+                "Support is outside the selected client engagement support folder."
+            )
     if stage not in {"inspection", "checks"}:
         raise ValueError("Unsupported Check Entries client workflow stage.")
     if enforce_output_path:
@@ -703,6 +947,65 @@ def _validated_client_check_stage(
                 "Check Entries output does not match the client engagement."
             )
     return context
+
+
+def _bound_sample_entries(
+    entries: pl.DataFrame,
+    context: Mapping[str, Any] | None,
+) -> pl.DataFrame:
+    """Restrict v2 Check Entries work to the exact upstream sampled rows."""
+
+    if (
+        context is None
+        or context.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return entries
+    journal_sampling_bindings = [
+        item
+        for item in context["input_bindings"]
+        if item["kind"] == "upstream_artifact"
+        and item["upstream_workflow_id"] == "journal-sampling"
+    ]
+    run_ids = {item["upstream_run_id"] for item in journal_sampling_bindings}
+    sample_bindings = [
+        item
+        for item in journal_sampling_bindings
+        if item["upstream_artifact_id"] == "prepared.journal_sample_csv"
+    ]
+    if len(run_ids) != 1 or len(sample_bindings) != 1:
+        raise ValueError("Check Entries has no exact Journal Sampling sample binding.")
+    sample_binding = sample_bindings[0]
+    locator_columns = ["source_file", "source_sheet", "source_page", "source_row"]
+    try:
+        normalized_locators = [
+            pl.col(column).cast(pl.Utf8).fill_null("").alias(column)
+            for column in locator_columns
+        ]
+        sampled = (
+            pl.read_csv(Path(sample_binding["path"]), infer_schema=False)
+            .select(locator_columns)
+            .with_columns(normalized_locators)
+        )
+        indexed_entries = entries.with_row_index("_population_row_index")
+        population_locators = indexed_entries.select(
+            "_population_row_index", *locator_columns
+        ).with_columns(normalized_locators)
+        matched_indices = population_locators.join(
+            sampled, on=locator_columns, how="semi"
+        ).get_column("_population_row_index")
+        filtered = indexed_entries.join(
+            matched_indices.to_frame(), on="_population_row_index", how="semi"
+        ).drop("_population_row_index")
+        duplicate_count = sampled.height - sampled.unique().height
+    except (OSError, pl.exceptions.PolarsError) as exc:
+        raise ValueError(f"Bound Journal Sampling sample is invalid: {exc}") from exc
+    if sampled.height == 0:
+        raise ValueError("Bound Journal Sampling sample is empty.")
+    if duplicate_count or filtered.height != sampled.height:
+        raise ValueError(
+            "Bound sample rows do not close exactly to the qualified population."
+        )
+    return filtered
 
 
 def _captured_recipe(path: Path | None) -> tuple[dict[str, Any], bytes]:
@@ -1003,6 +1306,7 @@ def _upstream_artifact_receipt(
 
 _NORMALIZATION_REPLAY_FIELDS = (
     "schema_version",
+    "path_reference",
     "input",
     "source_root",
     "source_receipts",
@@ -1169,9 +1473,91 @@ def _validated_journal_sampling_replay_receipt(
     return replay
 
 
+def _current_upstream_journal_context(
+    normalized_path: Path,
+    diagnostics: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Load the current upstream Journal Sampling context after a folder move."""
+
+    persisted = diagnostics.get("client_engagement")
+    if (
+        not isinstance(persisted, Mapping)
+        or persisted.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        raise ValueError(
+            "Journal Sampling replay requires its portable customer-run context."
+        )
+    engagement_id = persisted.get("engagement_id")
+    run_id = persisted.get("run_id")
+    if not isinstance(engagement_id, str) or not isinstance(run_id, str):
+        raise ValueError("Journal Sampling portable context identity is invalid.")
+    normalized_resolved = normalized_path.expanduser().resolve()
+    candidates: list[Path] = []
+    for candidate in (normalized_resolved, *normalized_resolved.parents):
+        direct = candidate / "context.json"
+        if direct.is_file() and not direct.is_symlink():
+            candidates.append(direct)
+        if candidate.name == "Vera":
+            candidates.append(
+                candidate
+                / "engagements"
+                / engagement_id
+                / "runs"
+                / run_id
+                / "context.json"
+            )
+    for context_path in candidates:
+        if not context_path.is_file() or context_path.is_symlink():
+            continue
+        try:
+            current = load_client_engagement_context_file(
+                context_path,
+                expected_workflow_id="journal-sampling",
+                allowed_statuses=("running", "ready_for_review", "completed"),
+            )
+        except (OSError, ValueError):
+            continue
+        if (
+            current.get("engagement_id") == engagement_id
+            and current.get("run_id") == run_id
+            and current.get("client_id") == persisted.get("client_id")
+        ):
+            return current
+    raise ValueError("Journal Sampling current customer-run context is unavailable.")
+
+
+def _resolve_upstream_journal_reference(
+    normalized_path: Path,
+    diagnostics: Mapping[str, Any],
+    value: object,
+    *,
+    label: str,
+) -> Path:
+    """Resolve a sealed Journal Sampling path through current context authority."""
+
+    if not isinstance(value, str) or not value.strip() or value != value.strip():
+        raise ValueError(f"{label} is unavailable.")
+    reference = Path(value)
+    if diagnostics.get("path_reference") != "run_root_relative":
+        if not reference.is_absolute() or reference.resolve() != reference:
+            raise ValueError(f"{label} is not canonical.")
+        return reference
+    if (
+        reference.is_absolute()
+        or ".." in reference.parts
+        or reference.as_posix() != value
+    ):
+        raise ValueError(f"{label} leaves the Journal Sampling run.")
+    context = _current_upstream_journal_context(normalized_path, diagnostics)
+    run_root = Path(str(context["run_root"])).expanduser().resolve()
+    resolved = (run_root / reference).resolve()
+    if resolved == run_root or not _is_path_within(resolved, run_root):
+        raise ValueError(f"{label} leaves the Journal Sampling run.")
+    return resolved
+
+
 def _run_journal_sampling_replay(
     normalized_path: Path,
-    diagnostics_path: Path,
     diagnostics: dict[str, Any],
     envelope: dict[str, Any],
 ) -> dict[str, Any]:
@@ -1179,6 +1565,65 @@ def _run_journal_sampling_replay(
 
     component_root = _journal_sampling_component_root()
     replay_script = component_root / "scripts" / "replay_normalization.py"
+    normalized_resolved = normalized_path.expanduser().resolve(strict=True)
+    diagnostics_context = diagnostics.get("client_engagement")
+    if (
+        not isinstance(diagnostics_context, dict)
+        or diagnostics_context.get("schema_version")
+        != "vera.client_workflow_context.v2"
+    ):
+        raise ValueError(
+            "Journal Sampling replay requires its portable customer-run context."
+        )
+    context_candidates: list[Path] = []
+    explicit_context_path = diagnostics_context.get("context_path")
+    if isinstance(explicit_context_path, str) and explicit_context_path.strip():
+        context_candidates.append(Path(explicit_context_path).expanduser())
+    output_root = next(
+        (
+            candidate
+            for candidate in (normalized_resolved.parent, *normalized_resolved.parents)
+            if candidate.name == "outputs"
+            and (candidate.parent / "context.json").is_file()
+        ),
+        None,
+    )
+    if output_root is not None:
+        context_candidates.append(output_root.parent / "context.json")
+    vera_root = next(
+        (
+            candidate
+            for candidate in normalized_resolved.parents
+            if candidate.name == "Vera"
+        ),
+        None,
+    )
+    if vera_root is not None:
+        context_candidates.append(
+            vera_root
+            / "engagements"
+            / str(diagnostics_context["engagement_id"])
+            / "runs"
+            / str(diagnostics_context["run_id"])
+            / "context.json"
+        )
+    client_engagement_path = next(
+        (
+            candidate.resolve(strict=True)
+            for candidate in context_candidates
+            if candidate.is_absolute() and candidate.is_file()
+        ),
+        None,
+    )
+    if client_engagement_path is None:
+        raise ValueError("Journal Sampling customer-run context is unavailable.")
+    upstream_output = client_engagement_path.parent / "outputs"
+    replay_normalized_path = (
+        upstream_output / "normalization" / "normalized_journal.csv"
+    )
+    replay_diagnostics_path = (
+        upstream_output / "normalization" / "normalization_diagnostics.json"
+    )
     with tempfile.TemporaryDirectory(
         prefix="check-entries-journal-replay-"
     ) as temporary_name:
@@ -1192,11 +1637,14 @@ def _run_journal_sampling_replay(
                     "-I",
                     "-B",
                     str(replay_script),
-                    str(normalized_path),
+                    str(replay_normalized_path),
                     "--diagnostics",
-                    str(diagnostics_path),
+                    str(replay_diagnostics_path),
                     "--receipt-out",
                     str(receipt_path),
+                    "--client-engagement",
+                    str(client_engagement_path),
+                    "--read-only-upstream",
                 ],
                 cwd=component_root,
                 capture_output=True,
@@ -1247,7 +1695,12 @@ def _validate_upstream_assurance(
     source_root_value = diagnostics.get("source_root")
     if not isinstance(source_root_value, str) or not source_root_value.strip():
         raise ValueError("Normalization diagnostics are missing the source root.")
-    source_root = Path(source_root_value).expanduser()
+    source_root = _resolve_upstream_journal_reference(
+        normalized_path,
+        diagnostics,
+        source_root_value,
+        label="Journal Sampling source root",
+    )
     envelope_path = _adjacent_artifact_path(
         normalization_root,
         diagnostics.get("assurance_envelope"),
@@ -1289,12 +1742,19 @@ def _validate_upstream_assurance(
         diagnostics.get("normalization_recipe_path"),
         label="normalization_recipe_path",
     )
+    recorded_normalization_root_value = diagnostics.get("normalization_recipe_root")
     if (
         recipe_path.name != "normalization_recipe.json"
-        or diagnostics.get("normalization_recipe_root")
-        != normalization_root.resolve().as_posix()
+        or not isinstance(recorded_normalization_root_value, str)
+        or not recorded_normalization_root_value.strip()
     ):
         raise ValueError("Journal Sampling retained recipe path/root is not exact.")
+    recorded_normalization_root = _resolve_upstream_journal_reference(
+        normalized_path,
+        diagnostics,
+        recorded_normalization_root_value,
+        label="Journal Sampling retained recipe root",
+    )
     _stable_regular_bytes(
         recipe_path,
         label="Journal Sampling retained recipe",
@@ -1332,12 +1792,20 @@ def _validate_upstream_assurance(
         or not isinstance(recipe_source_receipt_raw, dict)
     ):
         raise ValueError("Journal Sampling recipe source provenance is incomplete.")
-    recipe_source_path = Path(recipe_source_value).expanduser()
-    if (
-        not recipe_source_path.is_absolute()
-        or recipe_source_path.resolve() != recipe_source_path
-    ):
-        raise ValueError("Journal Sampling recipe source path is not canonical.")
+    recorded_recipe_source_path = _resolve_upstream_journal_reference(
+        normalized_path,
+        diagnostics,
+        recipe_source_value,
+        label="Journal Sampling recipe source path",
+    )
+    try:
+        recipe_source_relative = recorded_recipe_source_path.relative_to(
+            recorded_normalization_root
+        )
+    except ValueError:
+        recipe_source_path = recorded_recipe_source_path
+    else:
+        recipe_source_path = normalization_root / recipe_source_relative
     _stable_regular_bytes(
         recipe_source_path,
         label="Journal Sampling recipe source",
@@ -1465,7 +1933,6 @@ def _validate_upstream_assurance(
     normalization_replay = (
         _run_journal_sampling_replay(
             normalized_path,
-            diagnostics_path,
             diagnostics,
             envelope,
         )
@@ -2980,21 +3447,23 @@ def inspect_entries(
     languages = language_assumptions(
         recipe, language=language, document_language=document_language
     )
-    journal_bytes = journal.read_bytes()
+    bound_journal = _bound_upstream_journal_execution(journal, client_engagement)
+    journal_bytes = bound_journal.read_bytes()
     frame, journal_diag = _load_journal_entries(
-        journal,
+        bound_journal,
         recipe,
         source_bytes=journal_bytes,
     )
     normalized_client_engagement = _validated_client_check_stage(
         client_engagement,
-        journal=journal,
+        journal=bound_journal,
         journal_diagnostics=journal_diag,
         support=pdf_path,
         output_dir=output_dir,
         stage="inspection",
         enforce_output_path=True,
     )
+    frame = _bound_sample_entries(frame, normalized_client_engagement)
     captured_support = _load_captured_support(pdf_path)
     _validate_support_captures(captured_support)
     pdfs = _pdf_inventory_from_captured(captured_support)
@@ -3049,7 +3518,11 @@ def inspect_entries(
         {
             **languages,
             **(
-                {"client_engagement": normalized_client_engagement}
+                {
+                    "client_engagement": _portable_client_engagement_context(
+                        normalized_client_engagement
+                    )
+                }
                 if normalized_client_engagement is not None
                 else {}
             ),
@@ -4515,21 +4988,23 @@ def _build_entry_checks_run(
     languages = language_assumptions(
         recipe, language=language, document_language=document_language
     )
-    journal_bytes = journal.read_bytes()
+    bound_journal = _bound_upstream_journal_execution(journal, client_engagement)
+    journal_bytes = bound_journal.read_bytes()
     entries, journal_diag = _load_journal_entries(
-        journal,
+        bound_journal,
         recipe,
         source_bytes=journal_bytes,
     )
     normalized_client_engagement = _validated_client_check_stage(
         client_engagement,
-        journal=journal,
+        journal=bound_journal,
         journal_diagnostics=journal_diag,
         support=pdf_path,
         output_dir=output_dir,
         stage="checks",
         enforce_output_path=enforce_client_output_path,
     )
+    entries = _bound_sample_entries(entries, normalized_client_engagement)
     captured_support = _load_captured_support(pdf_path)
     support_receipts = [capture.receipt for capture in captured_support.captures]
     (
@@ -4573,7 +5048,7 @@ def _build_entry_checks_run(
         else pl.DataFrame(schema={column: pl.Utf8 for column in RESULT_COLUMNS})
     )
     _, replayed_journal_diag = _load_journal_entries(
-        journal,
+        bound_journal,
         recipe,
         source_bytes=journal_bytes,
         expected_normalization_replay=journal_diag["upstream_assurance"][
@@ -4616,6 +5091,23 @@ def _build_entry_checks_run(
         xlsx_path=xlsx_path,
     )
     pdf_inventory = _pdf_inventory_from_captured(captured_support)
+    if normalized_client_engagement is not None:
+        pdf_inventory = [
+            {
+                **item,
+                **(
+                    {
+                        "path": _managed_check_reference(
+                            Path(str(item["path"])),
+                            normalized_client_engagement,
+                        )
+                    }
+                    if isinstance(item.get("path"), str) and str(item["path"]).strip()
+                    else {}
+                ),
+            }
+            for item in pdf_inventory
+        ]
     run_intake = write_run_intake(
         output_dir,
         journal,
@@ -4633,6 +5125,26 @@ def _build_entry_checks_run(
         connector_name=connector_name,
         client_engagement=normalized_client_engagement,
     )
+    recorded_run_intake = read_json(run_intake.path)
+    recorded_input_paths = recorded_run_intake.get("input_paths")
+    if not isinstance(recorded_input_paths, list) or len(recorded_input_paths) != 3:
+        raise ValueError("Check Entries run intake input paths are unavailable.")
+    recorded_journal_path = str(recorded_input_paths[0])
+    recorded_diagnostics_path = str(recorded_input_paths[1])
+    recorded_support_path = str(recorded_input_paths[2])
+    recorded_journal_diag = {
+        **journal_diag,
+        **(
+            {
+                "client_engagement": _portable_client_engagement_context(
+                    journal_diag.get("client_engagement")
+                )
+            }
+            if isinstance(journal_diag.get("client_engagement"), Mapping)
+            else {}
+        ),
+        "normalization_diagnostics": recorded_diagnostics_path,
+    }
     write_json(
         inventory_path,
         {
@@ -4967,17 +5479,26 @@ def _build_entry_checks_run(
         media_type="application/json",
     )
     output_receipts.append(assurance_receipt)
+    assurance_path_reference = (
+        (Path(str(recorded_run_intake["output_dir"])) / assurance_path.name).as_posix()
+        if recorded_run_intake.get("path_reference") == "run_root_relative"
+        else assurance_path.as_posix()
+    )
     audit = {
         "schema_version": "check_entries.audit.v2",
         **languages,
         **(
-            {"client_engagement": normalized_client_engagement}
+            {
+                "client_engagement": _portable_client_engagement_context(
+                    normalized_client_engagement
+                )
+            }
             if normalized_client_engagement is not None
             else {}
         ),
         "run_id": run_intake.run_id,
-        "journal": journal.as_posix(),
-        "pdf_path": pdf_path.as_posix(),
+        "journal": recorded_journal_path,
+        "pdf_path": recorded_support_path,
         "journal_row_count": entries.height,
         "pdf_count": len(pdfs),
         "invoice_count": len(invoices),
@@ -4988,7 +5509,7 @@ def _build_entry_checks_run(
         "amount_tolerance": tolerance_text,
         "date_window_days": date_window_days,
         "mapping": journal_diag["mapping"],
-        "source_preparation": journal_diag,
+        "source_preparation": recorded_journal_diag,
         "upstream_normalized_csv_receipt": upstream_normalized_receipt,
         "source_qualification": source_qualification,
         "support_manifest": captured_support.manifest,
@@ -5013,23 +5534,47 @@ def _build_entry_checks_run(
         "lineage": lineage,
         "assurance_gates": gate_register,
         "assurance_envelope": {
-            "path": assurance_path.as_posix(),
+            "path": assurance_path_reference,
             "content_sha256": assurance_envelope["content_sha256"],
             "artifact_receipt": assurance_receipt,
         },
         "professional_conclusion_status": "pending_review",
         "outputs": {
-            "normalized_entries_csv": normalized_path.as_posix(),
-            "prepared_support_facts_csv": support_facts_path.as_posix(),
-            "check_results_csv": results_path.as_posix(),
-            "check_results_xlsx": xlsx_path.as_posix() if xlsx_path.exists() else None,
-            "numeric_evidence_ledger_json": numeric_ledger_path.as_posix(),
-            "pdf_inventory_json": inventory_path.as_posix(),
-            "invoice_inventory_json": invoice_inventory_path.as_posix(),
-            "support_manifest_json": support_manifest_path.as_posix(),
-            "execution_recipe_json": execution_recipe_path.as_posix(),
-            "review_notes_md": review_notes_path.as_posix(),
-            "assurance_envelope_json": assurance_path.as_posix(),
+            "normalized_entries_csv": _managed_check_reference(
+                normalized_path, normalized_client_engagement
+            ),
+            "prepared_support_facts_csv": _managed_check_reference(
+                support_facts_path, normalized_client_engagement
+            ),
+            "check_results_csv": _managed_check_reference(
+                results_path, normalized_client_engagement
+            ),
+            "check_results_xlsx": (
+                _managed_check_reference(xlsx_path, normalized_client_engagement)
+                if xlsx_path.exists()
+                else None
+            ),
+            "numeric_evidence_ledger_json": _managed_check_reference(
+                numeric_ledger_path, normalized_client_engagement
+            ),
+            "pdf_inventory_json": _managed_check_reference(
+                inventory_path, normalized_client_engagement
+            ),
+            "invoice_inventory_json": _managed_check_reference(
+                invoice_inventory_path, normalized_client_engagement
+            ),
+            "support_manifest_json": _managed_check_reference(
+                support_manifest_path, normalized_client_engagement
+            ),
+            "execution_recipe_json": _managed_check_reference(
+                execution_recipe_path, normalized_client_engagement
+            ),
+            "review_notes_md": _managed_check_reference(
+                review_notes_path, normalized_client_engagement
+            ),
+            "assurance_envelope_json": _managed_check_reference(
+                assurance_path, normalized_client_engagement
+            ),
         },
         "review_session": {
             "run_intake_path": "run_intake.json",
@@ -5044,11 +5589,11 @@ def _build_entry_checks_run(
     _write_review_notes(review_notes_path, audit)
     write_review_session_artifacts(
         output_dir,
-        journal,
-        pdf_path,
+        Path(recorded_journal_path),
+        Path(recorded_support_path),
         run_id=run_intake.run_id,
         run_intake_path=run_intake.path,
-        recipe_path=recipe_path,
+        recipe_path=execution_recipe_path,
         language=languages["language"],
         document_language=languages["document_language"],
         amount_tolerance=tolerance_text,

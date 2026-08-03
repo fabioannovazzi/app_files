@@ -11,6 +11,7 @@
     "assets/registro-imprese-sari-review-widget.html"
   ],
   "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr"
   ],
   "runtime_profiles": [
@@ -90,7 +91,7 @@
   "security_controls": [
     {
       "id": "private-case-folder",
-      "control": "Evidence and generated artifacts remain in an owner-only directory outside the repository."
+      "control": "Initialization, inventory, and packaging require a digest-valid Studio Archive registro-imprese-sari context, accept local evidence only from that engagement, and write generated artifacts only inside its exact run output root."
     },
     {
       "id": "reject-secret-and-session-material",
@@ -98,9 +99,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c8ab91fe0c799511fcaf568ea5f3665abbf0d9098195f455efcd1506ff1f7239"
+    "source_fingerprint": "904478425fdf8a880957d28b1715fdcac5e9e99a49b233061423a80b6ee6aaad"
   }
 }

@@ -10,6 +10,22 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 try:
     from inspect_question import (
         angle_confirmation_for_question,
@@ -951,6 +967,9 @@ def write_validation(
     prompt_contract_review: dict[str, Any],
     language: str = "auto",
     source_domains: list[str] | None = None,
+    input_paths: list[Path] | None = None,
+    client_engagement: dict[str, Any] | None = None,
+    client_run_id: str | None = None,
 ) -> dict[str, Path]:
     """Write validation artifacts and return their paths."""
 
@@ -968,6 +987,9 @@ def write_validation(
         source_domains=normalized_source_domains,
         answer_contract=answer_contract,
         prompt_contract_review=prompt_contract_review,
+        input_paths=input_paths or [],
+        client_engagement=client_engagement,
+        client_run_id=client_run_id,
     )
     audit = validate_prompt_text(
         question_text,
@@ -1021,12 +1043,30 @@ def write_validation(
         audit=audit,
         paths=paths,
     )
+    run_root = (
+        Path(str(client_engagement["run_root"])).expanduser().resolve(strict=True)
+        if client_engagement is not None
+        else None
+    )
+
+    def persisted_path(path: Path) -> str:
+        if run_root is None:
+            return str(path)
+        try:
+            return (
+                path.expanduser().resolve(strict=True).relative_to(run_root).as_posix()
+            )
+        except ValueError as exc:
+            raise ValueError(
+                "Prompt Optimizer review artifact is outside the current run."
+            ) from exc
+
     audit["review_session"] = {
         "run_id": review_session.run_id,
-        "run_intake_path": str(review_session.run_intake_path),
-        "review_payload_path": str(review_session.review_payload_path),
-        "ui_decisions_path": str(review_session.ui_decisions_path),
-        "final_artifacts_path": str(review_session.final_artifacts_path),
+        "run_intake_path": persisted_path(review_session.run_intake_path),
+        "review_payload_path": persisted_path(review_session.review_payload_path),
+        "ui_decisions_path": persisted_path(review_session.ui_decisions_path),
+        "final_artifacts_path": persisted_path(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }
     write_json(audit_path, audit)
@@ -1149,6 +1189,7 @@ def main() -> int:
             "source_domains_comma.txt, and README_HUMAN.md."
         ),
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument(
         "--language", choices=["auto", "it", "en", "fr", "de", "es"], default="auto"
     )
@@ -1180,6 +1221,24 @@ def main() -> int:
     )
     args = parser.parse_args()
 
+    input_paths = [
+        args.question_file,
+        args.prompt_file,
+        args.answer_contract_file,
+        args.prompt_contract_review_file,
+    ]
+    if args.source_domains_file is not None:
+        input_paths.append(args.source_domains_file)
+    try:
+        client_context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="prompt-optimizer",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+
     question_text = _read_text(args.question_file)
     prompt_text = _read_text(args.prompt_file)
     answer_contract = json.loads(args.answer_contract_file.read_text(encoding="utf-8"))
@@ -1207,6 +1266,9 @@ def main() -> int:
         prompt_contract_review=prompt_contract_review,
         language=args.language,
         source_domains=source_domains,
+        input_paths=input_paths,
+        client_engagement=client_context,
+        client_run_id=str(client_context["run_id"]),
     )
     return 0
 

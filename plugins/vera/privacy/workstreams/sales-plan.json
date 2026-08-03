@@ -8,6 +8,9 @@
     "scripts",
     "mcp"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -29,6 +32,10 @@
   "external_boundaries": [],
   "security_controls": [
     {
+      "id": "client-engagement-path-isolation",
+      "control": "Case preparation and Plan execution require a digest-valid Studio Archive sales-plan context, accept the reviewed case and Actuals only from that engagement, and write only to the context's run output root or a descendant."
+    },
+    {
       "id": "reviewed-plan-assumptions",
       "control": "The Plan engine accepts only a reviewed assumption contract bound to the exact source hash and period mapping. The contract explicitly chooses priority or compound behavior for same-driver overlaps and the basis for discount and COGS assumptions. The engine fails on unmatched scopes, unsupported drivers, ambiguous priority winners, incompatible driver combinations, missing or nonpositive driver metrics, impossible same-currency FX, or stale source evidence."
     },
@@ -42,9 +49,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-30",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a35ca35bb594d41ab22a98d6ffc8e2934ea3a39f7f8e06f7076e19d5c2d9dc0e"
+    "source_fingerprint": "6fca91c0c3a636c3adc298341e9b4f9d16755485b2b82e3c88905923f55ada21"
   }
 }

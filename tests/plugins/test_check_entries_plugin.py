@@ -34,6 +34,75 @@ STUDIO_ARCHIVE_CORE_PATH = (
 )
 
 
+def _load_client_ledger() -> Any:
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_check_entries_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+    return ledger
+
+
+def _running_customer_output(tmp_path: Path) -> tuple[Path, str]:
+    ledger = _load_client_ledger()
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir(parents=True)
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Test engagement")
+    source = tmp_path / "managed-source.txt"
+    source.write_text("managed input\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "check-entries",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    return Path(running["output_dir"]), str(running["context"]["run_id"])
+
+
+def _customer_context_path(output_dir: Path) -> Path:
+    candidate = output_dir.resolve()
+    while candidate != candidate.parent:
+        context_path = candidate / "context.json"
+        if context_path.is_file():
+            return context_path
+        candidate = candidate.parent
+    raise AssertionError("customer-run context is unavailable")
+
+
+def _rename_customer_output(output_dir: Path) -> tuple[Path, Path, Path]:
+    context_path = _customer_context_path(output_dir)
+    client_root = context_path.parents[5]
+    renamed_root = client_root.with_name(f"{client_root.name} Renamed")
+    relative_output = output_dir.relative_to(client_root)
+    relative_context = context_path.relative_to(client_root)
+    client_root.rename(renamed_root)
+    return (
+        renamed_root / relative_output,
+        renamed_root / relative_context,
+        output_dir,
+    )
+
+
 def _tree_snapshot(path: Path) -> dict[str, tuple[bytes, int]]:
     return {
         candidate.relative_to(path).as_posix(): (
@@ -315,6 +384,7 @@ def _qualified_journal(
     write_source: bool = True,
 ) -> Path:
     root.mkdir(parents=True, exist_ok=True)
+    managed_fixture: tuple[Any, Path, str, str] | None = None
     source_path = source_path or root / "entries.xlsx"
     source_path.parent.mkdir(parents=True, exist_ok=True)
     normalization_dir = root / normalization_name
@@ -344,6 +414,51 @@ def _qualified_journal(
                     for row in rows
                 ],
             ],
+        )
+    if client_engagement is None:
+        ledger = _load_client_ledger()
+        fixture_root = root / ".managed-journal-fixtures"
+        fixture_number = 1
+        client_root = fixture_root / f"Client-{fixture_number}"
+        while client_root.exists():
+            fixture_number += 1
+            client_root = fixture_root / f"Client-{fixture_number}"
+        client_root.mkdir(parents=True)
+        client_id = "client_" + "1" * 24
+        ledger.create_client_manifest(client_root, client_id)
+        engagement = ledger.create_engagement(
+            client_root,
+            client_id,
+            "Check Entries upstream fixture",
+        )
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            source_path,
+            "journal",
+        )
+        prepared = ledger.prepare_run(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            "journal-sampling",
+            "test-version",
+            input_ids=[imported["receipt"]["input_id"]],
+        )
+        running = ledger.start_run(
+            client_root,
+            engagement["engagement_id"],
+            prepared["run"]["run_id"],
+        )
+        client_engagement = running["context"]
+        source_path = Path(client_engagement["input_bindings"][0]["path"])
+        normalization_dir = Path(client_engagement["output_dir"]) / "normalization"
+        managed_fixture = (
+            ledger,
+            client_root,
+            engagement["engagement_id"],
+            prepared["run"]["run_id"],
         )
     sampling_core = _load_journal_sampling_core()
     sampling_core.inspect_path(
@@ -418,7 +533,81 @@ def _qualified_journal(
         client_engagement=client_engagement,
     )
     assert normalized.diagnostics["population_status"] == "complete"
+    if managed_fixture is not None:
+        ledger, client_root, engagement_id, run_id = managed_fixture
+        declarations = [
+            {
+                "artifact_id": f"internal.journal_fixture.{index:03d}",
+                "path": artifact.relative_to(normalization_dir.parent).as_posix(),
+                "purpose": "Preserve a Journal Sampling assurance fixture.",
+                "audience": "internal",
+                "media_type": (
+                    "application/json" if artifact.suffix == ".json" else "text/csv"
+                ),
+            }
+            for index, artifact in enumerate(
+                sorted(
+                    path
+                    for path in normalization_dir.parent.rglob("*")
+                    if path.is_file()
+                ),
+                start=1,
+            )
+        ]
+        ledger.finalize_run(client_root, engagement_id, run_id, declarations)
     return normalization_dir / "normalized_journal.csv"
+
+
+def _qualified_journal_source(normalized: Path) -> Path:
+    """Resolve the managed source bound to one qualified Journal run."""
+
+    diagnostics = json.loads(
+        (normalized.parent / "normalization_diagnostics.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    reference = Path(diagnostics["input"])
+    assert diagnostics["path_reference"] == "run_root_relative"
+    assert not reference.is_absolute() and ".." not in reference.parts
+    return (_customer_context_path(normalized).parent / reference).resolve(strict=True)
+
+
+def _journal_tamper_source(normalized: Path) -> Path:
+    """Move source-receipt testing off the immutable v2 input binding."""
+
+    original = _qualified_journal_source(normalized)
+    run_root = _customer_context_path(normalized).parent
+    source_root = run_root / "outputs" / "receipt-test-source"
+    source_root.mkdir(parents=True)
+    source = source_root / original.name
+    shutil.copy2(original, source)
+    diagnostics_path = normalized.parent / "normalization_diagnostics.json"
+    diagnostics = json.loads(diagnostics_path.read_text(encoding="utf-8"))
+    diagnostics["input"] = source.relative_to(run_root).as_posix()
+    diagnostics["source_root"] = source_root.relative_to(run_root).as_posix()
+    _seal_review_payload(diagnostics)
+    diagnostics_path.write_text(
+        json.dumps(diagnostics, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return source
+
+
+def _portable_context_projection(context: dict[str, Any]) -> dict[str, Any]:
+    """Return the stable v2 context identity persisted by managed workflows."""
+
+    runtime_fields = {
+        "studio_client_folder",
+        "input_bindings",
+        "input_dir",
+        "workspace_root",
+        "output_dir",
+        "run_root",
+        "run_manifest_path",
+        "input_manifest_path",
+        "context_path",
+    }
+    return {key: value for key, value in context.items() if key not in runtime_fields}
 
 
 def _client_bound_check_inputs(
@@ -478,6 +667,214 @@ def _client_bound_check_inputs(
         workspace_root=workspace_root,
     )
     return normalized, support, journal_context, check_context
+
+
+def _v2_client_bound_check_inputs(
+    tmp_path: Path,
+    rows: list[dict[str, object]],
+) -> tuple[Path, Path, dict[str, Any], dict[str, Any]]:
+    """Create one running v2 Journal Sampling -> Check Entries boundary."""
+
+    check_core = load_core()
+    archive_core = load_studio_archive_core()
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Zecca SPA"
+    client_root.mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = archive_core.configure_archive(archive_root, state_dir=state_dir)
+    scope_id = next(
+        item["scope_id"]
+        for item in configured["scopes"]
+        if item["display_name"] == "Zecca SPA"
+    )
+    client_id = archive_core.set_studio_client_identity(
+        scope_id,
+        legal_names=["Zecca SPA"],
+        state_dir=state_dir,
+    )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        client_id,
+        "Journal sample checks",
+        state_dir=state_dir,
+    )["engagement"]["engagement_id"]
+
+    received = tmp_path / "received"
+    received.mkdir()
+    journal_source = received / "journal.xlsx"
+    _save_workbook(
+        journal_source,
+        [
+            [
+                "Data",
+                "Nr. Reg",
+                "Conto",
+                "Descrizione conto",
+                "Descrizione",
+                "Dare",
+                "Avere",
+            ],
+            *[
+                [
+                    row["date"],
+                    row.get("movement"),
+                    row.get("account", "4000"),
+                    row.get("account_desc", "Trade payable"),
+                    row.get("description"),
+                    row.get("debit"),
+                    row.get("credit"),
+                ]
+                for row in rows
+            ],
+        ],
+    )
+    journal_import = archive_core.import_studio_client_document(
+        client_id,
+        journal_source,
+        "journal",
+        engagement_id=engagement_id,
+        state_dir=state_dir,
+    )
+    journal_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "journal-sampling",
+        input_ids=[journal_import["input_id"]],
+        state_dir=state_dir,
+    )
+    journal_run_id = journal_run["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        state_dir=state_dir,
+    )
+    journal_context = journal_run["client_engagement"]
+    journal_output = Path(journal_context["output_dir"])
+    journal_execution = next(
+        Path(item["path"])
+        for item in journal_context["input_bindings"]
+        if item["binding_id"] == journal_import["input_id"]
+    )
+    normalized = _qualified_journal(
+        journal_output,
+        rows,
+        source_path=journal_execution,
+        normalization_name="normalization",
+        client_engagement=journal_context,
+        write_source=False,
+    )
+    sampling_core = _load_journal_sampling_core()
+    sampling_core.run_sample(
+        normalized,
+        journal_output / "sample",
+        method="systematic",
+        size=1,
+        client_engagement=journal_context,
+    )
+
+    special_artifact_ids = {
+        "normalization/normalized_journal.csv": "prepared.normalized_journal",
+        "normalization/normalization_diagnostics.json": (
+            "internal.normalization_diagnostics"
+        ),
+        "sample/journal_sample.csv": "prepared.journal_sample_csv",
+    }
+    declarations = []
+    for index, artifact_path in enumerate(
+        sorted(path for path in journal_output.rglob("*") if path.is_file()),
+        start=1,
+    ):
+        relative_path = artifact_path.relative_to(journal_output).as_posix()
+        declarations.append(
+            {
+                "artifact_id": special_artifact_ids.get(
+                    relative_path, f"internal.journal_sampling.{index:03d}"
+                ),
+                "path": relative_path,
+                "purpose": f"Preserve Journal Sampling artifact {relative_path}.",
+                "audience": (
+                    "review" if relative_path.startswith("sample/") else "internal"
+                ),
+                "media_type": (
+                    "application/json"
+                    if artifact_path.suffix == ".json"
+                    else (
+                        "text/csv"
+                        if artifact_path.suffix == ".csv"
+                        else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                ),
+            }
+        )
+    archive_core.finalize_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        declarations,
+        state_dir=state_dir,
+    )
+    archive_core.complete_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        state_dir=state_dir,
+    )
+    upstream_artifacts = [
+        {
+            "run_id": journal_run_id,
+            "artifact_id": declaration["artifact_id"],
+            "role": (
+                "journal_sample"
+                if declaration["artifact_id"] == "prepared.journal_sample_csv"
+                else "journal_normalization"
+            ),
+        }
+        for declaration in declarations
+        if declaration["path"] in check_core.JOURNAL_HANDOFF_ARTIFACT_PATHS
+    ]
+
+    support_source = received / "invoice.pdf"
+    support_source.write_bytes(
+        _text_pdf_bytes(
+            [
+                "Invoice",
+                "Movement M-1001",
+                "Supplier VAT: 01234567890",
+                "02/01/2025 EUR 123.45",
+            ]
+        )
+    )
+    support_import = archive_core.import_studio_client_document(
+        client_id,
+        support_source,
+        "support",
+        engagement_id=engagement_id,
+        state_dir=state_dir,
+    )
+    check_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "check-entries",
+        input_ids=[support_import["input_id"]],
+        upstream_artifacts=upstream_artifacts,
+        state_dir=state_dir,
+    )
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        check_run["run"]["run_id"],
+        state_dir=state_dir,
+    )
+    check_context = check_run["client_engagement"]
+    check_journal = next(
+        Path(item["path"])
+        for item in check_context["input_bindings"]
+        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+    )
+    support = next(
+        Path(item["path"])
+        for item in check_context["input_bindings"]
+        if item["binding_id"] == support_import["input_id"]
+    )
+    return check_journal, support, journal_context, check_context
 
 
 def _fatturapa_xml(
@@ -751,12 +1148,170 @@ def _call_mcp_server(
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
 
 
+def _check_transaction_call(
+    tool_name: str,
+    arguments: dict[str, Any],
+) -> dict[str, Any]:
+    response = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": tool_name, "arguments": arguments},
+            }
+        ]
+    )[0]
+    return response["result"]["structuredContent"]
+
+
+def _portable_check_transaction_case(
+    tmp_path: Path,
+) -> tuple[Path, dict[str, Any]]:
+    output_dir, run_id = _running_customer_output(tmp_path)
+    context_path = _customer_context_path(output_dir)
+    core = load_core()
+    context = core.load_client_engagement_context(context_path)
+    source_path = Path(context["input_bindings"][0]["path"])
+    core.write_run_intake(
+        output_dir,
+        source_path,
+        source_path,
+        normalization_diagnostics_path=source_path,
+        recipe_path=None,
+        language="en",
+        document_language="en",
+        amount_tolerance="0.01",
+        date_window_days=0,
+        mapping={},
+        journal_row_count=1,
+        pdf_count=1,
+        client_engagement=context,
+    )
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = {
+        "schema_version": "2.0",
+        "plugin": "check-entries",
+        "workflow": "check-entries",
+        "run_id": run_id,
+        "source_paths": list(run_intake["input_paths"]),
+        "review_type": "journal_entry_support_review",
+        "items": [
+            {
+                "id": "entry-1",
+                "item_type": "supported_entry",
+                "title": "Managed entry",
+                "source_path": run_intake["input_paths"][0],
+                "output_path": "final_artifacts.json",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "evidence": [],
+                "data": {"status": "ok"},
+                "status": "needs_review",
+            }
+        ],
+        "item_count": 1,
+        "columns": [],
+        "source_artifacts": {"run_intake": "run_intake.json"},
+        "evidence": {},
+        "allowed_actions": ["accept", "mark_unclear", "skip"],
+        "status": "ready_for_review",
+        "summary": {"result_row_count": 1, "ok_count": 1},
+    }
+    _seal_review_payload(review_payload)
+    final_artifacts = {
+        "schema_version": "2.0",
+        "plugin": "check-entries",
+        "workflow": "check-entries",
+        "run_id": run_id,
+        "outputs": [],
+        "status": "written_pending_review",
+    }
+    for name, payload in (
+        ("review_payload.json", review_payload),
+        ("final_artifacts.json", final_artifacts),
+    ):
+        (output_dir / name).write_text(
+            json.dumps(payload, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    return output_dir, {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "final_artifacts": final_artifacts,
+        "decisions": [{"item_id": "entry-1", "action": "accept"}],
+    }
+
+
+def test_check_review_save_and_apply_survive_customer_folder_rename(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_check_transaction_case(tmp_path)
+    old_customer_root = _customer_context_path(output_dir).parents[5].as_posix()
+    old_output = output_dir.as_posix()
+    assert arguments["run_intake"]["path_reference"] == "run_root_relative"
+    assert arguments["run_intake"]["output_dir"] == "outputs"
+    assert all(
+        not Path(value).is_absolute()
+        for value in arguments["run_intake"]["input_paths"]
+    )
+
+    renamed_output, current_context, stale_output = _rename_customer_output(output_dir)
+    arguments["client_engagement"] = current_context.as_posix()
+
+    saved = _check_transaction_call(
+        "save_check_entries_decisions",
+        arguments,
+    )
+    applied = _check_transaction_call(
+        "apply_check_entries_decisions",
+        arguments,
+    )
+
+    assert saved["ok"] is True, saved
+    assert saved["persisted"] is True
+    assert applied["ok"] is True, applied
+    assert applied["persisted"] is True
+    assert (renamed_output / "ui_decisions.json").is_file()
+    assert (renamed_output / "applied_decisions.json").is_file()
+    assert not stale_output.exists()
+    assert old_output not in arguments["run_intake"]["output_dir"]
+    assert all(
+        old_customer_root not in artifact.read_text(encoding="utf-8")
+        for artifact in renamed_output.rglob("*")
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}
+    )
+
+
+def test_check_review_rejects_run_root_escape_without_writing(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_check_transaction_case(tmp_path)
+    arguments["client_engagement"] = _customer_context_path(output_dir).as_posix()
+    forged = json.loads(json.dumps(arguments))
+    forged["run_intake"]["output_dir"] = "../outside"
+    before = _transaction_tree_state(output_dir)
+
+    result = _check_transaction_call(
+        "save_check_entries_decisions",
+        forged,
+    )
+
+    assert result["ok"] is False
+    assert "leaves the customer run" in result["error"]
+    assert _transaction_tree_state(output_dir) == before
+    assert not (output_dir.parent.parent / "outside").exists()
+
+
 def _supported_assurance_run(
     monkeypatch: Any,
     root: Path,
 ) -> tuple[Any, Path, dict[str, Any], dict[str, Any]]:
+    del monkeypatch
     core = load_core()
-    normalized = _qualified_journal(
+    normalized, support_path, _, check_context = _v2_client_bound_check_inputs(
         root,
         [
             {
@@ -767,19 +1322,7 @@ def _supported_assurance_run(
             }
         ],
     )
-    support_dir = root / "support"
-    output_dir = root / "checks"
-    support_dir.mkdir()
-    (support_dir / "support_M-1001.pdf").write_bytes(
-        _text_pdf_bytes(
-            [
-                "Invoice",
-                "Movement M-1001",
-                "Supplier VAT: 01234567890",
-                "02/01/2025 EUR 123,45",
-            ]
-        )
-    )
+    output_dir = Path(check_context["output_dir"]) / "checks"
     recipe_path = _reviewed_party_recipe(
         core,
         normalized,
@@ -788,22 +1331,105 @@ def _supported_assurance_run(
     _reviewed_pdf_assertion_recipe(
         core,
         normalized,
-        support_dir,
+        support_path,
         recipe_path,
-        support_locator="support_M-1001.pdf",
+        support_locator=support_path.name,
         direction=True,
     )
     core.run_entry_checks(
         normalized,
-        support_dir,
+        support_path,
         output_dir,
         recipe_path,
+        client_engagement=check_context,
     )
     return (
         core,
         output_dir,
         json.loads((output_dir / "review_payload.json").read_text()),
         json.loads((output_dir / "run_intake.json").read_text()),
+    )
+
+
+def test_managed_journal_to_check_review_survives_customer_folder_rename(
+    monkeypatch: Any,
+    tmp_path: Path,
+) -> None:
+    _, output_dir, review_payload, run_intake = _supported_assurance_run(
+        monkeypatch,
+        tmp_path,
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    decisions = [
+        {
+            "item_id": item["id"],
+            "action": (
+                "accept"
+                if "accept" in item["allowed_actions"]
+                else item["allowed_actions"][0]
+            ),
+        }
+        for item in review_payload["items"]
+    ]
+    old_customer_root = _customer_context_path(output_dir).parents[5]
+    old_customer_path = old_customer_root.as_posix()
+    renamed_output, current_context, stale_output = _rename_customer_output(output_dir)
+    arguments = {
+        "client_engagement": current_context.as_posix(),
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "final_artifacts": final_artifacts,
+        "decisions": decisions,
+    }
+
+    saved = _check_transaction_call(
+        "save_check_entries_decisions",
+        arguments,
+    )
+    arguments.update(
+        {
+            "run_intake": json.loads(
+                (renamed_output / "run_intake.json").read_text(encoding="utf-8")
+            ),
+            "review_payload": json.loads(
+                (renamed_output / "review_payload.json").read_text(encoding="utf-8")
+            ),
+            "final_artifacts": json.loads(
+                (renamed_output / "final_artifacts.json").read_text(encoding="utf-8")
+            ),
+        }
+    )
+    applied = _check_transaction_call(
+        "apply_check_entries_decisions",
+        arguments,
+    )
+
+    assert saved["ok"] is True, saved
+    assert saved["persisted"] is True
+    assert applied["ok"] is True, applied
+    assert applied["persisted"] is True
+    assert (
+        applied["applied_decisions"]["assurance_preflight"]["assurance_replayed"]
+        is True
+    )
+    assert (renamed_output / "ui_decisions.json").is_file()
+    assert (renamed_output / "applied_decisions.json").is_file()
+    assert not stale_output.exists()
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert old_customer_path not in run_intake["output_dir"]
+    renamed_client_root = current_context.parents[5]
+    managed_output_files = [
+        artifact
+        for output_root in renamed_client_root.glob("Vera/engagements/*/runs/*/outputs")
+        for artifact in output_root.rglob("*")
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}
+    ]
+    assert managed_output_files
+    assert all(
+        old_customer_path not in artifact.read_text(encoding="utf-8")
+        for artifact in managed_output_files
     )
 
 
@@ -819,6 +1445,54 @@ def _replace_receipt(
         )
         for receipt in receipts
     ]
+
+
+def _managed_run_context_path(output_dir: Path) -> Path:
+    """Return the current context path owning a managed Check output."""
+
+    return output_dir.parent.parent / "context.json"
+
+
+def _managed_check_mcp_arguments(
+    output_dir: Path,
+    arguments: dict[str, Any],
+) -> dict[str, Any]:
+    """Bind a durable MCP write to its current managed-run context."""
+
+    return {
+        "client_engagement": _customer_context_path(output_dir).as_posix(),
+        **arguments,
+    }
+
+
+def _resolve_run_reference(
+    output_dir: Path,
+    run_intake: dict[str, Any],
+    value: object,
+) -> Path:
+    """Resolve one persisted path against the current managed run root."""
+
+    reference = Path(str(value))
+    if reference.is_absolute():
+        return reference
+    if run_intake.get("path_reference") != "run_root_relative":
+        raise AssertionError("test fixture has a nonportable relative path")
+    run_root = output_dir.parent.parent
+    resolved = (run_root / reference).resolve(strict=True)
+    if not resolved.is_relative_to(run_root.resolve(strict=True)):
+        raise AssertionError("test fixture path escapes the managed run")
+    return resolved
+
+
+def _support_reference_root(
+    output_dir: Path,
+    run_intake: dict[str, Any],
+    value: object,
+) -> Path:
+    """Return the artifact root for a support file or directory reference."""
+
+    resolved = _resolve_run_reference(output_dir, run_intake, value)
+    return resolved if resolved.is_dir() else resolved.parent
 
 
 def _forge_self_resealed_material_state(
@@ -837,6 +1511,9 @@ def _forge_self_resealed_material_state(
     envelope = json.loads(envelope_path.read_text(encoding="utf-8"))
     audit = json.loads(audit_path.read_text(encoding="utf-8"))
     payload = json.loads(payload_path.read_text(encoding="utf-8"))
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
     final_artifacts = json.loads(final_path.read_text(encoding="utf-8"))
     ui_decisions = json.loads(ui_path.read_text(encoding="utf-8"))
     applied = json.loads(applied_path.read_text(encoding="utf-8"))
@@ -973,11 +1650,15 @@ def _forge_self_resealed_material_state(
     for replacement in replacements:
         receipts = _replace_receipt(receipts, replacement)
     roots = {
-        "normalization": Path(audit["journal"]).parent,
-        "support": (
-            Path(audit["pdf_path"])
-            if Path(audit["pdf_path"]).is_dir()
-            else Path(audit["pdf_path"]).parent
+        "normalization": _resolve_run_reference(
+            output_dir,
+            run_intake,
+            audit["journal"],
+        ).parent,
+        "support": _support_reference_root(
+            output_dir,
+            run_intake,
+            audit["pdf_path"],
         ),
         "run": output_dir,
         **core.implementation_artifact_roots(),
@@ -1735,6 +2416,9 @@ def test_accept_only_review_is_replayed_and_resealed(
                 "params": {
                     "name": "apply_check_entries_decisions",
                     "arguments": {
+                        "client_engagement": _managed_run_context_path(
+                            output_dir
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "decisions": decisions,
@@ -1761,10 +2445,16 @@ def test_accept_only_review_is_replayed_and_resealed(
     core.validate_assurance_envelope(
         resealed,
         artifact_roots={
-            "normalization": Path(
-                json.loads((output_dir / "check_audit.json").read_text())["journal"]
+            "normalization": _resolve_run_reference(
+                output_dir,
+                run_intake,
+                json.loads((output_dir / "check_audit.json").read_text())["journal"],
             ).parent,
-            "support": tmp_path / "support",
+            "support": _support_reference_root(
+                output_dir,
+                run_intake,
+                run_intake["input_paths"][2],
+            ),
             "run": output_dir,
             **core.implementation_artifact_roots(),
         },
@@ -1806,6 +2496,9 @@ def test_fresh_rederivation_rejects_fully_self_resealed_material_and_gate_forger
                 "params": {
                     "name": "apply_check_entries_decisions",
                     "arguments": {
+                        "client_engagement": _managed_run_context_path(
+                            output_dir
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "decisions": complete_decisions,
@@ -1846,6 +2539,9 @@ def test_fresh_rederivation_rejects_fully_self_resealed_material_and_gate_forger
                 "params": {
                     "name": tool_name,
                     "arguments": {
+                        "client_engagement": _managed_run_context_path(
+                            output_dir
+                        ).as_posix(),
                         "run_intake": persisted_intake,
                         "review_payload": forged_payload,
                         **(
@@ -1904,10 +2600,13 @@ def test_assured_review_tools_reject_foreign_physical_output_path(
     before = _transaction_tree_state(output_dir)
     item = review_payload["items"][0]
     action = "accept" if "accept" in item["allowed_actions"] else "skip"
-    arguments: dict[str, Any] = {
-        "run_intake": run_intake,
-        "review_payload": review_payload,
-    }
+    arguments: dict[str, Any] = _managed_check_mcp_arguments(
+        output_dir,
+        {
+            "run_intake": run_intake,
+            "review_payload": review_payload,
+        },
+    )
     if tool_name in {
         "save_check_entries_decisions",
         "apply_check_entries_decisions",
@@ -2194,7 +2893,7 @@ def test_mcp_launches_python_with_isolated_no_bytecode_flags(
     monkeypatch: Any,
     tmp_path: Path,
 ) -> None:
-    _, _, review_payload, run_intake = _supported_assurance_run(
+    _, output_dir, review_payload, run_intake = _supported_assurance_run(
         monkeypatch,
         tmp_path,
     )
@@ -2226,10 +2925,13 @@ def test_mcp_launches_python_with_isolated_no_bytecode_flags(
                 "method": "tools/call",
                 "params": {
                     "name": "validate_check_entries_review",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                        },
+                    ),
                 },
             }
         ]
@@ -2253,7 +2955,7 @@ def test_mcp_replay_rejects_changed_transitive_implementation(
     relative_path: str,
 ) -> None:
     # Arrange
-    _, _, review_payload, run_intake = _supported_assurance_run(
+    _, output_dir, review_payload, run_intake = _supported_assurance_run(
         monkeypatch,
         tmp_path,
     )
@@ -2277,10 +2979,13 @@ def test_mcp_replay_rejects_changed_transitive_implementation(
                 "method": "tools/call",
                 "params": {
                     "name": "validate_check_entries_review",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                        },
+                    ),
                 },
             }
         ],
@@ -2359,17 +3064,20 @@ def test_review_preflight_rejects_unrelated_check_result_mutation(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": entry_item["id"],
-                                "action": "edit",
-                                "edit_value": "Reviewer-confirmed note",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": entry_item["id"],
+                                    "action": "edit",
+                                    "edit_value": "Reviewer-confirmed note",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -2805,13 +3513,43 @@ def test_changed_original_journal_blocks_upstream_replay(tmp_path: Path) -> None
             }
         ],
     )
-    source_path = tmp_path / "entries.xlsx"
+    source_path = _journal_tamper_source(normalized)
     source_path.write_bytes(source_path.read_bytes() + b"changed-after-normalization")
     support_dir = tmp_path / "support"
     support_dir.mkdir()
 
     with pytest.raises(ValueError, match="artifact receipt"):
         core.run_entry_checks(normalized, support_dir, tmp_path / "out")
+
+
+def test_managed_journal_input_tamper_fails_before_check_output(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {
+                "date": "2025-02-01",
+                "movement": "T-4-MANAGED",
+                "description": "Changed managed source workbook",
+                "debit": "10",
+            }
+        ],
+    )
+    source_path = _qualified_journal_source(normalized)
+    source_path.write_bytes(source_path.read_bytes() + b"managed-input-tamper")
+    support_dir = tmp_path / "support"
+    support_dir.mkdir()
+    output_dir = tmp_path / "out"
+
+    with pytest.raises(
+        ValueError,
+        match="Journal Sampling current customer-run context is unavailable",
+    ):
+        core.run_entry_checks(normalized, support_dir, output_dir)
+
+    assert not output_dir.exists()
 
 
 def test_fresh_upstream_replay_runs_before_polars_population_parse(
@@ -2860,7 +3598,7 @@ def test_self_resealed_raw_journal_forgery_fails_fresh_reperformance(
             }
         ],
     )
-    source_path = tmp_path / "entries.xlsx"
+    source_path = _journal_tamper_source(normalized)
     workbook = openpyxl.load_workbook(source_path)
     workbook.active["F2"] = "11"
     workbook.save(source_path)
@@ -2918,7 +3656,7 @@ def test_self_resealed_reviewed_recipe_forgery_fails_fresh_reperformance(
         ],
     )
     normalization_root = normalized.parent
-    source_path = tmp_path / "entries.xlsx"
+    source_path = _qualified_journal_source(normalized)
     recipe_source = normalization_root / "suggested_recipe.json"
     recipe = json.loads(recipe_source.read_text(encoding="utf-8"))
     for source_name, entry in recipe["files"].items():
@@ -2973,8 +3711,16 @@ def test_self_resealed_reviewed_recipe_forgery_fails_fresh_reperformance(
     forged_envelope = json.loads(
         (forged_root / "assurance_envelope.json").read_text(encoding="utf-8")
     )
-    forged_diagnostics["normalization_recipe_root"] = normalization_root.as_posix()
-    forged_diagnostics["output_csv"] = normalized.as_posix()
+    for field in (
+        "client_engagement",
+        "path_reference",
+        "input",
+        "source_root",
+        "normalization_recipe_root",
+        "normalization_recipe_source_path",
+        "output_csv",
+    ):
+        forged_diagnostics[field] = original_diagnostics[field]
     forged_diagnostics["normalized_csv_receipt"] = old_normalized_receipt
     forged_envelope["artifact_receipts"] = [
         (
@@ -3408,7 +4154,7 @@ def test_check_entries_run_is_bound_to_journal_sampling_client_engagement(
 ) -> None:
     # Arrange
     core = load_core()
-    journal, support, journal_context, check_context = _client_bound_check_inputs(
+    journal, support, journal_context, check_context = _v2_client_bound_check_inputs(
         tmp_path,
         [
             {
@@ -3418,9 +4164,6 @@ def test_check_entries_run_is_bound_to_journal_sampling_client_engagement(
                 "debit": "123.45",
             }
         ],
-    )
-    (support / "invoice.pdf").write_bytes(
-        _text_pdf_bytes(["Movement M-1001", "EUR 123.45", "02/01/2025"])
     )
     output_dir = Path(check_context["output_dir"])
 
@@ -3439,21 +4182,35 @@ def test_check_entries_run_is_bound_to_journal_sampling_client_engagement(
     )
 
     # Assert
-    assert inspection.journal["client_engagement"] == journal_context
-    assert result.audit["client_engagement"] == check_context
+    expected_journal_context = _portable_context_projection(journal_context)
+    expected_check_context = _portable_context_projection(check_context)
+    assert inspection.journal["client_engagement"] == expected_journal_context
+    assert result.audit["client_engagement"] == expected_check_context
     for filename in (
         "run_intake.json",
         "review_payload.json",
         "final_artifacts.json",
     ):
         payload = json.loads((output_dir / "checks" / filename).read_text())
-        assert payload["client_engagement"] == check_context
+        assert payload["client_engagement"] == expected_check_context
+        assert not {
+            "studio_client_folder",
+            "input_bindings",
+            "input_dir",
+            "workspace_root",
+            "output_dir",
+            "run_root",
+            "run_manifest_path",
+            "input_manifest_path",
+            "context_path",
+        }.intersection(payload["client_engagement"])
+        assert payload["run_id"] == check_context["run_id"]
 
 
-def test_full_chat_workflow_resumes_sample_and_checks_in_same_engagement(
+def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
     tmp_path: Path,
 ) -> None:
-    # Arrange: a professional identifies an existing client and supplies a journal.
+    # Arrange: one explicit client engagement and one sealed Journal Sampling run.
     check_core = load_core()
     archive_core = load_studio_archive_core()
     archive_root = tmp_path / "Studio"
@@ -3461,23 +4218,44 @@ def test_full_chat_workflow_resumes_sample_and_checks_in_same_engagement(
     client_root.mkdir(parents=True)
     state_dir = tmp_path / "private-state"
     configured = archive_core.configure_archive(archive_root, state_dir=state_dir)
-    scope_id = configured["scopes"][0]["scope_id"]
+    scope_id = next(
+        item["scope_id"]
+        for item in configured["scopes"]
+        if item["display_name"] == "Zecca SPA"
+    )
     client_id = archive_core.set_studio_client_identity(
         scope_id,
         legal_names=["Zecca SPA"],
         state_dir=state_dir,
     )["client"]["client_id"]
-    rows = [
-        {
-            "date": "2025-01-02",
-            "movement": "M-1001",
-            "description": "Invoice payment",
-            "debit": "123.45",
-        }
-    ]
+    engagement_id = archive_core.create_studio_client_engagement(
+        client_id,
+        "2025 journal sample checks",
+        state_dir=state_dir,
+    )["engagement"]["engagement_id"]
     received = tmp_path / "received"
     received.mkdir()
     original_journal = received / "zecca-journal.xlsx"
+    journal_rows = [
+        {
+            "date": "2025-01-02",
+            "movement": "M-1001",
+            "description": "Invoice one",
+            "debit": "100.00",
+        },
+        {
+            "date": "2025-01-03",
+            "movement": "M-1002",
+            "description": "Invoice two",
+            "debit": "200.00",
+        },
+        {
+            "date": "2025-01-04",
+            "movement": "M-1003",
+            "description": "Invoice three",
+            "debit": "300.00",
+        },
+    ]
     _save_workbook(
         original_journal,
         [
@@ -3490,117 +4268,527 @@ def test_full_chat_workflow_resumes_sample_and_checks_in_same_engagement(
                 "Dare",
                 "Avere",
             ],
-            [
-                "2025-01-02",
-                "M-1001",
-                "4000",
-                "Trade payable",
-                "Invoice payment",
-                "123.45",
-                None,
+            *[
+                [
+                    row["date"],
+                    row["movement"],
+                    "4000",
+                    "Trade payable",
+                    row["description"],
+                    row["debit"],
+                    None,
+                ]
+                for row in journal_rows
             ],
         ],
     )
-    original_journal_bytes = original_journal.read_bytes()
-
-    # Act: the journal copy is sampled under the returned durable context.
     journal_import = archive_core.import_studio_client_document(
         client_id,
         original_journal,
         "journal",
-        engagement_label="Zecca 2025 journal",
+        engagement_id=engagement_id,
         state_dir=state_dir,
     )
-    journal_context = journal_import["client_engagement"]
-    normalized = _qualified_journal(
-        Path(journal_context["output_dir"]),
-        rows,
-        source_path=Path(journal_import["imported_path"]),
+    journal_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "journal-sampling",
+        input_ids=[journal_import["input_id"]],
+        idempotency_key="journal-sample-2025",
+        state_dir=state_dir,
+    )
+    journal_run_id = journal_run["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        state_dir=state_dir,
+    )
+    journal_context = journal_run["client_engagement"]
+    journal_output = Path(journal_context["output_dir"])
+    sample_dir = journal_output / "sample"
+    journal_execution = next(
+        Path(item["path"])
+        for item in journal_context["input_bindings"]
+        if item["binding_id"] == journal_import["input_id"]
+    )
+    normalized_path = _qualified_journal(
+        journal_output,
+        journal_rows,
+        source_path=journal_execution,
         normalization_name="normalization",
         client_engagement=journal_context,
         write_source=False,
     )
     sampling_core = _load_journal_sampling_core()
     sampling_core.run_sample(
-        normalized,
-        Path(journal_context["output_dir"]) / "sample",
+        normalized_path,
+        sample_dir,
+        method="systematic",
         size=1,
         client_engagement=journal_context,
     )
-
-    # Act: a later chat resumes the engagement, imports support, and checks it.
-    resumed = archive_core.list_studio_client_engagements(
+    population_rows = check_core.pl.read_csv(
+        normalized_path, infer_schema=False
+    ).to_dicts()
+    sample_path = sample_dir / "journal_sample.csv"
+    sampled_rows = check_core.pl.read_csv(sample_path, infer_schema=False).to_dicts()
+    special_artifact_ids = {
+        "normalization/normalized_journal.csv": "prepared.normalized_journal",
+        "normalization/normalization_diagnostics.json": (
+            "internal.normalization_diagnostics"
+        ),
+        "sample/journal_sample.csv": "prepared.journal_sample_csv",
+    }
+    declarations = []
+    for index, artifact_path in enumerate(
+        sorted(path for path in journal_output.rglob("*") if path.is_file()),
+        start=1,
+    ):
+        relative_path = artifact_path.relative_to(journal_output).as_posix()
+        declarations.append(
+            {
+                "artifact_id": special_artifact_ids.get(
+                    relative_path, f"internal.journal_sampling.{index:03d}"
+                ),
+                "path": relative_path,
+                "purpose": f"Preserve Journal Sampling artifact {relative_path}.",
+                "audience": (
+                    "review" if relative_path.startswith("sample/") else "internal"
+                ),
+                "media_type": (
+                    "application/json"
+                    if artifact_path.suffix == ".json"
+                    else (
+                        "text/csv"
+                        if artifact_path.suffix == ".csv"
+                        else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    )
+                ),
+            }
+        )
+    archive_core.finalize_studio_client_workflow(
         client_id,
+        engagement_id,
+        journal_run_id,
+        declarations,
         state_dir=state_dir,
     )
-    engagement = resumed["engagements"][0]
-    journal_run = next(
-        run
-        for run in engagement["workflow_runs"]
-        if run["workflow_id"] == "journal-sampling"
-    )
-    original_support = received / "invoice.pdf"
-    original_support.write_bytes(
-        _text_pdf_bytes(["Movement M-1001", "EUR 123.45", "02/01/2025"])
-    )
-    original_support_bytes = original_support.read_bytes()
-    support_import = archive_core.import_studio_client_document(
+    archive_core.complete_studio_client_workflow(
         client_id,
-        original_support,
+        engagement_id,
+        journal_run_id,
+        state_dir=state_dir,
+    )
+    upstream_artifacts = [
+        {
+            "run_id": journal_run_id,
+            "artifact_id": declaration["artifact_id"],
+            "role": (
+                "journal_sample"
+                if declaration["artifact_id"] == "prepared.journal_sample_csv"
+                else "journal_normalization"
+            ),
+        }
+        for declaration in declarations
+        if declaration["path"] in check_core.JOURNAL_HANDOFF_ARTIFACT_PATHS
+    ]
+
+    wrong_role_source = received / "not-support.pdf"
+    wrong_role_source.write_bytes(_text_pdf_bytes(["Not a support receipt"]))
+    wrong_role_input = archive_core.import_studio_client_document(
+        client_id,
+        wrong_role_source,
+        "source",
+        engagement_id=engagement_id,
+        state_dir=state_dir,
+    )
+    wrong_role_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "check-entries",
+        input_ids=[wrong_role_input["input_id"]],
+        upstream_artifacts=upstream_artifacts,
+        idempotency_key="wrong-support-role",
+        state_dir=state_dir,
+    )
+    wrong_role_context = wrong_role_run["client_engagement"]
+    wrong_role_journal = next(
+        item
+        for item in wrong_role_context["input_bindings"]
+        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+    )
+    wrong_role_diagnostics = next(
+        item
+        for item in wrong_role_context["input_bindings"]
+        if item.get("upstream_artifact_id") == "internal.normalization_diagnostics"
+    )
+    wrong_role_support = next(
+        item
+        for item in wrong_role_context["input_bindings"]
+        if item["binding_id"] == wrong_role_input["input_id"]
+    )
+    with pytest.raises(ValueError, match="role support"):
+        check_core._validated_client_check_stage(
+            wrong_role_context,
+            journal=Path(wrong_role_journal["path"]),
+            journal_diagnostics={
+                "client_engagement": journal_context,
+                "normalization_diagnostics": wrong_role_diagnostics["path"],
+            },
+            support=Path(wrong_role_support["path"]),
+            output_dir=Path(wrong_role_context["output_dir"]) / "checks",
+            stage="checks",
+            enforce_output_path=True,
+        )
+
+    def prepare_support_batch(name: str, payload: bytes) -> tuple[dict[str, Any], str]:
+        support_source = received / f"support-{name}.pdf"
+        support_source.write_bytes(payload)
+        imported = archive_core.import_studio_client_document(
+            client_id,
+            support_source,
+            "support",
+            engagement_id=engagement_id,
+            state_dir=state_dir,
+        )
+        prepared = archive_core.prepare_studio_client_workflow(
+            engagement_id,
+            "check-entries",
+            input_ids=[imported["input_id"]],
+            upstream_artifacts=upstream_artifacts,
+            idempotency_key=f"check-support-{name}",
+            state_dir=state_dir,
+        )
+        archive_core.start_studio_client_workflow(
+            client_id,
+            engagement_id,
+            prepared["run"]["run_id"],
+            state_dir=state_dir,
+        )
+        return prepared, imported["input_id"]
+
+    # Act: batch A runs first; batch B then gets a separate immutable run.
+    batch_a, support_a_id = prepare_support_batch(
+        "a",
+        _text_pdf_bytes(
+            [
+                "Evidence batch A",
+                "Movement M-1001 EUR 100.00 02/01/2025",
+                "Movement M-1002 EUR 200.00 03/01/2025",
+                "Movement M-1003 EUR 300.00 04/01/2025",
+            ]
+        ),
+    )
+    manifest_a_path = Path(batch_a["client_engagement"]["input_manifest_path"])
+    support_a_binding = next(
+        item
+        for item in batch_a["client_engagement"]["input_bindings"]
+        if item["binding_id"] == support_a_id
+    )
+    normalized_a_binding = next(
+        item
+        for item in batch_a["client_engagement"]["input_bindings"]
+        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+    )
+    with pytest.raises(ValueError, match="run-local normalized-journal"):
+        check_core._bound_upstream_journal_execution(
+            Path(normalized_a_binding["source_path"]),
+            batch_a["client_engagement"],
+        )
+
+    def validate_batch(
+        prepared: dict[str, Any], support_id: str
+    ) -> tuple[Any, Path, Path]:
+        context = prepared["client_engagement"]
+        bindings = context["input_bindings"]
+        normalized_binding = next(
+            item
+            for item in bindings
+            if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+        )
+        diagnostics_binding = next(
+            item
+            for item in bindings
+            if item.get("upstream_artifact_id") == "internal.normalization_diagnostics"
+        )
+        support_binding = next(
+            item for item in bindings if item["binding_id"] == support_id
+        )
+        check_core._validated_client_check_stage(
+            context,
+            journal=Path(normalized_binding["path"]),
+            journal_diagnostics={
+                "client_engagement": journal_context,
+                "normalization_diagnostics": diagnostics_binding["path"],
+            },
+            support=Path(support_binding["path"]),
+            output_dir=Path(context["output_dir"]) / "checks",
+            stage="checks",
+            enforce_output_path=True,
+        )
+        return (
+            check_core._bound_sample_entries(
+                check_core.pl.DataFrame(population_rows),
+                context,
+            ),
+            Path(normalized_binding["path"]),
+            Path(support_binding["path"]),
+        )
+
+    filtered_a, batch_a_journal, batch_a_support = validate_batch(batch_a, support_a_id)
+    result_a = check_core.run_entry_checks(
+        batch_a_journal,
+        batch_a_support,
+        Path(batch_a["client_engagement"]["output_dir"]) / "checks",
+        client_engagement=batch_a["client_engagement"],
+    )
+    manifest_a_before = manifest_a_path.read_bytes()
+    support_a_before = Path(support_a_binding["path"]).read_bytes()
+    outputs_a_before = _tree_snapshot(Path(batch_a["client_engagement"]["output_dir"]))
+    batch_b, support_b_id = prepare_support_batch(
+        "b",
+        _text_pdf_bytes(
+            [
+                "Evidence batch B",
+                "Movement M-1001 EUR 100.00 02/01/2025",
+                "Movement M-1002 EUR 200.00 03/01/2025",
+                "Movement M-1003 EUR 300.00 04/01/2025",
+            ]
+        ),
+    )
+    filtered_b, _, _ = validate_batch(batch_b, support_b_id)
+
+    # Assert: both checks use only the sample, while batch B cannot alter batch A.
+    locator_columns = ["source_file", "source_sheet", "source_page", "source_row"]
+    assert filtered_a.select(locator_columns).to_dicts() == [
+        {column: sampled_rows[0][column] for column in locator_columns}
+    ]
+    assert filtered_b.select(locator_columns).to_dicts() == [
+        {column: sampled_rows[0][column] for column in locator_columns}
+    ]
+    assert result_a.audit["result_row_count"] == 1
+    assert result_a.frame.get_column("movement_number").to_list() == [
+        sampled_rows[0]["movement_number"]
+    ]
+    assert batch_a["run"]["run_id"] != batch_b["run"]["run_id"]
+    assert manifest_a_path.read_bytes() == manifest_a_before
+    assert Path(support_a_binding["path"]).read_bytes() == support_a_before
+    assert _tree_snapshot(Path(batch_a["client_engagement"]["output_dir"])) == (
+        outputs_a_before
+    )
+    batch_a_binding_ids = {
+        item["binding_id"] for item in batch_a["input_manifest"]["inputs"]
+    }
+    batch_b_binding_ids = {
+        item["binding_id"] for item in batch_b["input_manifest"]["inputs"]
+    }
+    assert support_a_id in batch_a_binding_ids
+    assert support_b_id not in batch_a_binding_ids
+    assert support_b_id in batch_b_binding_ids
+    assert support_a_id not in batch_b_binding_ids
+
+
+def test_check_entries_v2_rejects_missing_normalization_diagnostics_binding(
+    tmp_path: Path,
+) -> None:
+    check_core = load_core()
+    archive_core = load_studio_archive_core()
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Client"
+    client_root.mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = archive_core.configure_archive(archive_root, state_dir=state_dir)
+    scope_id = next(
+        item["scope_id"]
+        for item in configured["scopes"]
+        if item["display_name"] == "Client"
+    )
+    client_id = archive_core.set_studio_client_identity(
+        scope_id,
+        legal_names=["Client"],
+        state_dir=state_dir,
+    )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        client_id,
+        "Incomplete handoff",
+        state_dir=state_dir,
+    )["engagement"]["engagement_id"]
+    received = tmp_path / "received"
+    received.mkdir()
+    journal_source = received / "journal.csv"
+    journal_source.write_text("journal\n", encoding="utf-8")
+    journal_input = archive_core.import_studio_client_document(
+        client_id,
+        journal_source,
+        "journal",
+        engagement_id=engagement_id,
+        state_dir=state_dir,
+    )
+    journal_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "journal-sampling",
+        input_ids=[journal_input["input_id"]],
+        state_dir=state_dir,
+    )
+    journal_run_id = journal_run["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        state_dir=state_dir,
+    )
+    output = Path(journal_run["client_engagement"]["output_dir"])
+    (output / "normalization").mkdir()
+    (output / "sample").mkdir()
+    (output / "normalization" / "normalized_journal.csv").write_text(
+        "source_file,source_sheet,source_page,source_row\njournal.csv,,,2\n",
+        encoding="utf-8",
+    )
+    (output / "normalization" / "normalization_diagnostics.json").write_text(
+        "{}\n", encoding="utf-8"
+    )
+    (output / "sample" / "journal_sample.csv").write_text(
+        "source_file,source_sheet,source_page,source_row\njournal.csv,,,2\n",
+        encoding="utf-8",
+    )
+    archive_core.finalize_studio_client_workflow(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        [
+            {
+                "artifact_id": "prepared.normalized_journal",
+                "path": "normalization/normalized_journal.csv",
+                "purpose": "Provide the qualified journal population.",
+                "audience": "internal",
+                "media_type": "text/csv",
+            },
+            {
+                "artifact_id": "internal.normalization_diagnostics",
+                "path": "normalization/normalization_diagnostics.json",
+                "purpose": "Preserve normalization diagnostics.",
+                "audience": "internal",
+                "media_type": "application/json",
+            },
+            {
+                "artifact_id": "prepared.journal_sample_csv",
+                "path": "sample/journal_sample.csv",
+                "purpose": "Identify the exact selected journal rows.",
+                "audience": "review",
+                "media_type": "text/csv",
+            },
+        ],
+        state_dir=state_dir,
+    )
+    support_source = received / "support.pdf"
+    support_source.write_bytes(b"support\n")
+    support_input = archive_core.import_studio_client_document(
+        client_id,
+        support_source,
         "support",
-        engagement_id=engagement["engagement_id"],
+        engagement_id=engagement_id,
         state_dir=state_dir,
     )
-    check_context = support_import["client_engagement"]
-    check_output = Path(check_context["output_dir"])
-    check_core.inspect_entries(
-        Path(journal_run["normalized_journal_path"]),
-        Path(support_import["imported_path"]),
-        check_output / "inspection",
-        client_engagement=check_context,
-    )
-    result = check_core.run_entry_checks(
-        Path(journal_run["normalized_journal_path"]),
-        Path(support_import["imported_path"]),
-        check_output / "checks",
-        client_engagement=check_context,
-    )
-    completed = archive_core.list_studio_client_engagements(
-        client_id,
+    check_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "check-entries",
+        input_ids=[support_input["input_id"]],
+        upstream_artifacts=[
+            {
+                "run_id": journal_run_id,
+                "artifact_id": "prepared.normalized_journal",
+                "role": "normalized_journal",
+            },
+            {
+                "run_id": journal_run_id,
+                "artifact_id": "prepared.journal_sample_csv",
+                "role": "journal_sample",
+            },
+        ],
         state_dir=state_dir,
-    )["engagements"][0]
+    )
+    context = check_run["client_engagement"]
+    journal_binding = next(
+        item
+        for item in context["input_bindings"]
+        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
+    )
+    support_binding = next(
+        item
+        for item in context["input_bindings"]
+        if item["binding_id"] == support_input["input_id"]
+    )
 
-    # Assert
-    assert original_journal.read_bytes() == original_journal_bytes
-    assert original_support.read_bytes() == original_support_bytes
-    assert journal_run["normalization_available"] is True
-    assert journal_run["sample_available"] is True
-    assert (
-        result.audit["client_engagement"]["engagement_id"]
-        == engagement["engagement_id"]
+    with pytest.raises(ValueError, match="exact normalized journal"):
+        check_core._validated_client_check_stage(
+            context,
+            journal=Path(journal_binding["path"]),
+            journal_diagnostics={
+                "client_engagement": journal_run["client_engagement"],
+                "normalization_diagnostics": str(
+                    output / "normalization" / "normalization_diagnostics.json"
+                ),
+            },
+            support=Path(support_binding["path"]),
+            output_dir=Path(context["output_dir"]) / "checks",
+            stage="checks",
+            enforce_output_path=True,
+        )
+
+    three_artifact_run = archive_core.prepare_studio_client_workflow(
+        engagement_id,
+        "check-entries",
+        input_ids=[support_input["input_id"]],
+        upstream_artifacts=[
+            {
+                "run_id": journal_run_id,
+                "artifact_id": artifact_id,
+                "role": "journal_handoff",
+            }
+            for artifact_id in (
+                "prepared.normalized_journal",
+                "internal.normalization_diagnostics",
+                "prepared.journal_sample_csv",
+            )
+        ],
+        idempotency_key="three-artifact-only-handoff",
+        state_dir=state_dir,
     )
-    assert (
-        result.audit["client_engagement"]["studio_client_folder"]["studio_client_id"]
-        == client_id
+    three_context = three_artifact_run["client_engagement"]
+    three_journal = next(
+        item
+        for item in three_context["input_bindings"]
+        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
     )
-    check_run = next(
-        run
-        for run in completed["workflow_runs"]
-        if run["workflow_id"] == "check-entries"
+    three_diagnostics = next(
+        item
+        for item in three_context["input_bindings"]
+        if item.get("upstream_artifact_id") == "internal.normalization_diagnostics"
     )
-    assert check_run["checks_available"] is True
+    three_support = next(
+        item
+        for item in three_context["input_bindings"]
+        if item["binding_id"] == support_input["input_id"]
+    )
+    with pytest.raises(ValueError, match="complete exact Journal Sampling"):
+        check_core._validated_client_check_stage(
+            three_context,
+            journal=Path(three_journal["path"]),
+            journal_diagnostics={
+                "client_engagement": journal_run["client_engagement"],
+                "normalization_diagnostics": three_diagnostics["path"],
+            },
+            support=Path(three_support["path"]),
+            output_dir=Path(three_context["output_dir"]) / "checks",
+            stage="checks",
+            enforce_output_path=True,
+        )
 
 
 def test_check_entries_rejects_cross_client_context(tmp_path: Path) -> None:
     # Arrange
     core = load_core()
-    from vera_assurance import (
-        build_client_engagement_context,
-        build_studio_client_folder_binding,
-    )
-
-    journal, support, _, check_context = _client_bound_check_inputs(
-        tmp_path,
+    _, _, journal_context, _ = _v2_client_bound_check_inputs(
+        tmp_path / "selected",
         [
             {
                 "date": "2025-01-02",
@@ -3610,35 +4798,31 @@ def test_check_entries_rejects_cross_client_context(tmp_path: Path) -> None:
             }
         ],
     )
-    other_root = tmp_path / "Studio" / "Other Client"
-    other_input = other_root / "Vera engagements" / ("eng_" + "4" * 24) / "inputs"
-    (other_input / "support").mkdir(parents=True)
-    other_relative = "Other Client"
-    other_folder = build_studio_client_folder_binding(
-        studio_client_id="client_" + "b" * 24,
-        scope_id="scope_"
-        + hashlib.sha256(other_relative.casefold().encode("utf-8")).hexdigest()[:24],
-        archive_root=tmp_path / "Studio",
-        scope_relative_dir=other_relative,
-        client_root=other_root,
-        display_name=other_relative,
-    )
-    other_context = build_client_engagement_context(
-        studio_client_folder=other_folder,
-        engagement_id="eng_" + "4" * 24,
-        workflow_id="check-entries",
-        run_id="run_" + "5" * 24,
-        input_dir=other_input,
-        workspace_root=Path(check_context["workspace_root"]),
+    other_journal, other_support, _, other_context = _v2_client_bound_check_inputs(
+        tmp_path / "other",
+        [
+            {
+                "date": "2025-01-02",
+                "movement": "OTHER-1",
+                "description": "Other client invoice",
+                "debit": "50.00",
+            }
+        ],
     )
 
     # Act / Assert
     with pytest.raises(ValueError, match="different client engagements"):
-        core.inspect_entries(
-            journal,
-            support,
-            Path(other_context["output_dir"]) / "inspection",
-            client_engagement=other_context,
+        core._validated_client_check_stage(
+            other_context,
+            journal=other_journal,
+            journal_diagnostics={
+                "client_engagement": journal_context,
+                "normalization_diagnostics": "unreached.json",
+            },
+            support=other_support,
+            output_dir=Path(other_context["output_dir"]) / "inspection",
+            stage="inspection",
+            enforce_output_path=True,
         )
 
 
@@ -3647,7 +4831,7 @@ def test_check_entries_rejects_support_outside_selected_engagement(
 ) -> None:
     # Arrange
     core = load_core()
-    journal, _, _, check_context = _client_bound_check_inputs(
+    journal, _, _, check_context = _v2_client_bound_check_inputs(
         tmp_path,
         [
             {
@@ -3662,7 +4846,7 @@ def test_check_entries_rejects_support_outside_selected_engagement(
     foreign_support.mkdir()
 
     # Act / Assert
-    with pytest.raises(ValueError, match="outside the selected client engagement"):
+    with pytest.raises(ValueError, match="support selection must close"):
         core.inspect_entries(
             journal,
             foreign_support,
@@ -4293,8 +5477,9 @@ def test_static_page_exposes_five_language_switch() -> None:
 def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     tmp_path: Path,
 ) -> None:
-    check_results_path = tmp_path / "check_results.csv"
-    check_results_xlsx_path = tmp_path / "check_results.xlsx"
+    output_dir, client_run_id = _running_customer_output(tmp_path)
+    check_results_path = output_dir / "check_results.csv"
+    check_results_xlsx_path = output_dir / "check_results.xlsx"
     check_results_path.write_text(
         "\n".join(
             [
@@ -4318,7 +5503,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "schema_version": "2.0",
         "plugin": "check-entries",
         "workflow": "check-entries",
-        "run_id": "check-entries-test-run",
+        "run_id": client_run_id,
         "source_paths": ["entries.xlsx", "support_1001.pdf"],
         "review_type": "journal_entry_support_review",
         "items": [
@@ -4397,12 +5582,12 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "schema_version": "2.0",
         "plugin": "check-entries",
         "workflow": "check-entries",
-        "run_id": "check-entries-test-run",
+        "run_id": client_run_id,
         "created_at": "2026-01-01T00:00:00Z",
         "language": "en",
         "document_language": "en",
         "input_paths": ["entries.xlsx", "support_1001.pdf"],
-        "output_dir": tmp_path.as_posix(),
+        "output_dir": output_dir.as_posix(),
         "inferred_task": "journal_entry_support_check",
         "assumptions": {},
         "unresolved_questions": [],
@@ -4437,18 +5622,18 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "schema_version": "2.0",
         "plugin": "check-entries",
         "workflow": "check-entries",
-        "run_id": "check-entries-test-run",
+        "run_id": client_run_id,
         "review_payload_path": "review_payload.json",
         "review_payload_content_sha256": review_payload["content_sha256"],
         "decisions": [],
         "decision_count": 0,
         "status": "pending_review",
     }
-    (tmp_path / "run_intake.json").write_text(
+    (output_dir / "run_intake.json").write_text(
         json.dumps(run_intake, indent=2) + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "review_payload.json").write_text(
+    (output_dir / "review_payload.json").write_text(
         json.dumps(review_payload, indent=2) + "\n",
         encoding="utf-8",
     )
@@ -4490,6 +5675,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
             "params": {
                 "name": "save_check_entries_decisions",
                 "arguments": {
+                    "client_engagement": _customer_context_path(output_dir).as_posix(),
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
@@ -4515,13 +5701,14 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
             "params": {
                 "name": "apply_check_entries_decisions",
                 "arguments": {
+                    "client_engagement": _customer_context_path(output_dir).as_posix(),
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": {
                         "schema_version": "2.0",
                         "plugin": "check-entries",
                         "workflow": "check-entries",
-                        "run_id": "check-entries-test-run",
+                        "run_id": client_run_id,
                         "outputs": [
                             {
                                 "path": "review_payload.json",
@@ -4588,7 +5775,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     assert save_result["persisted"] is True
     assert save_result["decision_count"] == 2
     assert save_result["status"] == "reviewed"
-    written_decisions = json.loads((tmp_path / "ui_decisions.json").read_text())
+    written_decisions = json.loads((output_dir / "ui_decisions.json").read_text())
     assert written_decisions["decision_source"] == "mcp_widget"
     assert written_decisions["status"] == "reviewed"
     assert written_decisions["decision_count"] == 2
@@ -4604,14 +5791,14 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     apply_result = responses[7]["result"]["structuredContent"]
     assert apply_result["ok"] is True
     assert apply_result["persisted"] is True
-    assert apply_result["run_intake_path"] == str(tmp_path / "run_intake.json")
+    assert apply_result["run_intake_path"] == str(output_dir / "run_intake.json")
     assert apply_result["decision_count"] == 2
     assert apply_result["blocker_count"] == 1
     assert apply_result["structured_update_count"] == 1
     assert apply_result["native_regeneration_count"] == 0
     assert apply_result["native_regenerated_count"] == 1
     assert apply_result["application_status"] == "blocked"
-    applied = json.loads((tmp_path / "applied_decisions.json").read_text())
+    applied = json.loads((output_dir / "applied_decisions.json").read_text())
     assert applied["plugin"] == "check-entries"
     assert applied["effects"][0]["structured_update"] == {
         "id_field": "source_row",
@@ -4634,7 +5821,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     )
     workbook = openpyxl.load_workbook(check_results_xlsx_path)
     assert workbook.active["B2"].value == "Reviewer confirmed support evidence."
-    final_artifacts = json.loads((tmp_path / "final_artifacts.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
     assert final_artifacts["status"] == "blocked"
     assert final_artifacts["review_application"]["structured_update_count"] == 1
     assert final_artifacts["review_application"]["structured_update_paths"] == [
@@ -4663,7 +5850,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "revisions/originals/check_results__entry-1.csv",
         "revisions/originals/check_results__entry-1.xlsx",
     } <= {output["path"] for output in final_artifacts["outputs"]}
-    run_intake = json.loads((tmp_path / "run_intake.json").read_text())
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_apply_steps = [
         step
         for step in run_intake["execution_trace"]
@@ -4680,7 +5867,7 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
         "ui_decisions.json",
     } <= set(review_apply_steps[0]["outputs"])
     contract = validate_contract(
-        tmp_path,
+        output_dir,
         strict_data_posture=True,
         strict_execution_trace=True,
         strict_output_paths=True,
@@ -4701,34 +5888,9 @@ def test_check_entries_mcp_server_rejects_invalid_review_decisions(
     tmp_path: Path,
     decisions: list[dict[str, object]],
 ) -> None:
-    review_payload = {
-        "schema_version": "2.0",
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": "check-entries-test-run",
-        "items": [
-            {
-                "id": "entry-1",
-                "item_type": "supported_entry",
-                "title": "1001 | 123.45",
-                "allowed_actions": ["accept", "edit", "skip"],
-                "recommended_action": "accept",
-            },
-        ],
-        "item_count": 1,
-        "status": "ready_for_review",
-    }
-    _seal_review_payload(review_payload)
-    run_intake = {
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": "check-entries-test-run",
-        "output_dir": tmp_path.as_posix(),
-    }
-    (tmp_path / "run_intake.json").write_text(
-        json.dumps(run_intake, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    output_dir, managed_arguments = _portable_check_transaction_case(tmp_path)
+    review_payload = managed_arguments["review_payload"]
+    run_intake = managed_arguments["run_intake"]
     messages: list[dict[str, object]] = [
         {
             "jsonrpc": "2.0",
@@ -4736,11 +5898,14 @@ def test_check_entries_mcp_server_rejects_invalid_review_decisions(
             "method": "tools/call",
             "params": {
                 "name": "save_check_entries_decisions",
-                "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
-                    "decisions": decisions,
-                },
+                "arguments": _managed_check_mcp_arguments(
+                    output_dir,
+                    {
+                        "run_intake": run_intake,
+                        "review_payload": review_payload,
+                        "decisions": decisions,
+                    },
+                ),
             },
         },
     ]
@@ -4753,56 +5918,29 @@ def test_check_entries_mcp_server_rejects_invalid_review_decisions(
         result["structuredContent"]["error"]
         == "Check Entries review transaction failed safely."
     )
-    assert not (tmp_path / "ui_decisions.json").exists()
+    assert not (output_dir / "ui_decisions.json").exists()
 
 
 def test_forged_review_summary_cannot_grant_final_ready(tmp_path: Path) -> None:
-    review_payload = {
-        "schema_version": "2.0",
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": "forged-assurance-run",
-        "items": [
-            {
-                "id": "entry-1",
-                "item_type": "supported_entry",
-                "title": "Entry 1",
-                "allowed_actions": ["accept"],
-                "recommended_action": "accept",
-                "data": {},
-            }
-        ],
-        "item_count": 1,
-        "status": "ready_for_review",
-        "summary": {
-            "assurance_gates": {"report_ready": True},
-            "professional_conclusion_status": "reviewed",
-        },
-    }
-    _seal_review_payload(review_payload)
-    (tmp_path / "review_payload.json").write_text(
-        json.dumps(review_payload, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    run_intake = {
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": review_payload["run_id"],
-        "output_dir": tmp_path.as_posix(),
-    }
-    (tmp_path / "run_intake.json").write_text(
-        json.dumps(run_intake, indent=2) + "\n",
-        encoding="utf-8",
-    )
-    forged_final = {
-        "schema_version": "2.0",
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": review_payload["run_id"],
-        "outputs": [],
+    output_dir, managed_arguments = _portable_check_transaction_case(tmp_path)
+    review_payload = managed_arguments["review_payload"]
+    review_payload["summary"] = {
         "assurance_gates": {"report_ready": True},
         "professional_conclusion_status": "reviewed",
     }
+    _seal_review_payload(review_payload)
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(review_payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    run_intake = managed_arguments["run_intake"]
+    forged_final = managed_arguments["final_artifacts"]
+    forged_final["assurance_gates"] = {"report_ready": True}
+    forged_final["professional_conclusion_status"] = "reviewed"
+    (output_dir / "final_artifacts.json").write_text(
+        json.dumps(forged_final, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     responses = _call_mcp_server(
         [
@@ -4812,12 +5950,15 @@ def test_forged_review_summary_cannot_grant_final_ready(tmp_path: Path) -> None:
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "final_artifacts": forged_final,
-                        "decisions": [{"item_id": "entry-1", "action": "accept"}],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "final_artifacts": forged_final,
+                            "decisions": [{"item_id": "entry-1", "action": "accept"}],
+                        },
+                    ),
                 },
             }
         ]
@@ -4947,16 +6088,19 @@ def test_check_entries_mcp_rejects_invalid_run_intake_before_any_write(
                 "method": "tools/call",
                 "params": {
                     "name": tool_name,
-                    "arguments": {
-                        "run_intake": submitted_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": item["id"],
-                                "action": action,
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": submitted_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": item["id"],
+                                    "action": action,
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -5763,8 +6907,24 @@ def test_mcp_apply_python_failure_rolls_back_exact_output_tree(
         if item["item_type"] == "supported_entry"
     )
     prior = _tree_snapshot(output_dir)
+    real_python = Path(sys.executable)
     failing_python = tmp_path / "failing-python"
-    failing_python.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    failing_python.write_text(
+        "\n".join(
+            [
+                "#!/usr/bin/env python3",
+                "import subprocess",
+                "import sys",
+                f"real = {str(real_python)!r}",
+                'if "--client-run-preflight-only" in sys.argv:',
+                "    completed = subprocess.run([real, *sys.argv[1:]])",
+                "    raise SystemExit(completed.returncode)",
+                "raise SystemExit(1)",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
     failing_python.chmod(0o700)
     monkeypatch.setenv("PYTHON", str(failing_python))
 
@@ -5776,17 +6936,20 @@ def test_mcp_apply_python_failure_rolls_back_exact_output_tree(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": entry_item["id"],
-                                "action": "edit",
-                                "edit_value": "Injected rollback test.",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": entry_item["id"],
+                                    "action": "edit",
+                                    "edit_value": "Injected rollback test.",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -6138,6 +7301,8 @@ def _mcp_review_write_message(
     tool_name: str,
     review_payload: dict[str, Any],
     run_intake: dict[str, Any],
+    *,
+    output_dir: Path,
 ) -> list[dict[str, object]]:
     item = next(
         entry
@@ -6151,17 +7316,20 @@ def _mcp_review_write_message(
             "method": "tools/call",
             "params": {
                 "name": tool_name,
-                "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
-                    "decisions": [
-                        {
-                            "item_id": item["id"],
-                            "action": "edit",
-                            "edit_value": "Transaction containment review.",
-                        }
-                    ],
-                },
+                "arguments": _managed_check_mcp_arguments(
+                    output_dir,
+                    {
+                        "run_intake": run_intake,
+                        "review_payload": review_payload,
+                        "decisions": [
+                            {
+                                "item_id": item["id"],
+                                "action": "edit",
+                                "edit_value": "Transaction containment review.",
+                            }
+                        ],
+                    },
+                ),
             },
         }
     ]
@@ -6208,7 +7376,12 @@ def test_mcp_review_transaction_restores_trusted_bytes_and_modes_after_commit_fa
 
     # Act
     response = _call_mcp_server(
-        _mcp_review_write_message(tool_name, review_payload, run_intake)
+        _mcp_review_write_message(
+            tool_name,
+            review_payload,
+            run_intake,
+            output_dir=output_dir,
+        )
     )[0]["result"]
 
     # Assert
@@ -6249,6 +7422,7 @@ def test_mcp_review_transaction_rejects_root_relocation_without_moving_canonical
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -6296,7 +7470,12 @@ def test_mcp_review_transaction_bounds_fail_before_canonical_mutation(
 
     # Act
     response = _call_mcp_server(
-        _mcp_review_write_message(tool_name, review_payload, run_intake)
+        _mcp_review_write_message(
+            tool_name,
+            review_payload,
+            run_intake,
+            output_dir=output_dir,
+        )
     )[0]["result"]
 
     # Assert
@@ -6340,7 +7519,12 @@ def test_mcp_review_transaction_honest_commit_preserves_unwritten_nested_modes(
 
     # Act
     response = _call_mcp_server(
-        _mcp_review_write_message(tool_name, review_payload, run_intake)
+        _mcp_review_write_message(
+            tool_name,
+            review_payload,
+            run_intake,
+            output_dir=output_dir,
+        )
     )[0]["result"]
 
     # Assert
@@ -6398,7 +7582,12 @@ def test_mcp_review_transactions_reject_unsafe_internal_entries_before_writes(
 
     # Act
     response = _call_mcp_server(
-        _mcp_review_write_message(tool_name, review_payload, run_intake)
+        _mcp_review_write_message(
+            tool_name,
+            review_payload,
+            run_intake,
+            output_dir=output_dir,
+        )
     )[0]["result"]
 
     # Assert
@@ -6445,17 +7634,20 @@ def test_mcp_rejects_preexisting_internal_symlink_without_external_write(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": item["id"],
-                                "action": "edit",
-                                "edit_value": "Must stay inside the run.",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": item["id"],
+                                    "action": "edit",
+                                    "edit_value": "Must stay inside the run.",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -6524,17 +7716,20 @@ def test_mcp_post_preflight_symlink_swap_rolls_back_without_external_edit(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": item["id"],
-                                "action": "edit",
-                                "edit_value": "Independent transaction probe.",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": item["id"],
+                                    "action": "edit",
+                                    "edit_value": "Independent transaction probe.",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -6573,7 +7768,7 @@ def test_mcp_apply_phase_link_swap_is_rejected_before_external_mutation(
                 "import subprocess",
                 "import sys",
                 f"real = {str(real_python)!r}",
-                'if "--preflight-only" in sys.argv:',
+                'if "--preflight-only" in sys.argv or "--client-run-preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]])",
                 "    raise SystemExit(completed.returncode)",
                 'out = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
@@ -6604,6 +7799,7 @@ def test_mcp_apply_phase_link_swap_is_rejected_before_external_mutation(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -6664,6 +7860,7 @@ def test_mcp_dangling_canonical_output_swap_restores_exact_prior_tree(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -6697,6 +7894,7 @@ def test_mcp_save_decisions_commits_only_canonical_decision_artifact(
             "save_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -6739,16 +7937,19 @@ def test_mcp_save_rejects_rehashed_caller_review_payload_without_mutation(
                 "method": "tools/call",
                 "params": {
                     "name": "save_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": forged_review,
-                        "decisions": [
-                            {
-                                "item_id": forged_review["items"][0]["id"],
-                                "action": "accept",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": forged_review,
+                            "decisions": [
+                                {
+                                    "item_id": forged_review["items"][0]["id"],
+                                    "action": "accept",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -6775,6 +7976,7 @@ def test_mcp_apply_rejects_fake_ready_child_without_mutation(
         tmp_path,
     )
     before = _transaction_tree_state(output_dir)
+    real_python = Path(sys.executable)
     fake_python = tmp_path / "fake-check-entries-ready-python"
     fake_python.write_text(
         "\n".join(
@@ -6782,8 +7984,13 @@ def test_mcp_apply_rejects_fake_ready_child_without_mutation(
                 "#!/usr/bin/env python3",
                 "from __future__ import annotations",
                 "import json",
+                "import subprocess",
                 "import sys",
                 "from pathlib import Path",
+                f"real = {str(real_python)!r}",
+                'if "--client-run-preflight-only" in sys.argv:',
+                "    completed = subprocess.run([real, *sys.argv[1:]])",
+                "    raise SystemExit(completed.returncode)",
                 'output_dir = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
                 "envelope = json.loads(",
                 '    (output_dir / "assurance_envelope.json").read_text(encoding="utf-8")',
@@ -6836,11 +8043,14 @@ def test_mcp_apply_rejects_fake_ready_child_without_mutation(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": decisions,
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": decisions,
+                        },
+                    ),
                 },
             }
         ]
@@ -6872,13 +8082,19 @@ def test_mcp_preflight_child_failure_is_bounded_and_discloses_no_paths(
     outside_before = outside.read_bytes()
     posix_path = "/Users/private/repository/client/run/secret.csv"
     windows_path = "C:\\Users\\private\\repository\\client\\run\\secret.csv"
+    real_python = Path(sys.executable)
     wrapper = tmp_path / "python-malicious-preflight"
     wrapper.write_text(
         "\n".join(
             [
                 "#!/usr/bin/env python3",
                 "import os",
+                "import subprocess",
                 "import sys",
+                f"real = {str(real_python)!r}",
+                'if "--client-run-preflight-only" in sys.argv:',
+                "    completed = subprocess.run([real, *sys.argv[1:]])",
+                "    raise SystemExit(completed.returncode)",
                 'posix_path = os.environ["CE_TEST_POSIX_PATH"]',
                 'windows_path = os.environ["CE_TEST_WINDOWS_PATH"]',
                 'sys.stdout.write(f"arbitrary child output {posix_path} {windows_path}\\n")',
@@ -6902,6 +8118,7 @@ def test_mcp_preflight_child_failure_is_bounded_and_discloses_no_paths(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -6982,6 +8199,7 @@ def test_mcp_apply_child_failure_is_bounded_and_rolls_back_link_swap(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7012,9 +8230,30 @@ def test_mcp_preflight_child_start_failure_is_fixed_and_rolls_back(
         tmp_path,
     )
     before = _tree_snapshot(output_dir)
+    real_python = Path(sys.executable)
     blocked_executable = tmp_path / "python-not-executable"
-    blocked_executable.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    blocked_executable.chmod(0o600)
+    blocked_executable.write_text(
+        "\n".join(
+            [
+                "#!/usr/bin/env python3",
+                "from pathlib import Path",
+                "import subprocess",
+                "import sys",
+                f"real = {str(real_python)!r}",
+                'if "--client-run-preflight-only" in sys.argv:',
+                "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
+                "    sys.stdout.buffer.write(completed.stdout)",
+                "    sys.stderr.buffer.write(completed.stderr)",
+                "    if completed.returncode == 0:",
+                "        Path(__file__).chmod(0o600)",
+                "    raise SystemExit(completed.returncode)",
+                "raise SystemExit(0)",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    blocked_executable.chmod(0o700)
     monkeypatch.setenv("PYTHON", blocked_executable.as_posix())
 
     # Act
@@ -7023,6 +8262,7 @@ def test_mcp_preflight_child_start_failure_is_fixed_and_rolls_back(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7077,6 +8317,7 @@ def test_mcp_apply_child_start_failure_is_fixed_and_rolls_back(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7147,6 +8388,11 @@ def test_mcp_status_zero_invalid_child_result_fails_closed_and_rolls_back(
                 "import sys",
                 f"real = {str(real_python)!r}",
                 'phase = os.environ["CE_TEST_INVALID_PHASE"]',
+                'if "--client-run-preflight-only" in sys.argv:',
+                "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
+                "    sys.stdout.buffer.write(completed.stdout)",
+                "    sys.stderr.buffer.write(completed.stderr)",
+                "    raise SystemExit(completed.returncode)",
                 'if phase == "apply" and "--preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -7173,6 +8419,7 @@ def test_mcp_status_zero_invalid_child_result_fails_closed_and_rolls_back(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7226,6 +8473,7 @@ def test_mcp_valid_preflight_and_apply_child_objects_remain_accepted(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7263,7 +8511,7 @@ def test_mcp_forged_shaped_apply_result_cannot_commit_or_pollute_trace(
                 "import subprocess",
                 "import sys",
                 f"real = {str(real_python)!r}",
-                'if "--preflight-only" in sys.argv:',
+                'if "--preflight-only" in sys.argv or "--client-run-preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "    sys.stdout.buffer.write(completed.stdout)",
                 "    sys.stderr.buffer.write(completed.stderr)",
@@ -7308,6 +8556,7 @@ def test_mcp_forged_shaped_apply_result_cannot_commit_or_pollute_trace(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7412,6 +8661,7 @@ def test_mcp_ignores_forged_top_level_child_path_metadata(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7517,7 +8767,7 @@ def test_mcp_contradictory_persisted_child_state_fails_closed(
                 "    sys.stdout.buffer.write(completed.stdout)",
                 "    sys.stderr.buffer.write(completed.stderr)",
                 "    raise SystemExit(completed.returncode)",
-                'if "--preflight-only" in sys.argv:',
+                'if "--preflight-only" in sys.argv or "--client-run-preflight-only" in sys.argv:',
                 "    sys.stdout.buffer.write(completed.stdout)",
                 "    raise SystemExit(0)",
                 'out = Path(sys.argv[sys.argv.index("--output-dir") + 1])',
@@ -7604,6 +8854,7 @@ def test_mcp_contradictory_persisted_child_state_fails_closed(
             "apply_check_entries_decisions",
             review_payload,
             run_intake,
+            output_dir=output_dir,
         )
     )[0]["result"]
 
@@ -7647,17 +8898,20 @@ def test_mcp_assured_apply_commits_without_staging_paths(
                 "method": "tools/call",
                 "params": {
                     "name": "apply_check_entries_decisions",
-                    "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "decisions": [
-                            {
-                                "item_id": item["id"],
-                                "action": "edit",
-                                "edit_value": "Reviewer confirmed exact support.",
-                            }
-                        ],
-                    },
+                    "arguments": _managed_check_mcp_arguments(
+                        output_dir,
+                        {
+                            "run_intake": run_intake,
+                            "review_payload": review_payload,
+                            "decisions": [
+                                {
+                                    "item_id": item["id"],
+                                    "action": "edit",
+                                    "edit_value": "Reviewer confirmed exact support.",
+                                }
+                            ],
+                        },
+                    ),
                 },
             }
         ]
@@ -7668,7 +8922,9 @@ def test_mcp_assured_apply_commits_without_staging_paths(
     audit = json.loads((output_dir / "check_audit.json").read_text())
     assert (
         audit["assurance_envelope"]["path"]
-        == (output_dir / "assurance_envelope.json").as_posix()
+        == (output_dir / "assurance_envelope.json")
+        .relative_to(_customer_context_path(output_dir).parent)
+        .as_posix()
     )
     assert ".check-entries-apply-" not in json.dumps(audit)
     assert list(output_dir.parent.glob(".check-entries-apply-*")) == []
@@ -7678,36 +8934,21 @@ def test_mcp_assured_apply_commits_without_staging_paths(
 
 
 def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
-    review_payload = {
-        "schema_version": "2.0",
-        "plugin": "check-entries",
-        "workflow": "check-entries",
-        "run_id": "check-entries-es-runtime",
-        "language": "es-ES",
-        "review_type": "journal_entry_support_review",
-        "items": [
-            {
-                "id": "entry-es-1",
-                "item_type": "supported_entry",
-                "title": "ES-1",
-                "allowed_actions": ["accept", "skip"],
-                "recommended_action": "accept",
-            }
-        ],
-        "item_count": 1,
-        "status": "ready_for_review",
-    }
+    output_dir, managed_arguments = _portable_check_transaction_case(tmp_path)
+    review_payload = managed_arguments["review_payload"]
+    review_payload["language"] = "es-ES"
     _seal_review_payload(review_payload)
-    run_intake = {
-        "run_id": review_payload["run_id"],
-        "language": "es",
-        "output_dir": tmp_path.as_posix(),
-    }
-    (tmp_path / "run_intake.json").write_text(
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(review_payload, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    run_intake = managed_arguments["run_intake"]
+    run_intake["language"] = "es"
+    (output_dir / "run_intake.json").write_text(
         json.dumps(run_intake, indent=2) + "\n",
         encoding="utf-8",
     )
-    decision = {"item_id": "entry-es-1", "action": "accept"}
+    decision = {"item_id": review_payload["items"][0]["id"], "action": "accept"}
     invalid_payload = _seal_review_payload({**review_payload, "items": "invalid"})
     messages = [
         {
@@ -7743,11 +8984,14 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
             "method": "tools/call",
             "params": {
                 "name": "apply_check_entries_decisions",
-                "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
-                    "decisions": [decision],
-                },
+                "arguments": _managed_check_mcp_arguments(
+                    output_dir,
+                    {
+                        "run_intake": run_intake,
+                        "review_payload": review_payload,
+                        "decisions": [decision],
+                    },
+                ),
             },
         },
         {
@@ -7766,7 +9010,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
     saved = responses[3]["result"]["structuredContent"]
     applied = responses[4]["result"]["structuredContent"]
     invalid = responses[5]["result"]["structuredContent"]
-    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
 
     assert (
         "Use validate_check_entries_review antes"

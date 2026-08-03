@@ -1,11 +1,8 @@
 from __future__ import annotations
 
-import argparse
 import csv
 import hashlib
-import logging
 import re
-import secrets
 import unicodedata
 from dataclasses import dataclass
 from datetime import datetime
@@ -47,7 +44,6 @@ __all__ = [
     "write_inventory_csv",
 ]
 
-LOGGER = logging.getLogger(__name__)
 MAX_SOURCE_ENTRIES = 20_000
 MAX_SOURCE_FILES = 5_000
 MAX_SOURCE_FILE_BYTES = 256 * 1024 * 1024
@@ -717,54 +713,3 @@ def write_index_markdown(
 
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Scansiona una cartella cliente e produce indice e inventario CSV."
-    )
-    parser.add_argument("folder", type=Path, help="Cartella cliente da analizzare.")
-    parser.add_argument("--year", type=int, default=None, help="Anno fiscale target.")
-    parser.add_argument(
-        "--out",
-        type=Path,
-        default=None,
-        help="Cartella output. Default: sibling output/client-file-preparation-<id>.",
-    )
-    parser.add_argument(
-        "--jurisdiction",
-        choices=("italy", "geneva", "zurich", "uk", "mixed"),
-        default="italy",
-        help="Giurisdizione usata per classificare i file XML.",
-    )
-    return parser.parse_args()
-
-
-def main() -> int:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    args = _parse_args()
-    out_dir = (
-        args.out
-        or args.folder.parent
-        / "output"
-        / f"client-file-preparation-{secrets.token_hex(8)}"
-    )
-    records = scan_folder(
-        args.folder,
-        target_year=args.year,
-        output_dir=out_dir,
-        jurisdiction=args.jurisdiction,
-    )
-    write_inventory_csv(records, out_dir / "01_document_inventory.csv")
-    write_index_markdown(
-        records,
-        out_dir / "00_fascicolo_index.md",
-        args.folder,
-        target_year=args.year,
-    )
-    LOGGER.info("Analizzati %s file. Output in %s", len(records), out_dir)
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

@@ -8,11 +8,28 @@ import ipaddress
 import json
 import re
 import socket
+import sys
 import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
 from typing import Any
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["inspect_sources", "write_source_inventory"]
 
@@ -124,14 +141,30 @@ def _extract_urls_from_inventory(path: Path) -> list[str]:
     return _ordered_unique(urls)
 
 
-def _source_file_record(path: Path) -> dict[str, Any]:
+def _source_file_record(
+    path: Path,
+    *,
+    run_root: Path | None = None,
+) -> dict[str, Any]:
     text = path.read_text(encoding="utf-8", errors="ignore")
     encoded = text.encode("utf-8")
+    resolved = path.expanduser().resolve()
+    recorded_path = resolved.as_posix()
+    path_reference = "absolute"
+    if run_root is not None:
+        try:
+            recorded_path = resolved.relative_to(run_root.resolve()).as_posix()
+        except ValueError as exc:
+            raise ValueError(
+                "managed source file is outside the current customer run"
+            ) from exc
+        path_reference = "run_root_relative"
     return {
         "kind": "file",
         "name": path.name,
-        "path": str(path),
-        "origin_path": str(path.resolve()),
+        "path_reference": path_reference,
+        "path": recorded_path,
+        "origin_path": recorded_path,
         "status": "available" if text.strip() else "empty",
         "character_count": len(text.strip()),
         "content_hash": hashlib.sha256(encoded).hexdigest(),
@@ -294,6 +327,7 @@ def inspect_sources(
     fetch_urls: bool = True,
     capture_dir: Path | None = None,
     capture_base_dir: Path | None = None,
+    run_root: Path | None = None,
 ) -> dict[str, Any]:
     """Return deterministic source inventory."""
 
@@ -315,7 +349,7 @@ def inspect_sources(
         ]
     )
     file_records = [
-        _source_file_record(path)
+        _source_file_record(path, run_root=run_root)
         for path in (source_files or [])
         if path.exists() and path.is_file()
     ]
@@ -325,6 +359,7 @@ def inspect_sources(
         capture_base_dir=capture_base_dir,
     )
     return {
+        "path_reference": ("run_root_relative" if run_root is not None else "absolute"),
         "url_count": len(urls),
         "file_count": len(file_records),
         "sources": records,
@@ -338,6 +373,7 @@ def write_source_inventory(
     source_files: list[Path] | None = None,
     timeout: float = 10.0,
     fetch_urls: bool = True,
+    run_root: Path | None = None,
 ) -> dict[str, Path]:
     output_dir.mkdir(parents=True, exist_ok=True)
     payload = inspect_sources(
@@ -347,6 +383,7 @@ def write_source_inventory(
         fetch_urls=fetch_urls,
         capture_dir=output_dir / "sources",
         capture_base_dir=output_dir,
+        run_root=run_root,
     )
     path = output_dir / "source_inventory.json"
     path.write_text(
@@ -360,16 +397,27 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("document_inventory", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--source-file", type=Path, action="append", default=[])
     parser.add_argument("--timeout", type=float, default=10.0)
     parser.add_argument("--no-fetch", action="store_true")
     args = parser.parse_args()
+    try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="deep-research-validator",
+            input_paths=[args.document_inventory, *args.source_file],
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     write_source_inventory(
         args.document_inventory,
         args.output_dir,
         source_files=args.source_file,
         timeout=args.timeout,
         fetch_urls=not args.no_fetch,
+        run_root=Path(context["run_root"]),
     )
     return 0
 

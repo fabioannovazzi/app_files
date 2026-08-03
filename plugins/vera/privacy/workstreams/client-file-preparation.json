@@ -10,6 +10,9 @@
     "assets/review-workbench-adapter.json",
     "assets/client-file-preparation-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -63,13 +66,13 @@
     },
     {
       "id": "private-output-root",
-      "control": "Customer outputs are written outside the Git workspace and published folders."
+      "control": "Every public entry point requires a digest-valid Studio Archive client-file-preparation context, accepts source material only from that engagement's managed inputs or prior artifacts under the same engagement workspace, and writes only to the context's run output root or a descendant."
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-29",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f4924e00c243ce5b83f101d7711235ffc00c82d44a1e9ca8fa78d5a52f0f4e1f"
+    "source_fingerprint": "24478195b53c5ccc1f8fb835859e1a580e238d7860d5428085bea44243040044"
   }
 }

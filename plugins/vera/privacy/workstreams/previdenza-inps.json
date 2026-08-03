@@ -11,6 +11,7 @@
     "assets/previdenza-inps-review-widget.html"
   ],
   "governed_shared_paths": [
+    "vendor/modules/vera_assurance",
     "vendor/modules/vera_ocr"
   ],
   "runtime_profiles": [
@@ -88,7 +89,7 @@
   "security_controls": [
     {
       "id": "private-case-folder",
-      "control": "Evidence and generated artifacts remain in an access-restricted directory outside the repository."
+      "control": "Every mutating CLI stage requires a digest-valid, running Studio Archive previdenza-inps context. External downloads are individually receipted before prepare; prepared inputs stay closed, while portal registration, capture, inventory, validation, reconciliation, and packaging write only inside the exact run output root."
     },
     {
       "id": "no-authentication-material",
@@ -100,9 +101,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3ef314b6c7a029104531ee951476755ac012aff0da9a1c200293d17f5300469a"
+    "source_fingerprint": "712e868a22897c5b5eea03fc83040ab80769e4d1d550cd3ee3720060d73eaabc"
   }
 }

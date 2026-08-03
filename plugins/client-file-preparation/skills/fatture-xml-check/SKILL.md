@@ -3,9 +3,13 @@ name: fatture-xml-check
 description: "Use when formally checking Italian FatturaPA XML files in a customer folder: parse invoice metadata, create CSV summaries, identify malformed XML, date issues, and duplicate candidates."
 ---
 
-## Output Location Rule
+## Client workflow gate
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Resolve the exact Studio Archive client and engagement, import the XML source
+into its managed input folder, and resume or prepare a
+`client-file-preparation` run. Write only inside its `output_dir` and pass its
+absolute context path as `--client-engagement`. Do not invent a sibling output
+folder.
 
 # Fatture XML Check
 
@@ -38,7 +42,7 @@ plugin source or generated ZIPs during a run.
 From this skill directory, use the plugin script:
 
 ```bash
-python ../../scripts/parse_fatturapa_xml.py <cartella> --year <anno> --out <cartella-output>/fatture
+python ../../scripts/parse_fatturapa_xml.py <managed-input-folder> --year <anno> --out <client-run-output>/fatture --client-engagement <client_engagement_path>
 ```
 
 ## Outputs

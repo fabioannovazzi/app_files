@@ -47,6 +47,23 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
+## Output Location Rule
+
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
+
 # Registro Imprese e SARI
 
 Prepare a reviewable practice plan from explicit case facts and current official
@@ -135,19 +152,20 @@ python scripts/check_dependencies.py --requirements requirements-ocr.txt
 Do not install packages at runtime. Report missing requirements and let the user
 decide how to update the environment.
 
-Never write run outputs inside this Git workspace. Use an existing owner-only
-customer/run directory outside the repository, or let the initializer create a
-new one:
+Never write run outputs inside this Git workspace. Prepare the Studio Archive
+workflow context first and let the initializer use that run's exact output
+directory:
 
 ```bash
 python scripts/initialize_case.py \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --reference-date YYYY-MM-DD \
   --client-reference CLIENT-OPAQUE-001
 ```
 
-Do not overwrite or resume draft files for a different `run_id`.
+The initializer copies the run ID from the exact running ledger context. Do not
+overwrite or resume draft files from another run.
 
 ## 2. Confirm the material intake
 
@@ -177,9 +195,9 @@ When the user provides exported documents or DIRE/SARI screenshots, inventory
 them locally:
 
 ```bash
-python scripts/inventory_case.py /absolute/input-folder \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+python scripts/inventory_case.py <managed-input-folder> \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --no-ocr
 ```
 
@@ -189,6 +207,9 @@ user explicitly chooses the optional first model-download route, add:
 ```bash
 --allow-ocr-model-download
 ```
+
+If `--ocr-cache-dir` is used, place it under `<client-run-output>`; an external
+cache path is rejected because the stage may write model files there.
 
 The run records whether that route was selected and whether network access
 actually occurred; it does not manufacture an approval ID. The shared
@@ -217,8 +238,8 @@ without fetching it from a script:
 
 ```bash
 python scripts/register_official_source.py \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --source-id SARI-TENANT-CARD-ID \
   --source-type official_sari_selected_result \
   --title "Official card title" \
@@ -232,7 +253,9 @@ python scripts/register_official_source.py \
 
 For an official page or source copy supplied by the user, select the matching
 source type and `user_provided_copy`. A local `--snapshot` is allowed only for a
-user-provided copy or recorded written reuse authorization.
+user-provided copy or recorded written reuse authorization, and it must be an
+exact input selected when this Studio Archive run was prepared (or an artifact
+already inside this run).
 
 Research current official Registro Imprese, DIRE, chamber, INPS, INAIL, SUAP,
 and IVASS sources only when the facts make them relevant. Record each selected
@@ -253,8 +276,8 @@ at most that one card:
 
 ```bash
 python scripts/sari_connector.py search \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --tenant exact-current-tenant \
   --expected-chamber "Official chamber title" \
   --query "generic topical terms" \
@@ -264,8 +287,8 @@ python scripts/sari_connector.py search \
 
 ```bash
 python scripts/sari_connector.py detail \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --tenant exact-current-tenant \
   --expected-chamber "Official chamber title" \
   --card-id HUMAN-SELECTED-ID \
@@ -310,10 +333,11 @@ Run the mechanical validation:
 
 ```bash
 python scripts/validate_practice_case.py \
-  --case-intake /absolute/private/run-dir/case_intake_draft.json \
-  --practice-plan /absolute/private/run-dir/practice_plan_draft.json \
-  --official-sources /absolute/private/run-dir/official_sources.json \
-  --output-dir /absolute/private/run-dir
+  --case-intake <client-run-output>/case_intake_draft.json \
+  --practice-plan <client-run-output>/practice_plan_draft.json \
+  --official-sources <client-run-output>/official_sources.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Add `--local-inventory .../local_evidence_inventory.json` when local evidence
@@ -322,7 +346,8 @@ a structurally sound case with explicit blockers; the status remains draft.
 
 ```bash
 python scripts/package_practice.py \
-  --output-dir /absolute/private/run-dir
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Confirm that `final_artifacts.json` binds the exact validated inputs and source

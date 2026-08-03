@@ -7,6 +7,17 @@ import sys
 from pathlib import Path
 from typing import Any
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -14,6 +25,10 @@ if str(SCRIPT_DIR) not in sys.path:
 from package_validation import (  # noqa: E402
     build_audit,
     render_validation_package,
+)
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_workflow_context_for_output,
 )
 
 __all__ = ["apply_review_edits", "main"]
@@ -47,6 +62,19 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def _run_output_file(output_dir: Path, path: Path, label: str) -> Path:
+    """Resolve one existing file and keep it inside the selected run output."""
+
+    resolved_output = output_dir.expanduser().resolve()
+    try:
+        resolved = path.expanduser().resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"{label} is unavailable: {exc}") from exc
+    if not resolved.is_file() or not resolved.is_relative_to(resolved_output):
+        raise ValueError(f"{label} must be a file inside the run output")
+    return resolved
 
 
 def _eligible_claim_fix_effect(effect: dict[str, Any]) -> bool:
@@ -122,6 +150,7 @@ def _resolve_input_path(
     file_name: str,
     *,
     prefer_output_dir: bool = False,
+    run_root: Path | None = None,
 ) -> Path:
     output_candidate = output_dir / file_name
     if prefer_output_dir and output_candidate.exists():
@@ -134,7 +163,18 @@ def _resolve_input_path(
             path = Path(raw_path)
             if path.name != file_name:
                 continue
-            candidates = [path] if path.is_absolute() else [output_dir / path]
+            if run_intake.get("path_reference") == "run_root_relative":
+                if run_root is None or path.is_absolute() or ".." in path.parts:
+                    raise ValueError("Managed Answer Validator input path is invalid.")
+                resolved_root = run_root.expanduser().resolve(strict=True)
+                candidate = (resolved_root / path).resolve(strict=True)
+                if not candidate.is_relative_to(resolved_root):
+                    raise ValueError(
+                        "Managed Answer Validator input escapes the current run."
+                    )
+                candidates = [candidate]
+            else:
+                candidates = [path] if path.is_absolute() else [output_dir / path]
             candidates.append(output_candidate)
             for candidate in candidates:
                 if candidate.exists():
@@ -186,6 +226,8 @@ def apply_review_edits(
     output_dir: Path,
     applied_decisions_path: Path,
     final_artifacts_path: Path,
+    *,
+    client_engagement: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Refresh deterministic package artifacts after explicit claim JSON edits."""
 
@@ -221,15 +263,22 @@ def apply_review_edits(
         raise FileNotFoundError(answer_contract_path)
 
     run_intake = _read_json(run_intake_path)
+    run_root = (
+        Path(str(client_engagement["run_root"]))
+        if client_engagement is not None
+        else None
+    )
     document_inventory_path = _resolve_input_path(
         output_dir,
         run_intake,
         "document_inventory.json",
+        run_root=run_root,
     )
     source_inventory_path = _resolve_input_path(
         output_dir,
         run_intake,
         "source_inventory.json",
+        run_root=run_root,
     )
     if not document_inventory_path.exists():
         raise FileNotFoundError(document_inventory_path)
@@ -411,13 +460,53 @@ def main(argv: list[str] | None = None) -> int:
         description="Apply answer-validation review edits to downstream artifacts."
     )
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--applied-decisions", type=Path, required=True)
-    parser.add_argument("--final-artifacts", type=Path, required=True)
+    parser.add_argument("--applied-decisions", type=Path)
+    parser.add_argument("--final-artifacts", type=Path)
+    parser.add_argument(
+        "--client-run-preflight-only",
+        action="store_true",
+        help="Validate the owning running customer-folder run without writing.",
+    )
     args = parser.parse_args(argv)
+    try:
+        client_context = load_client_workflow_context_for_output(
+            args.output_dir.expanduser().resolve(),
+            expected_workflow_id="deep-research-validator",
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+    if args.client_run_preflight_only:
+        result = {
+            "ok": True,
+            "schema_version": client_context["schema_version"],
+            "workflow_id": client_context["workflow_id"],
+            "client_run_id": client_context["run_id"],
+        }
+        sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+        return 0
+    if args.applied_decisions is None or args.final_artifacts is None:
+        parser.error(
+            "--applied-decisions and --final-artifacts are required unless "
+            "--client-run-preflight-only is used"
+        )
+    try:
+        applied_decisions = _run_output_file(
+            args.output_dir,
+            args.applied_decisions,
+            "applied decisions",
+        )
+        final_artifacts = _run_output_file(
+            args.output_dir,
+            args.final_artifacts,
+            "final artifacts",
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
     result = apply_review_edits(
         args.output_dir,
-        args.applied_decisions,
-        args.final_artifacts,
+        applied_decisions,
+        final_artifacts,
+        client_engagement=client_context,
     )
     sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
     return 0

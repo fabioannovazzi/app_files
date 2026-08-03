@@ -376,6 +376,10 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: {
+        type: "string",
+        description: "Absolute path to the current portable customer-run context.json.",
+      },
       run_intake: {
         type: "object",
         description: "Optional run_intake.json object.",
@@ -425,6 +429,10 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: {
+        type: "string",
+        description: "Absolute path to the current portable customer-run context.json; required for persistence.",
+      },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       run_intake_path: { type: "string", description: "Optional local path to run_intake.json for persistence." },
       review_payload: reviewPayload,
@@ -443,7 +451,7 @@ function toolDefinitions() {
           "SHA-256 predecessor checkpoint retained outside the mutable run tree. Its authority depends on that separate channel.",
       },
     },
-    ["decisions"],
+    ["client_engagement", "decisions"],
   );
   return [
     {
@@ -577,10 +585,8 @@ function readJsonObjectFromLocalPath(filePath, fieldPath) {
   return parsed;
 }
 
-function outputDirFromRunIntake(runIntake) {
-  const outputDir =
-    typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+function outputDirFromRunIntake(runIntake, inputArgs) {
+  return resolveRunOutputDir({ ...inputArgs, run_intake: runIntake });
 }
 
 function ensurePathInsideOutput(filePath, outputDir, fieldPath) {
@@ -600,9 +606,9 @@ function materializeInputArgs(inputArgs) {
   if (runIntakePath) {
     args.run_intake = readJsonObjectFromLocalPath(runIntakePath, "run_intake_path");
     loadedPaths.push(["run_intake_path", runIntakePath]);
-    outputDir = outputDirFromRunIntake(args.run_intake) || path.dirname(runIntakePath);
+    outputDir = outputDirFromRunIntake(args.run_intake, args) || path.dirname(runIntakePath);
   } else if (isPlainObject(args.run_intake)) {
-    outputDir = outputDirFromRunIntake(args.run_intake);
+    outputDir = outputDirFromRunIntake(args.run_intake, args);
   }
 
   const reviewPayloadPath = resolveLocalJsonPath(
@@ -627,7 +633,7 @@ function materializeInputArgs(inputArgs) {
         "run_intake_path",
       );
       loadedPaths.push(["run_intake_path", defaultRunIntakePath]);
-      outputDir = outputDirFromRunIntake(args.run_intake) || outputDir;
+      outputDir = outputDirFromRunIntake(args.run_intake, args) || outputDir;
     }
   }
   if (!isPlainObject(args.review_payload) && outputDir) {
@@ -727,6 +733,8 @@ function validateReviewPayload(inputArgs) {
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
   const payload = {
     widget_type: "audit_reconciliation_review",
+    client_engagement:
+      typeof args.client_engagement === "string" ? args.client_engagement : null,
     run_intake: isPlainObject(args.run_intake) ? args.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(args.ui_decisions)
@@ -1673,10 +1681,8 @@ function withGeneratedReviewOutputTransaction(
 // END GENERATED REVIEW OUTPUT TRANSACTION
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -1885,16 +1891,58 @@ function auditReviewPythonCandidates() {
   );
 }
 
-function auditReviewPythonBridge(command, ...args) {
+function auditReviewCustomerRunPaths(outputDir) {
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    let observed = null;
+    try {
+      observed = fs.lstatSync(contextPath);
+    } catch (error) {
+      if (error?.code !== "ENOENT") {
+        throw new Error("Customer-run context is unavailable.");
+      }
+    }
+    if (
+      observed?.isFile() &&
+      !observed.isSymbolicLink() &&
+      observed.nlink === 1
+    ) {
+      return {
+        contextPath,
+        persistentOutputDir: path.join(candidate, "outputs"),
+      };
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) {
+      throw new Error("Customer-run context is unavailable.");
+    }
+    candidate = parent;
+  }
+}
+
+function auditReviewPythonBridge(command, outputDir, ...args) {
   const scriptPath = path.join(
     PLUGIN_ROOT,
     "scripts",
     "audit_assurance.py",
   );
+  const customerRun = auditReviewCustomerRunPaths(outputDir);
   for (const executable of auditReviewPythonCandidates()) {
     const replay = childProcess.spawnSync(
       executable,
-      ["-I", "-B", scriptPath, command, ...args],
+      [
+        "-I",
+        "-B",
+        scriptPath,
+        "--client-engagement",
+        customerRun.contextPath,
+        "--persistent-output-dir",
+        customerRun.persistentOutputDir,
+        command,
+        outputDir,
+        ...args,
+      ],
       {
         encoding: "utf8",
         maxBuffer: 64 * 1024 * 1024,
@@ -1927,14 +1975,18 @@ function auditReviewReplayAssuranceWithPython(
   outputDir,
   expectedPredecessorCheckpoint,
 ) {
-  const bridgeArgs = [outputDir];
+  const bridgeArgs = [];
   if (expectedPredecessorCheckpoint) {
     bridgeArgs.push(
       "--expected-predecessor-checkpoint",
       expectedPredecessorCheckpoint,
     );
   }
-  const payload = auditReviewPythonBridge("validate-run-json", ...bridgeArgs);
+  const payload = auditReviewPythonBridge(
+    "validate-run-json",
+    outputDir,
+    ...bridgeArgs,
+  );
   if (
     !isPlainObject(payload.assurance) ||
     !isPlainObject(payload.result)
@@ -1942,6 +1994,38 @@ function auditReviewReplayAssuranceWithPython(
     throw new Error("Complete assurance replay failed.");
   }
   return payload;
+}
+
+function auditReviewRequireMatchingCustomerRun(inputArgs, outputDir) {
+  const boundary = auditReviewPythonBridge(
+    "validate-context-json",
+    outputDir,
+  );
+  const persistedRunIntake = readJsonFileIfPresent(
+    path.join(outputDir, "run_intake.json"),
+  );
+  const persistedReviewPayload = readJsonFileIfPresent(
+    path.join(outputDir, "review_payload.json"),
+  );
+  const authorities = [
+    persistedRunIntake,
+    persistedReviewPayload,
+    inputArgs.run_intake,
+    inputArgs.review_payload,
+  ];
+  if (
+    typeof boundary.run_id !== "string" ||
+    authorities.some(
+      (authority) =>
+        !isPlainObject(authority) ||
+        authority.run_id !== boundary.run_id,
+    )
+  ) {
+    throw new Error(
+      "Audit Reconciliation review run does not match the customer-run context.",
+    );
+  }
+  return boundary;
 }
 
 function auditReviewReplayAssurance(
@@ -2485,6 +2569,7 @@ function saveDecisionPayload(inputArgs) {
   const materializedArgs = materializeInputArgs(inputArgs);
   const canonicalOutputDir = resolveRunOutputDir(materializedArgs);
   if (!canonicalOutputDir) return saveDecisionPayloadWrites(materializedArgs);
+  auditReviewRequireMatchingCustomerRun(materializedArgs, canonicalOutputDir);
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "save",
@@ -2570,8 +2655,50 @@ function saveDecisionPayloadWrites(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputReference) return null;
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : typeof runIntake?.client_engagement?.context_path === "string"
+        ? runIntake.client_engagement.context_path.trim()
+        : "";
+  if (!contextValue && path.isAbsolute(outputReference)) {
+    return path.resolve(outputReference);
+  }
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error("Audit Reconciliation persistence requires the current client_engagement context.");
+  }
+  const contextPath = path.resolve(contextValue);
+  if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
+    throw new Error("Audit Reconciliation client_engagement path is invalid.");
+  }
+  const contextStat = generatedReviewPathEntryStat(contextPath);
+  if (
+    !contextStat ||
+    !contextStat.isFile() ||
+    contextStat.isSymbolicLink() ||
+    contextStat.nlink !== 1
+  ) {
+    throw new Error("Audit Reconciliation client_engagement context is unavailable.");
+  }
+  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("Audit Reconciliation output reference is not run-root-relative.");
+  }
+  const runRoot = path.dirname(contextPath);
+  const resolved = path.isAbsolute(outputReference)
+    ? path.resolve(outputReference)
+    : path.resolve(runRoot, outputReference);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Audit Reconciliation output reference leaves the customer run.");
+  }
+  return resolved;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -3608,6 +3735,7 @@ function applyDecisionPayload(inputArgs) {
   const materializedArgs = materializeInputArgs(inputArgs);
   const canonicalOutputDir = resolveRunOutputDir(materializedArgs);
   if (!canonicalOutputDir) return applyDecisionPayloadWrites(materializedArgs);
+  auditReviewRequireMatchingCustomerRun(materializedArgs, canonicalOutputDir);
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "apply",

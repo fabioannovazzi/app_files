@@ -35,6 +35,10 @@
   "external_boundaries": [],
   "security_controls": [
     {
+      "id": "client-engagement-path-isolation",
+      "control": "Inspection and report building require a digest-valid Studio Archive report-builder context, accept imported sources or prior artifacts only from the same engagement, and write only to the context's run output root or a descendant."
+    },
+    {
       "id": "persisted-review-integrity-replay",
       "control": "For a persisted run, the MCP parent derives run, review, current decisions, final state, and protected files from the transaction's trusted image, exact-compares supplied copies, and replays current external-source, archive-container/member, review-payload, final-gallery, and output-byte receipts before review save or apply writes; stale state aborts before mutation."
     },
@@ -76,9 +80,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d1827b2ef17ceb6752cbf2f110129326e96cebe1c74009d63d101cd129bf03e0"
+    "source_fingerprint": "bce5e021de2abd46acdb748647c38f93ff5b9ce78a695d5dab4b96f9653e5ea4"
   }
 }

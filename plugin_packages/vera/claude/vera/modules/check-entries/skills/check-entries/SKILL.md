@@ -58,12 +58,18 @@ state that the sealed client-bound run remains pending.
 
 # Check Entries
 
-Use this skill when qualified journal entries must be checked against supporting
-documents. Check Entries consumes `normalized_journal.csv` and the adjacent
-sealed `normalization_diagnostics.json` written by Journal Sampling. It does
-not infer headers, mappings, amounts, or movement identifiers from a raw journal.
-professional reviews evidence ambiguities and professional conclusions after the
-mechanical checks.
+Use this skill when sampled, qualified journal entries must be checked against
+supporting documents. Three artifacts define the semantic boundary from one
+finalized Journal Sampling run: `normalized_journal.csv`, its sealed
+`normalization_diagnostics.json`, and `journal_sample.csv`. Bind those three
+artifacts plus every normalization companion that Check Entries reads to replay
+assurance: `normalization_recipe.json`, `suggested_recipe.json`,
+`reviewed_decisions.json`, `assurance_gates.json`, `assurance_envelope.json`,
+and `qualification_review_payload.json`. The normalized population and
+diagnostics validate preparation; the sample is the exact row selection. Check
+Entries does not check the unsampled population and does not infer headers,
+mappings, amounts, or movement identifiers from a raw journal. professional reviews
+evidence ambiguities and professional conclusions after the mechanical checks.
 
 The workflow is not Italian-only. Support the same five working locales used by the reconciliation plugin: `it`, `en`, `fr`, `de`, and `es`. Keep canonical output column names in English for stability, but speak to the user and write summaries in the chosen working language.
 
@@ -111,15 +117,16 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 Required:
 
-- Journal Sampling `normalized_journal.csv` with adjacent
-  `normalization_diagnostics.json`, a complete population status, qualified
-  source records, a valid CSV receipt, and a persisted Journal Sampling client
-  context;
-- one support source: a FatturaPA ZIP/XML, a local export produced by an
-  authorized accounting-system connector, or a supporting PDF file/folder,
-  imported into the same Studio Archive client and engagement;
-- a persisted Check Entries `client_engagement` context returned by that
-  support import.
+- an exact, closed artifact handoff from one review-ready or completed Journal
+  Sampling run in the same client and engagement. Its three semantic IDs are
+  `prepared.normalized_journal`, `internal.normalization_diagnostics`, and
+  `prepared.journal_sample_csv`; it must also bind the six normalization
+  companions named above so assurance replay uses only this run's input view;
+- one explicit evidence batch: a FatturaPA ZIP/XML, a local export produced by
+  an authorized accounting-system connector, or one or more supporting PDFs,
+  each imported into that engagement as an immutable `support` receipt;
+- a Check Entries run prepared from only those upstream artifact references and
+  support `input_ids`, then moved to `running` before execution.
 
 Optional:
 
@@ -129,26 +136,15 @@ Optional:
 
 Raw XLS/XLSX/CSV/PDF journals never enter Check Entries execution. Run Journal
 Sampling first. Ambiguous or inferred mappings must be reviewed and hash-bound
-there before Check Entries can run.
+there before Check Entries can run. A support import does not create a Check
+Entries context or automatically add itself to an existing run.
 
 ## First Run Workflow
 
-1. Confirm one exact client and connected-folder scope. Cowork cannot list or resume local Studio engagements. Run the sealed Check Entries CLI only when a compatible local Vera installation supplied a digest-valid context, its same-engagement normalized journal, and available bound paths. Otherwise review the connected journal/support material and state that the sealed client-bound check remains pending.
-2. Apply this acquisition ladder: ask first for the ZIP containing all relevant
-   FatturaPA XMLs; if unavailable, offer an authorized accounting-system
-   connection that materializes a local ZIP/folder export; otherwise request
-   PDFs only for unresolved sampled entries. Never request credentials, tokens,
-   cookies, or one-time codes. Ask for working language, source-document
-   language, and evidence assumptions only when unresolved.
-   When the user chooses connection, use a callable provider-specific connector
-   only after confirming the studio/client has authorized access. Restrict the
-   connector action to read/export for the selected client and period, record
-   the connector name, and pass its local ZIP/folder result to Check Entries.
-   If no connector for the named accounting system is callable, say so rather
-   than simulating a connection; ask which provider must be integrated or move
-   to the targeted-PDF fallback at the user's direction.
-   When a compatible client-engagement context is present, use only support already materialized inside its managed support path. Without that context, inspect the smallest useful connected support scope for review only and keep the sealed run pending.
-3. Run dependency checks from the plugin directory:
+1. Confirm one exact client and connected-folder scope. Cowork cannot list or resume local Studio engagements, import support, prepare or start a run, or issue a Check Entries context. Never infer the client, engagement, or sampling run from filenames or recency.
+2. Ask first for the relevant FatturaPA ZIP in the connected folder; if unavailable, use an authorized accounting-system export already materialized there, then targeted PDFs for unresolved sampled entries. Never request credentials, tokens, cookies, or one-time codes. Without a compatible local context, inspect only the smallest useful connected support scope and state that the sealed client-bound check remains pending.
+3. Run the sealed Check Entries CLI only when a compatible local Vera installation supplied a digest-valid running context whose paths are available. It must bind the exact `prepared.normalized_journal`, `internal.normalization_diagnostics`, and `prepared.journal_sample_csv` artifacts from one finalized same-engagement Journal Sampling run, plus only the immutable support receipts for this evidence batch. Use those bindings unchanged, check only the bound sample, and never scan later connected or engagement files. A later evidence delivery remains a separate pending local run.
+4. Run dependency checks from the plugin directory:
 
 ```bash
 python scripts/check_dependencies.py
@@ -156,29 +152,40 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-4. Confirm that Journal Sampling produced a qualified complete population, then
-   run inspection to validate its closure and inventory support:
+5. Confirm that Journal Sampling produced a qualified complete population and
+   exact sample, then run inspection to validate their closure and inventory
+   only the bound support batch:
 
 ```bash
-python scripts/inspect_entries.py <same-engagement-normalized-journal.csv> <imported-support-path-or-support-folder> --output-dir <client-run-output>/inspection --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_entries.py <bound-normalized-journal> <bound-support-path-or-closed-folder> --output-dir <client-run-output>/inspection --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-5. Read `inspection.json` and `suggested_recipe.json`. If source qualification,
+6. Read `inspection.json` and `suggested_recipe.json`. If source qualification,
    diagnostics hash, receipt, row closure, or exact monetary closure fails, stop
    and return to Journal Sampling. Do not repair or infer preparation inside
    Check Entries.
-6. Record only Check Entries settings such as exact amount tolerance and date
+7. Record only Check Entries settings such as exact amount tolerance and date
    window in the work-folder recipe.
-7. Run deterministic checks:
+8. Run deterministic checks:
 
 ```bash
-python scripts/run_checks.py <same-engagement-normalized-journal.csv> <imported-support-path-or-support-folder> --output-dir <client-run-output>/checks --recipe <client-run-output>/inspection/suggested_recipe.json --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-closed-folder> --output-dir <client-run-output>/checks --recipe <client-run-output>/inspection/suggested_recipe.json --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-8. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and `review_notes.md` before final delivery. Report the stable client and engagement binding, support matching coverage, status counts, unresolved/manual-review rows, mismatches, and output paths.
+9. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and
+   `review_notes.md` before final delivery. Report the stable client and
+   engagement binding, exact Journal Sampling run and sample, evidence-batch
+   input IDs, support matching coverage, status counts, unresolved/manual-review
+   rows, mismatches, and output paths. Complete every write-producing MCP save
+   or apply transaction before sealing the outer customer-folder run.
+10. After the last output write, do not treat the output directory as an available or completed Studio artifact. Cowork does not package Studio Archive and cannot finalize, complete, fail, or cancel its customer-folder run. Report every physical output with its intended artifact ID, relative path, concrete purpose, audience, and media type. A compatible local Vera installation must verify and declare the exact tree, move it to `ready_for_review`, and record completion or a terminal failure/cancellation. Until then, state that the sealed client-bound check remains pending.
 
 ## Prepared-Evidence Contract
 
+- Treat the bound `prepared.journal_sample_csv` as an input, not a display-only
+  output. Join it to the qualified normalized population by the preserved
+  physical source locators and reject missing, duplicate, or extra matches.
+  Check only the resulting sampled rows.
 - Preserve `source_file`, `source_sheet`, `source_page`, `source_row`,
   `movement_number`, `currency`, `unit`, `reported_increment`, and the Journal
   Sampling qualification ID.
@@ -359,10 +366,11 @@ Store both assumptions in the generated recipe and preserve them in diagnostics/
 Starter prompts:
 
 ```text
-IT: Usa Check Entries su /percorso/normalized_journal.csv qualificato da Journal Sampling e sui PDF in /percorso/pdf. Lingua: it. Lingua documenti: auto.
-EN: Use Check Entries on /path/normalized_journal.csv qualified by Journal Sampling and support PDFs in /path/pdfs. Language: en. Document language: auto.
-FR: Utilise Check Entries sur /chemin/normalized_journal.csv qualifié par Journal Sampling et les PDF dans /chemin/pdfs. Langue: fr. Langue des documents: auto.
-DE: Verwende Check Entries für die von Journal Sampling qualifizierte Datei /pfad/normalized_journal.csv und die Beleg-PDFs in /pfad/pdfs. Sprache: de. Dokumentsprache: auto.
+IT: Usa Check Entries per il cliente <cliente>. Riprendi il campione Journal Sampling <campione> e controllalo contro questo lotto di supporti <percorso>. Lingua: it. Lingua documenti: auto.
+EN: Use Check Entries for <client>. Resume Journal Sampling sample <sample> and check it against this support batch <path>. Language: en. Document language: auto.
+FR: Utilise Check Entries pour <client>. Reprends l'échantillon Journal Sampling <échantillon> et contrôle-le avec ce lot de justificatifs <chemin>. Langue: fr. Langue des documents: auto.
+DE: Verwende Check Entries für <Mandant>. Öffne die Journal-Sampling-Stichprobe <Stichprobe> und prüfe sie gegen diesen Belegsatz <Pfad>. Sprache: de. Dokumentsprache: auto.
+ES: Usa Check Entries para <cliente>. Reanuda la muestra de Journal Sampling <muestra> y compruébala con este lote de soportes <ruta>. Idioma: es. Idioma de los documentos: auto.
 ```
 
 ## Failure Modes

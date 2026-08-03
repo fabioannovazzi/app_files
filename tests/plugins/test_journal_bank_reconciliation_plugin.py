@@ -68,6 +68,70 @@ TABULAR_V7_EXTENSION_CONTRACT_PATH = (
 )
 
 
+def _running_customer_output(tmp_path: Path) -> tuple[Path, str]:
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_journal_bank_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir(parents=True)
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Test engagement")
+    source = tmp_path / "managed-source.txt"
+    source.write_text("managed input\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "journal-bank-reconciliation",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    return Path(running["output_dir"]), str(running["context"]["run_id"])
+
+
+def _customer_context_path(output_dir: Path) -> Path:
+    candidate = output_dir.resolve()
+    while candidate != candidate.parent:
+        context_path = candidate / "context.json"
+        if context_path.is_file():
+            return context_path
+        candidate = candidate.parent
+    raise AssertionError("customer-run context is unavailable")
+
+
+def _rename_customer_output(output_dir: Path) -> tuple[Path, Path, Path]:
+    context_path = _customer_context_path(output_dir)
+    client_root = context_path.parents[5]
+    renamed_root = client_root.with_name(f"{client_root.name} Renamed")
+    relative_output = output_dir.relative_to(client_root)
+    relative_context = context_path.relative_to(client_root)
+    client_root.rename(renamed_root)
+    return (
+        renamed_root / relative_output,
+        renamed_root / relative_context,
+        output_dir,
+    )
+
+
 def load_core() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
@@ -409,16 +473,19 @@ def _prepare_reviewed_summary_recipe(
 
 
 def _prepare_sealed_mcp_review_run(
-    output_dir: Path,
+    tmp_path: Path,
     *,
     language: str = "en",
+    portable: bool = False,
 ) -> tuple[
+    Path,
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
 ]:
     core = load_core()
+    output_dir, client_run_id = _running_customer_output(tmp_path)
     source_dir = output_dir / "sources"
     bank_path = source_dir / "bank.xlsx"
     journal_path = source_dir / "journal.xlsx"
@@ -452,27 +519,38 @@ def _prepare_sealed_mcp_review_run(
         recipe_path,
         language=language,
         document_language="en",
+        client_run_id=client_run_id,
+        client_run_root=(
+            _customer_context_path(output_dir).parent if portable else None
+        ),
     )
-    return tuple(
-        json.loads((output_dir / name).read_text(encoding="utf-8"))
-        for name in (
-            "run_intake.json",
-            "review_payload.json",
-            "ui_decisions.json",
-            "final_artifacts.json",
-        )
+    return (
+        output_dir,
+        *(
+            json.loads((output_dir / name).read_text(encoding="utf-8"))
+            for name in (
+                "run_intake.json",
+                "review_payload.json",
+                "ui_decisions.json",
+                "final_artifacts.json",
+            )
+        ),
     )
 
 
 def _prepare_closed_mcp_review_run(
-    output_dir: Path,
+    tmp_path: Path,
+    *,
+    portable: bool = False,
 ) -> tuple[
+    Path,
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
     dict[str, Any],
 ]:
     core = load_core()
+    output_dir, client_run_id = _running_customer_output(tmp_path)
     source_dir = output_dir.parent / f"{output_dir.name}-sources"
     bank_path = source_dir / "bank.csv"
     journal_path = source_dir / "journal.csv"
@@ -497,15 +575,27 @@ def _prepare_closed_mcp_review_run(
         journal_path,
         output_dir.parent / f"{output_dir.name}-recipe",
     )
-    core.run_reconciliation(bank_path, journal_path, output_dir, recipe_path)
-    return tuple(
-        json.loads((output_dir / name).read_text(encoding="utf-8"))
-        for name in (
-            "run_intake.json",
-            "review_payload.json",
-            "ui_decisions.json",
-            "final_artifacts.json",
-        )
+    core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        client_run_id=client_run_id,
+        client_run_root=(
+            _customer_context_path(output_dir).parent if portable else None
+        ),
+    )
+    return (
+        output_dir,
+        *(
+            json.loads((output_dir / name).read_text(encoding="utf-8"))
+            for name in (
+                "run_intake.json",
+                "review_payload.json",
+                "ui_decisions.json",
+                "final_artifacts.json",
+            )
+        ),
     )
 
 
@@ -886,6 +976,119 @@ def _call_mcp_server(
         env=env,
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
+
+
+def _bank_transaction_call(
+    tool_name: str,
+    arguments: dict[str, Any],
+) -> dict[str, Any]:
+    response = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": tool_name, "arguments": arguments},
+            }
+        ]
+    )[0]
+    return response["result"]["structuredContent"]
+
+
+def _portable_bank_transaction_case(
+    tmp_path: Path,
+) -> tuple[Path, dict[str, Any]]:
+    output_dir, run_intake, review_payload, _, final_artifacts = (
+        _prepare_sealed_mcp_review_run(tmp_path, portable=True)
+    )
+    decisions = [
+        {
+            "item_id": item["id"],
+            "action": (
+                "accept"
+                if "accept" in item["allowed_actions"]
+                else item["allowed_actions"][0]
+            ),
+        }
+        for item in review_payload["items"]
+    ]
+    return output_dir, {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "final_artifacts": final_artifacts,
+        "decisions": decisions,
+    }
+
+
+def test_bank_review_save_and_apply_survive_customer_folder_rename(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_bank_transaction_case(tmp_path)
+    old_customer_root = _customer_context_path(output_dir).parents[5].as_posix()
+    old_output = output_dir.as_posix()
+    assert arguments["run_intake"]["path_reference"] == "run_root_relative"
+    assert arguments["run_intake"]["output_dir"] == "outputs"
+    assert all(
+        not Path(value).is_absolute()
+        for value in arguments["run_intake"]["input_paths"]
+    )
+
+    renamed_output, current_context, stale_output = _rename_customer_output(output_dir)
+    arguments["client_engagement"] = current_context.as_posix()
+
+    saved = _bank_transaction_call(
+        "save_journal_bank_decisions",
+        arguments,
+    )
+    applied = _bank_transaction_call(
+        "apply_journal_bank_decisions",
+        arguments,
+    )
+
+    assert saved["ok"] is True
+    assert saved["persisted"] is True
+    assert applied["ok"] is True
+    assert applied["persisted"] is True
+    assert (renamed_output / "ui_decisions.json").is_file()
+    assert (renamed_output / "applied_decisions.json").is_file()
+    assert not stale_output.exists()
+    assert old_output not in arguments["run_intake"]["output_dir"]
+    assert all(
+        old_customer_root not in artifact.read_text(encoding="utf-8")
+        for artifact in renamed_output.rglob("*")
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}
+    )
+
+
+def test_bank_review_rejects_run_root_escape_without_writing(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_bank_transaction_case(tmp_path)
+    arguments["client_engagement"] = _customer_context_path(output_dir).as_posix()
+    forged = json.loads(json.dumps(arguments))
+    forged["run_intake"]["output_dir"] = "../outside"
+    before = _tree_snapshot(output_dir)
+
+    result = _bank_transaction_call(
+        "save_journal_bank_decisions",
+        forged,
+    )
+
+    assert result["ok"] is False
+    assert "leaves the customer run" in result["error"]
+    assert _tree_snapshot(output_dir) == before
+    assert not (output_dir.parent.parent / "outside").exists()
+
+
+def _customer_run_preflight_passthrough_script_lines() -> list[str]:
+    """Let stage-attack wrappers target review work after customer validation."""
+    return [
+        'if "--client-run-preflight-only" in sys.argv:',
+        "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
+        "    sys.stdout.buffer.write(completed.stdout)",
+        "    sys.stderr.buffer.write(completed.stderr)",
+        "    raise SystemExit(completed.returncode)",
+    ]
 
 
 def _copy_journal_bank_implementation(tmp_path: Path) -> tuple[Path, Path]:
@@ -1525,6 +1728,7 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
     tmp_path: Path,
 ) -> None:
     core = load_core()
+    client_run_id = "run_" + "a" * 24
     bank_path = tmp_path / "bank.xlsx"
     journal_path = tmp_path / "journal.xlsx"
     output_dir = tmp_path / "out"
@@ -1565,6 +1769,7 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
         recipe_path,
         language="it",
         document_language="it",
+        client_run_id=client_run_id,
     )
 
     inspection_payload = json.loads((output_dir / "inspection.json").read_text())
@@ -1657,6 +1862,7 @@ def test_plugin_inspects_and_runs_deterministic_journal_bank_reconciliation(
     assert assurance_gates["gates"]["reconciliation"]["status"] == "withheld"
     assert assurance_gates["report_ready"] is False
     assert run_intake["plugin"] == "journal-bank-reconciliation"
+    assert run_intake["run_id"] == client_run_id
     assert review_payload["run_id"] == run_intake["run_id"]
     assert review_payload["review_type"] == "journal_bank_reconciliation_review"
     assert review_payload["item_count"] == len(review_payload["items"])
@@ -6074,7 +6280,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
 ) -> None:
     core = load_core()
     output_dir = tmp_path / "run"
-    _prepare_closed_mcp_review_run(output_dir)
+    output_dir, *_ = _prepare_closed_mcp_review_run(output_dir)
     envelope = json.loads(
         (output_dir / "assurance_envelope.json").read_text(encoding="utf-8")
     )
@@ -6108,7 +6314,7 @@ def test_python_preimport_rejects_every_unowned_implementation_entry(
     attack_kind: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    _prepare_closed_mcp_review_run(output_dir)
+    output_dir, *_ = _prepare_closed_mcp_review_run(output_dir)
     before = _tree_snapshot(output_dir)
     copied_plugin, _ = _copy_journal_bank_implementation(tmp_path)
     rogue = copied_plugin / "scripts" / "rogue"
@@ -6287,7 +6493,7 @@ def test_python_preflight_rejects_copied_implementation_byte_mutation(
     relative_path: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    _prepare_closed_mcp_review_run(output_dir)
+    output_dir, *_ = _prepare_closed_mcp_review_run(output_dir)
     before = _tree_snapshot(output_dir)
     copied_plugin, copied_shared = _copy_journal_bank_implementation(tmp_path)
     root = copied_plugin if implementation_root == "plugin" else copied_shared
@@ -6331,7 +6537,9 @@ def test_mcp_replay_rejects_copied_implementation_byte_mutation(
     relative_path: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     copied_plugin, copied_shared = _copy_journal_bank_implementation(tmp_path)
     root = copied_plugin if implementation_root == "plugin" else copied_shared
@@ -6362,7 +6570,9 @@ def test_copied_implementation_links_are_never_authoritative(
     link_kind: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     copied_plugin, copied_shared = _copy_journal_bank_implementation(tmp_path)
     target = copied_shared / "review_output_transaction.cjs"
@@ -6416,7 +6626,9 @@ def test_copied_implementation_set_cannot_self_expand(
     replay_surface: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     copied_plugin, _ = _copy_journal_bank_implementation(tmp_path)
     (copied_plugin / "scripts" / "untrusted_extension.py").write_text(
@@ -6466,7 +6678,9 @@ def test_implementation_receipt_set_must_remain_exact(
     set_attack: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_closed_mcp_review_run(
+        output_dir
+    )
     envelope_path = output_dir / "assurance_envelope.json"
     envelope = json.loads(envelope_path.read_text(encoding="utf-8"))
     if set_attack == "missing":
@@ -8647,11 +8861,11 @@ def test_static_page_exposes_five_language_switch() -> None:
 def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     tmp_path: Path,
 ) -> None:
-    run_intake, review_payload, ui_decisions, final_artifacts = (
+    output_dir, run_intake, review_payload, ui_decisions, final_artifacts = (
         _prepare_sealed_mcp_review_run(tmp_path)
     )
-    matches_path = tmp_path / "reconciliation_matches.csv"
-    workbook_path = tmp_path / "journal_bank_reconciliation.xlsx"
+    matches_path = output_dir / "reconciliation_matches.csv"
+    workbook_path = output_dir / "journal_bank_reconciliation.xlsx"
     matched_item = next(
         item for item in review_payload["items"] if item["item_type"] == "matched_pair"
     )
@@ -8768,7 +8982,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     assert save_result["ok"] is True
     assert save_result["persisted"] is True
     assert save_result["decision_count"] == len(decisions)
-    written_decisions = json.loads((tmp_path / "ui_decisions.json").read_text())
+    written_decisions = json.loads((output_dir / "ui_decisions.json").read_text())
     assert written_decisions["decisions"][0]["edit_value"] == (
         "Reviewer accepted reference match."
     )
@@ -8778,7 +8992,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     apply_result = responses[7]["result"]["structuredContent"]
     assert apply_result["ok"] is True
     assert apply_result["persisted"] is True
-    assert apply_result["run_intake_path"] == str(tmp_path / "run_intake.json")
+    assert apply_result["run_intake_path"] == str(output_dir / "run_intake.json")
     assert apply_result["decision_count"] == len(decisions)
     assert apply_result["blocker_count"] == 1
     assert apply_result["structured_update_count"] == 1
@@ -8788,7 +9002,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     assert "Reviewer accepted reference match." in matches_path.read_text(
         encoding="utf-8"
     )
-    applied = json.loads((tmp_path / "applied_decisions.json").read_text())
+    applied = json.loads((output_dir / "applied_decisions.json").read_text())
     assert applied["effects"][0]["structured_update"] == {
         "id_field": "bank_transaction_id",
         "record_id": matched_item["data"]["target_record_id"],
@@ -8811,7 +9025,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     )
     review_note_cell = match_sheet.cell(row=2, column=review_note_column)
     assert review_note_cell.value == "Reviewer accepted reference match."
-    final_artifacts = json.loads((tmp_path / "final_artifacts.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
     assert final_artifacts["review_application"]["structured_update_count"] == 1
     assert final_artifacts["review_application"]["structured_update_paths"] == [
         "reconciliation_matches.csv"
@@ -8846,7 +9060,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
             f"journal_bank_reconciliation__{matched_item['id']}.xlsx"
         ),
     } <= {output["path"] for output in final_artifacts["outputs"]}
-    run_intake = json.loads((tmp_path / "run_intake.json").read_text())
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_apply_steps = [
         step
         for step in run_intake["execution_trace"]
@@ -8866,7 +9080,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         "ui_decisions.json",
     } <= set(review_apply_steps[0]["outputs"])
     contract = validate_contract(
-        tmp_path,
+        output_dir,
         strict_data_posture=True,
         strict_execution_trace=True,
         strict_output_paths=True,
@@ -8879,8 +9093,8 @@ def test_journal_bank_mcp_closed_review_uses_validated_canonical_readiness(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, final_artifacts = _prepare_closed_mcp_review_run(
-        output_dir
+    output_dir, run_intake, review_payload, _, final_artifacts = (
+        _prepare_closed_mcp_review_run(output_dir, portable=True)
     )
     decisions = [
         {"item_id": item["id"], "action": "accept"} for item in review_payload["items"]
@@ -8895,6 +9109,9 @@ def test_journal_bank_mcp_closed_review_uses_validated_canonical_readiness(
                 "params": {
                     "name": "apply_journal_bank_decisions",
                     "arguments": {
+                        "client_engagement": _customer_context_path(
+                            output_dir
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "final_artifacts": final_artifacts,
@@ -8940,8 +9157,8 @@ def test_journal_bank_mcp_delayed_native_regeneration_allows_modified_timestamp(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, final_artifacts = _prepare_closed_mcp_review_run(
-        output_dir
+    output_dir, run_intake, review_payload, _, final_artifacts = (
+        _prepare_closed_mcp_review_run(output_dir)
     )
     matched_item = next(
         item for item in review_payload["items"] if item["item_type"] == "matched_pair"
@@ -8989,8 +9206,8 @@ def test_journal_bank_mcp_complete_unresolved_review_remains_gate_bound(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, final_artifacts = _prepare_sealed_mcp_review_run(
-        output_dir
+    output_dir, run_intake, review_payload, _, final_artifacts = (
+        _prepare_sealed_mcp_review_run(output_dir)
     )
     decisions = [
         {"item_id": item["id"], "action": "accept"} for item in review_payload["items"]
@@ -9015,7 +9232,7 @@ def test_journal_bank_mcp_complete_unresolved_review_remains_gate_bound(
         ]
     )[0]["result"]
 
-    assert response["isError"] is False
+    assert response["isError"] is False, response
     result = response["structuredContent"]
     assert result["application_status"] == "blocked"
     assert result["assurance_report_ready"] is False
@@ -9042,8 +9259,8 @@ def test_journal_bank_mcp_child_cannot_author_assurance_envelope_fields(
 ) -> None:
     output_dir = tmp_path / "run"
     if forgery_mode == "nonready_reviewed_envelope":
-        run_intake, review_payload, _, final_artifacts = _prepare_sealed_mcp_review_run(
-            output_dir
+        output_dir, run_intake, review_payload, _, final_artifacts = (
+            _prepare_sealed_mcp_review_run(output_dir)
         )
         item = next(
             entry
@@ -9052,8 +9269,8 @@ def test_journal_bank_mcp_child_cannot_author_assurance_envelope_fields(
         )
         decisions = [{"item_id": item["id"], "action": "accept"}]
     else:
-        run_intake, review_payload, _, final_artifacts = _prepare_closed_mcp_review_run(
-            output_dir
+        output_dir, run_intake, review_payload, _, final_artifacts = (
+            _prepare_closed_mcp_review_run(output_dir)
         )
         decisions = [
             {"item_id": item["id"], "action": "accept"}
@@ -9072,6 +9289,7 @@ def test_journal_bank_mcp_child_cannot_author_assurance_envelope_fields(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -9272,7 +9490,7 @@ def test_journal_bank_mcp_apply_rejects_unsealed_output_before_mutation(
 
 
 def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
         tmp_path,
         language="es-ES",
     )
@@ -9336,7 +9554,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
     saved = responses[3]["result"]["structuredContent"]
     applied = responses[4]["result"]["structuredContent"]
     invalid = responses[5]["result"]["structuredContent"]
-    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
 
     assert (
         "Use validate_journal_bank_review antes"
@@ -9386,7 +9604,9 @@ def test_journal_bank_mcp_review_transactions_reject_unsafe_internal_entries(
     expected_error: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     target = output_dir / "ui_decisions.json"
     outside = tmp_path / f"outside-{tool_name}-{entry_kind}.json"
     outside_before: bytes | None = None
@@ -9429,7 +9649,9 @@ def test_journal_bank_mcp_post_preflight_link_swap_rolls_back_exact_tree(
     link_kind: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     outside = tmp_path / "outside-reconciliation-matches.csv"
     wrapper = tmp_path / "python-preflight-journal-bank-swap"
@@ -9442,6 +9664,7 @@ def test_journal_bank_mcp_post_preflight_link_swap_rolls_back_exact_tree(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "sys.stdout.buffer.write(completed.stdout)",
                 "sys.stderr.buffer.write(completed.stderr)",
@@ -9491,7 +9714,9 @@ def test_journal_bank_mcp_python_apply_link_swap_cannot_mutate_external_file(
     link_kind: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     outside = tmp_path / f"outside-applied-{link_kind}.json"
     wrapper = tmp_path / f"python-apply-journal-bank-{link_kind}-swap"
@@ -9504,6 +9729,7 @@ def test_journal_bank_mcp_python_apply_link_swap_cannot_mutate_external_file(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 'if "--preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]])",
                 "    raise SystemExit(completed.returncode)",
@@ -9553,7 +9779,9 @@ def test_journal_bank_mcp_dangling_canonical_swap_restores_exact_tree(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-dangling-output"
     wrapper.write_text(
@@ -9565,6 +9793,7 @@ def test_journal_bank_mcp_dangling_canonical_swap_restores_exact_tree(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 'if "--preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]])",
                 "    raise SystemExit(completed.returncode)",
@@ -9603,7 +9832,9 @@ def test_journal_bank_mcp_rejects_intermediate_output_symlink(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "real" / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     alias = tmp_path / "alias"
     alias.symlink_to(output_dir.parent, target_is_directory=True)
@@ -9631,7 +9862,7 @@ def test_journal_bank_python_preflight_rejects_replay_symlink(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, *_ = _prepare_sealed_mcp_review_run(output_dir)
     outside = tmp_path / "outside-replay.json"
     outside.write_bytes(b'{"outside":"unchanged"}\n')
     outside_before = outside.read_bytes()
@@ -9650,7 +9881,9 @@ def test_journal_bank_mcp_preflight_persisted_replay_must_match_stdout(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-preflight-divergence"
     wrapper.write_text(
@@ -9663,6 +9896,7 @@ def test_journal_bank_mcp_preflight_persisted_replay_must_match_stdout(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -9722,7 +9956,9 @@ def test_journal_bank_mcp_child_failure_is_path_free_and_rolls_back(
     expected_error: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / f"python-journal-bank-malicious-{phase}"
     wrapper.write_text(
@@ -9733,6 +9969,7 @@ def test_journal_bank_mcp_child_failure_is_path_free_and_rolls_back(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 'phase = os.environ["JB_TEST_FAILURE_PHASE"]',
                 'if phase == "apply" and "--preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
@@ -9777,7 +10014,9 @@ def test_journal_bank_mcp_rejects_transaction_root_relocation_without_moving_can
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     before_modes = _tree_mode_snapshot(output_dir)
     canonical_inode = output_dir.stat().st_ino
@@ -9790,6 +10029,7 @@ def test_journal_bank_mcp_rejects_transaction_root_relocation_without_moving_can
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode == 0 and '--preflight-only' not in sys.argv:",
                 "    working = Path(sys.argv[sys.argv.index('--output-dir') + 1])",
@@ -9837,7 +10077,9 @@ def test_journal_bank_mcp_child_created_snapshot_is_non_authoritative(
     attack: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     outside = tmp_path / "outside-snapshot-target"
     outside.mkdir()
     marker = outside / "marker.txt"
@@ -9853,6 +10095,7 @@ def test_journal_bank_mcp_child_created_snapshot_is_non_authoritative(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -9892,7 +10135,7 @@ def test_journal_bank_mcp_child_created_snapshot_is_non_authoritative(
         )
     )[0]["result"]
 
-    assert response["isError"] is False
+    assert response["isError"] is False, response
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
@@ -9931,7 +10174,9 @@ def test_journal_bank_mcp_child_cannot_change_output_tree_modes(
     expected_error: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     before_modes = _tree_mode_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-mode-attack"
@@ -9944,6 +10189,7 @@ def test_journal_bank_mcp_child_cannot_change_output_tree_modes(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -10005,7 +10251,9 @@ def test_journal_bank_mcp_invalid_child_output_fails_closed(
     child_output: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / f"python-journal-bank-invalid-{phase}"
     wrapper.write_text(
@@ -10016,6 +10264,7 @@ def test_journal_bank_mcp_invalid_child_output_fails_closed(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 'phase = os.environ["JB_TEST_INVALID_PHASE"]',
                 'if phase == "apply" and "--preflight-only" in sys.argv:',
                 "    completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
@@ -10067,7 +10316,9 @@ def test_journal_bank_mcp_child_cannot_self_author_final_readiness(
     forgery_mode: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-readiness-forgery"
     wrapper.write_text(
@@ -10081,6 +10332,7 @@ def test_journal_bank_mcp_child_cannot_self_author_final_readiness(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -10187,7 +10439,9 @@ def test_journal_bank_mcp_no_native_child_cannot_extend_trace_outputs(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-trace-forgery"
     wrapper.write_text(
@@ -10200,6 +10454,7 @@ def test_journal_bank_mcp_no_native_child_cannot_extend_trace_outputs(
                 "import sys",
                 "from pathlib import Path",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -10306,8 +10561,8 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
     forgery_mode: str,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, final_artifacts = _prepare_closed_mcp_review_run(
-        output_dir
+    output_dir, run_intake, review_payload, _, final_artifacts = (
+        _prepare_closed_mcp_review_run(output_dir, portable=True)
     )
     decisions = []
     edited = False
@@ -10329,7 +10584,7 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
     wrapper.write_text(
         "\n".join(
             [
-                "#!/usr/bin/env python3",
+                f"#!{sys.executable}",
                 "import hashlib",
                 "import json",
                 "import os",
@@ -10340,6 +10595,7 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
                 "from pathlib import Path",
                 "import openpyxl",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "if completed.returncode != 0:",
                 "    sys.stdout.buffer.write(completed.stdout)",
@@ -10532,6 +10788,9 @@ def test_journal_bank_mcp_rejects_forged_regenerated_workbook_bytes(
                 "params": {
                     "name": "apply_journal_bank_decisions",
                     "arguments": {
+                        "client_engagement": _customer_context_path(
+                            output_dir
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "final_artifacts": final_artifacts,
@@ -10555,11 +10814,31 @@ def test_journal_bank_mcp_preflight_start_failure_is_fixed(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     blocked = tmp_path / "python-journal-bank-not-executable"
-    blocked.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
-    blocked.chmod(0o600)
+    blocked.write_text(
+        "\n".join(
+            [
+                "#!/usr/bin/env python3",
+                "from pathlib import Path",
+                "import subprocess",
+                "import sys",
+                f"real = {str(Path(sys.executable))!r}",
+                "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
+                "sys.stdout.buffer.write(completed.stdout)",
+                "sys.stderr.buffer.write(completed.stderr)",
+                'if completed.returncode == 0 and "--client-run-preflight-only" in sys.argv:',
+                "    Path(__file__).chmod(0o600)",
+                "raise SystemExit(completed.returncode)",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    blocked.chmod(0o700)
     monkeypatch.setenv("PYTHON", blocked.as_posix())
 
     response = _call_mcp_server(
@@ -10584,7 +10863,9 @@ def test_journal_bank_mcp_apply_start_failure_is_fixed(
     tmp_path: Path,
 ) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
     wrapper = tmp_path / "python-journal-bank-disable-after-preflight"
     wrapper.write_text(
@@ -10595,6 +10876,7 @@ def test_journal_bank_mcp_apply_start_failure_is_fixed(
                 "import subprocess",
                 "import sys",
                 f"real = {str(Path(sys.executable))!r}",
+                *_customer_run_preflight_passthrough_script_lines(),
                 "completed = subprocess.run([real, *sys.argv[1:]], capture_output=True)",
                 "sys.stdout.buffer.write(completed.stdout)",
                 "sys.stderr.buffer.write(completed.stderr)",
@@ -10628,7 +10910,9 @@ def test_journal_bank_mcp_apply_start_failure_is_fixed(
 
 def test_journal_bank_mcp_save_commits_only_decision_file(tmp_path: Path) -> None:
     output_dir = tmp_path / "run"
-    run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(output_dir)
+    output_dir, run_intake, review_payload, _, _ = _prepare_sealed_mcp_review_run(
+        output_dir
+    )
     before = _tree_snapshot(output_dir)
 
     response = _call_mcp_server(

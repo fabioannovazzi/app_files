@@ -66,12 +66,14 @@ se il collegamento alla banca è ambiguo.
 
 Per un primo lavoro completo, Codex deve raccogliere e confermare questi elementi prima di lanciare gli helper:
 
-- binding `client_folder` ottenuto da un unico `scope_id` corrente di Studio
-  Archive, ID canonico dell'incarico e `workspace_root` privato fuori dalla
-  cartella evidenze; il runner rifiuta input di altri clienti e deriva da questi
-  valori il percorso client/incarico/workflow/run senza accettare un output
-  arbitrario;
-- cartella input con partite aperte, mastrini, banche, distinte, factoring/anticipi e compensazioni disponibili;
+- cliente e incarico selezionati in Studio Archive; ogni documento ricevuto va
+  importato nell'incarico con un ruolo esplicito, poi il run
+  `audit-reconciliation` va preparato con gli ID di quegli import e avviato;
+- file `--client-engagement` prodotto per quel run: il runner accetta solo le
+  copie di esecuzione chiuse in `runs/<run-id>/inputs/` e scrive soltanto in
+  `runs/<run-id>/outputs/`, entrambi dentro la cartella cliente;
+- partite aperte, mastrini, banche, distinte, factoring/anticipi,
+  compensazioni e assunzioni disponibili tra gli input importati;
 - periodo e cut-off della riconciliazione;
 - file che contiene la popolazione da riconciliare;
 - lingua operativa e lingua dei documenti (`it`, `en`, `fr`, `de`, `es` o `auto` per documenti misti);
@@ -79,6 +81,10 @@ Per un primo lavoro completo, Codex deve raccogliere e confermare questi element
 - controllo dipendenze con `python scripts/check_dependencies.py`;
 - output attesi: Excel audit, scheda operativa per commercialista, Word, il record canonico `assurance_final_outputs/reconciliation_results.json`, `source_pages.json`, `run_intake.json`, `review_payload.json`, `ui_decisions.json`, `final_artifacts.json`, `artifact_card.md`, `review_ui.html`, review Codex e, se utile, richieste mirate di evidenza;
 - passaggio di review: controllare eccezioni, righe ad alto valore, evidenze obbligatorie e righe non chiuse.
+
+Al termine, Studio Archive deve chiudere tutti gli output conservati con
+percorso, scopo, destinatario, media type e hash; solo dopo il run può passare
+a `ready_for_review` e quindi a `completed`.
 
 Lingue supportate per etichette e testi di output: italiano (`it`), inglese (`en`), francese (`fr`), tedesco (`de`) e spagnolo (`es`).
 
@@ -328,7 +334,9 @@ Dopo aver generato il workbook di riconciliazione, puoi creare un campione di
 righe da controllare manualmente:
 
 ```bash
-python scripts/build_review_sample.py <output-dir>/riconciliazione_audit.xlsx --count 2
+python scripts/build_review_sample.py <output-dir>/riconciliazione_audit.xlsx \
+  --count 2 \
+  --client-engagement <customer-run>/context.json
 ```
 
 Lo script produce:
@@ -349,8 +357,12 @@ python scripts/build_missing_evidence_requests.py <output-dir>/riconciliazione_a
   --entity-name "Societa revisionata" \
   --counterparty-name "Controparte" \
   --cutoff-date 2023-12-31 \
-  --language it
+  --language it \
+  --client-engagement <customer-run>/context.json
 ```
+
+Both helpers reject a stale, completed, or unrelated context and any input or
+output path outside that running customer-folder run.
 
 Lo script produce `richieste_mirate_evidenze.xlsx` con categorie operative
 localizzate (`it`, `fr`, `de`, `en`): righe gia riconciliate con evidenza

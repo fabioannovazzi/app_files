@@ -1,9 +1,7 @@
 from __future__ import annotations
 
-import argparse
 import csv
 import hashlib
-import logging
 import re
 import unicodedata
 from dataclasses import dataclass
@@ -16,8 +14,6 @@ __all__ = [
     "sha256_file",
     "write_duplicate_candidates_csv",
 ]
-
-LOGGER = logging.getLogger(__name__)
 
 
 @dataclass(frozen=True)
@@ -135,33 +131,3 @@ def write_duplicate_candidates_csv(
         for candidate in candidates:
             writer.writerow(candidate.as_row())
     return path
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Individua duplicati esatti o fortemente sospetti in una cartella."
-    )
-    parser.add_argument("folder", type=Path, help="Cartella da analizzare.")
-    parser.add_argument(
-        "--out",
-        type=Path,
-        default=None,
-        help="File CSV output. Default: <folder>/out/duplicate_candidates.csv",
-    )
-    return parser.parse_args()
-
-
-def main() -> int:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    args = _parse_args()
-    out_path = args.out or args.folder / "out" / "duplicate_candidates.csv"
-    candidates = find_duplicate_candidates(args.folder.rglob("*"), args.folder)
-    write_duplicate_candidates_csv(candidates, out_path)
-    LOGGER.info(
-        "Trovati %s candidati duplicati. Output in %s", len(candidates), out_path
-    )
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

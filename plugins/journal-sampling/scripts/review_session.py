@@ -327,6 +327,35 @@ def _clean_text(value: Any) -> str:
     return " ".join(str(value or "").strip().split())
 
 
+def _portable_client_engagement(
+    client_engagement: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Remove runtime-only absolute paths from a persisted v2 context."""
+
+    if (
+        not isinstance(client_engagement, dict)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return client_engagement
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
 def _rows(frame: Any) -> list[dict[str, Any]]:
     if frame is None:
         return []
@@ -661,25 +690,59 @@ def write_run_intake(
     language: str,
     declared_output_dir: Path | None = None,
     client_engagement: dict[str, Any] | None = None,
+    run_id: str | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic sample selection."""
 
     language_code = _normalize_language(language)
     copy = _review_copy(language_code)
-    run_id = _run_id(normalized_csv)
+    context_run_id = (
+        client_engagement.get("run_id")
+        if isinstance(client_engagement, dict)
+        and isinstance(client_engagement.get("run_id"), str)
+        else None
+    )
+    active_run_id = run_id.strip() if isinstance(run_id, str) else ""
+    if not active_run_id:
+        active_run_id = context_run_id or _run_id(normalized_csv)
+    if context_run_id and active_run_id != context_run_id:
+        raise ValueError("Run intake ID does not match the client engagement run.")
+    run_root_value = (
+        client_engagement.get("run_root")
+        if isinstance(client_engagement, dict)
+        else None
+    )
+
+    def run_reference(path_value: Path) -> str:
+        if not isinstance(run_root_value, str) or not run_root_value.strip():
+            return path_value.as_posix()
+        run_root = Path(run_root_value).expanduser().resolve()
+        try:
+            relative = path_value.expanduser().resolve().relative_to(run_root)
+        except ValueError as exc:
+            raise ValueError("Journal Sampling path is outside the run root.") from exc
+        if not relative.parts:
+            raise ValueError("Journal Sampling path must identify a run artifact.")
+        return relative.as_posix()
+
+    normalized_csv_ref = run_reference(normalized_csv)
+    output_ref = run_reference(declared_output_dir or output_dir)
+    managed_run = isinstance(run_root_value, str) and bool(run_root_value.strip())
+    persisted_client_engagement = _portable_client_engagement(client_engagement)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
-        "run_id": run_id,
-        "client_engagement": client_engagement,
+        "run_id": active_run_id,
+        "client_engagement": persisted_client_engagement,
+        **({"path_reference": "run_root_relative"} if managed_run else {}),
         "created_at": _utc_now(),
         "language": language_code,
-        "input_paths": [normalized_csv.as_posix()],
-        "output_dir": (declared_output_dir or output_dir).as_posix(),
+        "input_paths": [normalized_csv_ref],
+        "output_dir": output_ref,
         "inferred_task": "journal_sampling_review_payload",
         "assumptions": {
-            "normalized_csv": normalized_csv.as_posix(),
+            "normalized_csv": normalized_csv_ref,
             "method": method,
             "requested_size": size,
             "seed": 42 if method.strip().lower() == "random" else None,
@@ -699,7 +762,7 @@ def write_run_intake(
             "note": copy["dependency_note"],
         },
         "data_posture": {
-            "local_files_read": [normalized_csv.as_posix()],
+            "local_files_read": [normalized_csv_ref],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
@@ -709,7 +772,7 @@ def write_run_intake(
         "status": "ready_for_sampling_run",
     }
     return RunIntakeResult(
-        run_id=run_id,
+        run_id=active_run_id,
         path=_write_json(output_dir / "run_intake.json", payload),
     )
 
@@ -725,6 +788,8 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
 
+    persisted_client_engagement = _portable_client_engagement(client_engagement)
+
     language = _normalize_language(audit.get("language"))
     copy = _review_copy(language)
     sample_rows = _rows(sample)
@@ -738,7 +803,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
-        "client_engagement": client_engagement,
+        "client_engagement": persisted_client_engagement,
         "created_at": _utc_now(),
         "language": language,
         "source_paths": [audit.get("normalized_csv")],
@@ -828,7 +893,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
-            "client_engagement": client_engagement,
+            "client_engagement": persisted_client_engagement,
             "completed_at": _utc_now(),
             "outputs": outputs,
             "caveats": list(copy["caveats"]),

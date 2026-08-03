@@ -68,6 +68,10 @@ from collections import defaultdict
 from pathlib import Path
 
 from report_builder_core import review_numeric_measure_columns, write_json
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["main"]
 
@@ -133,6 +137,7 @@ def main() -> int:
     parser.add_argument("--inspection", type=Path, required=True)
     parser.add_argument("--recipe", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--section", required=True)
     parser.add_argument(
         "--header-row",
@@ -195,6 +200,15 @@ def main() -> int:
         help="Explicit sign treatment for included source cells.",
     )
     args = parser.parse_args()
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="report-builder",
+            input_paths=[args.inspection, args.recipe],
+            output_dir=args.output,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     included_columns = (
         []
         if args.columns.strip().lower() == "none"

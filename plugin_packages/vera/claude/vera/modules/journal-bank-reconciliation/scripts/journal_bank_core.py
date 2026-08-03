@@ -5780,6 +5780,8 @@ def run_reconciliation(
     date_window_days: int = 7,
     language: object | None = None,
     document_language: object | None = None,
+    client_run_id: str | None = None,
+    client_run_root: Path | None = None,
 ) -> ReconciliationRunResult:
     """Run exact, policy-bound journal-to-bank reconciliation."""
 
@@ -5795,6 +5797,23 @@ def run_reconciliation(
         recipe, language=language, document_language=document_language
     )
     output_dir.mkdir(parents=True, exist_ok=True)
+    managed_run_root = (
+        client_run_root.expanduser().resolve() if client_run_root is not None else None
+    )
+
+    def output_reference(path: Path) -> str:
+        if managed_run_root is None:
+            return path.as_posix()
+        try:
+            relative = path.expanduser().resolve().relative_to(managed_run_root)
+        except ValueError as exc:
+            raise ValueError(
+                "Journal-Bank output leaves the managed customer run."
+            ) from exc
+        if not relative.parts:
+            raise ValueError("Journal-Bank output must identify a run artifact.")
+        return relative.as_posix()
+
     run_intake = write_run_intake(
         output_dir,
         bank_path=bank_path,
@@ -5805,7 +5824,16 @@ def run_reconciliation(
         document_language=languages["document_language"],
         tolerance=tolerance_text,
         date_window_days=date_window_days,
+        client_run_id=client_run_id,
+        client_run_root=client_run_root,
     )
+    recorded_intake = read_json(run_intake.path)
+    recorded_assumptions = recorded_intake.get("assumptions")
+    if not isinstance(recorded_assumptions, dict):
+        raise ValueError("Journal-Bank run intake assumptions are unavailable")
+    recorded_bank_path = str(recorded_assumptions["bank_path"])
+    recorded_journal_path = str(recorded_assumptions["journal_path"])
+    recorded_sample_path = recorded_assumptions.get("sample_path")
     initial_source_receipts, source_refs = _source_artifact_receipts(
         (("bank", bank_path), ("journal", journal_path), ("sample", sample_path))
     )
@@ -6037,9 +6065,9 @@ def run_reconciliation(
             "status": "blocked",
             "block_code": blocked_code,
             "block_detail": blocked_detail,
-            "bank_path": bank_path.as_posix(),
-            "journal_path": journal_path.as_posix(),
-            "sample_path": sample_path.as_posix() if sample_path else None,
+            "bank_path": recorded_bank_path,
+            "journal_path": recorded_journal_path,
+            "sample_path": recorded_sample_path,
             "sample_movement_count": len(sample_movements),
             "sample_diagnostics": sample_diagnostics,
             "source_snapshot_changed": bool(changed_sources),
@@ -6070,7 +6098,7 @@ def run_reconciliation(
             "relationship_residual_row_count": 0,
             "diagnostics": {"bank": bank_diag, "journal": journal_diag},
             "outputs": {
-                key: value.as_posix()
+                key: output_reference(value)
                 for key, value in paths.items()
                 if key != "material_value_ledger_json"
             },
@@ -6095,10 +6123,12 @@ def run_reconciliation(
         )
         blocked_audit["review_session"] = {
             "run_id": review_session.run_id,
-            "run_intake_path": str(review_session.run_intake_path),
-            "review_payload_path": str(review_session.review_payload_path),
-            "ui_decisions_path": str(review_session.ui_decisions_path),
-            "final_artifacts_path": str(review_session.final_artifacts_path),
+            "run_intake_path": output_reference(review_session.run_intake_path),
+            "review_payload_path": output_reference(review_session.review_payload_path),
+            "ui_decisions_path": output_reference(review_session.ui_decisions_path),
+            "final_artifacts_path": output_reference(
+                review_session.final_artifacts_path
+            ),
             "review_item_count": review_session.review_item_count,
         }
         write_assurance_json(paths["audit_json"], blocked_audit)
@@ -6199,9 +6229,9 @@ def run_reconciliation(
             if reconciliation_status == "passed"
             else "completed_with_unresolved_reconciliation"
         ),
-        "bank_path": bank_path.as_posix(),
-        "journal_path": journal_path.as_posix(),
-        "sample_path": sample_path.as_posix() if sample_path else None,
+        "bank_path": recorded_bank_path,
+        "journal_path": recorded_journal_path,
+        "sample_path": recorded_sample_path,
         "sample_movement_count": len(sample_movements),
         "sample_diagnostics": sample_diagnostics,
         "source_snapshot_changed": bool(changed_sources),
@@ -6227,7 +6257,7 @@ def run_reconciliation(
         "relationship_within_policy_tolerance": bool(relationship_ledger["balanced"]),
         "relationship_residual_row_count": relationship_residuals.height,
         "diagnostics": {"bank": bank_diag, "journal": journal_diag},
-        "outputs": {key: value.as_posix() for key, value in paths.items()},
+        "outputs": {key: output_reference(value) for key, value in paths.items()},
     }
     write_json(paths["audit_json"], audit)
     _write_review_notes(paths["review_notes_md"], audit)
@@ -6256,10 +6286,10 @@ def run_reconciliation(
     )
     audit["review_session"] = {
         "run_id": review_session.run_id,
-        "run_intake_path": str(review_session.run_intake_path),
-        "review_payload_path": str(review_session.review_payload_path),
-        "ui_decisions_path": str(review_session.ui_decisions_path),
-        "final_artifacts_path": str(review_session.final_artifacts_path),
+        "run_intake_path": output_reference(review_session.run_intake_path),
+        "review_payload_path": output_reference(review_session.review_payload_path),
+        "ui_decisions_path": output_reference(review_session.ui_decisions_path),
+        "final_artifacts_path": output_reference(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }
     write_json(paths["audit_json"], audit)

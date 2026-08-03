@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import argparse
 import csv
 import hashlib
 import importlib.util
@@ -18,7 +17,7 @@ from pathlib import Path
 from typing import Iterable, Sequence
 from xml.etree import ElementTree as ET
 
-from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
+from managed_ocr_runtime import activate_ocr_runtime
 from scan_folder import FileRecord
 
 __all__ = [
@@ -1464,60 +1463,3 @@ def write_extraction_report(
             )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path
-
-
-def _parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(
-        description="Estrae testo locale da PDF e immagini di una cartella cliente."
-    )
-    parser.add_argument("folder", type=Path, help="Cartella cliente.")
-    parser.add_argument("--out", type=Path, default=None, help="Cartella output.")
-    parser.add_argument("--no-ocr", action="store_true", help="Disabilita OCR.")
-    parser.add_argument("--lang", default="it", help="Lingua OCR Paddle.")
-    parser.add_argument(
-        "--language",
-        choices=("it", "en", "fr", "de", "es"),
-        default="it",
-        help="Lingua del report di estrazione.",
-    )
-    parser.add_argument(
-        "--max-pages",
-        type=int,
-        default=50,
-        help="Pagine massime per PDF.",
-    )
-    return parser.parse_args()
-
-
-def main() -> int:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
-    args = _parse_args()
-    from check_environment import (
-        OCR_DEPENDENCIES,
-        check_dependencies,
-        input_requires_ocr,
-    )
-    from scan_folder import scan_folder
-
-    if not args.no_ocr and input_requires_ocr(args.folder):
-        _, missing = check_dependencies(require_ocr=True)
-        if any(dependency in OCR_DEPENDENCIES for dependency in missing):
-            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
-            return 1
-    records = scan_folder(args.folder, output_dir=args.out)
-    out_dir = args.out or args.folder / "out" / "extracted"
-    evidence = extract_documents(
-        records,
-        args.folder,
-        out_dir,
-        enable_ocr=not args.no_ocr,
-        lang=args.lang,
-        max_pages=args.max_pages,
-        language=args.language,
-    )
-    LOGGER.info("Estratti %s documenti in %s", len(evidence), out_dir)
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

@@ -5,11 +5,23 @@ description: Use when Vera must create a reviewed forward-looking sales Plan fro
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task is
-explicitly plugin packaging/release. For user-data runs, choose an output
-directory outside the repo, preferably a sibling `output/sales-plan-<run-id>`
-folder next to the user-provided input folder.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import the reviewed Actuals
+and case inputs, then call `prepare_studio_client_workflow` with workflow ID
+`sales-plan`. Pass the returned `client_engagement_path` as
+`--client-engagement` to preparation and execution. Use only the context's run
+folder; cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before preparation. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Vera Plan
 
@@ -135,8 +147,9 @@ undeclared packages.
 
 ```bash
 python scripts/run_plan.py \
-  --case <case.json> \
-  --output-dir <fresh-output-directory>
+  --case <client-run-output>/case.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/plan
 ```
 
 5. Stop on failed reconciliation or any unmatched scope, unsupported driver,

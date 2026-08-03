@@ -50,6 +50,16 @@
         "vera_assurance"
       ]
     },
+    "client-file-preparation": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "new-client": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "check-entries": {
       "module_roots": [
         "vera_assurance"
@@ -70,6 +80,11 @@
         "vera_assurance"
       ]
     },
+    "sales-plan": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "financial-analysis": {
       "module_roots": [
         "vera_assurance",
@@ -77,6 +92,26 @@
       ]
     },
     "report-builder": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "prompt-optimizer": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "deep-research-validator": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "previdenza-inps": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
+    "registro-imprese-sari": {
       "module_roots": [
         "vera_assurance"
       ]

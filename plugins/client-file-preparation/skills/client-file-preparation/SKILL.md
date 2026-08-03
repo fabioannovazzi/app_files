@@ -5,7 +5,27 @@ description: "Use as New Client's first file-preparation phase for Italy, Geneva
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Every run is attached to one Studio Archive client and engagement. Identify or
+create the client, create or select the engagement, import each source into its
+managed input folder, then call `prepare_studio_client_workflow` with workflow
+ID `client-file-preparation`. Pass the returned `client_engagement_path` as
+`--client-engagement` to the workflow entry points.
+
+Use the context's `output_dir` or a workflow-defined child of it. Never invent
+a sibling output folder. The entry points reject a context for another
+workflow, input outside the selected engagement, and output outside that run.
+
+Start the prepared run before the first helper. After the last output write,
+call `finalize_studio_client_workflow` and declare every physical file with a
+stable artifact ID, relative path, concrete purpose, audience, and media type.
+Review the closed declaration, then call `complete_studio_client_workflow`;
+record `failed` or explicitly cancel an abandoned run instead of treating a
+partial directory as a result.
 
 # New Client · File Preparation
 
@@ -89,10 +109,10 @@ content.
 
 Ask only what is needed. If not obvious, ask for:
 
-- customer folder;
+- exact Studio Archive client and engagement;
+- managed input folder containing the imported source snapshot;
 - jurisdiction or market when not obvious: Italy, Geneva, Zurich, UK, or mixed;
 - target year or tax campaign;
-- output folder, if not a sibling `output/client-file-preparation` folder next to `<cartella-cliente>`;
 - whether unreadable/protected files should be skipped or paused for user help.
 
 The default scope is full intake: inventory, formal checks, structured fiscal
@@ -108,9 +128,11 @@ Do not ask the user to edit JSON, YAML, or plugin files.
 
 For a beta user's first run, guide the work in this order:
 
-1. Confirm the input folder and target year/campaign.
-2. Confirm output folder only when not inferable. Use OCR automatically when available and relevant.
-3. Run `python scripts/check_dependencies.py --folder <cartella-cliente>` from the plugin directory before helper scripts.
+1. Resolve the exact client and engagement, import the sources, prepare the
+   `client-file-preparation` context, and confirm the target year/campaign.
+2. Use the context's managed input and output paths. Use OCR automatically when
+   available and relevant.
+3. Run `python scripts/check_dependencies.py --folder <managed-input-folder>` from the plugin directory before helper scripts.
 4. If OCR setup is required, ask for approval, perform the managed installation,
    and automatically retry as specified below.
 5. Run the deterministic intake script.
@@ -152,11 +174,12 @@ Load `references/workflow-reference.md` for beta-facing starter prompts and full
 
 ## What Codex Should Do
 
-1. Identify the customer folder and target year.
+1. Resolve the exact client and engagement, import the source snapshot into its
+   managed input folder, and confirm the target year.
 2. From the plugin root, check local dependencies:
 
 ```bash
-python scripts/check_dependencies.py --folder <cartella-cliente>
+python scripts/check_dependencies.py --folder <managed-input-folder>
 ```
 
 If core PDF dependencies are missing, stop and say that document reading is not
@@ -181,23 +204,22 @@ Do not describe scanned evidence as read when setup is declined or unsuccessful.
 3. Run the deterministic intake script from the plugin root:
 
 ```bash
-python scripts/build_file_preparation_outputs.py <cartella-cliente> \
+python scripts/build_file_preparation_outputs.py <managed-input-folder> \
+  --client-engagement <client_engagement_path> \
   --year <anno> \
   --jurisdiction <italy|geneva|zurich|uk|mixed> \
-  --language <it|en|fr|de|es> \
-  --out <cartella-output>
+  --language <it|en|fr|de|es>
 ```
 
 Use `--no-ocr` only when the user explicitly wants a text-only pass after
 declining managed OCR setup.
 
-If execution stops after producing partial files, rerun the same command with
-the same `--out` path. The script validates the original source hashes and run
-settings, then reuses completed document extractions whose text integrity still
-matches. It rejects changed sources, incompatible settings, unrelated
-directories, and completed runs instead of overwriting them. Without `--out`,
-the default output ID is stable for the source folder so the same safe resume
-path is found automatically.
+If execution stops after producing partial files, resume the same Studio
+Archive run and rerun the same command with the same context path. The script
+validates the original source hashes and run settings, then reuses completed
+document extractions whose text integrity still matches. It rejects changed
+sources, incompatible settings, unrelated directories, and completed runs
+instead of overwriting them.
 
 `review_payload.json` includes bounded excerpts from every readable document in
 the selected folder, fiscal-field evidence snippets, and previews of the

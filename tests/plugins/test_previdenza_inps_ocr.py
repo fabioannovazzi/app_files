@@ -5,10 +5,11 @@ import json
 import sys
 from pathlib import Path
 from types import ModuleType
-from typing import Any
+from typing import Any, Callable
 
 import pytest
 from pypdf import PdfWriter
+from pypdf.generic import DecodedStreamObject, DictionaryObject, NameObject
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "previdenza-inps"
@@ -40,14 +41,27 @@ def _write_blank_pdf(path: Path, *, page_count: int = 1) -> Path:
 
 
 def _write_text_pdf(path: Path, text: str) -> Path:
-    fitz = pytest.importorskip("fitz")
-    document = fitz.open()
-    try:
-        page = document.new_page()
-        page.insert_text((72, 72), text)
-        document.save(path)
-    finally:
-        document.close()
+    writer = PdfWriter()
+    page = writer.add_blank_page(width=200, height=200)
+    font = DictionaryObject(
+        {
+            NameObject("/Type"): NameObject("/Font"),
+            NameObject("/Subtype"): NameObject("/Type1"),
+            NameObject("/BaseFont"): NameObject("/Helvetica"),
+        }
+    )
+    page[NameObject("/Resources")] = DictionaryObject(
+        {
+            NameObject("/Font"): DictionaryObject(
+                {NameObject("/F1"): writer._add_object(font)}
+            )
+        }
+    )
+    stream = DecodedStreamObject()
+    stream.set_data(f"BT /F1 12 Tf 72 72 Td ({text}) Tj ET".encode("ascii"))
+    page[NameObject("/Contents")] = writer._add_object(stream)
+    with path.open("wb") as handle:
+        writer.write(handle)
     return path
 
 
@@ -203,6 +217,46 @@ def test_image_ocr_keeps_local_provenance_and_records_actual_network_use(
     assert result.inventory["ocr"]["network_used"] is True
 
 
+def test_standalone_extraction_preserves_explicit_external_ocr_paths(
+    tmp_path: Path, monkeypatch: Any
+) -> None:
+    case_core = _load_script("case_core")
+    input_dir = tmp_path / "input"
+    output_dir = tmp_path / "output"
+    input_dir.mkdir()
+    (input_dir / "pagina.png").write_bytes(b"synthetic-image")
+    cache_dir = tmp_path / "standalone-cache"
+    detection_dir = tmp_path / "standalone-detection-model"
+    recognition_dir = tmp_path / "standalone-recognition-model"
+    observed: list[dict[str, Any]] = []
+
+    def _ocr(_image_bytes: bytes, **kwargs: Any) -> dict[str, Any]:
+        observed.append(kwargs)
+        return _successful_ocr("Testo della scansione")
+
+    monkeypatch.setattr(case_core, "_run_local_ocr", _ocr)
+
+    result = case_core.extract_case_documents(
+        input_dir,
+        output_dir,
+        ocr_cache_dir=cache_dir,
+        ocr_detection_model_dir=detection_dir,
+        ocr_recognition_model_dir=recognition_dir,
+    )
+
+    assert result.inventory["readable_document_count"] == 1
+    assert observed == [
+        {
+            "language": "it",
+            "cache_dir": cache_dir,
+            "allow_model_download": False,
+            "detection_model_dir": detection_dir,
+            "recognition_model_dir": recognition_dir,
+            "allow_implicit_model_paths": True,
+        }
+    ]
+
+
 def test_multiframe_tiff_preserves_one_page_locator_per_frame(
     tmp_path: Path, monkeypatch: Any
 ) -> None:
@@ -264,13 +318,15 @@ def test_missing_local_ocr_models_is_an_explicit_nonfatal_limitation(
 
 
 def test_no_ocr_never_calls_adapter_and_records_disabled_posture(
-    tmp_path: Path, monkeypatch: Any
+    vera_workflow_workspace: Callable[[str], dict[str, Any]], monkeypatch: Any
 ) -> None:
     inventory_case = _load_script("inventory_case")
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "output"
-    input_dir.mkdir()
-    _write_blank_pdf(input_dir / "scansione.pdf")
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={"scansione.png": "synthetic-image"},
+    )
+    input_dir = Path(workspace["input_dir"])
+    output_dir = Path(workspace["output_dir"])
 
     original_extract = inventory_case.extract_case_documents
 
@@ -286,7 +342,14 @@ def test_no_ocr_never_calls_adapter_and_records_disabled_posture(
     monkeypatch.setattr(inventory_case, "extract_case_documents", _assert_ocr_disabled)
 
     exit_code = inventory_case.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+        [
+            str(input_dir),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--no-ocr",
+        ]
     )
 
     assert exit_code == 2
@@ -314,12 +377,13 @@ def test_ocr_optional_requirements_have_import_mappings() -> None:
 
 
 def test_model_download_route_choice_is_persisted_before_extraction(
-    tmp_path: Path, monkeypatch: Any
+    vera_workflow_workspace: Callable[[str], dict[str, Any]], monkeypatch: Any
 ) -> None:
     inventory_case = _load_script("inventory_case")
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "output"
-    input_dir.mkdir()
+    workspace = vera_workflow_workspace("previdenza-inps")
+    input_dir = Path(workspace["input_dir"])
+    output_dir = Path(workspace["output_dir"])
+    cache_dir = output_dir / "ocr" / "cache"
     observed_preflight: list[dict[str, Any]] = []
 
     def _fail_after_preflight(*_args: Any, **_kwargs: Any) -> Any:
@@ -335,7 +399,11 @@ def test_model_download_route_choice_is_persisted_before_extraction(
             str(input_dir),
             "--output-dir",
             str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
             "--allow-ocr-model-download",
+            "--ocr-cache-dir",
+            str(cache_dir),
         ]
     )
 
