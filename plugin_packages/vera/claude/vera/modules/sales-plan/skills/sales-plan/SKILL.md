@@ -49,11 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task is
-explicitly plugin packaging/release. For user-data runs, choose an output
-directory outside the repo, preferably a sibling `output/sales-plan-<run-id>`
-folder next to the user-provided input folder.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Vera Plan
 
@@ -179,8 +188,9 @@ undeclared packages.
 
 ```bash
 python scripts/run_plan.py \
-  --case <case.json> \
-  --output-dir <fresh-output-directory>
+  --case <client-run-output>/case.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/plan
 ```
 
 5. Stop on failed reconciliation or any unmatched scope, unsupported driver,

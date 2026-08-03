@@ -49,7 +49,9 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive client/engagement run path described below; never
+choose a sibling output folder.
 
 # Audit Reconciliation
 
@@ -198,15 +200,17 @@ review items, on the workbook's `Source processing issues` sheet, and in
 ## Client boundary in Cowork
 
 Cowork v1 does not package the local Studio Archive index or its
-`get_studio_client_folder` tool, so it cannot issue a new client-folder binding.
+`get_studio_client_folder` tool, so it cannot prepare or start a customer-folder
+run or issue its workflow context.
 For connected-folder work, select and retain one explicit client folder and do
 not mix material from another client. Run `scripts/raw_input_runner.py` only
-when a digest-valid `vera.studio_client_folder.v2` binding was supplied by a
-compatible Vera Claude installation and its local paths are available in the
-current workspace. Otherwise continue with the useful connected-folder review
-and preparation that Cowork can perform, and state that the sealed local raw
-run remains pending. Never invent a scope ID or binding from a name or document
-content.
+when a compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for Audit Reconciliation and its complete
+customer-folder ledger paths are available in the current workspace. Otherwise
+continue with the useful connected-folder review and preparation that Cowork
+can perform, and state that the sealed local raw run remains pending. Never
+invent a client, engagement, run, receipt, or lifecycle state from a name or
+document content.
 
 ## Cowork review handoff
 
@@ -297,12 +301,25 @@ For generic runs, pass `scope_year` and `cutoff_date` through assumptions when t
 Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
-  CLI requires `--client-folder-binding`, `--engagement-id`, `--input-dir`,
-  `--workspace-root`, and `--assumptions-json`;
+  CLI requires the exact Studio Archive `--client-engagement` context and
+  `--assumptions-json`;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
 - `scripts/build_missing_evidence_requests.py`: post-run workbook of targeted missing-evidence requests that distinguishes evidence already acquired from the exact missing item per row, using localized operational labels instead of internal status/rule codes.
+
+Run every secondary helper with the same still-running portable context; each
+helper rejects an input or persistent output outside that run:
+
+```bash
+python -I -B scripts/audit_assurance.py \
+  --client-engagement <customer-run>/context.json \
+  validate-run-json <client-run-output>
+python scripts/build_review_sample.py <client-run-output>/riconciliazione_audit.xlsx \
+  --client-engagement <customer-run>/context.json
+python scripts/build_missing_evidence_requests.py <client-run-output>/riconciliazione_audit.xlsx \
+  --client-engagement <customer-run>/context.json
+```
 
 Normalization/matching and workpaper-output internals are retained source units
 loaded by the validated entrypoints; do not import or execute them directly.

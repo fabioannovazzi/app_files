@@ -253,6 +253,7 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
@@ -276,6 +277,7 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -435,6 +437,10 @@ function validateReviewPayload(inputArgs) {
   }
   const payload = {
     widget_type: "concordato_plan_review",
+    client_engagement:
+      typeof inputArgs.client_engagement === "string"
+        ? inputArgs.client_engagement
+        : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -1375,10 +1381,8 @@ function withGeneratedReviewOutputTransaction(
 // END GENERATED REVIEW OUTPUT TRANSACTION
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -1857,7 +1861,16 @@ function concordatoAssuranceRoots(outputDir, runIntake) {
   ) {
     throw new Error("Concordato assurance source root is unavailable.");
   }
-  const sourceRoot = path.resolve(runIntake.input_paths[0]);
+  const sourceRef = runIntake.input_paths[0];
+  const contextPath = concordatoClientEngagementPath(outputDir);
+  const sourceRoot = path.isAbsolute(sourceRef)
+    ? path.resolve(sourceRef)
+    : contextPath
+      ? path.resolve(path.dirname(contextPath), sourceRef)
+      : null;
+  if (!sourceRoot) {
+    throw new Error("Concordato assurance source root is unavailable.");
+  }
   const sourceStat = generatedReviewPathEntryStat(sourceRoot);
   if (
     !sourceStat ||
@@ -2434,8 +2447,22 @@ function finalizeConcordatoWorkingOutput(outputDir, phase) {
     "scripts",
     "finalize_output_closure.py",
   );
+  const clientEngagement = concordatoClientEngagementPath(outputDir);
+  if (!clientEngagement) {
+    throw new Error("Concordato customer-run context is unavailable.");
+  }
   return runConcordatoChild(
-    [script, "--output-dir", outputDir, "--phase", phase],
+    [
+      script,
+      "--output-dir",
+      outputDir,
+      "--client-engagement",
+      clientEngagement,
+      "--persistent-output-dir",
+      concordatoPersistentOutputDir(clientEngagement),
+      "--phase",
+      phase,
+    ],
     "finalize",
   );
 }
@@ -2477,8 +2504,20 @@ function replayPersistedReviewContext(inputArgs) {
     throw new Error("Caller final_artifacts does not match the persisted final artifacts");
   }
   const replayScript = path.join(PLUGIN_ROOT, "scripts", "replay_assurance.py");
+  const clientEngagement = concordatoClientEngagementPath(outputDir);
+  if (!clientEngagement) {
+    throw new Error("Concordato customer-run context is unavailable.");
+  }
   const replay = runConcordatoChild(
-    [replayScript, "--output-dir", outputDir],
+    [
+      replayScript,
+      "--output-dir",
+      outputDir,
+      "--client-engagement",
+      clientEngagement,
+      "--persistent-output-dir",
+      concordatoPersistentOutputDir(clientEngagement),
+    ],
     "replay",
   );
   if (!isPlainObject(replay) || replay.ok !== true) {
@@ -2884,6 +2923,10 @@ function workflowReviewTransactionOptions(kind, inputArgs, parentState) {
 function saveDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return saveDecisionPayloadWrites(inputArgs);
+  preflightClientWorkflowRun(
+    canonicalOutputDir,
+    inputArgs?.review_payload?.run_id,
+  );
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "save",
@@ -2980,7 +3023,47 @@ function saveDecisionPayloadWrites(inputArgs) {
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
   const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  if (!outputDir) return null;
+  if (path.isAbsolute(outputDir)) return path.resolve(outputDir);
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : "";
+  if (!contextValue || !path.isAbsolute(contextValue)) return null;
+  const runRoot = path.dirname(path.resolve(contextValue));
+  const resolved = path.resolve(runRoot, outputDir);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Concordato output reference leaves the customer run.");
+  }
+  return resolved;
+}
+
+function concordatoClientEngagementPath(outputDir) {
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    const contextStat = generatedReviewPathEntryStat(contextPath);
+    if (
+      contextStat &&
+      contextStat.isFile() &&
+      !contextStat.isSymbolicLink()
+    ) {
+      return contextPath;
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) return null;
+    candidate = parent;
+  }
+}
+
+function concordatoPersistentOutputDir(clientEngagement) {
+  return path.join(path.dirname(clientEngagement), "outputs");
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -3974,6 +4057,10 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 function applyDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return applyDecisionPayloadWrites(inputArgs);
+  preflightClientWorkflowRun(
+    canonicalOutputDir,
+    inputArgs?.review_payload?.run_id,
+  );
   const parentState = {};
   const workflowOptions = workflowReviewTransactionOptions(
     "apply",
@@ -4226,6 +4313,82 @@ function pythonExecutable() {
     return candidate;
   }
   return "python3";
+}
+
+const CLIENT_WORKFLOW_PREFLIGHT = String.raw`
+import json
+import sys
+from pathlib import Path
+
+plugin_root = Path(sys.argv[1]).resolve()
+output_dir = Path(sys.argv[2])
+workflow_id = sys.argv[3]
+candidates = (
+    plugin_root.parent / "_shared" / "vendor" / "modules",
+    plugin_root / "vendor" / "modules",
+    plugin_root.parent.parent / "vendor" / "modules",
+)
+for candidate in candidates:
+    if (candidate / "vera_assurance").is_dir():
+        sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+from vera_assurance import load_client_workflow_context_for_output
+
+context = load_client_workflow_context_for_output(
+    output_dir,
+    expected_workflow_id=workflow_id,
+)
+print(json.dumps({
+    "ok": True,
+    "schema_version": context["schema_version"],
+    "workflow_id": context["workflow_id"],
+    "run_id": context["run_id"],
+}, separators=(",", ":")))
+`;
+
+function preflightClientWorkflowRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  const completed = spawnSync(
+    pythonExecutable(),
+    [
+      "-I",
+      "-B",
+      "-c",
+      CLIENT_WORKFLOW_PREFLIGHT,
+      PLUGIN_ROOT,
+      outputDir,
+      "concordato-plan-review",
+    ],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error(
+      "Concordato persistence requires a running v2 customer-folder workflow run",
+    );
+  }
+  let result;
+  try {
+    result = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error(
+      "Concordato customer-run preflight returned an invalid result",
+    );
+  }
+  if (
+    !isPlainObject(result) ||
+    result.ok !== true ||
+    result.schema_version !== "vera.client_workflow_context.v2" ||
+    result.workflow_id !== "concordato-plan-review" ||
+    result.run_id !== expectedRunId
+  ) {
+    throw new Error(
+      "Concordato customer-run preflight returned an invalid result",
+    );
+  }
+  return result;
 }
 
 const CONCORDATO_CHILD_SUMMARY_DOCX =
@@ -4751,6 +4914,10 @@ function applyWorkflowSpecificReviewApplication(
     beforeChildImage,
   );
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const clientEngagement = concordatoClientEngagementPath(outputDir);
+  if (!clientEngagement) {
+    throw new Error("Concordato customer-run context is unavailable.");
+  }
   const childResult = runConcordatoChild(
     [
       scriptPath,
@@ -4760,6 +4927,10 @@ function applyWorkflowSpecificReviewApplication(
       appliedOutputPath,
       "--final-artifacts",
       finalArtifactsPath,
+      "--client-engagement",
+      clientEngagement,
+      "--persistent-output-dir",
+      concordatoPersistentOutputDir(clientEngagement),
     ],
     "apply",
   );

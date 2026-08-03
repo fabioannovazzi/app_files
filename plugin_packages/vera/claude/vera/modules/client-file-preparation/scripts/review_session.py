@@ -1170,6 +1170,7 @@ def write_run_intake(
     output_dir: Path,
     root: Path,
     *,
+    run_id: str | None = None,
     target_year: int | None,
     client_name: str,
     records: Sequence[FileRecord],
@@ -1179,10 +1180,11 @@ def write_run_intake(
     ocr_lang: str,
     jurisdiction: str,
     language: str,
+    run_root: Path | None = None,
 ) -> RunIntakeResult:
     """Write the intake contract as soon as folder scope is known."""
 
-    run_id = _run_id()
+    run_id = run_id or _run_id()
     data_posture_notes = {
         "it": [
             "Gli script esaminano localmente i file della cartella cliente e producono per l’interfaccia artefatti di review con anteprime limitate nelle dimensioni.",
@@ -1215,6 +1217,14 @@ def write_run_intake(
                 "es": "Cuando está activado o es necesario, el OCR lee los documentos locales antes de generar artefactos de revisión con vistas previas de tamaño limitado.",
             }[language]
         )
+    recorded_input = root.as_posix()
+    recorded_output = output_dir.as_posix()
+    path_reference = "absolute"
+    if run_root is not None:
+        normalized_run_root = run_root.expanduser().resolve()
+        recorded_input = root.relative_to(normalized_run_root).as_posix()
+        recorded_output = output_dir.relative_to(normalized_run_root).as_posix()
+        path_reference = "run_root_relative"
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
@@ -1223,8 +1233,9 @@ def write_run_intake(
         "created_at": _utc_now(),
         "language": language,
         "jurisdiction": jurisdiction,
-        "input_paths": [root.as_posix()],
-        "output_dir": output_dir.as_posix(),
+        "path_reference": path_reference,
+        "input_paths": [recorded_input],
+        "output_dir": recorded_output,
         "inferred_task": "first_customer_folder_intake",
         "assumptions": {
             "client_name": client_name,
@@ -1274,7 +1285,7 @@ def write_run_intake(
             ),
         },
         "data_posture": {
-            "local_files_read": [root.as_posix()],
+            "local_files_read": [recorded_input],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

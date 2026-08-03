@@ -114,6 +114,8 @@ except ImportError:  # pragma: no cover - direct script/importlib support
         validate_assurance_run,
     )
 
+from vera_assurance import load_client_workflow_context_for_output
+
 __all__ = [
     "apply_decisions",
     "build_session_payload",
@@ -1457,8 +1459,12 @@ def serve_review(
     """Serve the review UI on localhost and optionally open the system browser."""
 
     directory = _output_dir(output_dir)
-    build_session_payload(directory)
     safe_host = _validate_loopback_host(host)
+    load_client_workflow_context_for_output(
+        directory,
+        expected_workflow_id="audit-reconciliation",
+    )
+    build_session_payload(directory)
     httpd = ThreadingHTTPServer((safe_host, port), _handler(directory))
     actual_port = httpd.server_address[1]
     url = f"http://{safe_host}:{actual_port}/review"

@@ -218,6 +218,35 @@ def _clean_text(value: Any) -> str:
     return str(value or "").strip()
 
 
+def _portable_client_engagement(
+    client_engagement: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Remove runtime-only absolute paths from a persisted v2 context."""
+
+    if (
+        not isinstance(client_engagement, dict)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return client_engagement
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
 def _is_spanish(language: object) -> bool:
     return (
         str(language or "").strip().lower().replace("_", "-").split("-", 1)[0] == "es"
@@ -833,34 +862,64 @@ def write_run_intake(
 ) -> RunIntakeResult:
     """Write the run intake contract for review and replay."""
 
-    run_id = _run_id(journal)
+    run_id = (
+        str(client_engagement["run_id"])
+        if client_engagement is not None
+        else _run_id(journal)
+    )
     spanish = _is_spanish(language)
-    local_files_read = [
-        journal.as_posix(),
-        normalization_diagnostics_path.as_posix(),
-        pdf_path.as_posix(),
-    ]
+    run_root_value = (
+        client_engagement.get("run_root")
+        if isinstance(client_engagement, dict)
+        else None
+    )
+
+    def run_reference(path_value: Path) -> str:
+        if not isinstance(run_root_value, str) or not run_root_value.strip():
+            return path_value.as_posix()
+        run_root = Path(run_root_value).expanduser().resolve()
+        try:
+            relative = path_value.expanduser().resolve().relative_to(run_root)
+        except ValueError as exc:
+            raise ValueError("Check Entries path is outside the run root.") from exc
+        if not relative.parts:
+            raise ValueError("Check Entries path must identify a run artifact.")
+        return relative.as_posix()
+
+    journal_ref = run_reference(journal)
+    diagnostics_ref = run_reference(normalization_diagnostics_path)
+    pdf_ref = run_reference(pdf_path)
+    output_ref = run_reference(output_dir)
+    recipe_ref = (
+        run_reference(output_dir / "execution_recipe.json")
+        if recipe_path is not None
+        else None
+    )
+    local_files_read = [journal_ref, diagnostics_ref, pdf_ref]
     if recipe_path is not None:
-        local_files_read.append(recipe_path.as_posix())
+        local_files_read.append(recipe_ref)
+    managed_run = isinstance(run_root_value, str) and bool(run_root_value.strip())
+    persisted_client_engagement = _portable_client_engagement(client_engagement)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         **(
-            {"client_engagement": client_engagement}
+            {"client_engagement": persisted_client_engagement}
             if client_engagement is not None
             else {}
         ),
         "run_id": run_id,
+        **({"path_reference": "run_root_relative"} if managed_run else {}),
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
         "input_paths": [
-            journal.as_posix(),
-            normalization_diagnostics_path.as_posix(),
-            pdf_path.as_posix(),
+            journal_ref,
+            diagnostics_ref,
+            pdf_ref,
         ],
-        "output_dir": output_dir.as_posix(),
+        "output_dir": output_ref,
         "inferred_task": "journal_entry_support_check",
         "assumptions": {
             "amount_tolerance": amount_tolerance,
@@ -872,10 +931,8 @@ def write_run_intake(
             "pdf_count": pdf_count,
             "invoice_count": invoice_count,
             "connector_name": connector_name,
-            "recipe_path": recipe_path.as_posix() if recipe_path else None,
-            "normalization_diagnostics_path": (
-                normalization_diagnostics_path.as_posix()
-            ),
+            "recipe_path": recipe_ref,
+            "normalization_diagnostics_path": diagnostics_ref,
         },
         "unresolved_questions": [
             {
@@ -961,6 +1018,8 @@ def write_review_session_artifacts(
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact index."""
 
+    persisted_client_engagement = _portable_client_engagement(client_engagement)
+
     status_counts = _status_counts(result_rows)
     items: list[dict[str, Any]] = []
     items.extend(_mapping_items(mapping, language))
@@ -973,7 +1032,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         **(
-            {"client_engagement": client_engagement}
+            {"client_engagement": persisted_client_engagement}
             if client_engagement is not None
             else {}
         ),
@@ -1051,7 +1110,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             **(
-                {"client_engagement": client_engagement}
+                {"client_engagement": persisted_client_engagement}
                 if client_engagement is not None
                 else {}
             ),
@@ -1097,7 +1156,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             **(
-                {"client_engagement": client_engagement}
+                {"client_engagement": persisted_client_engagement}
                 if client_engagement is not None
                 else {}
             ),

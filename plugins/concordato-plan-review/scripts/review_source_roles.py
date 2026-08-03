@@ -75,6 +75,10 @@ from concordato_plan_core import (
     review_source_roles,
     write_json,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -110,9 +114,20 @@ def main() -> int:
     parser.add_argument("inspection_dir", type=Path)
     parser.add_argument("decisions", type=Path)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args()
     configure_logging(args.verbose)
+
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="concordato-plan-review",
+            input_paths=[args.inspection_dir, args.decisions],
+            output_dir=args.output,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
 
     inventory = _read_json(args.inspection_dir / "inventory.json")
     audit = _read_json(args.inspection_dir / "run_audit.json")

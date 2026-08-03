@@ -53,6 +53,7 @@ from vera_assurance import (  # noqa: E402
     canonical_json_sha256,
     decimal_text,
     file_snapshot,
+    load_client_engagement_context_file,
     parse_canonical_decimal,
     parse_localized_decimal,
     validate_artifact_receipt,
@@ -368,8 +369,10 @@ def load_client_engagement_context(path: Path) -> dict[str, Any]:
     """Load one exact client workflow context created by Studio Archive."""
 
     try:
-        payload = read_json(path.expanduser().resolve(strict=True))
-        return validate_client_engagement_context(payload)
+        return load_client_engagement_context_file(
+            path.expanduser().resolve(strict=True),
+            expected_workflow_id="journal-sampling",
+        )
     except (OSError, ValueError) as exc:
         raise ValueError(f"Client engagement context is invalid: {exc}") from exc
 
@@ -380,6 +383,145 @@ def _is_path_within(path: Path, parent: Path) -> bool:
     except ValueError:
         return False
     return True
+
+
+def _managed_run_reference(
+    path_value: Path,
+    client_engagement: Mapping[str, Any] | None,
+) -> str:
+    """Persist a managed artifact beneath its run root without folder identity."""
+
+    if client_engagement is None:
+        return path_value.as_posix()
+    run_root_value = client_engagement.get("run_root")
+    if not isinstance(run_root_value, str) or not run_root_value.strip():
+        return path_value.as_posix()
+    run_root = Path(run_root_value).expanduser().resolve()
+    resolved = path_value.expanduser().resolve()
+    try:
+        relative = resolved.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError("Journal Sampling path is outside the run root.") from exc
+    if not relative.parts or ".." in relative.parts:
+        raise ValueError("Journal Sampling path must identify a run artifact.")
+    return relative.as_posix()
+
+
+def _portable_client_engagement_context(
+    client_engagement: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Return the path-free identity persisted in managed workflow artifacts."""
+
+    if (
+        not isinstance(client_engagement, Mapping)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return (
+            dict(client_engagement) if isinstance(client_engagement, Mapping) else None
+        )
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
+def _current_journal_context(
+    anchor: Path,
+    persisted_context: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Load the current Journal Sampling run context from the renamed tree."""
+
+    if persisted_context.get("schema_version") != "vera.client_workflow_context.v2":
+        raise ValueError("Journal Sampling portable context is unavailable.")
+    engagement_id = persisted_context.get("engagement_id")
+    run_id = persisted_context.get("run_id")
+    if not isinstance(engagement_id, str) or not isinstance(run_id, str):
+        raise ValueError("Journal Sampling portable context identity is invalid.")
+    resolved_anchor = anchor.expanduser().resolve()
+    candidates: list[Path] = []
+    for candidate in (resolved_anchor, *resolved_anchor.parents):
+        direct = candidate / "context.json"
+        if direct.is_file() and not direct.is_symlink():
+            candidates.append(direct)
+        if candidate.name == "Vera":
+            candidates.append(
+                candidate
+                / "engagements"
+                / engagement_id
+                / "runs"
+                / run_id
+                / "context.json"
+            )
+    current: dict[str, Any] | None = None
+    for context_path in candidates:
+        if not context_path.is_file() or context_path.is_symlink():
+            continue
+        try:
+            candidate_context = load_client_engagement_context_file(
+                context_path,
+                expected_workflow_id="journal-sampling",
+                allowed_statuses=("running", "ready_for_review", "completed"),
+            )
+        except (OSError, ValueError):
+            continue
+        if (
+            candidate_context.get("engagement_id") == engagement_id
+            and candidate_context.get("run_id") == run_id
+            and candidate_context.get("client_id") == persisted_context.get("client_id")
+        ):
+            current = candidate_context
+            break
+    if current is None:
+        raise ValueError(
+            "Journal Sampling current customer-run context is unavailable."
+        )
+    return current
+
+
+def _resolve_normalization_reference(
+    anchor: Path,
+    diagnostics: Mapping[str, Any],
+    value: object,
+    *,
+    label: str,
+) -> Path:
+    """Resolve one sealed normalization reference through current run authority."""
+
+    if not isinstance(value, str) or not value.strip() or value != value.strip():
+        raise ValueError(f"{label} is unavailable.")
+    reference = Path(value)
+    if diagnostics.get("path_reference") != "run_root_relative":
+        if not reference.is_absolute() or reference.resolve() != reference:
+            raise ValueError(f"{label} is not canonical.")
+        return reference
+    if (
+        reference.is_absolute()
+        or ".." in reference.parts
+        or reference.as_posix() != value
+    ):
+        raise ValueError(f"{label} leaves the Journal Sampling run.")
+    persisted_context = diagnostics.get("client_engagement")
+    if not isinstance(persisted_context, Mapping):
+        raise ValueError("Journal Sampling portable context is unavailable.")
+    current_context = _current_journal_context(anchor, persisted_context)
+    run_root = Path(str(current_context["run_root"])).expanduser().resolve()
+    resolved = (run_root / reference).resolve()
+    if not _is_path_within(resolved, run_root) or resolved == run_root:
+        raise ValueError(f"{label} leaves the Journal Sampling run.")
+    return resolved
 
 
 def _validated_client_normalization_stage(
@@ -397,9 +539,20 @@ def _validated_client_normalization_stage(
     if context["workflow_id"] != "journal-sampling":
         raise ValueError("Client engagement is not for Journal Sampling.")
     resolved_input = input_path.expanduser().resolve(strict=True)
-    input_root = Path(context["input_dir"]).resolve(strict=True)
-    if not _is_path_within(resolved_input, input_root):
-        raise ValueError("Journal input is outside the selected client engagement.")
+    if context["schema_version"] == "vera.client_workflow_context.v2":
+        journal_inputs = {
+            Path(item["path"]).resolve(strict=True)
+            for item in context["input_bindings"]
+            if item["kind"] == "import" and item["role"] == "journal"
+        }
+        if journal_inputs != {resolved_input}:
+            raise ValueError(
+                "Journal input is not the run's one exact journal receipt."
+            )
+    else:
+        input_root = Path(context["input_dir"]).resolve(strict=True)
+        if not _is_path_within(resolved_input, input_root):
+            raise ValueError("Journal input is outside the selected client engagement.")
     expected_output = Path(context["output_dir"]) / "normalization"
     if output_dir.expanduser().resolve() != expected_output.resolve():
         raise ValueError(
@@ -435,7 +588,22 @@ def _validated_client_sample_stage(
     if output_dir.expanduser().resolve() != expected_output.resolve():
         raise ValueError("Sample output does not match the client engagement.")
     diagnostics = read_json(expected_csv.parent / "normalization_diagnostics.json")
-    if diagnostics.get("client_engagement") != context:
+    diagnostics_context = diagnostics.get("client_engagement")
+    if not isinstance(diagnostics_context, Mapping):
+        raise ValueError("Normalized journal client engagement is missing or stale.")
+    try:
+        normalized_diagnostics_context = validate_client_engagement_context(
+            diagnostics_context
+        )
+    except ValueError as exc:
+        raise ValueError(
+            "Normalized journal client engagement is missing or stale."
+        ) from exc
+    stable_keys = ("engagement_id", "workflow_id", "run_id", "content_sha256")
+    if any(
+        normalized_diagnostics_context.get(key) != context.get(key)
+        for key in stable_keys
+    ):
         raise ValueError("Normalized journal client engagement is missing or stale.")
     return context
 
@@ -3147,7 +3315,9 @@ def inspect_path(
             {
                 "files": inspections,
                 "total_rows": total_rows,
-                "client_engagement": normalized_client_engagement,
+                "client_engagement": _portable_client_engagement_context(
+                    normalized_client_engagement
+                ),
                 **languages,
                 "qualification_review_payload": "qualification_review_payload.json",
             },
@@ -3413,11 +3583,41 @@ def normalize_path(
         output_dir / "qualification_review_payload.json",
         review_payload,
     )
+    managed_run = (
+        isinstance(normalized_client_engagement, Mapping)
+        and isinstance(normalized_client_engagement.get("run_root"), str)
+        and bool(str(normalized_client_engagement["run_root"]).strip())
+    )
+    input_reference = _managed_run_reference(
+        resolved_input,
+        normalized_client_engagement,
+    )
+    source_root_reference = _managed_run_reference(
+        source_root,
+        normalized_client_engagement,
+    )
+    recipe_root_reference = (
+        _managed_run_reference(output_dir, normalized_client_engagement)
+        if captured_recipe_path is not None
+        else ""
+    )
+    recipe_source_reference = (
+        _managed_run_reference(recipe_source_path, normalized_client_engagement)
+        if recipe_source_path is not None
+        else ""
+    )
+    output_csv_reference = _managed_run_reference(
+        csv_path,
+        normalized_client_engagement,
+    )
     diagnostics_payload = {
         "schema_version": NORMALIZATION_SCHEMA_VERSION,
-        "client_engagement": normalized_client_engagement,
-        "input": resolved_input.as_posix(),
-        "source_root": source_root.as_posix(),
+        "client_engagement": _portable_client_engagement_context(
+            normalized_client_engagement
+        ),
+        **({"path_reference": "run_root_relative"} if managed_run else {}),
+        "input": input_reference,
+        "source_root": source_root_reference,
         "source_receipts": source_receipts,
         "normalization_recipe_path": (
             captured_recipe_path.relative_to(output_dir).as_posix()
@@ -3425,17 +3625,17 @@ def normalize_path(
             else ""
         ),
         "normalization_recipe_root": (
-            output_dir.as_posix() if captured_recipe_path is not None else ""
+            recipe_root_reference if captured_recipe_path is not None else ""
         ),
         "normalization_recipe_receipt": recipe_receipt,
         "normalization_recipe_source_path": (
-            recipe_source_path.as_posix() if recipe_source_path is not None else ""
+            recipe_source_reference if recipe_source_path is not None else ""
         ),
         "normalization_recipe_source_receipt": recipe_source_receipt,
         "row_count": frame.height,
         **languages,
         "files": diagnostics,
-        "output_csv": csv_path.as_posix(),
+        "output_csv": output_csv_reference,
         "normalized_csv_receipt": csv_receipt,
         "implementation_receipts": implementation_receipts,
         "reviewed_decisions": "reviewed_decisions.json",
@@ -3456,10 +3656,13 @@ def normalize_path(
         frame=frame,
         diagnostics={
             "schema_version": NORMALIZATION_SCHEMA_VERSION,
-            "client_engagement": normalized_client_engagement,
+            "client_engagement": _portable_client_engagement_context(
+                normalized_client_engagement
+            ),
+            **({"path_reference": "run_root_relative"} if managed_run else {}),
             "files": diagnostics,
             "source_qualifications": qualifications,
-            "source_root": source_root.as_posix(),
+            "source_root": source_root_reference,
             "source_receipts": source_receipts,
             "normalization_recipe_path": (
                 captured_recipe_path.relative_to(output_dir).as_posix()
@@ -3467,11 +3670,11 @@ def normalize_path(
                 else ""
             ),
             "normalization_recipe_root": (
-                output_dir.as_posix() if captured_recipe_path is not None else ""
+                recipe_root_reference if captured_recipe_path is not None else ""
             ),
             "normalization_recipe_receipt": recipe_receipt,
             "normalization_recipe_source_path": (
-                recipe_source_path.as_posix() if recipe_source_path is not None else ""
+                recipe_source_reference if recipe_source_path is not None else ""
             ),
             "normalization_recipe_source_receipt": recipe_source_receipt,
             "population_status": "complete" if population_complete else "incomplete",
@@ -3627,9 +3830,12 @@ def _validated_normalization_recipe(
         raise ValueError(
             "Normalization diagnostics do not retain the exact reviewed recipe."
         )
-    recorded_root = Path(recipe_root_value).expanduser().resolve()
-    if recorded_root != normalization_root:
-        raise ValueError("Normalization recipe root does not close to the population.")
+    recorded_root = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        recipe_root_value,
+        label="Normalization recipe root",
+    )
     recipe_path = normalization_root / recipe_path_value
     _require_ordinary_single_link(recipe_path, label="Captured normalization recipe")
     validated_recipe_receipt = validate_artifact_receipt(
@@ -3653,9 +3859,18 @@ def _validated_normalization_recipe(
         or not isinstance(source_receipt, dict)
     ):
         raise ValueError("Normalization recipe source provenance is incomplete.")
-    source_path = Path(source_path_value).expanduser()
-    if not source_path.is_absolute() or source_path.resolve() != source_path:
-        raise ValueError("Normalization recipe source path is not canonical.")
+    recorded_source_path = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        source_path_value,
+        label="Normalization recipe source path",
+    )
+    try:
+        source_relative = recorded_source_path.relative_to(recorded_root)
+    except ValueError:
+        source_path = recorded_source_path
+    else:
+        source_path = normalization_root / source_relative
     _require_ordinary_single_link(source_path, label="Normalization recipe source")
     validated_source_receipt = validate_artifact_receipt(
         {"normalization_recipe_source": source_path.parent},
@@ -3689,6 +3904,7 @@ def _validated_normalization_recipe(
 
 _NORMALIZATION_REPLAY_FIELDS = (
     "schema_version",
+    "path_reference",
     "input",
     "source_root",
     "source_receipts",
@@ -3726,15 +3942,19 @@ def _fresh_normalization_replay(
         or not source_root_value.strip()
     ):
         raise ValueError("Normalization diagnostics do not retain the raw input path.")
-    source_input = Path(input_value).expanduser()
-    source_root = Path(source_root_value).expanduser()
-    if (
-        not source_input.is_absolute()
-        or source_input.resolve() != source_input
-        or not source_root.is_absolute()
-        or source_root.resolve() != source_root
-        or (source_input != source_root and source_input.parent != source_root)
-    ):
+    source_input = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        input_value,
+        label="Normalization raw input",
+    )
+    source_root = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        source_root_value,
+        label="Normalization source root",
+    )
+    if source_input != source_root and source_input.parent != source_root:
         raise ValueError("Normalization raw input provenance is not canonical.")
 
     original_bytes = normalized_csv.read_bytes()
@@ -3776,6 +3996,9 @@ def _fresh_normalization_replay(
             field: replay_diagnostics_payload.get(field)
             for field in _NORMALIZATION_REPLAY_FIELDS
         }
+        if diagnostics.get("path_reference") == "run_root_relative":
+            for field in ("path_reference", "input", "source_root"):
+                replay_projection[field] = original_projection[field]
         if replay_bytes != original_bytes:
             raise ValueError(
                 "Fresh normalization does not reproduce normalized_journal.csv."
@@ -3861,14 +4084,20 @@ def _validate_population_proof(
     ]
     if any(item["status"] != "qualified" for item in qualifications):
         raise ValueError("Every source must be qualified before sampling.")
-    source_root = diagnostics.get("source_root")
+    source_root_reference = diagnostics.get("source_root")
     source_receipts_raw = diagnostics.get("source_receipts")
-    if not isinstance(source_root, str) or not source_root.strip():
+    if not isinstance(source_root_reference, str) or not source_root_reference.strip():
         raise ValueError("Normalization diagnostics are missing the source root.")
     if not isinstance(source_receipts_raw, list) or not source_receipts_raw:
         raise ValueError("Normalization diagnostics are missing source receipts.")
+    source_root = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        source_root_reference,
+        label="Normalization source root",
+    )
     source_receipts = [
-        validate_artifact_receipt({"source": Path(source_root)}, receipt)
+        validate_artifact_receipt({"source": source_root}, receipt)
         for receipt in source_receipts_raw
         if isinstance(receipt, dict)
     ]
@@ -3899,7 +4128,7 @@ def _validate_population_proof(
     envelope = validate_assurance_envelope(
         read_json(normalized_csv.parent / envelope_name),
         artifact_roots={
-            "source": Path(source_root),
+            "source": source_root,
             "normalization": normalized_csv.parent,
             **_implementation_artifact_roots(),
         },
@@ -4008,9 +4237,23 @@ def _validate_population_proof(
         diagnostics,
         recipe_path=recipe_path,
     )
+    managed_paths = diagnostics.get("path_reference") == "run_root_relative"
+    output_csv_reference = diagnostics.get("output_csv")
+    if managed_paths:
+        if not isinstance(output_csv_reference, str) or not output_csv_reference:
+            raise ValueError("Normalization diagnostics output reference is missing.")
+        output_reference = Path(output_csv_reference)
+        diagnostics_reference = output_reference.with_name(
+            diagnostics_path.name
+        ).as_posix()
+        envelope_reference = output_reference.with_name(envelope_name).as_posix()
+    else:
+        diagnostics_reference = diagnostics_path.as_posix()
+        envelope_reference = (normalized_csv.parent / envelope_name).as_posix()
     return {
-        "diagnostics_path": diagnostics_path.as_posix(),
-        "source_root": source_root,
+        **({"path_reference": "run_root_relative"} if managed_paths else {}),
+        "diagnostics_path": diagnostics_reference,
+        "source_root": source_root_reference,
         "normalization_content_sha256": recorded_digest,
         "population_status": "complete",
         "normalized_csv_receipt": receipt,
@@ -4018,7 +4261,7 @@ def _validate_population_proof(
         "normalization_recipe_receipt": recipe_receipt,
         "normalization_recipe_source_receipt": recipe_source_receipt,
         "normalization_replay": normalization_replay,
-        "assurance_envelope_path": (normalized_csv.parent / envelope_name).as_posix(),
+        "assurance_envelope_path": envelope_reference,
         "assurance_envelope_content_sha256": envelope["content_sha256"],
         "assurance_gates": envelope["gate_register"],
         "qualification_ids": [
@@ -4287,10 +4530,15 @@ def validate_sample_material_value_ledger(
         raise ValueError("Sample material-value ledger cardinality does not close.")
     if normalized_csv is None:
         audit = read_json(output_dir / "sampling_audit.json")
+        run_intake = read_json(output_dir / "run_intake.json")
         normalized_value = audit.get("normalized_csv")
         if not isinstance(normalized_value, str) or not normalized_value:
             raise ValueError("Sampling audit is missing the normalized CSV path.")
-        normalized_csv = Path(normalized_value)
+        normalized_csv = _resolve_run_intake_reference(
+            output_dir,
+            run_intake,
+            normalized_value,
+        )
     normalized_frame = pl.read_csv(normalized_csv, infer_schema=False).with_row_index(
         "__prepared_row_number",
         offset=1,
@@ -4469,11 +4717,11 @@ def _validated_normalization_envelope(
     diagnostics_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     diagnostics = read_json(diagnostics_path)
-    source_root = diagnostics.get("source_root")
+    source_root_reference = diagnostics.get("source_root")
     envelope_name = diagnostics.get("assurance_envelope")
     if (
-        not isinstance(source_root, str)
-        or not source_root
+        not isinstance(source_root_reference, str)
+        or not source_root_reference
         or not isinstance(envelope_name, str)
         or not envelope_name
     ):
@@ -4482,10 +4730,16 @@ def _validated_normalization_envelope(
         normalized_csv,
         diagnostics,
     )
+    source_root = _resolve_normalization_reference(
+        normalized_csv,
+        diagnostics,
+        source_root_reference,
+        label="Normalization source root",
+    )
     envelope = validate_assurance_envelope(
         read_json(normalized_csv.parent / envelope_name),
         artifact_roots={
-            "source": Path(source_root),
+            "source": source_root,
             "normalization": normalized_csv.parent,
             **_implementation_artifact_roots(),
         },
@@ -4659,7 +4913,12 @@ def _build_sample_assurance(
             "The deterministic sample and native-value closure do not establish audit sufficiency or a professional conclusion."
         ],
         artifact_roots={
-            "source": Path(diagnostics["source_root"]),
+            "source": _resolve_normalization_reference(
+                normalized_csv,
+                diagnostics,
+                diagnostics["source_root"],
+                label="Normalization source root",
+            ),
             "normalization": normalized_csv.parent,
             "sample": output_dir,
             **_implementation_artifact_roots(),
@@ -5205,6 +5464,33 @@ def prepare_sample_review_successor(
     }
 
 
+def _resolve_run_intake_reference(
+    output_dir: Path,
+    run_intake: Mapping[str, Any],
+    value: object,
+) -> Path:
+    """Resolve one persisted run-root-relative reference from the current tree."""
+
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError("Sample run intake path reference is unavailable.")
+    reference = Path(value)
+    if reference.is_absolute():
+        return reference.expanduser().resolve()
+    if (
+        run_intake.get("path_reference") != "run_root_relative"
+        or ".." in reference.parts
+    ):
+        raise ValueError("Sample run intake path reference is invalid.")
+    candidate = output_dir.expanduser().resolve()
+    while True:
+        context_path = candidate / "context.json"
+        if context_path.is_file() and not context_path.is_symlink():
+            return (candidate / reference).resolve()
+        if candidate == candidate.parent:
+            raise ValueError("Sample customer-run context is unavailable.")
+        candidate = candidate.parent
+
+
 def _review_item_contract(
     output_dir: Path,
     audit: dict[str, Any],
@@ -5286,8 +5572,22 @@ def _review_item_contract(
     ):
         raise ValueError("Sample review run identity is stale.")
     assumptions = run_intake.get("assumptions")
+    normalized_csv_reference = (
+        _resolve_run_intake_reference(
+            output_dir,
+            run_intake,
+            assumptions.get("normalized_csv"),
+        ).as_posix()
+        if isinstance(assumptions, dict)
+        else None
+    )
+    audit_normalized_csv_reference = _resolve_run_intake_reference(
+        output_dir,
+        run_intake,
+        audit.get("normalized_csv"),
+    ).as_posix()
     if not isinstance(assumptions, dict) or {
-        "normalized_csv": assumptions.get("normalized_csv"),
+        "normalized_csv": normalized_csv_reference,
         "method": assumptions.get("method"),
         "requested_size": assumptions.get("requested_size"),
         "group_column": assumptions.get("group_column"),
@@ -5298,7 +5598,7 @@ def _review_item_contract(
         "min_abs": assumptions.get("min_abs"),
         "keyword": assumptions.get("keyword"),
     } != {
-        "normalized_csv": audit.get("normalized_csv"),
+        "normalized_csv": audit_normalized_csv_reference,
         "method": audit.get("method"),
         "requested_size": audit.get("requested_size"),
         "group_column": read_json(output_dir / "sample_reproducibility.json")
@@ -6299,7 +6599,12 @@ def _expected_successor_envelope(
             "The successor proves deterministic preparation and review persistence only; professional sufficiency, reporting, and publication remain withheld."
         ],
         artifact_roots={
-            "source": Path(diagnostics["source_root"]),
+            "source": _resolve_normalization_reference(
+                normalized_csv,
+                diagnostics,
+                diagnostics["source_root"],
+                label="Normalization source root",
+            ),
             "normalization": normalized_csv.parent,
             "sample": output_dir,
             **_implementation_artifact_roots(),
@@ -6385,9 +6690,15 @@ def finalize_sample_review_successor(
     population_proof = audit.get("population_proof")
     if not isinstance(population_proof, dict):
         raise ValueError("Sampling audit lost its population proof.")
-    normalized_csv = Path(str(audit["normalized_csv"])).expanduser().resolve()
-    diagnostics_path = (
-        Path(str(population_proof["diagnostics_path"])).expanduser().resolve()
+    normalized_csv = _resolve_run_intake_reference(
+        output_dir,
+        run_intake,
+        audit["normalized_csv"],
+    )
+    diagnostics_path = _resolve_run_intake_reference(
+        output_dir,
+        run_intake,
+        population_proof["diagnostics_path"],
     )
     _build_successor_assurance(
         output_dir,
@@ -6563,6 +6874,7 @@ def validate_sample_assurance(output_dir: Path) -> dict[str, Any]:
     output_dir = unresolved_output_dir.resolve()
     output_set = validate_sample_output_set(output_dir)
     audit = read_json(output_dir / "sampling_audit.json")
+    run_intake = read_json(output_dir / "run_intake.json")
     normalized_value = audit.get("normalized_csv")
     population_proof = audit.get("population_proof")
     if (
@@ -6571,11 +6883,19 @@ def validate_sample_assurance(output_dir: Path) -> dict[str, Any]:
         or not isinstance(population_proof, dict)
     ):
         raise ValueError("Sampling audit does not contain replayable population proof.")
-    normalized_csv = Path(normalized_value).expanduser().resolve()
+    normalized_csv = _resolve_run_intake_reference(
+        output_dir,
+        run_intake,
+        normalized_value,
+    )
     diagnostics_value = population_proof.get("diagnostics_path")
     if not isinstance(diagnostics_value, str) or not diagnostics_value:
         raise ValueError("Sampling audit is missing normalization diagnostics.")
-    diagnostics_path = Path(diagnostics_value).expanduser().resolve()
+    diagnostics_path = _resolve_run_intake_reference(
+        output_dir,
+        run_intake,
+        diagnostics_value,
+    )
     frame = pl.read_csv(normalized_csv, infer_schema=False)
     fresh_proof = _validate_population_proof(
         normalized_csv,
@@ -6594,7 +6914,12 @@ def validate_sample_assurance(output_dir: Path) -> dict[str, Any]:
     envelope = validate_assurance_envelope(
         read_json(output_dir / "sample_assurance_envelope.json"),
         artifact_roots={
-            "source": Path(diagnostics["source_root"]),
+            "source": _resolve_normalization_reference(
+                normalized_csv,
+                diagnostics,
+                diagnostics["source_root"],
+                label="Normalization source root",
+            ),
             "normalization": normalized_csv.parent,
             "sample": output_dir,
             **_implementation_artifact_roots(),
@@ -6767,7 +7092,18 @@ def run_sample(
             language=language_code,
             declared_output_dir=output_dir,
             client_engagement=normalized_client_engagement,
+            run_id=(
+                str(normalized_client_engagement["run_id"])
+                if normalized_client_engagement is not None
+                else None
+            ),
         )
+        run_intake_payload = read_json(run_intake.path)
+        normalized_csv_reference = run_intake_payload.get("assumptions", {}).get(
+            "normalized_csv"
+        )
+        if not isinstance(normalized_csv_reference, str):
+            raise ValueError("Sample run intake has no normalized CSV reference.")
         sample_csv = staging_dir / "journal_sample.csv"
         sample_xlsx = staging_dir / "journal_sample.xlsx"
         sample.write_csv(sample_csv)
@@ -6800,16 +7136,35 @@ def run_sample(
         )
         review_paths = {
             "run_id": run_intake.run_id,
-            "run_intake_path": (output_dir / "run_intake.json").as_posix(),
-            "review_payload_path": (output_dir / "review_payload.json").as_posix(),
-            "ui_decisions_path": (output_dir / "ui_decisions.json").as_posix(),
-            "final_artifacts_path": (output_dir / "final_artifacts.json").as_posix(),
+            "run_intake_path": _managed_run_reference(
+                output_dir / "run_intake.json",
+                normalized_client_engagement,
+            ),
+            "review_payload_path": _managed_run_reference(
+                output_dir / "review_payload.json",
+                normalized_client_engagement,
+            ),
+            "ui_decisions_path": _managed_run_reference(
+                output_dir / "ui_decisions.json",
+                normalized_client_engagement,
+            ),
+            "final_artifacts_path": _managed_run_reference(
+                output_dir / "final_artifacts.json",
+                normalized_client_engagement,
+            ),
             "review_item_count": sample.height + 4,
         }
         audit = {
             "schema_version": "journal_sampling.sample_audit.v1",
-            "client_engagement": normalized_client_engagement,
-            "normalized_csv": normalized_csv.as_posix(),
+            "client_engagement": _portable_client_engagement_context(
+                normalized_client_engagement
+            ),
+            **(
+                {"path_reference": "run_root_relative"}
+                if run_intake_payload.get("path_reference") == "run_root_relative"
+                else {}
+            ),
+            "normalized_csv": normalized_csv_reference,
             "language": language_code,
             "method": method_key,
             "seed": 42 if method_key == "random" else None,

@@ -12,9 +12,12 @@ from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     ensure_safe_output_dir,
     iso_now,
     load_json_object,
+    load_running_case_context,
+    require_case_artifact_run,
     safe_identifier,
     sha256_bytes,
     sha256_file,
@@ -27,9 +30,23 @@ __all__ = ["inventory_case", "main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+
 MAX_FILE_BYTES = 25_000_000
 TEXT_SUFFIXES = {".csv", ".html", ".json", ".md", ".txt", ".xml"}
 IMAGE_SUFFIXES = {".jpeg", ".jpg", ".png", ".tif", ".tiff", ".webp"}
+
+
+def _recorded_path(path: Path, *, run_root: Path | None) -> str:
+    """Return an absolute standalone path or a managed run-relative reference."""
+
+    resolved = path.expanduser().resolve()
+    if run_root is None:
+        return resolved.as_posix()
+    normalized_root = run_root.expanduser().resolve()
+    try:
+        return resolved.relative_to(normalized_root).as_posix()
+    except ValueError as exc:
+        raise ValueError("managed inventory path leaves the customer run") from exc
 
 
 def _update_run_intake(
@@ -39,6 +56,8 @@ def _update_run_intake(
     run_id: str,
     records: list[dict[str, Any]],
     use_ocr: bool,
+    client_engagement: Path | None,
+    run_root: Path | None,
 ) -> None:
     path = output_dir / "run_intake.json"
     if not path.exists():
@@ -46,13 +65,15 @@ def _update_run_intake(
     payload = load_json_object(path)
     if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
         raise ValueError("run_intake.json belongs to another run")
-    input_path = input_dir.resolve().as_posix()
+    input_path = _recorded_path(input_dir, run_root=run_root)
     input_paths = payload.get("input_paths")
     if not isinstance(input_paths, list):
         input_paths = []
     if input_path not in input_paths:
         input_paths.append(input_path)
     payload["input_paths"] = input_paths
+    if run_root is not None:
+        payload["path_reference"] = "run_root_relative"
     data_posture = payload.get("data_posture")
     if not isinstance(data_posture, dict):
         data_posture = {}
@@ -83,9 +104,15 @@ def _update_run_intake(
                 "scripts/inventory_case.py",
                 input_path,
                 "--output-dir",
-                output_dir.as_posix(),
-                "--run-id",
-                run_id,
+                _recorded_path(output_dir, run_root=run_root),
+                *(
+                    [
+                        "--client-engagement",
+                        _recorded_path(client_engagement, run_root=run_root),
+                    ]
+                    if client_engagement is not None
+                    else []
+                ),
                 *([] if use_ocr else ["--no-ocr"]),
             ],
             "execution_location": "local_python",
@@ -182,6 +209,8 @@ def inventory_case(
     use_ocr: bool = True,
     ocr_cache_dir: Path | None = None,
     allow_ocr_model_download: bool = False,
+    client_engagement: Path | None = None,
+    run_root: Path | None = None,
 ) -> dict[str, Any]:
     """Inventory regular local files without semantic legal classification."""
 
@@ -216,7 +245,7 @@ def inventory_case(
         record: dict[str, Any] = {
             "document_id": f"DOC-{index:03d}",
             "relative_path": relative,
-            "source_path": path.resolve().as_posix(),
+            "source_path": _recorded_path(path, run_root=run_root),
             "mime_type": mimetypes.guess_type(path.name)[0]
             or "application/octet-stream",
             "size_bytes": path.lstat().st_size,
@@ -288,8 +317,9 @@ def inventory_case(
         "plugin": PLUGIN_NAME,
         "run_id": run_id,
         "created_at": iso_now(),
-        "input_dir": input_dir.resolve().as_posix(),
-        "output_dir": safe_output.as_posix(),
+        "path_reference": ("run_root_relative" if run_root is not None else "absolute"),
+        "input_dir": _recorded_path(input_dir, run_root=run_root),
+        "output_dir": _recorded_path(safe_output, run_root=run_root),
         "status": status,
         "document_count": len(records),
         "documents": records,
@@ -312,6 +342,8 @@ def inventory_case(
         run_id=run_id,
         records=records,
         use_ocr=use_ocr,
+        client_engagement=client_engagement,
+        run_root=run_root,
     )
     return payload
 
@@ -322,23 +354,39 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input_dir", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--language", default="it")
     parser.add_argument("--no-ocr", action="store_true")
     parser.add_argument("--ocr-cache-dir", type=Path)
     parser.add_argument("--allow-ocr-model-download", action="store_true")
     args = parser.parse_args(argv)
     try:
+        context = load_running_case_context(
+            args.client_engagement,
+            input_paths=[args.input_dir],
+            output_dir=args.output_dir,
+            additional_output_paths=(
+                [args.ocr_cache_dir] if args.ocr_cache_dir is not None else []
+            ),
+        )
+        run_intake_path = args.output_dir / "run_intake.json"
+        if run_intake_path.exists():
+            require_case_artifact_run(
+                run_intake_path,
+                run_id=context["run_id"],
+            )
         payload = inventory_case(
             args.input_dir,
             args.output_dir,
-            run_id=args.run_id,
+            run_id=context["run_id"],
             language=args.language,
             use_ocr=not args.no_ocr,
             ocr_cache_dir=args.ocr_cache_dir,
             allow_ocr_model_download=args.allow_ocr_model_download,
+            client_engagement=args.client_engagement,
+            run_root=Path(context["run_root"]),
         )
-    except (OSError, ValueError) as exc:
+    except (AssuranceContractError, OSError, ValueError) as exc:
         LOGGER.error("INVENTORY_BLOCKED: %s", exc)
         return 2
     LOGGER.info(

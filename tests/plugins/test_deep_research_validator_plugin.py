@@ -6,6 +6,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 from docx import Document
@@ -17,6 +18,98 @@ PLUGIN_ROOT = ROOT / "plugins" / "deep-research-validator"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 VERA_PRODUCT_PAGE_LINK = "../vera/index.html"
+
+
+def _running_customer_output(
+    tmp_path: Path,
+) -> tuple[Path, Path, dict[str, Any]]:
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_deep_research_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir()
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Test engagement")
+    managed_claim = "The Italian VAT rule applies to the transaction."
+    managed_inputs = {
+        "document_inventory.json": {
+            "source_name": "deep_research.md",
+            "character_count": 80,
+            "word_count": 12,
+            "urls": ["https://example.com"],
+        },
+        "source_inventory.json": {
+            "sources": [
+                {
+                    "kind": "url",
+                    "source_id": "source-001",
+                    "url": "https://example.com",
+                    "status": "available",
+                    "excerpt": managed_claim,
+                }
+            ]
+        },
+        "claims_review.json": _claims_review(
+            [
+                _claim_review(
+                    managed_claim,
+                    cited_passage="The Italian VAT rule applies",
+                )
+            ]
+        ),
+        "answer_contract.json": _answer_contract(),
+        "local_source.txt": {
+            "text": "The Italian VAT rule applies to the transaction."
+        },
+    }
+    input_ids: list[str] = []
+    for file_name, payload in managed_inputs.items():
+        source = tmp_path / file_name
+        source.write_text(json.dumps(payload) + "\n", encoding="utf-8")
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            source,
+            "source",
+        )
+        input_ids.append(imported["receipt"]["input_id"])
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "deep-research-validator",
+        "test-version",
+        input_ids=input_ids,
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context = running["context"]
+    return (
+        Path(running["output_dir"]),
+        Path(context["context_path"]),
+        context,
+    )
+
+
+def _file_snapshot(root: Path) -> dict[str, bytes]:
+    """Return the exact relative file content below a test root."""
+
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for path in sorted(root.rglob("*"))
+        if path.is_file()
+    }
 
 
 def _answer_contract(
@@ -502,6 +595,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         json.dumps(_answer_contract()),
         encoding="utf-8",
     )
+    client_run_id = "run_" + "c" * 24
 
     paths = package_mod.write_validation_package(
         document_inventory,
@@ -509,6 +603,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         claims_review,
         tmp_path / "out",
         answer_contract_path=answer_contract,
+        client_run_id=client_run_id,
     )
     audit = json.loads(paths["validation_audit"].read_text(encoding="utf-8"))
     run_intake = json.loads(
@@ -525,6 +620,7 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     )
 
     assert audit["status"] == "record_complete"
+    assert run_intake["run_id"] == client_run_id
     assert audit["delivery_readiness"] == "reviewed_answer_ready"
     assert audit["review_session"]["run_id"] == run_intake["run_id"]
     assert (
@@ -621,6 +717,213 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         strict_output_content=True,
     )
     assert contract_report.ok, contract_report.as_dict()
+
+
+def test_managed_package_writer_persists_only_run_relative_paths(
+    tmp_path: Path,
+) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    sources_mod = load_script(
+        "deep_research_validator_inspect_sources_managed_paths",
+        "inspect_sources.py",
+    )
+    package_mod = load_script(
+        "deep_research_validator_package_managed_paths",
+        "package_validation.py",
+    )
+    inputs_by_name = {
+        Path(binding["path"]).name: Path(binding["path"])
+        for binding in context["input_bindings"]
+    }
+    generated_inventory = sources_mod.write_source_inventory(
+        inputs_by_name["document_inventory.json"],
+        output_dir,
+        source_files=[inputs_by_name["local_source.txt"]],
+        fetch_urls=False,
+        run_root=Path(context["run_root"]),
+    )["source_inventory"]
+
+    paths = package_mod.write_validation_package(
+        inputs_by_name["document_inventory.json"],
+        generated_inventory,
+        inputs_by_name["claims_review.json"],
+        output_dir,
+        answer_contract_path=inputs_by_name["answer_contract.json"],
+        client_engagement=context,
+        client_run_id=str(context["run_id"]),
+    )
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    audit = json.loads(paths["validation_audit"].read_text(encoding="utf-8"))
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    client_root = str(context["studio_client_folder"]["client_root"])
+
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert all(not Path(value).is_absolute() for value in run_intake["input_paths"])
+    assert all(
+        not Path(value).is_absolute()
+        for key, value in audit["review_session"].items()
+        if key.endswith("_path")
+    )
+    assert review_payload["path_reference"] == "run_root_relative"
+    assert client_root not in json.dumps(
+        {
+            "run_intake": run_intake,
+            "review_session": audit["review_session"],
+            "source_artifacts": review_payload["source_artifacts"],
+        }
+    )
+    assert all(
+        client_root not in path.read_text(encoding="utf-8")
+        for path in output_dir.glob("*.json")
+    )
+    assert client_root not in (output_dir / "validation_package.md").read_text(
+        encoding="utf-8"
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    claim_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "supported_claim"
+    )
+    decisions = [
+        {
+            "item_id": item["id"],
+            "action": "edit" if item["id"] == claim_item["id"] else "accept",
+            **(
+                {"edit_value": "Limit the conclusion to the cited VAT rule."}
+                if item["id"] == claim_item["id"]
+                else {}
+            ),
+        }
+        for item in review_payload["items"]
+    ]
+    old_client_root = Path(context["studio_client_folder"]["client_root"])
+    renamed_client_root = tmp_path / "Renamed Customer"
+    context_relative = context_path.relative_to(old_client_root)
+    output_relative = output_dir.relative_to(old_client_root)
+    old_client_root.rename(renamed_client_root)
+    context_path = renamed_client_root / context_relative
+    output_dir = renamed_client_root / output_relative
+
+    responses = {
+        response["id"]: response
+        for response in _call_mcp_server(
+            [
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "save_deep_research_decisions",
+                        "arguments": {
+                            "run_intake": run_intake,
+                            "client_engagement": context_path.as_posix(),
+                            "review_payload": review_payload,
+                            "decisions": decisions,
+                        },
+                    },
+                },
+                {
+                    "jsonrpc": "2.0",
+                    "id": 2,
+                    "method": "tools/call",
+                    "params": {
+                        "name": "apply_deep_research_decisions",
+                        "arguments": {
+                            "run_intake": run_intake,
+                            "client_engagement": context_path.as_posix(),
+                            "review_payload": review_payload,
+                            "final_artifacts": final_artifacts,
+                            "decisions": decisions,
+                        },
+                    },
+                },
+            ]
+        )
+    }
+
+    assert responses[1]["result"]["isError"] is False
+    applied = responses[2]["result"]
+    assert applied["isError"] is False, applied
+    assert applied["structuredContent"]["structured_update_count"] == 1
+    assert applied["structuredContent"]["run_intake_path"] == str(
+        output_dir / "run_intake.json"
+    )
+    updated_claims = json.loads(
+        (output_dir / "claims_review.json").read_text(encoding="utf-8")
+    )
+    assert updated_claims["claims"][0]["proposed_fix"] == (
+        "Limit the conclusion to the cited VAT rule."
+    )
+    assert not old_client_root.exists()
+
+
+def test_managed_package_writer_rejects_input_outside_run_without_writes(
+    tmp_path: Path,
+) -> None:
+    output_dir, _context_path, context = _running_customer_output(tmp_path)
+    package_mod = load_script(
+        "deep_research_validator_package_managed_input_escape",
+        "package_validation.py",
+    )
+    inputs_by_name = {
+        Path(binding["path"]).name: Path(binding["path"])
+        for binding in context["input_bindings"]
+    }
+    outside_input = tmp_path / "outside-answer-contract.json"
+    outside_input.write_text(
+        json.dumps(_answer_contract()) + "\n",
+        encoding="utf-8",
+    )
+    before = _file_snapshot(tmp_path)
+
+    with pytest.raises(ValueError, match="outside the current run"):
+        package_mod.write_validation_package(
+            inputs_by_name["document_inventory.json"],
+            inputs_by_name["source_inventory.json"],
+            inputs_by_name["claims_review.json"],
+            output_dir,
+            answer_contract_path=outside_input,
+            client_engagement=context,
+            client_run_id=str(context["run_id"]),
+        )
+
+    assert _file_snapshot(tmp_path) == before
+
+
+def test_managed_source_inspection_rejects_unbound_file_without_writes(
+    tmp_path: Path,
+) -> None:
+    output_dir, _context_path, context = _running_customer_output(tmp_path)
+    sources_mod = load_script(
+        "deep_research_validator_inspect_sources_unbound_file",
+        "inspect_sources.py",
+    )
+    inputs_by_name = {
+        Path(binding["path"]).name: Path(binding["path"])
+        for binding in context["input_bindings"]
+    }
+    outside = tmp_path / "not-imported.txt"
+    outside.write_text("Unbound source evidence.\n", encoding="utf-8")
+    before = _file_snapshot(tmp_path)
+
+    with pytest.raises(ValueError, match="outside the current customer run"):
+        sources_mod.write_source_inventory(
+            inputs_by_name["document_inventory.json"],
+            output_dir,
+            source_files=[outside],
+            fetch_urls=False,
+            run_root=Path(context["run_root"]),
+        )
+
+    assert _file_snapshot(tmp_path) == before
 
 
 def test_package_validation_localizes_spanish_review_artifacts(tmp_path: Path) -> None:
@@ -1518,7 +1821,9 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
 def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     tmp_path: Path,
 ) -> None:
-    document_inventory_path = tmp_path / "document_inventory.json"
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    client_run_id = str(context["run_id"])
+    document_inventory_path = output_dir / "document_inventory.json"
     document_inventory_path.write_text(
         json.dumps(
             {
@@ -1531,7 +1836,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         + "\n",
         encoding="utf-8",
     )
-    source_inventory_path = tmp_path / "source_inventory.json"
+    source_inventory_path = output_dir / "source_inventory.json"
     source_inventory_path.write_text(
         json.dumps(
             {
@@ -1549,7 +1854,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         + "\n",
         encoding="utf-8",
     )
-    claims_review_path = tmp_path / "claims_review.json"
+    claims_review_path = output_dir / "claims_review.json"
     claims_review_path.write_text(
         json.dumps(
             _claims_review(
@@ -1564,11 +1869,11 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "answer_contract.json").write_text(
+    (output_dir / "answer_contract.json").write_text(
         json.dumps(_answer_contract()) + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "validation_audit.json").write_text(
+    (output_dir / "validation_audit.json").write_text(
         json.dumps(
             {
                 "record_integrity_status": "record_complete",
@@ -1580,7 +1885,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "validation_package.md").write_text(
+    (output_dir / "validation_package.md").write_text(
         "\n".join(
             [
                 "# Answer Validation Record",
@@ -1604,33 +1909,34 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         encoding="utf-8",
     )
     _write_docx(
-        tmp_path / "validated_document.docx",
+        output_dir / "validated_document.docx",
         ["Reviewed answer", "Original answer text."],
     )
     run_intake = {
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-test-run",
+        "run_id": client_run_id,
         "created_at": "2026-01-01T00:00:00Z",
         "language": "en",
+        "path_reference": "run_root_relative",
         "input_paths": [
-            "document_inventory.json",
-            "source_inventory.json",
-            "claims_review.json",
-            "answer_contract.json",
+            "outputs/document_inventory.json",
+            "outputs/source_inventory.json",
+            "outputs/claims_review.json",
+            "outputs/answer_contract.json",
         ],
-        "output_dir": tmp_path.as_posix(),
+        "output_dir": "outputs",
         "inferred_task": "answer_validation_review_payload",
         "assumptions": {},
         "unresolved_questions": [],
         "dependency_check": {"status": "not_run"},
         "data_posture": {
             "local_files_read": [
-                "document_inventory.json",
-                "source_inventory.json",
-                "claims_review.json",
-                "answer_contract.json",
+                "outputs/document_inventory.json",
+                "outputs/source_inventory.json",
+                "outputs/claims_review.json",
+                "outputs/answer_contract.json",
             ],
             "external_connectors_used": [],
             "upload_paths_used": [],
@@ -1642,7 +1948,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-test-run",
+        "run_id": client_run_id,
         "source_paths": [
             "document_inventory.json",
             "source_inventory.json",
@@ -1728,7 +2034,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-test-run",
+        "run_id": client_run_id,
         "review_payload_path": "review_payload.json",
         "decisions": [],
         "decision_count": 0,
@@ -1738,7 +2044,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-test-run",
+        "run_id": client_run_id,
         "outputs": [
             {
                 "path": "claims_review.json",
@@ -1782,18 +2088,30 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "next_actions": [],
         "status": "written_pending_review",
     }
-    (tmp_path / "run_intake.json").write_text(
+    (output_dir / "run_intake.json").write_text(
         json.dumps(run_intake, indent=2) + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "review_payload.json").write_text(
+    (output_dir / "review_payload.json").write_text(
         json.dumps(review_payload, indent=2) + "\n",
         encoding="utf-8",
     )
-    (tmp_path / "final_artifacts.json").write_text(
+    (output_dir / "final_artifacts.json").write_text(
         json.dumps(final_artifacts, indent=2) + "\n",
         encoding="utf-8",
     )
+    old_client_root = Path(context["studio_client_folder"]["client_root"])
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert all(not Path(value).is_absolute() for value in run_intake["input_paths"])
+    renamed_client_root = tmp_path / "Renamed Customer"
+    context_relative = context_path.relative_to(old_client_root)
+    output_relative = output_dir.relative_to(old_client_root)
+    old_client_root.rename(renamed_client_root)
+    context_path = renamed_client_root / context_relative
+    output_dir = renamed_client_root / output_relative
+    claims_review_path = output_dir / "claims_review.json"
+    assert not old_client_root.exists()
     messages: list[dict[str, object]] = [
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
         {
@@ -1813,6 +2131,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "name": "render_deep_research_review",
                 "arguments": {
                     "run_intake": run_intake,
+                    "client_engagement": context_path.as_posix(),
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
                     "final_artifacts": final_artifacts,
@@ -1834,6 +2153,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "name": "save_deep_research_decisions",
                 "arguments": {
                     "run_intake": run_intake,
+                    "client_engagement": context_path.as_posix(),
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
                     "decisions": [
@@ -1860,6 +2180,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "name": "apply_deep_research_decisions",
                 "arguments": {
                     "run_intake": run_intake,
+                    "client_engagement": context_path.as_posix(),
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
                     "final_artifacts": final_artifacts,
@@ -1911,7 +2232,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     assert save_result["decision_count"] == 2
     apply_result = responses[7]["result"]["structuredContent"]
     assert apply_result["ok"] is True
-    assert apply_result["run_intake_path"] == str(tmp_path / "run_intake.json")
+    assert apply_result["run_intake_path"] == str(output_dir / "run_intake.json")
     assert apply_result["structured_update_count"] == 1
     assert apply_result["native_regeneration_count"] == 0
     assert apply_result["native_regenerated_count"] == 0
@@ -1922,12 +2243,12 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     )
     assert updated_claims["document_revision"]["status"] == "required"
     assert updated_claims["validated_document"] == ""
-    package_text = (tmp_path / "validation_package.md").read_text(encoding="utf-8")
+    package_text = (output_dir / "validation_package.md").read_text(encoding="utf-8")
     assert "Narrow the claim to the cited VAT rule only." in package_text
-    docx_text = _docx_text(tmp_path / "validated_document.docx")
+    docx_text = _docx_text(output_dir / "validated_document.docx")
     assert "Original answer text." in docx_text
     assert "Narrow the claim to the cited VAT rule only." not in docx_text
-    applied = json.loads((tmp_path / "applied_decisions.json").read_text())
+    applied = json.loads((output_dir / "applied_decisions.json").read_text())
     assert applied["effects"][0]["structured_update"] == {
         "id_field": "claim_index",
         "record_id": "1",
@@ -1950,7 +2271,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     assert applied["native_regenerated_count"] == 0
     assert applied["native_regenerated_paths"] == []
     assert applied["semantic_regeneration_count"] == 1
-    final_after_apply = json.loads((tmp_path / "final_artifacts.json").read_text())
+    final_after_apply = json.loads((output_dir / "final_artifacts.json").read_text())
     assert final_after_apply["status"] == "revision_required"
     claims_output = next(
         output
@@ -1985,7 +2306,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         final_after_apply["review_application"]["semantic_regeneration_status"]
         == "required"
     )
-    run_intake = json.loads((tmp_path / "run_intake.json").read_text())
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_apply_steps = [
         step
         for step in run_intake["execution_trace"]
@@ -2001,7 +2322,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         "ui_decisions.json",
     } <= set(review_apply_steps[0]["outputs"])
     contract = validate_contract(
-        tmp_path,
+        output_dir,
         strict_data_posture=True,
         strict_execution_trace=True,
         strict_output_paths=True,
@@ -2013,11 +2334,13 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
 def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
     tmp_path: Path,
 ) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    client_run_id = str(context["run_id"])
     review_payload = {
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-es",
+        "run_id": client_run_id,
         "language": "es_ES",
         "review_type": "answer_validation_review",
         "item_count": 1,
@@ -2037,15 +2360,16 @@ def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-es",
+        "run_id": client_run_id,
         "language": "es",
-        "output_dir": tmp_path.as_posix(),
+        "path_reference": "run_root_relative",
+        "output_dir": "outputs",
     }
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": "deep-research-validator",
         "workflow": "deep-research-validator",
-        "run_id": "deep-research-es",
+        "run_id": client_run_id,
         "outputs": [],
         "caveats": [],
         "next_actions": [],
@@ -2115,6 +2439,7 @@ def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
                 "name": "apply_deep_research_decisions",
                 "arguments": {
                     "run_intake": run_intake,
+                    "client_engagement": context_path.as_posix(),
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
                     "decisions": decisions,
@@ -2140,8 +2465,96 @@ def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
     assert applied["final_artifacts"]["next_actions"] == [
         "Utilice final_artifacts.json como galería revisada de artefactos para la entrega."
     ]
-    handoff = (tmp_path / "review_handoff.md").read_text(encoding="utf-8")
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
     assert "Entrega para revisión" in handoff
     assert "## Revisión en Codex" in handoff
     assert "<!-- review-contract: Review Handoff -->" in handoff
     assert "Validate the payload" not in handoff
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["save_deep_research_decisions", "apply_deep_research_decisions"],
+)
+@pytest.mark.parametrize(
+    "output_ref_kind", ["escape", "stale_absolute", "missing_context"]
+)
+def test_deep_research_mcp_managed_output_reference_is_rejected_without_writes(
+    tmp_path: Path,
+    tool_name: str,
+    output_ref_kind: str,
+) -> None:
+    output_dir, context_path, context = _running_customer_output(tmp_path)
+    old_client_root = Path(context["studio_client_folder"]["client_root"])
+    if output_ref_kind == "stale_absolute":
+        output_ref = output_dir.as_posix()
+        renamed_client_root = tmp_path / "Renamed Customer"
+        context_relative = context_path.relative_to(old_client_root)
+        old_client_root.rename(renamed_client_root)
+        context_path = renamed_client_root / context_relative
+    elif output_ref_kind == "escape":
+        output_ref = "../outside"
+    else:
+        output_ref = "outputs"
+    run_id = str(context["run_id"])
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": run_id,
+        "path_reference": "run_root_relative",
+        "output_dir": output_ref,
+    }
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": run_id,
+        "review_type": "answer_validation_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "artifact-1",
+                "item_type": "validation_artifact",
+                "title": "Validation package",
+                "output_path": "validation_package.md",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "recommended_action": "accept",
+                "status": "needs_review",
+            }
+        ],
+    }
+    arguments: dict[str, object] = {
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "decisions": [{"item_id": "artifact-1", "action": "accept"}],
+    }
+    if output_ref_kind != "missing_context":
+        arguments["client_engagement"] = context_path.as_posix()
+    if tool_name.startswith("apply_"):
+        arguments["final_artifacts"] = {
+            "schema_version": "1.0",
+            "plugin": "deep-research-validator",
+            "workflow": "deep-research-validator",
+            "run_id": run_id,
+            "outputs": [],
+            "caveats": [],
+            "next_actions": [],
+            "status": "written_pending_review",
+        }
+    before = _file_snapshot(tmp_path)
+    messages: list[dict[str, object]] = [
+        {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": tool_name, "arguments": arguments},
+        }
+    ]
+
+    response = _call_mcp_server(messages)[0]["result"]
+
+    assert response["isError"] is True
+    assert response["structuredContent"]["ok"] is False
+    assert _file_snapshot(tmp_path) == before
+    assert not (tmp_path / "outside").exists()

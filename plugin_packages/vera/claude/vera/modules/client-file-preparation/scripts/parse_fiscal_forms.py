@@ -12,10 +12,25 @@ from pathlib import Path
 from typing import Iterable, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
 from extract_documents import DocumentEvidence  # noqa: E402
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = [
     "FiscalField",
@@ -1338,12 +1353,23 @@ def _parse_args() -> argparse.Namespace:
         default="it",
         help="Lingua del riepilogo leggibile.",
     )
+    parser.add_argument("--client-engagement", required=True, type=Path)
     return parser.parse_args()
 
 
 def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
     args = _parse_args()
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="client-file-preparation",
+            input_paths=[args.extracted_dir],
+            output_dir=args.extracted_dir.parent,
+        )
+    except AssuranceContractError as exc:
+        LOGGER.error("%s", exc)
+        return 2
     evidence = _load_document_evidence(args.extracted_dir / "documents.jsonl")
     fields = parse_structured_fiscal_fields(evidence, args.extracted_dir)
     write_fiscal_fields_csv(fields, args.extracted_dir / "structured_fiscal_fields.csv")

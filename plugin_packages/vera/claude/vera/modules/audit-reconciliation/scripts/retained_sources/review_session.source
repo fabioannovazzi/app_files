@@ -301,6 +301,66 @@ def _source_paths_from_inventory(
     return unique[:200]
 
 
+def _run_root_relative_reference(
+    value: str | Path,
+    client_engagement: dict[str, Any] | None,
+) -> str:
+    """Return a portable run-root-relative path for a managed workflow."""
+
+    text = _clean_text(value)
+    if not text:
+        raise ValueError("Managed workflow path references cannot be empty.")
+    run_root_value = (
+        client_engagement.get("run_root")
+        if isinstance(client_engagement, dict)
+        else None
+    )
+    if not isinstance(run_root_value, str) or not run_root_value.strip():
+        return Path(text).as_posix()
+    candidate = Path(text).expanduser()
+    if not candidate.is_absolute():
+        if candidate == Path(".") or ".." in candidate.parts:
+            raise ValueError("Managed workflow path reference leaves the run root.")
+        return candidate.as_posix()
+    run_root = Path(run_root_value).expanduser().resolve()
+    try:
+        relative = candidate.resolve().relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError("Managed workflow path is outside the run root.") from exc
+    if not relative.parts:
+        raise ValueError("Managed workflow path must identify a run artifact.")
+    return relative.as_posix()
+
+
+def _portable_client_engagement(
+    client_engagement: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Remove runtime-only absolute paths from a persisted v2 context."""
+
+    if (
+        not isinstance(client_engagement, dict)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return client_engagement
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
 def _status_counts(rows: Sequence[dict[str, Any]], field: str) -> dict[str, int]:
     counts: dict[str, int] = {}
     for row in rows:
@@ -1150,13 +1210,19 @@ def _write_artifact_card(
         missing_evidence_requests_path or result.get("missing_evidence_requests_path"),
         output_dir,
     )
-    command = f"python scripts/review_server.py {_quote_command_path(output_dir)}"
+    client_engagement = result.get("client_engagement")
+    if not isinstance(client_engagement, dict):
+        client_engagement = None
+    output_folder = _run_root_relative_reference(output_dir, client_engagement)
+    command = (
+        f"python scripts/review_server.py {_quote_command_path(Path(output_folder))}"
+    )
     if _is_spanish(language):
         lines = [
             "# Ficha de artefactos de la conciliación de auditoría",
             "",
             f"- ID de ejecución: `{run_id}`",
-            f"- Carpeta de salida: `{output_dir.as_posix()}`",
+            f"- Carpeta de salida: `{output_folder}`",
             "- Entrega para revisión: navegador local mediante `scripts/review_server.py`",
             f"- Comando: `{command}`",
             "- Estado de revisión: `pending_review` hasta que se guarden o apliquen las decisiones",
@@ -1187,7 +1253,7 @@ def _write_artifact_card(
             "# Audit Reconciliation Artifact Card",
             "",
             f"- Run ID: `{run_id}`",
-            f"- Output folder: `{output_dir.as_posix()}`",
+            f"- Output folder: `{output_folder}`",
             "- Review handoff: browser locale tramite `scripts/review_server.py`",
             f"- Command: `{command}`",
             "- Review status: `pending_review` finche non vengono salvate/applicate le decisioni",
@@ -1233,6 +1299,13 @@ def write_run_intake(
     """Write the durable run-intake artifact for audit reconciliation."""
 
     paths = _source_paths_from_inventory(source_inventory, source_paths)
+    portable_paths = [
+        _run_root_relative_reference(path, client_engagement) for path in paths
+    ]
+    portable_output = _run_root_relative_reference(output_dir, client_engagement)
+    managed_run = isinstance(client_engagement, dict) and isinstance(
+        client_engagement.get("run_root"), str
+    )
     active_run_id = (
         run_id.strip()
         if isinstance(run_id, str) and run_id.strip()
@@ -1256,11 +1329,12 @@ def write_run_intake(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": active_run_id,
-        "client_engagement": client_engagement,
+        "client_engagement": _portable_client_engagement(client_engagement),
+        **({"path_reference": "run_root_relative"} if managed_run else {}),
         "created_at": _utc_now(),
         "language": language,
-        "input_paths": paths,
-        "output_dir": output_dir.as_posix(),
+        "input_paths": portable_paths,
+        "output_dir": portable_output,
         "inferred_task": "audit_reconciliation_review_payload",
         "assumptions": {
             "scope_year": assumptions.get("scope_year"),
@@ -1287,7 +1361,7 @@ def write_run_intake(
             else _dependency_check_from_environment(assumptions)
         ),
         "data_posture": {
-            "local_files_read": paths,
+            "local_files_read": portable_paths,
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
@@ -1314,6 +1388,11 @@ def write_review_session_artifacts(
     language: str = "it",
 ) -> ReviewSessionResult:
     """Write review payload, pending decisions, and final artifact inventory."""
+
+    runtime_client_engagement = result.get("client_engagement")
+    if not isinstance(runtime_client_engagement, dict):
+        runtime_client_engagement = None
+    persisted_client_engagement = _portable_client_engagement(runtime_client_engagement)
 
     reconciliation_rows = [
         row for row in result.get("reconciliation_rows", []) if isinstance(row, dict)
@@ -1345,7 +1424,11 @@ def write_review_session_artifacts(
         )
     )
 
-    source_path_refs = _source_paths_from_inventory(source_inventory, source_paths)
+    source_path_refs = [
+        _run_root_relative_reference(path, runtime_client_engagement)
+        for path in _source_paths_from_inventory(source_inventory, source_paths)
+    ]
+    output_folder = _run_root_relative_reference(output_dir, runtime_client_engagement)
     review_status_counts = _status_counts(review_rows, "review_status")
     reconciliation_status_counts = _status_counts(
         reconciliation_rows, "reconciliation_status"
@@ -1363,7 +1446,7 @@ def write_review_session_artifacts(
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
-        "client_engagement": result.get("client_engagement"),
+        "client_engagement": persisted_client_engagement,
         "created_at": _utc_now(),
         "language": language,
         "source_paths": source_path_refs,
@@ -1527,7 +1610,7 @@ def write_review_session_artifacts(
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
-            "client_engagement": result.get("client_engagement"),
+            "client_engagement": persisted_client_engagement,
             "completed_at": _utc_now(),
             "outputs": _output_records(
                 output_dir,
@@ -1548,7 +1631,7 @@ def write_review_session_artifacts(
                     "required": True,
                     "command": (
                         "python scripts/review_server.py "
-                        f"{_quote_command_path(output_dir)}"
+                        f"{_quote_command_path(Path(output_folder))}"
                     ),
                     "writes": [
                         "ui_decisions.json",

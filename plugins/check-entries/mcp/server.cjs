@@ -268,7 +268,7 @@ function validatePersistedRunIntake(inputArgs) {
   }
   if (
     typeof persisted.output_dir !== "string" ||
-    path.resolve(persisted.output_dir) !== outputDir ||
+    resolveRunOutputDir({ ...inputArgs, run_intake: persisted }) !== outputDir ||
     JSON.stringify(immutableRunIntakeProjection(caller)) !==
       JSON.stringify(immutableRunIntakeProjection(persisted))
   ) {
@@ -393,7 +393,7 @@ function parentBoundCheckEntriesArgs(
   if (
     persistedRunIntake &&
     (typeof persistedRunIntake.output_dir !== "string" ||
-      path.resolve(persistedRunIntake.output_dir) !== path.resolve(outputDir))
+      resolveRunOutputDir({ ...inputArgs, run_intake: persistedRunIntake }) !== path.resolve(outputDir))
   ) {
     throw new Error(CHECK_ENTRIES_AUTHORIZATION_FAILURE);
   }
@@ -528,6 +528,7 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
@@ -551,6 +552,7 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -558,7 +560,7 @@ function toolDefinitions() {
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["client_engagement", "review_payload", "decisions"],
   );
   return [
     {
@@ -726,6 +728,10 @@ function validateReviewPayload(inputArgs) {
   }
   const payload = {
     widget_type: "check_entries_review",
+    client_engagement:
+      typeof inputArgs.client_engagement === "string"
+        ? inputArgs.client_engagement
+        : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -744,10 +750,8 @@ function validateReviewPayload(inputArgs) {
 }
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -870,6 +874,7 @@ function buildUiDecisions(inputArgs) {
 
 function saveDecisionPayload(inputArgs) {
   const outputDir = resolveRunOutputDir(inputArgs);
+  const expectedRunId = validateReviewPayload(inputArgs).review_payload.run_id;
   const persist = (trustedArgs, workingOutputDir) => {
     const { uiDecisions, decisionOutputPath } =
       buildUiDecisions(trustedArgs);
@@ -911,6 +916,7 @@ function saveDecisionPayload(inputArgs) {
   };
   if (!outputDir) return persist(inputArgs, null).result;
   validateCheckEntriesTransactionInput(outputDir);
+  preflightClientRun(outputDir, expectedRunId);
   let assuredWorkflow = false;
   return withGeneratedReviewOutputTransaction(
     outputDir,
@@ -931,7 +937,10 @@ function saveDecisionPayload(inputArgs) {
       );
       if (authority.assured) {
         const childPreflight =
-          preflightWorkflowSpecificReviewApplication(workingOutputDir);
+          preflightWorkflowSpecificReviewApplication(
+            workingOutputDir,
+            outputDir,
+          );
         validatePreflightAcknowledgement(childPreflight, persistedAuthority);
       }
       return persist(authority.args, workingOutputDir);
@@ -949,7 +958,10 @@ function saveDecisionPayload(inputArgs) {
         );
         if (assuredWorkflow) {
           const childPreflight =
-            preflightWorkflowSpecificReviewApplication(workingOutputDir);
+            preflightWorkflowSpecificReviewApplication(
+              workingOutputDir,
+              outputDir,
+            );
           validatePreflightAcknowledgement(childPreflight, persistedAuthority);
         }
       },
@@ -959,8 +971,80 @@ function saveDecisionPayload(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputReference) return null;
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : typeof runIntake?.client_engagement?.context_path === "string"
+        ? runIntake.client_engagement.context_path.trim()
+        : "";
+  if (!contextValue && path.isAbsolute(outputReference)) {
+    return path.resolve(outputReference);
+  }
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error("Check Entries persistence requires the current client_engagement context.");
+  }
+  const contextPath = path.resolve(contextValue);
+  if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
+    throw new Error("Check Entries client_engagement path is invalid.");
+  }
+  const contextStat = generatedReviewPathEntryStat(contextPath);
+  if (
+    !contextStat ||
+    !contextStat.isFile() ||
+    contextStat.isSymbolicLink() ||
+    contextStat.nlink !== 1
+  ) {
+    throw new Error("Check Entries client_engagement context is unavailable.");
+  }
+  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("Check Entries output reference is not run-root-relative.");
+  }
+  const runRoot = path.dirname(contextPath);
+  const resolved = path.isAbsolute(outputReference)
+    ? path.resolve(outputReference)
+    : path.resolve(runRoot, outputReference);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Check Entries output reference leaves the customer run.");
+  }
+  return resolved;
+}
+
+function persistedRunOutputMatchesCurrent(runIntake, outputDir) {
+  if (!isPlainObject(runIntake)) return false;
+  const outputReference =
+    typeof runIntake.output_dir === "string"
+      ? runIntake.output_dir.trim()
+      : "";
+  if (!outputReference) return false;
+  if (path.isAbsolute(outputReference)) {
+    return path.resolve(outputReference) === path.resolve(outputDir);
+  }
+  if (runIntake.path_reference !== "run_root_relative") return false;
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    const contextStat = generatedReviewPathEntryStat(contextPath);
+    if (
+      contextStat?.isFile() &&
+      !contextStat.isSymbolicLink() &&
+      contextStat.nlink === 1
+    ) {
+      return (
+        path.resolve(candidate, outputReference) === path.resolve(outputDir)
+      );
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) return false;
+    candidate = parent;
+  }
 }
 
 function pathEntryStat(targetPath) {
@@ -1658,6 +1742,53 @@ function stableArtifactBytes(absolutePath) {
   }
 }
 
+function checkEntriesCurrentRunRoot(outputDir) {
+  let runRoot = null;
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    const contextStat = generatedReviewPathEntryStat(contextPath);
+    if (
+      contextStat?.isFile() &&
+      !contextStat.isSymbolicLink() &&
+      contextStat.nlink === 1
+    ) {
+      runRoot = candidate;
+      break;
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) break;
+    candidate = parent;
+  }
+  return runRoot;
+}
+
+function resolveCheckEntriesRunReference(outputDir, runIntake, value) {
+  if (!nonEmptyTrimmedString(value)) {
+    throw new Error("missing assurance roots");
+  }
+  if (path.isAbsolute(value)) return path.resolve(value);
+  const runRoot = checkEntriesCurrentRunRoot(outputDir);
+  if (
+    !runRoot ||
+    runIntake.path_reference !== "run_root_relative" ||
+    value.split(/[\\/]+/).includes("..")
+  ) {
+    throw new Error("missing assurance roots");
+  }
+  const resolved = path.resolve(runRoot, value);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("missing assurance roots");
+  }
+  return resolved;
+}
+
 function checkEntriesArtifactRoots(outputDir, audit) {
   if (
     !nonEmptyTrimmedString(audit.journal) ||
@@ -1665,8 +1796,12 @@ function checkEntriesArtifactRoots(outputDir, audit) {
   ) {
     throw new Error("missing assurance roots");
   }
-  const journalPath = path.resolve(audit.journal);
-  const supportPath = path.resolve(audit.pdf_path);
+  const runIntake = readJsonFileIfPresent(path.join(outputDir, "run_intake.json")) || {};
+  const resolveSource = (value) => {
+    return resolveCheckEntriesRunReference(outputDir, runIntake, value);
+  };
+  const journalPath = resolveSource(audit.journal);
+  const supportPath = resolveSource(audit.pdf_path);
   const supportEntry = fs.lstatSync(supportPath);
   return {
     normalization: path.dirname(journalPath),
@@ -2178,7 +2313,7 @@ function validateCheckEntriesAssuranceAuthority(
       [reviewPayload, uiDecisions, finalArtifacts, envelope, audit].some(
         (value) => value.run_id !== runId,
       ) ||
-      path.resolve(runIntake.output_dir) !== path.resolve(canonicalOutputDir)
+      !persistedRunOutputMatchesCurrent(runIntake, canonicalOutputDir)
     ) {
       throw new Error("assurance run identity mismatch");
     }
@@ -2230,7 +2365,11 @@ function validateCheckEntriesAssuranceAuthority(
     ]) {
       if (
         !isPlainObject(binding) ||
-        path.resolve(binding.path) !== canonicalEnvelopePath ||
+        resolveCheckEntriesRunReference(
+          outputDir,
+          runIntake,
+          binding.path,
+        ) !== canonicalEnvelopePath ||
         binding.content_sha256 !== envelope.content_sha256 ||
         !canonicalJsonEqual(
           binding.artifact_receipt,
@@ -3431,6 +3570,7 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 
 function applyDecisionPayload(inputArgs) {
   const outputDir = resolveRunOutputDir(inputArgs);
+  const expectedRunId = validateReviewPayload(inputArgs).review_payload.run_id;
   const prepareApplication = (trustedArgs) => {
     const { uiDecisions } = buildUiDecisions(trustedArgs);
     const validationPayload = validateReviewPayload(trustedArgs);
@@ -3480,7 +3620,10 @@ function applyDecisionPayload(inputArgs) {
     const assurancePreflight = capturedAssurancePreflight;
     if (workingOutputDir) {
       const childPreflight =
-        preflightWorkflowSpecificReviewApplication(workingOutputDir);
+        preflightWorkflowSpecificReviewApplication(
+          workingOutputDir,
+          outputDir,
+        );
       validatePreflightAcknowledgement(
         childPreflight,
         capturedAssurancePreflight,
@@ -3542,6 +3685,7 @@ function applyDecisionPayload(inputArgs) {
     );
   }
   validateCheckEntriesTransactionInput(outputDir);
+  preflightClientRun(outputDir, expectedRunId);
   let assuredWorkflow = false;
   return withGeneratedReviewOutputTransaction(
     outputDir,
@@ -3593,7 +3737,10 @@ function applyDecisionPayload(inputArgs) {
             },
           );
           const childPreflight =
-            preflightWorkflowSpecificReviewApplication(workingOutputDir);
+            preflightWorkflowSpecificReviewApplication(
+              workingOutputDir,
+              outputDir,
+            );
           validatePreflightAcknowledgement(childPreflight, persistedAuthority);
         }
       },
@@ -3930,11 +4077,42 @@ function runWorkflowPython(args, phase) {
   return parseWorkflowScriptOutput(completed, phase);
 }
 
-function preflightWorkflowSpecificReviewApplication(outputDir) {
+function preflightClientRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const result = runWorkflowPython(
+    [
+      scriptPath,
+      "--output-dir",
+      outputDir,
+      "--client-run-preflight-only",
+    ],
+    "client_run",
+  );
+  if (
+    result.schema_version !== "vera.client_workflow_context.v2" ||
+    result.workflow_id !== "check-entries" ||
+    typeof result.client_run_id !== "string" ||
+    !result.client_run_id.trim() ||
+    result.client_run_id !== expectedRunId
+  ) {
+    throw new Error("Check Entries customer-run preflight returned an invalid result.");
+  }
+  return result;
+}
+
+function preflightWorkflowSpecificReviewApplication(
+  outputDir,
+  canonicalOutputDir = null,
+) {
   if (!outputDir) return { ok: true };
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const args = [scriptPath, "--output-dir", outputDir, "--preflight-only"];
+  if (canonicalOutputDir) {
+    args.push("--canonical-output-dir", canonicalOutputDir);
+  }
   return runWorkflowPython(
-    [scriptPath, "--output-dir", outputDir, "--preflight-only"],
+    args,
     "preflight",
   );
 }

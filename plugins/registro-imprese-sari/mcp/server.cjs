@@ -2,6 +2,7 @@
 "use strict";
 
 const crypto = require("node:crypto");
+const { spawnSync } = require("node:child_process");
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
@@ -77,6 +78,101 @@ function isObject(value) {
   return value !== null && typeof value === "object" && !Array.isArray(value);
 }
 
+function pythonExecutable() {
+  const virtualEnvironmentPython = process.env.VIRTUAL_ENV
+    ? path.join(
+        process.env.VIRTUAL_ENV,
+        process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+      )
+    : "";
+  const repositoryPython = path.resolve(
+    PLUGIN_ROOT,
+    "..",
+    "..",
+    ".venv",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+  );
+  const candidates = [
+    process.env.VERA_CLIENT_WORKFLOW_PYTHON,
+    process.env.PYTHON,
+    virtualEnvironmentPython,
+    repositoryPython,
+    "python3",
+    "python",
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    return candidate;
+  }
+  return "python3";
+}
+
+const CLIENT_WORKFLOW_PREFLIGHT = String.raw`
+import json
+import sys
+from pathlib import Path
+
+plugin_root = Path(sys.argv[1]).resolve()
+output_dir = Path(sys.argv[2])
+workflow_id = sys.argv[3]
+candidates = (
+    plugin_root.parent / "_shared" / "vendor" / "modules",
+    plugin_root / "vendor" / "modules",
+    plugin_root.parent.parent / "vendor" / "modules",
+)
+for candidate in candidates:
+    if (candidate / "vera_assurance").is_dir():
+        sys.path.insert(0, str(candidate))
+        break
+else:
+    raise RuntimeError("The required vera_assurance module is not available.")
+
+from vera_assurance import load_client_workflow_context_for_output
+
+context = load_client_workflow_context_for_output(
+    output_dir,
+    expected_workflow_id=workflow_id,
+)
+print(json.dumps({
+    "ok": True,
+    "schema_version": context["schema_version"],
+    "workflow_id": context["workflow_id"],
+    "run_id": context["run_id"],
+}, separators=(",", ":")))
+`;
+
+function preflightClientWorkflowRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  // Run ownership and lifecycle state are exact audit properties, so every
+  // persistence boundary reuses the shared v2 validator immediately before write.
+  const completed = spawnSync(
+    pythonExecutable(),
+    ["-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error(
+      "Registro Imprese SARI persistence requires a running v2 customer-folder workflow run",
+    );
+  }
+  let result;
+  try {
+    result = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error("Registro Imprese SARI customer-run preflight returned an invalid result");
+  }
+  if (
+    !isObject(result)
+    || result.ok !== true
+    || result.schema_version !== "vera.client_workflow_context.v2"
+    || result.workflow_id !== PLUGIN_NAME
+    || result.run_id !== expectedRunId
+  ) {
+    throw new Error("Registro Imprese SARI customer-run preflight returned an invalid result");
+  }
+  return result;
+}
+
 function objectSchema(properties, required = [], additionalProperties = true) {
   return { type: "object", properties, required, additionalProperties };
 }
@@ -122,6 +218,7 @@ function toolDefinitions() {
   );
   const reviewInput = objectSchema(
     {
+      client_engagement: { type: "string" },
       run_intake: { type: "object" },
       review_payload: reviewPayload,
       ui_decisions: { type: "object" },
@@ -141,6 +238,7 @@ function toolDefinitions() {
   );
   const decisionInput = objectSchema(
     {
+      client_engagement: { type: "string" },
       run_intake: { type: "object" },
       persistence_token: { type: "string" },
       review_payload: reviewPayload,
@@ -422,6 +520,39 @@ function isWithin(parent, child) {
   return relative === "" || (!relative.startsWith("..") && !path.isAbsolute(relative));
 }
 
+function resolveRunOutputReference(args, runIntake) {
+  const rawReference =
+    typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!rawReference) return null;
+  if (path.isAbsolute(rawReference)) return path.resolve(rawReference);
+  if (runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("relative run output requires path_reference=run_root_relative");
+  }
+  const contextValue =
+    typeof args.client_engagement === "string"
+      ? args.client_engagement.trim()
+      : "";
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error(
+      "client_engagement is required to resolve the portable run output",
+    );
+  }
+  const contextPath = path.resolve(contextValue);
+  const contextStat = fs.lstatSync(contextPath);
+  if (!contextStat.isFile() || contextStat.isSymbolicLink()) {
+    throw new Error("client_engagement must identify a regular context file");
+  }
+  if (fs.realpathSync(contextPath) !== contextPath) {
+    throw new Error("client_engagement may not traverse symlinks");
+  }
+  const runRoot = path.dirname(contextPath);
+  const outputDir = path.resolve(runRoot, rawReference);
+  if (outputDir === runRoot || !isWithin(runRoot, outputDir)) {
+    throw new Error("run output reference leaves the customer run");
+  }
+  return outputDir;
+}
+
 function persistenceContextForOutputDir(rawOutputDir, review, runIntakeArg = null) {
   const outputDir = path.resolve(rawOutputDir);
   const gitRoot = findGitRoot(PLUGIN_ROOT);
@@ -442,7 +573,7 @@ function persistenceContextForOutputDir(rawOutputDir, review, runIntakeArg = nul
   if (storedRun.plugin !== PLUGIN_NAME || storedRun.run_id !== review.run_id) {
     throw new Error("stored run_intake.json does not match the review payload");
   }
-  if (runIntakeArg.plugin != null && runIntakeArg.plugin !== PLUGIN_NAME) {
+  if (runIntakeArg?.plugin != null && runIntakeArg.plugin !== PLUGIN_NAME) {
     throw new Error("run_intake.plugin must match the plugin");
   }
   return { outputDir, storedRun, storedRunPath };
@@ -466,7 +597,8 @@ function issuePersistenceToken(args, review) {
   prunePersistenceContexts();
   const token = crypto.randomBytes(32).toString("base64url");
   PERSISTENCE_CONTEXTS.set(token, {
-    outputDir: context.outputDir,
+    outputReference: context.storedRun.output_dir,
+    pathReference: context.storedRun.path_reference,
     runId: review.run_id,
     reviewHash: verified.reviewHash,
     expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
@@ -489,8 +621,16 @@ function resolvePersistenceContext(args, review) {
     if (storedContext.runId !== review.run_id) {
       throw new Error("persistence_token belongs to another run");
     }
+    const tokenRunIntake = {
+      output_dir: storedContext.outputReference,
+      path_reference: storedContext.pathReference,
+    };
+    const currentOutputDir = resolveRunOutputReference(
+      args,
+      tokenRunIntake,
+    );
     const context = persistenceContextForOutputDir(
-      storedContext.outputDir,
+      currentOutputDir,
       review,
       runIntakeArg,
     );
@@ -504,7 +644,11 @@ function resolvePersistenceContext(args, review) {
   }
   const rawOutputDir = typeof runIntakeArg?.output_dir === "string" ? runIntakeArg.output_dir.trim() : "";
   if (!rawOutputDir) return null;
-  return persistenceContextForOutputDir(rawOutputDir, review, runIntakeArg);
+  return persistenceContextForOutputDir(
+    resolveRunOutputReference(args, runIntakeArg),
+    review,
+    runIntakeArg,
+  );
 }
 
 function readJson(filePath) {
@@ -646,6 +790,7 @@ function saveDecisions(args) {
     const verified = verifyStoredPackage(context, review);
     uiDecisions.review_payload_sha256 = verified.reviewHash;
     storedPath = path.join(context.outputDir, "ui_decisions.json");
+    preflightClientWorkflowRun(context.outputDir, review.run_id);
     writeJsonAtomic(storedPath, uiDecisions);
   }
   return {
@@ -753,6 +898,7 @@ function applyDecisions(args) {
   };
   const uiPath = path.join(context.outputDir, "ui_decisions.json");
   const appliedPath = path.join(context.outputDir, "applied_decisions.json");
+  preflightClientWorkflowRun(context.outputDir, review.run_id);
   writeJsonAtomic(uiPath, uiDecisions);
   writeJsonAtomic(appliedPath, applied);
   writeJsonAtomic(verified.finalPath, updatedFinal);

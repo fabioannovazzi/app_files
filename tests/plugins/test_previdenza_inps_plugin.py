@@ -8,6 +8,7 @@ import subprocess
 import sys
 from pathlib import Path
 from types import ModuleType
+from typing import Any, Callable
 
 import pytest
 from docx import Document
@@ -31,6 +32,21 @@ def _load_script(module_name: str) -> ModuleType:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def _filesystem_image(root: Path) -> tuple[tuple[str, str, bytes | None], ...]:
+    """Capture exact file bytes and directory names beneath a test run root."""
+
+    entries: list[tuple[str, str, bytes | None]] = []
+    for path in sorted(root.rglob("*"), key=lambda item: item.as_posix()):
+        relative = path.relative_to(root).as_posix()
+        if path.is_dir():
+            entries.append((relative, "directory", None))
+        elif path.is_file():
+            entries.append((relative, "file", path.read_bytes()))
+        else:
+            entries.append((relative, "other", None))
+    return tuple(entries)
 
 
 def _write_case_records(
@@ -225,6 +241,11 @@ def _inventory_case(tmp_path: Path, *, language: str = "it") -> tuple[Path, Path
     (input_dir / "mandato.txt").write_text(
         "Il rapporto decorre dal 1 gennaio 2021.", encoding="utf-8"
     )
+    inventory_case.load_client_engagement_context_file = lambda *_args, **_kwargs: {
+        "run_id": "run_111111111111111111111111",
+        "created_at": "2026-08-03T08:00:00+00:00",
+        "run_root": str(tmp_path.resolve()),
+    }
     assert (
         inventory_case.main(
             [
@@ -234,6 +255,8 @@ def _inventory_case(tmp_path: Path, *, language: str = "it") -> tuple[Path, Path
                 "--no-ocr",
                 "--language",
                 language,
+                "--client-engagement",
+                str(tmp_path / "context.json"),
             ]
         )
         == 0
@@ -241,11 +264,299 @@ def _inventory_case(tmp_path: Path, *, language: str = "it") -> tuple[Path, Path
     return input_dir, output_dir
 
 
+@pytest.mark.parametrize("rename_before_persist", [False, True])
+def test_previdenza_inps_primary_outputs_use_customer_run_id(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    rename_before_persist: bool,
+) -> None:
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={
+            "mandato.txt": "Il rapporto decorre dal 1 gennaio 2021.",
+        },
+    )
+    output_dir = Path(workspace["output_dir"])
+    inventory = _load_script("inventory_case")
+    validator = _load_script("validate_case_records")
+    packager = _load_script("package_case")
+
+    inventory_status = inventory.main(
+        [
+            str(workspace["input_dir"]),
+            "--output-dir",
+            str(output_dir),
+            "--no-ocr",
+            "--client-engagement",
+            str(workspace["context_path"]),
+        ]
+    )
+    records_path = _write_case_records(output_dir / "case_records_draft.json")
+    claims_path = _write_claims(output_dir / "claims_review.json")
+    audit = validator.validate_case_records(
+        records_path,
+        output_dir / "file_inventory.json",
+        output_dir,
+    )
+    package_status = packager.main(
+        [
+            str(output_dir / "case_records_validated.json"),
+            str(claims_path),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+        ]
+    )
+
+    context_path = Path(workspace["context_path"])
+    if rename_before_persist:
+        client_root = Path(workspace["client_root"])
+        relative_output = output_dir.relative_to(client_root)
+        relative_context = context_path.relative_to(client_root)
+        renamed_root = client_root.with_name("Renamed Test Client")
+        client_root.rename(renamed_root)
+        output_dir = renamed_root / relative_output
+        context_path = renamed_root / relative_context
+
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    assert inventory_status == 0
+    assert audit["status"] == "passed"
+    assert package_status == 0
+    assert run_intake["run_id"] == workspace["run_id"]
+    assert review_payload["run_id"] == workspace["run_id"]
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    persisted = _mcp_tool_call(
+        _node_or_skip(),
+        "save_previdenza_inps_decisions",
+        {
+            "client_engagement": str(context_path),
+            "run_intake": run_intake,
+            "review_payload": review_payload,
+            "decisions": [
+                {"item_id": review_payload["items"][0]["id"], "action": "accept"}
+            ],
+        },
+    )
+    assert persisted["ok"] is True
+    assert persisted["persisted"] is True
+    if rename_before_persist:
+        protected = {
+            path: path.read_bytes()
+            for path in (
+                output_dir / "ui_decisions.json",
+                output_dir / "final_artifacts.json",
+            )
+        }
+        rejected = _mcp_tool_call(
+            _node_or_skip(),
+            "save_previdenza_inps_decisions",
+            {
+                "client_engagement": str(context_path),
+                "run_intake": {**run_intake, "output_dir": "../outside"},
+                "review_payload": review_payload,
+                "decisions": [
+                    {
+                        "item_id": review_payload["items"][0]["id"],
+                        "action": "accept",
+                    }
+                ],
+            },
+        )
+        assert rejected["ok"] is False
+        assert "leaves the customer run" in rejected["error"]
+        assert all(path.read_bytes() == before for path, before in protected.items())
+
+
+@pytest.mark.parametrize(
+    "path_flag",
+    (
+        "--ocr-cache-dir",
+        "--ocr-detection-model-dir",
+        "--ocr-recognition-model-dir",
+    ),
+)
+def test_managed_inventory_rejects_ocr_paths_outside_outputs_before_write(
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+    path_flag: str,
+) -> None:
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={"mandato.txt": "Documento leggibile."},
+    )
+    inventory = _load_script("inventory_case")
+    run_root = Path(workspace["context_path"]).parent
+    outside_path = tmp_path / "unauthorized-ocr" / path_flag.removeprefix("--")
+    before = _filesystem_image(run_root)
+    extraction_calls: list[object] = []
+    monkeypatch.setattr(
+        inventory,
+        "extract_case_documents",
+        lambda *_args, **_kwargs: extraction_calls.append(object()),
+    )
+
+    status = inventory.main(
+        [
+            str(workspace["input_dir"]),
+            "--output-dir",
+            str(workspace["output_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            path_flag,
+            str(outside_path),
+        ]
+    )
+
+    assert status == 1
+    assert extraction_calls == []
+    assert not outside_path.exists()
+    assert _filesystem_image(run_root) == before
+
+
+def test_managed_inventory_requires_authorized_cache_before_model_download(
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={"mandato.txt": "Documento leggibile."},
+    )
+    inventory = _load_script("inventory_case")
+    run_root = Path(workspace["context_path"]).parent
+    before = _filesystem_image(run_root)
+    extraction_calls: list[object] = []
+    monkeypatch.setattr(
+        inventory,
+        "extract_case_documents",
+        lambda *_args, **_kwargs: extraction_calls.append(object()),
+    )
+
+    status = inventory.main(
+        [
+            str(workspace["input_dir"]),
+            "--output-dir",
+            str(workspace["output_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--allow-ocr-model-download",
+        ]
+    )
+
+    assert status == 1
+    assert extraction_calls == []
+    assert _filesystem_image(run_root) == before
+
+
+def test_managed_inventory_accepts_ocr_paths_inside_current_outputs(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={"mandato.txt": "Documento leggibile."},
+    )
+    inventory = _load_script("inventory_case")
+    output_dir = Path(workspace["output_dir"])
+
+    status = inventory.main(
+        [
+            str(workspace["input_dir"]),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--allow-ocr-model-download",
+            "--ocr-cache-dir",
+            str(output_dir / "ocr" / "cache"),
+            "--ocr-detection-model-dir",
+            str(output_dir / "ocr" / "detection"),
+            "--ocr-recognition-model-dir",
+            str(output_dir / "ocr" / "recognition"),
+        ]
+    )
+
+    assert status == 0
+    assert (output_dir / "file_inventory.json").is_file()
+
+
+def test_managed_inventory_accepts_exact_model_receipts_and_output_cache_after_rename(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    workspace = vera_workflow_workspace(
+        "previdenza-inps",
+        input_files={
+            "mandato.txt": "Documento leggibile.",
+            "detection-model.bin": "pinned detection model fixture",
+            "recognition-model.bin": "pinned recognition model fixture",
+        },
+    )
+    original_root = Path(workspace["client_root"])
+    renamed_root = original_root.with_name("Renamed OCR Customer")
+    relative_context = Path(workspace["context_path"]).relative_to(original_root)
+    relative_run_root = Path(workspace["context_path"]).parent.relative_to(
+        original_root
+    )
+    relative_input = Path(workspace["input_dir"]).relative_to(original_root)
+    relative_output = Path(workspace["output_dir"]).relative_to(original_root)
+    relative_detection = workspace["input_by_name"][
+        "detection-model.bin"
+    ].parent.relative_to(original_root)
+    relative_recognition = workspace["input_by_name"][
+        "recognition-model.bin"
+    ].parent.relative_to(original_root)
+    original_root.rename(renamed_root)
+    context_path = renamed_root / relative_context
+    input_dir = renamed_root / relative_input
+    output_dir = renamed_root / relative_output
+    cache_dir = output_dir / "ocr" / "cache"
+    inventory = _load_script("inventory_case")
+
+    status = inventory.main(
+        [
+            str(input_dir),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(context_path),
+            "--no-ocr",
+            "--ocr-cache-dir",
+            str(cache_dir),
+            "--ocr-detection-model-dir",
+            str(renamed_root / relative_detection),
+            "--ocr-recognition-model-dir",
+            str(renamed_root / relative_recognition),
+        ]
+    )
+
+    assert status == 0
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    assert run_intake["input_paths"] == [
+        relative_input.relative_to(relative_run_root).as_posix()
+    ]
+    assert str(original_root) not in json.dumps(run_intake)
+
+
 def _node_or_skip() -> str:
     node = shutil.which("node")
     if node is None:
         pytest.skip("Node.js is required for MCP execution tests")
     return node
+
+
+def _running_inps_test_output(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> tuple[Path, str]:
+    workspace = vera_workflow_workspace("previdenza-inps")
+    return Path(workspace["output_dir"]), str(workspace["run_id"])
 
 
 def _mcp_tool_call(
@@ -322,7 +633,7 @@ def _review_payload(
 
 
 def _write_run_intake(output_dir: Path, run_id: str) -> dict[str, object]:
-    output_dir.mkdir(mode=0o700)
+    output_dir.mkdir(mode=0o700, exist_ok=True)
     output_dir.chmod(0o700)
     payload = {
         "schema_version": "1.0",
@@ -330,6 +641,7 @@ def _write_run_intake(output_dir: Path, run_id: str) -> dict[str, object]:
         "workflow": "previdenza-inps",
         "run_id": run_id,
         "status": "inventory_complete",
+        "path_reference": "run_root_relative",
         "output_dir": output_dir.resolve().as_posix(),
         "data_posture": {
             "local_only": True,
@@ -471,7 +783,11 @@ def _package_bound_browser_capture_case(
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
-    return output_dir, stored_run_intake, review_payload
+    return (
+        output_dir,
+        {**stored_run_intake, "output_dir": output_dir.resolve().as_posix()},
+        review_payload,
+    )
 
 
 def test_inventory_case_is_stable_and_detects_byte_identical_duplicates(
@@ -1335,6 +1651,9 @@ def test_package_case_rejects_incomplete_or_external_calculation_package(
     validator = _load_script("validate_case_records")
     reconciler = _load_script("reconcile_contributions")
     packager = _load_script("package_case")
+    reconciler.load_client_engagement_context_file = lambda *_args, **_kwargs: {
+        "run_root": str(tmp_path.resolve()),
+    }
     assert (
         validator.validate_case_records(
             records_path, output_dir / "file_inventory.json", output_dir
@@ -1354,6 +1673,8 @@ def test_package_case_rejects_incomplete_or_external_calculation_package(
                 str(claims_path),
                 "--output-dir",
                 str(calculation_dir),
+                "--client-engagement",
+                str(tmp_path / "context.json"),
             ]
         )
         == 0
@@ -1459,12 +1780,14 @@ const html = fs.readFileSync(process.argv[1], "utf8");
 const match = html.match(/<script>([\s\S]*?)<\/script>/);
 if (!match) throw new Error("widget script missing");
 const nodes = new Map();
-const document = {
-  getElementById(id) {
+    const document = {
+      documentElement: { lang: "" },
+      getElementById(id) {
     if (!nodes.has(id)) {
-      nodes.set(id, {
-        addEventListener() {},
-        disabled: false,
+          nodes.set(id, {
+            addEventListener() {},
+            setAttribute() {},
+            disabled: false,
         innerHTML: "",
         textContent: "",
         value: "",
@@ -1545,10 +1868,10 @@ if (!lastWidgetState || Object.keys(lastWidgetState.decisions).length !== 0) {
 
 def test_previdenza_inps_mcp_save_persists_only_relative_path_disclosure(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-save"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
 
     result = _mcp_tool_call(
@@ -1566,6 +1889,32 @@ def test_previdenza_inps_mcp_save_persists_only_relative_path_disclosure(
     assert result["ui_decisions_path"] == "ui_decisions.json"
     assert output_dir.as_posix() not in json.dumps(result)
     assert (output_dir / "ui_decisions.json").exists()
+
+
+def test_previdenza_inps_mcp_rejects_ledger_run_id_mismatch_without_write(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    node = _node_or_skip()
+    output_dir, _ledger_run_id = _running_inps_test_output(vera_workflow_workspace)
+    mismatched_run_id = "previdenza-inps-mismatched-run"
+    run_intake = _write_run_intake(output_dir, mismatched_run_id)
+    final_path = output_dir / "final_artifacts.json"
+    final_before = final_path.read_bytes()
+
+    result = _mcp_tool_call(
+        node,
+        "save_previdenza_inps_decisions",
+        {
+            "run_intake": run_intake,
+            "review_payload": _review_payload(mismatched_run_id),
+            "decisions": [{"item_id": "audit-package", "action": "accept"}],
+        },
+    )
+
+    assert result["ok"] is False
+    assert "customer-run preflight returned an invalid result" in result["error"]
+    assert not (output_dir / "ui_decisions.json").exists()
+    assert final_path.read_bytes() == final_before
 
 
 def test_previdenza_inps_mcp_render_uses_opaque_persistence_token(
@@ -1989,10 +2338,10 @@ def test_previdenza_inps_mcp_rejects_bound_final_identity_mismatch(
 
 def test_previdenza_inps_mcp_render_token_can_persist_in_same_session(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-token-session"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     process = subprocess.Popen(
         [node, str(PLUGIN_ROOT / "mcp" / "server.cjs"), "--stdio"],
@@ -2093,10 +2442,10 @@ def test_previdenza_inps_mcp_save_rejects_mismatched_stored_run(
 
 def test_previdenza_inps_mcp_apply_reject_preserves_existing_blockers(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-reject"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     existing_blocker = {
         "code": "missing_source",
@@ -2129,10 +2478,10 @@ def test_previdenza_inps_mcp_apply_reject_preserves_existing_blockers(
 
 def test_previdenza_inps_mcp_apply_edit_records_revision_without_editing_memo(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-edit"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     artifact_review = _review_payload(run_id, item_type="artifact")
     (output_dir / "review_payload.json").write_text(
@@ -2184,10 +2533,10 @@ def test_previdenza_inps_mcp_apply_edit_records_revision_without_editing_memo(
 def test_previdenza_inps_mcp_non_accept_actions_remain_blocking(
     tmp_path: Path,
     action: str,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = f"previdenza-inps-block-{action}"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     _write_final_artifacts(output_dir, run_id)
     decision = {"item_id": "audit-package", "action": action}
@@ -2210,10 +2559,10 @@ def test_previdenza_inps_mcp_non_accept_actions_remain_blocking(
 
 def test_previdenza_inps_mcp_apply_all_accepts_keeps_professional_review_ceiling(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-accept"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     _write_final_artifacts(output_dir, run_id)
 
@@ -2257,10 +2606,10 @@ def test_previdenza_inps_mcp_apply_all_accepts_keeps_professional_review_ceiling
 
 def test_previdenza_inps_mcp_apply_accept_cannot_upgrade_invalid_package(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
     node = _node_or_skip()
-    run_id = "previdenza-inps-invalid-package"
-    output_dir = tmp_path / "output"
+    output_dir, run_id = _running_inps_test_output(vera_workflow_workspace)
     run_intake = _write_run_intake(output_dir, run_id)
     invalid_review = _review_payload(run_id)
     invalid_review["status"] = "validation_fail"

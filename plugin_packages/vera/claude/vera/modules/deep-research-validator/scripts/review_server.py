@@ -13,6 +13,7 @@ import secrets
 import shutil
 import socket
 import subprocess
+import sys
 import webbrowser
 from dataclasses import dataclass
 from http import HTTPStatus
@@ -45,6 +46,7 @@ ALLOWED_ACTIONS = {
 LOGGER = logging.getLogger(__name__)
 NODE_OVERRIDE_ENV = "MPARANZA_REVIEW_NODE"
 REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
+REQUIRE_VERA_CUSTOMER_RUN = False
 
 
 @dataclass(frozen=True)
@@ -143,6 +145,56 @@ def _output_dir(path: str | Path) -> Path:
     if not directory.is_dir():
         raise ValueError(f"output folder does not exist: {directory}")
     return directory
+
+
+def _validate_vera_customer_run(workbench: LocalReviewWorkbench) -> None:
+    """Require a live portable Vera run before the server can mutate review files."""
+
+    if not REQUIRE_VERA_CUSTOMER_RUN:
+        return
+    manifest = _read_json_object(
+        workbench.plugin_dir / ".codex-plugin" / "plugin.json",
+        required=True,
+    )
+    plugin = manifest.get("name")
+    vera_workflows = {
+        "audit-reconciliation",
+        "check-entries",
+        "client-file-preparation",
+        "concordato-plan-review",
+        "deep-research-validator",
+        "financial-analysis",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "new-client",
+        "previdenza-inps",
+        "prompt-optimizer",
+        "registro-imprese-sari",
+        "report-builder",
+        "sales-plan",
+    }
+    if plugin not in vera_workflows:
+        return
+    module_roots = (
+        workbench.plugin_dir / "vendor" / "modules",
+        workbench.plugin_dir.parent / "_shared" / "vendor" / "modules",
+    )
+    module_root = next(
+        (root for root in module_roots if (root / "vera_assurance").is_dir()),
+        None,
+    )
+    if module_root is None:
+        raise ValueError("Vera customer-run validator is unavailable")
+    if str(module_root) not in sys.path:
+        sys.path.insert(0, str(module_root))
+    from vera_assurance import (  # noqa: PLC0415
+        load_client_workflow_context_for_output,
+    )
+
+    load_client_workflow_context_for_output(
+        workbench.output_dir,
+        expected_workflow_id=str(plugin),
+    )
 
 
 def _validate_loopback_host(host: str) -> str:
@@ -797,6 +849,7 @@ def main(argv: list[str] | None = None) -> int:
             plugin_dir=_plugin_dir_from_args(args.plugin, args.plugin_dir),
             output_dir=_output_dir(args.output_dir),
         )
+        _validate_vera_customer_run(workbench)
         serve_review(
             workbench,
             host=args.host,

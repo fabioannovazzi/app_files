@@ -7,6 +7,17 @@ import sys
 from pathlib import Path
 from typing import Any
 
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -15,6 +26,10 @@ from validate_prompt import (  # noqa: E402
     render_prompt_package,
     validate_prompt_text,
     write_json,
+)
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_workflow_context_for_output,
 )
 
 __all__ = ["apply_review_edits", "main"]
@@ -46,6 +61,19 @@ def _write_json(path: Path, payload: dict[str, Any]) -> None:
         json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def _run_output_file(output_dir: Path, path: Path, label: str) -> Path:
+    """Resolve one existing file and keep it inside the selected run output."""
+
+    resolved_output = output_dir.expanduser().resolve()
+    try:
+        resolved = path.expanduser().resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"{label} is unavailable: {exc}") from exc
+    if not resolved.is_file() or not resolved.is_relative_to(resolved_output):
+        raise ValueError(f"{label} must be a file inside the run output")
+    return resolved
 
 
 def _eligible_optimized_prompt_effect(effect: dict[str, Any]) -> bool:
@@ -407,13 +435,52 @@ def main(argv: list[str] | None = None) -> int:
         description="Apply Prompt Optimizer review edits to downstream artifacts."
     )
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--applied-decisions", type=Path, required=True)
-    parser.add_argument("--final-artifacts", type=Path, required=True)
+    parser.add_argument("--applied-decisions", type=Path)
+    parser.add_argument("--final-artifacts", type=Path)
+    parser.add_argument(
+        "--client-run-preflight-only",
+        action="store_true",
+        help="Validate the owning running customer-folder run without writing.",
+    )
     args = parser.parse_args(argv)
+    try:
+        client_context = load_client_workflow_context_for_output(
+            args.output_dir.expanduser().resolve(),
+            expected_workflow_id="prompt-optimizer",
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+    if args.client_run_preflight_only:
+        result = {
+            "ok": True,
+            "schema_version": client_context["schema_version"],
+            "workflow_id": client_context["workflow_id"],
+            "client_run_id": client_context["run_id"],
+        }
+        sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+        return 0
+    if args.applied_decisions is None or args.final_artifacts is None:
+        parser.error(
+            "--applied-decisions and --final-artifacts are required unless "
+            "--client-run-preflight-only is used"
+        )
+    try:
+        applied_decisions = _run_output_file(
+            args.output_dir,
+            args.applied_decisions,
+            "applied decisions",
+        )
+        final_artifacts = _run_output_file(
+            args.output_dir,
+            args.final_artifacts,
+            "final artifacts",
+        )
+    except ValueError as exc:
+        parser.error(str(exc))
     result = apply_review_edits(
         args.output_dir,
-        args.applied_decisions,
-        args.final_artifacts,
+        applied_decisions,
+        final_artifacts,
     )
     sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
     return 0

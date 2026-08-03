@@ -366,6 +366,28 @@ def _as_output_ref(path: str | Path | None, output_dir: Path) -> str | None:
         return candidate.as_posix()
 
 
+def _run_path_reference(
+    path: Path,
+    client_engagement: dict[str, Any] | None,
+) -> str:
+    """Return an absolute unmanaged path or a portable managed-run reference."""
+
+    if client_engagement is None:
+        return path.as_posix()
+    run_root_value = client_engagement.get("run_root")
+    if not isinstance(run_root_value, str) or not run_root_value.strip():
+        raise ValueError("Managed Prompt Optimizer context has no run_root.")
+    run_root = Path(run_root_value).expanduser().resolve(strict=True)
+    resolved = path.expanduser().resolve(strict=True)
+    try:
+        relative = resolved.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError("Prompt Optimizer path is outside the current run.") from exc
+    if not relative.parts:
+        raise ValueError("Prompt Optimizer path must identify a run artifact.")
+    return relative.as_posix()
+
+
 def _clean_text(value: Any) -> str:
     return " ".join(str(value or "").strip().split())
 
@@ -573,20 +595,35 @@ def write_run_intake(
     source_domains: Sequence[str],
     answer_contract: dict[str, Any],
     prompt_contract_review: dict[str, Any] | None = None,
+    input_paths: Sequence[Path] = (),
+    client_engagement: dict[str, Any] | None = None,
+    client_run_id: str | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic prompt validation."""
 
-    run_id = _run_id(question_text)
+    context_run_id = (
+        str(client_engagement["run_id"]) if client_engagement is not None else None
+    )
+    if client_run_id is not None and context_run_id not in {None, client_run_id}:
+        raise ValueError("Prompt Optimizer run ID does not match its client context.")
+    run_id = context_run_id or client_run_id or _run_id(question_text)
     copy = _copy(language)
+    input_refs = [_run_path_reference(path, client_engagement) for path in input_paths]
+    output_ref = _run_path_reference(output_dir, client_engagement)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        **(
+            {"path_reference": "run_root_relative"}
+            if client_engagement is not None
+            else {}
+        ),
         "created_at": _utc_now(),
         "language": language,
-        "input_paths": [],
-        "output_dir": output_dir.as_posix(),
+        "input_paths": input_refs,
+        "output_dir": output_ref,
         "inferred_task": "prompt_optimizer_review_payload",
         "assumptions": {
             "question_character_count": len(question_text),
@@ -608,7 +645,7 @@ def write_run_intake(
             "note": copy["dependency_note"],
         },
         "data_posture": {
-            "local_files_read": [],
+            "local_files_read": input_refs,
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,

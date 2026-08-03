@@ -10,7 +10,23 @@ import sys
 from pathlib import Path, PurePosixPath
 from typing import Any, Iterator, Sequence
 
+SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
 from new_client_core import ValidationError, sha256_file, validate_contract
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = [
     "DeliveryValidationError",
@@ -22,7 +38,9 @@ LOGGER = logging.getLogger(__name__)
 DELIVERY_MANIFEST_NAME = "delivery_manifest.json"
 SOURCE_EVIDENCE_DIRECTORY = "source-evidence"
 DEFAULT_FORBIDDEN_TERMS = ("codex", "claude", "openai", "anthropic")
-RUN_ID_PATTERN = re.compile(r"\bnew-client-[0-9]{14,}-[0-9a-f]{12}\b")
+RUN_ID_PATTERN = re.compile(
+    r"(?:\brun_[0-9a-f]{24}\b|\bnew-client-[0-9]{14,}-[0-9a-f]{12}\b)"
+)
 UNICODE_ESCAPE_PATTERN = re.compile(r"\\u([0-9a-fA-F]{4})")
 SHA256_PATTERN = re.compile(r"[0-9a-f]{64}")
 MANIFEST_KEYS = frozenset(
@@ -706,17 +724,28 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("command", choices=("seal", "validate"))
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="new-client",
+            output_dir=args.output_dir,
+        )
         if args.command == "seal":
             report = seal_delivery(args.output_dir)
         else:
             report = validate_delivery(args.output_dir)
-    except (DeliveryValidationError, ValidationError, OSError) as exc:
+    except (
+        AssuranceContractError,
+        DeliveryValidationError,
+        ValidationError,
+        OSError,
+    ) as exc:
         LOGGER.error("%s", exc)
         return 1
     sys.stdout.write(

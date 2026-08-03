@@ -42,7 +42,9 @@ __all__ = [
     "SOURCE_INDEX_FILE_NAME",
     "canonical_json_sha256",
     "load_source_index",
+    "resolve_source_record_path",
     "seal_review_integrity",
+    "source_identity_key",
     "validate_review_integrity",
     "validate_source_index",
     "write_source_index",
@@ -290,6 +292,92 @@ def _private_source_records(
     )
 
 
+def _client_run_root(output_dir: Path) -> Path | None:
+    """Return the current managed run root containing one ordinary context."""
+
+    candidate = Path(output_dir).expanduser().resolve()
+    while True:
+        context_path = candidate / "context.json"
+        try:
+            observed = context_path.lstat()
+        except FileNotFoundError:
+            observed = None
+        if (
+            observed is not None
+            and stat.S_ISREG(observed.st_mode)
+            and not stat.S_ISLNK(observed.st_mode)
+            and observed.st_nlink == 1
+        ):
+            return candidate
+        parent = candidate.parent
+        if parent == candidate:
+            return None
+        candidate = parent
+
+
+def source_identity_key(output_dir: Path, source_path: Path) -> str:
+    """Return an absolute standalone identity or a portable managed identity."""
+
+    source = Path(source_path).expanduser().resolve()
+    run_root = _client_run_root(output_dir)
+    if run_root is None:
+        return source.as_posix()
+    try:
+        relative = source.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError(
+            "Report Builder managed source is outside the run root"
+        ) from exc
+    if not relative.parts:
+        raise ValueError("Report Builder managed source must identify a run artifact")
+    return f"run_root:{relative.as_posix()}"
+
+
+def _validate_managed_source_identity(output_dir: Path, identity_key: str) -> None:
+    """Reject machine-local or non-canonical identities in managed source indexes."""
+
+    if _client_run_root(output_dir) is None:
+        return
+    prefix = "run_root:"
+    if not identity_key.startswith(prefix):
+        raise ValueError("Report Builder managed source identity is not portable")
+    reference, separator, member_path = identity_key[len(prefix) :].partition("::")
+    candidate = PurePosixPath(reference)
+    if (
+        not reference
+        or candidate.is_absolute()
+        or candidate.as_posix() != reference
+        or any(part in {"", ".", ".."} for part in candidate.parts)
+        or "\\" in reference
+    ):
+        raise ValueError("Report Builder managed source identity is not canonical")
+    if separator and _canonical_zip_member_path(member_path) != member_path:
+        raise ValueError("Report Builder archive-member identity is not canonical")
+
+
+def _portable_source_root(output_dir: Path, root_path: str) -> Path:
+    """Resolve an absolute or explicitly managed run-relative source root."""
+
+    candidate = Path(root_path)
+    if candidate.is_absolute():
+        return candidate
+    if (
+        not root_path
+        or root_path != candidate.as_posix()
+        or root_path == "."
+        or ".." in candidate.parts
+        or "\\" in root_path
+    ):
+        raise ValueError("Report Builder source root is not canonical")
+    run_root = _client_run_root(output_dir)
+    if run_root is None:
+        raise ValueError("Report Builder portable source root has no customer run")
+    resolved = (run_root / candidate).resolve()
+    if not resolved.is_relative_to(run_root) or resolved == run_root:
+        raise ValueError("Report Builder source root leaves the customer run")
+    return resolved
+
+
 def write_source_index(
     output_dir: Path,
     tables: Sequence[Mapping[str, Any]],
@@ -302,6 +390,29 @@ def write_source_index(
     )
     if not sources:
         raise ValueError("Report Builder source index cannot be empty")
+    run_root = _client_run_root(output_root)
+    if run_root is not None:
+        for source in sources:
+            _validate_managed_source_identity(
+                output_root,
+                str(source["identity_key"]),
+            )
+            root_value = str(source["root_path"])
+            if not Path(root_value).is_absolute():
+                _portable_source_root(output_root, root_value)
+                continue
+            root_path = Path(root_value).expanduser().resolve()
+            try:
+                relative_root = root_path.relative_to(run_root)
+            except ValueError as exc:
+                raise ValueError(
+                    "Report Builder managed source is outside the run root"
+                ) from exc
+            if not relative_root.parts:
+                raise ValueError(
+                    "Report Builder managed source must identify a run artifact"
+                )
+            source["root_path"] = relative_root.as_posix()
     content = {
         "schema_version": SOURCE_INDEX_SCHEMA,
         "sources": sources,
@@ -341,7 +452,12 @@ def load_source_index(output_dir: Path) -> dict[str, Any]:
     return payload
 
 
-def _validate_private_source(record: Mapping[str, Any]) -> None:
+def resolve_source_record_path(
+    output_dir: Path,
+    record: Mapping[str, Any],
+) -> Path:
+    """Resolve one private source record against its current managed run."""
+
     artifact_id = record.get("artifact_id")
     identity_key = record.get("identity_key")
     root_path = record.get("root_path")
@@ -358,7 +474,15 @@ def _validate_private_source(record: Mapping[str, Any]) -> None:
     path_value = receipt.get("path")
     if not isinstance(path_value, str) or not path_value:
         raise ValueError(f"Source receipt path is missing for {artifact_id}")
-    source_path = _contained_file(Path(root_path), path_value)
+    return _contained_file(_portable_source_root(output_dir, root_path), path_value)
+
+
+def _validate_private_source(output_dir: Path, record: Mapping[str, Any]) -> None:
+    artifact_id = record.get("artifact_id")
+    receipt = record.get("receipt")
+    source_path = resolve_source_record_path(output_dir, record)
+    if not isinstance(receipt, Mapping):
+        raise ValueError("Malformed Report Builder private source record")
     byte_count, digest = _file_snapshot(source_path)
     if (
         receipt.get("artifact_id") != artifact_id
@@ -366,17 +490,6 @@ def _validate_private_source(record: Mapping[str, Any]) -> None:
         or receipt.get("sha256") != digest
     ):
         raise ValueError(f"Source receipt does not match current bytes: {artifact_id}")
-
-
-def _source_record_path(record: Mapping[str, Any]) -> Path:
-    root_path = record.get("root_path")
-    receipt = record.get("receipt")
-    if not isinstance(root_path, str) or not isinstance(receipt, Mapping):
-        raise ValueError("Malformed Report Builder private source record")
-    path_value = receipt.get("path")
-    if not isinstance(path_value, str) or not path_value:
-        raise ValueError("Report Builder private source path is missing")
-    return _contained_file(Path(root_path), path_value)
 
 
 def _canonical_zip_member_path(member_name: str) -> str:
@@ -429,10 +542,15 @@ def _zip_manifest(source_bytes: bytes) -> list[dict[str, Any]]:
     return sorted(manifest, key=lambda item: str(item["path"]).casefold())
 
 
-def validate_source_index(output_dir: Path) -> dict[str, Any]:
+def validate_source_index(
+    output_dir: Path,
+    *,
+    source_context_dir: Path | None = None,
+) -> dict[str, Any]:
     """Replay every persisted source receipt against current bytes."""
 
     payload = load_source_index(output_dir)
+    resolution_dir = Path(source_context_dir or output_dir)
     seen: set[str] = set()
     sources_by_id: dict[str, Mapping[str, Any]] = {}
     for source in payload["sources"]:
@@ -442,7 +560,11 @@ def validate_source_index(output_dir: Path) -> dict[str, Any]:
         if artifact_id in seen:
             raise ValueError(f"Duplicate source artifact identity: {artifact_id}")
         seen.add(artifact_id)
-        _validate_private_source(source)
+        identity_key = source.get("identity_key")
+        if not isinstance(identity_key, str):
+            raise ValueError("Malformed Report Builder source identity")
+        _validate_managed_source_identity(resolution_dir, identity_key)
+        _validate_private_source(resolution_dir, source)
         sources_by_id[artifact_id] = source
     manifests_by_container: dict[str, list[dict[str, Any]]] = {}
     for raw_manifest in payload["archive_manifests"]:
@@ -460,7 +582,9 @@ def validate_source_index(output_dir: Path) -> dict[str, Any]:
         container = sources_by_id.get(container_id)
         if container is None:
             raise ValueError("Archive manifest container source is missing")
-        current_manifest = _zip_manifest(_source_record_path(container).read_bytes())
+        current_manifest = _zip_manifest(
+            resolve_source_record_path(resolution_dir, container).read_bytes()
+        )
         if members != current_manifest:
             raise ValueError("Archive member manifest does not match current bytes")
         manifests_by_container[container_id] = current_manifest
@@ -501,9 +625,11 @@ def validate_source_index(output_dir: Path) -> dict[str, Any]:
             or receipt.get("sha256") != member["sha256"]
         ):
             raise ValueError("Archive-member derivation binding is stale")
+        container_identity = container.get("identity_key")
         identity_key = source.get("identity_key")
-        if not isinstance(identity_key, str) or not identity_key.endswith(
-            f"::{member_path}"
+        if (
+            not isinstance(container_identity, str)
+            or identity_key != f"{container_identity}::{member_path}"
         ):
             raise ValueError("Archive-member source identity is stale")
     extracted_member_ids = {
@@ -514,6 +640,15 @@ def validate_source_index(output_dir: Path) -> dict[str, Any]:
     }
     if extracted_member_ids != bound_member_ids:
         raise ValueError("Archive-member derivation bindings are incomplete")
+    for artifact_id, source in sources_by_id.items():
+        if artifact_id in bound_member_ids:
+            continue
+        expected_identity = source_identity_key(
+            resolution_dir,
+            resolve_source_record_path(resolution_dir, source),
+        )
+        if source.get("identity_key") != expected_identity:
+            raise ValueError("Report Builder direct source identity is stale")
     return payload
 
 

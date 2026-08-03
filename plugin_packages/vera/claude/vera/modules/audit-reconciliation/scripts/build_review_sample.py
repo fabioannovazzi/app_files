@@ -73,7 +73,9 @@ exec(  # nosec B102
     compile(_bootstrap_source, _BOOTSTRAP_PATH, "exec"),
     _BOOTSTRAP_NAMESPACE,
 )
-_BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](("locale_support",))
+_BOOTSTRAP_ROOTS = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
+    ("locale_support",)
+)
 _SCRIPTS_DIR = _bootstrap_os.path.dirname(_bootstrap_os.path.abspath(__file__))
 if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
@@ -90,6 +92,15 @@ from typing import Any, Callable
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
+
+_VERA_ASSURANCE_MODULE_ROOT = Path(str(_BOOTSTRAP_ROOTS["shared_assurance"])).parent
+if str(_VERA_ASSURANCE_MODULE_ROOT) not in sys.path:
+    sys.path.insert(0, str(_VERA_ASSURANCE_MODULE_ROOT))
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 try:
     from .locale_support import normalize_language
@@ -681,9 +692,13 @@ def main(argv: list[str] | None = None) -> int:
         description="Build an operational review sample from a reconciliation workbook."
     )
     parser.add_argument(
-        "workbook", help="Path to riconciliazione_audit.xlsx or equivalent workbook."
+        "workbook",
+        type=Path,
+        help="Path to riconciliazione_audit.xlsx or equivalent workbook.",
     )
-    parser.add_argument("--output-dir", help="Directory for generated review files.")
+    parser.add_argument(
+        "--output-dir", type=Path, help="Directory for generated review files."
+    )
     parser.add_argument(
         "--count", type=int, default=3, help="Number of rows to select."
     )
@@ -706,6 +721,7 @@ def main(argv: list[str] | None = None) -> int:
         default=DEFAULT_REQUEST_NAME,
         help="Generated Markdown request file name.",
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
 
     language = normalize_language(args.language)
@@ -714,16 +730,29 @@ def main(argv: list[str] | None = None) -> int:
             "build_review_sample currently renders reviewer-facing text in Italian only."
         )
 
-    workbook_path = Path(args.workbook)
-    output_dir = (
-        Path(args.output_dir) if args.output_dir else default_output_dir(workbook_path)
-    )
+    workbook_path = args.workbook
+    output_dir = args.output_dir or default_output_dir(workbook_path)
+    excel_output = output_dir / args.excel_name
+    request_output = output_dir / args.request_name
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="audit-reconciliation",
+            input_paths=[workbook_path],
+            output_dir=excel_output,
+        )
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="audit-reconciliation",
+            input_paths=[workbook_path],
+            output_dir=request_output,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     rows = load_reconciliation_rows(workbook_path)
     sample = build_review_sample(rows, status=args.status, count=args.count)
-    excel_path = write_review_sample_workbook(output_dir / args.excel_name, sample)
-    request_path = write_review_request(
-        output_dir / args.request_name, sample, greeting=args.greeting
-    )
+    excel_path = write_review_sample_workbook(excel_output, sample)
+    request_path = write_review_request(request_output, sample, greeting=args.greeting)
     print(f"Review sample workbook: {excel_path}")
     print(f"Review request draft: {request_path}")
     print(f"Selected rows: {len(sample.selected_rows)}")

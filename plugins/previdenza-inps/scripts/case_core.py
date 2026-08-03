@@ -232,6 +232,7 @@ def _run_local_ocr(
     allow_model_download: bool,
     detection_model_dir: Path | None,
     recognition_model_dir: Path | None,
+    allow_implicit_model_paths: bool,
 ) -> dict[str, Any]:
     """Run the optional local Paddle adapter and return a non-throwing status."""
 
@@ -257,6 +258,7 @@ def _run_local_ocr(
         allow_model_download=allow_model_download,
         detection_model_dir=detection_model_dir,
         recognition_model_dir=recognition_model_dir,
+        allow_implicit_model_paths=allow_implicit_model_paths,
     )
     return _ocr_result_dict(result)
 
@@ -334,6 +336,7 @@ def _extract_pdf(
     ocr_cache_dir: Path | None = None,
     ocr_detection_model_dir: Path | None = None,
     ocr_recognition_model_dir: Path | None = None,
+    allow_implicit_ocr_model_paths: bool = True,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], list[str]]:
     reader = PdfReader(str(path))
     limitations: list[str] = []
@@ -376,6 +379,7 @@ def _extract_pdf(
                     allow_model_download=allow_ocr_model_download,
                     detection_model_dir=ocr_detection_model_dir,
                     recognition_model_dir=ocr_recognition_model_dir,
+                    allow_implicit_model_paths=allow_implicit_ocr_model_paths,
                 )
                 ocr_network_used = ocr_network_used or bool(result.get("network_used"))
                 fragment, ocr_succeeded = _apply_ocr_result(fragment, result)
@@ -410,6 +414,7 @@ def _extract_image(
     ocr_cache_dir: Path | None,
     ocr_detection_model_dir: Path | None,
     ocr_recognition_model_dir: Path | None,
+    allow_implicit_ocr_model_paths: bool,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], list[str]]:
     fragments: list[dict[str, Any]] = []
     attempted_pages = 0
@@ -429,6 +434,7 @@ def _extract_image(
                 allow_model_download=allow_ocr_model_download,
                 detection_model_dir=ocr_detection_model_dir,
                 recognition_model_dir=ocr_recognition_model_dir,
+                allow_implicit_model_paths=allow_implicit_ocr_model_paths,
             )
             fragment, succeeded = _apply_ocr_result(fragment, result)
             successful_pages += int(succeeded)
@@ -657,6 +663,7 @@ def _extract_file(
     ocr_cache_dir: Path | None,
     ocr_detection_model_dir: Path | None,
     ocr_recognition_model_dir: Path | None,
+    allow_implicit_ocr_model_paths: bool,
 ) -> tuple[list[dict[str, Any]], dict[str, Any], list[str]]:
     suffix = path.suffix.lower()
     if suffix == ".pdf":
@@ -668,6 +675,7 @@ def _extract_file(
             ocr_cache_dir=ocr_cache_dir,
             ocr_detection_model_dir=ocr_detection_model_dir,
             ocr_recognition_model_dir=ocr_recognition_model_dir,
+            allow_implicit_ocr_model_paths=allow_implicit_ocr_model_paths,
         )
     if suffix in SUPPORTED_IMAGE_SUFFIXES:
         return _extract_image(
@@ -678,6 +686,7 @@ def _extract_file(
             ocr_cache_dir=ocr_cache_dir,
             ocr_detection_model_dir=ocr_detection_model_dir,
             ocr_recognition_model_dir=ocr_recognition_model_dir,
+            allow_implicit_ocr_model_paths=allow_implicit_ocr_model_paths,
         )
     if suffix == ".docx":
         return _extract_docx(path)
@@ -735,6 +744,9 @@ def extract_case_documents(
     visual_confirmation_methods: dict[Path, str] | None = None,
     excluded_paths: set[Path] | None = None,
     ocr_excluded_paths: set[Path] | None = None,
+    input_dir_reference: str | None = None,
+    output_dir_reference: str | None = None,
+    allow_implicit_ocr_model_paths: bool = True,
 ) -> ExtractionResult:
     """Inventory evidence; path exclusions can keep visual controls out of OCR."""
 
@@ -789,6 +801,7 @@ def extract_case_documents(
                     ocr_cache_dir=ocr_cache_dir,
                     ocr_detection_model_dir=ocr_detection_model_dir,
                     ocr_recognition_model_dir=ocr_recognition_model_dir,
+                    allow_implicit_ocr_model_paths=allow_implicit_ocr_model_paths,
                 )
                 capture_method = capture_methods.get(path.resolve())
                 if capture_method:
@@ -878,8 +891,9 @@ def extract_case_documents(
     inventory = {
         "schema_version": "1.0",
         "plugin": "previdenza-inps",
-        "input_dir": input_dir.as_posix(),
-        "output_dir": output_dir.as_posix(),
+        "path_reference": "run_root_relative",
+        "input_dir": input_dir_reference or input_dir.name,
+        "output_dir": output_dir_reference or ".",
         "document_count": len(documents),
         "readable_document_count": sum(
             document["readability"] == "text_readable" for document in documents

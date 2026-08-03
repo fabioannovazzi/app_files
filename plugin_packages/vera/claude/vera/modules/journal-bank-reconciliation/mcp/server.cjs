@@ -294,6 +294,7 @@ function toolDefinitions() {
   );
   const inputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
@@ -317,6 +318,7 @@ function toolDefinitions() {
   );
   const decisionInputSchema = objectSchema(
     {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
@@ -324,7 +326,7 @@ function toolDefinitions() {
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["client_engagement", "review_payload", "decisions"],
   );
   return [
     {
@@ -481,6 +483,10 @@ function validateReviewPayload(inputArgs) {
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
   const payload = {
     widget_type: "journal_bank_review",
+    client_engagement:
+      typeof inputArgs.client_engagement === "string"
+        ? inputArgs.client_engagement
+        : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -499,10 +505,8 @@ function validateReviewPayload(inputArgs) {
 }
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -658,15 +662,55 @@ function saveDecisionPayload(inputArgs) {
       ui_decisions: uiDecisions,
     };
   };
-  return outputDir
-    ? withOutputDirectoryTransaction(outputDir, persist)
-    : persist(null);
+  if (!outputDir) return persist(null);
+  preflightClientRun(outputDir, uiDecisions.run_id);
+  return withOutputDirectoryTransaction(outputDir, persist);
 }
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputReference) return null;
+  const contextValue =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : "";
+  if (!contextValue && path.isAbsolute(outputReference)) {
+    return path.resolve(outputReference);
+  }
+  if (!contextValue || !path.isAbsolute(contextValue)) {
+    throw new Error("Journal-Bank persistence requires the current client_engagement context.");
+  }
+  const contextPath = path.resolve(contextValue);
+  if (contextPath !== contextValue || path.basename(contextPath) !== "context.json") {
+    throw new Error("Journal-Bank client_engagement path is invalid.");
+  }
+  const contextStat = pathEntryStat(contextPath);
+  if (
+    !contextStat ||
+    !contextStat.isFile() ||
+    contextStat.isSymbolicLink() ||
+    contextStat.nlink !== 1
+  ) {
+    throw new Error("Journal-Bank client_engagement context is unavailable.");
+  }
+  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+    throw new Error("Journal-Bank output reference is not run-root-relative.");
+  }
+  const runRoot = path.dirname(contextPath);
+  const resolved = path.isAbsolute(outputReference)
+    ? path.resolve(outputReference)
+    : path.resolve(runRoot, outputReference);
+  const relative = path.relative(runRoot, resolved);
+  if (
+    relative === "" ||
+    relative === ".." ||
+    relative.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relative)
+  ) {
+    throw new Error("Journal-Bank output reference leaves the customer run.");
+  }
+  return resolved;
 }
 
 function pathEntryStat(targetPath) {
@@ -2187,7 +2231,7 @@ function applyDecisionPayload(inputArgs) {
         }
       : inputArgs;
     const preflightResult =
-      preflightWorkflowReviewApplication(workingOutputDir);
+      preflightWorkflowReviewApplication(workingOutputDir, outputDir);
     if (workingOutputDir) {
       validateOutputDirectoryTree(workingOutputDir);
       replayTrustedAssuranceBaseline(
@@ -2225,9 +2269,9 @@ function applyDecisionPayload(inputArgs) {
     }
     return result;
   };
-  return outputDir
-    ? withOutputDirectoryTransaction(outputDir, applyToOutput)
-    : applyToOutput(null);
+  if (!outputDir) return applyToOutput(null);
+  preflightClientRun(outputDir, uiDecisions.run_id);
+  return withOutputDirectoryTransaction(outputDir, applyToOutput);
 }
 
 function applyDecisionPayloadWrites({
@@ -2867,10 +2911,37 @@ function sourceRootsForOutput(outputDir) {
     implementation: PLUGIN_ROOT,
     shared_implementation: SHARED_ASSURANCE_ROOT,
   };
-  const canonicalOutputValue = shortString(runIntake.output_dir);
-  const canonicalOutput = canonicalOutputValue
-    ? path.resolve(canonicalOutputValue)
-    : null;
+  let runRoot = null;
+  let candidate = path.resolve(outputDir);
+  while (true) {
+    const contextPath = path.join(candidate, "context.json");
+    const contextStat = pathEntryStat(contextPath);
+    if (
+      contextStat?.isFile() &&
+      !contextStat.isSymbolicLink() &&
+      contextStat.nlink === 1
+    ) {
+      runRoot = candidate;
+      break;
+    }
+    const parent = path.dirname(candidate);
+    if (parent === candidate) break;
+    candidate = parent;
+  }
+  const resolveStoredReference = (value) => {
+    const reference = shortString(value);
+    if (!reference) return null;
+    if (path.isAbsolute(reference)) return path.resolve(reference);
+    if (
+      !runRoot ||
+      runIntake.path_reference !== "run_root_relative" ||
+      reference.split(/[\\/]+/).includes("..")
+    ) {
+      return null;
+    }
+    return path.resolve(runRoot, reference);
+  };
+  const canonicalOutput = resolveStoredReference(runIntake.output_dir);
   for (const [side, field] of [
     ["bank", "bank_path"],
     ["journal", "journal_path"],
@@ -2878,7 +2949,8 @@ function sourceRootsForOutput(outputDir) {
   ]) {
     const sourceValue = shortString(audit[field]);
     if (!sourceValue) continue;
-    let source = path.resolve(sourceValue);
+    let source = resolveStoredReference(sourceValue);
+    if (!source) continue;
     if (canonicalOutput && pathIsInside(canonicalOutput, source)) {
       source = path.join(outputDir, path.relative(canonicalOutput, source));
     }
@@ -3225,6 +3297,15 @@ function replayTrustedAssuranceBaseline(outputDir, baseline, replayResult) {
 
 function validateWorkflowScriptResult(parsed, phase) {
   if (!isPlainObject(parsed)) return false;
+  if (phase === "client_run") {
+    return (
+      parsed.ok === true &&
+      parsed.schema_version === "vera.client_workflow_context.v2" &&
+      parsed.workflow_id === "journal-bank-reconciliation" &&
+      typeof parsed.client_run_id === "string" &&
+      Boolean(parsed.client_run_id.trim())
+    );
+  }
   if (phase === "preflight") {
     const content = { ...parsed };
     delete content.content_sha256;
@@ -3307,7 +3388,28 @@ function runWorkflowPython(args, phase) {
   return parseWorkflowScriptOutput(completed, phase);
 }
 
-function preflightWorkflowReviewApplication(outputDir) {
+function preflightClientRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const result = runWorkflowPython(
+    [
+      scriptPath,
+      "--output-dir",
+      outputDir,
+      "--client-run-preflight-only",
+    ],
+    "client_run",
+  );
+  if (result.client_run_id !== expectedRunId) {
+    throw new Error("Journal-Bank customer-run preflight returned an invalid result.");
+  }
+  return result;
+}
+
+function preflightWorkflowReviewApplication(
+  outputDir,
+  canonicalOutputDir = null,
+) {
   if (!outputDir) return null;
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
   const localDate = (value) =>
@@ -3317,10 +3419,11 @@ function preflightWorkflowReviewApplication(outputDir) {
       value.getDate().toString().padStart(2, "0"),
     ].join("-");
   const startedOn = localDate(new Date());
-  const result = runWorkflowPython(
-    [scriptPath, "--output-dir", outputDir, "--preflight-only"],
-    "preflight",
-  );
+  const args = [scriptPath, "--output-dir", outputDir, "--preflight-only"];
+  if (canonicalOutputDir) {
+    args.push("--canonical-output-dir", canonicalOutputDir);
+  }
+  const result = runWorkflowPython(args, "preflight");
   const completedOn = localDate(new Date());
   if (![startedOn, completedOn].includes(result.replayed_on)) {
     throw new Error(workflowChildMessages("preflight").invalid);

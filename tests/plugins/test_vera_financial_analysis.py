@@ -109,7 +109,7 @@ def test_financial_analysis_mcp_describes_all_registered_packs() -> None:
     )
 
     responses = [json.loads(line) for line in result.stdout.splitlines()]
-    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.3"
+    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.4"
     assert responses[1]["result"]["structuredContent"]["registered_packs"] == [
         "monthly_pnl",
         "working_capital",
@@ -624,7 +624,7 @@ def test_case_validator_rejects_crosswalk_receipt_outside_package() -> None:
 def test_cli_writes_deterministic_contract_audit(tmp_path: Path) -> None:
     module = _load_case_module()
     contracts = _case_contracts("working_capital")
-    arguments: list[str] = []
+    source_arguments: list[tuple[str, Path]] = []
     single_paths = {
         "package": "--package",
         "request": "--request",
@@ -634,7 +634,7 @@ def test_cli_writes_deterministic_contract_audit(tmp_path: Path) -> None:
     for key, flag in single_paths.items():
         path = tmp_path / f"{key}.json"
         path.write_text(json.dumps(contracts[key]), encoding="utf-8")
-        arguments.extend([flag, str(path)])
+        source_arguments.append((flag, path))
     for key, flag in (
         ("datasets", "--dataset"),
         ("relationships", "--relationship"),
@@ -643,9 +643,61 @@ def test_cli_writes_deterministic_contract_audit(tmp_path: Path) -> None:
         for index, value in enumerate(contracts[key]):
             path = tmp_path / f"{key}-{index}.json"
             path.write_text(json.dumps(value), encoding="utf-8")
-            arguments.extend([flag, str(path)])
-    output = tmp_path / "financial_analysis_contract_audit.json"
-    arguments.extend(["--output", str(output)])
+            source_arguments.append((flag, path))
+
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    spec = importlib.util.spec_from_file_location(
+        "financial_analysis_test_client_ledger",
+        ledger_path,
+    )
+    assert spec and spec.loader
+    ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
+    spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Studio" / "Financial Client"
+    client_root.mkdir(parents=True)
+    client_id = "client_222222222222222222222222"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Financial review")
+    imported = [
+        ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            source,
+            "source",
+        )
+        for _, source in source_arguments
+    ]
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "financial-analysis",
+        "test-version",
+        input_ids=[item["receipt"]["input_id"] for item in imported],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    execution_by_name = {
+        Path(item["path"]).name: Path(item["path"])
+        for item in running["context"]["input_bindings"]
+    }
+    arguments: list[str] = []
+    for flag, source in source_arguments:
+        arguments.extend([flag, str(execution_by_name[source.name])])
+    output = Path(running["output_dir"]) / "financial_analysis_contract_audit.json"
+    arguments.extend(
+        [
+            "--output",
+            str(output),
+            "--client-engagement",
+            str(running["context_path"]),
+        ]
+    )
 
     return_code = module.main(arguments)
 

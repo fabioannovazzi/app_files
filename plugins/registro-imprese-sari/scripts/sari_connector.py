@@ -26,11 +26,14 @@ from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     assert_generic_public_query,
     ensure_safe_output_dir,
     iso_now,
     load_json_object,
+    load_running_case_context,
     normalize_html_text,
+    require_case_artifact_run,
     safe_identifier,
     sha256_bytes,
     write_private_json,
@@ -681,7 +684,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("operation", choices=("search", "detail"))
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--tenant", required=True)
     parser.add_argument("--expected-chamber", required=True)
     parser.add_argument("--written-use-authorization-id", required=True)
@@ -689,14 +692,22 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--card-id")
     parser.add_argument("--limit", type=int, default=MAX_RESULTS)
     args = parser.parse_args(argv)
-    common = {
-        "output_dir": args.output_dir,
-        "run_id": args.run_id,
-        "tenant": args.tenant,
-        "expected_chamber": args.expected_chamber,
-        "written_use_authorization_id": args.written_use_authorization_id,
-    }
     try:
+        context = load_running_case_context(
+            args.client_engagement,
+            output_dir=args.output_dir,
+        )
+        for name in ("run_intake.json", "official_sources.json"):
+            path = args.output_dir / name
+            if path.exists():
+                require_case_artifact_run(path, run_id=context["run_id"])
+        common = {
+            "output_dir": args.output_dir,
+            "run_id": context["run_id"],
+            "tenant": args.tenant,
+            "expected_chamber": args.expected_chamber,
+            "written_use_authorization_id": args.written_use_authorization_id,
+        }
         if args.operation == "search":
             if not args.query:
                 parser.error("search requires --query")
@@ -711,7 +722,7 @@ def main(argv: list[str] | None = None) -> int:
                 parser.error("detail requires --card-id")
             result = run_detail(card_id=args.card_id, **common)
             LOGGER.info("Stored selected SARI card %s", result["card_id"])
-    except (SariConnectorError, ValueError) as exc:
+    except (AssuranceContractError, OSError, SariConnectorError, ValueError) as exc:
         LOGGER.error("SARI_CONNECTOR_BLOCKED: %s", exc)
         return 2
     return 0

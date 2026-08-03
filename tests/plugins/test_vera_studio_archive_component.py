@@ -24,6 +24,22 @@ ROOT = Path(__file__).resolve().parents[2]
 COMPONENT_ROOT = ROOT / "plugins" / "studio-archive"
 ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
+EXPECTED_CLIENT_WORKFLOW_IDS = (
+    "audit-reconciliation",
+    "client-file-preparation",
+    "new-client",
+    "journal-sampling",
+    "check-entries",
+    "journal-bank-reconciliation",
+    "sales-plan",
+    "financial-analysis",
+    "report-builder",
+    "concordato-plan-review",
+    "prompt-optimizer",
+    "deep-research-validator",
+    "previdenza-inps",
+    "registro-imprese-sari",
+)
 
 
 @pytest.fixture(scope="module")
@@ -170,7 +186,7 @@ def test_client_folder_binding_excludes_private_identity_values(
     assert "01234567890" not in serialized
 
 
-def test_existing_client_journal_and_support_share_one_engagement(
+def test_existing_client_journal_and_support_share_one_explicit_engagement(
     indexed_archive: SimpleNamespace,
     archive_core: ModuleType,
 ) -> None:
@@ -185,27 +201,21 @@ def test_existing_client_journal_and_support_share_one_engagement(
     journal_bytes = b"journal source bytes"
     journal.write_bytes(journal_bytes)
 
+    engagement = archive_core.create_studio_client_engagement(
+        client_id,
+        "2025 journal sample",
+        state_dir=indexed_archive.state,
+    )["engagement"]
+
     # Act
     journal_import = archive_core.import_studio_client_document(
         client_id,
         journal,
         "journal",
-        engagement_label="2025 journal sample",
+        engagement_id=engagement["engagement_id"],
         state_dir=indexed_archive.state,
     )
-    engagement_id = journal_import["engagement"]["engagement_id"]
-    normalization_dir = (
-        Path(journal_import["client_engagement"]["output_dir"]) / "normalization"
-    )
-    normalization_dir.mkdir(parents=True)
-    (normalization_dir / "normalized_journal.csv").write_text(
-        "movement_number,amount_signed\nM-1,10\n",
-        encoding="utf-8",
-    )
-    (normalization_dir / "normalization_diagnostics.json").write_text(
-        "{}\n",
-        encoding="utf-8",
-    )
+    engagement_id = engagement["engagement_id"]
     support = indexed_archive.root.parent / "fatture.zip"
     support_bytes = b"support source bytes"
     support.write_bytes(support_bytes)
@@ -228,38 +238,18 @@ def test_existing_client_journal_and_support_share_one_engagement(
     assert Path(support_import["imported_path"]).read_bytes() == support_bytes
     assert journal_import["original_preserved"] is True
     assert support_import["original_preserved"] is True
-    assert journal_import["client_engagement"]["workflow_id"] == "journal-sampling"
-    assert support_import["client_engagement"]["workflow_id"] == "check-entries"
-    assert (
-        journal_import["client_engagement"]["engagement_id"]
-        == support_import["client_engagement"]["engagement_id"]
-        == engagement_id
-    )
-    assert (
-        journal_import["client_engagement"]["studio_client_folder"]["studio_client_id"]
-        == support_import["client_engagement"]["studio_client_folder"][
-            "studio_client_id"
-        ]
-        == client_id
-    )
+    assert "client_engagement" not in journal_import
+    assert "client_engagement" not in support_import
+    assert journal_import["engagement"]["engagement_id"] == engagement_id
+    assert support_import["engagement"]["engagement_id"] == engagement_id
     assert listed["engagement_count"] == 1
     listed_engagement = listed["engagements"][0]
     assert [item["role"] for item in listed_engagement["imports"]] == [
         "journal",
         "support",
     ]
-    assert listed_engagement["workflow_run_count"] == 2
-    journal_runs = [
-        run
-        for run in listed_engagement["workflow_runs"]
-        if run["workflow_id"] == "journal-sampling"
-    ]
-    assert len(journal_runs) == 1
-    assert journal_runs[0]["normalization_available"] is True
-    assert journal_runs[0]["normalized_journal_path"] == str(
-        normalization_dir / "normalized_journal.csv"
-    )
-    assert Path(journal_runs[0]["client_engagement_path"]).is_file()
+    assert listed_engagement["workflow_run_count"] == 0
+    assert listed_engagement["workflow_runs"] == []
 
 
 def test_new_client_creation_derives_folder_and_defers_relationship_setup(
@@ -289,6 +279,109 @@ def test_new_client_creation_derives_folder_and_defers_relationship_setup(
     assert result["next_workflow"] == "new-client"
 
 
+def test_create_engagement_does_not_assume_a_document_type(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+
+    result = archive_core.create_studio_client_engagement(
+        registration["client"]["client_id"],
+        "2026 financial analysis",
+        state_dir=indexed_archive.state,
+    )
+
+    assert result["status"] == "created"
+    assert result["engagement"]["imports"] == []
+    assert Path(result["input_dir"]).is_dir()
+    assert result["engagement"]["label"] == "2026 financial analysis"
+
+
+def test_generic_source_import_uses_an_explicit_engagement(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    client_id = registration["client"]["client_id"]
+    engagement = archive_core.create_studio_client_engagement(
+        client_id,
+        "2026 financial analysis",
+        state_dir=indexed_archive.state,
+    )["engagement"]
+    source = indexed_archive.root.parent / "monthly-pnl.xlsx"
+    source.write_bytes(b"reviewed source")
+
+    result = archive_core.import_studio_client_document(
+        client_id,
+        source,
+        "source",
+        engagement_id=engagement["engagement_id"],
+        state_dir=indexed_archive.state,
+    )
+
+    assert result["status"] == "imported"
+    assert result["engagement"]["engagement_id"] == engagement["engagement_id"]
+    assert result["engagement"]["imports"][0]["role"] == "source"
+    assert "client_engagement" not in result
+    assert Path(result["imported_path"]).read_bytes() == b"reviewed source"
+
+
+@pytest.mark.parametrize("workflow_id", EXPECTED_CLIENT_WORKFLOW_IDS)
+def test_prepare_workflow_supports_every_user_facing_vera_pipeline(
+    workflow_id: str,
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    registration = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )
+    engagement = archive_core.create_studio_client_engagement(
+        registration["client"]["client_id"],
+        "2026 engagement",
+        state_dir=indexed_archive.state,
+    )["engagement"]
+    source = indexed_archive.root.parent / f"{workflow_id}-source.txt"
+    source.write_text("Reviewed workflow source\n", encoding="utf-8")
+    imported = archive_core.import_studio_client_document(
+        registration["client"]["client_id"],
+        source,
+        "source",
+        engagement_id=engagement["engagement_id"],
+        state_dir=indexed_archive.state,
+    )
+
+    result = archive_core.prepare_studio_client_workflow(
+        engagement["engagement_id"],
+        workflow_id,
+        input_ids=[imported["input_id"]],
+        state_dir=indexed_archive.state,
+    )
+
+    context = result["client_engagement"]
+    assert context["workflow_id"] == workflow_id
+    assert context["engagement_id"] == engagement["engagement_id"]
+    output_dir = Path(context["output_dir"])
+    assert output_dir.name == "outputs"
+    assert output_dir.parent.name == result["run"]["run_id"]
+    assert output_dir.parent.parent.name == "runs"
+
+
+def test_registered_client_workflows_match_the_public_vera_inventory(
+    archive_core: ModuleType,
+) -> None:
+    assert archive_core.VERA_CLIENT_WORKFLOW_IDS == EXPECTED_CLIENT_WORKFLOW_IDS
+
+
 def test_support_import_rejects_another_clients_engagement(
     indexed_archive: SimpleNamespace,
     archive_core: ModuleType,
@@ -304,19 +397,25 @@ def test_support_import_rejects_another_clients_engagement(
         legal_names=["Bianchi SRL"],
         state_dir=indexed_archive.state,
     )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        rossi,
+        "Rossi journal",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
     journal = indexed_archive.root.parent / "journal.csv"
     journal.write_text("entry\n", encoding="utf-8")
-    engagement_id = archive_core.import_studio_client_document(
+    archive_core.import_studio_client_document(
         rossi,
         journal,
         "journal",
+        engagement_id=engagement_id,
         state_dir=indexed_archive.state,
-    )["engagement"]["engagement_id"]
+    )
     support = indexed_archive.root.parent / "invoice.pdf"
     support.write_bytes(b"%PDF support")
 
     # Act / Assert
-    with pytest.raises(archive_core.ArchiveError, match="another client"):
+    with pytest.raises(archive_core.ArchiveError, match="engagement is invalid"):
         archive_core.import_studio_client_document(
             bianchi,
             support,
@@ -339,6 +438,11 @@ def test_journal_import_rejects_source_from_another_client_scope(
         legal_names=["Rossi SRL"],
         state_dir=indexed_archive.state,
     )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        rossi,
+        "Rossi journal",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
     bianchi_source = indexed_archive.root / "Bianchi" / "journal.xlsx"
     source_bytes = b"Bianchi journal"
     bianchi_source.write_bytes(source_bytes)
@@ -349,10 +453,20 @@ def test_journal_import_rejects_source_from_another_client_scope(
             rossi,
             bianchi_source,
             "journal",
+            engagement_id=engagement_id,
             state_dir=indexed_archive.state,
         )
     assert bianchi_source.read_bytes() == source_bytes
-    assert not (indexed_archive.root / "Rossi" / "Vera engagements").exists()
+    assert not list(
+        (
+            indexed_archive.root
+            / "Rossi"
+            / "Vera"
+            / "engagements"
+            / engagement_id
+            / "inputs"
+        ).iterdir()
+    )
 
 
 def _mcp_request(
@@ -1218,7 +1332,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_fourteen_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_twenty_three_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1235,9 +1349,18 @@ def test_mcp_lists_fourteen_strict_local_tools(tmp_path: Path) -> None:
         "list_studio_archive_clients",
         "get_studio_client_folder",
         "create_studio_archive_client",
+        "create_studio_client_engagement",
         "import_studio_client_document",
         "list_studio_client_engagements",
         "prepare_studio_client_workflow",
+        "start_studio_client_workflow",
+        "fail_studio_client_workflow",
+        "cancel_studio_client_workflow",
+        "finalize_studio_client_workflow",
+        "complete_studio_client_workflow",
+        "close_studio_client_engagement",
+        "recover_studio_client_ledger",
+        "report_studio_client_retention",
         "configure_studio_archive",
         "refresh_studio_archive",
         "search_studio_archive",
@@ -1249,10 +1372,49 @@ def test_mcp_lists_fourteen_strict_local_tools(tmp_path: Path) -> None:
     assert all(tool["inputSchema"]["additionalProperties"] is False for tool in tools)
     assert all(tool["annotations"]["openWorldHint"] is False for tool in tools)
     tool_by_name = {tool["name"]: tool for tool in tools}
+    workflow_enum = tool_by_name["prepare_studio_client_workflow"]["inputSchema"][
+        "properties"
+    ]["workflow_id"]["enum"]
+    assert tuple(workflow_enum) == EXPECTED_CLIENT_WORKFLOW_IDS
+    assert (
+        tool_by_name["prepare_studio_client_workflow"]["annotations"]["idempotentHint"]
+        is True
+    )
+    artifact_required = tool_by_name["finalize_studio_client_workflow"]["inputSchema"][
+        "properties"
+    ]["artifacts"]["items"]["required"]
+    assert "media_type" in artifact_required
+    import_role_enum = tool_by_name["import_studio_client_document"]["inputSchema"][
+        "properties"
+    ]["role"]["enum"]
+    assert set(import_role_enum) == {"source", "journal", "support"}
     assert (
         tool_by_name["configure_studio_archive_client"]["annotations"]["idempotentHint"]
         is False
     )
+
+
+def test_mcp_rejects_finalize_artifact_without_media_type(tmp_path: Path) -> None:
+    result = _mcp_tool(
+        "finalize_studio_client_workflow",
+        {
+            "client_id": "client_111111111111111111111111",
+            "engagement_id": "eng_222222222222222222222222",
+            "run_id": "run_333333333333333333333333",
+            "artifacts": [
+                {
+                    "artifact_id": "review.result",
+                    "path": "result.txt",
+                    "purpose": "Present the result for professional review.",
+                    "audience": "review",
+                }
+            ],
+        },
+        state_dir=tmp_path / "state",
+    )
+
+    assert result["isError"] is True
+    assert "artifact media_type" in result["structuredContent"]["error"]["message"]
 
 
 def test_mcp_rejects_non_object_json_request(tmp_path: Path) -> None:
@@ -1335,6 +1497,109 @@ def test_mcp_configure_refresh_search_and_open(tmp_path: Path) -> None:
     assert result["structuredContent"]["citation"] == "Rossi/memo.txt, lines 1"
 
 
+def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -> None:
+    archive_root = tmp_path / "Shared Studio"
+    client_root = archive_root / "Rossi"
+    client_root.mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = _mcp_tool(
+        "configure_studio_archive",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+    scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
+    registered = _mcp_tool(
+        "configure_studio_archive_client",
+        {"scope_id": scope_id, "legal_names": ["Rossi SRL"]},
+        state_dir=state_dir,
+    )
+    client_id = registered["structuredContent"]["client"]["client_id"]
+    created = _mcp_tool(
+        "create_studio_client_engagement",
+        {"client_id": client_id, "engagement_label": "2026 review"},
+        state_dir=state_dir,
+    )
+    engagement_id = created["structuredContent"]["engagement"]["engagement_id"]
+    source = tmp_path / "received-journal.txt"
+    source.write_text("Reviewed journal evidence\n", encoding="utf-8")
+    imported = _mcp_tool(
+        "import_studio_client_document",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "source_path": str(source),
+            "role": "journal",
+        },
+        state_dir=state_dir,
+    )
+    prepared = _mcp_tool(
+        "prepare_studio_client_workflow",
+        {
+            "engagement_id": engagement_id,
+            "workflow_id": "financial-analysis",
+            "input_ids": [imported["structuredContent"]["input_id"]],
+            "purpose": "Prepare the reviewed financial analysis.",
+            "idempotency_key": "mcp-lifecycle",
+        },
+        state_dir=state_dir,
+    )
+    run_id = prepared["structuredContent"]["run"]["run_id"]
+    started = _mcp_tool(
+        "start_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": run_id,
+        },
+        state_dir=state_dir,
+    )
+    output_dir = Path(prepared["structuredContent"]["client_engagement"]["output_dir"])
+    (output_dir / "result.txt").write_text("Reviewed result\n", encoding="utf-8")
+    finalized = _mcp_tool(
+        "finalize_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": run_id,
+            "artifacts": [
+                {
+                    "artifact_id": "review.result",
+                    "path": "result.txt",
+                    "purpose": "Present the result for professional review.",
+                    "audience": "review",
+                    "media_type": "text/plain",
+                }
+            ],
+        },
+        state_dir=state_dir,
+    )
+    completed = _mcp_tool(
+        "complete_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": run_id,
+        },
+        state_dir=state_dir,
+    )
+    recovered = _mcp_tool(
+        "recover_studio_client_ledger",
+        {},
+        state_dir=state_dir,
+    )
+    retention = _mcp_tool(
+        "report_studio_client_retention",
+        {"client_id": client_id, "older_than_days": 0},
+        state_dir=state_dir,
+    )
+
+    assert started["structuredContent"]["status"] == "running"
+    assert finalized["structuredContent"]["status"] == "ready_for_review"
+    assert completed["structuredContent"]["status"] == "completed"
+    assert recovered["structuredContent"]["run_count"] == 1
+    assert retention["structuredContent"]["runs"][0]["retention_candidate"] is True
+
+
 def test_mcp_configures_plans_and_matches_client_scoped_gmail(tmp_path: Path) -> None:
     archive_root = tmp_path / "Shared Studio"
     (archive_root / "Rossi").mkdir(parents=True)
@@ -1380,7 +1645,7 @@ def test_mcp_configures_plans_and_matches_client_scoped_gmail(tmp_path: Path) ->
     assert result["structuredContent"]["may_use_in_scoped_answer"] is True
 
 
-def test_mcp_lists_and_rebinds_orphaned_client_profile(tmp_path: Path) -> None:
+def test_mcp_recovers_client_profile_after_folder_rename(tmp_path: Path) -> None:
     archive_root = tmp_path / "Shared Studio"
     original_folder = archive_root / "Rossi"
     original_folder.mkdir(parents=True)
@@ -1391,7 +1656,7 @@ def test_mcp_lists_and_rebinds_orphaned_client_profile(tmp_path: Path) -> None:
         state_dir=state_dir,
     )
     original_scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
-    _mcp_tool(
+    registered = _mcp_tool(
         "configure_studio_archive_client",
         {
             "scope_id": original_scope_id,
@@ -1412,26 +1677,19 @@ def test_mcp_lists_and_rebinds_orphaned_client_profile(tmp_path: Path) -> None:
         {},
         state_dir=state_dir,
     )
-    rebound = _mcp_tool(
-        "configure_studio_archive_client",
-        {
-            "scope_id": renamed_scope_id,
-            "replace_orphaned_scope_id": original_scope_id,
-        },
-        state_dir=state_dir,
-    )
     plan = _mcp_tool(
         "plan_studio_archive_gmail_search",
         {"scope_id": renamed_scope_id},
         state_dir=state_dir,
     )
 
-    assert profiles["structuredContent"]["orphaned_profile_count"] == 1
+    assert profiles["structuredContent"]["orphaned_profile_count"] == 0
+    recovered = profiles["structuredContent"]["clients"][0]
+    assert recovered["scope_id"] == renamed_scope_id
     assert (
-        profiles["structuredContent"]["orphaned_profiles"][0]["scope_id"]
-        == original_scope_id
+        recovered["client_id"] == registered["structuredContent"]["client"]["client_id"]
     )
-    assert rebound["structuredContent"]["status"] == "rebound"
+    assert recovered["email_addresses"] == ["amministrazione@rossi.it"]
     assert plan["structuredContent"]["profile_status"] == "configured"
 
 

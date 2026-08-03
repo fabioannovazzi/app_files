@@ -82,18 +82,21 @@ same operating-system user is likewise outside this in-process boundary.
 ## Studio client and engagement boundary
 
 The raw-input entrypoint accepts no free output directory. It requires a
-digest-valid `vera.studio_client_folder.v2` object emitted for one exact current
-Studio Archive scope, plus an engagement ID, an input directory inside that
-client root, and an absolute workspace root outside the evidence folder and Git
-workspace. It derives the run directory as
-`clients/<studio-client-id>/engagements/<engagement-id>/runs/audit-reconciliation/<run-id>`.
+digest-valid `vera.client_workflow_context.v2` file emitted by Studio Archive
+for one prepared and started `audit-reconciliation` run. The portable context
+resolves the current customer-folder location from the stable client manifest,
+then verifies the engagement, run, input manifest, import receipts, immutable
+execution copies, and output directory. The entrypoint reads only
+`runs/<run-id>/inputs/` and writes only `runs/<run-id>/outputs/` inside that
+customer folder.
 
-This rule is deterministic because path containment, scope-ID derivation,
-digest equality, and output-layout equality are mechanically verifiable. It
-does not decide client identity from names or document meaning. The exact
-context is repeated and sealed in intake, review, manifest, prepared,
-canonical, and assurance records so a later reviewer can detect cross-client
-or cross-engagement substitution.
+This rule is deterministic because IDs, path containment, receipt seals,
+byte hashes, lifecycle transitions, and output-layout equality are
+mechanically verifiable. It does not decide client identity from a folder name
+or document meaning, so renaming or moving the customer folder does not change
+the recorded identity. The exact context is repeated and sealed in intake,
+review, manifest, prepared, canonical, and assurance records so a later
+reviewer can detect cross-client, cross-engagement, or cross-run substitution.
 
 ## 3. Reconciliation boundary
 
@@ -187,7 +190,9 @@ field, so changing run identity changes the seal digest.
 For isolated replay, use:
 
 ```bash
-python -I -B scripts/audit_assurance.py validate-run-json <output-folder> \
+python -I -B scripts/audit_assurance.py \
+  --client-engagement <customer-run>/context.json \
+  validate-run-json <output-folder> \
   --expected-predecessor-checkpoint <retained-64-hex-sha256>
 ```
 

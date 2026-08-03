@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import sys
 from decimal import Decimal
 from pathlib import Path
@@ -32,11 +33,13 @@ from vera_assurance import (  # noqa: E402
     canonical_json_sha256,
     decimal_text,
     difference_within_tolerance,
+    load_client_engagement_context_file,
     parse_canonical_decimal,
     parse_localized_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
     validate_client_engagement_context,
+    validate_client_workflow_run,
     validate_numeric_evidence_ledger,
     validate_reviewed_decision_receipt,
     validate_source_qualification,
@@ -162,6 +165,81 @@ def test_client_engagement_rejects_other_client_input(tmp_path: Path) -> None:
             run_id="run-001",
             input_dir=other_client_input,
             workspace_root=tmp_path / "Vera Work",
+        )
+
+
+def test_client_workflow_context_file_rejects_legacy_pointer_context(
+    tmp_path: Path,
+) -> None:
+    folder = _client_folder(tmp_path)
+    input_dir = (
+        Path(str(folder["client_root"])) / "Vera engagements" / "eng_1" / "inputs"
+    )
+    input_dir.mkdir(parents=True)
+    source = input_dir / "monthly-pnl.xlsx"
+    source.write_bytes(b"source")
+    context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="eng_1",
+        workflow_id="financial-analysis",
+        run_id="run_1",
+        input_dir=input_dir,
+        workspace_root=tmp_path / "Vera Work",
+    )
+    context_path = tmp_path / "client-engagement.json"
+    context_path.write_text(json.dumps(context), encoding="utf-8")
+
+    with pytest.raises(AssuranceContractError, match="portable customer-folder"):
+        load_client_engagement_context_file(
+            context_path,
+            expected_workflow_id="financial-analysis",
+            input_paths=[source],
+            output_dir=context["output_dir"],
+        )
+
+
+def test_client_workflow_context_rejects_another_workflow(tmp_path: Path) -> None:
+    folder = _client_folder(tmp_path)
+    input_dir = Path(str(folder["client_root"])) / "inputs"
+    input_dir.mkdir()
+    context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="eng_1",
+        workflow_id="sales-plan",
+        run_id="run_1",
+        input_dir=input_dir,
+        workspace_root=tmp_path / "Vera Work",
+    )
+
+    with pytest.raises(AssuranceContractError, match="different Vera workflow"):
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="financial-analysis",
+        )
+
+
+def test_client_workflow_context_rejects_input_outside_engagement(
+    tmp_path: Path,
+) -> None:
+    folder = _client_folder(tmp_path)
+    input_dir = Path(str(folder["client_root"])) / "inputs"
+    input_dir.mkdir()
+    outside = tmp_path / "other-client.xlsx"
+    outside.write_bytes(b"outside")
+    context = build_client_engagement_context(
+        studio_client_folder=folder,
+        engagement_id="eng_1",
+        workflow_id="financial-analysis",
+        run_id="run_1",
+        input_dir=input_dir,
+        workspace_root=tmp_path / "Vera Work",
+    )
+
+    with pytest.raises(AssuranceContractError, match="outside"):
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="financial-analysis",
+            input_paths=[outside],
         )
 
 

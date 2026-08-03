@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -1109,10 +1110,28 @@ def write_run_intake(
     language: str,
     document_language: str,
     report_type: str,
+    run_id: str | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> RunIntakeResult:
     """Write run intake before deterministic report rendering."""
 
-    run_id = _run_id(input_path)
+    effective_run_id = run_id or _run_id(input_path)
+    run_root_value = (
+        client_engagement.get("run_root")
+        if isinstance(client_engagement, Mapping)
+        else None
+    )
+    managed_run = isinstance(run_root_value, str) and bool(run_root_value.strip())
+    output_reference = output_dir.as_posix()
+    if managed_run:
+        run_root = Path(run_root_value).expanduser().resolve()
+        try:
+            relative_output = output_dir.expanduser().resolve().relative_to(run_root)
+        except ValueError as exc:
+            raise ValueError("Report Builder output is outside the run root.") from exc
+        if not relative_output.parts:
+            raise ValueError("Report Builder output must identify a run artifact.")
+        output_reference = relative_output.as_posix()
     spanish = _is_spanish(language)
     local_files_read = [input_path.name]
     if recipe_path is not None:
@@ -1121,12 +1140,13 @@ def write_run_intake(
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
-        "run_id": run_id,
+        "run_id": effective_run_id,
+        **({"path_reference": "run_root_relative"} if managed_run else {}),
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
         "input_paths": [input_path.name],
-        "output_dir": output_dir.as_posix(),
+        "output_dir": output_reference,
         "inferred_task": "report_builder_review_payload",
         "assumptions": {
             "report_type": report_type,
@@ -1165,7 +1185,7 @@ def write_run_intake(
         "status": "ready_for_report_build",
     }
     return RunIntakeResult(
-        run_id=run_id,
+        run_id=effective_run_id,
         path=_write_json(output_dir / "run_intake.json", payload),
     )
 

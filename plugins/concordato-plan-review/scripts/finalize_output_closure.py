@@ -64,7 +64,9 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 import argparse
 import json
 import sys
+from collections.abc import Mapping
 from pathlib import Path
+from typing import Any
 
 from concordato_plan_core import (
     ASSURANCE_IMPLEMENTATION_ROOT,
@@ -72,7 +74,13 @@ from concordato_plan_core import (
     validate_numeric_evidence_closure,
 )
 from output_closure import finalize_output_closure, refresh_final_artifact_index
-from vera_assurance import canonical_json_sha256, validate_assurance_envelope
+from replay_assurance import _current_source_root
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    canonical_json_sha256,
+    load_client_engagement_context_file,
+    validate_assurance_envelope,
+)
 
 __all__ = ["main"]
 
@@ -84,15 +92,65 @@ def _read_object(path: Path) -> dict[str, object]:
     return payload
 
 
-def _replay_successor_prerequisites(output_dir: Path) -> None:
+def _load_cli_customer_context(
+    *,
+    client_engagement: Path,
+    output_dir: Path,
+    persistent_output_dir: Path | None,
+) -> dict[str, Any]:
+    """Authorize either the canonical output or its MCP transaction copy."""
+
+    context = load_client_engagement_context_file(
+        client_engagement,
+        expected_workflow_id="concordato-plan-review",
+    )
+    expected_output = Path(str(context["output_dir"])).resolve()
+    persistent_output = (
+        persistent_output_dir.expanduser().resolve()
+        if persistent_output_dir is not None
+        else expected_output
+    )
+    if persistent_output != expected_output:
+        raise AssuranceContractError(
+            "persistent Concordato output must be the customer run output root"
+        )
+    actual_output = output_dir.expanduser().resolve(strict=True)
+    if actual_output == expected_output or actual_output.is_relative_to(
+        expected_output
+    ):
+        load_client_engagement_context_file(
+            client_engagement,
+            expected_workflow_id="concordato-plan-review",
+            output_dir=actual_output,
+        )
+        return context
+    try:
+        relative = actual_output.relative_to(Path(str(context["run_root"])))
+    except ValueError as exc:
+        raise AssuranceContractError(
+            "Concordato output is outside the customer run"
+        ) from exc
+    if not (
+        len(relative.parts) == 2
+        and relative.parts[0].startswith(".generated-review-transaction-")
+        and relative.parts[1] == "working"
+    ):
+        raise AssuranceContractError(
+            "Concordato output is outside the customer run and its review transaction"
+        )
+    return context
+
+
+def _replay_successor_prerequisites(
+    output_dir: Path,
+    client_context: Mapping[str, Any] | None = None,
+) -> None:
     """Freshly replay immutable authority before sealing a mutable successor."""
 
     run_intake = _read_object(output_dir / "run_intake.json")
     review_payload = _read_object(output_dir / "review_payload.json")
     envelope = _read_object(output_dir / "assurance_envelope.json")
-    source_paths = run_intake.get("input_paths")
-    if not isinstance(source_paths, list) or len(source_paths) != 1:
-        raise ValueError("run_intake.input_paths must contain one source root")
+    source_root = _current_source_root(output_dir, run_intake, client_context)
     review_content = dict(review_payload)
     review_digest = review_content.pop("content_sha256", None)
     if review_digest != canonical_json_sha256(review_content):
@@ -100,7 +158,7 @@ def _replay_successor_prerequisites(output_dir: Path) -> None:
     validated = validate_assurance_envelope(
         envelope,
         artifact_roots={
-            "source": Path(str(source_paths[0])).resolve(),
+            "source": source_root,
             "run": output_dir,
             "implementation": COMPONENT_ROOT,
             "assurance_implementation": ASSURANCE_IMPLEMENTATION_ROOT,
@@ -115,12 +173,18 @@ def _replay_successor_prerequisites(output_dir: Path) -> None:
         raise ValueError("Review payload assurance binding is stale")
     ledger = _read_object(output_dir / "numeric_evidence_ledger.json")
     if ledger.get("schema_version") == "concordato.numeric_evidence_ledger.v2":
-        validate_numeric_evidence_closure(output_dir, ledger)
+        validate_numeric_evidence_closure(
+            output_dir,
+            ledger,
+            source_root=source_root,
+        )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument("--persistent-output-dir", type=Path, help=argparse.SUPPRESS)
     parser.add_argument(
         "--phase",
         required=True,
@@ -129,13 +193,18 @@ def main() -> int:
     args = parser.parse_args()
     try:
         output_dir = Path(args.output_dir).resolve()
-        _replay_successor_prerequisites(output_dir)
+        client_context = _load_cli_customer_context(
+            client_engagement=args.client_engagement,
+            output_dir=output_dir,
+            persistent_output_dir=args.persistent_output_dir,
+        )
+        _replay_successor_prerequisites(output_dir, client_context)
         refresh_final_artifact_index(output_dir)
         closure = finalize_output_closure(
             output_dir,
             phase=args.phase,
         )
-    except (OSError, ValueError) as exc:
+    except (AssuranceContractError, OSError, ValueError) as exc:
         sys.stdout.write(json.dumps({"ok": False, "error": str(exc)}) + "\n")
         return 1
     sys.stdout.write(

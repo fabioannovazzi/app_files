@@ -94,11 +94,13 @@ from journal_bank_core import (  # noqa: E402
     validate_exact_implementation_receipts,
 )
 from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
     artifact_receipt,
     build_assurance_envelope,
     build_gate_register,
     build_reviewed_decision_receipt,
     canonical_json_sha256,
+    load_client_workflow_context_for_output,
     validate_allocation_ledger,
     validate_artifact_receipt,
     validate_assurance_envelope,
@@ -441,11 +443,41 @@ def _source_roots(output_dir: Path) -> dict[str, Path]:
         if _lstat_or_none(run_intake_path) is not None
         else {}
     )
+    run_root: Path | None = None
+    candidate = output_dir.expanduser().resolve()
+    while True:
+        context_path = candidate / "context.json"
+        context_entry = _lstat_or_none(context_path)
+        if (
+            context_entry is not None
+            and stat.S_ISREG(context_entry.st_mode)
+            and not context_path.is_symlink()
+            and context_entry.st_nlink == 1
+        ):
+            run_root = candidate
+            break
+        if candidate == candidate.parent:
+            break
+        candidate = candidate.parent
+
+    def resolve_reference(value: object) -> Path | None:
+        text = clean_text(value)
+        if not text:
+            return None
+        reference = Path(text)
+        if reference.is_absolute():
+            return _absolute_path_without_following(reference)
+        if (
+            run_root is None
+            or run_intake.get("path_reference") != "run_root_relative"
+            or ".." in reference.parts
+        ):
+            return None
+        return _absolute_path_without_following(run_root / reference)
+
     canonical_output_value = clean_text(run_intake.get("output_dir"))
     canonical_output = (
-        _absolute_path_without_following(Path(canonical_output_value))
-        if canonical_output_value
-        else None
+        resolve_reference(canonical_output_value) if canonical_output_value else None
     )
     roots: dict[str, Path] = {
         "run": output_dir,
@@ -459,7 +491,9 @@ def _source_roots(output_dir: Path) -> dict[str, Path]:
         value = clean_text(audit.get(field))
         if not value:
             continue
-        source = _absolute_path_without_following(Path(value))
+        source = resolve_reference(value)
+        if source is None:
+            continue
         if canonical_output is not None and source.is_relative_to(canonical_output):
             source = output_dir / source.relative_to(canonical_output)
         roots[f"source_{side}"] = source if source.is_dir() else source.parent
@@ -1587,7 +1621,29 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--applied-decisions", type=Path)
     parser.add_argument("--final-artifacts", type=Path)
     parser.add_argument("--canonical-output-dir", type=Path)
+    parser.add_argument(
+        "--client-run-preflight-only",
+        action="store_true",
+        help="Validate the owning running customer-folder run without writing.",
+    )
     args = parser.parse_args(argv)
+    client_output_dir = args.canonical_output_dir or args.output_dir
+    try:
+        client_context = load_client_workflow_context_for_output(
+            client_output_dir.expanduser().resolve(),
+            expected_workflow_id="journal-bank-reconciliation",
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+    if args.client_run_preflight_only:
+        result = {
+            "ok": True,
+            "schema_version": client_context["schema_version"],
+            "workflow_id": client_context["workflow_id"],
+            "client_run_id": client_context["run_id"],
+        }
+        sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+        return 0
     if args.preflight_only:
         result = preflight_review_application(args.output_dir)
         sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")

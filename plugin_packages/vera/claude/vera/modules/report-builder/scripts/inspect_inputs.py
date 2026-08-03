@@ -62,8 +62,13 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+from pathlib import Path
 
 from report_builder_core import add_common_args, configure_logging, inspect_inputs
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 
 def main() -> int:
@@ -73,8 +78,18 @@ def main() -> int:
         description="Inspect report input files and write inspection.json plus suggested_recipe.json."
     )
     add_common_args(parser)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     args = parser.parse_args()
     configure_logging(args.verbose)
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="report-builder",
+            input_paths=[args.input_path],
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     result = inspect_inputs(
         args.input_path,
         args.output_dir,

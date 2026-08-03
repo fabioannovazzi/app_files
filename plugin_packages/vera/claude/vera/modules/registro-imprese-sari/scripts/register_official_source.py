@@ -10,9 +10,12 @@ from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     ensure_safe_output_dir,
     iso_now,
     load_json_object,
+    load_running_case_context,
+    require_case_artifact_run,
     safe_identifier,
     sha256_bytes,
     validate_iso_date,
@@ -206,7 +209,7 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--run-id", required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--source-id", required=True)
     parser.add_argument(
         "--source-type", choices=sorted(ALLOWED_SOURCE_TYPES), required=True
@@ -226,8 +229,19 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--snapshot", type=Path)
     args = parser.parse_args(argv)
     try:
-        source = register_source(**vars(args))
-    except (OSError, ValueError) as exc:
+        context = load_running_case_context(
+            args.client_engagement,
+            input_paths=[args.snapshot] if args.snapshot is not None else [],
+            output_dir=args.output_dir,
+        )
+        for name in ("run_intake.json", "official_sources.json"):
+            path = args.output_dir / name
+            if path.exists():
+                require_case_artifact_run(path, run_id=context["run_id"])
+        call_args = vars(args).copy()
+        call_args.pop("client_engagement")
+        source = register_source(run_id=context["run_id"], **call_args)
+    except (AssuranceContractError, OSError, ValueError) as exc:
         LOGGER.error("SOURCE_REGISTRATION_BLOCKED: %s", exc)
         return 2
     LOGGER.info("Registered official source %s", source["source_id"])

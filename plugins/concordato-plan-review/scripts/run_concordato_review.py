@@ -64,6 +64,10 @@ import logging
 from pathlib import Path
 
 from concordato_plan_core import configure_logging, run_concordato_review
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -84,6 +88,7 @@ def main() -> int:
         required=True,
         help="Folder where review artifacts will be written.",
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument(
         "--reference-date",
         default="",
@@ -120,6 +125,23 @@ def main() -> int:
     args = parser.parse_args()
 
     configure_logging(args.verbose)
+    input_paths = [args.input_dir]
+    input_paths.extend(
+        path for path in (args.recipe, args.semantic_recipe) if path is not None
+    )
+    try:
+        client_context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="concordato-plan-review",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 2
+    run_root = Path(client_context["run_root"])
+    input_path_ref = args.input_dir.expanduser().resolve().relative_to(run_root)
+    output_path_ref = args.output_dir.expanduser().resolve().relative_to(run_root)
     run = run_concordato_review(
         args.input_dir,
         args.output_dir,
@@ -130,6 +152,9 @@ def main() -> int:
         max_rows_per_sheet=args.max_rows_per_sheet,
         recipe=args.recipe,
         semantic_recipe=args.semantic_recipe,
+        run_id=str(client_context["run_id"]),
+        input_path_ref=input_path_ref.as_posix(),
+        output_path_ref=output_path_ref.as_posix(),
     )
     LOGGER.info("wrote review artifacts to %s", run.output_dir)
     LOGGER.info("files_inspected=%s", len(run.inventory))

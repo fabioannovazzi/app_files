@@ -11,8 +11,11 @@ from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
+    AssuranceContractError,
     ensure_safe_output_dir,
     load_json_object,
+    load_running_case_context,
+    require_case_artifact_run,
     safe_identifier,
     sha256_file,
     validate_iso_date,
@@ -885,6 +888,11 @@ def _update_run_intake(
     trace = payload.get("execution_trace")
     if not isinstance(trace, list):
         trace = []
+    output_reference = (
+        "outputs"
+        if payload.get("path_reference") == "run_root_relative"
+        else output_dir.as_posix()
+    )
     trace.append(
         {
             "step_id": f"validate_practice_case_{len(trace) + 1}",
@@ -899,7 +907,7 @@ def _update_run_intake(
                 "--official-sources",
                 "official_sources.json",
                 "--output-dir",
-                output_dir.as_posix(),
+                output_reference,
             ],
             "execution_location": "local_python",
             "status": validation_status,
@@ -1022,9 +1030,24 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--practice-plan", type=Path, required=True)
     parser.add_argument("--official-sources", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--local-inventory", type=Path)
     args = parser.parse_args(argv)
     try:
+        input_paths = [
+            args.case_intake,
+            args.practice_plan,
+            args.official_sources,
+        ]
+        if args.local_inventory is not None:
+            input_paths.append(args.local_inventory)
+        context = load_running_case_context(
+            args.client_engagement,
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+        for path in input_paths:
+            require_case_artifact_run(path, run_id=context["run_id"])
         audit = validate_practice_case(
             args.case_intake,
             args.practice_plan,
@@ -1032,7 +1055,12 @@ def main(argv: list[str] | None = None) -> int:
             args.output_dir,
             local_inventory_path=args.local_inventory,
         )
-    except (OSError, ValueError, json.JSONDecodeError) as exc:
+    except (
+        AssuranceContractError,
+        OSError,
+        ValueError,
+        json.JSONDecodeError,
+    ) as exc:
         LOGGER.error("VALIDATION_BLOCKED: %s", exc)
         return 2
     LOGGER.info(

@@ -190,6 +190,9 @@
       "type": "string",
       "pattern": "^[0-9a-fA-F]{64}$"
     },
+    "path_reference": {
+      "enum": ["run_root_relative", "plugin_root_relative"]
+    },
     "client_file_preparation_binding": {
       "oneOf": [
         {
@@ -207,6 +210,7 @@
             "mode": {"const": "client_file_preparation_run"},
             "run_id": {"$ref": "#/$defs/reference"},
             "final_artifacts_path": {"type": "string", "minLength": 1},
+            "final_artifacts_path_reference": {"$ref": "#/$defs/path_reference"},
             "final_artifacts_sha256": {"$ref": "#/$defs/sha256"},
             "upstream_package_hash": {"$ref": "#/$defs/sha256"},
             "promoted_evidence_ids": {"$ref": "#/$defs/evidence_ids"}
@@ -707,6 +711,9 @@
         },
         "local_path": {
           "type": ["string", "null"]
+        },
+        "local_path_reference": {
+          "$ref": "#/$defs/path_reference"
         }
       }
     },
@@ -825,6 +832,7 @@
           "minLength": 1
         },
         "local_path": {"type": "string", "minLength": 1},
+        "local_path_reference": {"$ref": "#/$defs/path_reference"},
         "sha256": {"$ref": "#/$defs/sha256"},
         "source_ids": {
           "type": "array",

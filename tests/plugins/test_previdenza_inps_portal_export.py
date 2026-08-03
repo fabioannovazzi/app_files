@@ -43,6 +43,41 @@ def _load_inventory_script() -> ModuleType:
     return module
 
 
+def _load_customer_ledger() -> ModuleType:
+    path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_previdenza_portal_export_customer_ledger"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _run_inventory(module: ModuleType, tmp_path: Path, arguments: list[str]) -> int:
+    """Exercise inventory behavior behind an isolated managed-context seam."""
+
+    original_loader = module.load_client_engagement_context_file
+    module.load_client_engagement_context_file = lambda *_args, **_kwargs: {
+        "run_id": "run_111111111111111111111111",
+        "created_at": "2026-08-03T08:00:00+00:00",
+        "run_root": str(tmp_path.resolve()),
+    }
+    try:
+        return module.main(
+            [
+                *arguments,
+                "--client-engagement",
+                str(tmp_path / "context.json"),
+            ]
+        )
+    finally:
+        module.load_client_engagement_context_file = original_loader
+
+
 def _registration_kwargs() -> dict[str, object]:
     return {
         "source_origin": "https://www.inps.it",
@@ -341,16 +376,47 @@ def test_cli_register_and_verify_without_portal_or_network_access(
     tmp_path: Path,
 ) -> None:
     source = _write_pdf(tmp_path / "export.pdf")
-    output_dir = tmp_path / "registered"
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Customer"
+    client_root.mkdir()
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root, client_id, "INPS export registration"
+    )
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "previdenza-inps",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    registered_source = Path(running["context"]["input_bindings"][0]["path"])
+    output_dir = Path(running["output_dir"]) / "acquisition" / "registered"
     register_command = [
         sys.executable,
         str(SCRIPT_PATH),
         "register",
-        str(source),
+        str(registered_source),
         "--output-dir",
         str(output_dir),
         "--source-origin",
         "https://www.inps.it",
+        "--client-engagement",
+        str(running["context_path"]),
     ]
 
     registered = subprocess.run(
@@ -389,7 +455,9 @@ def test_inventory_records_verified_export_and_excludes_private_manifest(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
         [
             str(registered_dir),
             "--output-dir",
@@ -397,7 +465,7 @@ def test_inventory_records_verified_export_and_excludes_private_manifest(
             "--portal-export-manifest",
             str(manifest_path),
             "--no-ocr",
-        ]
+        ],
     )
 
     assert result == 0
@@ -430,8 +498,10 @@ def test_inventory_requires_explicit_manifest_argument_for_registered_export(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(registered_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(registered_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -453,8 +523,10 @@ def test_inventory_rejects_tampered_export_receipt_with_changed_manifest_type(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(registered_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(registered_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -471,8 +543,10 @@ def test_inventory_rejects_nested_registered_export_bundle(tmp_path: Path) -> No
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -487,8 +561,10 @@ def test_inventory_rejects_orphan_registrar_artifact(tmp_path: Path) -> None:
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -509,8 +585,10 @@ def test_inventory_rejects_private_export_receipt_like_files(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -532,8 +610,10 @@ def test_inventory_does_not_blanket_reject_unrelated_generic_manifest(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_script()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 0

@@ -1,10 +1,11 @@
 """Local, page-oriented OCR adapter shared by Vera plugin components.
 
 The adapter never lets PaddleOCR resolve models itself. Both model directories
-must come from explicit arguments, the ``VERA_OCR_*_MODEL_DIR`` environment
-variables, an existing PaddleX ``official_models`` cache, or a Hugging Face
-snapshot resolved here. Hugging Face lookup is local-only unless
-``allow_model_download=True`` is passed by the caller.
+must come from explicit arguments or, when implicit paths are allowed, the
+``VERA_OCR_*_MODEL_DIR`` environment variables, an existing PaddleX
+``official_models`` cache, or a Hugging Face snapshot resolved here. Hugging
+Face lookup is local-only unless ``allow_model_download=True`` is passed by the
+caller.
 """
 
 from __future__ import annotations
@@ -201,10 +202,11 @@ def _resolve_one_model(
     label: str,
     cache_dir: Path | None,
     allow_model_download: bool,
+    allow_implicit_model_paths: bool,
 ) -> _ResolvedModel:
     source = "explicit"
     selected_path = explicit_path
-    if selected_path is None:
+    if selected_path is None and allow_implicit_model_paths:
         environment_value = os.environ.get(environment_variable, "").strip()
         if environment_value:
             selected_path = Path(environment_value).expanduser()
@@ -220,15 +222,26 @@ def _resolve_one_model(
             (f"{label}_model_dir_unavailable:{source}",),
         )
 
-    paddlex_cache_value = os.environ.get("PADDLE_PDX_CACHE_HOME", "").strip()
-    paddlex_cache_home = (
-        Path(paddlex_cache_value).expanduser()
-        if paddlex_cache_value
-        else Path.home() / ".paddlex"
-    )
-    paddlex_model_path = paddlex_cache_home / "official_models" / model_name
-    if _is_model_directory(paddlex_model_path):
-        return _ResolvedModel(paddlex_model_path, "paddlex_cache", False, ())
+    if allow_implicit_model_paths:
+        paddlex_cache_value = os.environ.get("PADDLE_PDX_CACHE_HOME", "").strip()
+        paddlex_cache_home = (
+            Path(paddlex_cache_value).expanduser()
+            if paddlex_cache_value
+            else Path.home() / ".paddlex"
+        )
+        paddlex_model_path = paddlex_cache_home / "official_models" / model_name
+        if _is_model_directory(paddlex_model_path):
+            return _ResolvedModel(paddlex_model_path, "paddlex_cache", False, ())
+
+    if cache_dir is None:
+        # Managed callers disable implicit locations so model reads and writes
+        # remain inside exact receipts or their authorized run output.
+        return _ResolvedModel(
+            None,
+            "unavailable",
+            False,
+            (f"{label}_managed_model_location_required",),
+        )
 
     return _resolve_huggingface_model(
         model_name,
@@ -253,6 +266,7 @@ def _resolve_models(
     allow_model_download: bool,
     detection_model_dir: Path | None,
     recognition_model_dir: Path | None,
+    allow_implicit_model_paths: bool,
 ) -> _ResolvedModels:
     detection = _resolve_one_model(
         detection_model_dir,
@@ -261,6 +275,7 @@ def _resolve_models(
         label="detection",
         cache_dir=cache_dir,
         allow_model_download=allow_model_download,
+        allow_implicit_model_paths=allow_implicit_model_paths,
     )
     if detection.path is None:
         return _ResolvedModels(
@@ -279,6 +294,7 @@ def _resolve_models(
         label="recognition",
         cache_dir=cache_dir,
         allow_model_download=allow_model_download,
+        allow_implicit_model_paths=allow_implicit_model_paths,
     )
     return _ResolvedModels(
         detection.path,
@@ -452,11 +468,14 @@ def extract_text_from_image_bytes(
     allow_model_download: bool = False,
     detection_model_dir: Path | None = None,
     recognition_model_dir: Path | None = None,
+    allow_implicit_model_paths: bool = True,
 ) -> OcrResult:
     """Extract text locally, returning a structured result instead of raising.
 
     Network access is possible only when ``allow_model_download`` is true and a
-    required model is absent from the local Hugging Face cache.
+    required model is absent from the local Hugging Face cache. Managed callers
+    can disable environment and user-cache discovery by passing
+    ``allow_implicit_model_paths=False``.
     """
 
     normalized_language, language_warnings = _normalize_language(language)
@@ -475,6 +494,7 @@ def extract_text_from_image_bytes(
         allow_model_download=allow_model_download,
         detection_model_dir=detection_model_dir,
         recognition_model_dir=recognition_model_dir,
+        allow_implicit_model_paths=allow_implicit_model_paths,
     )
     warnings = language_warnings + models.warnings
     if models.detection_path is None or models.recognition_path is None:

@@ -5,9 +5,26 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = [
     "QuestionInventory",
@@ -914,10 +931,21 @@ def main() -> int:
         required=True,
         help="Directory for question_inventory.json and prompt_recipe.json.",
     )
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument(
         "--language", choices=["auto", "it", "en", "fr", "de", "es"], default="auto"
     )
     args = parser.parse_args()
+
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="prompt-optimizer",
+            input_paths=[args.question_file],
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
 
     question_text = _read_text(args.question_file)
     if not question_text:

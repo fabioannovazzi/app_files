@@ -36,20 +36,24 @@ python -m pip install -r requirements.txt
 
 1. In Studio Archive, list clients, resolve existing versus new without using
    the filename as identity, register/create only after the user's choice, and
-   obtain authorization to copy the journal into one durable engagement. Use
-   the imported path and returned client-engagement context.
-2. Confirm sample size, sampling method, working language,
+   create or select one durable engagement. Obtain authorization to import the
+   journal as an immutable receipt and retain its exact `input_id`. Import does
+   not create a run.
+2. Prepare an idempotent `journal-sampling` run from that `input_id`, then start
+   it. Load its portable client-engagement context and execute only the bound
+   run-local journal path; write only to its `outputs/` directory.
+3. Confirm sample size, sampling method, working language,
    source-document language, and filters.
-3. Run `scripts/inspect_journal.py` with `--client-engagement` and the exact
+4. Run `scripts/inspect_journal.py` with `--client-engagement` and the exact
    context `normalization` output to create `inspection.json`,
    `suggested_recipe.json`, and `qualification_review_payload.json`.
-4. Resolve only essential mapping ambiguities, then bind the exact
+5. Resolve only essential mapping ambiguities, then bind the exact
    source-family mapping contract to its generated digest and a complete
    reviewed-decision receipt in the work-folder recipe. The contract includes
    posting identity, carry-forward, currency, unit, and the disposition of
    every monetary-labelled or numeric column.
-5. Run `scripts/normalize_journal.py` with the same context.
-6. Run `scripts/run_sample.py` with the same context and its exact `sample`
+6. Run `scripts/normalize_journal.py` with the same context.
+7. Run `scripts/run_sample.py` with the same context and its exact `sample`
    output; it verifies the adjacent normalization
    diagnostics, replayable assurance envelope, independent gates, qualified row
    closure, implementation receipts, original source receipts, retained
@@ -57,9 +61,39 @@ python -m pip install -r requirements.txt
    normalization from the raw journal and that exact recipe and requires a
    byte-identical canonical CSV and material preparation contract. The sample
    output folder must be absent or empty.
-7. Review diagnostics and deliver normalized rows, reviewed decisions,
+8. Review diagnostics and the normalized rows, reviewed decisions,
    sample-stage assurance gates and envelope, sample files, the all-row material
    value ledger, output receipts, audit trail, and MCP review handoff files.
+   Complete every write-producing MCP review transaction.
+9. After the last output write, finalize the customer-folder run by declaring
+   every physical output with a unique artifact ID, concrete purpose, audience,
+   and media type. The exact downstream contract includes
+   `prepared.normalized_journal`, `internal.normalization_diagnostics`, and
+   `prepared.journal_sample_csv`. Review the final declaration and complete the
+   run; record a failure or cancellation instead of treating partial output as
+   available.
+
+The customer folder, not a machine-local pointer, is the durable source of
+truth. It contains the client and engagement manifests, immutable input
+receipt, exact run input manifest, lifecycle, outputs, and artifact manifest.
+Current absolute paths can therefore be recovered after a folder rename or in
+a fresh local Studio Archive state.
+
+## Journal Sampling to Check Entries
+
+The normalized population, diagnostics, and sample are all intentional, but
+they serve different purposes. The normalized population makes preparation
+reproducible; diagnostics records whether that population qualified; the sample
+selects the exact entries to check.
+
+For each support delivery, Studio Archive imports or reuses one
+content-addressed immutable `support` receipt and prepares a separate Check
+Entries run. That run binds the exact
+Journal Sampling artifacts and that evidence batch. Check Entries validates the
+full prepared lineage but checks only the rows in the bound sample. A materially
+different second ZIP or PDF batch creates another run; an intentionally
+separate identical selection uses the explicit new-run option. It never expands
+the first run's input manifest.
 
 Normalization parses captured bytes and preserves exact Decimal text, currency,
 unit, source-reported increment (including consistent native XLSX display
@@ -79,6 +113,16 @@ files and 8 shared Vera assurance files. Unexpected caches, links, special
 files, directories, or executable/configuration files fail before local
 imports. These hashes prove local execution consistency, not package publisher
 or reviewer authority.
+
+Codex runs the isolated replay inside the same still-running customer run:
+
+```bash
+python -I -B scripts/replay_normalization.py \
+  <client-run-output>/normalization/normalized_journal.csv \
+  --diagnostics <client-run-output>/normalization/normalization_diagnostics.json \
+  --receipt-out <client-run-output>/normalization/replay_receipt.json \
+  --client-engagement <customer-run>/context.json
+```
 
 Sampling is finalized transactionally. It first writes into a private sibling
 staging directory, freshly replays upstream normalization and original-source

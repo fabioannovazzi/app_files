@@ -43,6 +43,27 @@ def _load_inventory_module() -> ModuleType:
     return module
 
 
+def _run_inventory(module: ModuleType, tmp_path: Path, arguments: list[str]) -> int:
+    """Exercise inventory behavior behind an isolated managed-context seam."""
+
+    original_loader = module.load_client_engagement_context_file
+    module.load_client_engagement_context_file = lambda *_args, **_kwargs: {
+        "run_id": "run_111111111111111111111111",
+        "created_at": "2026-08-03T08:00:00+00:00",
+        "run_root": str(tmp_path.resolve()),
+    }
+    try:
+        return module.main(
+            [
+                *arguments,
+                "--client-engagement",
+                str(tmp_path / "context.json"),
+            ]
+        )
+    finally:
+        module.load_client_engagement_context_file = original_loader
+
+
 PORTAL = _load_module()
 
 
@@ -484,7 +505,9 @@ def test_inventory_records_verified_portal_capture_and_excludes_private_receipt(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
         [
             str(capture_dir),
             "--output-dir",
@@ -492,7 +515,7 @@ def test_inventory_records_verified_portal_capture_and_excludes_private_receipt(
             "--portal-capture-manifest",
             str(capture_dir / PORTAL.MANIFEST_NAME),
             "--no-ocr",
-        ]
+        ],
     )
 
     assert result == 0
@@ -556,8 +579,10 @@ def test_inventory_requires_explicit_manifest_argument_for_capture(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
-        [str(capture_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(capture_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -580,8 +605,10 @@ def test_inventory_rejects_nested_capture_bundle_before_writing_output(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -601,8 +628,10 @@ def test_inventory_rejects_orphan_capture_artifact_before_writing_output(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -628,7 +657,9 @@ def test_inventory_rejects_tampered_root_capture_instead_of_inventorying_it(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
         [
             str(capture_dir),
             "--output-dir",
@@ -636,7 +667,7 @@ def test_inventory_rejects_tampered_root_capture_instead_of_inventorying_it(
             "--portal-capture-manifest",
             str(capture_dir / PORTAL.MANIFEST_NAME),
             "--no-ocr",
-        ]
+        ],
     )
 
     assert result == 1
@@ -657,8 +688,10 @@ def test_inventory_rejects_private_capture_receipt_like_files(
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
-        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"]
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
+        [str(input_dir), "--output-dir", str(output_dir), "--no-ocr"],
     )
 
     assert result == 1
@@ -678,14 +711,16 @@ def test_capture_screenshot_is_hashed_but_never_ocr_reprocessed(tmp_path: Path) 
     output_dir = tmp_path / "inventory"
     inventory_module = _load_inventory_module()
 
-    result = inventory_module.main(
+    result = _run_inventory(
+        inventory_module,
+        tmp_path,
         [
             str(capture_dir),
             "--output-dir",
             str(output_dir),
             "--portal-capture-manifest",
             str(capture_dir / PORTAL.MANIFEST_NAME),
-        ]
+        ],
     )
 
     assert result == 0

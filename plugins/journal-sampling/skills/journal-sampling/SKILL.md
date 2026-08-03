@@ -7,6 +7,11 @@ description: Use when a user wants Codex to qualify and extract accounting journ
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive `client_engagement` context. Inspection and normalization use its `normalization` child; sampling uses its `sample` child. Do not invent a sibling output folder or run an unbound product CLI.
 
+The context is a portable customer-folder run record, not a machine-local
+workspace pointer. Load it through the workflow gate so current absolute paths
+are hydrated after a folder rename. Use only its exact journal binding as input
+and only its exact `output_dir` for writes.
+
 # Journal Sampling
 
 Use this skill for audit sample-entry workflows where each customer's journal format may differ. The plugin is a guided Codex workflow: Codex inspects the files, asks only for unresolved mapping or sampling assumptions, runs deterministic helper scripts, reviews diagnostics, and delivers outputs.
@@ -53,9 +58,29 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 ## First Run Workflow
 
-1. Start with Studio Archive client intake. Call `list_studio_archive_clients`; do not infer the client from the journal filename. Resolve an existing registered client, explicitly register a confirmed existing scope, or create a client only after the user chooses New client. Explain that the original journal is preserved, obtain authorization for the controlled copy, and call `import_studio_client_document` with role `journal`. Use the returned imported path, `engagement_id`, `client_engagement`, and context path. If New Client onboarding is pending, preserve that status while preparing the journal; do not claim the relationship is active.
-2. Ask for working language, source-document language, and any known filters only if they are not already provided or inferable. Do not ask for output richness. If the audit plan does not specify sample size or method, default to the deterministic script baseline: `random`, size `25`, seed `42`, and record those assumptions in the audit trail.
-3. Run dependency checks from the plugin directory:
+1. Start with Studio Archive client intake. Call `list_studio_archive_clients`;
+   do not infer the client from the journal filename. Resolve an existing
+   registered client, explicitly register a confirmed existing customer folder,
+   or create a client only after the user chooses New client. Create or select
+   one engagement. Explain that the external original is preserved, obtain
+   authorization, and call `import_studio_client_document` with that
+   `engagement_id` and role `journal`. Retain its immutable `input_id` and
+   receipt. Import does not prepare or start Journal Sampling. If New Client
+   onboarding is pending, preserve that status while preparing the journal; do
+   not claim the relationship is active.
+2. Call `prepare_studio_client_workflow` for `journal-sampling` with that exact
+   journal `input_id`, a concrete label, and a purpose. Use the idempotent
+   returned run unless the user explicitly requests `new_run=true`. Call
+   `start_studio_client_workflow` before any helper script. Load the returned
+   `client_engagement_path` through the workflow gate and use the one
+   `input_bindings` item with role `journal`; do not use an unbound live file or
+   scan the engagement's other imports.
+3. Ask for working language, source-document language, and any known filters
+   only if they are not already provided or inferable. Do not ask for output
+   richness. If the audit plan does not specify sample size or method, default
+   to the deterministic script baseline: `random`, size `25`, seed `42`, and
+   record those assumptions in the audit trail.
+4. Run dependency checks from the plugin directory:
 
 ```bash
 python scripts/check_dependencies.py
@@ -63,18 +88,18 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-4. Run inspection to produce `inspection.json`, `suggested_recipe.json`, and
+5. Run inspection to produce `inspection.json`, `suggested_recipe.json`, and
    `qualification_review_payload.json`:
 
 ```bash
-python scripts/inspect_journal.py <imported-journal> --output-dir <client-run-output>/normalization --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/inspect_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-5. Read the inspection artifacts. Inspection never promotes a suggested mapping
+6. Read the inspection artifacts. Inspection never promotes a suggested mapping
    into the population. Review each source-family adapter, header/layout mapping,
    debit/credit or signed-amount convention, and localized number separators.
    Ask the user only for the smallest unresolved semantic decision.
-6. Record the reviewed recipe in the work folder, not plugin source. The
+7. Record the reviewed recipe in the work folder, not plugin source. The
    reviewed contract must explicitly bind the source artifact, adapter and
    version, field mapping, posting identity, carry-forward policy, currency,
    unit, and the disposition of every additional monetary-labelled or numeric
@@ -84,17 +109,17 @@ python scripts/inspect_journal.py <imported-journal> --output-dir <client-run-ou
    decision reference is not sufficient. If any bound field changes, rerun
    inspection with that recipe so a new digest is generated and review the new
    contract.
-7. Normalize rows:
+8. Normalize rows:
 
 ```bash
-python scripts/normalize_journal.py <imported-journal> --output-dir <client-run-output>/normalization --recipe <client-run-output>/normalization/suggested_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/normalize_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --recipe <client-run-output>/normalization/suggested_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Require the complete normalization to retain the exact reviewed bytes as
 `normalization_recipe.json`, with matching captured and original-source
 receipts. Do not delete or replace the original reviewed recipe after the run.
 
-8. Run deterministic sampling:
+9. Run deterministic sampling:
 
 ```bash
 python scripts/run_sample.py <client-run-output>/normalization/normalized_journal.csv --output-dir <client-run-output>/sample --client-engagement <client-engagement.json> --method random --size 25 --language <it|en|fr|de|es>
@@ -109,7 +134,7 @@ material field closes from its normalized row to its CSV row and XLSX cell, and
 the exact physical output allowlist closes. Do not treat a partial staging
 failure as a deliverable.
 
-9. Review `normalization_diagnostics.json`,
+10. Review `normalization_diagnostics.json`,
    `qualification_review_payload.json`, `reviewed_decisions.json`,
    `assurance_gates.json`, `assurance_envelope.json`, `sampling_audit.json`,
    `sample_reproducibility.json`, `sample_material_value_ledger.json`,
@@ -130,7 +155,50 @@ failure as a deliverable.
    exact file/directory/mode contract, and replays the full successor chain.
    Semantic review must remain `not_assessed`, reporting `blocked`, publication
    `withheld`, and `report_ready=false`; do not translate accepted item
-   decisions into `final_ready`.
+   decisions into `final_ready`. Complete every write-producing MCP save or
+   apply transaction before sealing the outer customer-folder run.
+
+   Isolated normalization replay and the internal review-successor bridge must
+   use the same still-running context. MCP supplies these arguments
+   automatically before any review write:
+
+```bash
+python -I -B scripts/replay_normalization.py \
+  <client-run-output>/normalization/normalized_journal.csv \
+  --diagnostics <client-run-output>/normalization/normalization_diagnostics.json \
+  --receipt-out <client-run-output>/normalization/replay_receipt.json \
+  --client-engagement <customer-run>/context.json
+python -I -B scripts/review_successor.py context <client-run-output> \
+  --client-engagement <customer-run>/context.json
+```
+
+11. After the last output write, call `finalize_studio_client_workflow` and
+   declare every physical output with a unique artifact ID, relative path,
+   concrete purpose, audience, and media type. The downstream handoff must
+   include `prepared.normalized_journal`,
+   `internal.normalization_diagnostics`, and
+   `prepared.journal_sample_csv`. Finalization moves the run to
+   `ready_for_review`; an undeclared or empty output tree is not available.
+   Review the final declaration, then call `complete_studio_client_workflow`.
+   If execution fails, record the run as `failed`; explicitly cancel an
+   abandoned run rather than deleting it.
+
+## Check Entries handoff
+
+The three files have different jobs. `normalized_journal.csv` is the qualified
+population needed to reproduce and validate the preparation;
+`normalization_diagnostics.json` proves how that population qualified; and
+`sample/journal_sample.csv` is the exact row-selection boundary. Check Entries
+must bind all required upstream artifacts from this one finalized Journal
+Sampling run and then restrict its work to the rows in the bound sample.
+
+Each support delivery is a separate evidence batch. Import it as an immutable,
+content-addressed `support` receipt (reusing the same receipt when the bytes and
+role are identical) and prepare a separate Check Entries run bound to that
+receipt and this exact sample. Use the explicit new-run option when a separately
+tracked batch has the same exact byte selection. A later support import does not
+change an earlier Check Entries input manifest or cause it to scan the
+engagement folder.
 
 ## Supported V2 Inputs
 
@@ -162,11 +230,11 @@ Store both assumptions in the generated recipe and preserve them in diagnostics/
 Starter prompts:
 
 ```text
-IT: Usa Journal Sampling sulla cartella /percorso/input. Lingua: it. Lingua documenti: auto. Ispeziona i file, chiedimi solo le ambiguita essenziali e genera campione, diagnostiche e audit trail.
-EN: Use Journal Sampling on /path/input. Language: en. Document language: auto. Inspect the files, ask only for essential ambiguities, then generate the sample, diagnostics, and audit trail.
-FR: Utilise Journal Sampling sur /chemin/input. Langue: fr. Langue des documents: auto. Inspecte les fichiers, demande uniquement les ambiguïtés essentielles, puis génère l'échantillon, les diagnostics et l'audit trail.
-DE: Verwende Journal Sampling für /pfad/input. Sprache: de. Dokumentsprache: auto. Prüfe die Dateien, frage nur wesentliche Unklarheiten ab und erstelle Stichprobe, Diagnostik und Audit-Trail.
-ES: Usa Journal Sampling en /ruta/input. Idioma: es. Idioma de los documentos: auto. Inspecciona los archivos, pregunta solo por las ambigüedades esenciales y genera la muestra, los diagnósticos y el registro de auditoría.
+IT: Usa Journal Sampling per il cliente <cliente> sul giornale <percorso-file>. Lingua: it. Lingua documenti: auto. Riprendi o crea il fascicolo corretto, chiedimi solo le ambiguità essenziali e genera campione, diagnostiche e audit trail.
+EN: Use Journal Sampling for <client> on journal <file-path>. Language: en. Document language: auto. Resume or create the correct engagement, ask only for essential ambiguities, then generate the sample, diagnostics, and audit trail.
+FR: Utilise Journal Sampling pour <client> sur le journal <chemin-fichier>. Langue: fr. Langue des documents: auto. Reprends ou crée la mission correcte, demande uniquement les ambiguïtés essentielles, puis génère l'échantillon, les diagnostics et l'audit trail.
+DE: Verwende Journal Sampling für <Mandant> mit dem Journal <Dateipfad>. Sprache: de. Dokumentsprache: auto. Öffne oder erstelle den richtigen Auftrag, frage nur wesentliche Unklarheiten ab und erstelle Stichprobe, Diagnostik und Audit-Trail.
+ES: Usa Journal Sampling para <cliente> con el diario <ruta-archivo>. Idioma: es. Idioma de los documentos: auto. Reanuda o crea el encargo correcto, pregunta solo por las ambigüedades esenciales y genera la muestra, los diagnósticos y el registro de auditoría.
 ```
 
 ## Mapping Recipe Rules

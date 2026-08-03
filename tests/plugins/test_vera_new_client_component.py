@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import shutil
@@ -7,7 +8,7 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 from zipfile import ZipFile
 
 import pytest
@@ -100,14 +101,22 @@ def _stop_mcp_session(process: subprocess.Popen[str]) -> None:
         process.wait(timeout=5)
 
 
-def _generate_package(tmp_path: Path) -> Path:
-    output_dir = tmp_path / "private-new-client"
+def _generate_package(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    *,
+    with_receipted_evidence: bool = False,
+) -> Path:
+    workspace = vera_workflow_workspace("new-client")
+    output_dir = workspace["output_dir"]
+    context_path = workspace["context_path"]
     initialized = subprocess.run(
         [
             sys.executable,
             str(PLUGIN_ROOT / "scripts" / "initialize_case.py"),
             "--case-dir",
             str(output_dir),
+            "--client-engagement",
+            str(context_path),
             "--client-reference",
             "CLIENT-OPAQUE-001",
             "--assessment-date",
@@ -121,6 +130,21 @@ def _generate_package(tmp_path: Path) -> Path:
     assert json.loads(initialized.stdout)["status"] == "new_client_input_initialized"
     intake_path = output_dir / "new_client_input.json"
     intake = json.loads(intake_path.read_text(encoding="utf-8"))
+    if with_receipted_evidence:
+        receipted_source = Path(workspace["input_paths"][0])
+        evidence_id = "receipted-source-evidence"
+        intake["evidence_register"].append(
+            {
+                "evidence_id": evidence_id,
+                "evidence_type": "receipted-client-source",
+                "status": "available",
+                "obtained_on": None,
+                "expires_on": None,
+                "sha256": hashlib.sha256(receipted_source.read_bytes()).hexdigest(),
+                "local_path": receipted_source.as_posix(),
+            }
+        )
+        intake["client_file_preparation_binding"]["evidence_ids"] = [evidence_id]
     intake_path.write_text(
         json.dumps(intake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
@@ -132,6 +156,8 @@ def _generate_package(tmp_path: Path) -> Path:
             str(intake_path),
             "--output-dir",
             str(output_dir),
+            "--client-engagement",
+            str(context_path),
         ],
         cwd=PLUGIN_ROOT,
         capture_output=True,
@@ -465,8 +491,9 @@ def test_packaged_vera_runs_new_client_file_preparation_phase(
 
 def test_new_client_generated_workflow_passes_both_contracts(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
     core = _load_core()
 
     # Keep this explicit generation signal for the review-contract coverage audit.
@@ -500,10 +527,164 @@ def test_new_client_generated_workflow_passes_both_contracts(
     assert stat.S_IMODE(output_dir.stat().st_mode) == 0o700
 
 
+@pytest.mark.parametrize(
+    "unbound_class",
+    (
+        "evidence",
+        "template",
+        "client_file_preparation_binding",
+        "client_file_preparation_output",
+        "source_registry",
+    ),
+)
+def test_managed_package_rejects_every_unbound_local_read_without_write(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    unbound_class: str,
+) -> None:
+    input_files = None
+    if unbound_class == "client_file_preparation_output":
+        input_files = {
+            "final_artifacts.json": json.dumps(
+                {"outputs": [{"path": "unbound-cfp-output.json"}]}
+            )
+        }
+    workspace = vera_workflow_workspace("new-client", input_files=input_files)
+    output_dir = Path(workspace["output_dir"])
+    initialized = subprocess.run(
+        [
+            sys.executable,
+            str(PLUGIN_ROOT / "scripts" / "initialize_case.py"),
+            "--case-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--client-reference",
+            "CLIENT-UNBOUND-READ",
+        ],
+        cwd=PLUGIN_ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+    )
+    assert json.loads(initialized.stdout)["status"] == "new_client_input_initialized"
+    intake_path = output_dir / "new_client_input.json"
+    intake = json.loads(intake_path.read_text(encoding="utf-8"))
+    if unbound_class == "client_file_preparation_output":
+        bound_manifest = Path(workspace["input_by_name"]["final_artifacts.json"])
+        unbound_path = bound_manifest.parent / "unbound-cfp-output.json"
+    else:
+        unbound_dir = Path(workspace["context"]["run_root"]) / "unbound-local-reads"
+        unbound_dir.mkdir(mode=0o700)
+        unbound_path = unbound_dir / f"{unbound_class}.json"
+    unbound_path.write_text("{}\n", encoding="utf-8")
+    digest = hashlib.sha256(unbound_path.read_bytes()).hexdigest()
+    extra_args: list[str] = []
+
+    if unbound_class == "evidence":
+        intake["evidence_register"].append(
+            {
+                "evidence_id": "unbound-evidence",
+                "evidence_type": "controlled-test-evidence",
+                "status": "available",
+                "obtained_on": None,
+                "expires_on": None,
+                "sha256": digest,
+                "local_path": unbound_path.as_posix(),
+            }
+        )
+    elif unbound_class == "template":
+        intake["template_references"].append(
+            {
+                "document_type": "mandate",
+                "template_id": "unbound-template",
+                "version": "1.0",
+                "local_path": unbound_path.as_posix(),
+                "sha256": digest,
+                "source_ids": ["gdpr_regulation"],
+                "source_basis_sha256": "a" * 64,
+                "approval_status": "pending",
+                "approved_by_role": None,
+                "approved_at": None,
+                "approval_withdrawn_at": None,
+                "reuse_status": "unknown",
+                "reuse_scope": None,
+                "jurisdiction": "IT",
+                "language": "it",
+                "valid_from": "2026-01-01",
+                "valid_until": "2099-12-31",
+                "review_due_on": "2099-12-01",
+            }
+        )
+    elif unbound_class == "client_file_preparation_binding":
+        intake["client_file_preparation_binding"] = {
+            "mode": "client_file_preparation_run",
+            "run_id": "unbound-phase-one-run",
+            "final_artifacts_path": unbound_path.as_posix(),
+            "final_artifacts_sha256": digest,
+            "upstream_package_hash": "b" * 64,
+            "promoted_evidence_ids": [],
+        }
+    elif unbound_class == "client_file_preparation_output":
+        intake["client_file_preparation_binding"] = {
+            "mode": "client_file_preparation_run",
+            "run_id": "bound-phase-one-manifest",
+            "final_artifacts_path": bound_manifest.as_posix(),
+            "final_artifacts_sha256": hashlib.sha256(
+                bound_manifest.read_bytes()
+            ).hexdigest(),
+            "upstream_package_hash": "b" * 64,
+            "promoted_evidence_ids": [],
+        }
+    else:
+        extra_args = ["--source-registry", unbound_path.as_posix()]
+
+    intake_path.write_text(
+        json.dumps(intake, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    before = {
+        path.relative_to(output_dir).as_posix(): path.read_bytes()
+        for path in output_dir.rglob("*")
+        if path.is_file()
+    }
+    sibling_names_before = sorted(path.name for path in output_dir.parent.iterdir())
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(PLUGIN_ROOT / "scripts" / "package_new_client.py"),
+            "--input",
+            str(intake_path),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            *extra_args,
+        ],
+        cwd=PLUGIN_ROOT,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    assert completed.returncode == 2
+    assert "exact receipts" in json.loads(completed.stdout)["error"]
+    after = {
+        path.relative_to(output_dir).as_posix(): path.read_bytes()
+        for path in output_dir.rglob("*")
+        if path.is_file()
+    }
+    assert after == before
+    assert sorted(path.name for path in output_dir.parent.iterdir()) == (
+        sibling_names_before
+    )
+
+
 def test_new_client_render_exposes_only_safe_output_basenames(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -523,6 +704,7 @@ def test_new_client_render_exposes_only_safe_output_basenames(
                 1,
                 "render_new_client_review",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
@@ -540,8 +722,85 @@ def test_new_client_render_exposes_only_safe_output_basenames(
     assert output_dir.as_posix() not in json.dumps(rendered)
 
 
-def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> None:
-    output_dir = _generate_package(tmp_path)
+def test_new_client_persistence_survives_customer_folder_rename_and_rejects_escape(
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    old_output_dir = _generate_package(
+        vera_workflow_workspace, with_receipted_evidence=True
+    )
+    old_client_root = old_output_dir.parents[5]
+    for artifact in old_output_dir.rglob("*.json"):
+        durable_json = artifact.read_text(encoding="utf-8")
+        assert old_client_root.as_posix() not in durable_json
+        assert PLUGIN_ROOT.as_posix() not in durable_json
+    retained_input = json.loads(
+        (old_output_dir / "new_client_input.json").read_text(encoding="utf-8")
+    )
+    evidence = retained_input["evidence_register"][0]
+    assert evidence["local_path_reference"] == "run_root_relative"
+    assert not Path(evidence["local_path"]).is_absolute()
+    relative_output = old_output_dir.relative_to(old_client_root)
+    renamed_client_root = old_client_root.with_name("Renamed Test Client")
+    old_client_root.rename(renamed_client_root)
+    output_dir = renamed_client_root / relative_output
+    client_engagement = str(output_dir.parent / "context.json")
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    arguments = {
+        "client_engagement": client_engagement,
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "decisions": [
+            {"item_id": review_payload["items"][0]["id"], "action": "accept"}
+        ],
+        "expected_decision_revision": 0,
+    }
+
+    saved = _call_mcp([_tool_call(1, "save_new_client_decisions", arguments)])[1][
+        "result"
+    ]["structuredContent"]
+
+    assert saved["ok"] is True
+    assert saved["persisted"] is True
+    protected = {
+        path: path.read_bytes()
+        for path in (
+            output_dir / "ui_decisions.json",
+            output_dir / "final_artifacts.json",
+        )
+    }
+    rejected = _call_mcp(
+        [
+            _tool_call(
+                2,
+                "save_new_client_decisions",
+                {
+                    **arguments,
+                    "run_intake": {**run_intake, "output_dir": "../outside"},
+                    "expected_decision_revision": 1,
+                },
+            )
+        ]
+    )[2]["result"]
+    assert rejected["isError"] is True
+    assert "leaves the customer run" in rejected["structuredContent"]["error"]
+    assert all(path.read_bytes() == before for path, before in protected.items())
+    assert not old_output_dir.exists()
+
+
+def test_widget_visible_payload_persists_with_opaque_token(
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -565,6 +824,7 @@ def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> No
                 1,
                 "render_new_client_review",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
@@ -585,6 +845,7 @@ def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> No
                 2,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": rendered["run_intake"],
                     "persistence_token": token,
                     "review_payload": rendered["review_payload"],
@@ -605,6 +866,7 @@ def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> No
                 3,
                 "apply_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": rendered["run_intake"],
                     "persistence_token": token,
                     "review_payload": rendered["review_payload"],
@@ -626,8 +888,10 @@ def test_widget_visible_payload_persists_with_opaque_token(tmp_path: Path) -> No
 
 def test_reload_reuses_saved_decision_details(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -677,6 +941,7 @@ def test_reload_reuses_saved_decision_details(
                 1,
                 "render_new_client_review",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
@@ -690,6 +955,7 @@ def test_reload_reuses_saved_decision_details(
                 2,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": first_render["run_intake"],
                     "persistence_token": first_render["decision_policy"][
                         "persistence_token"
@@ -707,6 +973,7 @@ def test_reload_reuses_saved_decision_details(
                 3,
                 "render_new_client_review",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": first_save["ui_decisions"],
@@ -728,6 +995,7 @@ def test_reload_reuses_saved_decision_details(
                 4,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": second_render["run_intake"],
                     "persistence_token": second_render["decision_policy"][
                         "persistence_token"
@@ -745,6 +1013,7 @@ def test_reload_reuses_saved_decision_details(
                 5,
                 "apply_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": second_render["run_intake"],
                     "persistence_token": second_render["decision_policy"][
                         "persistence_token"
@@ -784,8 +1053,10 @@ def test_reload_reuses_saved_decision_details(
 
 def test_save_invalidates_ready_gate_until_new_decisions_are_applied(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     core = _load_core()
     _mark_persistent_gate_ready(output_dir)
     run_intake = json.loads(
@@ -802,6 +1073,7 @@ def test_save_invalidates_ready_gate_until_new_decisions_are_applied(
                 1,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": _accepted_decisions(
@@ -831,6 +1103,7 @@ def test_save_invalidates_ready_gate_until_new_decisions_are_applied(
                 1,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": _accepted_decisions(review_payload),
@@ -854,8 +1127,10 @@ def test_save_invalidates_ready_gate_until_new_decisions_are_applied(
 
 def test_persistent_ready_gate_requires_professional_reviewer_reference(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     core = _load_core()
     _mark_persistent_gate_ready(output_dir)
     run_intake = json.loads(
@@ -872,6 +1147,7 @@ def test_persistent_ready_gate_requires_professional_reviewer_reference(
                 1,
                 "apply_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": accepted,
@@ -896,6 +1172,7 @@ def test_persistent_ready_gate_requires_professional_reviewer_reference(
                 1,
                 "apply_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": accepted,
@@ -921,8 +1198,10 @@ def test_persistent_ready_gate_requires_professional_reviewer_reference(
 
 def test_oldest_persistence_token_survives_lookup_at_capacity(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -947,6 +1226,7 @@ def test_oldest_persistence_token_survives_lookup_at_capacity(
                         request_id,
                         "render_new_client_review",
                         {
+                            "client_engagement": client_engagement,
                             "run_intake": run_intake,
                             "review_payload": review_payload,
                             "ui_decisions": ui_decisions,
@@ -972,6 +1252,7 @@ def test_oldest_persistence_token_survives_lookup_at_capacity(
                 129,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": oldest["run_intake"],
                     "persistence_token": oldest_token,
                     "review_payload": oldest["review_payload"],
@@ -995,9 +1276,11 @@ def test_oldest_persistence_token_survives_lookup_at_capacity(
 
 def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
-    alternate_output_dir = _generate_package(tmp_path / "alternate")
+    output_dir = _generate_package(vera_workflow_workspace)
+    alternate_output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -1013,6 +1296,7 @@ def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
                 1,
                 "render_new_client_review",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                 },
@@ -1027,6 +1311,7 @@ def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
                 2,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": rendered["run_intake"],
                     "persistence_token": token,
                     "review_payload": altered_review,
@@ -1049,6 +1334,7 @@ def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
                 3,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": mismatched_run_intake,
                     "persistence_token": token,
                     "review_payload": review_payload,
@@ -1076,8 +1362,11 @@ def test_persistence_token_rejects_altered_review_and_direct_path_mismatch(
     )
 
 
-def test_widget_persistence_rejects_unknown_token(tmp_path: Path) -> None:
-    output_dir = _generate_package(tmp_path)
+def test_widget_persistence_rejects_unknown_token(
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    output_dir = _generate_package(vera_workflow_workspace)
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
@@ -1111,8 +1400,10 @@ def test_widget_persistence_rejects_unknown_token(tmp_path: Path) -> None:
 
 def test_new_client_mcp_enforces_semantic_and_document_request_notes(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -1133,6 +1424,7 @@ def test_new_client_mcp_enforces_semantic_and_document_request_notes(
         if item["item_type"] == "missing_evidence"
     )
     common = {
+        "client_engagement": client_engagement,
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -1390,8 +1682,10 @@ def test_new_client_mcp_rejects_output_inside_source_package() -> None:
 
 def test_new_client_save_apply_preserves_integrity_and_history(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     core = _load_core()
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
@@ -1404,6 +1698,7 @@ def test_new_client_save_apply_preserves_integrity_and_history(
     )
     item_id = review_payload["items"][0]["id"]
     common = {
+        "client_engagement": client_engagement,
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -1474,10 +1769,87 @@ def test_new_client_save_apply_preserves_integrity_and_history(
     assert final["relationship_activation_performed"] is False
 
 
+def test_new_client_mcp_rejects_ledger_run_id_mismatch_without_write(
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+) -> None:
+    workspace = vera_workflow_workspace("new-client")
+    output_dir = Path(workspace["output_dir"])
+    initialized = subprocess.run(
+        [
+            sys.executable,
+            str(PLUGIN_ROOT / "scripts" / "initialize_case.py"),
+            "--case-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--client-reference",
+            "CLIENT-RUN-ID-MISMATCH",
+        ],
+        cwd=PLUGIN_ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+    )
+    assert json.loads(initialized.stdout)["status"] == "new_client_input_initialized"
+    packager = _load_module(
+        "new_client_mcp_run_id_mismatch_packager",
+        PLUGIN_ROOT / "scripts" / "package_new_client.py",
+    )
+    mismatched_run_id = "new-client-202608030000000000-deadbeefcafe"
+    packager.package_new_client(
+        output_dir / "new_client_input.json",
+        output_dir,
+        run_id=mismatched_run_id,
+    )
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    ui_path = output_dir / "ui_decisions.json"
+    final_path = output_dir / "final_artifacts.json"
+    ui_before = ui_path.read_bytes()
+    final_before = final_path.read_bytes()
+
+    response = _call_mcp(
+        [
+            _tool_call(
+                1,
+                "save_new_client_decisions",
+                {
+                    "run_intake": run_intake,
+                    "review_payload": review_payload,
+                    "final_artifacts": final_artifacts,
+                    "decisions": [
+                        {
+                            "item_id": review_payload["items"][0]["id"],
+                            "action": "accept",
+                        }
+                    ],
+                },
+            )
+        ]
+    )[1]["result"]
+
+    assert response["isError"] is True
+    assert (
+        "customer-run preflight returned an invalid result"
+        in response["structuredContent"]["error"]
+    )
+    assert ui_path.read_bytes() == ui_before
+    assert final_path.read_bytes() == final_before
+
+
 def test_new_client_save_rejects_stale_decision_revision(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -1491,6 +1863,7 @@ def test_new_client_save_rejects_stale_decision_revision(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
     arguments = {
+        "client_engagement": client_engagement,
         "run_intake": run_intake,
         "review_payload": review_payload,
         "ui_decisions": ui_decisions,
@@ -1524,8 +1897,10 @@ def test_new_client_save_rejects_stale_decision_revision(
 
 def test_new_client_save_rejects_tampered_local_artifact_before_writing(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
+    client_engagement = str(output_dir.parent / "context.json")
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -1555,6 +1930,7 @@ def test_new_client_save_rejects_tampered_local_artifact_before_writing(
                 1,
                 "save_new_client_decisions",
                 {
+                    "client_engagement": client_engagement,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "ui_decisions": ui_decisions,
@@ -1583,8 +1959,9 @@ def test_new_client_save_rejects_tampered_local_artifact_before_writing(
 
 def test_new_client_save_rejects_incomplete_export_gate_before_writing(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    output_dir = _generate_package(tmp_path)
+    output_dir = _generate_package(vera_workflow_workspace)
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )

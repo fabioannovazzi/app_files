@@ -11,6 +11,7 @@ import os
 import re
 import shutil
 import stat
+import sys
 import uuid
 from collections.abc import Callable, Mapping, Sequence
 from datetime import datetime, timezone
@@ -28,6 +29,21 @@ __all__ = [
 ]
 
 LOGGER = logging.getLogger(__name__)
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 SCHEMA_VERSION = "previdenza_inps.portal_capture.v3"
 VISIBLE_TEXT_NAME = "portal_visible_text.txt"
@@ -513,6 +529,7 @@ def _capture_parser(subparsers: Any) -> None:
     parser.add_argument("--remote-url", default="http://127.0.0.1:9222")
     parser.add_argument("--approved-origin", required=True)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument("--timeout-ms", type=int, default=20_000)
 
 
@@ -532,6 +549,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         if args.command == "verify":
             result = verify_portal_snapshot(args.output_dir)
         else:
+            load_client_engagement_context_file(
+                args.client_engagement,
+                expected_workflow_id="previdenza-inps",
+                output_dir=args.output_dir,
+            )
             manifest = capture_portal_snapshot(
                 remote_url=args.remote_url,
                 approved_origin=args.approved_origin,
@@ -543,7 +565,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 "capture_id": manifest["capture_id"],
                 "artifact_count": len(manifest["artifacts"]),
             }
-    except PortalCaptureError as exc:
+    except (AssuranceContractError, PortalCaptureError) as exc:
         LOGGER.error("Portal capture blocked: %s", exc)
         return 1
     LOGGER.info(

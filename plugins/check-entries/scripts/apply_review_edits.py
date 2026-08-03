@@ -139,10 +139,12 @@ from physical_output_set import (
 )
 from stable_ooxml import write_stable_xlsx
 from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
     artifact_receipt,
     build_assurance_envelope,
     build_reviewed_decision_receipt,
     canonical_json_sha256,
+    load_client_workflow_context_for_output,
     validate_artifact_receipt,
     validate_assurance_envelope,
 )
@@ -529,6 +531,38 @@ def _next_actions(current: list[Any], status: str) -> list[str]:
     return list(dict.fromkeys(next_actions))
 
 
+def _resolve_persisted_run_path(
+    output_dir: Path,
+    run_intake: dict[str, Any],
+    value: object,
+) -> Path:
+    text = clean_text(value)
+    if not text:
+        raise ValueError("Check Entries persisted path is unavailable")
+    reference = Path(text).expanduser()
+    if reference.is_absolute():
+        return _absolute_path_without_following(reference)
+    if (
+        run_intake.get("path_reference") != "run_root_relative"
+        or ".." in reference.parts
+    ):
+        raise ValueError("Check Entries persisted path is invalid")
+    candidate = output_dir.expanduser().resolve()
+    while True:
+        context_path = candidate / "context.json"
+        context_entry = _lstat_or_none(context_path)
+        if (
+            context_entry is not None
+            and stat.S_ISREG(context_entry.st_mode)
+            and not context_path.is_symlink()
+            and context_entry.st_nlink == 1
+        ):
+            return _absolute_path_without_following(candidate / reference)
+        if candidate == candidate.parent:
+            raise ValueError("Check Entries customer-run context is unavailable")
+        candidate = candidate.parent
+
+
 def _artifact_roots(output_dir: Path, audit: dict[str, Any]) -> dict[str, Path]:
     """Resolve all roots used by the Check Entries assurance envelope."""
 
@@ -538,8 +572,9 @@ def _artifact_roots(output_dir: Path, audit: dict[str, Any]) -> dict[str, Path]:
         raise ValueError("check_audit.json does not identify the normalized journal")
     if not support_value:
         raise ValueError("check_audit.json does not identify the support path")
-    journal = Path(journal_value).expanduser()
-    support = Path(support_value).expanduser()
+    run_intake = _read_json(output_dir / "run_intake.json")
+    journal = _resolve_persisted_run_path(output_dir, run_intake, journal_value)
+    support = _resolve_persisted_run_path(output_dir, run_intake, support_value)
     return {
         "normalization": journal.parent,
         "support": support if support.is_dir() else support.parent,
@@ -830,6 +865,15 @@ def _validated_execution_recipe(
         return None
     if not isinstance(recipe_value, str) or not recipe_value.strip():
         raise ValueError("run_intake.json recipe path is invalid")
+    if run_intake.get("path_reference") == "run_root_relative":
+        recipe_reference = Path(recipe_value)
+        if (
+            recipe_reference.is_absolute()
+            or ".." in recipe_reference.parts
+            or recipe_reference.name != "execution_recipe.json"
+        ):
+            raise ValueError("run_intake.json recipe path is invalid")
+        return captured_path
     recipe_path = _absolute_path_without_following(Path(recipe_value))
     original_bytes = _stable_regular_bytes(
         recipe_path,
@@ -838,6 +882,110 @@ def _validated_execution_recipe(
     if original_bytes != captured_bytes:
         raise ValueError("original Check Entries recipe changed after execution")
     return recipe_path
+
+
+def _client_engagement_material_projection(value: object) -> object:
+    """Keep client/run identity and receipts, excluding hydrated locations."""
+
+    if not isinstance(value, dict):
+        return value
+    projection = {
+        key: value.get(key)
+        for key in (
+            "schema_version",
+            "client_id",
+            "engagement_id",
+            "workflow_id",
+            "workflow_version",
+            "run_id",
+            "input_manifest",
+            "input_manifest_sha256",
+            "run_relative_path",
+            "output_relative_path",
+        )
+        if key in value
+    }
+    folder = value.get("studio_client_folder")
+    if isinstance(folder, dict):
+        projection["studio_client_folder"] = {
+            key: folder.get(key)
+            for key in (
+                "schema_version",
+                "studio_client_id",
+                "scope_id",
+                "scope_relative_dir",
+                "display_name",
+            )
+            if key in folder
+        }
+    bindings = value.get("input_bindings")
+    if isinstance(bindings, list):
+        projection["input_bindings"] = [
+            {
+                key: binding.get(key)
+                for key in (
+                    "binding_id",
+                    "byte_count",
+                    "execution_relative_path",
+                    "kind",
+                    "receipt_relative_path",
+                    "receipt_sha256",
+                    "role",
+                    "sha256",
+                    "source_relative_path",
+                    "upstream_artifact_id",
+                    "upstream_run_id",
+                    "upstream_workflow_id",
+                )
+                if key in binding
+            }
+            for binding in bindings
+            if isinstance(binding, dict)
+        ]
+    return projection
+
+
+def _portable_client_engagement_identity(value: object) -> object:
+    """Project only the sealed path-free v2 run identity."""
+
+    if not isinstance(value, dict):
+        return value
+    if value.get("schema_version") != "vera.client_workflow_context.v2":
+        return value
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: value.get(field) for field in portable_fields}
+
+
+def _source_preparation_material_projection(value: object) -> object:
+    if not isinstance(value, dict):
+        return value
+    return {
+        **value,
+        **(
+            {
+                "client_engagement": _client_engagement_material_projection(
+                    value["client_engagement"]
+                )
+            }
+            if "client_engagement" in value
+            else {}
+        ),
+    }
 
 
 def _review_payload_material_projection(payload: dict[str, Any]) -> dict[str, Any]:
@@ -851,7 +999,7 @@ def _review_payload_material_projection(payload: dict[str, Any]) -> dict[str, An
         for item in items
         if isinstance(item, dict) and item.get("item_type") != "review_artifact"
     ]
-    return {
+    projection = {
         key: payload.get(key)
         for key in (
             "schema_version",
@@ -870,10 +1018,18 @@ def _review_payload_material_projection(payload: dict[str, Any]) -> dict[str, An
             "summary",
         )
     } | {"material_items": material_items}
+    projection["client_engagement"] = _client_engagement_material_projection(
+        payload.get("client_engagement")
+    )
+    return projection
 
 
-def _run_intake_material_projection(value: dict[str, Any]) -> dict[str, Any]:
-    return {
+def _run_intake_material_projection(
+    value: dict[str, Any],
+    *,
+    recipe_reference: str | None = None,
+) -> dict[str, Any]:
+    projection = {
         key: value.get(key)
         for key in (
             "schema_version",
@@ -891,6 +1047,33 @@ def _run_intake_material_projection(value: dict[str, Any]) -> dict[str, Any]:
             "status",
         )
     }
+    projection["client_engagement"] = _client_engagement_material_projection(
+        value.get("client_engagement")
+    )
+    if recipe_reference is not None:
+        assumptions = projection.get("assumptions")
+        if isinstance(assumptions, dict):
+            projection["assumptions"] = {
+                **assumptions,
+                "recipe_path": recipe_reference,
+            }
+        data_posture = projection.get("data_posture")
+        if isinstance(data_posture, dict):
+            local_files = data_posture.get("local_files_read")
+            if isinstance(local_files, list):
+                projection["data_posture"] = {
+                    **data_posture,
+                    "local_files_read": [
+                        (
+                            recipe_reference
+                            if isinstance(item, str)
+                            and Path(item).name == "execution_recipe.json"
+                            else item
+                        )
+                        for item in local_files
+                    ],
+                }
+    return projection
 
 
 def _validate_rederived_material_state(
@@ -898,6 +1081,7 @@ def _validate_rederived_material_state(
     audit: dict[str, Any],
     envelope: dict[str, Any],
     successor_decision: dict[str, Any] | None,
+    client_engagement: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Freshly rerun every material check and compare the persisted successor."""
 
@@ -931,10 +1115,18 @@ def _validate_rederived_material_state(
         envelope,
         run_intake,
     )
-    journal = Path(clean_text(audit.get("journal"))).expanduser()
-    support = Path(clean_text(audit.get("pdf_path"))).expanduser()
     if not clean_text(audit.get("journal")) or not clean_text(audit.get("pdf_path")):
         raise ValueError("Check Entries original source paths are unavailable")
+    journal = _resolve_persisted_run_path(
+        output_dir,
+        run_intake,
+        audit.get("journal"),
+    )
+    support = _resolve_persisted_run_path(
+        output_dir,
+        run_intake,
+        audit.get("pdf_path"),
+    )
 
     with tempfile.TemporaryDirectory(
         prefix=".check-entries-material-replay-",
@@ -957,9 +1149,13 @@ def _validate_rederived_material_state(
                 else None
             ),
             client_engagement=(
-                run_intake.get("client_engagement")
-                if isinstance(run_intake.get("client_engagement"), dict)
-                else None
+                client_engagement
+                if client_engagement is not None
+                else (
+                    run_intake.get("client_engagement")
+                    if isinstance(run_intake.get("client_engagement"), dict)
+                    else None
+                )
             ),
             _enforce_client_output_path=False,
         )
@@ -1105,7 +1301,15 @@ def _validate_rederived_material_state(
             "professional_conclusion_status",
         )
         for field_name in material_audit_fields:
-            if audit.get(field_name) != replay_audit.get(field_name):
+            current_value = audit.get(field_name)
+            replay_value = replay_audit.get(field_name)
+            if field_name == "client_engagement":
+                current_value = _client_engagement_material_projection(current_value)
+                replay_value = _client_engagement_material_projection(replay_value)
+            elif field_name == "source_preparation":
+                current_value = _source_preparation_material_projection(current_value)
+                replay_value = _source_preparation_material_projection(replay_value)
+            if current_value != replay_value:
                 raise ValueError(
                     f"check_audit.json material field is not rederived: {field_name}"
                 )
@@ -1147,9 +1351,18 @@ def _validate_rederived_material_state(
             raise ValueError(
                 "review payload material projection differs from fresh rederivation"
             )
-        if _run_intake_material_projection(
-            run_intake
-        ) != _run_intake_material_projection(replay_intake):
+        current_intake_projection = _run_intake_material_projection(run_intake)
+        current_assumptions = run_intake.get("assumptions")
+        recipe_reference = (
+            clean_text(current_assumptions.get("recipe_path"))
+            if isinstance(current_assumptions, dict)
+            else ""
+        )
+        replay_intake_projection = _run_intake_material_projection(
+            replay_intake,
+            recipe_reference=recipe_reference or None,
+        )
+        if current_intake_projection != replay_intake_projection:
             raise ValueError(
                 "run intake material projection differs from fresh rederivation"
             )
@@ -1206,7 +1419,11 @@ def _validate_rederived_material_state(
         }
 
 
-def preflight_assurance(output_dir: Path) -> dict[str, Any]:
+def preflight_assurance(
+    output_dir: Path,
+    *,
+    client_engagement: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """Replay the persisted Check Entries assurance state before review writes."""
 
     output_dir = _validate_output_tree(output_dir)
@@ -1223,6 +1440,25 @@ def preflight_assurance(output_dir: Path) -> dict[str, Any]:
         envelope_path, audit_path = paths
         audit = _read_json(audit_path)
         envelope = _read_json(envelope_path)
+        effective_client_engagement = client_engagement
+        if effective_client_engagement is None:
+            try:
+                effective_client_engagement = load_client_workflow_context_for_output(
+                    output_dir,
+                    expected_workflow_id="check-entries",
+                )
+            except AssuranceContractError as exc:
+                raise ValueError(
+                    f"Check Entries current customer-run context is unavailable: {exc}"
+                ) from exc
+            persisted_intake = _read_json(output_dir / "run_intake.json")
+            if _portable_client_engagement_identity(
+                persisted_intake.get("client_engagement")
+            ) != _portable_client_engagement_identity(effective_client_engagement):
+                raise ValueError(
+                    "Check Entries current customer-run context does not match "
+                    "the persisted run identity"
+                )
         artifact_roots = _artifact_roots(output_dir, audit)
         validated = validate_assurance_envelope(
             envelope,
@@ -1246,6 +1482,7 @@ def preflight_assurance(output_dir: Path) -> dict[str, Any]:
             audit,
             validated,
             successor_decision,
+            effective_client_engagement,
         )
         result = {
             "ok": True,
@@ -1544,6 +1781,10 @@ def _reseal_assurance_after_review(
     envelope_path = output_dir / "assurance_envelope.json"
     audit_path = output_dir / "check_audit.json"
     audit = _read_json(audit_path)
+    recorded_assurance = audit.get("assurance_envelope")
+    recorded_assurance_path = (
+        recorded_assurance.get("path") if isinstance(recorded_assurance, dict) else None
+    )
     artifact_roots = _artifact_roots(output_dir, audit)
     changed_paths = (
         {"check_results.csv", "check_results.xlsx"} if edit_effects else set()
@@ -1615,7 +1856,12 @@ def _reseal_assurance_after_review(
     }
     audit["reviewed_decisions"] = reviewed_decisions
     audit["assurance_envelope"] = {
-        "path": (canonical_output_dir / envelope_path.name).as_posix(),
+        "path": (
+            recorded_assurance_path
+            if isinstance(recorded_assurance_path, str)
+            and recorded_assurance_path.strip()
+            else (canonical_output_dir / envelope_path.name).as_posix()
+        ),
         "content_sha256": resealed["content_sha256"],
         "artifact_receipt": envelope_receipt,
     }
@@ -1887,13 +2133,38 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--final-artifacts", type=Path)
     parser.add_argument("--canonical-output-dir", type=Path)
     parser.add_argument(
+        "--client-run-preflight-only",
+        action="store_true",
+        help="Validate the owning running customer-folder run without writing.",
+    )
+    parser.add_argument(
         "--preflight-only",
         action="store_true",
         help="Replay persisted assurance before any review artifacts are written.",
     )
     args = parser.parse_args(argv)
+    client_output_dir = args.canonical_output_dir or args.output_dir
+    try:
+        client_context = load_client_workflow_context_for_output(
+            client_output_dir.expanduser().resolve(),
+            expected_workflow_id="check-entries",
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
+    if args.client_run_preflight_only:
+        result = {
+            "ok": True,
+            "schema_version": client_context["schema_version"],
+            "workflow_id": client_context["workflow_id"],
+            "client_run_id": client_context["run_id"],
+        }
+        sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+        return 0
     if args.preflight_only:
-        result = preflight_assurance(args.output_dir)
+        result = preflight_assurance(
+            args.output_dir,
+            client_engagement=client_context,
+        )
         sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
         return 0
     if args.applied_decisions is None or args.final_artifacts is None:

@@ -5,7 +5,29 @@ description: Use when a user wants Vera or Codex to prepare an evidence-backed I
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/previdenza-inps-<run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` argument.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement. Import every externally
+downloaded file separately, select its exact receipt, then call
+`prepare_studio_client_workflow` with workflow ID `previdenza-inps` and start
+that prepared run. Prepared inputs are closed execution copies: never add a
+registered export, portal capture, draft, or other generated file to them.
+Write acquisition and analysis artifacts only below the returned
+`client-run-output`. Pass the returned `client_engagement_path` as
+`--client-engagement` to every mutating command: export registration, portal
+capture, inventory, record validation, contribution reconciliation, and
+packaging. Cross-engagement inputs, unreceipted external files, stopped runs,
+and arbitrary outputs are rejected.
+
+Start the prepared run before inventory. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Previdenza INPS
 
@@ -53,17 +75,24 @@ Confirm the Italian/INPS framework separately from output language. Surface any 
 
 Prefer an official PDF or other portal download made by the subject or appropriately profiled intermediary/delegate. No verified general-purpose API currently lets a commercialista retrieve a client's individual contribution position. Never route a private case through the public Open Data API or a PDND e-service merely because the words “INPS” or “Estratto Conto” match; verify the exact service contract and actor eligibility first.
 
-Register files already present in local storage before inventory. Keep both the source and registered directory outside the Git workspace. The registrar copies and hash-binds the files; it does not operate the portal or ask the professional to re-document access, profile, delegation, or model-processing authority for a local file. The command shape is:
+Select the client and engagement first. Import each downloaded export as its
+own Studio Archive input, prepare the exact receipt set, and start the run.
+Register only the resulting run execution copies. The registrar copies and
+hash-binds them under the same run's output tree; it does not operate the portal
+or ask the professional to re-document access, profile, delegation, or
+model-processing authority for a local file. The command shape is:
 
 ```bash
-python scripts/register_portal_export.py register /path/to/downloaded/export.pdf \
-  --output-dir /private/path/inps-export-registration \
-  --source-origin https://www.inps.it
+python scripts/register_portal_export.py register <run-execution-input>/export.pdf \
+  --output-dir <client-run-output>/acquisition/inps-export-registration \
+  --source-origin https://www.inps.it \
+  --client-engagement <client_engagement_path>
 python scripts/register_portal_export.py verify \
-  /private/path/inps-export-registration
-python scripts/inventory_case.py /private/path/inps-export-registration \
-  --portal-export-manifest /private/path/inps-export-registration/manifest.json \
-  --output-dir /private/path/previdenza-inps-run \
+  <client-run-output>/acquisition/inps-export-registration
+python scripts/inventory_case.py <client-run-output>/acquisition/inps-export-registration \
+  --portal-export-manifest <client-run-output>/acquisition/inps-export-registration/manifest.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output> \
   --language it \
   --reference-date YYYY-MM-DD
 ```
@@ -72,7 +101,23 @@ python scripts/inventory_case.py /private/path/inps-export-registration \
 
 For an alternative current-view snapshot, the user remains responsible for access authority and for using software-assisted capture only where permitted. Vera does not adjudicate or certify that question. One inventory run accepts one portal-derived acquisition mode; do not mix a capture receipt and an export-registration receipt. The human opens a dedicated browser session, authenticates personally with their own SPID/CIE/CNS, selects the relevant profile or delegation, navigates to the exact read-only view, and removes any credential or one-time-code display. Vera may then attach only to a loopback browser endpoint and capture that already-open tab. The capture implementation is forbidden from navigating, clicking, filling, submitting, downloading, reading cookies/storage, saving HTML, exporting browser state, or closing the user's browser. Do not ask the user to disclose credentials, cookies, tokens, or authentication codes.
 
-Run `python scripts/capture_portal_snapshot.py --help` from the component root. Invoking its `capture` command with the exact INPS origin is the explicit route choice; no separate authority form is collected. Run its `verify` command before inventory. Point `inventory_case.py` at the private capture directory and pass its verified manifest with `--portal-capture-manifest`. The manifest and all artifacts must remain outside the Git workspace in an owner-only folder.
+Run `python scripts/capture_portal_snapshot.py --help` from the component root. Invoking its `capture` command with the exact INPS origin is the explicit route choice; no separate authority form is collected. Write the capture below `<client-run-output>/acquisition`, never in prepared inputs, and run its `verify` command before inventory:
+
+```bash
+python scripts/capture_portal_snapshot.py capture \
+  --approved-origin https://www.inps.it \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/acquisition/inps-portal-capture
+python scripts/capture_portal_snapshot.py verify \
+  <client-run-output>/acquisition/inps-portal-capture
+python scripts/inventory_case.py \
+  <client-run-output>/acquisition/inps-portal-capture \
+  --portal-capture-manifest <client-run-output>/acquisition/inps-portal-capture/portal_capture_manifest.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output> \
+  --language it \
+  --reference-date YYYY-MM-DD
+```
 
 ### 1. Dependencies and inventory
 
@@ -81,8 +126,9 @@ From the component root (`plugins/previdenza-inps`), run:
 ```bash
 python scripts/check_dependencies.py
 python scripts/check_dependencies.py --requirements requirements-ocr.txt
-python scripts/inventory_case.py /path/to/case \
-  --output-dir /path/to/output/previdenza-inps-run \
+python scripts/inventory_case.py <run-execution-input-folder> \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output> \
   --language it \
   --reference-date YYYY-MM-DD
 ```
@@ -105,9 +151,10 @@ After the material decisions are confirmed, run:
 
 ```bash
 python scripts/validate_case_records.py \
-  /path/to/output/case_records_draft.json \
-  /path/to/output/file_inventory.json \
-  --output-dir /path/to/output
+  <client-run-output>/case_records_draft.json \
+  <client-run-output>/file_inventory.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Repair schema or provenance failures. Do not waive missing anchors by inference. The output includes `case_records_validated.json`, `case_records_audit.json`, `timeline.csv`, and `evidence_matrix.csv`.
@@ -124,10 +171,11 @@ Only after the rate/formula basis is fully supported and a professional reviewer
 
 ```bash
 python scripts/reconcile_contributions.py \
-  /path/to/output/arithmetic_recipes.json \
-  /path/to/output/case_records_validated.json \
-  /path/to/output/claims_review.json \
-  --output-dir /path/to/output
+  <client-run-output>/arithmetic_recipes.json \
+  <client-run-output>/case_records_validated.json \
+  <client-run-output>/claims_review.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 If a formula, rate, operand, provenance, or rounding choice is missing, leave status `calculation_not_run`. Never guess.
@@ -140,10 +188,11 @@ Run:
 
 ```bash
 python scripts/package_case.py \
-  /path/to/output/case_records_validated.json \
-  /path/to/output/claims_review.json \
-  --calculations /path/to/output/calculation_results.json \
-  --output-dir /path/to/output
+  <client-run-output>/case_records_validated.json \
+  <client-run-output>/claims_review.json \
+  --client-engagement <client_engagement_path> \
+  --calculations <client-run-output>/calculation_results.json \
+  --output-dir <client-run-output>
 ```
 
 Omit `--calculations` when no reviewed calculation is needed. A validation failure remains visible even when draft artifacts are written.
@@ -190,7 +239,7 @@ If MCP rendering is unavailable, review the local artifacts in Markdown. Keep de
 - Missing approved arithmetic input: `calculation_not_run`.
 - Unsupported material claim or malformed package: `validation_fail`.
 
-Never replace missing required evidence with model inference. Never write credentials, SPID/CIE secrets, cookies, tokens, private or tokenized session URLs, or raw local paths into artifacts or review payloads. Use a dedicated access-restricted output directory, avoid duplicate evidence copies, and keep external research queries free of personal identifiers. The firm or user chooses the Codex account and its data controls outside the per-case workflow.
+Never replace missing required evidence with model inference. Never write credentials, SPID/CIE secrets, cookies, tokens, private or tokenized session URLs, or raw local paths into artifacts or review payloads. Persist only run-root-relative file references so a renamed customer folder can be resumed from its current `context.json`. Use the access-restricted Studio Archive run output, avoid duplicate evidence copies, and keep external research queries free of personal identifiers. The firm or user chooses the Codex account and its data controls outside the per-case workflow.
 
 ## Plugin Improvement Feedback
 

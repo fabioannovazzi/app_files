@@ -23,7 +23,7 @@
       {
         "id": "journal-and-sample-review",
         "purpose": "Resolve journal mappings and explain the sampling design and selected sample",
-        "content": "User instructions; the stable Studio Archive client ID, current client-folder binding, engagement/workflow/run IDs and exact local input/output paths; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics and review decisions",
+        "content": "User instructions; the stable Studio Archive client, engagement and run identifiers; the exact journal input receipt and run-local execution copy; the customer-folder output root and lifecycle state; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics, artifact purposes and audiences, and review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -39,7 +39,7 @@
     },
     {
       "id": "client-engagement-path-isolation",
-      "control": "Every product CLI requires a digest-valid Studio Archive client-engagement context, accepts the imported journal only inside that engagement input root, and writes normalization and sample artifacts only to the exact derived client/engagement/workflow/run paths. The context is sealed into diagnostics and review artifacts."
+      "control": "Every product CLI requires a digest-valid running Studio Archive journal-sampling context, replays its customer-folder manifests and receipt-bound bytes, accepts exactly one journal execution copy selected by the run input manifest, and writes normalization and sample artifacts only below that run's exact output root. The context is sealed into diagnostics and review artifacts."
     },
     {
       "id": "sealed-population-and-implementation-replay",
@@ -59,9 +59,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-02",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3620bd56455ed99d4237f58bcdb4496a21431e86fb2bce6d8f007e9b31afb535"
+    "source_fingerprint": "b8b6d04f75eb5240fdae13b2bb9aa6f8e123a06b1b91c7559d20f29355cadf7c"
   }
 }

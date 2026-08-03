@@ -49,11 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or another published folder. Use a dedicated owner-only
-directory outside the repository, preferably a sibling
-`output/new-client-<run-id>` folder next to the user's private source
-folder. Pass that exact path to every `--output-dir` option.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # New Client
 
@@ -177,7 +186,8 @@ From the component root run:
 ```bash
 python scripts/check_dependencies.py
 python scripts/initialize_case.py \
-  --case-dir /private/path/new-client-run \
+  --case-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --client-reference CLIENT-001 \
   --assessment-date YYYY-MM-DD
 ```
@@ -211,8 +221,9 @@ For the normal handoff, create the phase-two starter deterministically:
 
 ```bash
 python scripts/promote_client_file_preparation.py \
-  --final-artifacts /private/path/file-preparation-run/final_artifacts.json \
-  --case-dir /private/path/new-client-run \
+  --final-artifacts <same-engagement-file-preparation-output>/final_artifacts.json \
+  --case-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --client-reference CLIENT-001
 ```
 
@@ -290,8 +301,9 @@ Run:
 
 ```bash
 python scripts/package_new_client.py \
-  --input /private/path/new-client-run/new_client_input.json \
-  --output-dir /private/path/new-client-run
+  --input <client-run-output>/new_client_input.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Record a studio template only as a reference. Verify its exact local content
@@ -312,7 +324,8 @@ source-evidence files to the delivered dossier, seal the complete final folder:
 
 ```bash
 python scripts/delivery_manifest.py seal \
-  --output-dir /private/path/new-client-delivery
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Run this only after the last package rebuild, after the final copy to the
@@ -325,7 +338,8 @@ Validate that exact delivered path independently after sealing:
 
 ```bash
 python scripts/delivery_manifest.py validate \
-  --output-dir /private/path/new-client-delivery
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Do not claim a complete delivered dossier until this command passes. If the

@@ -8,8 +8,19 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
 
 from initialize_case import build_template  # noqa: E402
 from new_client_core import (  # noqa: E402
@@ -23,8 +34,59 @@ from new_client_core import (  # noqa: E402
     verify_client_file_preparation_binding,
     write_private_json,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = ["build_parser", "main", "promote_client_file_preparation"]
+
+
+def _run_relative_path(path: Path, run_root: Path, *, label: str) -> str:
+    try:
+        relative = path.resolve(strict=True).relative_to(run_root.resolve(strict=True))
+    except (OSError, ValueError) as exc:
+        raise ValidationError(f"{label} is outside the current customer run.") from exc
+    if not relative.parts:
+        raise ValidationError(f"{label} must identify a file inside the customer run.")
+    return relative.as_posix()
+
+
+def _manifest_output_paths(manifest_path: Path) -> list[Path]:
+    manifest = load_json(manifest_path)
+    outputs = manifest.get("outputs")
+    if not isinstance(outputs, list) or not outputs:
+        raise ValidationError("Phase-one final_artifacts.outputs must not be empty.")
+    resolved: list[Path] = []
+    for index, output in enumerate(outputs):
+        if not isinstance(output, Mapping):
+            raise ValidationError(f"Phase-one outputs[{index}] must be an object.")
+        raw_path = output.get("path")
+        if not isinstance(raw_path, str):
+            raise ValidationError(f"Phase-one outputs[{index}].path must be text.")
+        relative = Path(raw_path)
+        if (
+            relative.is_absolute()
+            or relative.as_posix() != raw_path
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise ValidationError(
+                "Phase-one outputs must use canonical relative paths."
+            )
+        candidate = manifest_path.parent / relative
+        try:
+            if candidate.is_symlink():
+                raise ValidationError("Phase-one outputs must not be symbolic links.")
+            output_path = candidate.resolve(strict=True)
+        except OSError as exc:
+            raise ValidationError(
+                f"Phase-one output {raw_path!r} cannot be resolved: {exc}"
+            ) from exc
+        if not output_path.is_file():
+            raise ValidationError(f"Phase-one output {raw_path!r} is not a file.")
+        resolved.append(output_path)
+    return resolved
 
 
 def _reviewed_fiscal_items(
@@ -136,6 +198,7 @@ def promote_client_file_preparation(
     jurisdiction: str | None = None,
     language: str | None = None,
     overwrite: bool = False,
+    run_root: Path | None = None,
 ) -> Path:
     """Create a private phase-two starter from a byte-verified final-ready run."""
 
@@ -238,6 +301,27 @@ def promote_client_file_preparation(
     if verification.get("package_hash") != package_hash.casefold():
         raise ValidationError("Phase-one package changed during promotion.")
 
+    if run_root is not None:
+        normalized_run_root = run_root.expanduser().resolve(strict=True)
+        binding = intake["client_file_preparation_binding"]
+        binding["final_artifacts_path"] = _run_relative_path(
+            manifest_path,
+            normalized_run_root,
+            label="Phase-one final_artifacts.json",
+        )
+        binding["final_artifacts_path_reference"] = "run_root_relative"
+        for index, evidence in enumerate(intake["evidence_register"]):
+            raw_path = evidence.get("local_path")
+            if not isinstance(raw_path, str):
+                continue
+            evidence["local_path"] = _run_relative_path(
+                Path(raw_path),
+                normalized_run_root,
+                label=f"Promoted evidence_register[{index}].local_path",
+            )
+            evidence["local_path_reference"] = "run_root_relative"
+        validate_new_client_input(intake)
+
     output_dir = ensure_private_output_directory(
         case_dir,
         allowed_existing=("new_client_input.json",) if overwrite else (),
@@ -259,6 +343,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--final-artifacts", required=True, type=Path)
     parser.add_argument("--case-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument("--client-reference", required=True)
     parser.add_argument(
         "--client-type",
@@ -278,6 +363,20 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="new-client",
+            input_paths=[args.final_artifacts],
+            output_dir=args.case_dir,
+        )
+        manifest_path = args.final_artifacts.expanduser().resolve(strict=True)
+        upstream_outputs = _manifest_output_paths(manifest_path)
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="new-client",
+            input_paths=[manifest_path, *upstream_outputs],
+            output_dir=args.case_dir,
+        )
         path = promote_client_file_preparation(
             args.final_artifacts,
             args.case_dir,
@@ -288,8 +387,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             jurisdiction=args.jurisdiction,
             language=args.language,
             overwrite=args.overwrite,
+            run_root=Path(str(context["run_root"])),
         )
-    except (OSError, ValidationError) as exc:
+    except (AssuranceContractError, OSError, ValidationError) as exc:
         sys.stdout.write(json.dumps({"status": "error", "error": str(exc)}) + "\n")
         return 2
     sys.stdout.write(

@@ -23,7 +23,7 @@
       {
         "id": "entry-and-support-review",
         "purpose": "Map selected entries and resolve accounting-support checks",
-        "content": "User instructions; stable Studio Archive client ID and folder binding; engagement/workflow/run IDs and exact local input/output paths; qualified same-engagement journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; local source metadata; match results; evidence excerpts; reviewed party, relationship, currency and direction decisions",
+        "content": "User instructions; stable Studio Archive client, engagement and run identifiers; exact same-engagement Journal Sampling normalized-population, diagnostics and sample artifact bindings; exact support input receipts and run-local execution copies; lifecycle and output paths; sampled journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; source metadata; match results; evidence excerpts; artifact purposes and audiences; and reviewed party, relationship, currency and direction decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -58,7 +58,11 @@
     },
     {
       "id": "same-client-engagement-gate",
-      "control": "Every product CLI requires a digest-valid Check Entries client context, accepts support only below that engagement's managed support input, requires the normalized journal and diagnostics to carry a valid Journal Sampling context with the same stable client, engagement and workspace, and writes only to the exact inspection or checks child of the derived run path."
+      "control": "Every product CLI requires a digest-valid running Studio Archive check-entries context, replays its customer-folder manifests and exact selected bytes, accepts support only from that run's receipt-bound execution view, requires the normalized journal, normalization diagnostics, and journal sample to be declared artifacts of one available Journal Sampling run in the same client engagement, and writes only to the exact inspection or checks child of the Check Entries output root."
+    },
+    {
+      "id": "exact-sample-population-handoff",
+      "control": "Before inspection or checking, Check Entries restricts the qualified normalized population to the physical source locators in the exact bound journal_sample.csv artifact; an empty sample, duplicate sample locators, or any sample row that does not close one-for-one to the population fails closed."
     },
     {
       "id": "complete-support-membership",
@@ -86,9 +90,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-02",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5ddb77cd7646d6ae12cc566491a2a0eb22ec5b8f59cdf5b7265faff9bfbdca4a"
+    "source_fingerprint": "f179eed555348221417fff69e3c9b0893b08598a37bb3c164829d331b6f0bd41"
   }
 }

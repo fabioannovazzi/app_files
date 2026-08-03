@@ -215,6 +215,10 @@ function toolDefinitions() {
   const inputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object." },
+      client_engagement: {
+        type: "string",
+        description: "Current absolute path to the managed run context.json.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
@@ -238,6 +242,10 @@ function toolDefinitions() {
   const decisionInputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
+      client_engagement: {
+        type: "string",
+        description: "Current absolute path to the managed run context.json.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       decisions: { type: "array", items: decisionSchema },
@@ -419,10 +427,9 @@ function validateReviewPayload(inputArgs) {
 }
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  const outputDir = resolveRunOutputDir(inputArgs);
   if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  return path.join(outputDir, "ui_decisions.json");
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -546,6 +553,7 @@ function saveDecisionPayload(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
+    preflightClientRun(resolveRunOutputDir(inputArgs), uiDecisions.run_id);
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
     fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
     persisted = true;
@@ -568,8 +576,50 @@ function saveDecisionPayload(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputRef = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputRef) return null;
+  const contextRef =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : "";
+  if (runIntake?.path_reference !== "run_root_relative") {
+    if (contextRef) {
+      throw new Error(
+        "run_intake.output_dir must be a portable managed-run reference",
+      );
+    }
+    return null;
+  }
+  if (!contextRef) {
+    throw new Error(
+      "Answer Validator persistence requires the current client_engagement context",
+    );
+  }
+  if (
+    !path.isAbsolute(contextRef) ||
+    path.normalize(contextRef) !== contextRef ||
+    path.basename(contextRef) !== "context.json"
+  ) {
+    throw new Error("client_engagement must be the current absolute context.json path");
+  }
+  if (outputRef.includes("\\")) {
+    throw new Error("run_intake.output_dir must use a canonical relative path");
+  }
+  const parts = outputRef.split("/");
+  if (
+    parts[0] !== "outputs" ||
+    parts.some((part) => !part || part === "." || part === "..") ||
+    parts.join("/") !== outputRef
+  ) {
+    throw new Error("run_intake.output_dir must stay inside the managed run outputs");
+  }
+  const runRoot = path.dirname(contextRef);
+  const outputRoot = path.join(runRoot, "outputs");
+  const resolved = path.join(runRoot, ...parts);
+  if (resolved !== outputRoot && !resolved.startsWith(`${outputRoot}${path.sep}`)) {
+    throw new Error("run_intake.output_dir escapes the managed run outputs");
+  }
+  return resolved;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -1458,6 +1508,7 @@ function applyDecisionPayload(inputArgs) {
     buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
   );
   const outputDir = resolveRunOutputDir(inputArgs);
+  if (outputDir) preflightClientRun(outputDir, uiDecisions.run_id);
   const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
   const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
   const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
@@ -1593,6 +1644,44 @@ function pythonExecutable() {
     return candidate;
   }
   return "python3";
+}
+
+function preflightClientRun(outputDir, expectedRunId) {
+  if (!outputDir) return null;
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "apply_review_edits.py");
+  const completed = spawnSync(
+    pythonExecutable(),
+    [
+      scriptPath,
+      "--output-dir",
+      outputDir,
+      "--client-run-preflight-only",
+    ],
+    { cwd: PLUGIN_ROOT, encoding: "utf8" },
+  );
+  if (completed.error) throw completed.error;
+  if (completed.status !== 0) {
+    throw new Error(
+      completed.stderr ||
+        completed.stdout ||
+        "Answer-validation customer-run preflight failed.",
+    );
+  }
+  const output = completed.stdout.trim().split(/\r?\n/).filter(Boolean).pop();
+  if (!output) throw new Error("Answer-validation customer-run preflight failed.");
+  const parsed = JSON.parse(output);
+  if (
+    !isPlainObject(parsed) ||
+    parsed.ok !== true ||
+    parsed.schema_version !== "vera.client_workflow_context.v2" ||
+    parsed.workflow_id !== "deep-research-validator" ||
+    typeof parsed.client_run_id !== "string" ||
+    !parsed.client_run_id.trim() ||
+    parsed.client_run_id !== expectedRunId
+  ) {
+    throw new Error("Answer-validation customer-run preflight returned an invalid result.");
+  }
+  return parsed;
 }
 
 function applyWorkflowSpecificReviewApplication(outputDir, appliedOutputPath, finalArtifactsPath) {

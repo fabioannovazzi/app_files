@@ -2,26 +2,31 @@
 
 [Source code](https://github.com/fabioannovazzi/app_files/tree/main/plugins/check-entries) · [GNU AGPLv3 License](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
-Check Entries is a Codex workflow plugin for comparing selected journal entries
-with Italian FatturaPA XMLs and supporting PDF documents.
+Check Entries is a Codex workflow plugin for comparing the exact entries
+selected by Journal Sampling with Italian FatturaPA XMLs and supporting PDF
+documents.
 
 The plugin starts from a qualified prepared-evidence boundary:
 
-- Studio Archive must identify the stable client and engagement. In a later
-  chat, its engagement listing exposes persisted Journal Sampling contexts and
-  exact available normalized-journal paths. Support must be copied, with user
-  authorization and original preservation, into that same engagement. Both
-  product CLIs require the returned Check Entries context and reject
-  cross-client inputs or invented output paths.
-- Journal Sampling must first write `normalized_journal.csv` and adjacent
-  sealed `normalization_diagnostics.json`. Check Entries replays the complete
+- Studio Archive must identify the stable client and customer folder, create or
+  select an engagement, and retain each authorized support file as an immutable
+  input receipt. Import does not create or start a run.
+- Studio Archive prepares one Check Entries run from exact support `input_ids`
+  and exact finalized upstream artifact references, then starts it. Both product
+  CLIs use only its hydrated run-local input bindings and exact output path.
+  Cross-client, cross-engagement, unbound, and invented paths are rejected.
+- Journal Sampling must first finalize `normalized_journal.csv`, sealed
+  `normalization_diagnostics.json`, and `journal_sample.csv` as three exact
+  artifacts. Check Entries replays the complete
   upstream assurance envelope, gate register, reviewed mapping decisions,
   original-source receipts, retained reviewed-recipe receipt, normalized
   receipt, and exact 24-file Journal Sampling/shared implementation receipt
   set. It then invokes Journal Sampling's isolated `-I -B` replay CLI and
   requires the raw journal plus exact retained recipe to reproduce the
   canonical CSV and material preparation contract before Polars parses it.
-  Raw journal tables and partial preparation packages are rejected.
+  It then joins the exact bound sample to that qualified population by physical
+  source locator and checks only those sampled rows. Raw journal tables,
+  unsampled population rows, and partial preparation packages are rejected.
 - `scripts/inspect_entries.py` validates that qualified population and
   inventories a FatturaPA ZIP/XML, authorized connector export, or PDF support
   folder, then writes
@@ -42,6 +47,29 @@ The plugin starts from a qualified prepared-evidence boundary:
   canonical OOXML bytes twice before receipt. Codex handles ambiguity,
   evidence sufficiency, review explanation, and final language without direct
   OpenAI API calls from the plugin scripts.
+
+## Portable run lifecycle
+
+The customer folder is the durable source of truth. It holds
+`Vera/client.json`, the engagement manifest, immutable input receipts, each
+run's lifecycle and input manifest, a closed execution view, outputs, and the
+artifact manifest. Machine-local Studio Archive state contains only rebuildable
+configuration/search pointers and optional private contact metadata.
+
+The explicit Check Entries flow is: resume the exact finalized Journal Sampling
+run; import one support evidence batch; prepare a separate Check Entries run
+from that batch and the exact normalized-population, diagnostics, and sample
+artifacts; start; inspect and check only bound inputs; finalize every physical
+output with a purpose and audience; review; and complete. A materially different
+later ZIP or PDF batch creates another run; an intentionally separate identical
+selection uses the explicit new-run option. No later file can be discovered
+implicitly or mutate the first run's input manifest.
+
+If the customer folder is renamed, Studio Archive rehydrates paths from the
+portable relative records and stable client manifest. A fresh local state can
+recover and verify the ledger. Retention reporting is non-destructive; failed
+or cancelled runs remain visible until a separately authorized deletion policy
+exists.
 
 Run `python -I -B scripts/check_dependencies.py` from the plugin directory
 before using the helper scripts. The supported Python launchers establish the

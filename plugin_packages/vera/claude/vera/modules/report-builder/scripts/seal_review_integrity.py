@@ -67,6 +67,10 @@ import sys
 from pathlib import Path
 
 from report_builder_integrity import seal_review_integrity
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["main"]
 
@@ -76,13 +80,26 @@ def main() -> int:
         description="Seal current Report Builder source and handoff artifacts."
     )
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--expected-predecessor-checkpoint")
     args = parser.parse_args()
+    try:
+        client_context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="report-builder",
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     final_artifacts = json.loads(
         (args.output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
     if not isinstance(final_artifacts, dict):
         raise ValueError("final_artifacts.json must be an object")
+    if str(final_artifacts.get("run_id") or "") != str(client_context["run_id"]):
+        parser.error(
+            "final_artifacts.json run_id does not match the customer-run context"
+        )
     path = seal_review_integrity(
         args.output_dir,
         run_id=str(final_artifacts.get("run_id") or ""),

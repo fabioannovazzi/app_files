@@ -97,12 +97,12 @@ def test_spanish_language_uses_the_latin_recognition_model(
     ]
 
 
-def test_vera_vendors_only_shared_ocr_module() -> None:
+def test_vera_vendors_shared_ocr_module() -> None:
     config_path = ROOT / "scripts" / "plugin_vendor_modules.json"
 
     payload = json.loads(config_path.read_text(encoding="utf-8"))
 
-    assert payload["plugins"]["vera"]["module_roots"] == ["vera_ocr"]
+    assert "vera_ocr" in payload["plugins"]["vera"]["module_roots"]
 
 
 def test_extract_text_runtime_missing_returns_structured_status(
@@ -208,6 +208,45 @@ def test_extract_text_never_uses_remote_lookup_without_opt_in(
     assert result.network_used is False
     assert local_only_calls == [True]
     assert result.warnings == ("detection_model_not_found_in_local_cache",)
+
+
+def test_managed_model_resolution_ignores_environment_and_default_caches(
+    adapter: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    external_detection = tmp_path / "external-detection"
+    external_recognition = tmp_path / "external-recognition"
+    external_paddlex = tmp_path / "external-paddlex"
+    external_detection.mkdir()
+    external_recognition.mkdir()
+    external_paddlex.mkdir()
+    inspected: list[Path] = []
+    original_is_model_directory = adapter._is_model_directory
+
+    def guarded_is_model_directory(path: Path) -> bool:
+        inspected.append(path)
+        return original_is_model_directory(path)
+
+    monkeypatch.setenv("VERA_OCR_DETECTION_MODEL_DIR", str(external_detection))
+    monkeypatch.setenv("VERA_OCR_RECOGNITION_MODEL_DIR", str(external_recognition))
+    monkeypatch.setenv("PADDLE_PDX_CACHE_HOME", str(external_paddlex))
+    monkeypatch.setattr(adapter, "ocr_available", lambda: True)
+    monkeypatch.setattr(adapter, "_is_model_directory", guarded_is_model_directory)
+    monkeypatch.setattr(
+        adapter,
+        "_snapshot_download",
+        lambda **_kwargs: pytest.fail("managed OCR must not inspect a default cache"),
+    )
+
+    result = adapter.extract_text_from_image_bytes(
+        b"image",
+        allow_implicit_model_paths=False,
+    )
+
+    assert result.status == "models_unavailable"
+    assert result.warnings == ("detection_managed_model_location_required",)
+    assert inspected == []
 
 
 def test_extract_text_reuses_paddlex_cache_without_huggingface_lookup(

@@ -57,7 +57,9 @@ When the user wants a few rows to inspect with a client or reviewer, run `script
 Example:
 
 ```bash
-python scripts/build_review_sample.py <output-dir>/riconciliazione_audit.xlsx --count 2
+python scripts/build_review_sample.py <output-dir>/riconciliazione_audit.xlsx \
+  --count 2 \
+  --client-engagement <customer-run>/context.json
 ```
 
 The script creates `campione_movimenti_da_controllare.xlsx` and `testo_richiesta_controllo.md`.

@@ -11,8 +11,19 @@ from pathlib import Path
 from typing import Any
 
 SCRIPTS_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPTS_DIR.parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
+
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
 
 from plan_contract_kernel import (  # noqa: E402
     PinnedDirectory,
@@ -23,8 +34,14 @@ from plan_contract_kernel import (  # noqa: E402
 from prepare_sales_plan_case import (  # noqa: E402
     ENGINE_VERSION,
     RECIPE_ID,
+    declared_actual_sales_path,
     prepare_sales_plan_case,
     snapshot_declared_actual_sales,
+)
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
 )
 
 __all__ = ["PlanRunError", "main", "run_plan"]
@@ -177,10 +194,30 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="sales-plan",
+            input_paths=[args.case],
+            output_dir=args.output_dir,
+        )
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="sales-plan",
+            input_paths=[declared_actual_sales_path(args.case)],
+            output_dir=args.output_dir,
+        )
         receipt = run_plan(case_path=args.case, output_dir=args.output_dir)
-    except (OSError, PlanRunError, RuntimeError, TypeError, ValueError) as exc:
+    except (
+        AssuranceContractError,
+        OSError,
+        PlanRunError,
+        RuntimeError,
+        TypeError,
+        ValueError,
+    ) as exc:
         LOGGER.error("FAILED: %s", exc)
         return 2
     LOGGER.info("sales-plan: %s (%s)", receipt["status"], args.output_dir)

@@ -10,6 +10,7 @@ import stat
 import subprocess
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import Any
 
 import pytest
@@ -31,6 +32,86 @@ RAW_INPUT_RUNNER_PATH = SCRIPT_DIR / "raw_input_runner.py"
 CHECK_DEPENDENCIES_PATH = SCRIPT_DIR / "check_dependencies.py"
 MISSING_EVIDENCE_PATH = SCRIPT_DIR / "build_missing_evidence_requests.py"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
+
+
+def _load_customer_ledger() -> ModuleType:
+    path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "test_audit_reconciliation_customer_ledger"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _running_audit_output(tmp_path: Path) -> Path:
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Audit Customer"
+    client_root.mkdir()
+    client_id = "client_333333333333333333333333"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Audit review")
+    source = tmp_path / "audit-source.txt"
+    source.write_text("audit source\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "audit-reconciliation",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    return Path(running["output_dir"])
+
+
+def _customer_run_id(output_dir: Path) -> str:
+    candidate = output_dir.resolve()
+    while candidate != candidate.parent:
+        context_path = candidate / "context.json"
+        if context_path.is_file():
+            return str(json.loads(context_path.read_text(encoding="utf-8"))["run_id"])
+        candidate = candidate.parent
+    raise AssertionError("customer-run context is unavailable")
+
+
+def _customer_context_path(output_dir: Path) -> Path:
+    candidate = output_dir.resolve()
+    while candidate != candidate.parent:
+        context_path = candidate / "context.json"
+        if context_path.is_file():
+            return context_path
+        candidate = candidate.parent
+    raise AssertionError("customer-run context is unavailable")
+
+
+def _rename_customer_output(output_dir: Path) -> tuple[Path, Path, Path]:
+    context_path = _customer_context_path(output_dir)
+    client_root = context_path.parents[5]
+    renamed_root = client_root.with_name(f"{client_root.name} Renamed")
+    relative_output = output_dir.relative_to(client_root)
+    relative_context = context_path.relative_to(client_root)
+    client_root.rename(renamed_root)
+    return (
+        renamed_root / relative_output,
+        renamed_root / relative_context,
+        output_dir,
+    )
 
 
 def load_review_session() -> Any:
@@ -642,7 +723,12 @@ def test_review_session_writes_audit_reconciliation_contract(tmp_path: Path) -> 
 
 
 def _write_review_server_fixture(output_dir: Path) -> None:
-    output_dir.mkdir()
+    output_dir.mkdir(exist_ok=True)
+    run_id = (
+        _customer_run_id(output_dir)
+        if (output_dir.parent / "context.json").is_file()
+        else "audit-reconciliation-test-run"
+    )
     (output_dir / "codex_review_packet.json").write_text(
         json.dumps(
             [
@@ -663,7 +749,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-test-run",
+        "run_id": run_id,
         "review_type": "audit_reconciliation_review",
         "source_paths": ["open_items.xlsx"],
         "items": [
@@ -715,7 +801,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-test-run",
+        "run_id": run_id,
         "created_at": "2026-01-01T00:00:00Z",
         "language": "it",
         "input_paths": ["open_items.xlsx"],
@@ -755,7 +841,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-test-run",
+        "run_id": run_id,
         "decided_at": None,
         "decision_source": "not_collected",
         "review_payload_path": "review_payload.json",
@@ -767,7 +853,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-test-run",
+        "run_id": run_id,
         "outputs": [{"path": "artifact_card.md", "kind": "md", "status": "written"}],
         "review_handoff": {
             "primary": "local_browser_server",
@@ -795,7 +881,7 @@ def _write_review_server_fixture(output_dir: Path) -> None:
 
 def test_review_server_saves_local_browser_decisions(tmp_path: Path) -> None:
     review_server = load_review_server()
-    output_dir = tmp_path / "out"
+    output_dir = _running_audit_output(tmp_path)
     _write_review_server_fixture(output_dir)
 
     result = review_server.save_decisions(
@@ -1288,12 +1374,13 @@ def test_audit_mcp_rejects_post_start_expansion_before_next_public_surface(
 def test_audit_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "mcp-es"
+    output_dir = _running_audit_output(tmp_path)
+    run_id = _customer_run_id(output_dir)
     review_payload = {
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-es",
+        "run_id": run_id,
         "language": "spa",
         "review_type": "audit_reconciliation_review",
         "items": [
@@ -1311,7 +1398,7 @@ def test_audit_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
     }
     decisions = [{"item_id": "review:closed", "action": "accept"}]
     run_intake = {
-        "run_id": "audit-reconciliation-es",
+        "run_id": run_id,
         "output_dir": str(output_dir),
         "working_language": "es_ES",
     }
@@ -1319,11 +1406,11 @@ def test_audit_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-reconciliation-es",
+        "run_id": run_id,
         "outputs": [],
         "next_actions": [],
     }
-    output_dir.mkdir()
+    output_dir.mkdir(exist_ok=True)
     for name, payload in [
         ("run_intake.json", run_intake),
         ("review_payload.json", review_payload),
@@ -1439,7 +1526,7 @@ def test_audit_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
 def test_audit_reconciliation_mcp_server_accepts_local_review_paths(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "out"
+    output_dir = _running_audit_output(tmp_path)
     _write_review_server_fixture(output_dir)
     messages: list[dict[str, object]] = [
         {
@@ -1497,7 +1584,7 @@ def test_audit_reconciliation_mcp_server_accepts_local_review_paths(
     assert validate_result["item_count"] == 2
     assert "review_payload_path" in validate_result["message"]
     render_result = responses[3]["result"]["structuredContent"]
-    assert render_result["review_payload"]["run_id"] == "audit-reconciliation-test-run"
+    assert render_result["review_payload"]["run_id"] == _customer_run_id(output_dir)
     assert render_result["decision_policy"]["can_persist"] is True
     save_result = responses[4]["result"]["structuredContent"]
     assert save_result["ok"] is True
@@ -1664,7 +1751,7 @@ def test_skill_mentions_browser_review_and_mcp_tools() -> None:
 def _audit_transaction_case(
     output_dir: Path,
 ) -> dict[str, dict[str, Any] | list[dict[str, str]]]:
-    output_dir.mkdir(mode=0o750)
+    output_dir.mkdir(mode=0o750, exist_ok=True)
     output_dir.chmod(0o750)
     nested = output_dir / "nested"
     nested.mkdir(mode=0o711)
@@ -1672,8 +1759,9 @@ def _audit_transaction_case(
     sentinel = nested / "sentinel.bin"
     sentinel.write_bytes(b"\x00audit-original\xff")
     sentinel.chmod(0o640)
+    run_id = _customer_run_id(output_dir)
     run_intake = {
-        "run_id": "audit-transaction-run",
+        "run_id": run_id,
         "output_dir": str(output_dir),
         "working_language": "en",
         "execution_trace": [],
@@ -1682,7 +1770,7 @@ def _audit_transaction_case(
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-transaction-run",
+        "run_id": run_id,
         "review_type": "audit_reconciliation_review",
         "items": [
             {
@@ -1702,7 +1790,7 @@ def _audit_transaction_case(
         "schema_version": "1.0",
         "plugin": "audit-reconciliation",
         "workflow": "audit-reconciliation",
-        "run_id": "audit-transaction-run",
+        "run_id": run_id,
         "outputs": [],
         "next_actions": [],
     }
@@ -1760,7 +1848,7 @@ def test_audit_mcp_terminal_replay_rejects_invalid_assured_tree(
     assurance = load_assurance()
     workflow = load_reconciliation_workflow()
     review_server = load_review_server()
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     open_items = [
         {
             "record_id": "open-1",
@@ -1773,6 +1861,7 @@ def test_audit_mcp_terminal_replay_rejects_invalid_assured_tree(
     ]
     workflow_args = {
         "output_dir": output_dir,
+        "run_id": _customer_run_id(output_dir),
         "open_items": open_items,
         "evidence_rows": [],
         "assumptions": {
@@ -1934,7 +2023,7 @@ def test_audit_mcp_rejects_timestamp_valid_local_bytecode_before_python_bridge_i
     module_name: str,
 ) -> None:
     workflow = load_reconciliation_workflow()
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     workflow.build_reconciliation_artifacts(
         output_dir=output_dir,
         open_items=[
@@ -2044,9 +2133,10 @@ def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
 ) -> None:
     assurance = load_assurance()
     workflow = load_reconciliation_workflow()
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     workflow_args: dict[str, Any] = {
         "output_dir": output_dir,
+        "run_id": _customer_run_id(output_dir),
         "open_items": [
             {
                 "record_id": "open-1",
@@ -2226,10 +2316,96 @@ def _audit_transaction_call(
     return response["result"]["structuredContent"]
 
 
+def _portable_audit_transaction_case(
+    tmp_path: Path,
+) -> tuple[Path, dict[str, Any]]:
+    output_dir = _running_audit_output(tmp_path)
+    arguments = _audit_transaction_case(output_dir)
+    assurance = load_assurance()
+    context = assurance.load_client_engagement_context_file(
+        _customer_context_path(output_dir),
+        expected_workflow_id="audit-reconciliation",
+    )
+    source_path = Path(context["input_bindings"][0]["path"])
+    load_review_session().write_run_intake(
+        output_dir,
+        assumptions={"currency": "EUR"},
+        source_paths=[source_path],
+        language="en",
+        client_engagement=context,
+        run_id=str(context["run_id"]),
+    )
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    arguments["run_intake"] = run_intake
+    return output_dir, arguments
+
+
+def test_audit_review_save_and_apply_survive_customer_folder_rename(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_audit_transaction_case(tmp_path)
+    old_customer_root = _customer_context_path(output_dir).parents[5].as_posix()
+    old_output = output_dir.as_posix()
+    assert arguments["run_intake"]["path_reference"] == "run_root_relative"
+    assert arguments["run_intake"]["output_dir"] == "outputs"
+    assert all(
+        not Path(value).is_absolute()
+        for value in arguments["run_intake"]["input_paths"]
+    )
+
+    renamed_output, current_context, stale_output = _rename_customer_output(output_dir)
+    arguments["client_engagement"] = current_context.as_posix()
+
+    saved = _audit_transaction_call(
+        "save_audit_reconciliation_decisions",
+        arguments,
+    )
+    applied = _audit_transaction_call(
+        "apply_audit_reconciliation_decisions",
+        arguments,
+    )
+
+    assert saved["ok"] is True
+    assert saved["persisted"] is True
+    assert applied["ok"] is True
+    assert applied["persisted"] is True
+    assert (renamed_output / "ui_decisions.json").is_file()
+    assert (renamed_output / "applied_decisions.json").is_file()
+    assert not stale_output.exists()
+    assert old_output not in arguments["run_intake"]["output_dir"]
+    assert all(
+        old_customer_root not in artifact.read_text(encoding="utf-8")
+        for artifact in renamed_output.rglob("*")
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}
+    )
+
+
+def test_audit_review_rejects_run_root_escape_without_writing(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_audit_transaction_case(tmp_path)
+    arguments["client_engagement"] = _customer_context_path(output_dir).as_posix()
+    forged = json.loads(json.dumps(arguments))
+    forged["run_intake"]["output_dir"] = "../outside"
+    before = _audit_tree_image(output_dir)
+
+    result = _audit_transaction_call(
+        "save_audit_reconciliation_decisions",
+        forged,
+    )
+
+    assert result["ok"] is False
+    assert "leaves the customer run" in result["error"]
+    assert _audit_tree_image(output_dir) == before
+    assert not (output_dir.parent.parent / "outside").exists()
+
+
 def test_audit_review_transaction_honest_apply_commits_without_residue(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
 
     result = _audit_transaction_call(
@@ -2256,13 +2432,13 @@ def test_audit_review_transaction_honest_apply_commits_without_residue(
     )
     assert output_dir.stat().st_mode & 0o7777 == 0o750
     assert (output_dir / "nested").stat().st_mode & 0o7777 == 0o711
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 def test_audit_review_transaction_rejects_forged_caller_review_target(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     target = output_dir / "nested" / "controlled.txt"
     target.write_bytes(b"ORIGINAL-CANONICAL-BYTES")
@@ -2301,7 +2477,7 @@ def test_audit_review_transaction_rejects_forged_caller_review_target(
     assert target.read_bytes() == b"ORIGINAL-CANONICAL-BYTES"
     assert target.stat().st_mode & 0o7777 == 0o640
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 @pytest.mark.parametrize(
@@ -2363,7 +2539,7 @@ def test_audit_review_transaction_rejects_forged_caller_context(
     context_name: str,
     expected_error: str,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     if context_name == "ui_decisions":
         persisted_ui_decisions = {
@@ -2393,7 +2569,7 @@ def test_audit_review_transaction_rejects_forged_caller_context(
 
     assert result == {"ok": False, "error": expected_error}
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 @pytest.mark.parametrize(
@@ -2414,7 +2590,7 @@ def test_audit_review_transaction_late_failure_restores_bytes_and_modes(
     tool_name: str,
     needle: str,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     faulted = _audit_faulted_server(
@@ -2439,13 +2615,13 @@ def test_audit_review_transaction_late_failure_restores_bytes_and_modes(
     )
     assert "/private/client" not in result["error"]
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 def test_audit_review_transaction_rejects_forged_save_response_contract(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     needle = "      const workingResult = saveDecisionPayloadWrites(workingArgs);\n"
@@ -2476,13 +2652,13 @@ def test_audit_review_transaction_rejects_forged_save_response_contract(
         "error": "Audit Reconciliation saved decisions did not close.",
     }
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 def test_audit_review_transaction_rejects_forged_apply_response_contract(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     needle = "      const workingResult = applyDecisionPayloadWrites(workingArgs);\n"
@@ -2522,7 +2698,7 @@ def test_audit_review_transaction_rejects_forged_apply_response_contract(
         "error": "Audit Reconciliation response did not close.",
     }
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 @pytest.mark.parametrize("self_authorized_path", ["rogue.json", "ui_decisions.json"])
@@ -2530,7 +2706,7 @@ def test_audit_review_transaction_rejects_persisted_result_self_authorization(
     tmp_path: Path,
     self_authorized_path: str,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     needle = "      const workingResult = applyDecisionPayloadWrites(workingArgs);\n"
@@ -2572,7 +2748,7 @@ def test_audit_review_transaction_rejects_persisted_result_self_authorization(
     assert "\\" not in result["error"]
     assert self_authorized_path not in result["error"]
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 @pytest.mark.parametrize("attack_kind", ["symlink", "hardlink", "fifo"])
@@ -2580,7 +2756,7 @@ def test_audit_review_transaction_rejects_working_tree_poison(
     tmp_path: Path,
     attack_kind: str,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     external = tmp_path / "external-target.bin"
@@ -2619,13 +2795,13 @@ def test_audit_review_transaction_rejects_working_tree_poison(
     assert external.read_bytes() == b"EXTERNAL-UNCHANGED"
     assert external.stat().st_mode & 0o7777 == 0o600
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 def test_audit_review_transaction_rejects_transaction_root_relocation_without_moving_canonical(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     canonical_inode = output_dir.stat().st_ino
@@ -2653,15 +2829,15 @@ def test_audit_review_transaction_rejects_transaction_root_relocation_without_mo
     )
     assert output_dir.stat().st_ino == canonical_inode
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
-    assert not list(tmp_path.glob(".generated-review-commit-*"))
-    assert not list(tmp_path.glob(".generated-review-recovery-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-commit-*"))
+    assert not list(output_dir.parent.glob(".generated-review-recovery-*"))
 
 
 def test_audit_review_transaction_restores_after_commit_deletion(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     before = _audit_tree_image(output_dir)
     needle = "    committed = true;\n    const committedImage ="
@@ -2684,13 +2860,13 @@ def test_audit_review_transaction_restores_after_commit_deletion(
     assert result["ok"] is False
     assert "/" not in result["error"]
     assert _audit_tree_image(output_dir) == before
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 def test_audit_review_transaction_enforces_size_bound_before_mutation(
     tmp_path: Path,
 ) -> None:
-    output_dir = tmp_path / "output"
+    output_dir = _running_audit_output(tmp_path)
     arguments = _audit_transaction_case(output_dir)
     sentinel = output_dir / "nested" / "sentinel.bin"
     oversized = output_dir / "oversized.bin"
@@ -2710,4 +2886,4 @@ def test_audit_review_transaction_enforces_size_bound_before_mutation(
     assert sentinel.stat().st_ino == sentinel_inode
     assert sentinel.read_bytes() == sentinel_bytes
     assert oversized.stat().st_size == 128 * 1024 * 1024 + 1
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))

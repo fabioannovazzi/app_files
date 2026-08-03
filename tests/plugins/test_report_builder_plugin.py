@@ -15,7 +15,7 @@ import threading
 import time
 import zipfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import openpyxl
 import pytest
@@ -50,6 +50,20 @@ def load_core() -> Any:
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_customer_ledger() -> Any:
+    path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "report_builder_customer_ledger"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -582,14 +596,18 @@ Module._load = function reportTransactionResultFault(
 def _report_transaction_fixture(
     tmp_path: Path,
 ) -> tuple[Path, dict[str, Any]]:
-    core = load_core()
-    input_path = tmp_path / "budget.csv"
-    input_path.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    source = tmp_path / "budget.csv"
+    source.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
+    managed = _managed_report_run(tmp_path, source)
+    output_dir = managed["output_dir"]
+    run_id = managed["run_id"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert run_intake["run_id"] == run_id
+    assert review_payload["run_id"] == run_id
     section_item = next(
         item
         for item in review_payload["items"]
@@ -597,6 +615,7 @@ def _report_transaction_fixture(
         and item["data"]["status"] == "assigned"
     )
     return output_dir, {
+        "client_engagement": managed["context_path"].as_posix(),
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -608,6 +627,282 @@ def _report_transaction_fixture(
             }
         ],
     }
+
+
+def _managed_report_run(
+    tmp_path: Path,
+    source: Path,
+    *,
+    recipe: Path | None = None,
+    recipe_builder: Callable[[Any, Path, Path], Path] | None = None,
+    report_type: str = "management_report",
+    language: str = "en",
+    document_language: str = "auto",
+) -> dict[str, Any]:
+    """Build a report in one running ledger run from exact imported receipts."""
+
+    if recipe is not None and recipe_builder is not None:
+        raise ValueError("recipe and recipe_builder are mutually exclusive")
+    core = load_core()
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Customer"
+    client_root.mkdir()
+    client_id = "client_555555555555555555555555"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Report review")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    imported_recipe = (
+        ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            recipe,
+            "source",
+        )
+        if recipe is not None
+        else None
+    )
+    input_ids = [imported["receipt"]["input_id"]]
+    if imported_recipe is not None:
+        input_ids.append(imported_recipe["receipt"]["input_id"])
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "report-builder",
+        "test-version",
+        input_ids=input_ids,
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    bindings_by_id = {
+        item["binding_id"]: item for item in running["context"]["input_bindings"]
+    }
+    input_path = Path(bindings_by_id[imported["receipt"]["input_id"]]["path"])
+    recipe_path = (
+        Path(bindings_by_id[imported_recipe["receipt"]["input_id"]]["path"])
+        if imported_recipe is not None
+        else None
+    )
+    output_dir = Path(running["output_dir"])
+    run_id = str(running["context"]["run_id"])
+    if recipe_builder is not None:
+        generated_recipe = recipe_builder(core, input_path, output_dir)
+        recipe_path = output_dir / "suggested_recipe.json"
+        if generated_recipe.resolve() != recipe_path.resolve():
+            recipe_path.write_bytes(generated_recipe.read_bytes())
+            generated_recipe.unlink()
+    result = core.build_report(
+        input_path,
+        output_dir,
+        recipe_path=recipe_path,
+        report_type=report_type,
+        language=language,
+        document_language=document_language,
+        run_id=run_id,
+        client_engagement=running["context"],
+    )
+    return {
+        "core": core,
+        "output_dir": output_dir,
+        "source_path": input_path,
+        "recipe_path": recipe_path,
+        "run_id": run_id,
+        "context": running["context"],
+        "context_path": Path(running["context_path"]),
+        "result": result,
+    }
+
+
+def _current_report_source(output_dir: Path) -> Path:
+    """Return the exact imported source path bound by the private source index."""
+
+    source_index = json.loads((output_dir / "source_index.json").read_text())
+    source = source_index["sources"][0]
+    source_root = Path(source["root_path"])
+    if not source_root.is_absolute():
+        source_root = output_dir.parent / source_root
+    return source_root / source["receipt"]["path"]
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["save_report_builder_decisions", "apply_report_builder_decisions"],
+)
+def test_managed_review_persistence_continues_after_customer_folder_rename(
+    tmp_path: Path,
+    tool_name: str,
+) -> None:
+    source = tmp_path / "budget.csv"
+    source.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
+    managed = _managed_report_run(tmp_path, source)
+    original_client_root = tmp_path / "Customer"
+    renamed_client_root = tmp_path / "Renamed Customer"
+    source_index = json.loads(
+        (managed["output_dir"] / "source_index.json").read_text(encoding="utf-8")
+    )
+    assert source_index["sources"][0]["identity_key"].startswith("run_root:inputs/")
+    original_root_text = original_client_root.resolve().as_posix()
+    for artifact in managed["output_dir"].rglob("*"):
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}:
+            assert original_root_text not in artifact.read_text(encoding="utf-8")
+    relative_context = managed["context_path"].relative_to(original_client_root)
+    relative_output = managed["output_dir"].relative_to(original_client_root)
+    original_client_root.rename(renamed_client_root)
+    context_path = renamed_client_root / relative_context
+    output_dir = renamed_client_root / relative_output
+    sys.modules["mparanza_report_builder_integrity"].validate_review_integrity(
+        output_dir
+    )
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    section_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "report_section"
+        and item["data"]["status"] == "assigned"
+    )
+
+    result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": tool_name,
+            "arguments": {
+                "client_engagement": context_path.as_posix(),
+                "run_intake": run_intake,
+                "review_payload": review_payload,
+                "final_artifacts": final_artifacts,
+                "decisions": [
+                    {
+                        "item_id": section_item["id"],
+                        "action": "accept",
+                    }
+                ],
+            },
+        },
+    )["structuredContent"]
+
+    assert result["ok"] is True, result
+    assert result["persisted"] is True
+    assert (output_dir / "ui_decisions.json").is_file()
+    if tool_name == "apply_report_builder_decisions":
+        assert (output_dir / "applied_decisions.json").is_file()
+    renamed_root_text = renamed_client_root.resolve().as_posix()
+    for artifact in output_dir.rglob("*"):
+        if artifact.is_file() and artifact.suffix.lower() in {".json", ".md"}:
+            assert renamed_root_text not in artifact.read_text(encoding="utf-8")
+
+
+def test_managed_source_index_rejects_absolute_identity_key(tmp_path: Path) -> None:
+    source = tmp_path / "budget.csv"
+    source.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
+    managed = _managed_report_run(tmp_path, source)
+    output_dir = managed["output_dir"]
+    index_path = output_dir / "source_index.json"
+    source_index = json.loads(index_path.read_text(encoding="utf-8"))
+    source_index["sources"][0]["identity_key"] = managed["source_path"].as_posix()
+    integrity = sys.modules["mparanza_report_builder_integrity"]
+    content = {
+        "schema_version": source_index["schema_version"],
+        "sources": source_index["sources"],
+        "archive_manifests": source_index["archive_manifests"],
+        "archive_member_bindings": source_index["archive_member_bindings"],
+    }
+    source_index["content_sha256"] = integrity.canonical_json_sha256(content)
+    index_path.write_text(
+        json.dumps(source_index, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="identity is not portable"):
+        integrity.validate_source_index(output_dir)
+
+
+def test_managed_archive_source_identities_are_portable_and_container_bound(
+    tmp_path: Path,
+) -> None:
+    archive_path = tmp_path / "budget.zip"
+    with zipfile.ZipFile(archive_path, "w") as archive:
+        archive.writestr("nested/budget.csv", "line,amount\nA,10\nB,20\n")
+    managed = _managed_report_run(tmp_path, archive_path)
+    source_index = json.loads(
+        (managed["output_dir"] / "source_index.json").read_text(encoding="utf-8")
+    )
+    sources = {source["artifact_id"]: source for source in source_index["sources"]}
+    container_id = source_index["archive_manifests"][0]["container_artifact_id"]
+    binding = source_index["archive_member_bindings"][0]
+    container_identity = sources[container_id]["identity_key"]
+    member_identity = sources[binding["member_artifact_id"]]["identity_key"]
+
+    assert container_identity.startswith("run_root:inputs/")
+    assert member_identity == (f"{container_identity}::{binding['member_path']}")
+    assert (tmp_path / "Customer").resolve().as_posix() not in json.dumps(
+        source_index,
+        ensure_ascii=False,
+    )
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["save_report_builder_decisions", "apply_report_builder_decisions"],
+)
+def test_managed_review_persistence_rejects_output_escape_without_writes(
+    tmp_path: Path,
+    tool_name: str,
+) -> None:
+    source = tmp_path / "budget.csv"
+    source.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
+    managed = _managed_report_run(tmp_path, source)
+    output_dir = managed["output_dir"]
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    run_intake["output_dir"] = "../escaped-output"
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    section_item = next(
+        item
+        for item in review_payload["items"]
+        if item["item_type"] == "report_section"
+        and item["data"]["status"] == "assigned"
+    )
+    before = _tree_snapshot(output_dir)
+    escaped_output = managed["context_path"].parent.parent / "escaped-output"
+
+    response = _call_mcp_server_response(
+        "tools/call",
+        {
+            "name": tool_name,
+            "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
+                "run_intake": run_intake,
+                "review_payload": review_payload,
+                "final_artifacts": final_artifacts,
+                "decisions": [
+                    {
+                        "item_id": section_item["id"],
+                        "action": "accept",
+                    }
+                ],
+            },
+        },
+    )
+
+    failure = response["result"]["structuredContent"]
+    assert failure["ok"] is False
+    assert failure["error"] == (
+        "Report Builder output reference leaves the customer run."
+    )
+    assert _tree_snapshot(output_dir) == before
+    assert not escaped_output.exists()
 
 
 def _reseal_report_builder_self_consistent(output_dir: Path) -> None:
@@ -707,7 +1002,7 @@ def test_official_reseal_rejects_extra_report_audit_claim(tmp_path: Path) -> Non
 def test_python_integrity_rejects_current_source_hardlink(tmp_path: Path) -> None:
     # Arrange
     output_dir, _ = _report_transaction_fixture(tmp_path)
-    source_path = tmp_path / "budget.csv"
+    source_path = _current_report_source(output_dir)
     external_path = tmp_path / "same-source-bytes.csv"
     external_path.write_bytes(source_path.read_bytes())
     source_path.unlink()
@@ -1205,13 +1500,14 @@ def test_numeric_replay_rejects_self_consistently_resealed_ledger_forgery(
     core = load_core()
     input_path = tmp_path / "report.xlsx"
     _save_workbook(input_path)
-    recipe_path = _reviewed_numeric_recipe(
-        core,
+    managed = _managed_report_run(
+        tmp_path,
         input_path,
-        tmp_path / "inspection",
+        recipe_builder=lambda managed_core, source, work_dir: (
+            _reviewed_numeric_recipe(managed_core, source, work_dir)
+        ),
     )
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, recipe_path=recipe_path)
+    output_dir = managed["output_dir"]
     ledger_path = output_dir / "numeric_evidence_ledger.json"
     ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
     ledger["entries"][0]["value"] = "999999"
@@ -1233,6 +1529,7 @@ def test_numeric_replay_rejects_self_consistently_resealed_ledger_forgery(
     )
     _reseal_report_builder_self_consistent(output_dir)
     arguments = {
+        "client_engagement": managed["context_path"].as_posix(),
         "run_intake": json.loads(
             (output_dir / "run_intake.json").read_text(encoding="utf-8")
         ),
@@ -1292,6 +1589,7 @@ def test_successor_replay_rejects_self_consistently_resealed_divergence(
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": arguments["client_engagement"],
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1318,8 +1616,8 @@ def test_source_mapping_successor_accepts_a_new_review_round(
     core = load_core()
     input_path = tmp_path / "report.xlsx"
     _save_workbook(input_path)
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    managed = _managed_report_run(tmp_path, input_path)
+    output_dir = managed["output_dir"]
     first_review = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
@@ -1334,6 +1632,7 @@ def test_source_mapping_successor_accepts_a_new_review_round(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1363,6 +1662,7 @@ def test_source_mapping_successor_accepts_a_new_review_round(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1380,6 +1680,7 @@ def test_source_mapping_successor_accepts_a_new_review_round(
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1477,6 +1778,7 @@ def test_successor_validation_requires_retained_predecessor_checkpoint(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
     second_arguments = {
+        "client_engagement": arguments["client_engagement"],
         "run_intake": json.loads(
             (output_dir / "run_intake.json").read_text(encoding="utf-8")
         ),
@@ -1502,6 +1804,7 @@ def test_successor_validation_requires_retained_predecessor_checkpoint(
     )["structuredContent"]
     assert second["ok"] is True
     validation_arguments = {
+        "client_engagement": arguments["client_engagement"],
         "run_intake": json.loads(
             (output_dir / "run_intake.json").read_text(encoding="utf-8")
         ),
@@ -1626,6 +1929,7 @@ def test_alternative_honest_predecessor_cannot_replace_retained_checkpoint(
     )["structuredContent"]
     genuine_checkpoint = genuine["integrity_checkpoint"]
     current_arguments = {
+        "client_engagement": arguments["client_engagement"],
         "run_intake": json.loads(
             (output_dir / "run_intake.json").read_text(encoding="utf-8")
         ),
@@ -1719,6 +2023,7 @@ def test_alternative_honest_predecessor_cannot_replace_retained_checkpoint(
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": arguments["client_engagement"],
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1754,8 +2059,8 @@ def test_complete_text_only_review_is_report_ready_but_not_published(
         section["codex_comment"] = "Reviewer-supported qualitative comment."
     recipe_path = tmp_path / "recipe.json"
     core.write_json(recipe_path, recipe)
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, recipe_path=recipe_path)
+    managed = _managed_report_run(tmp_path, input_path, recipe=recipe_path)
+    output_dir = managed["output_dir"]
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
@@ -1769,6 +2074,7 @@ def test_complete_text_only_review_is_report_ready_but_not_published(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -1810,7 +2116,10 @@ def _install_report_builder_fake_authority_child(
                 "#!/usr/bin/env python3",
                 "import json",
                 "import os",
+                "import sys",
                 "from pathlib import Path",
+                'if "-c" in sys.argv:',
+                "    os.execv(sys.executable, [sys.executable, *sys.argv[1:]])",
                 'Path(os.environ["RB_FAKE_CHILD_MARKER"]).write_text("invoked\\n")',
                 'print(json.dumps({"ok": True}))',
                 "",
@@ -1828,13 +2137,49 @@ def _report_source_mapping_transaction_fixture(
     tmp_path: Path,
 ) -> tuple[Path, dict[str, Any]]:
     core = load_core()
-    input_path = tmp_path / "source-mapping.xlsx"
-    _save_workbook(input_path)
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    source = tmp_path / "source-mapping.xlsx"
+    _save_workbook(source)
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Customer"
+    client_root.mkdir()
+    client_id = "client_777777777777777777777777"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Report mapping")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "report-builder",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    input_path = Path(running["context"]["input_bindings"][0]["path"])
+    output_dir = Path(running["output_dir"])
+    run_id = str(running["context"]["run_id"])
+    core.build_report(
+        input_path,
+        output_dir,
+        report_type="management_report",
+        run_id=run_id,
+        client_engagement=running["context"],
+    )
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    assert run_intake["run_id"] == run_id
+    assert review_payload["run_id"] == run_id
     table_item = next(
         item
         for item in review_payload["items"]
@@ -1842,6 +2187,7 @@ def _report_source_mapping_transaction_fixture(
         and item["data"]["section"] == "income_statement"
     )
     return output_dir, {
+        "client_engagement": Path(running["context_path"]).as_posix(),
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -3012,7 +3358,42 @@ def test_numeric_review_cli_records_explicit_column_cell_and_sign_contract(
         "line,amount,account_id\nA,10,1001\nB,20,1002\n",
         encoding="utf-8",
     )
-    inspection_dir = tmp_path / "inspection"
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    spec = importlib.util.spec_from_file_location(
+        "report_builder_test_client_ledger",
+        ledger_path,
+    )
+    assert spec and spec.loader
+    ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
+    spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Studio" / "Report Client"
+    client_root.mkdir(parents=True)
+    client_id = "client_333333333333333333333333"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Report review")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        input_path,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "report-builder",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    input_path = Path(running["context"]["input_bindings"][0]["path"])
+    inspection_dir = Path(running["output_dir"]) / "inspection"
     inspection = core.inspect_inputs(
         input_path,
         inspection_dir,
@@ -3028,6 +3409,8 @@ def test_numeric_review_cli_records_explicit_column_cell_and_sign_contract(
         [
             sys.executable,
             str(SCRIPT_DIR / "review_numeric_measures.py"),
+            "--client-engagement",
+            str(running["context_path"]),
             "--inspection",
             str(inspection_dir / "inspection.json"),
             "--recipe",
@@ -3450,17 +3833,15 @@ def test_plugin_marks_unassigned_sections_for_codex_review(tmp_path: Path) -> No
 def test_report_builder_request_more_documents_prefills_blocker_context(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
     input_path = tmp_path / "report.xlsx"
-    output_dir = tmp_path / "out"
     _save_workbook(input_path)
-
-    core.build_report(
+    managed = _managed_report_run(
+        tmp_path,
         input_path,
-        output_dir,
         language="en",
         report_type="annual_financial_statement",
     )
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -3476,6 +3857,7 @@ def test_report_builder_request_more_documents_prefills_blocker_context(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3516,18 +3898,17 @@ def test_report_builder_apply_decisions_regenerates_docx_for_section_edit(
 ) -> None:
     core = load_core()
     input_path = tmp_path / "report.xlsx"
-    output_dir = tmp_path / "out"
-    report_dir = output_dir / "report"
+    inspection_dir = tmp_path / "inspection"
     _save_workbook(input_path)
 
     inspection = core.inspect_inputs(
         input_path,
-        output_dir,
+        inspection_dir,
         language="en",
         document_language="auto",
         report_type="management_report",
     )
-    recipe_path = output_dir / "suggested_recipe.json"
+    recipe_path = inspection_dir / "suggested_recipe.json"
     recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
     recipe["entity"] = "Example Ltd"
     recipe["period"] = "2025"
@@ -3536,14 +3917,16 @@ def test_report_builder_apply_decisions_regenerates_docx_for_section_edit(
         "codex_comment"
     ] = "Original income statement narrative."
     recipe_path.write_text(json.dumps(recipe, indent=2), encoding="utf-8")
-    result = core.build_report(
+    managed = _managed_report_run(
+        tmp_path,
         input_path,
-        report_dir,
-        recipe_path=recipe_path,
+        recipe=recipe_path,
         language="en",
         document_language="auto",
         report_type="management_report",
     )
+    report_dir = managed["output_dir"]
+    result = managed["result"]
     assert inspection.inspection["table_count"] == 3
     review_payload = json.loads((report_dir / "review_payload.json").read_text())
     run_intake = json.loads((report_dir / "run_intake.json").read_text())
@@ -3564,6 +3947,7 @@ def test_report_builder_apply_decisions_regenerates_docx_for_section_edit(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3657,18 +4041,17 @@ def test_report_builder_apply_decisions_regenerates_outputs_for_source_mapping_e
 ) -> None:
     core = load_core()
     input_path = tmp_path / "report.xlsx"
-    output_dir = tmp_path / "out"
-    report_dir = output_dir / "report"
+    inspection_dir = tmp_path / "inspection"
     _save_workbook(input_path)
 
     inspection = core.inspect_inputs(
         input_path,
-        output_dir,
+        inspection_dir,
         language="en",
         document_language="auto",
         report_type="management_report",
     )
-    recipe_path = output_dir / "suggested_recipe.json"
+    recipe_path = inspection_dir / "suggested_recipe.json"
     recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
     recipe["entity"] = "Example Ltd"
     recipe["period"] = "2025"
@@ -3677,14 +4060,15 @@ def test_report_builder_apply_decisions_regenerates_outputs_for_source_mapping_e
         "codex_comment"
     ] = "Income statement narrative follows the mapped source."
     recipe_path.write_text(json.dumps(recipe, indent=2), encoding="utf-8")
-    core.build_report(
+    managed = _managed_report_run(
+        tmp_path,
         input_path,
-        report_dir,
-        recipe_path=recipe_path,
+        recipe=recipe_path,
         language="en",
         document_language="auto",
         report_type="management_report",
     )
+    report_dir = managed["output_dir"]
     assert inspection.inspection["table_count"] == 3
 
     review_payload = json.loads((report_dir / "review_payload.json").read_text())
@@ -3704,6 +4088,7 @@ def test_report_builder_apply_decisions_regenerates_outputs_for_source_mapping_e
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3799,11 +4184,10 @@ def test_report_builder_apply_decisions_regenerates_outputs_for_source_mapping_e
 def test_invalid_mapping_preflight_leaves_persisted_run_byte_identical(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
     input_path = tmp_path / "report.xlsx"
     _save_workbook(input_path)
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    managed = _managed_report_run(tmp_path, input_path)
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -3819,6 +4203,7 @@ def test_invalid_mapping_preflight_leaves_persisted_run_byte_identical(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3845,11 +4230,10 @@ def test_invalid_mapping_preflight_leaves_persisted_run_byte_identical(
 def test_existing_application_lock_fails_closed_before_review_writes(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
     input_path = tmp_path / "budget.csv"
     input_path.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    managed = _managed_report_run(tmp_path, input_path)
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -3868,6 +4252,7 @@ def test_existing_application_lock_fails_closed_before_review_writes(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3893,11 +4278,11 @@ def test_existing_application_lock_fails_closed_before_review_writes(
 def test_source_mutation_during_application_rolls_back_every_output_write(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
-    input_path = tmp_path / "budget.csv"
-    input_path.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
-    output_dir = tmp_path / "report"
-    core.build_report(input_path, output_dir, report_type="management_report")
+    source = tmp_path / "budget.csv"
+    source.write_text("line,amount\nA,10\nB,20\n", encoding="utf-8")
+    managed = _managed_report_run(tmp_path, source)
+    output_dir = managed["output_dir"]
+    input_path = managed["source_path"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -3914,7 +4299,9 @@ def test_source_mutation_during_application_rolls_back_every_output_write(
         deadline = time.monotonic() + 10
         while time.monotonic() < deadline:
             transaction_revisions = list(
-                tmp_path.glob(".generated-review-transaction-*/working/revisions")
+                output_dir.parent.glob(
+                    ".generated-review-transaction-*/working/revisions"
+                )
             )
             if transaction_revisions:
                 input_path.write_text(
@@ -3932,6 +4319,7 @@ def test_source_mutation_during_application_rolls_back_every_output_write(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -3952,12 +4340,19 @@ def test_source_mutation_during_application_rolls_back_every_output_write(
     assert failure["ok"] is False
     assert any(
         token in failure["error"].lower()
-        for token in ("source", "receipt", "integrity", "stale")
-    )
+        for token in (
+            "source",
+            "receipt",
+            "integrity",
+            "stale",
+            "transaction failed safely",
+            "native regeneration failed",
+        )
+    ), failure
     assert _tree_snapshot(output_dir) == before
     assert not (output_dir / "applied_decisions.json").exists()
     assert not (output_dir / "revisions").exists()
-    assert not list(tmp_path.glob(".generated-review-transaction-*"))
+    assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
 @pytest.mark.parametrize(
@@ -4258,18 +4653,14 @@ def test_mcp_apply_rejects_stale_state_before_any_review_write(
     tmp_path: Path,
     tamper: Any,
 ) -> None:
-    core = load_core()
-    input_path = tmp_path / "budget.csv"
-    input_path.write_text(
+    source = tmp_path / "budget.csv"
+    source.write_text(
         "line,amount\nA,10\nB,20\n",
         encoding="utf-8",
     )
-    output_dir = tmp_path / "report"
-    core.build_report(
-        input_path,
-        output_dir,
-        report_type="management_report",
-    )
+    managed = _managed_report_run(tmp_path, source)
+    input_path = managed["source_path"]
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -4279,6 +4670,7 @@ def test_mcp_apply_rejects_stale_state_before_any_review_write(
         if item["item_type"] == "report_section" and "edit" in item["allowed_actions"]
     )
     arguments = {
+        "client_engagement": managed["context_path"].as_posix(),
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -4312,6 +4704,7 @@ def test_mcp_apply_rejects_stale_state_before_any_review_write(
             "receipt",
             "stale",
             "does not match",
+            "customer-folder",
         )
     )
     assert not (output_dir / "applied_decisions.json").exists()
@@ -4349,7 +4742,9 @@ def test_mcp_save_rejects_forged_persisted_identity_without_mutation(
 
     # Assert
     assert failure["ok"] is False
-    assert failure["error"] == "Report Builder persisted review authorization failed."
+    assert failure["error"] == (
+        "Report Builder customer-run preflight returned an invalid result"
+    )
     assert _transaction_tree_state(output_dir) == before
     assert not child_marker.exists()
     assert not list(tmp_path.glob(".generated-review-transaction-*"))
@@ -4406,7 +4801,9 @@ def test_mcp_apply_rejects_forged_one_item_caller_state_without_mutation(
 
     # Assert
     assert failure["ok"] is False
-    assert failure["error"] == "Report Builder persisted review authorization failed."
+    assert failure["error"] == (
+        "Report Builder customer-run preflight returned an invalid result"
+    )
     assert _transaction_tree_state(output_dir) == before
     assert not child_marker.exists()
     assert not list(tmp_path.glob(".generated-review-transaction-*"))
@@ -4420,7 +4817,7 @@ def test_mcp_apply_rejects_current_source_receipt_staleness_without_mutation(
 ) -> None:
     # Arrange
     output_dir, arguments = _report_transaction_fixture(tmp_path)
-    source_path = tmp_path / "budget.csv"
+    source_path = _current_report_source(output_dir)
     source_path.write_text(
         "line,amount\nA,999\nB,20\n",
         encoding="utf-8",
@@ -4443,7 +4840,9 @@ def test_mcp_apply_rejects_current_source_receipt_staleness_without_mutation(
 
     # Assert
     assert failure["ok"] is False
-    assert failure["error"] == "Report Builder persisted review authorization failed."
+    assert failure["error"] == (
+        "Report Builder persistence requires a running v2 customer-folder workflow run"
+    )
     assert _transaction_tree_state(output_dir) == before
     assert not child_marker.exists()
     assert not list(tmp_path.glob(".generated-review-transaction-*"))
@@ -4454,18 +4853,13 @@ def test_mcp_apply_rejects_current_source_receipt_staleness_without_mutation(
 def test_accepting_every_review_item_cannot_finalize_pending_numeric_measures(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
     input_path = tmp_path / "budget.csv"
     input_path.write_text(
         "line,amount,account_id\nA,10,1001\nB,20,1002\n",
         encoding="utf-8",
     )
-    output_dir = tmp_path / "report"
-    core.build_report(
-        input_path,
-        output_dir,
-        report_type="management_report",
-    )
+    managed = _managed_report_run(tmp_path, input_path)
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -4479,6 +4873,7 @@ def test_accepting_every_review_item_cannot_finalize_pending_numeric_measures(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -4511,6 +4906,7 @@ def test_accepting_every_review_item_cannot_finalize_pending_numeric_measures(
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -4527,37 +4923,42 @@ def test_accepting_every_review_item_cannot_finalize_pending_numeric_measures(
 def test_source_mapping_change_removes_stale_numeric_artifacts_and_references(
     tmp_path: Path,
 ) -> None:
-    core = load_core()
     input_path = tmp_path / "report.xlsx"
-    inspection_dir = tmp_path / "inspection"
-    output_dir = tmp_path / "report"
     _save_workbook(input_path)
-    inspection = core.inspect_inputs(
-        input_path,
-        inspection_dir,
-        report_type="management_report",
-    )
-    recipe = inspection.suggested_recipe
-    reviewed = core.review_numeric_measure_columns(
-        inspection.inspection,
-        recipe,
-        section_key="income_statement",
-        **_numeric_review_args(
+
+    def build_reviewed_recipe(core: Any, source: Path, work_dir: Path) -> Path:
+        inspection = core.inspect_inputs(
+            source,
+            work_dir,
+            report_type="management_report",
+        )
+        reviewed = core.review_numeric_measure_columns(
             inspection.inspection,
-            "report.xlsx::Income Statement",
-            ["Actual", "Budget"],
-        ),
-        reviewer_ref="reviewer.pytest",
-        reviewed_on="2026-07-24",
-        numeric_locale="en",
-        currency="EUR",
-        unit="currency",
-        scale="1",
-        parse_policy="strict_all_nonblank_v1",
+            inspection.suggested_recipe,
+            section_key="income_statement",
+            **_numeric_review_args(
+                inspection.inspection,
+                "report.xlsx::Income Statement",
+                ["Actual", "Budget"],
+            ),
+            reviewer_ref="reviewer.pytest",
+            reviewed_on="2026-07-24",
+            numeric_locale="en",
+            currency="EUR",
+            unit="currency",
+            scale="1",
+            parse_policy="strict_all_nonblank_v1",
+        )
+        recipe_path = work_dir / "reviewed_recipe.json"
+        core.write_json(recipe_path, reviewed)
+        return recipe_path
+
+    managed = _managed_report_run(
+        tmp_path,
+        input_path,
+        recipe_builder=build_reviewed_recipe,
     )
-    recipe_path = tmp_path / "reviewed_recipe.json"
-    core.write_json(recipe_path, reviewed)
-    core.build_report(input_path, output_dir, recipe_path=recipe_path)
+    output_dir = managed["output_dir"]
     assert (output_dir / "numeric_evidence_ledger.json").is_file()
     assert (output_dir / "source_receipts.json").is_file()
 
@@ -4576,6 +4977,7 @@ def test_source_mapping_change_removes_stale_numeric_artifacts_and_references(
         {
             "name": "apply_report_builder_decisions",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -4629,6 +5031,7 @@ def test_source_mapping_change_removes_stale_numeric_artifacts_and_references(
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": json.loads(
                     (output_dir / "run_intake.json").read_text(encoding="utf-8")
                 ),
@@ -4780,12 +5183,11 @@ def test_zip_rejects_duplicate_portable_canonical_member_paths(
 
 
 def test_zip_review_integrity_binds_the_original_archive_bytes(tmp_path: Path) -> None:
-    core = load_core()
     archive_path = tmp_path / "inputs.zip"
     with zipfile.ZipFile(archive_path, "w") as archive:
         archive.writestr("budget.csv", "line,amount\nA,10\nB,20\n")
-    output_dir = tmp_path / "report"
-    core.build_report(archive_path, output_dir, report_type="management_report")
+    managed = _managed_report_run(tmp_path, archive_path)
+    output_dir = managed["output_dir"]
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
@@ -4794,15 +5196,27 @@ def test_zip_review_integrity_binds_the_original_archive_bytes(tmp_path: Path) -
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
             },
         },
     )
-    assert valid["structuredContent"]["ok"] is True
+    assert valid["structuredContent"]["ok"] is True, valid["structuredContent"]
     before = _tree_snapshot(output_dir)
-    with zipfile.ZipFile(archive_path, "w") as archive:
+    source_index = json.loads((output_dir / "source_index.json").read_text())
+    container_id = source_index["archive_manifests"][0]["container_artifact_id"]
+    container = next(
+        source
+        for source in source_index["sources"]
+        if source["artifact_id"] == container_id
+    )
+    container_root = Path(container["root_path"])
+    if not container_root.is_absolute():
+        container_root = output_dir.parent / container_root
+    current_archive = container_root / container["receipt"]["path"]
+    with zipfile.ZipFile(current_archive, "w") as archive:
         archive.writestr("budget.csv", "line,amount\nA,999\nB,20\n")
 
     response = _call_mcp_server_response(
@@ -4810,6 +5224,7 @@ def test_zip_review_integrity_binds_the_original_archive_bytes(tmp_path: Path) -
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -5439,11 +5854,10 @@ def test_non_text_pdf_is_a_non_dismissible_source_qualification_blocker(
 
 
 def test_mcp_child_failure_omits_traceback_and_absolute_paths(tmp_path: Path) -> None:
-    core = load_core()
     source = tmp_path / "budget.csv"
     source.write_text("line,amount\nA,10\n", encoding="utf-8")
-    output_dir = tmp_path / "report"
-    core.build_report(source, output_dir)
+    managed = _managed_report_run(tmp_path, source)
+    output_dir = managed["output_dir"]
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -5460,6 +5874,7 @@ def test_mcp_child_failure_omits_traceback_and_absolute_paths(tmp_path: Path) ->
         {
             "name": "validate_report_builder_review",
             "arguments": {
+                "client_engagement": managed["context_path"].as_posix(),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,

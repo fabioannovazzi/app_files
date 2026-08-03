@@ -10,6 +10,9 @@
     "assets/review-workbench-adapter.json",
     "assets/deep-research-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -52,7 +55,7 @@
   "security_controls": [
     {
       "id": "private-output-root",
-      "control": "Run artifacts are written outside published repository paths."
+      "control": "Document inspection, source inspection, and packaging require a digest-valid Studio Archive deep-research-validator context, accept local evidence only from that engagement, and write only to the context's run output root or a descendant."
     },
     {
       "id": "public-url-boundary",
@@ -60,9 +63,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-31",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "408b69e3d7fd57090786ddb0be09c6fafb54a84b21c451a5b2c9a713fd66bcad"
+    "source_fingerprint": "bb8be35c709e625fc1e52899f5b5720443ba0f7917bac4bdaae55fabee1c6b76"
   }
 }

@@ -11,6 +11,9 @@
     "assets/review-workbench-adapter.json",
     "assets/new-client-review-widget.html"
   ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
   "runtime_profiles": [
     "openai-codex",
     "anthropic-cowork"
@@ -51,7 +54,7 @@
   "security_controls": [
     {
       "id": "owner-only-package",
-      "control": "The dossier is written to an owner-only directory outside the repository."
+      "control": "Initialization, phase-one promotion, and packaging require a digest-valid Studio Archive new-client context and write the owner-only dossier only inside its exact run output root; promotion accepts phase-one artifacts only from the same client engagement."
     },
     {
       "id": "upstream-package-integrity",
@@ -75,9 +78,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-07-27",
+    "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "acb96a8ac74aea06fe0351da2fdfb36a7b3d7ea61fc48e3dc39520f8edb90b98"
+    "source_fingerprint": "5ec54da5dc51e901f4da08bae341f5f7e5ac9d1662754b3d2f80e54a91ac6f25"
   }
 }

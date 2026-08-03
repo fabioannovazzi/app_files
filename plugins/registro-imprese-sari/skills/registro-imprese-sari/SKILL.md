@@ -3,6 +3,29 @@ name: registro-imprese-sari
 description: Use when Vera must understand and prepare an Italian Registro Imprese, REA, Comunicazione Unica, or DIRE position-opening practice from current official SARI/CCIAA guidance, including cases involving INPS, INAIL, SUAP, or IVASS/RUI; produces a source-backed draft for professional review and never logs in, signs, or files.
 ---
 
+## Output Location Rule
+
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import local case evidence,
+then call `prepare_studio_client_workflow` with workflow ID
+`registro-imprese-sari`. Pass the returned `client_engagement_path` as
+`--client-engagement` to every mutating script. The running ledger context owns
+the run ID; do not invent or pass a second one. Every local input must be an
+exact selected receipt or an artifact already inside this run, and every write
+must remain under the run output directory. Cross-engagement inputs and
+arbitrary outputs are rejected.
+
+Start the prepared run before initialization. After the last output write,
+call `finalize_studio_client_workflow` and declare every physical file with a
+stable artifact ID, relative path, concrete purpose, audience, and media type.
+Review the closed declaration, then call `complete_studio_client_workflow`;
+record `failed` or explicitly cancel an abandoned run instead of treating a
+partial directory as a result.
+
 # Registro Imprese e SARI
 
 Prepare a reviewable practice plan from explicit case facts and current official
@@ -91,19 +114,20 @@ python scripts/check_dependencies.py --requirements requirements-ocr.txt
 Do not install packages at runtime. Report missing requirements and let the user
 decide how to update the environment.
 
-Never write run outputs inside this Git workspace. Use an existing owner-only
-customer/run directory outside the repository, or let the initializer create a
-new one:
+Never write run outputs inside this Git workspace. Prepare the Studio Archive
+workflow context first and let the initializer use that run's exact output
+directory:
 
 ```bash
 python scripts/initialize_case.py \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --reference-date YYYY-MM-DD \
   --client-reference CLIENT-OPAQUE-001
 ```
 
-Do not overwrite or resume draft files for a different `run_id`.
+The initializer copies the run ID from the exact running ledger context. Do not
+overwrite or resume draft files from another run.
 
 ## 2. Confirm the material intake
 
@@ -133,9 +157,9 @@ When the user provides exported documents or DIRE/SARI screenshots, inventory
 them locally:
 
 ```bash
-python scripts/inventory_case.py /absolute/input-folder \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+python scripts/inventory_case.py <managed-input-folder> \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --no-ocr
 ```
 
@@ -145,6 +169,9 @@ user explicitly chooses the optional first model-download route, add:
 ```bash
 --allow-ocr-model-download
 ```
+
+If `--ocr-cache-dir` is used, place it under `<client-run-output>`; an external
+cache path is rejected because the stage may write model files there.
 
 The run records whether that route was selected and whether network access
 actually occurred; it does not manufacture an approval ID. The shared
@@ -169,8 +196,8 @@ Register a browser-selected source without fetching it from a script:
 
 ```bash
 python scripts/register_official_source.py \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --source-id SARI-TENANT-CARD-ID \
   --source-type official_sari_selected_result \
   --title "Official card title" \
@@ -184,7 +211,9 @@ python scripts/register_official_source.py \
 
 For an official page or source copy supplied by the user, select the matching
 source type and `user_provided_copy`. A local `--snapshot` is allowed only for a
-user-provided copy or recorded written reuse authorization.
+user-provided copy or recorded written reuse authorization, and it must be an
+exact input selected when this Studio Archive run was prepared (or an artifact
+already inside this run).
 
 Research current official Registro Imprese, DIRE, chamber, INPS, INAIL, SUAP,
 and IVASS sources only when the facts make them relevant. Record each selected
@@ -205,8 +234,8 @@ at most that one card:
 
 ```bash
 python scripts/sari_connector.py search \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --tenant exact-current-tenant \
   --expected-chamber "Official chamber title" \
   --query "generic topical terms" \
@@ -216,8 +245,8 @@ python scripts/sari_connector.py search \
 
 ```bash
 python scripts/sari_connector.py detail \
-  --output-dir /absolute/private/run-dir \
-  --run-id CASE-YYYYMMDD-001 \
+  --output-dir <client-run-output> \
+  --client-engagement <client_engagement_path> \
   --tenant exact-current-tenant \
   --expected-chamber "Official chamber title" \
   --card-id HUMAN-SELECTED-ID \
@@ -262,10 +291,11 @@ Run the mechanical validation:
 
 ```bash
 python scripts/validate_practice_case.py \
-  --case-intake /absolute/private/run-dir/case_intake_draft.json \
-  --practice-plan /absolute/private/run-dir/practice_plan_draft.json \
-  --official-sources /absolute/private/run-dir/official_sources.json \
-  --output-dir /absolute/private/run-dir
+  --case-intake <client-run-output>/case_intake_draft.json \
+  --practice-plan <client-run-output>/practice_plan_draft.json \
+  --official-sources <client-run-output>/official_sources.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Add `--local-inventory .../local_evidence_inventory.json` when local evidence
@@ -274,7 +304,8 @@ a structurally sound case with explicit blockers; the status remains draft.
 
 ```bash
 python scripts/package_practice.py \
-  --output-dir /absolute/private/run-dir
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>
 ```
 
 Confirm that `final_artifacts.json` binds the exact validated inputs and source

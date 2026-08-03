@@ -358,8 +358,15 @@ def test_vera_privacy_validator_detects_changed_governed_source(
     plugins_root = tmp_path / "plugins"
     vera_root = plugins_root / "vera"
     component_root = plugins_root / "prompt-optimizer"
+    shared_assurance = (
+        plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
+    )
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "prompt-optimizer", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
+        shared_assurance,
+    )
     shared_server = tmp_path / "scripts" / "serve_review_workbench.py"
     shared_server.parent.mkdir()
     shutil.copy2(ROOT / "scripts" / "serve_review_workbench.py", shared_server)
@@ -416,8 +423,15 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     plugins_root = repository_root / "plugins"
     vera_root = plugins_root / "vera"
     component_root = plugins_root / "client-file-preparation"
+    shared_assurance = (
+        plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
+    )
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "client-file-preparation", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
+        shared_assurance,
+    )
     shared_server = repository_root / "scripts" / "serve_review_workbench.py"
     shared_server.parent.mkdir(parents=True)
     shutil.copy2(ROOT / "scripts" / "serve_review_workbench.py", shared_server)
@@ -445,6 +459,10 @@ def test_privacy_fingerprint_governs_projected_local_review_server(
     packaged_component = vera_root / "modules" / "client-file-preparation"
     shutil.copytree(component_root, packaged_component)
     shutil.copy2(shared_server, packaged_component / "scripts" / "review_server.py")
+    shutil.copytree(
+        shared_assurance,
+        vera_root / "vendor" / "modules" / "vera_assurance",
+    )
     assert validator.validate_privacy_surfaces(vera_root) == []
 
     shared_server.write_text(
@@ -517,9 +535,16 @@ def test_privacy_fingerprint_governs_shared_ocr_source(
     plugins_root = tmp_path / "repository" / "plugins"
     vera_root = plugins_root / "vera"
     component_root = plugins_root / "previdenza-inps"
+    shared_assurance = (
+        plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
+    )
     shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "previdenza-inps", component_root)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
+        shared_assurance,
+    )
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
         shared_ocr,
@@ -559,9 +584,16 @@ def test_packaged_ocr_consumer_cannot_fall_back_to_repository_shared_source(
     plugins_root = tmp_path / "repository" / "plugins"
     vera_root = plugins_root / "vera"
     source_component = plugins_root / "previdenza-inps"
+    shared_assurance = (
+        plugins_root / "_shared" / "vendor" / "modules" / "vera_assurance"
+    )
     shared_ocr = plugins_root / "_shared" / "vendor" / "modules" / "vera_ocr"
     shutil.copytree(VERA_ROOT, vera_root)
     shutil.copytree(ROOT / "plugins" / "previdenza-inps", source_component)
+    shutil.copytree(
+        ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_assurance",
+        shared_assurance,
+    )
     shutil.copytree(
         ROOT / "plugins" / "_shared" / "vendor" / "modules" / "vera_ocr",
         shared_ocr,
@@ -580,6 +612,10 @@ def test_packaged_ocr_consumer_cannot_fall_back_to_repository_shared_source(
         manifest.unlink()
     validator._refresh("previdenza-inps", vera_root)
     shutil.copytree(source_component, vera_root / "modules" / "previdenza-inps")
+    shutil.copytree(
+        shared_assurance,
+        vera_root / "vendor" / "modules" / "vera_assurance",
+    )
 
     errors = validator.validate_privacy_surfaces(vera_root)
 

@@ -7,9 +7,26 @@ import hashlib
 import html
 import json
 import re
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["inspect_document_text", "read_document_text", "write_inspection"]
 
@@ -199,9 +216,19 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("document", type=Path, help="Answer document path.")
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args()
     if not args.document.exists():
         parser.error(f"document does not exist: {args.document}")
+    try:
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="deep-research-validator",
+            input_paths=[args.document],
+            output_dir=args.output_dir,
+        )
+    except AssuranceContractError as exc:
+        parser.error(str(exc))
     write_inspection(args.document, args.output_dir)
     return 0
 

@@ -34,7 +34,9 @@ from docx.shared import Inches, Pt, RGBColor
 try:
     from .report_builder_integrity import (
         load_source_index,
+        resolve_source_record_path,
         seal_review_integrity,
+        source_identity_key,
         validate_source_index,
         write_source_index,
     )
@@ -57,7 +59,9 @@ except ImportError:  # pragma: no cover - supports direct script imports
     sys.modules[_integrity_spec.name] = _integrity
     _integrity_spec.loader.exec_module(_integrity)
     load_source_index = _integrity.load_source_index
+    resolve_source_record_path = _integrity.resolve_source_record_path
     seal_review_integrity = _integrity.seal_review_integrity
+    source_identity_key = _integrity.source_identity_key
     validate_source_index = _integrity.validate_source_index
     write_source_index = _integrity.write_source_index
 
@@ -1348,7 +1352,10 @@ def load_tables(input_path: Path, output_dir: Path) -> list[dict[str, Any]]:
     archive_bytes: bytes | None = None
     archive_member_manifest: list[dict[str, Any]] = []
     if input_source.is_file() and input_source.suffix.lower() == ".zip":
-        archive_bytes, archive_source_receipt = _capture_source(input_source)
+        archive_bytes, archive_source_receipt = _capture_source(
+            input_source,
+            identity_key=source_identity_key(output_dir, input_source),
+        )
         archive_member_manifest = _zip_member_manifest(archive_bytes)
     archive_root = (
         _zip_destination(
@@ -1366,11 +1373,13 @@ def load_tables(input_path: Path, output_dir: Path) -> list[dict[str, Any]]:
     ):
         source_metadata: dict[str, Any] = {}
         try:
-            source_identity = file_path.resolve().as_posix()
+            source_identity = source_identity_key(output_dir, file_path)
             archive_member_binding: dict[str, Any] | None = None
-            if archive_root is not None:
+            if archive_root is not None and archive_source_receipt is not None:
                 member_path = file_path.resolve().relative_to(archive_root).as_posix()
-                source_identity = f"{input_source.as_posix()}::{member_path}"
+                source_identity = (
+                    f"{archive_source_receipt['identity_key']}::{member_path}"
+                )
             source_bytes, source_receipt = _capture_source(
                 file_path,
                 identity_key=source_identity,
@@ -1473,16 +1482,15 @@ def load_indexed_tables(
             or not isinstance(receipt, dict)
         ):
             raise ValueError("Malformed Report Builder source record")
-        source_path = Path(root_path) / str(receipt.get("path") or "")
+        source_path = resolve_source_record_path(output_dir, source_record)
         captured, current_receipt = _capture_source(
             source_path,
             identity_key=identity_key,
         )
-        if current_receipt != {
-            "identity_key": source_record["identity_key"],
-            "root_path": source_record["root_path"],
-            "receipt": source_record["receipt"],
-        }:
+        if (
+            current_receipt["identity_key"] != source_record["identity_key"]
+            or current_receipt["receipt"] != source_record["receipt"]
+        ):
             raise ValueError(
                 "Source receipt does not match the reviewed generation: "
                 f"{source_record.get('artifact_id')}"
@@ -3637,6 +3645,7 @@ def _workbook_numeric_locations(
 def _replay_source_numeric_value(
     evidence: dict[str, Any],
     sources_by_id: dict[str, dict[str, Any]],
+    output_dir: Path,
 ) -> str:
     """Reopen one receipted source and recompute the referenced column total."""
 
@@ -3651,12 +3660,12 @@ def _replay_source_numeric_value(
         raise ValueError(
             f"Numeric source receipt is malformed for {evidence['evidence_id']}"
         )
-    validated = validate_artifact_receipt(Path(root_path), receipt)
+    source_path = resolve_source_record_path(output_dir, source_receipt)
+    validated = validate_artifact_receipt(source_path.parent, receipt)
     if validated["artifact_id"] != evidence["source_artifact_ref"]:
         raise ValueError(
             f"Numeric source identity is stale for {evidence['evidence_id']}"
         )
-    source_path = Path(root_path) / str(validated["path"])
     identity_key = source_receipt.get("identity_key")
     if not isinstance(identity_key, str) or not identity_key:
         raise ValueError(
@@ -3666,11 +3675,10 @@ def _replay_source_numeric_value(
         source_path,
         identity_key=identity_key,
     )
-    if current_receipt != {
-        "identity_key": source_receipt["identity_key"],
-        "root_path": source_receipt["root_path"],
-        "receipt": source_receipt["receipt"],
-    }:
+    if (
+        current_receipt["identity_key"] != source_receipt["identity_key"]
+        or current_receipt["receipt"] != source_receipt["receipt"]
+    ):
         raise ValueError(
             f"Numeric source receipt changed for {evidence['evidence_id']}"
         )
@@ -3789,6 +3797,8 @@ def _write_source_receipts(
 def write_numeric_evidence_ledger(
     output_dir: Path,
     analysis: dict[str, Any],
+    *,
+    source_context_dir: Path | None = None,
 ) -> dict[str, Any] | None:
     """Reopen rendered outputs and seal exact numeric source-to-output closure."""
 
@@ -3804,7 +3814,11 @@ def write_numeric_evidence_ledger(
         (output_dir / "source_receipts.json").unlink(missing_ok=True)
         return None
 
-    source_index = validate_source_index(output_dir)
+    source_resolution_dir = Path(source_context_dir or output_dir)
+    source_index = validate_source_index(
+        output_dir,
+        source_context_dir=source_resolution_dir,
+    )
     sources_by_id = {
         str(source["artifact_id"]): source
         for source in source_index["sources"]
@@ -3829,7 +3843,11 @@ def write_numeric_evidence_ledger(
     entries = []
     for evidence in evidence_rows:
         evidence_id = str(evidence["evidence_id"])
-        source_value = _replay_source_numeric_value(evidence, sources_by_id)
+        source_value = _replay_source_numeric_value(
+            evidence,
+            sources_by_id,
+            source_resolution_dir,
+        )
         workbook_locator, workbook_value = workbook_locations[evidence_id]
         markdown_locator, markdown_value = markdown_locations[evidence_id]
         docx_locator, docx_value = docx_locations[evidence_id]
@@ -3887,6 +3905,8 @@ def _build_report_in_place(
     language: object | None = None,
     document_language: object | None = None,
     report_type: object | None = None,
+    run_id: str | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> BuildResult:
     """Build report outputs from inspected files and an editable recipe."""
 
@@ -3928,6 +3948,8 @@ def _build_report_in_place(
             recipe.get("document_language", assumptions["document_language"])
         ),
         report_type=normalize_report_type(recipe.get("report_type")),
+        run_id=run_id,
+        client_engagement=client_engagement,
     )
 
     raw_tables = load_tables(input_path, output_dir)
@@ -4109,6 +4131,8 @@ def build_report(
     language: object | None = None,
     document_language: object | None = None,
     report_type: object | None = None,
+    run_id: str | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> BuildResult:
     """Build atomically, restoring the exact prior run after any failure."""
 
@@ -4140,6 +4164,8 @@ def build_report(
             language=language,
             document_language=document_language,
             report_type=report_type,
+            run_id=run_id,
+            client_engagement=client_engagement,
         )
         completed = True
         return result

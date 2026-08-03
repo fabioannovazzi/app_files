@@ -69,6 +69,10 @@ from journal_sampling_core import (
     prepare_sample_review_successor,
     validate_sample_assurance,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 __all__ = ["main"]
 
@@ -77,15 +81,87 @@ def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Internal Journal Sampling review-successor assurance bridge."
     )
-    parser.add_argument("command", choices=("validate", "prepare", "finalize"))
+    parser.add_argument(
+        "command", choices=("context", "validate", "prepare", "finalize")
+    )
     parser.add_argument("output_dir", type=Path)
     parser.add_argument("--kind", choices=("save", "apply"))
+    parser.add_argument("--client-engagement", type=Path, required=True)
+    parser.add_argument(
+        "--persistent-output-dir",
+        type=Path,
+        help=argparse.SUPPRESS,
+    )
     return parser
 
 
-def main() -> int:
-    args = _parser().parse_args()
-    if args.command == "validate":
+def _is_ephemeral_review_working_tree(path: Path, *, run_root: Path) -> bool:
+    try:
+        relative = path.relative_to(run_root)
+    except ValueError:
+        return False
+    return (
+        len(relative.parts) == 2
+        and relative.parts[0].startswith(".generated-review-transaction-")
+        and relative.parts[1] == "working"
+    )
+
+
+def _load_cli_customer_run(args: argparse.Namespace) -> dict[str, object]:
+    context = load_client_engagement_context_file(
+        args.client_engagement,
+        expected_workflow_id="journal-sampling",
+    )
+    expected_output = Path(str(context["output_dir"]))
+    persistent_output = (
+        Path(args.persistent_output_dir).expanduser().resolve()
+        if args.persistent_output_dir is not None
+        else expected_output
+    )
+    if persistent_output.expanduser().resolve() != expected_output:
+        raise AssuranceContractError(
+            "persistent assurance output must be the customer run output root"
+        )
+    load_client_engagement_context_file(
+        args.client_engagement,
+        expected_workflow_id="journal-sampling",
+        output_dir=persistent_output,
+    )
+    actual_output = args.output_dir.expanduser().resolve(strict=True)
+    if actual_output == expected_output or actual_output.is_relative_to(
+        expected_output
+    ):
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="journal-sampling",
+            input_paths=[actual_output],
+            output_dir=actual_output,
+        )
+        return context
+    if not _is_ephemeral_review_working_tree(
+        actual_output,
+        run_root=Path(str(context["run_root"])),
+    ):
+        raise AssuranceContractError(
+            "assurance input is outside the customer run and its ephemeral review tree"
+        )
+    return context
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = _parser()
+    args = parser.parse_args(argv)
+    try:
+        context = _load_cli_customer_run(args)
+    except (AssuranceContractError, OSError) as exc:
+        parser.error(str(exc))
+    if args.command == "context":
+        result = {
+            "ok": True,
+            "workflow_id": context["workflow_id"],
+            "run_id": context["run_id"],
+        }
+    elif args.command == "validate":
         result = validate_sample_assurance(args.output_dir)
     elif args.command == "prepare":
         if args.kind is None:

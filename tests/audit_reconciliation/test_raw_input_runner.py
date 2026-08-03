@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import builtins
-import hashlib
 import importlib.util
 import json
 import sys
@@ -28,29 +27,64 @@ def load_runner():
     return module
 
 
+def running_audit_context(tmp_path: Path) -> tuple[dict[str, object], object]:
+    ledger_path = (
+        Path(__file__).resolve().parents[2]
+        / "plugins"
+        / "studio-archive"
+        / "scripts"
+        / "client_ledger.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "audit_reconciliation_test_client_ledger",
+        ledger_path,
+    )
+    assert spec and spec.loader
+    ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
+    spec.loader.exec_module(ledger)
+    client_root = tmp_path / "Studio" / "Rossi"
+    client_root.mkdir(parents=True)
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Audit 2023")
+    received = tmp_path / "received"
+    received.mkdir()
+    source = received / "assumptions.json"
+    source.write_text("{}\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "audit-reconciliation",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    return running["context"], ledger
+
+
 def test_client_engagement_rejects_input_from_another_client(tmp_path: Path) -> None:
     runner = load_runner()
-    archive_root = tmp_path / "Studio"
-    selected_root = archive_root / "Rossi"
-    other_input = archive_root / "Bianchi" / "input"
-    selected_root.mkdir(parents=True)
+    context, _ = running_audit_context(tmp_path)
+    other_input = tmp_path / "Studio" / "Bianchi" / "input"
     other_input.mkdir(parents=True)
-    binding = runner.build_studio_client_folder_binding(
-        studio_client_id="client_" + hashlib.sha256(b"rossi").hexdigest()[:24],
-        scope_id="scope_" + hashlib.sha256(b"rossi").hexdigest()[:24],
-        archive_root=archive_root,
-        scope_relative_dir="Rossi",
-        client_root=selected_root,
-        display_name="Rossi",
-    )
 
-    with pytest.raises(ValueError, match="selected studio client"):
-        runner.prepare_client_engagement_context(
-            client_folder=binding,
-            engagement_id="audit-2026",
+    with pytest.raises(ValueError, match="does not match"):
+        runner.run_raw_input_reconciliation(
             input_dir=other_input,
-            workspace_root=tmp_path / "Vera Work",
-            run_id="audit-reconciliation-audit-2026-test",
+            prepared_client_engagement=context,
         )
 
 
@@ -825,30 +859,9 @@ def test_extract_pdf_pages_emits_ocr_progress_events(tmp_path, monkeypatch):
 
 def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     runner = load_runner()
-    archive_root = tmp_path / "Studio"
-    client_root = archive_root / "Rossi"
-    input_dir = client_root / "input"
-    workspace_root = tmp_path / "Vera Work"
-    input_dir.mkdir(parents=True)
-    client_folder = runner.build_studio_client_folder_binding(
-        studio_client_id="client_" + hashlib.sha256(b"rossi").hexdigest()[:24],
-        scope_id="scope_" + hashlib.sha256(b"rossi").hexdigest()[:24],
-        archive_root=archive_root,
-        scope_relative_dir="Rossi",
-        client_root=client_root,
-        display_name="Rossi",
-    )
-    run_id = "audit-reconciliation-audit-2023-test"
-    output_dir = (
-        workspace_root
-        / "clients"
-        / client_folder["studio_client_id"]
-        / "engagements"
-        / "audit-2023"
-        / "runs"
-        / "audit-reconciliation"
-        / run_id
-    )
+    client_engagement, _ = running_audit_context(tmp_path)
+    input_dir = Path(client_engagement["input_dir"])
+    output_dir = Path(client_engagement["output_dir"])
 
     extracted_pages = [
         {
@@ -863,13 +876,60 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     ]
 
     def fake_extract_normalized_records(input_dir, assumptions, *, output_dir=None):
+        source_root = Path(input_dir)
+        source_files = [
+            path
+            for path in source_root.rglob("*")
+            if path.is_file()
+            and not any(
+                part.startswith(".") for part in path.relative_to(source_root).parts
+            )
+        ]
+        source_receipts = runner.build_source_receipts(source_root, source_files)
+        source_path = source_receipts[0]["path"]
+        adapter_family = runner.LEGACY_ADAPTER_FAMILY
+        decisions, decision_errors = runner.build_reviewed_source_decisions(
+            input_root=source_root,
+            source_receipts=source_receipts,
+            adapter_families={source_path: adapter_family},
+            assumptions={
+                **assumptions,
+                "reviewed_source_decisions": {
+                    source_path: reviewed_source_input(
+                        role="journal",
+                        adapter_family=adapter_family,
+                    )
+                },
+            },
+        )
+        assert not decision_errors
+        decision = decisions[source_path]
+        source_qualification = runner.build_source_qualification(
+            qualification_id="source.qualification.test",
+            adapter_id=adapter_family,
+            adapter_version=runner.SUPPORTED_SOURCE_ADAPTER_VERSIONS[adapter_family],
+            source_family="journal",
+            status="qualified",
+            source_artifact_refs=[source_receipts[0]["artifact_id"]],
+            reviewed_mapping_ref=decision["decision_id"],
+            controls=[
+                {
+                    "control_id": "test_layout_reviewed",
+                    "required": True,
+                    "status": "passed",
+                    "evidence_refs": [source_receipts[0]["artifact_id"]],
+                    "detail": "Test source layout was reviewed.",
+                }
+            ],
+        )
         return {
             "source_inventory": [
-                {"source_file": "scan.pdf", "source_role": "open_items"}
+                {"source_file": source_path, "source_role": "journal"}
             ],
-            "source_artifact_receipts": [],
-            "reviewed_source_decision_receipts": [],
-            "source_qualifications": [],
+            "source_root": str(source_root),
+            "source_artifact_receipts": source_receipts,
+            "reviewed_source_decision_receipts": list(decisions.values()),
+            "source_qualifications": [source_qualification],
             "source_pages": extracted_pages,
             "open_items": [],
             "evidence_rows": [],
@@ -884,7 +944,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
                     "reason": "No reviewed adapter is available.",
                 }
             ],
-            "cache_dir": str(tmp_path / ".audit_reconciliation_cache"),
+            "cache_dir": str(Path(input_dir) / ".audit_reconciliation_cache"),
         }
 
     monkeypatch.setattr(
@@ -893,11 +953,12 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
 
     result = runner.run_raw_input_reconciliation(
         input_dir=input_dir,
-        client_folder=client_folder,
-        engagement_id="audit-2023",
-        workspace_root=workspace_root,
-        run_id=run_id,
-        assumptions={"scope_year": "2023", "cutoff_date": "2023-12-31"},
+        prepared_client_engagement=client_engagement,
+        assumptions={
+            "scope_year": "2023",
+            "cutoff_date": "2023-12-31",
+            "assurance_run_date": "2026-08-03",
+        },
     )
 
     source_pages_path = output_dir / "source_pages.json"
@@ -906,10 +967,11 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     )
     source_pages = json.loads(source_pages_path.read_text(encoding="utf-8"))
 
-    assert result["manifest"]["source_pages_path"] == str(source_pages_path)
-    assert Path(result["manifest"]["accountant_report_path"]).exists()
-    assert manifest["source_pages_path"] == str(source_pages_path)
-    assert Path(manifest["accountant_report_path"]).exists()
+    run_root = Path(client_engagement["run_root"])
+    assert result["manifest"]["source_pages_path"] == "outputs/source_pages.json"
+    assert (run_root / result["manifest"]["accountant_report_path"]).exists()
+    assert manifest["source_pages_path"] == "outputs/source_pages.json"
+    assert (run_root / manifest["accountant_report_path"]).exists()
     assert manifest["counts"]["source_pages"] == 1
     assert source_pages == extracted_pages
     removed_sidecars = {
@@ -934,15 +996,19 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
         {path.name for path in output_dir.iterdir() if path.is_file()}
     )
 
+    assert (
+        manifest["assurance"]["canonical_data_path"]
+        == "outputs/assurance_final_outputs/reconciliation_results.json"
+    )
     canonical_path = (
         output_dir / "assurance_final_outputs" / "reconciliation_results.json"
     )
-    assert manifest["assurance"]["canonical_data_path"] == str(canonical_path)
+    portable_context = manifest["client_engagement"]
     canonical = json.loads(canonical_path.read_text(encoding="utf-8"))
     assert canonical["schema_version"] == (
         "audit_reconciliation.reconciliation_results.v3"
     )
-    assert canonical["client_engagement"] == result["client_engagement"]
+    assert canonical["client_engagement"] == portable_context
     run_intake = json.loads(
         (output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -952,10 +1018,9 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     assurance = json.loads(
         (output_dir / "assurance_receipts.json").read_text(encoding="utf-8")
     )
-    assert manifest["client_engagement"] == result["client_engagement"]
-    assert run_intake["client_engagement"] == result["client_engagement"]
-    assert prepared["client_engagement"] == result["client_engagement"]
-    assert assurance["client_engagement"] == result["client_engagement"]
+    assert run_intake["client_engagement"] == portable_context
+    assert prepared["client_engagement"] == portable_context
+    assert assurance["client_engagement"] == portable_context
     assert canonical["source_processing"]["extraction_errors"] == [
         {
             "source_file": "unsupported.csv",
@@ -978,7 +1043,9 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
-    assert review_payload["client_engagement"] == result["client_engagement"]
+    assert run_intake["run_id"] == client_engagement["run_id"]
+    assert review_payload["run_id"] == client_engagement["run_id"]
+    assert review_payload["client_engagement"] == portable_context
     assert review_payload["summary"]["source_processing_issue_count"] == 1
     assert any(
         item["item_type"] == "source_processing_issue"
@@ -987,7 +1054,8 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
-    assert final_artifacts["client_engagement"] == result["client_engagement"]
+    assert final_artifacts["run_id"] == client_engagement["run_id"]
+    assert final_artifacts["client_engagement"] == portable_context
     canonical_output = next(
         output
         for output in final_artifacts["outputs"]
@@ -998,6 +1066,23 @@ def test_raw_run_writes_extracted_source_pages_to_output(tmp_path, monkeypatch):
     )
     workbook = load_workbook(result["excel_path"], read_only=True)
     assert "Problemi elaborazione fonti" in workbook.sheetnames
+    workbook.close()
+
+    old_client_root = Path(client_engagement["studio_client_folder"]["client_root"])
+    renamed_client_root = old_client_root.with_name("Rossi Renamed")
+    old_client_root.rename(renamed_client_root)
+    renamed_output = (
+        renamed_client_root / client_engagement["run_relative_path"] / "outputs"
+    )
+
+    replayed = runner.validate_assurance_run(renamed_output)
+
+    assert replayed["client_engagement"]["run_id"] == client_engagement["run_id"]
+    for path in renamed_output.rglob("*"):
+        if path.is_file() and path.suffix.lower() in {".json", ".md"}:
+            text = path.read_text(encoding="utf-8")
+            assert str(old_client_root) not in text, path
+            assert str(renamed_client_root) not in text, path
 
 
 def test_payment_order_zip_extracts_invoice_rows_and_batch_total(tmp_path):

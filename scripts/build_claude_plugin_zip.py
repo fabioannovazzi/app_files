@@ -139,6 +139,12 @@ COWORK_FORBIDDEN_INSTRUCTION_MARKERS = (
     "for inspection only",
     "widget is the primary UI surface",
     "MCP server owns validation",
+    "list_studio_archive_clients",
+    "import_studio_client_document",
+    "prepare_studio_client_workflow",
+    "start_studio_client_workflow",
+    "finalize_studio_client_workflow",
+    "complete_studio_client_workflow",
 )
 MODULES_REQUIRING_HOST_DESCRIPTORS = frozenset(
     {
@@ -771,19 +777,19 @@ def _studio_archive_cowork_skill(source: str, reference: bytes) -> str:
 def _project_main_cowork_scope(text: str) -> str:
     text = _replace_section(
         text,
-        "## Client-first journal workflow in Codex",
-        """## Client-bound journal work in Cowork
+        "## Client-first workflow in Codex",
+        """## Client-bound work in Cowork
 
 Cowork v1 omits the local Studio Archive module. It cannot list or register
 stable local clients, create client folders, copy files into managed
 engagements, or issue and resume client-engagement contexts. Confirm one exact
-connected client folder and continue with useful source review, mapping,
-sampling-plan preparation, or support review. Run the sealed Journal Sampling
-or Check Entries product CLI only when a digest-valid context was supplied by a
-compatible local Vera installation and every bound local path is available in
-the current workspace. Otherwise state that the client-bound local run remains
-pending. Never invent a client, scope, engagement, workflow, or run ID from a
-name, filename, folder, or document content.""",
+connected client folder and continue with useful work on its sources. Run a
+client-bound Vera product CLI only when a digest-valid running context for that
+exact workflow was supplied by a compatible local Vera installation and every
+bound local path is available in the current workspace. Otherwise state that
+the client-bound local run remains pending. Never invent a client, scope,
+engagement, workflow, or run ID from a name, filename, folder, or document
+content.""",
     )
     text = _sub_required(
         text,
@@ -1066,21 +1072,45 @@ def _project_audit_cowork_skill(text: str) -> str:
         """## Client boundary in Cowork
 
 Cowork v1 does not package the local Studio Archive index or its
-`get_studio_client_folder` tool, so it cannot issue a new client-folder binding.
+`get_studio_client_folder` tool, so it cannot prepare or start a customer-folder
+run or issue its workflow context.
 For connected-folder work, select and retain one explicit client folder and do
 not mix material from another client. Run `scripts/raw_input_runner.py` only
-when a digest-valid `vera.studio_client_folder.v2` binding was supplied by a
-compatible Vera Codex installation and its local paths are available in the
-current workspace. Otherwise continue with the useful connected-folder review
-and preparation that Cowork can perform, and state that the sealed local raw
-run remains pending. Never invent a scope ID or binding from a name or document
-content.""",
+when a compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for Audit Reconciliation and its complete
+customer-folder ledger paths are available in the current workspace. Otherwise
+continue with the useful connected-folder review and preparation that Cowork
+can perform, and state that the sealed local raw run remains pending. Never
+invent a client, engagement, run, receipt, or lifecycle state from a name or
+document content.""",
     )
     return _replace_section(
         text,
         "## Browser Review UI And MCP Widget",
         f"## Cowork review handoff\n\n{COWORK_REVIEW_HANDOFF_BODY}",
     )
+
+
+def _project_client_workflow_gate_cowork(text: str) -> str:
+    """Replace local Studio lifecycle directions on Cowork module skills."""
+
+    replacement = """## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration."""
+    for heading in ("## Client engagement gate", "## Client workflow gate"):
+        try:
+            return _replace_section(text, heading, replacement)
+        except ValueError:
+            continue
+    return text
 
 
 def _project_journal_sampling_cowork_skill(text: str) -> str:
@@ -1098,18 +1128,22 @@ artifacts and state that the sealed client-bound run remains pending.""",
     )
     text = _sub_required(
         text,
-        r"(?m)^1\. Start with Studio Archive client intake\..*$",
+        r"(?ms)^1\. Start with Studio Archive client intake\..*?(?=^3\. Ask for)",
         "1. Confirm one exact client and connected-folder scope. Cowork cannot "
-        "list or register local Studio clients, create a folder, import a "
-        "journal, or issue a client-engagement context. If a compatible local "
-        "Vera installation supplied a digest-valid context and all bound paths "
-        "are available, use it unchanged for the CLI steps below. Otherwise "
-        "inspect the connected journal, prepare mappings and sampling "
-        "assumptions, and state that the sealed client-bound run remains "
-        "pending.",
+        "list or register local Studio clients, create a customer folder or "
+        "engagement, import a journal, prepare or start a run, or issue a "
+        "client-engagement context. Never infer the client from the journal "
+        "filename.\n"
+        "2. If a compatible local Vera installation supplied a digest-valid "
+        "running context and every bound path is available, use that context "
+        "unchanged for the CLI steps below. Use only its one exact immutable "
+        "journal binding and exact output directory; never scan other connected "
+        "files. Otherwise inspect the selected connected journal, prepare "
+        "mappings and sampling assumptions, and state that the sealed "
+        "client-bound run remains pending.\n",
         label="Journal sampling Cowork client boundary",
     )
-    return _sub_required(
+    text = _sub_required(
         text,
         r"(?ms)^   Treat the stage-zero manifest as pre-review only\. A later "
         r"save or apply is\n"
@@ -1119,6 +1153,24 @@ artifacts and state that the sealed client-bound run remains pending.""",
         "or apply is used, its successor is deliverable only after that "
         "transaction archives the exact predecessor,",
         label="Journal sampling optional MCP transaction",
+    )
+    return _sub_required(
+        text,
+        r"(?ms)^11\. After the last output write, call "
+        r"`finalize_studio_client_workflow`.*?(?=^## Check Entries handoff)",
+        "11. After the last output write, do not treat the output directory as "
+        "an available or completed Studio artifact. Cowork does not package "
+        "Studio Archive and cannot finalize, complete, fail, or cancel its "
+        "customer-folder run. Report every physical output with its intended "
+        "artifact ID, relative path, concrete purpose, audience, and media type. "
+        "The declaration must include `prepared.normalized_journal`, "
+        "`internal.normalization_diagnostics`, and "
+        "`prepared.journal_sample_csv`. "
+        "A compatible local Vera installation must verify and declare the exact "
+        "tree, move it to `ready_for_review`, and record completion or a terminal "
+        "failure/cancellation. Until then, state that the sealed client-bound "
+        "run remains pending.\n\n",
+        label="Journal sampling Cowork lifecycle handoff",
     )
 
 
@@ -1138,27 +1190,43 @@ state that the sealed client-bound run remains pending.""",
     text = _sub_required(
         text,
         r"(?ms)^1\. Resume the exact client engagement before acquiring support\..*?"
-        r"`normalization_available=true`\.",
+        r"(?=^4\. Run dependency checks)",
         "1. Confirm one exact client and connected-folder scope. Cowork cannot "
-        "list or resume local Studio engagements. Run the sealed Check Entries "
-        "CLI only when a compatible local Vera installation supplied a "
-        "digest-valid context, its same-engagement normalized journal, and "
-        "available bound paths. Otherwise review the connected journal/support "
-        "material and state that the sealed client-bound check remains pending.",
+        "list or resume local Studio engagements, import support, prepare or "
+        "start a run, or issue a Check Entries context. Never infer the client, "
+        "engagement, or sampling run from filenames or recency.\n"
+        "2. Ask first for the relevant FatturaPA ZIP in the connected folder; "
+        "if unavailable, use an authorized accounting-system export already "
+        "materialized there, then targeted PDFs for unresolved sampled entries. "
+        "Never request credentials, tokens, cookies, or one-time codes. Without "
+        "a compatible local context, inspect only the smallest useful connected "
+        "support scope and state that the sealed client-bound check remains "
+        "pending.\n"
+        "3. Run the sealed Check Entries CLI only when a compatible local Vera "
+        "installation supplied a digest-valid running context whose paths are "
+        "available. It must bind the exact `prepared.normalized_journal`, "
+        "`internal.normalization_diagnostics`, and "
+        "`prepared.journal_sample_csv` artifacts from one finalized "
+        "same-engagement Journal Sampling run, plus only the immutable support "
+        "receipts for this evidence batch. Use those bindings unchanged, check "
+        "only the bound sample, and never scan later connected or engagement "
+        "files. A later evidence delivery remains a separate pending local run.\n",
         label="Check Entries Cowork client boundary",
     )
     return _sub_required(
         text,
-        r"(?ms)   Explain that the original support file is preserved\. After the user\n"
-        r"   authorizes a controlled copy, call `import_studio_client_document` with role\n"
-        r"   `support` and the selected `engagement_id`\. Use the returned imported path,\n"
-        r"   Check Entries context, and context path\. Do not accept support from another\n"
-        r"   folder or engagement directly\.",
-        "   When a compatible client-engagement context is present, use only "
-        "support already materialized inside its managed support path. Without "
-        "that context, inspect the smallest useful connected support scope for "
-        "review only and keep the sealed run pending.",
-        label="Check Entries Cowork support intake",
+        r"(?ms)^10\. After the last output write, call "
+        r"`finalize_studio_client_workflow`.*?(?=^## Prepared-Evidence Contract)",
+        "10. After the last output write, do not treat the output directory as "
+        "an available or completed Studio artifact. Cowork does not package "
+        "Studio Archive and cannot finalize, complete, fail, or cancel its "
+        "customer-folder run. Report every physical output with its intended "
+        "artifact ID, relative path, concrete purpose, audience, and media type. "
+        "A compatible local Vera installation must verify and declare the exact "
+        "tree, move it to `ready_for_review`, and record completion or a terminal "
+        "failure/cancellation. Until then, state that the sealed client-bound "
+        "check remains pending.\n\n",
+        label="Check Entries Cowork lifecycle handoff",
     )
 
 
@@ -1353,13 +1421,34 @@ def _project_previdenza_inventory_script(content: bytes) -> bytes:
     )
     text = _sub_required(
         text,
+        r"(?ms)^    input_paths = \[args\.input_dir\]\n"
+        r"    input_paths\.extend\(\n"
+        r"        path\n"
+        r"        for path in \(args\.portal_capture_manifest, "
+        r"args\.portal_export_manifest\)\n"
+        r"        if path is not None\n"
+        r"    \)\n",
+        "    input_paths = [args.input_dir]\n"
+        "    if args.portal_export_manifest is not None:\n"
+        "        input_paths.append(args.portal_export_manifest)\n",
+        label="Previdenza inventory client-bound inputs",
+    )
+    text = _sub_required(
+        text,
         r"(?ms)^        portal_capture = _load_portal_capture\(.*?^        \)\n",
         "",
         label="Previdenza inventory capture load",
     )
-    text = text.replace(
-        "        args, output_dir, ocr_language, portal_capture, portal_export\n",
-        "        args, output_dir, ocr_language, portal_export\n",
+    text = _sub_required(
+        text,
+        re.escape(
+            "    run_intake = _initial_run_intake(\n"
+            "        args, output_dir, context, ocr_language, portal_capture, portal_export\n"
+            "    )\n"
+        ),
+        "    run_intake = _initial_run_intake("
+        "args, output_dir, context, ocr_language, portal_export)\n",
+        label="Previdenza inventory run intake call",
     )
     text = _sub_required(
         text,
@@ -1453,6 +1542,10 @@ def _project_cowork_runtime_text(
         ) from exc
     text = _project_natural_language_runtime(text)
     text = text.replace("local_codex_workspace", "cowork_connected_folder")
+    text = text.replace(
+        "REQUIRE_VERA_CUSTOMER_RUN = True",
+        "REQUIRE_VERA_CUSTOMER_RUN = False",
+    )
     return text.encode("utf-8")
 
 
@@ -1513,6 +1606,8 @@ def project_cowork_skill(
         == "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
     ):
         text = _project_registro_imprese_sari_cowork_skill(text)
+    if relative_path.startswith("modules/"):
+        text = _project_client_workflow_gate_cowork(text)
     review_section = COWORK_REVIEW_SECTIONS.get(relative_path)
     if review_section is not None:
         source_heading, projected_heading = review_section

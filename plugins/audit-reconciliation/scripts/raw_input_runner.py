@@ -121,13 +121,12 @@ _add_vera_assurance_module_path()
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     MoneyValidationError,
-    build_client_engagement_context,
     build_source_qualification,
-    build_studio_client_folder_binding,
     decimal_text,
+    load_client_engagement_context_file,
     parse_canonical_decimal,
     parse_localized_decimal,
-    validate_studio_client_folder_binding,
+    validate_client_engagement_context,
 )
 
 try:
@@ -169,6 +168,7 @@ try:
         finalize_assurance_run,
         reviewed_date_convention,
         reviewed_money_convention,
+        validate_assurance_run,
         validate_receipt_set,
     )
     from .build_missing_evidence_requests import (
@@ -206,6 +206,7 @@ except ImportError:  # pragma: no cover - direct import support
         finalize_assurance_run,
         reviewed_date_convention,
         reviewed_money_convention,
+        validate_assurance_run,
         validate_receipt_set,
     )
     from build_missing_evidence_requests import (  # type: ignore
@@ -286,86 +287,6 @@ def validate_run_cache_dir(cache_dir: str | Path, *, input_dir: str | Path) -> P
             f"got {resolved}. Use an output-local cache such as {recommended}."
         )
     return resolved
-
-
-def load_studio_client_folder_binding(
-    value: Mapping[str, Any] | str | Path,
-) -> dict[str, Any]:
-    """Load and validate a Studio Archive client-folder binding."""
-
-    payload: object = value
-    if isinstance(value, (str, Path)):
-        try:
-            payload = (
-                json.loads(sys.stdin.read())
-                if str(value) == "-"
-                else json.loads(Path(value).expanduser().read_text(encoding="utf-8"))
-            )
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise ValueError(f"Client-folder binding is unreadable: {exc}") from exc
-    if isinstance(payload, Mapping) and "client_folder" in payload:
-        payload = payload["client_folder"]
-    try:
-        binding = validate_studio_client_folder_binding(payload)
-    except AssuranceContractError as exc:
-        raise ValueError(f"Client-folder binding is invalid: {exc}") from exc
-    for label in ("archive_root", "client_root"):
-        path = Path(str(binding[label]))
-        try:
-            current = path.lstat()
-        except OSError as exc:
-            raise ValueError(f"Client-folder {label} is unavailable: {exc}") from exc
-        if path.is_symlink() or not path.is_dir() or current.st_nlink < 1:
-            raise ValueError(f"Client-folder {label} must be a real directory")
-    return binding
-
-
-def prepare_client_engagement_context(
-    *,
-    client_folder: Mapping[str, Any] | str | Path,
-    engagement_id: str,
-    input_dir: str | Path,
-    workspace_root: str | Path,
-    run_id: str | None = None,
-) -> dict[str, Any]:
-    """Resolve one client-bound Audit run and its managed output directory."""
-
-    binding = load_studio_client_folder_binding(client_folder)
-    input_path = Path(input_dir).expanduser()
-    try:
-        input_stat = input_path.lstat()
-        resolved_input = input_path.resolve(strict=True)
-    except OSError as exc:
-        raise ValueError(f"Audit input directory is unavailable: {exc}") from exc
-    if (
-        input_path.is_symlink()
-        or not resolved_input.is_dir()
-        or input_stat.st_nlink < 1
-    ):
-        raise ValueError("Audit input directory must be a real directory")
-    workspace_path = Path(workspace_root).expanduser()
-    if not workspace_path.is_absolute():
-        raise ValueError("Audit workspace_root must be an absolute path")
-    if workspace_path.is_symlink():
-        raise ValueError("Audit workspace_root cannot be a symbolic link")
-    resolved_workspace = workspace_path.resolve(strict=False)
-    active_run_id = run_id or (
-        f"{WORKFLOW_ID}-{engagement_id}-"
-        + datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-    )
-    try:
-        context = build_client_engagement_context(
-            studio_client_folder=binding,
-            engagement_id=engagement_id,
-            workflow_id=WORKFLOW_ID,
-            run_id=active_run_id,
-            input_dir=resolved_input,
-            workspace_root=resolved_workspace,
-        )
-    except AssuranceContractError as exc:
-        raise ValueError(f"Client engagement is invalid: {exc}") from exc
-    validate_run_output_dir(context["output_dir"], input_dir=resolved_input)
-    return context
 
 
 JOURNAL_HEADER_RE = re.compile(
@@ -3028,26 +2949,77 @@ def write_json(path: Path, payload: Any) -> Path:
     return path
 
 
+def _portable_client_engagement_context(
+    client_engagement: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Return the path-free identity persisted in managed run artifacts."""
+
+    if client_engagement.get("schema_version") != "vera.client_workflow_context.v2":
+        return dict(client_engagement)
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
+def _managed_run_reference(
+    value: str | Path,
+    client_engagement: Mapping[str, Any],
+) -> str:
+    """Return one normalized path relative to the owning managed run."""
+
+    reference = Path(value).expanduser()
+    run_root = Path(str(client_engagement["run_root"])).expanduser().resolve()
+    resolved = reference.resolve()
+    try:
+        relative = resolved.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError(
+            "Audit Reconciliation path is outside its managed run."
+        ) from exc
+    if not relative.parts or ".." in relative.parts:
+        raise ValueError(
+            "Audit Reconciliation path must identify a managed run artifact."
+        )
+    return relative.as_posix()
+
+
 def run_raw_input_reconciliation(
     *,
     input_dir: str | Path,
-    client_folder: Mapping[str, Any] | str | Path,
-    engagement_id: str,
-    workspace_root: str | Path,
+    prepared_client_engagement: Mapping[str, Any],
     assumptions: dict[str, Any] | None = None,
     title: str | None = None,
     narrative: str = "",
     language: str = "it",
-    run_id: str | None = None,
     expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
-    client_engagement = prepare_client_engagement_context(
-        client_folder=client_folder,
-        engagement_id=engagement_id,
-        input_dir=input_dir,
-        workspace_root=workspace_root,
-        run_id=run_id,
-    )
+    try:
+        client_engagement = validate_client_engagement_context(
+            prepared_client_engagement
+        )
+    except AssuranceContractError as exc:
+        raise ValueError(f"Client engagement is invalid: {exc}") from exc
+    if (
+        client_engagement["schema_version"] != "vera.client_workflow_context.v2"
+        or client_engagement["workflow_id"] != WORKFLOW_ID
+        or Path(client_engagement["input_dir"]).resolve() != Path(input_dir).resolve()
+    ):
+        raise ValueError("Prepared client engagement does not match this audit run.")
+    validate_run_output_dir(client_engagement["output_dir"], input_dir=input_dir)
     requested_language = normalize_language(
         (assumptions or {}).get("locale") or language
     )
@@ -3140,11 +3112,14 @@ def run_raw_input_reconciliation(
 
     source_pages_path = out_dir / "source_pages.json"
     manifest = {
-        "client_engagement": client_engagement,
-        "input_dir": str(input_dir),
-        "output_dir": str(out_dir),
-        "cache_dir": extracted["cache_dir"],
-        "source_pages_path": str(source_pages_path),
+        "client_engagement": _portable_client_engagement_context(client_engagement),
+        "path_reference": "run_root_relative",
+        "input_dir": _managed_run_reference(input_dir, client_engagement),
+        "output_dir": _managed_run_reference(out_dir, client_engagement),
+        "cache_dir": _managed_run_reference(extracted["cache_dir"], client_engagement),
+        "source_pages_path": _managed_run_reference(
+            source_pages_path, client_engagement
+        ),
         "assumptions": active,
         "counts": {
             "source_files": len(extracted["source_inventory"]),
@@ -3193,10 +3168,14 @@ def run_raw_input_reconciliation(
         },
         "checks": result["checks"],
         "checks_pass": result["checks_pass"],
-        "excel_path": result["excel_path"],
-        "accountant_report_path": result["accountant_report_path"],
-        "word_path": result["word_path"],
-        "missing_evidence_requests_path": str(missing_evidence_requests_path),
+        "excel_path": _managed_run_reference(result["excel_path"], client_engagement),
+        "accountant_report_path": _managed_run_reference(
+            result["accountant_report_path"], client_engagement
+        ),
+        "word_path": _managed_run_reference(result["word_path"], client_engagement),
+        "missing_evidence_requests_path": _managed_run_reference(
+            missing_evidence_requests_path, client_engagement
+        ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
     write_json(source_pages_path, extracted["source_pages"])
@@ -3223,20 +3202,39 @@ def run_raw_input_reconciliation(
     )
     manifest["review_session"] = {
         "run_id": review_session.run_id,
-        "run_intake_path": str(review_session.run_intake_path),
-        "review_payload_path": str(review_session.review_payload_path),
-        "ui_decisions_path": str(review_session.ui_decisions_path),
-        "review_html_path": str(review_session.review_html_path),
-        "final_artifacts_path": str(review_session.final_artifacts_path),
+        "run_intake_path": _managed_run_reference(
+            review_session.run_intake_path, client_engagement
+        ),
+        "review_payload_path": _managed_run_reference(
+            review_session.review_payload_path, client_engagement
+        ),
+        "ui_decisions_path": _managed_run_reference(
+            review_session.ui_decisions_path, client_engagement
+        ),
+        "review_html_path": _managed_run_reference(
+            review_session.review_html_path, client_engagement
+        ),
+        "final_artifacts_path": _managed_run_reference(
+            review_session.final_artifacts_path, client_engagement
+        ),
         "review_item_count": review_session.review_item_count,
     }
     manifest["assurance"] = {
-        "receipts_path": str(out_dir / "assurance_receipts.json"),
-        "gates_path": str(out_dir / "assurance_gates.json"),
-        "final_output_inventory_path": str(out_dir / "final_output_inventory.json"),
-        "final_output_boundary": str(out_dir / "assurance_final_outputs"),
-        "canonical_data_path": str(
-            out_dir / "assurance_final_outputs" / "reconciliation_results.json"
+        "receipts_path": _managed_run_reference(
+            out_dir / "assurance_receipts.json", client_engagement
+        ),
+        "gates_path": _managed_run_reference(
+            out_dir / "assurance_gates.json", client_engagement
+        ),
+        "final_output_inventory_path": _managed_run_reference(
+            out_dir / "final_output_inventory.json", client_engagement
+        ),
+        "final_output_boundary": _managed_run_reference(
+            out_dir / "assurance_final_outputs", client_engagement
+        ),
+        "canonical_data_path": _managed_run_reference(
+            out_dir / "assurance_final_outputs" / "reconciliation_results.json",
+            client_engagement,
         ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
@@ -3274,15 +3272,11 @@ def _cli_parser() -> Any:
     parser = argparse.ArgumentParser(
         description="Run one client-bound Audit Reconciliation workflow."
     )
-    parser.add_argument("--client-folder-binding", type=Path, required=True)
-    parser.add_argument("--engagement-id", required=True)
-    parser.add_argument("--input-dir", type=Path, required=True)
-    parser.add_argument("--workspace-root", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--assumptions-json", type=Path, required=True)
     parser.add_argument("--title")
     parser.add_argument("--narrative", default="")
     parser.add_argument("--language", default="it")
-    parser.add_argument("--run-id")
     parser.add_argument("--expected-predecessor-checkpoint")
     return parser
 
@@ -3292,19 +3286,21 @@ def main(argv: list[str] | None = None) -> int:
 
     args = _cli_parser().parse_args(argv)
     try:
+        client_engagement = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="audit-reconciliation",
+            input_paths=[args.assumptions_json],
+        )
         assumptions = json.loads(args.assumptions_json.read_text(encoding="utf-8"))
         if not isinstance(assumptions, dict):
             raise ValueError("Assumptions JSON must contain one object")
         result = run_raw_input_reconciliation(
-            input_dir=args.input_dir,
-            client_folder=args.client_folder_binding,
-            engagement_id=args.engagement_id,
-            workspace_root=args.workspace_root,
+            input_dir=Path(client_engagement["input_dir"]),
+            prepared_client_engagement=client_engagement,
             assumptions=assumptions,
             title=args.title,
             narrative=args.narrative,
             language=args.language,
-            run_id=args.run_id,
             expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
         )
     except (OSError, ValueError) as exc:

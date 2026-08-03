@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import csv
+import importlib.util
 import json
 import shutil
 import stat
@@ -54,6 +55,76 @@ from scripts.validate_plugin_review_contract import (
 )
 
 PROFESSIONAL_CONFIRMED_AT = "2026-01-31T10:00:00+01:00"
+
+
+def _managed_new_client_workspace(
+    tmp_path: Path, source_paths: list[Path]
+) -> dict[str, Any]:
+    """Create one real v2 customer run and bind exact copies of test inputs."""
+
+    ledger_path = (
+        REPOSITORY_ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    )
+    module_name = "new_client_legacy_test_client_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+
+    client_root = tmp_path / "Managed Client"
+    client_root.mkdir(mode=0o700)
+    client_id = "client_222222222222222222222222"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root, client_id, "New Client legacy contract test"
+    )
+    engagement_id = engagement["engagement_id"]
+    source_input_ids: dict[Path, str] = {}
+    input_ids: list[str] = []
+    for source_path in source_paths:
+        source = source_path.resolve(strict=True)
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement_id,
+            source,
+            "source",
+        )
+        input_id = str(imported["receipt"]["input_id"])
+        source_input_ids[source] = input_id
+        if input_id not in input_ids:
+            input_ids.append(input_id)
+
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement_id,
+        "new-client",
+        "legacy-test-v2",
+        input_ids=input_ids,
+        idempotency_key="new-client-legacy-strict-v2",
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement_id,
+        prepared["run"]["run_id"],
+    )
+    bindings_by_id = {
+        binding["binding_id"]: Path(binding["path"])
+        for binding in running["context"]["input_bindings"]
+    }
+    return {
+        "context": running["context"],
+        "context_path": Path(running["context_path"]),
+        "output_dir": Path(running["output_dir"]),
+        "bound_paths": {
+            source: bindings_by_id[input_id]
+            for source, input_id in source_input_ids.items()
+        },
+    }
 
 
 def test_dependency_checker_reports_ready(capsys: pytest.CaptureFixture[str]) -> None:
@@ -935,10 +1006,15 @@ def test_new_client_input_rejects_unsupported_language() -> None:
 def test_initializer_cli_writes_supported_non_italian_language(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
+    source_path = tmp_path / "initial-client-source.txt"
+    source_path.write_text("Controlled New Client source.\n", encoding="utf-8")
+    workspace = _managed_new_client_workspace(tmp_path, [source_path])
     exit_code = initialize_main(
         [
             "--case-dir",
-            (tmp_path / "german-case").as_posix(),
+            workspace["output_dir"].as_posix(),
+            "--client-engagement",
+            workspace["context_path"].as_posix(),
             "--client-reference",
             "CASE-LANGUAGE",
             "--language",
@@ -1747,13 +1823,32 @@ def test_mcp_apply_allows_inclusive_material_deadline_on_current_utc_date(
         json.dumps(registry, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    input_path = _write_new_client_input(tmp_path, validate_new_client_input(payload))
-    output_dir = tmp_path / "inclusive-apply"
+    local_sources = [
+        Path(record["local_path"])
+        for record in [*payload["evidence_register"], *payload["template_references"]]
+        if isinstance(record.get("local_path"), str)
+    ]
+    workspace = _managed_new_client_workspace(
+        tmp_path,
+        [*local_sources, registry_path],
+    )
+    for record in [*payload["evidence_register"], *payload["template_references"]]:
+        local_path = record.get("local_path")
+        if isinstance(local_path, str):
+            record["local_path"] = workspace["bound_paths"][
+                Path(local_path).resolve(strict=True)
+            ].as_posix()
+    input_path = _write_new_client_input(
+        workspace["output_dir"], validate_new_client_input(payload)
+    )
+    output_dir = workspace["output_dir"]
     package_new_client(
         input_path,
         output_dir,
-        source_registry_path=registry_path,
+        source_registry_path=workspace["bound_paths"][registry_path.resolve()],
         generated_at=f"{deadline}T10:00:00+00:00",
+        run_id=str(workspace["context"]["run_id"]),
+        client_engagement=workspace["context"],
     )
     review = load_json(output_dir / "review_payload.json")
     decisions = [
@@ -1767,6 +1862,7 @@ def test_mcp_apply_allows_inclusive_material_deadline_on_current_utc_date(
             "decisions": decisions,
             "decision_source": "temporal-inclusive-test",
             "reviewer": "reviewer-temporal-01",
+            "client_engagement": workspace["context_path"].as_posix(),
         },
     )
 

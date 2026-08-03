@@ -13,6 +13,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "registro-imprese-sari"
 SCRIPTS_ROOT = PLUGIN_ROOT / "scripts"
+ARCHIVE_CORE_PATH = ROOT / "plugins" / "studio-archive" / "scripts" / "archive_core.py"
 NODE_FALLBACK = (
     Path.home()
     / ".cache"
@@ -46,6 +47,14 @@ PRIVATE_DOCUMENT_QUOTE = "Il sottoscritto Mario Rossi dichiara l'avvio dell'atti
 PRIVATE_SARI_QUESTION = (
     "Per Mario Rossi (RSSMRA80A01H501U), quali passaggi DIRE servono per "
     "l'apertura descritta nel fascicolo?"
+)
+MUTATING_SCRIPT_NAMES = (
+    "initialize_case.py",
+    "inventory_case.py",
+    "register_official_source.py",
+    "sari_connector.py",
+    "validate_practice_case.py",
+    "package_practice.py",
 )
 
 
@@ -114,6 +123,91 @@ def _load_script(module_name: str) -> ModuleType:
             sys.modules["case_core"] = previous_core
 
 
+def _load_archive_core() -> ModuleType:
+    module_name = "registro_imprese_sari_test_archive_core"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    return _module_from_path(module_name, ARCHIVE_CORE_PATH)
+
+
+def _running_sari_workspace(
+    tmp_path: Path,
+    *,
+    rename_client_folder: bool = False,
+) -> dict[str, object]:
+    archive_core = _load_archive_core()
+    archive_root = tmp_path / "Studio"
+    client_root = archive_root / "Zecca SPA"
+    client_root.mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = archive_core.configure_archive(archive_root, state_dir=state_dir)
+    scope_id = next(
+        item["scope_id"]
+        for item in configured["scopes"]
+        if item["display_name"] == "Zecca SPA"
+    )
+    registration = archive_core.set_studio_client_identity(
+        scope_id,
+        legal_names=["Zecca SPA"],
+        tax_identifiers=["01234567890"],
+        state_dir=state_dir,
+    )
+    client_id = registration["client"]["client_id"]
+    engagement = archive_core.create_studio_client_engagement(
+        client_id,
+        "Registro Imprese 2026",
+        state_dir=state_dir,
+    )["engagement"]
+    evidence = tmp_path / "received-evidence.txt"
+    evidence.write_text("Exact selected case evidence.\n", encoding="utf-8")
+    imported = archive_core.import_studio_client_document(
+        client_id,
+        evidence,
+        "source",
+        engagement_id=engagement["engagement_id"],
+        state_dir=state_dir,
+    )
+    prepared = archive_core.prepare_studio_client_workflow(
+        engagement["engagement_id"],
+        "registro-imprese-sari",
+        input_ids=[imported["input_id"]],
+        label="Zecca Registro Imprese",
+        purpose="Prepare the Registro Imprese professional-review draft.",
+        idempotency_key="sari-ledger-stage",
+        state_dir=state_dir,
+    )
+    run_id = prepared["run"]["run_id"]
+    started = archive_core.start_studio_client_workflow(
+        client_id,
+        engagement["engagement_id"],
+        run_id,
+        state_dir=state_dir,
+    )
+    assert started["status"] == "running"
+    if rename_client_folder:
+        renamed_root = archive_root / "Zecca Holding SPA"
+        client_root.rename(renamed_root)
+        client_root = renamed_root
+        archive_core.refresh_archive(state_dir=state_dir)
+        archive_core.recover_studio_client_ledger(state_dir=state_dir)
+    listed = archive_core.list_studio_client_engagements(
+        client_id,
+        state_dir=state_dir,
+    )
+    run = next(
+        item
+        for item in listed["engagements"][0]["workflow_runs"]
+        if item["run_id"] == run_id
+    )
+    return {
+        "client_root": client_root,
+        "context": run["client_engagement"],
+        "context_path": Path(run["client_engagement_path"]),
+        "run_id": run_id,
+    }
+
+
 def _read_json(path: Path) -> dict[str, object]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -175,20 +269,37 @@ def _prepare_case(
     package_case: bool = True,
     output_name: str = "private-case",
     language: str = "it",
+    run_id_override: str | None = None,
+    include_inventory: bool = False,
 ) -> tuple[Path, dict[str, object]]:
     initialize_case = _load_script("initialize_case")
     register_source = _load_script("register_official_source")
     validate_case = _load_script("validate_practice_case")
     packager = _load_script("package_practice")
+    inventory = _load_script("inventory_case")
 
-    output_dir = tmp_path / output_name
+    workspace = _running_sari_workspace(tmp_path)
+    context = workspace["context"]
+    assert isinstance(context, dict)
+    output_dir = Path(str(context["output_dir"]))
+    run_id = run_id_override or str(workspace["run_id"])
     paths = initialize_case.initialize_case(
         output_dir,
-        run_id="SARI-TEST-001",
+        run_id=run_id,
         reference_date="2026-07-16",
         client_reference="CLIENT-REF-001",
         language=language,
+        client_engagement=Path(workspace["context_path"]),
     )
+    if include_inventory:
+        inventory.inventory_case(
+            Path(str(context["input_dir"])),
+            output_dir,
+            run_id=run_id,
+            use_ocr=False,
+            client_engagement=Path(workspace["context_path"]),
+            run_root=Path(str(context["run_root"])),
+        )
     intake = _read_json(paths["intake"])
     intake.update(
         {
@@ -221,7 +332,7 @@ def _prepare_case(
 
     source = register_source.register_source(
         output_dir=output_dir,
-        run_id="SARI-TEST-001",
+        run_id=run_id,
         source_id="SRC-SARI-001",
         source_type="official_sari_selected_result",
         title="Scheda SARI sintetica selezionata",
@@ -308,6 +419,110 @@ def _prepare_case(
     if package_case:
         packager.package_practice(output_dir)
     return output_dir, audit
+
+
+def test_started_sari_run_executes_after_customer_folder_rename(
+    tmp_path: Path,
+) -> None:
+    workspace = _running_sari_workspace(tmp_path, rename_client_folder=True)
+    initializer = _load_script("initialize_case")
+    inventory = _load_script("inventory_case")
+    context = workspace["context"]
+    assert isinstance(context, dict)
+    context_path = workspace["context_path"]
+    output_dir = Path(context["output_dir"])
+
+    initialize_status = initializer.main(
+        [
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(context_path),
+            "--reference-date",
+            "2026-08-03",
+            "--client-reference",
+            "ZECCA-REGISTRO-2026",
+        ]
+    )
+    inventory_status = inventory.main(
+        [
+            str(context["input_dir"]),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(context_path),
+            "--no-ocr",
+        ]
+    )
+
+    assert initialize_status == 0
+    assert inventory_status == 0
+    assert Path(context_path).is_relative_to(Path(workspace["client_root"]))
+    assert _read_json(output_dir / "run_intake.json")["run_id"] == workspace["run_id"]
+    assert _read_json(output_dir / "local_evidence_inventory.json")["run_id"] == (
+        workspace["run_id"]
+    )
+
+
+def test_sari_stage_rejects_output_outside_running_customer_run(
+    tmp_path: Path,
+) -> None:
+    workspace = _running_sari_workspace(tmp_path)
+    initializer = _load_script("initialize_case")
+    external_output = tmp_path / "external-output"
+
+    status = initializer.main(
+        [
+            "--output-dir",
+            str(external_output),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--reference-date",
+            "2026-08-03",
+            "--client-reference",
+            "ZECCA-REGISTRO-2026",
+        ]
+    )
+
+    assert status == 2
+    assert not external_output.exists()
+
+
+def test_sari_stage_rejects_unreceipted_external_input(tmp_path: Path) -> None:
+    workspace = _running_sari_workspace(tmp_path)
+    inventory = _load_script("inventory_case")
+    context = workspace["context"]
+    assert isinstance(context, dict)
+    external_input = tmp_path / "external-input"
+    external_input.mkdir()
+    (external_input / "not-selected.txt").write_text(
+        "This file was not selected for the run.\n",
+        encoding="utf-8",
+    )
+    output_dir = Path(context["output_dir"])
+
+    status = inventory.main(
+        [
+            str(external_input),
+            "--output-dir",
+            str(output_dir),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "--no-ocr",
+        ]
+    )
+
+    assert status == 2
+    assert not (output_dir / "local_evidence_inventory.json").exists()
+
+
+@pytest.mark.parametrize("script_name", MUTATING_SCRIPT_NAMES)
+def test_sari_writer_cli_uses_context_run_id_only(script_name: str) -> None:
+    source = (SCRIPTS_ROOT / script_name).read_text(encoding="utf-8")
+
+    assert 'add_argument("--client-engagement"' in source
+    assert "load_running_case_context(" in source
+    assert "--run-id" not in source
 
 
 def test_plugin_metadata_icon_and_trigger_fixtures_are_complete() -> None:
@@ -891,10 +1106,12 @@ def test_mcp_review_preserves_case_identifiers_but_omits_local_paths(
     run_intake["professional_question"] = PRIVATE_SARI_QUESTION
     review = _read_json(output_dir / "review_payload.json")
     final_artifacts = _read_json(output_dir / "final_artifacts.json")
+    context_path = output_dir.parent / "context.json"
 
     rendered = _tool_call(
         "render_registro_imprese_sari_review",
         {
+            "client_engagement": str(context_path),
             "run_intake": run_intake,
             "review_payload": review,
             "final_artifacts": final_artifacts,
@@ -1103,6 +1320,10 @@ def test_mcp_persists_and_applies_review_decisions_without_portal_actions(
     output_dir, _audit = _prepare_case(tmp_path)
     run_intake = _read_json(output_dir / "run_intake.json")
     review = _read_json(output_dir / "review_payload.json")
+    ledger_context = _read_json(output_dir.parent / "context.json")
+    context_path = output_dir.parent / "context.json"
+    assert run_intake["run_id"] == ledger_context["run_id"]
+    assert review["run_id"] == ledger_context["run_id"]
     decisions = [
         {"item_id": item["id"], "action": "accept"} for item in review["items"]
     ]
@@ -1110,6 +1331,7 @@ def test_mcp_persists_and_applies_review_decisions_without_portal_actions(
     saved = _tool_call(
         "save_registro_imprese_sari_decisions",
         {
+            "client_engagement": str(context_path),
             "run_intake": run_intake,
             "review_payload": review,
             "decisions": decisions[:1],
@@ -1124,6 +1346,7 @@ def test_mcp_persists_and_applies_review_decisions_without_portal_actions(
     applied = _tool_call(
         "apply_registro_imprese_sari_decisions",
         {
+            "client_engagement": str(context_path),
             "run_intake": run_intake,
             "review_payload": review,
             "decisions": decisions,
@@ -1162,12 +1385,103 @@ def test_mcp_persists_and_applies_review_decisions_without_portal_actions(
     assert contract.returncode == 0, contract.stdout + contract.stderr
 
 
+def test_sari_mcp_persists_after_customer_folder_rename(tmp_path: Path) -> None:
+    old_output_dir, _audit = _prepare_case(tmp_path, include_inventory=True)
+    old_client_root = old_output_dir.parents[5]
+    old_root_text = old_client_root.as_posix()
+    for json_path in old_output_dir.rglob("*.json"):
+        assert old_root_text not in json_path.read_text(encoding="utf-8"), json_path
+    relative_output = old_output_dir.relative_to(old_client_root)
+    renamed_client_root = old_client_root.with_name("Zecca Holding SPA")
+    old_client_root.rename(renamed_client_root)
+    output_dir = renamed_client_root / relative_output
+    context_path = output_dir.parent / "context.json"
+    run_intake = _read_json(output_dir / "run_intake.json")
+    review = _read_json(output_dir / "review_payload.json")
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    decisions = [
+        {"item_id": item["id"], "action": "accept"} for item in review["items"]
+    ]
+
+    saved = _tool_call(
+        "save_registro_imprese_sari_decisions",
+        {
+            "client_engagement": str(context_path),
+            "run_intake": run_intake,
+            "review_payload": review,
+            "decisions": decisions,
+        },
+    )
+    applied = _tool_call(
+        "apply_registro_imprese_sari_decisions",
+        {
+            "client_engagement": str(context_path),
+            "run_intake": run_intake,
+            "review_payload": review,
+            "decisions": decisions,
+            "reviewer": "REVIEWER-001",
+        },
+    )
+
+    assert saved["isError"] is False
+    assert saved["structuredContent"]["persisted"] is True
+    assert applied["isError"] is False
+    assert applied["structuredContent"]["persisted"] is True
+    assert (output_dir / "ui_decisions.json").exists()
+    assert (output_dir / "applied_decisions.json").exists()
+    assert not old_output_dir.exists()
+
+
+def test_sari_mcp_rejects_portable_output_escape_without_write(
+    tmp_path: Path,
+) -> None:
+    output_dir, _audit = _prepare_case(tmp_path)
+    context_path = output_dir.parent / "context.json"
+    run_intake = _read_json(output_dir / "run_intake.json")
+    run_intake["output_dir"] = "../outside"
+    review = _read_json(output_dir / "review_payload.json")
+    protected = {
+        path: path.read_bytes()
+        for path in (
+            output_dir / "ui_decisions.json",
+            output_dir / "final_artifacts.json",
+        )
+    }
+
+    saved = _tool_call(
+        "save_registro_imprese_sari_decisions",
+        {
+            "client_engagement": str(context_path),
+            "run_intake": run_intake,
+            "review_payload": review,
+            "decisions": [{"item_id": review["items"][0]["id"], "action": "accept"}],
+        },
+    )
+
+    assert saved["isError"] is True
+    assert "leaves the customer run" in saved["structuredContent"]["error"]
+    assert all(path.read_bytes() == before for path, before in protected.items())
+
+
+def test_sari_producer_rejects_ledger_run_id_mismatch_without_write(
+    tmp_path: Path,
+) -> None:
+    with pytest.raises(ValueError, match="run_id must match"):
+        _prepare_case(
+            tmp_path,
+            run_id_override="SARI-MISMATCHED-RUN-001",
+        )
+    assert not list(tmp_path.rglob("run_intake.json"))
+
+
 def test_widget_render_round_trip_persists_with_opaque_context(
     tmp_path: Path,
 ) -> None:
     output_dir, _audit = _prepare_case(tmp_path)
     private_run_intake = _read_json(output_dir / "run_intake.json")
     review = _read_json(output_dir / "review_payload.json")
+    context_path = output_dir.parent / "context.json"
     process = subprocess.Popen(
         [_node_or_skip(), str(PLUGIN_ROOT / "mcp" / "server.cjs"), "--stdio"],
         stdin=subprocess.PIPE,
@@ -1204,7 +1518,11 @@ def test_widget_render_round_trip_persists_with_opaque_context(
         rendered = call_tool(
             1,
             "render_registro_imprese_sari_review",
-            {"run_intake": private_run_intake, "review_payload": review},
+            {
+                "client_engagement": str(context_path),
+                "run_intake": private_run_intake,
+                "review_payload": review,
+            },
         )
         rendered_payload = rendered["structuredContent"]
         public_run_intake = rendered_payload["run_intake"]
@@ -1218,6 +1536,7 @@ def test_widget_render_round_trip_persists_with_opaque_context(
             {"item_id": item["id"], "action": "accept"} for item in review["items"]
         ]
         widget_arguments = {
+            "client_engagement": str(context_path),
             "run_intake": public_run_intake,
             "persistence_token": persistence_token,
             "review_payload": rendered_payload["review_payload"],

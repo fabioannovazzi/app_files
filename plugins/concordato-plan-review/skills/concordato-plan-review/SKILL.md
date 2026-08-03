@@ -5,11 +5,24 @@ description: Use when a user wants Codex to organize and review an Italian conco
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task
-is explicitly plugin packaging/release. For user-data runs, prefer a sibling
-`output/concordato-preventivo-<run-id>` directory next to the supplied input
-folder and pass it to every output argument.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import the case sources, then
+call `prepare_studio_client_workflow` with workflow ID
+`concordato-plan-review`. Pass the returned `client_engagement_path` as
+`--client-engagement` to the review runner, reviewer-confirmation helpers,
+assurance replay, and every review writer. Include the same path in MCP review
+calls. Cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before execution. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Revisione del Concordato Preventivo
 
@@ -139,8 +152,9 @@ before unreliable output if a required capability is unavailable.
 ### 2. Inspect in abstention
 
 ```bash
-python scripts/run_concordato_review.py /path/to/input \
-  --output-dir /path/to/inspection \
+python scripts/run_concordato_review.py <managed-input-folder> \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/inspection \
   --reference-date 2026-03-31 \
   --language it \
   --document-language it \
@@ -195,9 +209,10 @@ professional. Do not label Codex's unconfirmed draft as reviewed.
 After confirmation, seal the model:
 
 ```bash
-python scripts/review_case_model.py /path/to/inspection \
-  /path/to/reviewer-confirmed-case-model.json \
-  --output /path/to/reviewed-semantic-recipe.json \
+python scripts/review_case_model.py <client-run-output>/inspection \
+  <client-run-output>/reviewer-confirmed-case-model.json \
+  --client-engagement <client_engagement_path> \
+  --output <client-run-output>/reviewed-semantic-recipe.json \
   --reviewer-ref qualified-reviewer \
   --reviewed-on 2026-07-26 \
   --reference-date 2026-03-31
@@ -212,9 +227,10 @@ If the review requires a plan-to-accounting amount tie-out, prepare the
 separate source/token decision file and seal it with:
 
 ```bash
-python scripts/review_source_roles.py /path/to/inspection \
-  /path/to/numeric-decisions.json \
-  --output /path/to/reviewed-numeric-recipe.json
+python scripts/review_source_roles.py <client-run-output>/inspection \
+  <client-run-output>/numeric-decisions.json \
+  --client-engagement <client_engagement_path> \
+  --output <client-run-output>/reviewed-numeric-recipe.json
 ```
 
 This path requires an explicit disposition for every extracted numeric token
@@ -226,13 +242,14 @@ merely because the capability once centered on a tie-out.
 Semantic review without the numerical appendix:
 
 ```bash
-python scripts/run_concordato_review.py /path/to/input \
-  --output-dir /path/to/reviewed-output \
+python scripts/run_concordato_review.py <managed-input-folder> \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/reviewed-output \
   --reference-date 2026-03-31 \
   --language it \
   --document-language it \
   --tolerance 1 \
-  --semantic-recipe /path/to/reviewed-semantic-recipe.json
+  --semantic-recipe <client-run-output>/reviewed-semantic-recipe.json
 ```
 
 When the numerical appendix is also authorized, add:
@@ -289,7 +306,9 @@ supporting evidence.
 ### 9. Replay
 
 ```bash
-python scripts/replay_assurance.py --output-dir /path/to/reviewed-output
+python scripts/replay_assurance.py \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/reviewed-output
 ```
 
 Use `references/workflow-reference.md` for the normative authority and replay

@@ -10,6 +10,7 @@ from collections.abc import Callable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
+from managed_case_inputs import declared_case_input_paths
 from preparation_contract_kernel import (
     PinnedDirectory,
     canonical_json_sha256,
@@ -52,6 +53,11 @@ def _activate_financial_analysis() -> None:
 
 _activate_financial_analysis()
 
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 from vera_financial_analysis import (  # noqa: E402
     FDD_ENGINE_VERSION,
     FDD_OUTPUT_ROLES,
@@ -621,14 +627,27 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--pack", choices=sorted(FDD_PACK_RECIPES), required=True)
     parser.add_argument("--case", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="financial-analysis",
+            input_paths=[args.case],
+            output_dir=args.output_dir,
+        )
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="financial-analysis",
+            input_paths=declared_case_input_paths(args.case, args.pack),
+            output_dir=args.output_dir,
+        )
         result = prepare_fdd_case(
             args.case,
             args.output_dir,
             expected_pack_id=args.pack,
         )
-    except (OSError, TypeError, ValueError) as exc:
+    except (AssuranceContractError, OSError, TypeError, ValueError) as exc:
         LOGGER.error("FAILED: %s", exc)
         return 2
     LOGGER.info("PASSED: %s", args.output_dir)

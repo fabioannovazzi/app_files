@@ -69,7 +69,8 @@ def _write_inventory(
         "created_at": "2026-07-16T08:00:00+00:00",
         "completed_at": "2026-07-16T08:01:00+00:00",
         "reference_date": None,
-        "output_dir": output_dir.resolve().as_posix(),
+        "path_reference": "run_root_relative",
+        "output_dir": output_dir.name,
         "data_posture": {
             "local_only": True,
             "network_calls_by_scripts": False,

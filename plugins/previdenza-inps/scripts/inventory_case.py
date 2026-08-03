@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -27,6 +28,22 @@ __all__ = ["main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
+
 PORTAL_CAPTURE_RESERVED_NAMES = frozenset(
     {
         PORTAL_CAPTURE_MANIFEST_NAME,
@@ -69,6 +86,72 @@ PORTAL_EXPORT_ARTIFACT_PREFIX = "inps-export-"
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _run_relative_path(path: Path, run_root: Path) -> str:
+    """Return a portable path anchored to the current workflow run."""
+
+    resolved_root = run_root.expanduser().resolve(strict=True)
+    resolved_path = path.expanduser().resolve(strict=True)
+    try:
+        return resolved_path.relative_to(resolved_root).as_posix()
+    except ValueError as exc:
+        raise ValueError("workflow path is outside the current run") from exc
+
+
+def _authorize_managed_ocr_paths(
+    args: argparse.Namespace,
+    context: dict[str, Any],
+) -> None:
+    """Require every possible OCR write target to stay in current-run outputs.
+
+    This deterministic boundary is justified by security and auditability: path
+    ancestry and model-download destinations are mechanically verifiable before
+    an OCR adapter can create cache or model files.
+    """
+
+    if args.allow_ocr_model_download and args.ocr_cache_dir is None:
+        raise AssuranceContractError(
+            "managed OCR model download requires --ocr-cache-dir inside the "
+            "current run outputs"
+        )
+    if args.ocr_cache_dir is not None:
+        try:
+            validate_client_workflow_run(
+                context,
+                expected_workflow_id="previdenza-inps",
+                output_dir=args.ocr_cache_dir,
+            )
+        except AssuranceContractError as exc:
+            raise AssuranceContractError(
+                "OCR cache path must stay inside the current run outputs"
+            ) from exc
+    for label, path in (
+        ("OCR detection model", args.ocr_detection_model_dir),
+        ("OCR recognition model", args.ocr_recognition_model_dir),
+    ):
+        if path is None:
+            continue
+        try:
+            validate_client_workflow_run(
+                context,
+                expected_workflow_id="previdenza-inps",
+                output_dir=path,
+            )
+            continue
+        except AssuranceContractError:
+            pass
+        try:
+            validate_client_workflow_run(
+                context,
+                expected_workflow_id="previdenza-inps",
+                input_paths=[path],
+            )
+        except AssuranceContractError as exc:
+            raise AssuranceContractError(
+                f"{label} path must be an exact receipt or stay inside the "
+                "current run outputs"
+            ) from exc
 
 
 def _named_paths(input_dir: Path, names: frozenset[str]) -> set[Path]:
@@ -151,6 +234,7 @@ def _portal_export_artifact_paths(input_dir: Path) -> set[Path]:
 def _initial_run_intake(
     args: argparse.Namespace,
     output_dir: Path,
+    context: dict[str, Any],
     ocr_language: str,
     portal_capture: dict[str, Any] | None,
     portal_export: dict[str, Any] | None,
@@ -163,12 +247,11 @@ def _initial_run_intake(
         "plugin": "previdenza-inps",
         "workflow": "previdenza-inps",
         "status": "inventory_in_progress",
-        "run_id": (
-            "previdenza-inps-" f"{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}"
-        ),
-        "created_at": _utc_now(),
-        "input_paths": [args.input_dir.expanduser().resolve().as_posix()],
-        "output_dir": output_dir.as_posix(),
+        "run_id": context["run_id"],
+        "created_at": context["created_at"],
+        "path_reference": "run_root_relative",
+        "input_paths": [_run_relative_path(args.input_dir, Path(context["run_root"]))],
+        "output_dir": _run_relative_path(output_dir, Path(context["run_root"])),
         "working_language": args.language,
         "reference_date": args.reference_date or None,
         "assumptions": [],
@@ -183,7 +266,9 @@ def _initial_run_intake(
             "local_only": not args.allow_ocr_model_download and not connector_used,
             "network_calls_by_scripts": connector_used,
             "network_access_allowed_for_model_weights": (args.allow_ocr_model_download),
-            "local_files_read": [args.input_dir.expanduser().resolve().as_posix()],
+            "local_files_read": [
+                _run_relative_path(args.input_dir, Path(context["run_root"]))
+            ],
             "external_connectors_used": [],
             "external_routes_used": [],
             "upload_paths_used": [],
@@ -371,6 +456,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("input_dir", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument(
         "--language", choices=("it", "en", "fr", "de", "es"), default="it"
     )
@@ -414,6 +500,23 @@ def main(argv: list[str] | None = None) -> int:
         parser.error(
             "--portal-capture-manifest and --portal-export-manifest are mutually exclusive"
         )
+    input_paths = [args.input_dir]
+    input_paths.extend(
+        path
+        for path in (args.portal_capture_manifest, args.portal_export_manifest)
+        if path is not None
+    )
+    try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="previdenza-inps",
+            input_paths=input_paths,
+            output_dir=args.output_dir,
+        )
+        _authorize_managed_ocr_paths(args, context)
+    except AssuranceContractError as exc:
+        LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 1
     ocr_language = args.ocr_language or args.language
 
     try:
@@ -432,7 +535,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     run_intake = _initial_run_intake(
-        args, output_dir, ocr_language, portal_capture, portal_export
+        args, output_dir, context, ocr_language, portal_capture, portal_export
     )
     write_json(output_dir / "run_intake.json", run_intake)
     try:
@@ -474,6 +577,13 @@ def main(argv: list[str] | None = None) -> int:
                 if portal_capture is not None
                 else None
             ),
+            input_dir_reference=_run_relative_path(
+                args.input_dir, Path(context["run_root"])
+            ),
+            output_dir_reference=_run_relative_path(
+                output_dir, Path(context["run_root"])
+            ),
+            allow_implicit_ocr_model_paths=False,
         )
     except (FileNotFoundError, PermissionError, ValueError) as exc:
         run_intake["status"] = "inventory_failed"

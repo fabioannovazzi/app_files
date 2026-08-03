@@ -49,12 +49,20 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task is
-explicitly plugin packaging/release. For user-data runs, choose an output
-directory outside the repo, preferably a sibling
-`output/financial-analysis-<run-id>` folder next to the user-provided input
-folder, and pass that path to every output argument.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client boundary in Cowork
+
+Cowork does not package Studio Archive, so it cannot select or register its
+local clients, import controlled snapshots, prepare or start customer-folder
+runs, or finalize their artifact manifests. Use a product CLI only when a
+compatible local Vera installation supplied a digest-valid, running
+`vera.client_workflow_context.v2` for this exact workflow and its complete
+customer-folder ledger paths are available. Otherwise work from the exact
+connected files, preserve a reviewable file-based handoff, and state that the
+sealed customer-folder run remains pending. Never invent an ID, receipt,
+lifecycle state, or completed artifact declaration.
 
 # Vera Financial Analysis
 
@@ -170,8 +178,9 @@ module.
 ```bash
 python scripts/run_pack.py \
   --pack <registered-pack-id> \
-  --case <case.json> \
-  --output-dir <output-dir>/prepared
+  --case <client-run-output>/case.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/prepared
 ```
 
    Registered pack IDs are `monthly_pnl`, `working_capital`,
@@ -202,6 +211,7 @@ python scripts/run_pack.py \
 
 ```bash
 python scripts/validate_case_contracts.py \
+  --client-engagement <client_engagement_path> \
   --package <data_package_manifest.json> \
   --dataset <dataset_contract.json> \
   --relationship <relationship_contract.json> \
@@ -209,7 +219,7 @@ python scripts/validate_case_contracts.py \
   --request <analysis_pack_request.json> \
   --reconciliation <reconciliation_result.json> \
   --prepared-manifest <prepared_evidence_manifest.json> \
-  --output <financial_analysis_contract_audit.json>
+  --output <client-run-output>/financial_analysis_contract_audit.json
 ```
 
 Repeat `--dataset`, `--relationship`, or `--crosswalk` as needed. Omit the

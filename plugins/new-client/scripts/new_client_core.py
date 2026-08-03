@@ -69,6 +69,7 @@ APPLICABILITY_TOPICS = (
 SCREENING_TYPES = ("pep", "sanctions", "country")
 SUPPORTED_LANGUAGES = ("it", "en", "fr", "de", "es")
 SUPPORTED_JURISDICTIONS = ("IT",)
+PORTABLE_PATH_REFERENCES = {"run_root_relative", "plugin_root_relative"}
 ITALY_COUNTRY_PACK = "it-professional-setup-2026"
 TEMPORAL_VALIDITY_POLICY = "inclusive_earliest_material_deadline_v1"
 TEMPORAL_APPLY_RULE = "system_utc_date_must_not_exceed_valid_through"
@@ -495,6 +496,22 @@ def _require_sha256(value: Any, field: str) -> str:
     return digest
 
 
+def _validate_optional_path_reference(
+    value: Mapping[str, Any], *, key: str, field: str
+) -> None:
+    """Validate an optional explicit portable-path scope.
+
+    Fixed path-scope codes are appropriate because containment and replay are
+    mechanical security properties, not professional or legal judgments.
+    """
+
+    reference = value.get(key)
+    if reference is not None and reference not in PORTABLE_PATH_REFERENCES:
+        raise ValidationError(
+            f"{field} must be run_root_relative or plugin_root_relative."
+        )
+
+
 def _resolve_local_file(path_value: Any, *, field: str, base_dir: Path) -> Path:
     raw_path = Path(_require_string(path_value, field)).expanduser()
     candidate = raw_path if raw_path.is_absolute() else base_dir / raw_path
@@ -795,6 +812,11 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
                 evidence.get("local_path"),
                 f"evidence_register[{index}].local_path",
             )
+        _validate_optional_path_reference(
+            evidence,
+            key="local_path_reference",
+            field=f"evidence_register[{index}].local_path_reference",
+        )
         if evidence.get("status") in {"verified", "available"}:
             if evidence.get("sha256") is None or evidence.get("local_path") is None:
                 raise ValidationError(
@@ -807,7 +829,7 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
     )
     binding_mode = client_file_preparation_binding.get("mode")
     if binding_mode == "client_file_preparation_run":
-        expected_binding_fields = {
+        required_binding_fields = {
             "mode",
             "run_id",
             "final_artifacts_path",
@@ -815,10 +837,16 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
             "upstream_package_hash",
             "promoted_evidence_ids",
         }
-        if set(client_file_preparation_binding) != expected_binding_fields:
+        allowed_binding_fields = required_binding_fields | {
+            "final_artifacts_path_reference"
+        }
+        if not required_binding_fields.issubset(
+            client_file_preparation_binding
+        ) or not set(client_file_preparation_binding).issubset(allowed_binding_fields):
             raise ValidationError(
                 "client_file_preparation_binding client_file_preparation_run fields must be exactly: "
-                + ", ".join(sorted(expected_binding_fields))
+                + ", ".join(sorted(required_binding_fields))
+                + "; final_artifacts_path_reference is optional"
             )
         _require_reference(
             client_file_preparation_binding.get("run_id"),
@@ -835,6 +863,11 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         _require_sha256(
             client_file_preparation_binding.get("upstream_package_hash"),
             "client_file_preparation_binding.upstream_package_hash",
+        )
+        _validate_optional_path_reference(
+            client_file_preparation_binding,
+            key="final_artifacts_path_reference",
+            field="client_file_preparation_binding.final_artifacts_path_reference",
         )
         _validate_evidence_ids(
             client_file_preparation_binding.get("promoted_evidence_ids", []),
@@ -1779,6 +1812,11 @@ def validate_new_client_input(payload: Mapping[str, Any]) -> dict[str, Any]:
         )
         _require_string(
             template.get("local_path"), f"template_references[{index}].local_path"
+        )
+        _validate_optional_path_reference(
+            template,
+            key="local_path_reference",
+            field=f"template_references[{index}].local_path_reference",
         )
         _require_sha256(template.get("sha256"), f"template_references[{index}].sha256")
         template_source_ids = _require_list(
@@ -5545,7 +5583,10 @@ def validate_contract(output_dir: Path) -> dict[str, Any]:
         outputs_by_name=by_name,
     )
     run_id = _require_reference(manifest.get("run_id"), "final_artifacts.run_id")
-    if not re.fullmatch(r"new-client-[0-9]{14,}-[0-9a-f]{12}", run_id):
+    if not re.fullmatch(
+        r"(?:run_[0-9a-f]{24}|new-client-[0-9]{14,}-[0-9a-f]{12})",
+        run_id,
+    ):
         raise ValidationError(
             "final_artifacts.run_id must be opaque and contract-shaped."
         )

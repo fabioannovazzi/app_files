@@ -394,6 +394,24 @@ def test_vera_source_manifest_uses_approved_subtitle() -> None:
     )
 
 
+def test_vera_prefers_word_for_local_docx_visual_review() -> None:
+    skill_path = ROOT / "plugins" / "vera" / "skills" / "vera" / "SKILL.md"
+    skill_text = skill_path.read_text(encoding="utf-8")
+    normalized_skill_text = " ".join(skill_text.split())
+
+    assert "A structural DOCX check does not establish" in normalized_skill_text
+    assert (
+        "use Word as the preferred application and rendering reference"
+        in normalized_skill_text
+    )
+    assert "LibreOffice may be used only as a fallback" in normalized_skill_text
+    assert (
+        "A LibreOffice launch, conversion, or local permission failure is not evidence "
+        "that visual review is impossible" in normalized_skill_text
+    )
+    assert "Never describe a DOCX as visually validated" in normalized_skill_text
+
+
 def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     builder = load_builder()
     vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]

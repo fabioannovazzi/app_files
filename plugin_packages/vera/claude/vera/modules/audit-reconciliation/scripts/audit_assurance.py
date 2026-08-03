@@ -132,6 +132,7 @@ def _add_vera_assurance_module_path() -> Path:
 VERA_ASSURANCE_ROOT = _add_vera_assurance_module_path()
 
 from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
     artifact_receipt,
     build_allocation_ledger,
     build_gate_register,
@@ -140,6 +141,7 @@ from vera_assurance import (  # noqa: E402
     canonical_json_sha256,
     decimal_text,
     file_snapshot,
+    load_client_engagement_context_file,
     parse_canonical_decimal,
     validate_allocation_ledger,
     validate_artifact_receipt,
@@ -681,19 +683,22 @@ def _validate_source_boundary(
 
     root = Path(source_root).resolve()
     physical: set[str] = set()
-    for path in root.iterdir():
-        if path.name.startswith("."):
+    for path in root.rglob("*"):
+        relative = path.relative_to(root)
+        if any(part.startswith(".") for part in relative.parts):
             continue
         file_stat = path.lstat()
-        if (
-            path.is_symlink()
-            or not stat.S_ISREG(file_stat.st_mode)
-            or file_stat.st_nlink != 1
-        ):
+        if path.is_symlink():
+            raise AssuranceRunError(
+                "source boundary entries must not be symbolic links"
+            )
+        if stat.S_ISDIR(file_stat.st_mode):
+            continue
+        if not stat.S_ISREG(file_stat.st_mode) or file_stat.st_nlink != 1:
             raise AssuranceRunError(
                 "source boundary entries must be ordinary single-link regular files"
             )
-        physical.add(path.relative_to(root).as_posix())
+        physical.add(relative.as_posix())
     declared = {str(receipt["path"]) for receipt in receipts}
     if physical != declared:
         raise AssuranceRunError(
@@ -1468,6 +1473,85 @@ def _validate_prepared_population(
             raise AssuranceRunError("source qualification emitted row count is stale")
 
 
+def _portable_client_engagement_context(
+    value: Mapping[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Return the path-free identity persisted in managed run artifacts."""
+
+    if value is None:
+        return None
+    if value.get("schema_version") != "vera.client_workflow_context.v2":
+        return dict(value)
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: value[field] for field in portable_fields}
+
+
+def _is_review_transaction_output(output_dir: Path, run_root: Path) -> bool:
+    """Recognize the private copy used by an Audit review transaction."""
+
+    return (
+        output_dir.name == "working"
+        and output_dir.parent.name.startswith(".audit-review-transaction-")
+        and output_dir.parent.parent == run_root
+    )
+
+
+def _current_client_engagement(
+    portable: Mapping[str, Any], *, output_dir: Path
+) -> dict[str, Any]:
+    """Hydrate a persisted run identity from its current customer tree."""
+
+    out_dir = Path(output_dir).resolve()
+    context_candidates = [out_dir.parent / "context.json"]
+    if out_dir.name == "working" and out_dir.parent.name.startswith(
+        ".audit-review-transaction-"
+    ):
+        context_candidates.append(out_dir.parent.parent / "context.json")
+    context_path = next((path for path in context_candidates if path.is_file()), None)
+    if context_path is None:
+        raise AssuranceRunError(
+            "current Audit Reconciliation customer-run context is unavailable"
+        )
+    try:
+        current = load_client_engagement_context_file(
+            context_path,
+            expected_workflow_id="audit-reconciliation",
+            allowed_statuses=("running", "ready_for_review", "completed"),
+        )
+    except ValueError as exc:
+        raise AssuranceRunError(
+            f"current Audit Reconciliation customer-run context is invalid: {exc}"
+        ) from exc
+    if _portable_client_engagement_context(current) != dict(portable):
+        raise AssuranceRunError(
+            "client engagement does not match the current customer-run context"
+        )
+    current_output = Path(current["output_dir"]).resolve()
+    current_run_root = Path(current["run_root"]).resolve()
+    if out_dir != current_output and not _is_review_transaction_output(
+        out_dir, current_run_root
+    ):
+        raise AssuranceRunError(
+            "client engagement output_dir does not match the assurance run"
+        )
+    return current
+
+
 def _validated_client_engagement(
     value: Mapping[str, Any] | None,
     *,
@@ -1482,7 +1566,17 @@ def _validated_client_engagement(
         normalized = validate_client_engagement_context(value)
     except ValueError as exc:
         raise AssuranceRunError(f"client engagement is invalid: {exc}") from exc
-    if Path(normalized["output_dir"]).resolve() != Path(output_dir).resolve():
+    if (
+        normalized["schema_version"] == "vera.client_workflow_context.v2"
+        and "output_dir" not in normalized
+    ):
+        normalized = _current_client_engagement(normalized, output_dir=output_dir)
+    normalized_output = Path(normalized["output_dir"]).resolve()
+    normalized_run_root = Path(normalized.get("run_root") or normalized_output.parent)
+    requested_output = Path(output_dir).resolve()
+    if requested_output != normalized_output and not _is_review_transaction_output(
+        requested_output, normalized_run_root
+    ):
         raise AssuranceRunError(
             "client engagement output_dir does not match the assurance run"
         )
@@ -1493,6 +1587,72 @@ def _validated_client_engagement(
             "client engagement input_dir does not match the receipted source root"
         )
     return normalized
+
+
+def _persisted_source_root(
+    source_root: Path | None,
+    client_engagement: Mapping[str, Any] | None,
+) -> str | None:
+    """Persist a managed source boundary relative to its current run root."""
+
+    if source_root is None:
+        return None
+    resolved = Path(source_root).resolve()
+    if (
+        isinstance(client_engagement, Mapping)
+        and client_engagement.get("schema_version") == "vera.client_workflow_context.v2"
+    ):
+        run_root = Path(str(client_engagement["run_root"])).resolve()
+        try:
+            relative = resolved.relative_to(run_root)
+        except ValueError as exc:
+            raise AssuranceRunError(
+                "managed assurance source_root is outside the run root"
+            ) from exc
+        if not relative.parts or ".." in relative.parts:
+            raise AssuranceRunError(
+                "managed assurance source_root must identify a run artifact"
+            )
+        return relative.as_posix()
+    return resolved.as_posix()
+
+
+def _resolved_source_root(
+    value: object,
+    client_engagement: Mapping[str, Any] | None,
+) -> Path | None:
+    """Resolve a sealed source boundary against the current managed run."""
+
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value:
+        raise AssuranceRunError("source_root must be path text or null")
+    reference = Path(value)
+    if (
+        isinstance(client_engagement, Mapping)
+        and client_engagement.get("schema_version") == "vera.client_workflow_context.v2"
+    ):
+        run_root = Path(str(client_engagement["run_root"])).resolve()
+        if reference.is_absolute() or reference == Path(".") or ".." in reference.parts:
+            raise AssuranceRunError(
+                "managed assurance source_root must be run-root-relative"
+            )
+        resolved = (run_root / reference).resolve()
+        try:
+            resolved.relative_to(run_root)
+        except ValueError as exc:
+            raise AssuranceRunError(
+                "managed assurance source_root leaves the current run"
+            ) from exc
+        expected_input = Path(str(client_engagement["input_dir"])).resolve()
+        if resolved != expected_input:
+            raise AssuranceRunError(
+                "client engagement input_dir does not match the receipted source root"
+            )
+        return resolved
+    if not reference.is_absolute():
+        raise AssuranceRunError("standalone source_root must be absolute text")
+    return reference.resolve()
 
 
 def prepare_assurance_run(
@@ -1571,7 +1731,9 @@ def prepare_assurance_run(
     )
     prepared_payload = {
         "schema_version": "audit_reconciliation.prepared_records.v2",
-        "client_engagement": normalized_client_engagement,
+        "client_engagement": _portable_client_engagement_context(
+            normalized_client_engagement
+        ),
         "open_items": list(open_items),
         "evidence_rows": list(evidence_rows),
         "assumptions": prepared_assumptions,
@@ -5405,7 +5567,9 @@ def _finalize_assurance_run_in_place(
             "unqualified sources cannot produce reconciliation or final artifacts"
         )
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
-    if prepared.get("client_engagement") != client_engagement:
+    if prepared.get("client_engagement") != _portable_client_engagement_context(
+        client_engagement
+    ):
         raise AssuranceRunError("client engagement changed after the prepared boundary")
     _validate_prepared_population(
         open_items=prepared["open_items"],
@@ -5490,7 +5654,7 @@ def _finalize_assurance_run_in_place(
     )
     reconciliation_payload = {
         "schema_version": RECONCILIATION_RESULTS_SCHEMA_VERSION,
-        "client_engagement": client_engagement,
+        "client_engagement": _portable_client_engagement_context(client_engagement),
         "source_processing": normalized_source_processing,
         "reconciliation_rows": list(reconciliation_rows),
         "allocation_ledgers": normalized_allocations,
@@ -5763,8 +5927,11 @@ def _finalize_assurance_run_in_place(
         "schema_version": ASSURANCE_SCHEMA_VERSION,
         "run_id": _sealed_run_id(out_dir, professional_review),
         "run_date": run_date,
-        "client_engagement": client_engagement,
-        "source_root": str(source_root) if source_root else None,
+        "client_engagement": _portable_client_engagement_context(client_engagement),
+        "source_root": _persisted_source_root(
+            Path(str(source_root)) if source_root else None,
+            client_engagement,
+        ),
         "source_receipts": source_receipts,
         "reviewed_source_decisions": source_decisions,
         "source_qualifications": normalized_qualifications,
@@ -6060,11 +6227,17 @@ def validate_assurance_run(
         **_implementation_roots(plugin_root),
         "run": out_dir,
     }
-    source_root = payload["source_root"]
+    client_engagement = _validated_client_engagement(
+        payload["client_engagement"],
+        output_dir=out_dir,
+        source_root=None,
+    )
+    source_root = _resolved_source_root(
+        payload["source_root"],
+        client_engagement,
+    )
     if source_root is not None:
-        if not isinstance(source_root, str) or not source_root:
-            raise AssuranceRunError("source_root must be absolute text or null")
-        roots["source"] = Path(source_root).resolve()
+        roots["source"] = source_root
     source_receipts = validate_receipt_set(
         roots,
         payload["source_receipts"],
@@ -6072,15 +6245,9 @@ def validate_assurance_run(
     if source_receipts:
         if source_root is None:
             raise AssuranceRunError("source receipts require source_root")
-        _validate_source_boundary(Path(source_root), source_receipts)
+        _validate_source_boundary(source_root, source_receipts)
     elif source_root is not None:
         raise AssuranceRunError("source_root is not allowed without source receipts")
-    client_engagement = _validated_client_engagement(
-        payload["client_engagement"],
-        output_dir=out_dir,
-        source_root=(Path(source_root) if source_root is not None else None),
-    )
-
     implementation_receipts = validate_receipt_set(
         roots,
         payload["implementation_receipts"],
@@ -6141,7 +6308,9 @@ def validate_assurance_run(
         or not isinstance(prepared["assumptions"], dict)
     ):
         raise AssuranceRunError("prepared record boundary has invalid fields")
-    if prepared["client_engagement"] != client_engagement:
+    if prepared["client_engagement"] != _portable_client_engagement_context(
+        client_engagement
+    ):
         raise AssuranceRunError("prepared client engagement is stale")
     if prepared["assumptions"].get("assurance_run_date") != run_date:
         raise AssuranceRunError("prepared run date is stale")
@@ -6192,7 +6361,9 @@ def validate_assurance_run(
         or result["schema_version"] != RECONCILIATION_RESULTS_SCHEMA_VERSION
     ):
         raise AssuranceRunError("sealed reconciliation result has invalid fields")
-    if result["client_engagement"] != client_engagement:
+    if result["client_engagement"] != _portable_client_engagement_context(
+        client_engagement
+    ):
         raise AssuranceRunError("sealed reconciliation client engagement is stale")
     for field in (
         "reconciliation_rows",
@@ -6529,7 +6700,23 @@ def _command_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Replay Audit Reconciliation assurance controls."
     )
+    parser.add_argument(
+        "--client-engagement",
+        type=Path,
+        required=True,
+        help="Absolute path to the current portable customer-run context.json.",
+    )
+    parser.add_argument(
+        "--persistent-output-dir",
+        type=Path,
+        help=argparse.SUPPRESS,
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
+    context = subparsers.add_parser(
+        "validate-context-json",
+        help="Validate the running customer-folder boundary without writing.",
+    )
+    context.add_argument("output_dir")
     replay = subparsers.add_parser(
         "validate-run-json",
         help="Replay a sealed run and emit the bounded MCP bridge result.",
@@ -6553,8 +6740,118 @@ def _command_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _is_ephemeral_review_working_tree(path: Path, *, run_root: Path) -> bool:
+    """Recognize the MCP copy-on-write tree, which is never persisted."""
+
+    try:
+        relative = path.relative_to(run_root)
+    except ValueError:
+        return False
+    return (
+        len(relative.parts) == 2
+        and relative.parts[0].startswith(".generated-review-transaction-")
+        and relative.parts[1] == "working"
+    )
+
+
+def _load_cli_customer_run(args: argparse.Namespace) -> dict[str, Any]:
+    """Close the CLI's persistent target to one running portable workflow run."""
+
+    context = load_client_engagement_context_file(
+        args.client_engagement,
+        expected_workflow_id="audit-reconciliation",
+    )
+    expected_output = Path(context["output_dir"])
+    persistent_output = (
+        Path(args.persistent_output_dir).expanduser().resolve()
+        if args.persistent_output_dir is not None
+        else expected_output
+    )
+    if persistent_output.expanduser().resolve() != expected_output:
+        raise AssuranceContractError(
+            "persistent assurance output must be the customer run output root"
+        )
+    load_client_engagement_context_file(
+        args.client_engagement,
+        expected_workflow_id="audit-reconciliation",
+        output_dir=persistent_output,
+    )
+    actual_output = Path(args.output_dir).expanduser().resolve(strict=True)
+    if actual_output == expected_output or actual_output.is_relative_to(
+        expected_output
+    ):
+        load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="audit-reconciliation",
+            input_paths=[actual_output],
+            output_dir=actual_output,
+        )
+        return context
+    run_root = Path(context["run_root"])
+    if not _is_ephemeral_review_working_tree(actual_output, run_root=run_root):
+        raise AssuranceContractError(
+            "assurance input is outside the customer run and its ephemeral review tree"
+        )
+    return context
+
+
+def _validate_transition_capture_path(
+    capture_dir: Path,
+    *,
+    output_dir: Path,
+    context: Mapping[str, Any],
+) -> None:
+    """Keep the temporary predecessor capture inside the current run transaction."""
+
+    capture = capture_dir.expanduser().resolve()
+    output = output_dir.expanduser().resolve(strict=True)
+    run_root = Path(str(context["run_root"]))
+    allowed_parents = {run_root, output.parent}
+    if capture.parent not in allowed_parents or not capture.name.startswith(
+        ".audit-review-transition-capture-"
+    ):
+        raise AssuranceContractError(
+            "transition capture must be a private temporary path in the current run"
+        )
+
+
 def _main(argv: Sequence[str] | None = None) -> int:
     args = _command_parser().parse_args(argv)
+    try:
+        client_context = _load_cli_customer_run(args)
+        if args.command in {
+            "capture-review-transition-json",
+            "retain-review-transition-json",
+        }:
+            _validate_transition_capture_path(
+                Path(args.capture_dir),
+                output_dir=Path(args.output_dir),
+                context=client_context,
+            )
+    except (AssuranceContractError, OSError) as exc:
+        sys.stdout.write(
+            json.dumps(
+                {"ok": False, "error": f"customer run boundary failed: {exc}"},
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            + "\n"
+        )
+        return 1
+    if args.command == "validate-context-json":
+        sys.stdout.write(
+            json.dumps(
+                {
+                    "ok": True,
+                    "workflow_id": client_context["workflow_id"],
+                    "run_id": client_context["run_id"],
+                },
+                ensure_ascii=False,
+                separators=(",", ":"),
+            )
+            + "\n"
+        )
+        return 0
     if args.command in {
         "capture-review-transition-json",
         "retain-review-transition-json",

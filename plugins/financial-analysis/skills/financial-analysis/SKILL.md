@@ -5,12 +5,24 @@ description: Use when Vera must prepare controlled accounting analysis or fixed 
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`,
-`protected_downloads`, or any GitHub Pages/static-site folder unless the task is
-explicitly plugin packaging/release. For user-data runs, choose an output
-directory outside the repo, preferably a sibling
-`output/financial-analysis-<run-id>` folder next to the user-provided input
-folder, and pass that path to every output argument.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import the reviewed datasets
+and case contract, then call `prepare_studio_client_workflow` with workflow ID
+`financial-analysis`. Pass the returned `client_engagement_path` as
+`--client-engagement` to `run_pack.py` and every directly invoked preparation
+or contract-validation writer. Use only the context's run folder or its
+documented children; cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before execution. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Vera Financial Analysis
 
@@ -126,8 +138,9 @@ module.
 ```bash
 python scripts/run_pack.py \
   --pack <registered-pack-id> \
-  --case <case.json> \
-  --output-dir <output-dir>/prepared
+  --case <client-run-output>/case.json \
+  --client-engagement <client_engagement_path> \
+  --output-dir <client-run-output>/prepared
 ```
 
    Registered pack IDs are `monthly_pnl`, `working_capital`,
@@ -158,6 +171,7 @@ python scripts/run_pack.py \
 
 ```bash
 python scripts/validate_case_contracts.py \
+  --client-engagement <client_engagement_path> \
   --package <data_package_manifest.json> \
   --dataset <dataset_contract.json> \
   --relationship <relationship_contract.json> \
@@ -165,7 +179,7 @@ python scripts/validate_case_contracts.py \
   --request <analysis_pack_request.json> \
   --reconciliation <reconciliation_result.json> \
   --prepared-manifest <prepared_evidence_manifest.json> \
-  --output <financial_analysis_contract_audit.json>
+  --output <client-run-output>/financial_analysis_contract_audit.json
 ```
 
 Repeat `--dataset`, `--relationship`, or `--crosswalk` as needed. Omit the

@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must identify or create one client workspace, import journal/support files into a durable engagement, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
+description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
 ---
 
 ## Surface routing
@@ -36,19 +36,23 @@ Desktop route.
 
 Never write run outputs inside this Git workspace, `static/shared`,
 `protected_downloads`, or any GitHub Pages/static-site folder unless the task is
-explicitly plugin packaging/release. Studio Archive keeps its persistent,
-derived index in the private state directory, normally
-`~/.mparanza/vera-studio-archive`. Never place that state inside the source
-archive or a synced/shared folder.
+explicitly plugin packaging/release. Every local Vera run writes only inside
+the selected customer folder at
+`Vera/engagements/<engagement-id>/runs/<run-id>/outputs`. Studio Archive keeps
+only its rebuildable search index, local configuration, and optional private
+contact metadata in the machine-local state directory, normally
+`~/.mparanza/vera-studio-archive`. Never place that private state inside the
+shared archive. It is not the source of truth for engagement inputs, runs, or
+artifacts.
 
 # Vera · Archivio dello Studio
 
 For the optional local document route, use one shared or synced source folder
-and duplicate only the derived index. Each professional configures the folder
-on their own computer and receives a separate SQLite FTS5 index, client
-identity registry, configuration, Codex context, and ChatGPT history. Do not
-create a shared database, shared account, vector service, or permissions layer
-in this first version.
+whose immediate child directories are customer folders. Each customer folder
+contains its portable Vera ledger; each professional duplicates only the
+derived SQLite FTS5 index, local configuration, optional private contact
+metadata, Codex context, and ChatGPT history. Do not create a shared database,
+shared account, vector service, or permissions layer in this first version.
 
 ChatGPT web and mobile may run the connected Gmail route and may review material
 supplied in the conversation. They must not claim to control WhatsApp Desktop,
@@ -57,22 +61,23 @@ index local folders, run local scripts, or create a persistent local archive.
 Search, indexing, and source opening never edit existing source documents.
 Immediate child directories become exact search scopes; supported root-level
 files receive their own root scope. Two separately authorized intake actions
-may write: New client creates one safely derived top-level folder, and document
-import copies one user-selected regular file into that client's generated
-`Vera engagements/<engagement-id>/inputs` subtree. Neither action renames,
-deletes, or overwrites an existing file. Refresh detects and adopts top-level
-scope-folder changes; explicit configuration also repairs them. The index never
-follows symbolic links.
+may write: New Client creates one safely derived top-level folder, and document
+import copies one user-selected regular file into that customer's
+`Vera/engagements/<engagement-id>/inputs/<input-id>` subtree. Neither action
+renames, deletes, or overwrites an existing file. Refresh detects top-level
+scope-folder changes and reads the stable identity from `Vera/client.json`.
+The index never follows symbolic links.
 
 ## Client and engagement intake
 
-Studio Archive is the source of truth for Vera's durable client and engagement
-boundary in Codex. Folder names are labels; a private `client_...` ID is the
-stable identity, and a private `eng_...` ID connects the journal, sample,
-support, and later checks even after the initiating chat is archived. Never
-infer the client from the journal filename or silently create a client.
+The selected customer folder is the source of truth for Vera's durable client,
+engagement, input, run, lifecycle, and artifact records in Codex. Folder names
+are labels; `Vera/client.json` carries the stable `client_...` identity, and
+each `Vera/engagements/<engagement-id>/engagement.json` carries one stable
+`eng_...` identity. These records survive an archived chat and a folder rename.
+Never infer the client from a filename or silently create a client.
 
-Use this exact chat workflow when a professional starts with a journal file:
+Use this exact chat workflow whenever a professional starts client work:
 
 1. Call `list_studio_archive_clients`. Compare the user's stated client with
    registered identities and unregistered top-level scopes semantically; exact
@@ -83,46 +88,92 @@ Use this exact chat workflow when a professional starts with a journal file:
    wording and the listed records do not already establish that choice.
    Before the first file copy, show the selected client and obtain the user's
    confirmation.
-3. For an existing registered client, retain its `client_id`. For an existing
-   but unregistered scope, call `configure_studio_archive_client` with the
-   confirmed scope and at least one confirmed legal name, email/PEC address, or
-   tax identifier; retain the returned `client_id`.
+3. For an existing registered client, retain the `client_id` recovered from its
+   customer-folder manifest. For an existing but unregistered scope, call
+   `configure_studio_archive_client` with the confirmed scope and at least one
+   confirmed legal name, email/PEC address, or tax identifier; retain the
+   returned `client_id`. This writes `Vera/client.json` in that customer folder.
 4. Only after the user chooses New client, call
    `create_studio_archive_client` with the confirmed legal name. Vera derives a
    safe folder label; the user does not need to invent a folder name. The
    result starts the separate `new-client` workflow and must remain
    `new_client_workflow_pending`; creating a folder does not say the commercial
    relationship is active.
-5. Explain that import preserves the original and creates a controlled copy.
-   After the user authorizes that copy, call `import_studio_client_document`
-   with role `journal`. Retain the returned `engagement_id`, imported path,
-   `client_engagement`, and context path. Pass that context unchanged to
-   Journal Sampling.
-6. In a later chat, call `list_studio_client_engagements` for the selected
+5. Create a new engagement with `create_studio_client_engagement`, or select an
+   existing engagement returned by `list_studio_client_engagements`. Ask when
+   more than one engagement could fit; never choose from recency or filename.
+6. Explain that import preserves the external original and creates an immutable
+   controlled snapshot plus a SHA-256 receipt. After authorization, call
+   `import_studio_client_document` for each source. Use role `source`
+   generally, `journal` for Journal Sampling, and `support` for Check Entries
+   evidence. Every import must use the selected client and engagement. Import
+   returns an `input_id`; it does not create or start a workflow run.
+7. Call `prepare_studio_client_workflow` with the selected workflow ID and the
+   exact `input_ids` and same-engagement upstream artifacts needed for this run.
+   Preparation creates an immutable input manifest and a closed run-local input
+   view. Repeating the same request returns the same run; set `new_run=true`
+   only when the user explicitly wants a separate run. Reuse its
+   `idempotency_key` for safe retries; choose a new key for another intentionally
+   distinct run.
+8. Call `start_studio_client_workflow`, then pass the prepared
+   `client_engagement_path` unchanged to the workflow entry points. Execute only
+   the paths in its hydrated `input_bindings`, and write only below its exact
+   `output_dir`. Never scan the whole engagement input folder as an implicit
+   input set.
+9. After execution, call `finalize_studio_client_workflow`. Declare every
+   physical output with a unique artifact ID, relative path, concrete purpose,
+   audience (`internal`, `review`, or `deliverable`), and media type. An empty,
+   partial, changed, or undeclared output tree is not review-ready. Review the
+   declared artifacts, then call `complete_studio_client_workflow`. On an
+   execution error, record `failed`; explicitly cancel an abandoned run.
+10. In a later chat, call `list_studio_client_engagements` for the selected
    `client_id`. It returns imported-file receipts and persisted workflow runs,
-   including exact normalized-journal paths and mechanical availability. Ask
-   the user to select an engagement if more than one could match; never choose
-   from recency or filename alone.
-7. After the user authorizes the support-file copy, import each ZIP/PDF with
-   role `support` and the selected `engagement_id`. The returned Check Entries
-   context must have the same stable client and engagement as the selected
-   Journal Sampling run.
+   including lifecycle, exact input manifests, artifact purposes, and
+   mechanical availability. Resume the exact engagement and run instead of
+   relying on chat history.
+
+For the journal-specific flow, prepare Journal Sampling from the exact journal
+`input_id`. Its finalized artifact manifest must identify the normalized
+population, normalization diagnostics, and `journal_sample.csv`. For each
+separate support delivery, import only that ZIP/PDF batch and prepare a separate
+Check Entries run bound to that support `input_id` plus those exact artifacts
+from one Journal Sampling run. Bind the complete handoff actually consumed by
+Check Entries: semantic artifacts `prepared.normalized_journal`,
+`internal.normalization_diagnostics`, and `prepared.journal_sample_csv`, plus
+the normalization companions `normalization_recipe.json`,
+`suggested_recipe.json`, `reviewed_decisions.json`, `assurance_gates.json`,
+`assurance_envelope.json`, and `qualification_review_payload.json`. The sample
+is the row-selection boundary: Check Entries checks those sampled entries, not
+the full journal. A later support batch is prepared as a separate run and
+cannot expand or mutate an earlier run's inputs; use `new_run=true` when an
+intentionally separate batch has the same exact byte selection as an earlier
+run, with a new `idempotency_key` for each distinct batch.
 
 Users do not operate the CLI. If Codex must use the internal fallback, the
 corresponding commands are `clients`, `configure-client`, `create-client`,
-`import-document`, `engagements`, and `prepare-workflow` in
+`create-engagement`, `import-document`, `engagements`, and `prepare-workflow` in
 `scripts/studio_archive.py`.
 
 `get_studio_client_folder --client-id client_...` returns a digest-bound
 `vera.studio_client_folder.v2` object containing both the stable client ID and
 the current folder `scope_id`. It does not expose the private registry's email
-addresses, legal names, or tax identifiers. Pass it unchanged to consuming
-Vera workflows.
+addresses, legal names, or tax identifiers. Use it for client identity and
+scope operations. An executable Vera workflow must use the separately prepared
+`vera.client_workflow_context.v2`; never substitute the client-folder object
+for a run context.
 
-If the folder was renamed or top-level scopes changed, refresh and explicitly
-rebind any orphaned private profile before exporting a new binding. Never edit
-the scope ID, paths, or digest to make a different client's input appear to
-belong to the selected client.
+If a customer folder was renamed, refresh the archive. Studio Archive finds the
+same `client_id` in `Vera/client.json`, updates the machine-local scope pointer,
+and hydrates current absolute paths from the portable relative records. Use
+`recover_studio_client_ledger` to rebuild local pointers and verify every
+customer-folder engagement, receipt, and run. Recovery does not restore private
+email, PEC, legal-name, or tax-ID values. Never edit an ID, path, or digest to
+make another customer's input appear to belong to the selected client.
+
+Close an engagement only after every active run is completed or cancelled.
+`report_studio_client_retention` reports age, size, lifecycle, and candidates
+for professional review without deleting anything. Deletion is never automatic
+and requires a separate, explicitly authorized policy and action.
 
 Gmail remains in the user-selected Gmail account and is accessed only through
 the connected Gmail plugin during an active task. Studio Archive does not
@@ -185,6 +236,9 @@ Ask only those unresolved choices in chat that materially change the actual inpu
   that is not already established, and which exact client/engagement applies;
 - authorization to create a new client folder or copy a selected journal or
   support file into the managed engagement;
+- which exact input receipts and upstream artifacts belong to a run when more
+  than one plausible batch exists, and whether the user explicitly wants a new
+  run instead of the idempotent existing run;
 - whether the user truly wants a studio-wide search before using `scope_id:
   "all"`;
 - whether already-installed local OCR should be used for scans when that could
@@ -223,13 +277,15 @@ On each professional's computer:
    application. Computer Use sees only the account currently selected in that
    application; never assume Fabio's and Paolo's accounts or chats are shared.
 
-The absolute source paths may differ between computers. That is fine. Do not
-copy either user's `archive.sqlite3` or `config.json` to the other. If Fabio
-and Paolo use the same operating-system account, each must set a different
-absolute `VERA_STUDIO_ARCHIVE_STATE_DIR`; separate ChatGPT licences do not
-separate files under one operating-system home directory. The derived index
-contains extracted text and is not application-encrypted, so keep it under
-private operating-system and disk/backup controls.
+The absolute source paths may differ between computers. The relative
+`Vera/...` ledger in each customer folder remains valid, and each computer
+hydrates its own current absolute paths. Do not copy either user's
+`archive.sqlite3`, `config.json`, or private contact registry to the other. If
+Fabio and Paolo use the same operating-system account, each must set a
+different absolute `VERA_STUDIO_ARCHIVE_STATE_DIR`; separate ChatGPT licences
+do not separate files under one operating-system home directory. The derived
+index contains extracted text and is not application-encrypted, so keep it
+under private operating-system and disk/backup controls.
 
 Neither the skill nor the local MCP can verify which Gmail account the
 connector selected without calling the connector. Before each Gmail search,
@@ -411,6 +467,12 @@ For local documents, prefer these Vera MCP tools:
 - `search_studio_archive`
 - `open_studio_archive_source`
 
+For the portable customer workflow, use the client, engagement, import,
+prepare, lifecycle, finalize, recovery, and retention tools named in the exact
+flow above. Import and prepare are deliberately separate. Start and finalize
+are also separate; a directory that merely contains files is not a completed
+run.
+
 If MCP is unavailable, work from the component root and use:
 
 ```bash
@@ -423,6 +485,15 @@ python scripts/studio_archive.py open --source-id src_... --context-chunks 1
 python scripts/studio_archive.py configure-client --scope-id scope_... \
   --email-address amministrazione@example.com --legal-name "Esempio SRL"
 python scripts/studio_archive.py clients
+python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
+python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 audit"
+python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
+python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id journal-sampling --input-id input_...
+python scripts/studio_archive.py start-workflow --client-id client_... --engagement-id eng_... --run-id run_...
+python scripts/studio_archive.py finalize-workflow --client-id client_... --engagement-id eng_... --run-id run_... --artifacts-json '[{"artifact_id":"deliverable.result","path":"result.pdf","purpose":"Reviewed client deliverable","audience":"deliverable","media_type":"application/pdf"}]'
+python scripts/studio_archive.py complete-workflow --client-id client_... --engagement-id eng_... --run-id run_...
+python scripts/studio_archive.py recover-ledger
+python scripts/studio_archive.py retention-report --client-id client_... --older-than-days 365
 python scripts/studio_archive.py plan-gmail --scope-id scope_... \
   --topic "rateazione INPS"
 python scripts/studio_archive.py match-email --expected-scope-id scope_... \
@@ -492,10 +563,18 @@ ZIPs during an archive run.
   candidate in the client answer.
 - New task: do not claim the prior task-scoped confirmation was persisted;
   confirm again when the address is not supplied.
-- Client folder was renamed: after refresh, call
-  `list_studio_archive_clients`, show the orphaned and target scopes, and use
-  `configure_studio_archive_client` with `replace_orphaned_scope_id` only after
-  the user confirms that exact rebind. Never infer or bulk-rebind profiles.
+- Client folder was renamed: refresh, then run
+  `recover_studio_client_ledger` when verification is needed. Resume only when
+  the same `client_id` is present in the customer-folder manifest; do not infer
+  identity from the renamed folder label.
+- Run is prepared but not started: start it before invoking a workflow helper.
+- A receipt, selected input, upstream artifact, or run manifest is missing or
+  changed: stop. Do not substitute another engagement file or silently prepare
+  a new run.
+- Execution fails: record the failed lifecycle state and reason. Do not expose
+  its output folder as available.
+- Artifacts do not close the physical output tree: do not complete the run;
+  fix or remove the unexplained output and finalize again.
 - Gmail message matches another client: exclude it from the selected client's
   answer.
 - Gmail headers are incomplete or unparseable: do not route automatically.

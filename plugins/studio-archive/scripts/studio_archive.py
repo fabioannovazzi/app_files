@@ -11,9 +11,16 @@ from pathlib import Path
 from typing import Any
 
 from archive_core import (
+    VERA_CLIENT_WORKFLOW_IDS,
     ArchiveError,
+    cancel_studio_client_workflow,
+    close_studio_client_engagement,
+    complete_studio_client_workflow,
     configure_archive,
     create_studio_client,
+    create_studio_client_engagement,
+    fail_studio_client_workflow,
+    finalize_studio_client_workflow,
     get_studio_client_folder,
     import_studio_client_document,
     list_studio_client_engagements,
@@ -22,9 +29,12 @@ from archive_core import (
     open_archive_source,
     plan_gmail_client_search,
     prepare_studio_client_workflow,
+    recover_studio_client_ledger,
     refresh_archive,
+    report_studio_client_retention,
     search_archive,
     set_studio_client_identity,
+    start_studio_client_workflow,
     studio_archive_status,
 )
 
@@ -53,14 +63,17 @@ def _parser() -> argparse.ArgumentParser:
     create_client.add_argument("--email-address", action="append", default=[])
     create_client.add_argument("--tax-identifier", action="append", default=[])
 
+    create_engagement = subparsers.add_parser("create-engagement")
+    create_engagement.add_argument("--client-id", required=True)
+    create_engagement.add_argument("--engagement-label", required=True)
+
     import_document = subparsers.add_parser("import-document")
     import_document.add_argument("--client-id", required=True)
     import_document.add_argument("--source-path", type=Path, required=True)
     import_document.add_argument(
-        "--role", choices=["journal", "support"], required=True
+        "--role", choices=["journal", "source", "support"], required=True
     )
-    import_document.add_argument("--engagement-id")
-    import_document.add_argument("--engagement-label")
+    import_document.add_argument("--engagement-id", required=True)
 
     engagements = subparsers.add_parser("engagements")
     engagements.add_argument("--client-id", required=True)
@@ -69,9 +82,55 @@ def _parser() -> argparse.ArgumentParser:
     prepare_workflow.add_argument("--engagement-id", required=True)
     prepare_workflow.add_argument(
         "--workflow-id",
-        choices=["journal-sampling", "check-entries", "audit-reconciliation"],
+        choices=list(VERA_CLIENT_WORKFLOW_IDS),
         required=True,
     )
+    prepare_workflow.add_argument("--input-id", action="append", default=[])
+    prepare_workflow.add_argument(
+        "--upstream-artifact",
+        action="append",
+        default=[],
+        help="Exact upstream reference formatted run_id:artifact_id:role.",
+    )
+    prepare_workflow.add_argument("--label")
+    prepare_workflow.add_argument("--purpose")
+    prepare_workflow.add_argument(
+        "--idempotency-key",
+        help="Stable request key; use a different key for each intentionally separate run.",
+    )
+    prepare_workflow.add_argument(
+        "--new-run",
+        action="store_true",
+        help="Create the explicit-new namespace; retries with the same key remain idempotent.",
+    )
+
+    for command in ("start-workflow", "cancel-workflow", "complete-workflow"):
+        lifecycle = subparsers.add_parser(command)
+        lifecycle.add_argument("--client-id", required=True)
+        lifecycle.add_argument("--engagement-id", required=True)
+        lifecycle.add_argument("--run-id", required=True)
+
+    fail_workflow = subparsers.add_parser("fail-workflow")
+    fail_workflow.add_argument("--client-id", required=True)
+    fail_workflow.add_argument("--engagement-id", required=True)
+    fail_workflow.add_argument("--run-id", required=True)
+    fail_workflow.add_argument("--reason", required=True)
+
+    finalize_workflow = subparsers.add_parser("finalize-workflow")
+    finalize_workflow.add_argument("--client-id", required=True)
+    finalize_workflow.add_argument("--engagement-id", required=True)
+    finalize_workflow.add_argument("--run-id", required=True)
+    finalize_workflow.add_argument("--artifacts-json", required=True)
+
+    close_engagement = subparsers.add_parser("close-engagement")
+    close_engagement.add_argument("--client-id", required=True)
+    close_engagement.add_argument("--engagement-id", required=True)
+
+    subparsers.add_parser("recover-ledger")
+
+    retention = subparsers.add_parser("retention-report")
+    retention.add_argument("--client-id", required=True)
+    retention.add_argument("--older-than-days", type=int)
 
     configure_client = subparsers.add_parser("configure-client")
     configure_client.add_argument("--scope-id", required=True)
@@ -125,20 +184,74 @@ def main(argv: list[str] | None = None) -> int:
                 email_addresses=args.email_address,
                 tax_identifiers=args.tax_identifier,
             )
+        elif args.command == "create-engagement":
+            result = create_studio_client_engagement(
+                args.client_id,
+                args.engagement_label,
+            )
         elif args.command == "import-document":
             result = import_studio_client_document(
                 args.client_id,
                 args.source_path,
                 args.role,
                 engagement_id=args.engagement_id,
-                engagement_label=args.engagement_label,
             )
         elif args.command == "engagements":
             result = list_studio_client_engagements(args.client_id)
         elif args.command == "prepare-workflow":
+            upstream_artifacts = []
+            for raw_reference in args.upstream_artifact:
+                parts = raw_reference.split(":", maxsplit=2)
+                if len(parts) != 3:
+                    raise ArchiveError(
+                        "Upstream artifact must be run_id:artifact_id:role."
+                    )
+                upstream_artifacts.append(
+                    {"run_id": parts[0], "artifact_id": parts[1], "role": parts[2]}
+                )
             result = prepare_studio_client_workflow(
                 args.engagement_id,
                 args.workflow_id,
+                input_ids=args.input_id,
+                upstream_artifacts=upstream_artifacts,
+                label=args.label,
+                purpose=args.purpose,
+                idempotency_key=args.idempotency_key,
+                new_run=args.new_run,
+            )
+        elif args.command == "start-workflow":
+            result = start_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "fail-workflow":
+            result = fail_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id, args.reason
+            )
+        elif args.command == "cancel-workflow":
+            result = cancel_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "finalize-workflow":
+            artifact_payload = json.loads(args.artifacts_json)
+            if not isinstance(artifact_payload, list):
+                raise ArchiveError("artifacts-json must contain a JSON array.")
+            result = finalize_studio_client_workflow(
+                args.client_id,
+                args.engagement_id,
+                args.run_id,
+                artifact_payload,
+            )
+        elif args.command == "complete-workflow":
+            result = complete_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "close-engagement":
+            result = close_studio_client_engagement(args.client_id, args.engagement_id)
+        elif args.command == "recover-ledger":
+            result = recover_studio_client_ledger()
+        elif args.command == "retention-report":
+            result = report_studio_client_retention(
+                args.client_id, older_than_days=args.older_than_days
             )
         elif args.command == "configure-client":
             result = set_studio_client_identity(
@@ -177,7 +290,7 @@ def main(argv: list[str] | None = None) -> int:
                 headers_complete=args.headers_complete,
                 expected_scope_id=args.expected_scope_id,
             )
-    except (ArchiveError, OSError, sqlite3.Error) as exc:
+    except (ArchiveError, OSError, ValueError, sqlite3.Error) as exc:
         _emit(
             {
                 "error": {

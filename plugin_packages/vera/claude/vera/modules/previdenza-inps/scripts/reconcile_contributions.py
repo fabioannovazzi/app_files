@@ -8,6 +8,7 @@ import csv
 import hashlib
 import json
 import logging
+import sys
 from datetime import datetime, timezone
 from decimal import (
     ROUND_DOWN,
@@ -32,6 +33,21 @@ __all__ = ["evaluate_recipes", "main"]
 
 LOGGER = logging.getLogger(__name__)
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
+
 OPERATIONS = {"add", "divide", "multiply", "subtract"}
 ROUNDING_MODES = {
     "ROUND_DOWN": ROUND_DOWN,
@@ -43,6 +59,17 @@ ROUNDING_MODES = {
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def _run_relative_path(path: Path, run_root: Path) -> str:
+    """Return a portable path anchored to the current workflow run."""
+
+    resolved_root = run_root.expanduser().resolve(strict=True)
+    resolved_path = path.expanduser().resolve(strict=True)
+    try:
+        return resolved_path.relative_to(resolved_root).as_posix()
+    except ValueError as exc:
+        raise ValueError("workflow path is outside the current run") from exc
 
 
 def _valid_approval_datetime(value: Any) -> bool:
@@ -372,9 +399,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("case_records", type=Path)
     parser.add_argument("claims_review", type=Path)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--client-engagement", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="previdenza-inps",
+            input_paths=[args.recipes, args.case_records, args.claims_review],
+            output_dir=args.output_dir,
+        )
         output_dir = ensure_safe_output_dir(args.output_dir, plugin_root=PLUGIN_ROOT)
+        run_root = Path(context["run_root"])
         result = evaluate_recipes(
             _load_object(args.recipes),
             _load_object(args.case_records),
@@ -382,15 +417,15 @@ def main(argv: list[str] | None = None) -> int:
         )
         result["input_provenance"] = {
             "recipes": {
-                "path": args.recipes.resolve().as_posix(),
+                "path": _run_relative_path(args.recipes, run_root),
                 "sha256": _file_sha256(args.recipes),
             },
             "case_records": {
-                "path": args.case_records.resolve().as_posix(),
+                "path": _run_relative_path(args.case_records, run_root),
                 "sha256": _file_sha256(args.case_records),
             },
             "claims_review": {
-                "path": args.claims_review.resolve().as_posix(),
+                "path": _run_relative_path(args.claims_review, run_root),
                 "sha256": _file_sha256(args.claims_review),
             },
         }
@@ -403,9 +438,10 @@ def main(argv: list[str] | None = None) -> int:
             {
                 "schema_version": "1.0",
                 "status": result["status"],
-                "calculation_results_path": results_path.resolve().as_posix(),
+                "path_reference": "run_root_relative",
+                "calculation_results_path": _run_relative_path(results_path, run_root),
                 "calculation_results_sha256": _file_sha256(results_path),
-                "calculation_results_csv_path": csv_path.resolve().as_posix(),
+                "calculation_results_csv_path": _run_relative_path(csv_path, run_root),
                 "calculation_results_csv_sha256": _file_sha256(csv_path),
                 "input_provenance": result["input_provenance"],
                 "recipe_count": result["recipe_count"],
@@ -419,6 +455,7 @@ def main(argv: list[str] | None = None) -> int:
             },
         )
     except (
+        AssuranceContractError,
         FileNotFoundError,
         json.JSONDecodeError,
         PermissionError,

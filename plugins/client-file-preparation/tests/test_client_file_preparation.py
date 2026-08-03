@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import importlib
+import importlib.util
 import json
 import shutil
 import subprocess
@@ -9,6 +10,7 @@ import sys
 import types
 import zipfile
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,6 +21,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+REPOSITORY_ROOT = PLUGIN_ROOT.parents[1]
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
 
 import extract_documents as extraction_module
@@ -211,6 +214,68 @@ def _load_review_run(
     )
 
 
+def _managed_review_run(
+    tmp_path: Path,
+    *,
+    content: str = CU_TEXT,
+) -> tuple[Any, Path]:
+    ledger_path = (
+        REPOSITORY_ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    )
+    module_name = "client_file_preparation_test_customer_ledger"
+    ledger = sys.modules.get(module_name)
+    if ledger is None:
+        spec = importlib.util.spec_from_file_location(module_name, ledger_path)
+        assert spec is not None and spec.loader is not None
+        ledger = importlib.util.module_from_spec(spec)
+        sys.modules[module_name] = ledger
+        spec.loader.exec_module(ledger)
+
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir(mode=0o700)
+    client_id = "client_333333333333333333333333"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root,
+        client_id,
+        "client-file-preparation-review",
+    )
+    source_root = tmp_path / "received"
+    source_root.mkdir(mode=0o700)
+    source_path = source_root / "support.txt"
+    source_path.write_text(content, encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source_path.resolve(),
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "client-file-preparation",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+        idempotency_key="client-file-preparation-review",
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context = running["context"]
+    result = build_file_preparation_outputs(
+        Path(context["input_dir"]),
+        target_year=2025,
+        output_dir=Path(running["output_dir"]),
+        run_id=str(context["run_id"]),
+        run_root=Path(context["run_root"]),
+    )
+    return result, Path(running["context_path"])
+
+
 def _call_review_decision_tool(
     tool_name: str,
     *,
@@ -219,6 +284,7 @@ def _call_review_decision_tool(
     final_artifacts: dict[str, object],
     decisions: list[dict[str, object]],
     reviewer: str | None = None,
+    client_engagement: Path | None = None,
 ) -> dict[str, object]:
     arguments: dict[str, object] = {
         "run_intake": run_intake,
@@ -226,6 +292,8 @@ def _call_review_decision_tool(
         "final_artifacts": final_artifacts,
         "decisions": decisions,
     }
+    if client_engagement is not None:
+        arguments["client_engagement"] = str(client_engagement)
     if reviewer is not None:
         arguments["reviewer"] = reviewer
     response = _call_mcp_server(
@@ -1975,10 +2043,10 @@ def test_client_file_preparation_mcp_server_validates_and_renders_review_payload
 def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "hosted-path-private-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(
+        tmp_path,
+        content=f"Ragione sociale: Hosted Path Private Client\n{CU_TEXT}",
+    )
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
     private_required_text = [
         text
@@ -2030,6 +2098,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             1,
             "render_client_file_preparation_review",
             {
+                "client_engagement": str(client_engagement),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
@@ -2041,7 +2110,9 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
         assert len(persistence_token) == 43
         assert "output_dir" not in rendered["run_intake"]
         assert result.output_dir.as_posix() not in json.dumps(render_response)
-        assert customer.as_posix() not in json.dumps(render_response)
+        assert str(result.output_dir.parent / "inputs") not in json.dumps(
+            render_response
+        )
         assert all(
             text in json.dumps(render_response, ensure_ascii=False)
             for text in private_required_text
@@ -2052,6 +2123,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             2,
             "save_client_file_preparation_decisions",
             {
+                "client_engagement": str(client_engagement),
                 "run_intake": rendered["run_intake"],
                 "persistence_token": "x" * 43,
                 "review_payload": rendered["review_payload"],
@@ -2069,6 +2141,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             3,
             "save_client_file_preparation_decisions",
             {
+                "client_engagement": str(client_engagement),
                 "run_intake": rendered["run_intake"],
                 "persistence_token": persistence_token,
                 "review_payload": rendered["review_payload"],
@@ -2088,6 +2161,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             4,
             "apply_client_file_preparation_decisions",
             {
+                "client_engagement": str(client_engagement),
                 "run_intake": rendered["run_intake"],
                 "persistence_token": persistence_token,
                 "review_payload": rendered["review_payload"],
@@ -2114,7 +2188,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             ensure_ascii=False,
         )
         assert result.output_dir.as_posix() not in browser_results
-        assert customer.as_posix() not in browser_results
+        assert str(result.output_dir.parent / "inputs") not in browser_results
         assert "Hosted Path Private Client" in browser_results
         persisted_final_artifacts = json.loads(
             (result.output_dir / "final_artifacts.json").read_text(encoding="utf-8")
@@ -2147,10 +2221,7 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
 def test_client_file_preparation_mcp_apply_updates_draft_email_artifact(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "apply-email-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     output_dir = result.output_dir
     draft_email_path = output_dir / "04_bozza_email_cliente.md"
     original_email = draft_email_path.read_text(encoding="utf-8")
@@ -2175,6 +2246,7 @@ def test_client_file_preparation_mcp_apply_updates_draft_email_artifact(
             "params": {
                 "name": "apply_client_file_preparation_decisions",
                 "arguments": {
+                    "client_engagement": str(client_engagement),
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -2238,10 +2310,7 @@ def test_client_file_preparation_mcp_apply_updates_draft_email_artifact(
 def test_client_file_preparation_mcp_rejects_edit_that_breaks_declared_qa(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "invalid-email-edit-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
     before = _run_tree_bytes(result.output_dir)
     decisions = [
@@ -2264,6 +2333,7 @@ def test_client_file_preparation_mcp_rejects_edit_that_breaks_declared_qa(
         final_artifacts=final_artifacts,
         decisions=decisions,
         reviewer="reviewer-qa-01",
+        client_engagement=client_engagement,
     )
 
     assert payload["ok"] is False
@@ -2274,10 +2344,7 @@ def test_client_file_preparation_mcp_rejects_edit_that_breaks_declared_qa(
 def test_client_file_preparation_mcp_save_reseals_generated_package(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "save-reseal-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake = json.loads(
         (result.output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -2297,6 +2364,7 @@ def test_client_file_preparation_mcp_save_reseals_generated_package(
                 "params": {
                     "name": "save_client_file_preparation_decisions",
                     "arguments": {
+                        "client_engagement": str(client_engagement),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "final_artifacts": final_artifacts,
@@ -2324,6 +2392,76 @@ def test_client_file_preparation_mcp_save_reseals_generated_package(
     assert updated["integrity"]["package_hash"] == _expected_package_hash(
         updated["outputs"]
     )
+
+
+def test_client_file_preparation_persistence_survives_customer_folder_rename_and_rejects_escape(
+    tmp_path: Path,
+) -> None:
+    result, old_context_path = _managed_review_run(tmp_path)
+    old_output_dir = result.output_dir
+    old_client_root = old_output_dir.parents[5]
+    relative_output = old_output_dir.relative_to(old_client_root)
+    relative_context = old_context_path.relative_to(old_client_root)
+    renamed_client_root = old_client_root.with_name("Renamed Managed Customer")
+    old_client_root.rename(renamed_client_root)
+    output_dir = renamed_client_root / relative_output
+    context_path = renamed_client_root / relative_context
+    run_intake, review_payload, final_artifacts = _load_review_run(output_dir)
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    arguments = {
+        "client_engagement": str(context_path),
+        "run_intake": run_intake,
+        "review_payload": review_payload,
+        "final_artifacts": final_artifacts,
+        "decisions": [
+            {"item_id": review_payload["items"][0]["id"], "action": "accept"}
+        ],
+    }
+
+    saved = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_client_file_preparation_decisions",
+                    "arguments": arguments,
+                },
+            }
+        ]
+    )[0]["result"]
+
+    assert saved["isError"] is False
+    assert saved["structuredContent"]["persisted"] is True
+    protected = {
+        path: path.read_bytes()
+        for path in (
+            output_dir / "ui_decisions.json",
+            output_dir / "final_artifacts.json",
+        )
+    }
+    rejected = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_client_file_preparation_decisions",
+                    "arguments": {
+                        **arguments,
+                        "run_intake": {**run_intake, "output_dir": "../outside"},
+                    },
+                },
+            }
+        ]
+    )[0]["result"]
+    assert rejected["isError"] is True
+    assert "leaves the customer run" in rejected["structuredContent"]["error"]
+    assert all(path.read_bytes() == before for path, before in protected.items())
+    assert not old_output_dir.exists()
 
 
 def test_client_file_preparation_mcp_apply_rejects_tampered_generated_artifact(
@@ -2379,10 +2517,7 @@ def test_client_file_preparation_mcp_apply_rejects_tampered_generated_artifact(
 def test_client_file_preparation_mcp_apply_reseals_generated_package(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "reseal-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake = json.loads(
         (result.output_dir / "run_intake.json").read_text(encoding="utf-8")
     )
@@ -2407,6 +2542,7 @@ def test_client_file_preparation_mcp_apply_reseals_generated_package(
                 "params": {
                     "name": "apply_client_file_preparation_decisions",
                     "arguments": {
+                        "client_engagement": str(client_engagement),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "final_artifacts": final_artifacts,
@@ -2594,10 +2730,7 @@ def test_mcp_save_binds_caller_review_to_sealed_run_payload(tmp_path: Path) -> N
 def test_mcp_final_ready_requires_stable_reviewer_attribution(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "reviewer-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
     decisions = [
         {"item_id": item["id"], "action": "accept"} for item in review_payload["items"]
@@ -2610,6 +2743,7 @@ def test_mcp_final_ready_requires_stable_reviewer_attribution(
         review_payload=review_payload,
         final_artifacts=final_artifacts,
         decisions=decisions,
+        client_engagement=client_engagement,
     )
 
     assert missing_reviewer["ok"] is False
@@ -2623,6 +2757,7 @@ def test_mcp_final_ready_requires_stable_reviewer_attribution(
         final_artifacts=final_artifacts,
         decisions=decisions[:1],
         reviewer="Fabio Annovazzi",
+        client_engagement=client_engagement,
     )
     assert saved["ok"] is True
     current_final = json.loads(
@@ -2635,16 +2770,16 @@ def test_mcp_final_ready_requires_stable_reviewer_attribution(
         final_artifacts=current_final,
         decisions=decisions,
         reviewer="Maria Rossi",
+        client_engagement=client_engagement,
     )
     assert changed_reviewer["ok"] is False
     assert "must remain stable" in changed_reviewer["error"]
 
 
-def test_mcp_skip_is_blocked_not_final_ready(tmp_path: Path) -> None:
-    customer = tmp_path / "skip-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+def test_mcp_skip_is_blocked_not_final_ready(
+    tmp_path: Path,
+) -> None:
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, final_artifacts = _load_review_run(result.output_dir)
     skipped_id = next(
         item["id"]
@@ -2666,6 +2801,7 @@ def test_mcp_skip_is_blocked_not_final_ready(tmp_path: Path) -> None:
         final_artifacts=final_artifacts,
         decisions=decisions,
         reviewer="reviewer-skip-01",
+        client_engagement=client_engagement,
     )
 
     assert payload["ok"] is True
@@ -2680,10 +2816,7 @@ def test_mcp_skip_is_blocked_not_final_ready(tmp_path: Path) -> None:
 def test_mcp_apply_is_transactional_when_later_effect_is_invalid(
     tmp_path: Path,
 ) -> None:
-    customer = tmp_path / "transaction-client"
-    customer.mkdir()
-    (customer / "support.txt").write_text(CU_TEXT, encoding="utf-8")
-    result = build_file_preparation_outputs(customer, target_year=2025)
+    result, client_engagement = _managed_review_run(tmp_path)
     run_intake, review_payload, _ = _load_review_run(result.output_dir)
     email_item = next(
         item for item in review_payload["items"] if item["id"] == "draft-client-email"
@@ -2716,6 +2849,7 @@ def test_mcp_apply_is_transactional_when_later_effect_is_invalid(
             },
         ],
         reviewer="reviewer-transaction-01",
+        client_engagement=client_engagement,
     )
 
     assert payload["ok"] is False

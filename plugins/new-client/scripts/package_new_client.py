@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import hashlib
 import json
 import os
 import re
@@ -12,8 +14,19 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+PLUGIN_ROOT = SCRIPT_DIR.parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
+
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
 
 from new_client_core import (  # noqa: E402
     EXPECTED_ARTIFACTS,
@@ -44,11 +57,337 @@ from new_client_core import (  # noqa: E402
     write_private_json,
     write_private_text,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = ["build_parser", "main", "package_new_client"]
 
-PLUGIN_ROOT = SCRIPT_DIR.parent
 DEFAULT_SOURCE_REGISTRY = PLUGIN_ROOT / "references" / "source-registry.json"
+
+
+def _private_json_bytes(payload: Mapping[str, Any]) -> bytes:
+    return (
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+
+
+def _portable_run_reference(path: Path, run_root: Path, *, label: str) -> str:
+    try:
+        relative = path.resolve(strict=True).relative_to(run_root)
+    except (OSError, ValueError) as exc:
+        raise ValidationError(f"{label} is outside the current customer run.") from exc
+    if not relative.parts:
+        raise ValidationError(f"{label} must identify a file inside the customer run.")
+    return relative.as_posix()
+
+
+def _resolve_managed_reference(
+    value: object,
+    *,
+    reference: object,
+    base_dir: Path,
+    run_root: Path,
+    label: str,
+) -> Path:
+    """Resolve one managed reference before the package creates any files.
+
+    This deterministic boundary is required for exact receipt containment and
+    portable replay; it does not decide whether the referenced evidence matters.
+    """
+
+    if not isinstance(value, str) or not value.strip():
+        raise ValidationError(f"{label} must be a non-empty path string.")
+    raw = Path(value).expanduser()
+    if reference == "plugin_root_relative":
+        raise ValidationError(f"{label} cannot use a plugin-owned path.")
+    if reference not in {None, "run_root_relative"}:
+        raise ValidationError(f"{label} has an unsupported path reference.")
+    if reference == "run_root_relative":
+        if raw.is_absolute() or any(part in {"", ".", ".."} for part in raw.parts):
+            raise ValidationError(f"{label} must be a canonical run-relative path.")
+        candidate = run_root / raw
+    elif raw.is_absolute():
+        candidate = raw
+    else:
+        local_candidate = base_dir / raw
+        run_candidate = run_root / raw
+        candidate = run_candidate if run_candidate.exists() else local_candidate
+    try:
+        if candidate.is_symlink():
+            raise ValidationError(f"{label} must not refer to a symbolic link.")
+        resolved = candidate.resolve(strict=True)
+    except OSError as exc:
+        raise ValidationError(f"{label} cannot be resolved: {exc}") from exc
+    if not resolved.is_file():
+        raise ValidationError(f"{label} must refer to a regular file.")
+    return resolved
+
+
+def _portable_verification_record(
+    record: Mapping[str, Any],
+    *,
+    run_root: Path,
+    path_key: str = "resolved_path",
+) -> dict[str, Any]:
+    portable = copy.deepcopy(dict(record))
+    raw_path = portable.get(path_key)
+    if isinstance(raw_path, str):
+        portable[path_key] = _portable_run_reference(
+            Path(raw_path), run_root, label=path_key
+        )
+        portable[f"{path_key}_reference"] = "run_root_relative"
+    return portable
+
+
+def _client_file_preparation_output_paths(manifest_path: Path) -> list[Path]:
+    manifest = load_json(manifest_path)
+    outputs = manifest.get("outputs")
+    if not isinstance(outputs, list) or not outputs:
+        raise ValidationError(
+            "Bound Client File Preparation final_artifacts.outputs must not be empty."
+        )
+    paths: list[Path] = []
+    for index, raw_output in enumerate(outputs):
+        if not isinstance(raw_output, Mapping):
+            raise ValidationError(
+                f"bound_client_file_preparation.outputs[{index}] must be an object."
+            )
+        raw_path = raw_output.get("path")
+        if not isinstance(raw_path, str):
+            raise ValidationError(
+                f"bound_client_file_preparation.outputs[{index}].path must be text."
+            )
+        relative = Path(raw_path)
+        if (
+            relative.is_absolute()
+            or relative.as_posix() != raw_path
+            or any(part in {"", ".", ".."} for part in relative.parts)
+        ):
+            raise ValidationError(
+                "Bound Client File Preparation outputs must use canonical relative paths."
+            )
+        candidate = manifest_path.parent / relative
+        try:
+            if candidate.is_symlink():
+                raise ValidationError(
+                    "Bound Client File Preparation outputs must not be symbolic links."
+                )
+            resolved = candidate.resolve(strict=True)
+        except OSError as exc:
+            raise ValidationError(
+                f"Bound Client File Preparation output {raw_path!r} cannot be resolved: {exc}"
+            ) from exc
+        if not resolved.is_file():
+            raise ValidationError(
+                f"Bound Client File Preparation output {raw_path!r} is not a file."
+            )
+        paths.append(resolved)
+    return paths
+
+
+def _preflight_managed_package_inputs(
+    *,
+    context: Mapping[str, Any],
+    input_path: Path,
+    output_dir: Path,
+    source_registry_path: Path,
+    generated_at: str,
+) -> dict[str, Any]:
+    """Authorize and verify every managed local read before package staging."""
+
+    validated_context = validate_client_workflow_run(
+        context,
+        expected_workflow_id="new-client",
+        input_paths=[input_path],
+        output_dir=output_dir,
+    )
+    if validated_context.get("schema_version") != "vera.client_workflow_context.v2":
+        raise ValidationError(
+            "Managed New Client packaging requires a v2 customer run."
+        )
+    run_root = Path(str(validated_context["run_root"])).resolve(strict=True)
+    resolved_input = input_path.expanduser().resolve(strict=True)
+    raw_intake = validate_new_client_input(load_json(resolved_input))
+    runtime_intake = copy.deepcopy(raw_intake)
+    portable_intake = copy.deepcopy(raw_intake)
+    authorized_paths: list[Path] = [resolved_input]
+    portable_reads: list[dict[str, str]] = [
+        {
+            "path": _portable_run_reference(
+                resolved_input, run_root, label="new_client_input"
+            ),
+            "path_reference": "run_root_relative",
+        }
+    ]
+
+    for index, record in enumerate(runtime_intake["evidence_register"]):
+        if record["status"] not in {"verified", "available"}:
+            continue
+        resolved = _resolve_managed_reference(
+            record.get("local_path"),
+            reference=record.get("local_path_reference"),
+            base_dir=resolved_input.parent,
+            run_root=run_root,
+            label=f"evidence_register[{index}].local_path",
+        )
+        reference = _portable_run_reference(
+            resolved, run_root, label=f"evidence_register[{index}].local_path"
+        )
+        record["local_path"] = resolved.as_posix()
+        portable_record = portable_intake["evidence_register"][index]
+        portable_record["local_path"] = reference
+        portable_record["local_path_reference"] = "run_root_relative"
+        authorized_paths.append(resolved)
+        portable_reads.append(
+            {"path": reference, "path_reference": "run_root_relative"}
+        )
+
+    binding = runtime_intake["client_file_preparation_binding"]
+    portable_binding = portable_intake["client_file_preparation_binding"]
+    manifest_path: Path | None = None
+    if binding["mode"] == "client_file_preparation_run":
+        manifest_path = _resolve_managed_reference(
+            binding["final_artifacts_path"],
+            reference=binding.get("final_artifacts_path_reference"),
+            base_dir=resolved_input.parent,
+            run_root=run_root,
+            label="client_file_preparation_binding.final_artifacts_path",
+        )
+        manifest_reference = _portable_run_reference(
+            manifest_path,
+            run_root,
+            label="client_file_preparation_binding.final_artifacts_path",
+        )
+        binding["final_artifacts_path"] = manifest_path.as_posix()
+        portable_binding["final_artifacts_path"] = manifest_reference
+        portable_binding["final_artifacts_path_reference"] = "run_root_relative"
+        authorized_paths.append(manifest_path)
+        portable_reads.append(
+            {"path": manifest_reference, "path_reference": "run_root_relative"}
+        )
+
+    for index, record in enumerate(runtime_intake["template_references"]):
+        resolved = _resolve_managed_reference(
+            record.get("local_path"),
+            reference=record.get("local_path_reference"),
+            base_dir=resolved_input.parent,
+            run_root=run_root,
+            label=f"template_references[{index}].local_path",
+        )
+        reference = _portable_run_reference(
+            resolved, run_root, label=f"template_references[{index}].local_path"
+        )
+        record["local_path"] = resolved.as_posix()
+        portable_record = portable_intake["template_references"][index]
+        portable_record["local_path"] = reference
+        portable_record["local_path_reference"] = "run_root_relative"
+        authorized_paths.append(resolved)
+        portable_reads.append(
+            {"path": reference, "path_reference": "run_root_relative"}
+        )
+
+    resolved_registry = source_registry_path.expanduser().resolve(strict=True)
+    default_registry = DEFAULT_SOURCE_REGISTRY.resolve(strict=True)
+    if resolved_registry == default_registry:
+        registry_reference = {
+            "path": resolved_registry.relative_to(PLUGIN_ROOT.resolve()).as_posix(),
+            "path_reference": "plugin_root_relative",
+        }
+    else:
+        authorized_paths.append(resolved_registry)
+        registry_reference = {
+            "path": _portable_run_reference(
+                resolved_registry, run_root, label="source_registry"
+            ),
+            "path_reference": "run_root_relative",
+        }
+        portable_reads.append(dict(registry_reference))
+
+    validate_client_workflow_run(
+        validated_context,
+        expected_workflow_id="new-client",
+        input_paths=authorized_paths,
+        output_dir=output_dir,
+    )
+    if manifest_path is not None:
+        phase_one_outputs = _client_file_preparation_output_paths(manifest_path)
+        validate_client_workflow_run(
+            validated_context,
+            expected_workflow_id="new-client",
+            input_paths=[*authorized_paths, *phase_one_outputs],
+            output_dir=output_dir,
+        )
+        for path in phase_one_outputs:
+            portable_reads.append(
+                {
+                    "path": _portable_run_reference(
+                        path, run_root, label="Client File Preparation output"
+                    ),
+                    "path_reference": "run_root_relative",
+                }
+            )
+
+    source_registry = load_source_registry(resolved_registry)
+    validate_source_references(runtime_intake, source_registry)
+    evidence_verifications = verify_evidence_register(
+        runtime_intake, base_dir=resolved_input.parent
+    )
+    client_file_preparation_verification = verify_client_file_preparation_binding(
+        runtime_intake, base_dir=resolved_input.parent
+    )
+    template_verifications = verify_template_references(
+        runtime_intake,
+        source_registry,
+        base_dir=resolved_input.parent,
+        as_of=date.fromisoformat(generated_at[:10]),
+    )
+
+    portable_evidence_verifications = [
+        _portable_verification_record(record, run_root=run_root)
+        for record in evidence_verifications
+    ]
+    portable_binding_verification = _portable_verification_record(
+        client_file_preparation_verification,
+        run_root=run_root,
+        path_key="bound_manifest_path",
+    )
+    verified_outputs = portable_binding_verification.get("verified_outputs")
+    if isinstance(verified_outputs, list):
+        portable_binding_verification["verified_outputs"] = [
+            _portable_verification_record(record, run_root=run_root)
+            for record in verified_outputs
+            if isinstance(record, Mapping)
+        ]
+    portable_template_verifications = [
+        _portable_verification_record(record, run_root=run_root)
+        for record in template_verifications
+    ]
+    unique_reads = list(
+        {
+            (item["path_reference"], item["path"]): item for item in portable_reads
+        }.values()
+    )
+    return {
+        "context": validated_context,
+        "run_root": run_root,
+        "input_reference": _portable_run_reference(
+            resolved_input, run_root, label="new_client_input"
+        ),
+        "source_input_sha256": sha256_file(resolved_input),
+        "runtime_intake": runtime_intake,
+        "portable_intake": portable_intake,
+        "source_registry": source_registry,
+        "source_registry_sha256": sha256_file(resolved_registry),
+        "source_registry_reference": registry_reference,
+        "evidence_verifications": portable_evidence_verifications,
+        "client_file_preparation_verification": portable_binding_verification,
+        "template_verifications": portable_template_verifications,
+        "local_files_read": unique_reads,
+    }
+
 
 _LOCALE_TEXT = {
     "it": {
@@ -1093,22 +1432,66 @@ def _package_new_client_into(
     source_registry_path: Path = DEFAULT_SOURCE_REGISTRY,
     generated_at: str | None = None,
     reported_output_dir: Path | None = None,
+    run_id: str | None = None,
+    run_root: Path | None = None,
+    managed_inputs: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a complete, private and reviewable new-client package."""
 
     generated_at_value = generated_at or utc_now()
     resolved_input = input_path.expanduser().resolve()
-    intake = validate_new_client_input(load_json(resolved_input))
+    if managed_inputs is None:
+        intake = validate_new_client_input(load_json(resolved_input))
+        source_registry = load_source_registry(
+            source_registry_path.expanduser().resolve()
+        )
+        validate_source_references(intake, source_registry)
+        evidence_verifications = verify_evidence_register(
+            intake, base_dir=resolved_input.parent
+        )
+        client_file_preparation_verification = verify_client_file_preparation_binding(
+            intake, base_dir=resolved_input.parent
+        )
+        template_verifications = verify_template_references(
+            intake,
+            source_registry,
+            base_dir=resolved_input.parent,
+            as_of=date.fromisoformat(generated_at_value[:10]),
+        )
+    else:
+        intake = copy.deepcopy(dict(managed_inputs["portable_intake"]))
+        source_registry = copy.deepcopy(dict(managed_inputs["source_registry"]))
+        evidence_verifications = copy.deepcopy(
+            list(managed_inputs["evidence_verifications"])
+        )
+        client_file_preparation_verification = copy.deepcopy(
+            dict(managed_inputs["client_file_preparation_verification"])
+        )
+        template_verifications = copy.deepcopy(
+            list(managed_inputs["template_verifications"])
+        )
+        run_root = Path(str(managed_inputs["run_root"]))
     language = str(intake["language"])
     final_manifest_copy = _FINAL_MANIFEST_COPY.get(language, _FINAL_MANIFEST_COPY["en"])
-    source_registry = load_source_registry(source_registry_path.expanduser().resolve())
-    validate_source_references(intake, source_registry)
     resolved_output = ensure_private_output_directory(output_dir)
     reported_output = (
         resolved_output
         if reported_output_dir is None
         else reported_output_dir.expanduser().resolve(strict=False)
     )
+    recorded_output = reported_output.as_posix()
+    path_reference = "absolute"
+    if run_root is not None:
+        normalized_run_root = run_root.expanduser().resolve()
+        try:
+            recorded_output = reported_output.relative_to(
+                normalized_run_root
+            ).as_posix()
+        except ValueError as exc:
+            raise ValidationError(
+                "New Client output directory must remain inside the customer run."
+            ) from exc
+        path_reference = "run_root_relative"
     existing = [
         name for name in EXPECTED_ARTIFACTS if (resolved_output / name).exists()
     ]
@@ -1120,20 +1503,8 @@ def _package_new_client_into(
         )
 
     input_hash = canonical_json_hash(intake)
-    run_id = _run_id(generated_at_value, input_hash)
-    evidence_verifications = verify_evidence_register(
-        intake, base_dir=resolved_input.parent
-    )
-    client_file_preparation_verification = verify_client_file_preparation_binding(
-        intake, base_dir=resolved_input.parent
-    )
+    run_id = run_id or _run_id(generated_at_value, input_hash)
     as_of = date.fromisoformat(generated_at_value[:10])
-    template_verifications = verify_template_references(
-        intake,
-        source_registry,
-        base_dir=resolved_input.parent,
-        as_of=as_of,
-    )
     aml_result = calculate_aml(intake["aml"])
     case_facts = build_case_facts(
         intake,
@@ -1211,27 +1582,56 @@ def _package_new_client_into(
             ],
         },
     }
-    local_files_read = [
-        resolved_input.as_posix(),
-        source_registry_path.expanduser().resolve().as_posix(),
-    ]
-    local_files_read.extend(
-        verification["resolved_path"]
-        for verification in evidence_verifications
-        if verification.get("resolved_path") is not None
-    )
-    if client_file_preparation_verification.get("bound_manifest_path") is not None:
-        local_files_read.append(
-            client_file_preparation_verification["bound_manifest_path"]
+    if managed_inputs is None:
+        local_files_read: list[Any] = [
+            resolved_input.as_posix(),
+            source_registry_path.expanduser().resolve().as_posix(),
+        ]
+        local_files_read.extend(
+            verification["resolved_path"]
+            for verification in evidence_verifications
+            if verification.get("resolved_path") is not None
         )
-    local_files_read.extend(
-        record["resolved_path"]
-        for record in client_file_preparation_verification.get("verified_outputs", [])
-    )
-    local_files_read.extend(
-        verification["resolved_path"] for verification in template_verifications
-    )
-    local_files_read = list(dict.fromkeys(local_files_read))
+        if client_file_preparation_verification.get("bound_manifest_path") is not None:
+            local_files_read.append(
+                client_file_preparation_verification["bound_manifest_path"]
+            )
+        local_files_read.extend(
+            record["resolved_path"]
+            for record in client_file_preparation_verification.get(
+                "verified_outputs", []
+            )
+        )
+        local_files_read.extend(
+            verification["resolved_path"] for verification in template_verifications
+        )
+        local_files_read = list(dict.fromkeys(local_files_read))
+        input_paths: list[Any] = [resolved_input.as_posix()]
+        input_record = {
+            "path": resolved_input.as_posix(),
+            "sha256": sha256_file(resolved_input),
+            "canonical_payload_sha256": input_hash,
+        }
+        source_registry_record = {
+            "path": source_registry_path.expanduser().resolve().as_posix(),
+            "sha256": sha256_file(source_registry_path.expanduser().resolve()),
+            "canonical_payload_sha256": canonical_json_hash(source_registry),
+        }
+    else:
+        local_files_read = copy.deepcopy(list(managed_inputs["local_files_read"]))
+        input_reference = str(managed_inputs["input_reference"])
+        input_paths = [input_reference]
+        input_record = {
+            "path": input_reference,
+            "path_reference": "run_root_relative",
+            "sha256": hashlib.sha256(_private_json_bytes(intake)).hexdigest(),
+            "canonical_payload_sha256": input_hash,
+        }
+        source_registry_record = {
+            **copy.deepcopy(dict(managed_inputs["source_registry_reference"])),
+            "sha256": str(managed_inputs["source_registry_sha256"]),
+            "canonical_payload_sha256": canonical_json_hash(source_registry),
+        }
     run_intake = {
         "schema_version": SCHEMA_VERSION,
         "plugin": "new-client",
@@ -1240,13 +1640,14 @@ def _package_new_client_into(
         "generated_at": generated_at_value,
         "created_at": generated_at_value,
         "status": "ready_for_review",
+        "path_reference": path_reference,
         "jurisdiction": intake["jurisdiction"],
         "country_pack": ITALY_COUNTRY_PACK,
         "language": intake["language"],
         "temporal_validity": temporal_validity,
         "client_reference": intake["client_reference"],
-        "input_paths": [resolved_input.as_posix()],
-        "output_dir": reported_output.as_posix(),
+        "input_paths": input_paths,
+        "output_dir": recorded_output,
         "inferred_task": "prepare_reviewable_professional_new_client",
         "assumptions": [
             "Input factor values and applicability records are professional inputs, "
@@ -1257,16 +1658,8 @@ def _package_new_client_into(
             "status": "ready",
             "dependencies": "python_standard_library_only",
         },
-        "input": {
-            "path": resolved_input.as_posix(),
-            "sha256": sha256_file(resolved_input),
-            "canonical_payload_sha256": input_hash,
-        },
-        "source_registry": {
-            "path": source_registry_path.expanduser().resolve().as_posix(),
-            "sha256": sha256_file(source_registry_path.expanduser().resolve()),
-            "canonical_payload_sha256": canonical_json_hash(source_registry),
-        },
+        "input": input_record,
+        "source_registry": source_registry_record,
         "data_posture": {
             "local_files_read": local_files_read,
             "external_connectors_used": [],
@@ -1484,11 +1877,25 @@ def package_new_client(
     *,
     source_registry_path: Path = DEFAULT_SOURCE_REGISTRY,
     generated_at: str | None = None,
+    run_id: str | None = None,
+    run_root: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build and validate in a sibling staging directory, then publish atomically."""
 
     requested_output = output_dir.expanduser().absolute()
     resolved_input = input_path.expanduser().resolve()
+    generated_at_value = generated_at or utc_now()
+    managed_inputs: Mapping[str, Any] | None = None
+    if client_engagement is not None:
+        managed_inputs = _preflight_managed_package_inputs(
+            context=client_engagement,
+            input_path=resolved_input,
+            output_dir=requested_output,
+            source_registry_path=source_registry_path,
+            generated_at=generated_at_value,
+        )
+        run_root = Path(str(managed_inputs["run_root"]))
     input_shares_output = (
         resolved_input.parent == requested_output.resolve(strict=False)
         and resolved_input.name == "new_client_input.json"
@@ -1513,24 +1920,44 @@ def package_new_client(
             input_path,
             staging_output,
             source_registry_path=source_registry_path,
-            generated_at=generated_at,
+            generated_at=generated_at_value,
             reported_output_dir=final_output,
+            run_id=run_id,
+            run_root=run_root,
+            managed_inputs=managed_inputs,
         )
-        if input_shares_output:
-            packaged_input_hash = load_json(staging_output / "run_intake.json")[
-                "input"
-            ]["sha256"]
-            if sha256_file(resolved_input) != packaged_input_hash:
+        if managed_inputs is not None:
+            if sha256_file(resolved_input) != managed_inputs["source_input_sha256"]:
                 raise ValidationError(
                     "new_client_input.json changed while the package was being built."
                 )
-            retained_input = staging_output / resolved_input.name
-            shutil.copy2(resolved_input, retained_input)
-            retained_input.chmod(0o600)
+            retained_input = write_private_json(
+                staging_output / "new_client_input.json",
+                managed_inputs["portable_intake"],
+            )
+            packaged_input_hash = load_json(staging_output / "run_intake.json")[
+                "input"
+            ]["sha256"]
             if sha256_file(retained_input) != packaged_input_hash:
                 raise ValidationError(
                     "The retained new_client_input.json copy failed byte verification."
                 )
+        if input_shares_output:
+            packaged_input_hash = load_json(staging_output / "run_intake.json")[
+                "input"
+            ]["sha256"]
+            if managed_inputs is None:
+                if sha256_file(resolved_input) != packaged_input_hash:
+                    raise ValidationError(
+                        "new_client_input.json changed while the package was being built."
+                    )
+                retained_input = staging_output / resolved_input.name
+                shutil.copy2(resolved_input, retained_input)
+                retained_input.chmod(0o600)
+                if sha256_file(retained_input) != packaged_input_hash:
+                    raise ValidationError(
+                        "The retained new_client_input.json copy failed byte verification."
+                    )
             backup_output = Path(
                 tempfile.mkdtemp(
                     prefix=f".{final_output.name}.",
@@ -1581,6 +2008,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--input", required=True, type=Path)
     parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument(
         "--source-registry",
         type=Path,
@@ -1594,12 +2022,20 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     args = build_parser().parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="new-client",
+            input_paths=[args.input],
+            output_dir=args.output_dir,
+        )
         result = package_new_client(
             args.input,
             args.output_dir,
             source_registry_path=args.source_registry,
+            run_id=str(context["run_id"]),
+            client_engagement=context,
         )
-    except ValidationError as exc:
+    except (AssuranceContractError, OSError, ValidationError) as exc:
         sys.stdout.write(json.dumps({"status": "error", "error": str(exc)}) + "\n")
         return 2
     sys.stdout.write(

@@ -39,6 +39,20 @@ def load_core() -> Any:
     return module
 
 
+def _load_customer_ledger() -> Any:
+    path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    module_name = "concordato_customer_ledger"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 def _save_workbook(path: Path, rows: list[list[Any]]) -> None:
     workbook = openpyxl.Workbook()
     sheet = workbook.active
@@ -168,20 +182,64 @@ def _reviewed_source_recipe(
     )
 
 
+def _start_managed_concordato_run(
+    tmp_path: Path,
+    received_dir: Path,
+) -> tuple[Path, Path, str, Path]:
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Customer"
+    client_root.mkdir()
+    client_id = "client_444444444444444444444444"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Concordato review")
+    input_ids = [
+        ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            source,
+            "source",
+        )["receipt"]["input_id"]
+        for source in sorted(received_dir.iterdir())
+    ]
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "concordato-plan-review",
+        "test-version",
+        input_ids=input_ids,
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context = running["context"]
+    return (
+        Path(context["input_dir"]),
+        Path(running["output_dir"]),
+        str(context["run_id"]),
+        Path(context["context_path"]),
+    )
+
+
 def _build_qualified_concordato_run(
     tmp_path: Path,
 ) -> tuple[Any, Path, Path]:
     core = load_core()
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "output"
-    input_dir.mkdir()
+    received_dir = tmp_path / "received"
+    received_dir.mkdir()
     _save_workbook(
-        input_dir / "piano.xlsx",
+        received_dir / "piano.xlsx",
         [["Voce", "Importo"], ["Debiti tributari", 100]],
     )
     _save_workbook(
-        input_dir / "supporto.xlsx",
+        received_dir / "supporto.xlsx",
         [["Voce", "Saldo"], ["Debiti tributari", 100]],
+    )
+    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+        tmp_path, received_dir
     )
     inspection = core.run_concordato_review(
         input_dir,
@@ -192,8 +250,13 @@ def _build_qualified_concordato_run(
         core,
         inspection,
         {
-            "piano.xlsx": "concordato_plan",
-            "supporto.xlsx": "other_support",
+            str(item["relative_path"]): (
+                "concordato_plan"
+                if Path(str(item["relative_path"])).name == "piano.xlsx"
+                else "other_support"
+            )
+            for item in inspection.inventory
+            if item.get("supported")
         },
     )
     core.run_concordato_review(
@@ -201,6 +264,7 @@ def _build_qualified_concordato_run(
         output_dir,
         tolerance="0",
         recipe=recipe,
+        run_id=run_id,
     )
     return core, input_dir, output_dir
 
@@ -209,11 +273,10 @@ def _build_multirow_qualified_concordato_run(
     tmp_path: Path,
 ) -> tuple[Any, Path]:
     core = load_core()
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "output"
-    input_dir.mkdir()
+    received_dir = tmp_path / "received"
+    received_dir.mkdir()
     _save_workbook(
-        input_dir / "piano.xlsx",
+        received_dir / "piano.xlsx",
         [
             ["Voce", "Importo"],
             ["Debiti tributari", 100],
@@ -223,13 +286,16 @@ def _build_multirow_qualified_concordato_run(
         ],
     )
     _save_workbook(
-        input_dir / "supporto.xlsx",
+        received_dir / "supporto.xlsx",
         [
             ["Voce", "Saldo"],
             ["Debiti tributari", 100],
             ["Debiti fornitori", 200],
             ["Debiti previdenziali", 300],
         ],
+    )
+    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+        tmp_path, received_dir
     )
     inspection = core.run_concordato_review(
         input_dir,
@@ -240,8 +306,13 @@ def _build_multirow_qualified_concordato_run(
         core,
         inspection,
         {
-            "piano.xlsx": "concordato_plan",
-            "supporto.xlsx": "other_support",
+            str(item["relative_path"]): (
+                "concordato_plan"
+                if Path(str(item["relative_path"])).name == "piano.xlsx"
+                else "other_support"
+            )
+            for item in inspection.inventory
+            if item.get("supported")
         },
     )
     core.run_concordato_review(
@@ -249,6 +320,7 @@ def _build_multirow_qualified_concordato_run(
         output_dir,
         tolerance="0",
         recipe=recipe,
+        run_id=run_id,
     )
     return core, output_dir
 
@@ -1143,6 +1215,7 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     assert run.audit["candidate_match_count"] == 1
     assert audit["tolerance"] == "0.01"
     assert audit["deterministic_boundary"].startswith("Inventory, extraction")
+
     assert "candidate_amount_match" in matches
     assert (output_dir / "concordato_tie_out_workpaper.xlsx").exists()
     assert (output_dir / "concordato_review_summary.docx").exists()
@@ -1349,6 +1422,109 @@ def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> No
     document_text = "\n".join(paragraph.text for paragraph in document.paragraphs)
     assert "battono per importo" in document_text
     assert "non battono" in document_text
+
+
+def test_customer_folder_rename_preserves_concordato_assurance_replay(
+    tmp_path: Path,
+) -> None:
+    ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    spec = importlib.util.spec_from_file_location(
+        "concordato_test_client_ledger",
+        ledger_path,
+    )
+    assert spec and spec.loader
+    ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
+    spec.loader.exec_module(ledger)
+    received = tmp_path / "received"
+    received.mkdir()
+    source = received / "plan.xlsx"
+    _save_workbook(source, [["Voce", "Importo"], ["Debiti", 1250]])
+    client_root = tmp_path / "Studio" / "Original Customer"
+    client_root.mkdir(parents=True)
+    client_id = "client_444444444444444444444444"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Concordato")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "concordato-plan-review",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    output_dir = Path(running["output_dir"]) / "reviewed-output"
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "run_concordato_review.py"),
+            str(running["context"]["input_dir"]),
+            "--client-engagement",
+            str(running["context_path"]),
+            "--output-dir",
+            str(output_dir),
+            "--reference-date",
+            "2026-03-31",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    assert run_intake["input_paths"] == ["inputs"]
+    assert run_intake["output_dir"] == "outputs/reviewed-output"
+    assert str(client_root) not in json.dumps(run_intake)
+
+    relative_output = output_dir.relative_to(client_root)
+    relative_context = Path(running["context_path"]).relative_to(client_root)
+    renamed_root = client_root.with_name("Renamed Customer")
+    client_root.rename(renamed_root)
+    replay = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "replay_assurance.py"),
+            "--output-dir",
+            str(renamed_root / relative_output),
+            "--client-engagement",
+            str(renamed_root / relative_context),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+
+    assert replay.returncode == 0, replay.stdout + replay.stderr
+    assert json.loads(replay.stdout)["ok"] is True
+    finalized = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "finalize_output_closure.py"),
+            "--output-dir",
+            str(renamed_root / relative_output),
+            "--client-engagement",
+            str(renamed_root / relative_context),
+            "--phase",
+            "review_save_finalization",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert finalized.returncode == 0, finalized.stdout + finalized.stderr
+    assert json.loads(finalized.stdout)["ok"] is True
 
 
 def test_numeric_evidence_ledger_closes_all_multirow_material_addresses(
@@ -2223,11 +2399,10 @@ def test_concordato_request_more_documents_prefills_blocker_context(
     tmp_path: Path,
 ) -> None:
     core = load_core()
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "output"
-    input_dir.mkdir()
+    received_dir = tmp_path / "received"
+    received_dir.mkdir()
     _save_workbook(
-        input_dir / "case_plan.xlsx",
+        received_dir / "case_plan.xlsx",
         [
             ["Voce", "Importo"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
@@ -2235,11 +2410,14 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         ],
     )
     _save_workbook(
-        input_dir / "supporting_ledger.xlsx",
+        received_dir / "supporting_ledger.xlsx",
         [
             ["Voce", "Saldo rettificato"],
             ["Debiti tributari entro 12 mesi", 4124413.15],
         ],
+    )
+    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+        tmp_path, received_dir
     )
 
     inspection_run = core.run_concordato_review(
@@ -2254,8 +2432,13 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         core,
         inspection_run,
         {
-            "case_plan.xlsx": "concordato_plan",
-            "supporting_ledger.xlsx": "other_support",
+            str(item["relative_path"]): (
+                "concordato_plan"
+                if Path(str(item["relative_path"])).name == "case_plan.xlsx"
+                else "other_support"
+            )
+            for item in inspection_run.inventory
+            if item.get("supported")
         },
     )
     core.run_concordato_review(
@@ -2266,6 +2449,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         document_language="it",
         tolerance="0.01",
         recipe=recipe,
+        run_id=run_id,
     )
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
@@ -2492,12 +2676,14 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     tmp_path: Path,
 ) -> None:
     core = load_core()
-    input_dir = tmp_path / "input"
-    output_dir = tmp_path / "concordato"
-    input_dir.mkdir()
+    received_dir = tmp_path / "received"
+    received_dir.mkdir()
     _save_workbook(
-        input_dir / "piano.xlsx",
+        received_dir / "piano.xlsx",
         [["Voce", "Importo"], ["Debiti tributari", 100]],
+    )
+    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+        tmp_path, received_dir
     )
     inspection = core.run_concordato_review(
         input_dir,
@@ -2507,13 +2693,18 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
     recipe = _reviewed_source_recipe(
         core,
         inspection,
-        {"piano.xlsx": "concordato_plan"},
+        {
+            str(item["relative_path"]): "concordato_plan"
+            for item in inspection.inventory
+            if item.get("supported")
+        },
     )
     core.run_concordato_review(
         input_dir,
         output_dir,
         tolerance="0",
         recipe=recipe,
+        run_id=run_id,
     )
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
@@ -2885,11 +3076,86 @@ def test_complete_concordato_review_remains_assurance_withheld(
 def _concordato_transaction_case(
     tmp_path: Path,
 ) -> tuple[Path, dict[str, Any]]:
-    _, _, output_dir = _build_qualified_concordato_run(tmp_path)
+    core = load_core()
+    source_dir = tmp_path / "received"
+    source_dir.mkdir()
+    _save_workbook(
+        source_dir / "piano.xlsx",
+        [["Voce", "Importo"], ["Debiti tributari", 100]],
+    )
+    _save_workbook(
+        source_dir / "supporto.xlsx",
+        [["Voce", "Saldo"], ["Debiti tributari", 100]],
+    )
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Customer"
+    client_root.mkdir()
+    client_id = "client_666666666666666666666666"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root,
+        client_id,
+        "Concordato review",
+    )
+    input_ids: list[str] = []
+    for source in sorted(source_dir.iterdir()):
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement["engagement_id"],
+            source,
+            "source",
+        )
+        input_ids.append(imported["receipt"]["input_id"])
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "concordato-plan-review",
+        "test-version",
+        input_ids=input_ids,
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    input_dir = Path(running["context"]["input_dir"])
+    inspection = core.run_concordato_review(
+        input_dir,
+        tmp_path / "inspection",
+        tolerance="0",
+    )
+    recipe = _reviewed_source_recipe(
+        core,
+        inspection,
+        {
+            str(item["relative_path"]): (
+                "concordato_plan"
+                if Path(str(item["relative_path"])).name == "piano.xlsx"
+                else "other_support"
+            )
+            for item in inspection.inventory
+            if item.get("supported")
+        },
+    )
+    output_dir = Path(running["output_dir"])
+    run_id = str(running["context"]["run_id"])
+    core.run_concordato_review(
+        input_dir,
+        output_dir,
+        tolerance="0",
+        recipe=recipe,
+        run_id=run_id,
+        input_path_ref="inputs",
+        output_path_ref="outputs",
+    )
     output_dir.chmod(0o750)
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    assert run_intake["run_id"] == run_id
+    assert review_payload["run_id"] == run_id
     decisions = [
         {
             "item_id": item["id"],
@@ -2898,6 +3164,7 @@ def _concordato_transaction_case(
         for item in review_payload["items"]
     ]
     return output_dir, {
+        "client_engagement": str(running["context_path"]),
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -2925,6 +3192,79 @@ def _concordato_memo_arguments(arguments: dict[str, Any]) -> dict[str, Any]:
             }
         ],
     }
+
+
+@pytest.mark.parametrize("reference_kind", ("legacy_absolute", "escaping"))
+def test_managed_replay_after_rename_rejects_nonportable_source_without_io(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    reference_kind: str,
+) -> None:
+    output_dir, arguments = _concordato_transaction_case(tmp_path)
+    context_path = Path(arguments["client_engagement"])
+    run_root = context_path.parent
+    vera_root = next(parent for parent in run_root.parents if parent.name == "Vera")
+    client_root = vera_root.parent
+    relative_output = output_dir.relative_to(client_root)
+    relative_context = context_path.relative_to(client_root)
+    renamed_root = client_root.with_name("Renamed Concordato Customer")
+    client_root.rename(renamed_root)
+    output_dir = renamed_root / relative_output
+    context_path = renamed_root / relative_context
+    run_root = context_path.parent
+    external_source = run_root.parent / "unauthorized-source"
+    external_source.mkdir()
+    protected_source = external_source / "must-not-be-read.txt"
+    protected_source.write_text("protected\n", encoding="utf-8")
+    forged_reference = (
+        external_source.as_posix()
+        if reference_kind == "legacy_absolute"
+        else "../unauthorized-source"
+    )
+    run_intake_path = output_dir / "run_intake.json"
+    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
+    run_intake["input_paths"] = [forged_reference]
+    _write_json(run_intake_path, run_intake)
+    before = _concordato_tree_image(output_dir)
+    protected_bytes = protected_source.read_bytes()
+
+    import replay_assurance as replay_module
+    from vera_assurance import load_client_engagement_context_file
+
+    client_context = load_client_engagement_context_file(
+        context_path,
+        expected_workflow_id="concordato-plan-review",
+        output_dir=output_dir,
+    )
+    external_accesses: list[Path] = []
+    original_open = Path.open
+
+    def guarded_open(path: Path, *args: Any, **kwargs: Any) -> Any:
+        resolved = path.expanduser().resolve()
+        if resolved == external_source or resolved.is_relative_to(external_source):
+            external_accesses.append(resolved)
+            raise AssertionError("forged Concordato source must not be read")
+        return original_open(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "open", guarded_open)
+    monkeypatch.setattr(
+        replay_module,
+        "run_concordato_review",
+        lambda *_args, **_kwargs: (_ for _ in ()).throw(
+            AssertionError("replay must stop before regeneration")
+        ),
+    )
+
+    with pytest.raises(ValueError, match="run-root-relative"):
+        replay_module.replay_assurance(
+            output_dir,
+            client_context=client_context,
+        )
+
+    assert external_accesses == []
+    with original_open(protected_source, "rb") as handle:
+        assert handle.read() == protected_bytes
+    assert _concordato_tree_image(output_dir) == before
 
 
 def _concordato_tree_image(root: Path) -> dict[str, tuple[Any, ...]]:
@@ -3007,7 +3347,7 @@ def _concordato_phase_child(
     )
     script.write_text(
         "#!/bin/sh\n"
-        'if [ "$(basename "$3")" = "replay_assurance.py" ]; then\n'
+        'if [ "$3" = "-c" ] || [ "$(basename "$3")" = "replay_assurance.py" ]; then\n'
         '  exec "$REAL_PYTHON" "$@"\n'
         "fi\n"
         f"{branch}",
@@ -3027,6 +3367,12 @@ def _concordato_post_child_tamper(tmp_path: Path) -> Path:
         "import subprocess\n"
         "import sys\n"
         "real_python = os.environ['REAL_PYTHON']\n"
+        "script_indexes = [\n"
+        "    index for index, value in enumerate(sys.argv[1:], 1)\n"
+        "    if value.endswith('.py')\n"
+        "]\n"
+        "if not script_indexes:\n"
+        "    os.execv(real_python, [real_python, *sys.argv[1:]])\n"
         "script_index = next(\n"
         "    index for index, value in enumerate(sys.argv[1:], 1)\n"
         "    if value.endswith('.py')\n"
@@ -3192,6 +3538,12 @@ def _concordato_forged_successor_chain(tmp_path: Path) -> Path:
         "import subprocess\n"
         "import sys\n"
         "real_python = os.environ['REAL_PYTHON']\n"
+        "script_indexes = [\n"
+        "    index for index, value in enumerate(sys.argv[1:], 1)\n"
+        "    if value.endswith('.py')\n"
+        "]\n"
+        "if not script_indexes:\n"
+        "    os.execv(real_python, [real_python, *sys.argv[1:]])\n"
         "script_index = next(\n"
         "    index for index, value in enumerate(sys.argv[1:], 1)\n"
         "    if value.endswith('.py')\n"
@@ -3262,8 +3614,14 @@ def test_concordato_review_transaction_honest_apply_commits_without_residue(
     assert closure["phase"] == "review_apply_finalization"
     assert closure["previous_closure_content_sha256"] == predecessor["content_sha256"]
     from replay_assurance import replay_assurance
+    from vera_assurance import load_client_engagement_context_file
 
-    replay = replay_assurance(output_dir)
+    client_context = load_client_engagement_context_file(
+        arguments["client_engagement"],
+        expected_workflow_id="concordato-plan-review",
+        output_dir=output_dir,
+    )
+    replay = replay_assurance(output_dir, client_context=client_context)
     assert replay["workflow_output_closure_content_sha256"] == closure["content_sha256"]
     assert replay["workflow_output_closure_phase"] == "review_apply_finalization"
     assert not list(tmp_path.glob(".generated-review-transaction-*"))
@@ -3307,8 +3665,14 @@ def test_concordato_edit_of_assurance_bound_markdown_writes_revision_only(
     revision_path = output_dir / effect["revision_artifact"]
     assert revision_path.read_text(encoding="utf-8") == edit_text
     from replay_assurance import replay_assurance
+    from vera_assurance import load_client_engagement_context_file
 
-    replay = replay_assurance(output_dir)
+    client_context = load_client_engagement_context_file(
+        arguments["client_engagement"],
+        expected_workflow_id="concordato-plan-review",
+        output_dir=output_dir,
+    )
+    replay = replay_assurance(output_dir, client_context=client_context)
     assert replay["workflow_output_closure_phase"] == "review_apply_finalization"
 
 
@@ -3352,11 +3716,17 @@ def test_standalone_replay_rejects_rehashed_applied_state(
         validate_output_closure,
     )
     from replay_assurance import replay_assurance
+    from vera_assurance import load_client_engagement_context_file
 
     validate_final_artifact_index(output_dir)
     validate_output_closure(output_dir)
+    client_context = load_client_engagement_context_file(
+        arguments["client_engagement"],
+        expected_workflow_id="concordato-plan-review",
+        output_dir=output_dir,
+    )
     with pytest.raises(ValueError, match="blocker_count is stale"):
-        replay_assurance(output_dir)
+        replay_assurance(output_dir, client_context=client_context)
 
 
 def test_concordato_review_transaction_honest_save_seals_successor(
@@ -3709,7 +4079,9 @@ def test_concordato_child_receives_only_working_output_paths(
     wrapper = tmp_path / "recording-python.sh"
     wrapper.write_text(
         "#!/bin/sh\n"
-        'printf "%s\\n" "$@" >> "$REVIEW_TX_CHILD_LOG"\n'
+        'if [ "$3" != "-c" ]; then\n'
+        '  printf "%s\\n" "$@" >> "$REVIEW_TX_CHILD_LOG"\n'
+        "fi\n"
         'exec "$REAL_PYTHON" "$@"\n',
         encoding="utf-8",
     )
@@ -3726,9 +4098,26 @@ def test_concordato_child_receives_only_working_output_paths(
     )
 
     child_arguments = child_log.read_text(encoding="utf-8")
+    child_argument_lines = child_arguments.splitlines()
     persisted_trace = (output_dir / "run_intake.json").read_text(encoding="utf-8")
     assert result["ok"] is True
-    assert str(output_dir) not in child_arguments
+    canonical_indexes = [
+        index
+        for index, value in enumerate(child_argument_lines)
+        if value == str(output_dir)
+    ]
+    assert canonical_indexes
+    assert all(
+        child_argument_lines[index - 1] == "--persistent-output-dir"
+        for index in canonical_indexes
+    )
+    operational_output_dirs = [
+        child_argument_lines[index + 1]
+        for index, value in enumerate(child_argument_lines[:-1])
+        if value == "--output-dir"
+    ]
+    assert operational_output_dirs
+    assert str(output_dir) not in operational_output_dirs
     assert ".generated-review-transaction-" in child_arguments
     assert "/working" in child_arguments
     assert ".generated-review-transaction-" not in persisted_trace
@@ -3741,13 +4130,24 @@ def test_concordato_child_start_failure_is_fixed_and_rolls_back(
 ) -> None:
     output_dir, arguments = _concordato_transaction_case(tmp_path)
     before = _concordato_tree_image(output_dir)
-    non_executable = tmp_path / "python-directory"
-    non_executable.mkdir()
+    non_executable = tmp_path / "python-becomes-non-executable.sh"
+    non_executable.write_text(
+        "#!/bin/sh\n"
+        'if [ "$3" = "-c" ]; then\n'
+        '  "$REAL_PYTHON" "$@"\n'
+        "  status=$?\n"
+        '  chmod 000 "$0"\n'
+        "  exit $status\n"
+        "fi\n"
+        "exit 17\n",
+        encoding="utf-8",
+    )
+    non_executable.chmod(0o700)
 
     result = _concordato_transaction_call(
         "save_concordato_plan_decisions",
         arguments,
-        env={"PYTHON": str(non_executable)},
+        env={"PYTHON": str(non_executable), "REAL_PYTHON": sys.executable},
     )
 
     assert result["ok"] is False
@@ -3790,6 +4190,10 @@ def test_concordato_parent_replay_rejects_stale_receipts_despite_exact_child_ech
     child.write_text(
         f"#!{sys.executable}\n"
         "import json\n"
+        "import os\n"
+        "import sys\n"
+        "if '-c' in sys.argv[1:]:\n"
+        "    os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n"
         f"print(json.dumps({child_result!r}))\n",
         encoding="utf-8",
     )
@@ -3850,8 +4254,11 @@ def test_concordato_child_cannot_forge_professional_readiness(
     child.write_text(
         f"#!{sys.executable}\n"
         "import json\n"
+        "import os\n"
         "import pathlib\n"
         "import sys\n"
+        "if '-c' in sys.argv[1:]:\n"
+        "    os.execv(sys.executable, [sys.executable, *sys.argv[1:]])\n"
         "script_index = next(\n"
         "    index for index, value in enumerate(sys.argv[1:], 1)\n"
         "    if value.endswith('.py')\n"

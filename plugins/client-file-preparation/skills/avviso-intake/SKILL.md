@@ -3,9 +3,12 @@ name: avviso-intake
 description: Use when creating a first intake memo for notices, agency communications, avvisi, cartelle, HMRC letters, or Swiss cantonal tax letters found in a customer folder, extracting practical references.
 ---
 
-## Output Location Rule
+## Client workflow gate
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Resolve the exact Studio Archive client and engagement before reading or writing
+case material. Resume or prepare a `client-file-preparation` run, use only its
+managed input folder and `output_dir`, and pass its absolute context path as
+`--client-engagement`. Do not invent a sibling output folder.
 
 # Avviso Intake
 
@@ -43,7 +46,7 @@ plugin source or generated ZIPs during a run.
 The avviso intake is included in the full workflow:
 
 ```bash
-python ../../scripts/build_file_preparation_outputs.py <cartella-cliente> --year <anno>
+python ../../scripts/build_file_preparation_outputs.py <managed-input-folder> --client-engagement <client_engagement_path> --year <anno>
 ```
 
 If the command is interrupted, rerun it with the same arguments and output

@@ -1358,6 +1358,9 @@ def write_run_intake(
     output_dir: Path,
     input_dir: Path,
     *,
+    run_id: str | None = None,
+    input_path_ref: str | None = None,
+    output_path_ref: str | None = None,
     reference_date: str,
     language: str,
     document_language: str,
@@ -1367,18 +1370,20 @@ def write_run_intake(
 ) -> RunIntakeResult:
     """Write the intake contract once folder scope has been inventoried."""
 
-    run_id = _run_id(input_dir)
+    effective_run_id = run_id or _run_id(input_dir)
+    recorded_input = input_path_ref or input_dir.as_posix()
+    recorded_output = output_path_ref or output_dir.as_posix()
     spanish = _is_spanish(language)
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
-        "run_id": run_id,
+        "run_id": effective_run_id,
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
-        "input_paths": [input_dir.as_posix()],
-        "output_dir": output_dir.as_posix(),
+        "input_paths": [recorded_input],
+        "output_dir": recorded_output,
         "inferred_task": "concordato_preventivo_review",
         "assumptions": {
             "reference_date": reference_date,
@@ -1398,7 +1403,7 @@ def write_run_intake(
             ),
         },
         "data_posture": {
-            "local_files_read": [input_dir.as_posix()],
+            "local_files_read": [recorded_input],
             "external_connectors_used": [],
             "upload_paths_used": [],
             "remote_sql_execution_used": False,
@@ -1419,7 +1424,7 @@ def write_run_intake(
         "status": "ready_for_extraction",
     }
     return RunIntakeResult(
-        run_id=run_id,
+        run_id=effective_run_id,
         path=_write_json(output_dir / "run_intake.json", payload),
     )
 
@@ -1429,6 +1434,7 @@ def write_review_session_artifacts(
     input_dir: Path,
     *,
     run_id: str,
+    input_path_ref: str | None = None,
     run_intake_path: Path,
     reference_date: str,
     language: str,
@@ -1477,7 +1483,7 @@ def write_review_session_artifacts(
         "created_at": _utc_now(),
         "language": language,
         "document_language": document_language,
-        "source_paths": [input_dir.as_posix()],
+        "source_paths": [input_path_ref or input_dir.as_posix()],
         "review_type": "concordato_preventivo_review",
         "items": items,
         "item_count": len(items),

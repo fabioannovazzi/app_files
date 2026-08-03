@@ -14,12 +14,24 @@ import csv
 import json
 import logging
 import re
+import sys
 from collections import Counter, defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import date
 from decimal import ROUND_HALF_UP, Decimal, Inexact, Rounded, localcontext
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from typing import Any
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
 
 from plan_contract_kernel import (
     ContractValidationError,
@@ -35,10 +47,16 @@ from plan_contract_kernel import (
     strict_json_load,
     write_json,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = [
     "ENGINE_VERSION",
     "RECIPE_ID",
+    "declared_actual_sales_path",
     "main",
     "prepare_sales_plan_case",
     "snapshot_declared_actual_sales",
@@ -461,6 +479,36 @@ def _load_assumptions(
             "reviewed_assumptions.assumptions must contain at least one assumption"
         )
     return assumptions
+
+
+def declared_actual_sales_path(case_path: Path) -> Path:
+    """Resolve the case-declared source lexically without opening that source."""
+
+    resolved_case = Path(case_path).resolve()
+    case = strict_json_load(resolved_case)
+    files = _mapping(case.get("files"), label="files")
+    _exact_fields(files, required=frozenset({"actual_sales"}), label="files")
+    receipt = _mapping(files["actual_sales"], label="files.actual_sales")
+    _exact_fields(
+        receipt,
+        required=frozenset({"path", "sha256"}),
+        label="files.actual_sales",
+    )
+    raw_path = _text(receipt["path"], label="files.actual_sales.path")
+    if "\\" in raw_path:
+        raise ContractValidationError(
+            "files.actual_sales.path must use POSIX separators"
+        )
+    relative = PurePosixPath(raw_path)
+    if (
+        relative.is_absolute()
+        or raw_path != relative.as_posix()
+        or any(part in {".", ".."} for part in relative.parts)
+    ):
+        raise ContractValidationError(
+            "files.actual_sales.path must be a canonical relative path"
+        )
+    return resolved_case.parent.joinpath(*relative.parts)
 
 
 def _load_case(
@@ -1811,6 +1859,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("case", type=Path, help="Path to case.json")
+    parser.add_argument("--client-engagement", required=True, type=Path)
     parser.add_argument(
         "--output-dir",
         required=True,
@@ -1819,8 +1868,26 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     try:
+        context = load_client_engagement_context_file(
+            args.client_engagement,
+            expected_workflow_id="sales-plan",
+            input_paths=[args.case],
+            output_dir=args.output_dir,
+        )
+        validate_client_workflow_run(
+            context,
+            expected_workflow_id="sales-plan",
+            input_paths=[declared_actual_sales_path(args.case)],
+            output_dir=args.output_dir,
+        )
         result = prepare_sales_plan_case(args.case, args.output_dir)
-    except (ContractValidationError, OSError, TypeError, ValueError) as exc:
+    except (
+        AssuranceContractError,
+        ContractValidationError,
+        OSError,
+        TypeError,
+        ValueError,
+    ) as exc:
         LOGGER.error("FAILED: %s", exc)
         return 2
     LOGGER.info(

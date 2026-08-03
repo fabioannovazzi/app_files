@@ -5,7 +5,24 @@ description: Use when Vera or Codex must validate a generated or supplied legal,
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace or a published folder. Use
+only the Studio Archive run path described below.
+
+## Client engagement gate
+
+Select one Studio Archive client and engagement, import the answer and supplied
+sources or use artifacts from the same engagement, then call
+`prepare_studio_client_workflow` with workflow ID
+`deep-research-validator`. Pass the returned `client_engagement_path` as
+`--client-engagement` to document inspection, source inspection, and packaging.
+Cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before inspection. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Validate Answer
 
@@ -97,13 +114,13 @@ If requirements are missing, install from `requirements.txt` only when the envir
 4. Inspect the document:
 
 ```bash
-python scripts/inspect_document.py <document-file> --output-dir <output-dir>
+python scripts/inspect_document.py <managed-document-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output>
 ```
 
 5. Inspect cited sources and optional local source files:
 
 ```bash
-python scripts/inspect_sources.py <output-dir>/document_inventory.json --output-dir <output-dir> [--source-file <path> ...]
+python scripts/inspect_sources.py <client-run-output>/document_inventory.json --client-engagement <client_engagement_path> --output-dir <client-run-output> [--source-file <managed-source-path> ...]
 ```
 
 Use `--no-fetch` if the environment cannot fetch URLs; then rely on listed references and local files.
@@ -195,7 +212,7 @@ must remain unresolved in `delivery_readiness` until addressed.
 8. Package and audit the review:
 
 ```bash
-python scripts/package_validation.py <output-dir>/document_inventory.json <output-dir>/source_inventory.json <output-dir>/claims_review_draft.json --answer-contract-file <output-dir>/answer_contract.json --output-dir <output-dir>
+python scripts/package_validation.py <client-run-output>/document_inventory.json <client-run-output>/source_inventory.json <client-run-output>/claims_review_draft.json --client-engagement <client_engagement_path> --answer-contract-file <client-run-output>/answer_contract.json --output-dir <client-run-output>
 ```
 
 Add `--docx` whenever DOCX tooling is available. Do not ask whether to export DOCX; it is a natural deliverable of the validation package.
@@ -254,7 +271,11 @@ The review must:
 When the local MCP server is available, prefer the OpenAI-style review handoff:
 
 1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the validation output folder.
+   `final_artifacts.json` from the validation output folder. Pass the current
+   absolute `client_engagement_path` as `client_engagement` with every MCP call
+   that includes `run_intake`. If the customer folder moved, use the
+   `context.json` path under its current location; never reuse a previously
+   recorded absolute path.
 2. Call `validate_deep_research_review` with `review_payload` before rendering.
 3. If validation succeeds, call `render_deep_research_review` with the same
    payload objects so Codex can show the local HTML widget
