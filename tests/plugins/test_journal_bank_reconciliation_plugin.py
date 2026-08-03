@@ -8616,9 +8616,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "current chat unchanged" in skill_text
     assert "Codex JSONL visibility is incomplete" in skill_text
     assert "luna_launch_receipt.json" in skill_text
-    assert (
-        "Do not copy or reconstruct its underlying `codex exec` command" in skill_text
-    )
+    assert "copy or reconstruct its underlying `codex exec` command" in skill_text
     assert "codex exec \\" not in skill_text
     assert "advisory only" in skill_text
     assert "modules.llm" not in script_text

@@ -63,27 +63,38 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 
 import argparse
 import hashlib
+import io
 import json
 import logging
 import os
+import platform
+import secrets
+import selectors
+import shutil
+import signal
 import stat
+import subprocess
+import tempfile
+import time
+import uuid
 from collections import Counter, deque
 from pathlib import Path
 from typing import Any, Mapping, Sequence
 
+import polars as pl
 from journal_bank_core import (
     TRANSACTION_COLUMNS,
+    _artifact_roots,
     _candidate_rows,
     _canonical_tolerance,
-    _current_relationship_policy,
     _JournalAmountIndex,
-    _read_material_csv,
+    _normalize_relationship_policy,
     canonical_json_sha256,
     configure_logging,
     decimal_text,
     parse_canonical_decimal,
-    read_json,
     validate_artifact_receipt,
+    validate_assurance_envelope,
     validate_exact_implementation_receipts,
     validate_material_value_ledger,
     write_json,
@@ -92,6 +103,7 @@ from journal_bank_core import (
 __all__ = [
     "CANDIDATE_GRAPH_NAME",
     "EVENTS_NAME",
+    "LAUNCH_RECEIPT_NAME",
     "OUTPUT_SCHEMA_NAME",
     "PROMPT_NAME",
     "RESPONSE_NAME",
@@ -101,6 +113,7 @@ __all__ = [
     "WORKER_RUN_NAME",
     "main",
     "prepare_semantic_review",
+    "run_semantic_worker",
     "validate_semantic_review",
 ]
 
@@ -112,16 +125,61 @@ OUTPUT_SCHEMA_NAME = "luna_output_schema.json"
 PROMPT_NAME = "luna_prompt.md"
 RESPONSE_NAME = "luna_response.json"
 EVENTS_NAME = "luna_events.jsonl"
+STDERR_NAME = "luna_stderr.log"
+LAUNCH_RECEIPT_NAME = "luna_launch_receipt.json"
 VALIDATED_SUGGESTIONS_NAME = "semantic_suggestions_validated.json"
 WORKER_RUN_NAME = "semantic_worker_run.json"
 STATUS_NAME = "semantic_review_status.json"
 VALIDATED_PENDING_NAME = ".semantic_suggestions_validated.pending.json"
 WORKER_PENDING_NAME = ".semantic_worker_run.pending.json"
+STATUS_PENDING_NAME = ".semantic_review_status.pending.json"
 
 GRAPH_SCHEMA_VERSION = "journal_bank.semantic_candidate_graph.v1"
 RESPONSE_SCHEMA_VERSION = "journal_bank.semantic_worker_response.v1"
 VALIDATED_SCHEMA_VERSION = "journal_bank.semantic_suggestions.v1"
 WORKER_RUN_SCHEMA_VERSION = "journal_bank.semantic_worker_run.v1"
+LAUNCH_RECEIPT_SCHEMA_VERSION = "journal_bank.semantic_launch_receipt.v1"
+
+WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
+PINNED_DARWIN_BUILD = "25F84"
+PINNED_CODEX_VERSION = "codex-cli 0.146.0-alpha.3.1"
+PINNED_CODEX_SHA256 = "6d8be49e49751554df16572369e636cbe02c84b208cad3dc35528c846eeca223"
+PINNED_SANDBOX_EXEC_SHA256 = (
+    "8290e4be7387a0df83cd1559e86afd880464f269450573d012795761fe298f16"
+)
+PINNED_CAT_SHA256 = "9e4bb13f36ffcc1ff2152738e185637f5b7c97977044bb88a3708cbba2c351ec"
+SANDBOX_EXEC_PATH = Path("/usr/bin/sandbox-exec")
+SANDBOX_CANARY_PATH = Path("/bin/cat")
+
+SEATBELT_PROFILE = """(version 1)
+(deny default)
+(import "system.sb")
+(allow process-exec (literal (param "CODEX_BIN")))
+(allow file-read* file-test-existence file-map-executable
+  (literal (param "CODEX_BIN")))
+(allow file-read* file-test-existence
+  (literal (param "CODEX_HOME_DIR"))
+  (literal (param "INSTALLATION_ID_FILE"))
+  (literal (param "GLOBAL_AGENTS_FILE"))
+  (literal (param "GLOBAL_AGENTS_OVERRIDE_FILE"))
+  (literal (param "AUTH_FILE"))
+  (literal (param "SCHEMA_FILE"))
+  (literal (param "WORK_DIR"))
+  (subpath (param "STATE_DIR"))
+  (subpath (param "LOG_DIR"))
+  (path-ancestors (param "WORK_DIR")))
+(allow file-write*
+  (literal (param "INSTALLATION_ID_FILE"))
+  (subpath (param "STATE_DIR"))
+  (subpath (param "LOG_DIR")))
+(allow mach-lookup
+  (global-name "com.apple.SecurityServer")
+  (global-name "com.apple.SystemConfiguration.configd"))
+(allow network-outbound)
+"""
+PINNED_SEATBELT_PROFILE_SHA256 = (
+    "c9fb7bbd473cf77e38e7ca041bb8b34b7c16178108f0a2660e6ba3131313d3be"
+)
 
 MAX_COMPONENT_BANK_ROWS = 20
 MAX_COMPONENT_JOURNAL_ROWS = 40
@@ -139,6 +197,13 @@ MAX_GRAPH_BYTES = 1024 * 1024
 MAX_DEFERRED_SUMMARIES = 250
 MAX_RESPONSE_BYTES = 1024 * 1024
 MAX_EVENTS_BYTES = 5 * 1024 * 1024
+MAX_STDERR_BYTES = 2 * 1024 * 1024
+MAX_EXECUTABLE_BYTES = 512 * 1024 * 1024
+MAX_CANARY_OUTPUT_BYTES = 128 * 1024
+WORKER_TIMEOUT_SECONDS = 600
+CANARY_TIMEOUT_SECONDS = 30
+MAX_REPLAY_CONTROL_BYTES = 64 * 1024 * 1024
+MAX_UNMATCHED_BYTES = 256 * 1024 * 1024
 MAX_CONTEXT_CHARS = 1_000
 MAX_RATIONALE_CHARS = 600
 MAX_DETAIL_CHARS = 200
@@ -172,16 +237,21 @@ DISABLED_WORKER_FEATURES = (
 )
 
 CURRENT_GENERATION_FILES = (
+    # Remove the completed marker and validated pair first so a partial archive
+    # cannot leave an old generation looking current.
+    STATUS_NAME,
+    VALIDATED_SUGGESTIONS_NAME,
+    WORKER_RUN_NAME,
+    STATUS_PENDING_NAME,
+    VALIDATED_PENDING_NAME,
+    WORKER_PENDING_NAME,
     CANDIDATE_GRAPH_NAME,
     OUTPUT_SCHEMA_NAME,
     PROMPT_NAME,
     RESPONSE_NAME,
     EVENTS_NAME,
-    VALIDATED_SUGGESTIONS_NAME,
-    WORKER_RUN_NAME,
-    STATUS_NAME,
-    VALIDATED_PENDING_NAME,
-    WORKER_PENDING_NAME,
+    STDERR_NAME,
+    LAUNCH_RECEIPT_NAME,
 )
 
 REQUIRED_RECEIPTS = {
@@ -340,6 +410,268 @@ def _strict_json_file(path: Path, *, maximum_bytes: int, label: str) -> dict[str
     return payload
 
 
+def _stable_executable_binding(
+    path: Path,
+    *,
+    label: str,
+    expected_sha256: str,
+) -> dict[str, Any]:
+    """Hash one ordinary executable without loading it into memory."""
+
+    unresolved = path.expanduser().absolute()
+    if unresolved.is_symlink():
+        raise ValueError(f"{label} cannot be a symlink")
+    try:
+        entry = unresolved.lstat()
+    except FileNotFoundError as exc:
+        raise ValueError(f"{label} does not exist: {unresolved}") from exc
+    if (
+        not stat.S_ISREG(entry.st_mode)
+        or entry.st_nlink != 1
+        or not entry.st_mode & stat.S_IXUSR
+    ):
+        raise ValueError(f"{label} must be an executable ordinary single-link file")
+    if entry.st_size > MAX_EXECUTABLE_BYTES:
+        raise ValueError(f"{label} exceeds {MAX_EXECUTABLE_BYTES} bytes")
+    digest = hashlib.sha256()
+    byte_count = 0
+    with unresolved.open("rb") as handle:
+        before = os.fstat(handle.fileno())
+        while chunk := handle.read(1024 * 1024):
+            digest.update(chunk)
+            byte_count += len(chunk)
+        after = os.fstat(handle.fileno())
+    entry_identity = (
+        entry.st_dev,
+        entry.st_ino,
+        entry.st_size,
+        entry.st_mtime_ns,
+        entry.st_nlink,
+        entry.st_mode,
+    )
+    if entry_identity != (
+        before.st_dev,
+        before.st_ino,
+        before.st_size,
+        before.st_mtime_ns,
+        before.st_nlink,
+        before.st_mode,
+    ) or entry_identity != (
+        after.st_dev,
+        after.st_ino,
+        after.st_size,
+        after.st_mtime_ns,
+        after.st_nlink,
+        after.st_mode,
+    ):
+        raise ValueError(f"{label} changed while it was hashed")
+    actual_sha256 = digest.hexdigest()
+    if byte_count != entry.st_size or actual_sha256 != expected_sha256:
+        raise ValueError(f"{label} is not the qualified executable")
+    return {
+        "sha256": actual_sha256,
+        "byte_count": byte_count,
+        "mode": entry.st_mode & 0o777,
+    }
+
+
+def _stable_sensitive_binding(
+    path: Path,
+    *,
+    maximum_bytes: int,
+    label: str,
+) -> dict[str, Any]:
+    _, payload, digest = _stable_file_snapshot(
+        path,
+        maximum_bytes=maximum_bytes,
+        label=label,
+    )
+    return {"sha256": digest, "byte_count": len(payload)}
+
+
+def _empty_optional_instruction_binding(path: Path, *, label: str) -> dict[str, Any]:
+    if not os.path.lexists(path):
+        return {"exists": False, "sha256": None, "byte_count": 0}
+    _, payload, digest = _stable_file_snapshot(
+        path,
+        maximum_bytes=0,
+        label=label,
+    )
+    if payload:
+        raise ValueError(f"{label} must be absent or empty for the isolated worker")
+    return {"exists": True, "sha256": digest, "byte_count": 0}
+
+
+def _codex_home_boundary_inputs() -> dict[str, Any]:
+    codex_home = (Path.home() / ".codex").absolute()
+    if codex_home.is_symlink() or not codex_home.is_dir():
+        raise ValueError("Claude home must be an ordinary directory")
+    codex_home = codex_home.resolve()
+    auth_path = codex_home / "auth.json"
+    installation_id_path = codex_home / "installation_id"
+    global_agents_path = codex_home / "AGENTS.md"
+    global_agents_override_path = codex_home / "AGENTS.override.md"
+    auth_binding = _stable_sensitive_binding(
+        auth_path,
+        maximum_bytes=2 * 1024 * 1024,
+        label="Claude authentication file",
+    )
+    installation_path, installation_bytes, installation_sha256 = _stable_file_snapshot(
+        installation_id_path,
+        maximum_bytes=256,
+        label="Claude installation ID",
+    )
+    try:
+        installation_text = installation_bytes.decode("ascii").strip()
+        uuid.UUID(installation_text)
+    except (UnicodeDecodeError, ValueError) as exc:
+        raise ValueError("Claude installation ID is not a UUID") from exc
+    if installation_path.stat().st_mode & 0o777 != 0o644:
+        raise ValueError("Claude installation ID must already have mode 0644")
+    return {
+        "codex_home": codex_home,
+        "auth_path": auth_path,
+        "installation_id_path": installation_id_path,
+        "global_agents_path": global_agents_path,
+        "global_agents_override_path": global_agents_override_path,
+        "bindings": {
+            "auth": auth_binding,
+            "installation_id": {
+                "sha256": installation_sha256,
+                "byte_count": len(installation_bytes),
+            },
+            "global_agents": _empty_optional_instruction_binding(
+                global_agents_path,
+                label="Global Claude AGENTS.md",
+            ),
+            "global_agents_override": _empty_optional_instruction_binding(
+                global_agents_override_path,
+                label="Global Claude AGENTS.override.md",
+            ),
+        },
+    }
+
+
+def _worker_environment() -> dict[str, str]:
+    allowed_names = (
+        "HOME",
+        "USER",
+        "LOGNAME",
+        "LANG",
+        "LC_ALL",
+        "LC_CTYPE",
+        "TZ",
+        "HTTP_PROXY",
+        "HTTPS_PROXY",
+        "ALL_PROXY",
+        "NO_PROXY",
+        "http_proxy",
+        "https_proxy",
+        "all_proxy",
+        "no_proxy",
+    )
+    return {name: os.environ[name] for name in allowed_names if name in os.environ}
+
+
+def _kill_process_group(process: subprocess.Popen[bytes]) -> None:
+    try:
+        os.killpg(process.pid, signal.SIGKILL)
+    except ProcessLookupError:
+        return
+
+
+def _run_captured_process(
+    command: Sequence[str],
+    *,
+    cwd: Path,
+    stdin_path: Path | None,
+    stdout_limit: int,
+    stderr_limit: int,
+    timeout_seconds: int,
+) -> dict[str, Any]:
+    """Run a process with bounded pipe capture and a hard process-group timeout."""
+
+    started = time.monotonic()
+    stdin_value: Any = subprocess.DEVNULL
+    stdin_handle: io.BufferedReader | None = None
+    if stdin_path is not None:
+        stdin_handle = stdin_path.open("rb")
+        stdin_value = stdin_handle
+    try:
+        process = subprocess.Popen(  # nosec B603
+            list(command),
+            cwd=cwd,
+            env=_worker_environment(),
+            stdin=stdin_value,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            start_new_session=True,
+        )
+    except OSError:
+        if stdin_handle is not None:
+            stdin_handle.close()
+        raise
+    if stdin_handle is not None:
+        stdin_handle.close()
+    if process.stdout is None or process.stderr is None:
+        _kill_process_group(process)
+        process.wait()
+        raise ValueError("Worker process pipes were not created")
+    selector = selectors.DefaultSelector()
+    streams = {
+        process.stdout.fileno(): ("stdout", process.stdout),
+        process.stderr.fileno(): ("stderr", process.stderr),
+    }
+    buffers = {"stdout": bytearray(), "stderr": bytearray()}
+    limits = {"stdout": stdout_limit, "stderr": stderr_limit}
+    for file_descriptor, (_, stream) in streams.items():
+        os.set_blocking(file_descriptor, False)
+        selector.register(stream, selectors.EVENT_READ)
+    failure: ValueError | None = None
+    try:
+        while selector.get_map():
+            remaining = timeout_seconds - (time.monotonic() - started)
+            if remaining <= 0:
+                failure = ValueError("Worker process exceeded its time limit")
+                _kill_process_group(process)
+                break
+            ready = selector.select(min(remaining, 0.25))
+            for key, _ in ready:
+                label, stream = streams[key.fd]
+                try:
+                    chunk = os.read(key.fd, 64 * 1024)
+                except BlockingIOError:
+                    continue
+                if not chunk:
+                    selector.unregister(stream)
+                    continue
+                buffers[label].extend(chunk)
+                if len(buffers[label]) > limits[label]:
+                    failure = ValueError(f"Worker {label} exceeded its byte limit")
+                    _kill_process_group(process)
+                    break
+            if failure is not None:
+                break
+        try:
+            return_code = process.wait(timeout=5)
+        except subprocess.TimeoutExpired as exc:
+            _kill_process_group(process)
+            process.wait()
+            raise ValueError("Worker process did not terminate") from exc
+    finally:
+        selector.close()
+        process.stdout.close()
+        process.stderr.close()
+    if failure is not None:
+        raise failure
+    return {
+        "return_code": return_code,
+        "stdout": bytes(buffers["stdout"]),
+        "stderr": bytes(buffers["stderr"]),
+        "duration_ms": int((time.monotonic() - started) * 1000),
+    }
+
+
 def _exact_fields(
     value: Mapping[str, Any],
     *,
@@ -422,6 +754,10 @@ def _semantic_output_dir(reconciliation_dir: Path, output_dir: Path) -> Path:
     resolved = unresolved.resolve()
     if resolved.parent != reconciliation_dir.parent or not resolved.is_dir():
         raise ValueError("Semantic output directory did not resolve to the sibling")
+    if resolved == reconciliation_dir:
+        raise ValueError(
+            "Semantic output directory must be distinct from reconciliation output"
+        )
     return resolved
 
 
@@ -448,7 +784,8 @@ def _new_output_path(output_dir: Path, name: str) -> Path:
 
 
 def _required_child(path: Path, output_dir: Path, name: str) -> Path:
-    if path.expanduser().absolute() != output_dir / name:
+    unresolved = path.expanduser().absolute()
+    if unresolved.name != name or unresolved.parent.resolve() != output_dir:
         raise ValueError(f"Expected {name} inside the semantic output directory")
     return output_dir / name
 
@@ -498,12 +835,165 @@ def _archive_current_generation(output_dir: Path) -> Path | None:
     return generation
 
 
-def _validated_source_binding(
+def _replay_file_snapshot(
+    path: Path,
+    *,
+    maximum_bytes: int,
+    label: str,
+    parse_json: bool = False,
+) -> dict[str, Any]:
+    _, payload, digest = _stable_file_snapshot(
+        path,
+        maximum_bytes=maximum_bytes,
+        label=label,
+    )
+    result: dict[str, Any] = {
+        "bytes": payload,
+        "byte_count": len(payload),
+        "sha256": digest,
+    }
+    if parse_json:
+        try:
+            text = payload.decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError(f"{label} is not valid UTF-8") from exc
+        result["value"] = _strict_json_text(text, label=label)
+    return result
+
+
+def _source_replay_snapshots(output_dir: Path) -> dict[str, dict[str, Any]]:
+    return {
+        "artifact_receipts.json": _replay_file_snapshot(
+            output_dir / "artifact_receipts.json",
+            maximum_bytes=MAX_REPLAY_CONTROL_BYTES,
+            label="artifact_receipts.json",
+            parse_json=True,
+        ),
+        "assurance_envelope.json": _replay_file_snapshot(
+            output_dir / "assurance_envelope.json",
+            maximum_bytes=MAX_REPLAY_CONTROL_BYTES,
+            label="assurance_envelope.json",
+            parse_json=True,
+        ),
+        "run_intake.json": _replay_file_snapshot(
+            output_dir / "run_intake.json",
+            maximum_bytes=MAX_REPLAY_CONTROL_BYTES,
+            label="run_intake.json",
+            parse_json=True,
+        ),
+        "reconciliation_audit.json": _replay_file_snapshot(
+            output_dir / "reconciliation_audit.json",
+            maximum_bytes=MAX_REPLAY_CONTROL_BYTES,
+            label="reconciliation_audit.json",
+            parse_json=True,
+        ),
+        "reviewed_decisions.json": _replay_file_snapshot(
+            output_dir / "reviewed_decisions.json",
+            maximum_bytes=MAX_REPLAY_CONTROL_BYTES,
+            label="reviewed_decisions.json",
+            parse_json=True,
+        ),
+        "unmatched_bank.csv": _replay_file_snapshot(
+            output_dir / "unmatched_bank.csv",
+            maximum_bytes=MAX_UNMATCHED_BYTES,
+            label="unmatched_bank.csv",
+        ),
+        "unmatched_journal.csv": _replay_file_snapshot(
+            output_dir / "unmatched_journal.csv",
+            maximum_bytes=MAX_UNMATCHED_BYTES,
+            label="unmatched_journal.csv",
+        ),
+    }
+
+
+def _artifact_roots_from_intake(
     output_dir: Path,
-) -> tuple[dict[str, Any], dict[str, Any]]:
+    intake: Mapping[str, Any],
+) -> dict[str, Path]:
+    assumptions = intake.get("assumptions")
+    if not isinstance(assumptions, dict):
+        raise ValueError("Run intake assumptions are unavailable")
+
+    def required_path(field: str) -> Path:
+        value = assumptions.get(field)
+        if not isinstance(value, str) or not value or not Path(value).is_absolute():
+            raise ValueError(f"Run intake {field} must be an absolute path")
+        return Path(value).expanduser()
+
+    declared_output = intake.get("output_dir")
+    if (
+        not isinstance(declared_output, str)
+        or not Path(declared_output).is_absolute()
+        or Path(declared_output).expanduser().resolve() != output_dir
+    ):
+        raise ValueError("Run intake output directory is stale")
+    sample_value = assumptions.get("sample_path")
+    if sample_value is not None and (
+        not isinstance(sample_value, str)
+        or not sample_value
+        or not Path(sample_value).is_absolute()
+    ):
+        raise ValueError("Run intake sample_path must be null or an absolute path")
+    return _artifact_roots(
+        bank_path=required_path("bank_path"),
+        journal_path=required_path("journal_path"),
+        sample_path=(
+            Path(sample_value).expanduser() if sample_value is not None else None
+        ),
+        output_dir=output_dir,
+    )
+
+
+def _relationship_policy_from_snapshot(reviewed: Mapping[str, Any]) -> dict[str, Any]:
+    decisions = reviewed.get("decisions")
+    if not isinstance(decisions, list):
+        raise ValueError("Reviewed decisions do not contain a relationship policy")
+    relationships = [
+        decision
+        for decision in decisions
+        if isinstance(decision, dict)
+        and decision.get("decision_type") == "journal_bank_relationship"
+    ]
+    if len(relationships) != 1 or not isinstance(relationships[0].get("content"), dict):
+        raise ValueError("Exactly one reviewed relationship policy is required")
+    return _normalize_relationship_policy(relationships[0]["content"].get("policy"))
+
+
+def _material_csv_from_snapshot(
+    snapshot: Mapping[str, Any],
+    *,
+    label: str,
+) -> pl.DataFrame:
+    try:
+        frame = pl.read_csv(io.BytesIO(snapshot["bytes"]), infer_schema=False)
+    except (OSError, pl.exceptions.PolarsError) as exc:
+        raise ValueError(f"{label} is not a valid material CSV") from exc
+    if frame.columns != list(TRANSACTION_COLUMNS):
+        raise ValueError(f"{label} columns do not close to the material contract")
+    return frame
+
+
+def _validated_source_replay(output_dir: Path) -> dict[str, Any]:
+    """Replay the run and parse every graph input from one stable byte generation."""
+
+    snapshots = _source_replay_snapshots(output_dir)
+    intake = snapshots["run_intake.json"]["value"]
+    envelope = snapshots["assurance_envelope.json"]["value"]
+    receipt_bundle = snapshots["artifact_receipts.json"]["value"]
+    roots = _artifact_roots_from_intake(output_dir, intake)
+
     validate_material_value_ledger(output_dir)
-    receipts = read_json(output_dir / "artifact_receipts.json")
-    raw_output_receipts = receipts.get("output_receipts")
+    validated_envelope = validate_assurance_envelope(envelope, artifact_roots=roots)
+    validate_exact_implementation_receipts(validated_envelope, artifact_roots=roots)
+    if validated_envelope != envelope:
+        raise ValueError("Assurance envelope does not replay exactly")
+    run_id = intake.get("run_id")
+    if not isinstance(run_id, str) or not run_id or envelope.get("run_id") != run_id:
+        raise ValueError("Run intake and assurance envelope run IDs diverge")
+    if envelope.get("workflow_id") != "journal_bank_reconciliation":
+        raise ValueError("Assurance envelope belongs to a different workflow")
+
+    raw_output_receipts = receipt_bundle.get("output_receipts")
     if not isinstance(raw_output_receipts, list):
         raise ValueError("Output artifact receipts are unavailable")
     receipt_by_id: dict[str, dict[str, Any]] = {}
@@ -515,25 +1005,77 @@ def _validated_source_binding(
             raise ValueError("Output artifact receipt IDs must be unique strings")
         receipt_by_id[artifact_id] = receipt
 
+    envelope_receipts = {
+        receipt["artifact_id"]: receipt
+        for receipt in envelope["artifact_receipts"]
+        if isinstance(receipt, dict) and isinstance(receipt.get("artifact_id"), str)
+    }
     selected_receipts: list[dict[str, Any]] = []
+    snapshot_receipts = {
+        "output.unmatched_bank_csv": snapshots["unmatched_bank.csv"],
+        "output.unmatched_journal_csv": snapshots["unmatched_journal.csv"],
+        "output.audit_json": snapshots["reconciliation_audit.json"],
+        "output.reviewed_decisions_json": snapshots["reviewed_decisions.json"],
+        "output.run_intake_json": snapshots["run_intake.json"],
+        "output.assurance_envelope_json": snapshots["assurance_envelope.json"],
+    }
+    envelope_exclusions = {
+        "output.run_intake_json",
+        "output.assurance_envelope_json",
+    }
     for artifact_id, relative_path in REQUIRED_RECEIPTS.items():
         receipt = receipt_by_id.get(artifact_id)
         if receipt is None or receipt.get("path") != relative_path:
             raise ValueError(f"Required current receipt is unavailable: {artifact_id}")
-        selected_receipts.append(validate_artifact_receipt(output_dir, receipt))
+        validated_receipt = validate_artifact_receipt(output_dir, receipt)
+        snapshot = snapshot_receipts.get(artifact_id)
+        if snapshot is not None and (
+            validated_receipt["byte_count"] != snapshot["byte_count"]
+            or validated_receipt["sha256"] != snapshot["sha256"]
+        ):
+            raise ValueError(f"Required replay input changed: {relative_path}")
+        if (
+            artifact_id not in envelope_exclusions
+            and envelope_receipts.get(artifact_id) != validated_receipt
+        ):
+            raise ValueError(
+                f"Current receipt diverges from assurance envelope: {artifact_id}"
+            )
+        selected_receipts.append(validated_receipt)
 
-    envelope = read_json(output_dir / "assurance_envelope.json")
-    validate_exact_implementation_receipts(envelope)
-    intake = read_json(output_dir / "run_intake.json")
-    run_id = intake.get("run_id")
-    if not isinstance(run_id, str) or not run_id:
-        raise ValueError("Run intake does not contain a run ID")
-    return {
+    current_snapshots = _source_replay_snapshots(output_dir)
+    if any(
+        current_snapshots[name]["bytes"] != snapshot["bytes"]
+        for name, snapshot in snapshots.items()
+    ):
+        raise ValueError("Reconciliation replay inputs changed during validation")
+
+    binding = {
         "run_id": run_id,
         "artifact_receipts": selected_receipts,
         "artifact_receipts_sha256": canonical_json_sha256(selected_receipts),
+        "artifact_receipts_bundle_sha256": snapshots["artifact_receipts.json"][
+            "sha256"
+        ],
+        "assurance_envelope_content_sha256": envelope["content_sha256"],
         "implementation_artifact_refs": envelope["implementation_artifact_refs"],
-    }, intake
+    }
+    return {
+        "source_binding": binding,
+        "snapshot_sha256": {
+            name: snapshot["sha256"] for name, snapshot in snapshots.items()
+        },
+        "audit": snapshots["reconciliation_audit.json"]["value"],
+        "relationship_policy": _relationship_policy_from_snapshot(
+            snapshots["reviewed_decisions.json"]["value"]
+        ),
+        "bank": _material_csv_from_snapshot(
+            snapshots["unmatched_bank.csv"], label="unmatched_bank.csv"
+        ),
+        "journal": _material_csv_from_snapshot(
+            snapshots["unmatched_journal.csv"], label="unmatched_journal.csv"
+        ),
+    }
 
 
 def _context_text(value: object, field: str, truncated: list[str]) -> str | None:
@@ -819,8 +1361,9 @@ def _bounded_deferred_components(
 def _graph_content(
     output_dir: Path,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    source_binding, _ = _validated_source_binding(output_dir)
-    audit = read_json(output_dir / "reconciliation_audit.json")
+    replay = _validated_source_replay(output_dir)
+    source_binding = replay["source_binding"]
+    audit = replay["audit"]
     tolerance, tolerance_text = _canonical_tolerance(audit.get("tolerance"))
     date_window_days = audit.get("date_window_days")
     if (
@@ -829,16 +1372,14 @@ def _graph_content(
         or date_window_days < 0
     ):
         raise ValueError("Reconciliation date window is invalid")
-    relationship_policy = _current_relationship_policy(output_dir)
+    relationship_policy = replay["relationship_policy"]
     if (
         relationship_policy["amount_tolerance"] != tolerance_text
         or relationship_policy["date_window_days"] != date_window_days
     ):
         raise ValueError("Reconciliation audit and relationship policy diverge")
-    bank = _read_material_csv(output_dir / "unmatched_bank.csv", TRANSACTION_COLUMNS)
-    journal = _read_material_csv(
-        output_dir / "unmatched_journal.csv", TRANSACTION_COLUMNS
-    )
+    bank = replay["bank"]
+    journal = replay["journal"]
     if (
         audit.get("unmatched_bank_count") != bank.height
         or audit.get("unmatched_journal_count") != journal.height
@@ -885,13 +1426,15 @@ def _graph_content(
         "advisory_only": True,
         "authoritative_effects": [],
         "requested_worker_configuration": {
-            "execution": "separate_codex_exec",
+            "execution": "separate_pinned_codex_exec",
             "model": "gpt-5.6-luna",
             "reasoning_effort": "max",
             "ephemeral": True,
-            "sandbox": "read-only",
+            "inner_sandbox": "read-only",
+            "outer_filesystem_boundary": WORKER_BOUNDARY_CONTRACT_ID,
             "project_rules_loaded": False,
-            "working_directory": "semantic-review",
+            "global_instructions_required_empty": True,
+            "working_directory": "ephemeral_worker_capsule",
             "disabled_features": list(DISABLED_WORKER_FEATURES),
             "main_chat_model_change": False,
         },
@@ -951,6 +1494,14 @@ def _graph_content(
         prompt_fits = len(prompt.encode("utf-8")) <= MAX_PROMPT_BYTES
         graph_fits = len(_json_bytes(graph)) <= MAX_GRAPH_BYTES
         if prompt_fits and graph_fits:
+            current_replay = _validated_source_replay(output_dir)
+            if (
+                current_replay["snapshot_sha256"] != replay["snapshot_sha256"]
+                or current_replay["source_binding"] != source_binding
+            ):
+                raise ValueError(
+                    "Reconciliation changed while semantic graph was built"
+                )
             return graph, _worker_output_schema(graph)
         if not selected:
             raise ValueError("Bounded semantic graph cannot fit its artifact limits")
@@ -1095,6 +1646,23 @@ def _write_status(
     failure_reason: str | None = None,
 ) -> Path:
     status_path = _safe_output_path(semantic_dir, STATUS_NAME)
+    if status_path.exists():
+        existing = _strict_json_file(
+            status_path,
+            maximum_bytes=MAX_RESPONSE_BYTES,
+            label=STATUS_NAME,
+        )
+        existing_content = dict(existing)
+        existing_digest = existing_content.pop("content_sha256", None)
+        if existing_digest != canonical_json_sha256(existing_content):
+            raise ValueError("Semantic review status has an invalid digest")
+        if existing.get("candidate_graph_sha256") != graph["candidate_graph_sha256"]:
+            raise ValueError("Semantic review status belongs to another graph")
+        if (
+            existing.get("status") == "completed_validated"
+            and status_value != "completed_validated"
+        ):
+            return status_path
     content = {
         "schema_version": "journal_bank.semantic_review_status.v1",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
@@ -1104,9 +1672,15 @@ def _write_status(
         "advisory_only": True,
         "main_chat_model_change": False,
     }
-    write_json(
-        status_path, {**content, "content_sha256": canonical_json_sha256(content)}
-    )
+    payload = {**content, "content_sha256": canonical_json_sha256(content)}
+    pending = _new_output_path(semantic_dir, STATUS_PENDING_NAME)
+    try:
+        with pending.open("xb") as handle:
+            handle.write(_json_bytes(payload))
+        pending.replace(status_path)
+    except OSError:
+        pending.unlink(missing_ok=True)
+        raise
     return status_path
 
 
@@ -1183,6 +1757,584 @@ def _validate_graph_and_preparation_files(
     if prompt != _worker_prompt(expected_graph):
         raise ValueError("Worker prompt is stale or modified")
     return graph
+
+
+def _darwin_build_version() -> str:
+    if platform.system() != "Darwin":
+        raise ValueError("The isolated Luna worker is qualified only on macOS")
+    try:
+        completed = subprocess.run(  # nosec B603
+            ["/usr/bin/sw_vers", "-buildVersion"],
+            capture_output=True,
+            check=False,
+            timeout=10,
+            env=_worker_environment(),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise ValueError("Unable to identify the macOS build") from exc
+    try:
+        build = completed.stdout.decode("ascii").strip()
+    except UnicodeDecodeError as exc:
+        raise ValueError("macOS build output is invalid") from exc
+    if completed.returncode != 0 or build != PINNED_DARWIN_BUILD:
+        raise ValueError("The macOS build has not been qualified for Luna isolation")
+    return build
+
+
+def _resolved_codex_binary(codex_bin: Path | None) -> Path:
+    if codex_bin is None:
+        discovered = shutil.which("codex")
+        if discovered is None:
+            raise ValueError("Claude CLI is unavailable")
+        candidate = Path(discovered)
+    else:
+        candidate = codex_bin
+    try:
+        return candidate.expanduser().absolute().resolve(strict=True)
+    except (FileNotFoundError, OSError) as exc:
+        raise ValueError("Claude CLI path cannot be resolved") from exc
+
+
+def _seatbelt_prefix(
+    *,
+    executable: Path,
+    profile_path: Path,
+    schema_path: Path,
+    work_dir: Path,
+    state_dir: Path,
+    log_dir: Path,
+    boundary_inputs: Mapping[str, Any],
+) -> list[str]:
+    parameters = {
+        "CODEX_BIN": executable,
+        "CODEX_HOME_DIR": boundary_inputs["codex_home"],
+        "INSTALLATION_ID_FILE": boundary_inputs["installation_id_path"],
+        "GLOBAL_AGENTS_FILE": boundary_inputs["global_agents_path"],
+        "GLOBAL_AGENTS_OVERRIDE_FILE": boundary_inputs["global_agents_override_path"],
+        "AUTH_FILE": boundary_inputs["auth_path"],
+        "SCHEMA_FILE": schema_path,
+        "WORK_DIR": work_dir,
+        "STATE_DIR": state_dir,
+        "LOG_DIR": log_dir,
+    }
+    command = [str(SANDBOX_EXEC_PATH)]
+    for name, value in parameters.items():
+        command.extend(["-D", f"{name}={value}"])
+    command.extend(["-f", str(profile_path), str(executable)])
+    return command
+
+
+def _qualified_executables(codex_bin: Path | None) -> dict[str, Any]:
+    build = _darwin_build_version()
+    resolved_codex = _resolved_codex_binary(codex_bin)
+    return {
+        "darwin_build": build,
+        "codex_path": resolved_codex,
+        "codex_binding": _stable_executable_binding(
+            resolved_codex,
+            label="Claude CLI",
+            expected_sha256=PINNED_CODEX_SHA256,
+        ),
+        "sandbox_exec_binding": _stable_executable_binding(
+            SANDBOX_EXEC_PATH,
+            label="macOS sandbox-exec",
+            expected_sha256=PINNED_SANDBOX_EXEC_SHA256,
+        ),
+        "canary_binding": _stable_executable_binding(
+            SANDBOX_CANARY_PATH,
+            label="macOS sandbox canary reader",
+            expected_sha256=PINNED_CAT_SHA256,
+        ),
+    }
+
+
+def _qualification_canaries(
+    *,
+    semantic_dir: Path,
+    profile_path: Path,
+    schema_path: Path,
+    schema_bytes: bytes,
+    capsule: Path,
+    state_dir: Path,
+    log_dir: Path,
+    boundary_inputs: Mapping[str, Any],
+    executables: Mapping[str, Any],
+) -> dict[str, Any]:
+    canary_prefix = _seatbelt_prefix(
+        executable=SANDBOX_CANARY_PATH,
+        profile_path=profile_path,
+        schema_path=schema_path,
+        work_dir=capsule,
+        state_dir=state_dir,
+        log_dir=log_dir,
+        boundary_inputs=boundary_inputs,
+    )
+    allowed = _run_captured_process(
+        [*canary_prefix, str(schema_path)],
+        cwd=capsule,
+        stdin_path=None,
+        stdout_limit=MAX_CANARY_OUTPUT_BYTES,
+        stderr_limit=MAX_CANARY_OUTPUT_BYTES,
+        timeout_seconds=CANARY_TIMEOUT_SECONDS,
+    )
+    if allowed["return_code"] != 0 or allowed["stdout"] != schema_bytes:
+        raise ValueError("Seatbelt did not permit the exact schema canary")
+
+    sentinel_path = semantic_dir / f".luna-outside-canary.{secrets.token_hex(16)}"
+    sentinel_bytes = secrets.token_bytes(48)
+    if os.path.lexists(sentinel_path):
+        raise ValueError("Seatbelt outside-read canary path already exists")
+    try:
+        with sentinel_path.open("xb") as handle:
+            handle.write(sentinel_bytes)
+        denied = _run_captured_process(
+            [*canary_prefix, str(sentinel_path)],
+            cwd=capsule,
+            stdin_path=None,
+            stdout_limit=MAX_CANARY_OUTPUT_BYTES,
+            stderr_limit=MAX_CANARY_OUTPUT_BYTES,
+            timeout_seconds=CANARY_TIMEOUT_SECONDS,
+        )
+    finally:
+        sentinel_path.unlink(missing_ok=True)
+    if (
+        denied["return_code"] == 0
+        or sentinel_bytes in denied["stdout"]
+        or sentinel_bytes in denied["stderr"]
+    ):
+        raise ValueError("Seatbelt did not deny the outside-read canary")
+
+    codex_prefix = _seatbelt_prefix(
+        executable=executables["codex_path"],
+        profile_path=profile_path,
+        schema_path=schema_path,
+        work_dir=capsule,
+        state_dir=state_dir,
+        log_dir=log_dir,
+        boundary_inputs=boundary_inputs,
+    )
+    version_result = _run_captured_process(
+        [*codex_prefix, "--version"],
+        cwd=capsule,
+        stdin_path=None,
+        stdout_limit=MAX_CANARY_OUTPUT_BYTES,
+        stderr_limit=MAX_CANARY_OUTPUT_BYTES,
+        timeout_seconds=CANARY_TIMEOUT_SECONDS,
+    )
+    try:
+        version = version_result["stdout"].decode("utf-8").strip()
+    except UnicodeDecodeError as exc:
+        raise ValueError("Claude version output is not UTF-8") from exc
+    if version_result["return_code"] != 0 or version != PINNED_CODEX_VERSION:
+        raise ValueError("Claude version did not match the qualified worker")
+    return {
+        "exact_schema_read_succeeded": True,
+        "outside_capsule_read_denied": True,
+        "codex_version_inside_boundary": version,
+    }
+
+
+def _worker_inner_argv(
+    *,
+    capsule: Path,
+    schema_path: Path,
+    state_dir: Path,
+    log_dir: Path,
+) -> list[str]:
+    command = [
+        "exec",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--strict-config",
+        "--ignore-rules",
+        "--skip-git-repo-check",
+        "--cd",
+        str(capsule),
+    ]
+    for feature in DISABLED_WORKER_FEATURES:
+        command.extend(["--disable", feature])
+    command.extend(
+        [
+            "--model",
+            "gpt-5.6-luna",
+            "--config",
+            'model_reasoning_effort="max"',
+            "--config",
+            "project_doc_max_bytes=0",
+            "--config",
+            f"sqlite_home={json.dumps(str(state_dir))}",
+            "--config",
+            f"log_dir={json.dumps(str(log_dir))}",
+            "--sandbox",
+            "read-only",
+            "--output-schema",
+            str(schema_path),
+            "--json",
+            "-",
+        ]
+    )
+    return command
+
+
+def _redacted_worker_argv() -> list[str]:
+    command = [
+        "sandbox-exec",
+        "<exact-boundary-parameters>",
+        "codex",
+        "exec",
+        "--ephemeral",
+        "--ignore-user-config",
+        "--strict-config",
+        "--ignore-rules",
+        "--skip-git-repo-check",
+        "--cd",
+        "<capsule>",
+    ]
+    for feature in DISABLED_WORKER_FEATURES:
+        command.extend(["--disable", feature])
+    command.extend(
+        [
+            "--model",
+            "gpt-5.6-luna",
+            "--config",
+            'model_reasoning_effort="max"',
+            "--config",
+            "project_doc_max_bytes=0",
+            "--config",
+            'sqlite_home="<capsule>/state"',
+            "--config",
+            'log_dir="<capsule>/log"',
+            "--sandbox",
+            "read-only",
+            "--output-schema",
+            "<capsule>/luna_output_schema.json",
+            "--json",
+            "-",
+        ]
+    )
+    return command
+
+
+def _publish_worker_artifacts(
+    semantic_dir: Path,
+    capsule: Path,
+    artifacts: Mapping[str, bytes],
+) -> None:
+    for name in artifacts:
+        _new_output_path(semantic_dir, name)
+    staging_dir = capsule / "publish"
+    staging_dir.mkdir(mode=0o700)
+    staged: dict[str, Path] = {}
+    for name, payload in artifacts.items():
+        path = staging_dir / name
+        with path.open("xb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        staged[name] = path
+    published: list[Path] = []
+    try:
+        for name in artifacts:
+            destination = semantic_dir / name
+            staged[name].replace(destination)
+            published.append(destination)
+    except OSError:
+        for path in published:
+            path.unlink(missing_ok=True)
+        raise
+
+
+def _cleanup_worker_capsule(semantic_dir: Path, capsule: Path) -> None:
+    if (
+        capsule.parent.resolve() != semantic_dir
+        or not capsule.name.startswith(".luna-worker-capsule.")
+        or capsule.is_symlink()
+    ):
+        raise ValueError("Refusing to clean an unexpected worker capsule")
+    shutil.rmtree(capsule)
+
+
+def _remove_published_worker_artifacts(semantic_dir: Path) -> None:
+    for name in (RESPONSE_NAME, EVENTS_NAME, STDERR_NAME, LAUNCH_RECEIPT_NAME):
+        path = semantic_dir / name
+        if not os.path.lexists(path):
+            continue
+        current = path.lstat()
+        if path.is_symlink() or not stat.S_ISREG(current.st_mode):
+            raise ValueError(f"Cannot remove unsafe partial worker artifact: {name}")
+        path.unlink()
+
+
+def run_semantic_worker(
+    reconciliation_dir: Path,
+    semantic_output_dir: Path,
+    candidate_graph_path: Path,
+    *,
+    codex_bin: Path | None = None,
+) -> dict[str, Any]:
+    """Launch one pinned Luna worker without changing the calling chat model."""
+
+    reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
+    semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
+    graph = _validate_graph_and_preparation_files(
+        reconciliation,
+        semantic,
+        candidate_graph_path,
+    )
+    if not graph["selected_components"]:
+        raise ValueError("The bounded candidate packet does not require a worker")
+    for name in (
+        RESPONSE_NAME,
+        EVENTS_NAME,
+        STDERR_NAME,
+        LAUNCH_RECEIPT_NAME,
+        VALIDATED_SUGGESTIONS_NAME,
+        WORKER_RUN_NAME,
+    ):
+        _new_output_path(semantic, name)
+
+    graph_path = _required_child(
+        candidate_graph_path,
+        semantic,
+        CANDIDATE_GRAPH_NAME,
+    )
+    _, graph_file_bytes, graph_file_sha256 = _stable_file_snapshot(
+        graph_path,
+        maximum_bytes=MAX_GRAPH_BYTES,
+        label=CANDIDATE_GRAPH_NAME,
+    )
+    prompt_path = semantic / PROMPT_NAME
+    prompt_text, prompt_sha256 = _text_snapshot(
+        prompt_path,
+        maximum_bytes=MAX_PROMPT_BYTES,
+        label=PROMPT_NAME,
+    )
+    if prompt_text != _worker_prompt(graph):
+        raise ValueError("Worker prompt is stale or modified")
+    schema_path = semantic / OUTPUT_SCHEMA_NAME
+    _, schema_bytes, schema_sha256 = _stable_file_snapshot(
+        schema_path,
+        maximum_bytes=MAX_PROMPT_BYTES,
+        label=OUTPUT_SCHEMA_NAME,
+    )
+    if schema_bytes != _json_bytes(_worker_output_schema(graph)):
+        raise ValueError("Worker output schema is stale or modified")
+    prompt_bytes = prompt_text.encode("utf-8")
+    boundary_inputs = _codex_home_boundary_inputs()
+    executables = _qualified_executables(codex_bin)
+    profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
+    if profile_sha256 != PINNED_SEATBELT_PROFILE_SHA256:
+        raise ValueError("Seatbelt profile does not match the qualified boundary")
+
+    capsule = Path(
+        tempfile.mkdtemp(prefix=".luna-worker-capsule.", dir=semantic)
+    ).resolve()
+    capsule.chmod(0o700)
+    artifacts_published = False
+    try:
+        capsule_schema = capsule / OUTPUT_SCHEMA_NAME
+        capsule_prompt = capsule / "prompt.stdin"
+        profile_path = capsule / "seatbelt.sb"
+        state_dir = capsule / "state"
+        log_dir = capsule / "log"
+        state_dir.mkdir(mode=0o700)
+        log_dir.mkdir(mode=0o700)
+        capsule_schema.write_bytes(schema_bytes)
+        capsule_prompt.write_bytes(prompt_bytes)
+        profile_path.write_text(SEATBELT_PROFILE, encoding="utf-8")
+        for path in (capsule_schema, capsule_prompt, profile_path):
+            path.chmod(0o600)
+
+        canaries = _qualification_canaries(
+            semantic_dir=semantic,
+            profile_path=profile_path,
+            schema_path=capsule_schema,
+            schema_bytes=schema_bytes,
+            capsule=capsule,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+            executables=executables,
+        )
+        worker_prefix = _seatbelt_prefix(
+            executable=executables["codex_path"],
+            profile_path=profile_path,
+            schema_path=capsule_schema,
+            work_dir=capsule,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+        )
+        worker_inner = _worker_inner_argv(
+            capsule=capsule,
+            schema_path=capsule_schema,
+            state_dir=state_dir,
+            log_dir=log_dir,
+        )
+        process_result = _run_captured_process(
+            [*worker_prefix, *worker_inner],
+            cwd=capsule,
+            stdin_path=capsule_prompt,
+            stdout_limit=MAX_EVENTS_BYTES,
+            stderr_limit=MAX_STDERR_BYTES,
+            timeout_seconds=WORKER_TIMEOUT_SECONDS,
+        )
+        if process_result["return_code"] != 0:
+            raise ValueError("The isolated Luna worker returned a nonzero status")
+        try:
+            events_text = process_result["stdout"].decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Worker JSONL output is not UTF-8") from exc
+        event_summary = _validate_worker_events(events_text, response=None)
+        response = event_summary["final_response"]
+        _validate_worker_response(response, graph)
+        response_bytes = _json_bytes(response)
+        response_sha256 = hashlib.sha256(response_bytes).hexdigest()
+        events_bytes = process_result["stdout"]
+        events_sha256 = hashlib.sha256(events_bytes).hexdigest()
+        stderr_bytes = process_result["stderr"]
+        stderr_sha256 = hashlib.sha256(stderr_bytes).hexdigest()
+
+        current_graph = _validate_graph_and_preparation_files(
+            reconciliation,
+            semantic,
+            graph_path,
+        )
+        if current_graph != graph:
+            raise ValueError("Reconciliation changed while Luna was running")
+        if _codex_home_boundary_inputs()["bindings"] != boundary_inputs["bindings"]:
+            raise ValueError("Claude boundary inputs changed while Luna was running")
+        if (
+            _stable_executable_binding(
+                executables["codex_path"],
+                label="Claude CLI",
+                expected_sha256=PINNED_CODEX_SHA256,
+            )
+            != executables["codex_binding"]
+        ):
+            raise ValueError("Claude CLI changed while Luna was running")
+        if (
+            _stable_executable_binding(
+                SANDBOX_EXEC_PATH,
+                label="macOS sandbox-exec",
+                expected_sha256=PINNED_SANDBOX_EXEC_SHA256,
+            )
+            != executables["sandbox_exec_binding"]
+        ):
+            raise ValueError("macOS sandbox-exec changed while Luna was running")
+        if (
+            _stable_executable_binding(
+                SANDBOX_CANARY_PATH,
+                label="macOS sandbox canary reader",
+                expected_sha256=PINNED_CAT_SHA256,
+            )
+            != executables["canary_binding"]
+        ):
+            raise ValueError("Sandbox canary reader changed while Luna was running")
+
+        receipt_content = {
+            "schema_version": LAUNCH_RECEIPT_SCHEMA_VERSION,
+            "workflow_id": "journal_bank_reconciliation",
+            "candidate_graph_sha256": graph["candidate_graph_sha256"],
+            "packet": {
+                "candidate_graph_file_sha256": graph_file_sha256,
+                "candidate_graph_file_bytes": len(graph_file_bytes),
+                "prompt_sha256": prompt_sha256,
+                "prompt_bytes": len(prompt_bytes),
+                "output_schema_sha256": schema_sha256,
+                "output_schema_bytes": len(schema_bytes),
+            },
+            "requested_worker_configuration": graph["requested_worker_configuration"],
+            "boundary": {
+                "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
+                "platform": "Darwin",
+                "darwin_build": executables["darwin_build"],
+                "profile_sha256": profile_sha256,
+                "codex_path": str(executables["codex_path"]),
+                "codex_sha256": executables["codex_binding"]["sha256"],
+                "codex_bytes": executables["codex_binding"]["byte_count"],
+                "codex_version": PINNED_CODEX_VERSION,
+                "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
+                "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
+                "canary_reader_sha256": executables["canary_binding"]["sha256"],
+                "canaries": canaries,
+                "global_instructions_absent_or_empty": True,
+                "auth_file_readable_by_codex_process": True,
+                "installation_id_preexisting_and_unchanged": True,
+                "outbound_network_allowed": True,
+                "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
+                "qualification_basis": (
+                    "pinned_hidden_view_image_outside_nonce_denied"
+                ),
+            },
+            "process": {
+                "return_code": process_result["return_code"],
+                "timed_out": False,
+                "duration_ms": process_result["duration_ms"],
+                "redacted_argv": _redacted_worker_argv(),
+                "response_sha256": response_sha256,
+                "response_bytes": len(response_bytes),
+                "events_sha256": events_sha256,
+                "events_bytes": len(events_bytes),
+                "stderr_sha256": stderr_sha256,
+                "stderr_bytes": len(stderr_bytes),
+            },
+            "jsonl_observation": {
+                "visibility_complete": False,
+                "visible_forbidden_item_count": 0,
+                "tool_use_absence_observed": False,
+                "thread_id": event_summary["thread_id"],
+                "usage": event_summary["usage"],
+                "completed_item_counts": event_summary["completed_item_counts"],
+            },
+            "runtime_attestation": {
+                "model_observed": False,
+                "reasoning_effort_observed": False,
+                "main_chat_model_change": False,
+            },
+            "advisory_only": True,
+        }
+        receipt = {
+            **receipt_content,
+            "content_sha256": canonical_json_sha256(receipt_content),
+        }
+        _publish_worker_artifacts(
+            semantic,
+            capsule,
+            {
+                RESPONSE_NAME: response_bytes,
+                EVENTS_NAME: events_bytes,
+                STDERR_NAME: stderr_bytes,
+                LAUNCH_RECEIPT_NAME: _json_bytes(receipt),
+            },
+        )
+        artifacts_published = True
+        status_path = _write_status(
+            semantic,
+            graph,
+            status_value="worker_completed_pending_validation",
+        )
+        return {
+            "response": semantic / RESPONSE_NAME,
+            "events": semantic / EVENTS_NAME,
+            "stderr": semantic / STDERR_NAME,
+            "launch_receipt": semantic / LAUNCH_RECEIPT_NAME,
+            "status": status_path,
+            "candidate_graph_sha256": graph["candidate_graph_sha256"],
+            "main_chat_model_change": False,
+        }
+    except (OSError, ValueError):
+        if artifacts_published:
+            _remove_published_worker_artifacts(semantic)
+            artifacts_published = False
+        raise
+    finally:
+        try:
+            _cleanup_worker_capsule(semantic, capsule)
+        except (OSError, ValueError):
+            if artifacts_published:
+                _remove_published_worker_artifacts(semantic)
+            raise
 
 
 def _validate_worker_response(
@@ -1326,14 +2478,21 @@ def _validate_worker_response(
 
 def _validate_worker_events(
     events_text: str,
-    response: Mapping[str, Any],
+    response: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
     lines = events_text.splitlines()
     if not lines:
         raise ValueError("Worker event stream is empty")
-    thread_ids: list[str] = []
-    usages: list[dict[str, int]] = []
-    agent_messages: list[str] = []
+    thread_id: str | None = None
+    usage: dict[str, int] | None = None
+    turn_started = False
+    turn_completed = False
+    item_types: dict[str, str] = {}
+    started_item_ids: set[str] = set()
+    completed_item_ids: set[str] = set()
+    completed_item_order: list[str] = []
+    agent_message: str | None = None
+    agent_message_id: str | None = None
     item_counts = {"agent_message": 0, "reasoning": 0}
     for line_number, line in enumerate(lines, start=1):
         if not line.strip():
@@ -1343,30 +2502,62 @@ def _validate_worker_events(
         if event_type not in EVENT_TYPES:
             raise ValueError(f"Worker event type is unsupported: {event_type}")
         if event_type == "thread.started":
-            thread_id = event.get("thread_id")
-            if not isinstance(thread_id, str) or not thread_id:
+            if line_number != 1 or thread_id is not None:
+                raise ValueError("Worker thread must start exactly once and first")
+            candidate_thread_id = event.get("thread_id")
+            if not isinstance(candidate_thread_id, str) or not candidate_thread_id:
                 raise ValueError("Worker thread event is missing thread_id")
-            thread_ids.append(thread_id)
+            thread_id = candidate_thread_id
+            continue
+        if thread_id is None:
+            raise ValueError("Worker event occurred before thread start")
+        if event_type == "turn.started":
+            if turn_started or turn_completed or line_number != 2:
+                raise ValueError("Worker turn must start exactly once after its thread")
+            turn_started = True
+            continue
         if event_type in {"item.started", "item.updated", "item.completed"}:
+            if not turn_started or turn_completed:
+                raise ValueError("Worker item event occurred outside the active turn")
             item = event.get("item")
             if not isinstance(item, dict):
                 raise ValueError("Worker item event is malformed")
+            item_id = item.get("id")
+            if not isinstance(item_id, str) or not item_id:
+                raise ValueError("Worker item event has no stable item ID")
             item_type = item.get("type")
             if item_type not in MODEL_ITEM_TYPES:
                 raise ValueError(f"Worker used a forbidden item type: {item_type}")
+            prior_type = item_types.setdefault(item_id, item_type)
+            if prior_type != item_type:
+                raise ValueError("Worker item type changed during its lifecycle")
+            if item_id in completed_item_ids:
+                raise ValueError("Worker emitted an item event after completion")
+            if event_type == "item.started":
+                if item_id in started_item_ids:
+                    raise ValueError("Worker item started more than once")
+                started_item_ids.add(item_id)
             if event_type == "item.completed":
+                completed_item_ids.add(item_id)
+                completed_item_order.append(item_id)
                 item_counts[item_type] += 1
                 if item_type == "agent_message":
+                    if agent_message is not None:
+                        raise ValueError("Worker emitted multiple completed messages")
                     message = item.get("text")
                     if not isinstance(message, str):
                         raise ValueError("Completed worker message has no text")
-                    agent_messages.append(message)
+                    agent_message = message
+                    agent_message_id = item_id
+            continue
         if event_type == "turn.completed":
-            usage = event.get("usage")
-            if not isinstance(usage, dict) or not usage:
+            if not turn_started or turn_completed or line_number != len(lines):
+                raise ValueError("Worker turn must complete exactly once and last")
+            raw_usage = event.get("usage")
+            if not isinstance(raw_usage, dict) or not raw_usage:
                 raise ValueError("Completed worker turn has no usage")
             normalized_usage: dict[str, int] = {}
-            for key, value in usage.items():
+            for key, value in raw_usage.items():
                 if not isinstance(key, str):
                     raise ValueError("Worker usage keys must be strings")
                 normalized_usage[key] = _non_negative_int(
@@ -1377,22 +2568,209 @@ def _validate_worker_events(
                 or "output_tokens" not in normalized_usage
             ):
                 raise ValueError("Worker usage is missing token totals")
-            usages.append(normalized_usage)
-    if len(thread_ids) != 1 or len(set(thread_ids)) != 1:
+            usage = normalized_usage
+            turn_completed = True
+            continue
+        raise ValueError(f"Worker event lifecycle is invalid: {event_type}")
+    if thread_id is None:
         raise ValueError("Worker event stream must contain one thread")
-    if len(usages) != 1:
+    if not turn_started or not turn_completed or usage is None:
         raise ValueError("Worker event stream must contain one completed turn")
-    if not agent_messages:
-        raise ValueError("Worker event stream has no completed agent message")
-    final_message = _strict_json_text(agent_messages[-1], label="final worker message")
-    if final_message != response:
+    if agent_message is None or agent_message_id != completed_item_order[-1]:
+        raise ValueError("Worker final item must be its single completed message")
+    final_message = _strict_json_text(agent_message, label="final worker message")
+    if response is not None and final_message != response:
         raise ValueError("Final worker event message differs from retained response")
     return {
-        "thread_id": thread_ids[0],
-        "usage": usages[0],
+        "thread_id": thread_id,
+        "usage": usage,
         "completed_item_counts": item_counts,
-        "tool_item_count": 0,
+        "jsonl_visibility_complete": False,
+        "visible_forbidden_item_count": 0,
+        "tool_use_absence_observed": False,
+        "final_response": final_message,
     }
+
+
+def _validate_launch_receipt(
+    receipt: Mapping[str, Any],
+    *,
+    graph: Mapping[str, Any],
+    graph_file_sha256: str,
+    graph_file_bytes: int,
+    prompt_sha256: str,
+    prompt_bytes: int,
+    schema_sha256: str,
+    schema_bytes: int,
+    response_sha256: str,
+    response_bytes: int,
+    events_sha256: str,
+    events_bytes: int,
+    stderr_sha256: str,
+    stderr_bytes: int,
+    event_summary: Mapping[str, Any],
+) -> None:
+    _exact_fields(
+        receipt,
+        required={
+            "schema_version",
+            "workflow_id",
+            "candidate_graph_sha256",
+            "packet",
+            "requested_worker_configuration",
+            "boundary",
+            "process",
+            "jsonl_observation",
+            "runtime_attestation",
+            "advisory_only",
+            "content_sha256",
+        },
+        label="Luna launch receipt",
+    )
+    content = dict(receipt)
+    content_sha256 = content.pop("content_sha256")
+    if (
+        receipt["schema_version"] != LAUNCH_RECEIPT_SCHEMA_VERSION
+        or receipt["workflow_id"] != "journal_bank_reconciliation"
+        or receipt["candidate_graph_sha256"] != graph["candidate_graph_sha256"]
+        or receipt["requested_worker_configuration"]
+        != graph["requested_worker_configuration"]
+        or receipt["advisory_only"] is not True
+        or content_sha256 != canonical_json_sha256(content)
+    ):
+        raise ValueError("Luna launch receipt identity is invalid")
+
+    packet = receipt["packet"]
+    if not isinstance(packet, dict):
+        raise ValueError("Luna launch receipt packet binding is invalid")
+    _exact_fields(
+        packet,
+        required={
+            "candidate_graph_file_sha256",
+            "candidate_graph_file_bytes",
+            "prompt_sha256",
+            "prompt_bytes",
+            "output_schema_sha256",
+            "output_schema_bytes",
+        },
+        label="Luna launch packet binding",
+    )
+    if packet != {
+        "candidate_graph_file_sha256": graph_file_sha256,
+        "candidate_graph_file_bytes": graph_file_bytes,
+        "prompt_sha256": prompt_sha256,
+        "prompt_bytes": prompt_bytes,
+        "output_schema_sha256": schema_sha256,
+        "output_schema_bytes": schema_bytes,
+    }:
+        raise ValueError("Luna launch receipt packet is stale")
+
+    boundary = receipt["boundary"]
+    if not isinstance(boundary, dict):
+        raise ValueError("Luna launch boundary is invalid")
+    _exact_fields(
+        boundary,
+        required={
+            "contract_id",
+            "platform",
+            "darwin_build",
+            "profile_sha256",
+            "codex_path",
+            "codex_sha256",
+            "codex_bytes",
+            "codex_version",
+            "sandbox_exec_path",
+            "sandbox_exec_sha256",
+            "canary_reader_sha256",
+            "canaries",
+            "global_instructions_absent_or_empty",
+            "auth_file_readable_by_codex_process",
+            "installation_id_preexisting_and_unchanged",
+            "outbound_network_allowed",
+            "filesystem_scope",
+            "qualification_basis",
+        },
+        label="Luna launch boundary",
+    )
+    codex_path = boundary["codex_path"]
+    if not isinstance(codex_path, str) or not Path(codex_path).is_absolute():
+        raise ValueError("Luna launch Claude path is invalid")
+    expected_boundary = {
+        "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
+        "platform": "Darwin",
+        "darwin_build": PINNED_DARWIN_BUILD,
+        "profile_sha256": PINNED_SEATBELT_PROFILE_SHA256,
+        "codex_sha256": PINNED_CODEX_SHA256,
+        "codex_version": PINNED_CODEX_VERSION,
+        "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
+        "sandbox_exec_sha256": PINNED_SANDBOX_EXEC_SHA256,
+        "canary_reader_sha256": PINNED_CAT_SHA256,
+        "canaries": {
+            "exact_schema_read_succeeded": True,
+            "outside_capsule_read_denied": True,
+            "codex_version_inside_boundary": PINNED_CODEX_VERSION,
+        },
+        "global_instructions_absent_or_empty": True,
+        "auth_file_readable_by_codex_process": True,
+        "installation_id_preexisting_and_unchanged": True,
+        "outbound_network_allowed": True,
+        "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
+        "qualification_basis": "pinned_hidden_view_image_outside_nonce_denied",
+    }
+    for key, expected in expected_boundary.items():
+        if boundary[key] != expected:
+            raise ValueError(f"Luna launch boundary field is invalid: {key}")
+    _non_negative_int(boundary["codex_bytes"], label="Luna Claude byte count")
+
+    process = receipt["process"]
+    if not isinstance(process, dict):
+        raise ValueError("Luna launch process receipt is invalid")
+    _exact_fields(
+        process,
+        required={
+            "return_code",
+            "timed_out",
+            "duration_ms",
+            "redacted_argv",
+            "response_sha256",
+            "response_bytes",
+            "events_sha256",
+            "events_bytes",
+            "stderr_sha256",
+            "stderr_bytes",
+        },
+        label="Luna launch process receipt",
+    )
+    if (
+        process["return_code"] != 0
+        or process["timed_out"] is not False
+        or process["redacted_argv"] != _redacted_worker_argv()
+        or process["response_sha256"] != response_sha256
+        or process["response_bytes"] != response_bytes
+        or process["events_sha256"] != events_sha256
+        or process["events_bytes"] != events_bytes
+        or process["stderr_sha256"] != stderr_sha256
+        or process["stderr_bytes"] != stderr_bytes
+    ):
+        raise ValueError("Luna launch process receipt does not bind retained output")
+    _non_negative_int(process["duration_ms"], label="Luna worker duration")
+
+    expected_jsonl = {
+        "visibility_complete": False,
+        "visible_forbidden_item_count": 0,
+        "tool_use_absence_observed": False,
+        "thread_id": event_summary["thread_id"],
+        "usage": event_summary["usage"],
+        "completed_item_counts": event_summary["completed_item_counts"],
+    }
+    if receipt["jsonl_observation"] != expected_jsonl:
+        raise ValueError("Luna launch JSONL observation is invalid")
+    if receipt["runtime_attestation"] != {
+        "model_observed": False,
+        "reasoning_effort_observed": False,
+        "main_chat_model_change": False,
+    }:
+        raise ValueError("Luna launch runtime attestation is invalid")
 
 
 def _write_validation_pair(
@@ -1400,8 +2778,30 @@ def _write_validation_pair(
     validated: Mapping[str, Any],
     worker_run: Mapping[str, Any],
 ) -> tuple[Path, Path]:
-    """Stage both validation artifacts and expose neither on a preflight failure."""
+    """Stage a new pair or accept an exact already-published pair idempotently."""
 
+    validated_path = semantic_dir / VALIDATED_SUGGESTIONS_NAME
+    worker_path = semantic_dir / WORKER_RUN_NAME
+    validated_exists = os.path.lexists(validated_path)
+    worker_exists = os.path.lexists(worker_path)
+    if validated_exists or worker_exists:
+        if validated_exists and worker_exists:
+            existing_validated = _strict_json_file(
+                validated_path,
+                maximum_bytes=MAX_RESPONSE_BYTES,
+                label=VALIDATED_SUGGESTIONS_NAME,
+            )
+            existing_worker = _strict_json_file(
+                worker_path,
+                maximum_bytes=MAX_RESPONSE_BYTES,
+                label=WORKER_RUN_NAME,
+            )
+            if existing_validated == validated and existing_worker == worker_run:
+                return validated_path, worker_path
+        raise ValueError(
+            "Semantic validation output already exists with different content; "
+            "prepare a new generation"
+        )
     validated_path = _new_output_path(semantic_dir, VALIDATED_SUGGESTIONS_NAME)
     worker_path = _new_output_path(semantic_dir, WORKER_RUN_NAME)
     validated_pending = _new_output_path(semantic_dir, VALIDATED_PENDING_NAME)
@@ -1429,7 +2829,7 @@ def validate_semantic_review(
     response_path: Path,
     events_path: Path,
 ) -> dict[str, Any]:
-    """Validate one tool-free worker response and write advisory artifacts."""
+    """Validate one capsule-contained worker response and write advisory artifacts."""
 
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
@@ -1438,16 +2838,80 @@ def validate_semantic_review(
     )
     response_file = _required_child(response_path, semantic, RESPONSE_NAME)
     events_file = _required_child(events_path, semantic, EVENTS_NAME)
-    response, response_sha256 = _strict_json_snapshot(
-        response_file, maximum_bytes=MAX_RESPONSE_BYTES, label=RESPONSE_NAME
+    receipt_file = _required_child(
+        semantic / LAUNCH_RECEIPT_NAME,
+        semantic,
+        LAUNCH_RECEIPT_NAME,
     )
+    stderr_file = _required_child(
+        semantic / STDERR_NAME,
+        semantic,
+        STDERR_NAME,
+    )
+    _, response_bytes_value, response_sha256 = _stable_file_snapshot(
+        response_file,
+        maximum_bytes=MAX_RESPONSE_BYTES,
+        label=RESPONSE_NAME,
+    )
+    try:
+        response_text = response_bytes_value.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError(f"{RESPONSE_NAME} is not valid UTF-8") from exc
+    response = _strict_json_text(response_text, label=RESPONSE_NAME)
     events_text, events_sha256 = _text_snapshot(
         events_file,
         maximum_bytes=MAX_EVENTS_BYTES,
         label=EVENTS_NAME,
     )
+    receipt, launch_receipt_sha256 = _strict_json_snapshot(
+        receipt_file,
+        maximum_bytes=MAX_RESPONSE_BYTES,
+        label=LAUNCH_RECEIPT_NAME,
+    )
+    _, stderr_bytes_value, stderr_sha256 = _stable_file_snapshot(
+        stderr_file,
+        maximum_bytes=MAX_STDERR_BYTES,
+        label=STDERR_NAME,
+    )
     normalized_reviews = _validate_worker_response(response, graph)
     event_summary = _validate_worker_events(events_text, response)
+    graph_file = _required_child(
+        candidate_graph_path,
+        semantic,
+        CANDIDATE_GRAPH_NAME,
+    )
+    _, graph_file_bytes_value, graph_file_sha256 = _stable_file_snapshot(
+        graph_file,
+        maximum_bytes=MAX_GRAPH_BYTES,
+        label=CANDIDATE_GRAPH_NAME,
+    )
+    prompt_text, prompt_sha256 = _text_snapshot(
+        semantic / PROMPT_NAME,
+        maximum_bytes=MAX_PROMPT_BYTES,
+        label=PROMPT_NAME,
+    )
+    _, schema_bytes_value, schema_sha256 = _stable_file_snapshot(
+        semantic / OUTPUT_SCHEMA_NAME,
+        maximum_bytes=MAX_PROMPT_BYTES,
+        label=OUTPUT_SCHEMA_NAME,
+    )
+    _validate_launch_receipt(
+        receipt,
+        graph=graph,
+        graph_file_sha256=graph_file_sha256,
+        graph_file_bytes=len(graph_file_bytes_value),
+        prompt_sha256=prompt_sha256,
+        prompt_bytes=len(prompt_text.encode("utf-8")),
+        schema_sha256=schema_sha256,
+        schema_bytes=len(schema_bytes_value),
+        response_sha256=response_sha256,
+        response_bytes=len(response_bytes_value),
+        events_sha256=events_sha256,
+        events_bytes=len(events_text.encode("utf-8")),
+        stderr_sha256=stderr_sha256,
+        stderr_bytes=len(stderr_bytes_value),
+        event_summary=event_summary,
+    )
     decisions = [
         decision for review in normalized_reviews for decision in review["decisions"]
     ]
@@ -1486,16 +2950,26 @@ def validate_semantic_review(
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "requested_worker_configuration": graph["requested_worker_configuration"],
         "runtime_attestation": {
-            "thread_and_usage_observed": True,
-            "model_and_reasoning_effort_observed": False,
-            "trust_boundary": "main_codex_launch_command",
+            "separate_thread_and_usage_observed": True,
+            "model_observed": False,
+            "reasoning_effort_observed": False,
+            "filesystem_boundary_receipt_validated": True,
+            "jsonl_visibility_complete": False,
+            "tool_use_absence_observed": False,
+            "trust_boundary": WORKER_BOUNDARY_CONTRACT_ID,
         },
         "thread_id": event_summary["thread_id"],
         "usage": event_summary["usage"],
         "completed_item_counts": event_summary["completed_item_counts"],
-        "tool_item_count": event_summary["tool_item_count"],
+        "jsonl_observation": {
+            "visibility_complete": False,
+            "visible_forbidden_item_count": 0,
+            "tool_use_absence_observed": False,
+        },
         "response_sha256": response_sha256,
         "events_sha256": events_sha256,
+        "stderr_sha256": stderr_sha256,
+        "launch_receipt_sha256": launch_receipt_sha256,
         "validated_suggestions_sha256": validated["content_sha256"],
         "status": "completed_validated",
         "advisory_only": True,
@@ -1526,6 +3000,14 @@ def _parser() -> argparse.ArgumentParser:
     prepare = subparsers.add_parser("prepare", help="Prepare a bounded worker packet.")
     prepare.add_argument("reconciliation_dir", type=Path)
     prepare.add_argument("--output-dir", type=Path, required=True)
+    run_worker = subparsers.add_parser(
+        "run-worker",
+        help="Run the pinned Luna worker in a deny-default capsule.",
+    )
+    run_worker.add_argument("reconciliation_dir", type=Path)
+    run_worker.add_argument("--output-dir", type=Path, required=True)
+    run_worker.add_argument("--candidate-graph", type=Path, required=True)
+    run_worker.add_argument("--codex-bin", type=Path)
     validate = subparsers.add_parser("validate", help="Validate a retained worker run.")
     validate.add_argument("reconciliation_dir", type=Path)
     validate.add_argument("--output-dir", type=Path, required=True)
@@ -1554,6 +3036,25 @@ def _record_cli_validation_failure(args: argparse.Namespace) -> None:
         LOGGER.error("Unable to record semantic worker limitation: %s", status_error)
 
 
+def _record_cli_launch_failure(args: argparse.Namespace) -> None:
+    try:
+        reconciliation = _resolved_reconciliation_dir(args.reconciliation_dir)
+        semantic = _semantic_output_dir(reconciliation, args.output_dir)
+        graph = _validate_graph_and_preparation_files(
+            reconciliation,
+            semantic,
+            args.candidate_graph,
+        )
+        _write_status(
+            semantic,
+            graph,
+            status_value="worker_failed",
+            failure_reason="worker_isolation_or_launch_failed",
+        )
+    except (OSError, ValueError) as status_error:
+        LOGGER.error("Unable to record semantic worker limitation: %s", status_error)
+
+
 def main() -> int:
     """Run the deterministic preparation or validation command."""
 
@@ -1566,6 +3067,23 @@ def main() -> int:
             result["selected_component_count"],
             result["deferred_component_count"],
             result["worker_required"],
+        )
+        return 0
+    if args.command == "run-worker":
+        try:
+            result = run_semantic_worker(
+                args.reconciliation_dir,
+                args.output_dir,
+                args.candidate_graph,
+                codex_bin=args.codex_bin,
+            )
+        except (OSError, ValueError) as exc:
+            _record_cli_launch_failure(args)
+            LOGGER.error("SEMANTIC_WORKER_LAUNCH_FAILED: %s", exc)
+            return 2
+        LOGGER.info(
+            "isolated Luna worker completed pending validation: %s",
+            result["candidate_graph_sha256"],
         )
         return 0
     try:
