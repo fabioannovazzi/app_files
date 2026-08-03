@@ -349,20 +349,37 @@ local WhatsApp Desktop application on the same computer.
 1. Confirm one complete international client phone in the current task and
    state that opening the chat may mark messages as read. Reject all-client,
    multi-client, group, community, channel, broadcast, or ambiguous scope.
-2. Target the `net.whatsapp.WhatsApp` application. Read a fresh accessibility
-   snapshot and positively identify the sidebar search control by role, label,
-   and location before typing.
-3. Type only in that verified search control, first using the exact phone.
-   Never type in the message composer. After every action, refresh state and
-   verify the focused control and selected chat.
-4. Open only one one-to-one result and verify its header or contact information
-   against the exact phone. Stop before reading content when the phone cannot
-   be verified.
-5. Inspect only the visible messages needed for the requested topic and date
-   range. Scroll only inside the selected chat. Cite visible sender, timestamp,
-   and a concise on-screen locator; state history and unreadable-media limits.
-6. If any text appears in the composer, select and clear it without pressing
-   Return, stop, and report the focus failure.
+2. Target the already-running `net.whatsapp.WhatsApp` application. Import
+   `scripts/whatsapp_desktop_guard.mjs` from this module in the same persistent
+   `node_repl` session as Computer Use. Require one empty known chat-list Search
+   control, one empty composer, and no send control before entering anything.
+3. Call `guardedPhoneSearch({sky, confirmedPhone, expectedChatName})`. It uses
+   Command-F, re-resolves and clicks the exact indexed Search control, and
+   enters one phone digit at a time with `press_key`. If focus metadata is
+   exposed, it must name Search; if WhatsApp omits it, the first single digit is
+   the bounded destination proof. Refresh full accessibility state after every
+   digit. Never use `type_text`, paste, dictation, coordinates, or a full-phone
+   write. Continue only when each Search value equals the exact expected
+   prefix, the composer stays empty, no send control appears, and the sanitized
+   result is `ready_to_open_target` with one fresh target result index.
+4. Keep raw pre-verification accessibility state inside local JavaScript; do not
+   return it because unrelated sidebar previews may be present. If one newly
+   entered digit reached the previously empty composer, let the guard remove
+   only that proven digit, verify cleanup, and stop. Do not alter unknown or
+   pre-existing composer content and never press Return.
+5. Immediately call `verifyAndOpenGuardedTarget(...)`. It uses only the exact
+   result's exposed `More Info` action, requires one contact-card heading equal
+   to the confirmed chat name and one exact normalized phone, dismisses the
+   card, re-resolves and opens that exact contact, and clears only the proven
+   query through `TokenizedSearchBar_DeleteButton`. It returns only sanitized
+   verification state. Stop before returning message content when the phone
+   cannot be verified.
+6. After verification, use `extractVerifiedChatTable(...)` to isolate only the
+   exact target chat's `ChatMessagesTableView` subtree. Inspect only visible
+   messages needed for the requested topic and date range. Scroll only inside
+   the selected chat and isolate that table again after each scroll. Cite
+   visible sender, timestamp, and a concise on-screen locator; state history and
+   unreadable-media limits. Never return unrelated chat-list previews.
 
 Never send, reply, forward, react, edit, delete, star, pin, archive, mute,
 block, call, create a chat, open a link, download or play media, export a chat,
@@ -487,10 +504,12 @@ ZIPs during an archive run.
   unresolved conflict.
 - WhatsApp Desktop, Computer Use, or an already-authenticated local app is
   unavailable: stop; do not use WhatsApp Web, a server, or an unofficial API.
-- WhatsApp search focus, phone verification, chat identity, or one-to-one scope
-  is uncertain: stop before reading content.
-- WhatsApp composer receives text: clear it without sending, stop, and report
-  the focus failure.
+- WhatsApp search or composer is not uniquely exposed and empty, guarded prefix
+  verification fails, or phone, chat identity, or one-to-one scope is
+  uncertain: stop before returning content.
+- One proven digit reaches the previously empty WhatsApp composer: let the
+  guard remove only that digit and verify cleanup. Do not alter unknown or
+  pre-existing content; never send; stop and report the focus failure.
 - WhatsApp write, download, export, or settings action is requested: refuse it
   and keep the route read-only.
 

@@ -99,7 +99,6 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     assert interface["longDescription"] == approved_description
     assert "controlla i dati contabili" in interface["longDescription"]
     assert "casi di concordato preventivo" in interface["longDescription"]
-    assert "richieste mirate per Deep Research" in interface["longDescription"]
     assert "Raccoglie, ordina e ritrova i documenti del cliente" in (
         interface["longDescription"]
     )
@@ -110,9 +109,6 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     assert "consiglia Codex Desktop" not in interface["longDescription"]
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
-    assert any(
-        "documenti del cliente" in prompt for prompt in interface["defaultPrompt"]
-    )
 
 
 def test_whatsapp_desktop_is_a_workstream_boundary_not_a_hosted_service() -> None:

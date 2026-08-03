@@ -20,8 +20,10 @@ Choose the route before resolving any module:
 1. When the user asks to inspect WhatsApp messages, confirm that Computer Use
    can control the local WhatsApp Desktop application on the same computer.
    - If it is available, read `references/whatsapp-desktop.md` completely and
-     follow it. Do not resolve the local document module, call a WhatsApp MCP
-     server, use a browser, or run a WhatsApp script.
+     follow it. Do not resolve the local document module as a workflow or call
+     its MCP. Resolve only the bundled Studio Archive
+     `scripts/whatsapp_desktop_guard.mjs` named by that reference; do not call a
+     WhatsApp MCP server, use a browser, or run any other WhatsApp script.
    - If it is unavailable, explain that message inspection requires Codex
      Desktop, Computer Use, and the user's already-authenticated WhatsApp
      Desktop application. Complete any useful scope or question preparation in
