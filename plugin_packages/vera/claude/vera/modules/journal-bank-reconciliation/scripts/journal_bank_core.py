@@ -12,6 +12,7 @@ import stat
 import sys
 import tempfile
 import unicodedata
+from bisect import bisect_left
 from collections import Counter
 from dataclasses import dataclass
 from datetime import date, datetime, timedelta
@@ -4465,9 +4466,78 @@ def _same_required_perimeter(
     ) and _direction_compatible(bank_row, journal_row, policy)
 
 
+@dataclass(frozen=True)
+class _JournalAmountIndex:
+    """Exact Decimal range index for mechanically eligible journal amounts.
+
+    The index only removes rows outside the authoritative reviewed-tolerance
+    predicate. Existing perimeter, date, reference, and one-to-one checks remain
+    authoritative for every row returned by the index.
+    """
+
+    amounts: tuple[Decimal, ...]
+    positioned_rows: tuple[tuple[int, dict[str, Any]], ...]
+
+    @classmethod
+    def from_rows(cls, journal_rows: Sequence[dict[str, Any]]) -> _JournalAmountIndex:
+        indexed_rows: list[tuple[Decimal, int, dict[str, Any]]] = []
+        for position, journal_row in enumerate(journal_rows):
+            journal_value = journal_row.get("amount_abs")
+            if not isinstance(journal_value, str):
+                continue
+            indexed_rows.append(
+                (
+                    parse_canonical_decimal(journal_value, label="journal amount"),
+                    position,
+                    journal_row,
+                )
+            )
+        indexed_rows.sort(key=lambda item: (item[0], item[1]))
+        return cls(
+            amounts=tuple(item[0] for item in indexed_rows),
+            positioned_rows=tuple((item[1], item[2]) for item in indexed_rows),
+        )
+
+    def rows_within_tolerance(
+        self, amount: Decimal, tolerance: Decimal
+    ) -> list[dict[str, Any]]:
+        """Return predicate-approved candidates in original journal order.
+
+        Searching outward from the insertion point avoids calculating Decimal
+        bounds that the ambient context could round inward. The authoritative
+        tolerance predicate decides both inclusion and where each scan stops.
+        """
+
+        pivot = bisect_left(self.amounts, amount)
+        positioned_candidates: list[tuple[int, dict[str, Any]]] = []
+
+        left = pivot - 1
+        while left >= 0:
+            _, within_tolerance = difference_within_tolerance(
+                amount, self.amounts[left], tolerance
+            )
+            if not within_tolerance:
+                break
+            positioned_candidates.append(self.positioned_rows[left])
+            left -= 1
+
+        right = pivot
+        while right < len(self.amounts):
+            _, within_tolerance = difference_within_tolerance(
+                amount, self.amounts[right], tolerance
+            )
+            if not within_tolerance:
+                break
+            positioned_candidates.append(self.positioned_rows[right])
+            right += 1
+
+        positioned_candidates.sort(key=lambda item: item[0])
+        return [row for _, row in positioned_candidates]
+
+
 def _candidate_rows(
     bank_row: dict[str, Any],
-    journal_rows: list[dict[str, Any]],
+    journal_index: _JournalAmountIndex,
     used_journal: set[str],
     *,
     tolerance: Decimal,
@@ -4481,7 +4551,9 @@ def _candidate_rows(
         if isinstance(bank_value, str)
         else None
     )
-    for journal_row in journal_rows:
+    if bank_amount is None:
+        return candidates
+    for journal_row in journal_index.rows_within_tolerance(bank_amount, tolerance):
         journal_id = str(journal_row["transaction_id"])
         if journal_id in used_journal:
             continue
@@ -4491,7 +4563,7 @@ def _candidate_rows(
             if isinstance(journal_value, str)
             else None
         )
-        if bank_amount is None or journal_amount is None:
+        if journal_amount is None:
             continue
         if not _same_required_perimeter(bank_row, journal_row, relationship_policy):
             continue
@@ -4554,7 +4626,7 @@ def _make_match_record(
 
 def _unconflicted_singleton_batch(
     bank_rows: Sequence[dict[str, Any]],
-    journal_rows: list[dict[str, Any]],
+    journal_index: _JournalAmountIndex,
     used_bank: set[str],
     used_journal: set[str],
     *,
@@ -4576,7 +4648,7 @@ def _unconflicted_singleton_batch(
             continue
         candidates = _candidate_rows(
             bank_row,
-            journal_rows,
+            journal_index,
             used_journal,
             tolerance=tolerance,
             date_window_days=date_window_days,
@@ -4621,6 +4693,7 @@ def _match_transactions(
 ) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame, dict[str, int]]:
     bank_rows = bank.to_dicts()
     journal_rows = journal.to_dicts()
+    journal_index = _JournalAmountIndex.from_rows(journal_rows)
     used_bank: set[str] = set()
     used_journal: set[str] = set()
     matches: list[dict[str, Any]] = []
@@ -4647,7 +4720,7 @@ def _match_transactions(
     while True:
         reference_batch = _unconflicted_singleton_batch(
             bank_rows,
-            journal_rows,
+            journal_index,
             used_bank,
             used_journal,
             tolerance=tolerance,
@@ -4662,7 +4735,7 @@ def _match_transactions(
 
     first_amount_date_batch = _unconflicted_singleton_batch(
         bank_rows,
-        journal_rows,
+        journal_index,
         used_bank,
         used_journal,
         tolerance=tolerance,
@@ -4676,7 +4749,7 @@ def _match_transactions(
     while first_amount_date_batch:
         later_amount_date_batch = _unconflicted_singleton_batch(
             bank_rows,
-            journal_rows,
+            journal_index,
             used_bank,
             used_journal,
             tolerance=tolerance,
