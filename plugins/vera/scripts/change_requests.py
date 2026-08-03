@@ -9,6 +9,7 @@ import importlib
 import json
 import logging
 import os
+import platform
 import re
 import ssl
 import stat
@@ -22,6 +23,7 @@ import uuid
 import webbrowser
 from collections.abc import Callable, Iterator, Mapping
 from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -31,6 +33,7 @@ __all__ = [
     "main",
     "reserve_suggestion_prompt",
     "start_interview",
+    "submit_evidence",
     "submit_problem",
     "submit_suggestion",
 ]
@@ -505,6 +508,133 @@ def _read_request_file(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _parse_aware_timestamp(value: Any, *, field: str) -> None:
+    if not isinstance(value, str) or not value.strip():
+        raise ChangeRequestError(f"{field} must be an ISO timestamp with timezone.")
+    try:
+        timestamp = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ChangeRequestError(
+            f"{field} must be an ISO timestamp with timezone."
+        ) from exc
+    if timestamp.tzinfo is None or timestamp.utcoffset() is None:
+        raise ChangeRequestError(f"{field} must include a timezone.")
+
+
+def _validate_string_list(
+    value: Any,
+    *,
+    field: str,
+    max_items: int,
+    max_chars: int,
+) -> None:
+    if (
+        not isinstance(value, list)
+        or not value
+        or len(value) > max_items
+        or any(
+            not isinstance(item, str) or not item.strip() or len(item) > max_chars
+            for item in value
+        )
+    ):
+        raise ChangeRequestError(f"{field} must contain bounded non-empty strings.")
+
+
+def _validate_problem_request(payload: Mapping[str, Any]) -> None:
+    """Validate mechanical evidence shape; Codex retains semantic judgment."""
+
+    allowed = {
+        "schema_version",
+        "title",
+        "expected",
+        "observed",
+        "reproduction",
+        "diagnostics",
+        "error",
+        "plugin_version",
+    }
+    if payload.get("schema_version") != 2 or set(payload) - allowed:
+        raise ChangeRequestError(
+            "Problem report must use the supported schema_version 2."
+        )
+    for field, max_chars in (
+        ("title", 256),
+        ("expected", 4_000),
+        ("observed", 4_000),
+    ):
+        value = payload.get(field)
+        if not isinstance(value, str) or not value.strip() or len(value) > max_chars:
+            raise ChangeRequestError(f"Problem report {field} is missing or too long.")
+    _validate_string_list(
+        payload.get("reproduction"),
+        field="Problem report reproduction",
+        max_items=20,
+        max_chars=1_000,
+    )
+    diagnostics = payload.get("diagnostics")
+    if not isinstance(diagnostics, dict):
+        raise ChangeRequestError("Problem report diagnostics are required.")
+    diagnostic_allowed = {
+        "occurred_at",
+        "runtime",
+        "operation",
+        "evidence",
+        "correlation_ids",
+    }
+    if set(diagnostics) - diagnostic_allowed:
+        raise ChangeRequestError("Problem report diagnostics contain unknown fields.")
+    _parse_aware_timestamp(
+        diagnostics.get("occurred_at"), field="diagnostics.occurred_at"
+    )
+    for field, max_chars in (("runtime", 256), ("operation", 512)):
+        value = diagnostics.get(field)
+        if not isinstance(value, str) or not value.strip() or len(value) > max_chars:
+            raise ChangeRequestError(f"diagnostics.{field} is missing or too long.")
+    _validate_string_list(
+        diagnostics.get("evidence"),
+        field="diagnostics.evidence",
+        max_items=20,
+        max_chars=2_000,
+    )
+    correlation_ids = diagnostics.get("correlation_ids", [])
+    if correlation_ids:
+        _validate_string_list(
+            correlation_ids,
+            field="diagnostics.correlation_ids",
+            max_items=20,
+            max_chars=256,
+        )
+
+
+def _validate_follow_up_evidence(payload: Mapping[str, Any]) -> None:
+    if payload.get("schema_version") != 1 or set(payload) != {
+        "schema_version",
+        "summary",
+        "evidence",
+    }:
+        raise ChangeRequestError("Follow-up evidence must use the supported schema.")
+    summary = payload.get("summary")
+    if not isinstance(summary, str) or not summary.strip() or len(summary) > 4_000:
+        raise ChangeRequestError("Follow-up evidence summary is missing or too long.")
+    _validate_string_list(
+        payload.get("evidence"),
+        field="Follow-up evidence",
+        max_items=20,
+        max_chars=2_000,
+    )
+
+
+def _client_context(checked_at: float) -> dict[str, str]:
+    """Return bounded non-identifying client diagnostics for support correlation."""
+
+    return {
+        "submitted_at": datetime.fromtimestamp(checked_at, tz=timezone.utc).isoformat(),
+        "platform": (platform.system() or "unknown").lower()[:64],
+        "python_version": platform.python_version()[:64],
+        "client": "plugin_change_request",
+    }
+
+
 def _response_json(response: Any) -> dict[str, Any]:
     raw = response.read(MAX_RESPONSE_BYTES + 1)
     if len(raw) > MAX_RESPONSE_BYTES:
@@ -624,6 +754,29 @@ def _validate_receipt(payload: Mapping[str, Any]) -> dict[str, Any]:
     fixed = payload.get("fixed")
     if not isinstance(fixed, bool) or fixed != (status == "fixed"):
         raise ChangeRequestError("The response contains inconsistent fixed status.")
+    disposition = payload.get("disposition")
+    if disposition is None:
+        disposition = "fixed" if status == "fixed" else "unresolved"
+    if disposition not in {
+        "unresolved",
+        "needs_info",
+        "fixed",
+        "duplicate",
+        "external",
+        "non_actionable",
+    } or (status == "fixed") != (disposition == "fixed"):
+        raise ChangeRequestError("The response contains an invalid disposition.")
+    revision = payload.get("revision", 1)
+    if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+        raise ChangeRequestError("The response contains an invalid status revision.")
+    needs_info_question = payload.get("needs_info_question")
+    if disposition == "needs_info":
+        if not isinstance(needs_info_question, str) or not needs_info_question.strip():
+            raise ChangeRequestError("The response is missing its evidence question.")
+    elif needs_info_question is not None:
+        raise ChangeRequestError(
+            "The response contains an unexpected evidence question."
+        )
     fixed_version = payload.get("fixed_version")
     if fixed_version is not None and not isinstance(fixed_version, str):
         raise ChangeRequestError("The response contains an invalid fixed version.")
@@ -631,6 +784,9 @@ def _validate_receipt(payload: Mapping[str, Any]) -> dict[str, Any]:
         "change_request_id": request_id,
         "status_token": token,
         "status": status,
+        "disposition": disposition,
+        "revision": revision,
+        "needs_info_question": needs_info_question,
         "fixed": fixed,
         "fixed_version": fixed_version,
         "install_url": _validate_install_url(payload.get("install_url")),
@@ -653,6 +809,9 @@ def _validate_interview_receipt(payload: Mapping[str, Any]) -> dict[str, Any]:
         "change_request_id": request_id,
         "status_token": token,
         "status": "open",
+        "disposition": "unresolved",
+        "revision": 1,
+        "needs_info_question": None,
         "fixed": False,
         "fixed_version": None,
         "install_url": None,
@@ -669,7 +828,9 @@ def _find_or_create_entry(
     request_without_id: Mapping[str, Any],
     now: float,
 ) -> tuple[dict[str, Any], bool]:
-    fingerprint = _payload_hash(request_without_id)
+    fingerprint_payload = dict(request_without_id)
+    fingerprint_payload.pop("client_context", None)
+    fingerprint = _payload_hash(fingerprint_payload)
     for entry in state["requests"]:
         if entry.get("kind") == kind and entry.get("payload_hash") == fingerprint:
             return entry, False
@@ -730,6 +891,9 @@ def _stored_receipt(entry: Mapping[str, Any]) -> dict[str, Any] | None:
             "fixed_version",
             "install_url",
             "interview_url",
+            "disposition",
+            "revision",
+            "needs_info_question",
         )
         if key in entry
     }
@@ -836,6 +1000,8 @@ def _submit_text_request(
 
     plugin_name, plugin_version = _read_plugin_identity(plugin_root)
     request_payload = _read_request_file(request_path)
+    if kind == "problem":
+        _validate_problem_request(request_payload)
     checked_at = time.time() if now is None else now
     body_without_id = {
         "schema_version": 1,
@@ -843,6 +1009,7 @@ def _submit_text_request(
         "plugin": plugin_name,
         "plugin_version": plugin_version,
         "request": request_payload,
+        "client_context": _client_context(checked_at),
     }
     entry = _reserve_entry(
         kind=kind,
@@ -921,6 +1088,102 @@ def submit_suggestion(
         now=now,
         timeout_seconds=timeout_seconds,
     )
+
+
+def submit_evidence(
+    plugin_root: Path,
+    change_request_id: str,
+    evidence_path: Path,
+    *,
+    plugin_data: Path | None = None,
+    base_url: str = DEFAULT_BASE_URL,
+    opener: Callable[..., Any] | None = None,
+    now: float | None = None,
+    timeout_seconds: float = DEFAULT_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Submit one requested sanitized evidence update with idempotent retry."""
+
+    if _CHANGE_REQUEST_ID.fullmatch(change_request_id) is None:
+        raise ChangeRequestError("Invalid change-request ID.")
+    plugin_name, _plugin_version = _read_plugin_identity(plugin_root)
+    evidence = _read_request_file(evidence_path)
+    _validate_follow_up_evidence(evidence)
+    checked_at = time.time() if now is None else now
+    evidence_hash = _payload_hash(evidence)
+    with _locked_state(plugin_name, plugin_data) as state_directories:
+        state = _load_state(plugin_name, state_directories)
+        entry = next(
+            (
+                candidate
+                for candidate in state["requests"]
+                if candidate.get("change_request_id") == change_request_id
+            ),
+            None,
+        )
+        if entry is None or not isinstance(entry.get("status_token"), str):
+            raise ChangeRequestError("No local receipt exists for this change request.")
+        completed_updates = entry.get("evidence_updates", [])
+        if isinstance(completed_updates, list) and any(
+            isinstance(update, dict) and update.get("payload_hash") == evidence_hash
+            for update in completed_updates
+        ):
+            stored = _stored_receipt(entry)
+            if stored is None:
+                raise ChangeRequestError("The local change-request receipt is invalid.")
+            return stored
+        pending = entry.get("pending_evidence")
+        if isinstance(pending, dict) and pending.get("payload_hash") == evidence_hash:
+            update_id = str(pending["update_id"])
+        else:
+            update_id = str(uuid.uuid4())
+            entry["pending_evidence"] = {
+                "update_id": update_id,
+                "payload_hash": evidence_hash,
+            }
+            entry["updated_at"] = checked_at
+            _write_state(state, state_directories)
+        status_token = str(entry["status_token"])
+    response = _post_json(
+        base_url,
+        f"/api/change-requests/{change_request_id}/evidence",
+        {
+            "schema_version": 1,
+            "update_id": update_id,
+            "status_token": status_token,
+            "evidence": evidence,
+        },
+        opener=opener,
+        timeout_seconds=timeout_seconds,
+    )
+    receipt = _validate_receipt(response)
+    with _locked_state(plugin_name, plugin_data) as state_directories:
+        state = _load_state(plugin_name, state_directories)
+        entry = next(
+            (
+                candidate
+                for candidate in state["requests"]
+                if candidate.get("change_request_id") == change_request_id
+            ),
+            None,
+        )
+        if entry is None:
+            raise ChangeRequestError("The local change-request receipt is missing.")
+        entry.update(receipt)
+        entry.pop("pending_evidence", None)
+        completed_updates = entry.get("evidence_updates", [])
+        if not isinstance(completed_updates, list):
+            completed_updates = []
+        completed_updates.append(
+            {
+                "update_id": update_id,
+                "payload_hash": evidence_hash,
+                "submitted_at": checked_at,
+            }
+        )
+        entry["evidence_updates"] = completed_updates
+        entry["updated_at"] = checked_at
+        _write_state(state, state_directories)
+    return receipt
 
 
 def start_interview(
@@ -1014,6 +1277,38 @@ def _status_rows(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
             raise ChangeRequestError(
                 "The status response contains inconsistent status."
             )
+        disposition = row.get("disposition")
+        if disposition is None:
+            disposition = "fixed" if status == "fixed" else "unresolved"
+        if disposition not in {
+            "unresolved",
+            "needs_info",
+            "fixed",
+            "duplicate",
+            "external",
+            "non_actionable",
+        } or (status == "fixed") != (disposition == "fixed"):
+            raise ChangeRequestError(
+                "The status response contains an invalid disposition."
+            )
+        revision = row.get("revision", 1)
+        if isinstance(revision, bool) or not isinstance(revision, int) or revision < 1:
+            raise ChangeRequestError(
+                "The status response contains an invalid status revision."
+            )
+        needs_info_question = row.get("needs_info_question")
+        if disposition == "needs_info":
+            if (
+                not isinstance(needs_info_question, str)
+                or not needs_info_question.strip()
+            ):
+                raise ChangeRequestError(
+                    "The status response is missing its evidence question."
+                )
+        elif needs_info_question is not None:
+            raise ChangeRequestError(
+                "The status response contains an unexpected evidence question."
+            )
         fixed_version = row.get("fixed_version")
         if fixed_version is not None and not isinstance(fixed_version, str):
             raise ChangeRequestError(
@@ -1024,6 +1319,9 @@ def _status_rows(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
                 "change_request_id": request_id,
                 "found": True,
                 "status": status,
+                "disposition": disposition,
+                "revision": revision,
+                "needs_info_question": needs_info_question,
                 "fixed": fixed,
                 "fixed_version": fixed_version,
                 "install_url": _validate_install_url(row.get("install_url")),
@@ -1052,7 +1350,6 @@ def check_fixed_requests(
                 for entry in state["requests"]
                 if isinstance(entry.get("change_request_id"), str)
                 and isinstance(entry.get("status_token"), str)
-                and entry.get("fixed_notified_at") is None
             ]
             if not pending:
                 _write_state(state, state_directories)
@@ -1080,30 +1377,59 @@ def check_fixed_requests(
             for row in _status_rows(response):
                 if row.get("found"):
                     updates_by_id[row["change_request_id"]] = row
-        newly_fixed: list[dict[str, Any]] = []
+        notifications: list[str] = []
         with _locked_state(plugin_name, plugin_data) as state_directories:
             state = _load_state(plugin_name, state_directories)
             for entry in state["requests"]:
                 request_id = entry.get("change_request_id")
                 row = updates_by_id.get(str(request_id))
-                if row is None or entry.get("fixed_notified_at") is not None:
+                if row is None:
                     continue
+                notified_revision = entry.get("notified_revision", 0)
+                if isinstance(notified_revision, bool) or not isinstance(
+                    notified_revision, (int, float)
+                ):
+                    notified_revision = 0
                 entry.update(
                     {key: value for key, value in row.items() if key != "found"}
                 )
                 entry["updated_at"] = checked_at
+                revision = int(entry.get("revision", 1))
+                if revision <= int(notified_revision):
+                    continue
+                disposition = entry.get("disposition")
                 if entry.get("status") == "fixed":
                     entry["fixed_notified_at"] = checked_at
-                    newly_fixed.append(dict(entry))
+                    notifications.append(
+                        f"The problem you reported as {entry['change_request_id']} "
+                        "is fixed. Update now?"
+                    )
+                elif disposition == "needs_info":
+                    question = entry.get("needs_info_question")
+                    if isinstance(question, str):
+                        entry["needs_info_notified_question"] = question
+                        notifications.append(
+                            f"The developer needs more evidence for "
+                            f"{entry['change_request_id']}: {question}"
+                        )
+                elif disposition in {"duplicate", "external", "non_actionable"}:
+                    label = str(disposition).replace("_", " ")
+                    notifications.append(
+                        f"The report {entry['change_request_id']} was closed as "
+                        f"{label}; no plugin fix was claimed."
+                    )
+                elif int(notified_revision) > 0:
+                    notifications.append(
+                        f"The report {entry['change_request_id']} was reopened and "
+                        "is under active investigation."
+                    )
+                entry["notified_revision"] = revision
             _write_state(state, state_directories)
     except (ChangeRequestError, OSError, TypeError, ValueError):
         return None
-    if not newly_fixed:
+    if not notifications:
         return None
-    return "\n".join(
-        f"The problem you reported as {entry['change_request_id']} is fixed. Update now?"
-        for entry in newly_fixed
-    )
+    return "\n".join(notifications)
 
 
 def _plugin_data_from_env() -> Path | None:
@@ -1132,6 +1458,9 @@ def main() -> int:
     problem_parser.add_argument("--request", type=Path, required=True)
     suggestion_parser = subparsers.add_parser("submit-suggestion")
     suggestion_parser.add_argument("--request", type=Path, required=True)
+    evidence_parser = subparsers.add_parser("add-evidence")
+    evidence_parser.add_argument("--change-request", required=True)
+    evidence_parser.add_argument("--request", type=Path, required=True)
     interview_parser = subparsers.add_parser("start-interview")
     interview_parser.add_argument("--opportunity", required=True)
     interview_parser.add_argument("--language", choices=LANGUAGES, default="it")
@@ -1153,6 +1482,14 @@ def main() -> int:
         elif args.command == "submit-suggestion":
             receipt = submit_suggestion(
                 args.plugin_root,
+                args.request,
+                plugin_data=_plugin_data_from_env(),
+                base_url=args.base_url,
+            )
+        elif args.command == "add-evidence":
+            receipt = submit_evidence(
+                args.plugin_root,
+                args.change_request,
                 args.request,
                 plugin_data=_plugin_data_from_env(),
                 base_url=args.base_url,

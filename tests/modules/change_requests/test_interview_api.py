@@ -22,6 +22,15 @@ def _client(store: ChangeRequestStore) -> TestClient:
     app.dependency_overrides[change_request_api.get_change_request_store] = (
         lambda: store
     )
+    limiter = change_request_api.ChangeRequestRateLimiter(
+        intake_per_source=1_000,
+        intake_global=1_000,
+        status_per_source=1_000,
+        status_global=1_000,
+    )
+    app.dependency_overrides[change_request_api.get_change_request_rate_limiter] = (
+        lambda: limiter
+    )
     return TestClient(app)
 
 

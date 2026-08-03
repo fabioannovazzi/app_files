@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from uuid import uuid4
 
@@ -27,8 +28,24 @@ def _payload(*, submission_id: str | None = None) -> dict[str, object]:
         "plugin": "clara",
         "plugin_version": "1.0.0",
         "request": {
+            "schema_version": 2,
+            "title": "Synthetic failure",
             "observed": "The synthetic input failed.",
             "expected": "The synthetic input should pass.",
+            "reproduction": ["Run the synthetic public workflow."],
+            "diagnostics": {
+                "occurred_at": "2026-08-03T07:00:00+00:00",
+                "runtime": "Codex Desktop test runtime",
+                "operation": "synthetic public workflow",
+                "evidence": ["The public operation returned synthetic error E_TEST."],
+                "correlation_ids": ["req-test-1"],
+            },
+        },
+        "client_context": {
+            "submitted_at": "2026-08-03T07:01:00+00:00",
+            "platform": "test",
+            "python_version": "3.12",
+            "client": "plugin_change_request",
         },
     }
 
@@ -56,6 +73,9 @@ def test_submit_and_batch_poll_return_stable_public_contract(tmp_path: Path) -> 
         "change_request_id": "CR-1",
         "status_token": receipt["status_token"],
         "status": "open",
+        "disposition": "unresolved",
+        "revision": 1,
+        "needs_info_question": None,
         "fixed": False,
         "fixed_version": None,
         "install_url": None,
@@ -68,6 +88,9 @@ def test_submit_and_batch_poll_return_stable_public_contract(tmp_path: Path) -> 
                 "change_request_id": "CR-1",
                 "found": True,
                 "status": "open",
+                "disposition": "unresolved",
+                "revision": 1,
+                "needs_info_question": None,
                 "fixed": False,
                 "fixed_version": None,
                 "install_url": None,
@@ -87,7 +110,9 @@ def test_submit_retry_is_idempotent_and_changed_content_conflicts(
 
     first = client.post("/api/change-requests", json=payload)
     retried = client.post("/api/change-requests", json=payload)
-    payload["request"] = {"observed": "Changed"}
+    request = payload["request"]
+    assert isinstance(request, dict)
+    request["observed"] = "Changed but still valid."
     conflict = client.post("/api/change-requests", json=payload)
 
     assert retried.status_code == 201
@@ -121,6 +146,9 @@ def test_batch_poll_does_not_reveal_missing_or_wrong_token(tmp_path: Path) -> No
             "change_request_id": "CR-1",
             "found": False,
             "status": None,
+            "disposition": None,
+            "revision": None,
+            "needs_info_question": None,
             "fixed": False,
             "fixed_version": None,
             "install_url": None,
@@ -129,6 +157,9 @@ def test_batch_poll_does_not_reveal_missing_or_wrong_token(tmp_path: Path) -> No
             "change_request_id": "CR-999",
             "found": False,
             "status": None,
+            "disposition": None,
+            "revision": None,
+            "needs_info_question": None,
             "fixed": False,
             "fixed_version": None,
             "install_url": None,
@@ -153,6 +184,97 @@ def test_public_intake_rate_limit_returns_retry_after(tmp_path: Path) -> None:
     assert first.status_code == 201
     assert limited.status_code == 429
     assert limited.headers["retry-after"] == "30"
+
+
+def test_problem_intake_rejects_missing_diagnostic_contract(tmp_path: Path) -> None:
+    client, _store = _client(tmp_path)
+    payload = _payload()
+    payload["request"] = {
+        "title": "Incomplete report",
+        "expected": "Success",
+        "observed": "Failure",
+    }
+
+    response = client.post("/api/change-requests", json=payload)
+
+    assert response.status_code == 422
+
+
+def test_problem_intake_requires_non_identifying_client_context(tmp_path: Path) -> None:
+    client, _store = _client(tmp_path)
+    payload = _payload()
+    payload.pop("client_context")
+
+    response = client.post("/api/change-requests", json=payload)
+
+    assert response.status_code == 422
+
+
+def test_needs_info_question_accepts_token_authorized_evidence(tmp_path: Path) -> None:
+    client, store = _client(tmp_path)
+    receipt = client.post("/api/change-requests", json=_payload()).json()
+    store.mark_needs_info(
+        receipt["change_request_id"],
+        question="Provide the exact sanitized terminal response.",
+    )
+
+    polled = client.post(
+        "/api/change-requests/status",
+        json={
+            "requests": [
+                {
+                    "change_request_id": receipt["change_request_id"],
+                    "status_token": receipt["status_token"],
+                }
+            ]
+        },
+    )
+    updated = client.post(
+        f"/api/change-requests/{receipt['change_request_id']}/evidence",
+        json={
+            "schema_version": 1,
+            "update_id": str(uuid4()),
+            "status_token": receipt["status_token"],
+            "evidence": {
+                "schema_version": 1,
+                "summary": "The terminal response was reproduced.",
+                "evidence": ["Exact sanitized response: HTTP 404 job not found."],
+            },
+        },
+    )
+
+    assert polled.json()["requests"][0]["disposition"] == "needs_info"
+    assert polled.json()["requests"][0]["needs_info_question"] == (
+        "Provide the exact sanitized terminal response."
+    )
+    assert updated.status_code == 200
+    assert updated.json()["disposition"] == "unresolved"
+    assert updated.json()["needs_info_question"] is None
+    stored = store.get(receipt["change_request_id"])
+    assert stored is not None
+    assert len(json.loads(stored.follow_up_json)) == 1
+
+
+def test_follow_up_evidence_hides_wrong_status_token(tmp_path: Path) -> None:
+    client, store = _client(tmp_path)
+    receipt = client.post("/api/change-requests", json=_payload()).json()
+    store.mark_needs_info(receipt["change_request_id"], question="Provide evidence.")
+
+    response = client.post(
+        f"/api/change-requests/{receipt['change_request_id']}/evidence",
+        json={
+            "schema_version": 1,
+            "update_id": str(uuid4()),
+            "status_token": "wrong-token-value-long-enough",
+            "evidence": {
+                "schema_version": 1,
+                "summary": "Synthetic follow-up.",
+                "evidence": ["Synthetic evidence."],
+            },
+        },
+    )
+
+    assert response.status_code == 404
 
 
 def test_rate_limiter_separates_sources_and_expires_fixed_window() -> None:

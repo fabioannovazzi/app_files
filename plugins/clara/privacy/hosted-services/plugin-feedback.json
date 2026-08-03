@@ -17,13 +17,23 @@
     "repository/modules/hosted_services/api.py",
     "repository/modules/pdp/legal_content.py"
   ],
-  "trigger": "A problem or suggestion is submitted only after the user sees and approves the exact sanitized request. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version notification.",
+  "trigger": "A sufficiently evidenced problem or suggestion is submitted only after the user sees and approves the exact sanitized request. After a receipt exists, SessionStart may automatically poll its opaque status token for a fixed-version or needs-information notification. Follow-up evidence is transmitted only after the user sees and separately approves it.",
   "automatic": true,
   "data_sent": [
     {
       "id": "approved-text-request",
       "when": "After explicit consent to transmit one sanitized problem or suggestion",
-      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. The Clara skill instructs Codex to show, sanitize, and obtain consent for that request, but the helper accepts arbitrary JSON within its size and shape limits and does not detect personal data or enforce sanitization."
+      "content": "Schema version, problem or capability kind, plugin name and version, idempotency identifier, and the selected JSON request. Problem reports must include occurred time, runtime, operation, reproduction, and at least one bounded diagnostic evidence string. The helper enforces that mechanical shape but does not detect personal data, judge semantic sufficiency, or anonymize the file. The Clara skill requires Codex to show, sanitize, and obtain consent for the exact request."
+    },
+    {
+      "id": "automatic-client-context",
+      "when": "With an approved text problem or suggestion submission",
+      "content": "Submission timestamp, operating-system family, Python version, and the fixed plugin-change-request client identifier. The helper does not collect a username, path, environment value, document, account identifier, or stable device identifier."
+    },
+    {
+      "id": "approved-follow-up-evidence",
+      "when": "After status polling returns a specific needs-information question and the user approves the exact sanitized answer",
+      "content": "Change-request identifier, locally held opaque status token, idempotent evidence-update identifier, bounded summary, and one or more sanitized evidence strings. The original request and client or case material are not resent."
     },
     {
       "id": "optional-suggestion-interview",
@@ -40,7 +50,7 @@
     {
       "id": "submission-receipt",
       "when": "After a successful problem or suggestion submission",
-      "content": "Change-request identifier, opaque status token, open or fixed status, fixed version when available, and validated install URL"
+      "content": "Change-request identifier, opaque status token, legacy open or fixed release status, explicit disposition, needs-information question when applicable, fixed version when available, and validated install URL"
     },
     {
       "id": "suggestion-interview-link",
@@ -50,7 +60,7 @@
     {
       "id": "status-update",
       "when": "During automatic polling of previously submitted requests",
-      "content": "Whether each request exists and is open or fixed, fixed version, and install URL"
+      "content": "Whether each request exists, its legacy release status, explicit disposition, needs-information question when applicable, fixed version, and install URL"
     }
   ],
   "access": {
@@ -59,6 +69,8 @@
       "Remote requests are restricted to HTTPS mparanza.com or www.mparanza.com outside local tests.",
       "Payload and response sizes are bounded.",
       "A durable idempotency record prevents a network retry from creating a second request.",
+      "Problem files without the required bounded diagnostic shape are rejected before transmission.",
+      "Follow-up evidence requires the locally stored opaque status token and a separate idempotent update identifier.",
       "The skill requires separate consent for a problem report and a suggestion."
     ]
   },
@@ -74,12 +86,16 @@
     {
       "id": "idempotent-submission",
       "control": "A durable idempotency identifier and local receipt prevent a network retry from creating a second feedback request."
+    },
+    {
+      "id": "bounded-diagnostic-contract",
+      "control": "The client and service reject problem reports missing the versioned diagnostic shape, and token-authorized follow-up evidence is bounded and idempotent."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "hosted_service_boundary_review_of_source",
-    "source_fingerprint": "d33297e9227af2f71d2bf84732335badfef079df7edcbc297c3c280b43925cbc"
+    "source_fingerprint": "7333ff21618b35a2a348af72a74d7bd5f9b6d6bbe455fed8c09ac456921a11c6"
   }
 }

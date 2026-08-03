@@ -113,6 +113,25 @@ def write_plugin(root: Path, name: str, version: str = "1.2.3") -> Path:
     return plugin_root
 
 
+def problem_report(observed: str) -> dict[str, Any]:
+    """Return the smallest complete sanitized problem-report contract."""
+
+    return {
+        "schema_version": 2,
+        "title": "Synthetic plugin failure",
+        "expected": "The synthetic operation should complete.",
+        "observed": observed,
+        "reproduction": ["Run the synthetic plugin operation."],
+        "diagnostics": {
+            "occurred_at": "2026-08-03T07:00:00+00:00",
+            "runtime": "Codex Desktop test runtime",
+            "operation": "synthetic plugin operation",
+            "evidence": [f"Sanitized evidence: {observed}"],
+            "correlation_ids": ["req-synthetic"],
+        },
+    }
+
+
 def read_state(path: Path) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -374,11 +393,7 @@ def test_submit_problem_persists_before_post_and_syncs_both_state_stores(
     plugin_data = tmp_path / "plugin-data"
     plugin_root = write_plugin(tmp_path, "clara")
     request_path = tmp_path / "request.json"
-    request_payload = {
-        "title": "Workbook export failed",
-        "expected": "A workbook",
-        "actual": "No file was produced",
-    }
+    request_payload = problem_report("No workbook file was produced.")
     request_path.write_text(json.dumps(request_payload), encoding="utf-8")
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
     posted: list[dict[str, Any]] = []
@@ -412,16 +427,20 @@ def test_submit_problem_persists_before_post_and_syncs_both_state_stores(
     )
 
     assert receipt["change_request_id"] == "CR-123"
-    assert posted == [
-        {
-            "schema_version": 1,
-            "submission_id": receipt["submission_id"],
-            "kind": "problem",
-            "plugin": "clara",
-            "plugin_version": "1.2.3",
-            "request": request_payload,
-        }
-    ]
+    assert len(posted) == 1
+    assert posted[0]["schema_version"] == 1
+    assert posted[0]["submission_id"] == receipt["submission_id"]
+    assert posted[0]["kind"] == "problem"
+    assert posted[0]["plugin"] == "clara"
+    assert posted[0]["plugin_version"] == "1.2.3"
+    assert posted[0]["request"] == request_payload
+    assert posted[0]["client_context"]["client"] == "plugin_change_request"
+    assert set(posted[0]["client_context"]) == {
+        "submitted_at",
+        "platform",
+        "python_version",
+        "client",
+    }
     stable_state = read_state(stable_root / "clara" / "state.json")
     explicit_state = read_state(plugin_data / "change-requests" / "state.json")
     assert stable_state == explicit_state
@@ -437,7 +456,9 @@ def test_submit_problem_retries_with_same_persisted_submission_id(
     stable_root = tmp_path / "stable"
     plugin_root = write_plugin(tmp_path, "vera")
     request_path = tmp_path / "request.json"
-    request_path.write_text(json.dumps({"actual": "Parser stopped"}), encoding="utf-8")
+    request_path.write_text(
+        json.dumps(problem_report("Parser stopped.")), encoding="utf-8"
+    )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
 
     def unavailable(*_args: object, **_kwargs: object) -> None:
@@ -493,6 +514,117 @@ def test_submit_problem_retries_with_same_persisted_submission_id(
     assert repeated == receipt
 
 
+def test_submit_problem_rejects_missing_diagnostics_before_state_or_network(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_root = write_plugin(tmp_path, "clara")
+    request_path = tmp_path / "request.json"
+    request_path.write_text(
+        json.dumps(
+            {
+                "title": "Incomplete report",
+                "expected": "Success",
+                "observed": "Failure",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+
+    with pytest.raises(client.ChangeRequestError, match="schema_version 2"):
+        client.submit_problem(
+            plugin_root,
+            request_path,
+            base_url="http://localhost:8080",
+            opener=lambda *_args, **_kwargs: pytest.fail("network must not be called"),
+        )
+
+    assert not (stable_root / "clara" / "state.json").exists()
+
+
+def test_submit_evidence_uses_local_token_and_is_idempotent(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_root = write_plugin(tmp_path, "clara")
+    problem_path = tmp_path / "problem.json"
+    problem_path.write_text(
+        json.dumps(problem_report("The job result was unavailable.")),
+        encoding="utf-8",
+    )
+    evidence_path = tmp_path / "evidence.json"
+    evidence_payload = {
+        "schema_version": 1,
+        "summary": "The exact terminal response was reproduced.",
+        "evidence": ["HTTP 404 with sanitized job-not-found response."],
+    }
+    evidence_path.write_text(json.dumps(evidence_payload), encoding="utf-8")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    client.submit_problem(
+        plugin_root,
+        problem_path,
+        base_url="http://localhost:8080",
+        opener=lambda *_args, **_kwargs: FakeResponse(
+            {
+                "change_request_id": "CR-12",
+                "status_token": "needs-info-token-long-enough",
+                "status": "open",
+                "disposition": "needs_info",
+                "needs_info_question": "Provide the exact terminal response.",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        ),
+        now=700.0,
+    )
+    posted: list[dict[str, Any]] = []
+
+    def evidence_opener(request: Any, **_kwargs: object) -> FakeResponse:
+        assert request.full_url.endswith("/api/change-requests/CR-12/evidence")
+        payload = json.loads(request.data.decode("utf-8"))
+        posted.append(payload)
+        assert payload["status_token"] == "needs-info-token-long-enough"
+        assert payload["evidence"] == evidence_payload
+        return FakeResponse(
+            {
+                "change_request_id": "CR-12",
+                "status_token": "needs-info-token-long-enough",
+                "status": "open",
+                "disposition": "unresolved",
+                "needs_info_question": None,
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        )
+
+    first = client.submit_evidence(
+        plugin_root,
+        "CR-12",
+        evidence_path,
+        base_url="http://localhost:8080",
+        opener=evidence_opener,
+        now=701.0,
+    )
+    repeated = client.submit_evidence(
+        plugin_root,
+        "CR-12",
+        evidence_path,
+        base_url="http://localhost:8080",
+        opener=lambda *_args, **_kwargs: pytest.fail("duplicate must stay local"),
+        now=702.0,
+    )
+
+    assert first["disposition"] == "unresolved"
+    assert repeated["disposition"] == "unresolved"
+    assert len(posted) == 1
+    assert isinstance(posted[0]["update_id"], str)
+
+
 def test_submit_suggestion_posts_capability_and_reuses_durable_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -535,16 +667,13 @@ def test_submit_suggestion_posts_capability_and_reuses_durable_receipt(
         now=250.0,
     )
 
-    assert posted == [
-        {
-            "schema_version": 1,
-            "submission_id": receipt["submission_id"],
-            "kind": "capability",
-            "plugin": "clara",
-            "plugin_version": "1.2.3",
-            "request": request_payload,
-        }
-    ]
+    assert len(posted) == 1
+    assert posted[0]["submission_id"] == receipt["submission_id"]
+    assert posted[0]["kind"] == "capability"
+    assert posted[0]["plugin"] == "clara"
+    assert posted[0]["plugin_version"] == "1.2.3"
+    assert posted[0]["request"] == request_payload
+    assert posted[0]["client_context"]["client"] == "plugin_change_request"
 
     def must_not_post(*_args: object, **_kwargs: object) -> None:
         raise AssertionError("A stored suggestion receipt should make a retry local")
@@ -859,8 +988,12 @@ def test_parallel_processes_preserve_both_receipts(
     plugin_root = write_plugin(tmp_path, "clara")
     first_request = tmp_path / "first.json"
     second_request = tmp_path / "second.json"
-    first_request.write_text(json.dumps({"actual": "First"}), encoding="utf-8")
-    second_request.write_text(json.dumps({"actual": "Second"}), encoding="utf-8")
+    first_request.write_text(
+        json.dumps(problem_report("First failure.")), encoding="utf-8"
+    )
+    second_request.write_text(
+        json.dumps(problem_report("Second failure.")), encoding="utf-8"
+    )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
     first_posted = context.Event()
     second_posted = context.Event()
@@ -1033,7 +1166,7 @@ def test_submit_problem_falls_back_when_primary_state_is_unwritable(
     plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
     request_path = tmp_path / "problem.json"
     request_path.write_text(
-        json.dumps({"actual": "Synthetic read-only state failure"}),
+        json.dumps(problem_report("Synthetic read-only state failure.")),
         encoding="utf-8",
     )
     posted: list[dict[str, Any]] = []
@@ -1242,7 +1375,7 @@ def test_submit_problem_uses_plugin_data_when_home_and_temp_are_unwritable(
     plugin_data = tmp_path / "plugin-data"
     request_path = tmp_path / "problem.json"
     request_path.write_text(
-        json.dumps({"actual": "Synthetic read-only state failure"}),
+        json.dumps(problem_report("Synthetic read-only state failure.")),
         encoding="utf-8",
     )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_stable_root))
@@ -1288,7 +1421,7 @@ def test_fallback_rejects_symlink_without_touching_target(
     plugin_root = write_plugin(tmp_path, "vera", "2.0.0")
     request_path = tmp_path / "problem.json"
     request_path.write_text(
-        json.dumps({"actual": "Synthetic read-only state failure"}),
+        json.dumps(problem_report("Synthetic read-only state failure.")),
         encoding="utf-8",
     )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(blocked_stable_root))
@@ -1511,7 +1644,9 @@ def test_check_fixed_requests_emits_exact_message_once(
     plugin_data = tmp_path / "plugin-data"
     plugin_root = write_plugin(tmp_path, "clara")
     request_path = tmp_path / "request.json"
-    request_path.write_text(json.dumps({"actual": "Wrong total"}), encoding="utf-8")
+    request_path.write_text(
+        json.dumps(problem_report("Wrong total.")), encoding="utf-8"
+    )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
 
     receipt = client.submit_problem(
@@ -1570,18 +1705,110 @@ def test_check_fixed_requests_emits_exact_message_once(
     assert stable_state == explicit_state
     assert stable_state["requests"][0]["fixed_notified_at"] == 500.0
 
-    def must_not_poll(*_args: object, **_kwargs: object) -> None:
-        raise AssertionError("A fixed request must be notified only once")
-
     assert (
         client.check_fixed_requests(
             plugin_root,
             plugin_data,
-            opener=must_not_poll,
+            opener=status_opener,
             now=501.0,
             base_url="http://localhost:8080",
         )
         is None
+    )
+
+
+def test_status_check_surfaces_needs_info_question_once(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    client = load_client()
+    stable_root = tmp_path / "stable"
+    plugin_root = write_plugin(tmp_path, "vera")
+    request_path = tmp_path / "request.json"
+    request_path.write_text(
+        json.dumps(problem_report("Computer Use did not start.")), encoding="utf-8"
+    )
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    client.submit_problem(
+        plugin_root,
+        request_path,
+        base_url="http://localhost:8080",
+        opener=lambda *_args, **_kwargs: FakeResponse(
+            {
+                "change_request_id": "CR-13",
+                "status_token": "needs-info-token-long-enough",
+                "status": "open",
+                "fixed": False,
+                "fixed_version": None,
+                "install_url": None,
+            }
+        ),
+        now=800.0,
+    )
+
+    def status_opener(*_args: object, **_kwargs: object) -> FakeResponse:
+        return FakeResponse(
+            {
+                "requests": [
+                    {
+                        "change_request_id": "CR-13",
+                        "found": True,
+                        "status": "open",
+                        "disposition": "needs_info",
+                        "revision": 2,
+                        "needs_info_question": "Provide the Computer Use startup trace.",
+                        "fixed": False,
+                        "fixed_version": None,
+                        "install_url": None,
+                    }
+                ]
+            }
+        )
+
+    first = client.check_fixed_requests(
+        plugin_root,
+        None,
+        opener=status_opener,
+        now=801.0,
+        base_url="http://localhost:8080",
+    )
+    repeated = client.check_fixed_requests(
+        plugin_root,
+        None,
+        opener=status_opener,
+        now=802.0,
+        base_url="http://localhost:8080",
+    )
+    reopened = client.check_fixed_requests(
+        plugin_root,
+        None,
+        opener=lambda *_args, **_kwargs: FakeResponse(
+            {
+                "requests": [
+                    {
+                        "change_request_id": "CR-13",
+                        "found": True,
+                        "status": "open",
+                        "disposition": "unresolved",
+                        "revision": 3,
+                        "needs_info_question": None,
+                        "fixed": False,
+                        "fixed_version": None,
+                        "install_url": None,
+                    }
+                ]
+            }
+        ),
+        now=803.0,
+        base_url="http://localhost:8080",
+    )
+
+    assert first == (
+        "The developer needs more evidence for CR-13: "
+        "Provide the Computer Use startup trace."
+    )
+    assert repeated is None
+    assert (
+        reopened == "The report CR-13 was reopened and is under active investigation."
     )
 
 
@@ -1593,7 +1820,9 @@ def test_hook_visible_state_merges_request_created_without_plugin_data(
     plugin_data = tmp_path / "hook-plugin-data"
     plugin_root = write_plugin(tmp_path, "vera")
     request_path = tmp_path / "request.json"
-    request_path.write_text(json.dumps({"actual": "Missing row"}), encoding="utf-8")
+    request_path.write_text(
+        json.dumps(problem_report("Missing row.")), encoding="utf-8"
+    )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
 
     client.submit_problem(
@@ -1675,7 +1904,9 @@ def test_client_rejects_unapproved_remote_hosts(
     client = load_client()
     plugin_root = write_plugin(tmp_path, "clara")
     request_path = tmp_path / "request.json"
-    request_path.write_text(json.dumps({"actual": "Failure"}), encoding="utf-8")
+    request_path.write_text(
+        json.dumps(problem_report("Synthetic failure.")), encoding="utf-8"
+    )
     monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(tmp_path / "state"))
 
     with pytest.raises(client.ChangeRequestError, match="must be https://mparanza.com"):
