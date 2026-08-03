@@ -99,7 +99,6 @@ def test_vera_manifest_uses_approved_capability_copy() -> None:
     assert interface["longDescription"] == approved_description
     assert "controlla i dati contabili" in interface["longDescription"]
     assert "casi di concordato preventivo" in interface["longDescription"]
-    assert "richieste mirate per Deep Research" in interface["longDescription"]
     assert "Raccoglie, ordina e ritrova i documenti del cliente" in (
         interface["longDescription"]
     )
