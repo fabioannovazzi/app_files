@@ -14,6 +14,7 @@ import time
 from datetime import date, datetime
 from decimal import Decimal
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 from zipfile import ZIP_DEFLATED, ZipFile
 
@@ -26,6 +27,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "journal-bank-reconciliation" / "scripts"
 CORE_PATH = SCRIPT_DIR / "journal_bank_core.py"
 APPLY_REVIEW_EDITS_PATH = SCRIPT_DIR / "apply_review_edits.py"
+SEMANTIC_REVIEW_PATH = SCRIPT_DIR / "semantic_review.py"
 MCP_SERVER_PATH = (
     ROOT / "plugins" / "journal-bank-reconciliation" / "mcp" / "server.cjs"
 )
@@ -82,6 +84,19 @@ def load_apply_review_edits() -> Any:
         sys.path.insert(0, str(SCRIPT_DIR))
     spec = importlib.util.spec_from_file_location(
         "journal_bank_apply_review_edits", APPLY_REVIEW_EDITS_PATH
+    )
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def load_semantic_review() -> Any:
+    if str(SCRIPT_DIR) not in sys.path:
+        sys.path.insert(0, str(SCRIPT_DIR))
+    spec = importlib.util.spec_from_file_location(
+        "journal_bank_semantic_review", SEMANTIC_REVIEW_PATH
     )
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
@@ -523,6 +538,313 @@ def _prepare_two_match_run(tmp_path: Path) -> tuple[Any, Path]:
         date_window_days=0,
     )
     return core, output_dir
+
+
+def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Path]:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    case_dir = tmp_path / "case"
+    bank_path = case_dir / "bank.csv"
+    journal_path = case_dir / "journal.csv"
+    reconciliation_dir = case_dir / "reconciliation"
+    semantic_dir = case_dir / "semantic-review"
+    case_dir.mkdir()
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Payment Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Payment Beta", "Beta"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Invoice Beta", "Beta"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        case_dir / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 2
+    assert result.unmatched_journal.height == 2
+    return core, semantic_review, reconciliation_dir, semantic_dir
+
+
+def _valid_semantic_response(graph: dict[str, Any]) -> dict[str, Any]:
+    component = graph["selected_components"][0]
+    journals_by_beneficiary = {
+        record["beneficiary"]: record["transaction_id"]
+        for record in component["journal_records"]
+    }
+    decisions = [
+        {
+            "bank_transaction_id": record["transaction_id"],
+            "verdict": "suggest_match",
+            "journal_transaction_id": journals_by_beneficiary[record["beneficiary"]],
+            "evidence_fields": [
+                "amount_abs",
+                "transaction_date",
+                "beneficiary",
+                "description",
+            ],
+            "rationale": (
+                "The amount and date are eligible, and the beneficiary plus "
+                "description identify this neighboring journal row."
+            ),
+            "contradictions": [],
+            "requested_evidence": [],
+        }
+        for record in component["bank_records"]
+    ]
+    return {
+        "schema_version": "journal_bank.semantic_worker_response.v1",
+        "candidate_graph_sha256": graph["candidate_graph_sha256"],
+        "component_reviews": [
+            {"component_id": component["component_id"], "decisions": decisions}
+        ],
+    }
+
+
+def _write_semantic_worker_result(
+    semantic_dir: Path,
+    response: dict[str, Any],
+    *,
+    item_type: str = "agent_message",
+    events_override: list[dict[str, Any]] | None = None,
+) -> tuple[Path, Path]:
+    semantic_review = sys.modules.get("journal_bank_semantic_review")
+    if semantic_review is None:
+        semantic_review = load_semantic_review()
+    response_path = semantic_dir / "luna_response.json"
+    events_path = semantic_dir / "luna_events.jsonl"
+    response_path.write_text(
+        json.dumps(response, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
+    events = events_override
+    if events is None:
+        events = [
+            {"type": "thread.started", "thread_id": "thread_luna_test"},
+            {"type": "turn.started"},
+            {
+                "type": "item.completed",
+                "item": {
+                    "id": "item_0",
+                    "type": item_type,
+                    "text": json.dumps(response, ensure_ascii=False),
+                },
+            },
+            {
+                "type": "turn.completed",
+                "usage": {"input_tokens": 120, "output_tokens": 80},
+            },
+        ]
+    events_bytes = "".join(
+        json.dumps(event, ensure_ascii=False) + "\n" for event in events
+    ).encode("utf-8")
+    events_path.write_bytes(events_bytes)
+    stderr_path = semantic_dir / "luna_stderr.log"
+    stderr_bytes = b""
+    stderr_path.write_bytes(stderr_bytes)
+    response_bytes = response_path.read_bytes()
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph_bytes = graph_path.read_bytes()
+    graph = json.loads(graph_bytes)
+    prompt_bytes = (semantic_dir / "luna_prompt.md").read_bytes()
+    schema_bytes = (semantic_dir / "luna_output_schema.json").read_bytes()
+    receipt_content = {
+        "schema_version": "journal_bank.semantic_launch_receipt.v1",
+        "workflow_id": "journal_bank_reconciliation",
+        "candidate_graph_sha256": graph["candidate_graph_sha256"],
+        "packet": {
+            "candidate_graph_file_sha256": hashlib.sha256(graph_bytes).hexdigest(),
+            "candidate_graph_file_bytes": len(graph_bytes),
+            "prompt_sha256": hashlib.sha256(prompt_bytes).hexdigest(),
+            "prompt_bytes": len(prompt_bytes),
+            "output_schema_sha256": hashlib.sha256(schema_bytes).hexdigest(),
+            "output_schema_bytes": len(schema_bytes),
+        },
+        "requested_worker_configuration": graph["requested_worker_configuration"],
+        "boundary": {
+            "contract_id": "journal_bank.luna_seatbelt_capsule.v1",
+            "platform": "Darwin",
+            "darwin_build": "25F84",
+            "profile_sha256": semantic_review.PINNED_SEATBELT_PROFILE_SHA256,
+            "codex_path": "/Applications/ChatGPT.app/Contents/Resources/codex",
+            "codex_sha256": semantic_review.PINNED_CODEX_SHA256,
+            "codex_bytes": 1,
+            "codex_version": "codex-cli 0.146.0-alpha.3.1",
+            "sandbox_exec_path": "/usr/bin/sandbox-exec",
+            "sandbox_exec_sha256": semantic_review.PINNED_SANDBOX_EXEC_SHA256,
+            "canary_reader_sha256": semantic_review.PINNED_CAT_SHA256,
+            "canaries": {
+                "exact_schema_read_succeeded": True,
+                "outside_capsule_read_denied": True,
+                "codex_version_inside_boundary": "codex-cli 0.146.0-alpha.3.1",
+            },
+            "global_instructions_absent_or_empty": True,
+            "auth_file_readable_by_codex_process": True,
+            "installation_id_preexisting_and_unchanged": True,
+            "outbound_network_allowed": True,
+            "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
+            "qualification_basis": "pinned_hidden_view_image_outside_nonce_denied",
+        },
+        "process": {
+            "return_code": 0,
+            "timed_out": False,
+            "duration_ms": 1,
+            "redacted_argv": semantic_review._redacted_worker_argv(),
+            "response_sha256": hashlib.sha256(response_bytes).hexdigest(),
+            "response_bytes": len(response_bytes),
+            "events_sha256": hashlib.sha256(events_bytes).hexdigest(),
+            "events_bytes": len(events_bytes),
+            "stderr_sha256": hashlib.sha256(stderr_bytes).hexdigest(),
+            "stderr_bytes": len(stderr_bytes),
+        },
+        "jsonl_observation": {
+            "visibility_complete": False,
+            "visible_forbidden_item_count": 0,
+            "tool_use_absence_observed": False,
+            "thread_id": "thread_luna_test",
+            "usage": {"input_tokens": 120, "output_tokens": 80},
+            "completed_item_counts": {"agent_message": 1, "reasoning": 0},
+        },
+        "runtime_attestation": {
+            "model_observed": False,
+            "reasoning_effort_observed": False,
+            "main_chat_model_change": False,
+        },
+        "advisory_only": True,
+    }
+    receipt = {
+        **receipt_content,
+        "content_sha256": semantic_review.canonical_json_sha256(receipt_content),
+    }
+    (semantic_dir / "luna_launch_receipt.json").write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return response_path, events_path
+
+
+def _mock_semantic_worker_runtime(
+    monkeypatch: pytest.MonkeyPatch,
+    semantic_review: Any,
+    tmp_path: Path,
+    process_result: dict[str, Any],
+) -> dict[str, Any]:
+    fake_home = tmp_path / "qualified-codex-home"
+    boundary_inputs = {
+        "codex_home": fake_home,
+        "auth_path": fake_home / "auth.json",
+        "installation_id_path": fake_home / "installation_id",
+        "global_agents_path": fake_home / "AGENTS.md",
+        "global_agents_override_path": fake_home / "AGENTS.override.md",
+        "bindings": {
+            "auth": {"sha256": "a" * 64, "byte_count": 1},
+            "installation_id": {"sha256": "b" * 64, "byte_count": 36},
+            "global_agents": {"exists": False, "sha256": None, "byte_count": 0},
+            "global_agents_override": {
+                "exists": False,
+                "sha256": None,
+                "byte_count": 0,
+            },
+        },
+    }
+    codex_path = Path("/qualified/codex")
+    executable_bindings = {
+        codex_path: {
+            "sha256": semantic_review.PINNED_CODEX_SHA256,
+            "byte_count": 267_702_000,
+            "mode": 0o755,
+        },
+        semantic_review.SANDBOX_EXEC_PATH: {
+            "sha256": semantic_review.PINNED_SANDBOX_EXEC_SHA256,
+            "byte_count": 102_560,
+            "mode": 0o755,
+        },
+        semantic_review.SANDBOX_CANARY_PATH: {
+            "sha256": semantic_review.PINNED_CAT_SHA256,
+            "byte_count": 118_992,
+            "mode": 0o755,
+        },
+    }
+    qualified = {
+        "darwin_build": semantic_review.PINNED_DARWIN_BUILD,
+        "codex_path": codex_path,
+        "codex_binding": executable_bindings[codex_path],
+        "sandbox_exec_binding": executable_bindings[semantic_review.SANDBOX_EXEC_PATH],
+        "canary_binding": executable_bindings[semantic_review.SANDBOX_CANARY_PATH],
+    }
+    captured: dict[str, Any] = {}
+
+    def fake_process(command: list[str], **kwargs: Any) -> dict[str, Any]:
+        captured["command"] = command
+        captured["kwargs"] = kwargs
+        return process_result
+
+    monkeypatch.setattr(
+        semantic_review,
+        "_codex_home_boundary_inputs",
+        lambda: boundary_inputs,
+    )
+    monkeypatch.setattr(
+        semantic_review,
+        "_qualified_executables",
+        lambda codex_bin: qualified,
+    )
+    monkeypatch.setattr(
+        semantic_review,
+        "_qualification_canaries",
+        lambda **kwargs: {
+            "exact_schema_read_succeeded": True,
+            "outside_capsule_read_denied": True,
+            "codex_version_inside_boundary": semantic_review.PINNED_CODEX_VERSION,
+        },
+    )
+    monkeypatch.setattr(
+        semantic_review,
+        "_stable_executable_binding",
+        lambda path, **kwargs: executable_bindings[Path(path)],
+    )
+    monkeypatch.setattr(semantic_review, "_run_captured_process", fake_process)
+    return captured
+
+
+def _reseal_semantic_source_receipt(
+    reconciliation_dir: Path,
+    *,
+    artifact_id: str,
+    artifact_path: Path,
+) -> None:
+    receipt_path = reconciliation_dir / "artifact_receipts.json"
+    bundle = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt = next(
+        item for item in bundle["output_receipts"] if item["artifact_id"] == artifact_id
+    )
+    payload = artifact_path.read_bytes()
+    receipt["byte_count"] = len(payload)
+    receipt["sha256"] = hashlib.sha256(payload).hexdigest()
+    receipt_path.write_text(
+        json.dumps(bundle, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
 
 
 def _relationship_policy(amount_tolerance: object) -> dict[str, Any]:
@@ -4518,7 +4840,7 @@ def test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closur
                 if receipt["role"] == "implementation"
             ]
         )
-        == 23
+        == 24
     )
 
 
@@ -5774,7 +6096,7 @@ def test_initial_assurance_envelope_binds_exact_transitive_implementation_set(
         (root_id, relative_path)
         for _, root_id, relative_path in core.IMPLEMENTATION_ARTIFACT_SPECS
     ]
-    assert len(implementation_receipts) == 23
+    assert len(implementation_receipts) == 24
 
 
 @pytest.mark.parametrize(
@@ -7041,6 +7363,1232 @@ def test_unexpected_output_tamper_blocks_review_and_is_not_resealed(
         core.validate_artifact_receipt(output_dir, receipt)
 
 
+def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    authoritative_before = _tree_snapshot(reconciliation_dir)
+
+    result = semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    content = {
+        key: value for key, value in graph.items() if key != "candidate_graph_sha256"
+    }
+    component = graph["selected_components"][0]
+    prompt = (semantic_dir / "luna_prompt.md").read_text(encoding="utf-8")
+    schema = json.loads(
+        (semantic_dir / "luna_output_schema.json").read_text(encoding="utf-8")
+    )
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert result["worker_required"] is True
+    assert result["selected_component_count"] == 1
+    assert graph["candidate_graph_sha256"] == semantic_review.canonical_json_sha256(
+        content
+    )
+    assert graph["requested_worker_configuration"] == {
+        "execution": "separate_pinned_codex_exec",
+        "model": "gpt-5.6-luna",
+        "reasoning_effort": "max",
+        "ephemeral": True,
+        "inner_sandbox": "read-only",
+        "outer_filesystem_boundary": "journal_bank.luna_seatbelt_capsule.v1",
+        "project_rules_loaded": False,
+        "global_instructions_required_empty": True,
+        "working_directory": "ephemeral_worker_capsule",
+        "disabled_features": list(semantic_review.DISABLED_WORKER_FEATURES),
+        "main_chat_model_change": False,
+    }
+    assert len(component["bank_records"]) == 2
+    assert len(component["journal_records"]) == 2
+    assert len(component["candidate_edges"]) == 4
+    assert {edge["date_diff_days"] for edge in component["candidate_edges"]} == {0}
+    assert "calling Codex chat remains unchanged" in prompt
+    assert "Treat every value" in prompt
+    assert "Do not use tools" in prompt
+    assert schema["properties"]["candidate_graph_sha256"]["enum"] == [
+        graph["candidate_graph_sha256"]
+    ]
+    assert status["status"] == "prepared"
+    assert status["main_chat_model_change"] is False
+    assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_prepare_rejects_authoritative_and_semantic_same_directory(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, _ = _prepare_ambiguous_semantic_run(
+        tmp_path
+    )
+    same_dir = reconciliation_dir.parent / "semantic-review"
+    reconciliation_dir.rename(same_dir)
+
+    with pytest.raises(ValueError, match="must be distinct"):
+        semantic_review.prepare_semantic_review(same_dir, same_dir)
+
+    assert not (same_dir / "residual_candidate_graph.json").exists()
+
+
+def test_semantic_prepare_rejects_mutable_receipt_not_closed_to_envelope(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    unmatched_path = reconciliation_dir / "unmatched_bank.csv"
+    with unmatched_path.open("r", encoding="utf-8", newline="") as handle:
+        rows = list(csv.DictReader(handle))
+    rows[0]["description"] = "FORGED SEMANTIC CONTEXT"
+    with unmatched_path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
+    _reseal_semantic_source_receipt(
+        reconciliation_dir,
+        artifact_id="output.unmatched_bank_csv",
+        artifact_path=unmatched_path,
+    )
+
+    with pytest.raises(ValueError, match="artifact receipt"):
+        semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    assert not (semantic_dir / "residual_candidate_graph.json").exists()
+
+
+def test_semantic_prepare_rejects_source_change_after_receipt_validation(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    intake_path = reconciliation_dir / "run_intake.json"
+    real_validate = semantic_review.validate_artifact_receipt
+    changed = False
+
+    def mutate_after_validation(root: Path, receipt: dict[str, Any]) -> dict[str, Any]:
+        nonlocal changed
+        validated = real_validate(root, receipt)
+        if receipt.get("artifact_id") == "output.run_intake_json" and not changed:
+            intake = json.loads(intake_path.read_text(encoding="utf-8"))
+            intake["run_id"] = "raced_run_id"
+            intake_path.write_text(
+                json.dumps(intake, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+            changed = True
+        return validated
+
+    monkeypatch.setattr(
+        semantic_review, "validate_artifact_receipt", mutate_after_validation
+    )
+
+    with pytest.raises(ValueError, match="changed during validation"):
+        semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+
+def test_semantic_prepare_rejects_hardlinked_graph_input(tmp_path: Path) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    source = reconciliation_dir / "unmatched_bank.csv"
+    os.link(source, tmp_path / "unmatched_bank_alias.csv")
+
+    with pytest.raises(ValueError, match="ordinary single-link file"):
+        semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+
+def test_semantic_prepare_defers_candidate_discovery_at_hard_edge_cap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    monkeypatch.setattr(semantic_review, "MAX_DISCOVERED_EDGES", 3)
+
+    result = semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    assert result["worker_required"] is False
+    assert graph["counts"]["candidate_discovery_complete"] is False
+    assert graph["counts"]["eligible_component_count"] is None
+    assert graph["selected_components"] == []
+    assert graph["deferred_components"] == [
+        {
+            "component_id": graph["deferred_components"][0]["component_id"],
+            "bank_count": 2,
+            "journal_count": 2,
+            "observed_edge_count": 4,
+            "observed_candidate_comparison_count": 4,
+            "reason": "candidate_discovery_edge_cap_exceeded",
+        }
+    ]
+
+
+def test_semantic_prepare_defers_candidate_discovery_at_raw_comparison_cap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    case_dir = tmp_path / "case"
+    bank_path = case_dir / "bank.csv"
+    journal_path = case_dir / "journal.csv"
+    reconciliation_dir = case_dir / "reconciliation"
+    semantic_dir = case_dir / "semantic-review"
+    case_dir.mkdir()
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Entity", "Description"],
+            ["2026-05-08", "80.00", "bank-a", "Payment Alpha"],
+            ["2026-05-08", "80.00", "bank-b", "Payment Beta"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Entity", "Description"],
+            ["2026-05-08", "80.00", "journal-a", "Invoice Alpha"],
+            ["2026-05-08", "80.00", "journal-b", "Invoice Beta"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        case_dir / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    run_result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+    assert run_result.matches.is_empty()
+    monkeypatch.setattr(semantic_review, "MAX_DISCOVERED_CANDIDATE_COMPARISONS", 3)
+
+    result = semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    assert result["worker_required"] is False
+    assert graph["counts"]["candidate_discovery_complete"] is False
+    assert graph["counts"]["eligible_component_count"] is None
+    assert graph["selected_components"] == []
+    assert graph["deferred_components"] == [
+        {
+            "component_id": graph["deferred_components"][0]["component_id"],
+            "bank_count": 2,
+            "journal_count": 2,
+            "observed_edge_count": 0,
+            "observed_candidate_comparison_count": 4,
+            "reason": "candidate_discovery_comparison_cap_exceeded",
+        }
+    ]
+
+
+def test_semantic_deferred_summary_keeps_graph_replay_within_byte_cap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    components = [
+        {
+            "component_id": f"component.synthetic.{index}",
+            "bank_records": [{"transaction_id": f"bank:{index}"}],
+            "journal_records": [{"transaction_id": f"journal:{index}"}],
+            "candidate_edges": [
+                {
+                    "bank_transaction_id": f"bank:{index}",
+                    "journal_transaction_id": f"journal:{index}",
+                    "amount_delta": "0",
+                    "date_diff_days": 0,
+                    "shared_references": [],
+                }
+            ],
+        }
+        for index in range(5)
+    ]
+    monkeypatch.setattr(semantic_review, "MAX_DEFERRED_SUMMARIES", 2)
+    monkeypatch.setattr(
+        semantic_review,
+        "_candidate_components",
+        lambda *args, **kwargs: (components, None),
+    )
+
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response = {
+        "schema_version": "journal_bank.semantic_worker_response.v1",
+        "candidate_graph_sha256": graph["candidate_graph_sha256"],
+        "component_reviews": [],
+    }
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+    result = semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        graph_path,
+        response_path,
+        events_path,
+    )
+    assert graph_path.stat().st_size <= semantic_review.MAX_GRAPH_BYTES
+    assert len(graph["deferred_components"]) == 2
+    assert graph["deferred_component_summary"] == {
+        "omitted_component_count": 3,
+        "omitted_bank_count": 3,
+        "omitted_journal_count": 3,
+        "known_observed_edge_count": 3,
+        "unknown_observed_edge_component_count": 0,
+        "known_observed_candidate_comparison_count": 0,
+        "unknown_observed_candidate_comparison_component_count": 3,
+        "reason_counts": {"unexpected_deterministic_singleton": 3},
+        "omitted_components_sha256": graph["deferred_component_summary"][
+            "omitted_components_sha256"
+        ],
+    }
+    assert result["summary"]["decision_count"] == 0
+
+
+def test_semantic_validate_writes_advisory_artifacts_without_authoritative_changes(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+    authoritative_before = _tree_snapshot(reconciliation_dir)
+
+    result = semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        semantic_dir / "residual_candidate_graph.json",
+        response_path,
+        events_path,
+    )
+
+    validated = json.loads(
+        (semantic_dir / "semantic_suggestions_validated.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    worker_run = json.loads(
+        (semantic_dir / "semantic_worker_run.json").read_text(encoding="utf-8")
+    )
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert result["summary"] == {
+        "component_count": 1,
+        "decision_count": 2,
+        "suggest_match_count": 2,
+        "abstention_count": 0,
+        "no_match_count": 0,
+    }
+    assert validated["advisory_only"] is True
+    assert validated["application_status"] == "not_applied"
+    assert validated["authoritative_effects"] == []
+    assert validated["main_codex_review_required"] is True
+    assert worker_run["requested_worker_configuration"]["model"] == "gpt-5.6-luna"
+    assert worker_run["requested_worker_configuration"]["reasoning_effort"] == "max"
+    assert worker_run["runtime_attestation"] == {
+        "separate_thread_and_usage_observed": True,
+        "model_observed": False,
+        "reasoning_effort_observed": False,
+        "filesystem_boundary_receipt_validated": True,
+        "jsonl_visibility_complete": False,
+        "tool_use_absence_observed": False,
+        "trust_boundary": "journal_bank.luna_seatbelt_capsule.v1",
+    }
+    assert worker_run["jsonl_observation"] == {
+        "visibility_complete": False,
+        "visible_forbidden_item_count": 0,
+        "tool_use_absence_observed": False,
+    }
+    assert "tool_item_count" not in worker_run
+    assert worker_run["main_chat_model_change"] is False
+    assert status["status"] == "completed_validated"
+    assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_validate_is_idempotent_for_exact_worker_generation(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    semantic_review.validate_semantic_review(
+        reconciliation_dir, semantic_dir, graph_path, response_path, events_path
+    )
+    first_pair = {
+        name: (semantic_dir / name).read_bytes()
+        for name in (
+            "semantic_suggestions_validated.json",
+            "semantic_worker_run.json",
+        )
+    }
+
+    result = semantic_review.validate_semantic_review(
+        reconciliation_dir, semantic_dir, graph_path, response_path, events_path
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert result["summary"]["decision_count"] == 2
+    assert status["status"] == "completed_validated"
+    assert {
+        name: (semantic_dir / name).read_bytes() for name in first_pair
+    } == first_pair
+
+
+def test_semantic_reprepare_archives_prior_worker_generation(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        semantic_dir / "residual_candidate_graph.json",
+        response_path,
+        events_path,
+    )
+
+    prepared = semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    archive_dir = prepared["archived_generation"]
+    assert isinstance(archive_dir, Path)
+    assert (archive_dir / "semantic_suggestions_validated.json").is_file()
+    assert (archive_dir / "semantic_worker_run.json").is_file()
+    assert (archive_dir / "luna_response.json").is_file()
+    assert (archive_dir / "luna_events.jsonl").is_file()
+    assert not (semantic_dir / "semantic_suggestions_validated.json").exists()
+    assert not (semantic_dir / "semantic_worker_run.json").exists()
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert status["status"] == "prepared"
+
+
+def test_semantic_reprepare_failure_removes_completed_marker_first(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    semantic_review.validate_semantic_review(
+        reconciliation_dir, semantic_dir, graph_path, response_path, events_path
+    )
+    real_replace = Path.replace
+
+    def fail_after_status(path: Path, target: Path) -> Path:
+        if path.name == "semantic_suggestions_validated.json":
+            raise OSError("synthetic archive failure")
+        return real_replace(path, target)
+
+    monkeypatch.setattr(Path, "replace", fail_after_status)
+
+    with pytest.raises(OSError, match="synthetic archive failure"):
+        semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    assert not (semantic_dir / "semantic_review_status.json").exists()
+    assert (semantic_dir / "semantic_suggestions_validated.json").is_file()
+
+
+def test_semantic_validate_preflights_both_advisory_outputs(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    (semantic_dir / "semantic_worker_run.json").mkdir()
+
+    with pytest.raises(ValueError, match="already exists"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+    assert not (semantic_dir / "semantic_suggestions_validated.json").exists()
+
+
+def test_semantic_validate_rejects_file_identity_change_during_snapshot(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    real_fstat = semantic_review.os.fstat
+    call_count = 0
+
+    def drifting_fstat(file_descriptor: int) -> Any:
+        nonlocal call_count
+        current = real_fstat(file_descriptor)
+        call_count += 1
+        if call_count != 2:
+            return current
+        values = {
+            name: getattr(current, name)
+            for name in (
+                "st_dev",
+                "st_ino",
+                "st_size",
+                "st_mtime_ns",
+                "st_nlink",
+                "st_mode",
+            )
+        }
+        values["st_mtime_ns"] += 1
+        return SimpleNamespace(**values)
+
+    monkeypatch.setattr(semantic_review.os, "fstat", drifting_fstat)
+
+    with pytest.raises(ValueError, match="changed while it was read"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+@pytest.mark.parametrize(
+    "invalid_case",
+    [
+        "stale_hash",
+        "invented_edge",
+        "journal_reuse",
+        "missing_bank",
+        "non_match_with_journal",
+        "unexpected_field",
+        "overlong_rationale",
+    ],
+)
+def test_semantic_validate_rejects_invalid_worker_decisions(
+    tmp_path: Path,
+    invalid_case: str,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    decisions = response["component_reviews"][0]["decisions"]
+    if invalid_case == "stale_hash":
+        response["candidate_graph_sha256"] = "0" * 64
+    elif invalid_case == "invented_edge":
+        decisions[0]["journal_transaction_id"] = "journal:invented"
+    elif invalid_case == "journal_reuse":
+        decisions[1]["journal_transaction_id"] = decisions[0]["journal_transaction_id"]
+    elif invalid_case == "missing_bank":
+        decisions.pop()
+    elif invalid_case == "non_match_with_journal":
+        decisions[0]["verdict"] = "ambiguous"
+    elif invalid_case == "unexpected_field":
+        decisions[0]["confidence"] = "high"
+    else:
+        decisions[0]["rationale"] = "x" * 601
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+    authoritative_before = _tree_snapshot(reconciliation_dir)
+
+    with pytest.raises(ValueError):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+    assert not (semantic_dir / "semantic_suggestions_validated.json").exists()
+    assert not (semantic_dir / "semantic_worker_run.json").exists()
+    assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_validate_rejects_duplicate_json_keys(tmp_path: Path) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+    original = response_path.read_text(encoding="utf-8").strip()
+    duplicate = original[:-1] + ',"schema_version":"duplicate"}'
+    response_path.write_text(duplicate + "\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="duplicate JSON key"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+def test_semantic_validate_rejects_worker_tool_events(tmp_path: Path) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir, response, item_type="command_execution"
+    )
+
+    with pytest.raises(ValueError, match="forbidden item type"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+@pytest.mark.parametrize(
+    "events_builder",
+    [
+        pytest.param(
+            lambda message: [
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+            ],
+            id="missing-turn-start",
+        ),
+        pytest.param(
+            lambda message: [
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {"type": "turn.started"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+            ],
+            id="duplicate-turn-start",
+        ),
+        pytest.param(
+            lambda message: [
+                {"type": "turn.started"},
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+            ],
+            id="thread-not-first",
+        ),
+        pytest.param(
+            lambda message: [
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+                {
+                    "type": "item.completed",
+                    "item": {"id": "item_1", "type": "reasoning"},
+                },
+            ],
+            id="item-after-turn-completion",
+        ),
+        pytest.param(
+            lambda message: [
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_1",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+            ],
+            id="multiple-agent-messages",
+        ),
+        pytest.param(
+            lambda message: [
+                {"type": "thread.started", "thread_id": "thread_luna_test"},
+                {"type": "turn.started"},
+                {
+                    "type": "item.completed",
+                    "item": {"id": "item_1", "type": "reasoning"},
+                },
+                {
+                    "type": "item.completed",
+                    "item": {"id": "item_1", "type": "reasoning"},
+                },
+                {
+                    "type": "item.completed",
+                    "item": {
+                        "id": "item_0",
+                        "type": "agent_message",
+                        "text": message,
+                    },
+                },
+                {
+                    "type": "turn.completed",
+                    "usage": {"input_tokens": 120, "output_tokens": 80},
+                },
+            ],
+            id="duplicate-item-completion",
+        ),
+    ],
+)
+def test_semantic_validate_rejects_impossible_worker_event_lifecycle(
+    tmp_path: Path,
+    events_builder: Any,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    events = events_builder(json.dumps(response, ensure_ascii=False))
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir,
+        response,
+        events_override=events,
+    )
+
+    with pytest.raises(ValueError, match="Worker"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+def test_semantic_validate_requires_pinned_launch_receipt(tmp_path: Path) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir,
+        _valid_semantic_response(graph),
+    )
+    (semantic_dir / "luna_launch_receipt.json").unlink()
+
+    with pytest.raises(ValueError, match="launch_receipt.json does not exist"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+def test_semantic_validate_rejects_rehashed_forged_launch_boundary(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir,
+        _valid_semantic_response(graph),
+    )
+    receipt_path = semantic_dir / "luna_launch_receipt.json"
+    receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    receipt["boundary"]["codex_sha256"] = "0" * 64
+    receipt_content = dict(receipt)
+    receipt_content.pop("content_sha256")
+    receipt["content_sha256"] = semantic_review.canonical_json_sha256(receipt_content)
+    receipt_path.write_text(
+        json.dumps(receipt, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(ValueError, match="codex_sha256"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+            response_path,
+            events_path,
+        )
+
+
+def test_semantic_run_worker_launches_separate_pinned_luna_capsule(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    events = [
+        {"type": "thread.started", "thread_id": "thread_luna_mock"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "item_0",
+                "type": "agent_message",
+                "text": json.dumps(response, ensure_ascii=False),
+            },
+        },
+        {
+            "type": "turn.completed",
+            "usage": {"input_tokens": 120, "output_tokens": 80},
+        },
+    ]
+    events_bytes = "".join(
+        json.dumps(event, ensure_ascii=False) + "\n" for event in events
+    ).encode("utf-8")
+    captured = _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic_review,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": events_bytes,
+            "stderr": b"bounded worker warning\n",
+            "duration_ms": 42,
+        },
+    )
+    authoritative_before = _tree_snapshot(reconciliation_dir)
+
+    result = semantic_review.run_semantic_worker(
+        reconciliation_dir,
+        semantic_dir,
+        semantic_dir / "residual_candidate_graph.json",
+    )
+
+    command = captured["command"]
+    receipt = json.loads(
+        (semantic_dir / "luna_launch_receipt.json").read_text(encoding="utf-8")
+    )
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert command[0] == "/usr/bin/sandbox-exec"
+    assert command[command.index("--model") + 1] == "gpt-5.6-luna"
+    assert 'model_reasoning_effort="max"' in command
+    assert "--disable" in command
+    assert "shell_tool" in command
+    assert "unified_exec" in command
+    assert captured["kwargs"]["stdin_path"].name == "prompt.stdin"
+    assert result["main_chat_model_change"] is False
+    assert receipt["runtime_attestation"]["main_chat_model_change"] is False
+    assert receipt["jsonl_observation"]["visibility_complete"] is False
+    assert receipt["jsonl_observation"]["tool_use_absence_observed"] is False
+    assert status["status"] == "worker_completed_pending_validation"
+    assert (semantic_dir / "luna_response.json").is_file()
+    assert (semantic_dir / "luna_events.jsonl").read_bytes() == events_bytes
+    assert not list(semantic_dir.glob(".luna-worker-capsule.*"))
+    assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_run_worker_fails_closed_on_unqualified_platform(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    semantic_review = load_semantic_review()
+    monkeypatch.setattr(semantic_review.platform, "system", lambda: "Linux")
+
+    with pytest.raises(ValueError, match="only on macOS"):
+        semantic_review._darwin_build_version()
+
+
+def test_semantic_run_worker_does_not_launch_after_failed_boundary_canary(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    captured = _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic_review,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": b"",
+            "stderr": b"",
+            "duration_ms": 1,
+        },
+    )
+
+    def reject_canary(**kwargs: Any) -> dict[str, Any]:
+        raise ValueError("outside-read canary failed")
+
+    monkeypatch.setattr(semantic_review, "_qualification_canaries", reject_canary)
+
+    with pytest.raises(ValueError, match="outside-read canary failed"):
+        semantic_review.run_semantic_worker(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+        )
+
+    assert captured == {}
+    assert not (semantic_dir / "luna_launch_receipt.json").exists()
+    assert not list(semantic_dir.glob(".luna-worker-capsule.*"))
+
+
+def test_semantic_run_worker_rejects_nonzero_child_without_partial_outputs(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic_review,
+        tmp_path,
+        {
+            "return_code": 1,
+            "stdout": b"",
+            "stderr": b"worker failed",
+            "duration_ms": 3,
+        },
+    )
+
+    with pytest.raises(ValueError, match="nonzero"):
+        semantic_review.run_semantic_worker(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+        )
+
+    assert not (semantic_dir / "luna_response.json").exists()
+    assert not (semantic_dir / "luna_events.jsonl").exists()
+    assert not (semantic_dir / "luna_stderr.log").exists()
+    assert not (semantic_dir / "luna_launch_receipt.json").exists()
+
+
+def test_semantic_run_worker_rolls_back_partial_atomic_publication(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    response = _valid_semantic_response(graph)
+    events = [
+        {"type": "thread.started", "thread_id": "thread_luna_mock"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "item_0",
+                "type": "agent_message",
+                "text": json.dumps(response, ensure_ascii=False),
+            },
+        },
+        {
+            "type": "turn.completed",
+            "usage": {"input_tokens": 120, "output_tokens": 80},
+        },
+    ]
+    events_bytes = "".join(
+        json.dumps(event, ensure_ascii=False) + "\n" for event in events
+    ).encode("utf-8")
+    _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic_review,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": events_bytes,
+            "stderr": b"",
+            "duration_ms": 4,
+        },
+    )
+    real_replace = Path.replace
+
+    def fail_receipt_publish(path: Path, target: Path) -> Path:
+        if path.name == "luna_launch_receipt.json":
+            raise OSError("synthetic receipt publication failure")
+        return real_replace(path, target)
+
+    monkeypatch.setattr(Path, "replace", fail_receipt_publish)
+
+    with pytest.raises(OSError, match="synthetic receipt publication failure"):
+        semantic_review.run_semantic_worker(
+            reconciliation_dir,
+            semantic_dir,
+            semantic_dir / "residual_candidate_graph.json",
+        )
+
+    assert not (semantic_dir / "luna_response.json").exists()
+    assert not (semantic_dir / "luna_events.jsonl").exists()
+    assert not (semantic_dir / "luna_stderr.log").exists()
+    assert not (semantic_dir / "luna_launch_receipt.json").exists()
+
+
+def test_semantic_validate_cli_records_worker_failure_status(tmp_path: Path) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SEMANTIC_REVIEW_PATH),
+            "validate",
+            str(reconciliation_dir),
+            "--candidate-graph",
+            str(semantic_dir / "residual_candidate_graph.json"),
+            "--output-dir",
+            str(semantic_dir),
+            "--response",
+            str(semantic_dir / "luna_response.json"),
+            "--events",
+            str(semantic_dir / "luna_events.jsonl"),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert completed.returncode == 2
+    assert "SEMANTIC_WORKER_VALIDATION_FAILED" in completed.stderr
+    assert status["status"] == "worker_failed"
+    assert status["failure_reason"] == "worker_command_or_validation_failed"
+
+
+def test_semantic_completed_status_survives_invalid_validation_retry(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir,
+        _valid_semantic_response(graph),
+    )
+    semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        graph_path,
+        response_path,
+        events_path,
+    )
+    response_path.write_text("{}\n", encoding="utf-8")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SEMANTIC_REVIEW_PATH),
+            "validate",
+            str(reconciliation_dir),
+            "--candidate-graph",
+            str(graph_path),
+            "--output-dir",
+            str(semantic_dir),
+            "--response",
+            str(response_path),
+            "--events",
+            str(events_path),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert completed.returncode == 2
+    assert status["status"] == "completed_validated"
+    assert (semantic_dir / "semantic_suggestions_validated.json").is_file()
+    assert (semantic_dir / "semantic_worker_run.json").is_file()
+
+
+def test_semantic_source_tamper_does_not_forge_bound_worker_failure_status(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    unmatched_path = reconciliation_dir / "unmatched_bank.csv"
+    unmatched_path.write_bytes(unmatched_path.read_bytes() + b"\n")
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SEMANTIC_REVIEW_PATH),
+            "validate",
+            str(reconciliation_dir),
+            "--candidate-graph",
+            str(semantic_dir / "residual_candidate_graph.json"),
+            "--output-dir",
+            str(semantic_dir),
+            "--response",
+            str(semantic_dir / "luna_response.json"),
+            "--events",
+            str(semantic_dir / "luna_events.jsonl"),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert completed.returncode == 2
+    assert status["status"] == "prepared"
+    assert status["failure_reason"] is None
+
+
 def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     skill_text = (
         ROOT
@@ -7062,6 +8610,15 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_journal_bank_review" in skill_text
     assert "render_journal_bank_review" in skill_text
+    assert "Optional Codex-Only Luna Max Residual Review" in skill_text
+    assert "semantic_review.py run-worker" in skill_text
+    assert "journal_bank.luna_seatbelt_capsule.v1" in skill_text
+    assert "current chat unchanged" in skill_text
+    assert "Codex JSONL visibility is incomplete" in skill_text
+    assert "luna_launch_receipt.json" in skill_text
+    assert "copy or reconstruct its underlying `codex exec` command" in skill_text
+    assert "codex exec \\" not in skill_text
+    assert "advisory only" in skill_text
     assert "modules.llm" not in script_text
     assert "model_router" not in script_text
     assert "openai" not in script_text.lower()

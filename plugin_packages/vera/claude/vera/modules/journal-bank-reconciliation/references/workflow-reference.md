@@ -248,7 +248,7 @@ complete reviewable native package, including an empty
 Only `material_value_ledger.json` is absent when source qualification or
 relationship authority blocks, because material reconciliation never ran.
 
-The execution boundary closes an exact 23-file contract covering launcher
+The execution boundary closes an exact 24-file contract covering launcher
 configuration, UI assets, Python/Node code, and the shared assurance kernel.
 Supported Python entries validate the physical tree before local imports; MCP
 does so before manifest parsing and invokes Python with `-I -B`. Unowned
