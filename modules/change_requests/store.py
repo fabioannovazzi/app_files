@@ -37,12 +37,23 @@ __all__ = [
     "ChangeRequestStore",
     "ChangeRequestStoreError",
     "ChangeRequestStoreUnavailableError",
+    "ChangeRequestDisposition",
     "ChangeRequestTriageState",
     "get_change_request_store",
 ]
 
 ChangeRequestStatus = Literal["open", "fixed"]
+ChangeRequestDisposition = Literal[
+    "unresolved",
+    "needs_info",
+    "fixed",
+    "duplicate",
+    "external",
+    "non_actionable",
+]
 ChangeRequestTriageState = Literal["active", "considering"]
+_UNRESOLVED_DISPOSITIONS = frozenset({"unresolved", "needs_info"})
+_NON_FIX_DISPOSITIONS = frozenset({"duplicate", "external", "non_actionable"})
 
 _CHANGE_REQUEST_ID_PATTERN = re.compile(r"^CR-(?P<number>[1-9][0-9]*)$")
 _DEFAULT_MAX_RECORDS = 10_000
@@ -62,6 +73,12 @@ CREATE TABLE IF NOT EXISTS mparanza_change_requests (
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'fixed')),
     triage_state TEXT NOT NULL DEFAULT 'active'
         CHECK (triage_state IN ('active', 'considering')),
+    disposition TEXT NOT NULL DEFAULT 'unresolved',
+    revision INTEGER NOT NULL DEFAULT 1,
+    needs_info_question TEXT,
+    follow_up_json TEXT NOT NULL DEFAULT '[]',
+    operator_note TEXT,
+    closed_at TEXT,
     interview_url TEXT,
     interview_json TEXT,
     fixed_version TEXT,
@@ -85,6 +102,12 @@ CREATE TABLE IF NOT EXISTS mparanza_change_requests (
     status TEXT NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'fixed')),
     triage_state TEXT NOT NULL DEFAULT 'active'
         CHECK (triage_state IN ('active', 'considering')),
+    disposition TEXT NOT NULL DEFAULT 'unresolved',
+    revision INTEGER NOT NULL DEFAULT 1,
+    needs_info_question TEXT,
+    follow_up_json TEXT NOT NULL DEFAULT '[]',
+    operator_note TEXT,
+    closed_at TEXT,
     interview_url TEXT,
     interview_json TEXT,
     fixed_version TEXT,
@@ -134,6 +157,12 @@ class ChangeRequestRecord:
     status_token: str
     status: ChangeRequestStatus
     triage_state: ChangeRequestTriageState
+    disposition: ChangeRequestDisposition
+    revision: int
+    needs_info_question: str | None
+    follow_up_json: str
+    operator_note: str | None
+    closed_at: str | None
     interview_url: str | None
     interview_json: str | None
     fixed_version: str | None
@@ -152,7 +181,13 @@ class ChangeRequestRecord:
     def fixed(self) -> bool:
         """Return whether the correction has been published."""
 
-        return self.status == "fixed"
+        return self.status == "fixed" and self.disposition == "fixed"
+
+    @property
+    def unresolved(self) -> bool:
+        """Return whether the request still requires investigation or evidence."""
+
+        return self.disposition in _UNRESOLVED_DISPOSITIONS
 
 
 def _utc_now() -> str:
@@ -326,6 +361,35 @@ class ChangeRequestStore:
                 "ALTER TABLE mparanza_change_requests "
                 "ADD COLUMN IF NOT EXISTS interview_json TEXT"
             )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS disposition TEXT NOT NULL "
+                "DEFAULT 'unresolved'"
+            )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS revision INTEGER NOT NULL DEFAULT 1"
+            )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS needs_info_question TEXT"
+            )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS follow_up_json TEXT NOT NULL DEFAULT '[]'"
+            )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS operator_note TEXT"
+            )
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN IF NOT EXISTS closed_at TEXT"
+            )
+            connection.execute(
+                "UPDATE mparanza_change_requests SET disposition = 'fixed' "
+                "WHERE status = 'fixed' AND disposition = 'unresolved'"
+            )
             return
         columns = {
             str(row["name"])
@@ -347,6 +411,38 @@ class ChangeRequestStore:
             connection.execute(
                 "ALTER TABLE mparanza_change_requests ADD COLUMN interview_json TEXT"
             )
+        if "disposition" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests ADD COLUMN disposition TEXT "
+                "NOT NULL DEFAULT 'unresolved'"
+            )
+        if "revision" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests ADD COLUMN revision INTEGER "
+                "NOT NULL DEFAULT 1"
+            )
+        if "needs_info_question" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests "
+                "ADD COLUMN needs_info_question TEXT"
+            )
+        if "follow_up_json" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests ADD COLUMN follow_up_json TEXT "
+                "NOT NULL DEFAULT '[]'"
+            )
+        if "operator_note" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests ADD COLUMN operator_note TEXT"
+            )
+        if "closed_at" not in columns:
+            connection.execute(
+                "ALTER TABLE mparanza_change_requests ADD COLUMN closed_at TEXT"
+            )
+        connection.execute(
+            "UPDATE mparanza_change_requests SET disposition = 'fixed' "
+            "WHERE status = 'fixed' AND disposition = 'unresolved'"
+        )
 
     @staticmethod
     def _record_from_row(row: Mapping[str, Any] | sqlite3.Row) -> ChangeRequestRecord:
@@ -371,6 +467,43 @@ class ChangeRequestStore:
             raise ChangeRequestStoreUnavailableError(
                 "Stored change-request triage state is invalid."
             )
+        disposition = str(values.get("disposition") or "")
+        if disposition not in {
+            "unresolved",
+            "needs_info",
+            "fixed",
+            "duplicate",
+            "external",
+            "non_actionable",
+        }:
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request disposition is invalid."
+            )
+        if (status == "fixed") != (disposition == "fixed"):
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request release state is inconsistent."
+            )
+        try:
+            revision = int(values.get("revision") or 0)
+        except (TypeError, ValueError) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request revision is invalid."
+            ) from exc
+        if revision < 1:
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request revision is invalid."
+            )
+        follow_up_json = str(values.get("follow_up_json") or "[]")
+        try:
+            follow_up_payload = json.loads(follow_up_json)
+        except json.JSONDecodeError as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request follow-up evidence is invalid."
+            ) from exc
+        if not isinstance(follow_up_payload, list):
+            raise ChangeRequestStoreUnavailableError(
+                "Stored change-request follow-up evidence is invalid."
+            )
         return ChangeRequestRecord(
             request_no=int(values["request_no"]),
             submission_id=str(values["submission_id"]),
@@ -382,6 +515,24 @@ class ChangeRequestStore:
             status_token=str(values["status_token"]),
             status=status,
             triage_state=triage_state,
+            disposition=disposition,
+            revision=revision,
+            needs_info_question=(
+                str(values["needs_info_question"])
+                if values.get("needs_info_question") is not None
+                else None
+            ),
+            follow_up_json=follow_up_json,
+            operator_note=(
+                str(values["operator_note"])
+                if values.get("operator_note") is not None
+                else None
+            ),
+            closed_at=(
+                str(values["closed_at"])
+                if values.get("closed_at") is not None
+                else None
+            ),
             interview_url=(
                 str(values["interview_url"])
                 if values.get("interview_url") is not None
@@ -638,6 +789,7 @@ class ChangeRequestStore:
                         """
                         SELECT * FROM mparanza_change_requests
                         WHERE status = 'open'
+                          AND disposition IN ('unresolved', 'needs_info')
                         ORDER BY request_no ASC
                         LIMIT ?
                         """,
@@ -647,7 +799,9 @@ class ChangeRequestStore:
                     rows = connection.execute(
                         """
                         SELECT * FROM mparanza_change_requests
-                        WHERE status = 'open' AND triage_state = ?
+                        WHERE status = 'open'
+                          AND disposition IN ('unresolved', 'needs_info')
+                          AND triage_state = ?
                         ORDER BY request_no ASC
                         LIMIT ?
                         """,
@@ -682,9 +836,9 @@ class ChangeRequestStore:
                 if row is None:
                     raise ChangeRequestNotFoundError("Unknown change request.")
                 current = self._record_from_row(row)
-                if current.fixed:
+                if current.disposition != "unresolved":
                     raise ChangeRequestConflictError(
-                        "Fixed change requests cannot change triage queue."
+                        "Only unresolved requests can change triage queue."
                     )
                 if current.triage_state == triage_state:
                     return current
@@ -705,6 +859,255 @@ class ChangeRequestStore:
                         "Change-request triage state changed concurrently."
                     )
                 return updated
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+
+    def mark_needs_info(
+        self,
+        change_request_id: str,
+        *,
+        question: str,
+    ) -> ChangeRequestRecord:
+        """Request one bounded, token-mediated evidence follow-up."""
+
+        request_no = _request_number(change_request_id)
+        clean_question = " ".join(question.split())
+        if not clean_question or len(clean_question) > 1_000:
+            raise ValueError(
+                "A needs-information question of 1-1000 characters is required."
+            )
+        self._ensure_schema()
+        timestamp = _utc_now()
+        try:
+            with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                if current.disposition not in _UNRESOLVED_DISPOSITIONS:
+                    raise ChangeRequestConflictError(
+                        "Closed change requests must be reopened before requesting evidence."
+                    )
+                if (
+                    current.disposition == "needs_info"
+                    and current.needs_info_question == clean_question
+                ):
+                    return current
+                connection.execute(
+                    """
+                    UPDATE mparanza_change_requests
+                    SET status = 'open', disposition = 'needs_info',
+                        revision = revision + 1,
+                        triage_state = 'active', needs_info_question = ?,
+                        operator_note = NULL, closed_at = NULL,
+                        fixed_version = NULL, install_url = NULL, fixed_at = NULL,
+                        updated_at = ?
+                    WHERE request_no = ?
+                    """,
+                    (clean_question, timestamp, request_no),
+                )
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                updated = self._record_from_row(row)
+                if updated.disposition != "needs_info":
+                    raise ChangeRequestConflictError(
+                        "Change-request evidence state changed concurrently."
+                    )
+                return updated
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+
+    def add_follow_up_evidence(
+        self,
+        change_request_id: str,
+        status_token: str,
+        payload: Mapping[str, Any],
+    ) -> ChangeRequestRecord:
+        """Append one idempotent evidence update and return it to active triage."""
+
+        request_no = _request_number(change_request_id)
+        update_id = str(payload.get("update_id") or "").strip()
+        if not update_id:
+            raise ValueError("Evidence update ID is required.")
+        evidence_json = _canonical_json(payload)
+        evidence_hash = _digest(evidence_json)
+        self._ensure_schema()
+        timestamp = _utc_now()
+        try:
+            with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                if not hmac.compare_digest(current.status_token, status_token):
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                updates = json.loads(current.follow_up_json)
+                existing = next(
+                    (
+                        update
+                        for update in updates
+                        if isinstance(update, dict)
+                        and update.get("update_id") == update_id
+                    ),
+                    None,
+                )
+                if existing is not None:
+                    if not hmac.compare_digest(
+                        str(existing.get("evidence_sha256") or ""), evidence_hash
+                    ):
+                        raise ChangeRequestConflictError(
+                            "Evidence update ID was already used for different content."
+                        )
+                    return current
+                if current.disposition != "needs_info":
+                    raise ChangeRequestConflictError(
+                        "Change request is not waiting for additional evidence."
+                    )
+                updates.append(
+                    {
+                        "update_id": update_id,
+                        "evidence_sha256": evidence_hash,
+                        "received_at": timestamp,
+                        "payload": dict(payload),
+                    }
+                )
+                connection.execute(
+                    """
+                    UPDATE mparanza_change_requests
+                    SET disposition = 'unresolved', triage_state = 'active',
+                        revision = revision + 1,
+                        needs_info_question = NULL, follow_up_json = ?,
+                        updated_at = ?
+                    WHERE request_no = ? AND disposition = 'needs_info'
+                    """,
+                    (json.dumps(updates, ensure_ascii=False), timestamp, request_no),
+                )
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                updated = self._record_from_row(row)
+                if updated.disposition != "unresolved":
+                    raise ChangeRequestConflictError(
+                        "Change-request evidence state changed concurrently."
+                    )
+                return updated
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+
+    def close_without_fix(
+        self,
+        change_request_id: str,
+        *,
+        disposition: ChangeRequestDisposition,
+        note: str,
+    ) -> ChangeRequestRecord:
+        """Close a verified non-fix outcome without advertising a release."""
+
+        request_no = _request_number(change_request_id)
+        if disposition not in _NON_FIX_DISPOSITIONS:
+            raise ValueError("Unknown non-fix disposition.")
+        clean_note = " ".join(note.split())
+        if not clean_note or len(clean_note) > 2_000:
+            raise ValueError("A closure note of 1-2000 characters is required.")
+        self._ensure_schema()
+        timestamp = _utc_now()
+        try:
+            with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                if (
+                    current.disposition == disposition
+                    and current.operator_note == clean_note
+                ):
+                    return current
+                if not current.unresolved:
+                    raise ChangeRequestConflictError(
+                        "Closed change request must be reopened before redisposition."
+                    )
+                connection.execute(
+                    """
+                    UPDATE mparanza_change_requests
+                    SET status = 'open', disposition = ?, triage_state = 'active',
+                        revision = revision + 1,
+                        needs_info_question = NULL, operator_note = ?, closed_at = ?,
+                        fixed_version = NULL, install_url = NULL, fixed_at = NULL,
+                        updated_at = ?
+                    WHERE request_no = ?
+                    """,
+                    (disposition, clean_note, timestamp, timestamp, request_no),
+                )
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                return self._record_from_row(row)
+        except (
+            OSError,
+            sqlite3.Error,
+            psycopg.Error,
+            PostgresCommitStateUnknownError,
+        ) as exc:
+            raise ChangeRequestStoreUnavailableError(
+                "Change-request storage is unavailable."
+            ) from exc
+
+    def reopen(self, change_request_id: str) -> ChangeRequestRecord:
+        """Return any closed or needs-information request to active investigation."""
+
+        request_no = _request_number(change_request_id)
+        self._ensure_schema()
+        timestamp = _utc_now()
+        try:
+            with self._connect() as connection:
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                current = self._record_from_row(row)
+                if (
+                    current.disposition == "unresolved"
+                    and current.triage_state == "active"
+                ):
+                    return current
+                connection.execute(
+                    """
+                    UPDATE mparanza_change_requests
+                    SET status = 'open', disposition = 'unresolved',
+                        revision = revision + 1,
+                        triage_state = 'active', needs_info_question = NULL,
+                        operator_note = NULL, closed_at = NULL,
+                        fixed_version = NULL, install_url = NULL, fixed_at = NULL,
+                        updated_at = ?
+                    WHERE request_no = ?
+                    """,
+                    (timestamp, request_no),
+                )
+                row = self._select_number(connection, request_no)
+                if row is None:
+                    raise ChangeRequestNotFoundError("Unknown change request.")
+                return self._record_from_row(row)
         except (
             OSError,
             sqlite3.Error,
@@ -833,18 +1236,32 @@ class ChangeRequestStore:
                     "Change request was already fixed by another published release."
                 )
             return current
+        if not current.unresolved:
+            raise ChangeRequestConflictError(
+                "Closed change request must be reopened before marking a fix."
+            )
         timestamp = _utc_now()
         try:
             with self._connect() as connection:
                 connection.execute(
                     """
                     UPDATE mparanza_change_requests
-                    SET status = 'fixed', triage_state = 'active',
+                    SET status = 'fixed', disposition = 'fixed',
+                        revision = revision + 1,
+                        triage_state = 'active', needs_info_question = NULL,
+                        operator_note = NULL, closed_at = ?,
                         fixed_version = ?, install_url = ?,
                         fixed_at = ?, updated_at = ?
                     WHERE request_no = ? AND status = 'open'
                     """,
-                    (version, install_url, timestamp, timestamp, request_no),
+                    (
+                        timestamp,
+                        version,
+                        install_url,
+                        timestamp,
+                        timestamp,
+                        request_no,
+                    ),
                 )
                 row = self._select_number(connection, request_no)
                 if row is None:

@@ -13,6 +13,7 @@ from modules.change_requests.store import (
     ChangeRequestCapacityError,
     ChangeRequestConflictError,
     ChangeRequestManifestError,
+    ChangeRequestNotFoundError,
     ChangeRequestStore,
 )
 
@@ -97,6 +98,83 @@ def test_activate_restores_considering_request_to_active_queue(tmp_path: Path) -
     assert active.status == "open"
     assert active.triage_state == "active"
     assert store.list_open() == [active]
+
+
+def test_needs_info_accepts_idempotent_token_authorized_follow_up(
+    tmp_path: Path,
+) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission())
+    waiting = store.mark_needs_info(
+        record.change_request_id,
+        question="Provide the exact sanitized response status.",
+    )
+    evidence = {
+        "update_id": str(uuid4()),
+        "evidence": {
+            "schema_version": 1,
+            "summary": "The response was reproduced.",
+            "evidence": ["HTTP 404 with a sanitized job-not-found body."],
+        },
+    }
+
+    with pytest.raises(ChangeRequestNotFoundError):
+        store.add_follow_up_evidence(
+            record.change_request_id,
+            "wrong-token-value-long-enough",
+            evidence,
+        )
+    updated = store.add_follow_up_evidence(
+        record.change_request_id,
+        record.status_token,
+        evidence,
+    )
+    retried = store.add_follow_up_evidence(
+        record.change_request_id,
+        record.status_token,
+        evidence,
+    )
+
+    assert waiting.disposition == "needs_info"
+    assert waiting.revision == 2
+    assert waiting.needs_info_question == (
+        "Provide the exact sanitized response status."
+    )
+    assert store.list_open() == [updated]
+    assert updated.disposition == "unresolved"
+    assert updated.revision == 3
+    assert updated.needs_info_question is None
+    assert retried == updated
+    assert len(json.loads(updated.follow_up_json)) == 1
+
+
+def test_non_fix_disposition_is_distinct_and_reversible(tmp_path: Path) -> None:
+    store = ChangeRequestStore(sqlite_path=tmp_path / "change-requests.sqlite3")
+    record = store.submit(_submission())
+
+    closed = store.close_without_fix(
+        record.change_request_id,
+        disposition="external",
+        note="Reproduced outside Mparanza and routed to the runtime owner.",
+    )
+
+    assert closed.status == "open"
+    assert closed.disposition == "external"
+    assert closed.revision == 2
+    assert closed.fixed is False
+    assert closed.closed_at is not None
+    assert store.list_open() == []
+    with pytest.raises(ChangeRequestConflictError, match="Only unresolved"):
+        store.set_triage_state(record.change_request_id, "considering")
+
+    reopened = store.reopen(record.change_request_id)
+
+    assert reopened.status == "open"
+    assert reopened.disposition == "unresolved"
+    assert reopened.revision == 3
+    assert reopened.operator_note is None
+    assert reopened.closed_at is None
+    assert store.list_open() == [reopened]
 
 
 def test_submit_rejects_reused_submission_id_with_different_content(
@@ -321,8 +399,7 @@ def test_mark_fixed_requires_exact_local_published_manifest(tmp_path: Path) -> N
 def test_existing_sqlite_store_adds_interview_columns(tmp_path: Path) -> None:
     database_path = tmp_path / "old.sqlite3"
     with sqlite3.connect(database_path) as connection:
-        connection.execute(
-            """
+        connection.execute("""
             CREATE TABLE mparanza_change_requests (
                 request_no INTEGER PRIMARY KEY AUTOINCREMENT,
                 submission_id TEXT NOT NULL UNIQUE,
@@ -339,8 +416,7 @@ def test_existing_sqlite_store_adds_interview_columns(tmp_path: Path) -> None:
                 updated_at TEXT NOT NULL,
                 fixed_at TEXT
             )
-            """
-        )
+            """)
     store = ChangeRequestStore(sqlite_path=database_path)
 
     record = store.submit(_submission(kind="capability"))

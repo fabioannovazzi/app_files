@@ -40,7 +40,7 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
     )
     commands = parser.add_subparsers(dest="command", required=True)
 
-    list_parser = commands.add_parser("list", help="List oldest open requests.")
+    list_parser = commands.add_parser("list", help="List oldest unresolved requests.")
     list_parser.add_argument("--limit", type=int, default=100)
     list_parser.add_argument(
         "--triage-state",
@@ -61,6 +61,28 @@ def parse_args(argv: Sequence[str]) -> argparse.Namespace:
         "activate", help="Return a considering request to the active queue."
     )
     activate_parser.add_argument("change_request_id")
+
+    needs_info_parser = commands.add_parser(
+        "needs-info", help="Ask the reporter for specific additional evidence."
+    )
+    needs_info_parser.add_argument("change_request_id")
+    needs_info_parser.add_argument("--question", required=True)
+
+    close_parser = commands.add_parser(
+        "close", help="Close a verified non-fix outcome with an explicit disposition."
+    )
+    close_parser.add_argument("change_request_id")
+    close_parser.add_argument(
+        "--disposition",
+        required=True,
+        choices=("duplicate", "external", "non_actionable"),
+    )
+    close_parser.add_argument("--note", required=True)
+
+    reopen_parser = commands.add_parser(
+        "reopen", help="Return a closed or needs-information request to active triage."
+    )
+    reopen_parser.add_argument("change_request_id")
 
     fixed_parser = commands.add_parser(
         "fixed", help="Mark a request fixed after its plugin version is published."
@@ -86,6 +108,11 @@ def _record_payload(
         "kind": record.kind,
         "status": record.status,
         "triage_state": record.triage_state,
+        "disposition": record.disposition,
+        "revision": record.revision,
+        "needs_info_question": record.needs_info_question,
+        "operator_note": record.operator_note,
+        "closed_at": record.closed_at,
         "interview_url": record.interview_url,
         "fixed_version": record.fixed_version,
         "install_url": record.install_url,
@@ -99,6 +126,7 @@ def _record_payload(
         payload["interview"] = (
             json.loads(record.interview_json) if record.interview_json else None
         )
+        payload["follow_up_evidence"] = json.loads(record.follow_up_json)
     return payload
 
 
@@ -137,6 +165,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             )
             _write_json(_record_payload(record, include_request=False))
             return 0
+        if args.command == "needs-info":
+            record = store.mark_needs_info(
+                args.change_request_id,
+                question=args.question,
+            )
+            _write_json(_record_payload(record, include_request=False))
+            return 0
+        if args.command == "close":
+            record = store.close_without_fix(
+                args.change_request_id,
+                disposition=args.disposition,
+                note=args.note,
+            )
+            _write_json(_record_payload(record, include_request=False))
+            return 0
+        if args.command == "reopen":
+            record = store.reopen(args.change_request_id)
+            _write_json(_record_payload(record, include_request=False))
+            return 0
         if args.command == "fixed":
             record = store.mark_fixed(
                 args.change_request_id,
@@ -150,6 +197,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         ChangeRequestManifestError,
         ChangeRequestNotFoundError,
         ChangeRequestStoreUnavailableError,
+        ValueError,
     ) as exc:
         LOGGER.error("%s", exc)
         return 2

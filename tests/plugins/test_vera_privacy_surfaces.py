@@ -139,6 +139,7 @@ def test_vera_shared_services_separate_update_and_feedback() -> None:
     assert [boundary["id"] for boundary in feedback_boundaries] == [
         "automatic-feedback-status-poll",
         "approved-text-feedback-submission",
+        "approved-follow-up-evidence",
         "approved-improvement-interview",
     ]
     assert feedback_boundaries[0]["activation"] == ("automatic_after_prior_submission")
@@ -323,6 +324,14 @@ def test_vera_privacy_validator_detects_changed_shared_service_source(
     )
     for manifest in (vera_root / "privacy" / "workstreams").glob("*.json"):
         manifest.unlink()
+    for relative_path in (
+        Path("modules/change_requests/api.py"),
+        Path("modules/change_requests/store.py"),
+        Path("scripts/manage_change_requests.py"),
+    ):
+        target = tmp_path / relative_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / relative_path, target)
 
     validator._refresh_service("all", vera_root)
     updater = vera_root / "scripts" / "check_for_update.py"

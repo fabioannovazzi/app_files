@@ -6,18 +6,20 @@ import threading
 import time
 from collections import OrderedDict, deque
 from collections.abc import Callable, Coroutine
+from datetime import datetime
 from functools import lru_cache
-from typing import Annotated, Any, Literal
+from typing import Annotated, Any, Literal, Self
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import Response
 from fastapi.routing import APIRoute
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 from modules.change_requests.store import (
     ChangeRequestCapacityError,
     ChangeRequestConflictError,
+    ChangeRequestNotFoundError,
     ChangeRequestRecord,
     ChangeRequestStore,
     ChangeRequestStoreUnavailableError,
@@ -37,6 +39,7 @@ __all__ = [
     "ChangeRequestReceipt",
     "ChangeRequestInterviewReceipt",
     "ChangeRequestInterviewSubmission",
+    "ChangeRequestEvidenceSubmission",
     "ChangeRequestSubmission",
     "ChangeRequestStatusBatchRequest",
     "ChangeRequestStatusBatchResponse",
@@ -192,6 +195,120 @@ class ChangeRequestSubmission(BaseModel):
     plugin: Literal["clara", "vera"]
     plugin_version: str = Field(min_length=1, max_length=128)
     request: dict[str, Any] = Field(min_length=1)
+    client_context: dict[str, Any] | None = None
+
+    @model_validator(mode="after")
+    def validate_problem_contract(self) -> Self:
+        """Enforce only mechanically verifiable evidence shape at intake."""
+
+        if self.kind == "problem":
+            ProblemReport.model_validate(self.request)
+            if self.client_context is None:
+                raise ValueError("problem submissions require client_context")
+        if self.client_context is not None:
+            ChangeRequestClientContext.model_validate(self.client_context)
+        return self
+
+
+class ChangeRequestClientContext(BaseModel):
+    """Non-identifying context added mechanically by the plugin client."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    submitted_at: datetime
+    platform: str = Field(min_length=1, max_length=64)
+    python_version: str = Field(min_length=1, max_length=64)
+    client: Literal["plugin_change_request"]
+
+    @field_validator("submitted_at")
+    @classmethod
+    def require_timezone(cls, value: datetime) -> datetime:
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError("submitted_at must include a timezone")
+        return value
+
+
+class ProblemDiagnostics(BaseModel):
+    """Sanitized run evidence required for an actionable problem report."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    occurred_at: datetime
+    runtime: str = Field(min_length=1, max_length=256)
+    operation: str = Field(min_length=1, max_length=512)
+    evidence: list[str] = Field(min_length=1, max_length=20)
+    correlation_ids: list[str] = Field(default_factory=list, max_length=20)
+
+    @field_validator("occurred_at")
+    @classmethod
+    def require_timezone(cls, value: datetime) -> datetime:
+        if value.tzinfo is None or value.utcoffset() is None:
+            raise ValueError("occurred_at must include a timezone")
+        return value
+
+    @field_validator("evidence")
+    @classmethod
+    def validate_evidence(cls, values: list[str]) -> list[str]:
+        if any(not value.strip() or len(value) > 2_000 for value in values):
+            raise ValueError("diagnostic evidence entries must be 1-2000 characters")
+        return values
+
+    @field_validator("correlation_ids")
+    @classmethod
+    def validate_correlation_ids(cls, values: list[str]) -> list[str]:
+        if any(not value.strip() or len(value) > 256 for value in values):
+            raise ValueError("correlation IDs must be 1-256 characters")
+        return values
+
+
+class ProblemReport(BaseModel):
+    """Complete sanitized problem contract; semantic triage remains operator-led."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal[2]
+    title: str = Field(min_length=1, max_length=256)
+    expected: str = Field(min_length=1, max_length=4_000)
+    observed: str = Field(min_length=1, max_length=4_000)
+    reproduction: list[str] = Field(min_length=1, max_length=20)
+    diagnostics: ProblemDiagnostics
+    error: str | None = Field(default=None, max_length=2_000)
+    plugin_version: str | None = Field(default=None, max_length=128)
+
+    @field_validator("reproduction")
+    @classmethod
+    def validate_reproduction(cls, values: list[str]) -> list[str]:
+        if any(not value.strip() or len(value) > 1_000 for value in values):
+            raise ValueError("reproduction steps must be 1-1000 characters")
+        return values
+
+
+class FollowUpEvidence(BaseModel):
+    """One sanitized answer to an operator's needs-information question."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal[1]
+    summary: str = Field(min_length=1, max_length=4_000)
+    evidence: list[str] = Field(min_length=1, max_length=20)
+
+    @field_validator("evidence")
+    @classmethod
+    def validate_evidence(cls, values: list[str]) -> list[str]:
+        if any(not value.strip() or len(value) > 2_000 for value in values):
+            raise ValueError("follow-up evidence entries must be 1-2000 characters")
+        return values
+
+
+class ChangeRequestEvidenceSubmission(BaseModel):
+    """Token-authorized, idempotent evidence supplied after a needs-info request."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    schema_version: Literal[1] = 1
+    update_id: UUID
+    status_token: str = Field(min_length=20, max_length=200)
+    evidence: FollowUpEvidence
 
 
 class ChangeRequestReceipt(BaseModel):
@@ -201,6 +318,16 @@ class ChangeRequestReceipt(BaseModel):
     change_request_id: str
     status_token: str
     status: Literal["open", "fixed"]
+    disposition: Literal[
+        "unresolved",
+        "needs_info",
+        "fixed",
+        "duplicate",
+        "external",
+        "non_actionable",
+    ]
+    revision: int = Field(ge=1)
+    needs_info_question: str | None = None
     fixed: bool
     fixed_version: str | None = None
     install_url: str | None = None
@@ -251,6 +378,19 @@ class ChangeRequestStatusItem(BaseModel):
     change_request_id: str
     found: bool
     status: Literal["open", "fixed"] | None = None
+    disposition: (
+        Literal[
+            "unresolved",
+            "needs_info",
+            "fixed",
+            "duplicate",
+            "external",
+            "non_actionable",
+        ]
+        | None
+    ) = None
+    revision: int | None = Field(default=None, ge=1)
+    needs_info_question: str | None = None
     fixed: bool = False
     fixed_version: str | None = None
     install_url: str | None = None
@@ -268,6 +408,9 @@ def _receipt(record: ChangeRequestRecord) -> ChangeRequestReceipt:
         change_request_id=record.change_request_id,
         status_token=record.status_token,
         status=record.status,
+        disposition=record.disposition,
+        revision=record.revision,
+        needs_info_question=record.needs_info_question,
         fixed=record.fixed,
         fixed_version=record.fixed_version,
         install_url=record.install_url,
@@ -286,6 +429,9 @@ def _status_item(
         change_request_id=record.change_request_id,
         found=True,
         status=record.status,
+        disposition=record.disposition,
+        revision=record.revision,
+        needs_info_question=record.needs_info_question,
         fixed=record.fixed,
         fixed_version=record.fixed_version,
         install_url=record.install_url,
@@ -293,6 +439,11 @@ def _status_item(
 
 
 def _raise_http_store_error(exc: Exception) -> None:
+    if isinstance(exc, ChangeRequestNotFoundError):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Unknown change request.",
+        ) from exc
     if isinstance(exc, ChangeRequestConflictError):
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -345,6 +496,39 @@ def submit_change_request(
     except (
         ChangeRequestCapacityError,
         ChangeRequestConflictError,
+        ChangeRequestStoreUnavailableError,
+    ) as exc:
+        _raise_http_store_error(exc)
+        raise AssertionError("unreachable")
+    return _receipt(record)
+
+
+@router.post(
+    "/{change_request_id}/evidence",
+    response_model=ChangeRequestReceipt,
+)
+def submit_change_request_evidence(
+    change_request_id: str,
+    payload: ChangeRequestEvidenceSubmission,
+    request: Request,
+    store: Store,
+    rate_limiter: RateLimiter,
+) -> ChangeRequestReceipt:
+    """Attach one requested evidence update without collecting user identity."""
+
+    _enforce_rate_limit(request, rate_limiter, "intake")
+    try:
+        record = store.add_follow_up_evidence(
+            change_request_id,
+            payload.status_token,
+            {
+                "update_id": str(payload.update_id),
+                "evidence": payload.evidence.model_dump(mode="json"),
+            },
+        )
+    except (
+        ChangeRequestConflictError,
+        ChangeRequestNotFoundError,
         ChangeRequestStoreUnavailableError,
     ) as exc:
         _raise_http_store_error(exc)

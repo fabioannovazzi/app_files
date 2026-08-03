@@ -1307,6 +1307,35 @@ not attach the run, source documents, client or customer material, credentials,
 secrets, personal data, or identifying details. Replace any necessary example
 with a synthetic equivalent. Show the user the exact sanitized request that
 would be sent, then ask only for consent to transmit that technical problem.
+Do not submit a problem report until inspected run evidence can fill this exact
+schema:
+
+```json
+{
+  "schema_version": 2,
+  "title": "Short technical failure title",
+  "expected": "Concrete expected behavior",
+  "observed": "Concrete observed behavior",
+  "reproduction": ["Exact bounded step"],
+  "diagnostics": {
+    "occurred_at": "2026-01-01T12:00:00+00:00",
+    "runtime": "Codex Desktop and relevant callable runtime",
+    "operation": "Exact operation that failed",
+    "evidence": ["Sanitized exact error, response status, or output shape"],
+    "correlation_ids": ["Opaque non-secret request or job identifier when available"]
+  },
+  "error": "Optional sanitized exact error text",
+  "plugin_version": "Installed Clara version"
+}
+```
+
+The fixed schema is mechanical because required evidence presence, lengths,
+and timestamps are auditable; it does not decide whether the report is a defect
+or who owns it. If occurred time, runtime, operation, reproduction, or at least
+one exact sanitized evidence item is unavailable, do not transmit the report.
+Reproduce safely or explain that the evidence is currently insufficient. Never
+invent diagnostic evidence or include a bearer token, private URL, local path,
+personal identifier, or source content.
 Localize the consent question to the conversation language. In Italian, ask:
 
 > Vuoi che trasmetta questo problema tecnico allo sviluppatore così possiamo risolverlo?
@@ -1328,6 +1357,20 @@ python scripts/change_requests.py submit-problem --request <approved-request.jso
 
 Report the returned `CR-N` receipt. A retry after a network failure must reuse
 the saved submission and return the same receipt; it is not a new request.
+
+If a later status check says the developer needs more evidence, show the exact
+question to the user. Draft a separate sanitized follow-up file with
+`schema_version`, a short `summary`, and one or more exact `evidence` strings;
+show it and obtain consent before transmitting it. Then run:
+
+```bash
+python scripts/change_requests.py add-evidence \
+  --change-request CR-N --request <approved-evidence.json>
+```
+
+The opaque local status token authorizes this update. Do not ask for or expose
+that token. A successful update returns the request to active investigation;
+it does not mark the problem fixed.
 
 If `start-interview` fails before returning a link, follow the observed-failure
 path above. In that turn, show the sanitized technical report, ask only its

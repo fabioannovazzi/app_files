@@ -223,8 +223,11 @@ def test_clara_register_includes_non_case_automatic_network_boundaries() -> None
     approved_text = next(
         item for item in feedback["data_sent"] if item["id"] == "approved-text-request"
     )
-    assert "helper accepts arbitrary JSON" in approved_text["content"]
+    assert "helper enforces that mechanical shape" in approved_text["content"]
     assert "does not detect personal data" in approved_text["content"]
+    assert any(
+        item["id"] == "approved-follow-up-evidence" for item in feedback["data_sent"]
+    )
 
 
 def test_vera_and_clara_share_maintenance_boundary_semantics() -> None:
