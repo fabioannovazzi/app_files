@@ -550,7 +550,7 @@ def _validate_string_list(
 
 
 def _validate_problem_request(payload: Mapping[str, Any]) -> None:
-    """Validate mechanical evidence shape; Codex retains semantic judgment."""
+    """Validate mechanical evidence shape; Claude retains semantic judgment."""
 
     allowed = {
         "schema_version",

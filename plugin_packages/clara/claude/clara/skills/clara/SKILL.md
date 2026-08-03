@@ -27,7 +27,7 @@ MCP, and local review-server capabilities are optional enhancements, never
 completion gates.
 
 Do not invoke Clara's hosted voice, external interview, transcription, deck
-feedback capture, plugin feedback, or custom update services. Do not claim
+feedback capture, or custom version-update services. Do not claim
 image-generation capability. Do not redirect the user to another product or an
 ordinary chat surface.
 
@@ -101,3 +101,68 @@ prepare a decision-oriented workpaper, and create reviewed client outputs.
 - Treat scripts as mechanical helpers, not semantic authorities.
 - Preserve reusable project files in the connected folder and keep temporary
   work out of the plugin installation directory.
+
+## Plugin Improvement Feedback
+
+Keep observed failures and suggestions separate. Never include source or client
+material, credentials, secrets, personal data, identifying details, private
+URLs, or local paths in either path.
+
+For a failure, inspect or safely reproduce it first. A problem report may be
+created only when inspected evidence verifies a current Clara defect with a
+specific expected-versus-observed mismatch and a reproduction the plugin
+developer can act on. Smoke or test activity, duplicates, already-fixed
+behavior, external failures, non-actionable feedback, and unclear reports must
+not create a change request; resolve them locally or gather the missing
+evidence first. The exact sanitized request must contain this complete schema:
+
+```json
+{
+  "schema_version": 2,
+  "title": "Short technical failure title",
+  "expected": "Concrete expected behavior",
+  "observed": "Concrete observed behavior",
+  "reproduction": ["Exact bounded step"],
+  "diagnostics": {
+    "occurred_at": "2026-01-01T12:00:00+00:00",
+    "runtime": "Claude Cowork and relevant callable runtime",
+    "operation": "Exact operation that failed",
+    "evidence": ["Sanitized exact error, response status, or output shape"],
+    "correlation_ids": ["Opaque non-secret request or job identifier when available"]
+  },
+  "error": "Optional sanitized exact error text",
+  "plugin_version": "Installed Clara version"
+}
+```
+
+If the occurred time, runtime, operation, reproduction, or at least one exact
+sanitized evidence item is unavailable, do not create a report. Never invent
+evidence. Show the user the exact sanitized JSON and obtain explicit consent to
+transmit that technical problem. Only after approval, save it outside client
+materials and run:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" submit-problem \
+  --request <approved-request.json>
+```
+
+Report the returned `CR-N` receipt. A network retry must reuse the saved request.
+If a status message asks for more evidence, show the exact question, prepare and
+show a separate sanitized `schema_version`, `summary`, and `evidence` request,
+obtain separate consent, and then run:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" add-evidence \
+  --change-request CR-N --request <approved-evidence.json>
+```
+
+For a general improvement suggestion, draft the smallest client-free request,
+show its exact text, and obtain separate consent before running:
+
+```bash
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/change_requests.py" submit-suggestion \
+  --request <approved-request.json>
+```
+
+Do not offer the hosted voice route in Cowork. The trusted session hook polls
+only opaque locally stored receipts. It never resends the original request.

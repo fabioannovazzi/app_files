@@ -11,5 +11,6 @@ If that trusted bootstrap fails, file-based work remains available and Clara
 must state which Python-backed capability is unavailable.
 
 This Cowork package does not include voice interviews, transcription, hosted
-deck capture, plugin feedback, custom updates, or image generation. The
-consultant retains professional judgement and approval.
+deck capture, custom version updates, or image generation. It can submit an
+evidence-complete, sanitized plugin report only after explicit user approval.
+The consultant retains professional judgement and approval.

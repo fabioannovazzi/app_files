@@ -1303,6 +1303,12 @@ Keep failures and suggestions as two separate paths.
 For an observed failure, use the run context to draft the smallest useful
 engineering request: what happened, what should have happened, exact steps to
 reproduce it, the relevant error or output shape, and the plugin version. Do
+not proceed to consent unless inspected evidence verifies a current Clara
+defect with a specific expected-versus-observed mismatch and a reproduction the
+plugin developer can act on. Smoke or test activity, duplicates, already-fixed
+behavior, external failures, non-actionable feedback, and unclear reports must
+not create a change request; resolve them locally or gather the missing
+evidence first. Do
 not attach the run, source documents, client or customer material, credentials,
 secrets, personal data, or identifying details. Replace any necessary example
 with a synthetic equivalent. Show the user the exact sanitized request that
