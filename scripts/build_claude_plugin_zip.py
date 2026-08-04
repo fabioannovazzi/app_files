@@ -1592,7 +1592,7 @@ def project_cowork_skill(
     ):
         text = _remove_optional_section(
             text,
-            "## Optional Codex-Only Luna Max Residual Review",
+            "## Codex-Only Luna Max Residual Resolution Funnel",
         )
     elif (
         relative_path
@@ -1650,7 +1650,7 @@ def _project_cowork_reference(
     ):
         text = _remove_optional_section(
             text,
-            "## Codex-Only Residual Semantic Advisory",
+            "## Codex-Only Residual Resolution Funnel",
         )
     if "Cowork execution note" not in text:
         text = f"{COWORK_REFERENCE_CONTRACT.strip()}\n\n{text.lstrip()}"
