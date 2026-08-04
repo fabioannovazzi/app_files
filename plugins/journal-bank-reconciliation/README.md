@@ -14,8 +14,9 @@ calls.
 Only one unambiguous, exact supported header contract qualifies automatically.
 Profiled dates, numeric positions, and fuzzy labels remain proposals and emit
 zero rows until a reviewer seals the chosen mapping against the content-addressed
-source receipt. Every run also requires a reviewed one-to-one relationship
-policy covering evidence reuse, currency, unit, entity/party perimeter,
+source receipt. Every run also requires a reviewed relationship policy whose
+shape may be one-to-one, one-to-many, many-to-one, or many-to-many, covering
+evidence reuse, currency, unit, entity/party perimeter,
 direction, amount tolerance, date window, and any defaults.
 Non-canonical source direction labels require a complete, source-bound value
 mapping to `positive`, `negative`, or `zero`; the plugin does not assume a
@@ -55,12 +56,12 @@ monetary columns and an explicit excluded list, including an empty list. Each
 potential column must be mapped to amount/debit/credit or explicitly excluded;
 an incomplete or stale disposition emits zero rows.
 
-Relationship receipts use `journal_bank.relationship.v2`. Matching evaluates
-conflict-free singleton batches rather than choosing row-by-row: reference
-waves run first, `amount_date_unique` labels the first amount/date singleton
-batch, and `amount_date_single` labels only later singleton waves created by
-earlier amount/date allocations. Competing singleton bank rows targeting the
-same journal row remain ambiguous regardless of source order.
+Relationship receipts use `journal_bank.relationship.v3`. Matching first
+evaluates conflict-free singleton reference batches, then mechanically closes
+permitted one-to-many or many-to-one groups when one shared stable reference
+defines the population and exact Decimal totals agree. Overlapping possible
+groups stay unmatched. Amount/date singleton waves follow; source row order
+never breaks a collision.
 
 Generic text-PDF movement extraction is deliberately disabled. PDF inspection
 can still retain narrowly classified balance, total, scalare, and conditions
@@ -82,7 +83,7 @@ preparation and binds every declared match and residual value to its exact CSV
 row/column and XLSX cell. Lineage uses the physical sheet and row from the
 source, even across preambles and blank rows.
 
-Reconciliation is passed only when the one-to-one ledger is exactly closed and
+Reconciliation is passed only when the non-reusing relationship ledger is exactly closed and
 no bank or journal rows remain unmatched. Reviewer acceptance cannot override a
 withheld reconciliation gate. Authorized review edits regenerate native output
 when needed and reseal artifact receipts; unexpected output changes block final
@@ -120,14 +121,17 @@ Users should invoke the plugin from Codex rather than running the scripts direct
 
 The Codex-only residual resolution pass keeps the main reconciliation chat on
 its existing model. After deterministic qualification and matching, Codex may
-use `semantic_review.py prepare` and the pinned `run-worker` launcher to send
-one bounded unresolved candidate packet to a separate Luna Max process. The
+use `semantic_review.py run-all` to advance through successive bounded
+unresolved candidate packets in separate Luna Max processes. The
 launcher is qualified only on its pinned macOS/Codex/Seatbelt environment,
 fails closed when those pins or its filesystem canaries do not match, and
 records a content-bound launch receipt. The bounded packet is transmitted to
 the OpenAI Codex service. Raw worker output remains advisory until validation;
 validated decisions update a sibling cumulative certainty funnel and remove
-movements meeting the human-selected threshold from its review queue. They
+movements meeting the human-selected threshold from its review queue and
+bank-side operational human-review payload. Unmatched journal rows remain
+available as strict evidence and candidate context without creating a second
+standalone queue. They
 cannot change canonical perfect matches, ledgers, receipts, gates, or report
 readiness.
 
@@ -137,7 +141,9 @@ Deterministic runs now emit `run_intake.json`, `review_payload.json`,
 `ui_decisions.json`, and `final_artifacts.json` in the reconciliation output
 folder.
 
-- `validate_journal_bank_review` validates the review payload.
+- `validate_journal_bank_review` validates the review payload. After semantic
+  resolution, pass `semantic-review/operational_review_payload.json`, not the
+  unreduced deterministic `review_payload.json`.
 - `render_journal_bank_review` renders the local widget
   `ui://widget/journal-bank-review.html`.
 - The widget focuses on unmatched bank rows, unmatched journal rows, matched
