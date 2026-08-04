@@ -134,77 +134,23 @@ CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
-CHATGPT_SPECIALIST_INSTRUCTIONS_FILE = "marketplace_skill_instructions.json"
+CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (
     "Do not stop merely because the current surface is ChatGPT."
 )
 REQUIRED_CODEX_RECOMMENDATION = "I work better with Codex because"
 CODEX_DOWNLOAD_URL = "https://developers.openai.com/codex/app#getting-started"
-CHATGPT_CODEX_RECOMMENDATION = f"""
-After the first substantive result, recommend Codex once, naturally and without
-interrupting the work:
-
-> {REQUIRED_CODEX_RECOMMENDATION} it lets me work directly with your folders,
-> preserve project files, run tools and checks, and create durable deliverables.
-> [Download the ChatGPT desktop app with Codex]({CODEX_DOWNLOAD_URL}).
-> We can continue here in ChatGPT now.
-
-Do not show this recommendation on startup, after a trivial response, or more
-than once in the same conversation. Installation is never a prerequisite for
-continuing the useful in-chat work.
-""".strip()
-CHATGPT_RUNTIME_CONTRACT = f"""
-{REQUIRED_CHATGPT_HEADING}
-
-{REQUIRED_CHATGPT_CONTINUATION} Use material supplied in the conversation and
-any callable connected-app tools to complete a useful lightweight version of
-the workflow. Analyze evidence, ask focused questions, draft or review the
-requested output, and clearly distinguish completed work from operations that
-require unavailable local tools. Do not claim that local scripts ran or that
-durable local artifacts were created when there is no local workspace.
-
-{CHATGPT_CODEX_RECOMMENDATION}
-""".strip()
-VERA_ITALIAN_CODEX_RECOMMENDATION = f"""
-
-For Vera, match the conversation language. When the user writes in Italian,
-use this Italian version instead of the English recommendation:
-
-> Lavoro meglio con Codex perché mi permette di lavorare direttamente nelle tue
-> cartelle, conservare i file del progetto, eseguire strumenti e controlli e
-> creare documenti e risultati che restano nel tuo spazio di lavoro.
-> [Scarica l'app desktop di ChatGPT con Codex]({CODEX_DOWNLOAD_URL}).
-> Possiamo continuare qui in ChatGPT.
-""".rstrip()
 
 
-def chatgpt_runtime_contract(plugin_name: str) -> str:
-    """Return the public ChatGPT runtime contract for one plugin."""
+@dataclass(frozen=True)
+class ChatGPTSkillCard:
+    """One user-visible Marketplace skill card."""
 
-    if plugin_name == "vera":
-        return CHATGPT_RUNTIME_CONTRACT + VERA_ITALIAN_CODEX_RECOMMENDATION
-    return CHATGPT_RUNTIME_CONTRACT
-
-
-def chatgpt_specialist_runtime_contract(
-    plugin_name: str,
-    runtime_note: str,
-) -> str:
-    """Return the cross-surface contract shown after specialist-specific copy."""
-
-    contract = f"""
-{REQUIRED_CHATGPT_HEADING}
-
-{REQUIRED_CHATGPT_CONTINUATION} {runtime_note.strip()}
-Do not claim that unavailable local operations ran or that durable local
-artifacts were created.
-
-{CHATGPT_CODEX_RECOMMENDATION}
-""".strip()
-    if plugin_name == "vera":
-        return contract + VERA_ITALIAN_CODEX_RECOMMENDATION
-    return contract
+    display_name: str
+    short_description: str
+    default_prompt: str
+    instructions: str
 
 
 @dataclass(frozen=True)
@@ -1020,62 +966,50 @@ def has_chatgpt_runtime_contract(text: str) -> bool:
     )
 
 
-def project_chatgpt_runtime_skill(content: bytes, *, plugin_name: str) -> bytes:
-    """Append the lightweight ChatGPT runtime contract to a public skill."""
-
-    text = content.decode("utf-8")
-    skill_body_start(text)
-    if has_chatgpt_runtime_contract(text):
-        return content
-    if (
-        REQUIRED_CHATGPT_HEADING in text
-        or REQUIRED_CHATGPT_CONTINUATION in text
-        or REQUIRED_CODEX_RECOMMENDATION in text
-    ):
-        raise ValueError(
-            "Skill Markdown has an incomplete or misplaced ChatGPT runtime contract"
-        )
-    projected = text.rstrip() + "\n\n" + chatgpt_runtime_contract(plugin_name) + "\n"
-    return projected.encode("utf-8")
-
-
-def project_chatgpt_specialist_skill(
+def project_chatgpt_card_skill(
     content: bytes,
     *,
     instructions: str,
 ) -> bytes:
-    """Project concise, source-owned instructions for one public specialist."""
+    """Project concise, source-owned instructions for one Marketplace card."""
 
     text = content.decode("utf-8")
     body_index = skill_body_start(text)
     if not text[body_index:].strip():
-        raise ValueError("Specialist skill must contain workflow instructions")
+        raise ValueError("Marketplace skill must contain workflow instructions")
     if not instructions.strip():
-        raise ValueError("Specialist Marketplace instructions must not be empty")
+        raise ValueError("Marketplace card instructions must not be empty")
     projected = text[:body_index] + "\n" + instructions.strip() + "\n"
     return projected.encode("utf-8")
 
 
-def load_chatgpt_specialist_instructions(
+def chatgpt_skill_interface(card: ChatGPTSkillCard) -> bytes:
+    """Return one deterministic OpenAI skill-interface file."""
+
+    lines = [
+        "interface:",
+        f"  display_name: {json.dumps(card.display_name, ensure_ascii=False)}",
+        "  short_description: "
+        f"{json.dumps(card.short_description, ensure_ascii=False)}",
+        f"  default_prompt: {json.dumps(card.default_prompt, ensure_ascii=False)}",
+    ]
+    return ("\n".join(lines) + "\n").encode("utf-8")
+
+
+def load_chatgpt_skill_cards(
     content: bytes,
     *,
     plugin_name: str,
     expected_skills: set[str],
-) -> dict[str, str]:
-    """Load complete, source-owned Marketplace copy for specialist cards."""
+) -> dict[str, ChatGPTSkillCard]:
+    """Load complete, source-owned Marketplace card copy and metadata."""
 
     payload = json.loads(content.decode("utf-8"))
-    if not isinstance(payload, dict) or payload.get("schema_version") != 1:
+    if not isinstance(payload, dict) or payload.get("schema_version") != 2:
         raise ValueError(
-            f"{plugin_name}: {CHATGPT_SPECIALIST_INSTRUCTIONS_FILE} "
-            "must use schema_version 1"
+            f"{plugin_name}: {CHATGPT_SKILL_CARDS_FILE} must use schema_version 2"
         )
-    runtime_note = payload.get("runtime_note")
     skills = payload.get("skills")
-    if not isinstance(runtime_note, str) or not runtime_note.strip():
-        raise ValueError(
-            f"{plugin_name}: Marketplace runtime_note must be a non-empty string"
-        )
     if not isinstance(skills, dict):
         raise ValueError(f"{plugin_name}: Marketplace skills must be an object")
     actual_skills = set(skills)
@@ -1086,19 +1020,44 @@ def load_chatgpt_specialist_instructions(
             f"{plugin_name}: Marketplace instruction coverage differs; "
             f"missing={missing}, unexpected={unexpected}"
         )
-    projected: dict[str, str] = {}
-    for skill_name, skill_instructions in skills.items():
-        if not isinstance(skill_instructions, str) or not skill_instructions.strip():
+    required_fields = {
+        "display_name",
+        "short_description",
+        "default_prompt",
+        "instructions",
+    }
+    cards: dict[str, ChatGPTSkillCard] = {}
+    for skill_name, raw_card in skills.items():
+        if not isinstance(raw_card, dict) or set(raw_card) != required_fields:
             raise ValueError(
-                f"{plugin_name}:{skill_name} Marketplace instructions "
-                "must be a non-empty string"
+                f"{plugin_name}:{skill_name} Marketplace card must define exactly "
+                f"{sorted(required_fields)}"
             )
-        projected[skill_name] = (
-            skill_instructions.strip()
-            + "\n\n"
-            + (chatgpt_specialist_runtime_contract(plugin_name, runtime_note))
+        values = {field: raw_card[field] for field in sorted(required_fields)}
+        if not all(
+            isinstance(value, str) and value.strip() for value in values.values()
+        ):
+            raise ValueError(
+                f"{plugin_name}:{skill_name} Marketplace card fields "
+                "must be non-empty strings"
+            )
+        if f"${skill_name}" not in raw_card["default_prompt"]:
+            raise ValueError(
+                f"{plugin_name}:{skill_name} default_prompt must invoke "
+                f"${skill_name}"
+            )
+        instructions = raw_card["instructions"].strip()
+        if "\n\n" in instructions or instructions.startswith("#"):
+            raise ValueError(
+                f"{plugin_name}:{skill_name} instructions must be one plain paragraph"
+            )
+        cards[skill_name] = ChatGPTSkillCard(
+            display_name=raw_card["display_name"].strip(),
+            short_description=raw_card["short_description"].strip(),
+            default_prompt=raw_card["default_prompt"].strip(),
+            instructions=instructions,
         )
-    return projected
+    return cards
 
 
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
@@ -1109,28 +1068,23 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     plugin_name = package.plugin_names[0]
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
     packaged_entries = expected_zip_entries(package)
-    specialist_instructions: dict[str, str] = {}
+    skill_cards: dict[str, ChatGPTSkillCard] = {}
     if plugin_name in CROSS_SURFACE_PLUGINS:
-        expected_specialists = {
+        expected_cards = {
             parts[1]
             for packaged_name in packaged_entries
             if packaged_name.startswith(prefix)
             for parts in [packaged_name.removeprefix(prefix).split("/")]
-            if len(parts) == 3
-            and parts[0] == "skills"
-            and parts[2] == "SKILL.md"
-            and parts[1] != plugin_name
+            if len(parts) == 3 and parts[0] == "skills" and parts[2] == "SKILL.md"
         }
-        instruction_path = f"{prefix}{CHATGPT_SPECIALIST_INSTRUCTIONS_FILE}"
+        instruction_path = f"{prefix}{CHATGPT_SKILL_CARDS_FILE}"
         instruction_content = packaged_entries.get(instruction_path)
         if instruction_content is None:
-            raise ValueError(
-                f"{plugin_name}: missing {CHATGPT_SPECIALIST_INSTRUCTIONS_FILE}"
-            )
-        specialist_instructions = load_chatgpt_specialist_instructions(
+            raise ValueError(f"{plugin_name}: missing {CHATGPT_SKILL_CARDS_FILE}")
+        skill_cards = load_chatgpt_skill_cards(
             instruction_content,
             plugin_name=plugin_name,
-            expected_skills=expected_specialists,
+            expected_skills=expected_cards,
         )
     entries: dict[str, bytes] = {"LICENSE": LICENSE_PATH.read_bytes()}
     for packaged_name, content in packaged_entries.items():
@@ -1138,7 +1092,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         name = packaged_name.removeprefix(prefix)
         path_parts = name.split("/")
-        if name == CHATGPT_SPECIALIST_INSTRUCTIONS_FILE:
+        if name == CHATGPT_SKILL_CARDS_FILE:
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
@@ -1157,29 +1111,22 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             content = project_chatgpt_manifest(content)
         elif name.endswith("/.codex-plugin/plugin.json"):
             content = project_chatgpt_component_manifest(content)
-        main_skill_name = f"skills/{plugin_name}/SKILL.md"
-        if plugin_name in CROSS_SURFACE_PLUGINS and name == main_skill_name:
-            content = project_chatgpt_runtime_skill(
-                content,
-                plugin_name=plugin_name,
-            )
-        elif (
+        if (
             plugin_name in CROSS_SURFACE_PLUGINS
             and len(path_parts) == 3
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
         ):
             skill_name = path_parts[1]
-            content = project_chatgpt_specialist_skill(
+            content = project_chatgpt_card_skill(
                 content,
-                instructions=specialist_instructions[skill_name],
-            )
-        elif plugin_name in CROSS_SURFACE_PLUGINS and name.endswith("/SKILL.md"):
-            content = project_chatgpt_runtime_skill(
-                content,
-                plugin_name=plugin_name,
+                instructions=skill_cards[skill_name].instructions,
             )
         entries[name] = content
+    for skill_name, card in skill_cards.items():
+        entries[f"skills/{skill_name}/agents/openai.yaml"] = chatgpt_skill_interface(
+            card
+        )
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
     return dict(sorted(entries.items()))
