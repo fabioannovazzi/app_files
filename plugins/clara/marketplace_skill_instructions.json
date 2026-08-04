@@ -1,15 +1,65 @@
 {
-  "schema_version": 1,
-  "runtime_note": "In ChatGPT, Clara works with the files and connected sources available in this conversation and clearly marks any local step she cannot run here. In Codex, Clara can execute the full local workflow and create durable, reviewable files in your workspace.",
+  "schema_version": 2,
   "skills": {
-    "attribute-reporting": "Attach the retailer product dataset and any existing reviewed attribute mapping. Clara maps products to the category taxonomy, preserves the agreed recent-versus-rest or best-seller-versus-other comparison, and returns the attribute findings, exceptions, and a reviewable report.",
-    "brand-fit": "Provide the completed, checked Retailer Signals analysis, evidence of the brand's current presence at that retailer, and the brand-owned catalogue. Clara compares all three, separates current-presence gaps from catalogue opportunities, and returns an evidence-linked Brand Fit assessment for review.",
-    "claim-basis-map": "Attach the deck, its source materials, and the generation-time claim snapshot if one exists. Clara links each slide claim to a source, calculation, reasoning, or unsupported status and returns a readable claims map plus any text drift that requires refresh.",
-    "deck-correction": "Attach the current PPTX or Clara HTML deck and the transcript, notes, recording, or comments containing the requested changes. Clara translates the feedback into an evidence-linked change ledger, protects untouched content, and returns a revised-copy plan and verification findings; when editing tools are available, she applies and checks the changes on a copy.",
-    "html-deck": "Provide the source documents or data, intended audience, and decision the presentation must support. Clara develops a source-bound storyline and slide plan, keeps claims and numbers traceable, and returns a reviewable standalone HTML deck when file tools are available.",
-    "interview": "Describe the research objective, participant role, language, and either the approved campaign or a scoped one-off brief. Clara prepares the interview brief; when hosted interview tools are available, she creates the expiring participant link and returns the completed evidence bundle with its quality review.",
-    "privacy-surface-review": "Identify the Clara workflow or hosted service being added or changed and provide the relevant source files. Clara inventories model-readable data, external boundaries, accounts, retention and controls, then returns the updated privacy record and validation findings for release review.",
-    "reporting-engine": "Attach the CSV, Excel, or Parquet dataset and state the business question or decision it should support. Clara profiles the fields, separates candidate metrics, dimensions and periods from reviewed meanings, checks chart compatibility, and returns a source-backed semantic and reporting plan with ambiguities clearly marked.",
-    "transcribe": "Provide the recording—or say that you want to start a voice capture—and identify the target case or folder and any known speakers. Clara selects the capture or import path; when Hosted Voice is available, she produces the transcript, supports speaker attribution, and returns a reviewed evidence package with uncertainties kept separate from advice."
+    "clara": {
+      "display_name": "Clara",
+      "short_description": "Turn evidence into reviewable advisory work",
+      "default_prompt": "Use $clara to organize these materials, identify gaps, and prepare a reviewable analysis or deliverable.",
+      "instructions": "Provide the case materials and describe the decision or deliverable you need. Clara organizes the evidence, selects the appropriate specialist workflow, and returns a reviewable analysis, report, or presentation with sources, assumptions, and unresolved questions kept visible."
+    },
+    "attribute-reporting": {
+      "display_name": "Attribute Reporting",
+      "short_description": "Compare product attributes across retailer cohorts",
+      "default_prompt": "Use $attribute-reporting to compare the product attributes in this retailer dataset and show the differences between the selected cohorts.",
+      "instructions": "Attach the retailer product dataset and any reviewed attribute mapping, then name the cohorts to compare. Clara maps products to the agreed category taxonomy and returns the attribute findings, exceptions, and a reviewable report."
+    },
+    "brand-fit": {
+      "display_name": "Brand Fit",
+      "short_description": "Find retailer opportunities for a brand catalogue",
+      "default_prompt": "Use $brand-fit to compare this brand catalogue with the retailer evidence and identify the strongest assortment opportunities.",
+      "instructions": "Provide the retailer analysis, evidence of the brand's current presence, and the brand-owned catalogue. Clara distinguishes current assortment gaps from new catalogue opportunities and returns an evidence-linked Brand Fit assessment."
+    },
+    "claim-basis-map": {
+      "display_name": "Claim Basis Map",
+      "short_description": "Link presentation claims to their evidence",
+      "default_prompt": "Use $claim-basis-map to check the claims in this presentation against its source materials and flag anything unsupported or out of date.",
+      "instructions": "Attach the presentation and its source materials. Clara links each slide claim to a source, calculation, reasoning step, or unsupported status and returns a readable claims map with any text that needs correction."
+    },
+    "deck-correction": {
+      "display_name": "Deck Correction",
+      "short_description": "Turn feedback into verified presentation changes",
+      "default_prompt": "Use $deck-correction to apply this feedback to the presentation while preserving content that was not challenged.",
+      "instructions": "Attach the current presentation and the transcript, notes, recording, or comments containing the requested changes. Clara turns the feedback into an evidence-linked change ledger, protects untouched content, and returns a revised presentation with verification findings when editing tools are available."
+    },
+    "html-deck": {
+      "display_name": "HTML Presentation",
+      "short_description": "Build a source-backed interactive presentation",
+      "default_prompt": "Use $html-deck to turn these source materials into a clear HTML presentation for this audience and decision.",
+      "instructions": "Provide the source documents or data, intended audience, and decision the presentation must support. Clara develops a source-bound storyline, keeps claims and numbers traceable, and returns a reviewable standalone HTML presentation when file tools are available."
+    },
+    "interview": {
+      "display_name": "Interview",
+      "short_description": "Prepare and review a structured interview",
+      "default_prompt": "Use $interview to prepare an interview for this research objective and participant, then organize the resulting evidence.",
+      "instructions": "Describe the research objective, participant role, language, and approved brief. Clara prepares the interview; when hosted interview tools are available, she creates the participant link and returns the completed transcript and evidence bundle with a quality review."
+    },
+    "privacy-surface-review": {
+      "display_name": "Privacy Surface Review",
+      "short_description": "Review how a Clara workflow handles data",
+      "default_prompt": "Use $privacy-surface-review to review the data boundaries, retention, accounts, and controls of this Clara workflow change.",
+      "instructions": "Identify the Clara workflow or hosted service being added or changed and provide the relevant source files. Clara inventories model-readable data, external boundaries, accounts, retention, and controls, then returns the updated privacy record and validation findings."
+    },
+    "reporting-engine": {
+      "display_name": "Reporting Engine",
+      "short_description": "Turn business data into checked reporting",
+      "default_prompt": "Use $reporting-engine to analyze this Excel file and prepare a clear chart and reporting plan for the business question it should answer.",
+      "instructions": "Attach the Excel file and state the business question or decision it should support. Clara checks the fields, calculations, metrics, dimensions, and chart choices, then returns a source-backed reporting plan with ambiguities clearly marked."
+    },
+    "transcribe": {
+      "display_name": "Transcribe",
+      "short_description": "Turn a recording into reviewed evidence",
+      "default_prompt": "Use $transcribe to transcribe this recording, identify the speakers where possible, and prepare a reviewed evidence package.",
+      "instructions": "Provide the recording, identify the target case or folder, and name any known speakers. Clara produces the transcript, supports speaker attribution, and returns a reviewed evidence package with uncertain passages kept separate from advice."
+    }
   }
 }

@@ -14,7 +14,7 @@ import pytest
 __all__ = [
     "test_local_package_exposes_codex_desktop_runtime_contract",
     "test_extracted_local_package_dependency_checker_starts",
-    "test_public_chatgpt_skill_projection_continues_with_codex_recommendation",
+    "test_public_chatgpt_skill_projection_hides_internal_runtime_copy",
 ]
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -127,7 +127,7 @@ def test_extracted_local_package_dependency_checker_starts(
 
 
 @pytest.mark.parametrize("plugin_name", PLUGIN_NAMES)
-def test_public_chatgpt_skill_projection_continues_with_codex_recommendation(
+def test_public_chatgpt_skill_projection_hides_internal_runtime_copy(
     plugin_name: str,
 ) -> None:
     builder = load_builder()
@@ -141,16 +141,17 @@ def test_public_chatgpt_skill_projection_continues_with_codex_recommendation(
         if name.endswith("/SKILL.md")
     }
     assert public_skills
-    assert all(
-        builder.has_chatgpt_runtime_contract(content)
-        for content in public_skills.values()
-    )
-    assert all(
-        "We can continue here in ChatGPT now." in content
-        for content in public_skills.values()
-    )
-    if plugin_name == "vera":
-        assert all(
-            "Possiamo continuare qui in ChatGPT." in content
-            for content in public_skills.values()
-        )
+    top_level_skills = {
+        name: content
+        for name, content in public_skills.items()
+        if name.startswith("skills/") and name.count("/") == 2
+    }
+    assert top_level_skills
+    for name, content in top_level_skills.items():
+        body = content[builder.skill_body_start(content) :].strip()
+        assert builder.REQUIRED_CHATGPT_HEADING not in body, name
+        assert builder.REQUIRED_CODEX_RECOMMENDATION not in body, name
+        assert "Lavoro meglio con Codex perché" not in body, name
+        assert builder.CODEX_DOWNLOAD_URL not in body, name
+        skill_name = name.split("/")[1]
+        assert f"skills/{skill_name}/agents/openai.yaml" in entries
