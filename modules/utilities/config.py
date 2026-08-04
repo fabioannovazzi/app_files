@@ -19,10 +19,8 @@ def select_provider(task):
     launchValidationReviewQuery = namingParams["launchValidationReviewQuery"]
     readImageTableQuery = namingParams["readImageTableQuery"]
     readImageTableStructureQuery = namingParams["readImageTableStructureQuery"]
-    quickRewriteQuery = namingParams["quickRewriteQuery"]
     llmFallbackQuery = namingParams["llmFallbackQuery"]
     randomMovementsQuery = namingParams["randomMovementsQuery"]
-    checkEntriesQuery = namingParams["checkEntriesQuery"]
     inferColumnQuery = namingParams["inferColumnQuery"]
     attributeDiscoveryQuery = namingParams["attributeDiscoveryQuery"]
     attributeScoringQuery = namingParams["attributeScoringQuery"]
@@ -73,7 +71,6 @@ def select_provider(task):
             model: gpt5ThinkingMini,
             batchMode: True,
         },
-        checkEntriesQuery: {provider: openai, model: gpt5ThinkingMini, batchMode: True},
         inferColumnQuery: {provider: openai, model: gpt5ThinkingMini, batchMode: False},
         llmFallbackQuery: {provider: openai, model: gpt54Mini, batchMode: False},
         merchantBrandWebsiteLookup: {
@@ -136,7 +133,6 @@ def select_provider(task):
             model: gpt54Mini,
             batchMode: True,
         },
-        quickRewriteQuery: {provider: openai, model: gpt5Thinking, batchMode: False},
         randomMovementsQuery: {provider: openai, model: gpt5Thinking, batchMode: False},
         readImageTableQuery: {
             provider: openai,
@@ -215,7 +211,6 @@ def get_naming_params():
         "getLinesTabLabel": "Get PDPs",
         "hierarchyTab": "hierarchyTab",
         "getLinesTab": "getLinesTab",
-        "checkEntriesQuery": "checkEntriesQuery",
         "randomMovementsQuery": "randomMovementsQuery",
         "readImageTableQuery": "readImageTableQuery",
         "readImageTableStructureQuery": "readImageTableStructureQuery",
@@ -230,7 +225,6 @@ def get_naming_params():
         "slideOcrVisualCorrectionQuery": "slideOcrVisualCorrectionQuery",
         "slidesChartTypeQuery": "slidesChartTypeQuery",
         "slidesPptxRepairQuery": "slidesPptxRepairQuery",
-        "quickRewriteQuery": "quickRewriteQuery",
         "inferColumnQuery": "inferColumnQuery",
         "attributeDiscoveryQuery": "attributeDiscoveryQuery",
         "attributeScoringQuery": "attributeScoringQuery",
