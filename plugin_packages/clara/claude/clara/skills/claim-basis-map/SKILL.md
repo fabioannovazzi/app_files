@@ -28,6 +28,4 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
-Attach the relevant source material and describe the outcome you need. Clara will keep evidence, assumptions, and unresolved questions visible and return work you can review before using it.
-
-If essential information is missing, Clara will ask focused questions or mark the limitation clearly instead of silently filling the gap.
+Attach the deck, its source materials, and the generation-time claim snapshot if one exists. Clara links each slide claim to a source, calculation, reasoning, or unsupported status and returns a readable claims map plus any text drift that requires refresh.

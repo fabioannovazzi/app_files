@@ -147,9 +147,9 @@ withholds the complete source.
 
 Every run requires a `journal_bank_relationship` reviewed decision receipt,
 sealed with `build_relationship_review_receipt` against the current bank and
-journal source artifact references. The supported relationship shape is
-`one_to_one`, evidence reuse is disabled, and currency and unit equality are
-mandatory. The policy also records:
+journal source artifact references. The supported relationship shapes are
+`one_to_one`, `one_to_many`, `many_to_one`, and `many_to_many`; evidence reuse
+is disabled, and currency and unit equality are mandatory. The policy also records:
 
 - whether entity and party must agree;
 - `absolute_amount`, `same_sign`, or `opposite_sign` direction treatment;
@@ -162,9 +162,9 @@ Relationship tolerance accepts canonical decimal text, `Decimal`, or integer
 values and is persisted as canonical Decimal text. Floats, booleans,
 localized/noncanonical text, non-finite values, and negative values are
 rejected rather than guessed.
-The relationship adapter is `journal_bank.relationship.v2`, version `2`.
-Version 2 seals the batch-safe, order-independent singleton allocation
-semantics below. Receipts from relationship adapter v1 are stale and must be
+The relationship adapter is `journal_bank.relationship.v3`, version `3`.
+Version 3 seals both batch-safe singleton allocation and conserved grouped
+reference allocation. Older relationship receipts are stale and must be
 reviewed again.
 
 ## Matching Stages
@@ -178,10 +178,16 @@ batch is accepted together; source row order never breaks target collisions.
    reference or movement token and amount inside the exact tolerance. Date
    evidence is optional for this explicit-identifier stage. Conflict-free
    reference waves repeat until no further safe reference singleton remains.
-2. `amount_date_unique`: the first conflict-free singleton amount/date batch
+2. `reference_group`: one bank movement to many journal rows, or many bank
+   movements to one journal row, only when a shared stable reference defines
+   the complete group, the reviewed shape permits it, every row is inside the
+   reviewed perimeter, and exact Decimal group totals agree within tolerance.
+   Any row participating in more than one possible group keeps all overlapping
+   groups unmatched.
+3. `amount_date_unique`: the first conflict-free singleton amount/date batch
    after reference matching is exhausted. Both rows require actual dates inside
    the configured date window.
-3. `amount_date_single`: later conflict-free singleton waves containing only
+4. `amount_date_single`: later conflict-free singleton waves containing only
    candidates that became singleton after an earlier amount/date batch removed
    other candidates. Later waves repeat until no safe singleton remains.
 
@@ -237,8 +243,9 @@ Inspection and reconciliation bind source bytes to content-addressed
 `input_receipts.json` records and `source_qualifications.json`. Reviewed mapping
 and relationship decisions are collected in `reviewed_decisions.json`.
 `lineage.json` points every emitted transaction to the physical workbook sheet
-and row (or physical CSV row). `relationship_ledger.json` records the exact
-one-to-one allocations and residuals. `relationship_residuals.csv` projects
+and row (or physical CSV row). `relationship_ledger.json` records exact
+non-reusing allocations and residuals, including permitted one-to-many and
+many-to-one reference groups. `relationship_residuals.csv` projects
 the record, allocated, and residual components for every bank and journal row.
 `material_value_ledger.json` freshly replays matching and the relationship
 ledger, then binds every declared match and residual field to the exact

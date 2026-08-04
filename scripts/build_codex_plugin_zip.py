@@ -134,22 +134,14 @@ CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
+CHATGPT_SPECIALIST_INSTRUCTIONS_FILE = "marketplace_skill_instructions.json"
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (
     "Do not stop merely because the current surface is ChatGPT."
 )
 REQUIRED_CODEX_RECOMMENDATION = "I work better with Codex because"
 CODEX_DOWNLOAD_URL = "https://developers.openai.com/codex/app#getting-started"
-CHATGPT_RUNTIME_CONTRACT = f"""
-{REQUIRED_CHATGPT_HEADING}
-
-{REQUIRED_CHATGPT_CONTINUATION} Use material supplied in the conversation and
-any callable connected-app tools to complete a useful lightweight version of
-the workflow. Analyze evidence, ask focused questions, draft or review the
-requested output, and clearly distinguish completed work from operations that
-require unavailable local tools. Do not claim that local scripts ran or that
-durable local artifacts were created when there is no local workspace.
-
+CHATGPT_CODEX_RECOMMENDATION = f"""
 After the first substantive result, recommend Codex once, naturally and without
 interrupting the work:
 
@@ -162,6 +154,18 @@ Do not show this recommendation on startup, after a trivial response, or more
 than once in the same conversation. Installation is never a prerequisite for
 continuing the useful in-chat work.
 """.strip()
+CHATGPT_RUNTIME_CONTRACT = f"""
+{REQUIRED_CHATGPT_HEADING}
+
+{REQUIRED_CHATGPT_CONTINUATION} Use material supplied in the conversation and
+any callable connected-app tools to complete a useful lightweight version of
+the workflow. Analyze evidence, ask focused questions, draft or review the
+requested output, and clearly distinguish completed work from operations that
+require unavailable local tools. Do not claim that local scripts ran or that
+durable local artifacts were created when there is no local workspace.
+
+{CHATGPT_CODEX_RECOMMENDATION}
+""".strip()
 VERA_ITALIAN_CODEX_RECOMMENDATION = f"""
 
 For Vera, match the conversation language. When the user writes in Italian,
@@ -173,22 +177,6 @@ use this Italian version instead of the English recommendation:
 > [Scarica l'app desktop di ChatGPT con Codex]({CODEX_DOWNLOAD_URL}).
 > Possiamo continuare qui in ChatGPT.
 """.rstrip()
-CHATGPT_SPECIALIST_INTRO = {
-    "clara": (
-        "Attach the relevant source material and describe the outcome you need. "
-        "Clara will keep evidence, assumptions, and unresolved questions visible "
-        "and return work you can review before using it.\n\n"
-        "If essential information is missing, Clara will ask focused questions or "
-        "mark the limitation clearly instead of silently filling the gap."
-    ),
-    "vera": (
-        "Allega i documenti pertinenti e descrivi il risultato che ti serve. Vera "
-        "manterrà visibili evidenze, assunzioni e questioni irrisolte e preparerà "
-        "un risultato verificabile prima dell’uso professionale.\n\n"
-        "Se mancano informazioni essenziali, Vera farà domande mirate o indicherà "
-        "chiaramente il limite senza colmare il vuoto in modo implicito."
-    ),
-}
 
 
 def chatgpt_runtime_contract(plugin_name: str) -> str:
@@ -197,6 +185,26 @@ def chatgpt_runtime_contract(plugin_name: str) -> str:
     if plugin_name == "vera":
         return CHATGPT_RUNTIME_CONTRACT + VERA_ITALIAN_CODEX_RECOMMENDATION
     return CHATGPT_RUNTIME_CONTRACT
+
+
+def chatgpt_specialist_runtime_contract(
+    plugin_name: str,
+    runtime_note: str,
+) -> str:
+    """Return the cross-surface contract shown after specialist-specific copy."""
+
+    contract = f"""
+{REQUIRED_CHATGPT_HEADING}
+
+{REQUIRED_CHATGPT_CONTINUATION} {runtime_note.strip()}
+Do not claim that unavailable local operations ran or that durable local
+artifacts were created.
+
+{CHATGPT_CODEX_RECOMMENDATION}
+""".strip()
+    if plugin_name == "vera":
+        return contract + VERA_ITALIAN_CODEX_RECOMMENDATION
+    return contract
 
 
 @dataclass(frozen=True)
@@ -991,17 +999,20 @@ def skill_body_start(text: str) -> int:
 
 
 def has_chatgpt_runtime_contract(text: str) -> bool:
-    """Return whether the first skill body section defines ChatGPT continuation."""
+    """Return whether a skill body defines the ChatGPT continuation contract."""
 
     try:
         body_index = skill_body_start(text)
     except ValueError:
         return False
     body = text[body_index:].lstrip("\n")
-    if not body.startswith(REQUIRED_CHATGPT_HEADING):
+    heading_index = body.find(REQUIRED_CHATGPT_HEADING)
+    if heading_index < 0:
         return False
-    next_section = body.find("\n## ", len(REQUIRED_CHATGPT_HEADING))
-    runtime_section = body if next_section < 0 else body[:next_section]
+    next_section = body.find("\n## ", heading_index + len(REQUIRED_CHATGPT_HEADING))
+    runtime_section = (
+        body[heading_index:] if next_section < 0 else body[heading_index:next_section]
+    )
     return (
         REQUIRED_CHATGPT_CONTINUATION in runtime_section
         and REQUIRED_CODEX_RECOMMENDATION in runtime_section
@@ -1010,10 +1021,10 @@ def has_chatgpt_runtime_contract(text: str) -> bool:
 
 
 def project_chatgpt_runtime_skill(content: bytes, *, plugin_name: str) -> bytes:
-    """Add the lightweight ChatGPT runtime contract to a public skill."""
+    """Append the lightweight ChatGPT runtime contract to a public skill."""
 
     text = content.decode("utf-8")
-    body_index = skill_body_start(text)
+    skill_body_start(text)
     if has_chatgpt_runtime_contract(text):
         return content
     if (
@@ -1024,26 +1035,70 @@ def project_chatgpt_runtime_skill(content: bytes, *, plugin_name: str) -> bytes:
         raise ValueError(
             "Skill Markdown has an incomplete or misplaced ChatGPT runtime contract"
         )
-    projected = (
-        text[:body_index]
-        + "\n"
-        + chatgpt_runtime_contract(plugin_name)
-        + "\n\n"
-        + text[body_index:].lstrip("\n")
-    )
+    projected = text.rstrip() + "\n\n" + chatgpt_runtime_contract(plugin_name) + "\n"
     return projected.encode("utf-8")
 
 
-def project_chatgpt_specialist_skill(content: bytes, *, plugin_name: str) -> bytes:
-    """Replace local specialist mechanics with clean in-chat guidance."""
+def project_chatgpt_specialist_skill(
+    content: bytes,
+    *,
+    instructions: str,
+) -> bytes:
+    """Project concise, source-owned instructions for one public specialist."""
 
     text = content.decode("utf-8")
     body_index = skill_body_start(text)
     if not text[body_index:].strip():
         raise ValueError("Specialist skill must contain workflow instructions")
-    intro = CHATGPT_SPECIALIST_INTRO[plugin_name]
-    projected = text[:body_index] + "\n" + intro + "\n"
+    if not instructions.strip():
+        raise ValueError("Specialist Marketplace instructions must not be empty")
+    projected = text[:body_index] + "\n" + instructions.strip() + "\n"
     return projected.encode("utf-8")
+
+
+def load_chatgpt_specialist_instructions(
+    content: bytes,
+    *,
+    plugin_name: str,
+    expected_skills: set[str],
+) -> dict[str, str]:
+    """Load complete, source-owned Marketplace copy for specialist cards."""
+
+    payload = json.loads(content.decode("utf-8"))
+    if not isinstance(payload, dict) or payload.get("schema_version") != 1:
+        raise ValueError(
+            f"{plugin_name}: {CHATGPT_SPECIALIST_INSTRUCTIONS_FILE} "
+            "must use schema_version 1"
+        )
+    runtime_note = payload.get("runtime_note")
+    skills = payload.get("skills")
+    if not isinstance(runtime_note, str) or not runtime_note.strip():
+        raise ValueError(
+            f"{plugin_name}: Marketplace runtime_note must be a non-empty string"
+        )
+    if not isinstance(skills, dict):
+        raise ValueError(f"{plugin_name}: Marketplace skills must be an object")
+    actual_skills = set(skills)
+    if actual_skills != expected_skills:
+        missing = sorted(expected_skills - actual_skills)
+        unexpected = sorted(actual_skills - expected_skills)
+        raise ValueError(
+            f"{plugin_name}: Marketplace instruction coverage differs; "
+            f"missing={missing}, unexpected={unexpected}"
+        )
+    projected: dict[str, str] = {}
+    for skill_name, skill_instructions in skills.items():
+        if not isinstance(skill_instructions, str) or not skill_instructions.strip():
+            raise ValueError(
+                f"{plugin_name}:{skill_name} Marketplace instructions "
+                "must be a non-empty string"
+            )
+        projected[skill_name] = (
+            skill_instructions.strip()
+            + "\n\n"
+            + (chatgpt_specialist_runtime_contract(plugin_name, runtime_note))
+        )
+    return projected
 
 
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
@@ -1054,12 +1109,37 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     plugin_name = package.plugin_names[0]
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
     packaged_entries = expected_zip_entries(package)
+    specialist_instructions: dict[str, str] = {}
+    if plugin_name in CROSS_SURFACE_PLUGINS:
+        expected_specialists = {
+            parts[1]
+            for packaged_name in packaged_entries
+            if packaged_name.startswith(prefix)
+            for parts in [packaged_name.removeprefix(prefix).split("/")]
+            if len(parts) == 3
+            and parts[0] == "skills"
+            and parts[2] == "SKILL.md"
+            and parts[1] != plugin_name
+        }
+        instruction_path = f"{prefix}{CHATGPT_SPECIALIST_INSTRUCTIONS_FILE}"
+        instruction_content = packaged_entries.get(instruction_path)
+        if instruction_content is None:
+            raise ValueError(
+                f"{plugin_name}: missing {CHATGPT_SPECIALIST_INSTRUCTIONS_FILE}"
+            )
+        specialist_instructions = load_chatgpt_specialist_instructions(
+            instruction_content,
+            plugin_name=plugin_name,
+            expected_skills=expected_specialists,
+        )
     entries: dict[str, bytes] = {"LICENSE": LICENSE_PATH.read_bytes()}
     for packaged_name, content in packaged_entries.items():
         if not packaged_name.startswith(prefix):
             continue
         name = packaged_name.removeprefix(prefix)
         path_parts = name.split("/")
+        if name == CHATGPT_SPECIALIST_INSTRUCTIONS_FILE:
+            continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if "mcp" in path_parts:
@@ -1085,10 +1165,17 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             )
         elif (
             plugin_name in CROSS_SURFACE_PLUGINS
-            and name.startswith("skills/")
-            and name.endswith("/SKILL.md")
+            and len(path_parts) == 3
+            and path_parts[0] == "skills"
+            and path_parts[2] == "SKILL.md"
         ):
+            skill_name = path_parts[1]
             content = project_chatgpt_specialist_skill(
+                content,
+                instructions=specialist_instructions[skill_name],
+            )
+        elif plugin_name in CROSS_SURFACE_PLUGINS and name.endswith("/SKILL.md"):
+            content = project_chatgpt_runtime_skill(
                 content,
                 plugin_name=plugin_name,
             )

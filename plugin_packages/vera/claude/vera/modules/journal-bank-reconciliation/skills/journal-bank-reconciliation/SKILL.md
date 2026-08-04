@@ -105,9 +105,10 @@ narration. At minimum:
 ## Core Principle
 
 Deterministic Python code owns mechanically verifiable source qualification,
-exact-decimal normalization, optional sample filtering, explicit-reference and
-amount/date matching, content-addressed receipts, physical source lineage,
-one-to-one relationship ledgers, independent assurance gates, and exports.
+exact-decimal normalization, optional sample filtering, explicit-reference,
+reference-group, and amount/date matching, content-addressed receipts, physical
+source lineage, non-reusing relationship ledgers, independent assurance gates,
+and exports.
 Claude may inspect files, propose recipes, explain assumptions, and review
 unresolved items, but the plugin scripts must not make direct OpenAI API calls.
 Descriptions and beneficiary names are review context, not automatic match
@@ -187,12 +188,13 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    `non_movement_summary_labels` list; either authority uses the additive
    `journal_bank.tabular.v7` receipt.
 6. Review the proposed `relationship.policy` in business terms. Confirm the
-   one-to-one shape, no evidence reuse, currency/unit/entity/party perimeter,
+   required relationship shape (`one_to_one`, `one_to_many`, `many_to_one`, or
+   `many_to_many`), no evidence reuse, currency/unit/entity/party perimeter,
    direction treatment, defaults, amount tolerance, and date window. Use
    `journal_bank_core.build_relationship_review_receipt` to seal the reviewed
    policy against the current bank and journal source references. Every run
-   requires the current `journal_bank.relationship.v2` relationship receipt;
-   v1 receipts predate batch-safe matching and are stale. Do not treat the
+   requires the current `journal_bank.relationship.v3` relationship receipt;
+   older receipts predate grouped reference allocation and are stale. Do not treat the
    generated proposal as reviewed.
 7. Run deterministic reconciliation:
 

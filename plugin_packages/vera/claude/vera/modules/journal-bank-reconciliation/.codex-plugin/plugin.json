@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.38",
+  "version": "0.1.39",
   "description": "Deterministic journal-to-bank reconciliation guided by Claude.",
   "author": {
     "name": "Mparanza",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Journal-Bank Reconciliation",
     "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, German, or Spanish.",
-    "longDescription": "Claude workflow for bounded bank-to-journal reconciliation. Claude inspects local bank and journal files, reviews mappings and the relationship perimeter, and explains limits. Shared assurance controls qualify only exact supported headers or current reviewed mappings, bind decisions and physical lineage to content-addressed sources, compare canonical Decimal money exactly, enforce one-to-one currency/unit/entity/direction policy, restrict reference matching to stable explicit identifiers, and block generic PDF layouts, invalid samples, residuals, or stale outputs instead of guessing. After deterministic perfect matching, a bounded Luna pass may classify, identify, or suggest eligible residual relationships; validated decisions feed a cumulative human-selected certainty funnel while strict matches and assurance artifacts remain unchanged. Valid runs write CSV/XLSX/JSON outputs, audit, gates, diagnostics, review notes, and professional review without direct model API calls from scripts.",
+    "longDescription": "Claude workflow for bounded bank-to-journal reconciliation. Claude inspects local bank and journal files, reviews mappings and the relationship perimeter, and explains limits. Shared assurance controls qualify only exact supported headers or current reviewed mappings, bind decisions and physical lineage to content-addressed sources, compare canonical Decimal money exactly, enforce reviewed non-reusing relationship shapes and currency/unit/entity/direction policy, restrict reference matching to stable explicit identifiers, and close unambiguous one-to-many or many-to-one reference groups by conserved totals. After deterministic matching, successive bounded Luna packets classify, identify, or suggest eligible residual relationships; validated decisions feed a cumulative human-selected certainty funnel and remove cleared movements from the operational review payload while strict matches and assurance artifacts remain unchanged. Valid runs write CSV/XLSX/JSON outputs, audit, gates, diagnostics, review notes, and professional review without direct model API calls from scripts.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",

@@ -48,10 +48,10 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.123
-- **Files:** 821
-- **Bytes:** 4,255,288
-- **SHA-256:** `6ae738e4265c311320a18ae6af59f8e9340dc9f81fa654f49703dc4592ba6740`
+- **Version:** 0.1.124
+- **Files:** 823
+- **Bytes:** 4,250,597
+- **SHA-256:** `c1f73cfdf22dd71f05142302b2f4ce8b22971d8001196f98ef82f3a26d23b84b`
 - **ZIP integrity:** clean
 
 The generated directory and exact archive above pass the repository's package

@@ -107,8 +107,8 @@ EXTENDED_TABULAR_ADAPTER_VERSION = "7"
 EXTENDED_TABULAR_ADAPTER_ID = "journal_bank.tabular.v7"
 TEXT_PDF_ADAPTER_VERSION = "2"
 TEXT_PDF_ADAPTER_ID = "journal_bank.text_pdf.disabled.v2"
-RELATIONSHIP_ADAPTER_ID = "journal_bank.relationship.v2"
-RELATIONSHIP_ADAPTER_VERSION = "2"
+RELATIONSHIP_ADAPTER_ID = "journal_bank.relationship.v3"
+RELATIONSHIP_ADAPTER_VERSION = "3"
 NORMALIZATION_SCHEMA_VERSION = "journal_bank.normalization.v2"
 LINEAGE_SCHEMA_VERSION = "journal_bank.lineage.v1"
 ASSURANCE_WORKFLOW_ID = "journal_bank_reconciliation"
@@ -116,6 +116,7 @@ ASSURANCE_WORKFLOW_VERSION = "2"
 FINAL_ARTIFACT_CLOSURE_MAX_PASSES = 8
 MATCH_STAGE_ORDER = (
     "reference",
+    "reference_group",
     "amount_date_unique",
     "amount_date_single",
 )
@@ -2081,8 +2082,8 @@ def _normalize_relationship_policy(policy: object) -> dict[str, Any]:
             "relationship policy must contain the exact reviewed perimeter fields"
         )
     shape = _clean_text(policy["relationship_shape"])
-    if shape != "one_to_one":
-        raise ValueError("only the one_to_one relationship shape is supported")
+    if shape not in {"one_to_one", "one_to_many", "many_to_one", "many_to_many"}:
+        raise ValueError("unsupported relationship shape")
     normalized: dict[str, Any] = {"relationship_shape": shape}
     for field in (
         "allow_evidence_reuse",
@@ -2095,7 +2096,7 @@ def _normalize_relationship_policy(policy: object) -> dict[str, Any]:
             raise ValueError(f"relationship policy {field} must be boolean")
         normalized[field] = policy[field]
     if normalized["allow_evidence_reuse"]:
-        raise ValueError("one_to_one reconciliation cannot reuse evidence")
+        raise ValueError("journal-bank reconciliation cannot reuse evidence")
     if not normalized["require_same_currency"] or not normalized["require_same_unit"]:
         raise ValueError("currency and unit equality are mandatory")
     direction_policy = _clean_text(policy["direction_policy"])
@@ -2133,7 +2134,7 @@ def build_relationship_review_receipt(
     source_artifact_refs: Sequence[str],
     policy: dict[str, Any],
 ) -> dict[str, Any]:
-    """Seal the one-to-one perimeter, direction, and tolerance policy."""
+    """Seal the reviewed relationship perimeter, shape, and tolerance policy."""
 
     normalized = _normalize_relationship_policy(policy)
     return build_reviewed_decision_receipt(
@@ -4213,7 +4214,7 @@ def inspect_inputs(
         else "qualified" if sample_movements else "invalid_or_empty"
     )
     proposed_relationship_policy = {
-        "relationship_shape": "one_to_one",
+        "relationship_shape": "many_to_many",
         "allow_evidence_reuse": False,
         "require_same_currency": True,
         "require_same_unit": True,
@@ -4476,7 +4477,7 @@ class _JournalAmountIndex:
     """Exact Decimal range index for mechanically eligible journal amounts.
 
     The index only removes rows outside the authoritative reviewed-tolerance
-    predicate. Existing perimeter, date, reference, and one-to-one checks remain
+    predicate. Existing perimeter, date, reference, and non-reuse checks remain
     authoritative for every row returned by the index.
     """
 
@@ -4688,6 +4689,126 @@ def _unconflicted_singleton_batch(
     )
 
 
+def _unconflicted_reference_group_batch(
+    bank_rows: Sequence[dict[str, Any]],
+    journal_rows: Sequence[dict[str, Any]],
+    used_bank: set[str],
+    used_journal: set[str],
+    *,
+    tolerance: Decimal,
+    date_window_days: int,
+    relationship_policy: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Return exact-sum reference groups with order-independent membership.
+
+    Grouping is deterministic because a shared explicit identifier defines the
+    population and exact Decimal conservation decides acceptance. Descriptions
+    and beneficiary similarity never create a group.
+    """
+
+    shape = str(relationship_policy["relationship_shape"])
+    if shape == "one_to_one":
+        return []
+    available_bank = [
+        row for row in bank_rows if str(row["transaction_id"]) not in used_bank
+    ]
+    available_journal = [
+        row for row in journal_rows if str(row["transaction_id"]) not in used_journal
+    ]
+    bank_by_token: dict[str, list[dict[str, Any]]] = {}
+    journal_by_token: dict[str, list[dict[str, Any]]] = {}
+    for row in available_bank:
+        for token in _reference_tokens(
+            row.get("reference"), row.get("movement_number")
+        ):
+            bank_by_token.setdefault(token, []).append(row)
+    for row in available_journal:
+        for token in _reference_tokens(
+            row.get("reference"), row.get("movement_number")
+        ):
+            journal_by_token.setdefault(token, []).append(row)
+
+    grouped: dict[tuple[tuple[str, ...], tuple[str, ...]], dict[str, Any]] = {}
+    for token in sorted(set(bank_by_token) & set(journal_by_token)):
+        bank_group = bank_by_token[token]
+        journal_group = journal_by_token[token]
+        bank_count = len(bank_group)
+        journal_count = len(journal_group)
+        one_to_many = bank_count == 1 and journal_count > 1
+        many_to_one = bank_count > 1 and journal_count == 1
+        if not (
+            (one_to_many and shape in {"one_to_many", "many_to_many"})
+            or (many_to_one and shape in {"many_to_one", "many_to_many"})
+        ):
+            continue
+        if not all(
+            _same_required_perimeter(bank_row, journal_row, relationship_policy)
+            for bank_row in bank_group
+            for journal_row in journal_group
+        ):
+            continue
+        date_differences = [
+            _date_diff_days(
+                bank_row.get("transaction_date"),
+                journal_row.get("transaction_date"),
+            )
+            for bank_row in bank_group
+            for journal_row in journal_group
+        ]
+        if any(
+            difference is not None and difference > date_window_days
+            for difference in date_differences
+        ):
+            continue
+        bank_total = sum(
+            (parse_canonical_decimal(str(row["amount_abs"])) for row in bank_group),
+            ZERO,
+        )
+        journal_total = sum(
+            (parse_canonical_decimal(str(row["amount_abs"])) for row in journal_group),
+            ZERO,
+        )
+        signed_delta, within_tolerance = difference_within_tolerance(
+            bank_total,
+            journal_total,
+            tolerance,
+        )
+        if not within_tolerance:
+            continue
+        bank_ids = tuple(sorted(str(row["transaction_id"]) for row in bank_group))
+        journal_ids = tuple(sorted(str(row["transaction_id"]) for row in journal_group))
+        key = (bank_ids, journal_ids)
+        candidate = grouped.setdefault(
+            key,
+            {
+                "bank_rows": bank_group,
+                "journal_rows": journal_group,
+                "amount_delta": abs(signed_delta),
+                "shared_references": [],
+            },
+        )
+        candidate["shared_references"].append(token)
+
+    bank_membership: Counter[str] = Counter()
+    journal_membership: Counter[str] = Counter()
+    for bank_ids, journal_ids in grouped:
+        bank_membership.update(bank_ids)
+        journal_membership.update(journal_ids)
+    accepted = [
+        candidate
+        for (bank_ids, journal_ids), candidate in grouped.items()
+        if all(bank_membership[item] == 1 for item in bank_ids)
+        and all(journal_membership[item] == 1 for item in journal_ids)
+    ]
+    return sorted(
+        accepted,
+        key=lambda item: (
+            tuple(str(row["transaction_id"]) for row in item["bank_rows"]),
+            tuple(str(row["transaction_id"]) for row in item["journal_rows"]),
+        ),
+    )
+
+
 def _match_transactions(
     bank: pl.DataFrame,
     journal: pl.DataFrame,
@@ -4703,9 +4824,12 @@ def _match_transactions(
     used_journal: set[str] = set()
     matches: list[dict[str, Any]] = []
     stage_counts: dict[str, int] = {}
-    reference_stage, first_amount_date_stage, later_amount_date_stage = (
-        MATCH_STAGE_ORDER
-    )
+    (
+        reference_stage,
+        reference_group_stage,
+        first_amount_date_stage,
+        later_amount_date_stage,
+    ) = MATCH_STAGE_ORDER
 
     def accept(bank_row: dict[str, Any], candidate: dict[str, Any], stage: str) -> None:
         matches.append(
@@ -4737,6 +4861,45 @@ def _match_transactions(
             break
         for bank_row, candidate in reference_batch:
             accept(bank_row, candidate, reference_stage)
+
+    while True:
+        reference_groups = _unconflicted_reference_group_batch(
+            bank_rows,
+            journal_rows,
+            used_bank,
+            used_journal,
+            tolerance=tolerance,
+            date_window_days=date_window_days,
+            relationship_policy=relationship_policy,
+        )
+        if not reference_groups:
+            break
+        for group in reference_groups:
+            bank_group = group["bank_rows"]
+            journal_group = group["journal_rows"]
+            if len(bank_group) == 1:
+                pairs = [(bank_group[0], journal_row) for journal_row in journal_group]
+            else:
+                pairs = [(bank_row, journal_group[0]) for bank_row in bank_group]
+            for bank_row, journal_row in pairs:
+                matches.append(
+                    _make_match_record(
+                        bank_row,
+                        journal_row,
+                        stage=reference_group_stage,
+                        amount_delta=group["amount_delta"],
+                        date_diff_days=_date_diff_days(
+                            bank_row.get("transaction_date"),
+                            journal_row.get("transaction_date"),
+                        ),
+                        shared_references=group["shared_references"],
+                    )
+                )
+            used_bank.update(str(row["transaction_id"]) for row in bank_group)
+            used_journal.update(str(row["transaction_id"]) for row in journal_group)
+            stage_counts[reference_group_stage] = stage_counts.get(
+                reference_group_stage, 0
+            ) + len(pairs)
 
     first_amount_date_batch = _unconflicted_singleton_batch(
         bank_rows,
