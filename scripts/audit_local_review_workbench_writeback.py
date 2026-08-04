@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.util
 import json
 import os
 import shutil
@@ -182,6 +184,105 @@ def _read_adapter(root: Path, plugin: str) -> dict[str, Any]:
     return json.loads(adapter_path.read_text(encoding="utf-8"))
 
 
+def _load_customer_ledger(root: Path) -> Any:
+    """Load the Studio Archive ledger used to create managed audit fixtures."""
+
+    module_name = "audit_local_review_customer_ledger"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    path = root / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"cannot load Studio Archive ledger: {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _seal_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    """Bind one review payload to its exact canonical JSON content."""
+
+    content = dict(payload)
+    content.pop("content_sha256", None)
+    digest = hashlib.sha256(
+        json.dumps(
+            content,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+            allow_nan=False,
+        ).encode("utf-8")
+    ).hexdigest()
+    return {**content, "content_sha256": digest}
+
+
+def _prepare_managed_vera_run(
+    root: Path,
+    plugin: str,
+    fixture_root: Path,
+) -> dict[str, Any]:
+    """Create and start one exact customer-folder run for a Vera fixture."""
+
+    fixture_root.mkdir(parents=True, exist_ok=True)
+    client_root = fixture_root / "customer-folder"
+    client_root.mkdir()
+    received_dir = fixture_root / "received"
+    received_dir.mkdir()
+    received_path = received_dir / f"{plugin}-browser-audit.txt"
+    received_path.write_text(
+        f"Synthetic source receipt for the {plugin} browser write-back audit.\n",
+        encoding="utf-8",
+    )
+
+    plugin_manifest = _read_json_if_present(
+        root / "plugins" / plugin / ".codex-plugin" / "plugin.json"
+    )
+    workflow_version = str(plugin_manifest.get("version") or "browser-audit-v1")
+    ledger = _load_customer_ledger(root)
+    client_id = "client_aaaaaaaaaaaaaaaaaaaaaaaa"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root,
+        client_id,
+        f"{plugin} browser write-back audit",
+    )
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        received_path.resolve(strict=True),
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        plugin,
+        workflow_version,
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    context_path = Path(running["context_path"])
+    portable_context = _read_json_if_present(context_path)
+    input_paths = [
+        str(binding["execution_relative_path"])
+        for binding in running["context"]["input_bindings"]
+    ]
+    return {
+        "output_dir": Path(running["output_dir"]),
+        "context_path": context_path,
+        "portable_context": portable_context,
+        "run_id": str(running["run"]["run_id"]),
+        "input_paths": input_paths,
+    }
+
+
 def _editable_demo_item(adapter: dict[str, Any]) -> dict[str, Any]:
     items = adapter.get("demo", {}).get("items", [])
     if not isinstance(items, list):
@@ -262,7 +363,22 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
     if plugin == "new-client":
         return _write_new_client_fixture(root, output_dir)
 
-    output_dir.mkdir(parents=True, exist_ok=True)
+    managed_run = (
+        _prepare_managed_vera_run(root, plugin, output_dir)
+        if plugin in serve_review_workbench.VERA_REVIEW_WORKFLOW_IDS
+        else None
+    )
+    if managed_run is not None:
+        output_dir = managed_run["output_dir"]
+        run_id = managed_run["run_id"]
+        input_paths = managed_run["input_paths"]
+        client_engagement = managed_run["portable_context"]
+    else:
+        output_dir.mkdir(parents=True, exist_ok=True)
+        run_id = f"{plugin}-browser-writeback"
+        input_paths = ["input.xlsx", "evidence/"]
+        client_engagement = None
+    review_schema_version = "2.0" if plugin == "check-entries" else "1.0"
     adapter = _read_adapter(root, plugin)
     item = json.loads(json.dumps(_editable_demo_item(adapter)))
     item["recommended_action"] = "edit"
@@ -274,19 +390,27 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
             "Editing this fixture item writes the target artifact during the browser audit.",
         )
     target_artifact = _write_target_artifact(output_dir, item)
-    run_id = f"{plugin}-browser-writeback"
-    input_paths = ["input.xlsx", "evidence/"]
     _write_json(
         output_dir / "run_intake.json",
         {
-            "schema_version": "1.0",
+            "schema_version": review_schema_version,
             "plugin": plugin,
             "workflow": plugin,
             "run_id": run_id,
+            **(
+                {
+                    "client_engagement": client_engagement,
+                    "path_reference": "run_root_relative",
+                }
+                if client_engagement is not None
+                else {}
+            ),
             "created_at": "2026-06-08T10:00:00Z",
             "language": "en",
             "input_paths": input_paths,
-            "output_dir": output_dir.as_posix(),
+            "output_dir": (
+                "outputs" if client_engagement is not None else output_dir.as_posix()
+            ),
             "inferred_task": f"Browser write-back audit for {plugin} review.",
             "assumptions": [
                 "Synthetic local fixture generated from the workbench adapter demo; not customer validation."
@@ -318,33 +442,38 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
             ],
         },
     )
-    _write_json(
-        output_dir / "review_payload.json",
-        {
-            "schema_version": "1.0",
-            "plugin": plugin,
-            "workflow": plugin,
-            "run_id": run_id,
-            "source_paths": input_paths,
-            "review_type": adapter.get("demo", {}).get(
-                "review_type", f"{plugin.replace('-', '_')}_review"
-            ),
-            "items": [item],
-            "item_count": 1,
-            "evidence": item.get("evidence", []),
-            "allowed_actions": item.get("allowed_actions", []),
-            "status": "ready_for_review",
-            "summary": {"issue_count": 1, "artifact_count": 1},
-        },
-    )
+    review_payload_content = {
+        "schema_version": review_schema_version,
+        "plugin": plugin,
+        "workflow": plugin,
+        **(
+            {"client_engagement": client_engagement}
+            if client_engagement is not None
+            else {}
+        ),
+        "run_id": run_id,
+        "source_paths": input_paths,
+        "review_type": adapter.get("demo", {}).get(
+            "review_type", f"{plugin.replace('-', '_')}_review"
+        ),
+        "items": [item],
+        "item_count": 1,
+        "evidence": item.get("evidence", []),
+        "allowed_actions": item.get("allowed_actions", []),
+        "status": "ready_for_review",
+        "summary": {"issue_count": 1, "artifact_count": 1},
+    }
+    review_payload = _seal_payload(review_payload_content)
+    _write_json(output_dir / "review_payload.json", review_payload)
     _write_json(
         output_dir / "ui_decisions.json",
         {
-            "schema_version": "1.0",
+            "schema_version": review_schema_version,
             "plugin": plugin,
             "workflow": plugin,
             "run_id": run_id,
             "review_payload_path": "review_payload.json",
+            "review_payload_content_sha256": review_payload["content_sha256"],
             "decisions": [],
             "decision_count": 0,
             "item_count": 1,
@@ -354,7 +483,7 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
     _write_json(
         output_dir / "final_artifacts.json",
         {
-            "schema_version": "1.0",
+            "schema_version": review_schema_version,
             "plugin": plugin,
             "workflow": plugin,
             "run_id": run_id,
@@ -370,15 +499,31 @@ def write_plugin_fixture(root: Path, plugin: str, output_dir: Path) -> dict[str,
             "status": "written_pending_review",
         },
     )
-    return {
+    fixture = {
         "item_id": str(item["id"]),
         "target_artifact": target_artifact,
         "writeback_mode": "artifact_edit",
     }
+    if managed_run is not None:
+        for path in output_dir.rglob("*"):
+            if path.is_file():
+                path.chmod(0o600)
+        fixture.update(
+            {
+                "output_dir": output_dir.as_posix(),
+                "client_engagement": managed_run["context_path"].as_posix(),
+                "run_id": run_id,
+            }
+        )
+    return fixture
 
 
 def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
     """Build a real blocked package with a grouped AML review proposal."""
+
+    managed_run = _prepare_managed_vera_run(root, "new-client", output_dir)
+    managed_output_dir = managed_run["output_dir"]
+    client_engagement = managed_run["context_path"]
 
     plugin_root = root / "plugins" / "new-client"
     initialize = subprocess.run(
@@ -386,7 +531,9 @@ def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
             sys.executable,
             str(plugin_root / "scripts" / "initialize_case.py"),
             "--case-dir",
-            str(output_dir),
+            str(managed_output_dir),
+            "--client-engagement",
+            str(client_engagement),
             "--client-reference",
             "CLIENT-AUDIT-001",
             "--assessment-date",
@@ -407,9 +554,11 @@ def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
             sys.executable,
             str(plugin_root / "scripts" / "package_new_client.py"),
             "--input",
-            str(output_dir / "new_client_input.json"),
+            str(managed_output_dir / "new_client_input.json"),
             "--output-dir",
-            str(output_dir),
+            str(managed_output_dir),
+            "--client-engagement",
+            str(client_engagement),
         ],
         cwd=plugin_root,
         capture_output=True,
@@ -421,7 +570,7 @@ def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
             "new-client audit packaging failed: "
             + (package.stderr or package.stdout).strip()
         )
-    review = _read_json_if_present(output_dir / "review_payload.json")
+    review = _read_json_if_present(managed_output_dir / "review_payload.json")
     items = review.get("items")
     if not isinstance(items, list):
         raise RuntimeError("new-client audit package has no review items")
@@ -441,134 +590,20 @@ def _write_new_client_fixture(root: Path, output_dir: Path) -> dict[str, str]:
         "item_id": str(item["id"]),
         "target_artifact": "aml_assessment_draft.json",
         "writeback_mode": "review_proposal",
+        "output_dir": managed_output_dir.as_posix(),
+        "client_engagement": client_engagement.as_posix(),
+        "run_id": managed_run["run_id"],
     }
 
 
-def write_check_entries_fixture(output_dir: Path) -> None:
-    """Write a small local run fixture with a CSV edit target."""
+def write_check_entries_fixture(
+    output_dir: Path,
+    *,
+    root: Path = ROOT,
+) -> dict[str, str]:
+    """Write one managed Check Entries browser-audit fixture."""
 
-    output_dir.mkdir(parents=True, exist_ok=True)
-    run_id = "check-entries-browser-writeback"
-    _write_json(
-        output_dir / "run_intake.json",
-        {
-            "schema_version": "1.0",
-            "plugin": "check-entries",
-            "workflow": "check-entries",
-            "run_id": run_id,
-            "created_at": "2026-06-08T10:00:00Z",
-            "language": "en",
-            "input_paths": ["entries.xlsx", "support_1001.pdf"],
-            "output_dir": output_dir.as_posix(),
-            "inferred_task": "Browser write-back audit for Check Entries review.",
-            "assumptions": ["Synthetic local fixture; not customer validation."],
-            "unresolved_questions": [],
-            "dependency_check": {"status": "ok"},
-            "data_posture": {
-                "local_files_read": ["entries.xlsx", "support_1001.pdf"],
-                "external_connectors_used": [],
-                "upload_paths_used": [],
-                "remote_sql_execution_used": False,
-                "hosted_notebook_execution_used": False,
-            },
-            "execution_trace": [
-                {
-                    "step_id": "fixture_review_session",
-                    "kind": "deterministic_review_session",
-                    "status": "passed",
-                    "execution_location": "local_codex_workspace",
-                    "command": ["audit_local_review_workbench_writeback", "fixture"],
-                    "inputs": ["entries.xlsx", "support_1001.pdf"],
-                    "outputs": [
-                        "run_intake.json",
-                        "review_payload.json",
-                        "final_artifacts.json",
-                        "check_results.csv",
-                    ],
-                }
-            ],
-        },
-    )
-    _write_json(
-        output_dir / "review_payload.json",
-        {
-            "schema_version": "1.0",
-            "plugin": "check-entries",
-            "workflow": "check-entries",
-            "run_id": run_id,
-            "source_paths": ["entries.xlsx", "support_1001.pdf"],
-            "review_type": "journal_entry_support_review",
-            "items": [
-                {
-                    "id": "entry-1",
-                    "item_type": "supported_entry",
-                    "title": "1001 | 123.45 | 2025-01-02",
-                    "source_path": "entries.xlsx",
-                    "output_path": "check_results.csv",
-                    "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
-                    "recommended_action": "edit",
-                    "status": "ready_for_review",
-                    "data": {
-                        "status": "ok",
-                        "movement_number": "1001",
-                        "entry_date": "2025-01-02",
-                        "beneficiary": "ACME Spa",
-                        "amount_abs": "123.45",
-                        "matched_pdf": "support_1001.pdf",
-                        "checks_run": "amount,date,beneficiary",
-                        "source_row": "1",
-                        "target_artifact": "check_results.csv",
-                        "target_id_field": "source_row",
-                        "target_record_id": "1",
-                        "target_field": "review_notes",
-                        "edit_hint": (
-                            "Editing this row writes review_notes in "
-                            "check_results.csv for source_row 1."
-                        ),
-                    },
-                    "evidence": [
-                        {
-                            "kind": "deterministic_checks",
-                            "status": "ok",
-                            "matched_pdf": "support_1001.pdf",
-                            "checks_run": "amount,date,beneficiary",
-                            "review_notes": "All deterministic checks passed.",
-                        }
-                    ],
-                }
-            ],
-            "item_count": 1,
-            "columns": ["source_row", "review_notes"],
-            "evidence": [{"kind": "deterministic_checks", "status": "ok"}],
-            "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
-            "status": "ready_for_review",
-            "summary": {"issue_count": 1, "artifact_count": 1},
-        },
-    )
-    _write_json(
-        output_dir / "final_artifacts.json",
-        {
-            "schema_version": "1.0",
-            "plugin": "check-entries",
-            "workflow": "check-entries",
-            "run_id": run_id,
-            "outputs": [
-                {
-                    "path": "check_results.csv",
-                    "kind": "csv",
-                    "status": "written",
-                    "required_columns": ["source_row", "review_notes"],
-                }
-            ],
-            "caveats": [],
-            "next_actions": [],
-            "status": "written_pending_review",
-        },
-    )
-    (output_dir / "check_results.csv").write_text(
-        "source_row,review_notes\n1,\n",
-        encoding="utf-8",
-    )
+    return write_plugin_fixture(root, "check-entries", output_dir)
 
 
 def _browser_executable(explicit_path: str | None) -> str | None:
@@ -755,28 +790,29 @@ def audit_local_review_writeback(
         raise RuntimeError("Node.js is required for the plugin MCP save/apply bridge.")
     run_dir = _prepare_output_dir(output_dir)
     fixture = write_plugin_fixture(root, plugin, run_dir)
+    fixture_output_dir = Path(fixture.get("output_dir", run_dir.as_posix()))
     report = BrowserWritebackReport(
         plugin=plugin,
-        output_dir=run_dir.as_posix(),
+        output_dir=fixture_output_dir.as_posix(),
         item_id=fixture["item_id"],
         target_artifact=fixture["target_artifact"],
         writeback_mode=fixture.get("writeback_mode", "artifact_edit"),
     )
     workbench = serve_review_workbench.LocalReviewWorkbench(
         plugin_dir=root / "plugins" / plugin,
-        output_dir=run_dir,
+        output_dir=fixture_output_dir,
     )
     httpd, url = serve_review_workbench.create_review_http_server(workbench)
     report.url = url
     thread = threading.Thread(target=httpd.serve_forever, daemon=True)
     thread.start()
     screenshot_path = (
-        screenshots_dir or run_dir / "screenshots"
+        screenshots_dir or fixture_output_dir / "screenshots"
     ) / f"{plugin}-browser-writeback.png"
     try:
         _drive_browser(
             url=url,
-            output_dir=run_dir,
+            output_dir=fixture_output_dir,
             report=report,
             browser_executable=browser_executable,
             screenshot_path=screenshot_path,

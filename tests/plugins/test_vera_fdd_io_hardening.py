@@ -68,6 +68,7 @@ def test_fdd_success_is_deterministic_and_delivers_complete_receipts(
     )
 
     expected_implementations = {
+        "scripts/managed_case_inputs.py",
         "scripts/prepare_fdd_case.py",
         "scripts/preparation_contract_kernel.py",
         "scripts/run_pack.py",

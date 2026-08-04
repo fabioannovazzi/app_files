@@ -49,6 +49,7 @@ if "vera_assurance" not in sys.modules:
             break
 
 from vera_assurance import (  # noqa: E402
+    JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
     MoneyValidationError,
     artifact_receipt,
     build_assurance_envelope,
@@ -116,17 +117,7 @@ DIRECTION_ADAPTER_VERSION = "1"
 NORMALIZED_JOURNAL_ARTIFACT_ID = "source.normalized_journal"
 NORMALIZATION_SCHEMA_VERSION = "journal_sampling.normalization.v2"
 JOURNAL_HANDOFF_ARTIFACT_PATHS = frozenset(
-    {
-        "normalization/normalized_journal.csv",
-        "normalization/normalization_diagnostics.json",
-        "normalization/normalization_recipe.json",
-        "normalization/suggested_recipe.json",
-        "normalization/reviewed_decisions.json",
-        "normalization/assurance_gates.json",
-        "normalization/assurance_envelope.json",
-        "normalization/qualification_review_payload.json",
-        "sample/journal_sample.csv",
-    }
+    path for path, _artifact_id, _role in JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF
 )
 JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     (

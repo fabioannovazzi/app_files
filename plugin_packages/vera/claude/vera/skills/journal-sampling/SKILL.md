@@ -54,7 +54,9 @@ override this Cowork contract.
 In local Claude, use a prepared and started customer-folder run bound to one
 exact immutable journal receipt. Finalize every output with purpose and
 audience. The normalized population, diagnostics, and exact sample are separate
-upstream artifacts; Check Entries must bind the sample and check only its rows.
+upstream artifacts. Start Check Entries through
+`start_check_entries_from_sample`; Studio Archive resolves those internal
+artifacts and Check Entries checks only the sample rows.
 
 Resolve `../../modules/journal-sampling` from this skill directory when it
 exists; otherwise resolve `../../../journal-sampling` in the repository. Read

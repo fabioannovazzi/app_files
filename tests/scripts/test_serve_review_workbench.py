@@ -6,11 +6,18 @@ import json
 import socket
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 SERVER_PATH = ROOT / "scripts" / "serve_review_workbench.py"
+CLIENT_LEDGER_PATH = (
+    ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
+)
+CHECK_ENTRIES_CORE_PATH = (
+    ROOT / "plugins" / "check-entries" / "scripts" / "check_entries_core.py"
+)
 
 
 def load_server_module():
@@ -18,6 +25,21 @@ def load_server_module():
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _load_fixture_module(module_name: str, path: Path) -> Any:
+    module = sys.modules.get(module_name)
+    if module is not None:
+        return module
+    module_dir = path.parent.as_posix()
+    if module_dir not in sys.path:
+        sys.path.insert(0, module_dir)
+    spec = importlib.util.spec_from_file_location(module_name, path)
+    assert spec and spec.loader
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
     spec.loader.exec_module(module)
     return module
 
@@ -132,6 +154,95 @@ def _fixture_output_dir(tmp_path: Path) -> Path:
     return output_dir
 
 
+def _managed_fixture_output_dir(tmp_path: Path) -> Path:
+    ledger = _load_fixture_module(
+        "test_review_workbench_client_ledger",
+        CLIENT_LEDGER_PATH,
+    )
+    core = _load_fixture_module(
+        "test_review_workbench_check_entries_core",
+        CHECK_ENTRIES_CORE_PATH,
+    )
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir()
+    client_id = "client_111111111111111111111111"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(client_root, client_id, "Review fixture")
+    source = tmp_path / "managed-source.txt"
+    source.write_text("managed review input\n", encoding="utf-8")
+    imported = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        source,
+        "source",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "check-entries",
+        "test-version",
+        input_ids=[imported["receipt"]["input_id"]],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    output_dir = Path(running["output_dir"])
+    context = core.load_client_engagement_context(
+        Path(running["run_root"]) / "context.json"
+    )
+    source_path = Path(context["input_bindings"][0]["path"])
+    core.write_run_intake(
+        output_dir,
+        source_path,
+        source_path,
+        normalization_diagnostics_path=source_path,
+        recipe_path=None,
+        language="en",
+        document_language="en",
+        amount_tolerance="0.01",
+        date_window_days=0,
+        mapping={},
+        journal_row_count=1,
+        pdf_count=1,
+        client_engagement=context,
+    )
+
+    legacy_root = tmp_path / "legacy-review-artifacts"
+    legacy_root.mkdir()
+    legacy_output = _fixture_output_dir(legacy_root)
+    review_payload = json.loads(
+        (legacy_output / "review_payload.json").read_text(encoding="utf-8")
+    )
+    review_payload["run_id"] = context["run_id"]
+    review_payload.pop("content_sha256", None)
+    _seal_review_payload(review_payload)
+    _write_json(output_dir / "review_payload.json", review_payload)
+    final_artifacts = json.loads(
+        (legacy_output / "final_artifacts.json").read_text(encoding="utf-8")
+    )
+    final_artifacts["run_id"] = context["run_id"]
+    _write_json(output_dir / "final_artifacts.json", final_artifacts)
+    (output_dir / "check_results.csv").write_bytes(
+        (legacy_output / "check_results.csv").read_bytes()
+    )
+    return output_dir
+
+
+def test_vera_review_server_workflows_match_the_vera_registry() -> None:
+    server = load_server_module()
+    components = json.loads(
+        (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
+    )
+
+    assert server.VERA_REVIEW_WORKFLOW_IDS == frozenset(components["plugins"]) - {
+        "studio-archive"
+    }
+
+
 def test_vera_review_server_rejects_output_outside_customer_run(
     tmp_path: Path,
 ) -> None:
@@ -143,6 +254,25 @@ def test_vera_review_server_rejects_output_outside_customer_run(
 
     with pytest.raises(ValueError, match="portable customer-folder"):
         server._validate_vera_customer_run(workbench)
+
+
+def test_managed_vera_render_uses_context_without_exposing_its_path(
+    tmp_path: Path,
+) -> None:
+    server = load_server_module()
+    output_dir = _managed_fixture_output_dir(tmp_path)
+    workbench = server.LocalReviewWorkbench(
+        plugin_dir=ROOT / "plugins" / "check-entries",
+        output_dir=output_dir,
+    )
+    context_path = output_dir.parent / "context.json"
+
+    session = server.build_session_payload(workbench)
+    serialized = json.dumps(session, ensure_ascii=False)
+
+    assert session["review_payload"]["run_id"] == context_path.parent.name
+    assert context_path.as_posix() not in serialized
+    assert output_dir.as_posix() not in serialized
 
 
 def _fixture_client_file_preparation_output_dir(tmp_path: Path) -> tuple[Path, str]:
@@ -516,11 +646,23 @@ def test_local_review_workbench_routes_save_and_apply_to_plugin_mcp(
 ) -> None:
     server = load_server_module()
     server._node_executable()
-    output_dir = _fixture_output_dir(tmp_path)
+    output_dir = _managed_fixture_output_dir(tmp_path)
     workbench = server.LocalReviewWorkbench(
         plugin_dir=ROOT / "plugins" / "check-entries",
         output_dir=output_dir,
     )
+    client_context = server._validate_vera_customer_run(workbench)
+    assert client_context is not None
+    assert (
+        client_context["context_path"]
+        == (output_dir.parent / "context.json").as_posix()
+    )
+    persisted_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    assert persisted_intake["path_reference"] == "run_root_relative"
+    assert persisted_intake["output_dir"] == "outputs"
+    assert "context_path" not in persisted_intake["client_engagement"]
     decisions = [
         {
             "item_id": "entry-1",
@@ -568,3 +710,9 @@ def test_local_review_workbench_routes_save_and_apply_to_plugin_mcp(
     assert applied_decisions["decision_source"] == "local_review_server"
     assert final_artifacts["review_application"]["decision_count"] == 1
     assert "Reviewed from local browser" in check_results
+    client_root = Path(client_context["context_path"]).parents[5]
+    assert client_root.as_posix() not in json.dumps([save_result, apply_result])
+    assert all(
+        client_root.as_posix() not in path.read_text(encoding="utf-8")
+        for path in output_dir.glob("*.json")
+    )

@@ -124,17 +124,17 @@ Entries context or automatically add itself to an existing run.
    and the selected `engagement_id` for each file. Retain the returned immutable
    `input_ids`; import does not prepare or start Check Entries. Do not accept
    support from another customer folder or engagement directly.
-3. Call `prepare_studio_client_workflow` for `check-entries` with only the
-   current evidence-batch `input_ids` and the exact nine same-engagement
-   Journal Sampling artifact references: the three semantic boundary artifacts
-   plus the six normalization companions named above. This creates a separate,
-   idempotent Check Entries run. Use `new_run=true` only when the user explicitly
-   wants a separate rerun. Call `start_studio_client_workflow`, load its
-   `client_engagement_path`, and use the hydrated bound paths. A later ZIP or
-   PDF delivery must be imported and prepared as another run; it cannot mutate
-   this run's input manifest. If its exact byte selection repeats an earlier
-   run, set `new_run=true` only after the user confirms that it is intentionally
-   a separate evidence batch.
+3. Call `start_check_entries_from_sample` with the selected `client_id`,
+   `engagement_id`, completed Journal Sampling `sample_run_id`, and only the
+   current evidence-batch `support_input_ids`. This operation resolves and
+   validates the complete internal handoff, prepares an idempotent Check
+   Entries run, and starts it. Do not ask the user to identify internal files
+   or assemble artifact references. Load the returned `client_engagement_path`
+   and use only its hydrated bound paths. A later ZIP or PDF delivery must be
+   imported and started as another run; it cannot mutate this run's input
+   manifest. If its exact byte selection repeats an earlier run, set
+   `new_run=true` only after the user confirms that it is intentionally a
+   separate evidence batch.
 4. Run dependency checks from the plugin directory:
 
 ```bash

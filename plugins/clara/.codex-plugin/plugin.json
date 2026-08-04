@@ -1,6 +1,6 @@
 {
   "name": "clara",
-  "version": "0.1.127",
+  "version": "0.1.131",
   "description": "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence.",
   "author": {
     "name": "Mparanza",
@@ -61,7 +61,7 @@
     "defaultPrompt": [
       "Use Clara to organize the evidence, surface gaps and contradictions, and identify decisions that cannot wait.",
       "Use Clara to run this interview, transcribe this recording, or correct this deck while preserving approved content.",
-      "Use Clara for Retailer Signals, Brand Fit, or reviewed dataset semantics; render the right business chart and check it."
+      "Use this Excel file to prepare an interactive HTML presentation with key findings, supporting charts and recommendations."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

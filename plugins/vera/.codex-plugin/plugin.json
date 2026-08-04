@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.72",
+  "version": "0.1.78",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -65,9 +65,9 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "supportURL": "https://mparanza.com/support",
     "defaultPrompt": [
-      "Prepara un Plan vendite da questi Actual, mostrando prima le assunzioni commerciali e valutarie interpretate.",
+      "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel e Word con abbinamenti, residui ed eccezioni.",
       "Controlla questa ricerca fiscale o normativa, verifica le fonti citate e segnala ciò che manca.",
-      "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti."
+      "Controlla queste scritture con fatture e documenti di supporto. Prepara esiti, anomalie e richieste per le evidenze mancanti."
     ],
     "brandColor": "#002060",
     "composerIcon": "./assets/icon.svg",

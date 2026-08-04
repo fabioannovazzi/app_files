@@ -300,12 +300,12 @@ def test_unmatched_third_party_message_is_not_persisted_or_auto_assigned(
             assert marker.encode("utf-8") not in path.read_bytes()
 
 
-def test_renamed_scope_profile_can_be_explicitly_rebound_after_refresh(
+def test_renamed_scope_profile_is_recovered_from_manifest_after_refresh(
     archive_core: ModuleType,
     configured_clients: SimpleNamespace,
 ) -> None:
     rossi_scope = configured_clients.scopes["Rossi"]
-    archive_core.set_studio_client_identity(
+    registered = archive_core.set_studio_client_identity(
         rossi_scope,
         email_addresses=["amministrazione@rossi.it"],
         state_dir=configured_clients.state,
@@ -330,20 +330,23 @@ def test_renamed_scope_profile_can_be_explicitly_rebound_after_refresh(
         for item in refreshed["scopes"]
         if item["display_name"] == "Rossi-Nuovo"
     )
-
-    rebound = archive_core.set_studio_client_identity(
-        renamed_scope,
-        replace_orphaned_scope_id=rossi_scope,
+    recovered_profiles = archive_core.list_studio_client_identities(
         state_dir=configured_clients.state,
     )
     plan = archive_core.plan_gmail_client_search(
         renamed_scope,
         state_dir=configured_clients.state,
     )
+    recovered = next(
+        item
+        for item in recovered_profiles["clients"]
+        if item["scope_id"] == renamed_scope
+    )
 
-    assert rebound["status"] == "rebound"
-    assert rebound["replaced_orphaned_scope_id"] == rossi_scope
-    assert rebound["client"]["email_addresses"] == ["amministrazione@rossi.it"]
+    assert refreshed["recovered_client_count"] == 1
+    assert recovered_profiles["orphaned_profile_count"] == 0
+    assert recovered["client_id"] == registered["client"]["client_id"]
+    assert recovered["email_addresses"] == ["amministrazione@rossi.it"]
     assert plan["profile_status"] == "configured"
 
 

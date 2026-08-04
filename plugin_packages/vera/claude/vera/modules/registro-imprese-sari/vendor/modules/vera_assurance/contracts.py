@@ -22,6 +22,7 @@ from .serialization import canonical_json_sha256
 
 __all__ = [
     "AssuranceContractError",
+    "JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF",
     "VERA_CLIENT_WORKFLOW_IDS",
     "build_client_engagement_context",
     "build_gate_register",
@@ -136,6 +137,57 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
+)
+
+# This is an exact file-contract handoff, so fixed rules provide mechanically
+# verifiable correctness and prevent the producing and consuming workflows from
+# drifting.  They do not decide whether the sample or support is sufficient.
+JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF = (
+    (
+        "normalization/normalized_journal.csv",
+        "prepared.normalized_journal",
+        "journal_normalization",
+    ),
+    (
+        "normalization/normalization_diagnostics.json",
+        "internal.normalization_diagnostics",
+        "journal_normalization",
+    ),
+    (
+        "normalization/normalization_recipe.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "normalization/suggested_recipe.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "normalization/reviewed_decisions.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "normalization/assurance_gates.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "normalization/assurance_envelope.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "normalization/qualification_review_payload.json",
+        None,
+        "journal_normalization",
+    ),
+    (
+        "sample/journal_sample.csv",
+        "prepared.journal_sample_csv",
+        "journal_sample",
+    ),
 )
 
 
@@ -1120,9 +1172,10 @@ def _hydrate_v2_client_workflow_context(
         engagement_manifest.get("schema_version") != "vera.engagement.v1"
         or engagement_manifest.get("client_id") != portable["client_id"]
         or engagement_manifest.get("engagement_id") != portable["engagement_id"]
-        or engagement_manifest.get("status") != "open"
+        or engagement_manifest.get("status") not in {"open", "closed"}
     ):
         raise AssuranceContractError("engagement manifest does not authorize this run")
+    engagement_status = engagement_manifest["status"]
 
     run_manifest = _validated_portable_run_manifest(
         _read_bounded_regular_json(run_root / "run.json", label="run manifest"),
@@ -1151,6 +1204,10 @@ def _hydrate_v2_client_workflow_context(
             )
         raise AssuranceContractError(
             "workflow helper execution requires an explicitly allowed run state"
+        )
+    if engagement_status == "closed" and run_manifest.get("status") != "completed":
+        raise AssuranceContractError(
+            "a closed engagement authorizes completed run evidence only"
         )
     input_manifest_path = run_root / portable["input_manifest"]
     input_manifest = _validated_sealed_manifest(

@@ -102,8 +102,10 @@ _MAX_JSON_BYTES = 16 * 1024 * 1024
 _MAX_INPUTS = 10_000
 _MAX_RUNS = 50_000
 _MAX_ARTIFACTS = 20_000
-_PREPARE_THREAD_LOCKS_GUARD = threading.Lock()
-_PREPARE_THREAD_LOCKS: dict[str, Any] = {}
+_ENGAGEMENT_LOCK_NAME = ".vera-engagement.lock"
+_ENGAGEMENT_LOCK_CONTENT = b"Vera engagement mutation lock\n"
+_ENGAGEMENT_THREAD_LOCKS_GUARD = threading.Lock()
+_ENGAGEMENT_THREAD_LOCKS: dict[str, Any] = {}
 
 
 class LedgerError(RuntimeError):
@@ -131,6 +133,64 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _stable_file_identity(path: Path, *, label: str) -> tuple[int, str]:
+    """Hash one regular file while proving its path and bytes stayed stable."""
+
+    before_path = _ordinary_file(path, label=label)
+    descriptor = -1
+    try:
+        descriptor = os.open(path, os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0))
+        before = os.fstat(descriptor)
+        identity = (
+            before.st_dev,
+            before.st_ino,
+            before.st_size,
+            before.st_mtime_ns,
+            before.st_ctime_ns,
+            before.st_nlink,
+        )
+        if identity != (
+            before_path.st_dev,
+            before_path.st_ino,
+            before_path.st_size,
+            before_path.st_mtime_ns,
+            before_path.st_ctime_ns,
+            before_path.st_nlink,
+        ):
+            raise LedgerError(f"{label} changed before it was opened.")
+        digest = hashlib.sha256()
+        while True:
+            chunk = os.read(descriptor, 1024 * 1024)
+            if not chunk:
+                break
+            digest.update(chunk)
+        after = os.fstat(descriptor)
+        final_path = _ordinary_file(path, label=label)
+        final_identity = (
+            after.st_dev,
+            after.st_ino,
+            after.st_size,
+            after.st_mtime_ns,
+            after.st_ctime_ns,
+            after.st_nlink,
+        )
+        if final_identity != identity or final_identity != (
+            final_path.st_dev,
+            final_path.st_ino,
+            final_path.st_size,
+            final_path.st_mtime_ns,
+            final_path.st_ctime_ns,
+            final_path.st_nlink,
+        ):
+            raise LedgerError(f"{label} changed while it was read.")
+        return after.st_size, digest.hexdigest()
+    except OSError as exc:
+        raise LedgerError(f"{label} could not be read safely: {exc}") from exc
+    finally:
+        if descriptor >= 0:
+            os.close(descriptor)
 
 
 def _new_id(prefix: str) -> str:
@@ -191,15 +251,15 @@ def _ordinary_file(path: Path, *, label: str) -> os.stat_result:
     return observed
 
 
-def _prepare_thread_lock(path: Path) -> Any:
-    """Return one process-local lock for an engagement prepare boundary."""
+def _engagement_thread_lock(path: Path) -> Any:
+    """Return one process-local lock for an engagement mutation boundary."""
 
     key = str(path)
-    with _PREPARE_THREAD_LOCKS_GUARD:
-        lock = _PREPARE_THREAD_LOCKS.get(key)
+    with _ENGAGEMENT_THREAD_LOCKS_GUARD:
+        lock = _ENGAGEMENT_THREAD_LOCKS.get(key)
         if lock is None:
             lock = threading.RLock()
-            _PREPARE_THREAD_LOCKS[key] = lock
+            _ENGAGEMENT_THREAD_LOCKS[key] = lock
         return lock
 
 
@@ -224,41 +284,95 @@ def _acquire_process_lock(descriptor: int) -> None:
             time.sleep(0.05)
 
 
-@contextmanager
-def _prepare_lock(client_root: Path, engagement_id: str) -> Iterator[None]:
-    """Serialize exact run-key lookup and creation across threads and processes.
+def _open_engagement_lock(path: Path) -> int:
+    """Open or recover the stable, purpose-specific engagement lock file."""
 
-    A fixed lock is justified here because one idempotency key must mechanically
-    resolve to one run even when separate local MCP processes retry together.
-    The existing engagement manifest is locked, so the guarantee adds no
-    otherwise purposeless portable file to the customer folder.
+    descriptor = -1
+    try:
+        descriptor = os.open(
+            path,
+            os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0),
+            0o600,
+        )
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode) or opened.st_nlink != 1:
+            raise LedgerError(
+                "Engagement mutation lock must be a single-link regular file."
+            )
+        try:
+            current = path.lstat()
+        except OSError as exc:
+            raise LedgerError(
+                f"Engagement mutation lock is unavailable: {exc}"
+            ) from exc
+        if path.is_symlink() or (opened.st_dev, opened.st_ino) != (
+            current.st_dev,
+            current.st_ino,
+        ):
+            raise LedgerError("Engagement mutation lock path is unsafe.")
+        if opened.st_size == 0:
+            os.write(descriptor, _ENGAGEMENT_LOCK_CONTENT)
+            os.fsync(descriptor)
+        elif opened.st_size > 1024:
+            raise LedgerError("Engagement mutation lock exceeds its size limit.")
+        os.lseek(descriptor, 0, os.SEEK_SET)
+        return descriptor
+    except LedgerError:
+        if descriptor >= 0:
+            os.close(descriptor)
+        raise
+    except OSError as exc:
+        if descriptor >= 0:
+            os.close(descriptor)
+        raise LedgerError(f"Engagement mutation lock is unavailable: {exc}") from exc
+
+
+@contextmanager
+def _engagement_lock(client_root: Path, engagement_id: str) -> Iterator[None]:
+    """Serialize idempotent engagement writes across threads and processes.
+
+    A fixed lock is justified because one imported content identity or run
+    idempotency key must mechanically resolve to one ledger record even when
+    separate local MCP processes retry together. The dedicated lock file has
+    this single documented runtime purpose and stays stable when manifests are
+    atomically replaced.
     """
 
     lock_path = (
-        _engagement_root(client_root.resolve(), engagement_id) / "engagement.json"
+        _engagement_root(client_root.resolve(), engagement_id) / _ENGAGEMENT_LOCK_NAME
     )
-    before = _ordinary_file(lock_path, label="engagement prepare lock")
-    thread_lock = _prepare_thread_lock(lock_path)
+    thread_lock = _engagement_thread_lock(lock_path)
     with thread_lock:
         descriptor = -1
-        try:
-            descriptor = os.open(
-                lock_path,
-                (os.O_RDWR if os.name == "nt" else os.O_RDONLY)
-                | getattr(os, "O_NOFOLLOW", 0),
-            )
-            opened = os.fstat(descriptor)
-            if (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino):
-                raise LedgerError("Engagement changed before its prepare lock opened.")
-            _acquire_process_lock(descriptor)
-        except LedgerError:
-            if descriptor >= 0:
-                os.close(descriptor)
-            raise
-        except OSError as exc:
-            if descriptor >= 0:
-                os.close(descriptor)
-            raise LedgerError(f"Engagement prepare lock is unavailable: {exc}") from exc
+        for _attempt in range(8):
+            try:
+                descriptor = _open_engagement_lock(lock_path)
+                opened = os.fstat(descriptor)
+                _acquire_process_lock(descriptor)
+                current = _ordinary_file(
+                    lock_path,
+                    label="engagement mutation lock",
+                )
+                if (opened.st_dev, opened.st_ino) != (
+                    current.st_dev,
+                    current.st_ino,
+                ):
+                    os.close(descriptor)
+                    descriptor = -1
+                    continue
+                break
+            except LedgerError:
+                if descriptor >= 0:
+                    os.close(descriptor)
+                raise
+            except OSError as exc:
+                if descriptor >= 0:
+                    os.close(descriptor)
+                raise LedgerError(
+                    f"Engagement mutation lock is unavailable: {exc}"
+                ) from exc
+        else:
+            raise LedgerError("Engagement changed repeatedly while acquiring its lock.")
         try:
             yield
         finally:
@@ -510,6 +624,8 @@ def create_engagement(
         }
         manifest = _sealed(content)
         _write_json(target / "engagement.json", manifest)
+        lock_descriptor = _open_engagement_lock(target / _ENGAGEMENT_LOCK_NAME)
+        os.close(lock_descriptor)
     except (LedgerError, OSError):
         shutil.rmtree(target, ignore_errors=True)
         raise
@@ -635,12 +751,17 @@ def load_input_receipt(
     if receipt["input_id"] != input_id:
         raise LedgerError("Input directory and receipt IDs disagree.")
     stored = input_root / receipt["stored_name"]
-    observed = _ordinary_file(stored, label="controlled input snapshot")
-    if verify_bytes and (
-        observed.st_size != receipt["byte_count"]
-        or _sha256_file(stored) != receipt["sha256"]
-    ):
-        raise LedgerError("Controlled input snapshot no longer matches its receipt.")
+    if verify_bytes:
+        byte_count, sha256 = _stable_file_identity(
+            stored,
+            label="controlled input snapshot",
+        )
+        if byte_count != receipt["byte_count"] or sha256 != receipt["sha256"]:
+            raise LedgerError(
+                "Controlled input snapshot no longer matches its receipt."
+            )
+    else:
+        _ordinary_file(stored, label="controlled input snapshot")
     return {
         **receipt,
         "relative_path": stored.relative_to(client_root.resolve()).as_posix(),
@@ -760,65 +881,73 @@ def import_document(
         raise LedgerError("Imported document path cannot contain symbolic links.")
     source_stat = _ordinary_file(source, label="import source")
     source_sha256 = _sha256_file(source)
-    inputs_root = _ordinary_directory(
-        _engagement_root(root, engagement_id) / "inputs",
-        label="engagement input directory",
-    )
-    for input_dir in _iter_manifest_directories(
-        inputs_root, prefix="input", maximum=_MAX_INPUTS
-    ):
-        receipt = load_input_receipt(root, engagement_id, input_dir.name)
-        if receipt["role"] == role and receipt["sha256"] == source_sha256:
-            if receipt["byte_count"] != source_stat.st_size:
-                raise LedgerError("Matching input digest has a conflicting byte count.")
-            return {
-                "status": "already_imported",
-                "receipt": receipt,
-                "imported_path": receipt["path"],
-                "original_preserved": True,
-                "source_archive_mutated": False,
+    with _engagement_lock(root, engagement_id):
+        engagement = load_engagement_manifest(root, engagement_id)
+        if engagement["client_id"] != client_id:
+            raise LedgerError("Selected client and engagement do not match.")
+        if engagement["status"] != "open":
+            raise LedgerError("Documents cannot be imported into a closed engagement.")
+        inputs_root = _ordinary_directory(
+            _engagement_root(root, engagement_id) / "inputs",
+            label="engagement input directory",
+        )
+        for input_dir in _iter_manifest_directories(
+            inputs_root, prefix="input", maximum=_MAX_INPUTS
+        ):
+            receipt = load_input_receipt(root, engagement_id, input_dir.name)
+            if receipt["role"] == role and receipt["sha256"] == source_sha256:
+                if receipt["byte_count"] != source_stat.st_size:
+                    raise LedgerError(
+                        "Matching input digest has a conflicting byte count."
+                    )
+                return {
+                    "status": "already_imported",
+                    "receipt": receipt,
+                    "imported_path": receipt["path"],
+                    "original_preserved": True,
+                    "source_archive_mutated": False,
+                }
+        input_id = _new_id("input")
+        target = inputs_root / input_id
+        target.mkdir(mode=0o700)
+        safe_name = source.name
+        if Path(safe_name).name != safe_name or safe_name in {
+            "",
+            ".",
+            "..",
+            "receipt.json",
+        }:
+            target.rmdir()
+            raise LedgerError("Imported document name is unsafe.")
+        destination = target / safe_name
+        try:
+            byte_count, digest = _stable_copy(source, destination)
+            if digest != source_sha256 or byte_count != source_stat.st_size:
+                raise LedgerError("Imported document copy does not match its source.")
+            content = {
+                "schema_version": INPUT_RECEIPT_SCHEMA,
+                "client_id": client_id,
+                "engagement_id": engagement_id,
+                "input_id": input_id,
+                "role": role,
+                "stored_name": safe_name,
+                "original_name": safe_name,
+                "byte_count": byte_count,
+                "sha256": digest,
+                "imported_at": _now_iso(),
             }
-    input_id = _new_id("input")
-    target = inputs_root / input_id
-    target.mkdir(mode=0o700)
-    safe_name = source.name
-    if Path(safe_name).name != safe_name or safe_name in {
-        "",
-        ".",
-        "..",
-        "receipt.json",
-    }:
-        target.rmdir()
-        raise LedgerError("Imported document name is unsafe.")
-    destination = target / safe_name
-    try:
-        byte_count, digest = _stable_copy(source, destination)
-        if digest != source_sha256 or byte_count != source_stat.st_size:
-            raise LedgerError("Imported document copy does not match its source.")
-        content = {
-            "schema_version": INPUT_RECEIPT_SCHEMA,
-            "client_id": client_id,
-            "engagement_id": engagement_id,
-            "input_id": input_id,
-            "role": role,
-            "stored_name": safe_name,
-            "original_name": safe_name,
-            "byte_count": byte_count,
-            "sha256": digest,
-            "imported_at": _now_iso(),
+            _write_json(target / "receipt.json", _sealed(content))
+            receipt = load_input_receipt(root, engagement_id, input_id)
+        except (LedgerError, OSError):
+            shutil.rmtree(target, ignore_errors=True)
+            raise
+        return {
+            "status": "imported",
+            "receipt": receipt,
+            "imported_path": receipt["path"],
+            "original_preserved": True,
+            "source_archive_mutated": True,
         }
-        _write_json(target / "receipt.json", _sealed(content))
-        receipt = load_input_receipt(root, engagement_id, input_id)
-    except (LedgerError, OSError):
-        shutil.rmtree(target, ignore_errors=True)
-        raise
-    return {
-        "status": "imported",
-        "receipt": receipt,
-        "imported_path": receipt["path"],
-        "original_preserved": True,
-        "source_archive_mutated": True,
-    }
 
 
 def _validate_artifact_record(record: Mapping[str, Any]) -> dict[str, Any]:
@@ -1226,19 +1355,30 @@ def load_run(
     resolved_bindings: list[dict[str, Any]] = []
     for binding in inputs["inputs"]:
         source = root / binding["source_relative_path"]
-        observed = _ordinary_file(source, label="bound workflow input")
-        if verify_inputs and (
-            observed.st_size != binding["byte_count"]
-            or _sha256_file(source) != binding["sha256"]
-        ):
-            raise LedgerError("A bound workflow input no longer matches its receipt.")
+        if verify_inputs:
+            byte_count, sha256 = _stable_file_identity(
+                source,
+                label="bound workflow input",
+            )
+            if byte_count != binding["byte_count"] or sha256 != binding["sha256"]:
+                raise LedgerError(
+                    "A bound workflow input no longer matches its receipt."
+                )
+        else:
+            _ordinary_file(source, label="bound workflow input")
         execution = run_root / binding["execution_relative_path"]
-        execution_observed = _ordinary_file(execution, label="run execution input")
-        if verify_inputs and (
-            execution_observed.st_size != binding["byte_count"]
-            or _sha256_file(execution) != binding["sha256"]
-        ):
-            raise LedgerError("Run execution input no longer matches its receipt.")
+        if verify_inputs:
+            execution_byte_count, execution_sha256 = _stable_file_identity(
+                execution,
+                label="run execution input",
+            )
+            if (
+                execution_byte_count != binding["byte_count"]
+                or execution_sha256 != binding["sha256"]
+            ):
+                raise LedgerError("Run execution input no longer matches its receipt.")
+        else:
+            _ordinary_file(execution, label="run execution input")
         receipt_path = root / binding["receipt_relative_path"]
         _ordinary_file(receipt_path, label="bound workflow input receipt")
         if binding["kind"] == "import":
@@ -1437,7 +1577,12 @@ def prepare_run(
         if new_run
         else normalized_key
     )
-    with _prepare_lock(root, engagement_id):
+    with _engagement_lock(root, engagement_id):
+        engagement = load_engagement_manifest(root, engagement_id)
+        if engagement["client_id"] != client_id:
+            raise LedgerError("Selected client and engagement do not match.")
+        if engagement["status"] != "open":
+            raise LedgerError("A workflow cannot be prepared in a closed engagement.")
         existing_runs = _iter_runs(root, engagement_id)
         for existing in existing_runs:
             run = existing["run"]
@@ -1538,7 +1683,7 @@ def prepare_run(
         return {"status": "prepared", **loaded}
 
 
-def _write_run_status(
+def _write_run_status_locked(
     client_root: Path,
     engagement_id: str,
     run_id: str,
@@ -1546,6 +1691,7 @@ def _write_run_status(
     *,
     reason: str | None = None,
 ) -> dict[str, Any]:
+    engagement = load_engagement_manifest(client_root, engagement_id)
     loaded = load_run(client_root, engagement_id, run_id)
     run = loaded["run"]
     current = run["status"]
@@ -1553,6 +1699,8 @@ def _write_run_status(
         if current == "completed":
             validate_run_artifacts(client_root, engagement_id, run_id)
         return loaded
+    if engagement["status"] != "open":
+        raise LedgerError("Runs cannot change after their engagement is closed.")
     if target_status not in _RUN_TRANSITIONS[current]:
         raise LedgerError(f"Run cannot transition from {current} to {target_status}.")
     if target_status == "completed":
@@ -1570,10 +1718,32 @@ def _write_run_status(
             if target_status == "failed"
             else None
         ),
-        "status_history": [*run["status_history"], {"status": target_status, "at": at}],
+        "status_history": [
+            *run["status_history"],
+            {"status": target_status, "at": at},
+        ],
     }
     _write_json(Path(loaded["run_root"]) / "run.json", updated)
     return load_run(client_root, engagement_id, run_id)
+
+
+def _write_run_status(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    target_status: str,
+    *,
+    reason: str | None = None,
+) -> dict[str, Any]:
+    root = _ordinary_directory(client_root, label="client folder")
+    with _engagement_lock(root, engagement_id):
+        return _write_run_status_locked(
+            root,
+            engagement_id,
+            run_id,
+            target_status,
+            reason=reason,
+        )
 
 
 def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, Any]:
@@ -1620,6 +1790,20 @@ def finalize_run(
 ) -> dict[str, Any]:
     """Seal every physical output with an explicit purpose and audience."""
 
+    root = _ordinary_directory(client_root, label="client folder")
+    with _engagement_lock(root, engagement_id):
+        return _finalize_run_locked(root, engagement_id, run_id, declarations)
+
+
+def _finalize_run_locked(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    declarations: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    engagement = load_engagement_manifest(client_root, engagement_id)
+    if engagement["status"] != "open":
+        raise LedgerError("Runs cannot be finalized after their engagement is closed.")
     loaded = load_run(client_root, engagement_id, run_id)
     if loaded["run"]["status"] not in {"running", "ready_for_review"}:
         raise LedgerError("Only a running or review-ready run can be finalized.")
@@ -1672,7 +1856,10 @@ def finalize_run(
     artifacts: list[dict[str, Any]] = []
     for relative_path in sorted(physical):
         source = physical[relative_path]
-        observed = _ordinary_file(source, label="workflow artifact")
+        byte_count, sha256 = _stable_file_identity(
+            source,
+            label="workflow artifact",
+        )
         raw = declared[relative_path]
         record = _validate_artifact_record(
             {
@@ -1681,11 +1868,13 @@ def finalize_run(
                 "purpose": raw["purpose"],
                 "audience": raw["audience"],
                 "media_type": raw["media_type"],
-                "byte_count": observed.st_size,
-                "sha256": _sha256_file(source),
+                "byte_count": byte_count,
+                "sha256": sha256,
             }
         )
         artifacts.append(record)
+    if _output_files(output_dir) != files:
+        raise LedgerError("Workflow outputs changed while they were being sealed.")
     if loaded["run"]["status"] == "ready_for_review":
         existing = validate_run_artifacts(client_root, engagement_id, run_id)
         requested = [
@@ -1717,8 +1906,9 @@ def finalize_run(
         }
     )
     _write_json(Path(loaded["run_root"]) / "artifact_manifest.json", manifest)
+    manifest = validate_run_artifacts(client_root, engagement_id, run_id)
     if loaded["run"]["status"] == "running":
-        loaded = _write_run_status(
+        loaded = _write_run_status_locked(
             client_root, engagement_id, run_id, "ready_for_review"
         )
     return {**loaded, "artifact_manifest": manifest}
@@ -1770,12 +1960,12 @@ def validate_run_artifacts(
     if set(physical) != set(declared):
         raise LedgerError("Artifact manifest no longer closes the output tree.")
     for relative_path, path in physical.items():
-        observed = _ordinary_file(path, label="workflow artifact")
+        byte_count, sha256 = _stable_file_identity(
+            path,
+            label="workflow artifact",
+        )
         record = declared[relative_path]
-        if (
-            observed.st_size != record["byte_count"]
-            or _sha256_file(path) != record["sha256"]
-        ):
+        if byte_count != record["byte_count"] or sha256 != record["sha256"]:
             raise LedgerError("Workflow artifact no longer matches its manifest.")
     return manifest
 
@@ -1790,33 +1980,34 @@ def close_engagement(client_root: Path, engagement_id: str) -> dict[str, Any]:
     """Close an engagement only after active runs have been resolved."""
 
     root = _ordinary_directory(client_root, label="client folder")
-    engagement = load_engagement_manifest(root, engagement_id)
-    if engagement["status"] == "closed":
-        return engagement
-    active = [
-        item["run"]["run_id"]
-        for item in _iter_runs(root, engagement_id)
-        if item["run"]["status"] in {"prepared", "running", "ready_for_review"}
-    ]
-    if active:
-        raise LedgerError(
-            "Engagement has active runs; complete or cancel them before closing: "
-            + ", ".join(active)
-        )
-    content = {
-        key: engagement[key]
-        for key in (
-            "schema_version",
-            "client_id",
-            "engagement_id",
-            "label",
-            "created_at",
-        )
-    }
-    content.update({"status": "closed", "closed_at": _now_iso()})
-    closed = _sealed(content)
-    _write_json(_engagement_root(root, engagement_id) / "engagement.json", closed)
-    return closed
+    with _engagement_lock(root, engagement_id):
+        engagement = load_engagement_manifest(root, engagement_id)
+        if engagement["status"] == "closed":
+            return engagement
+        active = [
+            item["run"]["run_id"]
+            for item in _iter_runs(root, engagement_id)
+            if item["run"]["status"] in {"prepared", "running", "ready_for_review"}
+        ]
+        if active:
+            raise LedgerError(
+                "Engagement has active runs; complete or cancel them before closing: "
+                + ", ".join(active)
+            )
+        content = {
+            key: engagement[key]
+            for key in (
+                "schema_version",
+                "client_id",
+                "engagement_id",
+                "label",
+                "created_at",
+            )
+        }
+        content.update({"status": "closed", "closed_at": _now_iso()})
+        closed = _sealed(content)
+        _write_json(_engagement_root(root, engagement_id) / "engagement.json", closed)
+        return closed
 
 
 def retention_report(

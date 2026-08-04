@@ -5,7 +5,7 @@ import json
 import shutil
 import subprocess
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import pytest
 
@@ -154,6 +154,83 @@ GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS = [
         "report-builder",
     }
 ]
+
+CLIENT_BOUND_GENERIC_PERSISTENCE_PLUGINS = frozenset(
+    {"deep-research-validator", "prompt-optimizer"}
+)
+
+
+def _generic_persistence_workspace(
+    plugin: str,
+    create_workspace: Callable[[str], dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Return a real v2 customer run for client-bound review persistence."""
+
+    if plugin not in CLIENT_BOUND_GENERIC_PERSISTENCE_PLUGINS:
+        return None
+    return create_workspace(plugin)
+
+
+def _generic_review_output_dir(
+    tmp_path: Path,
+    plugin: str,
+    relative_output: str,
+    workspace: dict[str, Any] | None,
+) -> Path:
+    """Resolve a generic fixture output within its owning run when required."""
+
+    if workspace is not None:
+        return Path(workspace["output_dir"]) / relative_output
+    return tmp_path / plugin / relative_output
+
+
+def _bind_generic_review_run(
+    review_payload: dict[str, object],
+    workspace: dict[str, Any] | None,
+) -> None:
+    """Bind a synthetic review payload to the real run used for persistence."""
+
+    if workspace is not None:
+        review_payload["run_id"] = str(workspace["run_id"])
+
+
+def _generic_review_run_intake(
+    plugin: str,
+    run_id: object,
+    output_dir: Path,
+    workspace: dict[str, Any] | None,
+    **extra: object,
+) -> dict[str, object]:
+    """Build either the legacy non-persistent or portable managed run intake."""
+
+    if workspace is None:
+        output_ref = output_dir.as_posix()
+    else:
+        output_ref = output_dir.relative_to(
+            Path(workspace["context_path"]).parent
+        ).as_posix()
+    run_intake: dict[str, object] = {
+        "schema_version": "1.0",
+        "plugin": plugin,
+        "workflow": plugin,
+        "run_id": run_id,
+        "output_dir": output_ref,
+        **extra,
+    }
+    if workspace is not None:
+        run_intake["path_reference"] = "run_root_relative"
+    return run_intake
+
+
+def _generic_review_client_arguments(
+    workspace: dict[str, Any] | None,
+) -> dict[str, str]:
+    """Return the current context path required by client-bound MCP writers."""
+
+    if workspace is None:
+        return {}
+    return {"client_engagement": Path(workspace["context_path"]).as_posix()}
+
 
 REVIEW_RENDER_TOOLS = {
     "check-entries": "render_check_entries_review",
@@ -1138,16 +1215,55 @@ def _demo_target_artifact_outputs(
     return outputs
 
 
+def _demo_prompt_contract_review() -> dict[str, object]:
+    """Return a complete semantic-review record for the Prompt demo edit."""
+
+    dimensions = {
+        dimension: {
+            "status": "conforms",
+            "analysis": "The adapter demo prompt semantically conforms.",
+        }
+        for dimension in (
+            "question_and_material_facts",
+            "generation_route",
+            "document_type",
+            "purpose",
+            "audience",
+            "output_language",
+            "jurisdiction",
+            "evidence_display",
+            "research_lens",
+            "validation_policy",
+            "source_strategy",
+        )
+    }
+    return {
+        "schema_version": "1.0",
+        "review_method": "model_led_semantic_conformance_review",
+        "dimensions": dimensions,
+        "overall_status": "conforms",
+        "reviewer_action": "accept",
+    }
+
+
 @pytest.mark.parametrize(
     ("plugin", "save_tool", "apply_tool", "_item_type"),
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
-    tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, _item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    save_tool: str,
+    apply_tool: str,
+    _item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin / "adapter-demo"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "adapter-demo", workspace)
     output_dir.mkdir(parents=True)
     review_payload = _adapter_demo_review_payload(plugin)
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     decisions = _demo_decisions(review_payload)
     final_artifacts = {
         "schema_version": "1.0",
@@ -1181,17 +1297,20 @@ def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
             + "\n",
             encoding="utf-8",
         )
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-        "assumptions": {
+        (output_dir / "prompt_contract_review.json").write_text(
+            json.dumps(_demo_prompt_contract_review(), indent=2) + "\n",
+            encoding="utf-8",
+        )
+    run_intake = _generic_review_run_intake(
+        plugin,
+        review_payload["run_id"],
+        output_dir,
+        workspace,
+        assumptions={
             "language": "en",
             "question_text": "Research Swiss tax residence using official sources.",
         },
-    }
+    )
     for filename, payload in (
         ("run_intake.json", run_intake),
         ("review_payload.json", review_payload),
@@ -1209,6 +1328,7 @@ def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
             "params": {
                 "name": save_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": decisions,
@@ -1224,6 +1344,7 @@ def test_non_plotting_review_save_and_apply_tools_accept_adapter_demo_payloads(
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -1327,17 +1448,21 @@ def _structured_edit_review_payload(
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_persist_review_results(
-    tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "results", workspace)
     review_payload = _minimal_review_payload(plugin, item_type)
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     messages: list[dict[str, object]] = [
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
         {
@@ -1347,6 +1472,7 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
             "params": {
                 "name": save_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": [
@@ -1368,6 +1494,7 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": {
@@ -1405,6 +1532,7 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
             "params": {
                 "name": save_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": [{"item_id": "missing", "action": "accept"}],
@@ -1479,26 +1607,29 @@ def test_non_plotting_review_save_and_apply_tools_persist_review_results(
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_states(
-    tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    partial_dir = tmp_path / plugin / "partial"
-    blocked_dir = tmp_path / plugin / "blocked"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    partial_dir = _generic_review_output_dir(tmp_path, plugin, "partial", workspace)
+    blocked_dir = _generic_review_output_dir(tmp_path, plugin, "blocked", workspace)
     review_payload = _two_item_review_payload(plugin, item_type)
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     review_payload["items"][1]["data"] = {
         "status": "needs_evidence",
         "requested_document": f"{plugin}-support.pdf",
     }
-    run_intake_partial = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(partial_dir),
-    }
-    run_intake_blocked = {
-        **run_intake_partial,
-        "output_dir": str(blocked_dir),
-    }
+    run_intake_partial = _generic_review_run_intake(
+        plugin, review_payload["run_id"], partial_dir, workspace
+    )
+    run_intake_blocked = _generic_review_run_intake(
+        plugin, review_payload["run_id"], blocked_dir, workspace
+    )
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": plugin,
@@ -1519,6 +1650,7 @@ def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_sta
             "params": {
                 "name": save_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake_partial,
                     "review_payload": review_payload,
                     "decisions": [{"item_id": "item-1", "action": "accept"}],
@@ -1533,6 +1665,7 @@ def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_sta
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake_partial,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -1548,6 +1681,7 @@ def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_sta
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake_blocked,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -1633,11 +1767,21 @@ def test_non_plotting_review_save_and_apply_tools_handle_partial_and_blocked_sta
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
-    tmp_path: Path, plugin: str, save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin / "missing-evidence"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(
+        tmp_path, plugin, "missing-evidence", workspace
+    )
     requested_document = f"{plugin}-support.pdf"
     review_payload = _two_item_review_payload(plugin, item_type)
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     review_payload["items"][1] = {
         **review_payload["items"][1],
         "allowed_actions": [
@@ -1668,13 +1812,9 @@ def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
             }
         ],
     }
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": plugin,
@@ -1703,6 +1843,7 @@ def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
             "params": {
                 "name": save_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "decisions": decisions,
@@ -1717,6 +1858,7 @@ def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -1790,21 +1932,25 @@ def test_non_plotting_review_request_more_documents_uses_explicit_item_metadata(
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_decisions(
-    tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    _save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin / "edit"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "edit", workspace)
     review_payload = _editable_review_payload(plugin, item_type)
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     original_text = "Original draft text.\n"
     revised_text = "Revised text from the review UI.\nSecond line."
     output_dir.mkdir(parents=True)
     (output_dir / "draft_memo.md").write_text(original_text, encoding="utf-8")
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": plugin,
@@ -1821,6 +1967,7 @@ def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_dec
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -1930,21 +2077,25 @@ def test_non_plotting_review_apply_tools_update_safe_text_artifacts_for_edit_dec
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_keep_binary_targets_revision_only(
-    tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    _save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin / "binary-edit"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "binary-edit", workspace)
     review_payload = _editable_review_payload(plugin, item_type, "draft_report.docx")
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     original_bytes = b"not a real docx fixture, just a binary target"
     revised_text = "Reviewer text that should not overwrite a binary artifact."
     output_dir.mkdir(parents=True)
     (output_dir / "draft_report.docx").write_bytes(original_bytes)
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": plugin,
@@ -1961,6 +2112,7 @@ def test_non_plotting_review_apply_tools_keep_binary_targets_revision_only(
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -2033,9 +2185,15 @@ def test_non_plotting_review_apply_tools_keep_binary_targets_revision_only(
     GENERIC_PERSISTENCE_REVIEW_SAVE_TOOLS,
 )
 def test_non_plotting_review_apply_tools_update_csv_rows_when_target_contract_is_explicit(
-    tmp_path: Path, plugin: str, _save_tool: str, apply_tool: str, item_type: str
+    tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
+    plugin: str,
+    _save_tool: str,
+    apply_tool: str,
+    item_type: str,
 ) -> None:
-    output_dir = tmp_path / plugin / "csv-edit"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "csv-edit", workspace)
     target_artifact = "native_results.csv"
     review_payload = _structured_edit_review_payload(
         plugin,
@@ -2043,19 +2201,17 @@ def test_non_plotting_review_apply_tools_update_csv_rows_when_target_contract_is
         target_artifact,
         "review_note",
     )
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     original_csv = (
         "item_id,status,review_note\nstructured-1,pending,old\nother,pending,keep\n"
     )
     revised_note = 'Approved, "reviewed"'
     output_dir.mkdir(parents=True)
     (output_dir / target_artifact).write_text(original_csv, encoding="utf-8")
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     final_artifacts = {
         "schema_version": "1.0",
         "plugin": plugin,
@@ -2072,6 +2228,7 @@ def test_non_plotting_review_apply_tools_update_csv_rows_when_target_contract_is
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -2148,11 +2305,13 @@ def test_non_plotting_review_apply_tools_update_csv_rows_when_target_contract_is
 
 def test_non_plotting_review_apply_tool_updates_json_records_when_target_contract_is_explicit(
     tmp_path: Path,
+    vera_workflow_workspace: Callable[[str], dict[str, Any]],
 ) -> None:
-    plugin = "check-entries"
-    apply_tool = "apply_check_entries_decisions"
-    item_type = "supported_entry"
-    output_dir = tmp_path / plugin / "json-edit"
+    plugin = "deep-research-validator"
+    apply_tool = "apply_deep_research_decisions"
+    item_type = "supported_claim"
+    workspace = _generic_persistence_workspace(plugin, vera_workflow_workspace)
+    output_dir = _generic_review_output_dir(tmp_path, plugin, "json-edit", workspace)
     target_artifact = "native_results.json"
     review_payload = _structured_edit_review_payload(
         plugin,
@@ -2161,6 +2320,8 @@ def test_non_plotting_review_apply_tool_updates_json_records_when_target_contrac
         "review_note",
         records_key="results",
     )
+    _bind_generic_review_run(review_payload, workspace)
+    client_arguments = _generic_review_client_arguments(workspace)
     original_json = {
         "results": [
             {"item_id": "structured-1", "status": "pending", "review_note": "old"},
@@ -2172,13 +2333,9 @@ def test_non_plotting_review_apply_tool_updates_json_records_when_target_contrac
         json.dumps(original_json, indent=2) + "\n",
         encoding="utf-8",
     )
-    run_intake = {
-        "schema_version": "1.0",
-        "plugin": plugin,
-        "workflow": plugin,
-        "run_id": review_payload["run_id"],
-        "output_dir": str(output_dir),
-    }
+    run_intake = _generic_review_run_intake(
+        plugin, review_payload["run_id"], output_dir, workspace
+    )
     messages: list[dict[str, object]] = [
         {
             "jsonrpc": "2.0",
@@ -2187,6 +2344,7 @@ def test_non_plotting_review_apply_tool_updates_json_records_when_target_contrac
             "params": {
                 "name": apply_tool,
                 "arguments": {
+                    **client_arguments,
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": {

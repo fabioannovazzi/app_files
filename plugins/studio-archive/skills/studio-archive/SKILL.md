@@ -74,7 +74,10 @@ The selected customer folder is the source of truth for Vera's durable client,
 engagement, input, run, lifecycle, and artifact records in Codex. Folder names
 are labels; `Vera/client.json` carries the stable `client_...` identity, and
 each `Vera/engagements/<engagement-id>/engagement.json` carries one stable
-`eng_...` identity. These records survive an archived chat and a folder rename.
+`eng_...` identity. The adjacent `.vera-engagement.lock` has one technical
+purpose: serialize simultaneous ledger mutations across local processes. It
+contains no case data and is not a workflow output. These records survive an
+archived chat and a folder rename.
 Never infer the client from a filename or silently create a client.
 
 Use this exact chat workflow whenever a professional starts client work:
@@ -134,25 +137,22 @@ Use this exact chat workflow whenever a professional starts client work:
 
 For the journal-specific flow, prepare Journal Sampling from the exact journal
 `input_id`. Its finalized artifact manifest must identify the normalized
-population, normalization diagnostics, and `journal_sample.csv`. For each
-separate support delivery, import only that ZIP/PDF batch and prepare a separate
-Check Entries run bound to that support `input_id` plus those exact artifacts
-from one Journal Sampling run. Bind the complete handoff actually consumed by
-Check Entries: semantic artifacts `prepared.normalized_journal`,
-`internal.normalization_diagnostics`, and `prepared.journal_sample_csv`, plus
-the normalization companions `normalization_recipe.json`,
-`suggested_recipe.json`, `reviewed_decisions.json`, `assurance_gates.json`,
-`assurance_envelope.json`, and `qualification_review_payload.json`. The sample
-is the row-selection boundary: Check Entries checks those sampled entries, not
-the full journal. A later support batch is prepared as a separate run and
-cannot expand or mutate an earlier run's inputs; use `new_run=true` when an
-intentionally separate batch has the same exact byte selection as an earlier
-run, with a new `idempotency_key` for each distinct batch.
+population, normalization diagnostics, sample, and assurance companions. For
+each separate support delivery, import only that ZIP/PDF batch and call
+`start_check_entries_from_sample` with the selected sampling run ID and support
+input IDs. That operation resolves and validates the complete internal handoff,
+then prepares and starts Check Entries. Do not expose or ask the user to
+assemble internal artifact references. The sample is the row-selection
+boundary: Check Entries checks those sampled entries, not the full journal. A
+later support batch is prepared as a separate run and cannot expand or mutate
+an earlier run's inputs; use `new_run=true` when an intentionally separate
+batch has the same exact byte selection as an earlier run, with a new
+`idempotency_key` for each distinct batch.
 
 Users do not operate the CLI. If Codex must use the internal fallback, the
 corresponding commands are `clients`, `configure-client`, `create-client`,
-`create-engagement`, `import-document`, `engagements`, and `prepare-workflow` in
-`scripts/studio_archive.py`.
+`create-engagement`, `import-document`, `engagements`, `prepare-workflow`, and
+`start-check-entries-from-sample` in `scripts/studio_archive.py`.
 
 `get_studio_client_folder --client-id client_...` returns a digest-bound
 `vera.studio_client_folder.v2` object containing both the stable client ID and

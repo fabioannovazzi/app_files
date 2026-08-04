@@ -765,7 +765,8 @@ def test_manifest_and_skill_are_generic() -> None:
     assert all(len(prompt) <= 128 for prompt in default_prompts)
     assert "organize the evidence" in default_prompt
     assert "decisions that cannot wait" in default_prompt
-    assert "render the right business chart" in default_prompt
+    assert "interactive HTML presentation" in default_prompt
+    assert "supporting charts and recommendations" in default_prompt
     forbidden_terms = ("Al" + "fredo", "Car" + "lo", "Gal" + "loni")
     for term in forbidden_terms:
         assert term not in plugin_text
@@ -782,7 +783,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.127"
+    assert manifest["version"] == "0.1.131"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]

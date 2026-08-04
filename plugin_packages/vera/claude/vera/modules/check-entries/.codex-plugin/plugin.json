@@ -1,6 +1,6 @@
 {
   "name": "check-entries",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Claude.",
   "author": {
     "name": "Mparanza",

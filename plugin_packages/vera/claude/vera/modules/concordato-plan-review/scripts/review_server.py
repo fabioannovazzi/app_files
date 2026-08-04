@@ -47,6 +47,24 @@ LOGGER = logging.getLogger(__name__)
 NODE_OVERRIDE_ENV = "MPARANZA_REVIEW_NODE"
 REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
 REQUIRE_VERA_CUSTOMER_RUN = False
+VERA_REVIEW_WORKFLOW_IDS = frozenset(
+    {
+        "audit-reconciliation",
+        "check-entries",
+        "client-file-preparation",
+        "concordato-plan-review",
+        "deep-research-validator",
+        "financial-analysis",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "new-client",
+        "previdenza-inps",
+        "prompt-optimizer",
+        "registro-imprese-sari",
+        "report-builder",
+        "sales-plan",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -147,34 +165,20 @@ def _output_dir(path: str | Path) -> Path:
     return directory
 
 
-def _validate_vera_customer_run(workbench: LocalReviewWorkbench) -> None:
-    """Require a live portable Vera run before the server can mutate review files."""
+def _validate_vera_customer_run(
+    workbench: LocalReviewWorkbench,
+) -> dict[str, Any] | None:
+    """Return the live portable Vera context required for review mutations."""
 
     if not REQUIRE_VERA_CUSTOMER_RUN:
-        return
+        return None
     manifest = _read_json_object(
         workbench.plugin_dir / ".codex-plugin" / "plugin.json",
         required=True,
     )
     plugin = manifest.get("name")
-    vera_workflows = {
-        "audit-reconciliation",
-        "check-entries",
-        "client-file-preparation",
-        "concordato-plan-review",
-        "deep-research-validator",
-        "financial-analysis",
-        "journal-bank-reconciliation",
-        "journal-sampling",
-        "new-client",
-        "previdenza-inps",
-        "prompt-optimizer",
-        "registro-imprese-sari",
-        "report-builder",
-        "sales-plan",
-    }
-    if plugin not in vera_workflows:
-        return
+    if plugin not in VERA_REVIEW_WORKFLOW_IDS:
+        return None
     module_roots = (
         workbench.plugin_dir / "vendor" / "modules",
         workbench.plugin_dir.parent / "_shared" / "vendor" / "modules",
@@ -191,10 +195,25 @@ def _validate_vera_customer_run(workbench: LocalReviewWorkbench) -> None:
         load_client_workflow_context_for_output,
     )
 
-    load_client_workflow_context_for_output(
+    return load_client_workflow_context_for_output(
         workbench.output_dir,
         expected_workflow_id=str(plugin),
     )
+
+
+def _with_vera_customer_context(
+    workbench: LocalReviewWorkbench,
+    args: dict[str, Any],
+) -> dict[str, Any]:
+    """Add the live customer-run path to one server-owned MCP call."""
+
+    client_context = _validate_vera_customer_run(workbench)
+    if client_context is None:
+        return args
+    context_path = client_context.get("context_path")
+    if not isinstance(context_path, str) or not context_path:
+        raise ValueError("Vera customer-run context path is unavailable")
+    return {**args, "client_engagement": context_path}
 
 
 def _validate_loopback_host(host: str) -> str:
@@ -440,15 +459,18 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     """Return the plugin-rendered, browser-safe local review session."""
 
     raw_session = _raw_session_payload(workbench)
+    render_args = {
+        "run_intake": raw_session["run_intake"],
+        "review_payload": raw_session["review_payload"],
+        "ui_decisions": raw_session["ui_decisions"],
+        "final_artifacts": raw_session["final_artifacts"],
+    }
+    if raw_session["run_intake"].get("path_reference") == "run_root_relative":
+        render_args = _with_vera_customer_context(workbench, render_args)
     rendered = _mcp_tool_result(
         workbench,
         _render_tool_name(_adapter(workbench)),
-        {
-            "run_intake": raw_session["run_intake"],
-            "review_payload": raw_session["review_payload"],
-            "ui_decisions": raw_session["ui_decisions"],
-            "final_artifacts": raw_session["final_artifacts"],
-        },
+        render_args,
     )
     if rendered.get("ok") is False:
         raise ValueError(str(rendered.get("error") or "plugin render tool failed"))
@@ -463,6 +485,7 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     redactions = _known_absolute_paths(
         {
             "session": raw_session,
+            "tool_args": render_args,
             "workbench_output_dir": workbench.output_dir.resolve().as_posix(),
         }
     )
@@ -646,7 +669,10 @@ def call_review_tool(
 
     if not isinstance(name, str) or not name.strip():
         raise ValueError("tool name must be a non-empty string")
-    args = _server_tool_args(workbench, posted_args or {})
+    args = _with_vera_customer_context(
+        workbench,
+        _server_tool_args(workbench, posted_args or {}),
+    )
     adapter = _adapter(workbench)
     allowed_tools = {adapter["saveTool"], adapter["applyTool"]}
     if name not in allowed_tools:

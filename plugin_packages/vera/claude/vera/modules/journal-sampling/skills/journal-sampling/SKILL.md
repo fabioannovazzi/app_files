@@ -213,11 +213,12 @@ Sampling run and then restrict its work to the rows in the bound sample.
 
 Each support delivery is a separate evidence batch. Import it as an immutable,
 content-addressed `support` receipt (reusing the same receipt when the bytes and
-role are identical) and prepare a separate Check Entries run bound to that
-receipt and this exact sample. Use the explicit new-run option when a separately
-tracked batch has the same exact byte selection. A later support import does not
-change an earlier Check Entries input manifest or cause it to scan the
-engagement folder.
+role are identical), then call `start_check_entries_from_sample` with this
+Journal Sampling run ID and the support input IDs. Studio Archive resolves and
+validates the internal artifacts; neither the user nor the chat should name or
+assemble them. Use the explicit new-run option when a separately tracked batch
+has the same exact byte selection. A later support import does not change an
+earlier Check Entries input manifest or cause it to scan the engagement folder.
 
 ## Supported V2 Inputs
 

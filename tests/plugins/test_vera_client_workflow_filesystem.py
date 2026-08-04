@@ -46,6 +46,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("check-entries", "run_checks.py"),
     ("journal-bank-reconciliation", "inspect_inputs.py"),
     ("journal-bank-reconciliation", "run_reconciliation.py"),
+    ("journal-bank-reconciliation", "semantic_review.py"),
     ("sales-plan", "prepare_sales_plan_case.py"),
     ("sales-plan", "run_plan.py"),
     ("financial-analysis", "run_pack.py"),
@@ -450,6 +451,33 @@ def test_completed_customer_folder_run_allows_explicit_read_only_hydration(
 
     assert context["schema_version"] == "vera.client_workflow_context.v2"
     assert context["workflow_id"] == "journal-sampling"
+
+
+def test_closed_engagement_retains_completed_run_read_only_hydration(
+    tmp_path: Path,
+) -> None:
+    ledger = _load_customer_ledger()
+    context_path, input_path, output_dir, _ = _completed_context(
+        tmp_path,
+        "journal-sampling",
+    )
+    portable = json.loads(context_path.read_text(encoding="utf-8"))
+    ledger.close_engagement(
+        context_path.parents[5],
+        portable["engagement_id"],
+    )
+
+    context = load_client_engagement_context_file(
+        context_path,
+        expected_workflow_id="journal-sampling",
+        input_paths=[input_path],
+        output_dir=output_dir,
+        allowed_statuses=("completed",),
+    )
+
+    assert context["schema_version"] == "vera.client_workflow_context.v2"
+    assert context["workflow_id"] == "journal-sampling"
+    assert Path(context["output_dir"]) == output_dir
 
 
 def test_completed_customer_folder_run_rejects_default_writer_loader(

@@ -68,7 +68,7 @@ TABULAR_V7_EXTENSION_CONTRACT_PATH = (
 )
 
 
-def _running_customer_output(tmp_path: Path) -> tuple[Path, str]:
+def _load_customer_ledger() -> Any:
     ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
     module_name = "test_journal_bank_customer_ledger"
     ledger = sys.modules.get(module_name)
@@ -78,6 +78,11 @@ def _running_customer_output(tmp_path: Path) -> tuple[Path, str]:
         ledger = importlib.util.module_from_spec(spec)
         sys.modules[module_name] = ledger
         spec.loader.exec_module(ledger)
+    return ledger
+
+
+def _running_customer_output(tmp_path: Path) -> tuple[Path, str]:
+    ledger = _load_customer_ledger()
     client_root = tmp_path / "Managed Customer"
     client_root.mkdir(parents=True)
     client_id = "client_111111111111111111111111"
@@ -675,6 +680,110 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
     assert result.unmatched_bank.height == 2
     assert result.unmatched_journal.height == 2
     return core, semantic_review, reconciliation_dir, semantic_dir
+
+
+def _prepare_managed_ambiguous_semantic_run(
+    tmp_path: Path,
+) -> tuple[Any, Any, Path, Path, Path, dict[str, Any]]:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    ledger = _load_customer_ledger()
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir()
+    client_id = "client_333333333333333333333333"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root,
+        client_id,
+        "Managed semantic CLI",
+    )
+    source_dir = tmp_path / "received"
+    source_dir.mkdir()
+    bank_source = source_dir / "bank.csv"
+    journal_source = source_dir / "journal.csv"
+    _save_csv(
+        bank_source,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Payment Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Payment Beta", "Beta"],
+        ],
+    )
+    _save_csv(
+        journal_source,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Invoice Beta", "Beta"],
+        ],
+    )
+    imported_bank = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        bank_source,
+        "source",
+    )
+    imported_journal = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        journal_source,
+        "journal",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "journal-bank-reconciliation",
+        "test-version",
+        input_ids=[
+            imported_bank["receipt"]["input_id"],
+            imported_journal["receipt"]["input_id"],
+        ],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    input_paths = {
+        binding["role"]: Path(binding["path"])
+        for binding in running["context"]["input_bindings"]
+    }
+    bank_path = input_paths["source"]
+    journal_path = input_paths["journal"]
+    output_dir = Path(running["output_dir"])
+    context_path = Path(running["context_path"])
+    client_run_id = str(running["run"]["run_id"])
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        output_dir / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    reconciliation_dir = output_dir / "reconciliation"
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+        client_run_id=client_run_id,
+        client_run_root=context_path.parent,
+    )
+    assert result.matches.is_empty()
+    return (
+        core,
+        semantic_review,
+        reconciliation_dir,
+        output_dir / "semantic-review",
+        context_path,
+        running["context"],
+    )
 
 
 def _valid_semantic_response(graph: dict[str, Any]) -> dict[str, Any]:
@@ -7577,6 +7686,217 @@ def test_unexpected_output_tamper_blocks_review_and_is_not_resealed(
         core.validate_artifact_receipt(output_dir, receipt)
 
 
+def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
+    tmp_path: Path,
+) -> None:
+    ledger = _load_customer_ledger()
+    core = load_core()
+    client_root = tmp_path / "Managed Customer"
+    client_root.mkdir()
+    client_id = "client_222222222222222222222222"
+    ledger.create_client_manifest(client_root, client_id)
+    engagement = ledger.create_engagement(
+        client_root,
+        client_id,
+        "Portable semantic review",
+    )
+    source_dir = tmp_path / "received"
+    source_dir.mkdir()
+    bank_source = source_dir / "bank.csv"
+    journal_source = source_dir / "journal.csv"
+    _save_csv(
+        bank_source,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Payment Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Payment Beta", "Beta"],
+        ],
+    )
+    _save_csv(
+        journal_source,
+        [
+            ["Date", "Amount", "Description", "Beneficiary"],
+            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha"],
+            ["2026-05-08", "80.00", "Invoice Beta", "Beta"],
+        ],
+    )
+    imported_bank = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        bank_source,
+        "source",
+    )
+    imported_journal = ledger.import_document(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        journal_source,
+        "journal",
+    )
+    prepared = ledger.prepare_run(
+        client_root,
+        client_id,
+        engagement["engagement_id"],
+        "journal-bank-reconciliation",
+        "test-version",
+        input_ids=[
+            imported_bank["receipt"]["input_id"],
+            imported_journal["receipt"]["input_id"],
+        ],
+    )
+    running = ledger.start_run(
+        client_root,
+        engagement["engagement_id"],
+        prepared["run"]["run_id"],
+    )
+    input_paths = {
+        binding["role"]: Path(binding["path"])
+        for binding in running["context"]["input_bindings"]
+    }
+    output_dir = Path(running["output_dir"])
+    context_path = Path(running["context_path"])
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        input_paths["source"],
+        input_paths["journal"],
+        output_dir / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    reconciliation_dir = output_dir / "reconciliation"
+    reconciliation = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(SCRIPT_DIR / "run_reconciliation.py"),
+            str(input_paths["source"]),
+            str(input_paths["journal"]),
+            "--output-dir",
+            str(reconciliation_dir),
+            "--recipe",
+            str(recipe_path),
+            "--tolerance",
+            "0",
+            "--date-window-days",
+            "0",
+            "--client-engagement",
+            str(context_path),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=120,
+    )
+    assert reconciliation.returncode == 0, reconciliation.stderr
+    run_intake = json.loads(
+        (reconciliation_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs/reconciliation"
+    assert all(not Path(value).is_absolute() for value in run_intake["input_paths"])
+
+    renamed_output, renamed_context, stale_output = _rename_customer_output(output_dir)
+    renamed_reconciliation = renamed_output / "reconciliation"
+    semantic_dir = renamed_output / "semantic-review"
+    portable_intake_path = renamed_reconciliation / "run_intake.json"
+    portable_intake_bytes = portable_intake_path.read_bytes()
+    forged_intake = json.loads(portable_intake_bytes.decode("utf-8"))
+    forged_intake["assumptions"]["bank_path"] = "outputs/recipe/input_receipts.json"
+    portable_intake_path.write_text(
+        json.dumps(forged_intake, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    blocked = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(SEMANTIC_REVIEW_PATH),
+            "prepare",
+            str(renamed_reconciliation),
+            "--output-dir",
+            str(semantic_dir),
+            "--client-engagement",
+            str(renamed_context),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=120,
+    )
+    assert blocked.returncode == 2
+    assert "exact receipts" in blocked.stderr
+    assert not any(semantic_dir.iterdir())
+    portable_intake_path.write_bytes(portable_intake_bytes)
+
+    semantic = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(SEMANTIC_REVIEW_PATH),
+            "prepare",
+            str(renamed_reconciliation),
+            "--output-dir",
+            str(semantic_dir),
+            "--client-engagement",
+            str(renamed_context),
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=120,
+    )
+    assert semantic.returncode == 0, semantic.stderr
+    assert not stale_output.exists()
+    assert {
+        "residual_candidate_graph.json",
+        "luna_output_schema.json",
+        "luna_prompt.md",
+        "semantic_review_status.json",
+    }.issubset({path.name for path in semantic_dir.iterdir()})
+
+    physical_outputs = sorted(
+        path for path in renamed_output.rglob("*") if path.is_file()
+    )
+    media_types = {
+        ".csv": "text/csv",
+        ".json": "application/json",
+        ".md": "text/markdown",
+        ".xlsx": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    }
+    declarations = [
+        {
+            "artifact_id": f"journal_bank.output.{index:03d}",
+            "path": path.relative_to(renamed_output).as_posix(),
+            "purpose": (
+                "Preserve this Journal–Bank run output for professional review: "
+                f"{path.relative_to(renamed_output).as_posix()}."
+            ),
+            "audience": "review",
+            "media_type": media_types.get(path.suffix.lower(), "text/plain"),
+        }
+        for index, path in enumerate(physical_outputs, start=1)
+    ]
+    renamed_client_root = renamed_context.parents[5]
+    finalized = ledger.finalize_run(
+        renamed_client_root,
+        engagement["engagement_id"],
+        running["run"]["run_id"],
+        declarations,
+    )
+    artifacts = finalized["artifact_manifest"]["artifacts"]
+    assert {artifact["path"] for artifact in artifacts} == {
+        path.relative_to(renamed_output).as_posix() for path in physical_outputs
+    }
+    assert all(artifact["purpose"] for artifact in artifacts)
+    completed = ledger.complete_run(
+        renamed_client_root,
+        engagement["engagement_id"],
+        running["run"]["run_id"],
+    )
+    assert completed["run"]["status"] == "completed"
+
+
 def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     tmp_path: Path,
 ) -> None:
@@ -8680,10 +9000,14 @@ def test_semantic_run_worker_rolls_back_partial_atomic_publication(
 
 
 def test_semantic_validate_cli_records_worker_failure_status(tmp_path: Path) -> None:
-    _, semantic_review, reconciliation_dir, semantic_dir = (
-        _prepare_ambiguous_semantic_run(tmp_path)
+    _, semantic_review, reconciliation_dir, semantic_dir, context_path, context = (
+        _prepare_managed_ambiguous_semantic_run(tmp_path)
     )
-    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        client_engagement=context,
+    )
 
     completed = subprocess.run(
         [
@@ -8699,6 +9023,8 @@ def test_semantic_validate_cli_records_worker_failure_status(tmp_path: Path) -> 
             str(semantic_dir / "luna_response.json"),
             "--events",
             str(semantic_dir / "luna_events.jsonl"),
+            "--client-engagement",
+            str(context_path),
         ],
         capture_output=True,
         check=False,
@@ -8717,10 +9043,14 @@ def test_semantic_validate_cli_records_worker_failure_status(tmp_path: Path) -> 
 def test_semantic_completed_status_survives_invalid_validation_retry(
     tmp_path: Path,
 ) -> None:
-    _, semantic_review, reconciliation_dir, semantic_dir = (
-        _prepare_ambiguous_semantic_run(tmp_path)
+    _, semantic_review, reconciliation_dir, semantic_dir, context_path, context = (
+        _prepare_managed_ambiguous_semantic_run(tmp_path)
     )
-    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        client_engagement=context,
+    )
     graph_path = semantic_dir / "residual_candidate_graph.json"
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
     response_path, events_path = _write_semantic_worker_result(
@@ -8733,6 +9063,7 @@ def test_semantic_completed_status_survives_invalid_validation_retry(
         graph_path,
         response_path,
         events_path,
+        client_engagement=context,
     )
     response_path.write_text("{}\n", encoding="utf-8")
 
@@ -8750,6 +9081,8 @@ def test_semantic_completed_status_survives_invalid_validation_retry(
             str(response_path),
             "--events",
             str(events_path),
+            "--client-engagement",
+            str(context_path),
         ],
         capture_output=True,
         check=False,
@@ -8768,10 +9101,14 @@ def test_semantic_completed_status_survives_invalid_validation_retry(
 def test_semantic_source_tamper_does_not_forge_bound_worker_failure_status(
     tmp_path: Path,
 ) -> None:
-    _, semantic_review, reconciliation_dir, semantic_dir = (
-        _prepare_ambiguous_semantic_run(tmp_path)
+    _, semantic_review, reconciliation_dir, semantic_dir, context_path, context = (
+        _prepare_managed_ambiguous_semantic_run(tmp_path)
     )
-    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        client_engagement=context,
+    )
     unmatched_path = reconciliation_dir / "unmatched_bank.csv"
     unmatched_path.write_bytes(unmatched_path.read_bytes() + b"\n")
 
@@ -8789,6 +9126,8 @@ def test_semantic_source_tamper_does_not_forge_bound_worker_failure_status(
             str(semantic_dir / "luna_response.json"),
             "--events",
             str(semantic_dir / "luna_events.jsonl"),
+            "--client-engagement",
+            str(context_path),
         ],
         capture_output=True,
         check=False,

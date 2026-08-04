@@ -89,6 +89,60 @@ def _manifest_output_paths(manifest_path: Path) -> list[Path]:
     return resolved
 
 
+def _require_client_file_preparation_lineage(
+    context: Mapping[str, Any],
+    selected_paths: Sequence[Path],
+) -> str:
+    """Require selected files to come from one exact phase-one artifact handoff."""
+
+    raw_bindings = context.get("input_bindings")
+    if not isinstance(raw_bindings, list):
+        raise ValidationError("The New Client run has no validated input bindings.")
+    bindings_by_path: dict[Path, Mapping[str, Any]] = {}
+    for raw_binding in raw_bindings:
+        if not isinstance(raw_binding, Mapping):
+            raise ValidationError("The New Client run has an invalid input binding.")
+        raw_path = raw_binding.get("path")
+        if not isinstance(raw_path, str):
+            raise ValidationError("The New Client run has an invalid input path.")
+        try:
+            binding_path = Path(raw_path).resolve(strict=True)
+        except OSError as exc:
+            raise ValidationError(
+                f"A selected New Client input is unavailable: {exc}"
+            ) from exc
+        bindings_by_path[binding_path] = raw_binding
+
+    upstream_run_ids: set[str] = set()
+    for selected_path in selected_paths:
+        try:
+            resolved = selected_path.resolve(strict=True)
+        except OSError as exc:
+            raise ValidationError(f"A phase-one input is unavailable: {exc}") from exc
+        binding = bindings_by_path.get(resolved)
+        if binding is None:
+            raise ValidationError(
+                "Every phase-one file must be an exact input of the New Client run."
+            )
+        if (
+            binding.get("kind") != "upstream_artifact"
+            or binding.get("upstream_workflow_id") != "client-file-preparation"
+        ):
+            raise ValidationError(
+                "Phase one must be a verified Client File Preparation "
+                "upstream-artifact handoff."
+            )
+        upstream_run_id = binding.get("upstream_run_id")
+        if not isinstance(upstream_run_id, str) or not upstream_run_id:
+            raise ValidationError("A phase-one artifact has no upstream run identity.")
+        upstream_run_ids.add(upstream_run_id)
+    if len(upstream_run_ids) != 1:
+        raise ValidationError(
+            "All phase-one files must come from one Client File Preparation run."
+        )
+    return next(iter(upstream_run_ids))
+
+
 def _reviewed_fiscal_items(
     review_payload: Mapping[str, Any], applied_decisions: Mapping[str, Any]
 ) -> list[dict[str, Any]]:
@@ -370,6 +424,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             output_dir=args.case_dir,
         )
         manifest_path = args.final_artifacts.expanduser().resolve(strict=True)
+        upstream_run_id = _require_client_file_preparation_lineage(
+            context,
+            [manifest_path],
+        )
+        manifest = load_json(manifest_path)
+        if manifest.get("run_id") != upstream_run_id:
+            raise ValidationError(
+                "Phase-one final_artifacts.json does not match its upstream run."
+            )
         upstream_outputs = _manifest_output_paths(manifest_path)
         validate_client_workflow_run(
             context,
@@ -377,6 +440,16 @@ def main(argv: Sequence[str] | None = None) -> int:
             input_paths=[manifest_path, *upstream_outputs],
             output_dir=args.case_dir,
         )
+        if (
+            _require_client_file_preparation_lineage(
+                context,
+                [manifest_path, *upstream_outputs],
+            )
+            != upstream_run_id
+        ):
+            raise ValidationError(
+                "Phase-one files do not share their manifest's upstream run."
+            )
         path = promote_client_file_preparation(
             args.final_artifacts,
             args.case_dir,

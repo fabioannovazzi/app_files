@@ -20,9 +20,7 @@ sys.dont_write_bytecode = True
 sys.pycache_prefix = "/dev/null/audit-reconciliation-tests"
 
 ROOT = Path(__file__).resolve().parents[2]
-SCRIPTS = (
-    ROOT / "plugins" / "audit-reconciliation" / "scripts"
-)
+SCRIPTS = ROOT / "plugins" / "audit-reconciliation" / "scripts"
 ASSURANCE_PATH = SCRIPTS / "audit_assurance.py"
 WORKFLOW_PATH = SCRIPTS / "reconciliation_workflow.py"
 REVIEW_SERVER_PATH = SCRIPTS / "review_server.py"
