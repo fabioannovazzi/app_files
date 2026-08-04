@@ -495,7 +495,9 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     reference = entries[reference_path].decode("utf-8")
     whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
-    assert builder.CHATGPT_SPECIALIST_INTRO["vera"] in wrapper
+    assert "Indica un solo cliente e la fonte da consultare" in wrapper
+    assert "mantiene separato il perimetro del cliente" in wrapper
+    assert "WhatsApp resta in sola lettura" in wrapper
     assert "references/marketplace-gmail.md" not in wrapper
     assert "references/whatsapp-desktop.md" not in wrapper
     assert "Do not resolve the local document module" not in wrapper
@@ -571,6 +573,29 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     main_skill_name = f"skills/{plugin_name}/SKILL.md"
     assert builder.has_chatgpt_runtime_contract(projected_skills[main_skill_name])
     assert "We can continue here in ChatGPT now." in projected_skills[main_skill_name]
+    specialist_bodies = {
+        name: content[builder.skill_body_start(content) :].strip()
+        for name, content in projected_skills.items()
+        if name.startswith("skills/") and name != main_skill_name
+    }
+    instruction_config = json.loads(
+        (
+            ROOT
+            / "plugins"
+            / plugin_name
+            / builder.CHATGPT_SPECIALIST_INSTRUCTIONS_FILE
+        ).read_text(encoding="utf-8")
+    )
+    expected_specialist_bodies = {
+        f"skills/{skill_name}/SKILL.md": (
+            instructions.strip() + "\n\n" + instruction_config["runtime_note"].strip()
+        )
+        for skill_name, instructions in instruction_config["skills"].items()
+    }
+    assert specialist_bodies
+    assert specialist_bodies == expected_specialist_bodies
+    assert len(set(specialist_bodies.values())) == len(specialist_bodies)
+    assert builder.CHATGPT_SPECIALIST_INSTRUCTIONS_FILE not in entries
     for name, content in projected_skills.items():
         if name == main_skill_name:
             continue
@@ -578,14 +603,23 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert builder.REQUIRED_CODEX_RECOMMENDATION not in content, name
         if not name.startswith("skills/"):
             continue
-        assert builder.CHATGPT_SPECIALIST_INTRO[plugin_name] in content, name
         assert "<details>" not in content, name
         assert "Plugin Improvement Feedback" not in content, name
         assert "Resolve `" not in content, name
         assert "/SKILL.md" not in content, name
+    if plugin_name == "clara":
+        deck_correction = specialist_bodies["skills/deck-correction/SKILL.md"]
+        assert deck_correction.startswith("Attach the current PPTX or Clara HTML deck")
+        assert "protects untouched content" in deck_correction
+        assert "verification findings" in deck_correction
     if plugin_name == "vera":
         vera_main = projected_skills["skills/vera/SKILL.md"]
         assert "Possiamo continuare qui in ChatGPT." in vera_main
+        audit_reconciliation = specialist_bodies["skills/audit-reconciliation/SKILL.md"]
+        assert audit_reconciliation.startswith(
+            "Allega mastrini, partite aperte, estratti conto"
+        )
+        assert "in Codex può produrre anche Excel e Word" in audit_reconciliation
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "vera"])
@@ -634,6 +668,49 @@ def test_chatgpt_skill_projection_rejects_contract_markers_in_frontmatter() -> N
         match="incomplete or misplaced ChatGPT runtime contract",
     ):
         builder.project_chatgpt_runtime_skill(content, plugin_name="clara")
+
+
+def test_chatgpt_specialist_projection_uses_approved_instructions() -> None:
+    builder = load_builder()
+    source = (
+        "---\n"
+        "name: deck-correction\n"
+        "description: Correct a presentation.\n"
+        "---\n\n"
+        "# Local workflow\n\n"
+        "Run python scripts/apply_changes.py.\n"
+    ).encode("utf-8")
+    approved_instructions = (
+        "Attach the existing deck and feedback. Preserve untouched content and "
+        "verify the approved changes."
+    )
+
+    projected = builder.project_chatgpt_specialist_skill(
+        source,
+        instructions=approved_instructions,
+    ).decode("utf-8")
+
+    body = projected[builder.skill_body_start(projected) :].strip()
+    assert body == approved_instructions
+    assert "scripts/apply_changes.py" not in body
+
+
+def test_chatgpt_specialist_instruction_config_rejects_incomplete_coverage() -> None:
+    builder = load_builder()
+    config = json.dumps(
+        {
+            "schema_version": 1,
+            "runtime_note": "Use available files and identify unavailable steps.",
+            "skills": {"deck-correction": "Attach the deck and feedback."},
+        }
+    ).encode("utf-8")
+
+    with pytest.raises(ValueError, match=r"missing=\['interview'\]"):
+        builder.load_chatgpt_specialist_instructions(
+            config,
+            plugin_name="clara",
+            expected_skills={"deck-correction", "interview"},
+        )
 
 
 def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
