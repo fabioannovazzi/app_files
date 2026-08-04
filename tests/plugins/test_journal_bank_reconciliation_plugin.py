@@ -809,11 +809,14 @@ def _valid_semantic_response(graph: dict[str, Any]) -> dict[str, Any]:
             ),
             "contradictions": [],
             "requested_evidence": [],
+            "resolution_level": "beneficiary_match",
+            "classification": None,
+            "identified_counterparty": record["beneficiary"],
         }
         for record in component["bank_records"]
     ]
     return {
-        "schema_version": "journal_bank.semantic_worker_response.v1",
+        "schema_version": "journal_bank.semantic_worker_response.v2",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "component_reviews": [
             {"component_id": component["component_id"], "decisions": decisions}
@@ -7816,6 +7819,8 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
             str(renamed_reconciliation),
             "--output-dir",
             str(semantic_dir),
+            "--required-level",
+            "identifier_match",
             "--client-engagement",
             str(renamed_context),
         ],
@@ -7838,6 +7843,8 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
             str(renamed_reconciliation),
             "--output-dir",
             str(semantic_dir),
+            "--required-level",
+            "identifier_match",
             "--client-engagement",
             str(renamed_context),
         ],
@@ -7853,7 +7860,14 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
         "luna_output_schema.json",
         "luna_prompt.md",
         "semantic_review_status.json",
+        "semantic_resolution_application.json",
+        "resolution_funnel.json",
+        "human_review_queue.json",
     }.issubset({path.name for path in semantic_dir.iterdir()})
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    assert graph["resolution_policy"]["required_level"] == "identifier_match"
 
     physical_outputs = sorted(
         path for path in renamed_output.rglob("*") if path.is_file()
@@ -7921,8 +7935,17 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     status = json.loads(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
+    baseline_funnel = json.loads(
+        (semantic_dir / "resolution_funnel.json").read_text(encoding="utf-8")
+    )
     assert result["worker_required"] is True
     assert result["selected_component_count"] == 1
+    assert result["required_resolution_level"] == "classified"
+    assert result["human_review_count"] == 2
+    assert graph["resolution_policy"]["perfect_match_authority"] == (
+        "deterministic_replay_only"
+    )
+    assert baseline_funnel["human_review"]["movement_count"] == 2
     assert graph["candidate_graph_sha256"] == semantic_review.canonical_json_sha256(
         content
     )
@@ -7952,6 +7975,116 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     assert status["status"] == "prepared"
     assert status["main_chat_model_change"] is False
     assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_prepare_assigns_deterministic_matches_only_to_perfect_level(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    reconciliation_dir = tmp_path / "reconciliation"
+    semantic_dir = tmp_path / "semantic-review"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-05-08", "100.00", "PAY-100"],
+            ["2026-05-09", "50.00", "PAY-050"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-05-08", "100.00", "PAY-100"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+    assert result.matches.height == 1
+
+    preparation = semantic_review.prepare_semantic_review(
+        reconciliation_dir, semantic_dir
+    )
+
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    by_level = {
+        item["highest_level_reached"]: item for item in application["assignments"]
+    }
+    assert by_level["perfect_match"]["decision_authority"] == "deterministic"
+    assert by_level["perfect_match"]["human_review_required"] is False
+    assert by_level["unresolved"]["human_review_required"] is True
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    component = graph["selected_components"][0]
+    assert preparation["worker_required"] is True
+    assert component["journal_records"] == []
+    assert component["candidate_edges"] == []
+    response = {
+        "schema_version": "journal_bank.semantic_worker_response.v2",
+        "candidate_graph_sha256": graph["candidate_graph_sha256"],
+        "component_reviews": [
+            {
+                "component_id": component["component_id"],
+                "decisions": [
+                    {
+                        "bank_transaction_id": component["bank_records"][0][
+                            "transaction_id"
+                        ],
+                        "verdict": "no_match",
+                        "journal_transaction_id": None,
+                        "evidence_fields": ["reference"],
+                        "rationale": "The bank reference supports an expense classification.",
+                        "contradictions": [],
+                        "requested_evidence": [],
+                        "resolution_level": "classified",
+                        "classification": "other expense",
+                        "identified_counterparty": None,
+                    }
+                ],
+            }
+        ],
+    }
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+
+    semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        graph_path,
+        response_path,
+        events_path,
+    )
+
+    applied = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert applied["summary"]["human_review_count"] == 0
+    assert {item["highest_level_reached"] for item in applied["assignments"]} == {
+        "classified",
+        "perfect_match",
+    }
 
 
 def test_semantic_prepare_rejects_authoritative_and_semantic_same_directory(
@@ -8172,7 +8305,7 @@ def test_semantic_deferred_summary_keeps_graph_replay_within_byte_cap(
     graph_path = semantic_dir / "residual_candidate_graph.json"
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
     response = {
-        "schema_version": "journal_bank.semantic_worker_response.v1",
+        "schema_version": "journal_bank.semantic_worker_response.v2",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "component_reviews": [],
     }
@@ -8202,7 +8335,7 @@ def test_semantic_deferred_summary_keeps_graph_replay_within_byte_cap(
     assert result["summary"]["decision_count"] == 0
 
 
-def test_semantic_validate_writes_advisory_artifacts_without_authoritative_changes(
+def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledger(
     tmp_path: Path,
 ) -> None:
     _, semantic_review, reconciliation_dir, semantic_dir = (
@@ -8235,17 +8368,46 @@ def test_semantic_validate_writes_advisory_artifacts_without_authoritative_chang
     status = json.loads(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    funnel = json.loads(
+        (semantic_dir / "resolution_funnel.json").read_text(encoding="utf-8")
+    )
+    review_queue = json.loads(
+        (semantic_dir / "human_review_queue.json").read_text(encoding="utf-8")
+    )
     assert result["summary"] == {
         "component_count": 1,
         "decision_count": 2,
         "suggest_match_count": 2,
         "abstention_count": 0,
         "no_match_count": 0,
+        "meets_threshold_count": 2,
+        "human_review_count": 0,
     }
-    assert validated["advisory_only"] is True
-    assert validated["application_status"] == "not_applied"
-    assert validated["authoritative_effects"] == []
-    assert validated["main_codex_review_required"] is True
+    assert validated["worker_output_advisory_until_validated"] is True
+    assert validated["application_status"] == "applied_to_resolution_funnel"
+    assert validated["strict_reconciliation_unchanged"] is True
+    assert validated["main_codex_review_required"] is False
+    assert application["summary"] == {
+        "movement_count": 2,
+        "meets_threshold_count": 2,
+        "human_review_count": 0,
+    }
+    assert {item["highest_level_reached"] for item in application["assignments"]} == {
+        "beneficiary_match"
+    }
+    assert {item["level"]: item["movement_count"] for item in funnel["at_least"]} == {
+        "classified": 2,
+        "candidate_match": 2,
+        "beneficiary_match": 2,
+        "identifier_match": 0,
+        "perfect_match": 0,
+    }
+    assert review_queue["items"] == []
     assert worker_run["requested_worker_configuration"]["model"] == "gpt-5.6-luna"
     assert worker_run["requested_worker_configuration"]["reasoning_effort"] == "max"
     assert worker_run["runtime_attestation"] == {
@@ -8266,6 +8428,90 @@ def test_semantic_validate_writes_advisory_artifacts_without_authoritative_chang
     assert worker_run["main_chat_model_change"] is False
     assert status["status"] == "completed_validated"
     assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_classification_clears_review_at_classified_threshold(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="classified",
+    )
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response = _valid_semantic_response(graph)
+    for decision in response["component_reviews"][0]["decisions"]:
+        decision.update(
+            {
+                "verdict": "no_match",
+                "journal_transaction_id": None,
+                "evidence_fields": ["description"],
+                "resolution_level": "classified",
+                "classification": "payroll",
+                "identified_counterparty": None,
+                "rationale": "The bank narrative is sufficient to classify payroll.",
+            }
+        )
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+
+    semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        graph_path,
+        response_path,
+        events_path,
+    )
+
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert application["summary"]["human_review_count"] == 0
+    assert {
+        (item["highest_level_reached"], item["classification"])
+        for item in application["assignments"]
+    } == {("classified", "payroll")}
+
+
+def test_semantic_beneficiary_resolution_stays_in_review_at_identifier_threshold(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="identifier_match",
+    )
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response_path, events_path = _write_semantic_worker_result(
+        semantic_dir,
+        _valid_semantic_response(graph),
+    )
+
+    semantic_review.validate_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        graph_path,
+        response_path,
+        events_path,
+    )
+
+    review_queue = json.loads(
+        (semantic_dir / "human_review_queue.json").read_text(encoding="utf-8")
+    )
+    assert review_queue["required_resolution_level"] == "identifier_match"
+    assert len(review_queue["items"]) == 2
+    assert {item["highest_level_reached"] for item in review_queue["items"]} == {
+        "beneficiary_match"
+    }
 
 
 def test_semantic_validate_is_idempotent_for_exact_worker_generation(
@@ -9163,7 +9409,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_journal_bank_review" in skill_text
     assert "render_journal_bank_review" in skill_text
-    assert "Optional Codex-Only Luna Max Residual Review" in skill_text
+    assert "Codex-Only Luna Max Residual Resolution Funnel" in skill_text
     assert "semantic_review.py run-worker" in skill_text
     assert "journal_bank.luna_seatbelt_capsule.v1" in skill_text
     assert "current chat unchanged" in skill_text
@@ -9171,7 +9417,8 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "luna_launch_receipt.json" in skill_text
     assert "copy or reconstruct its underlying `codex exec` command" in skill_text
     assert "codex exec \\" not in skill_text
-    assert "advisory only" in skill_text
+    assert "Raw worker output is advisory until the validator accepts it" in skill_text
+    assert "human_review_queue.json" in skill_text
     assert "modules.llm" not in script_text
     assert "model_router" not in script_text
     assert "openai" not in script_text.lower()

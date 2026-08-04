@@ -181,11 +181,12 @@ none receives a row-order preference.
 Candidates outside the reviewed currency, unit, entity, party, or direction
 perimeter are never matched.
 
-## Codex-Only Residual Semantic Advisory
+## Codex-Only Residual Resolution Funnel
 
-After a qualified deterministic run, `semantic_review.py prepare` may project
-the unmatched partitions into a bounded bipartite candidate graph. Preparation
-first validates the current output receipts and material-value ledger replay.
+After a qualified deterministic run, `semantic_review.py prepare` projects the
+unmatched partitions into a bounded candidate graph and records the user's
+required certainty threshold. Preparation first validates the current output
+receipts and material-value ledger replay.
 An edge exists only when the core candidate predicate accepts the exact amount
 and reviewed currency, unit, entity, party, and direction perimeter, and the
 pair also has either a shared stable explicit reference or two actual dates
@@ -224,7 +225,8 @@ published together only after packet, source, runtime-input, executable, and
 boundary checks replay successfully.
 
 Worker decisions are limited to `suggest_match`, `ambiguous`, `no_match`, and
-`needs_evidence`. A suggested journal row must be an existing graph neighbor;
+`needs_evidence`, plus a strongest supported resolution level and optional
+classification or identified counterparty. A suggested journal row must be an existing graph neighbor;
 other verdicts cannot name a journal row. Validation requires the current graph
 digest, exactly one review of every selected component and bank row, global
 one-to-one journal use, bounded evidence and rationale fields, a strict
@@ -237,13 +239,17 @@ reasoning effort, so worker metadata records both as requested rather than
 observed and validation requires the launch receipt.
 
 Validated results live outside the canonical reconciliation directory in its
-real sibling named `semantic-review` as
-`semantic_suggestions_validated.json` and `semantic_worker_run.json`. They are
-advisory only. They cannot alter native matches, review decisions, ledgers,
-artifact receipts, assurance gates, or report readiness, and they do not satisfy
-the professional semantic-review gate. Converting a suggestion into an
-official match requires a future source-bound reviewed-pair receipt and full
-canonical replay contract. If the current preparation closure remains valid,
+real sibling named `semantic-review`. Raw Luna output remains advisory until
+validation. The validator then applies accepted decisions to
+`semantic_resolution_application.json`, `resolution_funnel.json`, and
+`human_review_queue.json`. The funnel levels are `classified`,
+`candidate_match`, `beneficiary_match`, `identifier_match`, and
+`perfect_match`; “at least” totals are cumulative even though each movement is
+assigned only its highest level. Levels express sufficiency, not the presence
+of every weaker evidence field. Only deterministic replay may assign
+`perfect_match`; Luna may clear operational review at a lower user-selected
+threshold but cannot alter native matches, ledgers, artifact receipts,
+assurance gates, or report readiness. If the current preparation closure remains valid,
 worker unavailability or invalid output is recorded as `worker_failed`; source
 or packet tampering instead fails without writing a falsely bound status. A
 validated generation remains terminal until a new preparation archives its

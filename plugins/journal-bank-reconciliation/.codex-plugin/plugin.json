@@ -1,6 +1,6 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.37",
+  "version": "0.1.38",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",
@@ -24,7 +24,7 @@
   "interface": {
     "displayName": "Journal-Bank Reconciliation",
     "shortDescription": "Reconcile bank statements with journal or ledger exports in Italian, English, French, German, or Spanish.",
-    "longDescription": "Codex workflow for bounded bank-to-journal reconciliation. Codex inspects local bank and journal files, reviews mappings and the relationship perimeter, and explains limits. Shared assurance controls qualify only exact supported headers or current reviewed mappings, bind decisions and physical lineage to content-addressed sources, compare canonical Decimal money exactly, enforce one-to-one currency/unit/entity/direction policy, restrict reference matching to stable explicit identifiers, and block generic PDF layouts, invalid samples, residuals, or stale outputs instead of guessing. An additive reviewed adapter supports exact full Italian textual-month dates and exact reviewer-authorized non-movement summary labels without changing the default adapter contract. Valid runs write CSV/XLSX/JSON outputs, audit, gates, diagnostics, review notes, and Codex review without direct model API calls from scripts.",
+    "longDescription": "Codex workflow for bounded bank-to-journal reconciliation. Codex inspects local bank and journal files, reviews mappings and the relationship perimeter, and explains limits. Shared assurance controls qualify only exact supported headers or current reviewed mappings, bind decisions and physical lineage to content-addressed sources, compare canonical Decimal money exactly, enforce one-to-one currency/unit/entity/direction policy, restrict reference matching to stable explicit identifiers, and block generic PDF layouts, invalid samples, residuals, or stale outputs instead of guessing. After deterministic perfect matching, a bounded Luna pass may classify, identify, or suggest eligible residual relationships; validated decisions feed a cumulative human-selected certainty funnel while strict matches and assurance artifacts remain unchanged. Valid runs write CSV/XLSX/JSON outputs, audit, gates, diagnostics, review notes, and Codex review without direct model API calls from scripts.",
     "developerName": "Fabio",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",

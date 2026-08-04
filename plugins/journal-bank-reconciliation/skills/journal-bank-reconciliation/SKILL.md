@@ -175,12 +175,22 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    matches/residuals, unmatched partitions, blocked relationship ledger, gates,
    and audit instead.
 
-## Optional Codex-Only Luna Max Residual Review
+## Codex-Only Luna Max Residual Resolution Funnel
 
-Use this path only in Codex, after a qualified deterministic run leaves
-unmatched rows and the user has asked for semantic residual review. Anthropic
-Cowork and other runtimes skip it and continue with the normal review handoff.
-This is a subordinate advisory pass, not a different reconciliation mode.
+Use this path in Codex after a qualified deterministic run leaves unmatched
+bank movements. Anthropic Cowork and other runtimes skip it and continue with
+the normal review handoff. The purpose is to remove as much routine human work
+as the user's required certainty permits, not merely to attach suggestions.
+
+Before preparation, record the minimum certainty the user requires to remove a
+movement from human review. The ordered sufficiency levels are `classified`,
+`candidate_match`, `beneficiary_match`, `identifier_match`, and
+`perfect_match`. They form a cumulative “at least” funnel by count and gross
+absolute value. Each movement has one highest level, while funnel totals count
+it in that level and every weaker threshold. A stronger result does not assert
+that every weaker evidence field exists: identifier evidence may be sufficient
+without a beneficiary name. `perfect_match` belongs only to deterministic
+replay; Luna may reach at most `identifier_match`.
 
 The main reconciliation chat must keep its current model and remain the
 orchestrator and final review authority. Never change the model configuration
@@ -198,8 +208,14 @@ worker for the bounded packet produced for that run.
 ```bash
 python scripts/semantic_review.py prepare <output-dir>/reconciliation \
   --output-dir <output-dir>/semantic-review \
+  --required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match> \
   --client-engagement <client_engagement_path>
 ```
+
+Preparation immediately writes the deterministic baseline
+`semantic_resolution_application.json`, `resolution_funnel.json`, and
+`human_review_queue.json`. Exact deterministic matches are `perfect_match`;
+unresolved bank movements remain in the queue pending validated Luna output.
 
 Read the command result. If `worker_required` is false, do not launch Luna;
 report that no bounded eligible component was selected and retain the recorded
@@ -238,8 +254,8 @@ launcher deletes the capsule after the turn and publishes the response,
 events, bounded stderr, and `luna_launch_receipt.json` only after all replay and
 pin checks pass.
 
-3. After `run-worker` succeeds, validate the retained generation before
-   reading any suggestion as advisory evidence:
+3. After `run-worker` succeeds, validate the retained generation before using
+   any worker judgment:
 
 ```bash
 python scripts/semantic_review.py validate <output-dir>/reconciliation \
@@ -251,8 +267,11 @@ python scripts/semantic_review.py validate <output-dir>/reconciliation \
 ```
 
 Successful validation writes `semantic_suggestions_validated.json` and
-`semantic_worker_run.json` in the same sibling directory and changes
-`semantic_review_status.json` to `completed_validated`. It requires the fixed
+`semantic_worker_run.json`, updates the three resolution artifacts, and changes
+`semantic_review_status.json` to `completed_validated`. Validated Luna decisions
+apply automatically to the derived certainty funnel and remove movements that
+meet the selected threshold from `human_review_queue.json`. The strict
+reconciliation directory remains unchanged. Validation requires the fixed
 response, events, stderr, and launch-receipt files to agree with the current
 packet and the qualified launcher. When the current preparation closure still
 validates, a launch or validation failure returns nonzero and records
@@ -277,16 +296,14 @@ also does not independently attest the actual model or reasoning effort.
 `semantic_worker_run.json` records Luna Max and max effort as requested, not
 observed, and binds validation to the launch receipt.
 
-The validated suggestions remain in the sibling `semantic-review` directory
-and are advisory only. The main Codex chat may explain them, surface ambiguity,
-or request evidence, but it must not insert them into
-`reconciliation_matches.csv`, apply them as review decisions, or mutate the
-relationship ledger, material-value ledger, receipts, assurance gates, or
-`report_ready`. A future reviewed canonical replay contract is required before
-a semantic suggestion can become an official match. If the worker is missing,
-unavailable, or invalid, record that limitation and continue from the unchanged
-deterministic result; do not downgrade the main chat or silently substitute a
-different worker model.
+Raw worker output is advisory until the validator accepts it. Validated output
+is operational for the derived funnel and human-review queue, but it must not
+be inserted into `reconciliation_matches.csv` or mutate the relationship
+ledger, material-value ledger, receipts, assurance gates, or `report_ready`.
+Those strict artifacts continue to represent deterministic perfect matches.
+If the worker is missing, unavailable, or invalid, retain the deterministic
+baseline queue, record the limitation, and do not silently substitute another
+worker model.
 
 ## Mapping Recipe Rules
 

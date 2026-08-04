@@ -28,6 +28,14 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "bounded-luna-residual-resolution",
+        "purpose": "Classify, identify, or suggest eligible relationships for unresolved bank movements under the user's selected certainty threshold",
+        "content": "A bounded packet of unmatched bank rows, hard-compatible journal candidates, normalized dates and amounts, descriptions, beneficiary or counterparty details, references, movement numbers, account and perimeter fields, plus the reviewed matching policy",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -44,6 +52,10 @@
     {
       "id": "one-to-one-exact-reconciliation",
       "control": "Relationship-v2 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, one-to-one evidence use, and balanced relationship ledgers; row order cannot award a contested target, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
+    },
+    {
+      "id": "bounded-validated-luna-resolution-funnel",
+      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before preparing one size-capped candidate packet for a pinned deny-default Luna worker. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, one-to-one-use, and evidence checks pass. Accepted decisions update only sibling certainty-funnel and human-review-queue artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -71,9 +83,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "da58b30f491f86b8f16150c0c2ca9a479c4ac8647bbcc195bf5c299b2ba46bea"
+    "source_fingerprint": "ac32c0c45c3985d3c79eb1f4170084a2c3d0745dc43d7441c9e260aab547dbcd"
   }
 }
