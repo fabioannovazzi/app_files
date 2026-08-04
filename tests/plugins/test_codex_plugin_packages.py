@@ -588,7 +588,12 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     )
     expected_specialist_bodies = {
         f"skills/{skill_name}/SKILL.md": (
-            instructions.strip() + "\n\n" + instruction_config["runtime_note"].strip()
+            instructions.strip()
+            + "\n\n"
+            + builder.chatgpt_specialist_runtime_contract(
+                plugin_name,
+                instruction_config["runtime_note"],
+            )
         )
         for skill_name, instructions in instruction_config["skills"].items()
     }
@@ -599,8 +604,8 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     for name, content in projected_skills.items():
         if name == main_skill_name:
             continue
-        assert not builder.has_chatgpt_runtime_contract(content), name
-        assert builder.REQUIRED_CODEX_RECOMMENDATION not in content, name
+        assert builder.has_chatgpt_runtime_contract(content), name
+        assert builder.REQUIRED_CODEX_RECOMMENDATION in content, name
         if not name.startswith("skills/"):
             continue
         assert "<details>" not in content, name
@@ -620,6 +625,51 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             "Allega mastrini, partite aperte, estratti conto"
         )
         assert "in Codex può produrre anche Excel e Word" in audit_reconciliation
+
+
+@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+def test_committed_chatgpt_upload_uses_approved_specialist_card_copy(
+    plugin_name: str,
+) -> None:
+    builder = load_builder()
+    instruction_config = json.loads(
+        (
+            ROOT
+            / "plugins"
+            / plugin_name
+            / builder.CHATGPT_SPECIALIST_INSTRUCTIONS_FILE
+        ).read_text(encoding="utf-8")
+    )
+    expected_bodies = {
+        f"skills/{skill_name}/SKILL.md": (
+            instructions.strip()
+            + "\n\n"
+            + builder.chatgpt_specialist_runtime_contract(
+                plugin_name,
+                instruction_config["runtime_note"],
+            )
+        )
+        for skill_name, instructions in instruction_config["skills"].items()
+    }
+    upload_zip = (
+        ROOT / "plugin_packages" / plugin_name / f"{plugin_name}-chatgpt-upload.zip"
+    )
+
+    with ZipFile(upload_zip) as archive:
+        actual_bodies = {
+            name: content[builder.skill_body_start(content) :].strip()
+            for name in archive.namelist()
+            if name in expected_bodies
+            for content in [archive.read(name).decode("utf-8")]
+        }
+
+    assert actual_bodies == expected_bodies
+    assert len(set(actual_bodies.values())) == len(actual_bodies)
+    assert not any(
+        body.startswith("Attach the relevant source material")
+        or body.startswith("Allega i documenti pertinenti")
+        for body in actual_bodies.values()
+    )
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "vera"])
@@ -648,6 +698,29 @@ def test_chatgpt_skill_projection_rejects_an_incomplete_runtime_contract() -> No
         match="incomplete or misplaced ChatGPT runtime contract",
     ):
         builder.project_chatgpt_runtime_skill(content, plugin_name="clara")
+
+
+def test_chatgpt_skill_projection_preserves_specific_copy_before_runtime() -> None:
+    builder = load_builder()
+    source = (
+        "---\n"
+        "name: specific-workflow\n"
+        "description: Test fixture.\n"
+        "---\n\n"
+        "# Specific workflow\n\n"
+        "Review the supplied ledger and return the unmatched rows.\n"
+    ).encode("utf-8")
+
+    projected = builder.project_chatgpt_runtime_skill(
+        source,
+        plugin_name="clara",
+    ).decode("utf-8")
+    body = projected[builder.skill_body_start(projected) :].strip()
+
+    assert body.startswith("# Specific workflow")
+    assert body.index("# Specific workflow") < body.index(
+        builder.REQUIRED_CHATGPT_HEADING
+    )
 
 
 def test_chatgpt_skill_projection_rejects_contract_markers_in_frontmatter() -> None:

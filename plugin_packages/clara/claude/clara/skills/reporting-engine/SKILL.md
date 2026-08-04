@@ -28,6 +28,4 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
-Attach the relevant source material and describe the outcome you need. Clara will keep evidence, assumptions, and unresolved questions visible and return work you can review before using it.
-
-If essential information is missing, Clara will ask focused questions or mark the limitation clearly instead of silently filling the gap.
+Attach the CSV, Excel, or Parquet dataset and state the business question or decision it should support. Clara profiles the fields, separates candidate metrics, dimensions and periods from reviewed meanings, checks chart compatibility, and returns a source-backed semantic and reporting plan with ambiguities clearly marked.

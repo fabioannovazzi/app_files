@@ -50,12 +50,12 @@
       "control": "Bank and journal sources emit movements only through bounded tabular adapters or source-bound reviewed mapping receipts. The default tabular-v6 contract remains unchanged; additive tabular-v7 is selected only by a current receipt that explicitly binds Italian textual-month date_locale or exact reviewed non-movement summary labels. The v7 parser accepts only the frozen full Italian month vocabulary and valid Gregorian dates, while summary exclusion requires an exact reviewed label, a blank mapped date, and no stable explicit reference. CSV profiling covers only comma, semicolon, tab, and pipe within fixed byte and row limits; profiling is transport evidence rather than semantic authority, non-default or conflicting delimiters require a current receipt, and ambiguous, unsupported, malformed, ragged, stale, or partly invalid sources emit zero rows. Reviewed mappings bind the field delimiter separately from numeric separators and bind the complete current potential-monetary-column list plus explicit exclusions. Non-canonical direction labels require a complete source-specific mapping to positive, negative, or zero that agrees with the exact signed amount, and the relationship policy is a separate reviewed-decision receipt bound to the current bank and journal artifact digests, currency, unit, entity, party, direction, tolerance, and date-window perimeter."
     },
     {
-      "id": "one-to-one-exact-reconciliation",
-      "control": "Relationship-v2 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, one-to-one evidence use, and balanced relationship ledgers; row order cannot award a contested target, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
+      "id": "non-reusing-exact-reconciliation",
+      "control": "Relationship-v3 matching uses exact-decimal amounts, actual dates where required, distinctive explicit references, stable prepared identities, conflict-free batch snapshots, and non-reusing balanced relationship ledgers. Reviewed one-to-many or many-to-one groups require a shared stable reference and conserved group totals; overlapping groups remain unmatched. Row order cannot award contested evidence, while unmatched, reused, cross-currency, or residual rows keep readiness blocked."
     },
     {
       "id": "bounded-validated-luna-resolution-funnel",
-      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before preparing one size-capped candidate packet for a pinned deny-default Luna worker. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, one-to-one-use, and evidence checks pass. Accepted decisions update only sibling certainty-funnel and human-review-queue artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
+      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before preparing successive size-capped candidate packets for pinned deny-default Luna workers. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling cumulative certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -86,6 +86,6 @@
     "reviewed_at": "2026-08-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ac32c0c45c3985d3c79eb1f4170084a2c3d0745dc43d7441c9e260aab547dbcd"
+    "source_fingerprint": "ec679cc2992666f2f9d4fde7ceb913a8886390ba0b08d9efe38378565b79d2c9"
   }
 }

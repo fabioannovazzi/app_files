@@ -78,6 +78,7 @@ COWORK_OMITTED_PATHS = frozenset(
 COWORK_OMITTED_MODULES = frozenset({"studio-archive"})
 PROJECTION_ONLY_PATHS = frozenset(
     {
+        "marketplace_skill_instructions.json",
         "skills/studio-archive/references/marketplace-gmail.md",
         "skills/studio-archive/references/cowork-runtime.md",
         "skills/studio-archive/references/whatsapp-desktop.md",

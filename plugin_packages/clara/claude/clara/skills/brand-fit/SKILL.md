@@ -28,6 +28,4 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 
-Attach the relevant source material and describe the outcome you need. Clara will keep evidence, assumptions, and unresolved questions visible and return work you can review before using it.
-
-If essential information is missing, Clara will ask focused questions or mark the limitation clearly instead of silently filling the gap.
+Provide the completed, checked Retailer Signals analysis, evidence of the brand's current presence at that retailer, and the brand-owned catalogue. Clara compares all three, separates current-presence gaps from catalogue opportunities, and returns an evidence-linked Brand Fit assessment for review.

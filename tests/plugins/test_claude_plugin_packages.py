@@ -77,7 +77,7 @@ def cowork_instruction_docs(vera_entries):
     }
 
 
-def test_claude_manifest_uses_canonical_vera_identity_and_version(
+def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     vera_entries,
 ) -> None:
     source = json.loads(VERA_SOURCE_MANIFEST.read_text(encoding="utf-8"))
@@ -90,7 +90,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
         "name": template["name"],
         "displayName": template["displayName"],
-        "version": source["version"],
+        "version": template["version"],
         "description": template["description"],
         "author": template["author"],
         "homepage": template["homepage"],

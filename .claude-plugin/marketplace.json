@@ -48,7 +48,7 @@
       "displayName": "Clara",
       "source": "./plugin_packages/clara/claude/clara",
       "description": "AI companion for consultants. Clara organizes evidence, analyzes business data, and prepares reviewable advisory work, reports, and presentations.",
-      "version": "0.1.123",
+      "version": "0.1.124",
       "author": {
         "name": "Mparanza",
         "email": "hello@mparanza.com",
