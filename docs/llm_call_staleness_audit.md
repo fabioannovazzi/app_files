@@ -16,7 +16,7 @@ PDP, taxonomy, or product-evidence pipelines.
 | `attributeClassificationQuery` | `modules/add_attributes/add_attributes.py`, `modules/add_attributes/attribute_classification.py`, `modules/add_attributes/pdp_attribute_export.py` | Core attribute classification and PDP export pipeline. |
 | `attributeDiscoveryQuery` | `modules/add_attributes/attribute_discovery.py` | Discovers missing/derived attributes. |
 | `attributeScoringQuery` | `modules/add_attributes/attribute_scoring.py` | Scores candidate attribute values. |
-| `inferColumnQuery` | `modules/add_attributes/column_inference.py`, `modules/add_attributes/pareto.py`, `modules/llm/random_entries_queries.py` | Used for attribute column inference and journal/check entry column mapping. |
+| `inferColumnQuery` | `modules/add_attributes/column_inference.py`, `modules/add_attributes/pareto.py` | Used for attribute column inference. |
 | `categoryWebsiteLookup` | `src/category_lookup.py` | Resolves category websites with market context for attribute discovery. |
 | `merchantBrandWebsiteLookup` | `src/merchant_brand_lookup.py` | Resolves merchant/brand websites for attribute/PDP enrichment. |
 | `pdpClassificationQuery` | `modules/add_attributes/pdp_attribute_export.py` | PDP attribute classification stage. |
@@ -37,8 +37,6 @@ generation.
 
 | Query step | Primary production callers | Keep rationale |
 | --- | --- | --- |
-| `checkEntriesQuery` | `modules/check_entries/logic.py`, `modules/check_entries/backend.py` | Check Entries plugin workflow. |
-| `quickRewriteQuery` | `modules/check_entries/audit_note.py` | Check Entries audit-note rewrite. |
 | `llmFallbackQuery` | `modules/llm/model_router.py`, `modules/llm/openai_batch.py` | Generic OpenAI fallback used by live wrappers. |
 | `readImageTableQuery` | `src/slides/ocr_service.py` | Slide OCR/table extraction. |
 | `readImageTableStructureQuery` | `src/slides/ocr_service.py` | Slide OCR table-structure extraction. |

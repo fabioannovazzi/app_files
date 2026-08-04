@@ -299,29 +299,6 @@ To standardise LLM calls throughout the project:
 - Use `modules.llm.model_router.query_llm_return_json` or `query_llm_return_text` to send prompts. Both support OpenAI-style tool calling via the `tools` and `tool_choice` arguments.
 - Each `query_step` is mapped to a provider, model, and batch capability via `modules.utilities.config.select_provider`.
 
-### Example flow from UI to logic
-
-```python
-from modules.llm.llm_call_wrapper import init_llm_wrapper
-from modules.check_entries.logic import check_entry_against_text
-from modules.utilities.session_context import SessionContext
-
-session = SessionContext.from_state({})
-init_llm_wrapper("", session=session)
-llm_wrapper = session.state["llm_wrapper"]
-
-result = check_entry_against_text(
-    llm_wrapper,
-    entry,
-    pdf_text,
-    "eng",
-    tools=my_tools,
-    tool_choice="required",
-)
-```
-
-Inside `check_entry_against_text`, the logic layer calls `query_llm_return_json`, which uses `select_provider(query_step)` to resolve the actual provider/model and determine whether batching is supported.
-
 ## Design Context
 
 ### Users
