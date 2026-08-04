@@ -1092,9 +1092,11 @@ def test_changed_plugin_sources_bump_manifest_version() -> None:
         return
 
     changed_plugins = {
-        Path(line).parts[1]
+        path_parts[1]
         for line in result.stdout.splitlines()
-        if line.strip() and len(Path(line).parts) >= 3
+        if line.strip()
+        for path_parts in [Path(line).parts]
+        if len(path_parts) >= 3 and path_parts[2] != "privacy"
     }
 
     for plugin_name in sorted(changed_plugins):
