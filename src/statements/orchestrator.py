@@ -10,21 +10,18 @@ from typing import Dict, List, Tuple
 # New agentic parser for PDFs
 from finance.bank_statements.agentic_parser import AgenticStatementParser, ParserConfig
 from finance.bank_statements.model import BankTransaction
-
 from modules.utilities.utils import get_schema_and_column_names
+from parsers.extractors import extract_beneficiary, extract_references
 
 from .ingest import Document, DocumentIngestor
-from .llm_page_classifier import LLMPageClassifier
 from .locale_utils import detect_currency, detect_language
 from .page_classifier import PageClassifier
 from .row_filters import filter_rows
 from .schema import Transaction
 from .strategies import (
     strategy_line_heuristics,
-    strategy_llm_blocks,
     strategy_table_layout,
 )
-from parsers.extractors import extract_beneficiary, extract_references
 
 logger = logging.getLogger(__name__)
 
@@ -49,7 +46,6 @@ class StatementExtractor:
             ingestor = DocumentIngestor()
             document = ingestor.ingest(file_path)
             classifier = PageClassifier()
-            llm_classifier = LLMPageClassifier()
             kept_pages: List[str] = []
             page_details: List[Dict[str, object]] = []
             n_pages = len(document.pages)
@@ -60,20 +56,6 @@ class StatementExtractor:
                     page_index=idx,
                     is_last_page=idx == n_pages - 1,
                 )
-                if label != "transaction" and conf < 0.8:
-                    excerpt_lines = text.splitlines()
-                    snippet = "\n".join(
-                        excerpt_lines[:5]
-                        + excerpt_lines[
-                            len(excerpt_lines) // 2 : len(excerpt_lines) // 2 + 5
-                        ]
-                        + excerpt_lines[-5:]
-                    )
-                    llm_label, llm_conf = llm_classifier.classify_excerpt(
-                        snippet, locale=config.get("lang")
-                    )
-                    if llm_label == "summary" and llm_conf >= 0.8:
-                        label, conf = llm_label, llm_conf
                 if label == "summary" and conf >= 0.8:
                     page_details.append(
                         {"label": label, "confidence": conf, "details": details}
@@ -161,7 +143,6 @@ class StatementExtractor:
         strategies = [
             strategy_table_layout,
             strategy_line_heuristics,
-            strategy_llm_blocks,
         ]
         for strat in strategies:
             rows = strat(document, lang)

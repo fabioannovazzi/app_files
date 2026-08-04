@@ -45,8 +45,6 @@ generation.
 | `slideOcrSemanticQuery` | `src/slides/ocr_service.py` | Slide OCR semantic correction. |
 | `slideOcrResidualAuditQuery` | `src/slides/ocr_service.py` | Slide OCR residual audit. |
 | `slideOcrVisualCorrectionQuery` | `src/slides/ocr_service.py` | Slide OCR visual correction. |
-| `slidesChartTypeQuery` | `src/slides/chart_type_classifier.py` | Slide chart-type classification. |
-| `slidesPptxRepairQuery` | `src/slides/pptx_post_render.py` | PPTX post-render repair. |
 
 Hosted interviews use direct OpenAI Realtime HTTP calls in
 `modules/hosted_interviews/api.py`, shared through `modules/openai_realtime.py`.
@@ -59,7 +57,6 @@ attribute-analysis/PDP pipeline.
 
 | Candidate | Query steps / files | Evidence | Likely cleanup scope |
 | --- | --- | --- | --- |
-| Statement package LLM fallback stubs | `src/statements/llm.py`, `src/statements/llm_page_classifier.py`, `src/statements/strategies.py::strategy_llm_blocks`, statement LLM tests | `extract_transactions_llm` is a TODO that returns `[]` even when `LLM_API_KEY` exists. `LLMPageClassifier` gates on `BANK_PARSE_LLM` and calls `query_llm_return_json` with the old two-argument signature, so it cannot use the current wrapper correctly. This package is separate from the live check-statement/reconciliation plugin paths. | Remove the TODO LLM fallback and optional LLM page classifier, or rewrite them later as a proper wrapper-backed statement parser if that becomes a product goal. |
 | LLM refactor helper scripts | `tools/run_codex_llm_wrapper_refactor.py`, `tools/run_codex_llm_naming_params_refactor.py` | Developer automation for historical wrapper migration, not runtime LLM product behavior. | Optional cleanup only; not required for product LLM call removal. |
 
 ## Removed Report-Chat Provider Paths
@@ -114,7 +111,6 @@ Useful checks after cleanup:
 
 ```bash
 rg -n "conversation|report-chat|chat with report" modules src tests plugins
-rg -n "extract_transactions_llm|LLMPageClassifier|BANK_PARSE_LLM|LLM_API_KEY" src tests
 rg -n "attributeClassificationQuery|attributeDiscoveryQuery|attributeScoringQuery|pdpVisionAttributeQuery|pdpWebAttributeQuery|taxonomyGenerationQuery" modules/add_attributes modules/pdp src scripts
 rg -n "select_provider\\(|query_llm_return|run_step_json|run_step_text|api.openai.com|OPENAI_API_KEY" plugins/*/scripts plugins/_shared
 ```

@@ -93,16 +93,3 @@ def strategy_line_heuristics(document: Document, locale: str) -> List[Transactio
                 )
             )
     return transactions
-
-
-def strategy_llm_blocks(document: Document, locale: str) -> List[Transaction]:
-    """Fallback LLM extraction for difficult layouts."""
-    try:
-        from .llm import extract_transactions_llm
-    except Exception as e:  # pragma: no cover - optional
-        logging.exception(e)
-        return []
-    transactions: List[Transaction] = []
-    for text in document.pages:
-        transactions.extend(extract_transactions_llm(text, locale))
-    return transactions
