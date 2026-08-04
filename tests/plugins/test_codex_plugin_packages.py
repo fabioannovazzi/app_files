@@ -444,7 +444,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.81"
+    assert manifest["version"] == "0.1.82"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -485,15 +485,13 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     whatsapp_evals_path = "evals/whatsapp_desktop_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert wrapper_path in entries
-    assert reference_path in entries
-    assert whatsapp_reference_path in entries
+    assert reference_path not in entries
+    assert whatsapp_reference_path not in entries
     assert gmail_evals_path in entries
     assert whatsapp_evals_path in entries
     assert module_skill_path in entries
     wrapper = entries[wrapper_path].decode("utf-8")
     compact_wrapper = " ".join(wrapper.split())
-    reference = entries[reference_path].decode("utf-8")
-    whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
     assert "Indica un solo cliente e la fonte da consultare" in wrapper
     assert "mantiene separato il perimetro del cliente" in wrapper
@@ -502,19 +500,17 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "references/whatsapp-desktop.md" not in wrapper
     assert "Do not resolve the local document module" not in wrapper
     assert "Codex Desktop" not in compact_wrapper
-    assert reference.index("get_profile") < reference.index("search_emails")
-    assert reference.index("search_emails") < reference.index("batch_read_email")
-    assert "current conversation" in reference
-    assert "max_results: 10" in reference
-    assert "at most 20 results per page" in reference
-    assert "absent optional Cc or Bcc field" in reference
-    assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
-    assert "whatsapp-desktop-computer-use-v1" in whatsapp_reference
-    assert "net.whatsapp.WhatsApp" in whatsapp_reference
-    assert "Never type into the message composer" in whatsapp_reference
-    assert "without pressing Return" in whatsapp_reference
-    assert "no WhatsApp connector" in whatsapp_reference
     assert "## Connected Gmail workflow" in module_skill
+    assert module_skill.index("get_profile") < module_skill.index("search_emails")
+    assert module_skill.index("search_emails") < module_skill.index("batch_read_email")
+    assert "at most 20 results per page" in module_skill
+    assert "absence of an optional Cc" in module_skill
+    assert "cannot prove" in module_skill
+    assert "the absence of an undisclosed Bcc recipient" in module_skill
+    assert "whatsapp-desktop-computer-use-v1" in module_skill
+    assert "net.whatsapp.WhatsApp" in module_skill
+    assert "one empty composer" in module_skill
+    assert "never press Return" in module_skill
     gmail_section = module_skill.split(
         "## Connected Gmail workflow",
         maxsplit=1,
@@ -527,7 +523,6 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "configure_studio_archive_client",
         "python scripts/studio_archive.py",
     ):
-        assert local_dependency not in reference
         assert local_dependency not in gmail_section
     assert not any(
         name.rsplit("/", maxsplit=1)[-1] in {".app.json", ".mcp.json"}
@@ -587,6 +582,13 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     assert card_bodies == expected_card_bodies
     assert len(set(card_bodies.values())) == len(card_bodies)
     assert builder.CHATGPT_SKILL_CARDS_FILE not in entries
+    for skill_name in instruction_config["skills"]:
+        skill_prefix = f"skills/{skill_name}/"
+        assert {
+            name.removeprefix(skill_prefix)
+            for name in entries
+            if name.startswith(skill_prefix)
+        } == {"SKILL.md", "agents/openai.yaml"}
     for name, body in card_bodies.items():
         assert "\n\n" not in body, name
         assert builder.REQUIRED_CHATGPT_HEADING not in body, name
@@ -653,6 +655,13 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
             if name in expected_bodies
             for content in [archive.read(name).decode("utf-8")]
         }
+        for skill_name in instruction_config["skills"]:
+            skill_prefix = f"skills/{skill_name}/"
+            assert {
+                name.removeprefix(skill_prefix)
+                for name in archive.namelist()
+                if name.startswith(skill_prefix) and not name.endswith("/")
+            } == {"SKILL.md", "agents/openai.yaml"}
 
     assert actual_bodies == expected_bodies
     assert len(set(actual_bodies.values())) == len(actual_bodies)
