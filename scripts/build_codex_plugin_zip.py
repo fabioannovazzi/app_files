@@ -1137,6 +1137,17 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
+        if (
+            plugin_name in CROSS_SURFACE_PLUGINS
+            and len(path_parts) >= 3
+            and path_parts[0] == "skills"
+            and path_parts[1] in skill_cards
+            and not (len(path_parts) == 3 and path_parts[2] == "SKILL.md")
+        ):
+            # Marketplace cards must stay lightweight. The full Codex plugin keeps
+            # each skill's scripts, references, and assets; the ChatGPT projection
+            # exposes only the approved card copy and generated interface metadata.
+            continue
         if "mcp" in path_parts:
             if path_parts[-2:] == ["mcp", "server.cjs"]:
                 component_prefix = name.removesuffix("mcp/server.cjs")
