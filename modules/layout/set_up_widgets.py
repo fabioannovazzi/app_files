@@ -6036,42 +6036,6 @@ def get_metric_choice(df, chosenChart, paramDict, chartDict, automateDict, value
     return chartDict
 
 
-def get_overlay_chart_choice(chartDict, automateDict, paramDict):
-    namingParams = get_naming_params()
-    plotOverlayChartLabel = namingParams["plotOverlayChartLabel"]
-    plotOverlayChart = namingParams["plotOverlayChart"]
-    columnHash = paramDict[namingParams["columnHash"]]
-    metConditionValue = namingParams["metConditionValue"]
-    notMetConditionValue = namingParams["notMetConditionValue"]
-    metricsToPlotKey = namingParams["metricsToPlot"]
-    chosenChart = namingParams["chosenChart"]
-    stackedBarChart = namingParams["stackedBarChart"]
-    plotSmallMultiplesKey = namingParams["plotSmallMultiplesOtherCharts"]
-    booleanRadioOptions = [metConditionValue, notMetConditionValue]
-    chartDict[plotOverlayChart] = notMetConditionValue
-    metricsToPlot = chartDict[metricsToPlotKey]
-    if len(metricsToPlot) == 2 and chartDict[chosenChart] in [stackedBarChart]:
-        chartDict[plotOverlayChart] = metConditionValue
-    elif len(metricsToPlot) == 2 and (
-        plotSmallMultiplesKey not in chartDict or not chartDict[plotSmallMultiplesKey]
-    ):
-        index = 0
-        hashKey = get_hashed_key_for_widgets(plotOverlayChart, columnHash)
-        helpMessage = "True to plot overlay column chart."
-        index = insert_json_value(
-            "index", index, automateDict, booleanRadioOptions, plotOverlayChart, None
-        )
-        chartDict[plotOverlayChart] = ui.radio(
-            label=plotOverlayChartLabel,
-            options=booleanRadioOptions,
-            index=index,
-            key=hashKey,
-            horizontal=True,
-            help=helpMessage,
-            label_visibility="visible",
-        )
-        ui.caption("""✳️True to plot overlay column chart with two metrics.""")
-    return chartDict
 
 
 def get_dimensions_to_plot(chartDict, automateDict, chosenChart, indexCols, paramDict):

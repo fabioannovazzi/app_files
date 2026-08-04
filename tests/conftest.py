@@ -238,7 +238,11 @@ def _remember_canonical_modules() -> None:
         else:
             module_paths = getattr(module, "__path__", ())
             repository_namespace = False
-            for module_path in module_paths:
+            try:
+                resolved_module_paths = tuple(module_paths)
+            except (KeyError, RuntimeError):
+                continue
+            for module_path in resolved_module_paths:
                 try:
                     relative_path = (
                         Path(module_path).resolve().relative_to(ROOT.resolve())

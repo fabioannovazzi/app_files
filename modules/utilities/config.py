@@ -40,8 +40,6 @@ def select_provider(task):
     slideOcrSemanticQuery = namingParams["slideOcrSemanticQuery"]
     slideOcrResidualAuditQuery = namingParams["slideOcrResidualAuditQuery"]
     slideOcrVisualCorrectionQuery = namingParams["slideOcrVisualCorrectionQuery"]
-    slidesChartTypeQuery = namingParams["slidesChartTypeQuery"]
-    slidesPptxRepairQuery = namingParams["slidesPptxRepairQuery"]
     model = namingParams["modelName"]
     provider = namingParams["providerName"]
     batchMode = namingParams["batchMode"]
@@ -97,16 +95,6 @@ def select_provider(task):
             provider: openai,
             model: gpt5ThinkingMini,
             batchMode: False,
-        },
-        slidesChartTypeQuery: {
-            provider: openai,
-            model: gpt5ThinkingMini,
-            batchMode: True,
-        },
-        slidesPptxRepairQuery: {
-            provider: openai,
-            model: gpt54Mini,
-            batchMode: True,
         },
         pdpClassificationQuery: {
             provider: openai,
@@ -223,8 +211,6 @@ def get_naming_params():
         "slideOcrSemanticQuery": "slideOcrSemanticQuery",
         "slideOcrResidualAuditQuery": "slideOcrResidualAuditQuery",
         "slideOcrVisualCorrectionQuery": "slideOcrVisualCorrectionQuery",
-        "slidesChartTypeQuery": "slidesChartTypeQuery",
-        "slidesPptxRepairQuery": "slidesPptxRepairQuery",
         "inferColumnQuery": "inferColumnQuery",
         "attributeDiscoveryQuery": "attributeDiscoveryQuery",
         "attributeScoringQuery": "attributeScoringQuery",

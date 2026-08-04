@@ -33,12 +33,6 @@ class _StubClassifier:
         return ("transaction", 0.99, {"mock": True})
 
 
-class _StubLLMClassifier:
-    def classify_excerpt(self, snippet: str, locale: str | None):
-        # Never override heuristic classification
-        return ("transaction", 0.99)
-
-
 class _StubAgentic:
     def __init__(self, *a: Any, **k: Any) -> None:
         pass
@@ -72,7 +66,6 @@ def test_orchestrator_enriches_beneficiary_and_references(
     # Patch the components used by the orchestrator
     monkeypatch.setattr(orch_mod, "DocumentIngestor", lambda: _StubIngestor())
     monkeypatch.setattr(orch_mod, "PageClassifier", lambda: _StubClassifier())
-    monkeypatch.setattr(orch_mod, "LLMPageClassifier", lambda: _StubLLMClassifier())
     monkeypatch.setattr(
         orch_mod, "AgenticStatementParser", lambda *a, **k: _StubAgentic()
     )

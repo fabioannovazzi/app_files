@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import sys
-from pathlib import Path
 from datetime import date
 from decimal import Decimal
+from pathlib import Path
 
 import polars as pl
 import pytest
@@ -16,9 +16,8 @@ if str(SRC) not in sys.path:
 from statements.ingest import Document
 from statements.schema import Transaction
 from statements.strategies import (
-    strategy_table_layout,
     strategy_line_heuristics,
-    strategy_llm_blocks,
+    strategy_table_layout,
 )
 
 
@@ -93,7 +92,9 @@ def test_strategy_line_heuristics_parses_lines_and_updates_diagnostics() -> None
         ]
     )
     metadata = {"page_diagnostics": [{}, {}]}
-    doc = Document(path=Path("x.pdf"), kind="pdf", pages=[page1, page2], metadata=metadata)
+    doc = Document(
+        path=Path("x.pdf"), kind="pdf", pages=[page1, page2], metadata=metadata
+    )
 
     # Act
     out = strategy_line_heuristics(doc, locale="en")
@@ -110,42 +111,3 @@ def test_strategy_line_heuristics_parses_lines_and_updates_diagnostics() -> None
     assert diag[0]["kept_rows"] == 1 and diag[0]["dropped_rows"] == 1
     # Second page keeps both rows at filter stage; parsing drops the invalid one later
     assert diag[1]["kept_rows"] == 2 and diag[1]["dropped_rows"] == 0
-
-
-def test_strategy_llm_blocks_uses_llm_and_aggregates_pages(monkeypatch) -> None:
-    # Arrange: stub the LLM extractor to return one transaction per call
-    calls: list[tuple[str, str]] = []
-
-    def _stub_extract(text: str, locale: str) -> list[Transaction]:  # noqa: ANN001
-        calls.append((text, locale))
-        return [
-            Transaction(
-                booking_date=date(2023, 1, 1),
-                value_date=None,
-                description=f"tx from {text}",
-                amount=Decimal("1.00"),
-                currency="EUR",
-            )
-        ]
-
-    import statements.llm as llm_mod
-
-    monkeypatch.setattr(llm_mod, "extract_transactions_llm", _stub_extract)
-
-    doc = Document(path=Path("y.pdf"), kind="pdf", pages=["A", "B"])
-
-    # Act
-    out = strategy_llm_blocks(doc, locale="en")
-
-    # Assert
-    assert len(out) == 2
-    assert [t.description for t in out] == ["tx from A", "tx from B"]
-    assert calls == [("A", "en"), ("B", "en")]
-
-
-def test_strategy_llm_blocks_returns_empty_when_llm_returns_nothing() -> None:
-    # Arrange: default implementation returns [] when API key missing
-    doc = Document(path=Path("z.pdf"), kind="pdf", pages=["some text"])
-
-    # Act / Assert
-    assert strategy_llm_blocks(doc, locale="en") == []

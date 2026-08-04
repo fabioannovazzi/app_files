@@ -3345,7 +3345,6 @@ def get_table_download_link(data, name, fileFormat):
             + name
             + '" html file</a>'
         )  # decode b'abc' => abc
-        return href
 
 
 def get_table_number_format(df, colArray):
