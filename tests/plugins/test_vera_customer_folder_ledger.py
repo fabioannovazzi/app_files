@@ -147,6 +147,9 @@ def test_explicit_engagement_and_import_are_persisted_in_customer_folder(
     )
     assert (client_case.client_root / "Vera" / "client.json").is_file()
     assert (engagement_root / "engagement.json").is_file()
+    assert (engagement_root / ".vera-engagement.lock").read_bytes() == (
+        b"Vera engagement mutation lock\n"
+    )
     assert (engagement_root / "inputs" / receipt["input_id"] / "receipt.json").is_file()
     serialized = "\n".join(
         path.read_text(encoding="utf-8")
@@ -188,6 +191,105 @@ def test_repeated_import_reuses_one_content_addressed_input(
     assert replayed["input_id"] == client_case.imported["input_id"]
     assert replayed["input_receipt"] == client_case.imported["input_receipt"]
     assert len(replayed["engagement"]["imports"]) == 1
+
+
+def test_concurrent_import_retries_resolve_to_one_input_receipt(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    participant_count = 12
+    hash_barrier = Barrier(participant_count)
+    source = client_case.source.parent / "concurrent-support.txt"
+    source.write_text("Concurrent support evidence\n", encoding="utf-8")
+    source = source.resolve(strict=True)
+    original_sha256_file = archive_core.ledger._sha256_file
+
+    def hash_before_release(path: Path) -> str:
+        digest = original_sha256_file(path)
+        if path == source:
+            hash_barrier.wait(timeout=10)
+        return digest
+
+    monkeypatch.setattr(archive_core.ledger, "_sha256_file", hash_before_release)
+
+    def import_after_release() -> dict[str, object]:
+        return archive_core.ledger.import_document(
+            client_case.client_root,
+            client_case.client_id,
+            client_case.engagement_id,
+            source,
+            "support",
+        )
+
+    with ThreadPoolExecutor(max_workers=participant_count) as executor:
+        futures = [
+            executor.submit(import_after_release) for _ in range(participant_count)
+        ]
+        results = [future.result(timeout=20) for future in futures]
+
+    input_ids = {result["receipt"]["input_id"] for result in results}
+    statuses = [result["status"] for result in results]
+    assert len(input_ids) == 1
+    assert statuses.count("imported") == 1
+    assert statuses.count("already_imported") == participant_count - 1
+    assert (
+        len(
+            archive_core.ledger.list_inputs(
+                client_case.client_root,
+                client_case.engagement_id,
+            )
+        )
+        == 2
+    )
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX cross-process lock contract")
+def test_cross_process_import_retries_resolve_to_one_input_receipt(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    process_count = 6
+    process_context = multiprocessing.get_context("fork")
+    barrier = process_context.Barrier(process_count)
+    outcomes = process_context.Queue()
+    source = client_case.source.parent / "cross-process-support.bin"
+    source.write_bytes(b"cross-process support evidence\n" * 32_768)
+    source = source.resolve(strict=True)
+
+    def import_after_release() -> None:
+        barrier.wait(timeout=10)
+        try:
+            result = archive_core.ledger.import_document(
+                client_case.client_root,
+                client_case.client_id,
+                client_case.engagement_id,
+                source,
+                "support",
+            )
+        except (OSError, archive_core.ledger.LedgerError) as exc:
+            outcomes.put(("error", str(exc)))
+            return
+        outcomes.put((result["status"], result["receipt"]["input_id"]))
+
+    processes = [
+        process_context.Process(target=import_after_release)
+        for _ in range(process_count)
+    ]
+    for process in processes:
+        process.start()
+    for process in processes:
+        process.join(timeout=20)
+    results = [outcomes.get(timeout=5) for _ in range(process_count)]
+    outcomes.close()
+    outcomes.join_thread()
+
+    assert all(process.exitcode == 0 for process in processes)
+    assert len({result[1] for result in results}) == 1
+    assert [result[0] for result in results].count("imported") == 1
+    assert [result[0] for result in results].count("already_imported") == (
+        process_count - 1
+    )
 
 
 @pytest.mark.skipif(os.name != "posix", reason="POSIX permission contract")
@@ -356,6 +458,102 @@ def test_starting_an_already_running_run_is_idempotent(
     assert replayed["status"] == "running"
 
 
+def test_prepare_and_close_race_preserves_engagement_lifecycle(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    barrier = Barrier(2)
+
+    def prepare_after_release() -> tuple[str, str]:
+        barrier.wait(timeout=10)
+        try:
+            prepared = _prepare_run(
+                archive_core,
+                client_case,
+                idempotency_key="prepare-close-race",
+            )
+        except archive_core.ArchiveError as exc:
+            return "error", str(exc)
+        return "prepared", str(prepared["run"]["run_id"])
+
+    def close_after_release() -> tuple[str, str]:
+        barrier.wait(timeout=10)
+        try:
+            closed = archive_core.close_studio_client_engagement(
+                client_case.client_id,
+                client_case.engagement_id,
+                state_dir=client_case.state_dir,
+            )
+        except archive_core.ArchiveError as exc:
+            return "error", str(exc)
+        return "closed", str(closed["status"])
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        prepare_future = executor.submit(prepare_after_release)
+        close_future = executor.submit(close_after_release)
+        outcomes = {
+            prepare_future.result(timeout=20)[0],
+            close_future.result(timeout=20)[0],
+        }
+
+    engagement = archive_core.ledger.load_engagement_manifest(
+        client_case.client_root,
+        client_case.engagement_id,
+    )
+    runs = archive_core.ledger.list_runs(
+        client_case.client_root,
+        client_case.engagement_id,
+        verify_inputs=False,
+    )
+    if engagement["status"] == "closed":
+        assert outcomes == {"closed", "error"}
+        assert runs == ()
+    else:
+        assert engagement["status"] == "open"
+        assert outcomes == {"prepared", "error"}
+        assert len(runs) == 1
+        assert runs[0]["run"]["status"] == "prepared"
+
+
+def test_failed_run_cannot_restart_after_engagement_closes(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    prepared = _prepare_run(
+        archive_core,
+        client_case,
+        idempotency_key="closed-failed-run",
+    )
+    run_id = prepared["run"]["run_id"]
+    archive_core.fail_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        run_id,
+        "Retained terminal failure",
+        state_dir=client_case.state_dir,
+    )
+    archive_core.close_studio_client_engagement(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+
+    with pytest.raises(archive_core.ArchiveError, match="engagement is closed"):
+        archive_core.start_studio_client_workflow(
+            client_case.client_id,
+            client_case.engagement_id,
+            run_id,
+            state_dir=client_case.state_dir,
+        )
+
+    retained = archive_core.ledger.load_run(
+        client_case.client_root,
+        client_case.engagement_id,
+        run_id,
+    )
+    assert retained["run"]["status"] == "failed"
+
+
 def test_lifecycle_seals_every_output_with_purpose_and_audience(
     client_case: SimpleNamespace,
     archive_core: ModuleType,
@@ -442,6 +640,133 @@ def test_lifecycle_seals_every_output_with_purpose_and_audience(
     assert {item["audience"] for item in artifacts} == {"internal", "review"}
     assert all(item["purpose"] for item in artifacts)
     assert all(len(item["sha256"]) == 64 for item in artifacts)
+
+
+def test_concurrent_finalizers_commit_one_authoritative_declaration_set(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    prepared = _prepare_run(
+        archive_core,
+        client_case,
+        idempotency_key="concurrent-finalizers",
+    )
+    run_id = prepared["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        run_id,
+        state_dir=client_case.state_dir,
+    )
+    output_dir = Path(prepared["client_engagement"]["output_dir"])
+    (output_dir / "result.bin").write_bytes(b"reviewable output\n" * 131_072)
+    participant_count = 8
+    barrier = Barrier(participant_count)
+
+    def finalize_after_release(index: int) -> tuple[str, str]:
+        purpose = f"Authoritative purpose {index}."
+        barrier.wait(timeout=10)
+        try:
+            finalized = archive_core.finalize_studio_client_workflow(
+                client_case.client_id,
+                client_case.engagement_id,
+                run_id,
+                [
+                    {
+                        "artifact_id": "review.result",
+                        "path": "result.bin",
+                        "purpose": purpose,
+                        "audience": "review",
+                        "media_type": "application/octet-stream",
+                    }
+                ],
+                state_dir=client_case.state_dir,
+            )
+        except archive_core.ArchiveError as exc:
+            return "error", str(exc)
+        return "finalized", finalized["artifact_manifest"]["artifacts"][0]["purpose"]
+
+    with ThreadPoolExecutor(max_workers=participant_count) as executor:
+        futures = [
+            executor.submit(finalize_after_release, index)
+            for index in range(participant_count)
+        ]
+        results = [future.result(timeout=30) for future in futures]
+
+    successes = [result for result in results if result[0] == "finalized"]
+    authoritative = archive_core.ledger.validate_run_artifacts(
+        client_case.client_root,
+        client_case.engagement_id,
+        run_id,
+    )
+    assert len(successes) == 1
+    assert [result[0] for result in results].count("error") == participant_count - 1
+    assert authoritative["artifacts"][0]["purpose"] == successes[0][1]
+
+
+def test_finalization_rejects_an_output_that_changes_while_hashed(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    prepared = _prepare_run(
+        archive_core,
+        client_case,
+        idempotency_key="changing-finalization-output",
+    )
+    run_id = prepared["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        run_id,
+        state_dir=client_case.state_dir,
+    )
+    output_dir = Path(prepared["client_engagement"]["output_dir"])
+    output_path = output_dir / "changing.bin"
+    output_path.write_bytes(b"A" * (2 * 1024 * 1024))
+    original_read = archive_core.ledger.os.read
+    mutated = False
+
+    def read_then_mutate(descriptor: int, size: int) -> bytes:
+        nonlocal mutated
+        chunk = original_read(descriptor, size)
+        opened = os.fstat(descriptor)
+        target = output_path.stat()
+        if (
+            chunk
+            and not mutated
+            and (opened.st_dev, opened.st_ino) == (target.st_dev, target.st_ino)
+        ):
+            mutated = True
+            output_path.write_bytes(b"changed during finalization\n")
+        return chunk
+
+    monkeypatch.setattr(archive_core.ledger.os, "read", read_then_mutate)
+
+    with pytest.raises(archive_core.ArchiveError, match="changed while it was read"):
+        archive_core.finalize_studio_client_workflow(
+            client_case.client_id,
+            client_case.engagement_id,
+            run_id,
+            [
+                {
+                    "artifact_id": "review.changing",
+                    "path": "changing.bin",
+                    "purpose": "Exercise stable artifact sealing.",
+                    "audience": "review",
+                    "media_type": "application/octet-stream",
+                }
+            ],
+            state_dir=client_case.state_dir,
+        )
+
+    retained = archive_core.ledger.load_run(
+        client_case.client_root,
+        client_case.engagement_id,
+        run_id,
+    )
+    assert retained["run"]["status"] == "running"
+    assert not (Path(retained["run_root"]) / "artifact_manifest.json").exists()
 
 
 def test_finalize_rejects_an_artifact_without_declared_media_type(

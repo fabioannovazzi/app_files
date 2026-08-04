@@ -34,6 +34,7 @@ from archive_core import (
     report_studio_client_retention,
     search_archive,
     set_studio_client_identity,
+    start_check_entries_from_sample,
     start_studio_client_workflow,
     studio_archive_status,
 )
@@ -85,6 +86,18 @@ def _parser() -> argparse.ArgumentParser:
         choices=list(VERA_CLIENT_WORKFLOW_IDS),
         required=True,
     )
+
+    check_entries_handoff = subparsers.add_parser("start-check-entries-from-sample")
+    check_entries_handoff.add_argument("--client-id", required=True)
+    check_entries_handoff.add_argument("--engagement-id", required=True)
+    check_entries_handoff.add_argument("--sample-run-id", required=True)
+    check_entries_handoff.add_argument(
+        "--support-input-id", action="append", default=[]
+    )
+    check_entries_handoff.add_argument("--label")
+    check_entries_handoff.add_argument("--purpose")
+    check_entries_handoff.add_argument("--idempotency-key")
+    check_entries_handoff.add_argument("--new-run", action="store_true")
     prepare_workflow.add_argument("--input-id", action="append", default=[])
     prepare_workflow.add_argument(
         "--upstream-artifact",
@@ -222,6 +235,17 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "start-workflow":
             result = start_studio_client_workflow(
                 args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "start-check-entries-from-sample":
+            result = start_check_entries_from_sample(
+                args.client_id,
+                args.engagement_id,
+                args.sample_run_id,
+                support_input_ids=args.support_input_id,
+                label=args.label,
+                purpose=args.purpose,
+                idempotency_key=args.idempotency_key,
+                new_run=args.new_run,
             )
         elif args.command == "fail-workflow":
             result = fail_studio_client_workflow(

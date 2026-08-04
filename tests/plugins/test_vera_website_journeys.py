@@ -678,7 +678,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 10
+    expected_core_module_count = 11
 
     assert core.count('class="module-row"') == expected_core_module_count
     assert jurisdiction.count('data-jurisdiction-item="it"') == 5
@@ -1083,7 +1083,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 18
+    expected_module_link_count = 19
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

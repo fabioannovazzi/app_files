@@ -173,6 +173,22 @@ use this Italian version instead of the English recommendation:
 > [Scarica l'app desktop di ChatGPT con Codex]({CODEX_DOWNLOAD_URL}).
 > Possiamo continuare qui in ChatGPT.
 """.rstrip()
+CHATGPT_SPECIALIST_INTRO = {
+    "clara": (
+        "Attach the relevant source material and describe the outcome you need. "
+        "Clara will keep evidence, assumptions, and unresolved questions visible "
+        "and return work you can review before using it.\n\n"
+        "If essential information is missing, Clara will ask focused questions or "
+        "mark the limitation clearly instead of silently filling the gap."
+    ),
+    "vera": (
+        "Allega i documenti pertinenti e descrivi il risultato che ti serve. Vera "
+        "manterrà visibili evidenze, assunzioni e questioni irrisolte e preparerà "
+        "un risultato verificabile prima dell’uso professionale.\n\n"
+        "Se mancano informazioni essenziali, Vera farà domande mirate o indicherà "
+        "chiaramente il limite senza colmare il vuoto in modo implicito."
+    ),
+}
 
 
 def chatgpt_runtime_contract(plugin_name: str) -> str:
@@ -1018,6 +1034,18 @@ def project_chatgpt_runtime_skill(content: bytes, *, plugin_name: str) -> bytes:
     return projected.encode("utf-8")
 
 
+def project_chatgpt_specialist_skill(content: bytes, *, plugin_name: str) -> bytes:
+    """Replace local specialist mechanics with clean in-chat guidance."""
+
+    text = content.decode("utf-8")
+    body_index = skill_body_start(text)
+    if not text[body_index:].strip():
+        raise ValueError("Specialist skill must contain workflow instructions")
+    intro = CHATGPT_SPECIALIST_INTRO[plugin_name]
+    projected = text[:body_index] + "\n" + intro + "\n"
+    return projected.encode("utf-8")
+
+
 def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
     """Return one source-derived, skills-only tree for OpenAI Platform."""
 
@@ -1049,8 +1077,18 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             content = project_chatgpt_manifest(content)
         elif name.endswith("/.codex-plugin/plugin.json"):
             content = project_chatgpt_component_manifest(content)
-        if plugin_name in CROSS_SURFACE_PLUGINS and name.endswith("/SKILL.md"):
+        main_skill_name = f"skills/{plugin_name}/SKILL.md"
+        if plugin_name in CROSS_SURFACE_PLUGINS and name == main_skill_name:
             content = project_chatgpt_runtime_skill(
+                content,
+                plugin_name=plugin_name,
+            )
+        elif (
+            plugin_name in CROSS_SURFACE_PLUGINS
+            and name.startswith("skills/")
+            and name.endswith("/SKILL.md")
+        ):
+            content = project_chatgpt_specialist_skill(
                 content,
                 plugin_name=plugin_name,
             )

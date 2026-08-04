@@ -40,6 +40,21 @@ def _run_python(script: Path, *args: str) -> dict[str, Any] | None:
     return json.loads(lines[-1]) if lines else None
 
 
+def _run_python_failure(script: Path, *args: str) -> dict[str, Any]:
+    completed = subprocess.run(
+        [sys.executable, script.as_posix(), *args],
+        cwd=script.parent.parent,
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=30,
+    )
+    assert completed.returncode == 2, completed.stderr
+    lines = [line for line in completed.stdout.splitlines() if line.strip()]
+    assert lines
+    return json.loads(lines[-1])
+
+
 def _load_python_module(name: str, script: Path) -> Any:
     spec = importlib.util.spec_from_file_location(name, script)
     assert spec is not None and spec.loader is not None
@@ -220,6 +235,66 @@ def test_new_client_pipeline_promotes_a_sealed_reviewed_phase_one_run(
         durable_json = artifact.read_text(encoding="utf-8")
         assert phase_two["client_root"].as_posix() not in durable_json
         assert NEW_CLIENT_ROOT.as_posix() not in durable_json
+
+
+def test_new_client_promotion_rejects_a_directly_imported_phase_one_manifest(
+    vera_workflow_workspace: Callable[..., dict[str, Any]],
+) -> None:
+    workspace = vera_workflow_workspace(
+        "new-client",
+        input_files={"final_artifacts.json": "{}\n"},
+    )
+
+    result = _run_python_failure(
+        NEW_CLIENT_ROOT / "scripts" / "promote_client_file_preparation.py",
+        "--final-artifacts",
+        workspace["input_by_name"]["final_artifacts.json"].as_posix(),
+        "--case-dir",
+        workspace["output_dir"].as_posix(),
+        "--client-engagement",
+        workspace["context_path"].as_posix(),
+        "--client-reference",
+        "CLIENT-IMPORTED-PHASE-ONE",
+    )
+
+    assert result["status"] == "error"
+    assert "upstream-artifact handoff" in result["error"]
+    assert not (workspace["output_dir"] / "new_client_input.json").exists()
+
+
+def test_new_client_promotion_rejects_another_workflows_artifact(
+    vera_workflow_workspace: Callable[..., dict[str, Any]],
+) -> None:
+    engagement_id = "wrong-upstream-workflow"
+    upstream = vera_workflow_workspace(
+        "financial-analysis",
+        engagement_id=engagement_id,
+    )
+    (upstream["output_dir"] / "final_artifacts.json").write_text(
+        json.dumps({"run_id": upstream["run_id"]}) + "\n",
+        encoding="utf-8",
+    )
+    workspace = vera_workflow_workspace(
+        "new-client",
+        engagement_id=engagement_id,
+        upstream_workspace=upstream,
+    )
+
+    result = _run_python_failure(
+        NEW_CLIENT_ROOT / "scripts" / "promote_client_file_preparation.py",
+        "--final-artifacts",
+        workspace["input_by_name"]["final_artifacts.json"].as_posix(),
+        "--case-dir",
+        workspace["output_dir"].as_posix(),
+        "--client-engagement",
+        workspace["context_path"].as_posix(),
+        "--client-reference",
+        "CLIENT-WRONG-WORKFLOW",
+    )
+
+    assert result["status"] == "error"
+    assert "upstream-artifact handoff" in result["error"]
+    assert not (workspace["output_dir"] / "new_client_input.json").exists()
 
 
 def test_client_file_preparation_mcp_rejects_ledger_run_id_mismatch_without_write(

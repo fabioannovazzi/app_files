@@ -48,6 +48,7 @@ if str(_SCRIPT_DIRECTORY) not in sys.path:
 
 import client_ledger as ledger  # noqa: E402
 from vera_assurance import (  # noqa: E402
+    JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
     VERA_CLIENT_WORKFLOW_IDS,
     build_studio_client_folder_binding,
 )
@@ -77,6 +78,7 @@ __all__ = [
     "report_studio_client_retention",
     "search_archive",
     "set_studio_client_identity",
+    "start_check_entries_from_sample",
     "start_studio_client_workflow",
     "studio_archive_status",
 ]
@@ -1373,6 +1375,145 @@ def prepare_studio_client_workflow(
         "input_manifest": prepared["input_manifest"],
         "client_engagement": prepared["context"],
         "client_engagement_path": prepared["context_path"],
+    }
+
+
+def _journal_sampling_handoff_references(
+    client_root: Path,
+    engagement_id: str,
+    sample_run_id: str,
+) -> list[dict[str, str]]:
+    """Resolve the exact closed artifacts for one mechanical workflow handoff."""
+
+    try:
+        loaded = ledger.load_run(client_root, engagement_id, sample_run_id)
+        artifact_manifest = ledger.validate_run_artifacts(
+            client_root,
+            engagement_id,
+            sample_run_id,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Journal Sampling run is unavailable: {exc}") from exc
+    run = loaded["run"]
+    if run["workflow_id"] != "journal-sampling":
+        raise ArchiveError("Selected sample run is not a Journal Sampling run.")
+    if run["status"] not in {"ready_for_review", "completed"}:
+        raise ArchiveError(
+            "Journal Sampling must be review-ready or completed before Check Entries."
+        )
+    artifact_by_path = {
+        artifact["path"]: artifact for artifact in artifact_manifest["artifacts"]
+    }
+    expected_paths = {
+        path for path, _artifact_id, _role in JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF
+    }
+    missing_paths = sorted(expected_paths - set(artifact_by_path))
+    if missing_paths:
+        raise ArchiveError(
+            "Journal Sampling has no complete Check Entries handoff; "
+            f"missing={missing_paths}."
+        )
+    references: list[dict[str, str]] = []
+    for path, required_artifact_id, role in JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF:
+        artifact = artifact_by_path[path]
+        if (
+            required_artifact_id is not None
+            and artifact["artifact_id"] != required_artifact_id
+        ):
+            raise ArchiveError(
+                "Journal Sampling handoff has the wrong semantic artifact identity "
+                f"for {path}."
+            )
+        references.append(
+            {
+                "run_id": sample_run_id,
+                "artifact_id": artifact["artifact_id"],
+                "role": role,
+            }
+        )
+    return references
+
+
+def start_check_entries_from_sample(
+    client_id: str,
+    engagement_id: str,
+    sample_run_id: str,
+    *,
+    support_input_ids: Sequence[str],
+    label: str | None = None,
+    purpose: str | None = None,
+    idempotency_key: str | None = None,
+    new_run: bool = False,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Prepare and start Check Entries from one exact sample and support batch."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    if isinstance(support_input_ids, (str, bytes)) or not support_input_ids:
+        raise ArchiveError("Select at least one support input for Check Entries.")
+    normalized_support_ids = list(support_input_ids)
+    if (
+        not all(isinstance(input_id, str) for input_id in normalized_support_ids)
+        or len(normalized_support_ids) > 10_000
+        or len(set(normalized_support_ids)) != len(normalized_support_ids)
+    ):
+        raise ArchiveError("Check Entries support input selection is invalid.")
+    try:
+        support_receipts = [
+            ledger.load_input_receipt(root, engagement_id, input_id)
+            for input_id in normalized_support_ids
+        ]
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Check Entries support input is invalid: {exc}") from exc
+    if any(receipt["role"] != "support" for receipt in support_receipts):
+        raise ArchiveError(
+            "Check Entries accepts only inputs imported with the support role."
+        )
+    upstream_artifacts = _journal_sampling_handoff_references(
+        root,
+        engagement_id,
+        sample_run_id,
+    )
+    try:
+        prepared = ledger.prepare_run(
+            root,
+            client_id,
+            engagement_id,
+            "check-entries",
+            _workflow_version("check-entries"),
+            input_ids=normalized_support_ids,
+            upstream_artifacts=upstream_artifacts,
+            label=label or "Check sampled journal entries",
+            purpose=(
+                purpose
+                or "Check one exact Journal Sampling sample against one support batch."
+            ),
+            idempotency_key=idempotency_key,
+            new_run=new_run,
+        )
+        current_status = prepared["run"]["status"]
+        if current_status in {"prepared", "failed"}:
+            active = ledger.start_run(root, engagement_id, prepared["run"]["run_id"])
+        elif current_status in {"running", "ready_for_review", "completed"}:
+            active = prepared
+        else:
+            raise ArchiveError(
+                "The existing Check Entries run is cancelled; request a new run."
+            )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Check Entries handoff could not start: {exc}") from exc
+    return {
+        "status": active["run"]["status"],
+        "preparation_status": prepared["status"],
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "sample_run_id": sample_run_id,
+        "support_input_ids": normalized_support_ids,
+        "run": active["run"],
+        "input_manifest": active["input_manifest"],
+        "client_engagement": active["context"],
+        "client_engagement_path": active["context_path"],
     }
 
 

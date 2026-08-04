@@ -99,6 +99,11 @@ from journal_bank_core import (
     validate_material_value_ledger,
     write_json,
 )
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+    validate_client_workflow_run,
+)
 
 __all__ = [
     "CANDIDATE_GRAPH_NAME",
@@ -909,10 +914,95 @@ def _source_replay_snapshots(output_dir: Path) -> dict[str, dict[str, Any]]:
 def _artifact_roots_from_intake(
     output_dir: Path,
     intake: Mapping[str, Any],
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Path]:
     assumptions = intake.get("assumptions")
     if not isinstance(assumptions, dict):
         raise ValueError("Run intake assumptions are unavailable")
+
+    if intake.get("path_reference") == "run_root_relative":
+        if client_engagement is None:
+            raise ValueError(
+                "Portable run intake requires the current client engagement context"
+            )
+        if client_engagement.get("schema_version") != "vera.client_workflow_context.v2":
+            raise ValueError("Portable run intake requires a v2 client context")
+        if intake.get("run_id") != client_engagement.get("run_id"):
+            raise ValueError("Run intake and client engagement run IDs diverge")
+        run_root_value = client_engagement.get("run_root")
+        if not isinstance(run_root_value, str) or not run_root_value:
+            raise ValueError("Client engagement run root is unavailable")
+        run_root = Path(run_root_value).expanduser().resolve(strict=True)
+
+        def managed_path(value: object, *, field: str) -> Path:
+            if not isinstance(value, str) or not value or "\\" in value:
+                raise ValueError(f"Run intake {field} is not a portable path")
+            relative = Path(value)
+            if (
+                relative.is_absolute()
+                or relative.as_posix() != value
+                or relative == Path(".")
+                or ".." in relative.parts
+            ):
+                raise ValueError(f"Run intake {field} is not a canonical run path")
+            resolved = (run_root / relative).resolve(strict=True)
+            if not resolved.is_relative_to(run_root):
+                raise ValueError(f"Run intake {field} leaves the client run")
+            return resolved
+
+        declared_output = managed_path(intake.get("output_dir"), field="output_dir")
+        if declared_output != output_dir:
+            raise ValueError("Run intake output directory is stale")
+
+        bank_path = managed_path(assumptions.get("bank_path"), field="bank_path")
+        journal_path = managed_path(
+            assumptions.get("journal_path"), field="journal_path"
+        )
+        sample_value = assumptions.get("sample_path")
+        sample_path = (
+            managed_path(sample_value, field="sample_path")
+            if sample_value is not None
+            else None
+        )
+        recipe_value = assumptions.get("recipe_path")
+        recipe_path = (
+            managed_path(recipe_value, field="recipe_path")
+            if recipe_value is not None
+            else None
+        )
+        workflow_output_value = client_engagement.get("output_dir")
+        if not isinstance(workflow_output_value, str) or not workflow_output_value:
+            raise ValueError("Client engagement output root is unavailable")
+        workflow_output = Path(workflow_output_value).expanduser().resolve(strict=True)
+        if any(
+            path == workflow_output or path.is_relative_to(workflow_output)
+            for path in (bank_path, journal_path, sample_path)
+            if path is not None
+        ):
+            raise ValueError(
+                "Journal–Bank source paths must resolve to the run's exact receipts"
+            )
+        # Receipt membership and path containment are exact audit properties.
+        validate_client_workflow_run(
+            client_engagement,
+            expected_workflow_id="journal-bank-reconciliation",
+            input_paths=[
+                bank_path,
+                journal_path,
+                *(path for path in (sample_path, recipe_path) if path is not None),
+            ],
+            output_dir=output_dir,
+        )
+        return _artifact_roots(
+            bank_path=bank_path,
+            journal_path=journal_path,
+            sample_path=sample_path,
+            output_dir=output_dir,
+        )
+
+    if client_engagement is not None:
+        raise ValueError("Managed semantic review requires portable run intake")
 
     def required_path(field: str) -> Path:
         value = assumptions.get(field)
@@ -973,14 +1063,22 @@ def _material_csv_from_snapshot(
     return frame
 
 
-def _validated_source_replay(output_dir: Path) -> dict[str, Any]:
+def _validated_source_replay(
+    output_dir: Path,
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
     """Replay the run and parse every graph input from one stable byte generation."""
 
     snapshots = _source_replay_snapshots(output_dir)
     intake = snapshots["run_intake.json"]["value"]
     envelope = snapshots["assurance_envelope.json"]["value"]
     receipt_bundle = snapshots["artifact_receipts.json"]["value"]
-    roots = _artifact_roots_from_intake(output_dir, intake)
+    roots = _artifact_roots_from_intake(
+        output_dir,
+        intake,
+        client_engagement=client_engagement,
+    )
 
     validate_material_value_ledger(output_dir)
     validated_envelope = validate_assurance_envelope(envelope, artifact_roots=roots)
@@ -1360,8 +1458,13 @@ def _bounded_deferred_components(
 
 def _graph_content(
     output_dir: Path,
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
-    replay = _validated_source_replay(output_dir)
+    replay = _validated_source_replay(
+        output_dir,
+        client_engagement=client_engagement,
+    )
     source_binding = replay["source_binding"]
     audit = replay["audit"]
     tolerance, tolerance_text = _canonical_tolerance(audit.get("tolerance"))
@@ -1494,7 +1597,10 @@ def _graph_content(
         prompt_fits = len(prompt.encode("utf-8")) <= MAX_PROMPT_BYTES
         graph_fits = len(_json_bytes(graph)) <= MAX_GRAPH_BYTES
         if prompt_fits and graph_fits:
-            current_replay = _validated_source_replay(output_dir)
+            current_replay = _validated_source_replay(
+                output_dir,
+                client_engagement=client_engagement,
+            )
             if (
                 current_replay["snapshot_sha256"] != replay["snapshot_sha256"]
                 or current_replay["source_binding"] != source_binding
@@ -1687,13 +1793,18 @@ def _write_status(
 def prepare_semantic_review(
     reconciliation_dir: Path,
     semantic_output_dir: Path,
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Write a deterministic bounded graph, prompt, and worker output schema."""
 
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
     archived_generation = _archive_current_generation(semantic)
-    graph, schema = _graph_content(reconciliation)
+    graph, schema = _graph_content(
+        reconciliation,
+        client_engagement=client_engagement,
+    )
     graph_path = _safe_output_path(semantic, CANDIDATE_GRAPH_NAME)
     schema_path = _safe_output_path(semantic, OUTPUT_SCHEMA_NAME)
     prompt_path = _safe_output_path(semantic, PROMPT_NAME)
@@ -1718,6 +1829,8 @@ def _validate_graph_and_preparation_files(
     reconciliation: Path,
     semantic: Path,
     candidate_graph_path: Path,
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     graph_path = _required_child(
         candidate_graph_path,
@@ -1729,7 +1842,10 @@ def _validate_graph_and_preparation_files(
         maximum_bytes=MAX_GRAPH_BYTES,
         label=CANDIDATE_GRAPH_NAME,
     )
-    expected_graph, expected_schema = _graph_content(reconciliation)
+    expected_graph, expected_schema = _graph_content(
+        reconciliation,
+        client_engagement=client_engagement,
+    )
     if graph != expected_graph:
         raise ValueError("Candidate graph does not replay from current reconciliation")
     schema_path = _required_child(
@@ -2071,6 +2187,7 @@ def run_semantic_worker(
     candidate_graph_path: Path,
     *,
     codex_bin: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Launch one pinned Luna worker without changing the calling chat model."""
 
@@ -2080,6 +2197,7 @@ def run_semantic_worker(
         reconciliation,
         semantic,
         candidate_graph_path,
+        client_engagement=client_engagement,
     )
     if not graph["selected_components"]:
         raise ValueError("The bounded candidate packet does not require a worker")
@@ -2199,6 +2317,7 @@ def run_semantic_worker(
             reconciliation,
             semantic,
             graph_path,
+            client_engagement=client_engagement,
         )
         if current_graph != graph:
             raise ValueError("Reconciliation changed while Luna was running")
@@ -2828,13 +2947,18 @@ def validate_semantic_review(
     candidate_graph_path: Path,
     response_path: Path,
     events_path: Path,
+    *,
+    client_engagement: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Validate one capsule-contained worker response and write advisory artifacts."""
 
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
     graph = _validate_graph_and_preparation_files(
-        reconciliation, semantic, candidate_graph_path
+        reconciliation,
+        semantic,
+        candidate_graph_path,
+        client_engagement=client_engagement,
     )
     response_file = _required_child(response_path, semantic, RESPONSE_NAME)
     events_file = _required_child(events_path, semantic, EVENTS_NAME)
@@ -2993,6 +3117,10 @@ def validate_semantic_review(
     }
 
 
+def _add_client_engagement_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument("--client-engagement", type=Path, required=True)
+
+
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--verbose", action="store_true", help="Enable debug logging.")
@@ -3000,6 +3128,7 @@ def _parser() -> argparse.ArgumentParser:
     prepare = subparsers.add_parser("prepare", help="Prepare a bounded worker packet.")
     prepare.add_argument("reconciliation_dir", type=Path)
     prepare.add_argument("--output-dir", type=Path, required=True)
+    _add_client_engagement_argument(prepare)
     run_worker = subparsers.add_parser(
         "run-worker",
         help="Run the pinned Luna worker in a deny-default capsule.",
@@ -3008,16 +3137,35 @@ def _parser() -> argparse.ArgumentParser:
     run_worker.add_argument("--output-dir", type=Path, required=True)
     run_worker.add_argument("--candidate-graph", type=Path, required=True)
     run_worker.add_argument("--codex-bin", type=Path)
+    _add_client_engagement_argument(run_worker)
     validate = subparsers.add_parser("validate", help="Validate a retained worker run.")
     validate.add_argument("reconciliation_dir", type=Path)
     validate.add_argument("--output-dir", type=Path, required=True)
     validate.add_argument("--candidate-graph", type=Path, required=True)
     validate.add_argument("--response", type=Path, required=True)
     validate.add_argument("--events", type=Path, required=True)
+    _add_client_engagement_argument(validate)
     return parser
 
 
-def _record_cli_validation_failure(args: argparse.Namespace) -> None:
+def _load_cli_client_engagement(args: argparse.Namespace) -> dict[str, Any]:
+    input_paths = [args.reconciliation_dir]
+    for name in ("candidate_graph",):
+        value = getattr(args, name, None)
+        if value is not None:
+            input_paths.append(value)
+    return load_client_engagement_context_file(
+        args.client_engagement,
+        expected_workflow_id="journal-bank-reconciliation",
+        input_paths=input_paths,
+        output_dir=args.output_dir,
+    )
+
+
+def _record_cli_validation_failure(
+    args: argparse.Namespace,
+    client_engagement: Mapping[str, Any],
+) -> None:
     try:
         reconciliation = _resolved_reconciliation_dir(args.reconciliation_dir)
         semantic = _semantic_output_dir(reconciliation, args.output_dir)
@@ -3025,6 +3173,7 @@ def _record_cli_validation_failure(args: argparse.Namespace) -> None:
             reconciliation,
             semantic,
             args.candidate_graph,
+            client_engagement=client_engagement,
         )
         _write_status(
             semantic,
@@ -3036,7 +3185,10 @@ def _record_cli_validation_failure(args: argparse.Namespace) -> None:
         LOGGER.error("Unable to record semantic worker limitation: %s", status_error)
 
 
-def _record_cli_launch_failure(args: argparse.Namespace) -> None:
+def _record_cli_launch_failure(
+    args: argparse.Namespace,
+    client_engagement: Mapping[str, Any],
+) -> None:
     try:
         reconciliation = _resolved_reconciliation_dir(args.reconciliation_dir)
         semantic = _semantic_output_dir(reconciliation, args.output_dir)
@@ -3044,6 +3196,7 @@ def _record_cli_launch_failure(args: argparse.Namespace) -> None:
             reconciliation,
             semantic,
             args.candidate_graph,
+            client_engagement=client_engagement,
         )
         _write_status(
             semantic,
@@ -3060,8 +3213,21 @@ def main() -> int:
 
     args = _parser().parse_args()
     configure_logging(args.verbose)
+    try:
+        client_engagement = _load_cli_client_engagement(args)
+    except AssuranceContractError as exc:
+        LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
+        return 2
     if args.command == "prepare":
-        result = prepare_semantic_review(args.reconciliation_dir, args.output_dir)
+        try:
+            result = prepare_semantic_review(
+                args.reconciliation_dir,
+                args.output_dir,
+                client_engagement=client_engagement,
+            )
+        except (OSError, ValueError) as exc:
+            LOGGER.error("SEMANTIC_PREPARATION_FAILED: %s", exc)
+            return 2
         LOGGER.info(
             "semantic candidate graph prepared: selected=%s deferred=%s worker_required=%s",
             result["selected_component_count"],
@@ -3076,9 +3242,10 @@ def main() -> int:
                 args.output_dir,
                 args.candidate_graph,
                 codex_bin=args.codex_bin,
+                client_engagement=client_engagement,
             )
         except (OSError, ValueError) as exc:
-            _record_cli_launch_failure(args)
+            _record_cli_launch_failure(args, client_engagement)
             LOGGER.error("SEMANTIC_WORKER_LAUNCH_FAILED: %s", exc)
             return 2
         LOGGER.info(
@@ -3093,9 +3260,10 @@ def main() -> int:
             args.candidate_graph,
             args.response,
             args.events,
+            client_engagement=client_engagement,
         )
     except (OSError, ValueError) as exc:
-        _record_cli_validation_failure(args)
+        _record_cli_validation_failure(args, client_engagement)
         LOGGER.error("SEMANTIC_WORKER_VALIDATION_FAILED: %s", exc)
         return 2
     LOGGER.info("semantic worker response validated: %s", result["summary"])

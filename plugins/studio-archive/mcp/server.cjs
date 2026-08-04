@@ -23,6 +23,7 @@ const TOOL_NAMES = {
   importDocument: "import_studio_client_document",
   engagements: "list_studio_client_engagements",
   prepareWorkflow: "prepare_studio_client_workflow",
+  startCheckEntriesFromSample: "start_check_entries_from_sample",
   startWorkflow: "start_studio_client_workflow",
   failWorkflow: "fail_studio_client_workflow",
   cancelWorkflow: "cancel_studio_client_workflow",
@@ -275,6 +276,32 @@ function toolDefinitions() {
       description:
         "Move one exact prepared or failed run to running after its input receipts still validate.",
       inputSchema: runIdentitySchema(),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.startCheckEntriesFromSample,
+      title: "Start Check Entries from a completed sample",
+      description:
+        "Resolve and validate the complete internal Journal Sampling handoff, then prepare and start Check Entries against the selected support batch. The caller selects the sampling run and support inputs; no internal filenames or artifact IDs are required.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+          sample_run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
+          support_input_ids: {
+            type: "array",
+            minItems: 1,
+            maxItems: 10000,
+            uniqueItems: true,
+            items: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+          },
+          label: { type: "string", minLength: 1, maxLength: 160 },
+          purpose: { type: "string", minLength: 1, maxLength: 500 },
+          idempotency_key: { type: "string", minLength: 1, maxLength: 200 },
+          new_run: { type: "boolean" },
+        },
+        ["client_id", "engagement_id", "sample_run_id", "support_input_ids"],
+      ),
       annotations: annotations(false),
     },
     {
@@ -866,6 +893,67 @@ function commandForTool(name, rawArgs) {
   }
   if (name === TOOL_NAMES.startWorkflow) {
     return runIdentityCommand(args, "start-workflow");
+  }
+  if (name === TOOL_NAMES.startCheckEntriesFromSample) {
+    assertOnlyKeys(
+      args,
+      new Set([
+        "client_id",
+        "engagement_id",
+        "sample_run_id",
+        "support_input_ids",
+        "label",
+        "purpose",
+        "idempotency_key",
+        "new_run",
+      ]),
+    );
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    const sampleRunId = requireString(args.sample_run_id, "sample_run_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    if (!/^run_[0-9a-f]{24}$/.test(sampleRunId)) {
+      throw new Error("sample_run_id is invalid.");
+    }
+    const supportInputIds = optionalStringArray(
+      args.support_input_ids,
+      "support_input_ids",
+      10000,
+      30,
+    );
+    if (supportInputIds.length < 1 || new Set(supportInputIds).size !== supportInputIds.length) {
+      throw new Error("support_input_ids must be a non-empty unique array.");
+    }
+    const command = [
+      "start-check-entries-from-sample",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+      "--sample-run-id",
+      sampleRunId,
+    ];
+    for (const inputId of supportInputIds) {
+      if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
+        throw new Error("support_input_ids contains an invalid input ID.");
+      }
+      command.push("--support-input-id", inputId);
+    }
+    for (const [key, flag, maximum] of [
+      ["label", "--label", 160],
+      ["purpose", "--purpose", 500],
+      ["idempotency_key", "--idempotency-key", 200],
+    ]) {
+      const value = optionalString(args[key], key, maximum);
+      if (value !== null) command.push(flag, value);
+    }
+    if (optionalBoolean(args.new_run, "new_run")) command.push("--new-run");
+    return command;
   }
   if (name === TOOL_NAMES.failWorkflow) {
     const command = runIdentityCommand(args, "fail-workflow", ["reason"]);

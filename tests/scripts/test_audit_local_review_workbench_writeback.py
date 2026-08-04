@@ -5,8 +5,21 @@ import json
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_PATH = ROOT / "scripts" / "audit_local_review_workbench_writeback.py"
+GENERIC_VERA_REVIEW_PLUGINS = (
+    "audit-reconciliation",
+    "check-entries",
+    "client-file-preparation",
+    "concordato-plan-review",
+    "deep-research-validator",
+    "journal-bank-reconciliation",
+    "journal-sampling",
+    "prompt-optimizer",
+    "report-builder",
+)
 
 
 def load_audit_module():
@@ -23,9 +36,10 @@ def load_audit_module():
 
 def test_check_entries_fixture_contains_browser_edit_target(tmp_path: Path) -> None:
     audit = load_audit_module()
-    output_dir = tmp_path / "run"
+    fixture_root = tmp_path / "run"
 
-    audit.write_check_entries_fixture(output_dir)
+    fixture = audit.write_check_entries_fixture(fixture_root)
+    output_dir = Path(fixture["output_dir"])
 
     review_payload = json.loads(
         (output_dir / "review_payload.json").read_text(encoding="utf-8")
@@ -37,9 +51,14 @@ def test_check_entries_fixture_contains_browser_edit_target(tmp_path: Path) -> N
     assert review_payload["plugin"] == "check-entries"
     assert item["recommended_action"] == "edit"
     assert item["data"]["target_artifact"] == "check_results.csv"
-    assert item["data"]["target_id_field"] == "source_row"
+    assert item["data"]["target_id_field"] == "prepared_entry_id"
     assert item["data"]["target_field"] == "review_notes"
     assert run_intake["data_posture"]["remote_sql_execution_used"] is False
+    assert run_intake["run_id"].startswith("run_")
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert all(not Path(path).is_absolute() for path in run_intake["input_paths"])
+    assert Path(fixture["client_engagement"]) == output_dir.parent / "context.json"
     assert (output_dir / "check_results.csv").exists()
 
 
@@ -48,12 +67,13 @@ def test_generic_plugin_fixture_uses_adapter_edit_target(tmp_path: Path) -> None
     output_dir = tmp_path / "deep-research-run"
 
     fixture = audit.write_plugin_fixture(ROOT, "deep-research-validator", output_dir)
+    managed_output_dir = Path(fixture["output_dir"])
 
     review_payload = json.loads(
-        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+        (managed_output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
     item = review_payload["items"][0]
-    target_artifact = output_dir / fixture["target_artifact"]
+    target_artifact = managed_output_dir / fixture["target_artifact"]
     target_payload = json.loads(target_artifact.read_text(encoding="utf-8"))
     assert review_payload["plugin"] == "deep-research-validator"
     assert item["recommended_action"] == "edit"
@@ -64,6 +84,120 @@ def test_generic_plugin_fixture_uses_adapter_edit_target(tmp_path: Path) -> None
     assert "proposed_fix" in target_payload["claims"][0]
 
 
+@pytest.mark.parametrize("plugin", GENERIC_VERA_REVIEW_PLUGINS)
+def test_generic_vera_fixture_uses_running_customer_folder_run(
+    tmp_path: Path,
+    plugin: str,
+) -> None:
+    audit = load_audit_module()
+    fixture_root = tmp_path / plugin
+
+    fixture = audit.write_plugin_fixture(ROOT, plugin, fixture_root)
+    output_dir = Path(fixture["output_dir"])
+    context_path = Path(fixture["client_engagement"])
+    run_intake = json.loads(
+        (output_dir / "run_intake.json").read_text(encoding="utf-8")
+    )
+    run_manifest = json.loads(
+        (context_path.parent / "run.json").read_text(encoding="utf-8")
+    )
+    workbench = audit.serve_review_workbench.LocalReviewWorkbench(
+        plugin_dir=ROOT / "plugins" / plugin,
+        output_dir=output_dir,
+    )
+    context = audit.serve_review_workbench._validate_vera_customer_run(workbench)
+
+    assert output_dir == context_path.parent / "outputs"
+    assert output_dir.is_relative_to(fixture_root)
+    assert run_intake["run_id"] == fixture["run_id"] == run_manifest["run_id"]
+    assert run_manifest["status"] == "running"
+    assert run_intake["path_reference"] == "run_root_relative"
+    assert run_intake["output_dir"] == "outputs"
+    assert all(not Path(path).is_absolute() for path in run_intake["input_paths"])
+    assert context is not None
+    assert context["run_id"] == fixture["run_id"]
+
+
+def test_managed_check_entries_fixture_passes_preflight_and_reaches_mcp(
+    tmp_path: Path,
+) -> None:
+    audit = load_audit_module()
+    fixture = audit.write_plugin_fixture(ROOT, "check-entries", tmp_path / "run")
+    output_dir = Path(fixture["output_dir"])
+    workbench = audit.serve_review_workbench.LocalReviewWorkbench(
+        plugin_dir=ROOT / "plugins" / "check-entries",
+        output_dir=output_dir,
+    )
+
+    context = audit.serve_review_workbench._validate_vera_customer_run(workbench)
+    decisions = [
+        {
+            "item_id": fixture["item_id"],
+            "action": "edit",
+            "edit_value": "Reviewed from managed fixture",
+        }
+    ]
+    saved = audit.serve_review_workbench.call_review_tool(
+        workbench,
+        "save_check_entries_decisions",
+        {"decisions": decisions, "reviewer": "pytest"},
+    )
+    applied = audit.serve_review_workbench.call_review_tool(
+        workbench,
+        "apply_check_entries_decisions",
+        {"decisions": decisions, "reviewer": "pytest"},
+    )
+
+    assert context is not None
+    assert context["run_id"] == fixture["run_id"]
+    assert saved["ok"] is True
+    assert saved["persisted"] is True
+    assert applied["ok"] is True
+    assert applied["persisted"] is True
+    assert applied["structured_update_count"] == 1
+    assert (output_dir / "ui_decisions.json").is_file()
+    assert (output_dir / "applied_decisions.json").is_file()
+
+
+def test_suite_reports_each_managed_fixture_output_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    audit = load_audit_module()
+    suite_root = tmp_path / "suite"
+
+    def fixture_only_audit(**kwargs):
+        fixture = audit.write_plugin_fixture(
+            kwargs["root"],
+            kwargs["plugin"],
+            kwargs["output_dir"],
+        )
+        return audit.BrowserWritebackReport(
+            plugin=kwargs["plugin"],
+            output_dir=fixture["output_dir"],
+            item_id=fixture["item_id"],
+            target_artifact=fixture["target_artifact"],
+        )
+
+    monkeypatch.setattr(audit, "audit_local_review_writeback", fixture_only_audit)
+
+    reports = audit.audit_local_review_writebacks(
+        root=ROOT,
+        plugins=["check-entries", "deep-research-validator"],
+        output_dir=suite_root,
+    )
+
+    assert [report.plugin for report in reports] == [
+        "check-entries",
+        "deep-research-validator",
+    ]
+    assert all(Path(report.output_dir).name == "outputs" for report in reports)
+    assert all(
+        Path(report.output_dir).is_relative_to(suite_root / report.plugin)
+        for report in reports
+    )
+
+
 def test_new_client_fixture_uses_real_proposal_only_contract(
     tmp_path: Path,
 ) -> None:
@@ -71,12 +205,13 @@ def test_new_client_fixture_uses_real_proposal_only_contract(
     output_dir = tmp_path / "new-client-run"
 
     fixture = audit.write_plugin_fixture(ROOT, "new-client", output_dir)
+    managed_output_dir = Path(fixture["output_dir"])
 
     review_payload = json.loads(
-        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+        (managed_output_dir / "review_payload.json").read_text(encoding="utf-8")
     )
     final_artifacts = json.loads(
-        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
+        (managed_output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
     assert review_payload["schema_version"] == "1.1"
     assert review_payload["contract_version"] == "1.1"

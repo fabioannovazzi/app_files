@@ -1332,7 +1332,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_twenty_three_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_twenty_four_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1353,6 +1353,7 @@ def test_mcp_lists_twenty_three_strict_local_tools(tmp_path: Path) -> None:
         "import_studio_client_document",
         "list_studio_client_engagements",
         "prepare_studio_client_workflow",
+        "start_check_entries_from_sample",
         "start_studio_client_workflow",
         "fail_studio_client_workflow",
         "cancel_studio_client_workflow",
@@ -1378,6 +1379,17 @@ def test_mcp_lists_twenty_three_strict_local_tools(tmp_path: Path) -> None:
     assert tuple(workflow_enum) == EXPECTED_CLIENT_WORKFLOW_IDS
     assert (
         tool_by_name["prepare_studio_client_workflow"]["annotations"]["idempotentHint"]
+        is True
+    )
+    handoff_schema = tool_by_name["start_check_entries_from_sample"]["inputSchema"]
+    assert handoff_schema["required"] == [
+        "client_id",
+        "engagement_id",
+        "sample_run_id",
+        "support_input_ids",
+    ]
+    assert (
+        tool_by_name["start_check_entries_from_sample"]["annotations"]["idempotentHint"]
         is True
     )
     artifact_required = tool_by_name["finalize_studio_client_workflow"]["inputSchema"][
@@ -1598,6 +1610,200 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(tmp_path: Path) -
     assert completed["structuredContent"]["status"] == "completed"
     assert recovered["structuredContent"]["run_count"] == 1
     assert retention["structuredContent"]["runs"][0]["retention_candidate"] is True
+
+
+def test_mcp_starts_check_entries_from_a_completed_sample_without_internal_references(
+    tmp_path: Path,
+) -> None:
+    # Arrange: create one client engagement with a closed Journal Sampling run.
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Zecca").mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+    configured = _mcp_tool(
+        "configure_studio_archive",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+    scope_id = configured["structuredContent"]["scopes"][0]["scope_id"]
+    registered = _mcp_tool(
+        "configure_studio_archive_client",
+        {"scope_id": scope_id, "legal_names": ["Zecca SPA"]},
+        state_dir=state_dir,
+    )
+    client_id = registered["structuredContent"]["client"]["client_id"]
+    created = _mcp_tool(
+        "create_studio_client_engagement",
+        {"client_id": client_id, "engagement_label": "2026 sample checks"},
+        state_dir=state_dir,
+    )
+    engagement_id = created["structuredContent"]["engagement"]["engagement_id"]
+    journal_source = tmp_path / "journal.csv"
+    journal_source.write_text("date,amount\n2026-01-01,100\n", encoding="utf-8")
+    journal_import = _mcp_tool(
+        "import_studio_client_document",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "source_path": str(journal_source),
+            "role": "journal",
+        },
+        state_dir=state_dir,
+    )
+    sampling = _mcp_tool(
+        "prepare_studio_client_workflow",
+        {
+            "engagement_id": engagement_id,
+            "workflow_id": "journal-sampling",
+            "input_ids": [journal_import["structuredContent"]["input_id"]],
+            "idempotency_key": "sampling-handoff",
+        },
+        state_dir=state_dir,
+    )
+    sample_run_id = sampling["structuredContent"]["run"]["run_id"]
+    _mcp_tool(
+        "start_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": sample_run_id,
+        },
+        state_dir=state_dir,
+    )
+    output_dir = Path(sampling["structuredContent"]["client_engagement"]["output_dir"])
+    handoff_artifacts = [
+        (
+            "normalization/normalized_journal.csv",
+            "prepared.normalized_journal",
+            "text/csv",
+        ),
+        (
+            "normalization/normalization_diagnostics.json",
+            "internal.normalization_diagnostics",
+            "application/json",
+        ),
+        (
+            "normalization/normalization_recipe.json",
+            "internal.normalization_recipe",
+            "application/json",
+        ),
+        (
+            "normalization/suggested_recipe.json",
+            "internal.suggested_recipe",
+            "application/json",
+        ),
+        (
+            "normalization/reviewed_decisions.json",
+            "internal.reviewed_decisions",
+            "application/json",
+        ),
+        (
+            "normalization/assurance_gates.json",
+            "internal.assurance_gates",
+            "application/json",
+        ),
+        (
+            "normalization/assurance_envelope.json",
+            "internal.assurance_envelope",
+            "application/json",
+        ),
+        (
+            "normalization/qualification_review_payload.json",
+            "internal.qualification_review_payload",
+            "application/json",
+        ),
+        (
+            "sample/journal_sample.csv",
+            "prepared.journal_sample_csv",
+            "text/csv",
+        ),
+    ]
+    declarations = []
+    for relative_path, artifact_id, media_type in handoff_artifacts:
+        artifact_path = output_dir / relative_path
+        artifact_path.parent.mkdir(parents=True, exist_ok=True)
+        artifact_path.write_text("value\n", encoding="utf-8")
+        declarations.append(
+            {
+                "artifact_id": artifact_id,
+                "path": relative_path,
+                "purpose": f"Preserve {relative_path} for the workflow handoff.",
+                "audience": "internal",
+                "media_type": media_type,
+            }
+        )
+    _mcp_tool(
+        "finalize_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": sample_run_id,
+            "artifacts": declarations,
+        },
+        state_dir=state_dir,
+    )
+    _mcp_tool(
+        "complete_studio_client_workflow",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": sample_run_id,
+        },
+        state_dir=state_dir,
+    )
+    support_source = tmp_path / "returned-invoices.pdf"
+    support_source.write_bytes(b"%PDF-1.4\nreturned support\n%%EOF\n")
+    support_import = _mcp_tool(
+        "import_studio_client_document",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "source_path": str(support_source),
+            "role": "support",
+        },
+        state_dir=state_dir,
+    )
+    support_input_id = support_import["structuredContent"]["input_id"]
+    handoff_arguments = {
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "sample_run_id": sample_run_id,
+        "support_input_ids": [support_input_id],
+        "idempotency_key": "returned-invoices-batch",
+    }
+    normalized_output = output_dir / "normalization" / "normalized_journal.csv"
+    normalized_bytes = normalized_output.read_bytes()
+    normalized_output.write_bytes(normalized_bytes + b"changed\n")
+    rejected = _mcp_tool(
+        "start_check_entries_from_sample",
+        handoff_arguments,
+        state_dir=state_dir,
+    )
+    normalized_output.write_bytes(normalized_bytes)
+
+    # Act: the public tool receives no internal filenames or artifact references.
+    started = _mcp_tool(
+        "start_check_entries_from_sample",
+        handoff_arguments,
+        state_dir=state_dir,
+    )
+
+    # Assert: Check Entries is running with the support receipt and nine resolved bindings.
+    content = started["structuredContent"]
+    bindings = content["input_manifest"]["inputs"]
+    assert rejected["isError"] is True
+    assert "artifact" in rejected["content"][0]["text"].lower()
+    assert content["status"] == "running"
+    assert content["run"]["workflow_id"] == "check-entries"
+    assert content["sample_run_id"] == sample_run_id
+    assert [item["binding_id"] for item in bindings if item["kind"] == "import"] == [
+        support_input_id
+    ]
+    assert sum(item["kind"] == "upstream_artifact" for item in bindings) == 9
+    assert {
+        item["upstream_run_id"]
+        for item in bindings
+        if item["kind"] == "upstream_artifact"
+    } == {sample_run_id}
 
 
 def test_mcp_configures_plans_and_matches_client_scoped_gmail(tmp_path: Path) -> None:

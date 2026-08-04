@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from .contracts import (
+    JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
     VERA_CLIENT_WORKFLOW_IDS,
     AssuranceContractError,
     build_client_engagement_context,
@@ -55,6 +56,7 @@ __all__ = [
     "AssuranceContractError",
     "AssuranceEnvelopeError",
     "DecisionReceiptError",
+    "JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF",
     "MoneyValidationError",
     "RelationshipContractError",
     "SerializationValidationError",

@@ -265,8 +265,22 @@ def _build_qualified_concordato_run(
         tolerance="0",
         recipe=recipe,
         run_id=run_id,
+        input_path_ref="inputs",
+        output_path_ref="outputs",
     )
     return core, input_dir, output_dir
+
+
+def _load_managed_concordato_context(output_dir: Path) -> dict[str, Any]:
+    """Hydrate the current Studio Archive context for one test run."""
+
+    from vera_assurance import load_client_engagement_context_file
+
+    return load_client_engagement_context_file(
+        output_dir.parent / "context.json",
+        expected_workflow_id="concordato-plan-review",
+        output_dir=output_dir,
+    )
 
 
 def _build_multirow_qualified_concordato_run(
@@ -2049,7 +2063,10 @@ def test_standalone_replay_rejects_rehashed_review_packet_narrative(
 
     validate_output_closure(output_dir)
     with pytest.raises(ValueError, match="review_packet.md.*not independently"):
-        replay_assurance(output_dir)
+        replay_assurance(
+            output_dir,
+            client_context=_load_managed_concordato_context(output_dir),
+        )
 
 
 def test_standalone_replay_rejects_rehashed_review_handoff_narrative(
@@ -2084,7 +2101,10 @@ def test_standalone_replay_rejects_rehashed_review_handoff_narrative(
 
     validate_output_closure(output_dir)
     with pytest.raises(ValueError, match="review_handoff.md.*not independently"):
-        replay_assurance(output_dir)
+        replay_assurance(
+            output_dir,
+            client_context=_load_managed_concordato_context(output_dir),
+        )
 
 
 def test_standalone_replay_rejects_stale_run_audit_output_index(
@@ -2110,7 +2130,10 @@ def test_standalone_replay_rejects_stale_run_audit_output_index(
 
     validate_output_closure(output_dir)
     with pytest.raises(ValueError, match="indexed final artifact size is stale"):
-        replay_assurance(output_dir)
+        replay_assurance(
+            output_dir,
+            client_context=_load_managed_concordato_context(output_dir),
+        )
 
 
 @pytest.mark.parametrize(
@@ -2416,7 +2439,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
             ["Debiti tributari entro 12 mesi", 4124413.15],
         ],
     )
-    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+    input_dir, output_dir, run_id, context_path = _start_managed_concordato_run(
         tmp_path, received_dir
     )
 
@@ -2450,6 +2473,8 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         tolerance="0.01",
         recipe=recipe,
         run_id=run_id,
+        input_path_ref="inputs",
+        output_path_ref="outputs",
     )
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
@@ -2468,6 +2493,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
             "params": {
                 "name": "apply_concordato_plan_decisions",
                 "arguments": {
+                    "client_engagement": context_path.as_posix(),
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -2682,7 +2708,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         received_dir / "piano.xlsx",
         [["Voce", "Importo"], ["Debiti tributari", 100]],
     )
-    input_dir, output_dir, run_id, _ = _start_managed_concordato_run(
+    input_dir, output_dir, run_id, context_path = _start_managed_concordato_run(
         tmp_path, received_dir
     )
     inspection = core.run_concordato_review(
@@ -2705,6 +2731,8 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         tolerance="0",
         recipe=recipe,
         run_id=run_id,
+        input_path_ref="inputs",
+        output_path_ref="outputs",
     )
     run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
@@ -2727,6 +2755,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
             "params": {
                 "name": "apply_concordato_plan_decisions",
                 "arguments": {
+                    "client_engagement": context_path.as_posix(),
                     "run_intake": run_intake,
                     "review_payload": review_payload,
                     "final_artifacts": final_artifacts,
@@ -2941,6 +2970,9 @@ def test_concordato_mcp_read_only_tools_replay_persisted_review_context(
                 "params": {
                     "name": tool_name,
                     "arguments": {
+                        "client_engagement": (
+                            output_dir.parent / "context.json"
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": forged,
                     },
@@ -2977,6 +3009,9 @@ def test_concordato_mcp_rejects_forged_final_artifacts_before_write(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
+                        "client_engagement": (
+                            output_dir.parent / "context.json"
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "final_artifacts": forged_final,
@@ -3018,6 +3053,9 @@ def test_concordato_mcp_rejects_tampered_numeric_output_before_write(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
+                        "client_engagement": (
+                            output_dir.parent / "context.json"
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "decisions": [{"item_id": item["id"], "action": action}],
@@ -3055,6 +3093,9 @@ def test_complete_concordato_review_remains_assurance_withheld(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
+                        "client_engagement": (
+                            output_dir.parent / "context.json"
+                        ).as_posix(),
                         "run_intake": run_intake,
                         "review_payload": review_payload,
                         "decisions": decisions,

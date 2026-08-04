@@ -196,7 +196,9 @@ worker for the bounded packet produced for that run.
    components that exceed the fixed row, edge, component, or prompt-size caps.
 
 ```bash
-python scripts/semantic_review.py prepare <output-dir>/reconciliation --output-dir <output-dir>/semantic-review
+python scripts/semantic_review.py prepare <output-dir>/reconciliation \
+  --output-dir <output-dir>/semantic-review \
+  --client-engagement <client_engagement_path>
 ```
 
 Read the command result. If `worker_required` is false, do not launch Luna;
@@ -211,7 +213,8 @@ deferred-component reasons.
 ```bash
 python scripts/semantic_review.py run-worker <output-dir>/reconciliation \
   --candidate-graph <output-dir>/semantic-review/residual_candidate_graph.json \
-  --output-dir <output-dir>/semantic-review
+  --output-dir <output-dir>/semantic-review \
+  --client-engagement <client_engagement_path>
 ```
 
 The `journal_bank.luna_seatbelt_capsule.v1` launcher is qualified only for its
@@ -243,7 +246,8 @@ python scripts/semantic_review.py validate <output-dir>/reconciliation \
   --candidate-graph <output-dir>/semantic-review/residual_candidate_graph.json \
   --output-dir <output-dir>/semantic-review \
   --response <output-dir>/semantic-review/luna_response.json \
-  --events <output-dir>/semantic-review/luna_events.jsonl
+  --events <output-dir>/semantic-review/luna_events.jsonl \
+  --client-engagement <client_engagement_path>
 ```
 
 Successful validation writes `semantic_suggestions_validated.json` and

@@ -26,6 +26,7 @@ The complete run record travels with the customer folder:
   Vera/client.json
   Vera/engagements/<engagement-id>/
     engagement.json
+    .vera-engagement.lock        # process/thread mutation mutex; no case data
     inputs/<input-id>/<original-file>
     inputs/<input-id>/receipt.json
     runs/<run-id>/
@@ -38,11 +39,13 @@ The complete run record travels with the customer folder:
 ```
 
 Every file has a specific role: customer and engagement manifests preserve
-identity; input receipts preserve the exact imported bytes; the run and input
-manifests preserve lifecycle, purpose, and the exact selected inputs; the
-run-local input view prevents a workflow from accidentally consuming later
-files; the artifact manifest states why every output exists, who it is for, and
-which exact bytes are presented for review. Absolute machine paths are hydrated at runtime, so
+identity; the hidden engagement lock serializes imports, run transitions, and
+closure across simultaneous local processes and contains no case data; input
+receipts preserve the exact imported bytes; the run and input manifests
+preserve lifecycle, purpose, and the exact selected inputs; the run-local input
+view prevents a workflow from accidentally consuming later files; the artifact
+manifest states why every output exists, who it is for, and which exact bytes
+are presented for review. Absolute machine paths are hydrated at runtime, so
 the folder can be renamed or opened from another configured computer.
 
 The explicit flow is:
@@ -55,6 +58,9 @@ The explicit flow is:
 4. Prepare a run from exact input IDs and, when needed, exact finalized
    same-engagement upstream artifacts. Repeating the same request is
    idempotent; a separate run must be explicit.
+   For Journal Sampling to Check Entries, use the dedicated handoff operation:
+   select the completed sample run and support receipts, and let Studio Archive
+   validate and bind the internal artifacts.
 5. Start the prepared run, execute only its bound input paths, and write only
    below its `outputs/` directory.
 6. Finalize by declaring every physical output with an artifact ID, purpose,
@@ -143,6 +149,7 @@ python scripts/studio_archive.py import-document --client-id client_... --engage
 python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
 python scripts/studio_archive.py engagements --client-id client_...
 python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id journal-sampling --input-id input_...
+python scripts/studio_archive.py start-check-entries-from-sample --client-id client_... --engagement-id eng_... --sample-run-id run_... --support-input-id input_...
 python scripts/studio_archive.py start-workflow --client-id client_... --engagement-id eng_... --run-id run_...
 python scripts/studio_archive.py finalize-workflow --client-id client_... --engagement-id eng_... --run-id run_... --artifacts-json '[{"artifact_id":"deliverable.result","path":"result.pdf","purpose":"Reviewed client deliverable","audience":"deliverable","media_type":"application/pdf"}]'
 python scripts/studio_archive.py complete-workflow --client-id client_... --engagement-id eng_... --run-id run_...

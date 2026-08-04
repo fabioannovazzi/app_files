@@ -444,18 +444,18 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.72"
+    assert manifest["version"] == "0.1.78"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Prepara un Plan vendite da questi Actual, mostrando prima le assunzioni "
-        "commerciali e valutarie interpretate."
+        "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
+        "e Word con abbinamenti, residui ed eccezioni."
     )
     assert any(
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
     )
     assert prompts[2] == (
-        "Cerca in Gmail le email di un cliente usando solo indirizzi "
-        "confermati e senza mescolare altri clienti."
+        "Controlla queste scritture con fatture e documenti di supporto. Prepara "
+        "esiti, anomalie e richieste per le evidenze mancanti."
     )
     approved_description = (
         (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
@@ -495,10 +495,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     reference = entries[reference_path].decode("utf-8")
     whatsapp_reference = entries[whatsapp_reference_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
-    assert "references/marketplace-gmail.md" in wrapper
-    assert "references/whatsapp-desktop.md" in wrapper
-    assert "Do not resolve the local document module" in wrapper
-    assert "Codex Desktop" in compact_wrapper
+    assert builder.CHATGPT_SPECIALIST_INTRO["vera"] in wrapper
+    assert "references/marketplace-gmail.md" not in wrapper
+    assert "references/whatsapp-desktop.md" not in wrapper
+    assert "Do not resolve the local document module" not in wrapper
+    assert "Codex Desktop" not in compact_wrapper
     assert reference.index("get_profile") < reference.index("search_emails")
     assert reference.index("search_emails") < reference.index("batch_read_email")
     assert "current conversation" in reference
@@ -567,9 +568,21 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         if name.endswith("/SKILL.md")
     }
     assert projected_skills
-    for content in projected_skills.values():
-        assert builder.has_chatgpt_runtime_contract(content)
-        assert "We can continue here in ChatGPT now." in content
+    main_skill_name = f"skills/{plugin_name}/SKILL.md"
+    assert builder.has_chatgpt_runtime_contract(projected_skills[main_skill_name])
+    assert "We can continue here in ChatGPT now." in projected_skills[main_skill_name]
+    for name, content in projected_skills.items():
+        if name == main_skill_name:
+            continue
+        assert not builder.has_chatgpt_runtime_contract(content), name
+        assert builder.REQUIRED_CODEX_RECOMMENDATION not in content, name
+        if not name.startswith("skills/"):
+            continue
+        assert builder.CHATGPT_SPECIALIST_INTRO[plugin_name] in content, name
+        assert "<details>" not in content, name
+        assert "Plugin Improvement Feedback" not in content, name
+        assert "Resolve `" not in content, name
+        assert "/SKILL.md" not in content, name
     if plugin_name == "vera":
         vera_main = projected_skills["skills/vera/SKILL.md"]
         assert "Possiamo continuare qui in ChatGPT." in vera_main

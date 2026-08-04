@@ -4379,20 +4379,6 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         journal_run_id,
         state_dir=state_dir,
     )
-    upstream_artifacts = [
-        {
-            "run_id": journal_run_id,
-            "artifact_id": declaration["artifact_id"],
-            "role": (
-                "journal_sample"
-                if declaration["artifact_id"] == "prepared.journal_sample_csv"
-                else "journal_normalization"
-            ),
-        }
-        for declaration in declarations
-        if declaration["path"] in check_core.JOURNAL_HANDOFF_ARTIFACT_PATHS
-    ]
-
     wrong_role_source = received / "not-support.pdf"
     wrong_role_source.write_bytes(_text_pdf_bytes(["Not a support receipt"]))
     wrong_role_input = archive_core.import_studio_client_document(
@@ -4402,42 +4388,14 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         engagement_id=engagement_id,
         state_dir=state_dir,
     )
-    wrong_role_run = archive_core.prepare_studio_client_workflow(
-        engagement_id,
-        "check-entries",
-        input_ids=[wrong_role_input["input_id"]],
-        upstream_artifacts=upstream_artifacts,
-        idempotency_key="wrong-support-role",
-        state_dir=state_dir,
-    )
-    wrong_role_context = wrong_role_run["client_engagement"]
-    wrong_role_journal = next(
-        item
-        for item in wrong_role_context["input_bindings"]
-        if item.get("upstream_artifact_id") == "prepared.normalized_journal"
-    )
-    wrong_role_diagnostics = next(
-        item
-        for item in wrong_role_context["input_bindings"]
-        if item.get("upstream_artifact_id") == "internal.normalization_diagnostics"
-    )
-    wrong_role_support = next(
-        item
-        for item in wrong_role_context["input_bindings"]
-        if item["binding_id"] == wrong_role_input["input_id"]
-    )
-    with pytest.raises(ValueError, match="role support"):
-        check_core._validated_client_check_stage(
-            wrong_role_context,
-            journal=Path(wrong_role_journal["path"]),
-            journal_diagnostics={
-                "client_engagement": journal_context,
-                "normalization_diagnostics": wrong_role_diagnostics["path"],
-            },
-            support=Path(wrong_role_support["path"]),
-            output_dir=Path(wrong_role_context["output_dir"]) / "checks",
-            stage="checks",
-            enforce_output_path=True,
+    with pytest.raises(archive_core.ArchiveError, match="support role"):
+        archive_core.start_check_entries_from_sample(
+            client_id,
+            engagement_id,
+            journal_run_id,
+            support_input_ids=[wrong_role_input["input_id"]],
+            idempotency_key="wrong-support-role",
+            state_dir=state_dir,
         )
 
     def prepare_support_batch(name: str, payload: bytes) -> tuple[dict[str, Any], str]:
@@ -4450,18 +4408,12 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
             engagement_id=engagement_id,
             state_dir=state_dir,
         )
-        prepared = archive_core.prepare_studio_client_workflow(
-            engagement_id,
-            "check-entries",
-            input_ids=[imported["input_id"]],
-            upstream_artifacts=upstream_artifacts,
-            idempotency_key=f"check-support-{name}",
-            state_dir=state_dir,
-        )
-        archive_core.start_studio_client_workflow(
+        prepared = archive_core.start_check_entries_from_sample(
             client_id,
             engagement_id,
-            prepared["run"]["run_id"],
+            journal_run_id,
+            support_input_ids=[imported["input_id"]],
+            idempotency_key=f"check-support-{name}",
             state_dir=state_dir,
         )
         return prepared, imported["input_id"]
@@ -4477,6 +4429,14 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
                 "Movement M-1003 EUR 300.00 04/01/2025",
             ]
         ),
+    )
+    replayed_batch_a = archive_core.start_check_entries_from_sample(
+        client_id,
+        engagement_id,
+        journal_run_id,
+        support_input_ids=[support_a_id],
+        idempotency_key="check-support-a",
+        state_dir=state_dir,
     )
     manifest_a_path = Path(batch_a["client_engagement"]["input_manifest_path"])
     support_a_binding = next(
@@ -4570,6 +4530,15 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         sampled_rows[0]["movement_number"]
     ]
     assert batch_a["run"]["run_id"] != batch_b["run"]["run_id"]
+    assert batch_a["status"] == "running"
+    assert replayed_batch_a["run"]["run_id"] == batch_a["run"]["run_id"]
+    assert (
+        sum(
+            item["kind"] == "upstream_artifact"
+            for item in batch_a["input_manifest"]["inputs"]
+        )
+        == 9
+    )
     assert manifest_a_path.read_bytes() == manifest_a_before
     assert Path(support_a_binding["path"]).read_bytes() == support_a_before
     assert _tree_snapshot(Path(batch_a["client_engagement"]["output_dir"])) == (
