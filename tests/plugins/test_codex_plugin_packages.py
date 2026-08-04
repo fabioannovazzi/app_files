@@ -723,6 +723,114 @@ def test_chatgpt_card_config_rejects_incomplete_coverage() -> None:
         )
 
 
+def test_chatgpt_card_config_rejects_raw_slug_display_name() -> None:
+    builder = load_builder()
+    config = json.dumps(
+        {
+            "schema_version": 2,
+            "skills": {
+                "deck-correction": {
+                    "display_name": "deck-correction",
+                    "short_description": "Correct a presentation",
+                    "default_prompt": "Use $deck-correction to correct this deck.",
+                    "instructions": "Clara applies the requested deck corrections.",
+                }
+            },
+        }
+    ).encode("utf-8")
+
+    with pytest.raises(ValueError, match="must not repeat the raw slug"):
+        builder.load_chatgpt_skill_cards(
+            config,
+            plugin_name="clara",
+            expected_skills={"deck-correction"},
+        )
+
+
+def test_chatgpt_card_config_requires_product_specific_instructions() -> None:
+    builder = load_builder()
+    config = json.dumps(
+        {
+            "schema_version": 2,
+            "skills": {
+                "deck-correction": {
+                    "display_name": "Deck Correction",
+                    "short_description": "Correct a presentation",
+                    "default_prompt": "Use $deck-correction to correct this deck.",
+                    "instructions": "Attach the deck and requested corrections.",
+                }
+            },
+        }
+    ).encode("utf-8")
+
+    with pytest.raises(ValueError, match="must explain what Clara does"):
+        builder.load_chatgpt_skill_cards(
+            config,
+            plugin_name="clara",
+            expected_skills={"deck-correction"},
+        )
+
+
+def test_chatgpt_card_config_rejects_duplicate_visible_copy() -> None:
+    builder = load_builder()
+    config = json.dumps(
+        {
+            "schema_version": 2,
+            "skills": {
+                "deck-correction": {
+                    "display_name": "Deck Correction",
+                    "short_description": "Review professional evidence",
+                    "default_prompt": "Use $deck-correction to correct this deck.",
+                    "instructions": "Clara applies the requested deck corrections.",
+                },
+                "interview": {
+                    "display_name": "Interview",
+                    "short_description": "Review professional evidence",
+                    "default_prompt": "Use $interview to prepare this interview.",
+                    "instructions": "Clara prepares and reviews the interview evidence.",
+                },
+            },
+        }
+    ).encode("utf-8")
+
+    with pytest.raises(
+        ValueError,
+        match="interview short_description duplicates deck-correction",
+    ):
+        builder.load_chatgpt_skill_cards(
+            config,
+            plugin_name="clara",
+            expected_skills={"deck-correction", "interview"},
+        )
+
+
+def test_chatgpt_card_config_rejects_internal_runtime_copy() -> None:
+    builder = load_builder()
+    config = json.dumps(
+        {
+            "schema_version": 2,
+            "skills": {
+                "deck-correction": {
+                    "display_name": "Deck Correction",
+                    "short_description": "Correct a presentation",
+                    "default_prompt": "Use $deck-correction to correct this deck.",
+                    "instructions": (
+                        "Clara applies the requested deck corrections. "
+                        f"{builder.REQUIRED_CHATGPT_HEADING}"
+                    ),
+                }
+            },
+        }
+    ).encode("utf-8")
+
+    with pytest.raises(ValueError, match="contains internal runtime copy"):
+        builder.load_chatgpt_skill_cards(
+            config,
+            plugin_name="clara",
+            expected_skills={"deck-correction"},
+        )
+
+
 def test_chatgpt_manifest_rejects_more_than_three_default_prompts() -> None:
     builder = load_builder()
     source_path = ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json"

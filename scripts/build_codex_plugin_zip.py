@@ -1027,13 +1027,21 @@ def load_chatgpt_skill_cards(
         "instructions",
     }
     cards: dict[str, ChatGPTSkillCard] = {}
+    seen_values: dict[str, dict[str, str]] = {field: {} for field in required_fields}
     for skill_name, raw_card in skills.items():
         if not isinstance(raw_card, dict) or set(raw_card) != required_fields:
             raise ValueError(
                 f"{plugin_name}:{skill_name} Marketplace card must define exactly "
                 f"{sorted(required_fields)}"
             )
-        values = {field: raw_card[field] for field in sorted(required_fields)}
+        values = {
+            field: (
+                raw_card[field].strip()
+                if isinstance(raw_card[field], str)
+                else raw_card[field]
+            )
+            for field in sorted(required_fields)
+        }
         if not all(
             isinstance(value, str) and value.strip() for value in values.values()
         ):
@@ -1046,15 +1054,48 @@ def load_chatgpt_skill_cards(
                 f"{plugin_name}:{skill_name} default_prompt must invoke "
                 f"${skill_name}"
             )
-        instructions = raw_card["instructions"].strip()
+        display_name = values["display_name"]
+        if (
+            skill_name != plugin_name
+            and "-" in skill_name
+            and display_name.casefold() == skill_name.casefold()
+        ):
+            raise ValueError(
+                f"{plugin_name}:{skill_name} display_name must not repeat the raw slug"
+            )
+        instructions = values["instructions"]
+        if plugin_name.casefold() not in instructions.casefold():
+            raise ValueError(
+                f"{plugin_name}:{skill_name} instructions must explain what "
+                f"{plugin_name.title()} does"
+            )
         if "\n\n" in instructions or instructions.startswith("#"):
             raise ValueError(
                 f"{plugin_name}:{skill_name} instructions must be one plain paragraph"
             )
+        forbidden_markers = (
+            REQUIRED_CHATGPT_HEADING,
+            REQUIRED_CODEX_RECOMMENDATION,
+            "Lavoro meglio con Codex perché",
+            CODEX_DOWNLOAD_URL,
+        )
+        for field, value in values.items():
+            if any(marker in value for marker in forbidden_markers):
+                raise ValueError(
+                    f"{plugin_name}:{skill_name} {field} contains internal runtime copy"
+                )
+            normalized_value = " ".join(value.casefold().split())
+            duplicate_skill = seen_values[field].get(normalized_value)
+            if duplicate_skill is not None:
+                raise ValueError(
+                    f"{plugin_name}:{skill_name} {field} duplicates "
+                    f"{duplicate_skill}"
+                )
+            seen_values[field][normalized_value] = skill_name
         cards[skill_name] = ChatGPTSkillCard(
-            display_name=raw_card["display_name"].strip(),
-            short_description=raw_card["short_description"].strip(),
-            default_prompt=raw_card["default_prompt"].strip(),
+            display_name=display_name,
+            short_description=values["short_description"],
+            default_prompt=values["default_prompt"],
             instructions=instructions,
         )
     return cards
