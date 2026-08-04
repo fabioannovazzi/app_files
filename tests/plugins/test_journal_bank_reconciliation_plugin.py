@@ -647,17 +647,17 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
     _save_csv(
         bank_path,
         [
-            ["Date", "Amount", "Description", "Beneficiary"],
-            ["2026-05-08", "80.00", "Payment Alpha", "Alpha"],
-            ["2026-05-08", "80.00", "Payment Beta", "Beta"],
+            ["Date", "Amount", "Description", "Beneficiary", "Reference"],
+            ["2026-05-08", "80.00", "Payment Alpha", "Alpha", "BANK-100"],
+            ["2026-05-08", "80.00", "Payment Beta", "Beta", "BANK-200"],
         ],
     )
     _save_csv(
         journal_path,
         [
-            ["Date", "Amount", "Description", "Beneficiary"],
-            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha"],
-            ["2026-05-08", "80.00", "Invoice Beta", "Beta"],
+            ["Date", "Amount", "Description", "Beneficiary", "Reference"],
+            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha", "BOOK-100"],
+            ["2026-05-08", "80.00", "Invoice Beta", "Beta", "BOOK-200"],
         ],
     )
     recipe_path = _prepare_reviewed_recipe(
@@ -1334,7 +1334,7 @@ def test_evaluation_contract_v4_remains_immutable_historical_evidence() -> None:
     )
 
 
-def test_evaluation_contract_v5_closes_prospective_repository_contract() -> None:
+def test_evaluation_contract_v5_remains_immutable_historical_evidence() -> None:
     core = load_core()
     contract_bytes = EVALUATION_CONTRACT_PATH.read_bytes()
     raw_contract = contract_bytes.decode("utf-8")
@@ -1372,8 +1372,8 @@ def test_evaluation_contract_v5_closes_prospective_repository_contract() -> None
         "invalidates_prior_versions": True,
     }
     assert contract["implementation"]["relationship_adapter"] == {
-        "adapter_id": core.RELATIONSHIP_ADAPTER_ID,
-        "adapter_version": core.RELATIONSHIP_ADAPTER_VERSION,
+        "adapter_id": "journal_bank.relationship.v2",
+        "adapter_version": "2",
         "invalidates_prior_versions": True,
     }
     assert contract["schemas"]["normalized_transaction_columns"] == list(
@@ -1620,8 +1620,9 @@ def test_evaluation_contract_v5_closes_prospective_repository_contract() -> None
     )
     assert stable_reference["minimum_token_length"] == 5
     assert stable_reference["digit_required"] is True
-    assert contract["matching"]["stage_order"] == list(core.MATCH_STAGE_ORDER)
-    assert list(contract["matching"]["stages"]) == list(core.MATCH_STAGE_ORDER)
+    historical_stages = ["reference", "amount_date_unique", "amount_date_single"]
+    assert contract["matching"]["stage_order"] == historical_stages
+    assert list(contract["matching"]["stages"]) == historical_stages
     assert contract["matching"]["row_order_may_break_collision"] is False
     condition_outcomes = {
         entry["condition"]: entry for entry in contract["condition_outcome_matrix"]
@@ -2393,6 +2394,213 @@ def test_plugin_keeps_ambiguous_rows_unmatched(tmp_path: Path) -> None:
     assert result.unmatched_journal.height == 2
 
 
+def test_reference_group_matches_one_bank_movement_to_many_journal_rows(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "1000.00", "PAYROLL-100"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "600.00", "PAYROLL-100"],
+            ["2025-03-10", "400.00", "PAYROLL-100"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "many_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    ledger = json.loads(
+        (output_dir / "relationship_ledger.json").read_text(encoding="utf-8")
+    )
+    assert result.matches.height == 2
+    assert set(result.matches.get_column("stage")) == {"reference_group"}
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.is_empty()
+    assert ledger["balanced"] is True
+    semantic_dir = tmp_path / "semantic-review"
+    semantic_review.prepare_semantic_review(
+        output_dir,
+        semantic_dir,
+        required_resolution_level="perfect_match",
+    )
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assignment = application["assignments"][0]
+    assert assignment["highest_level_reached"] == "perfect_match"
+    assert len(assignment["journal_transaction_ids"]) == 2
+    assert assignment["human_review_required"] is False
+
+
+def test_reference_group_matches_many_bank_movements_to_one_journal_row(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "600.00", "PAYROLL-100"],
+            ["2025-03-10", "400.00", "PAYROLL-100"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "1000.00", "PAYROLL-100"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "many_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    ledger = json.loads(
+        (output_dir / "relationship_ledger.json").read_text(encoding="utf-8")
+    )
+    assert result.matches.height == 2
+    assert set(result.matches.get_column("stage")) == {"reference_group"}
+    assert result.unmatched_bank.is_empty()
+    assert result.unmatched_journal.is_empty()
+    assert ledger["balanced"] is True
+
+
+def test_overlapping_reference_groups_remain_unmatched(tmp_path: Path) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "1000.00", "GROUP-100 GROUP-200"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-03-10", "600.00", "GROUP-100 GROUP-200"],
+            ["2025-03-10", "400.00", "GROUP-100"],
+            ["2025-03-10", "400.00", "GROUP-200"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+        policy_updates={"relationship_shape": "many_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 3
+
+
+def test_reference_group_respects_reviewed_date_window(tmp_path: Path) -> None:
+    core = load_core()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    output_dir = tmp_path / "out"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-01-10", "1000.00", "PAYROLL-100"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2025-02-10", "600.00", "PAYROLL-100"],
+            ["2025-02-10", "400.00", "PAYROLL-100"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=7,
+        policy_updates={"relationship_shape": "many_to_many"},
+    )
+
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        output_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=7,
+    )
+
+    assert result.matches.is_empty()
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 2
+
+
 def test_amount_date_single_labels_only_a_later_singleton_wave(
     tmp_path: Path,
 ) -> None:
@@ -2568,8 +2776,8 @@ def test_relationship_adapter_v1_receipt_is_stale_after_matching_semantics_chang
     assert exc_info.value.code == "relationship_review_required"
     assert "invalid or stale" in exc_info.value.detail
     assert audit["block_code"] == "relationship_review_required"
-    assert current_decision["adapter_id"] == "journal_bank.relationship.v2"
-    assert current_decision["adapter_version"] == "2"
+    assert current_decision["adapter_id"] == "journal_bank.relationship.v3"
+    assert current_decision["adapter_version"] == "3"
     expected_files = set(core.INITIAL_RUN_OUTPUT_FILES) - {"material_value_ledger.json"}
     assert {
         path.name for path in output_dir.iterdir() if path.is_file()
@@ -8080,11 +8288,71 @@ def test_semantic_prepare_assigns_deterministic_matches_only_to_perfect_level(
             encoding="utf-8"
         )
     )
+    operational_review = json.loads(
+        (semantic_dir / "operational_review_payload.json").read_text(encoding="utf-8")
+    )
     assert applied["summary"]["human_review_count"] == 0
     assert {item["highest_level_reached"] for item in applied["assignments"]} == {
         "classified",
         "perfect_match",
     }
+    assert operational_review["summary"]["bank_human_review_count"] == 0
+    assert not any(
+        item["item_type"] == "unmatched_bank" for item in operational_review["items"]
+    )
+
+
+def test_semantic_tolerant_deterministic_match_is_not_perfect(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    reconciliation_dir = tmp_path / "reconciliation"
+    semantic_dir = tmp_path / "semantic-review"
+    _save_csv(
+        bank_path,
+        [["Date", "Amount", "Reference"], ["2026-05-08", "100.00", "PAY-100"]],
+    )
+    _save_csv(
+        journal_path,
+        [["Date", "Amount", "Reference"], ["2026-05-08", "100.50", "PAY-100"]],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="1",
+        date_window_days=0,
+    )
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="1",
+        date_window_days=0,
+    )
+    assert result.matches.height == 1
+
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="perfect_match",
+    )
+
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assignment = application["assignments"][0]
+    assert assignment["highest_level_reached"] == "identifier_match"
+    assert assignment["resolution_dimensions"]["deterministic_relationship"] is True
+    assert assignment["resolution_dimensions"]["exact_relationship"] is False
+    assert assignment["human_review_required"] is True
 
 
 def test_semantic_prepare_rejects_authoritative_and_semantic_same_directory(
@@ -8471,11 +8739,18 @@ def test_semantic_classification_clears_review_at_classified_threshold(
             encoding="utf-8"
         )
     )
+    operational_review = json.loads(
+        (semantic_dir / "operational_review_payload.json").read_text(encoding="utf-8")
+    )
     assert application["summary"]["human_review_count"] == 0
     assert {
         (item["highest_level_reached"], item["classification"])
         for item in application["assignments"]
     } == {("classified", "payroll")}
+    assert operational_review["items"] == []
+    assert operational_review["summary"]["bank_human_review_count"] == 0
+    assert operational_review["summary"]["journal_human_review_count"] == 0
+    assert operational_review["summary"]["unmatched_journal_context_count"] == 2
 
 
 def test_semantic_beneficiary_resolution_stays_in_review_at_identifier_threshold(
@@ -8586,6 +8861,163 @@ def test_semantic_reprepare_archives_prior_worker_generation(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
     assert status["status"] == "prepared"
+
+
+def test_semantic_reprepare_advances_until_every_bank_movement_is_reviewed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    core = load_core()
+    semantic_review = load_semantic_review()
+    bank_path = tmp_path / "bank.csv"
+    journal_path = tmp_path / "journal.csv"
+    reconciliation_dir = tmp_path / "reconciliation"
+    semantic_dir = tmp_path / "semantic-review"
+    _save_csv(
+        bank_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-05-08", "100.00", "PAY-100"],
+            ["2026-05-09", "50.00", "PAY-050"],
+            ["2026-05-10", "25.00", "PAY-025"],
+        ],
+    )
+    _save_csv(
+        journal_path,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-05-08", "100.00", "PAY-100"],
+        ],
+    )
+    recipe_path = _prepare_reviewed_recipe(
+        core,
+        bank_path,
+        journal_path,
+        tmp_path / "recipe",
+        tolerance="0",
+        date_window_days=0,
+    )
+    result = core.run_reconciliation(
+        bank_path,
+        journal_path,
+        reconciliation_dir,
+        recipe_path,
+        tolerance="0",
+        date_window_days=0,
+    )
+    assert result.matches.height == 1
+    assert result.unmatched_bank.height == 2
+    monkeypatch.setattr(semantic_review, "MAX_SELECTED_COMPONENTS", 1)
+
+    reviewed_bank_ids: set[str] = set()
+    for expected_prior_count in (0, 1):
+        prepared = semantic_review.prepare_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            required_resolution_level="classified",
+        )
+        graph_path = semantic_dir / "residual_candidate_graph.json"
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        component = graph["selected_components"][0]
+        bank_id = component["bank_records"][0]["transaction_id"]
+        assert prepared["reviewed_bank_count"] == expected_prior_count
+        assert bank_id not in reviewed_bank_ids
+        reviewed_bank_ids.add(bank_id)
+        response = {
+            "schema_version": "journal_bank.semantic_worker_response.v2",
+            "candidate_graph_sha256": graph["candidate_graph_sha256"],
+            "component_reviews": [
+                {
+                    "component_id": component["component_id"],
+                    "decisions": [
+                        {
+                            "bank_transaction_id": bank_id,
+                            "verdict": "no_match",
+                            "journal_transaction_id": None,
+                            "evidence_fields": ["reference"],
+                            "rationale": "The stable bank reference supports payroll classification.",
+                            "contradictions": [],
+                            "requested_evidence": [],
+                            "resolution_level": "classified",
+                            "classification": "payroll",
+                            "identified_counterparty": None,
+                        }
+                    ],
+                }
+            ],
+        }
+        response_path, events_path = _write_semantic_worker_result(
+            semantic_dir, response
+        )
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            graph_path,
+            response_path,
+            events_path,
+        )
+
+    final_preparation = semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="classified",
+    )
+    application = json.loads(
+        (semantic_dir / "semantic_resolution_application.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    cumulative = json.loads(
+        (semantic_dir / "cumulative_resolution_state.json").read_text(encoding="utf-8")
+    )
+    assert final_preparation["worker_required"] is False
+    assert final_preparation["reviewed_bank_count"] == 2
+    assert cumulative["reviewed_bank_count"] == 2
+    assert application["summary"]["human_review_count"] == 0
+    assert {item["highest_level_reached"] for item in application["assignments"]} == {
+        "classified",
+        "perfect_match",
+    }
+
+
+def test_semantic_run_all_orchestrates_packets_until_exhaustive(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+
+    def fake_worker(
+        reconciliation_path: Path,
+        semantic_path: Path,
+        graph_path: Path,
+        **_: Any,
+    ) -> dict[str, Any]:
+        assert reconciliation_path == reconciliation_dir
+        graph = json.loads(graph_path.read_text(encoding="utf-8"))
+        response_path, events_path = _write_semantic_worker_result(
+            semantic_path,
+            _valid_semantic_response(graph),
+        )
+        return {"response": response_path, "events": events_path}
+
+    monkeypatch.setattr(semantic_review, "run_semantic_worker", fake_worker)
+
+    result = semantic_review.run_semantic_resolution_pipeline(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="classified",
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    assert result["batch_count"] == 1
+    assert result["reviewed_bank_count"] == 2
+    assert result["human_review_count"] == 0
+    assert result["exhaustive"] is True
+    assert status["status"] == "completed_exhaustive"
 
 
 def test_semantic_reprepare_failure_removes_completed_marker_first(
@@ -8750,6 +9182,38 @@ def test_semantic_validate_rejects_invalid_worker_decisions(
     assert not (semantic_dir / "semantic_suggestions_validated.json").exists()
     assert not (semantic_dir / "semantic_worker_run.json").exists()
     assert _tree_snapshot(reconciliation_dir) == authoritative_before
+
+
+def test_semantic_identifier_level_requires_a_shared_cross_side_identifier(
+    tmp_path: Path,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="identifier_match",
+    )
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text(encoding="utf-8"))
+    response = _valid_semantic_response(graph)
+    response["component_reviews"][0]["decisions"][0].update(
+        {
+            "resolution_level": "identifier_match",
+            "evidence_fields": ["reference"],
+        }
+    )
+    response_path, events_path = _write_semantic_worker_result(semantic_dir, response)
+
+    with pytest.raises(ValueError, match="shared stable identifier"):
+        semantic_review.validate_semantic_review(
+            reconciliation_dir,
+            semantic_dir,
+            graph_path,
+            response_path,
+            events_path,
+        )
 
 
 def test_semantic_validate_rejects_duplicate_json_keys(tmp_path: Path) -> None:

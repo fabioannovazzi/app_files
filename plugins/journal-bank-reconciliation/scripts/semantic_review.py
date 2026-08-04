@@ -111,7 +111,9 @@ __all__ = [
     "EVENTS_NAME",
     "HUMAN_REVIEW_QUEUE_NAME",
     "LAUNCH_RECEIPT_NAME",
+    "CUMULATIVE_RESOLUTION_STATE_NAME",
     "OUTPUT_SCHEMA_NAME",
+    "OPERATIONAL_REVIEW_PAYLOAD_NAME",
     "PROMPT_NAME",
     "RESPONSE_NAME",
     "RESOLUTION_APPLICATION_NAME",
@@ -123,6 +125,7 @@ __all__ = [
     "WORKER_RUN_NAME",
     "main",
     "prepare_semantic_review",
+    "run_semantic_resolution_pipeline",
     "run_semantic_worker",
     "validate_semantic_review",
 ]
@@ -143,6 +146,9 @@ STATUS_NAME = "semantic_review_status.json"
 RESOLUTION_APPLICATION_NAME = "semantic_resolution_application.json"
 RESOLUTION_FUNNEL_NAME = "resolution_funnel.json"
 HUMAN_REVIEW_QUEUE_NAME = "human_review_queue.json"
+OPERATIONAL_REVIEW_PAYLOAD_NAME = "operational_review_payload.json"
+PRIOR_RESOLUTION_STATE_NAME = "prior_resolution_state.json"
+CUMULATIVE_RESOLUTION_STATE_NAME = "cumulative_resolution_state.json"
 VALIDATED_PENDING_NAME = ".semantic_suggestions_validated.pending.json"
 WORKER_PENDING_NAME = ".semantic_worker_run.pending.json"
 STATUS_PENDING_NAME = ".semantic_review_status.pending.json"
@@ -156,6 +162,7 @@ RESOLUTION_APPLICATION_SCHEMA_VERSION = (
     "journal_bank.semantic_resolution_application.v1"
 )
 RESOLUTION_FUNNEL_SCHEMA_VERSION = "journal_bank.resolution_funnel.v1"
+RESOLUTION_STATE_SCHEMA_VERSION = "journal_bank.semantic_resolution_state.v1"
 
 # These are sufficiency thresholds, not claims that every weaker evidence type
 # is present.  For example, a reference-supported result is "at least"
@@ -223,6 +230,7 @@ MAX_SELECTED_COMPONENTS = 25
 MAX_SELECTED_BANK_ROWS = 200
 MAX_SELECTED_JOURNAL_ROWS = 400
 MAX_SELECTED_EDGES = 1_000
+MAX_SEMANTIC_BATCHES = 10_000
 MAX_PROMPT_BYTES = 256 * 1024
 MAX_GRAPH_BYTES = 1024 * 1024
 MAX_DEFERRED_SUMMARIES = 250
@@ -240,6 +248,7 @@ MAX_RATIONALE_CHARS = 600
 MAX_DETAIL_CHARS = 200
 MAX_DETAIL_ITEMS = 5
 MAX_EVIDENCE_FIELDS = 8
+MAX_OPERATIONAL_BANK_ITEMS = 1_900
 
 DISABLED_WORKER_FEATURES = (
     "apps",
@@ -283,9 +292,11 @@ CURRENT_GENERATION_FILES = (
     EVENTS_NAME,
     STDERR_NAME,
     LAUNCH_RECEIPT_NAME,
+    PRIOR_RESOLUTION_STATE_NAME,
     RESOLUTION_APPLICATION_NAME,
     RESOLUTION_FUNNEL_NAME,
     HUMAN_REVIEW_QUEUE_NAME,
+    OPERATIONAL_REVIEW_PAYLOAD_NAME,
 )
 
 REQUIRED_RECEIPTS = {
@@ -868,6 +879,157 @@ def _archive_current_generation(output_dir: Path) -> Path | None:
         },
     )
     return generation
+
+
+def _resolution_state_payload(
+    source_binding: Mapping[str, Any],
+    component_reviews: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Build the cumulative, source-bound semantic decision state."""
+
+    reviews = [dict(review) for review in component_reviews]
+    bank_ids: set[str] = set()
+    journal_ids: set[str] = set()
+    for review in reviews:
+        component_id = review.get("component_id")
+        decisions = review.get("decisions")
+        if not isinstance(component_id, str) or not isinstance(decisions, list):
+            raise ValueError("Resolution state component reviews are malformed")
+        for decision in decisions:
+            if not isinstance(decision, dict):
+                raise ValueError("Resolution state decisions must be objects")
+            bank_id = decision.get("bank_transaction_id")
+            if not isinstance(bank_id, str) or not bank_id or bank_id in bank_ids:
+                raise ValueError("Resolution state bank decisions must be unique")
+            bank_ids.add(bank_id)
+            journal_id = decision.get("journal_transaction_id")
+            if journal_id is not None:
+                if (
+                    not isinstance(journal_id, str)
+                    or not journal_id
+                    or journal_id in journal_ids
+                ):
+                    raise ValueError(
+                        "Resolution state journal assignments must be unique"
+                    )
+                journal_ids.add(journal_id)
+    content = {
+        "schema_version": RESOLUTION_STATE_SCHEMA_VERSION,
+        "workflow_id": "journal_bank_reconciliation",
+        "source_binding": dict(source_binding),
+        "component_reviews": reviews,
+        "reviewed_bank_count": len(bank_ids),
+        "used_journal_count": len(journal_ids),
+    }
+    return {**content, "content_sha256": canonical_json_sha256(content)}
+
+
+def _load_resolution_state(path: Path, *, required: bool) -> dict[str, Any] | None:
+    if not path.exists():
+        if required:
+            raise ValueError(
+                f"Required semantic resolution state is missing: {path.name}"
+            )
+        return None
+    payload = _strict_json_file(
+        path,
+        maximum_bytes=MAX_UNMATCHED_BYTES,
+        label=path.name,
+    )
+    if not isinstance(payload, dict):
+        raise ValueError("Semantic resolution state must be an object")
+    _exact_fields(
+        payload,
+        required={
+            "schema_version",
+            "workflow_id",
+            "source_binding",
+            "component_reviews",
+            "reviewed_bank_count",
+            "used_journal_count",
+            "content_sha256",
+        },
+        label="semantic resolution state",
+    )
+    if (
+        payload["schema_version"] != RESOLUTION_STATE_SCHEMA_VERSION
+        or payload["workflow_id"] != "journal_bank_reconciliation"
+        or not isinstance(payload["source_binding"], dict)
+        or not isinstance(payload["component_reviews"], list)
+    ):
+        raise ValueError("Semantic resolution state metadata is invalid")
+    content = {key: value for key, value in payload.items() if key != "content_sha256"}
+    if payload["content_sha256"] != canonical_json_sha256(content):
+        raise ValueError("Semantic resolution state content hash is invalid")
+    replay = _resolution_state_payload(
+        payload["source_binding"], payload["component_reviews"]
+    )
+    if replay != payload:
+        raise ValueError("Semantic resolution state does not replay")
+    return payload
+
+
+def _merge_resolution_reviews(
+    prior_reviews: Sequence[Mapping[str, Any]],
+    current_reviews: Sequence[Mapping[str, Any]],
+) -> list[dict[str, Any]]:
+    """Merge successive bounded worker packets without reusing evidence."""
+
+    merged = [dict(review) for review in prior_reviews]
+    decisions_by_bank = {
+        str(decision["bank_transaction_id"]): decision
+        for review in merged
+        for decision in review["decisions"]
+    }
+    used_journal = {
+        str(decision["journal_transaction_id"])
+        for decision in decisions_by_bank.values()
+        if decision.get("journal_transaction_id") is not None
+    }
+    for review in current_reviews:
+        additions: list[dict[str, Any]] = []
+        for decision in review["decisions"]:
+            bank_id = str(decision["bank_transaction_id"])
+            existing = decisions_by_bank.get(bank_id)
+            if existing is not None:
+                if existing != decision:
+                    raise ValueError(
+                        "A cumulative bank decision changed across packets"
+                    )
+                continue
+            journal_id = decision.get("journal_transaction_id")
+            if journal_id is not None and str(journal_id) in used_journal:
+                raise ValueError("A cumulative semantic decision reuses a journal row")
+            decisions_by_bank[bank_id] = decision
+            if journal_id is not None:
+                used_journal.add(str(journal_id))
+            additions.append(dict(decision))
+        if additions:
+            merged.append(
+                {
+                    "component_id": str(review["component_id"]),
+                    "decisions": additions,
+                }
+            )
+    return merged
+
+
+def _write_cumulative_resolution_state(
+    semantic_dir: Path,
+    payload: Mapping[str, Any],
+) -> Path:
+    path = _safe_output_path(semantic_dir, CUMULATIVE_RESOLUTION_STATE_NAME)
+    pending = semantic_dir / f".{CUMULATIVE_RESOLUTION_STATE_NAME}.pending"
+    if os.path.lexists(pending):
+        raise ValueError("Cumulative semantic resolution write is already pending")
+    try:
+        with pending.open("xb") as handle:
+            handle.write(_json_bytes(payload))
+        pending.replace(path)
+    except OSError:
+        pending.unlink(missing_ok=True)
+        raise
+    return path
 
 
 def _replay_file_snapshot(
@@ -1503,7 +1665,8 @@ def _graph_content(
     *,
     client_engagement: Mapping[str, Any] | None = None,
     required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
-) -> tuple[dict[str, Any], dict[str, Any]]:
+    prior_resolution_state: Mapping[str, Any] | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
     if (
         required_resolution_level not in RESOLUTION_RANK
         or required_resolution_level == "unresolved"
@@ -1536,31 +1699,76 @@ def _graph_content(
         or audit.get("unmatched_journal_count") != journal.height
     ):
         raise ValueError("Reconciliation unmatched counts are stale")
+    prior_state = (
+        _resolution_state_payload(source_binding, [])
+        if prior_resolution_state is None
+        else dict(prior_resolution_state)
+    )
+    if prior_state.get("source_binding") != source_binding:
+        raise ValueError("Prior semantic decisions belong to another reconciliation")
+    if (
+        _resolution_state_payload(
+            source_binding, prior_state.get("component_reviews", [])
+        )
+        != prior_state
+    ):
+        raise ValueError("Prior semantic decisions do not replay")
+    prior_decisions = [
+        decision
+        for review in prior_state["component_reviews"]
+        for decision in review["decisions"]
+    ]
+    reviewed_bank_ids = {
+        str(decision["bank_transaction_id"]) for decision in prior_decisions
+    }
+    used_journal_ids = {
+        str(decision["journal_transaction_id"])
+        for decision in prior_decisions
+        if decision.get("journal_transaction_id") is not None
+    }
+    full_bank_rows = bank.to_dicts()
+    full_journal_rows = journal.to_dicts()
+    available_bank_ids = {str(row["transaction_id"]) for row in full_bank_rows}
+    available_journal_ids = {str(row["transaction_id"]) for row in full_journal_rows}
+    if not reviewed_bank_ids.issubset(available_bank_ids):
+        raise ValueError("Prior semantic decisions contain stale bank movements")
+    if not used_journal_ids.issubset(available_journal_ids):
+        raise ValueError("Prior semantic decisions contain stale journal movements")
+    bank_rows = [
+        row
+        for row in full_bank_rows
+        if str(row["transaction_id"]) not in reviewed_bank_ids
+    ]
+    journal_rows = [
+        row
+        for row in full_journal_rows
+        if str(row["transaction_id"]) not in used_journal_ids
+    ]
     discovery_deferred: dict[str, Any] | None = None
     if (
-        bank.height > MAX_DISCOVERY_BANK_ROWS
-        or journal.height > MAX_DISCOVERY_JOURNAL_ROWS
+        len(bank_rows) > MAX_DISCOVERY_BANK_ROWS
+        or len(journal_rows) > MAX_DISCOVERY_JOURNAL_ROWS
     ):
         components: list[dict[str, Any]] = []
         discovery_deferred = _deferred_partition(
-            bank_count=bank.height,
-            journal_count=journal.height,
+            bank_count=len(bank_rows),
+            journal_count=len(journal_rows),
             observed_edge_count=None,
             observed_candidate_comparison_count=None,
             reason="unmatched_partition_cap_exceeded",
         )
     else:
         components, discovery_limit = _candidate_components(
-            bank.to_dicts(),
-            journal.to_dicts(),
+            bank_rows,
+            journal_rows,
             tolerance=tolerance,
             date_window_days=date_window_days,
             relationship_policy=relationship_policy,
         )
         if discovery_limit is not None:
             discovery_deferred = _deferred_partition(
-                bank_count=bank.height,
-                journal_count=journal.height,
+                bank_count=len(bank_rows),
+                journal_count=len(journal_rows),
                 observed_edge_count=discovery_limit["observed_edge_count"],
                 observed_candidate_comparison_count=discovery_limit[
                     "observed_candidate_comparison_count"
@@ -1596,6 +1804,13 @@ def _graph_content(
             "main_chat_model_change": False,
         },
         "source_binding": source_binding,
+        "prior_resolution": {
+            "state_sha256": prior_state["content_sha256"],
+            "reviewed_bank_count": prior_state["reviewed_bank_count"],
+            "used_journal_count": prior_state["used_journal_count"],
+            "remaining_bank_count": len(bank_rows),
+            "remaining_journal_count": len(journal_rows),
+        },
         "matching_policy": {
             "tolerance": tolerance_text,
             "date_window_days": date_window_days,
@@ -1662,7 +1877,7 @@ def _graph_content(
                 raise ValueError(
                     "Reconciliation changed while semantic graph was built"
                 )
-            return graph, _worker_output_schema(graph)
+            return graph, _worker_output_schema(graph), prior_state
         if not selected:
             raise ValueError("Bounded semantic graph cannot fit its artifact limits")
         removed = selected.pop()
@@ -1843,10 +2058,10 @@ def _write_status(
             raise ValueError("Semantic review status has an invalid digest")
         if existing.get("candidate_graph_sha256") != graph["candidate_graph_sha256"]:
             raise ValueError("Semantic review status belongs to another graph")
-        if (
-            existing.get("status") == "completed_validated"
-            and status_value != "completed_validated"
-        ):
+        if existing.get("status") in {
+            "completed_validated",
+            "completed_exhaustive",
+        } and status_value not in {"completed_validated", "completed_exhaustive"}:
             return status_path
     content = {
         "schema_version": "journal_bank.semantic_review_status.v2",
@@ -1857,7 +2072,7 @@ def _write_status(
         "worker_output_advisory_until_validated": True,
         "resolution_application_status": (
             "validated_luna_applied"
-            if status_value == "completed_validated"
+            if status_value in {"completed_validated", "completed_exhaustive"}
             else "deterministic_baseline"
         ),
         "main_chat_model_change": False,
@@ -1885,19 +2100,31 @@ def prepare_semantic_review(
 
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
+    cumulative_state = _load_resolution_state(
+        semantic / CUMULATIVE_RESOLUTION_STATE_NAME,
+        required=False,
+    )
     archived_generation = _archive_current_generation(semantic)
-    graph, schema = _graph_content(
+    graph, schema, prior_state = _graph_content(
         reconciliation,
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
+        prior_resolution_state=cumulative_state,
     )
     graph_path = _safe_output_path(semantic, CANDIDATE_GRAPH_NAME)
     schema_path = _safe_output_path(semantic, OUTPUT_SCHEMA_NAME)
     prompt_path = _safe_output_path(semantic, PROMPT_NAME)
+    prior_state_path = _new_output_path(semantic, PRIOR_RESOLUTION_STATE_NAME)
+    write_json(prior_state_path, prior_state)
     write_json(graph_path, graph)
     write_json(schema_path, schema)
     _write_text(prompt_path, _worker_prompt(graph))
-    application = _apply_resolution_funnel(reconciliation, semantic, graph, [])
+    application = _apply_resolution_funnel(
+        reconciliation,
+        semantic,
+        graph,
+        prior_state["component_reviews"],
+    )
     status_path = _write_status(semantic, graph, status_value="prepared")
     return {
         "candidate_graph": graph_path,
@@ -1905,12 +2132,15 @@ def prepare_semantic_review(
         "prompt": prompt_path,
         "status": status_path,
         "archived_generation": archived_generation,
+        "prior_resolution_state": prior_state_path,
         "worker_required": bool(graph["selected_components"]),
         "selected_component_count": graph["counts"]["selected_component_count"],
         "deferred_component_count": graph["counts"]["deferred_component_count"],
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "required_resolution_level": required_resolution_level,
         "human_review_count": application["summary"]["human_review_count"],
+        "reviewed_bank_count": prior_state["reviewed_bank_count"],
+        "operational_review_payload": semantic / OPERATIONAL_REVIEW_PAYLOAD_NAME,
     }
 
 
@@ -1937,11 +2167,22 @@ def _validate_graph_and_preparation_files(
     required_resolution_level = resolution_policy.get("required_level")
     if not isinstance(required_resolution_level, str):
         raise ValueError("Candidate graph required resolution level is unavailable")
-    expected_graph, expected_schema = _graph_content(
+    prior_state = _load_resolution_state(
+        _required_child(
+            semantic / PRIOR_RESOLUTION_STATE_NAME,
+            semantic,
+            PRIOR_RESOLUTION_STATE_NAME,
+        ),
+        required=True,
+    )
+    expected_graph, expected_schema, expected_prior_state = _graph_content(
         reconciliation,
         client_engagement=client_engagement,
         required_resolution_level=required_resolution_level,
+        prior_resolution_state=prior_state,
     )
+    if prior_state != expected_prior_state:
+        raise ValueError("Prior semantic resolution state is stale or modified")
     if graph != expected_graph:
         raise ValueError("Candidate graph does not replay from current reconciliation")
     schema_path = _required_child(
@@ -2601,10 +2842,11 @@ def _validate_worker_response(
         journal_records = {
             record["transaction_id"]: record for record in component["journal_records"]
         }
-        edges = {
-            (edge["bank_transaction_id"], edge["journal_transaction_id"])
+        edge_by_pair = {
+            (edge["bank_transaction_id"], edge["journal_transaction_id"]): edge
             for edge in component["candidate_edges"]
         }
+        edges = set(edge_by_pair)
         decisions = review_by_component[component_id]["decisions"]
         if not isinstance(decisions, list):
             raise ValueError("Component decisions must be a list")
@@ -2729,12 +2971,35 @@ def _validate_worker_response(
                 raise ValueError(
                     "Candidate-level resolution requires a suggested match"
                 )
-            if resolution_level == "identifier_match" and not (
-                {"reference", "movement_number", "party_ref"} & set(evidence_fields)
-            ):
-                raise ValueError(
-                    "Identifier-level resolution requires identifier evidence"
+            if resolution_level == "identifier_match":
+                if verdict != "suggest_match" or not isinstance(journal_id, str):
+                    raise ValueError(
+                        "Identifier-level resolution requires a suggested counterpart"
+                    )
+                identifier_fields = {
+                    "reference",
+                    "movement_number",
+                    "party_ref",
+                } & set(evidence_fields)
+                bank_record = bank_records[bank_id]
+                journal_record = journal_records[journal_id]
+                shared_reference = bool(
+                    edge_by_pair[(bank_id, journal_id)].get("shared_references")
                 )
+                bank_party = str(bank_record.get("party_ref") or "").strip().casefold()
+                journal_party = (
+                    str(journal_record.get("party_ref") or "").strip().casefold()
+                )
+                shared_party = bool(bank_party and bank_party == journal_party)
+                reference_supported = bool(
+                    {"reference", "movement_number"} & identifier_fields
+                    and shared_reference
+                )
+                party_supported = "party_ref" in identifier_fields and shared_party
+                if not (reference_supported or party_supported):
+                    raise ValueError(
+                        "Identifier-level resolution requires a shared stable identifier"
+                    )
             if resolution_level == "beneficiary_match" and not (
                 "beneficiary" in evidence_fields or identified_counterparty is not None
             ):
@@ -3123,6 +3388,166 @@ def _stable_csv_rows(path: Path, *, label: str) -> list[dict[str, Any]]:
     return pl.read_csv(io.BytesIO(payload), infer_schema=False).to_dicts()
 
 
+def _write_operational_review_payload(
+    reconciliation: Path,
+    semantic: Path,
+    application: Mapping[str, Any],
+    review_queue: Mapping[str, Any],
+) -> Path:
+    """Write the actionable workbench payload from the reduced review queue."""
+
+    base_payload = _strict_json_file(
+        reconciliation / "review_payload.json",
+        maximum_bytes=MAX_UNMATCHED_BYTES,
+        label="review_payload.json",
+    )
+    base_items = base_payload.get("items")
+    if not isinstance(base_items, list):
+        raise ValueError("Base review payload items are unavailable")
+    bank_items_by_id: dict[str, dict[str, Any]] = {}
+    journal_items: list[dict[str, Any]] = []
+    for item in base_items:
+        if not isinstance(item, dict):
+            continue
+        item_type = item.get("item_type")
+        data = item.get("data")
+        if item_type == "unmatched_bank" and isinstance(data, dict):
+            transaction_id = data.get("transaction_id")
+            if isinstance(transaction_id, str):
+                bank_items_by_id[transaction_id] = item
+        elif item_type == "unmatched_journal":
+            journal_items.append(item)
+
+    operational_bank_items: list[dict[str, Any]] = []
+    queue_items = review_queue.get("items")
+    if not isinstance(queue_items, list):
+        raise ValueError("Human review queue items are unavailable")
+    for assignment in queue_items[:MAX_OPERATIONAL_BANK_ITEMS]:
+        if not isinstance(assignment, dict):
+            raise ValueError("Human review queue assignment is malformed")
+        bank_id = str(assignment["bank_transaction_id"])
+        bank_evidence = assignment.get("bank_evidence")
+        if not isinstance(bank_evidence, dict):
+            raise ValueError("Human review queue bank evidence is unavailable")
+        existing = bank_items_by_id.get(bank_id)
+        item = dict(existing) if existing is not None else {}
+        data = dict(item.get("data") or {})
+        data.update(bank_evidence)
+        data.update(
+            {
+                "highest_level_reached": assignment["highest_level_reached"],
+                "classification": assignment.get("classification"),
+                "identified_counterparty": assignment.get("identified_counterparty"),
+                "resolution_verdict": assignment["verdict"],
+                "resolution_rationale": assignment.get("rationale"),
+                "requested_evidence": assignment.get("requested_evidence", []),
+                "candidate_journal_evidence": assignment.get(
+                    "candidate_journal_evidence", []
+                ),
+            }
+        )
+        date_text = str(bank_evidence.get("transaction_date") or "")
+        amount_text = str(bank_evidence.get("amount_abs") or "")
+        description = str(bank_evidence.get("description") or bank_id)
+        item.update(
+            {
+                "id": str(item.get("id") or f"operational-bank-{bank_id}"),
+                "item_type": "unmatched_bank",
+                "title": str(
+                    item.get("title")
+                    or " | ".join(
+                        value
+                        for value in (date_text, amount_text, description)
+                        if value
+                    )
+                ),
+                "source_path": item.get("source_path")
+                or str(bank_evidence.get("source_file") or "")
+                or None,
+                "output_path": "unmatched_bank.csv",
+                "allowed_actions": [
+                    "accept",
+                    "edit",
+                    "mark_unclear",
+                    "request_more_documents",
+                    "skip",
+                ],
+                "recommended_action": (
+                    "request_more_documents"
+                    if assignment.get("requested_evidence")
+                    else "mark_unclear"
+                ),
+                "evidence": [
+                    {
+                        "kind": "semantic_resolution",
+                        "bank_transaction_id": bank_id,
+                        "highest_level_reached": assignment["highest_level_reached"],
+                        "evidence_fields": assignment.get("evidence_fields", []),
+                        "contradictions": assignment.get("contradictions", []),
+                        "decision_authority": assignment.get("decision_authority"),
+                    }
+                ],
+                "data": data,
+                "status": "needs_review",
+            }
+        )
+        operational_bank_items.append(item)
+    if len(queue_items) > MAX_OPERATIONAL_BANK_ITEMS:
+        operational_bank_items.append(
+            {
+                "id": "operational-bank-truncated",
+                "item_type": "review_artifact",
+                "title": "Additional bank exceptions remain in human_review_queue.json",
+                "source_path": None,
+                "output_path": HUMAN_REVIEW_QUEUE_NAME,
+                "allowed_actions": ["mark_unclear", "skip"],
+                "recommended_action": "mark_unclear",
+                "evidence": [],
+                "data": {
+                    "displayed_count": MAX_OPERATIONAL_BANK_ITEMS,
+                    "total_count": len(queue_items),
+                },
+                "status": "needs_review",
+            }
+        )
+
+    # The operational objective is bank-side completeness. Unmatched journal
+    # rows remain available as strict reconciliation evidence and candidate
+    # context, but do not create a second standalone human queue.
+    items = operational_bank_items
+    base_summary = dict(base_payload.get("summary") or {})
+    bank_movement_count = int(application["summary"]["movement_count"])
+    human_bank_count = int(application["summary"]["human_review_count"])
+    payload = {
+        **base_payload,
+        "review_type": "journal_bank_operational_exception_review",
+        "items": items,
+        "item_count": len(items),
+        "status": "ready_for_review",
+        "source_artifacts": {
+            **dict(base_payload.get("source_artifacts") or {}),
+            "semantic_resolution_application": RESOLUTION_APPLICATION_NAME,
+            "resolution_funnel": RESOLUTION_FUNNEL_NAME,
+            "human_review_queue": HUMAN_REVIEW_QUEUE_NAME,
+            "cumulative_resolution_state": CUMULATIVE_RESOLUTION_STATE_NAME,
+        },
+        "summary": {
+            **base_summary,
+            "bank_movement_count": bank_movement_count,
+            "bank_auto_resolved_count": bank_movement_count - human_bank_count,
+            "bank_human_review_count": human_bank_count,
+            "journal_human_review_count": 0,
+            "unmatched_journal_context_count": len(journal_items),
+            "actionable_item_count": len(items),
+            "required_resolution_level": application["required_resolution_level"],
+        },
+        "strict_reconciliation_unchanged": True,
+    }
+    path = _safe_output_path(semantic, OPERATIONAL_REVIEW_PAYLOAD_NAME)
+    write_json(path, payload)
+    return path
+
+
 def _apply_resolution_funnel(
     reconciliation: Path,
     semantic: Path,
@@ -3148,11 +3573,13 @@ def _apply_resolution_funnel(
         reconciliation / "reconciliation_matches.csv",
         label="reconciliation_matches.csv",
     )
-    deterministic_matches = {
-        str(row["bank_transaction_id"]): row
-        for row in match_rows
-        if row.get("bank_transaction_id")
-    }
+    deterministic_matches: dict[str, list[dict[str, Any]]] = {}
+    for match_row in match_rows:
+        bank_transaction_id = match_row.get("bank_transaction_id")
+        if bank_transaction_id:
+            deterministic_matches.setdefault(str(bank_transaction_id), []).append(
+                match_row
+            )
     semantic_decisions = {
         str(decision["bank_transaction_id"]): decision
         for review in normalized_reviews
@@ -3168,41 +3595,81 @@ def _apply_resolution_funnel(
             candidate_journal_ids.setdefault(
                 str(edge["bank_transaction_id"]), []
             ).append(str(edge["journal_transaction_id"]))
+    for bank_id, matches_for_bank in deterministic_matches.items():
+        candidates = candidate_journal_ids.setdefault(bank_id, [])
+        for match in matches_for_bank:
+            journal_id = match.get("journal_transaction_id")
+            if isinstance(journal_id, str) and journal_id not in candidates:
+                candidates.append(journal_id)
+    for bank_id, decision in semantic_decisions.items():
+        journal_id = decision.get("journal_transaction_id")
+        if isinstance(journal_id, str):
+            candidates = candidate_journal_ids.setdefault(bank_id, [])
+            if journal_id not in candidates:
+                candidates.append(journal_id)
     review_context_fields = (
         "transaction_id",
         *NODE_CONTEXT_FIELDS,
         "source_file",
-        "sheet_name",
+        "source_sheet",
         "source_row",
     )
 
     def review_context(row: Mapping[str, Any]) -> dict[str, Any]:
         return {field: row.get(field) for field in review_context_fields}
 
+    def deterministic_resolution_level(
+        deterministic_rows: Sequence[Mapping[str, Any]],
+    ) -> str:
+        if not deterministic_rows:
+            raise ValueError("Deterministic resolution requires match evidence")
+        match = deterministic_rows[0]
+        amount_delta = parse_canonical_decimal(
+            match.get("amount_delta"),
+            label="deterministic match amount delta",
+        )
+        shared_reference = bool(str(match.get("shared_references") or "").strip())
+        date_diff_value = match.get("date_diff_days")
+        exact_date = str(date_diff_value).strip() == "0"
+        if amount_delta == Decimal("0") and (shared_reference or exact_date):
+            return "perfect_match"
+        if shared_reference:
+            return "identifier_match"
+        return "candidate_match"
+
     assignments: list[dict[str, Any]] = []
     for row in bank_rows:
         bank_id = str(row["transaction_id"])
-        match = deterministic_matches.get(bank_id)
+        matches_for_bank = deterministic_matches.get(bank_id)
         decision = semantic_decisions.get(bank_id)
-        if match is not None:
-            level = "perfect_match"
+        if matches_for_bank is not None:
+            level = deterministic_resolution_level(matches_for_bank)
             authority = "deterministic"
-            journal_id = match.get("journal_transaction_id")
+            journal_ids = [
+                str(match["journal_transaction_id"])
+                for match in matches_for_bank
+                if match.get("journal_transaction_id")
+            ]
+            journal_id = journal_ids[0] if len(journal_ids) == 1 else None
             classification = None
             counterparty = row.get("beneficiary") or None
             evidence_fields = [
                 "amount_abs",
                 "transaction_date",
-                str(match.get("stage")),
+                *sorted({str(match.get("stage")) for match in matches_for_bank}),
             ]
             contradictions: list[str] = []
-            rationale = f"Deterministic {match.get('stage')} relationship replay."
+            rationale = (
+                "Deterministic relationship replay across "
+                f"{len(matches_for_bank)} allocation edge(s)."
+            )
             requested_evidence: list[str] = []
             verdict = "matched"
         elif decision is not None:
             level = str(decision["resolution_level"])
             authority = "luna_validated"
             journal_id = decision.get("journal_transaction_id")
+            journal_ids = [journal_id] if isinstance(journal_id, str) else []
             classification = decision.get("classification")
             counterparty = decision.get("identified_counterparty")
             evidence_fields = list(decision.get("evidence_fields") or [])
@@ -3214,6 +3681,7 @@ def _apply_resolution_funnel(
             level = "unresolved"
             authority = "none"
             journal_id = None
+            journal_ids = []
             classification = None
             counterparty = None
             evidence_fields = []
@@ -3244,6 +3712,7 @@ def _apply_resolution_funnel(
                 "classification": classification,
                 "identified_counterparty": counterparty,
                 "journal_transaction_id": journal_id,
+                "journal_transaction_ids": journal_ids,
                 "evidence_fields": evidence_fields,
                 "rationale": rationale,
                 "requested_evidence": requested_evidence,
@@ -3252,6 +3721,16 @@ def _apply_resolution_funnel(
                 "contradictions": contradictions,
                 "meets_required_level": meets_threshold,
                 "human_review_required": not meets_threshold,
+                "resolution_dimensions": {
+                    "purpose_classified": classification is not None,
+                    "counterparty_identified": counterparty is not None,
+                    "accounting_candidate_identified": bool(journal_ids),
+                    "stable_identifier_matched": (
+                        level in {"identifier_match", "perfect_match"}
+                    ),
+                    "deterministic_relationship": matches_for_bank is not None,
+                    "exact_relationship": level == "perfect_match",
+                },
             }
         )
 
@@ -3332,6 +3811,12 @@ def _apply_resolution_funnel(
     write_json(_safe_output_path(semantic, RESOLUTION_APPLICATION_NAME), application)
     write_json(_safe_output_path(semantic, RESOLUTION_FUNNEL_NAME), funnel)
     write_json(_safe_output_path(semantic, HUMAN_REVIEW_QUEUE_NAME), queue)
+    _write_operational_review_payload(
+        reconciliation,
+        semantic,
+        application,
+        queue,
+    )
     return application
 
 
@@ -3430,11 +3915,27 @@ def validate_semantic_review(
         stderr_bytes=len(stderr_bytes_value),
         event_summary=event_summary,
     )
+    prior_state = _load_resolution_state(
+        semantic / PRIOR_RESOLUTION_STATE_NAME,
+        required=True,
+    )
+    merged_reviews = _merge_resolution_reviews(
+        prior_state["component_reviews"],
+        normalized_reviews,
+    )
+    cumulative_state = _resolution_state_payload(
+        graph["source_binding"],
+        merged_reviews,
+    )
     application = _apply_resolution_funnel(
         reconciliation,
         semantic,
         graph,
-        normalized_reviews,
+        merged_reviews,
+    )
+    cumulative_state_path = _write_cumulative_resolution_state(
+        semantic,
+        cumulative_state,
     )
     decisions = [
         decision for review in normalized_reviews for decision in review["decisions"]
@@ -3452,9 +3953,11 @@ def validate_semantic_review(
             application["summary"]["human_review_count"]
         ),
         "operational_effects": [
+            CUMULATIVE_RESOLUTION_STATE_NAME,
             RESOLUTION_APPLICATION_NAME,
             RESOLUTION_FUNNEL_NAME,
             HUMAN_REVIEW_QUEUE_NAME,
+            OPERATIONAL_REVIEW_PAYLOAD_NAME,
         ],
         "component_reviews": normalized_reviews,
         "summary": {
@@ -3526,9 +4029,98 @@ def validate_semantic_review(
         "resolution_application": semantic / RESOLUTION_APPLICATION_NAME,
         "resolution_funnel": semantic / RESOLUTION_FUNNEL_NAME,
         "human_review_queue": semantic / HUMAN_REVIEW_QUEUE_NAME,
+        "operational_review_payload": semantic / OPERATIONAL_REVIEW_PAYLOAD_NAME,
+        "cumulative_resolution_state": cumulative_state_path,
         "summary": validated["summary"],
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
     }
+
+
+def run_semantic_resolution_pipeline(
+    reconciliation_dir: Path,
+    semantic_output_dir: Path,
+    *,
+    required_resolution_level: str,
+    codex_bin: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Process every bounded semantic packet until no eligible component remains."""
+
+    batches: list[dict[str, Any]] = []
+    previous_reviewed_count = -1
+    for batch_number in range(1, MAX_SEMANTIC_BATCHES + 1):
+        prepared = prepare_semantic_review(
+            reconciliation_dir,
+            semantic_output_dir,
+            client_engagement=client_engagement,
+            required_resolution_level=required_resolution_level,
+        )
+        reviewed_count = int(prepared["reviewed_bank_count"])
+        if reviewed_count < previous_reviewed_count:
+            raise ValueError("Cumulative semantic review coverage moved backwards")
+        if not prepared["worker_required"]:
+            graph = _strict_json_file(
+                prepared["candidate_graph"],
+                maximum_bytes=MAX_GRAPH_BYTES,
+                label=CANDIDATE_GRAPH_NAME,
+            )
+            exhaustive = int(prepared["deferred_component_count"]) == 0
+            _write_status(
+                Path(semantic_output_dir).resolve(),
+                graph,
+                status_value=(
+                    "completed_exhaustive" if exhaustive else "completed_with_deferred"
+                ),
+                failure_reason=(None if exhaustive else "components_remain_deferred"),
+            )
+            return {
+                "batch_count": len(batches),
+                "batches": batches,
+                "exhaustive": exhaustive,
+                "deferred_component_count": prepared["deferred_component_count"],
+                "reviewed_bank_count": reviewed_count,
+                "human_review_count": prepared["human_review_count"],
+                "resolution_application": semantic_output_dir
+                / RESOLUTION_APPLICATION_NAME,
+                "resolution_funnel": semantic_output_dir / RESOLUTION_FUNNEL_NAME,
+                "human_review_queue": semantic_output_dir / HUMAN_REVIEW_QUEUE_NAME,
+                "operational_review_payload": semantic_output_dir
+                / OPERATIONAL_REVIEW_PAYLOAD_NAME,
+            }
+        worker = run_semantic_worker(
+            reconciliation_dir,
+            semantic_output_dir,
+            prepared["candidate_graph"],
+            codex_bin=codex_bin,
+            client_engagement=client_engagement,
+        )
+        validated = validate_semantic_review(
+            reconciliation_dir,
+            semantic_output_dir,
+            prepared["candidate_graph"],
+            worker["response"],
+            worker["events"],
+            client_engagement=client_engagement,
+        )
+        cumulative = _load_resolution_state(
+            semantic_output_dir / CUMULATIVE_RESOLUTION_STATE_NAME,
+            required=True,
+        )
+        next_reviewed_count = int(cumulative["reviewed_bank_count"])
+        if next_reviewed_count <= reviewed_count:
+            raise ValueError("Semantic worker packet did not advance bank coverage")
+        batches.append(
+            {
+                "batch_number": batch_number,
+                "candidate_graph_sha256": prepared["candidate_graph_sha256"],
+                "selected_component_count": prepared["selected_component_count"],
+                "reviewed_bank_count_before": reviewed_count,
+                "reviewed_bank_count_after": next_reviewed_count,
+                "human_review_count_after": validated["summary"]["human_review_count"],
+            }
+        )
+        previous_reviewed_count = next_reviewed_count
+    raise ValueError("Semantic resolution exceeded the maximum bounded batch count")
 
 
 def _add_client_engagement_argument(parser: argparse.ArgumentParser) -> None:
@@ -3549,6 +4141,20 @@ def _parser() -> argparse.ArgumentParser:
         help="Minimum certainty that removes a bank movement from human review.",
     )
     _add_client_engagement_argument(prepare)
+    run_all = subparsers.add_parser(
+        "run-all",
+        help="Prepare, run, and validate successive packets until coverage is complete.",
+    )
+    run_all.add_argument("reconciliation_dir", type=Path)
+    run_all.add_argument("--output-dir", type=Path, required=True)
+    run_all.add_argument(
+        "--required-level",
+        choices=RESOLUTION_LEVELS[1:],
+        required=True,
+        help="Minimum certainty that removes a bank movement from human review.",
+    )
+    run_all.add_argument("--codex-bin", type=Path)
+    _add_client_engagement_argument(run_all)
     run_worker = subparsers.add_parser(
         "run-worker",
         help="Run the pinned Luna worker in a deny-default capsule.",
@@ -3654,6 +4260,26 @@ def main() -> int:
             result["selected_component_count"],
             result["deferred_component_count"],
             result["worker_required"],
+        )
+        return 0
+    if args.command == "run-all":
+        try:
+            result = run_semantic_resolution_pipeline(
+                args.reconciliation_dir,
+                args.output_dir,
+                required_resolution_level=args.required_level,
+                codex_bin=args.codex_bin,
+                client_engagement=client_engagement,
+            )
+        except (OSError, ValueError) as exc:
+            LOGGER.error("SEMANTIC_PIPELINE_FAILED: %s", exc)
+            return 2
+        LOGGER.info(
+            "semantic pipeline completed: batches=%s reviewed=%s human_review=%s exhaustive=%s",
+            result["batch_count"],
+            result["reviewed_bank_count"],
+            result["human_review_count"],
+            result["exhaustive"],
         )
         return 0
     if args.command == "run-worker":

@@ -65,9 +65,10 @@ narration. At minimum:
 ## Core Principle
 
 Deterministic Python code owns mechanically verifiable source qualification,
-exact-decimal normalization, optional sample filtering, explicit-reference and
-amount/date matching, content-addressed receipts, physical source lineage,
-one-to-one relationship ledgers, independent assurance gates, and exports.
+exact-decimal normalization, optional sample filtering, explicit-reference,
+reference-group, and amount/date matching, content-addressed receipts, physical
+source lineage, non-reusing relationship ledgers, independent assurance gates,
+and exports.
 Codex may inspect files, propose recipes, explain assumptions, and review
 unresolved items, but the plugin scripts must not make direct OpenAI API calls.
 Descriptions and beneficiary names are review context, not automatic match
@@ -147,12 +148,13 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    `non_movement_summary_labels` list; either authority uses the additive
    `journal_bank.tabular.v7` receipt.
 6. Review the proposed `relationship.policy` in business terms. Confirm the
-   one-to-one shape, no evidence reuse, currency/unit/entity/party perimeter,
+   required relationship shape (`one_to_one`, `one_to_many`, `many_to_one`, or
+   `many_to_many`), no evidence reuse, currency/unit/entity/party perimeter,
    direction treatment, defaults, amount tolerance, and date window. Use
    `journal_bank_core.build_relationship_review_receipt` to seal the reviewed
    policy against the current bank and journal source references. Every run
-   requires the current `journal_bank.relationship.v2` relationship receipt;
-   v1 receipts predate batch-safe matching and are stale. Do not treat the
+   requires the current `journal_bank.relationship.v3` relationship receipt;
+   older receipts predate grouped reference allocation and are stale. Do not treat the
    generated proposal as reviewed.
 7. Run deterministic reconciliation:
 
@@ -198,28 +200,32 @@ of the current chat, never rerun the full reconciliation with Luna, and never
 send one worker call per candidate. Launch one separate ephemeral Luna Max
 worker for the bounded packet produced for that run.
 
-1. Run `semantic_review.py prepare` against the completed
-   `reconciliation` directory and a sibling `semantic-review` directory. The
-   helper first validates the current artifact receipts and material-value
-   replay, then emits a content-addressed prompt, candidate graph, and strict
-   output schema. It includes only hard-compatible candidate edges and defers
-   components that exceed the fixed row, edge, component, or prompt-size caps.
+1. Prefer `semantic_review.py run-all` against the completed `reconciliation`
+   directory and a sibling `semantic-review` directory. It repeatedly prepares,
+   runs, and validates bounded packets until every eligible bank movement has a
+   decision. The helper carries prior validated decisions forward without
+   reusing journal evidence; packet limits bound each worker turn rather than
+   silently limiting the complete run.
 
 ```bash
-python scripts/semantic_review.py prepare <output-dir>/reconciliation \
+python scripts/semantic_review.py run-all <output-dir>/reconciliation \
   --output-dir <output-dir>/semantic-review \
   --required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match> \
   --client-engagement <client_engagement_path>
 ```
 
-Preparation immediately writes the deterministic baseline
+Each preparation immediately writes the current deterministic plus cumulative
 `semantic_resolution_application.json`, `resolution_funnel.json`, and
-`human_review_queue.json`. Exact deterministic matches are `perfect_match`;
-unresolved bank movements remain in the queue pending validated Luna output.
+`human_review_queue.json`. It also writes `operational_review_payload.json`, the
+actual human workbench source: bank movements already cleared at the chosen
+threshold are absent, and unmatched journal rows remain evidence context rather
+than a second standalone review queue. Exact deterministic relationships with conserved amounts
+and a shared stable identifier or exact date are `perfect_match`; unresolved
+bank movements remain in the queue pending validated Luna output.
 
-Read the command result. If `worker_required` is false, do not launch Luna;
-report that no bounded eligible component was selected and retain the recorded
-deferred-component reasons.
+Use `prepare`, `run-worker`, and `validate` separately only for diagnosis. If a
+preparation reports `worker_required: false`, do not launch Luna; retain and
+report any deferred-component reasons.
 
 2. From the main Codex chat, invoke only the qualified launcher below. Do not
    copy or reconstruct its underlying `codex exec` command. The launcher keeps
@@ -270,7 +276,8 @@ Successful validation writes `semantic_suggestions_validated.json` and
 `semantic_worker_run.json`, updates the three resolution artifacts, and changes
 `semantic_review_status.json` to `completed_validated`. Validated Luna decisions
 apply automatically to the derived certainty funnel and remove movements that
-meet the selected threshold from `human_review_queue.json`. The strict
+meet the selected threshold from `human_review_queue.json` and
+`operational_review_payload.json`. The strict
 reconciliation directory remains unchanged. Validation requires the fixed
 response, events, stderr, and launch-receipt files to agree with the current
 packet and the qualified launcher. When the current preparation closure still
