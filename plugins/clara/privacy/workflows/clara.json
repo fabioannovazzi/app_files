@@ -7,9 +7,12 @@
     ".claude-plugin/plugin.json",
     ".codex-plugin/plugin.json",
     "requirements.txt",
+    "agents/clara.md",
     "hooks/cowork-hooks.json",
     "hooks/hooks.json",
     "skills/clara/SKILL.md",
+    "skills/clara/references/cowork-runtime.md",
+    "skills/clara/references/workflow-catalog.md",
     "contracts/preparation_audit_envelope.v2.schema.json",
     "contracts/real_data_pilot_intake.v1.schema.json",
     "contracts/real_data_pilot_intake.v2.schema.json",
@@ -171,6 +174,6 @@
     "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "55e500f3334a3dfd98ea2f0a528b33c146850848f4a28c63b448d7cbf09391e6"
+    "source_fingerprint": "d469c9bacb49c66785f9752981702cb039cf5ac331028c2822a03b6277649e19"
   }
 }
