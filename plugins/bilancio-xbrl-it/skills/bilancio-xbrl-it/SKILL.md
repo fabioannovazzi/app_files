@@ -237,8 +237,10 @@ python scripts/build_taxonomy_catalogue.py \
 ```
 
 The builder uses pinned Arelle, records the official package checksum, and
-extracts concepts and relationship sets. The exporter rejects `UNVERIFIED` or
-mismatched catalogue checksums.
+extracts schema-2 item/tuple/dimension metadata, labels, references, and
+relationship sets. Only non-abstract reportable items may become facts; tuple
+containers remain structural paths for repeated rows. The exporter rejects
+`UNVERIFIED` or mismatched catalogue checksums.
 
 ## Review output
 

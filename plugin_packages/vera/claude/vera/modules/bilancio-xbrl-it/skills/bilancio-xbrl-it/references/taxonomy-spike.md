@@ -43,8 +43,12 @@ python scripts/build_taxonomy_catalogue.py \
   --output /controlled/path/PCI_2018-11-04.catalogue.json
 ```
 
-Observed result: all three entry-point DTSs loaded without Arelle errors and
-the unified catalogue contained 2,399 concepts.
+Observed result: all three entry-point DTSs loaded without Arelle errors. The
+schema-2 unified catalogue contained 2,399 concepts: 2,292 items, 29 tuples,
+and 78 schema/reference concepts that are neither items nor tuples. It also
+preserved 6,708 concept references and the resolved presentation and
+calculation networks. Only non-abstract reportable items may enter renderer or
+schedule allowlists.
 
 ## Local validation evidence
 
@@ -107,20 +111,25 @@ The checked audit at `scripts/audit_schedule_taxonomy.py` observed:
 
 | Form | Schedule families | Permitted unique monetary table concepts | Route |
 | --- | ---: | ---: | --- |
-| Ordinary | 8 | 625 | `TABLE_FACTS` |
-| Abbreviated | 8 | 454 | `TABLE_FACTS` |
+| Ordinary | 8 | 623 | `TABLE_FACTS` |
+| Abbreviated | 8 | 453 | `TABLE_FACTS` |
 | Micro | 8 | 0 | `TEXT_ONLY` |
 
 The ordinary inventory SHA-256 is
-`2f9608c6516a8bfcb39d3d1d84628b9a164428d16113bcb921b4abec152cb196`;
+`ee0178b2e8fb35cbab1d3ecca5782de3c04f7abc02f9d964c78dbac06b8db376`;
 the abbreviated inventory SHA-256 is
-`bea37c0236bb837387589e45e59be2c51088752517c467e2082d7e001365dde5`;
+`eb59426cfc2bdc11e4fb2529fa90a070cb861dc0dea84e3ea9baedfefb61c598`;
 the micro inventory SHA-256 is
-`75a26895b2ad0d653c5f60c9a1ebbe34ed8f120ab90026b3b2ab46d15fe2c1d2`.
+`b86889e511bad1f958044f9cb0b3d72bf252a6db57c77f8b26a71b922e53d4a7`.
 The adapter policy SHA-256 is
 `3f90676d582862bcaa9a48a1f35b632c6b719198374bffb7e8220488bae590a5`,
 and the checked audit report SHA-256 is
-`df28050f246ce4738d53d2718cdec28512b74be759c0a02592bcc9573b147336`.
+`f99572cfed076993070c80012122de5ef02d9daac50be64221ed3ffaf098ea5a`.
+
+The corrected counts exclude tuple containers and non-item schema concepts.
+Reportable descendants inside tuple tables remain available with exact
+role/root/tuple-path bindings, so repeated rows can emit distinct tuple
+occurrences without weakening duplicate-fact controls.
 
 This proves the form-specific structural boundary and guarded fact-compilation
 path. It does not prove that a professional binding chosen for one synthetic
@@ -154,7 +163,7 @@ Observed on 2026-08-05 with the package and catalogue above:
   disclosure coverage; the stale-prior case records a redline and does not
   silently reuse the prior text;
 - generated catalogue SHA-256:
-  `591365c192acc52b819726366640ff59b198cd628bc969844c4581b1a530635a`;
+  `c30f5436979e4a9c39dccac6a2f9e556f5d54eba2cb6a4437eba060559698854`;
 - statutory-presentation rule-pack SHA-256:
   `d3808f0be5190d652031faa7ef489fe4552521f41dec2e295ff58fc5583cfcbb`;
 - schedule-taxonomy rule-pack SHA-256:
@@ -164,7 +173,7 @@ Observed on 2026-08-05 with the package and catalogue above:
 - eight non-cash schedule workflows record complete per-cell adapter
   dispositions and emit representative official schedule facts;
 - final controlled run manifest SHA-256:
-  `b3749dd69caf3e933e786b03b9480417dace228d62aff8d0ed0618c7319255db`;
+  `3462fed35175c98519d42b9d2ab4aeda2ee63e0b7034ab3156e03fd0c7187a1d`;
 - external TEBENI status: `NOT_RUN_USER_CONTROLLED`.
 
 This evidence proves the controlled renderer and boundary paths used by the

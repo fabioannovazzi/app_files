@@ -42,6 +42,8 @@ def _concept(
         "type": "xbrli:stringItemType" if abstract else "xbrli:monetaryItemType",
         "period_type": period_type,
         "abstract": abstract,
+        "is_item": True,
+        "is_tuple": False,
         "forms": ["ABBREVIATED"],
         "label_it": qname,
     }
@@ -49,7 +51,7 @@ def _concept(
 
 def _catalogue() -> dict[str, object]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "taxonomy_id": "PCI_2018-11-04",
         "taxonomy_package_sha256": PACKAGE_CHECKSUM,
         "entry_points": {"ABBREVIATED": "https://example.invalid/abbreviated.xsd"},

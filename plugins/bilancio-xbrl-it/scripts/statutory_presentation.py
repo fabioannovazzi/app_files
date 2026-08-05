@@ -53,8 +53,12 @@ def _decimal_text(value: Decimal) -> str:
 
 
 def _is_monetary(concept: Mapping[str, Any]) -> bool:
-    return concept.get("abstract") is not True and "monetaryItemType" in str(
-        concept.get("type", "")
+    return (
+        concept.get("abstract") is not True
+        and concept.get("is_item") is True
+        and concept.get("is_tuple") is False
+        and concept.get("period_type") in {"instant", "duration"}
+        and "monetaryItemType" in str(concept.get("type", ""))
     )
 
 
@@ -66,6 +70,8 @@ def build_primary_presentation_inventory(
     """Build the exact primary-statement inventory for one statutory form."""
 
     form = selected_form.upper()
+    if catalogue.get("schema_version") != 2:
+        raise ValueError("Statutory presentation requires taxonomy catalogue schema 2")
     if str(catalogue.get("taxonomy_id")) != str(rule_pack.get("taxonomy_id")):
         raise ValueError("Presentation rule pack and catalogue taxonomy differ")
     forms = rule_pack.get("forms")

@@ -86,7 +86,15 @@ def _parse_log(log_file: Path) -> tuple[list[dict[str, str]], bool]:
         code = entry.attrib.get("code", "")
         text = " ".join("".join(entry.itertext()).split())
         messages.append({"level": level, "code": code, "message": text})
-        if level in {"error", "error-semantic", "assertion-not-satisfied"}:
+        if level in {
+            "critical",
+            "error",
+            "error-semantic",
+            "exception",
+            "fatal",
+            "assertion-not-satisfied",
+            "inconsistency",
+        }:
             has_error = True
     return messages, has_error
 

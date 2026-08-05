@@ -216,8 +216,11 @@ def _fake_catalogue(suite: dict[str, object], checksum: str) -> dict[str, object
                     "weight": None,
                 }
             )
+    for concept in concepts.values():
+        concept["is_item"] = True
+        concept["is_tuple"] = False
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "taxonomy_id": "PCI_2018-11-04",
         "taxonomy_package_sha256": checksum,
         "entry_points": {
@@ -436,3 +439,48 @@ def test_golden_runner_refuses_nonempty_output_directory(tmp_path: Path) -> None
         )
 
     assert (output / "existing.txt").read_text(encoding="utf-8") == "keep"
+
+
+def test_official_golden_schedule_rejects_missing_semantic_binding(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    inventory = {
+        "schedules": {
+            "EQUITY": {
+                "strategy": "TABLE_FACTS",
+                "allowed_concepts": [
+                    {
+                        "xbrl_concept": "itcc-ci:UnrelatedMonetaryFact",
+                        "type": "xbrli:monetaryItemType",
+                        "period_type": "duration",
+                    }
+                ],
+            }
+        }
+    }
+    monkeypatch.setattr(
+        golden,
+        "build_schedule_table_inventory",
+        lambda *_args: inventory,
+    )
+    monkeypatch.setattr(
+        golden,
+        "schedule_adapter_records",
+        lambda _schedule: [
+            {
+                "fact_id": "equity_contributions",
+                "fact_type": "MONETARY",
+                "key": "contributions",
+            }
+        ],
+    )
+
+    with pytest.raises(ValueError, match="Official golden schedule binding"):
+        golden._schedule_taxonomy_decisions(
+            {
+                "selected_form": "ORDINARY",
+                "schedules": [{"schedule_type": "EQUITY"}],
+            },
+            {"official_source": "https://example.invalid/official-taxonomy.zip"},
+            {},
+        )

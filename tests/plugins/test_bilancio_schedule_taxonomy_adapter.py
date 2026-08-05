@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import sys
+from copy import deepcopy
 from pathlib import Path
 
 import pytest
@@ -31,7 +32,7 @@ audit = _load_module("audit_schedule_taxonomy")
 
 def _catalogue() -> dict[str, object]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "taxonomy_id": "PCI_2018-11-04",
         "taxonomy_package_sha256": PACKAGE_CHECKSUM,
         "concepts": [
@@ -40,6 +41,8 @@ def _catalogue() -> dict[str, object]:
                 "type": "xbrli:stringItemType",
                 "period_type": "instant",
                 "abstract": True,
+                "is_item": True,
+                "is_tuple": False,
                 "label_it": "Fondi",
             },
             {
@@ -47,6 +50,8 @@ def _catalogue() -> dict[str, object]:
                 "type": "xbrli:monetaryItemType",
                 "period_type": "instant",
                 "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
                 "label_it": "Saldo iniziale",
             },
             {
@@ -54,14 +59,45 @@ def _catalogue() -> dict[str, object]:
                 "type": "xbrli:stringItemType",
                 "period_type": "instant",
                 "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
                 "label_it": "Classe",
+            },
+            {
+                "qname": "itcc:ProvisionTuple",
+                "type": "xbrli:stringItemType",
+                "period_type": None,
+                "abstract": False,
+                "is_item": False,
+                "is_tuple": True,
+                "label_it": "Contenitore righe",
             },
             {
                 "qname": "itcc:OutsideTable",
                 "type": "xbrli:monetaryItemType",
                 "period_type": "instant",
                 "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
                 "label_it": "Fuori prospetto",
+            },
+            {
+                "qname": "itcc:TupleAmount",
+                "type": "xbrli:monetaryItemType",
+                "period_type": "instant",
+                "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
+                "label_it": "Importo riga",
+            },
+            {
+                "qname": "itcc:TupleLabel",
+                "type": "xbrli:stringItemType",
+                "period_type": "instant",
+                "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
+                "label_it": "Etichetta riga",
             },
         ],
         "relationships": {
@@ -78,6 +114,27 @@ def _catalogue() -> dict[str, object]:
                     "role": ROLE,
                     "from": "itcc:ProvisionTable",
                     "to": "itcc:ProvisionClass",
+                    "order": "2",
+                },
+                {
+                    "form": "ORDINARY",
+                    "role": ROLE,
+                    "from": "itcc:ProvisionTable",
+                    "to": "itcc:ProvisionTuple",
+                    "order": "3",
+                },
+                {
+                    "form": "ORDINARY",
+                    "role": ROLE,
+                    "from": "itcc:ProvisionTuple",
+                    "to": "itcc:TupleAmount",
+                    "order": "1",
+                },
+                {
+                    "form": "ORDINARY",
+                    "role": ROLE,
+                    "from": "itcc:ProvisionTuple",
+                    "to": "itcc:TupleLabel",
                     "order": "2",
                 },
             ]
@@ -195,6 +252,117 @@ def test_compile_schedule_taxonomy_adapter_derives_reviewed_table_facts() -> Non
         ("itcc:ProvisionOpening", "MONETARY", "10"),
         ("itcc:ProvisionClass", "TEXT", "Fondo contenzioso"),
     }
+
+
+def test_schedule_inventory_excludes_non_item_tuple_containers() -> None:
+    result = adapter.build_schedule_table_inventory(
+        _catalogue(), _rule_pack(), "ORDINARY"
+    )
+
+    allowed = {
+        item["xbrl_concept"]
+        for item in result["schedules"]["PROVISIONS"]["allowed_concepts"]
+    }
+    assert "itcc:ProvisionTuple" not in allowed
+
+
+def test_schedule_adapter_rejects_arbitrary_monetary_scaling() -> None:
+    decisions = _decisions()
+    decisions[0]["outputs"][0]["inputs"][0]["multiplier"] = "0.5"
+
+    with pytest.raises(ValueError, match="explicit sign conventions"):
+        adapter.compile_schedule_taxonomy_adapter(
+            _case(), _catalogue(), _rule_pack(), decisions, "reviewer_1"
+        )
+
+
+def test_schedule_adapter_rejects_duplicate_inputs_in_one_output() -> None:
+    decisions = _decisions()
+    repeated = dict(decisions[0]["outputs"][0]["inputs"][0])
+    decisions[0]["outputs"][0]["inputs"].append(repeated)
+
+    with pytest.raises(ValueError, match="repeats source fact"):
+        adapter.compile_schedule_taxonomy_adapter(
+            _case(), _catalogue(), _rule_pack(), decisions, "reviewer_1"
+        )
+
+
+def test_schedule_adapter_preserves_repeated_tuple_rows() -> None:
+    case = _case()
+    second_row = deepcopy(case["schedules"][0]["rows"][0])
+    second_row.update(
+        {
+            "row_id": "legal",
+            "source_refs": ["doc_1_row_2"],
+            "provision_class": "Fondo legale",
+            "opening_amount": "20",
+        }
+    )
+    case["schedules"][0]["rows"].append(second_row)
+    mapped_fields = {"opening_amount", "provision_class"}
+    all_fields = {
+        "opening_amount",
+        "additions",
+        "uses",
+        "releases",
+        "other_increases",
+        "other_decreases",
+        "closing_amount",
+        "provision_class",
+    }
+    outputs = []
+    omissions = []
+    for row_id in ("risks", "legal"):
+        prefix = f"schedule:provisions_1:{row_id}:"
+        outputs.extend(
+            [
+                {
+                    "xbrl_concept": "itcc:TupleAmount",
+                    "period": "current_instant",
+                    "inputs": [
+                        {
+                            "schedule_fact_id": f"{prefix}opening_amount",
+                            "multiplier": "1",
+                        }
+                    ],
+                },
+                {
+                    "xbrl_concept": "itcc:TupleLabel",
+                    "period": "current_instant",
+                    "inputs": [{"schedule_fact_id": f"{prefix}provision_class"}],
+                },
+            ]
+        )
+        omissions.extend(
+            {
+                "schedule_fact_id": f"{prefix}{field}",
+                "status": "REPRESENTED_ELSEWHERE_CONFIRMED",
+                "reason": "Not represented by this controlled miniature table.",
+            }
+            for field in sorted(all_fields - mapped_fields)
+        )
+    decisions = [
+        {
+            "schedule_type": "PROVISIONS",
+            "strategy": "TABLE_FACTS",
+            "outputs": outputs,
+            "omissions": omissions,
+        }
+    ]
+
+    result = adapter.compile_schedule_taxonomy_adapter(
+        case, _catalogue(), _rule_pack(), decisions, "reviewer_1"
+    )
+
+    assert len(result["generated_facts"]) == 4
+    assert {fact["tuple_instance_id"] for fact in result["generated_facts"]} == {
+        "provisions_1:risks",
+        "provisions_1:legal",
+    }
+    assert all(
+        fact["tuple_path"] == ["itcc:ProvisionTuple"]
+        for fact in result["generated_facts"]
+    )
 
 
 def test_compile_schedule_taxonomy_adapter_reconciles_existing_primary_fact() -> None:

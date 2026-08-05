@@ -21,6 +21,7 @@ from schedule_engine import required_schedule_types
 __all__ = [
     "NOTE_SECTIONS",
     "build_disclosure_coverage",
+    "disclosure_answer_complete",
     "disclosure_rule_pack_hash",
     "manual_disclosure_flags",
     "note_outline",
@@ -55,6 +56,35 @@ QUESTION_STATES = {
     "NOT_APPLICABLE_CONFIRMED",
 }
 ACCEPTED_ANSWER_STATES = {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
+
+
+def _has_substantive_value(value: Any) -> bool:
+    """Return whether a reviewed answer contains an explicit structured value."""
+
+    if value is None:
+        return False
+    if isinstance(value, str):
+        return bool(value.strip())
+    if isinstance(value, Mapping):
+        return bool(value) and any(
+            _has_substantive_value(item) for item in value.values()
+        )
+    if isinstance(value, Sequence) and not isinstance(value, (str, bytes)):
+        return bool(value) and any(_has_substantive_value(item) for item in value)
+    return True
+
+
+def disclosure_answer_complete(answer: Mapping[str, Any]) -> bool:
+    """Verify that a terminal answer records a real professional confirmation."""
+
+    status = str(answer.get("status", "")).upper()
+    if status not in ACCEPTED_ANSWER_STATES:
+        return False
+    if not str(answer.get("confirmed_by", "")).strip():
+        return False
+    if status == "NOT_APPLICABLE_CONFIRMED":
+        return bool(str(answer.get("reason", "")).strip())
+    return _has_substantive_value(answer.get("value"))
 
 
 def disclosure_rule_pack_hash(rule_pack: Mapping[str, Any]) -> str:
@@ -160,7 +190,7 @@ def _requirement_complete(
     key = str(requirement["key"])
     if kind == "ANSWER":
         return any(
-            answer.get("key") == key and answer.get("status") in ACCEPTED_ANSWER_STATES
+            answer.get("key") == key and disclosure_answer_complete(answer)
             for answer in case.get("disclosure_answers", [])
         )
     if kind == "SCHEDULE":
@@ -261,6 +291,12 @@ def build_disclosure_coverage(
             answer = answers.get(question["answer_key"])
             if not triggered:
                 state = "NOT_TRIGGERED"
+            elif answer and answer.get("status") in ACCEPTED_ANSWER_STATES:
+                state = (
+                    str(answer["status"])
+                    if disclosure_answer_complete(answer)
+                    else "OPEN"
+                )
             elif answer and answer.get("status") in QUESTION_STATES:
                 state = answer["status"]
             elif complete:

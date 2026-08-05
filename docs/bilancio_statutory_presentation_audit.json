@@ -51,7 +51,7 @@
         "instance_file": "controlled-complete-abbreviated.xbrl",
         "instance_sha256": "dd724bdf7181b92d0df6536d0287b139a46165161e9407ca0bad7abec886525b",
         "validation_report_file": "controlled-complete-abbreviated.json",
-        "validation_report_sha256": "39667383834864f1657ea8430e9dab90995959be28794cedf1918b911bea75a2",
+        "validation_report_sha256": "52ad71a10d310ac033d3746d426f91ad156fb4683dc2c5d281fff1e226e43362",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -102,7 +102,7 @@
         "instance_file": "controlled-complete-micro.xbrl",
         "instance_sha256": "3af91fbc4383f037625494de19c091147cdd44804a292805ea14a46a570c9aaa",
         "validation_report_file": "controlled-complete-micro.json",
-        "validation_report_sha256": "b7084a5fc6fe069e93257610f0b49facdc1b406dfef0108b3b7aa3d39ed93e59",
+        "validation_report_sha256": "02a756dad8495ff760d9685bc0fe3e5507e474c0b064b432947872a692a5e2b7",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -165,14 +165,14 @@
         "instance_file": "controlled-complete-ordinary.xbrl",
         "instance_sha256": "88f14f0efcc834a8fc07f2d9d1b87618b941046f0df20a25c0c0560507cdd92b",
         "validation_report_file": "controlled-complete-ordinary.json",
-        "validation_report_sha256": "f2c7bc2d3b41eb44e6bdbe9475227b2ef1ef54822897db0169131ef01af07d35",
+        "validation_report_sha256": "9eb14516a437767ed038ab40d18dbf0573b6a9d83c805bb47b94089a0af4f5b7",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
       }
     }
   ],
-  "report_sha256": "eff96416d7c3131bcd2a7c3671511fc60d028d3bbacea572a041ce7e23413a63",
-  "catalogue_file_sha256": "591365c192acc52b819726366640ff59b198cd628bc969844c4581b1a530635a",
+  "report_sha256": "150253ffec4d602f1d2dfca24a36cebb935ccf09cfcfbc9f2062f37036318075",
+  "catalogue_file_sha256": "c30f5436979e4a9c39dccac6a2f9e556f5d54eba2cb6a4437eba060559698854",
   "rule_pack_file_sha256": "d3808f0be5190d652031faa7ef489fe4552521f41dec2e295ff58fc5583cfcbb"
 }

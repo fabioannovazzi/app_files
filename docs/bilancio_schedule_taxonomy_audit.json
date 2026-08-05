@@ -6,7 +6,7 @@
   "rule_pack_id": "IT_SCHEDULE_TAXONOMY_2026.1",
   "forms": {
     "ORDINARY": {
-      "inventory_sha256": "2f9608b2949d253b3012162a2b4e09a9e731e639c9764aed2cc8a1665c1cb196",
+      "inventory_sha256": "ee0178b2e8fb35cbab1d3ecca5782de3c04f7abc02f9d964c78dbac06b8db376",
       "schedules": {
         "EQUITY": {
           "strategy": "TABLE_FACTS",
@@ -37,7 +37,7 @@
             "itcc-ci:AnalisiVariazioniScadenzaDebitiProspetto",
             "itcc-ci:DettagliSuiDebitiSuddivisiAreaGeograficaProspetto"
           ],
-          "unique_allowed_fact_concepts": 178
+          "unique_allowed_fact_concepts": 177
         },
         "PROVISIONS": {
           "strategy": "TABLE_FACTS",
@@ -52,7 +52,7 @@
             "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
             "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
           ],
-          "unique_allowed_fact_concepts": 53
+          "unique_allowed_fact_concepts": 52
         },
         "TAXES": {
           "strategy": "TABLE_FACTS",
@@ -71,7 +71,7 @@
       }
     },
     "ABBREVIATED": {
-      "inventory_sha256": "bea37ce0c693d9a4a4d42af6616b5431bcf971593f546d54ef881c328196dde5",
+      "inventory_sha256": "eb59426cfc2bdc11e4fb2529fa90a070cb861dc0dea84e3ea9baedfefb61c598",
       "schedules": {
         "EQUITY": {
           "strategy": "TABLE_FACTS",
@@ -115,7 +115,7 @@
             "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
             "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
           ],
-          "unique_allowed_fact_concepts": 53
+          "unique_allowed_fact_concepts": 52
         },
         "TAXES": {
           "strategy": "TABLE_FACTS",
@@ -134,7 +134,7 @@
       }
     },
     "MICRO": {
-      "inventory_sha256": "75a2686d4779d25c818f5727b38bf47c965c42296889b8bcc7654680fe29c1d2",
+      "inventory_sha256": "b86889e511bad1f958044f9cb0b3d72bf252a6db57c77f8b26a71b922e53d4a7",
       "schedules": {
         "EQUITY": {
           "strategy": "TEXT_ONLY",
@@ -181,6 +181,6 @@
   },
   "issues": [],
   "status": "PASS",
-  "catalogue_sha256": "591365c192acc52b819726366640ff59b198cd628bc969844c4581b1a530635a",
+  "catalogue_sha256": "c30f5436979e4a9c39dccac6a2f9e556f5d54eba2cb6a4437eba060559698854",
   "rule_pack_sha256": "3f90676d582862bcaa9a48a1f35b632c6b719198374bffb7e8220488bae590a5"
 }

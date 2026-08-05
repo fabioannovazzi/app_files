@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -487,6 +488,16 @@ def test_regulatory_migration_invalidates_outputs_but_retains_evidence(
         "statements",
     }
     assert result["audit_events"][-1]["action"] == ("regulatory_versions_migrated")
+
+
+def test_create_case_requires_pinned_taxonomy_package_checksum(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload.pop("taxonomy_checksum")
+
+    with pytest.raises(ValueError, match="taxonomy package checksum"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
 
 
 def test_regulatory_migration_full_validation_result_is_recorded(
@@ -1206,7 +1217,7 @@ def _write_catalogue(path: Path, checksum: str) -> None:
     path.write_text(
         json.dumps(
             {
-                "schema_version": 1,
+                "schema_version": 2,
                 "taxonomy_id": "PCI_2018-11-04",
                 "taxonomy_package_sha256": checksum,
                 "entry_points": {
@@ -1224,24 +1235,32 @@ def _write_catalogue(path: Path, checksum: str) -> None:
                         "type": "xbrli:monetaryItemType",
                         "period_type": "instant",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                     },
                     {
                         "qname": "itcc:LiabilitiesEquity",
                         "type": "xbrli:monetaryItemType",
                         "period_type": "instant",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                     },
                     {
                         "qname": "itcc:NotesText",
                         "type": "nonnum:textBlockItemType",
                         "period_type": "duration",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                     },
                     {
                         "qname": "itcc-ci:CommentoInformazioniCalceAlloStatoPatrimonialeMicro",
                         "type": "nonnum:textBlockItemType",
                         "period_type": "instant",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                         "forms": ["MICRO"],
                     },
                     *[
@@ -1250,6 +1269,8 @@ def _write_catalogue(path: Path, checksum: str) -> None:
                             "type": "nonnum:textBlockItemType",
                             "period_type": "duration",
                             "abstract": False,
+                            "is_item": True,
+                            "is_tuple": False,
                         }
                         for position in range(2, 15)
                     ],
@@ -1258,6 +1279,8 @@ def _write_catalogue(path: Path, checksum: str) -> None:
                         "type": "nonnum:textBlockItemType",
                         "period_type": "duration",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                         "nillable": False,
                     },
                     {
@@ -1265,17 +1288,26 @@ def _write_catalogue(path: Path, checksum: str) -> None:
                         "type": "xbrli:monetaryItemType",
                         "period_type": "instant",
                         "abstract": False,
+                        "is_item": True,
+                        "is_tuple": False,
                         "nillable": True,
                     },
                     {
                         "qname": "itcc:RegionAxis",
                         "period_type": "duration",
                         "abstract": True,
+                        "is_item": True,
+                        "is_tuple": False,
+                        "is_dimension_item": True,
                     },
                     {
                         "qname": "itcc:ItalyMember",
                         "period_type": "duration",
                         "abstract": True,
+                        "is_item": True,
+                        "is_tuple": False,
+                        "is_dimension_item": False,
+                        "is_hypercube_item": False,
                     },
                 ],
             }
@@ -1346,6 +1378,87 @@ def test_render_xbrl_unverified_catalogue_is_rejected(tmp_path: Path) -> None:
         xbrl_case.render_xbrl(case, catalogue)
 
 
+def test_render_xbrl_rejects_non_item_tuple_concept(tmp_path: Path) -> None:
+    case = _approved_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    catalogue_payload = json.loads(catalogue.read_text(encoding="utf-8"))
+    catalogue_payload["concepts"].append(
+        {
+            "qname": "itcc:MovementTuple",
+            "type": "xbrli:stringItemType",
+            "period_type": None,
+            "abstract": False,
+            "is_item": False,
+            "is_tuple": True,
+        }
+    )
+    catalogue.write_text(json.dumps(catalogue_payload), encoding="utf-8")
+    snapshot = case["approval"]["snapshot"]
+    snapshot["canonical_facts"][0]["xbrl_concept"] = "itcc:MovementTuple"
+    case["approval"]["snapshot_hash"] = hashlib.sha256(
+        xbrl_case._canonical_json(snapshot)
+    ).hexdigest()
+
+    with pytest.raises(ValueError, match="non-item taxonomy concept"):
+        xbrl_case.render_xbrl(case, catalogue)
+
+
+def test_render_xbrl_emits_repeated_tuple_occurrences(tmp_path: Path) -> None:
+    case = _approved_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    catalogue_payload = json.loads(catalogue.read_text(encoding="utf-8"))
+    catalogue_payload["concepts"].extend(
+        [
+            {
+                "qname": "itcc:MovementTuple",
+                "type": "xbrli:stringItemType",
+                "period_type": None,
+                "abstract": False,
+                "is_item": False,
+                "is_tuple": True,
+            },
+            {
+                "qname": "itcc:MovementAmount",
+                "type": "xbrli:monetaryItemType",
+                "period_type": "instant",
+                "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
+            },
+        ]
+    )
+    catalogue.write_text(json.dumps(catalogue_payload), encoding="utf-8")
+    snapshot = case["approval"]["snapshot"]
+    snapshot["schedule_taxonomy_facts"] = [
+        {
+            "fact_id": f"tuple_amount_{position}",
+            "xbrl_concept": "itcc:MovementAmount",
+            "period": "current_instant",
+            "fact_type": "MONETARY",
+            "value": value,
+            "status": "DERIVED",
+            "dimensions": {},
+            "tuple_path": ["itcc:MovementTuple"],
+            "tuple_instance_id": f"movement:{position}",
+        }
+        for position, value in ((1, "10"), (2, "20"))
+    ]
+    case["approval"]["snapshot_hash"] = hashlib.sha256(
+        xbrl_case._canonical_json(snapshot)
+    ).hexdigest()
+
+    root = etree.fromstring(xbrl_case.render_xbrl(case, catalogue))
+
+    tuples = root.findall("{https://example.invalid/itcc}MovementTuple")
+    assert len(tuples) == 2
+    assert [
+        tuple_element.findtext("{https://example.invalid/itcc}MovementAmount")
+        for tuple_element in tuples
+    ] == ["10.00", "20.00"]
+
+
 def test_stale_revision_is_rejected_before_mutation(tmp_path: Path) -> None:
     _, case = _created_case(tmp_path)
 
@@ -1372,6 +1485,16 @@ def _write_prior_xbrl(path: Path, entity_identifier: str = "IT00000000000") -> N
 """,
         encoding="utf-8",
     )
+
+
+def _eur_unit_record() -> dict[str, object]:
+    return {
+        "kind": "MEASURE",
+        "measure": {
+            "namespace": "http://www.xbrl.org/2003/iso4217",
+            "local_name": "EUR",
+        },
+    }
 
 
 def test_ingest_prior_xbrl_preserves_source_and_trial_balance_manifests(
@@ -1408,6 +1531,51 @@ def test_ingest_prior_xbrl_wrong_entity_is_rejected(tmp_path: Path) -> None:
         xbrl_case.ingest_prior_xbrl(case, prior, "preparer_1", case["revision_id"])
 
 
+def test_prior_xbrl_non_eur_monetary_fact_cannot_reconcile_comparative(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    prior = tmp_path / "prior-usd.xbrl"
+    _write_prior_xbrl(prior)
+    prior.write_text(
+        prior.read_text(encoding="utf-8").replace(
+            "iso4217:EUR</xbrli:measure>",
+            "iso4217:USD</xbrli:measure>",
+        ),
+        encoding="utf-8",
+    )
+    parsed = xbrl_case.parse_prior_xbrl(prior)
+    parsed["matching_context_ids"] = ["prior-instant"]
+    parsed["facts"][0]["qname"] = "itcc:Assets"
+    parsed["facts"][0]["value"] = "90"
+    case["prior_xbrl"] = parsed
+
+    result = xbrl_case.validate_case(case)
+
+    assert "INPUT.PRIOR_XBRL_MONETARY_UNIT_INVALID" in {
+        issue["rule_id"] for issue in result["issues"]
+    }
+
+
+def test_prior_xbrl_locale_formatted_monetary_value_cannot_reconcile(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    prior = tmp_path / "prior-invalid-decimal.xbrl"
+    _write_prior_xbrl(prior)
+    parsed = xbrl_case.parse_prior_xbrl(prior)
+    parsed["matching_context_ids"] = ["prior-instant"]
+    parsed["facts"][0]["qname"] = "itcc:Assets"
+    parsed["facts"][0]["value"] = "90,00"
+    case["prior_xbrl"] = parsed
+
+    result = xbrl_case.validate_case(case)
+
+    assert "INPUT.PRIOR_XBRL_MONETARY_VALUE_INVALID" in {
+        issue["rule_id"] for issue in result["issues"]
+    }
+
+
 def test_validate_case_blocks_comparative_mismatch_with_attached_prior_xbrl(
     tmp_path: Path,
 ) -> None:
@@ -1425,6 +1593,7 @@ def test_validate_case_blocks_comparative_mismatch_with_attached_prior_xbrl(
                 "qname": "itcc:Assets",
                 "context_ref": "prior-instant",
                 "unit_ref": "EUR",
+                "unit": _eur_unit_record(),
                 "nil": False,
                 "value": "999",
                 "source_anchor": {"source_ref": "prior_fact_assets"},
@@ -1433,6 +1602,7 @@ def test_validate_case_blocks_comparative_mismatch_with_attached_prior_xbrl(
                 "qname": "itcc:LiabilitiesEquity",
                 "context_ref": "prior-instant",
                 "unit_ref": "EUR",
+                "unit": _eur_unit_record(),
                 "nil": False,
                 "value": "90",
                 "source_anchor": {"source_ref": "prior_fact_liabilities"},
@@ -1470,6 +1640,7 @@ def test_evidenced_restatement_resolves_prior_xbrl_comparative_blocker(
                 "qname": "itcc:Assets",
                 "context_ref": "prior-instant",
                 "unit_ref": "EUR",
+                "unit": _eur_unit_record(),
                 "nil": False,
                 "value": "999",
                 "source_anchor": {"source_ref": "prior_fact_assets"},
@@ -1478,6 +1649,7 @@ def test_evidenced_restatement_resolves_prior_xbrl_comparative_blocker(
                 "qname": "itcc:LiabilitiesEquity",
                 "context_ref": "prior-instant",
                 "unit_ref": "EUR",
+                "unit": _eur_unit_record(),
                 "nil": False,
                 "value": "90",
                 "source_anchor": {"source_ref": "prior_fact_liabilities"},
@@ -1564,7 +1736,7 @@ def test_prior_xbrl_preserves_explicit_and_typed_table_contexts(
     result = xbrl_case.parse_prior_xbrl(prior)
 
     context = result["contexts"][0]
-    assert result["schema_version"] == 2
+    assert result["schema_version"] == 4
     assert context["has_dimensions"] is True
     assert [item["kind"] for item in context["dimensions"]] == [
         "EXPLICIT",
@@ -1577,6 +1749,45 @@ def test_prior_xbrl_preserves_explicit_and_typed_table_contexts(
     assert result["context_fact_groups"][0]["facts"] == [
         {"fact_id": "prior_fact_000001", "qname": "itcc:Amount"}
     ]
+
+
+def test_prior_xbrl_extracts_facts_nested_in_tuple_containers(
+    tmp_path: Path,
+) -> None:
+    prior = tmp_path / "tuple-prior.xbrl"
+    prior.write_text(
+        """<?xml version="1.0" encoding="UTF-8"?>
+<xbrli:xbrl xmlns:xbrli="http://www.xbrl.org/2003/instance"
+ xmlns:link="http://www.xbrl.org/2003/linkbase"
+ xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:itcc="https://example.invalid/itcc">
+ <link:schemaRef xlink:type="simple" xlink:href="taxonomy.xsd"/>
+ <xbrli:context id="table-row-1">
+  <xbrli:entity>
+   <xbrli:identifier scheme="https://example.invalid/entity">IT00000000000</xbrli:identifier>
+  </xbrli:entity>
+  <xbrli:period><xbrli:instant>2024-12-31</xbrli:instant></xbrli:period>
+ </xbrli:context>
+ <itcc:MovementsTable>
+  <itcc:MovementRow>
+   <itcc:OpeningAmount contextRef="table-row-1">25</itcc:OpeningAmount>
+  </itcc:MovementRow>
+ </itcc:MovementsTable>
+</xbrli:xbrl>
+""",
+        encoding="utf-8",
+    )
+
+    result = xbrl_case.parse_prior_xbrl(prior)
+
+    assert [fact["qname"] for fact in result["facts"]] == ["itcc:OpeningAmount"]
+    assert [item["qname"] for item in result["facts"][0]["tuple_ancestors"]] == [
+        "itcc:MovementsTable",
+        "itcc:MovementRow",
+    ]
+    assert result["facts"][0]["source_anchor"]["xpath"].endswith(
+        "/itcc:MovementsTable/itcc:MovementRow/itcc:OpeningAmount"
+    )
 
 
 def test_mapping_memory_reuses_only_same_tenant_and_client(tmp_path: Path) -> None:
@@ -2841,6 +3052,89 @@ def test_validation_requires_current_preview_and_disclosure_pack(
     rule_ids = {item["rule_id"] for item in result["issues"]}
     assert "DISCLOSURE.RULE_PACK_REQUIRED" in rule_ids
     assert "REVIEW.PREVIEW_REQUIRED" in rule_ids
+
+
+def test_validation_blocks_unbalanced_comparative_balance_sheet(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    case["statements"]["section_totals"]["ASSETS"]["prior"] = "91"
+
+    result = xbrl_case.validate_case(case)
+
+    assert "STATEMENT.COMPARATIVE_BALANCE_SHEET" in {
+        issue["rule_id"] for issue in result["issues"]
+    }
+
+
+def test_validation_blocks_comparative_result_equity_mismatch(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    case["statements"]["facts"] = [
+        *case["statements"]["facts"],
+        *[
+            {
+                "statement_section": "INCOME_RESULT",
+                "current_value": "0",
+                "prior_value": "10",
+            },
+            {
+                "statement_section": "EQUITY_RESULT",
+                "current_value": "0",
+                "prior_value": "0",
+            },
+        ],
+    ]
+
+    result = xbrl_case.validate_case(case)
+
+    assert "STATEMENT.COMPARATIVE_RESULT_TIE_OUT" in {
+        issue["rule_id"] for issue in result["issues"]
+    }
+
+
+@pytest.mark.parametrize(
+    ("answer", "message"),
+    [
+        (
+            {"key": "post_closing_events", "status": "ACCEPTED", "value": None},
+            "reviewed structured value",
+        ),
+        (
+            {
+                "key": "post_closing_events",
+                "status": "NOT_APPLICABLE_CONFIRMED",
+                "reason": "",
+            },
+            "specific reason",
+        ),
+        (
+            {
+                "key": "post_closing_events",
+                "status": "ACCEPTED",
+                "value": False,
+                "confirmed_by": "another_user",
+            },
+            "authenticated actor",
+        ),
+        (
+            {"key": "invented_answer", "status": "ACCEPTED", "value": True},
+            "not active or annual",
+        ),
+    ],
+)
+def test_disclosure_completion_rejects_empty_professional_confirmations(
+    tmp_path: Path,
+    answer: dict[str, object],
+    message: str,
+) -> None:
+    case = _prepared_case(tmp_path)
+
+    with pytest.raises(ValueError, match=message):
+        xbrl_case.record_disclosure_answers(
+            case, [answer], "reviewer_1", case["revision_id"]
+        )
 
 
 def test_substantive_taxonomy_mismatch_requires_reviewed_treatment_and_report(

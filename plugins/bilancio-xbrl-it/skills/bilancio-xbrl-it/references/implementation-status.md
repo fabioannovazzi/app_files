@@ -25,14 +25,16 @@
 - Tenant-isolated approved mapping memory with exact client-over-tenant
   precedence, explicit tenant-wide reuse approval, and no cross-tenant reads.
 - Secure prior-XBRL intake with exact entity/period checks, schema reference,
-  fact source anchors, no remote XML resolution, and a versioned context model
-  that preserves explicit dimensions, canonical typed dimensions,
+  fact source anchors, no remote XML resolution, validated context periods and
+  unit definitions, strict XML-decimal monetary values, and an EUR-only
+  comparative-reconciliation gate. Its versioned context model preserves
+  explicit dimensions, canonical typed dimensions, tuple ancestry,
   segment/scenario placement, semantic context signatures, and context-to-fact
   groups for later table reconstruction.
 - Exact statement-line aggregation, balanced reviewer-approved presentation
   adjustments, full-precision computation, explicit presentation-rounding
-  formulas, selected accounting tie-outs, annual negative confirmations,
-  layered blockers, approval, workpaper, and artifact manifest.
+  formulas, current and comparative balance/result tie-outs, annual negative
+  confirmations, layered blockers, approval, workpaper, and artifact manifest.
 - Versioned ordinary, abbreviated, and micro primary-statement presentation
   policies bound to the official catalogue. The engine derives every required
   monetary leaf and total from the selected official presentation/calculation
@@ -53,6 +55,11 @@
   are reconciled instead of duplicated. The ordinary and abbreviated forms
   expose controlled table inventories; micro cases follow a reviewed
   text-only route because the entry point has no note tables.
+- Tuple-based note tables preserve role-specific presentation paths and bind
+  each reportable descendant to its exact root and tuple ancestry. Repeated
+  schedule rows create distinct tuple occurrences while retaining
+  occurrence-scoped duplicate controls; official single- and two-row PCI tuple
+  instances pass pinned offline Arelle.
 - Payable schedules separately capture and validate the amount secured by
   guarantees, including a source anchor, and reject negative amounts or an
   amount above the closing payable balance.
@@ -65,6 +72,8 @@
   contracts.
 - Effective-dated disclosure coverage, a blocker-first dynamic questionnaire,
   all annual negative confirmations, fourteen structured note sections,
+  terminal-answer gates requiring substantive values or specific
+  not-applicable reasons under the authenticated reviewer identity,
   sentence-level narrative provenance, prior-text stale suggestions and
   word-level redlines.
 - Pre-validation lifecycle state now follows the reviewed coverage itself:
@@ -90,10 +99,15 @@
   from unresolved mappings, active questions, stale prior text, incomplete note
   sections, validation issues, or general workflow guidance. The selector does
   not apply its own suggestions.
-- Arelle-backed taxonomy catalogue builder, checksum-bound XML renderer,
+- Arelle-backed schema-2 taxonomy catalogue builder that distinguishes items,
+  tuples, dimensions and non-item schema concepts and preserves labels,
+  references and extended relationship metadata; checksum-bound XML renderer,
   accepted narrative text facts, reviewed dimensional facts, explicit
   taxonomy-permitted nil facts, and a replaceable local Arelle validation
   interface.
+- The local validator fails on Arelle calculation inconsistencies and all
+  severe processor log levels even when the processor exits with code zero, so
+  approval cannot treat a calculation-warning channel as a passing report.
 - Reviewer-owned issue acknowledgements and professional HIGH overrides bound
   to exact issue fingerprints. Structural blockers remain non-overridable;
   approval requires warning review and explicit override confirmation.
@@ -128,7 +142,7 @@
   package; all three passed the pinned Arelle validator. See
   `taxonomy-spike.md` for the reproducible evidence and remaining gates.
 - A checked official schedule-taxonomy audit binds the adapter policy to the
-  locked package and catalogue. It found 625 permitted ordinary and 454
+  locked package and catalogue. It found 623 permitted ordinary and 453
   permitted abbreviated monetary table concepts across the eight non-cash
   schedule families, while all eight micro families are explicitly
   `TEXT_ONLY`. See `docs/bilancio_schedule_taxonomy_audit.json` at the
