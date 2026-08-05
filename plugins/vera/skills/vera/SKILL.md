@@ -131,6 +131,13 @@ for each intentionally distinct run.
 
 ## Module routing
 
+The names below are bare internal routing names. Codex supplies the plugin
+namespace. Whenever a skill identity is shown to a user, logged as workflow
+provenance, or referenced outside this plugin's implementation, use the fully
+qualified form `vera:<skill-name>`. Never expose a Vera specialist as a bare
+public name and never put the `vera:` prefix in `SKILL.md` frontmatter, which
+would duplicate the host namespace.
+
 - `studio-archive`: durable local client IDs and engagements plus three
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, or an optional local document archive.
@@ -203,6 +210,18 @@ for each intentionally distinct run.
   blocked without separate written reuse authorization. The module never
   receives credentials, accesses a filing session, signs, pays, asks support,
   or submits a practice.
+
+## Workflow provenance
+
+Before delivering a supported substantive result, disclose only the fully
+qualified identities of the workflows actually followed:
+
+```text
+Vera workflow: vera:<specialist-skill>[ -> vera:<assurance-skill> ...]
+```
+
+The user invokes `@vera`; Vera selects the specialist workflow internally. Do
+not ask the user to translate their request into a skill name.
 
 ## Question To Validated Answer Journey
 

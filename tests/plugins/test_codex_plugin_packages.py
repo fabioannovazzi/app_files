@@ -394,6 +394,27 @@ def test_vera_source_manifest_uses_approved_subtitle() -> None:
     )
 
 
+def test_vera_uses_one_public_skill_namespace() -> None:
+    builder = load_builder()
+    plugin_root = ROOT / "plugins" / "vera"
+    manifest = json.loads(
+        (plugin_root / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    declared_names = {
+        builder.skill_frontmatter_name(skill_path)
+        for skill_path in (plugin_root / "skills").glob("*/SKILL.md")
+    }
+    public_identities = {f"{manifest['name']}:{name}" for name in declared_names}
+    router = (plugin_root / "skills" / "vera" / "SKILL.md").read_text(encoding="utf-8")
+
+    assert None not in declared_names
+    assert all(":" not in name for name in declared_names if name is not None)
+    assert len(public_identities) == len(declared_names)
+    assert all(identity.startswith("vera:") for identity in public_identities)
+    assert "Vera workflow: vera:<specialist-skill>" in router
+    assert "Vera workflow: <specialist-skill>" not in router
+
+
 def test_vera_prefers_word_for_local_docx_visual_review() -> None:
     skill_path = ROOT / "plugins" / "vera" / "skills" / "vera" / "SKILL.md"
     skill_text = skill_path.read_text(encoding="utf-8")
@@ -444,7 +465,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.82"
+    assert manifest["version"] == "0.1.83"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -1896,6 +1917,28 @@ def test_builder_validation_matches_dependency_standard() -> None:
     assert builder.validate_bundle_config(builder.load_bundles()) == []
     for plugin_root in builder.discover_plugin_dirs():
         assert builder.validate_plugin_source(plugin_root) == []
+
+
+def test_builder_rejects_redundant_plugin_namespace_in_skill_name(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    plugin_root = tmp_path / "vera"
+    skill_path = plugin_root / "skills" / "journal-sampling" / "SKILL.md"
+    skill_path.parent.mkdir(parents=True)
+    skill_path.write_text(
+        "---\nname: vera:journal-sampling\ndescription: Invalid fixture.\n---\n",
+        encoding="utf-8",
+    )
+
+    errors = builder.validate_plugin_skill_identities(plugin_root)
+
+    assert errors == [
+        "vera: skills/journal-sampling/SKILL.md name must be bare; Codex "
+        "supplies the public vera: namespace",
+        "vera: skills/journal-sampling/SKILL.md name must match its skill "
+        "directory (journal-sampling)",
+    ]
 
 
 @pytest.mark.parametrize(

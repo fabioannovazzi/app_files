@@ -436,6 +436,54 @@ def validate_plugin_contract_coverage(plugin_dir: Path) -> list[str]:
     ]
 
 
+def skill_frontmatter_name(skill_path: Path) -> str | None:
+    """Return the declared skill name from simple YAML frontmatter."""
+
+    text = skill_path.read_text(encoding="utf-8")
+    parts = text.split("---", maxsplit=2)
+    if len(parts) != 3 or parts[0].strip():
+        return None
+    for line in parts[1].splitlines():
+        key, separator, value = line.partition(":")
+        if separator and key.strip() == "name":
+            return value.strip().strip("\"'") or None
+    return None
+
+
+def validate_plugin_skill_identities(plugin_dir: Path) -> list[str]:
+    """Validate bare skill names and their host-qualified public identities."""
+
+    errors: list[str] = []
+    plugin_name = plugin_dir.name
+    declared_names: set[str] = set()
+    for skill_path in sorted((plugin_dir / "skills").glob("*/SKILL.md")):
+        expected_name = skill_path.parent.name
+        declared_name = skill_frontmatter_name(skill_path)
+        relative_path = skill_path.relative_to(plugin_dir)
+        if declared_name is None:
+            errors.append(
+                f"{plugin_name}: {relative_path} must declare frontmatter name"
+            )
+            continue
+        if ":" in declared_name:
+            errors.append(
+                f"{plugin_name}: {relative_path} name must be bare; Codex supplies "
+                f"the public {plugin_name}: namespace"
+            )
+        if declared_name != expected_name:
+            errors.append(
+                f"{plugin_name}: {relative_path} name must match its skill directory "
+                f"({expected_name})"
+            )
+        if declared_name in declared_names:
+            errors.append(
+                f"{plugin_name}: duplicate public skill identity "
+                f"{plugin_name}:{declared_name}"
+            )
+        declared_names.add(declared_name)
+    return errors
+
+
 def validate_plugin_source(plugin_dir: Path) -> list[str]:
     errors: list[str] = []
     plugin_name = plugin_dir.name
@@ -537,6 +585,7 @@ def validate_plugin_source(plugin_dir: Path) -> list[str]:
     if not skill_files:
         errors.append(f"{plugin_name}: missing skills/*/SKILL.md")
     else:
+        errors.extend(validate_plugin_skill_identities(plugin_dir))
         combined_skill_text = "\n".join(
             path.read_text(encoding="utf-8") for path in skill_files
         )
