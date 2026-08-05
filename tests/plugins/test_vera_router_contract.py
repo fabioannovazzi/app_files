@@ -38,7 +38,7 @@ def test_vera_router_defines_supported_gap_and_unrelated_outcomes() -> None:
         "Professional capability gap",
         "Unrelated work",
         "Do not fall back to general-assistant behavior inside Vera",
-        "Vera workflow: <specialist skill>",
+        "Vera workflow: vera:<specialist-skill>",
     )
 
     assert all(contract in router for contract in required_contracts)

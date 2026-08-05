@@ -21,6 +21,19 @@ separate implementations and must not be edited by hand. A release is valid
 only when both packages are built from the same source commit and carry the same
 version.
 
+## Skill identities
+
+Vera owns one public skill namespace. Codex exposes every registered specialist
+as `vera:<skill-name>`, for example `vera:journal-sampling`. Skill frontmatter
+keeps only the bare internal name because the host supplies `vera:`. A bare
+specialist name is not a public Vera identity, and a frontmatter name that
+already contains `vera:` would create a redundant namespace.
+
+Install only one Vera distribution at a time. Before enabling the curated Vera
+plugin, remove or disable an older local `vera@mp-vera` installation. If the
+same Vera skill appears twice, both distributions are active and the legacy
+copy must be removed.
+
 ## Cowork v1 contract
 
 Cowork is Vera's Anthropic marketplace surface. Ordinary Claude Chat is not a

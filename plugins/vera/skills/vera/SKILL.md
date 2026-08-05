@@ -174,15 +174,35 @@ The catalog distinguishes user-facing workflows, cross-cutting assurance
 skills, subordinate intake skills, and developer governance. A cross-cutting
 skill is not a substitute for a missing operational workflow.
 
+The names in that catalog are bare internal routing names. Codex supplies the
+plugin namespace. Whenever a skill identity is shown to a user, logged as
+workflow provenance, or referenced outside this plugin's implementation, use
+the fully qualified form `vera:<skill-name>`. Never expose a Vera specialist as
+a bare public name and never put the `vera:` prefix in `SKILL.md` frontmatter,
+which would duplicate the host namespace.
+
 ### Cross-runtime route boundaries
 
 Keep these host-sensitive boundaries inline so package projections can narrow
 them without changing the capability catalog:
 
-- `studio-archive`: durable local client IDs and engagements plus authorized
-  evidence routes for one client's connected documents, Gmail, or a
-  capability-gated WhatsApp Desktop chat. Never mix clients, use WhatsApp Web,
-  or use an unofficial WhatsApp API;
+- `studio-archive`: durable local client IDs and engagements plus three
+  independent evidence routes for one client's Gmail, one verified local
+  WhatsApp Desktop chat, or an optional local document archive.
+  Gmail uses a callable read-only connector, task-scoped confirmed addresses,
+  bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
+  is capability-gated and excluded from Cowork v1; on another supported local
+  runtime it requires one confirmed complete phone number and a verified
+  one-to-one chat. Each professional may additionally keep a private SQLite
+  search index, configuration, and optional private contact metadata for one
+  shared or synced studio folder. The portable client, engagement, input, run,
+  lifecycle, and artifact ledger stays in each customer folder. Search and
+  indexing do not edit sources. After explicit user choice, the intake route
+  may create one derived client folder and engagement and may copy selected
+  source, journal, or support files into its managed subtree without
+  overwriting the originals. The workflow never stores Gmail credentials or
+  messages, modifies existing source documents or mail, shares a local index,
+  uses WhatsApp Web or an unofficial API, or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `previdenza-inps`: evidence-backed INPS case review from supplied documents,
   official exports, and a conditional read-only snapshot of an already-open
@@ -194,15 +214,18 @@ them without changing the capability catalog:
 
 ## Workflow provenance
 
-Before delivering any supported substantive result, include one compact line:
+Before delivering a supported substantive result, disclose only the fully
+qualified identities of the workflows actually followed:
 
 ```text
-Vera workflow: <specialist skill>[ -> <assurance skill> ...]
+Vera workflow: vera:<specialist-skill>[ -> vera:<assurance-skill> ...]
 ```
 
-List only workflows actually selected and followed. This is provenance for the
-result, not a menu the user must understand. Never label a generic answer as a
-Vera result or claim that a workflow ran when it did not.
+The user invokes `@vera`; Vera selects the specialist workflow internally. Do
+not ask the user to translate their request into a skill name. List only
+workflows actually selected and followed. This is provenance for the result,
+not a menu the user must understand. Never label a generic answer as a Vera
+result or claim that a workflow ran when it did not.
 
 ## Question To Validated Answer Journey
 

@@ -189,6 +189,20 @@ SPECS = (
         "pension",
     ),
     IconSpec(
+        "financial-analysis",
+        "Financial Analysis",
+        "#315F72",
+        "#5CA6C4",
+        "financial_analysis",
+    ),
+    IconSpec(
+        "sales-plan",
+        "Sales Plan",
+        "#4F6F52",
+        "#79B66A",
+        "sales_plan",
+    ),
+    IconSpec(
         "clara",
         "Clara",
         "#002060",
@@ -373,6 +387,20 @@ def _body(spec: IconSpec) -> str:
   <circle cx="43" cy="42" r="10" fill="{accent}"/>
   <path d="M43 36v6l4 3" fill="none" stroke="#171816" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M20 18h10" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>""",
+        "financial_analysis": f"""
+  <path d="M15 14h31l6 7v29H15z" fill="{paper}"/>
+  <path d="M46 14v8h6" fill="#DCE5E8"/>
+  <path d="M22 40V31M30 40V24M38 40V34" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M21 45h20" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="43" cy="39" r="8" fill="none" stroke="{accent}" stroke-width="4"/>
+  <path d="m49 45 7 7" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>""",
+        "sales_plan": f"""
+  <path d="M14 49h37" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
+  <rect x="18" y="34" width="7" height="12" rx="2" fill="{paper}"/>
+  <rect x="29" y="27" width="7" height="19" rx="2" fill="{paper}"/>
+  <rect x="40" y="19" width="7" height="27" rx="2" fill="{accent}"/>
+  <path d="m18 28 10-8 8 4 13-12" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M42 12h7v7" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
         "advisor": f"""
   <circle cx="32" cy="22" r="8" fill="{paper}"/>
   <path d="M18 51c2.2-11 8.7-17 14-17s11.8 6 14 17" fill="none" stroke="{paper}" stroke-width="7" stroke-linecap="round"/>
