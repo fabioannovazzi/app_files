@@ -203,6 +203,13 @@ SPECS = (
         "sales_plan",
     ),
     IconSpec(
+        "bilancio-xbrl-it",
+        "Bilancio intelligente",
+        "#002060",
+        "#00B0F0",
+        "bilancio",
+    ),
+    IconSpec(
         "clara",
         "Clara",
         "#002060",
@@ -401,6 +408,11 @@ def _body(spec: IconSpec) -> str:
   <rect x="40" y="19" width="7" height="27" rx="2" fill="{accent}"/>
   <path d="m18 28 10-8 8 4 13-12" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M42 12h7v7" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "bilancio": f"""
+  <rect x="13" y="13" width="38" height="39" rx="5" fill="{paper}"/>
+  <path d="M32 20v25M20 24h8M36 24h8M20 31h6M38 31h6M20 38h8M36 38h8" fill="none" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <path d="M18 46h28" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="25" cy="46" r="3" fill="{accent}"/><circle cx="39" cy="46" r="3" fill="{accent}"/>""",
         "advisor": f"""
   <circle cx="32" cy="22" r="8" fill="{paper}"/>
   <path d="M18 51c2.2-11 8.7-17 14-17s11.8 6 14 17" fill="none" stroke="{paper}" stroke-width="7" stroke-linecap="round"/>

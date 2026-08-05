@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "id": "IT_CC_PRESENTATION_2026.1",
+  "effective_from": "2018-11-04",
+  "effective_to": "2026-12-31",
+  "jurisdiction": "IT",
+  "taxonomy_id": "PCI_2018-11-04",
+  "owner": "Accounting rule owner approval required before beta",
+  "source_register": [
+    {
+      "kind": "official_taxonomy_package",
+      "title": "Tassonomia Principi Contabili Italiani 2018-11-04",
+      "url": "https://it.xbrl.org/materiali/tassonomie/tassonomia-principi-contabili-italiani-2018/"
+    }
+  ],
+  "statement_sections": {
+    "ASSETS": {
+      "expected_role_kind": "BALANCE_SHEET",
+      "root_concept": "itcc-ci:TotaleAttivo",
+      "canonical_multiplier": "1"
+    },
+    "LIABILITIES_EQUITY": {
+      "expected_role_kind": "BALANCE_SHEET",
+      "root_concept": "itcc-ci:TotalePassivo",
+      "canonical_multiplier": "-1"
+    },
+    "INCOME_RESULT": {
+      "expected_role_kind": "INCOME_STATEMENT",
+      "root_concept": "itcc-ci:UtilePerditaEsercizio",
+      "canonical_multiplier": "1"
+    }
+  },
+  "schedule_trigger_roots": {
+    "FIXED_ASSETS": [
+      "itcc-ci:TotaleImmobilizzazioniImmateriali",
+      "itcc-ci:TotaleImmobilizzazioniMateriali"
+    ],
+    "RECEIVABLES": [
+      "itcc-ci:TotaleCrediti"
+    ],
+    "PAYABLES": [
+      "itcc-ci:TotaleDebiti"
+    ],
+    "EQUITY": [
+      "itcc-ci:TotalePatrimonioNetto"
+    ],
+    "PROVISIONS": [
+      "itcc-ci:TotaleFondiRischiOneri"
+    ],
+    "TFR": [
+      "itcc-ci:TrattamentoFineRapportoLavoroSubordinato"
+    ],
+    "TAXES": [
+      "itcc-ci:CreditiImposteAnticipateTotaleImposteAnticipate",
+      "itcc-ci:FondiRischiOneriImposteAncheDifferite",
+      "itcc-ci:ImposteRedditoEsercizioCorrentiDifferiteAnticipateTotaleImposteRedditoEsercizioCorrentiDifferiteAnticipate"
+    ]
+  },
+  "cash_flow_contract": {
+    "form": "ORDINARY",
+    "net_change_root_concept": "itcc-ci:IncrementoDecrementoDisponibilitaLiquide"
+  },
+  "forms": {
+    "ORDINARY": {
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SpCodCivile",
+          "expected": {
+            "presentation_relationships": 213,
+            "calculation_relationships": 166,
+            "monetary_concepts": 168,
+            "leaf_concepts": 123,
+            "total_concepts": 45
+          }
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEValProduzioneCodCivile",
+          "expected": {
+            "presentation_relationships": 92,
+            "calculation_relationships": 76,
+            "monetary_concepts": 77,
+            "leaf_concepts": 59,
+            "total_concepts": 18
+          }
+        },
+        {
+          "kind": "CASH_FLOW_INDIRECT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/RFIndiretto",
+          "expected": {
+            "presentation_relationships": 73,
+            "calculation_relationships": 50,
+            "monetary_concepts": 59,
+            "leaf_concepts": 48,
+            "total_concepts": 11
+          }
+        }
+      ]
+    },
+    "ABBREVIATED": {
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SPAbbreviata",
+          "expected": {
+            "presentation_relationships": 42,
+            "calculation_relationships": 33,
+            "monetary_concepts": 35,
+            "leaf_concepts": 28,
+            "total_concepts": 7
+          }
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEAbbreviata",
+          "expected": {
+            "presentation_relationships": 96,
+            "calculation_relationships": 80,
+            "monetary_concepts": 81,
+            "leaf_concepts": 59,
+            "total_concepts": 22
+          }
+        }
+      ]
+    },
+    "MICRO": {
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SPMicroImpresa",
+          "expected": {
+            "presentation_relationships": 41,
+            "calculation_relationships": 32,
+            "monetary_concepts": 34,
+            "leaf_concepts": 27,
+            "total_concepts": 7
+          }
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEMicroImpresa",
+          "expected": {
+            "presentation_relationships": 94,
+            "calculation_relationships": 78,
+            "monetary_concepts": 79,
+            "leaf_concepts": 57,
+            "total_concepts": 22
+          }
+        }
+      ]
+    }
+  }
+}

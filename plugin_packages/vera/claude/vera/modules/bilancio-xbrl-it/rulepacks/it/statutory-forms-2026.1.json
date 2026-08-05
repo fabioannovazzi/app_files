@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "IT_CC_2026.1",
+  "effective_from": "2024-09-25",
+  "effective_to": "2026-12-31",
+  "currency": "EUR",
+  "test": "two_out_of_three_for_required_year_window",
+  "forms": {
+    "ABBREVIATED": {
+      "assets": "5500000",
+      "revenue": "11000000",
+      "employees": "50"
+    },
+    "MICRO": {
+      "assets": "220000",
+      "revenue": "440000",
+      "employees": "5"
+    }
+  },
+  "taxonomy_output_contracts": {
+    "MICRO_FOOTER_TEXT": {
+      "xbrl_concept": "itcc-ci:CommentoInformazioniCalceAlloStatoPatrimonialeMicro",
+      "labels": {
+        "it": {
+          "guarantees_commitments_contingencies": "Garanzie, impegni e passivita potenziali",
+          "director_auditor_compensation": "Compensi ad amministratori e organi di controllo",
+          "own_and_parent_shares": "Azioni proprie e della controllante"
+        },
+        "en": {
+          "guarantees_commitments_contingencies": "Guarantees, commitments and contingent liabilities",
+          "director_auditor_compensation": "Directors' and supervisory bodies' compensation",
+          "own_and_parent_shares": "Own and parent-company shares"
+        }
+      },
+      "not_applicable_text": {
+        "it": "non applicabile, come confermato dal professionista",
+        "en": "not applicable, as confirmed by the professional"
+      }
+    }
+  },
+  "source_register": [
+    {
+      "id": "RI_2026",
+      "kind": "filing_instruction",
+      "title": "Manuale operativo per il deposito dei bilanci 2026",
+      "url": "https://www.unioncamere.gov.it/sites/default/files/articoli/2026-05/Manuale-Operativo-Bilanci-2026.pdf",
+      "retrieved_on": "2026-08-05"
+    }
+  ]
+}

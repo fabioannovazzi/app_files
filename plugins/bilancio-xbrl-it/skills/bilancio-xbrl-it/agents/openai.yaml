@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bilancio intelligente"
+  short_description: "Rende intelligente la preparazione del bilancio OIC"
+  default_prompt: "Use $bilancio-xbrl-it to understand the accounting evidence, prepare a reviewable Italian OIC annual financial statement, and render XBRL only as the final deterministic export."

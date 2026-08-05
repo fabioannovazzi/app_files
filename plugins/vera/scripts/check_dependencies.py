@@ -28,6 +28,7 @@ COMPONENTS = (
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
+    "bilancio-xbrl-it",
     "studio-archive",
 )
 

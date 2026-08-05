@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "test_nature": "CONTROLLED_STRUCTURAL_ZERO_COVERAGE_ONLY",
+  "limitation": "This verifies inventory closure and official calculation mechanics; it is not evidence for a real entity's accounting judgments.",
+  "taxonomy_id": "PCI_2018-11-04",
+  "taxonomy_package_sha256": "c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1",
+  "rule_pack_id": "IT_CC_PRESENTATION_2026.1",
+  "forms": [
+    {
+      "form": "ABBREVIATED",
+      "inventory_sha256": "cf1e366fd25a00c255f2a723b4cc54559f6453e22ca3c0e14c3d198e140dbeb2",
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SPAbbreviata",
+          "roots": [
+            "itcc-ci:StatoPatrimoniale"
+          ],
+          "presentation_relationships": 42,
+          "calculation_relationships": 33,
+          "monetary_concepts": 35,
+          "leaf_concepts": 28,
+          "total_concepts": 7
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEAbbreviata",
+          "roots": [
+            "itcc-ci:ContoEconomico"
+          ],
+          "presentation_relationships": 96,
+          "calculation_relationships": 80,
+          "monetary_concepts": 81,
+          "leaf_concepts": 59,
+          "total_concepts": 22
+        }
+      ],
+      "unique_required_leaf_concepts": 87,
+      "unique_total_concepts": 29,
+      "formula_count": 29,
+      "controlled_closure": {
+        "status": "COMPLETE",
+        "explicit_decisions": 87,
+        "output_fact_count": 116,
+        "missing_period_decisions": 0,
+        "issues": 0
+      },
+      "xbrl_validation": {
+        "form": "ABBREVIATED",
+        "status": "PASS",
+        "instance_file": "controlled-complete-abbreviated.xbrl",
+        "instance_sha256": "dd724bdf7181b92d0df6536d0287b139a46165161e9407ca0bad7abec886525b",
+        "validation_report_file": "controlled-complete-abbreviated.json",
+        "validation_report_sha256": "39667383834864f1657ea8430e9dab90995959be28794cedf1918b911bea75a2",
+        "processor": "arelle-release",
+        "message_count": 2,
+        "error_messages": []
+      }
+    },
+    {
+      "form": "MICRO",
+      "inventory_sha256": "5c4816c00e2d4fbccdbcab45190baaca05eed7a811788f841ea73bde923e0693",
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SPMicroImpresa",
+          "roots": [
+            "itcc-ci:StatoPatrimoniale"
+          ],
+          "presentation_relationships": 41,
+          "calculation_relationships": 32,
+          "monetary_concepts": 34,
+          "leaf_concepts": 27,
+          "total_concepts": 7
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEMicroImpresa",
+          "roots": [
+            "itcc-ci:ContoEconomico"
+          ],
+          "presentation_relationships": 94,
+          "calculation_relationships": 78,
+          "monetary_concepts": 79,
+          "leaf_concepts": 57,
+          "total_concepts": 22
+        }
+      ],
+      "unique_required_leaf_concepts": 84,
+      "unique_total_concepts": 29,
+      "formula_count": 29,
+      "controlled_closure": {
+        "status": "COMPLETE",
+        "explicit_decisions": 84,
+        "output_fact_count": 113,
+        "missing_period_decisions": 0,
+        "issues": 0
+      },
+      "xbrl_validation": {
+        "form": "MICRO",
+        "status": "PASS",
+        "instance_file": "controlled-complete-micro.xbrl",
+        "instance_sha256": "3af91fbc4383f037625494de19c091147cdd44804a292805ea14a46a570c9aaa",
+        "validation_report_file": "controlled-complete-micro.json",
+        "validation_report_sha256": "b7084a5fc6fe069e93257610f0b49facdc1b406dfef0108b3b7aa3d39ed93e59",
+        "processor": "arelle-release",
+        "message_count": 2,
+        "error_messages": []
+      }
+    },
+    {
+      "form": "ORDINARY",
+      "inventory_sha256": "43c850ac430ba323648ad8d79ad28f76a1e2d7fd811026874710e229cd2b7590",
+      "roles": [
+        {
+          "kind": "BALANCE_SHEET",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/SpCodCivile",
+          "roots": [
+            "itcc-ci:StatoPatrimoniale"
+          ],
+          "presentation_relationships": 213,
+          "calculation_relationships": 166,
+          "monetary_concepts": 168,
+          "leaf_concepts": 123,
+          "total_concepts": 45
+        },
+        {
+          "kind": "INCOME_STATEMENT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/CEValProduzioneCodCivile",
+          "roots": [
+            "itcc-ci:ContoEconomico"
+          ],
+          "presentation_relationships": 92,
+          "calculation_relationships": 76,
+          "monetary_concepts": 77,
+          "leaf_concepts": 59,
+          "total_concepts": 18
+        },
+        {
+          "kind": "CASH_FLOW_INDIRECT",
+          "role": "http://www.infocamere.it/itnn/fr/itcc/role/RFIndiretto",
+          "roots": [
+            "itcc-ci:RendicontoFinanziarioMetodoIndiretto"
+          ],
+          "presentation_relationships": 73,
+          "calculation_relationships": 50,
+          "monetary_concepts": 59,
+          "leaf_concepts": 48,
+          "total_concepts": 11
+        }
+      ],
+      "unique_required_leaf_concepts": 224,
+      "unique_total_concepts": 74,
+      "formula_count": 74,
+      "controlled_closure": {
+        "status": "COMPLETE",
+        "explicit_decisions": 224,
+        "output_fact_count": 298,
+        "missing_period_decisions": 0,
+        "issues": 0
+      },
+      "xbrl_validation": {
+        "form": "ORDINARY",
+        "status": "PASS",
+        "instance_file": "controlled-complete-ordinary.xbrl",
+        "instance_sha256": "88f14f0efcc834a8fc07f2d9d1b87618b941046f0df20a25c0c0560507cdd92b",
+        "validation_report_file": "controlled-complete-ordinary.json",
+        "validation_report_sha256": "f2c7bc2d3b41eb44e6bdbe9475227b2ef1ef54822897db0169131ef01af07d35",
+        "processor": "arelle-release",
+        "message_count": 2,
+        "error_messages": []
+      }
+    }
+  ],
+  "report_sha256": "eff96416d7c3131bcd2a7c3671511fc60d028d3bbacea572a041ce7e23413a63",
+  "catalogue_file_sha256": "591365c192acc52b819726366640ff59b198cd628bc969844c4581b1a530635a",
+  "rule_pack_file_sha256": "d3808f0be5190d652031faa7ef489fe4552521f41dec2e295ff58fc5583cfcbb"
+}

@@ -1,0 +1,347 @@
+{
+  "schema_version": 1,
+  "suite_id": "bilancio-xbrl-it-golden-v1",
+  "taxonomy_id": "PCI_2018-11-04",
+  "fixture_policy": {
+    "synthetic_only": true,
+    "approved_for_regression_use": true,
+    "contains_personal_data": false
+  },
+  "cases": [
+    {
+      "number": 1,
+      "case_id": "G01_SIMPLE_ABBREVIATED_SRL",
+      "title": "Simple abbreviated S.r.l.",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "100000",
+      "prior_total": "90000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "La società applica i criteri di valutazione OIC confermati dal professionista."
+      }
+    },
+    {
+      "number": 2,
+      "case_id": "G02_ORDINARY_WITH_CASH_FLOW",
+      "title": "Ordinary S.r.l. with cash-flow statement",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "180000",
+      "prior_total": "165000",
+      "marker": {
+        "concept": "itcc-ci:IncrementoDecrementoDisponibilitaLiquide",
+        "current": "15000",
+        "prior": "9000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoVariazioniDisponibilitaLiquide",
+        "text": "Il rendiconto finanziario riconcilia una variazione positiva delle disponibilità liquide di euro 15.000."
+      }
+    },
+    {
+      "number": 3,
+      "case_id": "G03_MICRO_FOOTER_ONLY",
+      "title": "Micro-enterprise with footer information and no notes",
+      "mode": "XBRL",
+      "selected_form": "MICRO",
+      "current_total": "45000",
+      "prior_total": "42000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoInformazioniCalceAlloStatoPatrimonialeMicro",
+        "text": "Informazioni in calce confermate: nessuna garanzia o impegno; nessun compenso agli organi sociali; nessuna azione propria o della controllante."
+      }
+    },
+    {
+      "number": 4,
+      "case_id": "G04_MICRO_ELIGIBLE_ABBREVIATED_CHOICE",
+      "title": "Micro-eligible entity voluntarily choosing abbreviated",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "52000",
+      "prior_total": "49000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "Pur essendo ammissibile al bilancio micro, la società ha scelto il bilancio abbreviato."
+      }
+    },
+    {
+      "number": 5,
+      "case_id": "G05_FIRST_YEAR",
+      "title": "First-year company",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "35000",
+      "prior_total": "0",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "Il presente bilancio riguarda il primo esercizio sociale; i valori comparativi sono pertanto pari a zero."
+      }
+    },
+    {
+      "number": 6,
+      "case_id": "G06_ABBREVIATED_TO_ORDINARY",
+      "title": "Change from abbreviated to ordinary",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "5100000",
+      "prior_total": "4700000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "La società presenta il bilancio in forma ordinaria dopo aver adottato la forma abbreviata nell'esercizio precedente."
+      }
+    },
+    {
+      "number": 7,
+      "case_id": "G07_FIXED_ASSET_ADDITIONS_DISPOSALS",
+      "title": "Fixed-asset additions and disposals",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "760000",
+      "prior_total": "720000",
+      "marker": {
+        "concept": "itcc-ci:CostoTotaleImmobilizzazioniMateriali",
+        "current": "310000",
+        "prior": "280000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoMovimentiImmobilizzazioniMateriali",
+        "text": "Il prospetto riconcilia costo iniziale, incrementi, dismissioni e costo finale delle immobilizzazioni materiali."
+      }
+    },
+    {
+      "number": 8,
+      "case_id": "G08_IMPAIRMENT_AND_REVERSAL",
+      "title": "Impairment and reversal",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "830000",
+      "prior_total": "800000",
+      "marker": {
+        "concept": "itcc-ci:SvalutazioniTotaleImmobilizzazioniMateriali",
+        "current": "18000",
+        "prior": "30000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoImmobilizzazioniMateriali",
+        "text": "Le perdite durevoli e il successivo ripristino sono stati riconciliati con il prospetto dei cespiti."
+      }
+    },
+    {
+      "number": 9,
+      "case_id": "G09_RECEIVABLE_OVER_FIVE_YEARS",
+      "title": "Receivables with over-five-year component",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "290000",
+      "prior_total": "275000",
+      "marker": {
+        "concept": "itcc-ci:CreditiVersoClientiIscrittiAttivoCircolanteQuotaScadenteOltre5Anni",
+        "current": "25000",
+        "prior": "18000"
+      }
+    },
+    {
+      "number": 10,
+      "case_id": "G10_SECURED_BANK_DEBT",
+      "title": "Secured bank debt",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "640000",
+      "prior_total": "610000",
+      "marker": {
+        "concept": "itcc-ci:DebitiAssistitiIpotecheDebitiVersoBanche",
+        "current": "140000",
+        "prior": "155000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoDebitiAssistitiGaranzieRealiBeniSociali",
+        "text": "Il finanziamento bancario assistito da ipoteca è ricondotto alla relativa garanzia reale."
+      }
+    },
+    {
+      "number": 11,
+      "case_id": "G11_SHAREHOLDER_FINANCING",
+      "title": "Shareholder financing",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "410000",
+      "prior_total": "390000",
+      "marker": {
+        "concept": "itcc-ci:DebitiDebitiVersoSociFinanziamentiTotaleDebitiVersoSociFinanziamenti",
+        "current": "70000",
+        "prior": "50000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoFinanziamentiEffettuatiSociSocieta",
+        "text": "I finanziamenti dei soci sono stati classificati e descritti sulla base degli accordi confermati."
+      }
+    },
+    {
+      "number": 12,
+      "case_id": "G12_RELATED_PARTY_TRANSACTION",
+      "title": "Related-party transaction",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "930000",
+      "prior_total": "880000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoInformazioniOperazioniPartiCorrelate",
+        "text": "L'operazione con parte correlata è stata confermata e descritta con importo, natura del rapporto e condizioni."
+      }
+    },
+    {
+      "number": 13,
+      "case_id": "G13_DEFERRED_TAXES",
+      "title": "Deferred taxes",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "870000",
+      "prior_total": "840000",
+      "marker": {
+        "concept": "itcc-ci:FondoImposteDifferiteAnticipateFineEsercizioIRES",
+        "current": "22000",
+        "prior": "17000"
+      }
+    },
+    {
+      "number": 14,
+      "case_id": "G14_PROVISIONS_AND_TFR",
+      "title": "Provisions and TFR",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "1200000",
+      "prior_total": "1150000",
+      "marker": {
+        "concept": "itcc-ci:TrattamentoFineRapportoLavoroSubordinato",
+        "current": "95000",
+        "prior": "87000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoInformazioniTrattamentoFineRapportoLavoroSubordinato",
+        "text": "Il fondo TFR è riconciliato tra saldo iniziale, accantonamenti, utilizzi e saldo finale."
+      }
+    },
+    {
+      "number": 15,
+      "case_id": "G15_FOREIGN_CURRENCY_ITEMS",
+      "title": "Foreign-currency items",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "680000",
+      "prior_total": "650000",
+      "marker": {
+        "concept": "itcc-ci:EffettoCambiDisponibilitaLiquide",
+        "current": "-3000",
+        "prior": "2000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "Le poste monetarie in valuta sono state convertite al cambio di chiusura e le differenze sono state riconciliate."
+      }
+    },
+    {
+      "number": 16,
+      "case_id": "G16_DERIVATIVES_FAIR_VALUE_RESERVE",
+      "title": "Derivatives and fair-value reserve",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "1450000",
+      "prior_total": "1320000",
+      "marker": {
+        "concept": "itcc-ci:PatrimonioNettoRiservaOperazioniCoperturaFlussiFinanziariAttesi",
+        "current": "28000",
+        "prior": "16000"
+      },
+      "narrative": {
+        "concept": "itcc-ci:CommentoInformazioniRelativeAgliStrumentiFinanziariDerivatiExArt2427-bisCodiceCivile",
+        "text": "Gli strumenti derivati e la riserva di copertura dei flussi finanziari attesi sono stati confermati dal professionista."
+      }
+    },
+    {
+      "number": 17,
+      "case_id": "G17_POST_CLOSING_EVENT",
+      "title": "Post-closing event",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "370000",
+      "prior_total": "355000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoInformazioniSuiFattiRilievoAvvenutiDopoLaChiusuraEsercizio",
+        "text": "Dopo la chiusura è intervenuto un evento rilevante, non rettificativo, descritto e confermato dal professionista."
+      }
+    },
+    {
+      "number": 18,
+      "case_id": "G18_GOING_CONCERN_WARNING",
+      "title": "Going-concern warning",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "260000",
+      "prior_total": "310000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "Permangono incertezze significative sulla continuità aziendale; valutazioni, piani e conferme professionali sono richiamati nella nota."
+      }
+    },
+    {
+      "number": 19,
+      "case_id": "G19_PRIOR_PERIOD_ERROR",
+      "title": "Prior-period error",
+      "mode": "XBRL",
+      "selected_form": "ORDINARY",
+      "current_total": "790000",
+      "prior_total": "745000",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCorrezioneErroriRilevanti",
+        "text": "L'errore rilevante dell'esercizio precedente è stato corretto e riconciliato con i saldi comparativi approvati."
+      }
+    },
+    {
+      "number": 20,
+      "case_id": "G20_SUBSTANTIVE_TAXONOMY_MISMATCH",
+      "title": "Substantive taxonomy mismatch",
+      "mode": "BOUNDARY",
+      "boundary": "SUBSTANTIVE_TAXONOMY_MISMATCH",
+      "expected_observation": "PROFESSIONAL_TREATMENT_RECORDED"
+    },
+    {
+      "number": 21,
+      "case_id": "G21_UNSUPPORTED_IFRS_ENTITY",
+      "title": "Unsupported IFRS entity",
+      "mode": "BOUNDARY",
+      "boundary": "UNSUPPORTED_IFRS_ENTITY",
+      "expected_observation": "UNSUPPORTED_ACCOUNTING_FRAMEWORK"
+    },
+    {
+      "number": 22,
+      "case_id": "G22_PROMPT_INJECTION_SPREADSHEET",
+      "title": "Malicious spreadsheet text attempting prompt injection",
+      "mode": "BOUNDARY",
+      "boundary": "PROMPT_INJECTION_SPREADSHEET",
+      "expected_observation": "EVIDENCE_KEPT_UNTRUSTED"
+    },
+    {
+      "number": 23,
+      "case_id": "G23_INCONSISTENT_PROGRESSIVES",
+      "title": "Inconsistent debit and credit progressives",
+      "mode": "BOUNDARY",
+      "boundary": "INCONSISTENT_PROGRESSIVES",
+      "expected_observation": "PARSER_CONFIRMATION_BLOCKED"
+    },
+    {
+      "number": 24,
+      "case_id": "G24_STALE_PRIOR_NARRATIVE",
+      "title": "Previous-year XBRL with stale narrative",
+      "mode": "XBRL",
+      "selected_form": "ABBREVIATED",
+      "current_total": "480000",
+      "prior_total": "450000",
+      "prior_narrative_text": "La società non ha dipendenti e non ha sostenuto nuovi investimenti.",
+      "narrative": {
+        "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
+        "text": "La società ha cinque dipendenti e ha sostenuto nuovi investimenti nel corso dell'esercizio."
+      }
+    }
+  ]
+}
