@@ -135,6 +135,13 @@ def test_audio_upload_controls_are_inactive_without_plugin_launch() -> None:
     )
 
 
+def test_audio_file_picker_only_advertises_server_supported_extensions() -> None:
+    page = (ROOT / "templates" / "case_notes_voice.html").read_text(encoding="utf-8")
+
+    assert 'accept=".mp3,.mp4,.mpeg,.mpga,.m4a,.wav,.webm"' in page
+    assert "audio/*" not in page
+
+
 def test_voice_source_identity_metadata_resets_between_captures() -> None:
     page = (ROOT / "templates" / "case_notes_voice.html").read_text(encoding="utf-8")
     script = (ROOT / "static" / "js" / "case-notes-voice.js").read_text(
