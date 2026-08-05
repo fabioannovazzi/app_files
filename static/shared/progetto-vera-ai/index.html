@@ -1,0 +1,1091 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="Progetto Vera AI: una sperimentazione pratica costruita con commercialisti su casi di lavoro reali.">
+  <meta name="theme-color" content="#002060">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>Progetto Vera AI · Presentazione pratica</title>
+  <style>
+    :root {
+      --navy: #002060;
+      --blue: #0070c0;
+      --cyan: #00b0f0;
+      --ink: #12223f;
+      --muted: #60708b;
+      --line: rgba(0, 32, 96, .16);
+      --pale: #f4faff;
+      --white: #ffffff;
+      --sans: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+      --ease: cubic-bezier(.22, 1, .36, 1);
+      --deck-width: min(100vw, calc(100vh * 16 / 9));
+      --deck-height: min(100vh, calc(100vw * 9 / 16));
+    }
+
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: #e8eef7;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-kerning: normal;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    button,
+    a { font: inherit; }
+
+    button { color: inherit; }
+
+    .deck {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: var(--deck-width);
+      height: var(--deck-height);
+      overflow: hidden;
+      transform: translate(-50%, -50%);
+      background: var(--white);
+      container: deck / size;
+      isolation: isolate;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      padding: 5.7cqh 6.3cqw 4.5cqh;
+      overflow: hidden;
+      visibility: hidden;
+      opacity: 0;
+      transform: translate3d(3.5%, 0, 0);
+      background:
+        linear-gradient(90deg, rgba(0, 176, 240, .08) 1px, transparent 1px),
+        linear-gradient(rgba(0, 176, 240, .06) 1px, transparent 1px),
+        var(--white);
+      background-size: 7.4cqw 7.4cqw;
+      transition: opacity 420ms var(--ease), transform 560ms var(--ease), visibility 0s;
+    }
+
+    .slide::after {
+      content: "";
+      display: none;
+      position: absolute;
+      z-index: -1;
+      width: 35cqw;
+      height: 35cqw;
+      right: -18cqw;
+      bottom: -24cqw;
+      border: 1px solid rgba(0, 176, 240, .32);
+      border-radius: 50%;
+    }
+
+    .slide.is-before { transform: translate3d(-3.5%, 0, 0); }
+
+    .slide.is-active {
+      z-index: 3;
+      visibility: visible;
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+      transition-delay: 0s;
+    }
+
+    .slide--navy {
+      color: var(--white);
+      background:
+        radial-gradient(circle at 86% 12%, rgba(0, 176, 240, .34), transparent 26%),
+        linear-gradient(140deg, #00143f 0%, var(--navy) 54%, #003b78 100%);
+    }
+
+    .slide--navy::after {
+      border-color: rgba(255, 255, 255, .22);
+    }
+
+    .slide--pale { background-color: var(--pale); }
+
+    .slide-head,
+    .slide-foot,
+    .slide-body { position: relative; z-index: 2; }
+
+    .slide-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 3cqw;
+    }
+
+    .slide-head--end { justify-content: flex-end; }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: .65cqw;
+      font-size: 1.05cqw;
+      font-weight: 650;
+      letter-spacing: -.02em;
+    }
+
+    .brand-mark {
+      width: 1.05cqw;
+      height: 1.05cqw;
+      border-radius: 50%;
+      background: var(--cyan);
+    }
+
+    .chapter {
+      color: var(--blue);
+      font-size: .72cqw;
+      font-weight: 650;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+
+    .slide--navy .chapter { color: #69d8ff; }
+
+    .slide-body {
+      display: grid;
+      align-content: center;
+      min-height: 0;
+    }
+
+    .slide-foot {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 3cqw;
+      color: var(--muted);
+      font-size: .68cqw;
+      line-height: 1.35;
+    }
+
+    .slide-foot--end { justify-content: flex-end; }
+
+    .foot-link {
+      margin-left: .35cqw;
+      color: var(--blue);
+      font-weight: 650;
+      text-decoration-color: rgba(0, 112, 192, .4);
+      text-underline-offset: .16em;
+    }
+
+    .slide--navy .slide-foot { color: rgba(255, 255, 255, .68); }
+
+    .slide-number {
+      min-width: 2.5cqw;
+      color: var(--blue);
+      font-variant-numeric: tabular-nums;
+      font-weight: 650;
+      text-align: right;
+    }
+
+    .slide--navy .slide-number { color: var(--cyan); }
+
+    .eyebrow {
+      margin: 0 0 1.5cqh;
+      color: var(--blue);
+      font-size: .82cqw;
+      font-weight: 650;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .slide--navy .eyebrow { color: #69d8ff; }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1 {
+      max-width: 69cqw;
+      margin-bottom: 2.7cqh;
+      font-size: clamp(32px, 5.25cqw, 78px);
+      font-weight: 650;
+      line-height: .98;
+      letter-spacing: -.064em;
+    }
+
+    h2 {
+      max-width: 72cqw;
+      margin-bottom: 3.5cqh;
+      color: var(--navy);
+      font-size: clamp(29px, 4.05cqw, 62px);
+      font-weight: 650;
+      line-height: 1.01;
+      letter-spacing: -.058em;
+    }
+
+    .slide--navy h2 { color: var(--white); }
+
+    h3 {
+      margin-bottom: .9cqh;
+      color: var(--navy);
+      font-size: 1.22cqw;
+      font-weight: 650;
+      line-height: 1.13;
+      letter-spacing: -.03em;
+    }
+
+    .lede {
+      max-width: 61cqw;
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, .82);
+      font-size: 1.42cqw;
+      line-height: 1.38;
+      letter-spacing: -.02em;
+    }
+
+    .lede strong { color: var(--white); font-weight: 600; }
+
+    .accent { color: #69d8ff; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(0, .96fr);
+      gap: 6.8cqw;
+      align-items: center;
+    }
+
+    .plain-copy {
+      max-width: 43cqw;
+      color: var(--muted);
+      font-size: 1.28cqw;
+      line-height: 1.5;
+      letter-spacing: -.015em;
+    }
+
+    .plain-copy strong { color: var(--ink); font-weight: 600; }
+
+    .stack {
+      display: grid;
+      gap: 1.25cqh;
+    }
+
+    .stack--four { gap: .72cqh; }
+
+    .stack--four .work-card { padding-block: 1.25cqh; }
+
+    .stack--four .work-card h3 { margin-bottom: .55cqh; }
+
+    .stack--four .work-card p { font-size: .82cqw; }
+
+    .work-card {
+      display: grid;
+      grid-template-columns: 3.6cqw 1fr;
+      gap: 1.45cqw;
+      align-items: start;
+      padding: 1.7cqh 1.4cqw;
+      border-top: 1px solid var(--line);
+      background: rgba(255, 255, 255, .78);
+    }
+
+    .work-card:last-child { border-bottom: 1px solid var(--line); }
+
+    .work-card .index {
+      color: var(--cyan);
+      font-size: 1.6cqw;
+      font-weight: 650;
+      line-height: 1;
+      letter-spacing: -.05em;
+    }
+
+    .work-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .9cqw;
+      line-height: 1.38;
+    }
+
+    .onboarding-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 2.2cqw;
+    }
+
+    .onboarding-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 24cqh;
+      padding: 2.6cqh 2cqw;
+      border: 1px solid var(--line);
+      border-top: .38cqh solid var(--cyan);
+      background: rgba(255, 255, 255, .92);
+    }
+
+    .onboarding-card .kicker {
+      display: block;
+      margin-bottom: 2.2cqh;
+      color: var(--blue);
+      font-size: .72cqw;
+      font-weight: 650;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .onboarding-card p {
+      margin-bottom: 1.5cqh;
+      color: var(--muted);
+      font-size: 1cqw;
+      line-height: 1.42;
+    }
+
+    .cost-line {
+      display: flex;
+      align-items: baseline;
+      gap: .55cqw;
+      margin-bottom: 1.45cqh;
+      font-size: .78cqw;
+      line-height: 1.25;
+    }
+
+    .cost-line strong {
+      color: var(--blue);
+      font-weight: 700;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .cost-line span { color: var(--muted); }
+
+    .marketplace-visual {
+      width: 21cqw;
+      max-width: 100%;
+      margin: .3cqh 0 1.4cqh;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #050505;
+    }
+
+    .marketplace-shot {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .codex-download-visual {
+      width: 31cqw;
+      max-width: 100%;
+      margin: .3cqh 0 1.4cqh auto;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      background: #f7f8fb;
+    }
+
+    .codex-download-shot {
+      display: block;
+      width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .marketplace-bar {
+      display: block;
+      margin-bottom: .8cqh;
+      color: var(--muted);
+      font-size: .58cqw;
+      font-weight: 650;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .marketplace-tile {
+      display: grid;
+      grid-template-columns: 2cqw 1fr auto;
+      gap: .8cqw;
+      align-items: center;
+    }
+
+    .marketplace-icon {
+      display: grid;
+      width: 2cqw;
+      height: 2cqw;
+      place-items: center;
+      border-radius: .35cqw;
+      color: var(--white);
+      background: var(--navy);
+      font-size: .92cqw;
+      font-weight: 700;
+    }
+
+    .marketplace-name strong,
+    .marketplace-name small { display: block; }
+
+    .marketplace-name strong {
+      color: var(--navy);
+      font-size: .82cqw;
+    }
+
+    .marketplace-name small {
+      margin-top: .18cqh;
+      color: var(--muted);
+      font-size: .62cqw;
+    }
+
+    .marketplace-action {
+      padding: .55cqh .65cqw;
+      color: var(--blue);
+      border: 1px solid rgba(0, 112, 192, .3);
+      font-size: .62cqw;
+      font-weight: 650;
+    }
+
+    .onboarding-link {
+      align-self: flex-start;
+      color: var(--blue);
+      font-size: .88cqw;
+      font-weight: 650;
+      text-decoration: none;
+      border-bottom: 1px solid rgba(0, 112, 192, .35);
+    }
+
+    .onboarding-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.3cqw;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .onboarding-link:focus-visible {
+      outline: 2px solid var(--cyan);
+      outline-offset: 4px;
+    }
+
+    .onboarding-note {
+      margin: 2.4cqh 0 0;
+      color: var(--navy);
+      font-size: 1.08cqw;
+      line-height: 1.4;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 2.15cqw;
+      align-items: stretch;
+    }
+
+    .flow-card {
+      position: relative;
+      min-height: 25cqh;
+      padding: 2.7cqh 1.85cqw;
+      border: 1px solid var(--line);
+      border-top: .38cqh solid var(--cyan);
+      background: rgba(255, 255, 255, .92);
+    }
+
+    .flow-card:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -1.72cqw;
+      z-index: 3;
+      transform: translateY(-53%);
+      color: var(--blue);
+      font-size: 1.55cqw;
+      font-weight: 500;
+    }
+
+    .flow-card .kicker {
+      display: block;
+      margin-bottom: 3.2cqh;
+      color: var(--blue);
+      font-size: .7cqw;
+      font-weight: 650;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .flow-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: .95cqw;
+      line-height: 1.42;
+    }
+
+    .examples-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.45cqw;
+      margin-top: 2.4cqh;
+    }
+
+    .example-card {
+      min-height: 23cqh;
+      padding: 2.3cqh 1.45cqw;
+      border: 1px solid var(--line);
+      border-top: .36cqh solid var(--cyan);
+      background: rgba(255, 255, 255, .92);
+    }
+
+    .example-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9cqw;
+      line-height: 1.43;
+    }
+
+    .privacy-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1.45cqw;
+      margin-top: 2.4cqh;
+    }
+
+    .boundary {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 2.4cqh;
+      border: 1px solid rgba(255, 255, 255, .17);
+      background: rgba(255, 255, 255, .17);
+    }
+
+    .boundary article {
+      min-height: 18cqh;
+      padding: 2.2cqh 1.8cqw;
+      background: rgba(0, 20, 63, .62);
+    }
+
+    .boundary h3 { color: var(--white); }
+
+    .boundary p {
+      margin: 0;
+      color: rgba(255, 255, 255, .72);
+      font-size: .9cqw;
+      line-height: 1.43;
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: minmax(0, .84fr) minmax(0, 1.16fr);
+      gap: 7cqw;
+      align-items: center;
+    }
+
+    .proof-quote {
+      position: relative;
+      padding: 3.8cqh 2.7cqw 3.5cqh;
+      border-left: .42cqw solid var(--cyan);
+      background: var(--navy);
+      color: var(--white);
+    }
+
+    .proof-quote::before {
+      content: "“";
+      position: absolute;
+      top: -1.8cqh;
+      right: 1.6cqw;
+      color: rgba(0, 176, 240, .3);
+      font-size: 10cqw;
+      font-weight: 650;
+      line-height: 1;
+    }
+
+    .proof-quote p {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-size: 1.55cqw;
+      font-weight: 500;
+      line-height: 1.3;
+      letter-spacing: -.03em;
+    }
+
+    .proof-list {
+      display: grid;
+      gap: 2.6cqh;
+    }
+
+    .proof-row {
+      display: grid;
+      grid-template-columns: 4.3cqw 1fr;
+      gap: 1.45cqw;
+      align-items: baseline;
+      padding-bottom: 2.1cqh;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-row strong {
+      color: var(--blue);
+      font-size: 2.45cqw;
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .proof-row span {
+      color: var(--muted);
+      font-size: 1.05cqw;
+      line-height: 1.35;
+    }
+
+    .test-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1.45cqw;
+    }
+
+    .test-grid--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .test-grid--three .test-step { min-height: 21cqh; }
+
+    .test-step {
+      min-height: 27cqh;
+      padding: 2.3cqh 1.4cqw;
+      border-top: .36cqh solid var(--cyan);
+      background: rgba(255, 255, 255, .08);
+    }
+
+    .test-step .time {
+      display: block;
+      margin-bottom: 3.2cqh;
+      color: #69d8ff;
+      font-size: .72cqw;
+      font-weight: 650;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .test-step h3 { color: var(--white); }
+
+    .test-step p {
+      margin: 0;
+      color: rgba(255, 255, 255, .7);
+      font-size: .88cqw;
+      line-height: 1.42;
+    }
+
+    .scorecard {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1px;
+      border: 1px solid var(--line);
+      background: var(--line);
+    }
+
+    .score-item {
+      min-height: 14.5cqh;
+      padding: 2.15cqh 1.8cqw;
+      background: rgba(255, 255, 255, .94);
+    }
+
+    .score-item span {
+      display: block;
+      margin-bottom: .85cqh;
+      color: var(--cyan);
+      font-size: .7cqw;
+      font-weight: 650;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .score-item p {
+      margin: 0;
+      color: var(--ink);
+      font-size: 1.13cqw;
+      line-height: 1.3;
+      letter-spacing: -.025em;
+    }
+
+    .closing {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      gap: 7cqw;
+      align-items: end;
+    }
+
+    .closing .lede { max-width: 56cqw; }
+
+    .ask {
+      padding: 2.8cqh 2cqw;
+      border: 1px solid rgba(255, 255, 255, .22);
+      background: rgba(255, 255, 255, .06);
+    }
+
+    .ask span {
+      display: block;
+      margin-bottom: 1.1cqh;
+      color: #69d8ff;
+      font-size: .72cqw;
+      font-weight: 650;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .ask p {
+      margin: 0;
+      color: var(--white);
+      font-size: 1.22cqw;
+      line-height: 1.35;
+      letter-spacing: -.025em;
+    }
+
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+
+    .is-active .reveal { opacity: 1; transform: none; }
+
+    .deck-controls {
+      position: fixed;
+      left: 50%;
+      bottom: max(1.35rem, env(safe-area-inset-bottom));
+      z-index: 20;
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      transform: translateX(-50%);
+      padding: .42rem;
+      border: 1px solid rgba(0, 32, 96, .12);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .88);
+      backdrop-filter: blur(16px);
+      transition: opacity 180ms ease;
+    }
+
+    .deck-controls button {
+      display: grid;
+      width: 2.1rem;
+      height: 2.1rem;
+      place-items: center;
+      border: 0;
+      border-radius: 50%;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .deck-controls button:hover,
+    .deck-controls button:focus-visible { background: rgba(0, 112, 192, .1); outline: none; }
+
+    .deck-controls button:disabled { cursor: default; opacity: .3; }
+
+    .control-count {
+      min-width: 3.8rem;
+      color: var(--muted);
+      font-size: .77rem;
+      font-variant-numeric: tabular-nums;
+      text-align: center;
+    }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      z-index: 30;
+      width: 0;
+      height: 3px;
+      background: var(--cyan);
+      transition: width 450ms var(--ease);
+    }
+
+    .notes {
+      position: fixed;
+      z-index: 50;
+      right: 1.2rem;
+      bottom: 1.2rem;
+      width: min(34rem, calc(100vw - 2.4rem));
+      max-height: 38vh;
+      overflow: auto;
+      padding: 1rem 1.1rem;
+      border: 1px solid rgba(0, 32, 96, .14);
+      border-radius: .6rem;
+      background: rgba(255, 255, 255, .96);
+      color: var(--ink);
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+
+    .notes[hidden] { display: none; }
+    .speaker-notes { display: none; }
+
+    @media (max-aspect-ratio: 4 / 3) {
+      .deck-controls { bottom: .55rem; }
+    }
+
+    @media print {
+      html,
+      body { overflow: visible; background: #fff; }
+      .deck { position: static; width: 100%; height: auto; transform: none; }
+      .slide { position: relative; width: 100vw; height: 56.25vw; visibility: visible; opacity: 1; transform: none; page-break-after: always; }
+      .deck-controls,
+      .progress,
+      .notes { display: none !important; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Presentazione Progetto Vera AI">
+    <section class="slide slide--navy is-active" id="progetto" data-title="Progetto Vera AI" data-slide-title="Progetto Vera AI" data-chapter="apertura" aria-hidden="false">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">Progetto Vera AI</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Una sperimentazione pratica</p>
+        <h1 class="reveal" style="--i:1">Costruire Vera <span class="accent">con i commercialisti.</span></h1>
+        <p class="lede reveal" style="--i:2">Provare Vera sul lavoro vero, capire cosa va migliorato e usare il tuo feedback per fare uno strumento più utile.</p>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">01 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Il progetto non parte da una promessa astratta. Parte da un gruppo di professionisti disponibili a provare Vera su attività concrete e a dirci, con franchezza, che cosa funziona e che cosa no.</aside>
+    </section>
+
+    <section class="slide" id="codex" data-title="Codex e Vera" data-slide-title="Codex e Vera" data-chapter="strumento" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">I due ruoli</span>
+      </header>
+      <div class="slide-body two-col">
+        <div>
+          <p class="eyebrow reveal" style="--i:0">Codex + Vera</p>
+          <h2 class="reveal" style="--i:1">Codex lavora sul progetto. Vera aggiunge il metodo.</h2>
+          <p class="plain-copy reveal" style="--i:2">Codex è un agente AI e un ambiente di lavoro: legge i file del progetto, usa strumenti e completa attività. Vera è un plugin di Codex: aggiunge istruzioni e workflow pensati per il lavoro del commercialista.</p>
+        </div>
+        <div class="stack stack--four">
+          <article class="work-card reveal" style="--i:1"><span class="index">01</span><div><h3>Parte dai file</h3><p>Lavora su una cartella scelta dal professionista, con confini e permessi visibili.</p></div></article>
+          <article class="work-card reveal" style="--i:2"><span class="index">02</span><div><h3>Usa strumenti</h3><p>Può eseguire codice, confrontare dati e produrre artefatti invece di limitarsi a suggerirli.</p></div></article>
+          <article class="work-card reveal" style="--i:3"><span class="index">03</span><div><h3>Lascia una traccia</h3><p>Input, passaggi, eccezioni e output restano disponibili per il controllo umano.</p></div></article>
+          <article class="work-card reveal" style="--i:4"><span class="index">04</span><div><h3>Usa il tuo abbonamento ChatGPT</h3><p>Rispetto all’API a consumo, il costo effettivo può risultare molto più basso e rendere pratico un lavoro più intensivo con l’AI.</p></div></article>
+        </div>
+      </div>
+      <footer class="slide-foot">
+        <span>Vera è compatibile anche con Claude Cowork.</span>
+        <span class="slide-number">02 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Codex è l’ambiente operativo: lavora sul progetto e sui suoi file. Vera è il plugin specialistico che porta dentro Codex un metodo pensato per il lavoro del commercialista. Con l’accesso tramite ChatGPT, il lavoro usa l’abbonamento e i limiti del piano invece della tariffazione API a consumo.</aside>
+    </section>
+
+    <section class="slide slide--pale" id="iniziare" data-title="Come iniziare" data-slide-title="Come iniziare" data-chapter="accesso" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">Per iniziare</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Primo accesso</p>
+        <h2 class="reveal" style="--i:1">Prima Codex. Poi Vera.</h2>
+        <div class="onboarding-grid">
+      <article class="onboarding-card reveal" style="--i:1">
+        <h3>Codex</h3>
+        <p>Scarica Codex dal sito OpenAI.</p>
+        <figure class="codex-download-visual"><img class="codex-download-shot" src="codex-desktop-quickstart.png" alt="Pagina OpenAI Get started with the desktop app" width="815" height="351"></figure>
+        <div class="onboarding-actions"><a class="onboarding-link" href="https://developers.openai.com/codex/app#getting-started" target="_blank" rel="noopener noreferrer">Scarica Codex · Gratis con il tuo conto ChatGPT</a></div>
+      </article>
+      <article class="onboarding-card reveal" style="--i:2">
+        <h3>Vera</h3>
+        <p>Apri la scheda di Vera, installa il plugin e abilitalo.</p>
+        <figure class="marketplace-visual"><img class="marketplace-shot" src="commercialisti-marketplace.jpeg" alt="Vera nei risultati del marketplace dei plugin per la ricerca Commercialisti" width="800" height="484"></figure>
+        <div class="onboarding-actions"><a class="onboarding-link" href="https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer">Scarica Vera · Gratis</a></div>
+      </article>
+    </div>
+    <p class="onboarding-note reveal" style="--i:3">Esempio di prompt: «@Vera, aiutami a riconciliare questi movimenti.»</p>
+      </div>
+      <footer class="slide-foot">
+        <span><a class="foot-link" href="https://mparanza.com/static/shared/vera/downloads/vera-cowork-plugin.zip" target="_blank" rel="noopener noreferrer">Scarica Vera per Claude Cowork</a></span>
+        <span class="slide-number">03 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Prima si installa e si apre Codex con il proprio account ChatGPT. Poi si apre la scheda di Vera, si installa il plugin e lo si abilita nel workspace scelto. Una nuova attività rende disponibile Vera nel progetto.</aside>
+    </section>
+
+    <section class="slide slide--pale" id="vera" data-title="Che cos’è Vera" data-slide-title="Che cos’è Vera" data-chapter="metodo" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">Il metodo</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Che cos’è Vera</p>
+        <h2 class="reveal" style="--i:1">Vera porta in Codex il metodo del lavoro professionale.</h2>
+        <div class="flow">
+          <article class="flow-card reveal" style="--i:1"><span class="kicker">Fornisci</span><h3>Fonti e obiettivo</h3><p>Documenti, periodo, perimetro del controllo e risultato atteso.</p></article>
+          <article class="flow-card reveal" style="--i:2"><span class="kicker">Vera prepara</span><h3>Analisi e carta di lavoro</h3><p>Qualifica le fonti, esegue i passaggi verificabili e separa anomalie e assunzioni.</p></article>
+          <article class="flow-card reveal" style="--i:3"><span class="kicker">Tu decidi</span><h3>Revisione professionale</h3><p>Confermi il significato, valuti le eccezioni e approvi ciò che può essere usato. La conferma resta tua: Vera non sostituisce il giudizio professionale.</p></article>
+        </div>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">04 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Vera è il livello specialistico. Definisce come affrontare riconciliazioni, controlli, analisi e fascicoli: che cosa chiedere, che cosa calcolare, che cosa produrre e quali decisioni devono restare al professionista.</aside>
+    </section>
+
+    <section class="slide slide--pale" id="privacy" data-title="Privacy e GDPR" data-slide-title="Privacy e GDPR" data-chapter="privacy" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">Privacy e GDPR</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Dove restano i dati</p>
+        <h2 class="reveal" style="--i:1">I dati restano sul tuo computer.</h2>
+        <div class="privacy-grid">
+          <article class="example-card reveal" style="--i:1"><h3>Vera è locale</h3><p>Vera è codice e file di testo che girano sul tuo computer.</p></article>
+          <article class="example-card reveal" style="--i:2"><h3>Nessun dato del lavoro sul nostro server.</h3><p>File e dati del caso restano sul tuo computer.</p></article>
+          <article class="example-card reveal" style="--i:3"><h3>DPA</h3><p>Per usare Vera serve solo il DPA con OpenAI.</p></article>
+        </div>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">05 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Vera è codice e file di testo che girano sul computer dell’utente. File e dati del caso restano locali. Per usare Vera serve solo il DPA con OpenAI.</aside>
+    </section>
+
+    <section class="slide" id="esempi" data-title="Che cosa fa Vera" data-slide-title="Che cosa fa Vera" data-chapter="esempi" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">Cosa fa Vera</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Che cosa fa Vera</p>
+        <h2 class="reveal" style="--i:1">Quattro esempi di lavoro concreto.</h2>
+        <div class="examples-grid">
+          <article class="example-card reveal" style="--i:1"><h3>Revisione e controlli</h3><p>Controlla registrazioni, documenti e campioni; segnala eccezioni e lascia una traccia del lavoro.</p></article>
+          <article class="example-card reveal" style="--i:2"><h3>Riconciliazioni</h3><p>Confronta mastrini, estratti conto e altri elenchi; propone abbinamenti e mette in evidenza le differenze.</p></article>
+          <article class="example-card reveal" style="--i:3"><h3>Pareri legali e tributari</h3><p>Organizza fonti, fatti e quesiti; prepara una bozza da sottoporre alla revisione del professionista.</p></article>
+          <article class="example-card reveal" style="--i:4"><h3>Organizzazione dei dati dello studio</h3><p>Ordina fascicoli e dati, evidenzia documenti mancanti e rende il lavoro più facile da riprendere.</p></article>
+        </div>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">06 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Gli esempi mostrano attività concrete: controlli e revisione, riconciliazioni, supporto alla preparazione di pareri e organizzazione dei dati dello studio. Vera prepara il lavoro; il professionista verifica fonti, eccezioni, conclusioni e uso finale.</aside>
+    </section>
+
+    <section class="slide slide--navy" id="obiettivo" data-title="Feedback e nuove idee" data-slide-title="Feedback e nuove idee" data-chapter="obiettivo" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">L’obiettivo</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Che cosa vogliamo ottenere</p>
+        <h2 class="reveal" style="--i:1">Cerchiamo il tuo feedback e le tue idee.</h2>
+        <div class="boundary">
+          <article class="reveal" style="--i:1"><h3>Feedback sul lavoro di Vera</h3><p>Che cosa ti è stato utile e che cosa va migliorato?</p></article>
+          <article class="reveal" style="--i:2"><h3>Nuove idee da implementare</h3><p>Su quali nuove attività dello studio vorresti che Vera ti aiutasse?</p></article>
+          <article class="reveal" style="--i:3"><h3>Vera cresce con il tuo feedback.</h3><p>La tua conoscenza del processo è quello che conta.</p></article>
+        </div>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">07 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Chiediamo un riscontro sul lavoro di Vera e nuove idee sulle attività dello studio in cui vorresti il suo aiuto. Vera cresce con il tuo feedback.</aside>
+    </section>
+
+    <section class="slide slide--navy" id="come-provare" data-title="Come provare Vera" data-slide-title="Come provare Vera" data-chapter="prova" aria-hidden="true">
+      <header class="slide-head slide-head--end">
+        <span class="chapter">La prova</span>
+      </header>
+      <div class="slide-body">
+        <p class="eyebrow reveal" style="--i:0">Come provare Vera</p>
+        <h2 class="reveal" style="--i:1">Scegli un’attività. Fatti aiutare da Vera. Racconta com’è andata.</h2>
+        <div class="test-grid test-grid--three">
+          <article class="test-step reveal" style="--i:1"><span class="time">01 · Scegli</span><h3>Un’attività ricorrente</h3><p>Parti da un lavoro che conosci bene e di cui puoi valutare il risultato.</p></article>
+          <article class="test-step reveal" style="--i:2"><span class="time">02 · Lavora</span><h3>Fatti aiutare da Vera</h3><p>Descrivi l’obiettivo, usa i file sul tuo computer e rivedi il lavoro prodotto.</p></article>
+          <article class="test-step reveal" style="--i:3"><span class="time">03 · Condividi</span><h3>Racconta com’è andata</h3><p>Puoi dare il feedback a voce o per iscritto, oppure lasciare che Vera prepari un riepilogo conciso. Lo controlli prima dell’invio. Al server arriva solo il feedback sintetico necessario per l’analisi: non vengono inviati dati privati, dati del caso o file di lavoro.</p></article>
+        </div>
+      </div>
+      <footer class="slide-foot slide-foot--end">
+        <span class="slide-number">08 / 08</span>
+      </footer>
+      <aside class="speaker-notes">Scegli un’attività ricorrente, fatti aiutare da Vera e racconta com’è andata. Puoi dare il feedback a voce o per iscritto, oppure lasciare che Vera prepari un riepilogo conciso. Lo controlli prima dell’invio. Al server arriva solo il feedback sintetico necessario per l’analisi: non vengono inviati dati privati, dati del caso o file di lavoro.</aside>
+    </section>
+  </main>
+
+  <div class="progress" id="progress" aria-hidden="true"></div>
+  <nav class="deck-controls" aria-label="Controlli presentazione">
+    <button id="previous" type="button" aria-label="Slide precedente">←</button>
+    <span class="control-count" id="counter" aria-live="polite">1 / 8</span>
+    <button id="next" type="button" aria-label="Slide successiva">→</button>
+  </nav>
+  <aside class="notes" id="notes" hidden aria-live="polite"></aside>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll(".slide"));
+      const previous = document.getElementById("previous");
+      const next = document.getElementById("next");
+      const counter = document.getElementById("counter");
+      const progress = document.getElementById("progress");
+      const notes = document.getElementById("notes");
+      let index = Math.max(0, slides.findIndex((slide) => slide.classList.contains("is-active")));
+      let touchStartX = 0;
+      let notesVisible = false;
+
+      function render(updateHash = true) {
+        slides.forEach((slide, slideIndex) => {
+          const active = slideIndex === index;
+          slide.classList.toggle("is-active", active);
+          slide.classList.toggle("is-before", slideIndex < index);
+          slide.setAttribute("aria-hidden", String(!active));
+        });
+        previous.disabled = index === 0;
+        next.disabled = index === slides.length - 1;
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        document.title = index === 0
+          ? "Progetto Vera AI · Presentazione pratica"
+          : `${slides[index].dataset.title} · Progetto Vera AI`;
+        if (notesVisible) showNotes();
+        if (updateHash) history.replaceState(null, "", `#${slides[index].id}`);
+      }
+
+      function goTo(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        render();
+      }
+
+      function showNotes() {
+        const source = slides[index].querySelector(".speaker-notes");
+        notes.textContent = source ? source.textContent.trim() : "Nessuna nota per questa slide.";
+        notes.hidden = false;
+      }
+
+      function toggleNotes() {
+        notesVisible = !notesVisible;
+        if (notesVisible) showNotes();
+        else notes.hidden = true;
+      }
+
+      previous.addEventListener("click", () => goTo(index - 1));
+      next.addEventListener("click", () => goTo(index + 1));
+
+      document.addEventListener("keydown", (event) => {
+        if (["ArrowRight", "PageDown", " "].includes(event.key)) {
+          event.preventDefault();
+          goTo(index + 1);
+        } else if (["ArrowLeft", "PageUp"].includes(event.key)) {
+          event.preventDefault();
+          goTo(index - 1);
+        } else if (event.key === "Home") {
+          goTo(0);
+        } else if (event.key === "End") {
+          goTo(slides.length - 1);
+        } else if (event.key.toLowerCase() === "n") {
+          toggleNotes();
+        } else if (event.key.toLowerCase() === "f") {
+          document.documentElement.requestFullscreen?.();
+        }
+      });
+
+      document.addEventListener("touchstart", (event) => {
+        touchStartX = event.changedTouches[0].screenX;
+      }, { passive: true });
+
+      document.addEventListener("touchend", (event) => {
+        const distance = event.changedTouches[0].screenX - touchStartX;
+        if (Math.abs(distance) > 55) goTo(index + (distance < 0 ? 1 : -1));
+      }, { passive: true });
+
+      const requested = window.location.hash.slice(1);
+      const requestedIndex = slides.findIndex((slide) => slide.id === requested);
+      if (requestedIndex >= 0) index = requestedIndex;
+      render(false);
+    })();
+  </script>
+</body>
+</html>
