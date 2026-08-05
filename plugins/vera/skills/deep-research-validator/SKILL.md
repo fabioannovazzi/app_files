@@ -1,6 +1,6 @@
 ---
 name: deep-research-validator
-description: Use when validating any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated.
+description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow.
 ---
 
 # Validate Answer
