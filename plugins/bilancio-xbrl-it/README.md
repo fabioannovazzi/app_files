@@ -235,8 +235,10 @@ python scripts/audit_schedule_taxonomy.py \
 
 This verifies the effective adapter pack against the official presentation
 graph for fixed assets, receivables, payables, equity, provisions, TFR, taxes,
-and guarantees/commitments. It proves structural concept eligibility, not the
-professional classification of an arbitrary client schedule.
+and guarantees/commitments. Reportable item descendants retain their exact
+role, root, and tuple path so repeated table rows are not flattened into
+duplicate facts. It proves structural concept eligibility, not the professional
+classification of an arbitrary client schedule.
 
 ## Controlled performance regression
 

@@ -103,10 +103,21 @@ def _concept_record(concept: object) -> dict[str, Any]:
         "balance": concept.balance,
         "abstract": bool(concept.isAbstract),
         "nillable": bool(concept.isNillable),
+        "is_item": bool(concept.isItem),
+        "is_tuple": bool(concept.isTuple),
+        "is_dimension_item": bool(concept.isDimensionItem),
+        "is_hypercube_item": bool(concept.isHypercubeItem),
+        "substitution_group": (
+            _qname_text(concept.substitutionGroupQname)
+            if concept.substitutionGroupQname
+            else None
+        ),
         "forms": [],
         "presentation_roles": [],
         "calculation_parents": [],
+        "definition_roles": [],
         "table_memberships": [],
+        "references": [],
     }
 
 
@@ -153,8 +164,12 @@ def build_catalogue(
         relationship_arcroles = {
             "presentation": XbrlConst.parentChild,
             "calculation": XbrlConst.summationItem,
+            "all": XbrlConst.all,
+            "not_all": XbrlConst.notAll,
+            "hypercube_dimension": XbrlConst.hypercubeDimension,
             "dimension_domain": XbrlConst.dimensionDomain,
             "domain_member": XbrlConst.domainMember,
+            "dimension_default": XbrlConst.dimensionDefault,
         }
         relationship_rows: dict[str, list[dict[str, object]]] = {
             name: [] for name in relationship_arcroles
@@ -181,6 +196,28 @@ def build_catalogue(
                             namespaces[str(prefix)] = str(namespace)
                         item = concepts.setdefault(qname_text, _concept_record(concept))
                         item["forms"].append(form)
+                    reference_set = model.relationshipSet(XbrlConst.conceptReference)
+                    for relationship in reference_set.modelRelationships:
+                        source = _qname_text(relationship.fromModelObject.qname)
+                        source_item = concepts.get(source)
+                        if source_item is None:
+                            continue
+                        resource = relationship.toModelObject
+                        parts = [
+                            {
+                                "name": str(child.localName),
+                                "value": str(child.stringValue).strip(),
+                            }
+                            for child in resource.iterchildren()
+                            if str(child.stringValue).strip()
+                        ]
+                        source_item["references"].append(
+                            {
+                                "form": form,
+                                "role": str(resource.role or ""),
+                                "parts": parts,
+                            }
+                        )
                     for name, arcrole in relationship_arcroles.items():
                         relationship_set = model.relationshipSet(arcrole)
                         for relationship in relationship_set.modelRelationships:
@@ -199,6 +236,21 @@ def build_catalogue(
                                         if relationship.weight is not None
                                         else None
                                     ),
+                                    "preferred_label": (
+                                        str(relationship.preferredLabel)
+                                        if relationship.preferredLabel
+                                        else None
+                                    ),
+                                    "target_role": (
+                                        str(relationship.targetRole)
+                                        if relationship.targetRole
+                                        else None
+                                    ),
+                                    "closed": getattr(relationship, "isClosed", None),
+                                    "context_element": getattr(
+                                        relationship, "contextElement", None
+                                    ),
+                                    "usable": getattr(relationship, "isUsable", None),
                                 }
                             )
                             target_item = concepts.get(target)
@@ -209,6 +261,7 @@ def build_catalogue(
                             elif name == "calculation":
                                 target_item["calculation_parents"].append(source)
                             else:
+                                target_item["definition_roles"].append(role)
                                 target_item["table_memberships"].append(role)
                 finally:
                     if model is not None:
@@ -218,14 +271,22 @@ def build_catalogue(
                     "forms",
                     "presentation_roles",
                     "calculation_parents",
+                    "definition_roles",
                     "table_memberships",
                 ):
                     item[key] = sorted(set(item[key]))
+                unique_references = {
+                    json.dumps(reference, ensure_ascii=False, sort_keys=True): reference
+                    for reference in item["references"]
+                }
+                item["references"] = [
+                    unique_references[key] for key in sorted(unique_references)
+                ]
             for name, rows in relationship_rows.items():
                 unique = {json.dumps(row, sort_keys=True): row for row in rows}
                 relationship_rows[name] = [unique[key] for key in sorted(unique)]
             return {
-                "schema_version": 1,
+                "schema_version": 2,
                 "taxonomy_id": taxonomy_id,
                 "taxonomy_package_sha256": actual_sha256,
                 "official_source": official_source,

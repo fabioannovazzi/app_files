@@ -35,6 +35,7 @@ from client_history import (
 from defusedxml.ElementTree import fromstring
 from disclosure_engine import (
     build_disclosure_coverage,
+    disclosure_answer_complete,
     disclosure_rule_pack_hash,
     manual_disclosure_flags,
     narrative_redline,
@@ -127,11 +128,25 @@ XBRLDI_NS = "http://xbrl.org/2006/xbrldi"
 XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"
 SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 SAFE_QNAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*:[A-Za-z_][A-Za-z0-9_.-]*$")
+XBRL_DECIMAL_LEXICAL = re.compile(r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$")
 MONEY_LITERAL = re.compile(
     r"(?:€|euro)\s*(\(?-?(?:\d{1,3}(?:[.\s]\d{3})+|\d+)(?:[,.]\d+)?\)?)",
     flags=re.IGNORECASE,
 )
 EXPORTABLE_STATUSES = {"OBSERVED", "DERIVED", "USER_CONFIRMED"}
+ANNUAL_NEGATIVE_CONFIRMATION_KEYS = {
+    "guarantees_and_commitments",
+    "contingent_liabilities",
+    "related_party_transactions",
+    "off_balance_sheet_arrangements",
+    "derivatives",
+    "post_closing_events",
+    "accounting_policy_changes",
+    "prior_period_errors",
+    "going_concern_uncertainties",
+    "non_market_transactions",
+    "double_format_events",
+}
 SUPPORTED_LEGAL_FORMS = {"SRL", "SPA", "SAPA"}
 MAX_INPUT_BYTES = 100 * 1024 * 1024
 MAX_XLSX_UNCOMPRESSED_BYTES = 250 * 1024 * 1024
@@ -775,6 +790,9 @@ def create_case(
             )
     if str(payload.get("currency", "EUR")) != "EUR":
         raise ValueError("MVP supports EUR only")
+    taxonomy_checksum = str(payload.get("taxonomy_checksum") or "")
+    if not re.fullmatch(r"[0-9a-f]{64}", taxonomy_checksum):
+        raise ValueError("A lowercase SHA-256 taxonomy package checksum is required")
     unsupported_reasons = _validate_entity(entity)
     state = CaseState.UNSUPPORTED if unsupported_reasons else CaseState.DRAFT
     reporting_precision = int(payload.get("reporting_precision", 0))
@@ -811,7 +829,7 @@ def create_case(
         "rule_pack_checksum": _sha256_bytes(_canonical_json(rule_pack)),
         "taxonomy_output_contracts": taxonomy_output_contracts,
         "statutory_presentation_rule_pack_checksum": None,
-        "taxonomy_checksum": payload.get("taxonomy_checksum"),
+        "taxonomy_checksum": taxonomy_checksum,
         "unsupported_reasons": unsupported_reasons,
         "source_documents": [],
         "file_security_scans": [],
@@ -1123,7 +1141,7 @@ def ingest_prior_xbrl(
         "media_type": "application/xbrl+xml",
         "sha256": parsed["sha256"],
         "size_bytes": source.resolve().stat().st_size,
-        "parser_profile": "prior_xbrl_v2",
+        "parser_profile": "prior_xbrl_v4",
         "parsed_at": _now(),
     }
     _mutate(case, actor, "prior_xbrl_parsed")
@@ -1137,7 +1155,7 @@ def ingest_prior_xbrl(
         "document_id": document_id,
         "expected_prior_end": expected_prior_end,
         "matching_context_ids": [item["context_id"] for item in matching_contexts],
-        "computation_context": _computation_context(case, "prior-xbrl-parser-v2"),
+        "computation_context": _computation_context(case, "prior-xbrl-parser-v4"),
     }
     case["mapping_candidates"] = []
     case["taxonomy_mapping_index"] = None
@@ -1149,7 +1167,7 @@ def ingest_prior_xbrl(
         case,
         "document_parsed",
         actor,
-        {"document_id": document_id, "parser_profile": "prior_xbrl_v2"},
+        {"document_id": document_id, "parser_profile": "prior_xbrl_v4"},
     )
     _record_event(
         case,
@@ -1654,19 +1672,33 @@ def _prior_xbrl_reconciliation(case: Mapping[str, Any]) -> dict[str, Any]:
     }
     observed: dict[str, Decimal] = {}
     observed_refs: dict[str, str] = {}
+    invalid_unit_qnames: set[str] = set()
+    invalid_value_qnames: set[str] = set()
     issues: list[dict[str, Any]] = []
     for fact in prior_xbrl.get("facts", []):
         context_ref = str(fact.get("context_ref", ""))
         if (
             context_ref not in matching_context_ids
             or (contexts.get(context_ref) or {}).get("has_dimensions")
-            or not fact.get("unit_ref")
             or fact.get("nil")
             or fact.get("value") in {None, ""}
         ):
             continue
         qname = str(fact["qname"])
-        value = normalize_decimal(fact["value"])
+        unit = fact.get("unit") or {}
+        measure = unit.get("measure") or {}
+        if not (
+            unit.get("kind") == "MEASURE"
+            and measure.get("namespace") == ISO4217_NS
+            and measure.get("local_name") == "EUR"
+        ):
+            invalid_unit_qnames.add(qname)
+            continue
+        raw_value = str(fact["value"]).strip()
+        if not XBRL_DECIMAL_LEXICAL.fullmatch(raw_value):
+            invalid_value_qnames.add(qname)
+            continue
+        value = Decimal(raw_value)
         if qname in observed and observed[qname] != value:
             issues.append(
                 {
@@ -1729,6 +1761,20 @@ def _prior_xbrl_reconciliation(case: Mapping[str, Any]) -> dict[str, Any]:
             *inventory.get("totals", []),
         ]
     } | set(expected)
+    for qname in sorted(invalid_unit_qnames & relevant):
+        issues.append(
+            {
+                "code": "PRIOR_XBRL_MONETARY_UNIT_INVALID",
+                "xbrl_concept": qname,
+            }
+        )
+    for qname in sorted(invalid_value_qnames & relevant):
+        issues.append(
+            {
+                "code": "PRIOR_XBRL_MONETARY_VALUE_INVALID",
+                "xbrl_concept": qname,
+            }
+        )
     checks: list[dict[str, Any]] = []
     decisions = {
         str(item["xbrl_concept"]): item
@@ -3519,7 +3565,7 @@ def record_narrative_blocks(
     accepted_answers = {
         str(answer["key"])
         for answer in case.get("disclosure_answers", [])
-        if answer.get("status") in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
+        if disclosure_answer_complete(answer)
     }
     valid_refs = {
         str(fact["fact_id"]) for fact in case.get("canonical_facts", [])
@@ -4288,32 +4334,63 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
     else:
         totals = statements["section_totals"]
         if "ASSETS" in totals and "LIABILITIES_EQUITY" in totals:
-            if (
-                Decimal(totals["ASSETS"]["current"])
-                + Decimal(totals["LIABILITIES_EQUITY"]["current"])
-                != 0
+            for period, rule_id, period_label in (
+                ("current", "STATEMENT.BALANCE_SHEET", "Current"),
+                (
+                    "prior",
+                    "STATEMENT.COMPARATIVE_BALANCE_SHEET",
+                    "Comparative",
+                ),
             ):
+                asset_value = totals["ASSETS"].get(period)
+                liability_value = totals["LIABILITIES_EQUITY"].get(period)
+                if asset_value is None or liability_value is None:
+                    add(
+                        rule_id,
+                        "BLOCKER",
+                        f"{period_label} balance-sheet totals are missing",
+                    )
+                elif Decimal(asset_value) + Decimal(liability_value) != 0:
+                    add(
+                        rule_id,
+                        "BLOCKER",
+                        f"{period_label} assets do not equal liabilities and equity",
+                    )
+        result_facts = [
+            fact
+            for fact in statements["facts"]
+            if fact["statement_section"] in {"INCOME_RESULT", "EQUITY_RESULT"}
+        ]
+        for value_field, rule_id, period_label in (
+            ("current_value", "STATEMENT.RESULT_TIE_OUT", "Current"),
+            (
+                "prior_value",
+                "STATEMENT.COMPARATIVE_RESULT_TIE_OUT",
+                "Comparative",
+            ),
+        ):
+            if any(fact.get(value_field) is None for fact in result_facts):
                 add(
-                    "STATEMENT.BALANCE_SHEET",
+                    rule_id,
                     "BLOCKER",
-                    "Assets do not equal liabilities and equity",
+                    f"{period_label} result reconciliation values are missing",
                 )
-        result_income = sum(
-            Decimal(fact["current_value"])
-            for fact in statements["facts"]
-            if fact["statement_section"] == "INCOME_RESULT"
-        )
-        result_equity = sum(
-            Decimal(fact["current_value"])
-            for fact in statements["facts"]
-            if fact["statement_section"] == "EQUITY_RESULT"
-        )
-        if result_income or result_equity:
-            if result_income + result_equity != 0:
+                continue
+            result_income = sum(
+                Decimal(fact[value_field])
+                for fact in result_facts
+                if fact["statement_section"] == "INCOME_RESULT"
+            )
+            result_equity = sum(
+                Decimal(fact[value_field])
+                for fact in result_facts
+                if fact["statement_section"] == "EQUITY_RESULT"
+            )
+            if (result_income or result_equity) and result_income + result_equity != 0:
                 add(
-                    "STATEMENT.RESULT_TIE_OUT",
+                    rule_id,
                     "BLOCKER",
-                    "Income-statement result does not reconcile to equity",
+                    f"{period_label} income-statement result does not reconcile to equity",
                 )
     if case.get("statutory_presentation_required", True):
         mapping_index = case.get("taxonomy_mapping_index")
@@ -4549,25 +4626,12 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
             )
         else:
             narrative_qnames.add(qname)
-    negative_keys = {
-        "guarantees_and_commitments",
-        "contingent_liabilities",
-        "related_party_transactions",
-        "off_balance_sheet_arrangements",
-        "derivatives",
-        "post_closing_events",
-        "accounting_policy_changes",
-        "prior_period_errors",
-        "going_concern_uncertainties",
-        "non_market_transactions",
-        "double_format_events",
-    }
     accepted_answers = {
         answer["key"]
         for answer in case.get("disclosure_answers", [])
-        if answer.get("status") in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
+        if disclosure_answer_complete(answer)
     }
-    missing_confirmations = sorted(negative_keys - accepted_answers)
+    missing_confirmations = sorted(ANNUAL_NEGATIVE_CONFIRMATION_KEYS - accepted_answers)
     if missing_confirmations:
         add(
             "DISCLOSURE.NEGATIVE_CONFIRMATIONS",
@@ -4579,7 +4643,7 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
             answer
             for answer in case.get("disclosure_answers", [])
             if answer.get("key") == "double_format_events"
-            and answer.get("status") in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
+            and disclosure_answer_complete(answer)
         ),
         None,
     )
@@ -4825,19 +4889,44 @@ def record_disclosure_answers(
         "REJECTED",
         "NOT_APPLICABLE_CONFIRMED",
     }
+    allowed_keys = {
+        str(question["answer_key"]) for question in case.get("questionnaire", [])
+    } | ANNUAL_NEGATIVE_CONFIRMATION_KEYS
     for answer in answers:
         key = str(answer["key"])
         if not key or key in seen:
             raise ValueError("Disclosure answer keys must be present and unique")
+        if key not in allowed_keys:
+            raise ValueError(f"Disclosure answer key is not active or annual: {key}")
         seen.add(key)
         status = str(answer["status"]).upper()
         if status not in allowed_statuses:
             raise ValueError(f"Unsupported disclosure answer status: {status}")
-        if (
-            status in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
-            and not str(answer.get("confirmed_by", actor)).strip()
+        if status in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}:
+            if not actor.strip():
+                raise ValueError(
+                    "Accepted disclosure answers require an authenticated actor"
+                )
+            claimed_actor = answer.get("confirmed_by")
+            if claimed_actor is not None and str(claimed_actor) != actor:
+                raise ValueError(
+                    "Disclosure confirmation identity must match the authenticated actor"
+                )
+        terminal_answer = {
+            **dict(answer),
+            "status": status,
+            "confirmed_by": actor,
+        }
+        if status == "ACCEPTED" and not disclosure_answer_complete(terminal_answer):
+            raise ValueError(
+                "Accepted disclosure answers require a reviewed structured value"
+            )
+        if status == "NOT_APPLICABLE_CONFIRMED" and not disclosure_answer_complete(
+            terminal_answer
         ):
-            raise ValueError("Accepted disclosure answers require a confirming actor")
+            raise ValueError(
+                "Not-applicable disclosure confirmations require a specific reason"
+            )
         if status == "ASSIGNED" and not str(answer.get("owner", "")).strip():
             raise ValueError("Assigned disclosure answers require an owner")
         source_refs = sorted(
@@ -4858,7 +4947,7 @@ def record_disclosure_answers(
                 "reason": str(answer.get("reason", "")),
                 "owner": str(answer.get("owner", "")) or None,
                 "confirmed_by": (
-                    str(answer.get("confirmed_by", actor))
+                    actor
                     if status in {"ACCEPTED", "NOT_APPLICABLE_CONFIRMED"}
                     else None
                 ),
@@ -5077,6 +5166,8 @@ def _taxonomy_catalogue(
     if path.is_symlink() or not path.is_file():
         raise ValueError("Taxonomy catalogue must be a regular local file")
     catalogue = json.loads(path.read_text(encoding="utf-8"))
+    if catalogue.get("schema_version") != 2:
+        raise ValueError("Taxonomy catalogue schema version 2 is required")
     if catalogue.get("taxonomy_id") != expected_id:
         raise ValueError("Taxonomy catalogue identifier does not match the locked case")
     package_checksum = catalogue.get("taxonomy_package_sha256")
@@ -5086,7 +5177,38 @@ def _taxonomy_catalogue(
         )
     if expected_checksum and package_checksum != expected_checksum:
         raise ValueError("Taxonomy package checksum does not match the locked case")
+    concepts = catalogue.get("concepts")
+    if not isinstance(concepts, list) or not concepts:
+        raise ValueError("Taxonomy catalogue has no concepts")
+    qnames: set[str] = set()
+    for concept in concepts:
+        if not isinstance(concept, Mapping) or not str(concept.get("qname", "")):
+            raise ValueError("Taxonomy catalogue contains an invalid concept record")
+        qname = str(concept["qname"])
+        if qname in qnames:
+            raise ValueError(f"Taxonomy catalogue repeats concept {qname}")
+        qnames.add(qname)
+        if not isinstance(concept.get("is_item"), bool) or not isinstance(
+            concept.get("is_tuple"), bool
+        ):
+            raise ValueError(
+                f"Taxonomy concept lacks item-versus-tuple metadata: {qname}"
+            )
+        if concept["is_item"] is True and concept["is_tuple"] is True:
+            raise ValueError(f"Taxonomy concept cannot be both item and tuple: {qname}")
     return catalogue
+
+
+def _is_reportable_item(concept: Mapping[str, Any] | None) -> bool:
+    """Return whether one taxonomy concept can be emitted as an item fact."""
+
+    return bool(
+        concept
+        and concept.get("abstract") is not True
+        and concept.get("is_item") is True
+        and concept.get("is_tuple") is False
+        and concept.get("period_type") in {"instant", "duration"}
+    )
 
 
 def _taxonomy_presentation_order(
@@ -5243,6 +5365,17 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         for axis, member in dimensions:
             if axis not in concept_lookup or member not in concept_lookup:
                 raise ValueError(f"Unknown dimension axis or member: {axis}={member}")
+            axis_concept = concept_lookup[axis]
+            member_concept = concept_lookup[member]
+            if axis_concept.get("is_dimension_item") is not True:
+                raise ValueError(f"Dimension axis is not a dimension item: {axis}")
+            if (
+                member_concept.get("is_item") is not True
+                or member_concept.get("is_tuple") is not False
+                or member_concept.get("is_dimension_item") is True
+                or member_concept.get("is_hypercube_item") is True
+            ):
+                raise ValueError(f"Dimension member is not a domain item: {member}")
             if axis.split(":", 1)[0] not in namespaces:
                 raise ValueError(f"Missing namespace for dimension axis: {axis}")
             if member.split(":", 1)[0] not in namespaces:
@@ -5280,7 +5413,47 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
     output_language = str(snapshot.get("output_language", "it"))
     if output_language not in {"it", "en"}:
         raise ValueError("Approved snapshot output language must be it or en")
-    seen: set[tuple[str, str]] = set()
+    seen: set[tuple[str, str, str]] = set()
+    tuple_containers: dict[tuple[tuple[str, ...], str], etree._Element] = {}
+
+    def tuple_parent(tuple_path: list[str], instance_id: str) -> etree._Element:
+        """Create or reuse one deterministic nested tuple occurrence."""
+
+        parent = root
+        for depth, tuple_qname in enumerate(tuple_path, start=1):
+            path_key = tuple(tuple_path[:depth])
+            key = (path_key, instance_id)
+            if key in tuple_containers:
+                parent = tuple_containers[key]
+                continue
+            tuple_concept = concept_lookup.get(tuple_qname)
+            if (
+                not tuple_concept
+                or tuple_concept.get("is_tuple") is not True
+                or tuple_concept.get("is_item") is not False
+                or tuple_concept.get("abstract") is True
+            ):
+                raise ValueError(
+                    f"Tuple path contains a non-tuple concept: {tuple_qname}"
+                )
+            forms = tuple_concept.get("forms")
+            if forms and selected_form not in forms:
+                raise ValueError(
+                    f"Tuple concept {tuple_qname} is not available for {selected_form}"
+                )
+            prefix, local_name = tuple_qname.split(":", 1)
+            namespace = namespaces.get(prefix)
+            if not namespace:
+                raise ValueError(f"Missing namespace for tuple concept: {tuple_qname}")
+            container = etree.SubElement(parent, etree.QName(namespace, local_name))
+            tuple_digest = _sha256_bytes(
+                _canonical_json({"path": path_key, "instance": instance_id})
+            )[:20]
+            container.set("id", _xbrl_fact_id("tuple", tuple_digest, depth))
+            tuple_containers[key] = container
+            parent = container
+        return parent
+
     for fact in sorted(snapshot.get("canonical_facts", []), key=fact_sort_key):
         qname = fact.get("xbrl_concept")
         if not qname:
@@ -5293,8 +5466,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
                 f"Fact {fact['fact_id']} has no reviewed XBRL sign convention"
             )
         concept = concept_lookup.get(qname)
-        if not concept or concept.get("abstract"):
-            raise ValueError(f"Unknown or abstract taxonomy concept: {qname}")
+        if not _is_reportable_item(concept):
+            raise ValueError(
+                f"Unknown, abstract, or non-item taxonomy concept: {qname}"
+            )
         if "monetaryItemType" not in str(concept.get("type", "")):
             raise ValueError(f"Statement fact concept is not monetary: {qname}")
         forms = concept.get("forms")
@@ -5318,7 +5493,7 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
             (current_context, fact["current_value"]),
             (prior_context, fact["prior_value"]),
         ):
-            duplicate_key = (qname, context_ref)
+            duplicate_key = (qname, context_ref, "")
             if duplicate_key in seen:
                 raise ValueError(
                     f"Conflicting duplicate fact: {qname} in {context_ref}"
@@ -5360,8 +5535,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
             raise ValueError("Statutory presentation fact has no provenance")
         qname = str(fact["xbrl_concept"])
         concept = concept_lookup.get(qname)
-        if not concept or concept.get("abstract"):
-            raise ValueError(f"Unknown or abstract presentation concept: {qname}")
+        if not _is_reportable_item(concept):
+            raise ValueError(
+                f"Unknown, abstract, or non-item presentation concept: {qname}"
+            )
         if "monetaryItemType" not in str(concept.get("type", "")):
             raise ValueError(f"Presentation fact concept is not monetary: {qname}")
         forms = concept.get("forms")
@@ -5387,7 +5564,7 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         ):
             if value is None:
                 continue
-            duplicate_key = (qname, context_ref)
+            duplicate_key = (qname, context_ref, "")
             if duplicate_key in seen:
                 raise ValueError(
                     f"Conflicting duplicate fact: {qname} in {context_ref}"
@@ -5420,8 +5597,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
     ):
         qname = str(fact["xbrl_concept"])
         concept = concept_lookup.get(qname)
-        if not concept or concept.get("abstract"):
-            raise ValueError(f"Unknown or abstract taxonomy concept: {qname}")
+        if not _is_reportable_item(concept):
+            raise ValueError(
+                f"Unknown, abstract, or non-item taxonomy concept: {qname}"
+            )
         forms = concept.get("forms")
         if forms and selected_form not in forms:
             raise ValueError(
@@ -5439,7 +5618,14 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         context_ref = (
             dimension_contexts[(period_key, dimensions)] if dimensions else period_key
         )
-        duplicate_key = (qname, context_ref)
+        tuple_path = [str(item) for item in fact.get("tuple_path", [])]
+        tuple_instance_id = fact.get("tuple_instance_id")
+        if tuple_path and not str(tuple_instance_id or "").strip():
+            raise ValueError("Tuple facts require a stable tuple instance identifier")
+        if not tuple_path and tuple_instance_id is not None:
+            raise ValueError("Flat facts cannot carry a tuple instance identifier")
+        occurrence = f"{'/'.join(tuple_path)}#{tuple_instance_id}" if tuple_path else ""
+        duplicate_key = (qname, context_ref, occurrence)
         if duplicate_key in seen:
             raise ValueError(f"Conflicting duplicate fact: {qname} in {context_ref}")
         seen.add(duplicate_key)
@@ -5447,7 +5633,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         namespace = namespaces.get(prefix)
         if not namespace:
             raise ValueError(f"Missing namespace for concept: {qname}")
-        element = etree.SubElement(root, etree.QName(namespace, local_name))
+        parent = (
+            tuple_parent(tuple_path, str(tuple_instance_id)) if tuple_path else root
+        )
+        element = etree.SubElement(parent, etree.QName(namespace, local_name))
         element.set(
             "id",
             _xbrl_fact_id(
@@ -5493,8 +5682,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         if language != output_language:
             raise ValueError("Narrative language differs from approved output")
         concept = concept_lookup.get(qname)
-        if not concept or concept.get("abstract"):
-            raise ValueError(f"Unknown or abstract narrative concept: {qname}")
+        if not _is_reportable_item(concept):
+            raise ValueError(
+                f"Unknown, abstract, or non-item narrative concept: {qname}"
+            )
         if "monetaryItemType" in str(concept.get("type", "")):
             raise ValueError(f"Narrative block uses a monetary concept: {qname}")
         forms = concept.get("forms")
@@ -5511,7 +5702,7 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
             if concept["period_type"] == "instant"
             else "current_duration"
         )
-        duplicate_key = (str(qname), context_ref)
+        duplicate_key = (str(qname), context_ref, "")
         if duplicate_key in seen:
             raise ValueError(f"Conflicting duplicate fact: {qname} in {context_ref}")
         seen.add(duplicate_key)
@@ -5532,8 +5723,10 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         if not qname or not text or not micro_reporting.get("reviewed_by"):
             raise ValueError("Micro footer is not a reviewed renderable XBRL fact")
         concept = concept_lookup.get(qname)
-        if not concept or concept.get("abstract"):
-            raise ValueError(f"Unknown or abstract micro-footer concept: {qname}")
+        if not _is_reportable_item(concept):
+            raise ValueError(
+                f"Unknown, abstract, or non-item micro-footer concept: {qname}"
+            )
         if "monetaryItemType" in str(concept.get("type", "")):
             raise ValueError(f"Micro footer uses a monetary concept: {qname}")
         forms = concept.get("forms")
@@ -5550,7 +5743,7 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
             if concept["period_type"] == "instant"
             else "current_duration"
         )
-        duplicate_key = (qname, context_ref)
+        duplicate_key = (qname, context_ref, "")
         if duplicate_key in seen:
             raise ValueError(f"Conflicting duplicate fact: {qname} in {context_ref}")
         seen.add(duplicate_key)

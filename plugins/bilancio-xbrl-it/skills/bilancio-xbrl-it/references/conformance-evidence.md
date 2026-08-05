@@ -39,9 +39,9 @@ variation result, and checksum-records the report and log.
 - CSV report SHA-256:
   `413bc110079705aa0c3ed8babe6a9b865ef1f36974c5476e855876c2b9da0af9`.
 - Log SHA-256:
-  `792cd458e3228ca5b72d75d18527dfca92fb6bc35da460b97253d694e390fd49`.
+  `c7555a3ee21d51c0fd709394d8a62e6a83ec02f90f2ec284cddddc3c1987c665`.
 - Manifest SHA-256:
-  `276655df33c94f390427d319eecc0e5d2a62c194f77acfb4c0f1ee60004c2650`.
+  `4b933dd3652900b15989e2184ea442b749a8dc6dcd5bd503f6e0f3d356bf25cb`.
 
 The initial structural-only run passed 538 variations and failed 68 expected
 calculation-inconsistency variations because calculation validation was not

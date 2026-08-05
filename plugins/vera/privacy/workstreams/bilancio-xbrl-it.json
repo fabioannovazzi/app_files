@@ -84,7 +84,7 @@
     },
     {
       "id": "taxonomy-and-export-integrity",
-      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction; export rejects an unverified or mismatched taxonomy catalogue and writes checksums for every artifact."
+      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction, distinguishes reportable items from tuples and non-item schema concepts, and preserves tuple and relationship metadata; export rejects an unverified or mismatched taxonomy catalogue and writes checksums for every artifact."
     },
     {
       "id": "offline-local-xbrl-validation",
@@ -92,7 +92,7 @@
     },
     {
       "id": "safe-prior-xbrl-intake",
-      "control": "The prior-instance parser accepts only bounded regular local files, rejects symbolic links and document type declarations, disables entity and network resolution, requires one schema reference, and checks the entity identifier and comparative period before attaching source-anchored facts. Explicit dimensions, canonicalized typed dimensions, segment/scenario placement and context-fact groups are retained without executing or remotely resolving supplied XML."
+      "control": "The prior-instance parser accepts only bounded regular local files, rejects symbolic links and document type declarations, disables entity and network resolution, requires one schema reference, validates context periods, unit definitions and XML-decimal monetary values, and checks the entity identifier, comparative period and EUR reconciliation unit before attaching source-anchored facts. Explicit dimensions, canonicalized typed dimensions, tuple ancestry, segment/scenario placement and context-fact groups are retained without executing or remotely resolving supplied XML."
     },
     {
       "id": "tenant-isolated-mapping-memory",
@@ -104,7 +104,7 @@
     },
     {
       "id": "schedule-taxonomy-adapter-boundary",
-      "control": "A deployment-controlled checksum-locked rule pack selects the official presentation roots permitted for each form and schedule family. Every normalized schedule cell requires a reviewed exact-concept binding or reasoned omission; monetary values are mechanically derived from source cells, text facts use one exact source, matching primary facts are reconciled instead of duplicated, and uncovered cells, all-omitted table routes, contradictory facts and out-of-bound concepts fail closed."
+      "control": "A deployment-controlled checksum-locked rule pack selects the official presentation roots permitted for each form and schedule family. Every normalized schedule cell requires a reviewed exact-concept binding or reasoned omission; monetary values permit only explicit sign multipliers, text facts use one exact source, and role-specific tuple paths allow repeated reviewed rows without flattening their structure. Matching primary facts are reconciled instead of duplicated, and repeated inputs, uncovered cells, all-omitted table routes, contradictory facts and out-of-bound concepts fail closed."
     },
     {
       "id": "bounded-supporting-workbook-intake",
@@ -140,7 +140,7 @@
     },
     {
       "id": "canonical-case-record-integrity",
-      "control": "The canonical case JSON and its SHA-256 sidecar are written through bounded non-symlink temporary paths and every load verifies the sidecar before parsing. Missing, malformed, mismatched, or symlinked record/checksum pairs fail closed."
+      "control": "Canonical case and idempotency JSON records and their SHA-256 sidecars are written through bounded non-symlink temporary paths and every load verifies the sidecar before parsing. Missing, malformed, mismatched, or symlinked record/checksum pairs fail closed."
     },
     {
       "id": "minimum-context-model-suggestion-boundary",
@@ -171,6 +171,6 @@
     "reviewed_at": "2026-08-05",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "734691107a990b22564cde1d8c492d9d31f739e94795baf37add1fa8b599da85"
+    "source_fingerprint": "8b4bc6360dd9eb66003c26b75ffbf798d8509c87e1bb849e60beec8150192c07"
   }
 }

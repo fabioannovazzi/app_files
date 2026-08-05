@@ -368,14 +368,56 @@ class CaseService:
             finally:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
-    def _idempotency_path(self, case_dir: Path, key: str) -> Path:
+    def _idempotency_paths(self, case_dir: Path, key: str) -> tuple[Path, Path]:
         if not SAFE_ID.fullmatch(key):
             raise ValueError("Idempotency key must be a safe stable identifier")
         directory = case_dir / ".idempotency"
         if directory.is_symlink():
             raise ValueError("Idempotency directory must not be a symbolic link")
         directory.mkdir(parents=True, exist_ok=True)
-        return directory / f"{key}.json"
+        record = directory / f"{key}.json"
+        checksum = directory / f"{key}.sha256"
+        if record.is_symlink() or checksum.is_symlink():
+            raise ValueError("Idempotency files must not be symbolic links")
+        return record, checksum
+
+    def _load_idempotency(self, case_dir: Path, key: str) -> dict[str, Any]:
+        record_path, checksum_path = self._idempotency_paths(case_dir, key)
+        if not record_path.is_file() or not checksum_path.is_file():
+            raise ValueError("Idempotency record is missing integrity metadata")
+        record_bytes = record_path.read_bytes()
+        expected_checksum = checksum_path.read_text(encoding="ascii").strip()
+        if (
+            not re_full_sha256(expected_checksum)
+            or hashlib.sha256(record_bytes).hexdigest() != expected_checksum
+        ):
+            raise ValueError("Idempotency record integrity verification failed")
+        payload = json.loads(record_bytes)
+        if (
+            not isinstance(payload, dict)
+            or set(payload) != {"request_hash", "response"}
+            or not re_full_sha256(str(payload.get("request_hash", "")))
+            or not isinstance(payload.get("response"), dict)
+        ):
+            raise ValueError("Idempotency record payload is invalid")
+        return payload
+
+    def _save_idempotency(
+        self, case_dir: Path, key: str, record: Mapping[str, Any]
+    ) -> dict[str, Any]:
+        record_path, checksum_path = self._idempotency_paths(case_dir, key)
+        record_tmp = record_path.with_suffix(".json.tmp")
+        checksum_tmp = checksum_path.with_suffix(".sha256.tmp")
+        if record_tmp.is_symlink() or checksum_tmp.is_symlink():
+            raise ValueError("Temporary idempotency files must not be symbolic links")
+        record_bytes = _canonical_json(record) + b"\n"
+        record_tmp.write_bytes(record_bytes)
+        checksum_tmp.write_text(
+            hashlib.sha256(record_bytes).hexdigest() + "\n", encoding="ascii"
+        )
+        record_tmp.replace(record_path)
+        checksum_tmp.replace(checksum_path)
+        return self._load_idempotency(case_dir, key)
 
     def _job_paths(self, case_dir: Path, job_id: str) -> tuple[Path, Path, Path]:
         if not SAFE_ID.fullmatch(job_id):
@@ -445,18 +487,15 @@ class CaseService:
         callback: Callable[[], dict[str, Any]],
     ) -> dict[str, Any]:
         request_hash = hashlib.sha256(_canonical_json(request)).hexdigest()
-        path = self._idempotency_path(case_dir, key)
-        if path.is_file():
-            record = json.loads(path.read_text(encoding="utf-8"))
+        record_path, checksum_path = self._idempotency_paths(case_dir, key)
+        if record_path.exists() or checksum_path.exists():
+            record = self._load_idempotency(case_dir, key)
             if record["request_hash"] != request_hash:
                 raise ValueError("Idempotency key was already used for another request")
             return dict(record["response"])
         response = callback()
         record = {"request_hash": request_hash, "response": response}
-        temporary = path.with_suffix(".tmp")
-        temporary.write_bytes(_canonical_json(record) + b"\n")
-        temporary.replace(path)
-        return response
+        return dict(self._save_idempotency(case_dir, key, record)["response"])
 
     def create(
         self,
@@ -1082,14 +1121,13 @@ class CaseService:
                 with self._case_lock(case_dir):
                     current_case = load_case(case_dir)
                     current_job = self._load_job(case_dir, job_id)
-                    idempotency_record = (
-                        case_dir
-                        / ".idempotency"
-                        / f"{job['mutation_idempotency_key']}.json"
+                    idempotency_record, idempotency_checksum = self._idempotency_paths(
+                        case_dir, str(job["mutation_idempotency_key"])
                     )
-                    stale = (
-                        str(current_case["revision_id"]) != job["expected_revision"]
-                        and not idempotency_record.is_file()
+                    stale = str(current_case["revision_id"]) != job[
+                        "expected_revision"
+                    ] and not (
+                        idempotency_record.is_file() and idempotency_checksum.is_file()
                     )
                     current_job["status"] = "STALE" if stale else "FAILED"
                     current_job["completed_at"] = _now()

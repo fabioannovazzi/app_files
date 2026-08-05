@@ -53,19 +53,37 @@ def _decimal_text(value: Decimal) -> str:
     return format(normalized, "f")
 
 
-def _descendants(relationships: Sequence[Mapping[str, Any]], root: str) -> set[str]:
+def _presentation_paths(
+    relationships: Sequence[Mapping[str, Any]], root: str
+) -> dict[str, list[tuple[str, ...]]]:
+    """Return every acyclic presentation path below one root within one role."""
+
     children: dict[str, set[str]] = defaultdict(set)
     for relationship in relationships:
         children[str(relationship["from"])].add(str(relationship["to"]))
-    result = {root}
-    pending = [root]
+    result: dict[str, list[tuple[str, ...]]] = defaultdict(list)
+    pending = [(root, (root,))]
     while pending:
-        parent = pending.pop()
+        parent, path = pending.pop()
         for child in children.get(parent, set()):
-            if child not in result:
-                result.add(child)
-                pending.append(child)
-    return result
+            if child in path:
+                raise ValueError("Official presentation graph contains a cycle")
+            child_path = (*path, child)
+            if child_path not in result[child]:
+                result[child].append(child_path)
+                pending.append((child, child_path))
+    return dict(result)
+
+
+def _is_reportable_item(concept: Mapping[str, Any]) -> bool:
+    """Return whether a catalogue concept may legally become an item fact."""
+
+    return (
+        concept.get("abstract") is not True
+        and concept.get("is_item") is True
+        and concept.get("is_tuple") is False
+        and concept.get("period_type") in {"instant", "duration"}
+    )
 
 
 def build_schedule_table_inventory(
@@ -76,6 +94,8 @@ def build_schedule_table_inventory(
     """Return the checksum-bound note-table concepts allowed for one form."""
 
     form = selected_form.upper()
+    if catalogue.get("schema_version") != 2:
+        raise ValueError("Schedule adapter requires taxonomy catalogue schema 2")
     if str(catalogue.get("taxonomy_id")) != str(rule_pack.get("taxonomy_id")):
         raise ValueError("Schedule adapter and catalogue taxonomy differ")
     form_policies = rule_pack.get("forms")
@@ -103,7 +123,7 @@ def build_schedule_table_inventory(
             raise ValueError(f"Schedule {schedule_type} requires table roots")
         if strategy == "TEXT_ONLY" and roots:
             raise ValueError(f"Text-only schedule {schedule_type} cannot have roots")
-        allowed: set[str] = set()
+        allowed_bindings: dict[str, list[dict[str, Any]]] = defaultdict(list)
         tables = []
         for root in roots:
             concept = concepts.get(root)
@@ -111,24 +131,49 @@ def build_schedule_table_inventory(
                 raise ValueError(
                     f"Schedule table root is unknown or non-abstract: {root}"
                 )
-            nodes = _descendants(form_relationships, root)
-            if len(nodes) == 1:
+            roles = sorted(
+                {
+                    str(item["role"])
+                    for item in form_relationships
+                    if str(item["from"]) == root
+                }
+            )
+            if not roles:
                 raise ValueError(
                     f"Official presentation graph has no {form} table below {root}"
                 )
-            fact_concepts = sorted(
-                qname
-                for qname in nodes
-                if qname in concepts and concepts[qname].get("abstract") is not True
-            )
+            fact_concepts: set[str] = set()
+            for role in roles:
+                role_relationships = [
+                    item for item in form_relationships if str(item.get("role")) == role
+                ]
+                paths = _presentation_paths(role_relationships, root)
+                for qname, concept_paths in paths.items():
+                    if qname not in concepts or not _is_reportable_item(
+                        concepts[qname]
+                    ):
+                        continue
+                    fact_concepts.add(qname)
+                    for path in concept_paths:
+                        binding = {
+                            "table_root": root,
+                            "role": role,
+                            "tuple_path": [
+                                node
+                                for node in path[1:-1]
+                                if concepts[node].get("is_tuple") is True
+                            ],
+                        }
+                        if binding not in allowed_bindings[qname]:
+                            allowed_bindings[qname].append(binding)
             if not fact_concepts:
                 raise ValueError(f"Schedule table has no reportable facts: {root}")
-            allowed.update(fact_concepts)
             tables.append(
                 {
                     "root": root,
                     "label_it": str(concept.get("label_it") or root),
-                    "fact_concepts": fact_concepts,
+                    "roles": roles,
+                    "fact_concepts": sorted(fact_concepts),
                 }
             )
         inventories[schedule_type] = {
@@ -140,12 +185,15 @@ def build_schedule_table_inventory(
                     "label_it": str(concepts[qname].get("label_it") or qname),
                     "period_type": str(concepts[qname].get("period_type")),
                     "type": str(concepts[qname].get("type")),
+                    "table_bindings": sorted(
+                        allowed_bindings[qname], key=lambda item: _canonical_json(item)
+                    ),
                 }
-                for qname in sorted(allowed)
+                for qname in sorted(allowed_bindings)
             ],
         }
     inventory = {
-        "schema_version": 1,
+        "schema_version": 2,
         "rule_pack_id": str(rule_pack["id"]),
         "taxonomy_id": str(catalogue["taxonomy_id"]),
         "taxonomy_package_sha256": str(catalogue["taxonomy_package_sha256"]),
@@ -237,7 +285,7 @@ def compile_schedule_taxonomy_adapter(
     existing = _existing_facts(case)
     generated: list[dict[str, Any]] = []
     coverage: list[dict[str, Any]] = []
-    generated_keys: set[tuple[str, str]] = set()
+    generated_keys: set[tuple[str, str, str]] = set()
     for schedule_type, schedule in sorted(schedule_lookup.items()):
         policy = inventory["schedules"].get(schedule_type)
         if policy is None:
@@ -282,6 +330,27 @@ def compile_schedule_taxonomy_adapter(
                 raise ValueError(
                     f"Concept is outside the active schedule tables: {qname}"
                 )
+            bindings = list(concept.get("table_bindings", []))
+            requested_root = output.get("table_root")
+            requested_role = output.get("role")
+            if requested_root is not None:
+                bindings = [
+                    item
+                    for item in bindings
+                    if str(item["table_root"]) == str(requested_root)
+                ]
+            if requested_role is not None:
+                bindings = [
+                    item
+                    for item in bindings
+                    if str(item["role"]) == str(requested_role)
+                ]
+            if len(bindings) != 1:
+                raise ValueError(
+                    f"Schedule concept requires one unambiguous table binding: {qname}"
+                )
+            table_binding = dict(bindings[0])
+            tuple_path = [str(item) for item in table_binding["tuple_path"]]
             period = str(output.get("period", ""))
             if period not in {"current_instant", "current_duration"}:
                 raise ValueError("Schedule table outputs must use a current period")
@@ -292,6 +361,7 @@ def compile_schedule_taxonomy_adapter(
                 raise ValueError("Schedule table outputs require source schedule facts")
             source_refs: set[str] = set()
             input_ids: list[str] = []
+            input_row_ids: set[str] = set()
             monetary = "monetaryItemType" in str(concept["type"])
             if monetary:
                 value = Decimal("0")
@@ -300,12 +370,21 @@ def compile_schedule_taxonomy_adapter(
                     record = records.get(fact_id)
                     if record is None or record["fact_type"] != "MONETARY":
                         raise ValueError(f"Invalid monetary schedule input: {fact_id}")
+                    if fact_id in input_ids:
+                        raise ValueError(
+                            f"Schedule output repeats source fact: {fact_id}"
+                        )
                     multiplier = _decimal(
                         raw_input.get("multiplier", "1"), "multiplier"
                     )
+                    if multiplier not in {Decimal("1"), Decimal("-1")}:
+                        raise ValueError(
+                            "Schedule monetary multipliers must be explicit sign conventions"
+                        )
                     value += _decimal(record["value"], fact_id) * multiplier
                     used.add(fact_id)
                     input_ids.append(fact_id)
+                    input_row_ids.add(str(record["row_id"]))
                     source_refs.update(str(item) for item in record["source_refs"])
                 fact_type = "MONETARY"
                 output_value = _decimal_text(value)
@@ -318,20 +397,33 @@ def compile_schedule_taxonomy_adapter(
                 record = records.get(fact_id)
                 if record is None or record["fact_type"] != "TEXT":
                     raise ValueError(f"Invalid text schedule input: {fact_id}")
+                if _decimal(inputs[0].get("multiplier", "1"), "multiplier") != 1:
+                    raise ValueError("Text schedule inputs cannot be scaled")
                 used.add(fact_id)
                 input_ids.append(fact_id)
+                input_row_ids.add(str(record["row_id"]))
                 source_refs.update(str(item) for item in record["source_refs"])
                 fact_type = "TEXT"
                 output_value = str(record["value"])
-            key = (qname, period)
-            if key in generated_keys:
+            tuple_instance_id = None
+            if tuple_path:
+                if len(input_row_ids) != 1:
+                    raise ValueError(
+                        "Tuple table outputs must derive from exactly one schedule row"
+                    )
+                tuple_instance_id = (
+                    f"{schedule['schedule_id']}:{next(iter(input_row_ids))}"
+                )
+            generated_key = (qname, period, tuple_instance_id or "")
+            if generated_key in generated_keys:
                 raise ValueError(f"Duplicate generated schedule fact: {qname} {period}")
-            generated_keys.add(key)
+            generated_keys.add(generated_key)
             derivation = {
                 "kind": "SCHEDULE_TAXONOMY_ADAPTER",
                 "schedule_id": str(schedule["schedule_id"]),
                 "schedule_type": schedule_type,
                 "input_fact_ids": sorted(input_ids),
+                "table_binding": table_binding,
                 "expression": [
                     {
                         "schedule_fact_id": str(item["schedule_fact_id"]),
@@ -340,8 +432,9 @@ def compile_schedule_taxonomy_adapter(
                     for item in inputs
                 ],
             }
-            if key in existing:
-                if fact_type != "MONETARY" or existing[key] != _decimal(
+            existing_key = (qname, period)
+            if not tuple_path and existing_key in existing:
+                if fact_type != "MONETARY" or existing[existing_key] != _decimal(
                     output_value, qname
                 ):
                     raise ValueError(
@@ -373,6 +466,8 @@ def compile_schedule_taxonomy_adapter(
                 "source_refs": sorted(source_refs),
                 "derivation": derivation,
                 "dimensions": {},
+                "tuple_path": tuple_path,
+                "tuple_instance_id": tuple_instance_id,
                 "nil_reason": None,
                 "confirmed_by": actor,
             }
@@ -406,7 +501,7 @@ def compile_schedule_taxonomy_adapter(
             }
         )
     result = {
-        "schema_version": 1,
+        "schema_version": 2,
         "rule_pack_id": str(rule_pack["id"]),
         "rule_pack_sha256": _sha256(rule_pack),
         "inventory": inventory,

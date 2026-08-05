@@ -96,6 +96,7 @@ def _write_presentation_config(
 ) -> tuple[Path, Path]:
     role = "https://example.invalid/role/primary"
     catalogue = {
+        "schema_version": 2,
         "taxonomy_id": "PCI_2018-11-04",
         "taxonomy_package_sha256": "a" * 64,
         "concepts": [
@@ -104,6 +105,8 @@ def _write_presentation_config(
                 "type": "xbrli:stringItemType",
                 "period_type": "instant",
                 "abstract": True,
+                "is_item": True,
+                "is_tuple": False,
                 "label_it": "Radice",
             },
             *[
@@ -112,6 +115,8 @@ def _write_presentation_config(
                     "type": "xbrli:monetaryItemType",
                     "period_type": "instant",
                     "abstract": False,
+                    "is_item": True,
+                    "is_tuple": False,
                     "label_it": name,
                 }
                 for name in ("A", "B", "Total")
@@ -204,6 +209,41 @@ def test_case_service_create_is_tenant_scoped_and_idempotent(tmp_path: Path) -> 
         case_file.with_name("case.json.sha256").read_text(encoding="ascii").strip()
     )
     assert len(checksum) == 64
+    idempotency_checksum = (
+        case_file.parent / ".idempotency" / "create_1.sha256"
+    ).read_text(encoding="ascii")
+    assert len(idempotency_checksum.strip()) == 64
+
+
+def test_case_service_rejects_tampered_idempotency_record(tmp_path: Path) -> None:
+    service = case_service.CaseService(tmp_path / "store")
+    context = _context()
+    service.create(context, _payload(), _rule_pack(), "create_1")
+    record = (
+        tmp_path / "store" / "tenant_1" / "case_2025" / ".idempotency" / "create_1.json"
+    )
+    record.write_text("{}\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Idempotency record integrity"):
+        service.create(context, _payload(), _rule_pack(), "create_1")
+
+
+def test_case_service_rejects_missing_idempotency_checksum(tmp_path: Path) -> None:
+    service = case_service.CaseService(tmp_path / "store")
+    context = _context()
+    service.create(context, _payload(), _rule_pack(), "create_1")
+    checksum = (
+        tmp_path
+        / "store"
+        / "tenant_1"
+        / "case_2025"
+        / ".idempotency"
+        / "create_1.sha256"
+    )
+    checksum.unlink()
+
+    with pytest.raises(ValueError, match="missing integrity metadata"):
+        service.create(context, _payload(), _rule_pack(), "create_1")
 
 
 def test_case_service_same_idempotency_key_different_request_is_rejected(
@@ -1063,13 +1103,19 @@ def test_taxonomy_catalogue_build_job_uses_only_configured_registry_and_package(
         assert expected_sha256 == package_sha256
         assert official_source == "https://example.invalid/official.zip"
         return {
-            "schema_version": 1,
+            "schema_version": 2,
             "taxonomy_id": taxonomy_id,
             "taxonomy_package_sha256": expected_sha256,
             "official_source": official_source,
             "entry_points": entry_points,
             "namespaces": {},
-            "concepts": [{"qname": "itcc-ci:TotaleAttivo"}],
+            "concepts": [
+                {
+                    "qname": "itcc-ci:TotaleAttivo",
+                    "is_item": True,
+                    "is_tuple": False,
+                }
+            ],
             "relationships": {},
         }
 

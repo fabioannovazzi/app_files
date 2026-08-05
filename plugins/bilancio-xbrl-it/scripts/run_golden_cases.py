@@ -114,9 +114,9 @@ GOLDEN_SCHEDULE_BINDINGS = {
         "inputs": [("over_five_years", "1")],
     },
     "EQUITY": {
-        "xbrl_concept": "itcc-ci:PatrimonioNettoAltreVariazioniTotalePatrimonioNetto",
+        "xbrl_concept": "itcc-ci:PatrimonioNettoIncrementiRiservaOperazioniCoperturaFlussiFinanziariAttesi",
         "period": "current_duration",
-        "inputs": [("other_movements", "1")],
+        "inputs": [("contributions", "1")],
     },
     "PROVISIONS": {
         "xbrl_concept": "itcc-ci:AccantonamentoEsercizioTotaleFondiRischiOneri",
@@ -133,6 +133,18 @@ GOLDEN_SCHEDULE_BINDINGS = {
         "period": "current_duration",
         "inputs": [("temporary_difference", "1")],
     },
+}
+GOLDEN_TUPLE_SCHEDULE_BINDINGS = {
+    "RECEIVABLES": [
+        (
+            "itcc-ci:AreaGeograficaCreditiIscrittiAttivoCircolanteAreaGeografica",
+            "geography",
+        ),
+        (
+            "itcc-ci:TotaleCreditiIscrittiAttivoCircolanteCreditiIscrittiAttivoCircolanteAreaGeografica",
+            "closing_amount",
+        ),
+    ]
 }
 NEGATIVE_CONFIRMATION_KEYS = {
     "accounting_policy_changes",
@@ -322,8 +334,14 @@ def _validate_catalogue_coverage(
                 required.append((str(value["concept"]), form))
     for qname, form in required:
         concept = lookup.get(qname)
-        if concept is None or concept.get("abstract") is True:
-            raise ValueError(f"Golden concept is absent or abstract: {qname}")
+        if (
+            concept is None
+            or concept.get("abstract") is True
+            or concept.get("is_item") is not True
+            or concept.get("is_tuple") is not False
+            or concept.get("period_type") not in {"instant", "duration"}
+        ):
+            raise ValueError(f"Golden concept is not a reportable item: {qname}")
         forms = concept.get("forms")
         if isinstance(forms, list) and form not in forms:
             raise ValueError(f"Golden concept {qname} is unavailable for {form}")
@@ -418,6 +436,30 @@ def _balance_plan(
                     prior_total - marker_prior,
                 )
             )
+    elif (
+        int(fixture["number"]) == 9
+        and {
+            "itcc-ci:CreditiEsigibiliEntroEsercizioSuccessivo",
+            "itcc-ci:CreditiEsigibiliOltreEsercizioSuccessivo",
+        }
+        <= requirement_lookup.keys()
+    ):
+        marker_current = Decimal(str(marker["current"]))
+        marker_prior = Decimal(str(marker["prior"]))
+        assets.extend(
+            [
+                (
+                    "itcc-ci:CreditiEsigibiliEntroEsercizioSuccessivo",
+                    current_total - marker_current,
+                    prior_total - marker_prior,
+                ),
+                (
+                    "itcc-ci:CreditiEsigibiliOltreEsercizioSuccessivo",
+                    marker_current,
+                    marker_prior,
+                ),
+            ]
+        )
     else:
         assets.append((generic_asset_concept, current_total, prior_total))
     if marker_is_balance_leaf and concepts[marker_qname].get("balance") == "credit":
@@ -468,6 +510,13 @@ def _balance_plan(
             item for item in plan if item["statement_section"] == target_section
         )
         target["schedule_triggers"].append(schedule_type)
+    if (
+        int(fixture["number"]) == 9
+        and sum(item["statement_section"] == "ASSETS" for item in plan) > 1
+    ):
+        for item in plan:
+            if item["statement_section"] == "ASSETS":
+                item["canonical_line"] = "ASSETS.RECEIVABLES"
     return plan
 
 
@@ -812,9 +861,21 @@ def _schedule_payload(
     fixture: Mapping[str, Any], case: Mapping[str, Any], schedule_type: str
 ) -> dict[str, Any]:
     fact = _schedule_target(case, schedule_type)
-    multiplier = Decimal(str(fact["xbrl_sign_multiplier"]))
-    opening = Decimal(str(fact["prior_value"])) * multiplier
-    closing = Decimal(str(fact["current_value"])) * multiplier
+    matching_facts = [
+        item for item in case["canonical_facts"] if item["key"] == fact["key"]
+    ]
+    multipliers = {
+        Decimal(str(item["xbrl_sign_multiplier"])) for item in matching_facts
+    }
+    if len(multipliers) != 1:
+        raise ValueError("Golden aggregate schedule line has mixed sign conventions")
+    multiplier = next(iter(multipliers))
+    opening = sum(
+        Decimal(str(item["prior_value"])) * multiplier for item in matching_facts
+    )
+    closing = sum(
+        Decimal(str(item["current_value"])) * multiplier for item in matching_facts
+    )
     increase = max(closing - opening, Decimal("0"))
     decrease = max(opening - closing, Decimal("0"))
     if schedule_type == "CASH_FLOW":
@@ -1017,6 +1078,11 @@ def _schedule_taxonomy_decisions(
                     }
                 )
             else:
+                if catalogue.get("official_source"):
+                    raise ValueError(
+                        "Official golden schedule binding is unavailable for "
+                        f"{schedule_type}"
+                    )
                 # Unit tests use a deliberately tiny synthetic taxonomy.  Its
                 # generic table concept is controlled by the test rule pack,
                 # so bind one exact monetary cell rather than assuming an
@@ -1036,6 +1102,28 @@ def _schedule_taxonomy_decisions(
                         "xbrl_concept": str(concept["xbrl_concept"]),
                         "period": f"current_{concept['period_type']}",
                         "inputs": [{"schedule_fact_id": fact_id, "multiplier": "1"}],
+                    }
+                )
+            for qname, key in GOLDEN_TUPLE_SCHEDULE_BINDINGS.get(schedule_type, []):
+                concept = allowed.get(qname)
+                if concept is None:
+                    continue
+                matches = [item for item in records if item["key"] == key]
+                if len(matches) != 1:
+                    raise ValueError(
+                        f"Golden tuple schedule binding {schedule_type}.{key} is ambiguous"
+                    )
+                record = matches[0]
+                fact_id = str(record["fact_id"])
+                used.add(fact_id)
+                input_record: dict[str, str] = {"schedule_fact_id": fact_id}
+                if record["fact_type"] == "MONETARY":
+                    input_record["multiplier"] = "1"
+                outputs.append(
+                    {
+                        "xbrl_concept": qname,
+                        "period": f"current_{concept['period_type']}",
+                        "inputs": [input_record],
                     }
                 )
         omissions = [

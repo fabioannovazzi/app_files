@@ -23,17 +23,17 @@ local validation engine, and saves the case plus a checksum-addressed manifest.
 - Source size: 850,111 bytes.
 - Source SHA-256:
   `407a1767e6a8b681dac5bb7da4e83f3eee474f57577fe2b6e7950a3ee8943eb6`.
-- Parse: 2.4524 seconds; target 60 seconds; `PASS`.
-- Mapping application: 1.9057 seconds; recorded without a separate target.
-- Statement recomputation: 3.4324 seconds; target 10 seconds; `PASS`.
-- Deterministic repeat: 3.4889 seconds; matching statement SHA-256
+- Parse: 2.5224 seconds; target 60 seconds; `PASS`.
+- Mapping application: 1.7611 seconds; recorded without a separate target.
+- Statement recomputation: 3.2057 seconds; target 10 seconds; `PASS`.
+- Deterministic repeat: 3.3514 seconds; matching statement SHA-256
   `e016a6b520d9c3e75cd08501bc8132f710975e1ebb38097251990b9778971f1b`.
-- Local validation: 2.1877 seconds; target 60 seconds; `PASS` for execution
+- Local validation: 2.1589 seconds; target 60 seconds; `PASS` for execution
   time. The deliberately incomplete synthetic case correctly returned a domain
   validation result of `FAIL`; performance success does not convert blockers
   into accounting acceptance.
 - Evidence manifest SHA-256:
-  `6cefc4a47eba0f07914bbe2aeb5c45602e6597d25f8b18c4e7d7743f7cd5453d`.
+  `cfddd7f35bf5a0930e8fa66eed63779629ccc60065c5a31b5afe85a2f249b841`.
 
 The run exposed and closed a quadratic audit-hashing path: mapping decisions
 now calculate the immutable post-mutation hash once and reuse it across the
