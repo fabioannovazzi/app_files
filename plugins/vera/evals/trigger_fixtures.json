@@ -8,6 +8,16 @@
       "required_signals": ["Vera", "accounting folder", "review module"]
     },
     {
+      "id": "vera-explicit-unrelated",
+      "prompt": "@vera where can I find a good pizza?",
+      "required_signals": ["Vera router activated", "outside Vera's professional scope", "ordinary ChatGPT", "no pizza recommendation"]
+    },
+    {
+      "id": "vera-professional-capability-gap",
+      "prompt": "@vera prepara una dichiarazione IVA annuale completa e pronta per l'invio telematico.",
+      "required_signals": ["professional capability gap", "no generic Codex answer", "sanitized change request", "consent before transmission"]
+    },
+    {
       "id": "vera-commercialista-task",
       "prompt": "Prepara l'istruttoria della cartella cliente e poi indicami i controlli contabili necessari.",
       "required_signals": ["istruttoria", "cartella cliente", "controlli contabili"]
@@ -65,6 +75,7 @@
   ],
   "should_not_trigger": [
     {"id": "clara-advisory", "prompt": "Use Clara to prepare a succession advisory decision pack."},
-    {"id": "generic-code", "prompt": "Review this Python pull request for security issues."}
+    {"id": "generic-code", "prompt": "Review this Python pull request for security issues."},
+    {"id": "generic-pizza", "prompt": "Where can I find a good pizza near me?"}
   ]
 }

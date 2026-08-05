@@ -1,6 +1,6 @@
 ---
 name: prompt-optimizer
-description: Use internally when a legal, tax, or compliance question needs an answer contract and source-backed generation instructions for either direct Claude drafting or a ChatGPT Deep Research handoff. The user does not need to ask for prompt optimization.
+description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for direct Claude work or a ChatGPT Deep Research handoff. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow.
 ---
 
 ## Cowork execution contract
