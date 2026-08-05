@@ -3,6 +3,18 @@
   "version": 1,
   "should_trigger": [
     {
+      "id": "clara-explicit-unrelated",
+      "prompt": "@clara where can I find a good pizza?",
+      "required_signals": ["@clara", "outside Clara's professional scope", "ordinary ChatGPT"],
+      "expected_skill": "clara:clara"
+    },
+    {
+      "id": "clara-professional-capability-gap",
+      "prompt": "Use @clara to design and administer a statistically weighted public-opinion survey, recruit the panel, and certify the sampling methodology.",
+      "required_signals": ["@clara", "professional capability gap", "change request", "consent"],
+      "expected_skill": "clara:clara"
+    },
+    {
       "id": "succession-case-workspace",
       "prompt": "Use Clara to organize this succession case, capture advisor judgement, and produce a decision pack.",
       "required_signals": ["Clara", "succession", "judgement", "decision pack"]
@@ -116,25 +128,33 @@
     {
       "id": "deck-claim-basis-map",
       "prompt": "Use Clara to create a readable sidecar that maps each PPTX slide claim to its source, calculation, prior-slide claim, reasoning, assumption, or ungrounded status without adding visible citations to the deck.",
-      "required_signals": ["PPTX", "slide claim", "prior-slide claim", "ungrounded"]
+      "required_signals": ["PPTX", "slide claim", "prior-slide claim", "ungrounded"],
+      "expected_skill": "clara:claim-basis-map"
     },
     {
       "id": "animated-html-deck-from-docx",
       "prompt": "Turn this approved Word document into a distinctive self-contained animated HTML presentation with speaker notes and a difficult publication URL.",
-      "required_signals": ["Word document", "animated HTML presentation", "speaker notes", "publication URL"]
+      "required_signals": ["Word document", "animated HTML presentation", "speaker notes", "publication URL"],
+      "expected_skill": "clara:html-deck"
     },
     {
       "id": "fixed-stage-browser-presentation",
       "prompt": "Use Clara to create a source-faithful fixed 16:9 browser deck from this report, with semantic motion, fullscreen navigation, and browser QA.",
-      "required_signals": ["source-faithful", "16:9 browser deck", "semantic motion", "browser QA"]
+      "required_signals": ["source-faithful", "16:9 browser deck", "semantic motion", "browser QA"],
+      "expected_skill": "clara:html-deck"
     },
     {
       "id": "preservation-aware-html-deck-revision",
       "prompt": "Revise this existing Clara HTML deck from the approved change notes, preserve every untouched slide and protected component, and prove the before/after fidelity.",
-      "required_signals": ["Clara HTML deck", "change notes", "protected component", "before/after fidelity"]
+      "required_signals": ["Clara HTML deck", "change notes", "protected component", "before/after fidelity"],
+      "expected_skill": "clara:html-deck"
     }
   ],
   "should_not_trigger": [
+    {
+      "id": "generic-pizza",
+      "prompt": "Where can I find a good pizza?"
+    },
     {
       "id": "journal-check",
       "prompt": "Compare these journal entries with supporting invoices and mark mismatches."

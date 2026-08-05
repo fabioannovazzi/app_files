@@ -62,19 +62,22 @@ def test_clara_routes_brand_fit_separately_from_retailer_signals_and_charts() ->
         (CLARA_ROOT / "evals" / "trigger_fixtures.json").read_text(encoding="utf-8")
     )
     router = (CLARA_ROOT / "skills" / "clara" / "SKILL.md").read_text(encoding="utf-8")
+    catalog = (
+        CLARA_ROOT / "skills" / "clara" / "references" / "workflow-catalog.md"
+    ).read_text(encoding="utf-8")
     brand_fit_cases = {
         item["id"]: item
         for item in fixtures["should_trigger"]
         if item.get("expected_skill") == "clara:brand-fit"
     }
 
-    assert manifest["version"] == "0.1.134"
+    assert manifest["version"] == "0.1.135"
     assert manifest["name"] == "clara"
     assert manifest["interface"]["displayName"] == "Clara"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert "brand-fit" in manifest["keywords"]
-    assert "Clara exposes six distinct conversation workflows" in router
-    assert "Use `brand-fit`" in router
+    assert "references/workflow-catalog.md" in router
+    assert "- `brand-fit`:" in catalog
     assert set(brand_fit_cases) == {
         "brand-fit-current-presence-and-owned-catalogue",
         "brand-fit-stored-snapshot-boundary",

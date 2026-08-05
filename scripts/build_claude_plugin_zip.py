@@ -1899,7 +1899,9 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
         ".codex-plugin/plugin.json",
         "hooks/hooks.json",
         "hooks/cowork-hooks.json",
+        "marketplace_skill_instructions.json",
         CLARA_COWORK_RUNTIME_REFERENCE,
+        "skills/clara/references/workflow-catalog.md",
     }:
         return True
     if relative_path.startswith(
@@ -1913,6 +1915,8 @@ def _clara_cowork_omits_path(relative_path: str) -> bool:
     ):
         return True
     if relative_path.endswith("/agents/openai.yaml"):
+        return True
+    if "mcp" in parts:
         return True
     if ".codex-plugin" in parts or ".app.json" in parts or ".mcp.json" in parts:
         return True
@@ -2048,6 +2052,29 @@ def _validate_clara_cowork_entries(
                 )
 
 
+def _full_codex_plugin_entries(
+    *,
+    builder: ModuleType,
+    source_target: object,
+    plugin_name: str,
+) -> dict[str, bytes]:
+    """Return the complete source-derived plugin tree without card projection."""
+
+    plugin_names = getattr(source_target, "plugin_names")
+    if plugin_names != [plugin_name]:
+        raise ValueError(f"{plugin_name}: expected one matching source plugin")
+    package_root = getattr(source_target, "package_root")
+    prefix = f"{package_root}/plugins/{plugin_name}/"
+    packaged_entries = builder.expected_zip_entries(source_target)
+    entries = {
+        name.removeprefix(prefix): content
+        for name, content in packaged_entries.items()
+        if name.startswith(prefix)
+    }
+    entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
+    return dict(sorted(entries.items()))
+
+
 def _clara_package_entries(
     package: ClaudePackage,
     *,
@@ -2056,7 +2083,13 @@ def _clara_package_entries(
 ) -> dict[str, bytes]:
     """Return the reviewed Clara Cowork projection."""
 
-    source_entries = builder.chatgpt_upload_entries(source_target)
+    # Cowork needs the complete runtime tree. The OpenAI Marketplace card
+    # projection deliberately removes nested scripts, references, and assets.
+    source_entries = _full_codex_plugin_entries(
+        builder=builder,
+        source_target=source_target,
+        plugin_name="clara",
+    )
     source_manifest = source_entries.get(".codex-plugin/plugin.json")
     if source_manifest is None:
         raise ValueError("clara: canonical manifest is missing")

@@ -56,17 +56,20 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         (CLARA_ROOT / "evals" / "trigger_fixtures.json").read_text(encoding="utf-8")
     )
     router = (CLARA_ROOT / "skills" / "clara" / "SKILL.md").read_text(encoding="utf-8")
+    catalog = (
+        CLARA_ROOT / "skills" / "clara" / "references" / "workflow-catalog.md"
+    ).read_text(encoding="utf-8")
     attribute_cases = {
         item["id"]: item
         for item in fixtures["should_trigger"]
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.134"
+    assert manifest["version"] == "0.1.135"
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "Retailer Signals" in manifest["interface"]["longDescription"]
-    assert "Clara exposes six distinct conversation workflows" in router
-    assert "Use `attribute-reporting`" in router
+    assert "references/workflow-catalog.md" in router
+    assert "- `attribute-reporting`:" in catalog
     assert set(attribute_cases) == {
         "retail-attribute-report-from-current-data",
         "retail-attribute-report-fresh-scrape",
