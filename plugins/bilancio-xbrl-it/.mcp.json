@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "bilancioXbrlIt": {
+      "title": "Bilancio intelligente",
+      "description": "Make the Italian OIC accounts process intelligent; render XBRL only as the final deterministic export.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

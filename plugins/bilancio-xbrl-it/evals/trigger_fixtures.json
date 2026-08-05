@@ -1,0 +1,42 @@
+{
+  "plugin": "bilancio-xbrl-it",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "prepare_intelligent_accounts",
+      "prompt": "Prepara in modo intelligente il bilancio 2025 di Rossi S.r.l.: comprendi i conti, riusa le decisioni dell'anno scorso e dimmi cosa richiede attenzione.",
+      "required_signals": ["bilancio 2025", "comprendi i conti", "decisioni dell'anno scorso"]
+    },
+    {
+      "id": "prepare_oic_xbrl",
+      "prompt": "Prepara il bilancio XBRL 2025 di Rossi S.r.l. dai saldi OIC allegati.",
+      "required_signals": ["bilancio XBRL", "S.r.l.", "OIC"]
+    },
+    {
+      "id": "review_trial_balance_disclosures",
+      "prompt": "Controlla questo bilancio di verifica e dimmi cosa manca per la nota integrativa.",
+      "required_signals": ["bilancio di verifica", "nota integrativa"]
+    },
+    {
+      "id": "update_prior_xbrl",
+      "prompt": "Importa il precedente XBRL e aggiorna il bilancio OIC con i progressivi dare e avere.",
+      "required_signals": ["precedente XBRL", "bilancio OIC", "dare e avere"]
+    },
+    {
+      "id": "review_mapping_and_generate",
+      "prompt": "Verifica le mappature del piano dei conti e genera una bozza XBRL rivedibile.",
+      "required_signals": ["mappature", "piano dei conti", "XBRL"]
+    },
+    {
+      "id": "understand_next_action",
+      "prompt": "Leggi questi dati contabili e aiutami a capire cosa devo fare adesso per arrivare a un bilancio completo e rivedibile.",
+      "required_signals": ["dati contabili", "cosa devo fare adesso", "bilancio completo"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "tax_return", "prompt": "Prepara la dichiarazione dei redditi della società."},
+    {"id": "file_accounts", "prompt": "Firma digitalmente e deposita il bilancio al Registro Imprese."},
+    {"id": "listed_ifrs", "prompt": "Analizza il bilancio IFRS consolidato di una società quotata."},
+    {"id": "bank_reconciliation", "prompt": "Riconcilia questi movimenti bancari con il libro giornale."}
+  ]
+}

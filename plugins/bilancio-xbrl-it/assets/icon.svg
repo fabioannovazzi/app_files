@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bilancio intelligente" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <rect x="13" y="13" width="38" height="39" rx="5" fill="#F7F0DF"/>
+  <path d="M32 20v25M20 24h8M36 24h8M20 31h6M38 31h6M20 38h8M36 38h8" fill="none" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M18 46h28" stroke="#00B0F0" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="25" cy="46" r="3" fill="#00B0F0"/><circle cx="39" cy="46" r="3" fill="#00B0F0"/>
+</svg>

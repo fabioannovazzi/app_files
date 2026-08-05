@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "suite_id": "XBRL-CONF-2025-07-16",
+  "standard": "XBRL 2.1",
+  "published_at": "2025-07-16",
+  "official_index": "https://specifications.xbrl.org/work-product-index-group-base-spec-base-spec.html",
+  "official_package": "https://www.xbrl.org/2025/XBRL-CONF-2025-07-16.zip",
+  "sha256": "00462b833fd064108d0781c601bf2b186db9b85ef950030df9db3ef2f68455e9",
+  "entry_point": "XBRL-CONF-2025-07-16/xbrl.xml",
+  "processor_mode": "--validate --calc xbrl21 --internetConnectivity offline",
+  "bundled": false
+}

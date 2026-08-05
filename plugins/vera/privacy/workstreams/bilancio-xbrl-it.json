@@ -1,0 +1,176 @@
+{
+  "schema_version": 3,
+  "workstream": "bilancio-xbrl-it",
+  "display_name": "Bilancio intelligente",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "mcp",
+    "rulepacks",
+    "taxonomy"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "annual-accounts-evidence",
+        "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
+        "content": "User instructions; entity profile and tax identifier; trial balances and account descriptions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "minimum-context-intelligent-participation",
+        "purpose": "Provide workflow guidance, mapping proposals, question prioritization, narrative drafts, prior-year comparisons, and issue explanations inside the existing bilancio process",
+        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity is excluded where the task does not require it; model output remains non-authoritative and evidence-linked",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-regulatory-and-taxonomy-research",
+      "kind": "public_research",
+      "destination": "Official Unioncamere, XBRL Italia, Normattiva, OIC, XBRL International, and Arelle public sources",
+      "purpose": "Verify effective rules, filing instructions, taxonomy packages, technical standards, processor releases, and licensing metadata",
+      "content": "Public legal, accounting, filing, taxonomy, and software-version queries; client names, tax identifiers, balances, and case documents are excluded from queries",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "Use primary official sources and record effective date, retrieval date, and version or checksum where applicable.",
+        "Keep client identifiers, balances, source extracts, and case documents out of public research queries."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
+    },
+    {
+      "id": "manual-tebeni-validation",
+      "kind": "send_or_publish",
+      "destination": "User-selected official TEBENI validation and visualization service",
+      "purpose": "Perform the official external validation and rendering check after local validation",
+      "content": "The approved XBRL instance selected by the user and the returned validation or rendering report",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Vera does not automate an undocumented browser workflow or transmit the instance without the user's explicit route choice.",
+        "The workflow exports a checksum-bound approved instance for manual upload and treats the returned external report as evidence, not as silent approval."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "safe-trial-balance-ingestion",
+      "control": "The deterministic importer accepts only regular CSV or XLSX files, rejects symbolic links and duplicate account identifiers, opens XLSX without macros or external-link resolution, and preserves per-cell source anchors plus the source SHA-256."
+    },
+    {
+      "id": "revision-and-approval-integrity",
+      "control": "Every mutating command requires the current revision, an approval binds the exact canonical snapshot and input manifest hashes, and a later mutation invalidates and archives that approval before a new revision is created."
+    },
+    {
+      "id": "taxonomy-and-export-integrity",
+      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction; export rejects an unverified or mismatched taxonomy catalogue and writes checksums for every artifact."
+    },
+    {
+      "id": "offline-local-xbrl-validation",
+      "control": "Before approval, the current substantive case is rendered through the checksum-bound catalogue and the pinned Arelle interface runs structural and XBRL 2.1 calculation validation with offline internet connectivity. Candidate, catalogue, package, and report hashes enter the approval snapshot; substantive changes invalidate that review."
+    },
+    {
+      "id": "safe-prior-xbrl-intake",
+      "control": "The prior-instance parser accepts only bounded regular local files, rejects symbolic links and document type declarations, disables entity and network resolution, requires one schema reference, and checks the entity identifier and comparative period before attaching source-anchored facts. Explicit dimensions, canonicalized typed dimensions, segment/scenario placement and context-fact groups are retained without executing or remotely resolving supplied XML."
+    },
+    {
+      "id": "tenant-isolated-mapping-memory",
+      "control": "The mapping-memory store rejects a tenant identifier mismatch and symbolic links, hashes the client key within the tenant, gives client mappings precedence, requires explicit tenant-wide scope, verifies the approved snapshot hash, and stores classifications without historical amounts or source anchors."
+    },
+    {
+      "id": "schedule-evidence-integrity",
+      "control": "Movement and cash-flow schedules accept only normalized decimal fields with observed or user-confirmed source references; exact opening, closing, maturity, secured-payable, movement, statement, reclassification, and cash-change failures remain blocking instead of being repaired by assumptions."
+    },
+    {
+      "id": "schedule-taxonomy-adapter-boundary",
+      "control": "A deployment-controlled checksum-locked rule pack selects the official presentation roots permitted for each form and schedule family. Every normalized schedule cell requires a reviewed exact-concept binding or reasoned omission; monetary values are mechanically derived from source cells, text facts use one exact source, matching primary facts are reconciled instead of duplicated, and uncovered cells, all-omitted table routes, contradictory facts and out-of-bound concepts fail closed."
+    },
+    {
+      "id": "bounded-supporting-workbook-intake",
+      "control": "Trial-balance and schedule XLSX intake rejects path traversal, encrypted ZIP members, macros, external links, suspicious compression, oversized expanded packages, more than 20,000 rows, and formulas without trusted cached values; imported schedule cells retain exact source anchors."
+    },
+    {
+      "id": "authenticated-tenant-and-role-service",
+      "control": "The writable service derives tenant, actor, roles, and originating interface from the authenticated host environment rather than mutation payloads; tenant-scoped paths, capability checks, time-limited support grants, file locks, revision checks, and idempotency records gate every operation. Source and returned-report reads are confined to a deployment-configured input root; taxonomy paths and MCP/HTTP statutory and disclosure rule packs are deployment configuration rather than request data; explicit studio-admin migration is the only supported regulatory replacement route; and symlinked storage paths fail closed."
+    },
+    {
+      "id": "host-malware-scanner-boundary",
+      "control": "Conversational and worker ingestion require a host-configured scanner command expressed as a JSON argument array and executed without a shell. Parsing proceeds only after a CLEAN verdict; pre/post-scan size and SHA-256 must remain stable, and the engine, signature version, timestamp, document identifier, size and checksum are persisted as an audited receipt."
+    },
+    {
+      "id": "short-lived-artifact-delivery",
+      "control": "Only reviewer and read-only-auditor roles may issue idempotent artifact grants. Grants last 30 to 900 seconds, are HMAC-signed by a deployment secret, disclose no storage path, bind tenant, case, file and approved manifest checksum, reject non-canonical Base64URL encodings before signature verification, and require safe-path, size and checksum verification again at redemption; issue and download events are audited."
+    },
+    {
+      "id": "explicit-retention-and-deletion-boundary",
+      "control": "The service has no implicit retention period. An owner-approved host value from 1 to 3,650 days enables studio-admin archiving while preserving approved artifacts. Purge requires the exact case revision and an elapsed recorded cutoff, removes only the validated tenant/case directory, and leaves a checksum-protected idempotent tombstone with hashes and accountability metadata rather than source content."
+    },
+    {
+      "id": "revision-bound-background-jobs",
+      "control": "Long-running work may be persisted only as checksum-verified, tenant-scoped jobs created by an already authorized requester. Execution is reserved to the internal SERVICE_WORKER role, retries replay through the mutation idempotency ledger, compact status omits source-bearing payloads, and an intervening case revision makes unapplied work terminally STALE. Taxonomy builds accept no request-selected package, registry, path or entry point. Host semantic invocation receives only a minimum-context packet, runs outside the mutation lock, stores the exact response for retry recovery, and may record only a MODEL_SUGGESTED result."
+    },
+    {
+      "id": "bounded-professional-review-views",
+      "control": "The review-view service authorizes every tenant-scoped read, caps collection pages at 500 records, returns compact preview and artifact resource identifiers rather than file bytes or arbitrary host paths, and excludes the immutable approval snapshot payload from the approval/export view."
+    },
+    {
+      "id": "authenticated-http-adapter",
+      "control": "The optional HTTP adapter accepts authentication only as a host-injected RequestContext, never from tenant or role request fields. Case creation rejects request-selected statutory rule packs; mutations require an Idempotency-Key and current If-Match revision; stale writes return a conflict; and read routes return structured resources rather than source or artifact bytes."
+    },
+    {
+      "id": "canonical-case-record-integrity",
+      "control": "The canonical case JSON and its SHA-256 sidecar are written through bounded non-symlink temporary paths and every load verifies the sidecar before parsing. Missing, malformed, mismatched, or symlinked record/checksum pairs fail closed."
+    },
+    {
+      "id": "minimum-context-model-suggestion-boundary",
+      "control": "Semantic tasks receive task-specific packets that mark document content as untrusted and omit direct entity identity when unnecessary; strict output schemas and evidence-reference closure prevent out-of-packet claims, and mapping, narrative, and workflow outputs remain MODEL_SUGGESTED until a separate professional decision."
+    },
+    {
+      "id": "statutory-presentation-coverage-boundary",
+      "control": "Selected-form primary-statement requirements come only from checksum-bound official presentation and calculation relationships plus a versioned host-controlled policy. Every absent current or comparative leaf requires an explicit professional zero or not-applicable decision and reason; bounded model guidance may explain gaps but cannot create facts, confirm absence, derive authoritative totals, or make incomplete coverage exportable."
+    },
+    {
+      "id": "manual-external-validation-addendum",
+      "control": "A user-supplied TEBENI report is accepted only as a bounded local regular file after local validation and approval, checksum-recorded as a non-authoritative external result, and attached without modifying or invalidating the approved accounting snapshot."
+    },
+    {
+      "id": "client-history-minimisation",
+      "control": "Approved client-history memory is tenant- and client-key scoped and retains only the selected form, accepted answer decisions, accepted narrative text, and recurring rule identifiers; it excludes direct identity, current amounts, and source anchors, and every future suggestion remains unconfirmed or stale until reviewed again."
+    },
+    {
+      "id": "reviewed-taxonomy-fact-boundary",
+      "control": "Additional text, monetary, dimensional, and nil facts require exportable evidence status and exact source or derivation provenance; model-suggested states cannot be recorded, dimensional QNames are validated, and nil output requires both a professional reason and a catalogue concept that explicitly permits nil."
+    },
+    {
+      "id": "review-and-audit-integrity",
+      "control": "Structural blockers cannot be overridden; professional overrides are limited to HIGH issues and bind the exact issue fingerprint and reviewer reason. Material audit events record tenant, case, revision, actor, originating interface, and before/after content hashes."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-05",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "734691107a990b22564cde1d8c492d9d31f739e94795baf37add1fa8b599da85"
+  }
+}

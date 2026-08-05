@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "taxonomy_id": "PCI_2018-11-04",
+  "status": "source_verified_package_not_bundled",
+  "official_source": "https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip",
+  "taxonomy_package_sha256": "c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1",
+  "entry_points": {
+    "ORDINARY": "2018-11-04/itcc-ci-ese-2018-11-04.xsd",
+    "ABBREVIATED": "2018-11-04/itcc-ci-abb-2018-11-04.xsd",
+    "MICRO": "2018-11-04/itcc-ci-micr-2018-11-04.xsd"
+  },
+  "licensing_review": "required_before_bundling",
+  "catalogue_build_command": "python scripts/build_taxonomy_catalogue.py --package <official.zip> --entry-point ORDINARY=2018-11-04/itcc-ci-ese-2018-11-04.xsd --entry-point ABBREVIATED=2018-11-04/itcc-ci-abb-2018-11-04.xsd --entry-point MICRO=2018-11-04/itcc-ci-micr-2018-11-04.xsd --taxonomy-id PCI_2018-11-04 --expected-sha256 c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1 --official-source https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip --output <catalogue.json>",
+  "note": "The repository does not bundle an unverified taxonomy package or hand-copied concept list."
+}

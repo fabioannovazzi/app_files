@@ -19,6 +19,12 @@
       "default_prompt": "Usa $avviso-intake per esaminare questo avviso fiscale e preparare una prima nota istruttoria con scadenze e documenti da recuperare.",
       "instructions": "Allega l'avviso, la cartella o la lettera fiscale e indica il cliente e la giurisdizione se non sono evidenti. Vera rileva autorità, riferimenti, date, importi, scadenze e documenti da recuperare e restituisce una prima nota istruttoria con ogni elemento incerto marcato da verificare."
     },
+    "bilancio-xbrl-it": {
+      "display_name": "Bilancio intelligente",
+      "short_description": "Prepara bilanci OIC revisionabili con esportazione XBRL",
+      "default_prompt": "Usa $bilancio-xbrl-it per preparare questo bilancio OIC, segnalare i punti da rivedere e generare l’XBRL finale.",
+      "instructions": "Allega il bilancio di verifica, l'eventuale XBRL precedente e i documenti di supporto disponibili. Vera comprende le evidenze contabili, propone mappature spiegate, segnala ambiguità e dati mancanti e prepara prospetti, nota integrativa e carta di lavoro per la revisione professionale. Calcoli, controlli e generazione XBRL restano deterministici; Vera non approva né deposita il bilancio."
+    },
     "check-entries": {
       "display_name": "Controllo scritture",
       "short_description": "Confronta scritture campionate e documenti di supporto",

@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "audit_id": "BILANCIO_SCHEDULE_TAXONOMY_2026.1",
+  "taxonomy_id": "PCI_2018-11-04",
+  "taxonomy_package_sha256": "c24b86375529469ca0be9a06b231fbb05da18df99fa36a1db2e587ab51e2f0f1",
+  "rule_pack_id": "IT_SCHEDULE_TAXONOMY_2026.1",
+  "forms": {
+    "ORDINARY": {
+      "inventory_sha256": "2f9608b2949d253b3012162a2b4e09a9e731e639c9764aed2cc8a1665c1cb196",
+      "schedules": {
+        "EQUITY": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniVociPatrimonioNettoProspetto",
+            "itcc-ci:OriginePossibilitaUtilizzoDistribuibilitaVociPatrimonioNettoProspetto"
+          ],
+          "unique_allowed_fact_concepts": 267
+        },
+        "FIXED_ASSETS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
+          ],
+          "unique_allowed_fact_concepts": 78
+        },
+        "GUARANTEES_COMMITMENTS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:ImportoComplessivoImpegniGaranziePassivitaPotenzialiNonRisultantiDalloStatoPatrimonialeProspetto"
+          ],
+          "unique_allowed_fact_concepts": 9
+        },
+        "PAYABLES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiDebitiAssistitiGaranzieRealiBeniSocialiProspetto",
+            "itcc-ci:AnalisiVariazioniScadenzaDebitiProspetto",
+            "itcc-ci:DettagliSuiDebitiSuddivisiAreaGeograficaProspetto"
+          ],
+          "unique_allowed_fact_concepts": 178
+        },
+        "PROVISIONS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniFondiRischiOneriProspetto"
+          ],
+          "unique_allowed_fact_concepts": 25
+        },
+        "RECEIVABLES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
+            "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
+          ],
+          "unique_allowed_fact_concepts": 53
+        },
+        "TAXES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:RilevazioneImposteDifferiteAnticipateEffettiConseguentiProspetto"
+          ],
+          "unique_allowed_fact_concepts": 10
+        },
+        "TFR": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniTrattamentoFineRapportoLavoroSubordinatoProspetto"
+          ],
+          "unique_allowed_fact_concepts": 5
+        }
+      }
+    },
+    "ABBREVIATED": {
+      "inventory_sha256": "bea37ce0c693d9a4a4d42af6616b5431bcf971593f546d54ef881c328196dde5",
+      "schedules": {
+        "EQUITY": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniVociPatrimonioNettoProspetto",
+            "itcc-ci:OriginePossibilitaUtilizzoDistribuibilitaVociPatrimonioNettoProspetto"
+          ],
+          "unique_allowed_fact_concepts": 267
+        },
+        "FIXED_ASSETS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
+          ],
+          "unique_allowed_fact_concepts": 78
+        },
+        "GUARANTEES_COMMITMENTS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:ImportoComplessivoImpegniGaranziePassivitaPotenzialiNonRisultantiDalloStatoPatrimonialeProspetto"
+          ],
+          "unique_allowed_fact_concepts": 9
+        },
+        "PAYABLES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiDebitiDurataSuperioreCinqueAnniDebitiAssistitiGaranzieRealiBeniSocialiAbbreviatoProspetto"
+          ],
+          "unique_allowed_fact_concepts": 7
+        },
+        "PROVISIONS": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniFondiRischiOneriProspetto"
+          ],
+          "unique_allowed_fact_concepts": 25
+        },
+        "RECEIVABLES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
+            "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
+          ],
+          "unique_allowed_fact_concepts": 53
+        },
+        "TAXES": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:RilevazioneImposteDifferiteAnticipateEffettiConseguentiProspetto"
+          ],
+          "unique_allowed_fact_concepts": 10
+        },
+        "TFR": {
+          "strategy": "TABLE_FACTS",
+          "table_roots": [
+            "itcc-ci:AnalisiVariazioniTrattamentoFineRapportoLavoroSubordinatoProspetto"
+          ],
+          "unique_allowed_fact_concepts": 5
+        }
+      }
+    },
+    "MICRO": {
+      "inventory_sha256": "75a2686d4779d25c818f5727b38bf47c965c42296889b8bcc7654680fe29c1d2",
+      "schedules": {
+        "EQUITY": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "FIXED_ASSETS": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "GUARANTEES_COMMITMENTS": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "PAYABLES": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "PROVISIONS": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "RECEIVABLES": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "TAXES": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        },
+        "TFR": {
+          "strategy": "TEXT_ONLY",
+          "table_roots": [],
+          "unique_allowed_fact_concepts": 0
+        }
+      }
+    }
+  },
+  "issues": [],
+  "status": "PASS",
+  "catalogue_sha256": "591365c192acc52b819726366640ff59b198cd628bc969844c4581b1a530635a",
+  "rule_pack_sha256": "3f90676d582862bcaa9a48a1f35b632c6b719198374bffb7e8220488bae590a5"
+}

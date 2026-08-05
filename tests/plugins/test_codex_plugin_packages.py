@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
     "audit-reconciliation",
+    "bilancio-xbrl-it",
     "check-entries",
     "concordato-plan-review",
     "deep-research-validator",
@@ -465,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.84"
+    assert manifest["version"] == "0.1.85"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -475,8 +476,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
     )
     assert prompts[2] == (
-        "Controlla queste scritture con fatture e documenti di supporto. Prepara "
-        "esiti, anomalie e richieste per le evidenze mancanti."
+        "Prepara un bilancio OIC intelligente: comprendi i dati, segnala ambiguità "
+        "e informazioni mancanti, poi genera l’XBRL finale."
     )
     approved_description = (
         (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")
@@ -4057,6 +4058,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
         "audit-reconciliation": (
             "https://mparanza.com/static/shared/riconciliazione-partite/index.html"
+        ),
+        "bilancio-xbrl-it": (
+            "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
         "check-entries": (
             "https://mparanza.com/static/shared/check-entries/index.html"

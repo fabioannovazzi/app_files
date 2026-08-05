@@ -1,0 +1,245 @@
+{
+  "schema_version": 1,
+  "id": "IT_DISCLOSURES_2026.1",
+  "effective_from": "2024-09-25",
+  "effective_to": "2026-12-31",
+  "owner": "Accounting rule owner approval required before beta",
+  "rules": [
+    {
+      "id": "IT.CC.BASIS_PREPARATION",
+      "category": "basis_of_preparation",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "basis_of_preparation"}, {"kind": "NARRATIVE_SECTION", "key": "INTRODUCTION"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "INTRODUCTION",
+      "legal_references": ["Applicable Civil Code presentation and form requirements"],
+      "oic_references": ["Applicable OIC presentation principles"],
+      "question": {"question_id": "Q_BASIS_PREPARATION", "answer_key": "basis_of_preparation", "title": "Basis and form of preparation", "requested_fields": [{"key": "basis", "type": "choice"}], "evidence_requested": "Approved form decision and accounting-policy evidence"}
+    },
+    {
+      "id": "IT.OIC.ACCOUNTING_POLICIES",
+      "category": "accounting_policies",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "accounting_policies"}, {"kind": "NARRATIVE_SECTION", "key": "POLICIES"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "POLICIES",
+      "legal_references": ["Applicable Civil Code valuation disclosures"],
+      "oic_references": ["Applicable OIC standards"],
+      "question": {"question_id": "Q_ACCOUNTING_POLICIES", "answer_key": "accounting_policies", "title": "Accounting policies applied", "requested_fields": [{"key": "policies_reviewed", "type": "boolean"}], "evidence_requested": "Current approved accounting-policy schedule"}
+    },
+    {
+      "id": "IT.CC.FIXED_ASSET_MOVEMENTS",
+      "category": "fixed_assets_and_impairment",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "FIXED_ASSETS"},
+      "requirements": [{"kind": "SCHEDULE", "key": "FIXED_ASSETS"}, {"kind": "NARRATIVE_SECTION", "key": "ASSETS"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "ASSETS",
+      "legal_references": ["Applicable Civil Code fixed-asset movement requirements"],
+      "oic_references": ["Applicable fixed-asset OIC standards"],
+      "question": {"question_id": "Q_FIXED_ASSET_MOVEMENTS", "answer_key": "fixed_asset_movements", "title": "Fixed-asset movements and impairment", "requested_fields": [{"key": "register_complete", "type": "boolean"}], "evidence_requested": "Fixed-asset register and ledger detail"}
+    },
+    {
+      "id": "IT.CC.RECEIVABLES_MATURITY",
+      "category": "receivables_maturity_geography",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "RECEIVABLES"},
+      "requirements": [{"kind": "SCHEDULE", "key": "RECEIVABLES"}, {"kind": "NARRATIVE_SECTION", "key": "ASSETS"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "ASSETS",
+      "legal_references": ["Civil Code receivables maturity and applicable abbreviated-form requirements"],
+      "oic_references": ["OIC 15"],
+      "question": {"question_id": "Q_RECEIVABLE_MATURITY", "answer_key": "receivable_maturity", "title": "Receivable maturity and geography", "requested_fields": [{"key": "maturity_schedule_complete", "type": "boolean"}], "evidence_requested": "Receivable aging or maturity schedule"}
+    },
+    {
+      "id": "IT.CC.PAYABLES_MATURITY",
+      "category": "payables_maturity_security",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "PAYABLES"},
+      "requirements": [{"kind": "SCHEDULE", "key": "PAYABLES"}, {"kind": "NARRATIVE_SECTION", "key": "LIABILITIES_EQUITY"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "LIABILITIES_EQUITY",
+      "legal_references": ["Applicable Civil Code payable maturity and security requirements"],
+      "oic_references": ["OIC 19"],
+      "question": {"question_id": "Q_PAYABLES_OVER_5Y", "answer_key": "payable_maturity", "title": "Debts by maturity and security", "requested_fields": [{"key": "bank_debt_over_5y", "type": "money", "currency": "EUR"}, {"key": "other_debt_over_5y", "type": "money", "currency": "EUR"}], "evidence_requested": "Loan plans or payable maturity schedule"}
+    },
+    {
+      "id": "IT.CC.EQUITY_MOVEMENTS",
+      "category": "equity_and_result_allocation",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "EQUITY"},
+      "requirements": [{"kind": "SCHEDULE", "key": "EQUITY"}, {"kind": "ANSWER", "key": "result_allocation"}, {"kind": "NARRATIVE_SECTION", "key": "RESULT_ALLOCATION"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "RESULT_ALLOCATION",
+      "legal_references": ["Applicable equity and result-allocation requirements"],
+      "oic_references": ["OIC 28"],
+      "question": {"question_id": "Q_RESULT_ALLOCATION", "answer_key": "result_allocation", "title": "Allocation of profit or coverage of loss", "requested_fields": [{"key": "approved_proposal", "type": "text"}], "evidence_requested": "Resolution or proposed allocation"}
+    },
+    {
+      "id": "IT.CC.PROVISIONS_TFR",
+      "category": "provisions_and_tfr",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "ANY", "conditions": [{"kind": "SCHEDULE_TYPE", "schedule_type": "PROVISIONS"}, {"kind": "SCHEDULE_TYPE", "schedule_type": "TFR"}]},
+      "requirements": [{"kind": "ANSWER", "key": "provisions_tfr_review"}, {"kind": "NARRATIVE_SECTION", "key": "LIABILITIES_EQUITY"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "LIABILITIES_EQUITY",
+      "legal_references": ["Applicable provisions and employee-severance movement requirements"],
+      "oic_references": ["OIC 31"],
+      "question": {"question_id": "Q_PROVISIONS_TFR", "answer_key": "provisions_tfr_review", "title": "Provisions and TFR movements", "requested_fields": [{"key": "movement_schedules_reviewed", "type": "boolean"}], "evidence_requested": "Provisions and payroll/TFR schedules"}
+    },
+    {
+      "id": "IT.CC.TAXES",
+      "category": "current_and_deferred_taxes",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "TAXES"},
+      "requirements": [{"kind": "SCHEDULE", "key": "TAXES"}, {"kind": "NARRATIVE_SECTION", "key": "TAXES"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "TAXES",
+      "legal_references": ["Applicable current and deferred tax disclosure requirements"],
+      "oic_references": ["OIC 25"],
+      "question": {"question_id": "Q_TAXES", "answer_key": "taxes_review", "title": "Current and deferred taxes", "requested_fields": [{"key": "tax_computation_complete", "type": "boolean"}], "evidence_requested": "Tax computation"}
+    },
+    {
+      "id": "IT.CC.GUARANTEES_COMMITMENTS",
+      "category": "guarantees_commitments_contingencies",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "guarantees_and_commitments"}, {"kind": "ANSWER", "key": "contingent_liabilities"}, {"kind": "NARRATIVE_SECTION", "key": "COMMITMENTS_RELATED"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "COMMITMENTS_RELATED",
+      "legal_references": ["Applicable commitments, guarantees, and contingent-liability requirements"],
+      "oic_references": [],
+      "questions": [
+        {"question_id": "Q_GUARANTEES_COMMITMENTS", "answer_key": "guarantees_and_commitments", "title": "Guarantees and commitments", "requested_fields": [{"key": "present", "type": "boolean"}], "evidence_requested": "Register or explicit annual confirmation"},
+        {"question_id": "Q_CONTINGENT_LIABILITIES", "answer_key": "contingent_liabilities", "title": "Contingent liabilities", "requested_fields": [{"key": "present", "type": "boolean"}], "evidence_requested": "Legal claims register or explicit annual confirmation"}
+      ]
+    },
+    {
+      "id": "IT.CC.RELATED_PARTIES_OFF_BALANCE",
+      "category": "related_parties_and_off_balance",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "related_party_transactions"}, {"kind": "ANSWER", "key": "off_balance_sheet_arrangements"}, {"kind": "NARRATIVE_SECTION", "key": "COMMITMENTS_RELATED"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "COMMITMENTS_RELATED",
+      "legal_references": ["Applicable related-party and off-balance-sheet disclosure requirements"],
+      "oic_references": [],
+      "questions": [
+        {"question_id": "Q_RELATED_PARTIES", "answer_key": "related_party_transactions", "title": "Related-party transactions", "requested_fields": [{"key": "transactions_present", "type": "boolean"}], "evidence_requested": "Related-party schedule and explicit confirmation"},
+        {"question_id": "Q_OFF_BALANCE_SHEET", "answer_key": "off_balance_sheet_arrangements", "title": "Off-balance-sheet arrangements", "requested_fields": [{"key": "arrangements_present", "type": "boolean"}], "evidence_requested": "Contract register or explicit annual confirmation"}
+      ]
+    },
+    {
+      "id": "IT.CC.DERIVATIVES",
+      "category": "financial_instruments_derivatives",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "derivatives"}, {"kind": "NARRATIVE_SECTION", "key": "FINANCIAL_INSTRUMENTS"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "FINANCIAL_INSTRUMENTS",
+      "legal_references": ["Applicable derivative and fair-value reserve requirements"],
+      "oic_references": ["OIC 32"],
+      "question": {"question_id": "Q_DERIVATIVES", "answer_key": "derivatives", "title": "Derivatives and fair-value reserve", "requested_fields": [{"key": "derivatives_present", "type": "boolean"}], "evidence_requested": "Contracts, valuations, or explicit annual confirmation"}
+    },
+    {
+      "id": "IT.CC.POST_CLOSING_GOING_CONCERN",
+      "category": "post_closing_and_going_concern",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [{"kind": "ANSWER", "key": "post_closing_events"}, {"kind": "ANSWER", "key": "going_concern_uncertainties"}, {"kind": "NARRATIVE_SECTION", "key": "POST_CLOSING_GOING_CONCERN"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "POST_CLOSING_GOING_CONCERN",
+      "legal_references": ["Applicable post-closing-event and going-concern requirements"],
+      "oic_references": ["OIC 11", "OIC 29"],
+      "questions": [
+        {"question_id": "Q_POST_CLOSING", "answer_key": "post_closing_events", "title": "Material post-closing events", "requested_fields": [{"key": "events_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation"},
+        {"question_id": "Q_GOING_CONCERN", "answer_key": "going_concern_uncertainties", "title": "Going-concern uncertainties", "requested_fields": [{"key": "uncertainties_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation and assessment where triggered"}
+      ]
+    },
+    {
+      "id": "IT.CC.REVENUE_EXCEPTIONAL_ITEMS",
+      "category": "revenue_financial_exceptional_items",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "MANUAL_FLAG", "flag": "REVENUE_OR_EXCEPTIONAL_DETAIL_REQUIRED"},
+      "requirements": [{"kind": "ANSWER", "key": "revenue_exceptional_detail"}, {"kind": "NARRATIVE_SECTION", "key": "INCOME_STATEMENT"}],
+      "severity_if_missing": "HIGH",
+      "note_section": "INCOME_STATEMENT",
+      "legal_references": ["Applicable revenue, financial income/expense, and exceptional-item requirements"],
+      "oic_references": ["OIC 12", "OIC 34"],
+      "question": {"question_id": "Q_REVENUE_EXCEPTIONAL", "answer_key": "revenue_exceptional_detail", "title": "Revenue and significant income-statement details", "requested_fields": [{"key": "detail", "type": "structured_table"}], "evidence_requested": "Revenue and ledger analysis"}
+    },
+    {
+      "id": "IT.CC.EMPLOYEES_CORPORATE_BODIES",
+      "category": "employees_and_corporate_bodies",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "MANUAL_FLAG", "flag": "EMPLOYEES_OR_BODIES_PRESENT"},
+      "requirements": [{"kind": "ANSWER", "key": "employees_corporate_bodies"}, {"kind": "NARRATIVE_SECTION", "key": "EMPLOYEES_BODIES"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "EMPLOYEES_BODIES",
+      "legal_references": ["Applicable employee and corporate-body disclosure requirements"],
+      "oic_references": [],
+      "question": {"question_id": "Q_EMPLOYEES_BODIES", "answer_key": "employees_corporate_bodies", "title": "Employees and corporate bodies", "requested_fields": [{"key": "average_employees", "type": "number"}], "evidence_requested": "Payroll and compensation schedules"}
+    },
+    {
+      "id": "IT.CC.GROUP_PARTICIPATIONS",
+      "category": "group_participations_parent_information",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "MANUAL_FLAG", "flag": "GROUP_OR_PARTICIPATIONS_PRESENT"},
+      "requirements": [{"kind": "ANSWER", "key": "group_participations"}, {"kind": "NARRATIVE_SECTION", "key": "GROUP_PARTICIPATIONS"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "GROUP_PARTICIPATIONS",
+      "legal_references": ["Applicable participation, group, parent, and consolidation-exemption requirements"],
+      "oic_references": ["Applicable participation OIC standards"],
+      "question": {"question_id": "Q_GROUP_PARTICIPATIONS", "answer_key": "group_participations", "title": "Group and participation information", "requested_fields": [{"key": "entities", "type": "structured_table"}], "evidence_requested": "Participation and group schedule"}
+    },
+    {
+      "id": "IT.CC.LEASES",
+      "category": "leases",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "MANUAL_FLAG", "flag": "FINANCE_LEASES_PRESENT"},
+      "requirements": [{"kind": "ANSWER", "key": "leases"}, {"kind": "NARRATIVE_SECTION", "key": "LEASES"}],
+      "severity_if_missing": "HIGH",
+      "note_section": "LEASES",
+      "legal_references": ["Applicable finance-lease disclosure requirements"],
+      "oic_references": [],
+      "question": {"question_id": "Q_LEASES", "answer_key": "leases", "title": "Finance leases", "requested_fields": [{"key": "lease_schedule", "type": "structured_table"}], "evidence_requested": "Lease contracts and schedules"}
+    },
+    {
+      "id": "IT.CC.OTHER_TRIGGERED_DISCLOSURES",
+      "category": "development_costs_other_balances_charges_specific_financing",
+      "forms": ["ORDINARY", "ABBREVIATED"],
+      "trigger": {"kind": "MANUAL_FLAG", "flag": "OTHER_STATUTORY_DISCLOSURES_REQUIRED"},
+      "requirements": [{"kind": "ANSWER", "key": "other_statutory_disclosures"}, {"kind": "NARRATIVE_SECTION", "key": "ADDITIONAL"}],
+      "severity_if_missing": "HIGH",
+      "note_section": "ADDITIONAL",
+      "legal_references": ["Applicable development-cost, other-balance, capitalised-charge, share-capital, instrument, and specific-financing requirements"],
+      "oic_references": ["Applicable OIC standards"],
+      "question": {"question_id": "Q_OTHER_STATUTORY", "answer_key": "other_statutory_disclosures", "title": "Other triggered statutory disclosures", "requested_fields": [{"key": "topics", "type": "multi_select"}], "evidence_requested": "Topic-specific supporting schedules"}
+    },
+    {
+      "id": "IT.OIC.ANNUAL_NEGATIVE_CONFIRMATIONS",
+      "category": "annual_policy_error_non_market_and_format_confirmations",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "ALWAYS"},
+      "requirements": [
+        {"kind": "ANSWER", "key": "accounting_policy_changes"},
+        {"kind": "ANSWER", "key": "prior_period_errors"},
+        {"kind": "ANSWER", "key": "non_market_transactions"},
+        {"kind": "ANSWER", "key": "double_format_events"},
+        {"kind": "NARRATIVE_SECTION", "key": "ADDITIONAL"}
+      ],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "ADDITIONAL",
+      "legal_references": ["Applicable annual-account disclosure and filing-format requirements"],
+      "oic_references": ["OIC 29 and applicable OIC standards"],
+      "questions": [
+        {"question_id": "Q_ACCOUNTING_POLICY_CHANGES", "answer_key": "accounting_policy_changes", "title": "Changes in accounting policies", "requested_fields": [{"key": "changes_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation and policy-change evidence where applicable"},
+        {"question_id": "Q_PRIOR_PERIOD_ERRORS", "answer_key": "prior_period_errors", "title": "Corrections of material prior-period errors", "requested_fields": [{"key": "errors_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation and correction schedule where applicable"},
+        {"question_id": "Q_NON_MARKET_TRANSACTIONS", "answer_key": "non_market_transactions", "title": "Transactions not concluded on market terms", "requested_fields": [{"key": "transactions_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation and transaction schedule where applicable"},
+        {"question_id": "Q_DOUBLE_FORMAT_EVENTS", "answer_key": "double_format_events", "title": "Substantive taxonomy representation differences", "requested_fields": [{"key": "differences_present", "type": "boolean"}], "evidence_requested": "Explicit annual confirmation and differences analysis where applicable"}
+      ]
+    }
+  ]
+}

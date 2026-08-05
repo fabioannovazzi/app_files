@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "id": "IT_SCHEDULE_TAXONOMY_2026.1",
+  "taxonomy_id": "PCI_2018-11-04",
+  "effective_from": "2024-09-25",
+  "effective_to": "2026-12-31",
+  "owner": "Accounting rule owner approval required before beta",
+  "forms": {
+    "ORDINARY": {
+      "FIXED_ASSETS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
+        ]
+      },
+      "RECEIVABLES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
+          "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
+        ]
+      },
+      "PAYABLES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniScadenzaDebitiProspetto",
+          "itcc-ci:DettagliSuiDebitiSuddivisiAreaGeograficaProspetto",
+          "itcc-ci:AnalisiDebitiAssistitiGaranzieRealiBeniSocialiProspetto"
+        ]
+      },
+      "EQUITY": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniVociPatrimonioNettoProspetto",
+          "itcc-ci:OriginePossibilitaUtilizzoDistribuibilitaVociPatrimonioNettoProspetto"
+        ]
+      },
+      "PROVISIONS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniFondiRischiOneriProspetto"
+        ]
+      },
+      "TFR": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniTrattamentoFineRapportoLavoroSubordinatoProspetto"
+        ]
+      },
+      "TAXES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:RilevazioneImposteDifferiteAnticipateEffettiConseguentiProspetto"
+        ]
+      },
+      "GUARANTEES_COMMITMENTS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:ImportoComplessivoImpegniGaranziePassivitaPotenzialiNonRisultantiDalloStatoPatrimonialeProspetto"
+        ]
+      }
+    },
+    "ABBREVIATED": {
+      "FIXED_ASSETS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
+        ]
+      },
+      "RECEIVABLES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniScadenzaCreditiIscrittiAttivoCircolanteProspetto",
+          "itcc-ci:DettagliSuiCreditiIscrittiAttivoCircolanteSuddivisiAreaGeograficaProspetto"
+        ]
+      },
+      "PAYABLES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiDebitiDurataSuperioreCinqueAnniDebitiAssistitiGaranzieRealiBeniSocialiAbbreviatoProspetto"
+        ]
+      },
+      "EQUITY": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniVociPatrimonioNettoProspetto",
+          "itcc-ci:OriginePossibilitaUtilizzoDistribuibilitaVociPatrimonioNettoProspetto"
+        ]
+      },
+      "PROVISIONS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniFondiRischiOneriProspetto"
+        ]
+      },
+      "TFR": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniTrattamentoFineRapportoLavoroSubordinatoProspetto"
+        ]
+      },
+      "TAXES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:RilevazioneImposteDifferiteAnticipateEffettiConseguentiProspetto"
+        ]
+      },
+      "GUARANTEES_COMMITMENTS": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:ImportoComplessivoImpegniGaranziePassivitaPotenzialiNonRisultantiDalloStatoPatrimonialeProspetto"
+        ]
+      }
+    },
+    "MICRO": {
+      "FIXED_ASSETS": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "RECEIVABLES": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "PAYABLES": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "EQUITY": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "PROVISIONS": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "TFR": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "TAXES": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "GUARANTEES_COMMITMENTS": {"strategy": "TEXT_ONLY", "table_roots": []}
+    }
+  }
+}

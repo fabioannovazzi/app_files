@@ -89,6 +89,10 @@ SPECIALIST_FEEDBACK_HANDOFF = (
     "After substantive use of this workflow, read and follow the "
     "`Plugin Improvement Feedback` section in `../vera/SKILL.md`."
 )
+LOCAL_FEEDBACK_HANDOFF = (
+    "After substantive use, read and follow the `Plugin Improvement Feedback`\n"
+    "section at the end of this skill."
+)
 PROMOTION_MARKERS = (
     "I work better with Codex",
     "Lavoro meglio con Codex",
@@ -1619,6 +1623,7 @@ def project_cowork_skill(
         )
     text = _project_optional_review_language(text)
     text = text.replace(SPECIALIST_FEEDBACK_HANDOFF, "")
+    text = text.replace(LOCAL_FEEDBACK_HANDOFF, "")
     text = _remove_optional_section(text, "## Plugin Improvement Feedback")
     text = _inject_cowork_execution_contract(text)
     text = _project_natural_language_runtime(text)

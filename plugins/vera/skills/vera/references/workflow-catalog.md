@@ -12,6 +12,9 @@ skill to imitate a missing operational workflow.
   workpapers.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
+- `bilancio-xbrl-it`: understand accounting evidence and prepare, update,
+  reconcile, review, validate, or export an individual Italian OIC civil-law
+  annual financial statement; XBRL is an output, not the workflow identity.
 - `check-entries`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.
 - `concordato-plan-review`: review an Italian concordato preventivo across the
