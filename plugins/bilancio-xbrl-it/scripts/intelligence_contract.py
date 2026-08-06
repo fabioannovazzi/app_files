@@ -65,6 +65,20 @@ def _canonical_json(value: Any) -> bytes:
     ).encode("utf-8")
 
 
+def _strip_model_routing_metadata(value: Any) -> Any:
+    """Remove out-of-band routing and reproducibility metadata from model context."""
+
+    if isinstance(value, Mapping):
+        return {
+            key: _strip_model_routing_metadata(item)
+            for key, item in value.items()
+            if key not in {"case_id", "tenant_id", "computation_context"}
+        }
+    if isinstance(value, (list, tuple)):
+        return [_strip_model_routing_metadata(item) for item in value]
+    return value
+
+
 def intelligence_packet_hash(packet: Mapping[str, Any]) -> str:
     """Return the reproducible input hash recorded with a model run."""
 
@@ -165,7 +179,6 @@ def build_intelligence_packet(
         "contract_version": "bilancio-intelligence-v1",
         "task": selected_task.value,
         "case_ref": {
-            "case_id": case["case_id"],
             "revision_id": case["revision_id"],
             "legal_form": case["entity"].get("legal_form"),
             "period": dict(case["period"]),
@@ -313,7 +326,7 @@ def build_intelligence_packet(
                 "issues": (case.get("validation") or {}).get("issues", []),
             },
         }
-    return base
+    return _strip_model_routing_metadata(base)
 
 
 def build_next_intelligence_packet(case: Mapping[str, Any]) -> dict[str, Any]:

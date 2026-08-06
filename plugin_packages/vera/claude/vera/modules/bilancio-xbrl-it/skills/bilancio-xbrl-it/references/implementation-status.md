@@ -17,9 +17,17 @@ Later host-specific instructions in this reference cannot override this rule.
 - Revisioned JSON case record with source manifest, audit events, optimistic
   concurrency, approval invalidation, and immutable approval snapshot hashes.
 - Generic CSV/XLSX trial-balance layouts, Decimal normalization, source anchors,
-  duplicate-account rejection, debit/credit progressive calibration, exact
-  closing-total confirmation gate, bounded XLSX preflight, macro/external-link
-  rejection, formula-cache checks, and ZIP-path/compression controls.
+  duplicate-account rejection, normalized-header collision rejection, bounded
+  finite non-exponent monetary lexicals, debit/credit progressive calibration,
+  exact closing-total confirmation gate, bounded XLSX preflight,
+  macro/external-link rejection, formula-cache checks, and
+  ZIP-path/compression controls. Every imported cell retains its original
+  header, normalized field name, exact spreadsheet coordinate, raw value and
+  normalized value.
+- Closing-entry inclusion is never inferred from ambiguous turnover values.
+  Calibration exposes it as requiring professional confirmation, and parser
+  confirmation records the selected convention, reviewer, time, reason and
+  resulting true, false or not-assessable status.
 - Effective-dated form thresholds loaded from a versioned JSON rule pack,
   first-year/two-year windows, user form selection, and micro exclusions.
 - Minimum entity identity intake now requires legal name, reporting identifier,
@@ -92,19 +100,22 @@ Later host-specific instructions in this reference cannot override this rule.
   narrative work. Narrative absence is not mislabeled as missing accounting
   evidence.
 - Escaped HTML review preview with substantive-content hashing, preview
-  invalidation, structured workpaper inclusion, and a user-controlled external
-  TEBENI report record that does not alter the approved accounting snapshot.
-  A later export carries the report and its source-document receipt as a
+  invalidation, exact byte capture inside the immutable snapshot, checksum and
+  length verification, and byte-identical export. The workpaper carries the
+  preview receipt without duplicating its encoded content. A user-controlled
+  external TEBENI report does not alter the approved accounting snapshot; a
+  later export carries the report and its source-document receipt as a
   non-authoritative workpaper addendum.
 - Tenant-scoped file service with authenticated request context, role
   capabilities, time-limited platform-support grants, optimistic concurrency,
   file locking, idempotency records, and compact writable Vera MCP tools.
 - Intelligent-participation contracts for workflow guidance, account mapping,
   question prioritization, narrative drafting, prior-year comparison, and issue
-  explanation. Context packets exclude direct entity identity where not needed,
-  treat document text as untrusted, and validate strict model output schemas and
-  evidence closure. Suggestions remain `MODEL_SUGGESTED` until a professional
-  applies a separate reviewed decision.
+  explanation. Context packets exclude direct entity identity and out-of-band
+  case routing identifiers where not needed, treat document text as untrusted,
+  and validate strict model output schemas and evidence closure. Suggestions
+  remain `MODEL_SUGGESTED` until a professional applies a separate reviewed
+  decision.
 - State-aware orchestration selects the next bounded intelligence contribution
   from unresolved mappings, active questions, stale prior text, incomplete note
   sections, validation issues, or general workflow guidance. The selector does
@@ -172,7 +183,11 @@ Later host-specific instructions in this reference cannot override this rule.
 - Approval now requires a pre-approval render of the current substantive case
   and a passing local XBRL processor report. The candidate, catalogue, package,
   and report hashes are carried into the immutable snapshot; any substantive
-  mutation invalidates the review before approval can recur.
+  mutation invalidates the review before approval can recur. Final export reads
+  the catalogue once, requires its exact approved checksum, re-renders from
+  those captured bytes, and refuses output unless the final XBRL is byte-for-byte
+  identical to the approved candidate. A validator that mutates the candidate
+  also fails the review.
 - The file-backed service accepts source and returned external-report reads only
   below a deployment-configured case input root. Taxonomy catalogue/package
   paths are deployment configuration rather than model-controlled request

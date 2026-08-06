@@ -55,6 +55,27 @@ def test_normalize_decimal_missing_value_is_not_inferred_as_zero(raw: object) ->
         xbrl_case.normalize_decimal(raw)
 
 
+@pytest.mark.parametrize(
+    "raw",
+    [
+        "NaN",
+        "Infinity",
+        "-Infinity",
+        "1e6",
+        "(-100)",
+        Decimal("NaN"),
+        float("inf"),
+        "1234567890123456789.00",
+        "1.1234567",
+    ],
+)
+def test_normalize_decimal_rejects_nonfinite_ambiguous_or_unbounded_value(
+    raw: object,
+) -> None:
+    with pytest.raises(ValueError):
+        xbrl_case.normalize_decimal(raw)
+
+
 def _case_payload(*, listed: bool = False) -> dict[str, object]:
     return {
         "case_id": "case_rossi_2025",
@@ -234,7 +255,64 @@ def test_ingest_trial_balance_excluding_opening_detects_exact_convention(
     calibration = result["trial_balance"]["calibration"]
     assert calibration["detected_convention"] == "TURNOVER_EXCLUDES_OPENING"
     assert calibration["unmatched_rows"] == 0
+    assert calibration["closing_entries_assessment"] == {
+        "appears_included": None,
+        "status": "REQUIRES_PROFESSIONAL_CONFIRMATION",
+        "reason": (
+            "The supported numeric columns do not mechanically distinguish "
+            "ordinary turnover from closing entries."
+        ),
+    }
     assert len(result["trial_balance"]["source_anchors"]) == 14
+    first_anchor = result["trial_balance"]["source_anchors"][0]
+    assert first_anchor["column"] == "A"
+    assert first_anchor["column_header"] == "account_code"
+    assert first_anchor["normalized_column"] == "account_code"
+    assert first_anchor["raw_value"] == "1000"
+    assert first_anchor["normalized_value"] == "1000"
+
+
+def test_ingest_trial_balance_rejects_aliases_that_collide_after_normalization(
+    tmp_path: Path,
+) -> None:
+    _, case = _created_case(tmp_path)
+    source = tmp_path / "duplicate-header.csv"
+    source.write_text(
+        "account_code;conto;account_description;opening_signed;period_debit;"
+        "period_credit;closing_signed;prior_closing_signed\n"
+        "ORIGINAL;OVERWRITE;Cassa;90;10;0;100;90\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(
+        ValueError,
+        match="Duplicate normalized column 'account_code'.*A.*B",
+    ):
+        xbrl_case.ingest_trial_balance(case, source, "preparer_1", "rev_1")
+
+
+def test_ingest_trial_balance_preserves_original_header_and_raw_cell_text(
+    tmp_path: Path,
+) -> None:
+    _, case = _created_case(tmp_path)
+    source = tmp_path / "original-cell.csv"
+    source.write_text(
+        " account_code ;account_description;opening_signed;period_debit;"
+        "period_credit;closing_signed;prior_closing_signed\n"
+        " 1000 ;Cassa;90;10;0;100;90\n"
+        "2000;Debiti;-90;0;10;-100;-90\n",
+        encoding="utf-8",
+    )
+
+    result = xbrl_case.ingest_trial_balance(
+        case, source, "preparer_1", case["revision_id"]
+    )
+
+    anchor = result["trial_balance"]["source_anchors"][0]
+    assert anchor["column_header"] == " account_code "
+    assert anchor["normalized_column"] == "account_code"
+    assert anchor["raw_value"] == " 1000 "
+    assert anchor["normalized_value"] == "1000"
 
 
 def test_ingest_signed_trial_balance_requires_turnover_columns(tmp_path: Path) -> None:
@@ -290,6 +368,40 @@ def test_confirm_parser_unbalanced_trial_balance_is_rejected(tmp_path: Path) -> 
             "preparer_1",
             case["revision_id"],
         )
+
+
+@pytest.mark.parametrize(
+    ("convention", "appears_included"),
+    [
+        ("TURNOVER_EXCLUDES_OPENING", False),
+        ("TURNOVER_INCLUDES_OPENING", False),
+        ("TURNOVER_INCLUDES_CLOSING_ENTRIES", True),
+        ("SIGNED_BALANCE_ONLY", None),
+    ],
+)
+def test_confirm_parser_records_professional_closing_entry_assessment(
+    tmp_path: Path, convention: str, appears_included: bool | None
+) -> None:
+    _, case = _created_case(tmp_path)
+    source = tmp_path / "trial_balance.csv"
+    _write_trial_balance(source)
+    case = xbrl_case.ingest_trial_balance(case, source, "preparer_1", "rev_1")
+
+    result = xbrl_case.confirm_parser(
+        case,
+        convention,
+        "preparer_1",
+        case["revision_id"],
+    )
+
+    review = result["trial_balance"]["closing_entries_review"]
+    assert review["appears_included"] is appears_included
+    assert review["status"] == "USER_CONFIRMED"
+    assert review["confirmed_convention"] == convention
+    assert review["confirmed_by"] == "preparer_1"
+    assert (
+        result["trial_balance"]["calibration"]["closing_entries_assessment"] == review
+    )
 
 
 def test_determine_forms_two_small_years_recommends_micro(tmp_path: Path) -> None:
@@ -1200,6 +1312,41 @@ def test_prepare_xbrl_review_binds_render_and_processor_report(
     assert len(result["xbrl_review"]["candidate_sha256"]) == 64
     assert len(result["xbrl_review"]["validation_report_sha256"]) == 64
     assert result["validation"]["validated_revision_id"] == result["revision_id"]
+
+
+def test_prepare_xbrl_review_rejects_validator_that_modifies_candidate(
+    tmp_path: Path,
+) -> None:
+    case = _ready_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    package = tmp_path / "taxonomy.zip"
+    package.write_bytes(b"test taxonomy package")
+
+    def modifying_validator(
+        instance: Path,
+        report: Path,
+        taxonomy_package: Path | None,
+        expected_taxonomy_sha256: str | None,
+    ) -> dict[str, object]:
+        instance.write_bytes(instance.read_bytes() + b"<!-- modified -->")
+        return _passing_xbrl_validator(
+            instance,
+            report,
+            taxonomy_package,
+            expected_taxonomy_sha256,
+        )
+
+    with pytest.raises(ValueError, match="modified the rendered XBRL"):
+        xbrl_case.prepare_xbrl_review(
+            case,
+            catalogue,
+            package,
+            tmp_path / "xbrl-review",
+            "reviewer_1",
+            case["revision_id"],
+            validator=modifying_validator,
+        )
 
 
 def test_post_approval_form_change_invalidates_prior_approval(tmp_path: Path) -> None:
@@ -2663,9 +2810,42 @@ def test_ingest_payable_schedule_csv_preserves_cell_anchors_and_reconciles(
     assert schedule["rows"][0]["closing_amount"] == "100.00"
     assert document["purpose"] == "PAYABLES_SCHEDULE"
     assert len(document["source_anchors"]) == 21
+    assert document["source_anchors"][0] == {
+        "source_ref": "src_doc_0002_0000001",
+        "document_id": "doc_0002",
+        "sheet": "csv",
+        "row": 2,
+        "column": "A",
+        "column_header": "row_id",
+        "normalized_column": "row_id",
+        "raw_value": "trade",
+        "normalized_value": "trade",
+        "parser_profile": "payables_template_v1",
+        "confidence": "HIGH",
+    }
     assert schedule["rows"][0]["source_refs"] == [
         item["source_ref"] for item in document["source_anchors"]
     ]
+
+
+def test_ingest_schedule_rejects_headers_that_collide_after_normalization(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    source = tmp_path / "duplicate-schedule-header.csv"
+    source.write_text("row_id;row id\ntrade;overwrite\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Duplicate normalized column 'row_id'"):
+        xbrl_case.ingest_schedule_file(
+            case,
+            source,
+            "PAYABLES",
+            "payables_imported",
+            "SP.PASSIVO.DEBITI",
+            {"statement_multiplier": "-1"},
+            "preparer_1",
+            case["revision_id"],
+        )
 
 
 def test_ingest_schedule_template_missing_required_column_is_rejected(
@@ -3278,7 +3458,17 @@ def test_export_includes_review_preview_and_structured_notes(tmp_path: Path) -> 
     manifest = json.loads(
         (output_dir / "artifact_manifest.json").read_text(encoding="utf-8")
     )
-    assert (output_dir / "preview.html").is_file()
+    exported_preview = output_dir / "preview.html"
+    assert (
+        exported_preview.read_bytes()
+        == (tmp_path / "reviewed-preview.html").read_bytes()
+    )
+    exported_xbrl = next(output_dir.glob("*.xbrl"))
+    assert (
+        exported_xbrl.read_bytes()
+        == (tmp_path / "approval-xbrl-review" / "review-candidate.xbrl").read_bytes()
+    )
+    assert "content_base64" not in workpaper["preview"]
     assert workpaper["disclosure_coverage"]["triggered_count"] > 0
     assert workpaper["narrative_blocks"]
     assert workpaper["assumptions"] == []
@@ -3311,6 +3501,59 @@ def test_export_includes_review_preview_and_structured_notes(tmp_path: Path) -> 
         path = output_dir / artifact["file_name"]
         assert xbrl_case._sha256_file(path) == artifact["sha256"]
         assert path.stat().st_size == artifact["size_bytes"]
+
+
+def test_export_rejects_catalogue_that_differs_from_approved_review(
+    tmp_path: Path,
+) -> None:
+    case = _approved_case(tmp_path)
+    changed_catalogue = tmp_path / "changed-catalogue.json"
+    _write_catalogue(changed_catalogue, "a" * 64)
+    payload = json.loads(changed_catalogue.read_text(encoding="utf-8"))
+    payload["entry_points"]["ABBREVIATED"] = "https://example.invalid/changed.xsd"
+    changed_catalogue.write_text(json.dumps(payload), encoding="utf-8")
+    output = tmp_path / "rejected-export"
+
+    with pytest.raises(ValueError, match="differs from the approved review catalogue"):
+        xbrl_case.export_case(case, output, changed_catalogue, "reviewer_1")
+
+    assert not output.exists()
+
+
+def test_export_rejects_tampered_reviewed_preview_bytes(tmp_path: Path) -> None:
+    case = _approved_case(tmp_path)
+    snapshot = case["approval"]["snapshot"]
+    snapshot["preview"]["content_base64"] = "dGFtcGVyZWQ="
+    case["approval"]["snapshot_hash"] = xbrl_case._sha256_bytes(
+        xbrl_case._canonical_json(snapshot)
+    )
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    output = tmp_path / "rejected-preview-export"
+
+    with pytest.raises(ValueError, match="preview byte length"):
+        xbrl_case.export_case(case, output, catalogue, "reviewer_1")
+
+    assert not output.exists()
+
+
+def test_export_rejects_bytes_that_differ_from_approved_candidate(
+    tmp_path: Path,
+) -> None:
+    case = _approved_case(tmp_path)
+    snapshot = case["approval"]["snapshot"]
+    snapshot["xbrl_review"]["candidate_sha256"] = "0" * 64
+    case["approval"]["snapshot_hash"] = xbrl_case._sha256_bytes(
+        xbrl_case._canonical_json(snapshot)
+    )
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    output = tmp_path / "rejected-candidate-export"
+
+    with pytest.raises(ValueError, match="final XBRL bytes differ"):
+        xbrl_case.export_case(case, output, catalogue, "reviewer_1")
+
+    assert not output.exists()
 
 
 def test_xbrl_renderer_emits_only_accepted_concept_bound_narrative(

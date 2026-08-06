@@ -11,11 +11,14 @@ review decisions.
 from __future__ import annotations
 
 import argparse
+import base64
+import binascii
 import csv
 import hashlib
 import html
 import json
 import logging
+import math
 import re
 import shutil
 import sys
@@ -129,6 +132,9 @@ XSI_NS = "http://www.w3.org/2001/XMLSchema-instance"
 SAFE_ID = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$")
 SAFE_QNAME = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*:[A-Za-z_][A-Za-z0-9_.-]*$")
 XBRL_DECIMAL_LEXICAL = re.compile(r"^[+-]?(?:\d+(?:\.\d*)?|\.\d+)$")
+NORMALIZED_MONEY_LEXICAL = re.compile(
+    r"^(?P<sign>[+-]?)(?P<integer>\d+)(?:\.(?P<fraction>\d+))?$"
+)
 MONEY_LITERAL = re.compile(
     r"(?:€|euro)\s*(\(?-?(?:\d{1,3}(?:[.\s]\d{3})+|\d+)(?:[,.]\d+)?\)?)",
     flags=re.IGNORECASE,
@@ -151,6 +157,8 @@ SUPPORTED_LEGAL_FORMS = {"SRL", "SPA", "SAPA"}
 MAX_INPUT_BYTES = 100 * 1024 * 1024
 MAX_XLSX_UNCOMPRESSED_BYTES = 250 * 1024 * 1024
 MAX_TEMPLATE_ROWS = 20_000
+MAX_MONEY_INTEGER_DIGITS = 18
+MAX_MONEY_FRACTION_DIGITS = 6
 
 
 class CaseState(StrEnum):
@@ -260,10 +268,57 @@ def _sha256_file(path: Path) -> str:
 
 
 def _decimal_text(value: Decimal) -> str:
-    normalized = (
-        value.quantize(Decimal("0.01")) if value == value.to_integral() else value
-    )
-    return format(normalized, "f")
+    _validate_monetary_decimal(value)
+    text = format(value, "f")
+    if value == value.to_integral():
+        return f"{text.split('.', maxsplit=1)[0]}.00"
+    return text
+
+
+def _validate_monetary_decimal(value: Decimal) -> Decimal:
+    """Reject non-finite or operationally unbounded monetary values."""
+
+    if not value.is_finite():
+        raise ValueError("Monetary values must be finite")
+    if value.is_zero():
+        integer_digits = 1
+    else:
+        integer_digits = max(value.adjusted() + 1, 1)
+    fractional_digits = max(-value.as_tuple().exponent, 0)
+    if integer_digits > MAX_MONEY_INTEGER_DIGITS:
+        raise ValueError(
+            f"Monetary values support at most {MAX_MONEY_INTEGER_DIGITS} integer digits"
+        )
+    if fractional_digits > MAX_MONEY_FRACTION_DIGITS:
+        raise ValueError(
+            f"Monetary values support at most {MAX_MONEY_FRACTION_DIGITS} fractional digits"
+        )
+    return value
+
+
+def _decimal_from_normalized_text(text: str, raw: Any, label: str) -> Decimal:
+    """Parse one bounded, non-exponent monetary lexical representation."""
+
+    descriptor = f"{label} monetary".strip()
+    match = NORMALIZED_MONEY_LEXICAL.fullmatch(text)
+    if not match:
+        raise ValueError(f"Invalid {descriptor} value: {raw!r}")
+    integer = match.group("integer").lstrip("0") or "0"
+    fraction = match.group("fraction") or ""
+    if len(integer) > MAX_MONEY_INTEGER_DIGITS:
+        raise ValueError(
+            f"{descriptor.capitalize()} values support at most "
+            f"{MAX_MONEY_INTEGER_DIGITS} integer digits"
+        )
+    if len(fraction) > MAX_MONEY_FRACTION_DIGITS:
+        raise ValueError(
+            f"{descriptor.capitalize()} values support at most "
+            f"{MAX_MONEY_FRACTION_DIGITS} fractional digits"
+        )
+    try:
+        return _validate_monetary_decimal(Decimal(text))
+    except InvalidOperation as exc:
+        raise ValueError(f"Invalid {descriptor} value: {raw!r}") from exc
 
 
 def _reported_decimal(value: Decimal, precision: int) -> Decimal:
@@ -298,17 +353,27 @@ def normalize_decimal(raw: Any) -> Decimal:
     """Parse locale-neutral or Italian-formatted money as an exact Decimal."""
 
     if isinstance(raw, Decimal):
-        return raw
+        return _validate_monetary_decimal(raw)
     if isinstance(raw, bool) or raw is None:
         raise ValueError("A monetary value is required")
     if isinstance(raw, int):
-        return Decimal(raw)
+        return _validate_monetary_decimal(Decimal(raw))
+    if isinstance(raw, float) and not math.isfinite(raw):
+        raise ValueError("Monetary values must be finite")
     text = str(raw).strip().replace("\u00a0", "").replace(" ", "")
     if not text:
         raise ValueError("A monetary value is required; blank is not zero")
-    negative = text.startswith("(") and text.endswith(")")
+    has_opening_parenthesis = text.startswith("(")
+    has_closing_parenthesis = text.endswith(")")
+    if has_opening_parenthesis != has_closing_parenthesis:
+        raise ValueError(f"Invalid monetary value: {raw!r}")
+    negative = has_opening_parenthesis and has_closing_parenthesis
     if negative:
         text = text[1:-1]
+        if text.startswith(("+", "-")):
+            raise ValueError(
+                f"Invalid monetary value with both parentheses and sign: {raw!r}"
+            )
     text = re.sub(r"^(EUR|€)", "", text, flags=re.IGNORECASE)
     text = re.sub(r"(EUR|€)$", "", text, flags=re.IGNORECASE)
     if "," in text and "." in text:
@@ -318,10 +383,7 @@ def normalize_decimal(raw: Any) -> Decimal:
             text = text.replace(",", "")
     elif "," in text:
         text = text.replace(".", "").replace(",", ".")
-    try:
-        value = Decimal(text)
-    except InvalidOperation as exc:
-        raise ValueError(f"Invalid monetary value: {raw!r}") from exc
+    value = _decimal_from_normalized_text(text, raw, "")
     return -value if negative else value
 
 
@@ -329,9 +391,18 @@ def _normalize_narrative_money_literal(raw: str, language: str) -> Decimal:
     """Parse a prose monetary literal using the approved output locale."""
 
     text = raw.strip().replace("\u00a0", "").replace(" ", "")
-    negative = text.startswith("(") and text.endswith(")")
+    has_opening_parenthesis = text.startswith("(")
+    has_closing_parenthesis = text.endswith(")")
+    if has_opening_parenthesis != has_closing_parenthesis:
+        raise ValueError(f"Invalid narrative monetary value: {raw!r}")
+    negative = has_opening_parenthesis and has_closing_parenthesis
     if negative:
         text = text[1:-1]
+        if text.startswith(("+", "-")):
+            raise ValueError(
+                "Invalid narrative monetary value with both parentheses and sign: "
+                f"{raw!r}"
+            )
     if language == "it":
         if re.fullmatch(r"-?\d{1,3}(?:\.\d{3})+", text):
             text = text.replace(".", "")
@@ -344,10 +415,7 @@ def _normalize_narrative_money_literal(raw: str, language: str) -> Decimal:
             text = text.replace(",", "")
     else:
         raise ValueError("Narrative monetary parsing supports Italian or English")
-    try:
-        value = Decimal(text)
-    except InvalidOperation as exc:
-        raise ValueError(f"Invalid narrative monetary value: {raw!r}") from exc
+    value = _decimal_from_normalized_text(text, raw, "narrative")
     return -value if negative else value
 
 
@@ -452,6 +520,25 @@ def _review_content_hash(case: Mapping[str, Any]) -> str:
     ):
         payload.pop(key, None)
     return _sha256_bytes(_canonical_json(payload))
+
+
+def _reviewed_preview_bytes(preview: Mapping[str, Any]) -> bytes:
+    """Decode and verify the exact HTML bytes shown during professional review."""
+
+    encoded = preview.get("content_base64")
+    if not isinstance(encoded, str) or not encoded:
+        raise ValueError("The reviewed preview does not contain bound HTML bytes")
+    try:
+        content = base64.b64decode(encoded, validate=True)
+    except (binascii.Error, ValueError) as exc:
+        raise ValueError(
+            "The reviewed preview contains invalid base64 content"
+        ) from exc
+    if len(content) != preview.get("size_bytes"):
+        raise ValueError("The reviewed preview byte length does not match its receipt")
+    if _sha256_bytes(content) != preview.get("sha256"):
+        raise ValueError("The reviewed preview checksum does not match its receipt")
+    return content
 
 
 def _next_document_id(case: Mapping[str, Any]) -> str:
@@ -1259,7 +1346,7 @@ def _load_table(
             raise ValueError("The CSV file is empty")
         if len(rows) - 1 > MAX_TEMPLATE_ROWS:
             raise ValueError("Input table exceeds the 20,000-row MVP limit")
-        return [str(value).strip() for value in rows[0]], rows[1:], "csv"
+        return [str(value) for value in rows[0]], rows[1:], "csv"
     if suffix == ".xlsx":
         try:
             from openpyxl import load_workbook
@@ -1315,7 +1402,7 @@ def _load_table(
         formula_workbook.close()
         workbook.close()
         return (
-            [str(value or "").strip() for value in rows[0]],
+            ["" if value is None else str(value) for value in rows[0]],
             [list(row) for row in rows[1:]],
             selected_title,
         )
@@ -1339,6 +1426,47 @@ def _normalized_header(value: str) -> str:
         "saldo_precedente_avere": "prior_closing_credit",
     }
     return aliases.get(text.strip("_"), text.strip("_"))
+
+
+def _column_reference(position: int) -> str:
+    """Return the one-based spreadsheet column letter for a zero-based position."""
+
+    if position < 0:
+        raise ValueError("Column positions cannot be negative")
+    value = position + 1
+    letters = ""
+    while value:
+        value, remainder = divmod(value - 1, 26)
+        letters = chr(65 + remainder) + letters
+    return letters
+
+
+def _normalized_header_columns(headers: Sequence[str]) -> list[dict[str, Any]]:
+    """Normalize headers while preserving coordinates and rejecting collisions."""
+
+    columns: list[dict[str, Any]] = []
+    seen: dict[str, dict[str, Any]] = {}
+    for position, original in enumerate(headers):
+        normalized = _normalized_header(original)
+        coordinate = _column_reference(position)
+        if not normalized:
+            raise ValueError(f"Column {coordinate} has a blank or unsupported header")
+        prior = seen.get(normalized)
+        if prior:
+            raise ValueError(
+                "Duplicate normalized column "
+                f"{normalized!r}: {prior['column']} ({prior['column_header']!r}) "
+                f"and {coordinate} ({original!r})"
+            )
+        column = {
+            "column": coordinate,
+            "column_index": position + 1,
+            "column_header": original,
+            "normalized_column": normalized,
+        }
+        seen[normalized] = column
+        columns.append(column)
+    return columns
 
 
 def _row_decimal(row: Mapping[str, Any], key: str) -> Decimal:
@@ -1396,6 +1524,14 @@ def _calibrate(rows: Sequence[Mapping[str, Any]], tolerance: Decimal) -> dict[st
         "unmatched_rows": tested - max(matches_excludes, matches_includes),
         "tolerance": _decimal_text(tolerance),
         "samples": samples,
+        "closing_entries_assessment": {
+            "appears_included": None,
+            "status": "REQUIRES_PROFESSIONAL_CONFIRMATION",
+            "reason": (
+                "The supported numeric columns do not mechanically distinguish "
+                "ordinary turnover from closing entries."
+            ),
+        },
     }
 
 
@@ -1416,7 +1552,8 @@ def ingest_trial_balance(
         raise ValueError("Trial balance must be a regular local file")
     path = source_path.resolve()
     headers, raw_rows, sheet_name = _load_table(path, sheet)
-    normalized_headers = [_normalized_header(value) for value in headers]
+    header_columns = _normalized_header_columns(headers)
+    normalized_headers = [item["normalized_column"] for item in header_columns]
     required = {"account_code", "account_description"}
     if not required.issubset(normalized_headers):
         raise ValueError("Trial balance requires account_code and account_description")
@@ -1454,6 +1591,7 @@ def ingest_trial_balance(
         "sha256": _sha256_file(path),
         "size_bytes": path.stat().st_size,
         "sheet": sheet_name,
+        "columns": header_columns,
         "parser_profile": "generic_it_tb_v1",
         "parsed_at": _now(),
     }
@@ -1499,26 +1637,31 @@ def ingest_trial_balance(
         period_debit = _row_decimal(row, "period_debit")
         period_credit = _row_decimal(row, "period_credit")
         source_refs: list[str] = []
-        for column_name in normalized_headers:
-            if column_name in row:
-                anchor_id = f"src_{len(anchors) + 1:07d}"
-                source_refs.append(anchor_id)
-                raw_value = row[column_name]
-                anchor: dict[str, Any] = {
-                    "source_ref": anchor_id,
-                    "document_id": document_id,
-                    "sheet": sheet_name,
-                    "row": index,
-                    "column": column_name,
-                    "raw_value": "" if raw_value is None else str(raw_value),
-                    "parser_profile": "generic_it_tb_v1",
-                    "confidence": "HIGH",
-                }
-                if column_name not in {"account_code", "account_description"}:
-                    anchor["normalized_value"] = _decimal_text(
-                        _row_decimal(row, column_name)
-                    )
-                anchors.append(anchor)
+        for column in header_columns:
+            position = int(column["column_index"]) - 1
+            column_name = str(column["normalized_column"])
+            anchor_id = f"src_{len(anchors) + 1:07d}"
+            source_refs.append(anchor_id)
+            raw_value = values[position] if position < len(values) else None
+            anchor: dict[str, Any] = {
+                "source_ref": anchor_id,
+                "document_id": document_id,
+                "sheet": sheet_name,
+                "row": index,
+                "column": column["column"],
+                "column_header": column["column_header"],
+                "normalized_column": column_name,
+                "raw_value": "" if raw_value is None else str(raw_value),
+                "parser_profile": "generic_it_tb_v1",
+                "confidence": "HIGH",
+            }
+            if column_name not in {"account_code", "account_description"}:
+                anchor["normalized_value"] = _decimal_text(
+                    _row_decimal(row, column_name)
+                )
+            else:
+                anchor["normalized_value"] = str(row[column_name] or "").strip()
+            anchors.append(anchor)
         entries.append(
             {
                 "account_id": f"acc_{len(entries) + 1:06d}",
@@ -1597,10 +1740,43 @@ def confirm_parser(
         )
     _mutate(case, actor, "parser_convention_confirmed")
     case["trial_balance"]["confirmed_convention"] = selected.value
+    if selected is ParserConvention.TURNOVER_INCLUDES_CLOSING_ENTRIES:
+        appears_included: bool | None = True
+        closing_reason = "The professional explicitly confirmed that turnover includes closing entries."
+    elif selected is ParserConvention.SIGNED_BALANCE_ONLY:
+        appears_included = None
+        closing_reason = (
+            "The professional confirmed a signed-balance-only source, so closing-entry "
+            "inclusion cannot be assessed from turnover columns."
+        )
+    else:
+        appears_included = False
+        closing_reason = (
+            "The professional explicitly confirmed a turnover convention that excludes "
+            "closing entries."
+        )
+    closing_review = {
+        "appears_included": appears_included,
+        "status": "USER_CONFIRMED",
+        "reason": closing_reason,
+        "confirmed_convention": selected.value,
+        "confirmed_by": actor,
+        "confirmed_at": _now(),
+    }
+    case["trial_balance"]["closing_entries_review"] = closing_review
+    case["trial_balance"]["calibration"]["closing_entries_assessment"] = deepcopy(
+        closing_review
+    )
     case["state"] = CaseState.MAPPING_REVIEW
     case["validation"] = None
     _record_event(
-        case, "parser_convention_confirmed", actor, {"convention": selected.value}
+        case,
+        "parser_convention_confirmed",
+        actor,
+        {
+            "convention": selected.value,
+            "closing_entries_review": closing_review,
+        },
     )
     return case
 
@@ -3258,7 +3434,8 @@ def ingest_schedule_file(
     required_fields = schedule_template_fields(normalized_type)
     required_text_fields = schedule_template_text_fields(normalized_type)
     headers, raw_rows, sheet_name = _load_table(source_path.resolve(), sheet)
-    normalized_headers = [_normalized_header(value) for value in headers]
+    header_columns = _normalized_header_columns(headers)
+    normalized_headers = [item["normalized_column"] for item in header_columns]
     required_headers = {"row_id", *required_fields, *required_text_fields}
     missing_headers = sorted(required_headers - set(normalized_headers))
     if missing_headers:
@@ -3286,17 +3463,19 @@ def ingest_schedule_file(
             "label": str(row.get("label") or row_id),
             "evidence_status": EvidenceStatus.OBSERVED,
         }
-        for column_name in normalized_headers:
-            if column_name not in row:
-                continue
+        for column in header_columns:
+            position = int(column["column_index"]) - 1
+            column_name = str(column["normalized_column"])
             anchor_id = f"src_{document_id}_{len(anchors) + 1:07d}"
-            raw_value = row[column_name]
+            raw_value = values[position] if position < len(values) else None
             anchor: dict[str, Any] = {
                 "source_ref": anchor_id,
                 "document_id": document_id,
                 "sheet": sheet_name,
                 "row": row_number,
-                "column": column_name,
+                "column": column["column"],
+                "column_header": column["column_header"],
+                "normalized_column": column_name,
                 "raw_value": "" if raw_value is None else str(raw_value),
                 "parser_profile": f"{normalized_type.lower()}_template_v1",
                 "confidence": "HIGH",
@@ -3309,6 +3488,8 @@ def ingest_schedule_file(
                 text_value = str(raw_value or "").strip()
                 normalized_row[column_name] = text_value or "UNKNOWN"
                 anchor["normalized_value"] = text_value or "UNKNOWN"
+            else:
+                anchor["normalized_value"] = str(raw_value or "").strip()
             anchors.append(anchor)
             source_refs.append(anchor_id)
         normalized_row["source_refs"] = source_refs
@@ -3333,6 +3514,7 @@ def ingest_schedule_file(
         "sha256": _sha256_file(source_path.resolve()),
         "size_bytes": source_path.resolve().stat().st_size,
         "sheet": sheet_name,
+        "columns": header_columns,
         "parser_profile": f"{normalized_type.lower()}_template_v1",
         "source_anchors": anchors,
         "parsed_at": _now(),
@@ -3928,13 +4110,23 @@ def create_preview(
         "file_name": output_path.name,
         "sha256": _sha256_bytes(preview),
         "size_bytes": len(preview),
+        "content_base64": base64.b64encode(preview).decode("ascii"),
         "rendered_revision_id": case["revision_id"],
         "rendered_at": _now(),
         "review_content_hash": _review_content_hash(case),
         "computation_context": _computation_context(case, "bilancio-preview-v1"),
     }
     case["validation"] = None
-    _record_event(case, "preview_rendered", actor, case["preview"])
+    _record_event(
+        case,
+        "preview_rendered",
+        actor,
+        {
+            key: value
+            for key, value in case["preview"].items()
+            if key != "content_base64"
+        },
+    )
     return case
 
 
@@ -4721,6 +4913,15 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
             "BLOCKER",
             "The review preview does not match the current substantive case content",
         )
+    else:
+        try:
+            _reviewed_preview_bytes(preview)
+        except ValueError as exc:
+            add(
+                "REVIEW.PREVIEW_INTEGRITY",
+                "BLOCKER",
+                str(exc),
+            )
     xbrl_review = case.get("xbrl_review")
     if xbrl_review:
         if xbrl_review.get("review_content_hash") != _review_content_hash(case):
@@ -5034,6 +5235,9 @@ def prepare_xbrl_review(
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
         raise ValueError("XBRL review output directory must be empty")
+    if catalogue_path.is_symlink() or not catalogue_path.is_file():
+        raise ValueError("Taxonomy catalogue must be a regular local file")
+    catalogue_bytes = catalogue_path.read_bytes()
     content_hash = _review_content_hash(case)
     snapshot = _case_payload_for_hash(case)
     snapshot_hash = _sha256_bytes(_canonical_json(snapshot))
@@ -5041,9 +5245,10 @@ def prepare_xbrl_review(
         "state": CaseState.APPROVED,
         "approval": {"snapshot": snapshot, "snapshot_hash": snapshot_hash},
     }
-    xml = render_xbrl(candidate, catalogue_path)
+    xml = render_xbrl(candidate, catalogue_path, catalogue_bytes=catalogue_bytes)
     candidate_path = output / "review-candidate.xbrl"
     candidate_path.write_bytes(xml)
+    candidate_sha256 = _sha256_bytes(xml)
     report_path = output / "local-xbrl-validation.json"
     selected_validator = validator or validate_instance
     result = selected_validator(
@@ -5057,6 +5262,8 @@ def prepare_xbrl_review(
             json.dumps(result, ensure_ascii=False, indent=2) + "\n",
             encoding="utf-8",
         )
+    if _sha256_file(candidate_path) != candidate_sha256:
+        raise ValueError("Local validation modified the rendered XBRL review candidate")
     status = str(result.get("status", "FAIL"))
     if status not in {"PASS", "FAIL"}:
         raise ValueError("Local XBRL validator returned an unsupported status")
@@ -5065,10 +5272,10 @@ def prepare_xbrl_review(
         "review_content_hash": content_hash,
         "candidate_snapshot_hash": snapshot_hash,
         "candidate_file_name": candidate_path.name,
-        "candidate_sha256": _sha256_file(candidate_path),
+        "candidate_sha256": candidate_sha256,
         "validation_report_file_name": report_path.name,
         "validation_report_sha256": _sha256_file(report_path),
-        "catalogue_sha256": _sha256_file(catalogue_path),
+        "catalogue_sha256": _sha256_bytes(catalogue_bytes),
         "taxonomy_package_sha256": result.get("taxonomy_package_sha256"),
         "processor": result.get("processor", "injected-validator"),
         "status": status,
@@ -5161,11 +5368,20 @@ def approve_case(
 
 
 def _taxonomy_catalogue(
-    path: Path, expected_id: str, expected_checksum: str | None
+    path: Path,
+    expected_id: str,
+    expected_checksum: str | None,
+    *,
+    content: bytes | None = None,
 ) -> dict[str, Any]:
-    if path.is_symlink() or not path.is_file():
-        raise ValueError("Taxonomy catalogue must be a regular local file")
-    catalogue = json.loads(path.read_text(encoding="utf-8"))
+    if content is None:
+        if path.is_symlink() or not path.is_file():
+            raise ValueError("Taxonomy catalogue must be a regular local file")
+        content = path.read_bytes()
+    try:
+        catalogue = json.loads(content.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("Taxonomy catalogue must be valid UTF-8 JSON") from exc
     if catalogue.get("schema_version") != 2:
         raise ValueError("Taxonomy catalogue schema version 2 is required")
     if catalogue.get("taxonomy_id") != expected_id:
@@ -5264,7 +5480,12 @@ def _taxonomy_presentation_order(
     return order
 
 
-def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
+def render_xbrl(
+    case: Mapping[str, Any],
+    catalogue_path: Path,
+    *,
+    catalogue_bytes: bytes | None = None,
+) -> bytes:
     """Render an approved snapshot into deterministic XBRL XML."""
 
     approval = case.get("approval")
@@ -5281,6 +5502,7 @@ def render_xbrl(case: Mapping[str, Any], catalogue_path: Path) -> bytes:
         catalogue_path,
         snapshot["rule_pack_versions"]["taxonomy_id"],
         snapshot.get("taxonomy_checksum"),
+        content=catalogue_bytes,
     )
     concept_lookup = {item["qname"]: item for item in catalogue["concepts"]}
     selected_form = snapshot.get("selected_form")
@@ -5885,6 +6107,28 @@ def export_case(
 
     if case.get("state") not in {CaseState.APPROVED, CaseState.EXPORTED}:
         raise ValueError("Only an approved case can be exported")
+    approval = case.get("approval") or {}
+    snapshot = approval.get("snapshot")
+    if not isinstance(snapshot, Mapping):
+        raise ValueError("The approved snapshot is missing")
+    if _sha256_bytes(_canonical_json(snapshot)) != approval.get("snapshot_hash"):
+        raise ValueError("The approved snapshot checksum does not match its receipt")
+    xbrl_review = snapshot.get("xbrl_review") or {}
+    if xbrl_review.get("status") != "PASS":
+        raise ValueError("Export requires the approved passing local XBRL review")
+    if catalogue_path.is_symlink() or not catalogue_path.is_file():
+        raise ValueError("Taxonomy catalogue must be a regular local file")
+    catalogue_bytes = catalogue_path.read_bytes()
+    if _sha256_bytes(catalogue_bytes) != xbrl_review.get("catalogue_sha256"):
+        raise ValueError(
+            "The export taxonomy catalogue differs from the approved review catalogue"
+        )
+    xml = render_xbrl(case, catalogue_path, catalogue_bytes=catalogue_bytes)
+    if _sha256_bytes(xml) != xbrl_review.get("candidate_sha256"):
+        raise ValueError(
+            "The final XBRL bytes differ from the approved review candidate"
+        )
+    preview_bytes = _reviewed_preview_bytes(snapshot.get("preview") or {})
     before_hash = _sha256_bytes(_canonical_json(_case_payload_for_hash(case)))
     if output_dir.is_symlink():
         raise ValueError("Export directory must not be a symbolic link")
@@ -5894,9 +6138,6 @@ def export_case(
     output.mkdir(parents=True, exist_ok=True)
     if any(output.iterdir()):
         raise ValueError("Export directory must be empty")
-    xml = render_xbrl(case, catalogue_path)
-    approval = case["approval"]
-    snapshot = approval["snapshot"]
     year = date.fromisoformat(snapshot["period"]["end"]).year
     taxonomy_slug = (
         snapshot["rule_pack_versions"]["taxonomy_id"].replace("PCI_", "pci").lower()
@@ -5934,7 +6175,7 @@ def export_case(
     validation_path = output / "validation_report.json"
     validation_path.write_bytes(_canonical_json(validation_report) + b"\n")
     preview_path = output / "preview.html"
-    preview_path.write_bytes(render_preview_html(snapshot))
+    preview_path.write_bytes(preview_bytes)
     peer_artifact_paths = [
         xbrl_path,
         mapping_report_path,
@@ -6015,7 +6256,11 @@ def export_case(
             if issue.get("severity") in {"MEDIUM", "LOW", "INFO"}
             and issue.get("review_status") == "UNREVIEWED"
         ],
-        "preview": snapshot.get("preview"),
+        "preview": {
+            key: value
+            for key, value in (snapshot.get("preview") or {}).items()
+            if key != "content_base64"
+        },
         "xbrl_review": snapshot.get("xbrl_review"),
         "validation": snapshot["validation"],
         "assumptions": [],
