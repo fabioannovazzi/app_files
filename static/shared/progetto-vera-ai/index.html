@@ -264,6 +264,10 @@
     }
 
     .plain-copy strong { color: var(--ink); font-weight: 600; }
+    .plain-copy a { color: var(--ink); text-decoration: none; }
+    .plain-copy a:hover, .plain-copy a:focus-visible { text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: .16em; }
+    .body-link { color: var(--ink); text-decoration: none; }
+    .slide--navy .body-link { color: var(--blue); font-weight: 700; }
 
     .stack {
       display: grid;
@@ -853,20 +857,20 @@
         <div>
           <p class="eyebrow reveal" style="--i:0">Codex + Vera</p>
           <h2 class="reveal" style="--i:1">Codex lavora sul progetto. Vera aggiunge il metodo.</h2>
-          <p class="plain-copy reveal" style="--i:2">Codex è un agente AI e un ambiente di lavoro: legge i file del progetto, usa strumenti e completa attività. Vera è un plugin di Codex: aggiunge istruzioni e workflow pensati per il lavoro del commercialista.</p>
+          <p class="plain-copy reveal" style="--i:2">Codex è un programma <a href="https://github.com/openai/codex" target="_blank" rel="noopener noreferrer">open source</a> sviluppato da OpenAI. Codex crea sul tuo computer un ambiente di lavoro agentico che legge i file del progetto, usa strumenti e svolge attività operative. Vera è un plugin <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/vera" target="_blank" rel="noopener noreferrer">open source</a> per Codex: aggiunge istruzioni e workflow pensati per il lavoro del commercialista.</p>
         </div>
         <div class="stack stack--four">
           <article class="work-card reveal" style="--i:1"><span class="index">01</span><div><h3>Parte dai file</h3><p>Lavora su una cartella scelta dal professionista, con confini e permessi visibili.</p></div></article>
-          <article class="work-card reveal" style="--i:2"><span class="index">02</span><div><h3>Usa strumenti</h3><p>Può eseguire codice, confrontare dati e produrre artefatti invece di limitarsi a suggerirli.</p></div></article>
+          <article class="work-card reveal" style="--i:2"><span class="index">02</span><div><h3>Usa strumenti</h3><p>Può eseguire codice, confrontare dati e produrre artefatti.</p></div></article>
           <article class="work-card reveal" style="--i:3"><span class="index">03</span><div><h3>Lascia una traccia</h3><p>Input, passaggi, eccezioni e output restano disponibili per il controllo umano.</p></div></article>
-          <article class="work-card reveal" style="--i:4"><span class="index">04</span><div><h3>Usa il tuo abbonamento ChatGPT</h3><p>Rispetto all’API a consumo, il costo effettivo può risultare molto più basso e rendere pratico un lavoro più intensivo con l’AI.</p></div></article>
+          <article class="work-card reveal" style="--i:4"><span class="index">04</span><div><h3>Usa il tuo abbonamento ChatGPT</h3><p>Il costo effettivo per token è molto più basso rispetto all’API a consumo, rendendo possibile un utilizzo più intensivo dell’AI.</p></div></article>
         </div>
       </div>
       <footer class="slide-foot">
         <span>Vera è compatibile anche con Claude Cowork.</span>
         <span class="slide-number">02 / 08</span>
       </footer>
-      <aside class="speaker-notes">Codex è l’ambiente operativo: lavora sul progetto e sui suoi file. Vera è il plugin specialistico che porta dentro Codex un metodo pensato per il lavoro del commercialista. Con l’accesso tramite ChatGPT, il lavoro usa l’abbonamento e i limiti del piano invece della tariffazione API a consumo.</aside>
+      <aside class="speaker-notes">Codex è un programma open source sviluppato da OpenAI. Crea sul computer del professionista un ambiente di lavoro agentico che legge i file del progetto, usa strumenti e svolge attività operative. Vera è il plugin specialistico che porta dentro Codex un metodo pensato per il lavoro del commercialista. Con l’accesso tramite ChatGPT, il lavoro usa l’abbonamento e i limiti del piano invece della tariffazione API a consumo.</aside>
     </section>
 
     <section class="slide slide--pale" id="iniziare" data-title="Come iniziare" data-slide-title="Come iniziare" data-chapter="accesso" aria-hidden="true">
@@ -874,20 +878,20 @@
         <span class="chapter">Per iniziare</span>
       </header>
       <div class="slide-body">
-        <p class="eyebrow reveal" style="--i:0">Primo accesso</p>
+        <p class="eyebrow reveal" style="--i:0">Cosa installare</p>
         <h2 class="reveal" style="--i:1">Prima Codex. Poi Vera.</h2>
         <div class="onboarding-grid">
       <article class="onboarding-card reveal" style="--i:1">
         <h3>Codex</h3>
         <p>Scarica Codex dal sito OpenAI.</p>
         <figure class="codex-download-visual"><img class="codex-download-shot" src="codex-desktop-quickstart.png" alt="Pagina OpenAI Get started with the desktop app" width="815" height="351"></figure>
-        <div class="onboarding-actions"><a class="onboarding-link" href="https://developers.openai.com/codex/app#getting-started" target="_blank" rel="noopener noreferrer">Scarica Codex · Gratis con il tuo conto ChatGPT</a></div>
+        <div class="onboarding-actions"><a class="onboarding-link" href="https://developers.openai.com/codex/app#getting-started" target="_blank" rel="noopener noreferrer">Link</a></div>
       </article>
       <article class="onboarding-card reveal" style="--i:2">
         <h3>Vera</h3>
         <p>Apri la scheda di Vera, installa il plugin e abilitalo.</p>
         <figure class="marketplace-visual"><img class="marketplace-shot" src="commercialisti-marketplace.jpeg" alt="Vera nei risultati del marketplace dei plugin per la ricerca Commercialisti" width="800" height="484"></figure>
-        <div class="onboarding-actions"><a class="onboarding-link" href="https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer">Scarica Vera · Gratis</a></div>
+        <div class="onboarding-actions"><a class="onboarding-link" href="https://chatgpt.com/plugins/plugins_6a57ac5ce65c8191ae7bd0a51160eb7d" target="_blank" rel="noopener noreferrer">Link</a></div>
       </article>
     </div>
     <p class="onboarding-note reveal" style="--i:3">Esempio di prompt: «@Vera, aiutami a riconciliare questi movimenti.»</p>
@@ -907,9 +911,9 @@
         <p class="eyebrow reveal" style="--i:0">Che cos’è Vera</p>
         <h2 class="reveal" style="--i:1">Vera porta in Codex il metodo del lavoro professionale.</h2>
         <div class="flow">
-          <article class="flow-card reveal" style="--i:1"><span class="kicker">Fornisci</span><h3>Fonti e obiettivo</h3><p>Documenti, periodo, perimetro del controllo e risultato atteso.</p></article>
-          <article class="flow-card reveal" style="--i:2"><span class="kicker">Vera prepara</span><h3>Analisi e carta di lavoro</h3><p>Qualifica le fonti, esegue i passaggi verificabili e separa anomalie e assunzioni.</p></article>
-          <article class="flow-card reveal" style="--i:3"><span class="kicker">Tu decidi</span><h3>Revisione professionale</h3><p>Confermi il significato, valuti le eccezioni e approvi ciò che può essere usato. La conferma resta tua: Vera non sostituisce il giudizio professionale.</p></article>
+          <article class="flow-card reveal" style="--i:1"><span class="kicker">Il professionista fornisce</span><h3>Fonti e obiettivo</h3><p>Documenti, periodo, perimetro del controllo e risultato atteso.</p></article>
+          <article class="flow-card reveal" style="--i:2"><span class="kicker">Vera prepara</span><h3>Analisi e documentazione del lavoro</h3><p>Qualifica le fonti, esegue i passaggi verificabili e separa anomalie e assunzioni.</p></article>
+          <article class="flow-card reveal" style="--i:3"><span class="kicker">Il professionista decide</span><h3>Revisione professionale</h3><p>Verifica le conclusioni, valuta le eccezioni e approva ciò che può essere usato: Vera non sostituisce il giudizio professionale.</p></article>
         </div>
       </div>
       <footer class="slide-foot slide-foot--end">
@@ -926,15 +930,15 @@
         <p class="eyebrow reveal" style="--i:0">Dove restano i dati</p>
         <h2 class="reveal" style="--i:1">I dati restano sul tuo computer.</h2>
         <div class="privacy-grid">
-          <article class="example-card reveal" style="--i:1"><h3>Vera è locale</h3><p>Vera è codice e file di testo che girano sul tuo computer.</p></article>
-          <article class="example-card reveal" style="--i:2"><h3>Nessun dato del lavoro sul nostro server.</h3><p>File e dati del caso restano sul tuo computer.</p></article>
-          <article class="example-card reveal" style="--i:3"><h3>DPA</h3><p>Per usare Vera serve solo il DPA con OpenAI.</p></article>
+          <article class="example-card reveal" style="--i:1"><h3>Vera gira sul tuo computer</h3><p>Vera è codice e file di testo che <a class="body-link" href="https://mparanza.com/data-handling?lang=it" target="_blank" rel="noopener noreferrer">girano sul tuo computer</a>.</p></article>
+          <article class="example-card reveal" style="--i:2"><h3>Nessun dato sul nostro server</h3><p>File e dati di lavoro <a class="body-link" href="https://mparanza.com/zero-retention" target="_blank" rel="noopener noreferrer">restano sul tuo computer</a>.</p></article>
+          <article class="example-card reveal" style="--i:3"><h3>DPA solo con OpenAI</h3><p>Non serve un ulteriore DPA con Mparanza.</p></article>
         </div>
       </div>
       <footer class="slide-foot slide-foot--end">
         <span class="slide-number">05 / 08</span>
       </footer>
-      <aside class="speaker-notes">Vera è codice e file di testo che girano sul computer dell’utente. File e dati del caso restano locali. Per usare Vera serve solo il DPA con OpenAI.</aside>
+      <aside class="speaker-notes">Vera è codice e file di testo che girano sul computer dell’utente. File e dati del caso restano locali. Il DPA è solo con OpenAI; non serve un ulteriore DPA con Mparanza.</aside>
     </section>
 
     <section class="slide" id="esempi" data-title="Che cosa fa Vera" data-slide-title="Che cosa fa Vera" data-chapter="esempi" aria-hidden="true">
@@ -945,16 +949,16 @@
         <p class="eyebrow reveal" style="--i:0">Che cosa fa Vera</p>
         <h2 class="reveal" style="--i:1">Quattro esempi di lavoro concreto.</h2>
         <div class="examples-grid">
-          <article class="example-card reveal" style="--i:1"><h3>Revisione e controlli</h3><p>Controlla registrazioni, documenti e campioni; segnala eccezioni e lascia una traccia del lavoro.</p></article>
-          <article class="example-card reveal" style="--i:2"><h3>Riconciliazioni</h3><p>Confronta mastrini, estratti conto e altri elenchi; propone abbinamenti e mette in evidenza le differenze.</p></article>
-          <article class="example-card reveal" style="--i:3"><h3>Pareri legali e tributari</h3><p>Organizza fonti, fatti e quesiti; prepara una bozza da sottoporre alla revisione del professionista.</p></article>
-          <article class="example-card reveal" style="--i:4"><h3>Organizzazione dei dati dello studio</h3><p>Ordina fascicoli e dati, evidenzia documenti mancanti e rende il lavoro più facile da riprendere.</p></article>
+          <article class="example-card reveal" style="--i:1"><h3>Verifica di registrazioni e documenti</h3><p>Controlla <a class="body-link" href="https://mparanza.com/static/shared/check-entries/index.html" target="_blank" rel="noopener noreferrer">registrazioni e documenti di supporto</a>, segnala eccezioni e lascia una traccia del lavoro.</p></article>
+          <article class="example-card reveal" style="--i:2"><h3>Riconciliazioni tra fonti</h3><p>Confronta <a class="body-link" href="https://mparanza.com/static/shared/journal-bank-reconciliation/index.html" target="_blank" rel="noopener noreferrer">mastrini, estratti conto e altri elenchi</a>; propone abbinamenti e mette in evidenza le differenze.</p></article>
+          <article class="example-card reveal" style="--i:3"><h3>Pareri legali e tributari</h3><p>Organizza <a class="body-link" href="https://mparanza.com/static/shared/prompt-optimizer/index.html" target="_blank" rel="noopener noreferrer">quesito, fatti e fonti</a>; prepara una ricerca controllabile da sottoporre alla revisione del professionista.</p></article>
+          <article class="example-card reveal" style="--i:4"><h3>Organizzazione dei dati</h3><p>Ordina <a class="body-link" href="https://mparanza.com/static/shared/studio-archive/index.html" target="_blank" rel="noopener noreferrer">fascicoli e dati dello studio</a>, evidenzia documenti mancanti e rende il lavoro più facile da riprendere.</p></article>
         </div>
       </div>
       <footer class="slide-foot slide-foot--end">
         <span class="slide-number">06 / 08</span>
       </footer>
-      <aside class="speaker-notes">Gli esempi mostrano attività concrete: controlli e revisione, riconciliazioni, supporto alla preparazione di pareri e organizzazione dei dati dello studio. Vera prepara il lavoro; il professionista verifica fonti, eccezioni, conclusioni e uso finale.</aside>
+      <aside class="speaker-notes">Gli esempi mostrano attività concrete: verifica di registrazioni e documenti, riconciliazioni tra fonti, supporto alla preparazione di pareri e organizzazione dei dati dello studio. Vera prepara il lavoro; il professionista verifica fonti, eccezioni, conclusioni e uso finale.</aside>
     </section>
 
     <section class="slide slide--navy" id="obiettivo" data-title="Feedback e nuove idee" data-slide-title="Feedback e nuove idee" data-chapter="obiettivo" aria-hidden="true">
@@ -963,7 +967,7 @@
       </header>
       <div class="slide-body">
         <p class="eyebrow reveal" style="--i:0">Che cosa vogliamo ottenere</p>
-        <h2 class="reveal" style="--i:1">Cerchiamo il tuo feedback e le tue idee.</h2>
+        <h2 class="reveal" style="--i:1">Ci servono il tuo feedback e le tue idee.</h2>
         <div class="boundary">
           <article class="reveal" style="--i:1"><h3>Feedback sul lavoro di Vera</h3><p>Che cosa ti è stato utile e che cosa va migliorato?</p></article>
           <article class="reveal" style="--i:2"><h3>Nuove idee da implementare</h3><p>Su quali nuove attività dello studio vorresti che Vera ti aiutasse?</p></article>
@@ -978,22 +982,22 @@
 
     <section class="slide slide--navy" id="come-provare" data-title="Come provare Vera" data-slide-title="Come provare Vera" data-chapter="prova" aria-hidden="true">
       <header class="slide-head slide-head--end">
-        <span class="chapter">La prova</span>
+        <span class="chapter">Inizia ora</span>
       </header>
       <div class="slide-body">
         <p class="eyebrow reveal" style="--i:0">Come provare Vera</p>
         <h2 class="reveal" style="--i:1">Scegli un’attività. Fatti aiutare da Vera. Racconta com’è andata.</h2>
         <div class="test-grid test-grid--three">
-          <article class="test-step reveal" style="--i:1"><span class="time">01 · Scegli</span><h3>Un’attività ricorrente</h3><p>Parti da un lavoro che conosci bene e di cui puoi valutare il risultato.</p></article>
-          <article class="test-step reveal" style="--i:2"><span class="time">02 · Lavora</span><h3>Fatti aiutare da Vera</h3><p>Descrivi l’obiettivo, usa i file sul tuo computer e rivedi il lavoro prodotto.</p></article>
-          <article class="test-step reveal" style="--i:3"><span class="time">03 · Condividi</span><h3>Racconta com’è andata</h3><p>Puoi dare il feedback a voce o per iscritto, oppure lasciare che Vera prepari un riepilogo conciso. Lo controlli prima dell’invio. Al server arriva solo il feedback sintetico necessario per l’analisi: non vengono inviati dati privati, dati del caso o file di lavoro.</p></article>
+          <article class="test-step reveal" style="--i:1"><span class="time">Scegli</span><h3>Un’attività ricorrente</h3><p>Parti da un lavoro che conosci bene e di cui puoi valutare il risultato.</p></article>
+          <article class="test-step reveal" style="--i:2"><span class="time">Prova</span><h3>Fatti aiutare da Vera</h3><p>Descrivi l’obiettivo, usa i file sul tuo computer e rivedi il lavoro prodotto.</p></article>
+          <article class="test-step reveal" style="--i:3"><span class="time">Condividi</span><h3>Racconta com’è andata</h3><p>Dai <a class="body-link" href="https://mparanza.com/support" target="_blank" rel="noopener noreferrer">il tuo feedback</a> a voce o per iscritto, oppure lascia che Vera prepari un riepilogo. Al server non vengono mai inviati dati del caso o file di lavoro.</p></article>
         </div>
       </div>
       <footer class="slide-foot">
         <span>Questa presentazione è stata preparata da <a class="foot-link" href="https://chatgpt.com/plugins/plugins_6a57b17fb5848191be710192d93fe03a" target="_blank" rel="noopener noreferrer">Clara</a>, la ‘sorella’ di Vera focalizzata su presentazioni e analisi dati.</span>
         <span class="slide-number">08 / 08</span>
       </footer>
-      <aside class="speaker-notes">Scegli un’attività ricorrente, fatti aiutare da Vera e racconta com’è andata. Puoi dare il feedback a voce o per iscritto, oppure lasciare che Vera prepari un riepilogo conciso. Lo controlli prima dell’invio. Al server arriva solo il feedback sintetico necessario per l’analisi: non vengono inviati dati privati, dati del caso o file di lavoro.</aside>
+      <aside class="speaker-notes">Scegli un’attività ricorrente, fatti aiutare da Vera e racconta com’è andata. Dai il tuo feedback a voce o per iscritto, oppure lascia che Vera prepari un riepilogo. Al server non vengono mai inviati dati del caso o file di lavoro.</aside>
     </section>
   </main>
 
