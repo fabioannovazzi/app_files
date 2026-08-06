@@ -681,7 +681,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     expected_core_module_count = 11
 
     assert core.count('class="module-row"') == expected_core_module_count
-    assert jurisdiction.count('data-jurisdiction-item="it"') == 5
+    assert jurisdiction.count('data-jurisdiction-item="it"') == 6
     assert jurisdiction.count('data-jurisdiction-item="en"') == 1
     assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
@@ -1083,7 +1083,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 19
+    expected_module_link_count = 20
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
@@ -1203,6 +1203,33 @@ def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
     assert 'es: { id: "RKcy1G79RAs", duration: "1:20" }' in page
 
 
+def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> None:
+    page_path = SHARED_ROOT / "vera" / "index.html"
+    page = page_path.read_text(encoding="utf-8")
+
+    assert 'id="bilancio-intelligente" data-bilancio-section hidden' in page
+    assert 'data-bilancio-nav hidden' in page
+    assert 'const showBilancio = lang === "it";' in page
+    assert (
+        'document.querySelector("[data-bilancio-section]").hidden = !showBilancio;'
+        in page
+    )
+    assert 'data-poster-src="media/bilancio-intelligente-poster.jpg"' in page
+    assert 'data-video-src="media/bilancio-intelligente.mp4" type="video/mp4"' in page
+    assert (
+        'kind="captions" srclang="it" label="Italiano" '
+        'data-caption-src="media/bilancio-intelligente.vtt" default'
+    ) in page
+    assert 'const showBilancio = lang === "it";' in page
+    assert "bilancioSource.removeAttribute(\"src\");" in page
+    for filename in (
+        "bilancio-intelligente.mp4",
+        "bilancio-intelligente-poster.jpg",
+        "bilancio-intelligente.vtt",
+    ):
+        assert (page_path.parent / "media" / filename).is_file()
+
+
 def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     spec_path = SHARED_ROOT / "video-production" / "vera-missing-guides.json"
     spec = json.loads(spec_path.read_text(encoding="utf-8"))
@@ -1216,6 +1243,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
     assert {(concept["module"], concept["edition"]) for concept in concepts} == {
         ("vera-overview", "core"),
         ("concordato-plan-review", "italy"),
+        ("bilancio-xbrl-it", "italy"),
         ("new-client", "italy"),
         ("studio-archive", "core"),
         ("journal-sampling", "core"),
@@ -1223,7 +1251,7 @@ def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
         ("check-entries", "italy-fatturapa"),
         ("data-handling", "core"),
     }
-    assert sum(len(concept["localizations"]) for concept in concepts) == 27
+    assert sum(len(concept["localizations"]) for concept in concepts) == 28
     for concept in concepts:
         assert len(concept["scenes"]) == 6
         assert concept["pageTargets"]
