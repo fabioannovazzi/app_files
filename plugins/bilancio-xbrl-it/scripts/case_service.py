@@ -40,6 +40,7 @@ from xbrl_case import (
     determine_forms,
     export_case,
     generate_mapping_candidates,
+    ingest_pdf_trial_balance,
     ingest_prior_xbrl,
     ingest_schedule_file,
     ingest_trial_balance,
@@ -58,6 +59,7 @@ from xbrl_case import (
     record_issue_reviews,
     record_micro_reporting,
     record_narrative_blocks,
+    record_pdf_trial_balance_review,
     record_schedule,
     record_schedule_taxonomy_adapter,
     record_statutory_presentation,
@@ -75,9 +77,11 @@ __all__ = ["CaseService", "LONG_RUNNING_OPERATIONS"]
 
 OPERATION_CAPABILITIES = {
     "ingest": "INGEST",
+    "ingest_pdf": "INGEST",
     "ingest_prior_xbrl": "INGEST",
     "attach_supporting_document": "INGEST",
     "confirm_parser": "PREPARE",
+    "review_pdf_extraction": "PREPARE",
     "migrate_regulatory_versions": "CONFIGURE",
     "determine_forms": "PREPARE",
     "select_form": "PREPARE",
@@ -116,6 +120,7 @@ OPERATION_CAPABILITIES = {
 LONG_RUNNING_OPERATIONS = frozenset(
     {
         "ingest",
+        "ingest_pdf",
         "ingest_prior_xbrl",
         "attach_supporting_document",
         "ingest_schedule",
@@ -298,6 +303,13 @@ class CaseService:
         if self.input_root is None:
             raise ValueError("The service requires a configured case input root")
         source = Path(str(raw_path))
+        if any(
+            component.is_symlink()
+            for component in (source.absolute(), *source.absolute().parents)
+        ):
+            raise ValueError(
+                "Case input path must not contain symbolic-link components"
+            )
         if source.is_symlink() or not source.is_file():
             raise ValueError("Case input must be a regular local file")
         resolved = source.resolve()
@@ -1243,6 +1255,20 @@ class CaseService:
                 str(payload["sheet"]) if payload.get("sheet") else None,
             )
             return self._record_input_scan(updated, receipt, actor)
+        if operation == "ingest_pdf":
+            source, receipt = self._controlled_input(payload["source_path"])
+            ocr_enabled = payload.get("ocr_enabled", True)
+            if not isinstance(ocr_enabled, bool):
+                raise ValueError("PDF ocr_enabled must be a boolean")
+            updated = ingest_pdf_trial_balance(
+                case,
+                source,
+                actor,
+                revision,
+                ocr_enabled=ocr_enabled,
+                ocr_language=str(payload.get("ocr_language", "it")),
+            )
+            return self._record_input_scan(updated, receipt, actor)
         if operation == "ingest_prior_xbrl":
             source, receipt = self._controlled_input(payload["source_path"])
             updated = ingest_prior_xbrl(case, source, actor, revision)
@@ -1260,6 +1286,13 @@ class CaseService:
             return self._record_input_scan(updated, receipt, actor)
         if operation == "confirm_parser":
             return confirm_parser(case, str(payload["convention"]), actor, revision)
+        if operation == "review_pdf_extraction":
+            return record_pdf_trial_balance_review(
+                case,
+                payload,
+                actor,
+                revision,
+            )
         if operation == "migrate_regulatory_versions":
             return migrate_regulatory_versions(case, payload, actor, revision)
         if operation == "determine_forms":

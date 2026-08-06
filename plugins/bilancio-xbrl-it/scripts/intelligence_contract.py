@@ -256,6 +256,26 @@ def build_intelligence_packet(
             raise ValueError("Issue intelligence references unknown issue IDs")
         base["reviewed_context"] = {"issues": issues}
     else:
+        pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
+        if pdf_candidate.get("status") == "PENDING_REVIEW":
+            base["untrusted_evidence"] = {
+                "pdf_trial_balance_candidate": {
+                    "status": "PENDING_REVIEW",
+                    "source_document_id": pdf_candidate.get("source_document_id"),
+                    "content_sha256": pdf_candidate.get("content_sha256"),
+                    "page_count": pdf_candidate.get("page_count"),
+                    "row_count": pdf_candidate.get("row_count"),
+                    "ocr_used": pdf_candidate.get("ocr_used"),
+                    "columns": list(pdf_candidate.get("columns", [])),
+                    "issues": list(pdf_candidate.get("issues", []))[:50],
+                    "sample_rows": list(pdf_candidate.get("rows", []))[:20],
+                    "required_action": (
+                        "Explain ambiguous headers, low-confidence cells, and rows "
+                        "requiring attention. Never accept, correct, exclude, or "
+                        "promote extracted values."
+                    ),
+                }
+            }
         presentation = case.get("statutory_presentation") or {}
         inventory = presentation.get("inventory") or {}
         requirement_labels = {
@@ -343,7 +363,15 @@ def build_next_intelligence_packet(case: Mapping[str, Any]) -> dict[str, Any]:
         for item in entries
         if str(item["account_id"]) not in mapped_ids
     ]
-    if trial_balance.get("confirmed_convention") and not case.get("selected_form"):
+    pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
+    if pdf_candidate.get("status") == "PENDING_REVIEW":
+        reason = (
+            "Explain the extracted PDF rows, uncertain cells, and column proposals "
+            "that require professional review before any accounting fact exists."
+        )
+    elif pdf_candidate.get("status") == "REJECTED":
+        reason = "Explain why a replacement trial-balance source is required."
+    elif trial_balance.get("confirmed_convention") and not case.get("selected_form"):
         reason = (
             "Select the statutory form before semantic mapping so candidates use "
             "the correct official presentation network."

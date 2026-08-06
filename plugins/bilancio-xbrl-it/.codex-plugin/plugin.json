@@ -1,7 +1,7 @@
 {
   "name": "bilancio-xbrl-it",
-  "version": "0.1.5",
-  "description": "Intelligent, source-traceable preparation of Italian OIC annual accounts, with deterministic XBRL export for professional review.",
+  "version": "0.1.6",
+  "description": "Intelligent, source-traceable preparation of Italian OIC annual accounts from spreadsheets or reviewed PDFs, with deterministic XBRL export.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -15,7 +15,7 @@
   "interface": {
     "displayName": "Bilancio intelligente",
     "shortDescription": "Rende intelligente la preparazione del bilancio OIC.",
-    "longDescription": "Vera partecipa all'intera preparazione del bilancio: comprende i dati contabili, riusa decisioni precedenti, propone mappature spiegate, riconosce ambiguità e informazioni mancanti, pone domande contestuali, prepara prospetti e nota integrativa e dirige l'attenzione professionale. Calcoli, regole, riconciliazioni e generazione XBRL restano deterministici e tracciabili. L'XBRL è un formato di esportazione del bilancio approvato, non il prodotto. Vera non firma, approva o deposita il bilancio.",
+    "longDescription": "Vera partecipa all'intera preparazione del bilancio: comprende i dati contabili da fogli di calcolo o PDF leggibili/scansionati, sottopone l'estrazione PDF alla revisione professionale, riusa decisioni precedenti, propone mappature spiegate, riconosce ambiguità e informazioni mancanti, pone domande contestuali, prepara prospetti e nota integrativa e dirige l'attenzione professionale. Calcoli, regole, riconciliazioni e generazione XBRL restano deterministici e tracciabili. L'XBRL è un formato di esportazione del bilancio approvato, non il prodotto. Vera non firma, approva o deposita il bilancio.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": ["Interactive", "Read", "Write", "Analysis"],
@@ -24,7 +24,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Prepara in modo intelligente il bilancio civilistico da questi dati contabili e mostrami ciò che richiede attenzione.",
-      "Comprendi questo bilancio di verifica, proponi le mappature e chiedimi soltanto le informazioni davvero mancanti.",
+      "Comprendi questo bilancio di verifica anche da PDF: mostrami celle incerte, proponi le mappature e chiedimi i dati mancanti.",
       "Prepara il bilancio OIC completo, la nota integrativa, la carta di lavoro e infine l'esportazione XBRL rivedibile."
     ],
     "brandColor": "#002060",

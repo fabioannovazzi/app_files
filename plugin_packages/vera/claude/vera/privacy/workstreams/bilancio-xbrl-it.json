@@ -8,7 +8,9 @@
     "scripts",
     "mcp",
     "rulepacks",
-    "taxonomy"
+    "taxonomy",
+    "requirements.txt",
+    "requirements-ocr.txt"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -20,7 +22,7 @@
       {
         "id": "annual-accounts-evidence",
         "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
-        "content": "User instructions; entity profile and tax identifier; trial balances and account descriptions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
+        "content": "User instructions; entity profile and tax identifier; CSV/XLSX and readable/scanned PDF trial balances and account descriptions; bounded PDF extraction candidates, page/table/cell geometry, OCR text and confidence, proposed headers, professional corrections and exclusions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -29,7 +31,7 @@
       {
         "id": "minimum-context-intelligent-participation",
         "purpose": "Provide workflow guidance, mapping proposals, question prioritization, narrative drafts, prior-year comparisons, and issue explanations inside the existing bilancio process",
-        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity and the out-of-band case routing identifier are excluded where the task does not require them; model output remains non-authoritative and evidence-linked",
+        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded pending-PDF headers, sample rows, geometry, OCR confidence and extraction issues, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity and the out-of-band case routing identifier are excluded where the task does not require them; model output remains non-authoritative and evidence-linked and cannot accept, correct, exclude, or promote PDF extraction rows",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -71,12 +73,34 @@
         "openai-codex",
         "anthropic-cowork"
       ]
+    },
+    {
+      "id": "optional-managed-ocr-download",
+      "kind": "hosted_service",
+      "destination": "Configured Python package indexes and PaddleOCR public model sources",
+      "purpose": "Install the optional persistent PaddleOCR runtime and recognition models needed for image-only trial-balance PDFs",
+      "content": "Public package names, versions, platform metadata, and OCR model identifiers only; client documents, extracted text, entity identifiers, balances, and case metadata are excluded",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Ask the exact OCR installation question and proceed only after the user's explicit approval.",
+        "Install only the separately declared requirements-ocr.txt contract into the fingerprinted managed runtime; do not transmit the PDF or extracted case content to package or model sources.",
+        "Reuse the checksum/fingerprint-bound runtime on later runs and surface installation failure instead of weakening the review gate."
+      ],
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ]
     }
   ],
   "security_controls": [
     {
       "id": "safe-trial-balance-ingestion",
-      "control": "The deterministic importer accepts only regular CSV or XLSX files, rejects symbolic links, duplicate account identifiers, headers that collide after alias normalization, non-finite or exponent monetary lexicals, ambiguous double signs, and operationally unbounded values. It opens XLSX without macros or external-link resolution and preserves the original header, normalized field, exact column coordinate, raw value, normalized value, and source SHA-256."
+      "control": "The deterministic importer accepts only bounded regular CSV, XLSX, or PDF files and rejects symbolic links. CSV/XLSX intake rejects duplicate account identifiers, headers that collide after alias normalization, non-finite or exponent monetary lexicals, ambiguous double signs, and operationally unbounded values; XLSX opens without macros or external-link resolution. PDF intake extracts only page/table/text or OCR geometry into a non-authoritative candidate and retains the source SHA-256."
+    },
+    {
+      "id": "reviewed-pdf-trial-balance-boundary",
+      "control": "A readable or scanned PDF extraction cannot create canonical entries. It remains PENDING_REVIEW with page, table, row, source column, bounding box, method, raw value and OCR confidence until an authenticated professional accepts the exact candidate hash, confirms all four review declarations, supplies or confirms a one-to-one accounting-column mapping, records corrections and excluded rows with reasons, and passes the reviewed rows through the existing Decimal/parser controls. Bounded model context may explain extraction issues but cannot accept, correct, exclude, or promote rows; parser-convention confirmation remains a separate gate."
     },
     {
       "id": "revision-and-approval-integrity",
@@ -171,6 +195,6 @@
     "reviewed_at": "2026-08-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "46bb0c1b27986aa2e9061d23ac154c27c40cb807cdac4c296794731b077204fe"
+    "source_fingerprint": "68af6a88d219dfb2f94f497951d02ab73ac68309a151450af397333a3c6645c5"
   }
 }

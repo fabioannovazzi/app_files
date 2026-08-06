@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.88"
+    assert manifest["version"] == "0.1.89"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -476,8 +476,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
     )
     assert prompts[2] == (
-        "Prepara un bilancio OIC intelligente: comprendi i dati, segnala ambiguità "
-        "e informazioni mancanti, poi genera l’XBRL finale."
+        "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere "
+        "estrazione e celle incerte, poi genera l’XBRL finale."
     )
     approved_description = (
         (ROOT / "docs" / "marketplace_copy" / "vera-long-description.txt")

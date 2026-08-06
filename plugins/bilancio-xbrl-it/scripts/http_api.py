@@ -143,6 +143,8 @@ def create_app(
         kind = str(payload.get("document_kind", "TRIAL_BALANCE")).upper()
         if kind == "PRIOR_XBRL":
             operation = "ingest_prior_xbrl"
+        elif kind == "PDF_TRIAL_BALANCE":
+            operation = "ingest_pdf"
         elif kind == "TRIAL_BALANCE":
             operation = "ingest"
         else:
@@ -150,6 +152,8 @@ def create_app(
         operation_payload = {
             "source_path": payload["source_path"],
             "sheet": payload.get("sheet"),
+            "ocr_enabled": payload.get("ocr_enabled", True),
+            "ocr_language": payload.get("ocr_language", "it"),
         }
         if operation == "attach_supporting_document":
             operation_payload.update(
@@ -200,6 +204,23 @@ def create_app(
             case_id,
             "confirm_parser",
             {"convention": payload["convention"]},
+            if_match,
+            idempotency_key,
+        )
+
+    @app.post("/v1/xbrl-cases/{case_id}/review-pdf-extraction")
+    def review_pdf_extraction_resource(
+        request: Request,
+        case_id: str,
+        payload: dict[str, Any] = Body(...),
+        if_match: str = Header(..., alias="If-Match"),
+        idempotency_key: str = Header(..., alias="Idempotency-Key"),
+    ) -> dict[str, Any]:
+        return mutate(
+            request,
+            case_id,
+            "review_pdf_extraction",
+            payload,
             if_match,
             idempotency_key,
         )
