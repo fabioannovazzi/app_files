@@ -144,7 +144,14 @@ def _dispatch(
         )
     if tool == "xbrl_document_ingest":
         kind = str(arguments["document_kind"])
-        operation = "ingest" if kind == "TRIAL_BALANCE" else "ingest_prior_xbrl"
+        operations = {
+            "TRIAL_BALANCE": "ingest",
+            "PDF_TRIAL_BALANCE": "ingest_pdf",
+            "PRIOR_XBRL": "ingest_prior_xbrl",
+        }
+        if kind not in operations:
+            raise ValueError(f"Unsupported XBRL document kind: {kind}")
+        operation = operations[kind]
         return _mutation(
             service,
             context,
@@ -153,6 +160,8 @@ def _dispatch(
             {
                 "source_path": arguments["source_path"],
                 "sheet": arguments.get("sheet"),
+                "ocr_enabled": arguments.get("ocr_enabled", True),
+                "ocr_language": arguments.get("ocr_language", "it"),
             },
         )
     if tool == "xbrl_case_analyze":

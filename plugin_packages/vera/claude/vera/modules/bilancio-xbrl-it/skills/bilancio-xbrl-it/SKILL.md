@@ -1,6 +1,6 @@
 ---
 name: bilancio-xbrl-it
-description: Use when an Italian professional accounting studio asks Vera or Claude to understand accounting evidence and intelligently prepare, update, reconcile, review, validate, or export an individual OIC civil-law annual financial statement from CSV/XLSX evidence, a prior XBRL, or structured schedules. XBRL is a final deterministic output format, not the workflow identity. The workflow never invents missing facts, signs, approves corporate accounts, or files them.
+description: Use when an Italian professional accounting studio asks Vera or Claude to understand accounting evidence and intelligently prepare, update, reconcile, review, validate, or export an individual OIC civil-law annual financial statement from CSV/XLSX or readable/scanned PDF evidence, a prior XBRL, or structured schedules. XBRL is a final deterministic output format, not the workflow identity. The workflow never invents missing facts, signs, approves corporate accounts, or files them.
 ---
 
 ## Cowork execution contract
@@ -127,12 +127,17 @@ Resolve the module root as the directory two levels above this skill. Run the
 dependency check before helper scripts:
 
 ```bash
-python scripts/check_dependencies.py
+python scripts/check_dependencies.py [--input <trial-balance.pdf>]
 ```
 
-Do not install missing packages at runtime. `requirements.txt` is the declared
-runtime contract. Report the missing dependency and let the user or deployment
-process update the environment.
+Do not install missing core packages at runtime. `requirements.txt` is the
+declared core contract. For an image-only PDF, the input-aware check may report
+`OCR_SETUP_REQUIRED`. Ask only: “PaddleOCR is required to read this document.
+Shall Claude install it now? The download is about 500 MB.” If the user agrees,
+run `python scripts/managed_ocr_runtime.py install`; it installs the separate
+`requirements-ocr.txt` contract into the persistent shared OCR runtime. Then
+retry the same PDF automatically. Do not attempt OCR installation without that
+approval.
 
 The optional HTTP deployment additionally uses `api-requirements.txt`. Check it
 only when operating `scripts/http_api.py`; do not make FastAPI a completion gate
@@ -156,7 +161,19 @@ and final professional approval always require the user's explicit choice.
    `ingest-prior-xbrl`; the parser must match the entity and comparative period
    and records facts as source evidence without treating them as current-year
    accounting decisions. Ingest one generic CSV or XLSX trial balance with
-   `ingest`. Review the source-anchor inventory, including original headers,
+   `ingest`. For a readable or scanned PDF trial balance, use `ingest-pdf` (or
+   `PDF_TRIAL_BALANCE` through the service). This creates only a
+   `PENDING_REVIEW` extraction candidate: embedded PDF geometry or OCR output
+   is never a canonical accounting fact. Inspect the paginated source review,
+   confirm or replace the proposed column mapping, record every cell
+   correction and every excluded summary/non-account row with a reason, and
+   submit all four review declarations through `review-pdf-extraction`. Only
+   an accepted review may install the trial balance. OCR confidence and model
+   explanation may direct attention, but may never accept, correct, exclude,
+   or promote a row. Then review the canonical source-anchor inventory,
+   including page, table, row, column, bounding box, extraction method,
+   original value, confirmed correction, and confidence. For every source,
+   review the original headers,
    normalized fields, exact coordinates and raw/normalized values, plus the
    calibration samples. Header aliases that collide, non-finite/exponent
    monetary values, ambiguous double signs and operationally unbounded amounts
@@ -264,7 +281,7 @@ Every mutating command requires the current `revision_id`. A stale revision
 fails. Any post-approval mutation archives and invalidates the approval before
 creating a new revision.
 
-For workbook ingestion, mapping-candidate preparation, intelligence-result
+For workbook or PDF ingestion, mapping-candidate preparation, intelligence-result
 recording, narrative recording, preview, validation, pre-approval XBRL review,
 export, deployment-controlled taxonomy-catalogue construction, or host-side
 minimum-context model invocation, the host may use `xbrl_case_enqueue_job`.

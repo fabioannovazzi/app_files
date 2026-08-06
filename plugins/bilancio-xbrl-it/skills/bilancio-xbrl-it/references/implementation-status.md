@@ -14,6 +14,16 @@
   ZIP-path/compression controls. Every imported cell retains its original
   header, normalized field name, exact spreadsheet coordinate, raw value and
   normalized value.
+- Native readable/scanned PDF trial-balance intake with a two-stage review
+  boundary. Embedded tables/text and optional PaddleOCR produce only a
+  checksum-bound candidate; no accounting entry exists until an authenticated
+  professional confirms all review declarations, the column mapping, every
+  correction, and every excluded row. Accepted anchors retain page/table/row/
+  column coordinates, bounding boxes, raw and normalized values, OCR confidence,
+  extraction method, correction reason, and reviewer identity. CLI, file-backed
+  service, revision-bound queue, MCP, HTTP, source review, and bounded untrusted
+  intelligence guidance use the same contract. The optional managed OCR runtime
+  is separately declared and requires explicit installation approval.
 - Closing-entry inclusion is never inferred from ambiguous turnover values.
   Calibration exposes it as requiring professional confirmation, and parser
   confirmation records the selected convention, reviewer, time, reason and

@@ -18,7 +18,17 @@ REQUIRED = {
     "defusedxml": "defusedxml",
     "lxml": "lxml",
     "openpyxl": "openpyxl",
+    "pdfplumber": "pdfplumber",
+    "pymupdf": "fitz",
+    "pillow": "PIL",
+    "opencv-python-headless": "cv2",
+    "paddlepaddle": "paddle",
 }
+OCR_REQUIREMENTS = "requirements-ocr.txt"
+OCR_SETUP_PROMPT = (
+    "PaddleOCR is required to read this document. Shall Codex install it now? "
+    "The download is about 500 MB."
+)
 
 
 def _requirement_name(line: str) -> str:
@@ -43,6 +53,23 @@ def _required_imports(requirement_files: list[Path]) -> dict[str, str]:
     return required
 
 
+def _pdf_requires_ocr(path: Path) -> bool:
+    """Return whether a bounded PDF has no useful embedded text."""
+
+    if path.suffix.lower() != ".pdf":
+        return False
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("Dependency-check input must be a regular local file")
+    try:
+        import pdfplumber  # type: ignore[import-not-found]
+    except (ImportError, ModuleNotFoundError):
+        return False
+    with pdfplumber.open(path) as pdf:
+        return not any(
+            len((page.extract_text() or "").strip()) >= 40 for page in pdf.pages[:5]
+        )
+
+
 def main(argv: list[str] | None = None) -> int:
     """Return zero when the pinned runtime is available."""
 
@@ -52,6 +79,16 @@ def main(argv: list[str] | None = None) -> int:
         action="append",
         default=[],
         help="Requirements file relative to the plugin root; may be repeated.",
+    )
+    parser.add_argument(
+        "--input",
+        type=Path,
+        help="Optional PDF input used to detect whether the OCR runtime is required.",
+    )
+    parser.add_argument(
+        "--require-ocr",
+        action="store_true",
+        help="Check the optional managed PaddleOCR runtime as well as core requirements.",
     )
     args = parser.parse_args(argv)
     if sys.version_info < (3, 11):
@@ -64,6 +101,26 @@ def main(argv: list[str] | None = None) -> int:
         else [plugin_root / "requirements.txt"]
     )
     try:
+        require_ocr = args.require_ocr or (
+            args.input is not None and _pdf_requires_ocr(args.input.resolve())
+        )
+    except (OSError, ValueError) as exc:
+        LOGGER.error("%s", exc)
+        return 1
+    if require_ocr and plugin_root / OCR_REQUIREMENTS not in requirement_files:
+        requirement_files.append(plugin_root / OCR_REQUIREMENTS)
+    if require_ocr:
+        try:
+            from managed_ocr_runtime import activate_ocr_runtime
+        except ImportError:
+            activate_ocr_runtime = None
+        if (
+            activate_ocr_runtime is None
+            or activate_ocr_runtime(plugin_root / OCR_REQUIREMENTS) is None
+        ):
+            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
+            return 1
+    try:
         required = _required_imports(requirement_files)
     except (OSError, ValueError) as exc:
         LOGGER.error("%s", exc)
@@ -74,6 +131,9 @@ def main(argv: list[str] | None = None) -> int:
         if importlib.util.find_spec(module) is None
     ]
     if missing:
+        if require_ocr:
+            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
+            return 1
         LOGGER.error("Missing declared dependencies: %s", ", ".join(missing))
         return 1
     LOGGER.info("All Bilancio XBRL Italia dependencies are importable.")

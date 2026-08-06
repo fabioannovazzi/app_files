@@ -82,6 +82,40 @@ Every case locks its statutory, OIC, filing-instruction, disclosure, and
 taxonomy versions. Statutory, disclosure, presentation, and schedule-taxonomy
 packs on the MCP and HTTP surfaces come only from deployment configuration;
 request-selected packs are rejected.
+
+## Reviewed PDF trial-balance intake
+
+Trial balances may be supplied as CSV, XLSX, readable PDF, or scanned PDF. A
+PDF follows a two-stage contract. `ingest-pdf` (service operation
+`ingest_pdf`, document kind `PDF_TRIAL_BALANCE`) extracts embedded text/table
+geometry or PaddleOCR tokens into a checksum-bound `PENDING_REVIEW` candidate.
+It retains page, table, row, source-column, bounding box, extraction method,
+raw value, and OCR confidence, but creates no canonical accounting entry.
+
+The authenticated professional then uses `review-pdf-extraction` (service
+operation `review_pdf_extraction`) to accept or reject the candidate. Acceptance
+requires all four explicit declarations covering headers/columns, account rows,
+monetary values, and excluded rows. The review may provide a one-to-one column
+mapping, cell corrections with reasons, and explicit row exclusions with
+reasons. Only the accepted reviewed rows pass through the existing Decimal
+normalizer and deterministic trial-balance parser. Debit/credit convention
+confirmation remains a separate subsequent gate.
+
+Run the input-aware dependency check before a PDF import:
+
+```bash
+python scripts/check_dependencies.py --input <trial-balance.pdf>
+```
+
+Readable PDFs use the core `pdfplumber` and PyMuPDF dependencies. If an
+image-only PDF needs the optional OCR runtime, the checker returns
+`OCR_SETUP_REQUIRED`. After explicit user approval, the host may run
+`python scripts/managed_ocr_runtime.py install`; this installs the separate
+`requirements-ocr.txt` contract into the persistent shared runtime. PaddleOCR
+package/model downloads contain no case document bytes. The PDF remains local
+to the configured case input root; only bounded extracted evidence may enter
+the selected Vera model context for non-authoritative explanation.
+
 A non-first-year case must provide the exact comparative start and end dates;
 the renderer does not infer a conventional prior year. The selected OIC pack
 adds its effective professional-review questions to the live questionnaire and

@@ -56,6 +56,7 @@ from intelligence_contract import (
 )
 from lxml import etree
 from mapping_memory import mapping_candidates, remember_approved_mappings
+from pdf_trial_balance import extract_pdf_tables
 from prior_xbrl import parse_prior_xbrl
 from schedule_engine import (
     SCHEDULE_TYPES,
@@ -88,6 +89,7 @@ __all__ = [
     "export_case",
     "generate_mapping_candidates",
     "ingest_prior_xbrl",
+    "ingest_pdf_trial_balance",
     "ingest_trial_balance",
     "ingest_schedule_file",
     "load_client_history",
@@ -101,6 +103,7 @@ __all__ = [
     "record_taxonomy_mapping_index",
     "record_taxonomy_representation",
     "record_micro_reporting",
+    "record_pdf_trial_balance_review",
     "load_case",
     "normalize_decimal",
     "prepare_xbrl_review",
@@ -161,6 +164,27 @@ MAX_XLSX_UNCOMPRESSED_BYTES = 250 * 1024 * 1024
 MAX_TEMPLATE_ROWS = 20_000
 MAX_MONEY_INTEGER_DIGITS = 18
 MAX_MONEY_FRACTION_DIGITS = 6
+PDF_REVIEW_DECLARATIONS = {
+    "headers_and_columns_reviewed",
+    "account_rows_reviewed",
+    "monetary_values_reviewed",
+    "excluded_rows_reviewed",
+}
+TRIAL_BALANCE_COLUMNS = {
+    "account_code",
+    "account_description",
+    "opening_debit",
+    "opening_credit",
+    "opening_signed",
+    "period_debit",
+    "period_credit",
+    "closing_debit",
+    "closing_credit",
+    "closing_signed",
+    "prior_closing_debit",
+    "prior_closing_credit",
+    "prior_closing_signed",
+}
 
 
 class CaseState(StrEnum):
@@ -1230,6 +1254,7 @@ def create_case(
         "prior_xbrl": None,
         "comparative_reconciliation_decisions": [],
         "trial_balance": None,
+        "pdf_trial_balance_candidate": None,
         "form_analysis": None,
         "selected_form": None,
         "mappings": [],
@@ -1754,18 +1779,28 @@ def _load_table(
 def _normalized_header(value: str) -> str:
     text = re.sub(r"[^a-z0-9]+", "_", value.strip().lower())
     aliases = {
+        "codice": "account_code",
+        "cod_conto": "account_code",
         "codice_conto": "account_code",
         "conto": "account_code",
         "descrizione": "account_description",
         "descrizione_conto": "account_description",
+        "denominazione_conto": "account_description",
         "saldo_iniziale_dare": "opening_debit",
         "saldo_iniziale_avere": "opening_credit",
+        "saldo_iniziale": "opening_signed",
+        "movimenti_dare": "period_debit",
+        "movimenti_avere": "period_credit",
+        "progressivo_dare": "period_debit",
+        "progressivo_avere": "period_credit",
         "progressivi_dare": "period_debit",
         "progressivi_avere": "period_credit",
         "saldo_finale_dare": "closing_debit",
         "saldo_finale_avere": "closing_credit",
+        "saldo_finale": "closing_signed",
         "saldo_precedente_dare": "prior_closing_debit",
         "saldo_precedente_avere": "prior_closing_credit",
+        "saldo_precedente": "prior_closing_signed",
     }
     return aliases.get(text.strip("_"), text.strip("_"))
 
@@ -1877,25 +1912,11 @@ def _calibrate(rows: Sequence[Mapping[str, Any]], tolerance: Decimal) -> dict[st
     }
 
 
-def ingest_trial_balance(
-    case: dict[str, Any],
-    source_path: Path,
-    actor: str,
-    expected_revision: str,
-    sheet: str | None = None,
-    tolerance: Decimal = Decimal("0.01"),
-) -> dict[str, Any]:
-    """Parse one source-anchored trial balance and produce calibration evidence."""
+def _trial_balance_layout(
+    normalized_headers: Sequence[str], first_year: bool
+) -> tuple[bool, bool]:
+    """Return mechanically supported layout flags or reject the source shape."""
 
-    _ensure_revision(case, expected_revision)
-    if case["state"] == CaseState.UNSUPPORTED:
-        raise ValueError("Unsupported cases cannot ingest accounting data")
-    if source_path.is_symlink() or not source_path.is_file():
-        raise ValueError("Trial balance must be a regular local file")
-    path = source_path.resolve()
-    headers, raw_rows, sheet_name = _load_table(path, sheet)
-    header_columns = _normalized_header_columns(headers)
-    normalized_headers = [item["normalized_column"] for item in header_columns]
     required = {"account_code", "account_description"}
     if not required.issubset(normalized_headers):
         raise ValueError("Trial balance requires account_code and account_description")
@@ -1913,7 +1934,6 @@ def ingest_trial_balance(
         "period_credit",
         "closing_signed",
     }.issubset(normalized_headers)
-    first_year = case["entity"].get("first_financial_year") is True
     comparative_columns = {
         "prior_closing_debit",
         "prior_closing_credit",
@@ -1935,27 +1955,31 @@ def ingest_trial_balance(
         raise ValueError(
             "Trial balance does not match supported separate or signed layouts"
         )
-    document_id = _next_document_id(case)
-    document = {
-        "document_id": document_id,
-        "purpose": "TRIAL_BALANCE",
-        "file_name": path.name,
-        "media_type": (
-            "text/csv"
-            if path.suffix.lower() == ".csv"
-            else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        ),
-        "sha256": _sha256_file(path),
-        "size_bytes": path.stat().st_size,
-        "sheet": sheet_name,
-        "columns": header_columns,
-        "parser_profile": "generic_it_tb_v1",
-        "parsed_at": _now(),
-    }
+    return separate_layout, signed_layout
+
+
+def _parse_trial_balance_rows(
+    case: Mapping[str, Any],
+    headers: Sequence[str],
+    raw_rows: Sequence[Sequence[Any]],
+    *,
+    document_id: str,
+    sheet_name: str,
+    parser_profile: str,
+    tolerance: Decimal,
+    anchor_metadata: Mapping[tuple[int, int], Mapping[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """Normalize one reviewed table while retaining source-specific coordinates."""
+
+    header_columns = _normalized_header_columns(headers)
+    normalized_headers = [item["normalized_column"] for item in header_columns]
+    first_year = case["entity"].get("first_financial_year") is True
+    separate_layout, _ = _trial_balance_layout(normalized_headers, first_year)
     entries: list[dict[str, Any]] = []
     seen: set[str] = set()
     anchors: list[dict[str, Any]] = []
-    for index, values in enumerate(raw_rows, start=2):
+    for row_offset, values in enumerate(raw_rows):
+        index = row_offset + 2
         row = {
             name: values[pos] if pos < len(values) else None
             for pos, name in enumerate(normalized_headers)
@@ -2008,24 +2032,43 @@ def ingest_trial_balance(
         period_debit = _row_decimal(row, "period_debit")
         period_credit = _row_decimal(row, "period_credit")
         source_refs: list[str] = []
+        account_id = f"acc_{len(entries) + 1:06d}"
         for column in header_columns:
             position = int(column["column_index"]) - 1
             column_name = str(column["normalized_column"])
             anchor_id = f"src_{len(anchors) + 1:07d}"
             source_refs.append(anchor_id)
             raw_value = values[position] if position < len(values) else None
+            metadata = dict((anchor_metadata or {}).get((row_offset, position), {}))
             anchor: dict[str, Any] = {
                 "source_ref": anchor_id,
                 "document_id": document_id,
+                "account_id": account_id,
                 "sheet": sheet_name,
                 "row": index,
                 "column": column["column"],
                 "column_header": column["column_header"],
                 "normalized_column": column_name,
-                "raw_value": "" if raw_value is None else str(raw_value),
-                "parser_profile": "generic_it_tb_v1",
-                "confidence": "HIGH",
+                "raw_value": metadata.pop(
+                    "raw_value", "" if raw_value is None else str(raw_value)
+                ),
+                "parser_profile": parser_profile,
+                "confidence": metadata.pop("confidence", "HIGH"),
             }
+            for key in (
+                "page",
+                "table_id",
+                "source_row",
+                "source_column",
+                "bbox",
+                "extraction_method",
+                "extraction_confidence",
+                "candidate_source_ref",
+                "correction",
+                "evidence_status",
+            ):
+                if key in metadata:
+                    anchor[key] = metadata[key]
             if column_name not in {"account_code", "account_description"}:
                 anchor["normalized_value"] = _decimal_text(
                     _row_decimal(row, column_name)
@@ -2035,7 +2078,7 @@ def ingest_trial_balance(
             anchors.append(anchor)
         entries.append(
             {
-                "account_id": f"acc_{len(entries) + 1:06d}",
+                "account_id": account_id,
                 "account_code": code,
                 "account_description": description,
                 "opening_debit": _decimal_text(opening_debit),
@@ -2064,13 +2107,7 @@ def ingest_trial_balance(
     calibration["closing_debit_total"] = _decimal_text(debit_total)
     calibration["closing_credit_total"] = _decimal_text(credit_total)
     calibration["closing_difference"] = _decimal_text(debit_total - credit_total)
-    _mutate(case, actor, "document_parsed")
-    case["source_documents"] = [
-        item
-        for item in case.get("source_documents", [])
-        if item.get("purpose") != "TRIAL_BALANCE"
-    ] + [document]
-    case["trial_balance"] = {
+    return {
         "layout": "SEPARATE_DEBIT_CREDIT" if separate_layout else "SIGNED_BALANCES",
         "comparative_status": (
             "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR" if first_year else "PRESENT"
@@ -2078,11 +2115,47 @@ def ingest_trial_balance(
         "entries": entries,
         "source_anchors": anchors,
         "calibration": calibration,
+        "header_columns": header_columns,
+        "parser_profile": parser_profile,
+    }
+
+
+def _install_trial_balance(
+    case: dict[str, Any],
+    parsed: Mapping[str, Any],
+    document: Mapping[str, Any],
+    actor: str,
+    action: str,
+    *,
+    pdf_review: Mapping[str, Any] | None = None,
+    pdf_candidate: Mapping[str, Any] | None = None,
+) -> None:
+    """Install a validated table into the canonical case in one mutation."""
+
+    _mutate(case, actor, action)
+    document_id = str(document["document_id"])
+    case["source_documents"] = [
+        item
+        for item in case.get("source_documents", [])
+        if item.get("purpose") not in {"TRIAL_BALANCE", "TRIAL_BALANCE_PDF"}
+        and str(item.get("document_id")) != document_id
+    ] + [dict(document)]
+    case["trial_balance"] = {
+        "layout": parsed["layout"],
+        "comparative_status": parsed["comparative_status"],
+        "entries": list(parsed["entries"]),
+        "source_anchors": list(parsed["source_anchors"]),
+        "calibration": dict(parsed["calibration"]),
         "confirmed_convention": None,
         "computation_context": _computation_context(
-            case, "generic-it-trial-balance-parser-v1"
+            case, str(parsed["parser_profile"])
         ),
     }
+    if pdf_review is not None:
+        case["trial_balance"]["pdf_extraction_review"] = dict(pdf_review)
+    case["pdf_trial_balance_candidate"] = (
+        None if pdf_candidate is None else dict(pdf_candidate)
+    )
     _clear_accounting_dependent_reviews(case)
     case["state"] = CaseState.INPUT_REVIEW
     case["mappings"] = []
@@ -2093,9 +2166,683 @@ def ingest_trial_balance(
     case["statutory_presentation"] = None
     case["schedules"] = []
     case["validation"] = None
+
+
+def ingest_trial_balance(
+    case: dict[str, Any],
+    source_path: Path,
+    actor: str,
+    expected_revision: str,
+    sheet: str | None = None,
+    tolerance: Decimal = Decimal("0.01"),
+) -> dict[str, Any]:
+    """Parse one source-anchored CSV/XLSX trial balance."""
+
+    _ensure_revision(case, expected_revision)
+    if case["state"] == CaseState.UNSUPPORTED:
+        raise ValueError("Unsupported cases cannot ingest accounting data")
+    if source_path.is_symlink() or not source_path.is_file():
+        raise ValueError("Trial balance must be a regular local file")
+    path = source_path.resolve()
+    headers, raw_rows, sheet_name = _load_table(path, sheet)
+    document_id = _next_document_id(case)
+    parsed = _parse_trial_balance_rows(
+        case,
+        headers,
+        raw_rows,
+        document_id=document_id,
+        sheet_name=sheet_name,
+        parser_profile="generic-it-trial-balance-parser-v1",
+        tolerance=tolerance,
+    )
+    document = {
+        "document_id": document_id,
+        "purpose": "TRIAL_BALANCE",
+        "file_name": path.name,
+        "media_type": (
+            "text/csv"
+            if path.suffix.lower() == ".csv"
+            else "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        ),
+        "sha256": _sha256_file(path),
+        "size_bytes": path.stat().st_size,
+        "sheet": sheet_name,
+        "columns": parsed["header_columns"],
+        "parser_profile": "generic-it-trial-balance-parser-v1",
+        "parsed_at": _now(),
+    }
+    _install_trial_balance(case, parsed, document, actor, "document_parsed")
     _record_event(case, "document_uploaded", actor, {"document_id": document_id})
     _record_evidence_attached(case, actor, document)
     _record_event(case, "document_parsed", actor, {"document_id": document_id})
+    return case
+
+
+def _pdf_row_values(row: Mapping[str, Any]) -> list[str]:
+    """Return whitespace-normalized values from one extracted PDF row."""
+
+    return [
+        " ".join(str(cell.get("raw_value") or "").split())
+        for cell in row.get("cells", [])
+    ]
+
+
+def _pdf_header_candidate(
+    table: Mapping[str, Any], *, first_year: bool
+) -> dict[str, Any] | None:
+    """Select a plausible header row using only exact aliases and geometry."""
+
+    candidates: list[dict[str, Any]] = []
+    for row in list(table.get("rows", []))[:12]:
+        values = _pdf_row_values(row)
+        nonempty = sum(bool(value) for value in values)
+        if nonempty < 4:
+            continue
+        normalized = [_normalized_header(value) for value in values]
+        recognized = [value for value in normalized if value in TRIAL_BALANCE_COLUMNS]
+        required = {"account_code", "account_description"} & set(recognized)
+        complete = False
+        if len(recognized) == len(set(recognized)):
+            try:
+                _trial_balance_layout(recognized, first_year)
+                complete = True
+            except ValueError:
+                pass
+        score = (
+            (1000 if complete else 0)
+            + len(required) * 100
+            + len(set(recognized)) * 10
+            + nonempty
+        )
+        candidates.append(
+            {
+                "row": row,
+                "values": values,
+                "normalized": normalized,
+                "recognized": len(set(recognized)),
+                "complete": complete,
+                "score": score,
+            }
+        )
+    if not candidates:
+        return None
+    candidates.sort(
+        key=lambda item: (int(item["score"]), -int(item["row"]["row_index"])),
+        reverse=True,
+    )
+    return candidates[0]
+
+
+def _aligned_pdf_cells(
+    row: Mapping[str, Any], header_row: Mapping[str, Any]
+) -> list[dict[str, Any]]:
+    """Align visual cells to header geometry without assigning accounting meaning."""
+
+    cells = [dict(item) for item in row.get("cells", [])]
+    headers = [dict(item) for item in header_row.get("cells", [])]
+    if len(cells) == len(headers):
+        return cells
+    header_boxes = [item.get("bbox") for item in headers]
+    if not headers or any(not box for box in header_boxes):
+        return cells
+    centers = [
+        (float(box[0]) + float(box[2])) / 2
+        for box in header_boxes
+        if isinstance(box, Sequence) and len(box) == 4
+    ]
+    if len(centers) != len(headers):
+        return cells
+    boundaries = [
+        (centers[index] + centers[index + 1]) / 2 for index in range(len(centers) - 1)
+    ]
+    buckets: list[list[dict[str, Any]]] = [[] for _ in headers]
+    for cell in cells:
+        box = cell.get("bbox")
+        if not isinstance(box, Sequence) or len(box) != 4:
+            return cells
+        center = (float(box[0]) + float(box[2])) / 2
+        position = sum(center > boundary for boundary in boundaries)
+        buckets[position].append(cell)
+    aligned: list[dict[str, Any]] = []
+    for bucket, header in zip(buckets, headers, strict=True):
+        if not bucket:
+            aligned.append(
+                {"raw_value": "", "bbox": header.get("bbox"), "confidence": 0.0}
+            )
+            continue
+        bucket.sort(key=lambda item: float((item.get("bbox") or [0])[0]))
+        boxes = [
+            tuple(float(value) for value in item["bbox"])
+            for item in bucket
+            if isinstance(item.get("bbox"), Sequence) and len(item["bbox"]) == 4
+        ]
+        aligned.append(
+            {
+                "raw_value": " ".join(
+                    str(item.get("raw_value") or "").strip()
+                    for item in bucket
+                    if str(item.get("raw_value") or "").strip()
+                ),
+                "bbox": list(
+                    (
+                        min(item[0] for item in boxes),
+                        min(item[1] for item in boxes),
+                        max(item[2] for item in boxes),
+                        max(item[3] for item in boxes),
+                    )
+                ),
+                "confidence": min(
+                    float(item.get("confidence", 0.0)) for item in bucket
+                ),
+            }
+        )
+    return aligned
+
+
+def _pdf_candidate_from_extraction(
+    extraction: Mapping[str, Any], *, document_id: str, first_year: bool
+) -> dict[str, Any]:
+    """Build a bounded, review-only trial-balance candidate from PDF geometry."""
+
+    table_headers: list[tuple[Mapping[str, Any], dict[str, Any]]] = []
+    for table in extraction.get("tables", []):
+        candidate = _pdf_header_candidate(table, first_year=first_year)
+        if candidate is not None:
+            table_headers.append((table, candidate))
+    if not table_headers:
+        raise ValueError("No plausible tabular header was found in the PDF")
+    table_headers.sort(
+        key=lambda item: int(item[1]["score"]),
+        reverse=True,
+    )
+    selected = table_headers[0][1]
+    selected_values = list(selected["values"])
+    selected_signature = tuple(selected["normalized"])
+    columns = []
+    header_cells = list(selected["row"].get("cells", []))
+    for position, raw_header in enumerate(selected_values, start=1):
+        normalized = _normalized_header(raw_header)
+        columns.append(
+            {
+                "column_index": position,
+                "raw_header": raw_header,
+                "proposed_normalized_column": (
+                    normalized if normalized in TRIAL_BALANCE_COLUMNS else None
+                ),
+                "bbox": (
+                    header_cells[position - 1].get("bbox")
+                    if position <= len(header_cells)
+                    else None
+                ),
+            }
+        )
+    candidate_rows: list[dict[str, Any]] = []
+    for table, header in table_headers:
+        if tuple(header["normalized"]) != selected_signature:
+            continue
+        header_index = int(header["row"]["row_index"])
+        for row in table.get("rows", []):
+            if int(row["row_index"]) <= header_index:
+                continue
+            cells = _aligned_pdf_cells(row, header["row"])
+            if len(cells) != len(columns):
+                continue
+            if not any(str(item.get("raw_value") or "").strip() for item in cells):
+                continue
+            row_id = f"{table['table_id']}_r{int(row['row_index']):04d}"
+            candidate_cells = []
+            for position, cell in enumerate(cells, start=1):
+                candidate_cells.append(
+                    {
+                        "candidate_source_ref": f"{row_id}_c{position:03d}",
+                        "column_index": position,
+                        "raw_value": str(cell.get("raw_value") or "").strip(),
+                        "bbox": cell.get("bbox"),
+                        "confidence": float(cell.get("confidence", 0.0)),
+                    }
+                )
+            candidate_rows.append(
+                {
+                    "row_id": row_id,
+                    "page": int(table["page"]),
+                    "table_id": str(table["table_id"]),
+                    "source_row": int(row["row_index"]),
+                    "extraction_method": str(table["method"]),
+                    "cells": candidate_cells,
+                }
+            )
+            if len(candidate_rows) > MAX_TEMPLATE_ROWS:
+                raise ValueError("PDF table exceeds the 20,000-row MVP limit")
+    if not candidate_rows:
+        raise ValueError("No candidate accounting rows followed the PDF header")
+    proposed = {
+        int(item["column_index"]): item.get("proposed_normalized_column")
+        for item in columns
+    }
+    account_code_index = next(
+        (index for index, name in proposed.items() if name == "account_code"), None
+    )
+    low_confidence_refs = [
+        str(cell["candidate_source_ref"])
+        for row in candidate_rows
+        for cell in row["cells"]
+        if float(cell["confidence"])
+        < float(extraction.get("ocr_review_threshold", 0.90))
+        and str(cell.get("raw_value") or "").strip()
+    ]
+    rows_without_account = []
+    if account_code_index is not None:
+        rows_without_account = [
+            str(row["row_id"])
+            for row in candidate_rows
+            if not str(
+                row["cells"][account_code_index - 1].get("raw_value") or ""
+            ).strip()
+        ]
+    issues: list[dict[str, Any]] = []
+    if extraction.get("ocr_used"):
+        issues.append(
+            {
+                "code": "OCR_REVIEW_REQUIRED",
+                "count": len(candidate_rows),
+                "sample_refs": [str(item["row_id"]) for item in candidate_rows[:20]],
+            }
+        )
+    if low_confidence_refs:
+        issues.append(
+            {
+                "code": "LOW_CONFIDENCE_CELL",
+                "count": len(low_confidence_refs),
+                "sample_refs": low_confidence_refs[:50],
+            }
+        )
+    if rows_without_account:
+        issues.append(
+            {
+                "code": "ROW_WITHOUT_ACCOUNT_CODE",
+                "count": len(rows_without_account),
+                "sample_refs": rows_without_account[:50],
+            }
+        )
+    proposed_headers = [
+        str(item["proposed_normalized_column"])
+        for item in columns
+        if item.get("proposed_normalized_column")
+    ]
+    mapping_complete = bool(selected["complete"])
+    if not mapping_complete:
+        issues.append(
+            {
+                "code": "COLUMN_MAPPING_REQUIRED",
+                "count": 1,
+                "sample_refs": [],
+            }
+        )
+    content = {
+        "source_document_id": document_id,
+        "columns": columns,
+        "rows": candidate_rows,
+    }
+    return {
+        "schema_version": 1,
+        "status": "PENDING_REVIEW",
+        **content,
+        "content_sha256": _sha256_bytes(_canonical_json(content)),
+        "parser_profile": str(extraction["parser_profile"]),
+        "page_count": int(extraction["page_count"]),
+        "page_methods": list(extraction["page_methods"]),
+        "methods": list(extraction["methods"]),
+        "ocr_used": bool(extraction["ocr_used"]),
+        "row_count": len(candidate_rows),
+        "proposed_headers": proposed_headers,
+        "proposed_mapping_complete": mapping_complete,
+        "issues": issues,
+        "created_at": _now(),
+    }
+
+
+def ingest_pdf_trial_balance(
+    case: dict[str, Any],
+    source_path: Path,
+    actor: str,
+    expected_revision: str,
+    *,
+    ocr_enabled: bool = True,
+    ocr_language: str = "it",
+) -> dict[str, Any]:
+    """Extract a review-only trial-balance candidate from a readable or scanned PDF."""
+
+    _ensure_revision(case, expected_revision)
+    if case["state"] == CaseState.UNSUPPORTED:
+        raise ValueError("Unsupported cases cannot ingest accounting data")
+    if ocr_language not in {"it", "en"}:
+        raise ValueError("OCR language must be 'it' or 'en'")
+    _reject_symlink_path_components(source_path, "PDF trial balance")
+    if source_path.is_symlink() or not source_path.is_file():
+        raise ValueError("PDF trial balance must be a regular local file")
+    path = source_path.resolve()
+    extraction = extract_pdf_tables(
+        path,
+        ocr_enabled=ocr_enabled,
+        ocr_language=ocr_language,
+        max_bytes=MAX_INPUT_BYTES,
+    )
+    document_id = _next_document_id(case)
+    candidate = _pdf_candidate_from_extraction(
+        extraction,
+        document_id=document_id,
+        first_year=case["entity"].get("first_financial_year") is True,
+    )
+    document = {
+        "document_id": document_id,
+        "purpose": "TRIAL_BALANCE_PDF",
+        "file_name": path.name,
+        "media_type": "application/pdf",
+        "sha256": _sha256_file(path),
+        "size_bytes": path.stat().st_size,
+        "page_count": int(extraction["page_count"]),
+        "extraction_methods": list(extraction["methods"]),
+        "ocr_used": bool(extraction["ocr_used"]),
+        "parser_profile": str(extraction["parser_profile"]),
+        "parsed_at": _now(),
+    }
+    _mutate(case, actor, "pdf_trial_balance_extracted")
+    case["source_documents"] = [
+        item
+        for item in case.get("source_documents", [])
+        if item.get("purpose") not in {"TRIAL_BALANCE", "TRIAL_BALANCE_PDF"}
+    ] + [document]
+    case["trial_balance"] = None
+    case["pdf_trial_balance_candidate"] = candidate
+    _clear_accounting_dependent_reviews(case)
+    case["state"] = CaseState.INPUT_REVIEW
+    case["mappings"] = []
+    case["mapping_candidates"] = []
+    case["taxonomy_mapping_index"] = None
+    _record_event(case, "document_uploaded", actor, {"document_id": document_id})
+    _record_evidence_attached(case, actor, document)
+    _record_event(
+        case,
+        "pdf_trial_balance_extracted",
+        actor,
+        {
+            "document_id": document_id,
+            "candidate_sha256": candidate["content_sha256"],
+            "row_count": candidate["row_count"],
+            "ocr_used": candidate["ocr_used"],
+        },
+    )
+    return case
+
+
+def _review_list(payload: Mapping[str, Any], key: str) -> list[Mapping[str, Any]]:
+    value = payload.get(key, [])
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
+        raise ValueError(f"PDF review {key} must be a list")
+    if any(not isinstance(item, Mapping) for item in value):
+        raise ValueError(f"PDF review {key} entries must be objects")
+    return [item for item in value if isinstance(item, Mapping)]
+
+
+def record_pdf_trial_balance_review(
+    case: dict[str, Any],
+    payload: Mapping[str, Any],
+    reviewer: str,
+    expected_revision: str,
+    *,
+    tolerance: Decimal = Decimal("0.01"),
+) -> dict[str, Any]:
+    """Accept or reject one extraction candidate under explicit professional review."""
+
+    _ensure_revision(case, expected_revision)
+    candidate = case.get("pdf_trial_balance_candidate")
+    if (
+        not isinstance(candidate, Mapping)
+        or candidate.get("status") != "PENDING_REVIEW"
+    ):
+        raise ValueError("No pending PDF trial-balance extraction is available")
+    decision = str(payload.get("decision") or "").upper()
+    if decision not in {"ACCEPTED", "REJECTED"}:
+        raise ValueError("PDF extraction review decision must be ACCEPTED or REJECTED")
+    reason = str(payload.get("reason") or "").strip()
+    if not reason:
+        raise ValueError("PDF extraction review requires a reason")
+    content = {
+        "source_document_id": candidate["source_document_id"],
+        "columns": candidate["columns"],
+        "rows": candidate["rows"],
+    }
+    if _sha256_bytes(_canonical_json(content)) != candidate.get("content_sha256"):
+        raise ValueError("PDF extraction candidate content hash does not match")
+    if decision == "REJECTED":
+        _mutate(case, reviewer, "pdf_trial_balance_reviewed")
+        rejected = deepcopy(candidate)
+        rejected.update(
+            {
+                "status": "REJECTED",
+                "review_reason": reason,
+                "reviewed_by": reviewer,
+                "reviewed_at": _now(),
+            }
+        )
+        case["pdf_trial_balance_candidate"] = rejected
+        _record_event(
+            case,
+            "pdf_trial_balance_reviewed",
+            reviewer,
+            {
+                "decision": decision,
+                "candidate_sha256": candidate["content_sha256"],
+            },
+        )
+        return case
+
+    declarations = payload.get("declarations")
+    if (
+        not isinstance(declarations, Mapping)
+        or set(declarations) != PDF_REVIEW_DECLARATIONS
+    ):
+        raise ValueError(
+            "PDF acceptance requires the exact extraction review declarations"
+        )
+    missing_declarations = sorted(
+        key for key in PDF_REVIEW_DECLARATIONS if declarations.get(key) is not True
+    )
+    if missing_declarations:
+        raise ValueError(
+            "PDF extraction declarations are not confirmed: "
+            + ", ".join(missing_declarations)
+        )
+    candidate_columns = {
+        int(item["column_index"]): item for item in candidate.get("columns", [])
+    }
+    mappings = _review_list(payload, "column_mapping")
+    if mappings:
+        selected_mapping = []
+        for item in mappings:
+            index = int(item.get("column_index", 0))
+            normalized = str(item.get("normalized_column") or "").strip()
+            if index not in candidate_columns:
+                raise ValueError("PDF review maps an unknown source column")
+            if normalized not in TRIAL_BALANCE_COLUMNS:
+                raise ValueError(
+                    f"Unsupported reviewed trial-balance column: {normalized}"
+                )
+            selected_mapping.append(
+                {"column_index": index, "normalized_column": normalized}
+            )
+    else:
+        selected_mapping = [
+            {
+                "column_index": index,
+                "normalized_column": str(column["proposed_normalized_column"]),
+            }
+            for index, column in candidate_columns.items()
+            if column.get("proposed_normalized_column") in TRIAL_BALANCE_COLUMNS
+        ]
+    selected_indices = [int(item["column_index"]) for item in selected_mapping]
+    selected_names = [str(item["normalized_column"]) for item in selected_mapping]
+    if len(selected_indices) != len(set(selected_indices)) or len(
+        selected_names
+    ) != len(set(selected_names)):
+        raise ValueError("PDF review column mapping must be one-to-one")
+    _trial_balance_layout(
+        selected_names,
+        case["entity"].get("first_financial_year") is True,
+    )
+    rows = {str(item["row_id"]): item for item in candidate.get("rows", [])}
+    exclusions = _review_list(payload, "excluded_rows")
+    excluded: dict[str, str] = {}
+    for item in exclusions:
+        row_id = str(item.get("row_id") or "")
+        exclusion_reason = str(item.get("reason") or "").strip()
+        if row_id not in rows or row_id in excluded or not exclusion_reason:
+            raise ValueError("PDF review contains an invalid or duplicate excluded row")
+        excluded[row_id] = exclusion_reason
+    corrections = _review_list(payload, "corrections")
+    corrected: dict[tuple[str, int], dict[str, str]] = {}
+    for item in corrections:
+        row_id = str(item.get("row_id") or "")
+        index = int(item.get("column_index", 0))
+        correction_reason = str(item.get("reason") or "").strip()
+        value = item.get("value")
+        if (
+            row_id not in rows
+            or index not in selected_indices
+            or (row_id, index) in corrected
+            or row_id in excluded
+            or not correction_reason
+            or isinstance(value, (Mapping, Sequence))
+            and not isinstance(value, str)
+        ):
+            raise ValueError("PDF review contains an invalid or duplicate correction")
+        corrected[(row_id, index)] = {
+            "value": "" if value is None else str(value),
+            "reason": correction_reason,
+        }
+    raw_rows: list[list[Any]] = []
+    anchor_metadata: dict[tuple[int, int], dict[str, Any]] = {}
+    accepted_row_ids: list[str] = []
+    for row in candidate.get("rows", []):
+        row_id = str(row["row_id"])
+        if row_id in excluded:
+            continue
+        cell_lookup = {int(item["column_index"]): item for item in row["cells"]}
+        values: list[Any] = []
+        output_row = len(raw_rows)
+        for output_column, source_index in enumerate(selected_indices):
+            cell = cell_lookup[source_index]
+            correction = corrected.get((row_id, source_index))
+            raw_value = str(cell.get("raw_value") or "")
+            value = correction["value"] if correction else raw_value
+            values.append(value)
+            metadata: dict[str, Any] = {
+                "raw_value": raw_value,
+                "page": int(row["page"]),
+                "table_id": str(row["table_id"]),
+                "source_row": int(row["source_row"]),
+                "source_column": source_index,
+                "bbox": cell.get("bbox"),
+                "extraction_method": str(row["extraction_method"]),
+                "extraction_confidence": float(cell.get("confidence", 0.0)),
+                "candidate_source_ref": str(cell["candidate_source_ref"]),
+                "confidence": "REVIEWED",
+                "evidence_status": EvidenceStatus.USER_CONFIRMED,
+            }
+            if correction:
+                metadata["correction"] = {
+                    "confirmed_value": correction["value"],
+                    "reason": correction["reason"],
+                    "reviewed_by": reviewer,
+                }
+            anchor_metadata[(output_row, output_column)] = metadata
+        raw_rows.append(values)
+        accepted_row_ids.append(row_id)
+    if not raw_rows:
+        raise ValueError("PDF review excluded every extracted row")
+    parsed = _parse_trial_balance_rows(
+        case,
+        selected_names,
+        raw_rows,
+        document_id=str(candidate["source_document_id"]),
+        sheet_name="PDF",
+        parser_profile="reviewed-pdf-it-trial-balance-v1",
+        tolerance=tolerance,
+        anchor_metadata=anchor_metadata,
+    )
+    document = next(
+        (
+            deepcopy(item)
+            for item in case.get("source_documents", [])
+            if item.get("document_id") == candidate["source_document_id"]
+        ),
+        None,
+    )
+    if document is None:
+        raise ValueError("PDF source document is missing from the case")
+    reviewed_at = _now()
+    review_summary = {
+        "status": "ACCEPTED",
+        "candidate_sha256": candidate["content_sha256"],
+        "reason": reason,
+        "declarations": dict(declarations),
+        "column_mapping": selected_mapping,
+        "accepted_row_count": len(accepted_row_ids),
+        "excluded_rows": [
+            {"row_id": row_id, "reason": exclusion_reason}
+            for row_id, exclusion_reason in sorted(excluded.items())
+        ],
+        "correction_count": len(corrected),
+        "reviewed_by": reviewer,
+        "reviewed_at": reviewed_at,
+    }
+    document.update(
+        {
+            "purpose": "TRIAL_BALANCE",
+            "columns": parsed["header_columns"],
+            "parser_profile": "reviewed-pdf-it-trial-balance-v1",
+            "pdf_extraction_review": review_summary,
+        }
+    )
+    candidate_summary = {
+        "schema_version": candidate["schema_version"],
+        "status": "ACCEPTED",
+        "source_document_id": candidate["source_document_id"],
+        "content_sha256": candidate["content_sha256"],
+        "row_count": candidate["row_count"],
+        "page_count": candidate["page_count"],
+        "methods": candidate["methods"],
+        "ocr_used": candidate["ocr_used"],
+        "issues": candidate["issues"],
+        "review": review_summary,
+    }
+    _install_trial_balance(
+        case,
+        parsed,
+        document,
+        reviewer,
+        "pdf_trial_balance_reviewed",
+        pdf_review=review_summary,
+        pdf_candidate=candidate_summary,
+    )
+    _record_event(
+        case,
+        "pdf_trial_balance_reviewed",
+        reviewer,
+        {
+            "decision": decision,
+            "candidate_sha256": candidate["content_sha256"],
+            "accepted_row_count": len(accepted_row_ids),
+            "excluded_row_count": len(excluded),
+            "correction_count": len(corrected),
+        },
+    )
+    _record_event(
+        case,
+        "document_parsed",
+        reviewer,
+        {"document_id": candidate["source_document_id"]},
+    )
     return case
 
 
@@ -6918,6 +7665,18 @@ def _parser() -> argparse.ArgumentParser:
     ingest.add_argument("--sheet")
     ingest.add_argument("--revision", required=True)
     ingest.add_argument("--actor", required=True)
+    pdf_ingest = sub.add_parser("ingest-pdf")
+    pdf_ingest.add_argument("--case-dir", type=Path, required=True)
+    pdf_ingest.add_argument("--source", type=Path, required=True)
+    pdf_ingest.add_argument("--ocr-language", choices=["it", "en"], default="it")
+    pdf_ingest.add_argument("--no-ocr", action="store_true")
+    pdf_ingest.add_argument("--revision", required=True)
+    pdf_ingest.add_argument("--actor", required=True)
+    pdf_review = sub.add_parser("review-pdf-extraction")
+    pdf_review.add_argument("--case-dir", type=Path, required=True)
+    pdf_review.add_argument("--payload", type=Path, required=True)
+    pdf_review.add_argument("--revision", required=True)
+    pdf_review.add_argument("--reviewer", required=True)
     prior = sub.add_parser("ingest-prior-xbrl")
     prior.add_argument("--case-dir", type=Path, required=True)
     prior.add_argument("--source", type=Path, required=True)
@@ -7144,6 +7903,22 @@ def main(argv: list[str] | None = None) -> int:
             if args.command == "ingest":
                 case = ingest_trial_balance(
                     case, args.source, args.actor, args.revision, args.sheet
+                )
+            elif args.command == "ingest-pdf":
+                case = ingest_pdf_trial_balance(
+                    case,
+                    args.source,
+                    args.actor,
+                    args.revision,
+                    ocr_enabled=not args.no_ocr,
+                    ocr_language=args.ocr_language,
+                )
+            elif args.command == "review-pdf-extraction":
+                case = record_pdf_trial_balance_review(
+                    case,
+                    _read_json(args.payload),
+                    args.reviewer,
+                    args.revision,
                 )
             elif args.command == "ingest-prior-xbrl":
                 case = ingest_prior_xbrl(case, args.source, args.actor, args.revision)

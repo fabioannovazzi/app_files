@@ -38,13 +38,16 @@ const TOOLS = [
   {
     name: "xbrl_document_ingest",
     title: "Understand bilancio evidence",
-    description: "Ingest a local trial balance or prior filed XBRL into a case.",
+    description:
+      "Ingest a spreadsheet, readable/scanned PDF trial balance, or prior filed XBRL into a case.",
     inputSchema: objectSchema(
       {
         ...COMMON_MUTATION,
-        document_kind: { enum: ["TRIAL_BALANCE", "PRIOR_XBRL"] },
+        document_kind: { enum: ["TRIAL_BALANCE", "PDF_TRIAL_BALANCE", "PRIOR_XBRL"] },
         source_path: { type: "string", minLength: 1 },
         sheet: { type: "string" },
+        ocr_enabled: { type: "boolean" },
+        ocr_language: { enum: ["it", "en"] },
       },
       ["case_id", "revision_id", "idempotency_key", "document_kind", "source_path"],
     ),
@@ -59,6 +62,7 @@ const TOOLS = [
         operation: {
           enum: [
             "confirm_parser",
+            "review_pdf_extraction",
             "migrate_regulatory_versions",
             "determine_forms",
             "select_form",
@@ -233,6 +237,7 @@ const TOOLS = [
         operation: {
           enum: [
             "ingest",
+            "ingest_pdf",
             "ingest_prior_xbrl",
             "ingest_schedule",
             "mapping_candidates",

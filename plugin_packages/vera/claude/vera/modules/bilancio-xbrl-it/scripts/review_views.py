@@ -46,6 +46,11 @@ def _page(
 def _next_action(case: Mapping[str, Any]) -> str:
     if case.get("unsupported_reasons"):
         return "STOP_UNSUPPORTED"
+    pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
+    if pdf_candidate.get("status") == "PENDING_REVIEW":
+        return "REVIEW_PDF_EXTRACTION"
+    if pdf_candidate.get("status") == "REJECTED":
+        return "REPLACE_PDF_SOURCE"
     trial_balance = case.get("trial_balance") or {}
     if not trial_balance:
         return "INGEST_TRIAL_BALANCE"
@@ -116,6 +121,7 @@ def _dashboard(case: Mapping[str, Any]) -> dict[str, Any]:
     trial_balance = case.get("trial_balance") or {}
     mappings = case.get("mappings", [])
     validation = case.get("validation") or {}
+    pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
     return {
         **_base(case, "CASE_DASHBOARD"),
         "selected_form": case.get("selected_form"),
@@ -133,6 +139,13 @@ def _dashboard(case: Mapping[str, Any]) -> dict[str, Any]:
             "blockers": validation.get("blockers"),
             "high": validation.get("high"),
             "review_required": validation.get("review_required"),
+        },
+        "pdf_extraction": {
+            "status": pdf_candidate.get("status", "NOT_PRESENT"),
+            "row_count": pdf_candidate.get("row_count", 0),
+            "page_count": pdf_candidate.get("page_count", 0),
+            "ocr_used": pdf_candidate.get("ocr_used", False),
+            "issue_count": len(pdf_candidate.get("issues", [])),
         },
         "schedule_statuses": [
             {
@@ -162,6 +175,7 @@ def build_review_view(
         return _dashboard(case)
     if selected == "SOURCE_REVIEW":
         trial_balance = case.get("trial_balance") or {}
+        pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
         return {
             **_base(case, selected),
             "documents": [dict(item) for item in case.get("source_documents", [])],
@@ -173,6 +187,19 @@ def build_review_view(
                 "calibration": trial_balance.get("calibration"),
             },
             "anchors": _page(trial_balance.get("source_anchors", []), offset, limit),
+            "pdf_extraction": {
+                "status": pdf_candidate.get("status", "NOT_PRESENT"),
+                "source_document_id": pdf_candidate.get("source_document_id"),
+                "content_sha256": pdf_candidate.get("content_sha256"),
+                "page_count": pdf_candidate.get("page_count", 0),
+                "row_count": pdf_candidate.get("row_count", 0),
+                "methods": list(pdf_candidate.get("methods", [])),
+                "ocr_used": pdf_candidate.get("ocr_used", False),
+                "columns": list(pdf_candidate.get("columns", [])),
+                "issues": list(pdf_candidate.get("issues", [])),
+                "review": pdf_candidate.get("review"),
+                "rows": _page(pdf_candidate.get("rows", []), offset, limit),
+            },
             "prior_xbrl": case.get("prior_xbrl"),
         }
     if selected == "MAPPING_GRID":

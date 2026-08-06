@@ -106,6 +106,25 @@ def test_mcp_lists_complete_vera_facing_tool_contract() -> None:
         "migrate_regulatory_versions"
         in analyze["inputSchema"]["properties"]["operation"]["enum"]
     )
+    assert (
+        "review_pdf_extraction"
+        in analyze["inputSchema"]["properties"]["operation"]["enum"]
+    )
+    ingest = next(
+        item
+        for item in responses[1]["result"]["tools"]
+        if item["name"] == "xbrl_document_ingest"
+    )
+    assert (
+        "PDF_TRIAL_BALANCE"
+        in ingest["inputSchema"]["properties"]["document_kind"]["enum"]
+    )
+    queue = next(
+        item
+        for item in responses[1]["result"]["tools"]
+        if item["name"] == "xbrl_case_enqueue_job"
+    )
+    assert "ingest_pdf" in queue["inputSchema"]["properties"]["operation"]["enum"]
 
 
 def test_mcp_create_uses_authenticated_environment_not_payload_tenant(

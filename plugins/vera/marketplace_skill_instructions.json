@@ -22,8 +22,8 @@
     "bilancio-xbrl-it": {
       "display_name": "Bilancio intelligente",
       "short_description": "Prepara bilanci OIC revisionabili con esportazione XBRL",
-      "default_prompt": "Usa $bilancio-xbrl-it per preparare questo bilancio OIC, segnalare i punti da rivedere e generare l’XBRL finale.",
-      "instructions": "Allega il bilancio di verifica, l'eventuale XBRL precedente e i documenti di supporto disponibili. Vera comprende le evidenze contabili, propone mappature spiegate, segnala ambiguità e dati mancanti e prepara prospetti, nota integrativa e carta di lavoro per la revisione professionale. Calcoli, controlli e generazione XBRL restano deterministici; Vera non approva né deposita il bilancio."
+      "default_prompt": "Usa $bilancio-xbrl-it per preparare questo bilancio OIC, anche da PDF, farmi rivedere i dati estratti e generare l’XBRL finale.",
+      "instructions": "Allega il bilancio di verifica in CSV, Excel o PDF leggibile/scansionato, l'eventuale XBRL precedente e i documenti di supporto disponibili. Per un PDF, Vera mostra intestazioni, righe, celle incerte, correzioni ed esclusioni prima di usare i dati. Poi comprende le evidenze contabili, propone mappature spiegate, segnala ambiguità e dati mancanti e prepara prospetti, nota integrativa e carta di lavoro per la revisione professionale. Calcoli, controlli e generazione XBRL restano deterministici; Vera non approva né deposita il bilancio."
     },
     "check-entries": {
       "display_name": "Controllo scritture",
