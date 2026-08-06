@@ -110,10 +110,16 @@ and final professional approval always require the user's explicit choice.
    `ingest-prior-xbrl`; the parser must match the entity and comparative period
    and records facts as source evidence without treating them as current-year
    accounting decisions. Ingest one generic CSV or XLSX trial balance with
-   `ingest`. Review the
-   source-anchor inventory and calibration samples.
+   `ingest`. Review the source-anchor inventory, including original headers,
+   normalized fields, exact coordinates and raw/normalized values, plus the
+   calibration samples. Header aliases that collide, non-finite/exponent
+   monetary values, ambiguous double signs and operationally unbounded amounts
+   must fail before accounting data is accepted.
 3. Explicitly confirm the progressive convention with `confirm-parser`. Stop
-   while it is `UNKNOWN`.
+   while it is `UNKNOWN`. Review the separate closing-entry assessment:
+   supported numeric columns do not prove that closing entries are included,
+   so only the professional's explicit convention confirmation may set that
+   status.
    If an open case must move to replacement regulatory packs, use only the
    explicit `migrate_regulatory_versions` operation as a studio administrator.
    Review its change report and rerun every invalidated computation plus full
@@ -158,12 +164,15 @@ and final professional approval always require the user's explicit choice.
 12. Run `prepare-xbrl-review` with the checksum-bound catalogue and official
     taxonomy package. This renders the current unapproved case and records the
     local XBRL processor report; approval is blocked unless it passes and still
-    matches the current substantive content.
+    matches the current substantive content. The processor may not modify the
+    rendered candidate.
 13. Have a reviewer inspect statements, mappings, evidence, issues, preview,
     rendered XBRL, and local processor report. Run `approve` only after all
     reviewer declarations are true.
-14. Run `export` only from the immutable approved snapshot and a checksum-bound
-    catalogue generated from the official taxonomy package.
+14. Run `export` only from the immutable approved snapshot and the exact
+    checksum-bound catalogue reviewed before approval. Export must reproduce
+    the approved XBRL candidate and reviewed preview byte-for-byte; any
+    catalogue, candidate, preview or snapshot mismatch stops the export.
 15. The user may upload the exported instance to TEBENI manually and return the
     official report for comparison. Do not substitute that external result for
     the mandatory pre-approval local processor report.
@@ -178,7 +187,8 @@ At each material stage, use `intelligence-packet` or the corresponding Vera MCP
 tool to provide only the context required for one semantic task. The packet may
 support workflow guidance, account mapping, question prioritization, narrative
 drafting, prior-year comparison, or issue explanation. Do not send the whole
-case merely because it is available.
+case or an out-of-band case routing identifier merely because it is available;
+include either only when the semantic task actually needs it.
 
 Run the semantic task in the selected Vera runtime, then pass the strict JSON
 result through `record-intelligence`. The validator rejects references outside

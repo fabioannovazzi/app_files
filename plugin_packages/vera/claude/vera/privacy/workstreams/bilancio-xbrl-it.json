@@ -29,7 +29,7 @@
       {
         "id": "minimum-context-intelligent-participation",
         "purpose": "Provide workflow guidance, mapping proposals, question prioritization, narrative drafts, prior-year comparisons, and issue explanations inside the existing bilancio process",
-        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity is excluded where the task does not require it; model output remains non-authoritative and evidence-linked",
+        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity and the out-of-band case routing identifier are excluded where the task does not require them; model output remains non-authoritative and evidence-linked",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -76,7 +76,7 @@
   "security_controls": [
     {
       "id": "safe-trial-balance-ingestion",
-      "control": "The deterministic importer accepts only regular CSV or XLSX files, rejects symbolic links and duplicate account identifiers, opens XLSX without macros or external-link resolution, and preserves per-cell source anchors plus the source SHA-256."
+      "control": "The deterministic importer accepts only regular CSV or XLSX files, rejects symbolic links, duplicate account identifiers, headers that collide after alias normalization, non-finite or exponent monetary lexicals, ambiguous double signs, and operationally unbounded values. It opens XLSX without macros or external-link resolution and preserves the original header, normalized field, exact column coordinate, raw value, normalized value, and source SHA-256."
     },
     {
       "id": "revision-and-approval-integrity",
@@ -84,11 +84,11 @@
     },
     {
       "id": "taxonomy-and-export-integrity",
-      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction, distinguishes reportable items from tuples and non-item schema concepts, and preserves tuple and relationship metadata; export rejects an unverified or mismatched taxonomy catalogue and writes checksums for every artifact."
+      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction, distinguishes reportable items from tuples and non-item schema concepts, and preserves tuple and relationship metadata. Export reads the catalogue once, requires the exact catalogue hash approved during local review, re-renders from those captured bytes, requires byte identity with the approved XBRL candidate, emits the exact checksum-verified preview bytes shown to the reviewer, and writes checksums for every artifact."
     },
     {
       "id": "offline-local-xbrl-validation",
-      "control": "Before approval, the current substantive case is rendered through the checksum-bound catalogue and the pinned Arelle interface runs structural and XBRL 2.1 calculation validation with offline internet connectivity. Candidate, catalogue, package, and report hashes enter the approval snapshot; substantive changes invalidate that review."
+      "control": "Before approval, the current substantive case is rendered through one captured checksum-bound catalogue payload and the pinned Arelle interface runs structural and XBRL 2.1 calculation validation with offline internet connectivity. The candidate must remain byte-identical across validation; candidate, catalogue, package, and report hashes enter the approval snapshot, and substantive changes invalidate that review."
     },
     {
       "id": "safe-prior-xbrl-intake",
@@ -144,7 +144,7 @@
     },
     {
       "id": "minimum-context-model-suggestion-boundary",
-      "control": "Semantic tasks receive task-specific packets that mark document content as untrusted and omit direct entity identity when unnecessary; strict output schemas and evidence-reference closure prevent out-of-packet claims, and mapping, narrative, and workflow outputs remain MODEL_SUGGESTED until a separate professional decision."
+      "control": "Semantic tasks receive task-specific packets that mark document content as untrusted and omit direct entity identity and the out-of-band case routing identifier when unnecessary; strict output schemas and evidence-reference closure prevent out-of-packet claims, and mapping, narrative, and workflow outputs remain MODEL_SUGGESTED until a separate professional decision."
     },
     {
       "id": "statutory-presentation-coverage-boundary",
@@ -168,9 +168,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-05",
+    "reviewed_at": "2026-08-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d1bdcf6fc75358f7e6d859f268aa7b5bb909317f85a7ec4b96d23eaff95f6ae8"
+    "source_fingerprint": "b821527a76ef4d8843f1769e1265ddcdbd28a42b39c46d5d1b57f0a3e56c627a"
   }
 }

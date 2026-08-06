@@ -10,7 +10,7 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Bilancio intelligente acceptance matrix
 
-Evidence snapshot: 2026-08-05. This matrix separates code that is locally
+Evidence snapshot: 2026-08-06. This matrix separates code that is locally
 proved from external, production-infrastructure, and owner-decision gates. A
 passing row does not imply that a broader row is complete.
 
@@ -41,8 +41,8 @@ Status meanings:
 | Criterion | Status | Inspected evidence | Remaining boundary |
 | --- | --- | --- | --- |
 | Create an eligible S.r.l./S.p.A./S.a.p.a. case | `PROVED_LOCAL` | `create_case`, scope reasons, service create/idempotency tests | None for the declared MVP forms |
-| Parse generic CSV/XLSX trial balance with source anchors | `PROVED_LOCAL` | `ingest_trial_balance`; CSV, workbook safety, formula-cache, traversal, and source-anchor tests | Native accounting-package adapters are later scope |
-| Calibrate and confirm debit/credit convention | `PROVED_LOCAL` | `_calibrate`, `confirm_parser`; exact, unknown, and imbalanced tests; golden case 23 | None for supported layouts |
+| Parse generic CSV/XLSX trial balance with source anchors | `PROVED_LOCAL` | `ingest_trial_balance`; CSV, workbook safety, formula-cache, traversal, normalized-header collision, bounded finite-decimal, and exact coordinate/raw/normalized source-anchor tests | Native accounting-package adapters are later scope |
+| Calibrate and confirm debit/credit convention | `PROVED_LOCAL` | `_calibrate`, `confirm_parser`; exact, unknown, imbalanced, and explicit closing-entry confirmation tests; golden case 23 | Closing-entry inclusion remains a professional confirmation because the supported numeric columns do not prove its meaning |
 | Calculate eligible forms through effective-dated rules and record user choice | `PROVED_LOCAL` | versioned form pack, `determine_forms`, `select_form`; two-year, first-year, exclusion tests; silent pack replacement rejection; explicit open-case migration/change report/full-revalidation tracking | Regulatory rule ownership/sign-off remains operational |
 | Require every account to be mapped, split, or excluded | `PROVED_LOCAL` | reviewed mapping decisions, exact split checks, validation coverage blocker, tenant/client mapping memory | Semantic mapping quality still needs representative model evaluation |
 | Reconcile balance sheet and income statement to canonical accounting data | `PARTIAL` | exact Decimal aggregation, balance/result tie-outs, adjustment and rounding tests; complete selected-form leaf inventory and official calculation rollups | Semantic mapping from arbitrary client accounts to every PCI leaf still needs representative coverage evidence |
@@ -54,19 +54,20 @@ Status meanings:
 | Generate deterministic XBRL | `PROVED_LOCAL` | checksum-bound renderer, explicit sign multipliers, context/unit/decimals, text, dimension, tuple and nil tests; all ordinary, abbreviated and micro primary-presentation facts rendered; controlled schedule facts, including repeated tuple rows, are derived, reconciled and rendered | Complete real-case schedule and note-table filing content remains partial |
 | Pass local XBRL validation before approval | `PROVED_LOCAL` | `prepare_xbrl_review`, offline Arelle adapter, calculation inconsistency and severe-log failure tests, current-content hash, processor-report hashes, approval gate tests | None for locally configured taxonomy inputs |
 | Approve an immutable reviewer snapshot | `PROVED_LOCAL` | revision check, declaration, issue review, snapshot hash and invalidation tests | Dual-review policy remains an owner decision |
-| Export XBRL, preview, mapping, issue, validation, and workpaper artifacts | `PROVED_LOCAL` | approved-snapshot export; standalone snapshot-bound reports; peer checksums embedded in workpaper; final checksum manifest tests | Production object storage is not implemented |
+| Export XBRL, preview, mapping, issue, validation, and workpaper artifacts | `PROVED_LOCAL` | approved-snapshot export; exact catalogue/candidate binding; validator-mutation rejection; byte-identical reviewed preview export; standalone snapshot-bound reports; peer checksums embedded in workpaper; final checksum manifest tests | Production object storage is not implemented |
 
 ## Safety and quality acceptance criteria (specification 24.2)
 
 | Criterion | Status | Inspected evidence | Remaining boundary |
 | --- | --- | --- | --- |
 | No model-suggested, assumed, or missing fact is exportable | `PROVED_LOCAL` | exportable-status gates in mappings, taxonomy facts, narratives and renderer; intelligence contract tests | None in the current reference implementation |
+| Minimum-context model packets omit unnecessary identity and routing fields | `PROVED_LOCAL` | Task-specific packet construction and minimisation tests exclude direct entity identity and `case_id`; revision and workflow context remain available | Real case evidence still enters only the selected configured runtime as declared in the privacy surface |
 | Every exported numeric and factual narrative item has provenance | `PROVED_LOCAL` | source/derivation checks, sentence-level claim closure, workpaper source references | A complete real-case professional audit has not been run |
 | Structural invalidity and imbalance cannot be overridden | `PROVED_LOCAL` | blocker policy, issue fingerprint reviews, adjustment and statement tests | None in current policy |
 | Unsupported entities are blocked before generation | `PROVED_LOCAL` | scope state and reason codes; listed/IFRS tests and golden case 21 | Special-sector coverage remains explicitly out of scope |
 | Editing approved data invalidates approval and local XBRL review | `PROVED_LOCAL` | `_mutate`, archived snapshots, review invalidation tests | None in file-backed engine |
 | Tenant and client data do not cross mapping, history, service, or path boundaries | `PROVED_LOCAL` | tenant authorization/memory/history tests; configured input-root and symlink tests | Production database/object-store row policies are not implemented |
-| Vera privacy surface is reviewed and current for this workstream | `PROVED_LOCAL` | `plugins/vera/privacy/workstreams/bilancio-xbrl-it.json` with refreshed source fingerprint | Repository-wide validator still reports unrelated stale workstreams |
+| Vera privacy surface is reviewed and current for this workstream | `PROVED_LOCAL` | `plugins/vera/privacy/workstreams/bilancio-xbrl-it.json` with refreshed source fingerprint; full privacy-surface validator passes on 2026-08-06 | None in the current repository register |
 
 ## Testing and taxonomy evidence
 

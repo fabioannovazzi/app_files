@@ -280,9 +280,12 @@ def build_review_view(
             "review_decisions": case.get("review_decisions", []),
         }
     if selected == "PREVIEW":
+        preview = case.get("preview") or {}
         return {
             **_base(case, selected),
-            "preview": case.get("preview"),
+            "preview": {
+                key: value for key, value in preview.items() if key != "content_base64"
+            },
             "xbrl_review": case.get("xbrl_review"),
             "resource_ids": {
                 "preview": f"xbrl-preview://{case['case_id']}/{case['revision_id']}",

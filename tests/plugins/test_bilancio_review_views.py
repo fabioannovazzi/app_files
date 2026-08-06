@@ -193,6 +193,18 @@ def test_approval_review_view_excludes_immutable_snapshot_payload(
     assert "snapshot" not in result["approval"]
 
 
+def test_preview_review_view_returns_receipt_without_embedded_html_bytes(
+    tmp_path: Path,
+) -> None:
+    case = _case(tmp_path)
+    case["preview"]["content_base64"] = "PGh0bWw+PC9odG1sPg=="
+
+    result = review_views.build_review_view(case, "PREVIEW")
+
+    assert result["preview"]["sha256"] == "b" * 64
+    assert "content_base64" not in result["preview"]
+
+
 def test_statement_view_exposes_statutory_requirements_and_next_action(
     tmp_path: Path,
 ) -> None:
