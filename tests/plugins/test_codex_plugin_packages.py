@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.87"
+    assert manifest["version"] == "0.1.88"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -3018,7 +3018,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         assert f'href="{module_link}"' in italy
     assert core.count(" data-module-link") == 11
     assert core.count('class="module-row"') == 11
-    assert italy.count('data-jurisdiction-item="it"') == 5
+    assert italy.count('data-jurisdiction-item="it"') == 6
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
     assert italy.count('data-jurisdiction-item="de"') == 1

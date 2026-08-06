@@ -22,6 +22,7 @@ import math
 import re
 import shutil
 import sys
+import tempfile
 import zipfile
 from copy import deepcopy
 from dataclasses import dataclass
@@ -266,6 +267,58 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _reject_symlink_path_components(path: Path, label: str) -> None:
+    """Reject a path when it or any existing ancestor is a symbolic link."""
+
+    absolute = path.absolute()
+    for component in (absolute, *absolute.parents):
+        if component.is_symlink():
+            raise ValueError(f"{label} must not contain symbolic-link components")
+
+
+def _controlled_output_path(output_dir: Path, label: str) -> Path:
+    """Validate an output destination without resolving through symlinks."""
+
+    output = output_dir.absolute()
+    _reject_symlink_path_components(output, label)
+    resolved = output.resolve(strict=False)
+    if resolved in {Path("/"), Path.home().resolve()}:
+        raise ValueError(f"Refusing a broad {label.lower()}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    _reject_symlink_path_components(output, label)
+    if output.exists() and not output.is_dir():
+        raise ValueError(f"{label} must be a directory")
+    return output
+
+
+def _directory_file_manifest(directory: Path, label: str) -> dict[str, str]:
+    """Hash a flat artifact directory while refusing links and nested entries."""
+
+    manifest: dict[str, str] = {}
+    for path in sorted(directory.iterdir(), key=lambda item: item.name):
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(f"{label} may contain regular files only")
+        manifest[path.name] = _sha256_file(path)
+    return manifest
+
+
+def _publish_output_directory(staging: Path, output: Path, label: str) -> None:
+    """Atomically publish complete artifacts or accept an exact retry replay."""
+
+    _reject_symlink_path_components(output, label)
+    if output.exists():
+        existing = _directory_file_manifest(output, label)
+        staged = _directory_file_manifest(staging, label)
+        if existing:
+            if existing != staged:
+                raise ValueError(
+                    f"{label} already contains different or incomplete artifacts"
+                )
+            return
+        output.rmdir()
+    staging.replace(output)
 
 
 def _decimal_text(value: Decimal) -> str:
@@ -917,7 +970,72 @@ def _validate_effective_rule_pack(
             raise ValueError(
                 "Early-adoption flags are invalid after the OIC pack becomes mandatory"
             )
+        _validate_oic_professional_review_rules(rule_pack)
     _validate_source_register(rule_pack, expected_kind)
+
+
+def _validate_oic_professional_review_rules(
+    rule_pack: Mapping[str, Any],
+) -> None:
+    """Require explicit reviewer-owned behavior from every OIC rule pack."""
+
+    rules = rule_pack.get("professional_review_rules")
+    if not isinstance(rules, list):
+        raise ValueError("OIC rule pack requires professional review rules")
+    rule_ids: set[str] = set()
+    answer_keys: set[str] = set()
+    for rule in rules:
+        if not isinstance(rule, Mapping):
+            raise ValueError("OIC professional review rules must be objects")
+        rule_id = str(rule.get("id", ""))
+        if not SAFE_ID.fullmatch(rule_id) or rule_id in rule_ids:
+            raise ValueError("OIC professional review rule IDs must be safe and unique")
+        rule_ids.add(rule_id)
+        if str((rule.get("trigger") or {}).get("kind", "")).upper() != "ALWAYS":
+            raise ValueError(
+                "OIC professional review applicability must remain reviewer-owned"
+            )
+        requirements = rule.get("requirements")
+        if not isinstance(requirements, list) or not requirements:
+            raise ValueError("OIC professional review rules require answer gates")
+        required_answers = {
+            str(item.get("key", ""))
+            for item in requirements
+            if isinstance(item, Mapping)
+            and str(item.get("kind", "")).upper() == "ANSWER"
+        }
+        question = rule.get("question")
+        questions = list(rule.get("questions", []))
+        if not questions and isinstance(question, Mapping):
+            questions = [question]
+        question_answers = {
+            str(item.get("answer_key", ""))
+            for item in questions
+            if isinstance(item, Mapping)
+        }
+        if not required_answers or required_answers != question_answers:
+            raise ValueError(
+                "Each OIC professional review answer gate requires one question"
+            )
+        if answer_keys & required_answers:
+            raise ValueError("OIC professional review answer keys must be unique")
+        answer_keys.update(required_answers)
+
+
+def _effective_disclosure_rule_pack(
+    case: Mapping[str, Any], rule_pack: Mapping[str, Any]
+) -> dict[str, Any]:
+    """Combine statutory disclosures with the locked OIC review checklist."""
+
+    effective = deepcopy(dict(rule_pack))
+    statutory_rules = list(effective.get("rules", []))
+    oic_rules = deepcopy(list(case.get("oic_professional_review_rules", [])))
+    statutory_ids = {str(item.get("id")) for item in statutory_rules}
+    oic_ids = {str(item.get("id")) for item in oic_rules}
+    if len(oic_ids) != len(oic_rules) or statutory_ids & oic_ids:
+        raise ValueError("OIC and statutory disclosure rule IDs must be unique")
+    effective["rules"] = [*statutory_rules, *oic_rules]
+    return effective
 
 
 def _validate_filing_instruction_pack(
@@ -948,6 +1066,7 @@ def _validate_disclosure_rule_pack(
 
     if (
         rule_pack.get("schema_version") != 1
+        or rule_pack.get("kind") != "DISCLOSURE_RULES"
         or not SAFE_ID.fullmatch(str(rule_pack.get("id", "")))
         or not isinstance(rule_pack.get("rules"), list)
         or not rule_pack["rules"]
@@ -1022,6 +1141,10 @@ def create_case(
         raise ValueError(
             "An explicit comparative period requires both prior start and end"
         )
+    if entity.get("first_financial_year") is not True and not prior_start_raw:
+        raise ValueError(
+            "A non-first-year case requires an explicit comparative period"
+        )
     if prior_start_raw:
         prior_start_date = date.fromisoformat(prior_start_raw)
         prior_end_date = date.fromisoformat(prior_end_raw)
@@ -1091,6 +1214,9 @@ def create_case(
         },
         "rule_pack_checksum": _sha256_bytes(_canonical_json(rule_pack)),
         "oic_rule_pack_checksum": _sha256_bytes(_canonical_json(oic_rule_pack)),
+        "oic_professional_review_rules": deepcopy(
+            list(oic_rule_pack["professional_review_rules"])
+        ),
         "filing_instruction_pack_checksum": _sha256_bytes(
             _canonical_json(filing_instruction_pack)
         ),
@@ -1197,9 +1323,9 @@ def migrate_regulatory_versions(
     reason = str(migration["reason"]).strip()
     if len(reason) < 10:
         raise ValueError("Regulatory migration requires a specific reason")
-    statutory_rule_pack = migration["statutory_rule_pack"]
-    if not isinstance(statutory_rule_pack, Mapping):
-        raise ValueError("Statutory rule pack must be an object")
+    statutory_rule_pack = _resolve_regulatory_pack(
+        migration["statutory_rule_pack"], "STATUTORY_FORM_RULES"
+    )
     period_start = date.fromisoformat(case["period"]["start"])
     _validate_effective_rule_pack(
         statutory_rule_pack, "STATUTORY_FORM_RULES", period_start
@@ -1228,11 +1354,10 @@ def migrate_regulatory_versions(
     )
     _validate_filing_instruction_pack(filing_instruction_pack, filing_campaign_year)
     disclosure_rule_pack = migration.get("disclosure_rule_pack")
-    if disclosure_rule_pack is not None and not isinstance(
-        disclosure_rule_pack, Mapping
-    ):
-        raise ValueError("Disclosure rule pack must be an object")
     if disclosure_rule_pack is not None:
+        disclosure_rule_pack = _resolve_regulatory_pack(
+            disclosure_rule_pack, "DISCLOSURE_RULES"
+        )
         _validate_disclosure_rule_pack(disclosure_rule_pack, period_start)
 
     previous_versions = deepcopy(case["rule_pack_versions"])
@@ -1346,6 +1471,9 @@ def migrate_regulatory_versions(
     case["rule_pack_versions"] = target_versions
     case["rule_pack_checksum"] = statutory_checksum
     case["oic_rule_pack_checksum"] = oic_checksum
+    case["oic_professional_review_rules"] = deepcopy(
+        list(oic_rule_pack["professional_review_rules"])
+    )
     case["filing_instruction_pack_checksum"] = filing_checksum
     case["filing_campaign_year"] = filing_campaign_year
     case["taxonomy_output_contracts"] = _taxonomy_output_contracts(statutory_rule_pack)
@@ -1423,8 +1551,7 @@ def ingest_prior_xbrl(
         raise ValueError("Prior-XBRL entity identifier does not match the case")
     expected_prior_end = str(case["entity"].get("prior_period_end") or "")
     if not expected_prior_end:
-        current_start = date.fromisoformat(case["period"]["start"])
-        expected_prior_end = (current_start - timedelta(days=1)).isoformat()
+        raise ValueError("The case has no explicit comparative period end")
     matching_contexts = [
         context
         for context in parsed["contexts"]
@@ -2042,6 +2169,11 @@ def _threshold_result(
         "revenue": normalize_decimal(year["revenue"]),
         "employees": normalize_decimal(year["employees"]),
     }
+    negative_metrics = sorted(key for key, value in values.items() if value < 0)
+    if negative_metrics:
+        raise ValueError(
+            "Form metrics cannot be negative: " + ", ".join(negative_metrics)
+        )
     breached = {key: values[key] > normalize_decimal(thresholds[key]) for key in values}
     raw_source_refs = year.get("source_refs", {})
     if raw_source_refs is not None and not isinstance(raw_source_refs, Mapping):
@@ -2652,6 +2784,8 @@ def apply_mapping_decisions(
         raise ValueError("Parser convention must be confirmed before mapping")
     if not case.get("selected_form"):
         raise ValueError("A statutory form must be selected before mapping")
+    if not decisions:
+        raise ValueError("At least one mapping decision is required")
     taxonomy_mapping_index = case.get("taxonomy_mapping_index")
     if case.get("statutory_presentation_required", True) and not taxonomy_mapping_index:
         raise ValueError(
@@ -2687,6 +2821,15 @@ def apply_mapping_decisions(
         if status == "EXCLUDED":
             if not str(decision.get("reason", "")).strip():
                 raise ValueError(f"Excluded account {account_id} requires a reason")
+            current_balance = Decimal(str(account["closing_signed"]))
+            prior_balance = account.get("prior_closing_signed")
+            if current_balance != 0 or (
+                comparative_required
+                and (prior_balance is None or Decimal(str(prior_balance)) != 0)
+            ):
+                raise ValueError(
+                    f"Non-zero account {account_id} cannot be excluded from the statements"
+                )
             allocations: list[dict[str, Any]] = []
         elif status == "ACCEPTED":
             allocations = []
@@ -2786,9 +2929,18 @@ def apply_mapping_decisions(
                 "allocations": allocations,
             }
         )
+    replacements = {str(item["account_id"]): item for item in normalized}
+    merged = [
+        replacements.get(
+            str(row["account_id"]), prior_mappings.get(str(row["account_id"]))
+        )
+        for row in trial_balance["entries"]
+        if str(row["account_id"]) in replacements
+        or str(row["account_id"]) in prior_mappings
+    ]
     _mutate(case, actor, "mapping_decisions_applied")
     _clear_accounting_dependent_reviews(case)
-    case["mappings"] = normalized
+    case["mappings"] = merged
     case["adjustments"] = []
     case["canonical_facts"] = []
     case["statements"] = None
@@ -2859,30 +3011,6 @@ def apply_mapping_decisions(
                 },
                 after_hash=mapping_after_hash,
             )
-    for removed_id in sorted(set(prior_mappings) - seen):
-        previous = prior_mappings[removed_id]
-        _record_event(
-            case,
-            "mapping_changed",
-            actor,
-            {
-                "account_id": removed_id,
-                "previous": _mapping_audit_summary(
-                    {
-                        key: previous.get(key)
-                        for key in (
-                            "decision",
-                            "reason",
-                            "candidate_source",
-                            "memory_scope",
-                            "allocations",
-                        )
-                    }
-                ),
-                "current": None,
-            },
-            after_hash=mapping_after_hash,
-        )
     return case
 
 
@@ -3913,7 +4041,9 @@ def _refresh_disclosures(case: dict[str, Any]) -> None:
     rule_pack = case.get("disclosure_rule_pack")
     if not rule_pack or not case.get("selected_form") or not case.get("statements"):
         return
-    coverage = build_disclosure_coverage(case, rule_pack)
+    coverage = build_disclosure_coverage(
+        case, _effective_disclosure_rule_pack(case, rule_pack)
+    )
     coverage["computation_context"] = _computation_context(
         case, "disclosure-coverage-v1"
     )
@@ -4879,6 +5009,29 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
             "BLOCKER",
             f"{len(missing_mappings)} accounts are not mapped or excluded",
         )
+    entries_by_id = {str(row["account_id"]): row for row in entries}
+    invalid_exclusions = []
+    comparative_required = case["entity"].get("first_financial_year") is not True
+    for mapping in case.get("mappings", []):
+        if mapping.get("decision") != "EXCLUDED":
+            continue
+        account = entries_by_id.get(str(mapping.get("account_id")))
+        if account is None:
+            continue
+        current_nonzero = Decimal(str(account["closing_signed"])) != 0
+        prior_value = account.get("prior_closing_signed")
+        prior_nonzero = comparative_required and (
+            prior_value is None or Decimal(str(prior_value)) != 0
+        )
+        if current_nonzero or prior_nonzero:
+            invalid_exclusions.append(str(mapping["account_id"]))
+    if invalid_exclusions:
+        add(
+            "MAPPING.NONZERO_EXCLUSION",
+            "BLOCKER",
+            "Non-zero accounts cannot be excluded: "
+            + ", ".join(sorted(invalid_exclusions)),
+        )
     for adjustment in case.get("adjustments", []):
         for amount_key in ("current_amount", "prior_amount"):
             total = sum(
@@ -5603,16 +5756,14 @@ def prepare_xbrl_review(
         raise ValueError(
             "Pre-approval XBRL review requires current passing case validation"
         )
-    if output_dir.is_symlink():
-        raise ValueError("XBRL review output directory must not be a symbolic link")
-    output = output_dir.resolve()
-    if output in {Path("/"), Path.home().resolve()}:
-        raise ValueError("Refusing a broad XBRL review output directory")
-    output.mkdir(parents=True, exist_ok=True)
-    if any(output.iterdir()):
-        raise ValueError("XBRL review output directory must be empty")
-    if catalogue_path.is_symlink() or not catalogue_path.is_file():
+    output = _controlled_output_path(output_dir, "XBRL review output directory")
+    _reject_symlink_path_components(catalogue_path, "Taxonomy catalogue path")
+    if not catalogue_path.is_file():
         raise ValueError("Taxonomy catalogue must be a regular local file")
+    if taxonomy_package is not None:
+        _reject_symlink_path_components(taxonomy_package, "Taxonomy package path")
+        if not taxonomy_package.is_file():
+            raise ValueError("Taxonomy package must be a regular local file")
     catalogue_bytes = catalogue_path.read_bytes()
     content_hash = _review_content_hash(case)
     snapshot = _case_payload_for_hash(case)
@@ -5622,27 +5773,36 @@ def prepare_xbrl_review(
         "approval": {"snapshot": snapshot, "snapshot_hash": snapshot_hash},
     }
     xml = render_xbrl(candidate, catalogue_path, catalogue_bytes=catalogue_bytes)
-    candidate_path = output / "review-candidate.xbrl"
-    candidate_path.write_bytes(xml)
     candidate_sha256 = _sha256_bytes(xml)
-    report_path = output / "local-xbrl-validation.json"
     selected_validator = validator or validate_instance
-    result = selected_validator(
-        candidate_path,
-        report_path,
-        taxonomy_package,
-        case.get("taxonomy_checksum"),
-    )
-    if not report_path.is_file():
-        report_path.write_text(
-            json.dumps(result, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+    with tempfile.TemporaryDirectory(
+        dir=output.parent, prefix=f".{output.name}.staging-"
+    ) as temporary:
+        staging = Path(temporary)
+        candidate_path = staging / "review-candidate.xbrl"
+        candidate_path.write_bytes(xml)
+        report_path = staging / "local-xbrl-validation.json"
+        result = selected_validator(
+            candidate_path,
+            report_path,
+            taxonomy_package,
+            case.get("taxonomy_checksum"),
         )
-    if _sha256_file(candidate_path) != candidate_sha256:
-        raise ValueError("Local validation modified the rendered XBRL review candidate")
-    status = str(result.get("status", "FAIL"))
-    if status not in {"PASS", "FAIL"}:
-        raise ValueError("Local XBRL validator returned an unsupported status")
+        if not report_path.is_file():
+            report_path.write_text(
+                json.dumps(result, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+        if _sha256_file(candidate_path) != candidate_sha256:
+            raise ValueError(
+                "Local validation modified the rendered XBRL review candidate"
+            )
+        status = str(result.get("status", "FAIL"))
+        if status not in {"PASS", "FAIL"}:
+            raise ValueError("Local XBRL validator returned an unsupported status")
+        _publish_output_directory(staging, output, "XBRL review output directory")
+    candidate_path = output / "review-candidate.xbrl"
+    report_path = output / "local-xbrl-validation.json"
     _mutate(case, actor, "xbrl_review_prepared")
     case["xbrl_review"] = {
         "review_content_hash": content_hash,
@@ -5921,13 +6081,12 @@ def render_xbrl(
     }
     first_year = snapshot["entity"].get("first_financial_year") is True
     if not first_year:
-        current_start = date.fromisoformat(period_start)
         prior_end = str(snapshot["entity"].get("prior_period_end") or "")
-        if not prior_end:
-            prior_end = (current_start - timedelta(days=1)).isoformat()
         prior_start = str(snapshot["entity"].get("prior_period_start") or "")
-        if not prior_start:
-            prior_start = _previous_year_date(current_start).isoformat()
+        if not prior_start or not prior_end:
+            raise ValueError(
+                "Approved comparative contexts require explicit start and end dates"
+            )
         if date.fromisoformat(prior_start) > date.fromisoformat(prior_end):
             raise ValueError("Approved comparative period start is after its end")
         contexts.update(
@@ -6511,7 +6670,8 @@ def export_case(
     xbrl_review = snapshot.get("xbrl_review") or {}
     if xbrl_review.get("status") != "PASS":
         raise ValueError("Export requires the approved passing local XBRL review")
-    if catalogue_path.is_symlink() or not catalogue_path.is_file():
+    _reject_symlink_path_components(catalogue_path, "Taxonomy catalogue path")
+    if not catalogue_path.is_file():
         raise ValueError("Taxonomy catalogue must be a regular local file")
     catalogue_bytes = catalogue_path.read_bytes()
     if _sha256_bytes(catalogue_bytes) != xbrl_review.get("catalogue_sha256"):
@@ -6525,14 +6685,11 @@ def export_case(
         )
     preview_bytes = _reviewed_preview_bytes(snapshot.get("preview") or {})
     before_hash = _sha256_bytes(_canonical_json(_case_payload_for_hash(case)))
-    if output_dir.is_symlink():
-        raise ValueError("Export directory must not be a symbolic link")
-    output = output_dir.resolve()
-    if output in {Path("/"), Path.home().resolve()}:
-        raise ValueError("Refusing a broad export directory")
-    output.mkdir(parents=True, exist_ok=True)
-    if any(output.iterdir()):
-        raise ValueError("Export directory must be empty")
+    final_output = _controlled_output_path(output_dir, "Export directory")
+    temporary_output = tempfile.TemporaryDirectory(
+        dir=final_output.parent, prefix=f".{final_output.name}.staging-"
+    )
+    output = Path(temporary_output.name)
     year = date.fromisoformat(snapshot["period"]["end"]).year
     taxonomy_slug = (
         snapshot["rule_pack_versions"]["taxonomy_id"].replace("PCI_", "pci").lower()
@@ -6590,6 +6747,9 @@ def export_case(
             if key not in {"snapshot", "audit_events"}
         },
         "rule_pack_versions": snapshot["rule_pack_versions"],
+        "oic_professional_review_rules": snapshot.get(
+            "oic_professional_review_rules", []
+        ),
         "regulatory_rule_pack_checksums": {
             "statutory_rule_pack": snapshot.get("rule_pack_checksum"),
             "oic_rule_pack": snapshot.get("oic_rule_pack_checksum"),
@@ -6711,15 +6871,14 @@ def export_case(
     }
     manifest_path = output / "artifact_manifest.json"
     manifest_path.write_bytes(_canonical_json(manifest) + b"\n")
+    manifest_artifact = _artifact_record(manifest_path)
+    _publish_output_directory(output, final_output, "Export directory")
+    temporary_output.cleanup()
     case["state"] = CaseState.EXPORTED
     case["updated_at"] = _now()
     case["artifacts"] = [
         *artifacts,
-        {
-            "file_name": manifest_path.name,
-            "sha256": _sha256_file(manifest_path),
-            "size_bytes": manifest_path.stat().st_size,
-        },
+        manifest_artifact,
     ]
     case["_pending_before_hash"] = before_hash
     _record_event(case, "artifact_exported", actor, {"manifest": manifest})

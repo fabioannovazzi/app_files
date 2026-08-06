@@ -48,6 +48,8 @@ def _case(tmp_path: Path) -> dict[str, object]:
                 "final_liquidation": False,
                 "first_financial_year": False,
                 "prior_year_form": "ABBREVIATED",
+                "prior_period_start": "2024-01-01",
+                "prior_period_end": "2024-12-31",
                 "micro_exclusion_flags": [],
             },
             "period": {"start": "2025-01-01", "end": "2025-12-31"},

@@ -5,6 +5,7 @@ import importlib.util
 import json
 import sys
 import zipfile
+from copy import deepcopy
 from decimal import Decimal
 from pathlib import Path
 
@@ -95,6 +96,8 @@ def _case_payload(*, listed: bool = False) -> dict[str, object]:
             "final_liquidation": False,
             "first_financial_year": False,
             "prior_year_form": "ABBREVIATED",
+            "prior_period_start": "2024-01-01",
+            "prior_period_end": "2024-12-31",
             "micro_exclusion_flags": [],
         },
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
@@ -117,11 +120,9 @@ def _disclosure_rule_pack() -> dict[str, object]:
 
 
 def _regulatory_migration() -> dict[str, object]:
-    statutory_rule_pack = _rule_pack()
-    statutory_rule_pack["id"] = "IT_CC_2026.2"
     return {
         "reason": "Adopt the reviewed replacement packs for this open case.",
-        "statutory_rule_pack": statutory_rule_pack,
+        "statutory_rule_pack": "IT_CC_2026.1",
         "oic_rule_pack": "OIC_2026.1",
         "taxonomy_id": "PCI_2018-11-04-R2",
         "taxonomy_checksum": "b" * 64,
@@ -273,6 +274,8 @@ def test_create_case_supports_2016_onward_period_with_effective_packs(
 ) -> None:
     payload = _case_payload()
     payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["entity"]["prior_period_start"] = "2019-01-01"
+    payload["entity"]["prior_period_end"] = "2019-12-31"
     payload["oic_rule_pack"] = "OIC_2016_2023.1"
     case = xbrl_case.create_case(
         tmp_path / "historical", payload, _historical_rule_pack(), "preparer_1"
@@ -301,6 +304,8 @@ def test_create_case_supports_2016_onward_period_with_effective_packs(
 def test_create_case_rejects_rule_pack_outside_period_up_front(tmp_path: Path) -> None:
     payload = _case_payload()
     payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["entity"]["prior_period_start"] = "2019-01-01"
+    payload["entity"]["prior_period_end"] = "2019-12-31"
     payload["oic_rule_pack"] = "OIC_2016_2023.1"
 
     with pytest.raises(ValueError, match="not effective for the reporting period"):
@@ -343,6 +348,7 @@ def test_create_case_rejects_incomplete_or_overlapping_comparative_period(
 ) -> None:
     payload = _case_payload()
     payload["entity"]["prior_period_start"] = "2024-01-01"
+    payload["entity"].pop("prior_period_end")
 
     with pytest.raises(ValueError, match="requires both prior start and end"):
         xbrl_case.create_case(
@@ -352,6 +358,17 @@ def test_create_case_rejects_incomplete_or_overlapping_comparative_period(
     payload["entity"]["prior_period_end"] = "2025-01-01"
     with pytest.raises(ValueError, match="overlaps"):
         xbrl_case.create_case(tmp_path / "overlap", payload, _rule_pack(), "preparer_1")
+
+
+def test_create_case_requires_explicit_dates_for_every_comparative_period(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["entity"].pop("prior_period_start")
+    payload["entity"].pop("prior_period_end")
+
+    with pytest.raises(ValueError, match="explicit comparative period"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
 
 
 def _write_trial_balance(path: Path, *, imbalance: bool = False) -> None:
@@ -452,6 +469,8 @@ def test_first_financial_year_uses_only_current_annuality_end_to_end(
     payload = _case_payload()
     payload["entity"]["first_financial_year"] = True
     payload["entity"].pop("prior_year_form")
+    payload["entity"].pop("prior_period_start")
+    payload["entity"].pop("prior_period_end")
     case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
     case["statutory_presentation_required"] = False
     source = tmp_path / "current-only.csv"
@@ -508,6 +527,8 @@ def test_first_financial_year_rejects_comparative_source_column(tmp_path: Path) 
     payload = _case_payload()
     payload["entity"]["first_financial_year"] = True
     payload["entity"].pop("prior_year_form")
+    payload["entity"].pop("prior_period_start")
+    payload["entity"].pop("prior_period_end")
     case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
     source = tmp_path / "invalid-comparative.csv"
     _write_trial_balance(source)
@@ -522,6 +543,8 @@ def test_first_financial_year_accepts_current_only_debit_credit_layout(
     payload = _case_payload()
     payload["entity"]["first_financial_year"] = True
     payload["entity"].pop("prior_year_form")
+    payload["entity"].pop("prior_period_start")
+    payload["entity"].pop("prior_period_end")
     case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
     source = tmp_path / "current-only-separate.csv"
     source.write_text(
@@ -845,6 +868,8 @@ def test_determine_forms_first_year_reports_current_threshold_failure(
     payload = _case_payload()
     payload["entity"]["first_financial_year"] = True
     payload["entity"].pop("prior_year_form")
+    payload["entity"].pop("prior_period_start")
+    payload["entity"].pop("prior_period_end")
     case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
     metrics = [
         {
@@ -911,6 +936,28 @@ def test_determine_forms_reports_blank_metric_as_missing_not_zero(
     assert result["form_analysis"]["eligible_forms"] == []
     assert result["form_analysis"]["recommended_form"] is None
     assert result["form_analysis"]["missing_fields"] == ["threshold_assets_for_2025"]
+
+
+def test_determine_forms_rejects_negative_legal_threshold_metrics(
+    tmp_path: Path,
+) -> None:
+    _, case = _created_case(tmp_path)
+
+    with pytest.raises(ValueError, match="cannot be negative: assets"):
+        xbrl_case.determine_forms(
+            case,
+            [
+                {
+                    "year": 2025,
+                    "assets": "-1",
+                    "revenue": "1",
+                    "employees": "1",
+                }
+            ],
+            _rule_pack(),
+            "preparer_1",
+            case["revision_id"],
+        )
 
 
 def test_determine_forms_rejects_silent_rule_pack_replacement(tmp_path: Path) -> None:
@@ -1012,7 +1059,7 @@ def test_regulatory_migration_invalidates_outputs_but_retains_evidence(
     assert result["selected_form"] is None
     assert result["mappings"] == []
     assert result["statements"] is None
-    assert result["rule_pack_versions"]["statutory_rule_pack"] == "IT_CC_2026.2"
+    assert result["rule_pack_versions"]["statutory_rule_pack"] == "IT_CC_2026.1"
     report = result["regulatory_migrations"][-1]
     assert report["from_revision_id"] != report["to_revision_id"]
     assert report["revalidation_status"] == "REQUIRED"
@@ -1021,6 +1068,22 @@ def test_regulatory_migration_invalidates_outputs_but_retains_evidence(
         "statements",
     }
     assert result["audit_events"][-1]["action"] == ("regulatory_versions_migrated")
+
+
+def test_regulatory_migration_rejects_caller_supplied_rule_pack_objects(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    migration = _regulatory_migration()
+    migration["statutory_rule_pack"] = _rule_pack()
+
+    with pytest.raises(ValueError, match="controlled rule-pack identifier"):
+        xbrl_case.migrate_regulatory_versions(
+            case,
+            migration,
+            "studio_admin_1",
+            case["revision_id"],
+        )
 
 
 def test_create_case_requires_pinned_taxonomy_package_checksum(
@@ -1593,6 +1656,77 @@ def _complete_disclosures_and_preview(
     )
 
 
+def test_oic_pack_selection_changes_required_professional_review_questions(
+    tmp_path: Path,
+) -> None:
+    def questions_for(
+        directory: str,
+        period_start: str,
+        period_end: str,
+        prior_start: str,
+        prior_end: str,
+        oic_pack: str,
+        statutory_pack: dict[str, object],
+    ) -> set[str]:
+        payload = _case_payload()
+        payload["case_id"] = f"case_{directory}"
+        payload["period"] = {"start": period_start, "end": period_end}
+        payload["entity"]["prior_period_start"] = prior_start
+        payload["entity"]["prior_period_end"] = prior_end
+        payload["oic_rule_pack"] = oic_pack
+        case = xbrl_case.create_case(
+            tmp_path / directory, payload, statutory_pack, "preparer_1"
+        )
+        case["selected_form"] = "ABBREVIATED"
+        case["statements"] = {"facts": []}
+        case = xbrl_case.activate_disclosures(
+            case,
+            _disclosure_rule_pack(),
+            "reviewer_1",
+            case["revision_id"],
+        )
+        return {
+            question["answer_key"]
+            for question in case["questionnaire"]
+            if str(question["answer_key"]).startswith("oic")
+        }
+
+    historical = questions_for(
+        "historical",
+        "2023-01-01",
+        "2023-12-31",
+        "2022-01-01",
+        "2022-12-31",
+        "OIC_2016_2023.1",
+        _historical_rule_pack(),
+    )
+    current = questions_for(
+        "current",
+        "2025-01-01",
+        "2025-12-31",
+        "2024-01-01",
+        "2024-12-31",
+        "OIC_2024_2025.1",
+        _rule_pack(),
+    )
+    amended = questions_for(
+        "amended",
+        "2026-01-01",
+        "2026-12-31",
+        "2025-01-01",
+        "2025-12-31",
+        "OIC_2026.1",
+        _rule_pack(),
+    )
+
+    assert historical == set()
+    assert current == {"oic34_revenue_policy_review"}
+    assert amended == {
+        "oic34_revenue_policy_review",
+        "oic_2025_amendments_review",
+    }
+
+
 def test_open_structured_disclosures_enter_data_gaps_state(tmp_path: Path) -> None:
     case = _prepared_case(tmp_path)
 
@@ -1779,6 +1913,81 @@ def test_prepare_xbrl_review_rejects_validator_that_modifies_candidate(
             case["revision_id"],
             validator=modifying_validator,
         )
+
+
+def test_failed_xbrl_review_job_leaves_no_partial_output_and_can_retry(
+    tmp_path: Path,
+) -> None:
+    case = _ready_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    package = tmp_path / "taxonomy.zip"
+    package.write_bytes(b"test taxonomy package")
+    output = tmp_path / "retryable-xbrl-review"
+
+    def failing_validator(
+        instance: Path,
+        report: Path,
+        taxonomy_package: Path | None,
+        expected_taxonomy_sha256: str | None,
+    ) -> dict[str, object]:
+        report.write_text('{"status":"FAIL"}\n', encoding="utf-8")
+        raise RuntimeError("processor interrupted")
+
+    with pytest.raises(RuntimeError, match="processor interrupted"):
+        xbrl_case.prepare_xbrl_review(
+            case,
+            catalogue,
+            package,
+            output,
+            "reviewer_1",
+            case["revision_id"],
+            validator=failing_validator,
+        )
+
+    assert not output.exists()
+    result = xbrl_case.prepare_xbrl_review(
+        case,
+        catalogue,
+        package,
+        output,
+        "reviewer_1",
+        case["revision_id"],
+        validator=_passing_xbrl_validator,
+    )
+
+    assert result["xbrl_review"]["status"] == "PASS"
+    assert sorted(path.name for path in output.iterdir()) == [
+        "local-xbrl-validation.json",
+        "review-candidate.xbrl",
+    ]
+
+
+def test_xbrl_review_rejects_symbolic_link_in_output_ancestor(
+    tmp_path: Path,
+) -> None:
+    case = _ready_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    package = tmp_path / "taxonomy.zip"
+    package.write_bytes(b"test taxonomy package")
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    linked_parent = tmp_path / "artifacts"
+    linked_parent.symlink_to(outside, target_is_directory=True)
+
+    with pytest.raises(ValueError, match="symbolic-link components"):
+        xbrl_case.prepare_xbrl_review(
+            case,
+            catalogue,
+            package,
+            linked_parent / "review",
+            "reviewer_1",
+            case["revision_id"],
+            validator=_passing_xbrl_validator,
+        )
+
+    assert list(outside.iterdir()) == []
 
 
 def test_post_approval_form_change_invalidates_prior_approval(tmp_path: Path) -> None:
@@ -2518,6 +2727,84 @@ def test_tenant_mapping_scope_requires_explicit_reuse_approval(tmp_path: Path) -
         xbrl_case.apply_mapping_decisions(
             case, [decision], "preparer_1", case["revision_id"]
         )
+
+
+def test_mapping_patch_preserves_unsubmitted_professional_decisions(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    untouched = deepcopy(case["mappings"][1])
+    changed = deepcopy(case["mappings"][0])
+    changed["allocations"][0]["canonical_line"] = "SP.ATTIVO.ALTRI"
+
+    result = xbrl_case.apply_mapping_decisions(
+        case, [changed], "reviewer_1", case["revision_id"]
+    )
+
+    assert len(result["mappings"]) == 2
+    assert result["mappings"][1] == untouched
+    assert result["mappings"][0]["allocations"][0]["canonical_line"] == (
+        "SP.ATTIVO.ALTRI"
+    )
+
+
+def test_nonzero_account_cannot_be_excluded_from_statement_generation(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+
+    with pytest.raises(ValueError, match="Non-zero account"):
+        xbrl_case.apply_mapping_decisions(
+            case,
+            [
+                {
+                    "account_id": case["mappings"][0]["account_id"],
+                    "decision": "EXCLUDED",
+                    "reason": "Reviewed but outside the desired presentation.",
+                }
+            ],
+            "reviewer_1",
+            case["revision_id"],
+        )
+
+
+def test_exact_zero_account_can_be_excluded_with_review_reason(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    account = case["trial_balance"]["entries"][0]
+    account["closing_signed"] = "0"
+    account["prior_closing_signed"] = "0"
+
+    result = xbrl_case.apply_mapping_decisions(
+        case,
+        [
+            {
+                "account_id": account["account_id"],
+                "decision": "EXCLUDED",
+                "reason": "Both presented annualities have an exact zero balance.",
+            }
+        ],
+        "reviewer_1",
+        case["revision_id"],
+    )
+
+    assert result["mappings"][0]["decision"] == "EXCLUDED"
+    assert result["mappings"][0]["allocations"] == []
+
+
+def test_validation_defensively_blocks_tampered_nonzero_exclusions(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    case["mappings"][0]["decision"] = "EXCLUDED"
+    case["mappings"][0]["allocations"] = []
+
+    result = xbrl_case.validate_case(case)
+
+    assert "MAPPING.NONZERO_EXCLUSION" in {
+        issue["rule_id"] for issue in result["issues"]
+    }
 
 
 def test_receivable_schedule_exact_maturity_and_statement_tie_out_is_complete(
@@ -3994,6 +4281,30 @@ def test_repeated_export_of_same_approval_is_byte_reproducible(
     assert _artifact_bytes_by_name(first_output) == _artifact_bytes_by_name(
         second_output
     )
+
+
+def test_failed_export_leaves_no_partial_output_and_can_retry(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    case = _approved_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    output = tmp_path / "retryable-export"
+    original_mapping_report = xbrl_case._mapping_report
+
+    def failing_mapping_report(*args: object, **kwargs: object) -> dict[str, object]:
+        raise RuntimeError("workpaper interrupted")
+
+    monkeypatch.setattr(xbrl_case, "_mapping_report", failing_mapping_report)
+    with pytest.raises(RuntimeError, match="workpaper interrupted"):
+        xbrl_case.export_case(case, output, catalogue, "reviewer_1")
+
+    assert not output.exists()
+    monkeypatch.setattr(xbrl_case, "_mapping_report", original_mapping_report)
+    result = xbrl_case.export_case(case, output, catalogue, "reviewer_1")
+
+    assert result["state"] == "EXPORTED"
+    assert (output / "artifact_manifest.json").is_file()
 
 
 def test_export_rejects_catalogue_that_differs_from_approved_review(

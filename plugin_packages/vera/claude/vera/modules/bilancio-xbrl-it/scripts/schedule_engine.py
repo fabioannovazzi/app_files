@@ -542,11 +542,14 @@ def _cash_flow(
     payload: Mapping[str, Any],
     statement_facts: Sequence[Mapping[str, Any]],
     issues: list[dict[str, str]],
+    comparative_required: bool,
 ) -> dict[str, Any]:
     cash_line = str(payload["cash_statement_line"])
     opening = _decimal(payload["opening_cash"], "opening_cash")
     closing = _decimal(payload["closing_cash"], "closing_cash")
-    if opening != _statement_amount(statement_facts, cash_line, "PRIOR"):
+    if comparative_required and opening != _statement_amount(
+        statement_facts, cash_line, "PRIOR"
+    ):
         issues.append({"rule_id": "CASH_FLOW.OPENING_CASH", "row_id": "cash"})
     if closing != _statement_amount(statement_facts, cash_line, "CURRENT"):
         issues.append({"rule_id": "CASH_FLOW.CLOSING_CASH", "row_id": "cash"})
@@ -594,7 +597,10 @@ def _cash_flow(
 
 
 def normalize_schedule(
-    payload: Mapping[str, Any], statement_facts: Sequence[Mapping[str, Any]]
+    payload: Mapping[str, Any],
+    statement_facts: Sequence[Mapping[str, Any]],
+    *,
+    comparative_required: bool = True,
 ) -> dict[str, Any]:
     """Normalize one explicit schedule and return its arithmetic issues."""
 
@@ -603,7 +609,7 @@ def normalize_schedule(
         raise ValueError(f"Unsupported schedule type: {schedule_type}")
     issues: list[dict[str, str]] = []
     if schedule_type == "CASH_FLOW":
-        content = _cash_flow(payload, statement_facts, issues)
+        content = _cash_flow(payload, statement_facts, issues, comparative_required)
         statement_line = content["cash_statement_line"]
     else:
         rows = list(payload.get("rows", []))
@@ -718,7 +724,7 @@ def normalize_schedule(
                         "row_id": "*",
                     }
                 )
-        if opening_field is not None:
+        if opening_field is not None and comparative_required:
             opening_total = sum(
                 (
                     _decimal(row[opening_field], opening_field)
@@ -753,6 +759,11 @@ def normalize_schedule(
         "schedule_type": schedule_type,
         **content,
         "status": "COMPLETE" if not issues else "INCOMPLETE",
+        "comparative_reconciliation": (
+            "PERFORMED"
+            if comparative_required
+            else "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
+        ),
         "issues": issues,
     }
 

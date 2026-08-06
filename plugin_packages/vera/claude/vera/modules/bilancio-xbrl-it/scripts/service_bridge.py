@@ -6,8 +6,9 @@ from __future__ import annotations
 import json
 import os
 import sys
+from datetime import date
 from pathlib import Path
-from typing import Any, Mapping
+from typing import Any, Mapping, Sequence
 
 from access_control import RequestContext
 from case_service import CaseService
@@ -16,8 +17,9 @@ from file_security import scanner_from_json
 __all__ = ["main"]
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_STATUTORY_RULE_PACK = (
-    PLUGIN_ROOT / "rulepacks" / "it" / "statutory-forms-2026.1.json"
+DEFAULT_STATUTORY_RULE_PACKS = (
+    PLUGIN_ROOT / "rulepacks" / "it" / "statutory-forms-2016.1.json",
+    PLUGIN_ROOT / "rulepacks" / "it" / "statutory-forms-2026.1.json",
 )
 DEFAULT_DISCLOSURE_RULE_PACK = (
     PLUGIN_ROOT / "rulepacks" / "it" / "disclosures-2026.1.json"
@@ -34,6 +36,52 @@ def _trusted_rule_pack(environment_key: str, default_path: Path) -> dict[str, An
     if not isinstance(payload, dict):
         raise ValueError(f"Configured rule pack is not an object: {environment_key}")
     return payload
+
+
+def _trusted_statutory_rule_packs() -> list[dict[str, Any]]:
+    """Load the deployment registry of effective statutory-form packs."""
+
+    configured = os.environ.get("VERA_XBRL_STATUTORY_RULE_PACK", "").strip()
+    paths = (Path(configured),) if configured else DEFAULT_STATUTORY_RULE_PACKS
+    packs = [
+        _trusted_rule_pack("VERA_XBRL_STATUTORY_RULE_PACK", path) for path in paths
+    ]
+    if len({str(pack.get("id")) for pack in packs}) != len(packs):
+        raise ValueError("Configured statutory rule-pack identifiers must be unique")
+    return packs
+
+
+def _effective_statutory_rule_pack(
+    packs: Sequence[Mapping[str, Any]], period_start: str
+) -> dict[str, Any]:
+    """Resolve exactly one deployment-controlled pack for a reporting period."""
+
+    start = date.fromisoformat(period_start)
+    matches = [
+        pack
+        for pack in packs
+        if date.fromisoformat(str(pack["effective_from"]))
+        <= start
+        <= date.fromisoformat(str(pack["effective_to"]))
+    ]
+    if len(matches) != 1:
+        raise ValueError(
+            "Reporting period must resolve to exactly one configured statutory rule pack"
+        )
+    return dict(matches[0])
+
+
+def _locked_statutory_rule_pack(
+    packs: Sequence[Mapping[str, Any]], locked_id: str
+) -> dict[str, Any]:
+    """Resolve exactly one deployment-controlled pack already locked to a case."""
+
+    matches = [pack for pack in packs if str(pack.get("id")) == locked_id]
+    if len(matches) != 1:
+        raise ValueError(
+            "The case statutory rule pack is not available in the deployment registry"
+        )
+    return dict(matches[0])
 
 
 def _context() -> RequestContext:
@@ -80,10 +128,14 @@ def _dispatch(
     context: RequestContext,
     tool: str,
     arguments: Mapping[str, Any],
-    statutory_rule_pack: Mapping[str, Any],
+    statutory_rule_packs: Sequence[Mapping[str, Any]],
     disclosure_rule_pack: Mapping[str, Any],
 ) -> Any:
     if tool == "xbrl_case_create":
+        statutory_rule_pack = _effective_statutory_rule_pack(
+            statutory_rule_packs,
+            str(arguments["payload"]["period"]["start"]),
+        )
         return service.create(
             context,
             arguments["payload"],
@@ -107,6 +159,11 @@ def _dispatch(
         operation = str(arguments["operation"])
         operation_payload = dict(arguments["payload"])
         if operation == "determine_forms":
+            summary = service.get(context, str(arguments["case_id"]))
+            statutory_rule_pack = _locked_statutory_rule_pack(
+                statutory_rule_packs,
+                str(summary["rule_pack_versions"]["statutory_rule_pack"]),
+            )
             operation_payload["rule_pack"] = dict(statutory_rule_pack)
         elif operation == "activate_disclosures":
             operation_payload["rule_pack"] = dict(disclosure_rule_pack)
@@ -222,9 +279,7 @@ def main() -> int:
     try:
         request = json.loads(sys.stdin.read())
         context = _context()
-        statutory_rule_pack = _trusted_rule_pack(
-            "VERA_XBRL_STATUTORY_RULE_PACK", DEFAULT_STATUTORY_RULE_PACK
-        )
+        statutory_rule_packs = _trusted_statutory_rule_packs()
         disclosure_rule_pack = _trusted_rule_pack(
             "VERA_XBRL_DISCLOSURE_RULE_PACK", DEFAULT_DISCLOSURE_RULE_PACK
         )
@@ -286,7 +341,7 @@ def main() -> int:
             context,
             str(request["tool"]),
             request.get("arguments", {}),
-            statutory_rule_pack,
+            statutory_rule_packs,
             disclosure_rule_pack,
         )
         sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")

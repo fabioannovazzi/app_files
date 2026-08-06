@@ -82,11 +82,16 @@ Every case locks its statutory, OIC, filing-instruction, disclosure, and
 taxonomy versions. Statutory, disclosure, presentation, and schedule-taxonomy
 packs on the MCP and HTTP surfaces come only from deployment configuration;
 request-selected packs are rejected.
+A non-first-year case must provide the exact comparative start and end dates;
+the renderer does not infer a conventional prior year. The selected OIC pack
+adds its effective professional-review questions to the live questionnaire and
+workpaper rather than acting as metadata only.
 A different pack cannot be passed silently to an existing case. A studio
 administrator may explicitly migrate an open case through
 `migrate_regulatory_versions` (or the
-`/regulatory-migrations` HTTP resource). The migration verifies effective dates
-and checksums, produces a bounded change report, retains source evidence,
+`/regulatory-migrations` HTTP resource). Migration targets are controlled pack
+identifiers, never caller-supplied rule-pack objects. The migration verifies
+effective dates and checksums, produces a bounded change report, retains source evidence,
 invalidates every regulated derived output, and requires full recomputation and
 revalidation. Approved, exported, archived, and unsupported cases cannot be
 migrated.

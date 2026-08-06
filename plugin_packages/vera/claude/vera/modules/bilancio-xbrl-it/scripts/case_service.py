@@ -181,6 +181,8 @@ def _summary(case: Mapping[str, Any]) -> dict[str, Any]:
         "case_id": case["case_id"],
         "revision_id": case["revision_id"],
         "state": case["state"],
+        "period": case["period"],
+        "rule_pack_versions": case["rule_pack_versions"],
         "selected_form": case.get("selected_form"),
         "blocking_issues": int(validation.get("blockers", 0)),
         "high_issues": int(validation.get("high", 0)),
