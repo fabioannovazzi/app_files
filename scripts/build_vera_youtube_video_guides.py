@@ -112,6 +112,7 @@ EXPECTED_LOCALIZATIONS = {
     ("vera-overview", "core", "de"),
     ("vera-overview", "core", "es"),
     ("concordato-plan-review", "italy", "it"),
+    ("bilancio-xbrl-it", "italy", "it"),
     ("data-handling", "core", "it"),
     ("data-handling", "core", "en"),
     ("data-handling", "core", "fr"),

@@ -123,6 +123,39 @@
       }
     },
     {
+      "conceptId": "from-accounting-evidence-to-intelligent-bilancio",
+      "module": "bilancio-xbrl-it",
+      "edition": "italy",
+      "scope": "country",
+      "jurisdiction": "IT",
+      "targetDurationSeconds": 78,
+      "pageTargets": [
+        "/static/shared/vera/index.html#bilancio-intelligente"
+      ],
+      "scenes": [
+        "Accounting evidence and prior-year knowledge",
+        "Account meaning and proposed mappings",
+        "Relevant questions and visible ambiguities",
+        "Statements, schedules, disclosures and narrative drafts",
+        "Exact controls and deterministic XBRL",
+        "Professional review and approved output"
+      ],
+      "localizations": {
+        "it": {
+          "title": "Vera | Dai dati contabili al bilancio intelligente",
+          "narration": "Il bilancio non comincia dall’XBRL: comincia dai dati contabili, dalle evidenze e dalle decisioni già confermate. Vera legge il bilancio di verifica, gli eventuali mastri, l’XBRL precedente e i prospetti disponibili mantenendo ogni elemento collegato alla fonte. Codex interpreta il significato dei conti, propone mappature spiegate e rende visibili alternative e ambiguità. Le decisioni precedenti possono essere riutilizzate, ma una nuova mappatura resta una proposta finché il professionista non la conferma. La versione OIC applicabile orienta le domande da porre e i prospetti o le informazioni integrative da preparare. Vera organizza le risposte e prepara stato patrimoniale, conto economico, tabelle e bozze della nota integrativa senza inventare ciò che manca. Calcoli, quadrature, riconciliazioni, regole di forma e generazione XBRL restano esatti, riproducibili e validati. Il commercialista rivede mappature, trattamenti, testi e punti aperti e approva il bilancio prima dell’eventuale deposito.",
+          "onScreen": [
+            "Dati contabili · fonti · anno precedente",
+            "Conti compresi · mappature proposte",
+            "Ambiguità visibili · domande pertinenti",
+            "Prospetti · informative · nota integrativa",
+            "Controlli esatti · XBRL deterministico",
+            "Bilancio rivedibile · revisione e approvazione"
+          ]
+        }
+      }
+    },
+    {
       "conceptId": "from-client-folder-to-operational-file",
       "module": "new-client",
       "edition": "italy",

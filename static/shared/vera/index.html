@@ -234,6 +234,136 @@
     .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
+
+    .bilancio-head {
+      align-items: start;
+      margin-bottom: clamp(48px, 7vw, 76px);
+    }
+
+    #bilancio-intelligente { scroll-margin-top: 76px; }
+
+    .bilancio-head h2 { max-width: 720px; }
+    .bilancio-head > p {
+      max-width: 610px;
+      padding-top: 6px;
+      color: var(--blue);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.45;
+    }
+
+    .bilancio-feature {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.28fr);
+      border-block: 2px solid var(--navy);
+    }
+
+    .bilancio-feature__copy {
+      padding: clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px) clamp(32px, 5vw, 56px) 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(40px, 7vw, 76px);
+      border-right: 1px solid var(--cyan);
+    }
+
+    .bilancio-thesis {
+      max-width: 13ch;
+      font-size: clamp(1.8rem, 3.8vw, 3.5rem);
+      font-weight: 650;
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+
+    .bilancio-feature__copy p:last-child {
+      max-width: 39ch;
+      color: var(--blue);
+    }
+
+    .bilancio-video {
+      min-width: 0;
+      margin: 0;
+      padding: clamp(28px, 4vw, 48px) 0 clamp(28px, 4vw, 48px) clamp(28px, 4vw, 48px);
+    }
+
+    .bilancio-video video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      background: var(--navy);
+    }
+
+    .bilancio-video figcaption {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px 20px;
+      color: var(--blue);
+      font-size: 0.8rem;
+    }
+
+    .bilancio-pipeline { margin-top: clamp(64px, 9vw, 104px); }
+    .bilancio-pipeline__head {
+      margin-bottom: 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .bilancio-pipeline__head h3 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
+    .bilancio-pipeline__head p { max-width: 46ch; color: var(--blue); }
+    .bilancio-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid var(--navy);
+    }
+
+    .bilancio-step {
+      min-height: 220px;
+      padding: 26px 28px 30px 0;
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .bilancio-step:not(:nth-child(3n + 1)) {
+      padding-left: 28px;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .bilancio-step__number {
+      display: block;
+      margin-bottom: 42px;
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .bilancio-step h4 {
+      margin: 0 0 10px;
+      color: var(--navy);
+      font-size: 1.08rem;
+      line-height: 1.2;
+    }
+
+    .bilancio-step p { max-width: 38ch; color: var(--blue); font-size: 0.94rem; }
+    .bilancio-boundary {
+      margin-top: clamp(52px, 8vw, 84px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-block: 2px solid var(--navy);
+    }
+
+    .bilancio-boundary article { padding: 28px 32px 34px 0; }
+    .bilancio-boundary article + article {
+      padding-inline: 32px 0;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .bilancio-boundary h3 { margin-bottom: 16px; font-size: 1.25rem; }
+    .bilancio-boundary p { max-width: 53ch; color: var(--blue); }
+
     .assurance-sequence {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -518,6 +648,17 @@
         align-items: start;
       }
       .workstream-head { grid-template-columns: minmax(200px, 0.8fr) minmax(0, 1.2fr); }
+      .bilancio-feature { grid-template-columns: 1fr; }
+      .bilancio-feature__copy {
+        padding-right: 0;
+        border-right: 0;
+        border-bottom: 1px solid var(--cyan);
+      }
+      .bilancio-video { padding-left: 0; }
+      .bilancio-pipeline__head { align-items: flex-start; flex-direction: column; }
+      .bilancio-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .bilancio-step:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
+      .bilancio-step:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--cyan); }
       .assurance-sequence { grid-template-columns: 1fr; }
       .assurance-step,
       .assurance-step + .assurance-step {
@@ -546,6 +687,18 @@
       .section-head { grid-template-columns: 1fr; gap: 20px; }
       .workstream-head { grid-template-columns: 1fr; gap: 10px; }
       .workstream-head p { grid-column: 1; }
+      .bilancio-steps { grid-template-columns: 1fr; }
+      .bilancio-step,
+      .bilancio-step:nth-child(even) {
+        min-height: 0;
+        padding: 26px 0 30px;
+        border-left: 0;
+      }
+      .bilancio-step__number { margin-bottom: 28px; }
+      .bilancio-boundary { grid-template-columns: 1fr; }
+      .bilancio-boundary article,
+      .bilancio-boundary article + article { padding: 28px 0 32px; border-left: 0; }
+      .bilancio-boundary article + article { border-top: 1px solid var(--cyan); }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
@@ -595,6 +748,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
+          <a href="#bilancio-intelligente" data-bilancio-nav hidden>Bilancio intelligente</a>
           <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
           <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
           <a href="#data-boundary" data-i18n="nav.data">Dati</a>
@@ -749,6 +903,84 @@
       </div>
     </section>
 
+    <section class="section-block" id="bilancio-intelligente" data-bilancio-section hidden>
+      <div class="section-head bilancio-head">
+        <div class="section-head__title">
+          <span class="section-index">Bilancio · Italia</span>
+          <h2>Il processo esiste già. Vera lo rende intelligente.</h2>
+        </div>
+        <p>Dal bilancio di verifica a un bilancio OIC rivedibile: Vera comprende i conti, riusa le decisioni confermate, individua ciò che manca e prepara prospetti, nota integrativa e file XBRL.</p>
+      </div>
+
+      <div class="bilancio-feature">
+        <div class="bilancio-feature__copy">
+          <p class="bilancio-thesis">L’XBRL è l’ultimo formato, non il lavoro.</p>
+          <p>Vera partecipa alla preparazione lungo tutto il percorso. Calcoli, riconciliazioni, regole civilistiche e generazione XML restano esatti e verificabili; le scelte contabili restano al professionista.</p>
+        </div>
+        <figure class="bilancio-video">
+          <video controls playsinline preload="metadata" data-bilancio-video data-poster-src="media/bilancio-intelligente-poster.jpg" aria-label="Bilancio intelligente: dai dati contabili all’XBRL rivedibile">
+            <source data-video-src="media/bilancio-intelligente.mp4" type="video/mp4">
+            <track kind="captions" srclang="it" label="Italiano" data-caption-src="media/bilancio-intelligente.vtt" default>
+            Il browser non supporta il video HTML5.
+          </video>
+          <figcaption>
+            <span>Bilancio intelligente · guida breve</span>
+            <span>Voce italiana · sottotitoli disponibili</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="bilancio-pipeline">
+        <div class="bilancio-pipeline__head">
+          <h3>Un unico percorso, con i punti aperti visibili.</h3>
+          <p>Vera non compila moduli alla cieca e non trasforma una proposta in una decisione.</p>
+        </div>
+        <div class="bilancio-steps">
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">01</span>
+            <h4>Legge le evidenze</h4>
+            <p>Bilancio di verifica, mastri, XBRL precedente e prospetti di supporto restano collegati alla fonte.</p>
+          </article>
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">02</span>
+            <h4>Comprende i conti</h4>
+            <p>Propone mappature spiegate, conserva quelle già approvate e rende esplicite le alternative.</p>
+          </article>
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">03</span>
+            <h4>Chiede ciò che serve</h4>
+            <p>Porta all’attenzione conti ambigui, saldi non riconciliati, informazioni mancanti e domande OIC pertinenti.</p>
+          </article>
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">04</span>
+            <h4>Prepara il bilancio</h4>
+            <p>Costruisce prospetti, tabelle, informative e bozze narrative usando anche la conoscenza confermata dell’anno precedente.</p>
+          </article>
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">05</span>
+            <h4>Controlla il risultato</h4>
+            <p>Calcoli, quadrature, riconciliazioni, regole di forma e validazione XBRL sono eseguiti in modo riproducibile.</p>
+          </article>
+          <article class="bilancio-step">
+            <span class="bilancio-step__number" aria-hidden="true">06</span>
+            <h4>Consegna per la revisione</h4>
+            <p>Mappature, questioni, prospetti, nota, anteprima e XBRL arrivano insieme, con blocchi e decisioni ancora aperte.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="bilancio-boundary">
+        <article>
+          <h3>Vera partecipa</h3>
+          <p>Interpreta il materiale, propone il passo successivo, riusa conoscenza approvata, prepara le bozze e spiega anomalie o incoerenze.</p>
+        </article>
+        <article>
+          <h3>Revisione e approvazione</h3>
+          <p>Il commercialista conferma forma, mappature, trattamenti contabili, informative e testi, quindi approva il bilancio prima dell’eventuale deposito.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="section-block" id="assurance">
       <div class="section-head">
         <div class="section-head__title">
@@ -788,6 +1020,11 @@
         <p data-i18n="jurisdiction.copy">Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.</p>
       </div>
       <div class="module-directory">
+        <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+          <h3>Bilancio intelligente</h3>
+          <p>Dai dati contabili a prospetti, nota integrativa e XBRL rivedibile, con mappature, domande e decisioni professionali visibili.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
         <a class="module-row" href="../check-entries/index.html#italy-adapter" data-module-link data-jurisdiction-item="it" hidden>
           <h3>Controllo scritture · FatturaPA</h3>
           <p>Collega le scritture allo ZIP XML o agli export FatturaPA e concentra la revisione sulle eccezioni.</p>
@@ -1630,6 +1867,23 @@
         button.setAttribute("aria-pressed", String(isActive));
       });
       const jurisdiction = jurisdictionsByPage[lang];
+      const showBilancio = lang === "it";
+      document.querySelector("[data-bilancio-section]").hidden = !showBilancio;
+      document.querySelector("[data-bilancio-nav]").hidden = !showBilancio;
+      const bilancioVideo = document.querySelector("[data-bilancio-video]");
+      const bilancioSource = bilancioVideo.querySelector("[data-video-src]");
+      const bilancioCaptions = bilancioVideo.querySelector("[data-caption-src]");
+      if (showBilancio) {
+        bilancioVideo.poster = bilancioVideo.dataset.posterSrc;
+        bilancioSource.src = bilancioSource.dataset.videoSrc;
+        bilancioCaptions.src = bilancioCaptions.dataset.captionSrc;
+      } else {
+        bilancioVideo.pause();
+        bilancioVideo.removeAttribute("poster");
+        bilancioSource.removeAttribute("src");
+        bilancioCaptions.removeAttribute("src");
+      }
+      bilancioVideo.load();
       document.querySelector("[data-jurisdiction-section]").hidden = !jurisdiction;
       document.querySelector("[data-jurisdiction-nav]").hidden = !jurisdiction;
       document.querySelectorAll("[data-jurisdiction-item]").forEach((item) => {
