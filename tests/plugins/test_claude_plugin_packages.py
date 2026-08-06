@@ -654,7 +654,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-                "All 15 Vera modules are available.",
+            "All 15 Vera modules are available.",
         ),
         (
             isolated.output_directory
