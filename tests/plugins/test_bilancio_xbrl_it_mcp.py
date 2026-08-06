@@ -55,7 +55,8 @@ def _payload() -> dict[str, object]:
             "micro_exclusion_flags": [],
         },
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
-        "oic_rule_pack": "OIC_2026.1",
+        "oic_rule_pack": "OIC_2024_2025.1",
+        "filing_campaign_year": 2026,
         "taxonomy_checksum": "a" * 64,
     }
 
@@ -140,6 +141,42 @@ def test_mcp_create_uses_authenticated_environment_not_payload_tenant(
         ).read_text(encoding="utf-8")
     )
     assert stored["tenant_id"] == "authenticated_tenant"
+
+
+def test_mcp_create_selects_historical_statutory_pack_by_period(
+    tmp_path: Path,
+) -> None:
+    payload = _payload()
+    payload["case_id"] = "case_mcp_2020"
+    payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["oic_rule_pack"] = "OIC_2016_2023.1"
+
+    responses = _run_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "xbrl_case_create",
+                    "arguments": {
+                        "payload": payload,
+                        "idempotency_key": "create_historical_1",
+                    },
+                },
+            }
+        ],
+        {
+            "VERA_XBRL_STORAGE_ROOT": str(tmp_path / "store"),
+            "VERA_XBRL_TENANT_ID": "authenticated_tenant",
+            "VERA_XBRL_ACTOR_ID": "preparer_1",
+            "VERA_XBRL_ROLES": "PREPARER",
+            "VERA_XBRL_PYTHON": sys.executable,
+        },
+    )
+
+    structured = responses[0]["result"]["structuredContent"]
+    assert structured["rule_pack_versions"]["statutory_rule_pack"] == ("IT_CC_2016.1")
 
 
 def test_mcp_mutation_fails_closed_without_authenticated_environment() -> None:

@@ -104,7 +104,8 @@ def _case_payload() -> dict[str, Any]:
             "micro_exclusion_flags": [],
         },
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
-        "oic_rule_pack": "OIC_2026.1",
+        "oic_rule_pack": "OIC_2024_2025.1",
+        "filing_campaign_year": 2026,
         "taxonomy_checksum": "a" * 64,
     }
 

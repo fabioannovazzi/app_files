@@ -94,8 +94,9 @@ migrated.
 Major parser, eligibility, mapping-candidate, statement, schedule, disclosure,
 note, intelligence, preview, validation, and local-XBRL outputs carry a common
 computation context: case/revision, input-manifest hash, mapping hash, locked
-rule versions, taxonomy checksum, model/template version, and time. This is
-lineage metadata; it does not make semantic classifications authoritative.
+rule versions, regulatory pack checksums, filing campaign, taxonomy checksum,
+model/template version, and time. This is lineage metadata; it does not make
+semantic classifications authoritative.
 
 Before validation, the case state is derived from controlled coverage rather
 than conversational judgment: missing or unreconciled structured schedules and

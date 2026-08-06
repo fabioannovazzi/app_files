@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "OIC_2026.1",
+  "kind": "OIC_ACCOUNTING_RULES",
+  "effective_from": "2025-01-01",
+  "effective_to": "2026-12-31",
+  "mandatory_from": "2026-01-01",
+  "early_adoption_flag": "OIC_AMENDMENTS_2025",
+  "recognized_early_adoption_flags": ["OIC_AMENDMENTS_2025"],
+  "rule_references": ["OIC amendments published 8 December 2025", "OIC 13", "OIC 16", "OIC 24", "OIC 25", "OIC 31"],
+  "source_register": [
+    {
+      "id": "OIC_AMENDMENTS_2025",
+      "kind": "official_accounting_standard_amendments",
+      "title": "Emendamenti ai principi contabili pubblicati l'8 dicembre 2025",
+      "url": "https://www.fondazioneoic.eu/oic-pubblica-gli-emendamenti-ai-principi-contabili/",
+      "retrieved_on": "2026-08-06"
+    }
+  ]
+}

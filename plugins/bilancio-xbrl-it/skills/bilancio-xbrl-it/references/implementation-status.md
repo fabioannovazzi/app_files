@@ -18,11 +18,25 @@
   Calibration exposes it as requiring professional confirmation, and parser
   confirmation records the selected convention, reviewer, time, reason and
   resulting true, false or not-assessable status.
-- Effective-dated form thresholds loaded from a versioned JSON rule pack,
-  first-year/two-year windows, user form selection, and micro exclusions.
+- Effective-dated form thresholds loaded from versioned JSON rule packs for
+  2016–2023 and 2024–2026. Eligibility distinguishes entry into a simplified
+  form from continuation until two consecutive threshold exceedances, exposes
+  the statement/note consequences of every form change, supports first-year
+  and two-year windows, records user selection, and applies micro exclusions.
 - Minimum entity identity intake now requires legal name, reporting identifier,
   registered office, explicit first-year status, and a prior statutory form for
   non-first-year cases.
+- First-financial-year cases are genuinely single-annuality: comparative source
+  columns and mapping values are rejected, statement/presentation prior values
+  remain absent rather than zero, comparative reconciliations are marked not
+  applicable, previews explain the omission, and XBRL contains current contexts
+  only.
+- OIC accounting packs and Registry filing-instruction packs resolve only from
+  the controlled bundled registry, are checked for period/campaign
+  applicability and official-source metadata, and are locked by identifier and
+  checksum. The current packs separate 2016–2023, 2024–2025, and mandatory or
+  explicitly early-adopted 2026 OIC rules; the trusted bridge selects the
+  statutory threshold pack effective for the case period.
 - Open cases have a studio-admin-only regulatory migration operation. Silent
   statutory/disclosure pack substitution is rejected; approved, exported and
   archived cases are immutable. An accepted migration retains source evidence,
@@ -41,8 +55,9 @@
   groups for later table reconstruction.
 - Exact statement-line aggregation, balanced reviewer-approved presentation
   adjustments, full-precision computation, explicit presentation-rounding
-  formulas, current and comparative balance/result tie-outs, annual negative
-  confirmations, layered blockers, approval, workpaper, and artifact manifest.
+  formulas, current and (when applicable) comparative balance/result tie-outs,
+  annual negative confirmations, layered blockers, approval, workpaper, and
+  artifact manifest.
 - Versioned ordinary, abbreviated, and micro primary-statement presentation
   policies bound to the official catalogue. The engine derives every required
   monetary leaf and total from the selected official presentation/calculation
@@ -137,12 +152,17 @@
   overrides, approval, and artifact-manifest reference.
 - Major derived outputs carry one standardized reproducibility context with the
   originating case/revision, source-manifest hash, mapping hash, locked rule
-  versions, taxonomy checksum, model/template version, and computation time.
+  versions, regulatory pack checksums, filing campaign, taxonomy checksum,
+  model/template version, and computation time.
 - Approved export produces standalone mapping, issue, and validation reports in
   addition to XBRL, accessible preview, and the complete workpaper. Each report
   binds the immutable snapshot identifier and hash. The workpaper contains
   peer-artifact checksums, while the final manifest records the workpaper and
   all other artifact hashes without recursive self-hashing.
+- Approval freezes the audit trail used by the workpaper, and export manifests
+  are based on immutable approval metadata rather than the exporting actor or
+  time. Repeating export from the same approval into separate empty directories
+  produces byte-identical XBRL, preview, reports, workpaper, and manifest.
 - An offline model-quality regression harness scores recorded outputs for
   monetary-weighted mapping precision, material-ambiguity recall,
   missing-information recall, stale-text recall, prompt-injection leakage,
@@ -159,7 +179,7 @@
   `TEXT_ONLY`. See `docs/bilancio_schedule_taxonomy_audit.json` at the
   repository root.
 - A checked-in 24-case synthetic regression register covers every scenario in
-  specification section 23.3. On 2026-08-05, twenty controlled XBRL instances
+  specification section 23.3. On 2026-08-06, twenty controlled XBRL instances
   passed the checksum-pinned offline Arelle validator and four unsupported,
   adversarial, or professional-treatment cases passed their production boundary
   contracts. All twenty XBRL cases traverse the public lifecycle, complete
@@ -169,7 +189,9 @@
   families exercise a complete adapter disposition in the relevant golden
   cases and emit representative official schedule facts. The run records exact
   suite, catalogue, package, rule-pack, instance, and report checksums and
-  explicitly leaves TEBENI as a user-controlled open gate.
+  explicitly leaves TEBENI as a user-controlled open gate. Golden case 5 is a
+  true first-year instance with a current-only source file and no comparative
+  XBRL context or fact.
 - Approval now requires a pre-approval render of the current substantive case
   and a passing local XBRL processor report. The candidate, catalogue, package,
   and report hashes are carried into the immutable snapshot; any substantive
@@ -216,9 +238,9 @@
   headers or payloads; every mutation uses an idempotency header and every
   post-creation mutation uses an `If-Match` revision precondition.
 - MCP and HTTP creation reject request-selected statutory rule packs; the
-  trusted bridge loads statutory and disclosure packs from deployment
-  configuration, while explicit studio-admin migration remains the only route
-  for changing a locked regulatory version.
+  trusted bridge loads an effective-dated statutory registry and the disclosure
+  pack from deployment configuration, while explicit studio-admin migration
+  remains the only route for changing a locked regulatory version.
 - The official checksum-locked XBRL 2.1 conformance suite dated 2025-07-16
   passes 606/606 variations with `arelle-release==2.42.1` offline. The first
   structural-only run exposed that calculation inconsistencies were not being

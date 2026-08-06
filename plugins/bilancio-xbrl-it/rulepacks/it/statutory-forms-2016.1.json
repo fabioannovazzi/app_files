@@ -1,20 +1,20 @@
 {
   "schema_version": 1,
-  "id": "IT_CC_2026.1",
+  "id": "IT_CC_2016.1",
   "kind": "STATUTORY_FORM_RULES",
-  "effective_from": "2024-01-01",
-  "effective_to": "2026-12-31",
+  "effective_from": "2016-01-01",
+  "effective_to": "2023-12-31",
   "currency": "EUR",
   "test": "two_out_of_three_with_entry_and_exit_transition",
   "forms": {
     "ABBREVIATED": {
-      "assets": "5500000",
-      "revenue": "11000000",
+      "assets": "4400000",
+      "revenue": "8800000",
       "employees": "50"
     },
     "MICRO": {
-      "assets": "220000",
-      "revenue": "440000",
+      "assets": "175000",
+      "revenue": "350000",
       "employees": "5"
     }
   },
@@ -54,11 +54,11 @@
   },
   "source_register": [
     {
-      "id": "UNIONCAMERE_BILANCI_2026",
+      "id": "UNIONCAMERE_BILANCI_2024",
       "kind": "official_filing_manual",
-      "title": "Manuale operativo per il deposito dei bilanci 2026",
-      "url": "https://www.unioncamere.gov.it/sites/default/files/articoli/2026-05/Manuale-Operativo-Bilanci-2026.pdf",
-      "retrieved_on": "2026-08-05"
+      "title": "Manuale operativo per il deposito dei bilanci 2024",
+      "url": "https://www.unioncamere.gov.it/sites/default/files/articoli/2024-04/Guida%20Nazionale%20Unioncamere%20Bilanci-18032024%20-08042024-rev_0.pdf",
+      "retrieved_on": "2026-08-06"
     }
   ]
 }

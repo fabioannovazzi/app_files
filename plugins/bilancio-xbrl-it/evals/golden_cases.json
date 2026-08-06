@@ -72,10 +72,9 @@
       "mode": "XBRL",
       "selected_form": "ABBREVIATED",
       "current_total": "35000",
-      "prior_total": "0",
       "narrative": {
         "concept": "itcc-ci:CommentoCriteriValutazioneApplicati",
-        "text": "Il presente bilancio riguarda il primo esercizio sociale; i valori comparativi sono pertanto pari a zero."
+        "text": "Il presente bilancio riguarda il primo esercizio sociale; l'informazione comparativa non è applicabile."
       }
     },
     {

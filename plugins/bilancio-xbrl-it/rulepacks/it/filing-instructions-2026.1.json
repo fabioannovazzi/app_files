@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "RI_2026.1",
+  "kind": "FILING_INSTRUCTIONS",
+  "campaign_from": "2026-01-01",
+  "campaign_to": "2026-12-31",
+  "campaign_year": 2026,
+  "taxonomy_id": "PCI_2018-11-04",
+  "instruction_references": ["Unioncamere Manuale operativo per il deposito dei bilanci 2026"],
+  "source_register": [
+    {
+      "id": "UNIONCAMERE_BILANCI_2026",
+      "kind": "official_filing_manual",
+      "title": "Manuale operativo per il deposito dei bilanci 2026",
+      "url": "https://www.unioncamere.gov.it/sites/default/files/articoli/2026-05/Manuale-Operativo-Bilanci-2026.pdf",
+      "retrieved_on": "2026-08-06"
+    }
+  ]
+}

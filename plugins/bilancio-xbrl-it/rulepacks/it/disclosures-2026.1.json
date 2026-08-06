@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "id": "IT_DISCLOSURES_2026.1",
-  "effective_from": "2024-09-25",
+  "effective_from": "2016-01-01",
   "effective_to": "2026-12-31",
   "owner": "Accounting rule owner approval required before beta",
   "rules": [
@@ -167,7 +167,9 @@
       "severity_if_missing": "HIGH",
       "note_section": "INCOME_STATEMENT",
       "legal_references": ["Applicable revenue, financial income/expense, and exceptional-item requirements"],
-      "oic_references": ["OIC 12", "OIC 34"],
+      "oic_references": [
+        "Applicable OIC revenue recognition and presentation standards for the reporting period"
+      ],
       "question": {"question_id": "Q_REVENUE_EXCEPTIONAL", "answer_key": "revenue_exceptional_detail", "title": "Revenue and significant income-statement details", "requested_fields": [{"key": "detail", "type": "structured_table"}], "evidence_requested": "Revenue and ledger analysis"}
     },
     {

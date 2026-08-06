@@ -112,9 +112,9 @@ the abbreviated inventory SHA-256 is
 the micro inventory SHA-256 is
 `b86889e511bad1f958044f9cb0b3d72bf252a6db57c77f8b26a71b922e53d4a7`.
 The adapter policy SHA-256 is
-`3f90676d582862bcaa9a48a1f35b632c6b719198374bffb7e8220488bae590a5`,
+`e8e90f6954003c4c2e768fbd4eca81635fc9a3503f25b98d9aae1c09fd197cd4`,
 and the checked audit report SHA-256 is
-`f99572cfed076993070c80012122de5ef02d9daac50be64221ed3ffaf098ea5a`.
+`6624a549971d3b84ce609f15938c86d2ad18e4d9ab436d091eab6161fe0bea45`.
 
 The corrected counts exclude tuple containers and non-item schema concepts.
 Reportable descendants inside tuple tables remain available with exact
@@ -140,7 +140,7 @@ XBRL fixture through the public case lifecycle from source ingestion through
 professional approval and export. It checks rendered values, invokes offline
 Arelle, and writes a checksum manifest.
 
-Observed on 2026-08-05 with the package and catalogue above:
+Re-executed on 2026-08-06 with the package and catalogue above:
 
 - suite status: `PASS`;
 - cases passed: `24/24`;
@@ -152,18 +152,20 @@ Observed on 2026-08-05 with the package and catalogue above:
 - every XBRL workflow records complete selected-form presentation and
   disclosure coverage; the stale-prior case records a redline and does not
   silently reuse the prior text;
+- the first-financial-year workflow ingests no comparative column, retains no
+  comparative facts, and renders only current instant and duration contexts;
 - generated catalogue SHA-256:
-  `c30f5436979e4a9c39dccac6a2f9e556f5d54eba2cb6a4437eba060559698854`;
+  `0699148330d4d905b85649a558efe94d1c0e40fcaea5c16d988f1699b9ffc30f`;
 - statutory-presentation rule-pack SHA-256:
-  `d3808f0be5190d652031faa7ef489fe4552521f41dec2e295ff58fc5583cfcbb`;
+  `6a58a1fd61f6327c9a21c57de765a0f66e6485f3359bb9dd9d288f1362bc3e0d`;
 - schedule-taxonomy rule-pack SHA-256:
-  `3f90676d582862bcaa9a48a1f35b632c6b719198374bffb7e8220488bae590a5`;
+  `e8e90f6954003c4c2e768fbd4eca81635fc9a3503f25b98d9aae1c09fd197cd4`;
 - golden-suite input SHA-256:
-  `19e7c8e0d5d3a92207cf72283cf9f423c19a444ad3ebfc373370b7626f807e88`;
+  `2d7930aecbd42867b34260a5449702f755c86f61d33612111378e3d39aeef5a6`;
 - eight non-cash schedule workflows record complete per-cell adapter
   dispositions and emit representative official schedule facts;
 - final controlled run manifest SHA-256:
-  `3462fed35175c98519d42b9d2ab4aeda2ee63e0b7034ab3156e03fd0c7187a1d`;
+  `cba338586e33bae658c17d94ca67c395a70a46185358c79968bbe7ae4f46d841`;
 - external TEBENI status: `NOT_RUN_USER_CONTROLLED`.
 
 This evidence proves the controlled renderer and boundary paths used by the
