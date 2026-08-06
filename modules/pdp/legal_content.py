@@ -24,13 +24,14 @@ LEGAL_PAGES: dict[str, dict[str, Any]] = {
         "eyebrow": "Mparanza LLC · Privacy notice",
         "effective_date": ZERO_RETENTION_EFFECTIVE_DATE,
         "summary": (
-            "Mparanza LLC's products use two processing categories. Ordinary plugin "
-            "functions run in the OpenAI Codex or Anthropic Cowork account and "
-            "workspace you choose. Mparanza LLC does "
-            "not receive or retain Customer Content merely because you use those "
-            "functions, and the plugin does not automatically anonymize that "
-            "content. Mparanza LLC-hosted services receive the content needed to "
-            "provide them under the retention rules below."
+            "Mparanza LLC's products use two processing categories: ordinary plugin "
+            "functions and Mparanza LLC-hosted services. Ordinary plugin functions "
+            "run in the OpenAI Codex or Anthropic Cowork account and workspace you "
+            "choose. Mparanza LLC does not receive or retain Customer Content merely "
+            "because you use these functions, and the plugins do not automatically "
+            "anonymize that content. Mparanza LLC-hosted services receive the Customer "
+            "Content needed to provide those services and handle it according to the "
+            "retention and deletion rules described below."
         ),
         "sections": [
             {
