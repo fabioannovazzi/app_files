@@ -24,8 +24,9 @@
   the statement/note consequences of every form change, supports first-year
   and two-year windows, records user selection, and applies micro exclusions.
 - Minimum entity identity intake now requires legal name, reporting identifier,
-  registered office, explicit first-year status, and a prior statutory form for
-  non-first-year cases.
+  registered office, explicit first-year status, and a prior statutory form and
+  explicit comparative start/end dates for non-first-year cases. Comparative
+  XBRL contexts are never synthesized from the current period.
 - First-financial-year cases are genuinely single-annuality: comparative source
   columns and mapping values are rejected, statement/presentation prior values
   remain absent rather than zero, comparative reconciliations are marked not
@@ -36,14 +37,21 @@
   applicability and official-source metadata, and are locked by identifier and
   checksum. The current packs separate 2016–2023, 2024–2025, and mandatory or
   explicitly early-adopted 2026 OIC rules; the trusted bridge selects the
-  statutory threshold pack effective for the case period.
-- Open cases have a studio-admin-only regulatory migration operation. Silent
-  statutory/disclosure pack substitution is rejected; approved, exported and
+  statutory threshold pack effective for the case period. The selected OIC
+  pack also contributes a locked reviewer-owned checklist: OIC 34 begins with
+  the 2024 pack and the December 2025 OIC 13/16/24/25/31 review begins with the
+  2026 pack. Vera may help prioritize those questions but cannot answer them.
+- Open cases have a studio-admin-only regulatory migration operation. Every
+  regulatory target is an identifier resolved from the controlled bundled
+  registry; caller-supplied statutory/disclosure objects and silent pack
+  substitution are rejected. Approved, exported and
   archived cases are immutable. An accepted migration retains source evidence,
   emits version/checksum and invalidation details, clears regulated outputs,
   and records each required full revalidation result.
 - Explicit reviewed account mappings and balancing splits; no automatic model
-  suggestion acceptance.
+  suggestion acceptance. Mapping updates are collection patches that retain
+  unsubmitted decisions, and exclusions are permitted only when both required
+  annualities have exact zero balances.
 - Tenant-isolated approved mapping memory with exact client-over-tenant
   precedence, explicit tenant-wide reuse approval, and no cross-tenant reads.
 - Secure prior-XBRL intake with exact entity/period checks, schema reference,
@@ -158,7 +166,9 @@
   addition to XBRL, accessible preview, and the complete workpaper. Each report
   binds the immutable snapshot identifier and hash. The workpaper contains
   peer-artifact checksums, while the final manifest records the workpaper and
-  all other artifact hashes without recursive self-hashing.
+  all other artifact hashes without recursive self-hashing. Review and export
+  directories are staged and atomically published; failed jobs leave no
+  partial destination and an exact completed replay is retry-safe.
 - Approval freezes the audit trail used by the workpaper, and export manifests
   are based on immutable approval metadata rather than the exporting actor or
   time. Repeating export from the same approval into separate empty directories
@@ -204,7 +214,8 @@
   below a deployment-configured case input root. Taxonomy catalogue/package
   paths are deployment configuration rather than model-controlled request
   fields, and symlinked case, lock, idempotency, preview, export, catalogue, and
-  case-write paths fail closed.
+  case-write paths fail closed. Review/export destinations also reject a
+  symbolic link in any existing ancestor component.
 - Long-running case mutations can be queued as checksum-verified tenant-scoped
   jobs, executed only by an internal worker role, and replayed through the same
   mutation idempotency ledger. Jobs carry retry limits and the exact source

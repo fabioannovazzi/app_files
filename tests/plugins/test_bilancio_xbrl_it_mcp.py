@@ -52,6 +52,8 @@ def _payload() -> dict[str, object]:
             "final_liquidation": False,
             "first_financial_year": False,
             "prior_year_form": "ABBREVIATED",
+            "prior_period_start": "2024-01-01",
+            "prior_period_end": "2024-12-31",
             "micro_exclusion_flags": [],
         },
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
@@ -149,6 +151,8 @@ def test_mcp_create_selects_historical_statutory_pack_by_period(
     payload = _payload()
     payload["case_id"] = "case_mcp_2020"
     payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["entity"]["prior_period_start"] = "2019-01-01"
+    payload["entity"]["prior_period_end"] = "2019-12-31"
     payload["oic_rule_pack"] = "OIC_2016_2023.1"
 
     responses = _run_server(

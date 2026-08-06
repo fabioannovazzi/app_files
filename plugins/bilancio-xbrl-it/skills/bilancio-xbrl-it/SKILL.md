@@ -105,8 +105,8 @@ and final professional approval always require the user's explicit choice.
    effective statutory pack, and lock every regulatory identifier and checksum
    together with the filing campaign and taxonomy checksum.
    Require legal name, reporting identifier, registered office, explicit
-   first-year status, and the prior statutory form when it is not the first
-   financial year.
+   first-year status, and the prior statutory form plus exact comparative start
+   and end dates when it is not the first financial year.
    Output defaults to Italian. Set `output_language` to `en` only for a wholly
    English approved output; never mix languages inside one case output.
 2. When available, attach the previous filed instance with
@@ -127,7 +127,7 @@ and final professional approval always require the user's explicit choice.
    explicit `migrate_regulatory_versions` operation as a studio administrator.
    Review its change report and rerun every invalidated computation plus full
    validation. Never migrate an approved, exported, or archived snapshot and
-   never pass a different pack directly to an existing locked computation.
+   pass only controlled pack identifiers—never caller-supplied pack objects.
 4. Run `determine-forms` with effective-dated threshold metrics. Show eligible
    and ineligible forms, entry/continuation basis, and the consequences of each
    form change; do not select a form for the user.
@@ -305,6 +305,23 @@ Artifact Card listing the approved snapshot, XBRL, workpaper, validation state,
 checksums, and residual professional-review items. Create `codex_run_review.md`
 when blocked or when a repeatable workflow gap should survive the chat. Never
 edit generated ZIPs during a run.
+
+## Mandatory implementation-review invariants
+
+When reviewing or changing this implementation in the source repository, run
+the dependency check and then:
+
+```bash
+python scripts/check_review_invariants.py
+```
+
+Do not declare the review complete unless every probe passes. The gate must
+prove that non-zero accounts cannot be excluded, mapping requests preserve
+unsubmitted decisions, selected OIC packs change the professional checklist,
+failed review/export jobs leave no partial destination and can be retried,
+symbolic links in destination ancestors fail closed, and the Vera privacy
+fingerprint matches the governed source. A general green test suite does not
+replace these named adversarial probes.
 
 ## Current implementation boundary
 

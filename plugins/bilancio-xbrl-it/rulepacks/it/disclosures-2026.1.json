@@ -1,6 +1,7 @@
 {
   "schema_version": 1,
   "id": "IT_DISCLOSURES_2026.1",
+  "kind": "DISCLOSURE_RULES",
   "effective_from": "2016-01-01",
   "effective_to": "2026-12-31",
   "owner": "Accounting rule owner approval required before beta",

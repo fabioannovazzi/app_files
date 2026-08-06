@@ -20,7 +20,7 @@
       {
         "id": "annual-accounts-evidence",
         "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
-        "content": "User instructions; entity profile and tax identifier; trial balances and account descriptions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
+        "content": "User instructions; entity profile and tax identifier; trial balances and account descriptions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -84,7 +84,7 @@
     },
     {
       "id": "taxonomy-and-export-integrity",
-      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction, distinguishes reportable items from tuples and non-item schema concepts, and preserves tuple and relationship metadata. Export reads the catalogue once, requires the exact catalogue hash approved during local review, re-renders from those captured bytes, requires byte identity with the approved XBRL candidate, emits the exact checksum-verified preview bytes shown to the reviewer, and writes checksums for every artifact."
+      "control": "The catalogue builder requires the expected official-package SHA-256 and bounded traversal-safe ZIP extraction, distinguishes reportable items from tuples and non-item schema concepts, and preserves tuple and relationship metadata. Export reads the catalogue once, requires the exact catalogue hash approved during local review, re-renders from those captured bytes, requires byte identity with the approved XBRL candidate, emits the exact checksum-verified preview bytes shown to the reviewer, and writes checksums for every artifact. Review and export artifacts are written to a sibling staging directory and published atomically only after completion, so a failed job does not leave a partial destination."
     },
     {
       "id": "offline-local-xbrl-validation",
@@ -112,7 +112,7 @@
     },
     {
       "id": "authenticated-tenant-and-role-service",
-      "control": "The writable service derives tenant, actor, roles, and originating interface from the authenticated host environment rather than mutation payloads; tenant-scoped paths, capability checks, time-limited support grants, file locks, revision checks, and idempotency records gate every operation. Source and returned-report reads are confined to a deployment-configured input root; taxonomy paths and MCP/HTTP statutory and disclosure rule packs are deployment configuration rather than request data; explicit studio-admin migration is the only supported regulatory replacement route; and symlinked storage paths fail closed."
+      "control": "The writable service derives tenant, actor, roles, and originating interface from the authenticated host environment rather than mutation payloads; tenant-scoped paths, capability checks, time-limited support grants, file locks, revision checks, and idempotency records gate every operation. Source and returned-report reads are confined to a deployment-configured input root; taxonomy paths and MCP/HTTP statutory and disclosure rule packs are deployment configuration rather than request data; explicit studio-admin migration accepts only identifiers resolved from the controlled bundled registry; and review/export destinations reject symbolic links in every existing ancestor component."
     },
     {
       "id": "host-malware-scanner-boundary",
@@ -171,6 +171,6 @@
     "reviewed_at": "2026-08-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b821527a76ef4d8843f1769e1265ddcdbd28a42b39c46d5d1b57f0a3e56c627a"
+    "source_fingerprint": "46bb0c1b27986aa2e9061d23ac154c27c40cb807cdac4c296794731b077204fe"
   }
 }

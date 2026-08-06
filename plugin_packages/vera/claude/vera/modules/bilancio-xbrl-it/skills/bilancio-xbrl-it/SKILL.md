@@ -111,7 +111,8 @@ Confirm or obtain:
 
 - entity, tax identifier, legal form, OIC framework, listed and regulated flags;
 - reporting period, comparative period, first-year flag, and prior form;
-- trial balance with opening, debit/credit movements, closing, and comparative;
+- trial balance with opening, debit/credit movements, and closing; require a
+  comparative only when this is not the first financial year;
 - annual threshold metrics and any micro-enterprise exclusion flags;
 - official taxonomy package, entry point, and verified SHA-256 before XBRL export;
 - named preparer and reviewer identities.
@@ -142,11 +143,13 @@ or material steps. Ordinary local inspection, deterministic calculation, and
 validation do not require a separate approval ceremony. Manual TEBENI upload
 and final professional approval always require the user's explicit choice.
 
-1. Create the scope-checked case with `scripts/xbrl_case.py create`. Lock the
-   statutory, OIC, filing, and taxonomy identifiers supplied in the payload.
+1. Create the scope-checked case with `scripts/xbrl_case.py create`. Resolve the
+   OIC and filing identifiers only from the controlled registry, select the
+   effective statutory pack, and lock every regulatory identifier and checksum
+   together with the filing campaign and taxonomy checksum.
    Require legal name, reporting identifier, registered office, explicit
-   first-year status, and the prior statutory form when it is not the first
-   financial year.
+   first-year status, and the prior statutory form plus exact comparative start
+   and end dates when it is not the first financial year.
    Output defaults to Italian. Set `output_language` to `en` only for a wholly
    English approved output; never mix languages inside one case output.
 2. When available, attach the previous filed instance with
@@ -167,27 +170,30 @@ and final professional approval always require the user's explicit choice.
    explicit `migrate_regulatory_versions` operation as a studio administrator.
    Review its change report and rerun every invalidated computation plus full
    validation. Never migrate an approved, exported, or archived snapshot and
-   never pass a different pack directly to an existing locked computation.
+   pass only controlled pack identifiers—never caller-supplied pack objects.
 4. Run `determine-forms` with effective-dated threshold metrics. Show eligible
-   and ineligible forms and reasons; do not select a form for the user.
+   and ineligible forms, entry/continuation basis, and the consequences of each
+   form change; do not select a form for the user.
 5. Record the explicit form choice with `select-form`.
 6. Prepare exact approved candidates with `mapping-candidates` when a
    tenant-owned mapping-memory file exists. Client matches take precedence over
    explicitly approved tenant-wide mappings. Then consider deterministic
    dictionaries, prior history, model suggestions, and manual mapping in that
    order. Apply only reviewed decisions with `apply-mappings`. Every split must
-   balance current and comparative amounts exactly. Never reuse mappings across
-   tenants.
+   balance current and, when applicable, comparative amounts exactly. A
+   first-financial-year mapping must not contain a comparative value. Never
+   reuse mappings across tenants.
 7. Run `compute-statements`. Treat its output as exact aggregation over
    reviewed mappings, not evidence that accounting classifications are right.
 8. Run `record-statutory-presentation` with the checksum-bound catalogue and
    bundled versioned presentation pack. Review every leaf required by the
    selected official primary-statement networks. Existing facts remain
-   source-backed; every absent current or comparative leaf must receive an
-   explicit professional `ZERO_CONFIRMED` or `NOT_APPLICABLE_CONFIRMED`
-   decision and reason. Official calculation relationships derive or verify
-   totals. Never infer zero from absence. Continue only when coverage is
-   `COMPLETE` and all total mismatches are resolved.
+   source-backed; every absent leaf for each applicable annuality must receive
+   an explicit professional `ZERO_CONFIRMED` or
+   `NOT_APPLICABLE_CONFIRMED` decision and reason. Do not create prior-period
+   decisions for a first financial year. Official calculation relationships
+   derive or verify totals. Never infer zero from absence. Continue only when
+   coverage is `COMPLETE` and all total mismatches are resolved.
 9. Collect reviewer-triggered schedules and structured disclosure answers. Use
    `ingest-schedule` for the documented CSV/XLSX fixed-asset, receivable,
    payable, equity, provision, TFR, tax, and guarantee templates, or use
@@ -342,6 +348,23 @@ Artifact Card listing the approved snapshot, XBRL, workpaper, validation state,
 checksums, and residual professional-review items. Create `run_review.md`
 when blocked or when a repeatable workflow gap should survive the chat. Never
 edit generated ZIPs during a run.
+
+## Mandatory implementation-review invariants
+
+When reviewing or changing this implementation in the source repository, run
+the dependency check and then:
+
+```bash
+python scripts/check_review_invariants.py
+```
+
+Do not declare the review complete unless every probe passes. The gate must
+prove that non-zero accounts cannot be excluded, mapping requests preserve
+unsubmitted decisions, selected OIC packs change the professional checklist,
+failed review/export jobs leave no partial destination and can be retried,
+symbolic links in destination ancestors fail closed, and the Vera privacy
+fingerprint matches the governed source. A general green test suite does not
+replace these named adversarial probes.
 
 ## Current implementation boundary
 

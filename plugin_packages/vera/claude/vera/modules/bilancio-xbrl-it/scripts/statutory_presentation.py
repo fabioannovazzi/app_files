@@ -339,7 +339,8 @@ def _fact_values(case: Mapping[str, Any]) -> dict[str, dict[str, Decimal]]:
             continue
         multiplier = Decimal(str(fact.get("xbrl_sign_multiplier", "")))
         add(str(qname), "current", Decimal(str(fact["current_value"])) * multiplier)
-        add(str(qname), "prior", Decimal(str(fact["prior_value"])) * multiplier)
+        if fact.get("prior_value") is not None:
+            add(str(qname), "prior", Decimal(str(fact["prior_value"])) * multiplier)
     for fact in case.get("taxonomy_facts", []):
         if fact.get("fact_type") != "MONETARY" or fact.get("dimensions"):
             continue
@@ -381,6 +382,8 @@ def build_statutory_presentation_coverage(
             "Statutory presentation rule pack is not effective for the case period"
         )
     inventory = build_primary_presentation_inventory(catalogue, rule_pack, form)
+    first_year = (case.get("entity") or {}).get("first_financial_year") is True
+    active_periods = ("current",) if first_year else PERIODS
     requirement_lookup = {
         item["xbrl_concept"]: item for item in inventory["requirements"]
     }
@@ -443,6 +446,7 @@ def build_statutory_presentation_coverage(
             and any(
                 Decimal(str(fact[value_key])) != 0
                 for value_key in ("current_value", "prior_value")
+                if fact.get(value_key) is not None
             )
         ]
         if triggering_facts:
@@ -471,6 +475,10 @@ def build_statutory_presentation_coverage(
         }
         if set(raw) - allowed_keys:
             raise ValueError("Presentation decision contains unsupported fields")
+        if first_year and "prior_status" in raw:
+            raise ValueError(
+                "First-financial-year presentation decisions cannot address a comparative"
+            )
         qname = str(raw["xbrl_concept"])
         if qname in decision_lookup or qname not in requirement_lookup:
             raise ValueError(f"Unknown or duplicate presentation decision: {qname}")
@@ -489,7 +497,7 @@ def build_statutory_presentation_coverage(
             raise ValueError("Presentation source_refs must be non-empty strings")
         source_refs = sorted(set(raw_source_refs))
         needed_decision = False
-        for period in PERIODS:
+        for period in active_periods:
             if period in values.get(qname, {}):
                 if str((raw or {}).get(f"{period}_status", "")).strip():
                     raise ValueError(
@@ -530,7 +538,8 @@ def build_statutory_presentation_coverage(
                 item[f"{period}_value"] = "0"
         if raw is not None and not needed_decision:
             raise ValueError(
-                f"Presentation decision is unnecessary because both facts exist: {qname}"
+                "Presentation decision is unnecessary because all applicable facts "
+                f"exist: {qname}"
             )
         if needed_decision:
             normalized_decisions.append(
@@ -538,7 +547,11 @@ def build_statutory_presentation_coverage(
                     "xbrl_concept": qname,
                     "label_it": requirement["label_it"],
                     "current_status": statuses["current"],
-                    "prior_status": statuses["prior"],
+                    "prior_status": (
+                        statuses["prior"]
+                        if not first_year
+                        else "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
+                    ),
                     "reason": reason,
                     "source_refs": source_refs,
                     "confirmed_by": actor,
@@ -554,7 +567,7 @@ def build_statutory_presentation_coverage(
         for formula in unresolved:
             parent = str(formula["parent"])
             resolved_formula = True
-            for period in PERIODS:
+            for period in active_periods:
                 children = formula["children"]
                 if not all(
                     period in values.get(str(child["child"]), {}) for child in children
@@ -640,7 +653,7 @@ def build_statutory_presentation_coverage(
     for section, contract in inventory["statement_sections"].items():
         root_concept = contract["root_concept"]
         multiplier = Decimal(contract["canonical_multiplier"])
-        for period in PERIODS:
+        for period in active_periods:
             raw_canonical = (section_totals.get(section) or {}).get(period, "0")
             canonical_value = Decimal(str(raw_canonical)) * multiplier
             xbrl_value = values.get(root_concept, {}).get(period, "MISSING")
