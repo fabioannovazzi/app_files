@@ -273,8 +273,8 @@ def validate_suite_definition(suite: Mapping[str, Any]) -> None:
         }:
             raise ValueError(f"Golden case {number} has an unsupported selected form")
     first_year = cases[4]
-    if Decimal(str(first_year.get("prior_total"))) != 0:
-        raise ValueError("The first-year golden case must have a zero comparative")
+    if "prior_total" in first_year:
+        raise ValueError("The first-year golden case must omit comparative values")
     stale = cases[23]
     if stale.get("prior_narrative_text") == (stale.get("narrative") or {}).get("text"):
         raise ValueError("The stale-narrative case must contain a changed current text")
@@ -402,7 +402,10 @@ def _balance_plan(
     """Build a small balanced ledger whose mapped leaves close to official roots."""
 
     current_total = Decimal(str(fixture["current_total"]))
-    prior_total = Decimal(str(fixture["prior_total"]))
+    first_financial_year = int(fixture["number"]) == 5
+    prior_total = (
+        Decimal("0") if first_financial_year else Decimal(str(fixture["prior_total"]))
+    )
     requirement_lookup = {
         str(item["xbrl_concept"]): item for item in inventory["requirements"]
     }
@@ -520,30 +523,36 @@ def _balance_plan(
     return plan
 
 
-def _write_trial_balance(path: Path, plan: Sequence[Mapping[str, Any]]) -> None:
-    rows = [
+def _write_trial_balance(
+    path: Path,
+    plan: Sequence[Mapping[str, Any]],
+    *,
+    first_financial_year: bool = False,
+) -> None:
+    header = (
         "account_code,account_description,opening_signed,period_debit,"
-        "period_credit,closing_signed,prior_closing_signed"
-    ]
+        "period_credit,closing_signed"
+    )
+    if not first_financial_year:
+        header += ",prior_closing_signed"
+    rows = [header]
     for item in plan:
         opening = Decimal(str(item["prior"]))
         closing = Decimal(str(item["current"]))
         movement = closing - opening
         debit = max(movement, Decimal("0"))
         credit = max(-movement, Decimal("0"))
-        rows.append(
-            ",".join(
-                (
-                    str(item["account_code"]),
-                    str(item["account_description"]),
-                    _decimal_text(opening),
-                    _decimal_text(debit),
-                    _decimal_text(credit),
-                    _decimal_text(closing),
-                    _decimal_text(opening),
-                )
-            )
-        )
+        values = [
+            str(item["account_code"]),
+            str(item["account_description"]),
+            _decimal_text(opening),
+            _decimal_text(debit),
+            _decimal_text(credit),
+            _decimal_text(closing),
+        ]
+        if not first_financial_year:
+            values.append(_decimal_text(opening))
+        rows.append(",".join(values))
     path.write_text("\n".join(rows) + "\n", encoding="utf-8")
 
 
@@ -705,7 +714,10 @@ def _taxonomy_facts_for_fixture(
     def add_pair(qname: str, current: Decimal, prior: Decimal, stem: str) -> None:
         nonlocal marker_fact_id
         period_type = str(lookup[qname]["period_type"])
-        for period, value in (("current", current), ("prior", prior)):
+        period_values = [("current", current)]
+        if case["entity"].get("first_financial_year") is not True:
+            period_values.append(("prior", prior))
+        for period, value in period_values:
             fact_id = f"{stem}_{period}"
             facts.append(
                 {
@@ -790,11 +802,14 @@ def _taxonomy_facts_for_fixture(
 
 
 def _presentation_decisions(case: Mapping[str, Any]) -> list[dict[str, Any]]:
+    active_periods = (
+        ("current",)
+        if case["entity"].get("first_financial_year") is True
+        else ("current", "prior")
+    )
     present: dict[str, set[str]] = {}
     for fact in case["canonical_facts"]:
-        present.setdefault(str(fact["xbrl_concept"]), set()).update(
-            {"current", "prior"}
-        )
+        present.setdefault(str(fact["xbrl_concept"]), set()).update(active_periods)
     for fact in case["taxonomy_facts"]:
         period = str(fact["period"]).split("_", 1)[0]
         present.setdefault(str(fact["xbrl_concept"]), set()).add(period)
@@ -804,7 +819,7 @@ def _presentation_decisions(case: Mapping[str, Any]) -> list[dict[str, Any]]:
             continue
         qname = str(concept["xbrl_concept"])
         periods = present.get(qname, set())
-        if periods == {"current", "prior"}:
+        if periods == set(active_periods):
             continue
         decision: dict[str, Any] = {
             "xbrl_concept": qname,
@@ -814,7 +829,7 @@ def _presentation_decisions(case: Mapping[str, Any]) -> list[dict[str, Any]]:
             ),
             "source_refs": [],
         }
-        for period in ("current", "prior"):
+        for period in active_periods:
             if period not in periods:
                 decision[f"{period}_status"] = "ZERO_CONFIRMED"
         decisions.append(decision)
@@ -1310,7 +1325,12 @@ def _approved_case(
             case, prior_path, "golden-preparer", case["revision_id"]
         )
     trial_balance_path = case_dir / "trial-balance.csv"
-    _write_trial_balance(trial_balance_path, plan)
+    first_financial_year = int(fixture["number"]) == 5
+    _write_trial_balance(
+        trial_balance_path,
+        plan,
+        first_financial_year=first_financial_year,
+    )
     case = ingest_trial_balance(
         case, trial_balance_path, "golden-preparer", case["revision_id"]
     )
@@ -1357,23 +1377,23 @@ def _approved_case(
     )
     decisions = []
     for account, item in zip(case["trial_balance"]["entries"], plan, strict=True):
+        allocation = {
+            "canonical_line": item["canonical_line"],
+            "statement_section": item["statement_section"],
+            "xbrl_concept": item["xbrl_concept"],
+            "xbrl_sign_multiplier": item["xbrl_sign_multiplier"],
+            "current_amount": _decimal_text(Decimal(str(item["current"]))),
+            "evidence_status": "OBSERVED",
+            "schedule_triggers": list(item["schedule_triggers"]),
+            "review_reason": "Controlled synthetic professional mapping.",
+        }
+        if not first_financial_year:
+            allocation["prior_amount"] = _decimal_text(Decimal(str(item["prior"])))
         decisions.append(
             {
                 "account_id": account["account_id"],
                 "decision": "ACCEPTED",
-                "allocations": [
-                    {
-                        "canonical_line": item["canonical_line"],
-                        "statement_section": item["statement_section"],
-                        "xbrl_concept": item["xbrl_concept"],
-                        "xbrl_sign_multiplier": item["xbrl_sign_multiplier"],
-                        "current_amount": _decimal_text(Decimal(str(item["current"]))),
-                        "prior_amount": _decimal_text(Decimal(str(item["prior"]))),
-                        "evidence_status": "OBSERVED",
-                        "schedule_triggers": list(item["schedule_triggers"]),
-                        "review_reason": "Controlled synthetic professional mapping.",
-                    }
-                ],
+                "allocations": [allocation],
             }
         )
     case = apply_mapping_decisions(
@@ -1600,10 +1620,9 @@ def _assert_rendered_case(
             str(element.get("contextRef")): Decimal(str(element.text))
             for element in _elements_for_qname(root, catalogue, qname)
         }
-        expected = {
-            "current_instant": Decimal(str(case["current_total"])),
-            "prior_instant": Decimal(str(case["prior_total"])),
-        }
+        expected = {"current_instant": Decimal(str(case["current_total"]))}
+        if int(case["number"]) != 5:
+            expected["prior_instant"] = Decimal(str(case["prior_total"]))
         if observed != expected:
             raise RuntimeError(f"{case['case_id']} rendered the wrong {qname} values")
     marker = case.get("marker")
@@ -1617,8 +1636,9 @@ def _assert_rendered_case(
         }
         expected_marker = {
             f"current_{suffix}": Decimal(str(marker["current"])),
-            f"prior_{suffix}": Decimal(str(marker["prior"])),
         }
+        if int(case["number"]) != 5:
+            expected_marker[f"prior_{suffix}"] = Decimal(str(marker["prior"]))
         if observed_marker != expected_marker:
             raise RuntimeError(f"{case['case_id']} rendered the wrong marker values")
     narrative = case.get("narrative")
@@ -1690,7 +1710,8 @@ def _case_payload(
         "tenant_id": "golden-tenant",
         "entity": entity,
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
-        "oic_rule_pack": "OIC_2026.1",
+        "oic_rule_pack": "OIC_2024_2025.1",
+        "filing_campaign_year": 2026,
         "taxonomy_checksum": taxonomy_checksum,
     }
 

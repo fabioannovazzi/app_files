@@ -49,9 +49,9 @@
         "form": "ABBREVIATED",
         "status": "PASS",
         "instance_file": "controlled-complete-abbreviated.xbrl",
-        "instance_sha256": "dd724bdf7181b92d0df6536d0287b139a46165161e9407ca0bad7abec886525b",
+        "instance_sha256": "6e6110bec4b3a6c8b508e97e8854de39a96de3f39e47fb4e1cdb74f5d762133e",
         "validation_report_file": "controlled-complete-abbreviated.json",
-        "validation_report_sha256": "52ad71a10d310ac033d3746d426f91ad156fb4683dc2c5d281fff1e226e43362",
+        "validation_report_sha256": "0e42559e3d0f9813ecaf3629304585ec1805510cb717698e0acf2e9939390bdc",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -100,9 +100,9 @@
         "form": "MICRO",
         "status": "PASS",
         "instance_file": "controlled-complete-micro.xbrl",
-        "instance_sha256": "3af91fbc4383f037625494de19c091147cdd44804a292805ea14a46a570c9aaa",
+        "instance_sha256": "3877f5419b0c5a6635a11111b8849e49a4d7cc63927f89d3019af7b84901a80c",
         "validation_report_file": "controlled-complete-micro.json",
-        "validation_report_sha256": "02a756dad8495ff760d9685bc0fe3e5507e474c0b064b432947872a692a5e2b7",
+        "validation_report_sha256": "5c4d2955045df2c3840e369cf4b1570801aad888a5e1d949102a4146250e9eec",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -163,16 +163,16 @@
         "form": "ORDINARY",
         "status": "PASS",
         "instance_file": "controlled-complete-ordinary.xbrl",
-        "instance_sha256": "88f14f0efcc834a8fc07f2d9d1b87618b941046f0df20a25c0c0560507cdd92b",
+        "instance_sha256": "0482337f9499970ff27cede24d1106e513a75f7cf40887a01a72795f99a4d443",
         "validation_report_file": "controlled-complete-ordinary.json",
-        "validation_report_sha256": "9eb14516a437767ed038ab40d18dbf0573b6a9d83c805bb47b94089a0af4f5b7",
+        "validation_report_sha256": "53f19b581fefb8c1b9891550d817b54d7bb3decfc53bc21e73ab51dc1299fb3e",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
       }
     }
   ],
-  "report_sha256": "150253ffec4d602f1d2dfca24a36cebb935ccf09cfcfbc9f2062f37036318075",
-  "catalogue_file_sha256": "c30f5436979e4a9c39dccac6a2f9e556f5d54eba2cb6a4437eba060559698854",
-  "rule_pack_file_sha256": "d3808f0be5190d652031faa7ef489fe4552521f41dec2e295ff58fc5583cfcbb"
+  "report_sha256": "6dba7c8044852cf319de60f73aff67ad943c4360a20e9844ab3d5b8c791eb637",
+  "catalogue_file_sha256": "0699148330d4d905b85649a558efe94d1c0e40fcaea5c16d988f1699b9ffc30f",
+  "rule_pack_file_sha256": "6a58a1fd61f6327c9a21c57de765a0f66e6485f3359bb9dd9d288f1362bc3e0d"
 }

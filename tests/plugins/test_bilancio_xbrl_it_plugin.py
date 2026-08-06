@@ -15,6 +15,9 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "bilancio-xbrl-it"
 MODULE_PATH = PLUGIN_ROOT / "scripts" / "xbrl_case.py"
 RULE_PACK_PATH = PLUGIN_ROOT / "rulepacks" / "it" / "statutory-forms-2026.1.json"
+HISTORICAL_RULE_PACK_PATH = (
+    PLUGIN_ROOT / "rulepacks" / "it" / "statutory-forms-2016.1.json"
+)
 DISCLOSURE_RULE_PACK_PATH = PLUGIN_ROOT / "rulepacks" / "it" / "disclosures-2026.1.json"
 
 
@@ -95,13 +98,18 @@ def _case_payload(*, listed: bool = False) -> dict[str, object]:
             "micro_exclusion_flags": [],
         },
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
-        "oic_rule_pack": "OIC_2026.1",
+        "oic_rule_pack": "OIC_2024_2025.1",
+        "filing_campaign_year": 2026,
         "taxonomy_checksum": "a" * 64,
     }
 
 
 def _rule_pack() -> dict[str, object]:
     return json.loads(RULE_PACK_PATH.read_text(encoding="utf-8"))
+
+
+def _historical_rule_pack() -> dict[str, object]:
+    return json.loads(HISTORICAL_RULE_PACK_PATH.read_text(encoding="utf-8"))
 
 
 def _disclosure_rule_pack() -> dict[str, object]:
@@ -114,10 +122,11 @@ def _regulatory_migration() -> dict[str, object]:
     return {
         "reason": "Adopt the reviewed replacement packs for this open case.",
         "statutory_rule_pack": statutory_rule_pack,
-        "oic_rule_pack": "OIC_2026.2",
+        "oic_rule_pack": "OIC_2026.1",
         "taxonomy_id": "PCI_2018-11-04-R2",
         "taxonomy_checksum": "b" * 64,
-        "filing_instruction_pack": "RI_2026.2",
+        "filing_instruction_pack": "RI_2026.1",
+        "filing_campaign_year": 2026,
         "early_adoption_flags": ["OIC_AMENDMENTS_2025"],
     }
 
@@ -164,6 +173,137 @@ def test_create_case_rejects_unsupported_output_language(tmp_path: Path) -> None
     payload["output_language"] = "fr"
 
     with pytest.raises(ValueError, match="Output language"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+
+@pytest.mark.parametrize(
+    ("payload_update", "message"),
+    [
+        ({"oic_rule_pack": "OIC_UNVERIFIED"}, "exactly one controlled pack"),
+        (
+            {"filing_instruction_pack": "RI_UNVERIFIED"},
+            "exactly one controlled pack",
+        ),
+        (
+            {
+                "oic_rule_pack": {
+                    "id": "OIC_CALLER_SUPPLIED",
+                    "kind": "OIC_ACCOUNTING_RULES",
+                }
+            },
+            "controlled rule-pack identifier",
+        ),
+    ],
+)
+def test_create_case_rejects_uncontrolled_regulatory_pack_labels(
+    tmp_path: Path, payload_update: dict[str, object], message: str
+) -> None:
+    payload = _case_payload()
+    payload.update(payload_update)
+
+    with pytest.raises(ValueError, match=message):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+
+def test_create_case_requires_explicit_2025_oic_early_adoption(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["oic_rule_pack"] = "OIC_2026.1"
+
+    with pytest.raises(ValueError, match="early-adoption flag"):
+        xbrl_case.create_case(
+            tmp_path / "without-flag", payload, _rule_pack(), "preparer_1"
+        )
+
+    payload["early_adoption_flags"] = ["OIC_AMENDMENTS_2025"]
+    case = xbrl_case.create_case(
+        tmp_path / "with-flag", payload, _rule_pack(), "preparer_1"
+    )
+
+    assert case["rule_pack_versions"]["oic_rule_pack"] == "OIC_2026.1"
+    assert len(case["oic_rule_pack_checksum"]) == 64
+    assert len(case["filing_instruction_pack_checksum"]) == 64
+
+
+def test_create_case_rejects_non_https_regulatory_source(tmp_path: Path) -> None:
+    rule_pack = _rule_pack()
+    rule_pack["source_register"][0]["url"] = "http://example.invalid/manual.pdf"
+
+    with pytest.raises(ValueError, match="must use HTTPS"):
+        xbrl_case.create_case(
+            tmp_path / "case", _case_payload(), rule_pack, "preparer_1"
+        )
+
+
+def test_create_case_rejects_unrecognized_oic_early_adoption_flag(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["early_adoption_flags"] = ["UNRECOGNIZED_FLAG"]
+
+    with pytest.raises(ValueError, match="does not recognize"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+
+def test_create_case_rejects_early_adoption_flag_after_pack_is_mandatory(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["period"] = {"start": "2026-01-01", "end": "2026-12-31"}
+    payload["oic_rule_pack"] = "OIC_2026.1"
+    payload["early_adoption_flags"] = ["OIC_AMENDMENTS_2025"]
+
+    with pytest.raises(ValueError, match="invalid after.*mandatory"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+
+def test_create_case_rejects_filing_pack_for_another_campaign(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["filing_campaign_year"] = 2025
+
+    with pytest.raises(ValueError, match="does not match the selected campaign"):
+        xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+
+def test_create_case_supports_2016_onward_period_with_effective_packs(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["oic_rule_pack"] = "OIC_2016_2023.1"
+    case = xbrl_case.create_case(
+        tmp_path / "historical", payload, _historical_rule_pack(), "preparer_1"
+    )
+    metrics = [
+        {"year": 2020, "assets": "1", "revenue": "1", "employees": "1"},
+        {"year": 2019, "assets": "1", "revenue": "1", "employees": "1"},
+    ]
+
+    result = xbrl_case.determine_forms(
+        case,
+        metrics,
+        _historical_rule_pack(),
+        "preparer_1",
+        case["revision_id"],
+    )
+
+    assert result["rule_pack_versions"]["statutory_rule_pack"] == "IT_CC_2016.1"
+    assert result["form_analysis"]["eligible_forms"] == [
+        "MICRO",
+        "ABBREVIATED",
+        "ORDINARY",
+    ]
+
+
+def test_create_case_rejects_rule_pack_outside_period_up_front(tmp_path: Path) -> None:
+    payload = _case_payload()
+    payload["period"] = {"start": "2020-01-01", "end": "2020-12-31"}
+    payload["oic_rule_pack"] = "OIC_2016_2023.1"
+
+    with pytest.raises(ValueError, match="not effective for the reporting period"):
         xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
 
 
@@ -230,6 +370,40 @@ def _created_case(tmp_path: Path) -> tuple[Path, dict[str, object]]:
     return case_dir, case
 
 
+def _first_year_mapping_decisions(case: dict[str, object]) -> list[dict[str, object]]:
+    entries = case["trial_balance"]["entries"]
+    return [
+        {
+            "account_id": entries[0]["account_id"],
+            "decision": "ACCEPTED",
+            "allocations": [
+                {
+                    "canonical_line": "FIRST_YEAR.ASSETS",
+                    "statement_section": "ASSETS",
+                    "xbrl_concept": "itcc:Assets",
+                    "xbrl_sign_multiplier": "1",
+                    "current_amount": "100",
+                    "evidence_status": "OBSERVED",
+                }
+            ],
+        },
+        {
+            "account_id": entries[1]["account_id"],
+            "decision": "ACCEPTED",
+            "allocations": [
+                {
+                    "canonical_line": "FIRST_YEAR.LIABILITIES_EQUITY",
+                    "statement_section": "LIABILITIES_EQUITY",
+                    "xbrl_concept": "itcc:LiabilitiesEquity",
+                    "xbrl_sign_multiplier": "-1",
+                    "current_amount": "-100",
+                    "evidence_status": "OBSERVED",
+                }
+            ],
+        },
+    ]
+
+
 def test_cli_status_reads_the_integrity_verified_case_record(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -270,6 +444,101 @@ def test_ingest_trial_balance_excluding_opening_detects_exact_convention(
     assert first_anchor["normalized_column"] == "account_code"
     assert first_anchor["raw_value"] == "1000"
     assert first_anchor["normalized_value"] == "1000"
+
+
+def test_first_financial_year_uses_only_current_annuality_end_to_end(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["entity"]["first_financial_year"] = True
+    payload["entity"].pop("prior_year_form")
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+    case["statutory_presentation_required"] = False
+    source = tmp_path / "current-only.csv"
+    source.write_text(
+        "account_code;account_description;opening_signed;period_debit;"
+        "period_credit;closing_signed\n"
+        "1000;Cassa;0;100;0;100\n"
+        "2000;Capitale;0;0;100;-100\n",
+        encoding="utf-8",
+    )
+    case = xbrl_case.ingest_trial_balance(
+        case, source, "preparer_1", case["revision_id"]
+    )
+    assert case["trial_balance"]["comparative_status"] == (
+        "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
+    )
+    assert all(
+        entry["prior_closing_signed"] is None
+        for entry in case["trial_balance"]["entries"]
+    )
+    case = xbrl_case.confirm_parser(
+        case,
+        "TURNOVER_EXCLUDES_OPENING",
+        "preparer_1",
+        case["revision_id"],
+    )
+    case = xbrl_case.determine_forms(
+        case,
+        [{"year": 2025, "assets": "35000", "revenue": "1", "employees": "1"}],
+        _rule_pack(),
+        "preparer_1",
+        case["revision_id"],
+    )
+    case = xbrl_case.select_form(case, "ABBREVIATED", "preparer_1", case["revision_id"])
+    case = xbrl_case.apply_mapping_decisions(
+        case,
+        _first_year_mapping_decisions(case),
+        "preparer_1",
+        case["revision_id"],
+    )
+    result = xbrl_case.build_statements(case, "preparer_1", case["revision_id"])
+
+    assert result["statements"]["comparative_status"] == (
+        "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
+    )
+    assert all(fact["prior_value"] is None for fact in result["canonical_facts"])
+    assert all(fact["prior_value"] is None for fact in result["statements"]["facts"])
+    preview = xbrl_case.render_preview_html(result).decode("utf-8")
+    assert "Valori del primo esercizio" in preview
+    assert "Comparativo" not in preview
+
+
+def test_first_financial_year_rejects_comparative_source_column(tmp_path: Path) -> None:
+    payload = _case_payload()
+    payload["entity"]["first_financial_year"] = True
+    payload["entity"].pop("prior_year_form")
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+    source = tmp_path / "invalid-comparative.csv"
+    _write_trial_balance(source)
+
+    with pytest.raises(ValueError, match="cannot contain comparative columns"):
+        xbrl_case.ingest_trial_balance(case, source, "preparer_1", case["revision_id"])
+
+
+def test_first_financial_year_accepts_current_only_debit_credit_layout(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["entity"]["first_financial_year"] = True
+    payload["entity"].pop("prior_year_form")
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+    source = tmp_path / "current-only-separate.csv"
+    source.write_text(
+        "account_code;account_description;opening_debit;opening_credit;"
+        "period_debit;period_credit;closing_debit;closing_credit\n"
+        "1000;Cassa;0;0;100;0;100;0\n"
+        "2000;Capitale;0;0;0;100;0;100\n",
+        encoding="utf-8",
+    )
+
+    result = xbrl_case.ingest_trial_balance(
+        case, source, "preparer_1", case["revision_id"]
+    )
+
+    assert result["trial_balance"]["layout"] == "SEPARATE_DEBIT_CREDIT"
+    assert result["trial_balance"]["entries"][0]["prior_closing_debit"] is None
+    assert result["trial_balance"]["entries"][1]["prior_closing_credit"] is None
 
 
 def test_ingest_trial_balance_rejects_aliases_that_collide_after_normalization(
@@ -441,6 +710,158 @@ def test_determine_forms_micro_exclusion_preserves_abbreviated_option(
     assert result["form_analysis"]["eligible_forms"] == ["ABBREVIATED", "ORDINARY"]
     assert result["form_analysis"]["calculations"]["MICRO"]["reasons"] == [
         "ENTITY_EXCLUDED_BY_STATUTE"
+    ]
+
+
+def _transition_metric(year: int, within: bool, target_form: str) -> dict[str, object]:
+    if within:
+        return {"year": year, "assets": "1", "revenue": "1", "employees": "1"}
+    if target_form == "MICRO":
+        return {
+            "year": year,
+            "assets": "220001",
+            "revenue": "440001",
+            "employees": "1",
+        }
+    return {
+        "year": year,
+        "assets": "5500001",
+        "revenue": "11000001",
+        "employees": "1",
+    }
+
+
+@pytest.mark.parametrize(
+    (
+        "prior_form",
+        "current_within",
+        "prior_within",
+        "target_form",
+        "expected_eligible",
+        "expected_basis",
+    ),
+    [
+        (
+            "ABBREVIATED",
+            False,
+            True,
+            "ABBREVIATED",
+            True,
+            "CONTINUATION_UNTIL_TWO_CONSECUTIVE_EXCEEDANCES",
+        ),
+        (
+            "ABBREVIATED",
+            False,
+            False,
+            "ABBREVIATED",
+            False,
+            "CONTINUATION_UNTIL_TWO_CONSECUTIVE_EXCEEDANCES",
+        ),
+        (
+            "ORDINARY",
+            True,
+            False,
+            "ABBREVIATED",
+            False,
+            "ENTRY_REQUIRES_TWO_CONSECUTIVE_YEARS_WITHIN",
+        ),
+        (
+            "ORDINARY",
+            True,
+            True,
+            "ABBREVIATED",
+            True,
+            "ENTRY_REQUIRES_TWO_CONSECUTIVE_YEARS_WITHIN",
+        ),
+        (
+            "MICRO",
+            False,
+            True,
+            "MICRO",
+            True,
+            "CONTINUATION_UNTIL_TWO_CONSECUTIVE_EXCEEDANCES",
+        ),
+    ],
+)
+def test_determine_forms_applies_entry_and_exit_transition_rules(
+    tmp_path: Path,
+    prior_form: str,
+    current_within: bool,
+    prior_within: bool,
+    target_form: str,
+    expected_eligible: bool,
+    expected_basis: str,
+) -> None:
+    payload = _case_payload()
+    payload["entity"]["prior_year_form"] = prior_form
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+
+    result = xbrl_case.determine_forms(
+        case,
+        [
+            _transition_metric(2025, current_within, target_form),
+            _transition_metric(2024, prior_within, target_form),
+        ],
+        _rule_pack(),
+        "preparer_1",
+        case["revision_id"],
+    )
+    calculation = result["form_analysis"]["calculations"][target_form]
+
+    assert calculation["eligible"] is expected_eligible
+    assert calculation["eligibility_basis"] == expected_basis
+
+
+def test_determine_forms_reports_consequences_of_form_change(tmp_path: Path) -> None:
+    payload = _case_payload()
+    payload["entity"]["prior_year_form"] = "ABBREVIATED"
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+    metrics = [
+        {"year": 2025, "assets": "1", "revenue": "1", "employees": "1"},
+        {"year": 2024, "assets": "1", "revenue": "1", "employees": "1"},
+    ]
+
+    result = xbrl_case.determine_forms(
+        case, metrics, _rule_pack(), "preparer_1", case["revision_id"]
+    )
+    ordinary = result["form_analysis"]["consequences_of_changing_form"]["ORDINARY"]
+
+    assert ordinary["change_type"] == "MORE_DETAILED"
+    assert ordinary["required_components"] == [
+        "BALANCE_SHEET",
+        "INCOME_STATEMENT",
+        "CASH_FLOW_STATEMENT",
+        "NOTES",
+    ]
+    assert ordinary["effects"] == [
+        "CASH_FLOW_STATEMENT_REQUIRED",
+        "ORDINARY_NOTES_REQUIRED",
+    ]
+
+
+def test_determine_forms_first_year_reports_current_threshold_failure(
+    tmp_path: Path,
+) -> None:
+    payload = _case_payload()
+    payload["entity"]["first_financial_year"] = True
+    payload["entity"].pop("prior_year_form")
+    case = xbrl_case.create_case(tmp_path / "case", payload, _rule_pack(), "preparer_1")
+    metrics = [
+        {
+            "year": 2025,
+            "assets": "5500001",
+            "revenue": "11000001",
+            "employees": "1",
+        }
+    ]
+
+    result = xbrl_case.determine_forms(
+        case, metrics, _rule_pack(), "preparer_1", case["revision_id"]
+    )
+
+    assert result["form_analysis"]["eligible_forms"] == ["ORDINARY"]
+    assert result["form_analysis"]["calculations"]["ABBREVIATED"]["reasons"] == [
+        "CURRENT_YEAR_THRESHOLDS_NOT_MET"
     ]
 
 
@@ -667,6 +1088,8 @@ def test_statement_output_records_complete_reproducibility_context(
         "input_manifest_hash",
         "mapping_version",
         "rule_pack_versions",
+        "regulatory_rule_pack_checksums",
+        "filing_campaign_year",
         "taxonomy_checksum",
         "model_version",
         "template_version",
@@ -677,6 +1100,15 @@ def test_statement_output_records_complete_reproducibility_context(
     assert len(context["input_manifest_hash"]) == 64
     assert len(context["mapping_version"]) == 64
     assert context["rule_pack_versions"] == case["rule_pack_versions"]
+    assert context["regulatory_rule_pack_checksums"] == {
+        "statutory_rule_pack": case["rule_pack_checksum"],
+        "oic_rule_pack": case["oic_rule_pack_checksum"],
+        "filing_instruction_pack": case["filing_instruction_pack_checksum"],
+        "disclosure_rule_pack": None,
+        "statutory_presentation_rule_pack": None,
+        "schedule_taxonomy_adapter_rule_pack": None,
+    }
+    assert context["filing_campaign_year"] == 2026
     assert context["taxonomy_checksum"] == case["taxonomy_checksum"]
     assert context["model_version"] is None
     assert context["template_version"] == "statement-engine-v1"
@@ -2959,11 +3391,30 @@ def test_disclosure_rule_pack_outside_effective_period_is_rejected(
     case = _prepared_case(tmp_path)
     rule_pack = _disclosure_rule_pack()
     rule_pack["effective_from"] = "2026-01-01"
+    before = json.loads(json.dumps(case))
 
     with pytest.raises(ValueError, match="not effective"):
         xbrl_case.activate_disclosures(
             case, rule_pack, "preparer_1", case["revision_id"]
         )
+
+    assert case == before
+
+
+def test_disclosure_rule_pack_without_rules_is_rejected_before_mutation(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    rule_pack = _disclosure_rule_pack()
+    rule_pack["rules"] = []
+    before = json.loads(json.dumps(case))
+
+    with pytest.raises(ValueError, match="non-empty schema-1"):
+        xbrl_case.activate_disclosures(
+            case, rule_pack, "preparer_1", case["revision_id"]
+        )
+
+    assert case == before
 
 
 def test_narrative_text_outside_sentence_claims_is_rejected() -> None:
@@ -3437,6 +3888,14 @@ def test_workpaper_includes_external_validation_as_non_authoritative_addendum(
     )
 
 
+def _artifact_bytes_by_name(output_dir: Path) -> dict[str, bytes]:
+    return {
+        path.name: path.read_bytes()
+        for path in sorted(output_dir.iterdir())
+        if path.is_file()
+    }
+
+
 def test_export_includes_review_preview_and_structured_notes(tmp_path: Path) -> None:
     case = _approved_case(tmp_path)
     catalogue = tmp_path / "catalogue.json"
@@ -3472,6 +3931,23 @@ def test_export_includes_review_preview_and_structured_notes(tmp_path: Path) -> 
     assert workpaper["disclosure_coverage"]["triggered_count"] > 0
     assert workpaper["narrative_blocks"]
     assert workpaper["assumptions"] == []
+    assert workpaper["filing_campaign_year"] == 2026
+    assert workpaper["regulatory_rule_pack_checksums"] == {
+        "statutory_rule_pack": case["approval"]["snapshot"]["rule_pack_checksum"],
+        "oic_rule_pack": case["approval"]["snapshot"]["oic_rule_pack_checksum"],
+        "filing_instruction_pack": case["approval"]["snapshot"][
+            "filing_instruction_pack_checksum"
+        ],
+        "disclosure_rule_pack": case["approval"]["snapshot"][
+            "disclosure_rule_pack_checksum"
+        ],
+        "statutory_presentation_rule_pack": case["approval"]["snapshot"].get(
+            "statutory_presentation_rule_pack_checksum"
+        ),
+        "schedule_taxonomy_adapter_rule_pack": case["approval"]["snapshot"].get(
+            "schedule_taxonomy_adapter_rule_pack_checksum"
+        ),
+    }
     assert mapping_report["snapshot_hash"] == case["approval"]["snapshot_hash"]
     assert mapping_report["summary"] == {
         "total_accounts": 2,
@@ -3501,6 +3977,23 @@ def test_export_includes_review_preview_and_structured_notes(tmp_path: Path) -> 
         path = output_dir / artifact["file_name"]
         assert xbrl_case._sha256_file(path) == artifact["sha256"]
         assert path.stat().st_size == artifact["size_bytes"]
+
+
+def test_repeated_export_of_same_approval_is_byte_reproducible(
+    tmp_path: Path,
+) -> None:
+    case = _approved_case(tmp_path)
+    catalogue = tmp_path / "catalogue.json"
+    _write_catalogue(catalogue, "a" * 64)
+    first_output = tmp_path / "export-first"
+    second_output = tmp_path / "export-second"
+
+    case = xbrl_case.export_case(case, first_output, catalogue, "reviewer_1")
+    xbrl_case.export_case(case, second_output, catalogue, "reviewer_2")
+
+    assert _artifact_bytes_by_name(first_output) == _artifact_bytes_by_name(
+        second_output
+    )
 
 
 def test_export_rejects_catalogue_that_differs_from_approved_review(

@@ -122,6 +122,7 @@ LOGGER = logging.getLogger(__name__)
 CASE_FILE = "case.json"
 CASE_CHECKSUM_FILE = "case.json.sha256"
 SCHEMA_VERSION = 1
+RULE_PACK_ROOT = Path(__file__).resolve().parents[1] / "rulepacks" / "it"
 XML_NS = "http://www.w3.org/XML/1998/namespace"
 XBRLI_NS = "http://www.xbrl.org/2003/instance"
 LINK_NS = "http://www.xbrl.org/2003/linkbase"
@@ -493,6 +494,19 @@ def _computation_context(
         "input_manifest_hash": _manifest_hash(case),
         "mapping_version": _sha256_bytes(_canonical_json(case.get("mappings", []))),
         "rule_pack_versions": deepcopy(dict(case["rule_pack_versions"])),
+        "regulatory_rule_pack_checksums": {
+            "statutory_rule_pack": case.get("rule_pack_checksum"),
+            "oic_rule_pack": case.get("oic_rule_pack_checksum"),
+            "filing_instruction_pack": case.get("filing_instruction_pack_checksum"),
+            "disclosure_rule_pack": case.get("disclosure_rule_pack_checksum"),
+            "statutory_presentation_rule_pack": case.get(
+                "statutory_presentation_rule_pack_checksum"
+            ),
+            "schedule_taxonomy_adapter_rule_pack": case.get(
+                "schedule_taxonomy_adapter_rule_pack_checksum"
+            ),
+        },
+        "filing_campaign_year": case.get("filing_campaign_year"),
         "taxonomy_checksum": case.get("taxonomy_checksum"),
         "model_version": model_version,
         "template_version": template_version,
@@ -841,6 +855,146 @@ def _taxonomy_output_contracts(rule_pack: Mapping[str, Any]) -> dict[str, Any]:
     return deepcopy(dict(raw_contracts))
 
 
+def _validate_source_register(rule_pack: Mapping[str, Any], pack_label: str) -> None:
+    """Require auditable official-source metadata for a regulatory pack."""
+
+    sources = rule_pack.get("source_register")
+    if not isinstance(sources, list) or not sources:
+        raise ValueError(f"{pack_label} requires a non-empty source register")
+    for source in sources:
+        if not isinstance(source, Mapping) or not all(
+            str(source.get(key, "")).strip()
+            for key in ("id", "kind", "title", "url", "retrieved_on")
+        ):
+            raise ValueError(f"{pack_label} contains an incomplete source record")
+        if not str(source["url"]).startswith("https://"):
+            raise ValueError(f"{pack_label} source URLs must use HTTPS")
+        date.fromisoformat(str(source["retrieved_on"]))
+
+
+def _validate_effective_rule_pack(
+    rule_pack: Mapping[str, Any],
+    expected_kind: str,
+    period_start: date,
+    early_adoption_flags: Sequence[str] = (),
+) -> None:
+    """Validate fixed regulatory applicability required for auditability."""
+
+    if (
+        rule_pack.get("schema_version") != 1
+        or str(rule_pack.get("kind")) != expected_kind
+    ):
+        raise ValueError(f"Expected a schema-1 {expected_kind} rule pack")
+    if not SAFE_ID.fullmatch(str(rule_pack.get("id", ""))):
+        raise ValueError(f"{expected_kind} rule pack requires a safe identifier")
+    effective_from = date.fromisoformat(str(rule_pack["effective_from"]))
+    effective_to = date.fromisoformat(str(rule_pack["effective_to"]))
+    if (
+        effective_from > effective_to
+        or not effective_from <= period_start <= effective_to
+    ):
+        raise ValueError(
+            f"{expected_kind} rule pack is not effective for the reporting period"
+        )
+    flags = {str(item) for item in early_adoption_flags}
+    recognized = {
+        str(item) for item in rule_pack.get("recognized_early_adoption_flags", [])
+    }
+    if expected_kind == "OIC_ACCOUNTING_RULES":
+        if flags - recognized:
+            raise ValueError(
+                "OIC rule pack does not recognize the requested early-adoption flags"
+            )
+        mandatory_from = date.fromisoformat(
+            str(rule_pack.get("mandatory_from", rule_pack["effective_from"]))
+        )
+        early_flag = str(rule_pack.get("early_adoption_flag", ""))
+        if period_start < mandatory_from and (
+            not early_flag or early_flag not in flags
+        ):
+            raise ValueError("OIC rule pack requires its reviewed early-adoption flag")
+        if period_start >= mandatory_from and flags:
+            raise ValueError(
+                "Early-adoption flags are invalid after the OIC pack becomes mandatory"
+            )
+    _validate_source_register(rule_pack, expected_kind)
+
+
+def _validate_filing_instruction_pack(
+    rule_pack: Mapping[str, Any], campaign_year: int
+) -> None:
+    """Validate filing instructions against the explicitly selected campaign."""
+
+    if (
+        rule_pack.get("schema_version") != 1
+        or rule_pack.get("kind") != "FILING_INSTRUCTIONS"
+        or not SAFE_ID.fullmatch(str(rule_pack.get("id", "")))
+    ):
+        raise ValueError("Expected a schema-1 FILING_INSTRUCTIONS rule pack")
+    campaign_from = date.fromisoformat(str(rule_pack["campaign_from"]))
+    campaign_to = date.fromisoformat(str(rule_pack["campaign_to"]))
+    if (
+        campaign_from > campaign_to
+        or int(rule_pack.get("campaign_year", -1)) != campaign_year
+    ):
+        raise ValueError("Filing-instruction pack does not match the selected campaign")
+    _validate_source_register(rule_pack, "FILING_INSTRUCTIONS")
+
+
+def _validate_disclosure_rule_pack(
+    rule_pack: Mapping[str, Any], period_start: date
+) -> None:
+    """Validate disclosure-pack identity and applicability before mutation."""
+
+    if (
+        rule_pack.get("schema_version") != 1
+        or not SAFE_ID.fullmatch(str(rule_pack.get("id", "")))
+        or not isinstance(rule_pack.get("rules"), list)
+        or not rule_pack["rules"]
+    ):
+        raise ValueError("Expected a non-empty schema-1 disclosure rule pack")
+    effective_from = date.fromisoformat(str(rule_pack["effective_from"]))
+    effective_to = date.fromisoformat(str(rule_pack["effective_to"]))
+    if (
+        effective_from > effective_to
+        or not effective_from <= period_start <= effective_to
+    ):
+        raise ValueError("Disclosure rule pack is not effective for the case period")
+
+
+def _bundled_regulatory_pack(pack_id: str, expected_kind: str) -> dict[str, Any]:
+    """Resolve an identifier only to a controlled bundled regulatory pack."""
+
+    if not SAFE_ID.fullmatch(pack_id):
+        raise ValueError(f"Invalid {expected_kind} rule-pack identifier")
+    matches: list[dict[str, Any]] = []
+    for path in sorted(RULE_PACK_ROOT.glob("*.json")):
+        if path.is_symlink() or not path.is_file():
+            continue
+        payload = json.loads(path.read_bytes())
+        if (
+            isinstance(payload, dict)
+            and str(payload.get("id")) == pack_id
+            and str(payload.get("kind")) == expected_kind
+        ):
+            matches.append(payload)
+    if len(matches) != 1:
+        raise ValueError(
+            f"{expected_kind} identifier must resolve to exactly one controlled pack"
+        )
+    return matches[0]
+
+
+def _resolve_regulatory_pack(raw: Any, expected_kind: str) -> dict[str, Any]:
+    """Resolve a caller-supplied identifier only to a bundled controlled pack."""
+
+    if isinstance(raw, Mapping):
+        raise ValueError(
+            f"{expected_kind} must be selected by controlled rule-pack identifier"
+        )
+    return _bundled_regulatory_pack(str(raw), expected_kind)
+
+
 def create_case(
     case_dir: Path,
     payload: Mapping[str, Any],
@@ -889,6 +1043,30 @@ def create_case(
     if output_language not in {"it", "en"}:
         raise ValueError("Output language must be it or en")
     _validate_required_entity_profile(entity)
+    raw_early_adoption_flags = payload.get("early_adoption_flags", [])
+    if not isinstance(raw_early_adoption_flags, list) or not all(
+        isinstance(item, str) and item.strip() for item in raw_early_adoption_flags
+    ):
+        raise ValueError("Early-adoption flags must be a list of non-empty strings")
+    early_adoption_flags = sorted(set(raw_early_adoption_flags))
+    filing_campaign_year = int(payload["filing_campaign_year"])
+    if filing_campaign_year < 2016 or filing_campaign_year > 9999:
+        raise ValueError("Filing campaign year is outside the supported range")
+    oic_rule_pack = _resolve_regulatory_pack(
+        payload["oic_rule_pack"], "OIC_ACCOUNTING_RULES"
+    )
+    filing_instruction_pack = _resolve_regulatory_pack(
+        payload.get("filing_instruction_pack", "RI_2026.1"),
+        "FILING_INSTRUCTIONS",
+    )
+    _validate_effective_rule_pack(rule_pack, "STATUTORY_FORM_RULES", start)
+    _validate_effective_rule_pack(
+        oic_rule_pack,
+        "OIC_ACCOUNTING_RULES",
+        start,
+        early_adoption_flags,
+    )
+    _validate_filing_instruction_pack(filing_instruction_pack, filing_campaign_year)
     taxonomy_output_contracts = _taxonomy_output_contracts(rule_pack)
     case: dict[str, Any] = {
         "schema_version": SCHEMA_VERSION,
@@ -906,14 +1084,17 @@ def create_case(
             "jurisdiction": "IT",
             "accounting_framework": "OIC",
             "statutory_rule_pack": rule_pack["id"],
-            "oic_rule_pack": str(payload["oic_rule_pack"]),
+            "oic_rule_pack": str(oic_rule_pack["id"]),
             "taxonomy_id": str(payload.get("taxonomy_id", "PCI_2018-11-04")),
-            "filing_instruction_pack": str(
-                payload.get("filing_instruction_pack", "RI_2026")
-            ),
-            "early_adoption_flags": list(payload.get("early_adoption_flags", [])),
+            "filing_instruction_pack": str(filing_instruction_pack["id"]),
+            "early_adoption_flags": early_adoption_flags,
         },
         "rule_pack_checksum": _sha256_bytes(_canonical_json(rule_pack)),
+        "oic_rule_pack_checksum": _sha256_bytes(_canonical_json(oic_rule_pack)),
+        "filing_instruction_pack_checksum": _sha256_bytes(
+            _canonical_json(filing_instruction_pack)
+        ),
+        "filing_campaign_year": filing_campaign_year,
         "taxonomy_output_contracts": taxonomy_output_contracts,
         "statutory_presentation_rule_pack_checksum": None,
         "taxonomy_checksum": taxonomy_checksum,
@@ -1005,6 +1186,7 @@ def migrate_regulatory_versions(
         "taxonomy_id",
         "taxonomy_checksum",
         "filing_instruction_pack",
+        "filing_campaign_year",
         "early_adoption_flags",
     }
     allowed = required | {"disclosure_rule_pack"}
@@ -1019,10 +1201,9 @@ def migrate_regulatory_versions(
     if not isinstance(statutory_rule_pack, Mapping):
         raise ValueError("Statutory rule pack must be an object")
     period_start = date.fromisoformat(case["period"]["start"])
-    effective_from = date.fromisoformat(str(statutory_rule_pack["effective_from"]))
-    effective_to = date.fromisoformat(str(statutory_rule_pack["effective_to"]))
-    if not effective_from <= period_start <= effective_to:
-        raise ValueError("Migrated statutory rule pack is not effective for the period")
+    _validate_effective_rule_pack(
+        statutory_rule_pack, "STATUTORY_FORM_RULES", period_start
+    )
     taxonomy_checksum = str(migration["taxonomy_checksum"])
     if not re.fullmatch(r"[0-9a-f]{64}", taxonomy_checksum):
         raise ValueError("Migrated taxonomy checksum must be a lowercase SHA-256")
@@ -1031,25 +1212,44 @@ def migrate_regulatory_versions(
         isinstance(item, str) and item.strip() for item in early_adoption_flags
     ):
         raise ValueError("Early-adoption flags must be a list of non-empty strings")
+    early_adoption_flags = sorted(set(early_adoption_flags))
+    oic_rule_pack = _resolve_regulatory_pack(
+        migration["oic_rule_pack"], "OIC_ACCOUNTING_RULES"
+    )
+    filing_instruction_pack = _resolve_regulatory_pack(
+        migration["filing_instruction_pack"], "FILING_INSTRUCTIONS"
+    )
+    filing_campaign_year = int(migration["filing_campaign_year"])
+    _validate_effective_rule_pack(
+        oic_rule_pack,
+        "OIC_ACCOUNTING_RULES",
+        period_start,
+        early_adoption_flags,
+    )
+    _validate_filing_instruction_pack(filing_instruction_pack, filing_campaign_year)
     disclosure_rule_pack = migration.get("disclosure_rule_pack")
     if disclosure_rule_pack is not None and not isinstance(
         disclosure_rule_pack, Mapping
     ):
         raise ValueError("Disclosure rule pack must be an object")
+    if disclosure_rule_pack is not None:
+        _validate_disclosure_rule_pack(disclosure_rule_pack, period_start)
 
     previous_versions = deepcopy(case["rule_pack_versions"])
     target_versions = {
         "jurisdiction": "IT",
         "accounting_framework": "OIC",
         "statutory_rule_pack": str(statutory_rule_pack["id"]),
-        "oic_rule_pack": str(migration["oic_rule_pack"]),
+        "oic_rule_pack": str(oic_rule_pack["id"]),
         "taxonomy_id": str(migration["taxonomy_id"]),
-        "filing_instruction_pack": str(migration["filing_instruction_pack"]),
+        "filing_instruction_pack": str(filing_instruction_pack["id"]),
         "early_adoption_flags": list(early_adoption_flags),
     }
     if disclosure_rule_pack is not None:
         target_versions["disclosure_rule_pack"] = str(disclosure_rule_pack["id"])
     statutory_checksum = _sha256_bytes(_canonical_json(statutory_rule_pack))
+    oic_checksum = _sha256_bytes(_canonical_json(oic_rule_pack))
+    filing_checksum = _sha256_bytes(_canonical_json(filing_instruction_pack))
     disclosure_checksum = (
         disclosure_rule_pack_hash(disclosure_rule_pack)
         if disclosure_rule_pack is not None
@@ -1068,6 +1268,18 @@ def migrate_regulatory_versions(
         "taxonomy": {
             "from": case.get("taxonomy_checksum"),
             "to": taxonomy_checksum,
+        },
+        "oic_rule_pack": {
+            "from": case.get("oic_rule_pack_checksum"),
+            "to": oic_checksum,
+        },
+        "filing_instruction_pack": {
+            "from": case.get("filing_instruction_pack_checksum"),
+            "to": filing_checksum,
+        },
+        "filing_campaign_year": {
+            "from": case.get("filing_campaign_year"),
+            "to": filing_campaign_year,
         },
         "disclosure_rule_pack": {
             "from": case.get("disclosure_rule_pack_checksum"),
@@ -1133,6 +1345,9 @@ def migrate_regulatory_versions(
     _mutate(case, actor, "regulatory_versions_migrated")
     case["rule_pack_versions"] = target_versions
     case["rule_pack_checksum"] = statutory_checksum
+    case["oic_rule_pack_checksum"] = oic_checksum
+    case["filing_instruction_pack_checksum"] = filing_checksum
+    case["filing_campaign_year"] = filing_campaign_year
     case["taxonomy_output_contracts"] = _taxonomy_output_contracts(statutory_rule_pack)
     case["statutory_presentation_rule_pack_checksum"] = None
     case["schedule_taxonomy_adapter_rule_pack_checksum"] = None
@@ -1557,23 +1772,38 @@ def ingest_trial_balance(
     required = {"account_code", "account_description"}
     if not required.issubset(normalized_headers):
         raise ValueError("Trial balance requires account_code and account_description")
-    separate_layout = {
+    separate_current_layout = {
         "opening_debit",
         "opening_credit",
         "period_debit",
         "period_credit",
         "closing_debit",
         "closing_credit",
-        "prior_closing_debit",
-        "prior_closing_credit",
     }.issubset(normalized_headers)
-    signed_layout = {
+    signed_current_layout = {
         "opening_signed",
         "period_debit",
         "period_credit",
         "closing_signed",
-        "prior_closing_signed",
     }.issubset(normalized_headers)
+    first_year = case["entity"].get("first_financial_year") is True
+    comparative_columns = {
+        "prior_closing_debit",
+        "prior_closing_credit",
+        "prior_closing_signed",
+    }
+    supplied_comparative_columns = comparative_columns & set(normalized_headers)
+    if first_year and supplied_comparative_columns:
+        raise ValueError(
+            "A first-financial-year trial balance cannot contain comparative columns"
+        )
+    separate_layout = separate_current_layout and (
+        first_year
+        or {"prior_closing_debit", "prior_closing_credit"}.issubset(normalized_headers)
+    )
+    signed_layout = signed_current_layout and (
+        first_year or "prior_closing_signed" in normalized_headers
+    )
     if not separate_layout and not signed_layout:
         raise ValueError(
             "Trial balance does not match supported separate or signed layouts"
@@ -1619,21 +1849,35 @@ def ingest_trial_balance(
             opening_credit = _row_decimal(row, "opening_credit")
             closing_debit = _row_decimal(row, "closing_debit")
             closing_credit = _row_decimal(row, "closing_credit")
-            prior_debit = _row_decimal(row, "prior_closing_debit")
-            prior_credit = _row_decimal(row, "prior_closing_credit")
+            prior_debit = (
+                None if first_year else _row_decimal(row, "prior_closing_debit")
+            )
+            prior_credit = (
+                None if first_year else _row_decimal(row, "prior_closing_credit")
+            )
             opening_signed = opening_debit - opening_credit
             closing_signed = closing_debit - closing_credit
-            prior_signed = prior_debit - prior_credit
+            prior_signed = (
+                None
+                if prior_debit is None or prior_credit is None
+                else prior_debit - prior_credit
+            )
         else:
             opening_signed = _row_decimal(row, "opening_signed")
             closing_signed = _row_decimal(row, "closing_signed")
-            prior_signed = _row_decimal(row, "prior_closing_signed")
+            prior_signed = (
+                None if first_year else _row_decimal(row, "prior_closing_signed")
+            )
             opening_debit = max(opening_signed, Decimal("0"))
             opening_credit = max(-opening_signed, Decimal("0"))
             closing_debit = max(closing_signed, Decimal("0"))
             closing_credit = max(-closing_signed, Decimal("0"))
-            prior_debit = max(prior_signed, Decimal("0"))
-            prior_credit = max(-prior_signed, Decimal("0"))
+            prior_debit = (
+                None if prior_signed is None else max(prior_signed, Decimal("0"))
+            )
+            prior_credit = (
+                None if prior_signed is None else max(-prior_signed, Decimal("0"))
+            )
         period_debit = _row_decimal(row, "period_debit")
         period_credit = _row_decimal(row, "period_credit")
         source_refs: list[str] = []
@@ -1675,9 +1919,15 @@ def ingest_trial_balance(
                 "closing_debit": _decimal_text(closing_debit),
                 "closing_credit": _decimal_text(closing_credit),
                 "closing_signed": _decimal_text(closing_signed),
-                "prior_closing_debit": _decimal_text(prior_debit),
-                "prior_closing_credit": _decimal_text(prior_credit),
-                "prior_closing_signed": _decimal_text(prior_signed),
+                "prior_closing_debit": (
+                    None if prior_debit is None else _decimal_text(prior_debit)
+                ),
+                "prior_closing_credit": (
+                    None if prior_credit is None else _decimal_text(prior_credit)
+                ),
+                "prior_closing_signed": (
+                    None if prior_signed is None else _decimal_text(prior_signed)
+                ),
                 "source_refs": source_refs,
             }
         )
@@ -1695,6 +1945,9 @@ def ingest_trial_balance(
     ] + [document]
     case["trial_balance"] = {
         "layout": "SEPARATE_DEBIT_CREDIT" if separate_layout else "SIGNED_BALANCES",
+        "comparative_status": (
+            "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR" if first_year else "PRESENT"
+        ),
         "entries": entries,
         "source_anchors": anchors,
         "calibration": calibration,
@@ -1903,7 +2156,7 @@ def _prior_xbrl_reconciliation(case: Mapping[str, Any]) -> dict[str, Any]:
     precision = int(case.get("reporting_precision", 0))
     for fact in case.get("canonical_facts", []):
         qname = fact.get("xbrl_concept")
-        if qname:
+        if qname and fact.get("prior_value") is not None:
             add_expected(
                 str(qname),
                 _reported_decimal(
@@ -2103,10 +2356,7 @@ def determine_forms(
             "Statutory rule pack differs from the locked case; use explicit migration"
         )
     period_start = date.fromisoformat(case["period"]["start"])
-    effective_from = date.fromisoformat(rule_pack["effective_from"])
-    effective_to = date.fromisoformat(rule_pack["effective_to"])
-    if not effective_from <= period_start <= effective_to:
-        raise ValueError("Rule pack is not effective for the reporting period")
+    _validate_effective_rule_pack(rule_pack, "STATUTORY_FORM_RULES", period_start)
     first_year = bool(case["entity"].get("first_financial_year"))
     required_years = 1 if first_year else 2
     if isinstance(metrics, (str, bytes)) or not isinstance(metrics, Sequence):
@@ -2143,6 +2393,16 @@ def determine_forms(
         missing.extend(f"threshold_{key}_for_{year}" for key in missing_metrics)
         if not missing_metrics:
             ordered.append(item)
+    prior_form = str(case["entity"].get("prior_year_form") or "").upper() or None
+    detail_rank = {"MICRO": 0, "ABBREVIATED": 1, "ORDINARY": 2}
+    form_components = rule_pack.get("form_components")
+    transition_consequences = rule_pack.get("form_change_consequences")
+    if not isinstance(form_components, Mapping) or set(form_components) != set(
+        detail_rank
+    ):
+        raise ValueError("Statutory rule pack requires components for every form")
+    if not isinstance(transition_consequences, Mapping):
+        raise ValueError("Statutory rule pack requires form-change consequences")
     analysis: dict[str, Any] = {}
     for form in ("ABBREVIATED", "MICRO"):
         thresholds = rule_pack["forms"][form]
@@ -2150,12 +2410,42 @@ def determine_forms(
             _threshold_result(item, thresholds, actor)
             for item in ordered[:required_years]
         ]
+        complete = len(years) == required_years
+        within = [bool(item["within_thresholds"]) for item in years]
+        continuing_or_moving_to_more_detail = bool(
+            prior_form and detail_rank[prior_form] <= detail_rank[form]
+        )
+        if first_year:
+            eligible_for_thresholds = complete and within == [True]
+            eligibility_basis = "FIRST_FINANCIAL_YEAR_CURRENT_THRESHOLDS"
+        elif continuing_or_moving_to_more_detail:
+            # Articles 2435-bis/ter require two consecutive exceedances before
+            # an entity already in the simplified regime must leave it.
+            eligible_for_thresholds = complete and not all(not item for item in within)
+            eligibility_basis = "CONTINUATION_UNTIL_TWO_CONSECUTIVE_EXCEEDANCES"
+        else:
+            # Entry from a more detailed form requires two consecutive years
+            # within the selected simplified-form thresholds.
+            eligible_for_thresholds = complete and all(within)
+            eligibility_basis = "ENTRY_REQUIRES_TWO_CONSECUTIVE_YEARS_WITHIN"
+        reasons: list[str] = []
+        if complete and not eligible_for_thresholds:
+            reasons.append(
+                "CURRENT_YEAR_THRESHOLDS_NOT_MET"
+                if first_year
+                else (
+                    "TWO_CONSECUTIVE_THRESHOLD_EXCEEDANCES"
+                    if continuing_or_moving_to_more_detail
+                    else "TWO_CONSECUTIVE_YEARS_WITHIN_NOT_MET"
+                )
+            )
         analysis[form] = {
             "thresholds": {key: str(value) for key, value in thresholds.items()},
             "years": years,
-            "eligible": len(years) == required_years
-            and all(item["within_thresholds"] for item in years),
-            "reasons": [],
+            "eligible": eligible_for_thresholds,
+            "eligibility_basis": eligibility_basis,
+            "continuation_rule_applied": continuing_or_moving_to_more_detail,
+            "reasons": reasons,
         }
     micro_exclusions = list(case["entity"].get("micro_exclusion_flags", []))
     if micro_exclusions:
@@ -2167,6 +2457,31 @@ def determine_forms(
     if analysis["MICRO"]["eligible"]:
         eligible.insert(0, "MICRO")
     recommended = eligible[0] if not missing else None
+    consequences: dict[str, Any] = {}
+    for form in ("MICRO", "ABBREVIATED", "ORDINARY"):
+        transition_key = f"{prior_form}_TO_{form}" if prior_form else None
+        consequences[form] = {
+            "change_type": (
+                "FIRST_YEAR_SELECTION"
+                if prior_form is None
+                else (
+                    "UNCHANGED"
+                    if prior_form == form
+                    else (
+                        "MORE_DETAILED"
+                        if detail_rank[form] > detail_rank[prior_form]
+                        else "LESS_DETAILED"
+                    )
+                )
+            ),
+            "required_components": list(form_components[form]),
+            "effects": (
+                []
+                if transition_key is None or prior_form == form
+                else list(transition_consequences.get(transition_key, []))
+            ),
+            "eligible": form in eligible and not missing,
+        }
     _mutate(case, actor, "form_eligibility_calculated")
     _clear_accounting_dependent_reviews(case)
     case["form_analysis"] = {
@@ -2177,8 +2492,9 @@ def determine_forms(
         ],
         "recommended_form": recommended,
         "least_burdensome_only": True,
-        "prior_year_form": case["entity"].get("prior_year_form"),
+        "prior_year_form": prior_form,
         "first_year": first_year,
+        "consequences_of_changing_form": consequences,
         "missing_fields": missing,
         "calculations": analysis,
         "computation_context": _computation_context(
@@ -2347,6 +2663,7 @@ def apply_mapping_decisions(
         if item.get("mapping_allowed") is True
     }
     accounts = {row["account_id"]: row for row in trial_balance["entries"]}
+    comparative_required = case["entity"].get("first_financial_year") is not True
     prior_mappings = {
         str(item["account_id"]): item for item in case.get("mappings", [])
     }
@@ -2390,9 +2707,18 @@ def apply_mapping_decisions(
                         "Reviewed mapping allocations must be observed or user-confirmed"
                     )
                 current = normalize_decimal(allocation["current_amount"])
-                prior = normalize_decimal(allocation["prior_amount"])
+                raw_prior = allocation.get("prior_amount")
+                if comparative_required:
+                    prior = normalize_decimal(raw_prior)
+                else:
+                    if raw_prior not in {None, ""}:
+                        raise ValueError(
+                            "First-financial-year mappings cannot contain comparative amounts"
+                        )
+                    prior = None
                 current_total += current
-                prior_total += prior
+                if prior is not None:
+                    prior_total += prior
                 qname = allocation.get("xbrl_concept")
                 if qname is not None and not SAFE_QNAME.fullmatch(str(qname)):
                     raise ValueError(f"Invalid XBRL QName: {qname}")
@@ -2431,7 +2757,9 @@ def apply_mapping_decisions(
                         "xbrl_concept": qname,
                         "xbrl_sign_multiplier": xbrl_sign_multiplier,
                         "current_amount": _decimal_text(current),
-                        "prior_amount": _decimal_text(prior),
+                        "prior_amount": (
+                            None if prior is None else _decimal_text(prior)
+                        ),
                         "evidence_status": evidence_status.value,
                         "review_reason": str(allocation.get("review_reason", "")),
                         "schedule_triggers": schedule_triggers,
@@ -2440,7 +2768,9 @@ def apply_mapping_decisions(
                 )
             if current_total != Decimal(account["closing_signed"]):
                 raise ValueError(f"Current split for {account_id} does not balance")
-            if prior_total != Decimal(account["prior_closing_signed"]):
+            if comparative_required and prior_total != Decimal(
+                account["prior_closing_signed"]
+            ):
                 raise ValueError(f"Prior split for {account_id} does not balance")
         else:
             raise ValueError(f"Unsupported mapping decision: {status}")
@@ -2568,6 +2898,7 @@ def record_adjustments(
     if not case.get("mappings"):
         raise ValueError("Reviewed mappings are required before adjustments")
     normalized: list[dict[str, Any]] = []
+    comparative_required = case["entity"].get("first_financial_year") is not True
     seen: set[str] = set()
     for raw in adjustments:
         adjustment_id = str(raw["adjustment_id"])
@@ -2585,9 +2916,18 @@ def record_adjustments(
         prior_total = Decimal("0")
         for position, raw_line in enumerate(raw_lines, start=1):
             current = normalize_decimal(raw_line["current_amount"])
-            prior = normalize_decimal(raw_line["prior_amount"])
+            raw_prior = raw_line.get("prior_amount")
+            if comparative_required:
+                prior = normalize_decimal(raw_prior)
+            else:
+                if raw_prior not in {None, ""}:
+                    raise ValueError(
+                        "First-financial-year adjustments cannot contain comparative amounts"
+                    )
+                prior = None
             current_total += current
-            prior_total += prior
+            if prior is not None:
+                prior_total += prior
             qname = raw_line.get("xbrl_concept")
             if qname is not None and not SAFE_QNAME.fullmatch(str(qname)):
                 raise ValueError(f"Invalid XBRL QName: {qname}")
@@ -2606,7 +2946,7 @@ def record_adjustments(
                     "xbrl_concept": qname,
                     "xbrl_sign_multiplier": xbrl_sign_multiplier,
                     "current_amount": _decimal_text(current),
-                    "prior_amount": _decimal_text(prior),
+                    "prior_amount": None if prior is None else _decimal_text(prior),
                     "source_refs": sorted(
                         {str(item) for item in raw_line.get("source_refs", [])}
                     ),
@@ -2616,7 +2956,7 @@ def record_adjustments(
                 lines[-1]["source_refs"]
             ) <= _available_evidence_refs(case):
                 raise ValueError("Adjustment lines reference evidence outside the case")
-        if current_total or prior_total:
+        if current_total or (comparative_required and prior_total):
             raise ValueError(
                 "Presentation adjustment lines must balance in both periods"
             )
@@ -2664,10 +3004,10 @@ def record_taxonomy_facts(
     seen_keys: set[tuple[str, str, tuple[tuple[str, str], ...]]] = set()
     allowed_periods = {
         "current_instant",
-        "prior_instant",
         "current_duration",
-        "prior_duration",
     }
+    if case["entity"].get("first_financial_year") is not True:
+        allowed_periods.update({"prior_instant", "prior_duration"})
     for raw in facts:
         fact_id = str(raw["fact_id"])
         qname = str(raw["xbrl_concept"])
@@ -3161,6 +3501,7 @@ def build_statements(
     mapped_ids = {item["account_id"] for item in case.get("mappings", [])}
     if {row["account_id"] for row in entries} != mapped_ids:
         raise ValueError("Every account must be mapped or explicitly excluded")
+    comparative_required = case["entity"].get("first_financial_year") is not True
     grouped: dict[tuple[str, str, str | None, str], dict[str, Any]] = {}
     for mapping in case["mappings"]:
         for allocation in mapping["allocations"]:
@@ -3178,14 +3519,15 @@ def build_statements(
                     "xbrl_concept": key[2],
                     "xbrl_sign_multiplier": key[3],
                     "current_amount": Decimal("0"),
-                    "prior_amount": Decimal("0"),
+                    "prior_amount": Decimal("0") if comparative_required else None,
                     "source_refs": [],
                     "allocation_refs": [],
                     "adjustment_refs": [],
                 },
             )
             item["current_amount"] += Decimal(allocation["current_amount"])
-            item["prior_amount"] += Decimal(allocation["prior_amount"])
+            if comparative_required:
+                item["prior_amount"] += Decimal(allocation["prior_amount"])
             item["source_refs"].extend(allocation["source_refs"])
             item["allocation_refs"].append(allocation["allocation_id"])
     for adjustment in case.get("adjustments", []):
@@ -3204,14 +3546,15 @@ def build_statements(
                     "xbrl_concept": key[2],
                     "xbrl_sign_multiplier": key[3],
                     "current_amount": Decimal("0"),
-                    "prior_amount": Decimal("0"),
+                    "prior_amount": Decimal("0") if comparative_required else None,
                     "source_refs": [],
                     "allocation_refs": [],
                     "adjustment_refs": [],
                 },
             )
             item["current_amount"] += Decimal(line["current_amount"])
-            item["prior_amount"] += Decimal(line["prior_amount"])
+            if comparative_required:
+                item["prior_amount"] += Decimal(line["prior_amount"])
             item["source_refs"].extend(line["source_refs"])
             item["adjustment_refs"].append(line["line_id"])
     facts: list[dict[str, Any]] = []
@@ -3226,7 +3569,11 @@ def build_statements(
                 "xbrl_sign_multiplier": item["xbrl_sign_multiplier"],
                 "period": case["period"]["end"],
                 "current_value": _decimal_text(item["current_amount"]),
-                "prior_value": _decimal_text(item["prior_amount"]),
+                "prior_value": (
+                    _decimal_text(item["prior_amount"])
+                    if comparative_required
+                    else None
+                ),
                 "currency": "EUR",
                 "status": EvidenceStatus.DERIVED,
                 "source_refs": sorted(set(item["source_refs"])),
@@ -3248,8 +3595,10 @@ def build_statements(
             "current": _decimal_text(
                 sum(Decimal(fact["current_value"]) for fact in selected)
             ),
-            "prior": _decimal_text(
-                sum(Decimal(fact["prior_value"]) for fact in selected)
+            "prior": (
+                _decimal_text(sum(Decimal(fact["prior_value"]) for fact in selected))
+                if comparative_required
+                else None
             ),
         }
     precision = int(case.get("reporting_precision", 0))
@@ -3259,8 +3608,12 @@ def build_statements(
             "current_value": _decimal_text(
                 _reported_decimal(Decimal(fact["current_value"]), precision)
             ),
-            "prior_value": _decimal_text(
-                _reported_decimal(Decimal(fact["prior_value"]), precision)
+            "prior_value": (
+                _decimal_text(
+                    _reported_decimal(Decimal(fact["prior_value"]), precision)
+                )
+                if comparative_required
+                else None
             ),
         }
         for fact in facts
@@ -3269,10 +3622,10 @@ def build_statements(
     rounding_adjustments: list[dict[str, Any]] = []
     for section, exact in totals.items():
         section_facts = [fact for fact in facts if fact["statement_section"] == section]
-        for period_key, value_key in (
-            ("current", "current_value"),
-            ("prior", "prior_value"),
-        ):
+        period_fields = [("current", "current_value")]
+        if comparative_required:
+            period_fields.append(("prior", "prior_value"))
+        for period_key, value_key in period_fields:
             rounded_total = _reported_decimal(Decimal(exact[period_key]), precision)
             displayed_sum = sum(
                 Decimal(presentation_lookup[fact["fact_id"]][value_key])
@@ -3304,6 +3657,9 @@ def build_statements(
         "presentation_facts": presentation_facts,
         "rounding_adjustments": rounding_adjustments,
         "reporting_precision": precision,
+        "comparative_status": (
+            "PRESENT" if comparative_required else "NOT_APPLICABLE_FIRST_FINANCIAL_YEAR"
+        ),
         "computed_at": _now(),
         "computation_context": _computation_context(case, "statement-engine-v1"),
     }
@@ -3379,7 +3735,11 @@ def record_schedule(
             f"professional_input:{actor}:{schedule_id}:amortisation_exception"
         ]
         reviewed_payload["amortisation_reconciliation_exception"] = normalized_exception
-    schedule = normalize_schedule(reviewed_payload, statements["facts"])
+    schedule = normalize_schedule(
+        reviewed_payload,
+        statements["facts"],
+        comparative_required=(case["entity"].get("first_financial_year") is not True),
+    )
     if (
         schedule["schedule_type"] == "CASH_FLOW"
         and case.get("selected_form") != "ORDINARY"
@@ -3695,6 +4055,9 @@ def activate_disclosures(
     _ensure_revision(case, expected_revision)
     if not case.get("selected_form") or not case.get("statements"):
         raise ValueError("Statements and statutory form are required for disclosures")
+    _validate_disclosure_rule_pack(
+        rule_pack, date.fromisoformat(case["period"]["start"])
+    )
     incoming_checksum = disclosure_rule_pack_hash(rule_pack)
     locked_id = case["rule_pack_versions"].get("disclosure_rule_pack")
     locked_checksum = case.get("disclosure_rule_pack_checksum")
@@ -3987,6 +4350,10 @@ def render_preview_html(case: Mapping[str, Any]) -> bytes:
 
     statements = case.get("statements") or {}
     facts = statements.get("facts", [])
+    first_year = (case.get("entity") or {}).get("first_financial_year") is True
+    statement_caption = (
+        "Valori del primo esercizio" if first_year else "Valori correnti e comparativi"
+    )
     schedules = case.get("schedules", [])
     questions = case.get("questionnaire", [])
     narratives = case.get("narrative_blocks", [])
@@ -4008,10 +4375,13 @@ def render_preview_html(case: Mapping[str, Any]) -> bytes:
         f"<td>{cell(fact.get('statement_section'))}</td>"
         f"<td>{cell(fact.get('key'))}</td>"
         f"<td>{cell(fact.get('current_value'))}</td>"
-        f"<td>{cell(fact.get('prior_value'))}</td>"
-        "</tr>"
+        + ("" if first_year else f"<td>{cell(fact.get('prior_value'))}</td>")
+        + "</tr>"
         for fact in facts
     )
+    statement_value_headers = '<th scope="col">Corrente</th>'
+    if not first_year:
+        statement_value_headers += '<th scope="col">Comparativo</th>'
     schedule_rows = "".join(
         "<tr>"
         f"<td>{cell(item.get('schedule_type'))}</td>"
@@ -4073,7 +4443,7 @@ def render_preview_html(case: Mapping[str, Any]) -> bytes:
 </head><body><a class="skip-link" href="#main-content">Vai al contenuto principale</a><main id="main-content" tabindex="-1" data-output-language="{cell(output_language)}"><h1>Anteprima bilancio civilistico e XBRL</h1>
 <p>Caso {cell(case.get('case_id'))} · revisione {cell(case.get('revision_id'))} · forma {cell(case.get('selected_form'))}</p>
 <section aria-labelledby="presentation-heading"><h2 id="presentation-heading">Copertura dei prospetti civilistici</h2><p>Stato: <strong>{cell(statutory_presentation.get('status', 'NON_REVISIONATA'))}</strong> · voci richieste {cell(presentation_summary.get('required_leaf_concepts', 0))} · decisioni esplicite {cell(presentation_summary.get('explicit_decisions', 0))} · decisioni mancanti {cell(presentation_summary.get('missing_period_decisions', 0))} · problemi aritmetici {cell(presentation_summary.get('issues', 0))}.</p></section>
-<section aria-labelledby="statements-heading"><h2 id="statements-heading">Prospetti</h2><div class="table-scroll" role="region" aria-labelledby="statements-heading" tabindex="0"><table><caption>Valori correnti e comparativi</caption><thead><tr><th scope="col">Sezione</th><th scope="col">Voce</th><th scope="col">Corrente</th><th scope="col">Comparativo</th></tr></thead><tbody>{statement_rows}</tbody></table></div></section>
+<section aria-labelledby="statements-heading"><h2 id="statements-heading">Prospetti</h2><div class="table-scroll" role="region" aria-labelledby="statements-heading" tabindex="0"><table><caption>{cell(statement_caption)}</caption><thead><tr><th scope="col">Sezione</th><th scope="col">Voce</th>{statement_value_headers}</tr></thead><tbody>{statement_rows}</tbody></table></div></section>
 <section aria-labelledby="schedules-heading"><h2 id="schedules-heading">Prospetti di dettaglio</h2><div class="table-scroll" role="region" aria-labelledby="schedules-heading" tabindex="0"><table><caption>Stato delle riconciliazioni di dettaglio</caption><thead><tr><th scope="col">Tipo</th><th scope="col">ID</th><th scope="col">Stato</th><th scope="col">Problemi</th></tr></thead><tbody>{schedule_rows}</tbody></table></div></section>
 <section aria-labelledby="questions-heading"><h2 id="questions-heading">Questionario</h2><div class="table-scroll" role="region" aria-labelledby="questions-heading" tabindex="0"><table><caption>Domande contestuali e motivazioni</caption><thead><tr><th scope="col">ID</th><th scope="col">Domanda</th><th scope="col">Stato</th><th scope="col">Motivo</th></tr></thead><tbody>{question_rows}</tbody></table></div></section>
 <section aria-labelledby="notes-heading"><h2 id="notes-heading">Nota integrativa</h2>{note_blocks}</section>
@@ -4512,7 +4882,9 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
     for adjustment in case.get("adjustments", []):
         for amount_key in ("current_amount", "prior_amount"):
             total = sum(
-                Decimal(line[amount_key]) for line in adjustment.get("lines", [])
+                Decimal(line[amount_key])
+                for line in adjustment.get("lines", [])
+                if line.get(amount_key) is not None
             )
             if total:
                 add(
@@ -4526,14 +4898,16 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
     else:
         totals = statements["section_totals"]
         if "ASSETS" in totals and "LIABILITIES_EQUITY" in totals:
-            for period, rule_id, period_label in (
-                ("current", "STATEMENT.BALANCE_SHEET", "Current"),
-                (
-                    "prior",
-                    "STATEMENT.COMPARATIVE_BALANCE_SHEET",
-                    "Comparative",
-                ),
-            ):
+            balance_periods = [("current", "STATEMENT.BALANCE_SHEET", "Current")]
+            if case["entity"].get("first_financial_year") is not True:
+                balance_periods.append(
+                    (
+                        "prior",
+                        "STATEMENT.COMPARATIVE_BALANCE_SHEET",
+                        "Comparative",
+                    )
+                )
+            for period, rule_id, period_label in balance_periods:
                 asset_value = totals["ASSETS"].get(period)
                 liability_value = totals["LIABILITIES_EQUITY"].get(period)
                 if asset_value is None or liability_value is None:
@@ -4553,14 +4927,16 @@ def validate_case(case: dict[str, Any]) -> dict[str, Any]:
             for fact in statements["facts"]
             if fact["statement_section"] in {"INCOME_RESULT", "EQUITY_RESULT"}
         ]
-        for value_field, rule_id, period_label in (
-            ("current_value", "STATEMENT.RESULT_TIE_OUT", "Current"),
-            (
-                "prior_value",
-                "STATEMENT.COMPARATIVE_RESULT_TIE_OUT",
-                "Comparative",
-            ),
-        ):
+        result_periods = [("current_value", "STATEMENT.RESULT_TIE_OUT", "Current")]
+        if case["entity"].get("first_financial_year") is not True:
+            result_periods.append(
+                (
+                    "prior_value",
+                    "STATEMENT.COMPARATIVE_RESULT_TIE_OUT",
+                    "Comparative",
+                )
+            )
+        for value_field, rule_id, period_label in result_periods:
             if any(fact.get(value_field) is None for fact in result_facts):
                 add(
                     rule_id,
@@ -5359,6 +5735,7 @@ def approve_case(
         "approved_at": _now(),
         "declaration": dict(declaration),
         "snapshot": snapshot_payload,
+        "audit_events": deepcopy(case.get("audit_events", [])),
     }
     case["state"] = CaseState.APPROVED
     case["updated_at"] = _now()
@@ -5538,21 +5915,27 @@ def render_xbrl(
     entity_identifier = str(snapshot["entity"]["tax_identifier"])
     period_end = snapshot["period"]["end"]
     period_start = snapshot["period"]["start"]
-    current_start = date.fromisoformat(period_start)
-    prior_end = str(snapshot["entity"].get("prior_period_end") or "")
-    if not prior_end:
-        prior_end = (current_start - timedelta(days=1)).isoformat()
-    prior_start = str(snapshot["entity"].get("prior_period_start") or "")
-    if not prior_start:
-        prior_start = _previous_year_date(current_start).isoformat()
-    if date.fromisoformat(prior_start) > date.fromisoformat(prior_end):
-        raise ValueError("Approved comparative period start is after its end")
     contexts = {
         "current_instant": (None, period_end),
-        "prior_instant": (None, prior_end),
         "current_duration": (period_start, period_end),
-        "prior_duration": (prior_start, prior_end),
     }
+    first_year = snapshot["entity"].get("first_financial_year") is True
+    if not first_year:
+        current_start = date.fromisoformat(period_start)
+        prior_end = str(snapshot["entity"].get("prior_period_end") or "")
+        if not prior_end:
+            prior_end = (current_start - timedelta(days=1)).isoformat()
+        prior_start = str(snapshot["entity"].get("prior_period_start") or "")
+        if not prior_start:
+            prior_start = _previous_year_date(current_start).isoformat()
+        if date.fromisoformat(prior_start) > date.fromisoformat(prior_end):
+            raise ValueError("Approved comparative period start is after its end")
+        contexts.update(
+            {
+                "prior_instant": (None, prior_end),
+                "prior_duration": (prior_start, prior_end),
+            }
+        )
     for context_id, (start, end) in contexts.items():
         context = etree.SubElement(
             root, etree.QName(XBRLI_NS, "context"), id=context_id
@@ -5682,6 +6065,10 @@ def render_xbrl(
             continue
         if fact["status"] not in EXPORTABLE_STATUSES:
             raise ValueError(f"Fact {fact['fact_id']} has a non-exportable status")
+        if first_year and fact.get("prior_value") is not None:
+            raise ValueError(
+                "First-financial-year canonical facts cannot contain comparative values"
+            )
         sign_multiplier = str(fact.get("xbrl_sign_multiplier", ""))
         if sign_multiplier not in {"1", "-1"}:
             raise ValueError(
@@ -5711,10 +6098,10 @@ def render_xbrl(
         prior_context = (
             "prior_instant" if concept["period_type"] == "instant" else "prior_duration"
         )
-        for context_ref, value in (
-            (current_context, fact["current_value"]),
-            (prior_context, fact["prior_value"]),
-        ):
+        period_values = [(current_context, fact["current_value"])]
+        if not first_year:
+            period_values.append((prior_context, fact["prior_value"]))
+        for context_ref, value in period_values:
             duplicate_key = (qname, context_ref, "")
             if duplicate_key in seen:
                 raise ValueError(
@@ -5755,6 +6142,10 @@ def render_xbrl(
             raise ValueError("Statutory presentation fact is not exportable")
         if not fact.get("derivation") and not fact.get("confirmed_by"):
             raise ValueError("Statutory presentation fact has no provenance")
+        if first_year and fact.get("prior_value") is not None:
+            raise ValueError(
+                "First-financial-year presentation cannot contain a comparative fact"
+            )
         qname = str(fact["xbrl_concept"])
         concept = concept_lookup.get(qname)
         if not _is_reportable_item(concept):
@@ -5836,6 +6227,10 @@ def render_xbrl(
         ):
             raise ValueError(
                 f"Taxonomy fact period does not match concept period type: {qname}"
+            )
+        if period_key not in contexts:
+            raise ValueError(
+                f"Taxonomy fact uses a period unavailable in the approved case: {period_key}"
             )
         context_ref = (
             dimension_contexts[(period_key, dimensions)] if dimensions else period_key
@@ -6190,9 +6585,24 @@ def export_case(
         "entity": snapshot["entity"],
         "period": snapshot["period"],
         "approval": {
-            key: value for key, value in approval.items() if key != "snapshot"
+            key: value
+            for key, value in approval.items()
+            if key not in {"snapshot", "audit_events"}
         },
         "rule_pack_versions": snapshot["rule_pack_versions"],
+        "regulatory_rule_pack_checksums": {
+            "statutory_rule_pack": snapshot.get("rule_pack_checksum"),
+            "oic_rule_pack": snapshot.get("oic_rule_pack_checksum"),
+            "filing_instruction_pack": snapshot.get("filing_instruction_pack_checksum"),
+            "disclosure_rule_pack": snapshot.get("disclosure_rule_pack_checksum"),
+            "statutory_presentation_rule_pack": snapshot.get(
+                "statutory_presentation_rule_pack_checksum"
+            ),
+            "schedule_taxonomy_adapter_rule_pack": snapshot.get(
+                "schedule_taxonomy_adapter_rule_pack_checksum"
+            ),
+        },
+        "filing_campaign_year": snapshot.get("filing_campaign_year"),
         "taxonomy_checksum": snapshot.get("taxonomy_checksum"),
         "source_documents": snapshot["source_documents"],
         "file_security_scans": snapshot.get("file_security_scans", []),
@@ -6267,7 +6677,7 @@ def export_case(
         "assumption_policy": (
             "Missing or model-suggested facts are not assumptions and are not exportable."
         ),
-        "audit_events": case["audit_events"],
+        "audit_events": approval.get("audit_events", []),
         "filing_boundary": "Vera does not sign, approve corporate accounts, or submit the filing.",
         "external_validation": case.get("external_validation"),
         "external_validation_documents": [
@@ -6294,8 +6704,9 @@ def export_case(
         "case_id": case["case_id"],
         "snapshot_id": approval["snapshot_id"],
         "snapshot_hash": approval["snapshot_hash"],
-        "exported_by": actor,
-        "exported_at": _now(),
+        "export_basis": "IMMUTABLE_APPROVAL_SNAPSHOT",
+        "approved_by": approval["approved_by"],
+        "approved_at": approval["approved_at"],
         "artifacts": artifacts,
     }
     manifest_path = output / "artifact_manifest.json"

@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "OIC_2016_2023.1",
+  "kind": "OIC_ACCOUNTING_RULES",
+  "effective_from": "2016-01-01",
+  "effective_to": "2023-12-31",
+  "mandatory_from": "2016-01-01",
+  "recognized_early_adoption_flags": [],
+  "rule_references": ["D.Lgs. 139/2015", "OIC national accounting standards applicable to the reporting period"],
+  "source_register": [
+    {
+      "id": "OIC_PRINCIPI_CONTABILI",
+      "kind": "official_accounting_standard_register",
+      "title": "Principi contabili nazionali",
+      "url": "https://www.fondazioneoic.eu/attivita-nazionale/principi-contabili/",
+      "retrieved_on": "2026-08-06"
+    }
+  ]
+}

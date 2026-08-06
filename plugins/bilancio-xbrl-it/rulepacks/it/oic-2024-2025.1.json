@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "OIC_2024_2025.1",
+  "kind": "OIC_ACCOUNTING_RULES",
+  "effective_from": "2024-01-01",
+  "effective_to": "2025-12-31",
+  "mandatory_from": "2024-01-01",
+  "recognized_early_adoption_flags": [],
+  "rule_references": ["OIC 34 Ricavi", "OIC national accounting standards applicable before the December 2025 amendments"],
+  "source_register": [
+    {
+      "id": "OIC_34",
+      "kind": "official_accounting_standard",
+      "title": "OIC 34 Ricavi",
+      "url": "https://www.fondazioneoic.eu/attivita-nazionale/principi-contabili/",
+      "retrieved_on": "2026-08-06"
+    }
+  ]
+}

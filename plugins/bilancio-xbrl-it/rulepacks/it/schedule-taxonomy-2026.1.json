@@ -2,7 +2,7 @@
   "schema_version": 1,
   "id": "IT_SCHEDULE_TAXONOMY_2026.1",
   "taxonomy_id": "PCI_2018-11-04",
-  "effective_from": "2024-09-25",
+  "effective_from": "2016-01-01",
   "effective_to": "2026-12-31",
   "owner": "Accounting rule owner approval required before beta",
   "forms": {
