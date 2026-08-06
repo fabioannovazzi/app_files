@@ -63,7 +63,10 @@ def test_zero_retention_page_is_public_when_auth_enabled(
     assert isinstance(page, dict)
     assert page["title"] == "Zero Retention Policy"
     assert "does not receive or retain Customer Content" in page["summary"]
-    assert "two processing categories" in page["summary"]
+    assert page["summary"].startswith(
+        "Mparanza LLC's products use two processing categories: ordinary plugin "
+        "functions and Mparanza LLC-hosted services."
+    )
     assert page["effective_date"] == "July 31, 2026"
     assert "OpenAI Codex or Anthropic Cowork" in str(page)
     assert "does not automatically anonymize" in str(page)
