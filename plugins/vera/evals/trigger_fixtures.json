@@ -43,6 +43,11 @@
       "required_signals": ["Vera", "SARI", "pratica DIRE"]
     },
     {
+      "id": "vera-bandi-agevolazioni",
+      "prompt": "Vera, prepara il dossier per questo bando regionale usando bando, allegati, FAQ e documenti aziendali; lascia firma e invio al soggetto autorizzato.",
+      "required_signals": ["Vera", "bando", "dossier", "firma e invio"]
+    },
+    {
       "id": "vera-deep-research-journey",
       "prompt": "Vera, prepara questa domanda fiscale per Deep Research, consigliami se limitare o solo prioritizzare i siti e, quando ti restituisco il report, validalo senza farmi ricominciare.",
       "required_signals": ["Vera", "Deep Research", "siti", "validalo"]

@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.92",
+  "version": "0.1.96",
   "description": "Vera affianca il commercialista in istruttorie, controlli, ricerche documentali e carte di lavoro rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -45,7 +45,10 @@
     "dire",
     "bilancio",
     "xbrl",
-    "oic"
+    "oic",
+    "bandi",
+    "agevolazioni",
+    "finanza-agevolata"
   ],
   "skills": "./skills/",
   "apps": "./.app.json",

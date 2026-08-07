@@ -137,6 +137,7 @@ VERA_CLIENT_WORKFLOW_IDS = (
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
+    "bandi-agevolazioni",
 )
 
 # This is an exact file-contract handoff, so fixed rules provide mechanically

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/run-state-1.0.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plugin", "workflow", "run_id", "created_at", "updated_at", "language", "phase", "status", "source_set_revision", "output_dir", "ready_to_file", "portal_actions_performed", "signature_actions_performed", "submission_actions_performed"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "workflow": {"const": "bandi-agevolazioni"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "language": {"type": "string", "pattern": "^[A-Za-z]{2,8}(?:-[A-Za-z]{2,8})?$"},
+    "phase": {"type": "string", "minLength": 1},
+    "status": {"enum": ["needs_review", "reviewed"]},
+    "source_set_revision": {"type": "integer", "minimum": 0},
+    "output_dir": {"type": "string", "minLength": 1},
+    "ready_to_file": {"const": false},
+    "portal_actions_performed": {"const": false},
+    "signature_actions_performed": {"const": false},
+    "submission_actions_performed": {"const": false}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"}
+  }
+}

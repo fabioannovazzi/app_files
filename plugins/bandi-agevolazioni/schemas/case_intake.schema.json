@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/case-intake-1.0.json",
+  "title": "Bandi e agevolazioni case intake",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plugin", "run_id", "reference_date", "client_reference", "application", "applicant", "project", "professional_question"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "reference_date": {"type": "string", "format": "date"},
+    "client_reference": {"$ref": "#/$defs/id"},
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "issuing_authority", "procedure_id", "submission_deadline", "status"],
+      "properties": {
+        "title": {"type": "string"},
+        "issuing_authority": {"type": "string"},
+        "procedure_id": {"type": "string"},
+        "submission_deadline": {"type": ["string", "null"], "format": "date-time"},
+        "status": {"enum": ["unknown", "confirmed", "needs_professional_review"]}
+      }
+    },
+    "applicant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["legal_name", "tax_code", "vat_number", "confirmation_status"],
+      "properties": {
+        "legal_name": {"type": "string"},
+        "tax_code": {"type": "string"},
+        "vat_number": {"type": "string"},
+        "confirmation_status": {"enum": ["unknown", "confirmed", "needs_professional_review"]}
+      }
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["title", "summary", "requested_amount", "currency", "confirmation_status"],
+      "properties": {
+        "title": {"type": "string"},
+        "summary": {"type": "string"},
+        "requested_amount": {"type": ["string", "null"], "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"},
+        "currency": {"type": ["string", "null"], "pattern": "^[A-Z]{3}$"},
+        "confirmation_status": {"enum": ["unknown", "confirmed", "needs_professional_review"]}
+      }
+    },
+    "professional_question": {"type": "string"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"}
+  }
+}

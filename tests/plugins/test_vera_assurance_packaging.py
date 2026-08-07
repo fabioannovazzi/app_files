@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 ASSURANCE_CONSUMERS = {
     "audit-reconciliation",
+    "bandi-agevolazioni",
     "check-entries",
     "client-file-preparation",
     "concordato-plan-review",

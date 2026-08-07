@@ -138,6 +138,7 @@ CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
     "audit-reconciliation": "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
+    "bandi-agevolazioni": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
     "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
     "bilancio-xbrl-it": "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md",
     "check-entries": "modules/check-entries/skills/check-entries/SKILL.md",

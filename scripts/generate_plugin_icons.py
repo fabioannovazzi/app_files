@@ -182,6 +182,13 @@ SPECS = (
         "registry",
     ),
     IconSpec(
+        "bandi-agevolazioni",
+        "Bandi e agevolazioni",
+        "#315F72",
+        "#79B66A",
+        "grant",
+    ),
+    IconSpec(
         "previdenza-inps",
         "Previdenza INPS",
         "#4B5F70",
@@ -387,6 +394,12 @@ def _body(spec: IconSpec) -> str:
   <rect x="37" y="31" width="18" height="20" rx="4" fill="{accent}"/>
   <path d="M42 37h8M42 42h8" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>
   <path d="m42 47 2 2 5-5" fill="none" stroke="#171816" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "grant": f"""
+  <path d="M16 12h28l8 9v32H16z" fill="{paper}"/>
+  <path d="M44 12v10h8" fill="#DCE5E8"/>
+  <path d="M23 27h17M23 35h12M23 43h10" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="45" cy="42" r="10" fill="{accent}"/>
+  <path d="M48 36c-1-1-5-1-6 1-2 4 7 3 5 7-1 2-5 2-7 0M44 33v18" fill="none" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>""",
         "pension": f"""
   <path d="M16 13h29l7 8v31H16z" fill="{paper}"/>
   <path d="M45 13v9h7" fill="#E1D6C3"/>

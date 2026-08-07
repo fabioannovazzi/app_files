@@ -39,6 +39,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "deep-research-validator",
     "previdenza-inps",
     "registro-imprese-sari",
+    "bandi-agevolazioni",
 )
 
 

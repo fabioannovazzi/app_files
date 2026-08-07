@@ -1,0 +1,43 @@
+{
+  "name": "bandi-agevolazioni",
+  "version": "0.1.1",
+  "description": "Prepara dossier rivedibili per bandi e agevolazioni da fonti ufficiali e dati cliente, senza firma o invio.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "bandi",
+    "agevolazioni",
+    "finanza-agevolata",
+    "contributi",
+    "commercialisti",
+    "dossier",
+    "professional-review"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Bandi e agevolazioni",
+    "shortDescription": "Prepara dossier agevolativi rivedibili, senza invio.",
+    "longDescription": "Vera organizza il bando, gli allegati, le modifiche, le FAQ, i moduli e le evidenze del cliente in un dossier rivedibile. Collega requisiti, verifiche, costi, documenti, campi e testi alle fonti, mantiene separati completezza ed esito e segnala dati mancanti, conflitti e punti da confermare. Non accede ai portali, non firma e non invia domande.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "supportURL": "https://mparanza.com/support",
+    "capabilities": ["Interactive", "Write", "Analysis"],
+    "defaultPrompt": [
+      "Ricostruisci i requisiti di questo bando e prepara il dossier rivedibile usando soltanto le fonti ufficiali e le evidenze del cliente.",
+      "Controlla requisiti, esclusioni, spese, documenti, moduli e testi; separa completezza ed esito.",
+      "Non accedere ai portali, non firmare e non inviare nulla."
+    ],
+    "brandColor": "#315F72",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg"
+  }
+}

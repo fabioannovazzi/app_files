@@ -1,0 +1,4 @@
+interface:
+  display_name: "Bandi e agevolazioni"
+  short_description: "Prepara domande agevolative rivedibili"
+  default_prompt: "Use $bandi-agevolazioni to prepare this grant application dossier from the official call and client evidence."
