@@ -681,7 +681,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     expected_core_module_count = 11
 
     assert core.count('class="module-row"') == expected_core_module_count
-    assert jurisdiction.count('data-jurisdiction-item="it"') == 6
+    assert jurisdiction.count('data-jurisdiction-item="it"') == 7
     assert jurisdiction.count('data-jurisdiction-item="en"') == 1
     assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
@@ -1083,7 +1083,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 20
+    expected_module_link_count = 21
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
@@ -1228,6 +1228,27 @@ def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> No
         "bilancio-intelligente.vtt",
     ):
         assert (page_path.parent / "media" / filename).is_file()
+
+
+def test_vera_hub_explains_bandi_with_evidence_and_professional_boundaries() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert 'id="bandi-agevolazioni" data-bandi-section hidden' in page
+    assert 'data-bandi-nav hidden' in page
+    assert 'const showBandi = lang === "it";' in page
+    assert (
+        'document.querySelector("[data-bandi-section]").hidden = !showBandi;'
+        in page
+    )
+    assert "Radar dello studio" in page
+    assert "Dossier del cliente" in page
+    assert "non è la probabilità di aver trovato tutte le agevolazioni" in page
+    assert "Implementato e testato" in page
+    assert "Da provare nel pilot" in page
+    assert "Vera non garantisce completezza" in page
+    assert "non riceve credenziali" in page
+    assert "non accede al portale" in page
+    assert "non firma e non invia" in page
 
 
 def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
