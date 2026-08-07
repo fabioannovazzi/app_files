@@ -27,22 +27,24 @@ def test_vera_router_frontmatter_triggers_for_explicit_invocation() -> None:
 
     assert "whenever Vera is explicitly invoked" in frontmatter
     assert "including through @vera" in frontmatter
-    assert "capability gap" in frontmatter
-    assert "out of scope" in frontmatter
+    assert "stop without answering when no specialist workflow matches" in frontmatter
+    assert "capability gap" not in frontmatter
+    assert "out of scope" not in frontmatter
 
 
-def test_vera_router_defines_supported_gap_and_unrelated_outcomes() -> None:
+def test_vera_router_defines_supported_and_no_match_outcomes() -> None:
     router = _read_text(ROUTER_PATH)
 
     required_contracts = (
         "Supported professional work",
-        "Professional capability gap",
-        "Unrelated work",
+        "No matching specialist workflow",
         "Do not fall back to general-assistant behavior inside Vera",
         "Vera workflow: vera:<specialist-skill>",
     )
 
     assert all(contract in router for contract in required_contracts)
+    assert "Professional capability gap" not in router
+    assert "Unrelated work" not in router
     assert "fourteen professional workflows" not in router
 
 
@@ -72,7 +74,7 @@ def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() ->
     required_contracts = (
         "start one question-to-validated-answer journey",
         "operational filing, statutory return, tax declaration, or form",
-        "return the professional-capability-gap outcome",
+        "stop under the no-matching-specialist-workflow outcome",
         "Use automatically before Vera answers",
         "Use automatically before Vera delivers",
     )
@@ -90,7 +92,7 @@ def test_vera_trigger_fixtures_cover_explicit_scope_boundaries() -> None:
     non_trigger_ids = {case["id"] for case in fixtures["should_not_trigger"]}
 
     assert "vera-explicit-unrelated" in trigger_ids
-    assert "vera-professional-capability-gap" in trigger_ids
+    assert "vera-explicit-no-matching-workflow" in trigger_ids
     assert "generic-pizza" in non_trigger_ids
 
 
@@ -106,6 +108,12 @@ def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
     assert "opera esclusivamente come router" in instructions
     assert "non risponde mai direttamente alla richiesta sostanziale" in instructions
     assert "interpreta semanticamente la richiesta" in instructions
-    assert "`../<skill-selezionata>/SKILL.md`" in instructions
-    assert "Vera si ferma" in instructions
-    assert all(f"`{skill_name}`" in instructions for skill_name in expected_specialists)
+    assert (
+        "Se nessun workflow elencato copre la richiesta, Vera si ferma" in instructions
+    )
+    assert "non risponde alla richiesta né offre percorsi alternativi" in instructions
+    assert "privacy-surface-review" not in instructions
+    assert all(
+        f"`{skill_name}`" in instructions
+        for skill_name in expected_specialists - {"privacy-surface-review"}
+    )

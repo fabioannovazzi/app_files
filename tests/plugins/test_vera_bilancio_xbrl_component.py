@@ -66,13 +66,17 @@ def test_vera_chatgpt_bilancio_skill_routes_to_complete_module_workflow() -> Non
     bundle = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
 
     entries = builder.chatgpt_upload_entries(bundle)
-    skill = entries["skills/bilancio-xbrl-it/SKILL.md"].decode("utf-8")
+    router = entries["skills/vera/SKILL.md"].decode("utf-8")
+    skill = entries["modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"].decode(
+        "utf-8"
+    )
 
-    assert "`../../modules/bilancio-xbrl-it`" in skill
-    assert "`skills/bilancio-xbrl-it/SKILL.md`" in skill
-    assert "tutti i riferimenti che richiede" in skill
-    assert "directory di lavoro" in skill
-    assert "`python scripts/check_dependencies.py`" in skill
+    assert "skills/bilancio-xbrl-it/SKILL.md`" in router
+    assert "skills/bilancio-xbrl-it/SKILL.md" not in {
+        name for name in entries if name.startswith("skills/")
+    }
+    assert "# Bilancio intelligente" in skill
+    assert "scripts/check_dependencies.py" in skill
 
 
 def test_bilancio_xbrl_icon_uses_shared_theme_and_is_unique() -> None:

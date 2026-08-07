@@ -10,12 +10,12 @@
     {
       "id": "vera-explicit-unrelated",
       "prompt": "@vera where can I find a good pizza?",
-      "required_signals": ["Vera router activated", "outside Vera's professional scope", "ordinary ChatGPT", "no pizza recommendation"]
+      "required_signals": ["Vera router activated", "no matching specialist workflow", "no pizza recommendation"]
     },
     {
-      "id": "vera-professional-capability-gap",
+      "id": "vera-explicit-no-matching-workflow",
       "prompt": "@vera prepara una dichiarazione IVA annuale completa e pronta per l'invio telematico.",
-      "required_signals": ["professional capability gap", "no generic Codex answer", "sanitized change request", "consent before transmission"]
+      "required_signals": ["no matching specialist workflow", "no generic Codex answer", "no alternative route"]
     },
     {
       "id": "vera-commercialista-task",

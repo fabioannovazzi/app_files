@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.91"
+    assert manifest["version"] == "0.1.92"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -500,28 +500,26 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "indicizzare" not in approved_description
     assert "consiglia Codex Desktop" not in approved_description
 
+    router_path = "skills/vera/SKILL.md"
     wrapper_path = "skills/studio-archive/SKILL.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
     whatsapp_reference_path = "skills/studio-archive/references/whatsapp-desktop.md"
     gmail_evals_path = "evals/marketplace_gmail_cases.json"
     whatsapp_evals_path = "evals/whatsapp_desktop_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
-    assert wrapper_path in entries
+    assert router_path in entries
+    assert wrapper_path not in entries
     assert reference_path not in entries
     assert whatsapp_reference_path not in entries
     assert gmail_evals_path in entries
     assert whatsapp_evals_path in entries
     assert module_skill_path in entries
-    wrapper = entries[wrapper_path].decode("utf-8")
-    compact_wrapper = " ".join(wrapper.split())
+    router = entries[router_path].decode("utf-8")
+    compact_router = " ".join(router.split())
     module_skill = entries[module_skill_path].decode("utf-8")
-    assert "Indica un solo cliente e la fonte da consultare" in wrapper
-    assert "mantiene separato il perimetro del cliente" in wrapper
-    assert "senza modificare o inviare contenuti" in wrapper
-    assert "references/marketplace-gmail.md" not in wrapper
-    assert "references/whatsapp-desktop.md" not in wrapper
-    assert "Do not resolve the local document module" not in wrapper
-    assert "Codex Desktop" not in compact_wrapper
+    assert "studio-archive" in router
+    assert "non dispone di un workflow specialistico adatto" in router
+    assert "Codex Desktop" not in compact_router
     assert "## Connected Gmail workflow" in module_skill
     assert module_skill.index("get_profile") < module_skill.index("search_emails")
     assert module_skill.index("search_emails") < module_skill.index("batch_read_email")
@@ -597,14 +595,18 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             encoding="utf-8"
         )
     )
+    public_skill_names = (
+        {plugin_name} if plugin_name == "vera" else set(instruction_config["skills"])
+    )
     expected_card_bodies = {
         f"skills/{skill_name}/SKILL.md": card["instructions"]
         for skill_name, card in instruction_config["skills"].items()
+        if skill_name in public_skill_names
     }
     assert card_bodies == expected_card_bodies
     assert len(set(card_bodies.values())) == len(card_bodies)
     assert builder.CHATGPT_SKILL_CARDS_FILE not in entries
-    for skill_name in instruction_config["skills"]:
+    for skill_name in public_skill_names:
         skill_prefix = f"skills/{skill_name}/"
         assert {
             name.removeprefix(skill_prefix)
@@ -641,15 +643,15 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        audit_reconciliation = card_bodies["skills/audit-reconciliation/SKILL.md"]
-        assert audit_reconciliation.startswith(
-            "Allega mastrini, partite aperte, estratti conto"
+        assert set(card_bodies) == {"skills/vera/SKILL.md"}
+        assert not any(
+            name.startswith("skills/audit-reconciliation/") for name in entries
         )
-        audit_interface = entries[
-            "skills/audit-reconciliation/agents/openai.yaml"
+        full_workflow = entries[
+            "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
         ].decode("utf-8")
-        assert 'display_name: "Riconciliazione contabile"' in audit_interface
-        assert "Use when reconciling" not in audit_interface
+        assert "# Audit Reconciliation" in full_workflow
+        assert "## Required Questions" in full_workflow
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "vera"])
@@ -662,9 +664,13 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
             encoding="utf-8"
         )
     )
+    public_skill_names = (
+        {plugin_name} if plugin_name == "vera" else set(instruction_config["skills"])
+    )
     expected_bodies = {
         f"skills/{skill_name}/SKILL.md": card["instructions"]
         for skill_name, card in instruction_config["skills"].items()
+        if skill_name in public_skill_names
     }
     upload_zip = (
         ROOT / "plugin_packages" / plugin_name / f"{plugin_name}-chatgpt-upload.zip"
@@ -677,7 +683,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
             if name in expected_bodies
             for content in [archive.read(name).decode("utf-8")]
         }
-        for skill_name in instruction_config["skills"]:
+        for skill_name in public_skill_names:
             skill_prefix = f"skills/{skill_name}/"
             assert {
                 name.removeprefix(skill_prefix)
@@ -862,17 +868,19 @@ def test_chatgpt_card_config_rejects_internal_runtime_copy() -> None:
         )
 
 
-def test_vera_chatgpt_card_config_rejects_incomplete_router_catalog() -> None:
+def test_vera_chatgpt_card_config_rejects_incomplete_router_paths() -> None:
     builder = load_builder()
     config_path = ROOT / "plugins" / "vera" / builder.CHATGPT_SKILL_CARDS_FILE
     payload = json.loads(config_path.read_text(encoding="utf-8"))
+    target = builder.VERA_CHATGPT_ROUTER_TARGETS["sales-plan"]
+    route = f"`sales-plan` → `../../{target}`"
     payload["skills"]["vera"]["instructions"] = payload["skills"]["vera"][
         "instructions"
-    ].replace("`sales-plan`, ", "", 1)
+    ].replace(route, "", 1)
 
     with pytest.raises(
         ValueError,
-        match=r"Marketplace root router catalog is incomplete; missing=\['sales-plan'\]",
+        match=r"Marketplace root router paths are incomplete; missing=\['sales-plan'\]",
     ):
         builder.load_chatgpt_skill_cards(
             json.dumps(payload).encode("utf-8"),

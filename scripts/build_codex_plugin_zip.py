@@ -135,6 +135,28 @@ CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
+VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
+VERA_CHATGPT_ROUTER_TARGETS = {
+    "audit-reconciliation": "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
+    "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
+    "bilancio-xbrl-it": "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md",
+    "check-entries": "modules/check-entries/skills/check-entries/SKILL.md",
+    "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+    "dati-fiscali-strutturati": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
+    "deep-research-validator": "modules/deep-research-validator/skills/deep-research-validator/SKILL.md",
+    "email-cliente": "modules/client-file-preparation/skills/email-cliente/SKILL.md",
+    "fatture-xml-check": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
+    "financial-analysis": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
+    "journal-bank-reconciliation": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+    "journal-sampling": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+    "new-client": "modules/new-client/skills/new-client/SKILL.md",
+    "previdenza-inps": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+    "prompt-optimizer": "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
+    "registro-imprese-sari": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+    "report-builder": "modules/report-builder/skills/report-builder/SKILL.md",
+    "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
+    "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
+}
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (
     "Do not stop merely because the current surface is ChatGPT."
@@ -1153,8 +1175,9 @@ def load_chatgpt_skill_cards(
             "opera esclusivamente come router",
             "non risponde mai direttamente alla richiesta sostanziale",
             "interpreta semanticamente la richiesta",
-            "`../<skill-selezionata>/SKILL.md`",
-            "Vera si ferma",
+            "Se nessun workflow elencato copre la richiesta, Vera si ferma",
+            "non dispone di un workflow specialistico adatto",
+            "non risponde alla richiesta né offre percorsi alternativi",
         )
         missing_contracts = [
             contract for contract in required_router_contracts if contract not in router
@@ -1164,15 +1187,38 @@ def load_chatgpt_skill_cards(
                 "vera: Marketplace root card is missing mandatory router contracts: "
                 f"{missing_contracts}"
             )
-        missing_specialists = sorted(
-            skill_name
-            for skill_name in expected_skills - {plugin_name}
-            if f"`{skill_name}`" not in router
+        expected_router_skills = (
+            expected_skills - {plugin_name} - VERA_CHATGPT_DEVELOPER_SKILLS
         )
-        if missing_specialists:
+        if set(VERA_CHATGPT_ROUTER_TARGETS) != expected_router_skills:
             raise ValueError(
-                "vera: Marketplace root router catalog is incomplete; "
-                f"missing={missing_specialists}"
+                "vera: Marketplace router target coverage differs; "
+                f"missing={sorted(expected_router_skills - set(VERA_CHATGPT_ROUTER_TARGETS))}, "
+                f"unexpected={sorted(set(VERA_CHATGPT_ROUTER_TARGETS) - expected_router_skills)}"
+            )
+        missing_routes = sorted(
+            skill_name
+            for skill_name, target in VERA_CHATGPT_ROUTER_TARGETS.items()
+            if f"`{skill_name}` → `../../{target}`" not in router
+        )
+        if missing_routes:
+            raise ValueError(
+                "vera: Marketplace root router paths are incomplete; "
+                f"missing={missing_routes}"
+            )
+        forbidden_router_branches = (
+            "richiesta coerente con la missione",
+            "richiesta è estranea",
+            "proposta di miglioramento",
+            "ChatGPT ordinario",
+        )
+        present_branches = [
+            branch for branch in forbidden_router_branches if branch in router
+        ]
+        if present_branches:
+            raise ValueError(
+                "vera: Marketplace root router must use one no-match outcome; "
+                f"found={present_branches}"
             )
     return cards
 
@@ -1203,6 +1249,19 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             plugin_name=plugin_name,
             expected_skills=expected_cards,
         )
+    public_skill_names = set(skill_cards)
+    if plugin_name == "vera":
+        public_skill_names = {plugin_name}
+        missing_targets = sorted(
+            target
+            for target in VERA_CHATGPT_ROUTER_TARGETS.values()
+            if f"{prefix}{target}" not in packaged_entries
+        )
+        if missing_targets:
+            raise ValueError(
+                "vera: Marketplace router targets are missing from the package: "
+                f"{missing_targets}"
+            )
     entries: dict[str, bytes] = {"LICENSE": LICENSE_PATH.read_bytes()}
     for packaged_name, content in packaged_entries.items():
         if not packaged_name.startswith(prefix):
@@ -1210,6 +1269,15 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         name = packaged_name.removeprefix(prefix)
         path_parts = name.split("/")
         if name == CHATGPT_SKILL_CARDS_FILE:
+            continue
+        if (
+            plugin_name == "vera"
+            and len(path_parts) >= 2
+            and path_parts[0] == "skills"
+            and path_parts[1] not in public_skill_names
+        ):
+            # Vera has one public ChatGPT entrypoint. Full specialist workflows
+            # remain internal modules and are loaded by the model-led root router.
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
@@ -1251,7 +1319,8 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
                 instructions=skill_cards[skill_name].instructions,
             )
         entries[name] = content
-    for skill_name, card in skill_cards.items():
+    for skill_name in sorted(public_skill_names):
+        card = skill_cards[skill_name]
         entries[f"skills/{skill_name}/agents/openai.yaml"] = chatgpt_skill_interface(
             card
         )
