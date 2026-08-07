@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/intelligence-register-1.0.json",
+  "title": "Non-authoritative Codex intelligence runs for one grant case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "contract_version", "plugin", "run_id", "runs"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "contract_version": {"const": "bandi-intelligence-v1"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "runs": {"type": "array", "items": {"$ref": "#/$defs/run"}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "task": {
+      "enum": [
+        "WORKFLOW_GUIDANCE",
+        "SOURCE_INTERPRETATION",
+        "REQUIREMENT_DRAFTING",
+        "EVIDENCE_MAPPING",
+        "ASSESSMENT_REASONING",
+        "COST_CLASSIFICATION",
+        "FORM_PORTAL_GUIDANCE",
+        "NARRATIVE_DRAFTING",
+        "CONSISTENCY_REVIEW",
+        "MISSING_INFO_RED_FLAGS",
+        "AUTHORITY_SIMULATION"
+      ]
+    },
+    "modelMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model", "prompt_template_version"],
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "prompt_template_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["decision", "reviewer_id", "reviewer_role", "confirmation_basis", "identity_assurance", "decided_at", "notes", "candidate_workbench_sha256"],
+      "properties": {
+        "decision": {"enum": ["accepted", "rejected", "returned"]},
+        "reviewer_id": {"$ref": "#/$defs/id"},
+        "reviewer_role": {"type": "string", "minLength": 1},
+        "confirmation_basis": {"const": "explicit_user_confirmation"},
+        "identity_assurance": {"const": "asserted_not_authenticated"},
+        "decided_at": {"type": "string", "format": "date-time"},
+        "notes": {"type": "string"},
+        "candidate_workbench_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intelligence_run_id", "idempotency_key", "task", "subject_ids", "status", "packet_sha256", "input_artifact_hashes", "model_metadata", "output", "recorded_by", "recorded_at", "requires_review", "decision", "applied_workbench_sha256"],
+      "properties": {
+        "intelligence_run_id": {"$ref": "#/$defs/id"},
+        "idempotency_key": {"$ref": "#/$defs/id"},
+        "task": {"$ref": "#/$defs/task"},
+        "subject_ids": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "status": {"enum": ["MODEL_SUGGESTED", "APPLYING", "ACCEPTED", "REJECTED", "RETURNED", "STALE"]},
+        "packet_sha256": {"$ref": "#/$defs/sha256"},
+        "input_artifact_hashes": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["case_intake", "source_register", "application_workbench"],
+          "properties": {
+            "case_intake": {"$ref": "#/$defs/sha256"},
+            "source_register": {"$ref": "#/$defs/sha256"},
+            "application_workbench": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "model_metadata": {"$ref": "#/$defs/modelMetadata"},
+        "output": {"type": "object"},
+        "recorded_by": {"$ref": "#/$defs/id"},
+        "recorded_at": {"type": "string", "format": "date-time"},
+        "requires_review": {"const": true},
+        "decision": {"anyOf": [{"$ref": "#/$defs/decision"}, {"type": "null"}]},
+        "applied_workbench_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]}
+      }
+    }
+  }
+}

@@ -122,8 +122,10 @@ lifecycle state, or completed artifact declaration.
 
 ## Workflow
 
-Read `references/workflow-method.md` completely before interpreting sources or
-editing the workbench.
+Read `references/product-thesis.md`, `references/workflow-method.md`, and
+`references/implementation-status.md` completely before interpreting sources,
+requesting a model contribution, or editing the workbench. Use
+`references/acceptance-matrix.md` when reviewing or releasing the workflow.
 
 1. Run `python scripts/check_dependencies.py` from the component root. The
    declared `jsonschema` dependency is required for exhaustive runtime contract
@@ -165,13 +167,58 @@ python scripts/link_sources.py \
   --target-source-id CALL-001
 ```
 
-4. Read the selected sources and client evidence. Claude/model reasoning drafts
-   atomic requirements, facts, assessments, document checklist items, expenses,
-   form fields, narratives, consistency checks, issues, and an adversarial
-   authority-review simulation in `application_workbench.json`.
-   Deterministic scripts validate shape, identity, references, exact arithmetic,
-   review hashes, status consistency, and prohibited portal controls; they do
-   not interpret the call.
+4. Read the selected sources and client evidence. Request one bounded semantic
+   contribution at a time. Create a bounded task packet without mutating the
+   case. The intake applicant object and local paths are not copied by default,
+   but professionally relevant facts and excerpts may still identify the
+   applicant; there is no automatic anonymization:
+
+```bash
+python scripts/intelligence_workflow.py \
+  --output-dir <run-output> \
+  --client-engagement <client_engagement_path> \
+  packet
+```
+
+   Record the exact response and exact provider/model/template identity as a
+   non-authoritative `MODEL_SUGGESTED` run:
+
+```bash
+python scripts/intelligence_workflow.py \
+  --output-dir <run-output> \
+  --client-engagement <client_engagement_path> \
+  record \
+  --model-output <strict-output.json> \
+  --provider <provider> \
+  --model <exact-model> \
+  --prompt-template-version bandi-intelligence-v1 \
+  --recorded-by <operator> \
+  --idempotency-key <stable-request-id>
+```
+
+   Claude/model reasoning may propose atomic requirements, facts, assessments,
+   document checklist items, expenses, form fields, narratives, consistency
+   checks, issues, and an adversarial authority-review simulation. It cannot
+   update the workbench until a professional explicitly accepts that exact run:
+
+```bash
+python scripts/intelligence_workflow.py \
+  --output-dir <run-output> \
+  --client-engagement <client_engagement_path> \
+  decide \
+  --intelligence-run-id INTEL-000001 \
+  --decision accepted \
+  --reviewer-id <reviewer> \
+  --reviewer-role commercialista \
+  --confirmed-by-user
+```
+
+   `rejected` and `returned` are also explicit terminal decisions. Accepted
+   contributions enter `application_workbench.json` only as `proposed`; they
+   never overwrite confirmed or blocked work. Any change to intake, sources, or
+   workbench makes an undecided run stale. Deterministic scripts validate shape,
+   identity, references, exact arithmetic, review hashes, status consistency,
+   and prohibited portal controls; they do not interpret the call.
 5. Record explicit professional decisions mechanically:
 
 ```bash

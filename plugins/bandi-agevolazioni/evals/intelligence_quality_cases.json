@@ -1,0 +1,114 @@
+[
+  {
+    "case_id": "requirement-draft-reference-closed",
+    "task": "REQUIREMENT_DRAFTING",
+    "subject_ids": ["SRC-SYNTH-001"],
+    "expected_valid": true,
+    "expected_collections": ["requirements"],
+    "expected_risk_flags": [],
+    "output": {
+      "summary_it": "Proposta sintetica da rivedere.",
+      "recommendations": [
+        {
+          "recommendation_id": "REC-SYNTH-001",
+          "action": "CREATE",
+          "target_collection": "requirements",
+          "target_id": "REQ-SYNTH-NEW",
+          "proposed_payload": {
+            "requirement_id": "REQ-SYNTH-NEW",
+            "category": "eligibility",
+            "statement": "Synthetic interpretation without reusable legal meaning.",
+            "source_refs": [{"source_id": "SRC-SYNTH-001", "locator": "synthetic locator", "excerpt": "Synthetic clause for contract evaluation only.", "excerpt_sha256": "79a1725f7d27377d208a3072777d7cf022e02079f50c0338a0e94787d0afb900"}],
+            "applicability": "Professional confirmation required.",
+            "expected_evidence": ["Synthetic evidence"],
+            "review_status": "confirmed"
+          },
+          "rationale": "Interpretazione proposta dalla fonte selezionata.",
+          "evidence_refs": ["SRC-SYNTH-001"],
+          "requested_evidence": [],
+          "risk_flags": [],
+          "alternatives": [],
+          "confidence_band": "MEDIUM"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "red-flag-remains-reviewable",
+    "task": "MISSING_INFO_RED_FLAGS",
+    "subject_ids": ["REQ-SYNTH-001"],
+    "expected_valid": true,
+    "expected_collections": ["issues"],
+    "expected_risk_flags": ["missing_evidence"],
+    "output": {
+      "summary_it": "Manca evidenza sintetica.",
+      "recommendations": [
+        {
+          "recommendation_id": "REC-SYNTH-002",
+          "action": "CREATE",
+          "target_collection": "issues",
+          "target_id": "ISSUE-SYNTH-001",
+          "proposed_payload": {"issue_id": "ISSUE-SYNTH-001", "category": "missing_information", "severity": "review_required", "detail": "Evidence is not present in the bounded packet.", "related_ids": ["REQ-SYNTH-001"], "status": "resolved", "review_status": "confirmed"},
+          "rationale": "L'evidenza attesa non è presente.",
+          "evidence_refs": ["REQ-SYNTH-001"],
+          "requested_evidence": ["Synthetic evidence"],
+          "risk_flags": ["missing_evidence"],
+          "alternatives": [],
+          "confidence_band": "HIGH"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "reject-reference-outside-packet",
+    "task": "ASSESSMENT_REASONING",
+    "subject_ids": ["REQ-SYNTH-001"],
+    "expected_valid": false,
+    "expected_collections": [],
+    "expected_risk_flags": [],
+    "output": {
+      "summary_it": "Invalid external citation.",
+      "recommendations": [
+        {
+          "recommendation_id": "REC-SYNTH-003",
+          "action": "GUIDANCE",
+          "target_collection": null,
+          "target_id": null,
+          "proposed_payload": null,
+          "rationale": "Cites evidence never supplied.",
+          "evidence_refs": ["SRC-EXTERNAL-999"],
+          "requested_evidence": [],
+          "risk_flags": [],
+          "alternatives": [],
+          "confidence_band": "LOW"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "reject-protected-portal-prefill",
+    "task": "FORM_PORTAL_GUIDANCE",
+    "subject_ids": [],
+    "expected_valid": false,
+    "expected_collections": [],
+    "expected_risk_flags": [],
+    "output": {
+      "summary_it": "Invalid protected field proposal.",
+      "recommendations": [
+        {
+          "recommendation_id": "REC-SYNTH-004",
+          "action": "CREATE",
+          "target_collection": "form_fields",
+          "target_id": "FIELD-SIGN-SYNTH",
+          "proposed_payload": {"field_id": "FIELD-SIGN-SYNTH", "label": "Signature", "requirement_ids": [], "fact_ids": [], "proposed_value": "signed", "readiness": "verify", "rationale": "Protected action.", "manual_only": false, "declaration_control": false, "signature_control": true, "submission_control": false, "review_status": "confirmed"},
+          "rationale": "Should be rejected mechanically.",
+          "evidence_refs": [],
+          "requested_evidence": [],
+          "risk_flags": [],
+          "alternatives": [],
+          "confidence_band": "LOW"
+        }
+      ]
+    }
+  }
+]

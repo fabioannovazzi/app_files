@@ -21,7 +21,7 @@
       {
         "id": "application-case-and-evidence",
         "purpose": "Reconstruct source-backed requirements and prepare a reviewable grant-application dossier",
-        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues and professional-review decisions",
+        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -73,12 +73,16 @@
     {
       "id": "explicit-review-confirmation",
       "control": "A review event is recorded only after the caller supplies explicit user confirmation; the event marks the reviewer identity as locally asserted and not authenticated, so the dossier cannot misrepresent identity assurance."
+    },
+    {
+      "id": "sealed-model-contribution-boundary",
+      "control": "Each bounded model contribution is reference-closed and sealed with exact input and packet hashes, model and prompt-template identity, starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "09654d448aa96fc4d34542bf7044945e3c78a89dbdf859c80c07722b0b4b7651"
+    "source_fingerprint": "98d93fd586958a57302c321e17a8c4f35dcc1191bdb3d089b7642fdc4080cce6"
   }
 }

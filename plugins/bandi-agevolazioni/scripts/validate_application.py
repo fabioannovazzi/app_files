@@ -15,6 +15,7 @@ from case_core import (
     case_lock,
     iso_now,
     load_running_context,
+    prohibited_secret_paths,
     require_run_artifact,
     safe_identifier,
     write_private_json,
@@ -29,59 +30,10 @@ LOGGER = logging.getLogger(__name__)
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 READINESS = {"ready", "missing", "verify", "not_applicable"}
 REVIEW_STATUS = {"proposed", "confirmed", "rejected", "blocked"}
-PROHIBITED_SECRET_KEYS = {
-    "password",
-    "passcode",
-    "pin",
-    "otp",
-    "cookie",
-    "cookies",
-    "token",
-    "access_token",
-    "refresh_token",
-    "session",
-    "session_id",
-    "signature",
-    "spid",
-    "cie",
-    "cns",
-    "credential",
-    "credentials",
-    "api_key",
-    "auth_token",
-    "client_secret",
-    "digital_signature",
-    "one_time_code",
-    "private_key",
-    "secret_key",
-    "session_cookie",
-}
 
 
 def _issue(issues: list[dict[str, str]], code: str, path: str, message: str) -> None:
     issues.append({"code": code, "path": path, "message": message})
-
-
-def _walk_secrets(value: object, *, path: str, issues: list[dict[str, str]]) -> None:
-    if isinstance(value, dict):
-        for key, child in value.items():
-            child_path = f"{path}.{key}" if path else str(key)
-            normalized = re.sub(
-                r"[^a-z0-9]+",
-                "_",
-                str(key).strip().casefold(),
-            ).strip("_")
-            if normalized in PROHIBITED_SECRET_KEYS:
-                _issue(
-                    issues,
-                    "secret_or_session_material_forbidden",
-                    child_path,
-                    "credentials, signatures, tokens, cookies, and session material are forbidden",
-                )
-            _walk_secrets(child, path=child_path, issues=issues)
-    elif isinstance(value, list):
-        for index, child in enumerate(value):
-            _walk_secrets(child, path=f"{path}[{index}]", issues=issues)
 
 
 def _items(
@@ -262,6 +214,9 @@ def _validate_application_locked(
     workbench = require_run_artifact(
         output_dir / "application_workbench.json", run_id=run_id
     )
+    intelligence = require_run_artifact(
+        output_dir / "intelligence_register.json", run_id=run_id
+    )
     reviews = require_run_artifact(output_dir / "review_log.json", run_id=run_id)
     run_state = require_run_artifact(output_dir / "run_state.json", run_id=run_id)
     issues: list[dict[str, str]] = []
@@ -269,13 +224,33 @@ def _validate_application_locked(
         ("case_intake", intake),
         ("source_register", sources),
         ("application_workbench", workbench),
+        ("intelligence_register", intelligence),
         ("review_log", reviews),
         ("run_state", run_state),
     ):
-        _walk_secrets(payload, path=label, issues=issues)
+        for secret_path in prohibited_secret_paths(payload, path=label):
+            _issue(
+                issues,
+                "secret_or_session_material_forbidden",
+                secret_path,
+                "credentials, signatures, tokens, cookies, and session material are forbidden",
+            )
         issues.extend(validate_artifact_schema(label, payload))
         if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
             _issue(issues, "artifact_identity_mismatch", label, "plugin/run mismatch")
+    applying_intelligence = [
+        str(item.get("intelligence_run_id"))
+        for item in intelligence.get("runs", [])
+        if isinstance(item, dict) and item.get("status") == "APPLYING"
+    ]
+    if applying_intelligence:
+        _issue(
+            issues,
+            "intelligence_application_incomplete",
+            "intelligence_register.runs",
+            "interrupted intelligence application requires recovery: "
+            + ", ".join(applying_intelligence),
+        )
     if run_state.get("source_set_revision") != sources.get("source_set_revision"):
         _issue(
             issues,
@@ -1102,6 +1077,7 @@ def _validate_application_locked(
         "case_intake": canonical_json_sha256(intake),
         "source_register": canonical_json_sha256(sources),
         "application_workbench": canonical_json_sha256(workbench),
+        "intelligence_register": canonical_json_sha256(intelligence),
         "review_log": canonical_json_sha256(reviews),
         "run_state": canonical_json_sha256(run_state),
     }
@@ -1129,6 +1105,11 @@ def _validate_application_locked(
             "consistency_checks": len(consistency_checks),
             "authority_checks": len(authority_checks),
             "issues": len(issue_items),
+            "intelligence_runs": len(intelligence.get("runs", [])),
+            "model_suggestions_pending": sum(
+                isinstance(item, dict) and item.get("status") == "MODEL_SUGGESTED"
+                for item in intelligence.get("runs", [])
+            ),
         },
         "issues": issues,
         "limitations": [
