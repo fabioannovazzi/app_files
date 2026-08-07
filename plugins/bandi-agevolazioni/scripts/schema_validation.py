@@ -15,6 +15,7 @@ ARTIFACT_SCHEMAS = {
     "case_intake": "case_intake.schema.json",
     "source_register": "source_register.schema.json",
     "application_workbench": "application_workbench.schema.json",
+    "intelligence_register": "intelligence_register.schema.json",
     "review_log": "review_log.schema.json",
     "run_state": "run_state.schema.json",
 }

@@ -45,6 +45,7 @@ def initialize_case(
         "case_intake": output_dir / "case_intake.json",
         "sources": output_dir / "source_register.json",
         "workbench": output_dir / "application_workbench.json",
+        "intelligence": output_dir / "intelligence_register.json",
         "reviews": output_dir / "review_log.json",
         "run_state": output_dir / "run_state.json",
     }
@@ -87,6 +88,7 @@ def initialize_case(
                     "issues",
                 ),
                 "reviews": ("events",),
+                "intelligence": ("runs",),
             }
             if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
                 raise ValueError(f"partial {label} belongs to another plugin run")
@@ -197,6 +199,16 @@ def initialize_case(
                         "Bozza per revisione professionale; Vera non firma e non invia la domanda."
                     ],
                 },
+            },
+        )
+        write_private_json(
+            files["intelligence"],
+            {
+                "schema_version": "1.0",
+                "contract_version": "bandi-intelligence-v1",
+                "plugin": PLUGIN_NAME,
+                "run_id": run_id,
+                "runs": [],
             },
         )
         write_private_json(

@@ -47,6 +47,7 @@ def _current_hashes(
     intake: dict[str, Any],
     sources: dict[str, Any],
     workbench: dict[str, Any],
+    intelligence: dict[str, Any],
     reviews: dict[str, Any],
     run_state: dict[str, Any],
 ) -> dict[str, str]:
@@ -54,6 +55,7 @@ def _current_hashes(
         "case_intake": canonical_json_sha256(intake),
         "source_register": canonical_json_sha256(sources),
         "application_workbench": canonical_json_sha256(workbench),
+        "intelligence_register": canonical_json_sha256(intelligence),
         "review_log": canonical_json_sha256(reviews),
         "run_state": canonical_json_sha256(run_state),
     }
@@ -64,6 +66,7 @@ def _render_markdown(
     intake: dict[str, Any],
     sources: dict[str, Any],
     workbench: dict[str, Any],
+    intelligence: dict[str, Any],
     reviews: dict[str, Any],
     audit: dict[str, Any],
 ) -> str:
@@ -481,6 +484,38 @@ def _render_markdown(
                 sorted(audit.get("review_states", {}).items()),
             ),
             "",
+            "## Contributi Codex registrati",
+            "",
+            "Le proposte del modello non hanno autorità autonoma. Solo le proposte con stato `ACCEPTED` sono state copiate nel workbench, sempre come `proposed`.",
+            "",
+            *_table(
+                [
+                    "Run",
+                    "Compito",
+                    "Stato",
+                    "Modello",
+                    "Sintesi",
+                    "Decisione professionale",
+                    "Hash pacchetto",
+                ],
+                (
+                    [
+                        item.get("intelligence_run_id"),
+                        item.get("task"),
+                        item.get("status"),
+                        f"{item.get('model_metadata', {}).get('provider')} / {item.get('model_metadata', {}).get('model')}",
+                        item.get("output", {}).get("summary_it"),
+                        (
+                            item.get("decision", {}).get("decision")
+                            if isinstance(item.get("decision"), dict)
+                            else "—"
+                        ),
+                        item.get("packet_sha256"),
+                    ]
+                    for item in intelligence.get("runs", [])
+                ),
+            ),
+            "",
             "## Registro delle revisioni professionali",
             "",
             *_table(
@@ -550,12 +585,17 @@ def _package_dossier_locked(
     workbench = require_run_artifact(
         output_dir / "application_workbench.json", run_id=run_id
     )
+    intelligence = require_run_artifact(
+        output_dir / "intelligence_register.json", run_id=run_id
+    )
     reviews = require_run_artifact(output_dir / "review_log.json", run_id=run_id)
     run_state = require_run_artifact(output_dir / "run_state.json", run_id=run_id)
     audit = require_run_artifact(output_dir / "validation_audit.json", run_id=run_id)
     if audit.get("status") != "passed":
         raise ValueError("validation_audit.json must pass before packaging")
-    current_hashes = _current_hashes(intake, sources, workbench, reviews, run_state)
+    current_hashes = _current_hashes(
+        intake, sources, workbench, intelligence, reviews, run_state
+    )
     if audit.get("artifact_hashes") != current_hashes:
         raise ValueError("validated artifacts changed; rerun validation")
     if workbench.get("dossier", {}).get("ready_to_file") is not False:
@@ -568,6 +608,7 @@ def _package_dossier_locked(
             intake=intake,
             sources=sources,
             workbench=workbench,
+            intelligence=intelligence,
             reviews=reviews,
             audit=audit,
         ),
@@ -579,13 +620,14 @@ def _package_dossier_locked(
         require_run_artifact(output_dir / "case_intake.json", run_id=run_id),
         require_run_artifact(output_dir / "source_register.json", run_id=run_id),
         require_run_artifact(output_dir / "application_workbench.json", run_id=run_id),
+        require_run_artifact(output_dir / "intelligence_register.json", run_id=run_id),
         require_run_artifact(output_dir / "review_log.json", run_id=run_id),
         require_run_artifact(output_dir / "run_state.json", run_id=run_id),
     )
     if final_hashes != current_hashes:
         raise ValueError("validated artifacts changed during packaging")
     manifest = {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "plugin": PLUGIN_NAME,
         "run_id": run_id,
         "generated_at": iso_now(),
@@ -641,6 +683,11 @@ def _package_dossier_locked(
                         "application_workbench",
                         "application_workbench.json",
                         "Requirement-level application workbench",
+                    ),
+                    (
+                        "intelligence_register",
+                        "intelligence_register.json",
+                        "Recorded Codex contributions and professional decisions",
                     ),
                     (
                         "review_log",

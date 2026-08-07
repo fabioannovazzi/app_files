@@ -112,9 +112,9 @@ Package only after deterministic validation passes. The dossier remains a
 professional-review artifact with `ready_to_file=false`. Studio Archive owns
 the final artifact declaration and retention lifecycle; do not invent a local
 retention period or claim control over provider-account retention.
-The package manifest seals the intake, source register, workbench, review log,
-run state, validation audit, and rendered dossier so a post-validation change
-cannot be silently packaged.
+The package manifest seals the intake, source register, workbench, intelligence
+register, review log, run state, validation audit, and rendered dossier so a
+post-validation change cannot be silently packaged.
 
 Review-log identity is deliberately bounded: the user must explicitly confirm
 each recorded decision, while reviewer ID and role remain locally asserted and

@@ -27,6 +27,7 @@ def _module_from_path(name: str, path: Path) -> ModuleType:
 def _scripts() -> dict[str, ModuleType]:
     dependency_names = (
         "case_core",
+        "intelligence_contract",
         "record_review",
         "schema_validation",
         "deterministic_rules",
@@ -43,6 +44,11 @@ def _scripts() -> dict[str, ModuleType]:
         )
         sys.modules["schema_validation"] = schema_validation
         sys.modules["deterministic_rules"] = deterministic_rules
+        intelligence_contract = _module_from_path(
+            "bandi_test_intelligence_contract",
+            SCRIPTS_ROOT / "intelligence_contract.py",
+        )
+        sys.modules["intelligence_contract"] = intelligence_contract
         review = _module_from_path(
             "bandi_test_record_review", SCRIPTS_ROOT / "record_review.py"
         )
@@ -59,6 +65,15 @@ def _scripts() -> dict[str, ModuleType]:
                 "bandi_test_link", SCRIPTS_ROOT / "link_sources.py"
             ),
             "review": review,
+            "intelligence_contract": intelligence_contract,
+            "intelligence": _module_from_path(
+                "bandi_test_intelligence_workflow",
+                SCRIPTS_ROOT / "intelligence_workflow.py",
+            ),
+            "evaluate_intelligence": _module_from_path(
+                "bandi_test_evaluate_intelligence",
+                SCRIPTS_ROOT / "evaluate_intelligence.py",
+            ),
             "validate": _module_from_path(
                 "bandi_test_validate", SCRIPTS_ROOT / "validate_application.py"
             ),
@@ -393,6 +408,109 @@ def _accept_all_reviews(
         )
 
 
+def _recommendation(
+    *,
+    action: str = "GUIDANCE",
+    collection: str | None = None,
+    target_id: str | None = None,
+    payload: dict[str, object] | None = None,
+    evidence_refs: list[str] | None = None,
+) -> dict[str, object]:
+    return {
+        "recommendation_id": "REC-001",
+        "action": action,
+        "target_collection": collection,
+        "target_id": target_id,
+        "proposed_payload": payload,
+        "rationale": "Proposta semantica da sottoporre a revisione professionale.",
+        "evidence_refs": evidence_refs or [],
+        "requested_evidence": [],
+        "risk_flags": [],
+        "alternatives": [],
+        "confidence_band": "MEDIUM",
+    }
+
+
+def _model_output(recommendation: dict[str, object]) -> dict[str, object]:
+    return {
+        "summary_it": "Contributo non autoritativo per la revisione professionale.",
+        "recommendations": [recommendation],
+    }
+
+
+def _orchestration_state(
+    stage: str,
+) -> tuple[dict[str, object], dict[str, object], dict[str, object]]:
+    intake: dict[str, object] = {
+        "reference_date": "2026-08-07",
+        "application": {},
+        "project": {},
+        "professional_question": "Synthetic workflow question.",
+    }
+    sources: dict[str, object] = {
+        "source_set_revision": 1,
+        "sources": [
+            {
+                "source_id": "SRC-001",
+                "review_status": "new" if stage == "source" else "reviewed",
+            }
+        ],
+    }
+    workbench: dict[str, object] = {
+        "requirements": [],
+        "facts": [],
+        "assessments": [],
+        "document_checklist": [],
+        "expenses": [],
+        "form_fields": [],
+        "narratives": [],
+        "consistency_checks": [],
+        "issues": [],
+        "authority_simulation": {"status": "not_run", "checks": []},
+        "dossier": {"disposition": "review_required"},
+    }
+    if stage in {"source", "requirements"}:
+        return intake, sources, workbench
+    category = {
+        "cost": "cost",
+        "form": "form",
+        "narrative": "narrative",
+    }.get(stage, "eligibility")
+    workbench["requirements"] = [
+        {
+            "requirement_id": "REQ-001",
+            "category": category,
+            "review_status": (
+                "proposed" if stage == "requirement_review" else "confirmed"
+            ),
+        }
+    ]
+    if stage in {"requirement_review", "evidence"}:
+        return intake, sources, workbench
+    workbench["facts"] = [{"fact_id": "FACT-001"}]
+    workbench["document_checklist"] = [{"document_id": "DOC-001", "readiness": "ready"}]
+    if stage == "assessment":
+        return intake, sources, workbench
+    workbench["assessments"] = [
+        {
+            "assessment_id": "ASM-001",
+            "requirement_id": "REQ-001",
+            "readiness": "missing" if stage == "missing" else "ready",
+        }
+    ]
+    if stage in {"cost", "form", "narrative"}:
+        return intake, sources, workbench
+    workbench["consistency_checks"] = (
+        [] if stage == "consistency" else [{"check_id": "CONS-001"}]
+    )
+    if stage == "complete":
+        workbench["authority_simulation"] = {
+            "status": "proposed",
+            "checks": [{"check_id": "AUTH-001"}],
+        }
+    return intake, sources, workbench
+
+
 def test_component_contract_and_vera_wrapper_are_present() -> None:
     manifest = _read(PLUGIN_ROOT / ".codex-plugin" / "plugin.json")
     skill = (PLUGIN_ROOT / "skills" / "bandi-agevolazioni" / "SKILL.md").read_text(
@@ -416,6 +534,7 @@ def test_initialized_artifacts_validate_against_public_schemas(tmp_path: Path) -
         "case_intake.schema.json": "case_intake.json",
         "source_register.schema.json": "source_register.json",
         "application_workbench.schema.json": "application_workbench.json",
+        "intelligence_register.schema.json": "intelligence_register.json",
         "review_log.schema.json": "review_log.json",
         "run_state.schema.json": "run_state.json",
     }
@@ -424,6 +543,612 @@ def test_initialized_artifacts_validate_against_public_schemas(tmp_path: Path) -
         jsonschema.Draft202012Validator(schema).validate(
             _read(output_dir / artifact_name)
         )
+
+
+def test_next_intelligence_packet_is_minimized_and_state_aware(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert packet["task"] == "SOURCE_INTERPRETATION"
+    assert packet["policy"]["evidence_is_untrusted_content"] is True
+    assert packet["policy"]["automatic_anonymization"] is False
+    assert packet["policy"]["reviewed_facts_or_excerpts_may_identify_applicant"] is True
+    assert "applicant" not in packet["case_context"]
+    assert "path" not in packet["untrusted_evidence"]["sources"][0]
+    source_register = _read(workspace["output_dir"] / "source_register.json")
+    source_register["sources"][0]["review_status"] = "reviewed"  # type: ignore[index]
+    _write(workspace["output_dir"] / "source_register.json", source_register)
+
+    next_packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert next_packet["task"] == "REQUIREMENT_DRAFTING"
+    assert next_packet["orchestration"]["selected_automatically"] is True
+
+
+@pytest.mark.parametrize(
+    ("stage", "expected_task"),
+    [
+        ("source", "SOURCE_INTERPRETATION"),
+        ("requirements", "REQUIREMENT_DRAFTING"),
+        ("requirement_review", "WORKFLOW_GUIDANCE"),
+        ("evidence", "EVIDENCE_MAPPING"),
+        ("assessment", "ASSESSMENT_REASONING"),
+        ("cost", "COST_CLASSIFICATION"),
+        ("form", "FORM_PORTAL_GUIDANCE"),
+        ("narrative", "NARRATIVE_DRAFTING"),
+        ("consistency", "CONSISTENCY_REVIEW"),
+        ("missing", "MISSING_INFO_RED_FLAGS"),
+        ("authority", "AUTHORITY_SIMULATION"),
+        ("complete", "WORKFLOW_GUIDANCE"),
+    ],
+)
+def test_intelligence_orchestration_uses_only_mechanical_case_state(
+    stage: str, expected_task: str
+) -> None:
+    scripts = _scripts()
+    intake, sources, workbench = _orchestration_state(stage)
+
+    packet = scripts["intelligence_contract"].build_next_intelligence_packet(
+        intake, sources, workbench
+    )
+
+    assert packet["task"] == expected_task
+    assert packet["orchestration"]["selected_automatically"] is True
+
+
+def test_intelligence_output_rejects_evidence_outside_packet(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="SOURCE_INTERPRETATION",
+        subject_ids=["SRC-CALL-001"],
+    )
+    output = _model_output(
+        _recommendation(
+            action="CREATE",
+            collection="issues",
+            target_id="ISSUE-001",
+            payload={
+                "issue_id": "ISSUE-001",
+                "category": "source_conflict",
+                "severity": "review_required",
+                "detail": "Verificare il rapporto tra le fonti.",
+                "related_ids": ["SRC-NOT-IN-PACKET"],
+                "status": "open",
+                "review_status": "proposed",
+            },
+            evidence_refs=["SRC-NOT-IN-PACKET"],
+        )
+    )
+
+    with pytest.raises(ValueError, match="outside its packet"):
+        scripts["intelligence_contract"].validate_intelligence_output(packet, output)
+
+
+def test_intelligence_output_requires_real_array_fields(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+    output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
+    output["recommendations"][0]["risk_flags"] = "not-an-array"  # type: ignore[index]
+
+    with pytest.raises(ValueError, match="risk_flag must be a list"):
+        scripts["intelligence_contract"].validate_intelligence_output(packet, output)
+
+
+def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    workbench_before = _read(workspace["output_dir"] / "application_workbench.json")
+    output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
+
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=output,
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+    repeated = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=output,
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+
+    assert recorded["status"] == "MODEL_SUGGESTED"
+    assert repeated == recorded
+    assert (
+        len(_read(workspace["output_dir"] / "intelligence_register.json")["runs"]) == 1
+    )
+    conflicting_output = dict(output)
+    conflicting_output["summary_it"] = "Different response under the same key."
+    with pytest.raises(ValueError, match="already used for another response"):
+        scripts["intelligence"].record_intelligence(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            model_output=conflicting_output,
+            provider="openai",
+            model="gpt-test-pinned",
+            prompt_template_version="bandi-v1",
+            recorded_by="codex-local",
+            idempotency_key="request-001",
+            task="WORKFLOW_GUIDANCE",
+            subject_ids=["SRC-CALL-001"],
+        )
+    assert recorded["requires_review"] is True
+    assert recorded["model_metadata"] == {
+        "provider": "openai",
+        "model": "gpt-test-pinned",
+        "prompt_template_version": "bandi-v1",
+    }
+    assert (
+        _read(workspace["output_dir"] / "application_workbench.json")
+        == workbench_before
+    )
+
+
+def test_intelligence_refuses_secret_or_session_fields_before_recording(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
+    output["api_key"] = "synthetic-secret-must-not-be-stored"
+
+    with pytest.raises(ValueError, match="prohibited secret/session fields"):
+        scripts["intelligence"].record_intelligence(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            model_output=output,
+            provider="openai",
+            model="gpt-test-pinned",
+            prompt_template_version="bandi-v1",
+            recorded_by="codex-local",
+            idempotency_key="request-001",
+            task="WORKFLOW_GUIDANCE",
+            subject_ids=["SRC-CALL-001"],
+        )
+
+    assert _read(workspace["output_dir"] / "intelligence_register.json")["runs"] == []
+
+
+def test_professional_accept_applies_only_as_proposed(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    sources_path = workspace["output_dir"] / "source_register.json"
+    sources = _read(sources_path)
+    sources["sources"][0]["review_status"] = "reviewed"  # type: ignore[index]
+    _write(sources_path, sources)
+    excerpt = "Requisito sintetico creato solo per il test del contratto."
+    payload = {
+        "requirement_id": "REQ-MODEL-001",
+        "category": "eligibility",
+        "statement": "Interpretazione proposta, non una regola legale riutilizzabile.",
+        "source_refs": [
+            {
+                "source_id": "SRC-CALL-001",
+                "locator": "sezione test",
+                "excerpt": excerpt,
+                "excerpt_sha256": hashlib.sha256(excerpt.encode()).hexdigest(),
+            }
+        ],
+        "applicability": "Da confermare sul caso concreto.",
+        "expected_evidence": ["Evidenza da confermare"],
+        "review_status": "confirmed",
+    }
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=_model_output(
+            _recommendation(
+                action="CREATE",
+                collection="requirements",
+                target_id="REQ-MODEL-001",
+                payload=payload,
+                evidence_refs=["SRC-CALL-001"],
+            )
+        ),
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="REQUIREMENT_DRAFTING",
+        subject_ids=["SRC-CALL-001"],
+    )
+
+    decided = scripts["intelligence"].decide_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        intelligence_run_id=recorded["intelligence_run_id"],
+        decision="accepted",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+    )
+
+    requirement = _read(workspace["output_dir"] / "application_workbench.json")[
+        "requirements"
+    ][0]
+    assert decided["status"] == "ACCEPTED"
+    assert decided["decision"]["confirmation_basis"] == "explicit_user_confirmation"
+    assert requirement["review_status"] == "proposed"
+
+
+def test_reject_does_not_mutate_workbench_and_repeated_decision_is_idempotent(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=output,
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+    before = _read(workspace["output_dir"] / "application_workbench.json")
+    kwargs = {
+        "output_dir": workspace["output_dir"],
+        "client_engagement": workspace["context_path"],
+        "intelligence_run_id": recorded["intelligence_run_id"],
+        "decision": "rejected",
+        "reviewer_id": "reviewer-001",
+        "reviewer_role": "commercialista",
+        "confirmed_by_user": True,
+    }
+
+    first = scripts["intelligence"].decide_intelligence(**kwargs)
+    repeated = scripts["intelligence"].decide_intelligence(**kwargs)
+
+    assert first == repeated
+    assert first["status"] == "REJECTED"
+    assert _read(workspace["output_dir"] / "application_workbench.json") == before
+
+
+def test_changed_case_marks_pending_intelligence_stale(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["case_summary"] = "Nuovo contesto professionale."
+    _write(workbench_path, workbench)
+
+    with pytest.raises(ValueError, match="marked STALE"):
+        scripts["intelligence"].decide_intelligence(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            intelligence_run_id=recorded["intelligence_run_id"],
+            decision="accepted",
+            reviewer_id="reviewer-001",
+            reviewer_role="commercialista",
+            confirmed_by_user=True,
+        )
+
+    register = _read(workspace["output_dir"] / "intelligence_register.json")
+    assert register["runs"][0]["status"] == "STALE"
+
+
+def test_validation_fails_closed_during_interrupted_intelligence_apply(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+    register_path = workspace["output_dir"] / "intelligence_register.json"
+    register = _read(register_path)
+    register["runs"][0]["status"] = "APPLYING"  # type: ignore[index]
+    register["runs"][0]["decision"] = {  # type: ignore[index]
+        "decision": "accepted",
+        "reviewer_id": "reviewer-001",
+        "reviewer_role": "commercialista",
+        "confirmation_basis": "explicit_user_confirmation",
+        "identity_assurance": "asserted_not_authenticated",
+        "decided_at": "2026-08-07T12:00:00+00:00",
+        "notes": "",
+        "candidate_workbench_sha256": scripts["core"].canonical_json_sha256(
+            _read(workspace["output_dir"] / "application_workbench.json")
+        ),
+    }
+    _write(register_path, register)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert recorded["status"] == "MODEL_SUGGESTED"
+    assert audit["status"] == "failed"
+    assert "intelligence_application_incomplete" in {
+        issue["code"] for issue in audit["issues"]
+    }
+
+
+def test_interrupted_acceptance_resumes_without_duplicate_application(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    payload = {
+        "issue_id": "ISSUE-MODEL-RECOVERY",
+        "category": "missing_information",
+        "severity": "review_required",
+        "detail": "Synthetic missing evidence for recovery testing.",
+        "related_ids": ["SRC-CALL-001"],
+        "status": "resolved",
+        "review_status": "confirmed",
+    }
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=_model_output(
+            _recommendation(
+                action="CREATE",
+                collection="issues",
+                target_id="ISSUE-MODEL-RECOVERY",
+                payload=payload,
+                evidence_refs=["SRC-CALL-001"],
+            )
+        ),
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="request-001",
+        task="SOURCE_INTERPRETATION",
+        subject_ids=["SRC-CALL-001"],
+    )
+    original_writer = scripts["intelligence"].write_private_json
+
+    def fail_before_workbench(path: Path, payload: dict[str, object]) -> Path:
+        if path.name == "application_workbench.json":
+            raise RuntimeError("synthetic crash before workbench commit")
+        return original_writer(path, payload)
+
+    monkeypatch.setattr(
+        scripts["intelligence"], "write_private_json", fail_before_workbench
+    )
+    decision = {
+        "output_dir": workspace["output_dir"],
+        "client_engagement": workspace["context_path"],
+        "intelligence_run_id": recorded["intelligence_run_id"],
+        "decision": "accepted",
+        "reviewer_id": "reviewer-001",
+        "reviewer_role": "commercialista",
+        "confirmed_by_user": True,
+    }
+
+    with pytest.raises(RuntimeError, match="synthetic crash"):
+        scripts["intelligence"].decide_intelligence(**decision)
+
+    assert (
+        _read(workspace["output_dir"] / "intelligence_register.json")["runs"][0][
+            "status"
+        ]
+        == "APPLYING"
+    )
+    monkeypatch.setattr(scripts["intelligence"], "write_private_json", original_writer)
+
+    recovered = scripts["intelligence"].decide_intelligence(**decision)
+    issues = _read(workspace["output_dir"] / "application_workbench.json")["issues"]
+
+    assert recovered["status"] == "ACCEPTED"
+    assert [item["issue_id"] for item in issues] == ["ISSUE-MODEL-RECOVERY"]
+    assert issues[0]["status"] == "open"
+    assert issues[0]["review_status"] == "proposed"
+
+
+def test_model_cannot_prefill_protected_portal_control(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="FORM_PORTAL_GUIDANCE",
+        subject_ids=[],
+    )
+    payload = {
+        "field_id": "FIELD-SIGNATURE-MODEL",
+        "label": "Firma",
+        "requirement_ids": [],
+        "fact_ids": [],
+        "proposed_value": "firmato",
+        "readiness": "verify",
+        "rationale": "Controllo protetto.",
+        "manual_only": False,
+        "declaration_control": False,
+        "signature_control": True,
+        "submission_control": False,
+        "review_status": "proposed",
+    }
+
+    with pytest.raises(ValueError, match="protected portal controls"):
+        scripts["intelligence_contract"].validate_intelligence_output(
+            packet,
+            _model_output(
+                _recommendation(
+                    action="CREATE",
+                    collection="form_fields",
+                    target_id="FIELD-SIGNATURE-MODEL",
+                    payload=payload,
+                )
+            ),
+        )
+
+
+def test_offline_intelligence_evaluation_matrix_passes() -> None:
+    scripts = _scripts()
+    cases = _read(PLUGIN_ROOT / "evals" / "intelligence_quality_cases.json")
+
+    report = scripts["evaluate_intelligence"].evaluate_cases(cases)
+
+    assert report["status"] == "passed"
+    assert report["pass_rate"] == 1.0
+    assert report["scope"] == "offline_contract_not_legal_accuracy"
+
+
+def test_intelligence_packet_cli_uses_bound_case(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+
+    result = scripts["intelligence"].main(
+        [
+            "--output-dir",
+            str(workspace["output_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "packet",
+        ]
+    )
+
+    assert result == 0
+
+
+def test_intelligence_record_cli_seals_response(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    response_path = tmp_path / "model-output.json"
+    _write(
+        response_path,
+        _model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+    )
+
+    result = scripts["intelligence"].main(
+        [
+            "--output-dir",
+            str(workspace["output_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "record",
+            "--model-output",
+            str(response_path),
+            "--provider",
+            "openai",
+            "--model",
+            "gpt-test-pinned",
+            "--prompt-template-version",
+            "bandi-v1",
+            "--recorded-by",
+            "codex-local",
+            "--idempotency-key",
+            "cli-request-001",
+            "--task",
+            "WORKFLOW_GUIDANCE",
+            "--subject-id",
+            "SRC-CALL-001",
+        ]
+    )
+
+    assert result == 0
+    assert (
+        _read(workspace["output_dir"] / "intelligence_register.json")["runs"][0][
+            "status"
+        ]
+        == "MODEL_SUGGESTED"
+    )
+
+
+def test_intelligence_decide_cli_records_return(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    recorded = scripts["intelligence"].record_intelligence(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        model_output=_model_output(_recommendation(evidence_refs=["SRC-CALL-001"])),
+        provider="openai",
+        model="gpt-test-pinned",
+        prompt_template_version="bandi-v1",
+        recorded_by="codex-local",
+        idempotency_key="cli-decision-001",
+        task="WORKFLOW_GUIDANCE",
+        subject_ids=["SRC-CALL-001"],
+    )
+
+    result = scripts["intelligence"].main(
+        [
+            "--output-dir",
+            str(workspace["output_dir"]),
+            "--client-engagement",
+            str(workspace["context_path"]),
+            "decide",
+            "--intelligence-run-id",
+            str(recorded["intelligence_run_id"]),
+            "--decision",
+            "returned",
+            "--reviewer-id",
+            "reviewer-001",
+            "--reviewer-role",
+            "commercialista",
+            "--confirmed-by-user",
+        ]
+    )
+
+    assert result == 0
+    assert (
+        _read(workspace["output_dir"] / "intelligence_register.json")["runs"][0][
+            "status"
+        ]
+        == "RETURNED"
+    )
+
+
+def test_intelligence_evaluation_cli_passes() -> None:
+    scripts = _scripts()
+
+    result = scripts["evaluate_intelligence"].main(
+        [
+            "--cases",
+            str(PLUGIN_ROOT / "evals" / "intelligence_quality_cases.json"),
+        ]
+    )
+
+    assert result == 0
 
 
 def test_source_registration_is_idempotent_after_professional_review(
@@ -516,10 +1241,12 @@ def test_reviewed_dossier_packages_without_filing_claims(tmp_path: Path) -> None
     assert "ASM-001" in dossier
     assert "FACT-001" in dossier
     assert "model_led" in dossier
+    assert "Contributi Codex registrati" in dossier
     assert {item["artifact_id"] for item in manifest["artifacts"]} >= {
         "evidence.case_intake",
         "evidence.source_register",
         "evidence.application_workbench",
+        "evidence.intelligence_register",
         "evidence.review_log",
         "evidence.run_state",
     }

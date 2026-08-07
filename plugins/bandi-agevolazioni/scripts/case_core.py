@@ -16,11 +16,13 @@ from typing import Any, Iterator, Sequence
 
 __all__ = [
     "PLUGIN_NAME",
+    "PROHIBITED_SECRET_KEYS",
     "case_lock",
     "canonical_json_sha256",
     "iso_now",
     "load_json_object",
     "load_running_context",
+    "prohibited_secret_paths",
     "relative_run_path",
     "require_run_artifact",
     "safe_identifier",
@@ -34,6 +36,33 @@ PLUGIN_NAME = "bandi-agevolazioni"
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 MAX_JSON_BYTES = 10_000_000
 SAFE_IDENTIFIER_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$")
+PROHIBITED_SECRET_KEYS = {
+    "password",
+    "passcode",
+    "pin",
+    "otp",
+    "cookie",
+    "cookies",
+    "token",
+    "access_token",
+    "refresh_token",
+    "session",
+    "session_id",
+    "signature",
+    "spid",
+    "cie",
+    "cns",
+    "credential",
+    "credentials",
+    "api_key",
+    "auth_token",
+    "client_secret",
+    "digital_signature",
+    "one_time_code",
+    "private_key",
+    "secret_key",
+    "session_cookie",
+}
 
 for _vendor_root in (
     PLUGIN_ROOT / "vendor" / "modules",
@@ -113,6 +142,25 @@ def load_json_object(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"JSON input must contain an object: {path}")
     return payload
+
+
+def prohibited_secret_paths(value: object, *, path: str = "") -> list[str]:
+    """Return value-free paths whose exact normalized keys are prohibited."""
+
+    matches: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = f"{path}.{key}" if path else str(key)
+            normalized = re.sub(r"[^a-z0-9]+", "_", str(key).strip().casefold()).strip(
+                "_"
+            )
+            if normalized in PROHIBITED_SECRET_KEYS:
+                matches.append(child_path)
+            matches.extend(prohibited_secret_paths(child, path=child_path))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            matches.extend(prohibited_secret_paths(child, path=f"{path}[{index}]"))
+    return matches
 
 
 def _mark_private(path: Path) -> Path:

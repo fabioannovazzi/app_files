@@ -89,6 +89,7 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("bandi-agevolazioni", "record_review.py"),
     ("bandi-agevolazioni", "validate_application.py"),
     ("bandi-agevolazioni", "package_dossier.py"),
+    ("bandi-agevolazioni", "intelligence_workflow.py"),
 )
 
 CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
@@ -121,6 +122,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("previdenza-inps", "check_dependencies.py"),
     ("registro-imprese-sari", "check_dependencies.py"),
     ("bandi-agevolazioni", "check_dependencies.py"),
+    ("bandi-agevolazioni", "evaluate_intelligence.py"),
 )
 
 OUTPUT_DISCOVERY_REVIEW_WRITER_WORKFLOWS = (
