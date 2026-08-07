@@ -18,6 +18,8 @@ ARTIFACT_SCHEMAS = {
     "intelligence_register": "intelligence_register.schema.json",
     "review_log": "review_log.schema.json",
     "run_state": "run_state.schema.json",
+    "opportunity_radar": "opportunity_radar.schema.json",
+    "opportunity_handoff": "opportunity_handoff.schema.json",
 }
 
 

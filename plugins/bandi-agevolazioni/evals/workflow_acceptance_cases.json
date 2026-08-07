@@ -2,6 +2,31 @@
   "schema_version": "1.0",
   "cases": [
     {
+      "case_id": "padova-client-opportunity-radar",
+      "kind": "synthetic_discovery_contract",
+      "fixture_limit": "Synthetic workflow fixture only. It supplies no universal publisher list, eligibility rule, discovery-completeness probability, or real client identity.",
+      "required_behavior": [
+        "build dated reviewable profile facets from supplied evidence and assertions using an opaque client reference",
+        "use model-led reasoning to propose a territory and profile-specific official-source plan",
+        "record planned, checked, unavailable and failed sources separately",
+        "report coverage only as checked sources in the reviewed applicable plan",
+        "preserve opportunity lifecycle observations and economic assumptions",
+        "keep compatibility and recommended client action proposed until professional review"
+      ]
+    },
+    {
+      "case_id": "new-opportunity-portfolio-reverse-match",
+      "kind": "synthetic_bidirectional_matching_contract",
+      "fixture_limit": "Synthetic workflow fixture only. Client references are opaque and no client contact is authorized.",
+      "required_behavior": [
+        "match one source-backed opportunity against several explicitly selected opaque profiles",
+        "prevent a match from citing another client's profile facet",
+        "surface missing information, contradictions, complexity and economic assumptions",
+        "require confirmed profile, sources, opportunity and match before handoff",
+        "never contact a client automatically"
+      ]
+    },
+    {
       "case_id": "regione-veneto-idatto-13223-intake",
       "kind": "real_use_case_exemplar",
       "procedure_reference": {

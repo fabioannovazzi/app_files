@@ -1,6 +1,6 @@
 ---
 name: bandi-agevolazioni
-description: Use when Vera must prepare or review an Italian grant, subsidy, tax-credit, or subsidized-finance application from official sources and client evidence without authenticating, signing, or filing.
+description: Use when Vera must discover, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance from official sources and client evidence without contacting clients, authenticating, signing, or filing.
 ---
 
 ## Cowork execution contract

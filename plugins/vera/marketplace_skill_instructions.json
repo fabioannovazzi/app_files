@@ -15,9 +15,9 @@
     },
     "bandi-agevolazioni": {
       "display_name": "Bandi e agevolazioni",
-      "short_description": "Prepara e controlla dossier per bandi e finanza agevolata",
-      "default_prompt": "Usa $bandi-agevolazioni per preparare da queste fonti un dossier tracciabile, con requisiti, documenti, spese, campi e punti da verificare.",
-      "instructions": "Allega il bando, gli allegati, le FAQ ufficiali e i documenti del beneficiario disponibili. Vera ricostruisce requisiti e fonti, prepara checklist, valutazioni, campi e narrative revisionabili e segnala mancanze e red flag. Il professionista approva le conclusioni; la persona autorizzata conserva credenziali, firma e trasmissione."
+      "short_description": "Scopre opportunità e prepara dossier per bandi agevolati",
+      "default_prompt": "Usa $bandi-agevolazioni per cercare opportunità compatibili con questo profilo e preparare il dossier della misura selezionata.",
+      "instructions": "Per la discovery, descrivi con riferimenti opachi territorio, attività, dimensione e investimenti previsti: Vera propone un piano di fonti ufficiali, registra la copertura effettivamente controllata, monitora lo stato delle opportunità e prepara abbinamenti ed economie da revisionare. Dopo la selezione, allega bando, allegati, FAQ ufficiali e documenti del beneficiario: Vera ricostruisce requisiti e fonti, prepara checklist, valutazioni, campi e narrative revisionabili e segnala mancanze e red flag. Il professionista approva profili, fonti, abbinamenti e conclusioni; Vera non contatta clienti e la persona autorizzata conserva credenziali, firma e trasmissione."
     },
     "avviso-intake": {
       "display_name": "Prima istruttoria avviso",

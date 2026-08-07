@@ -1,0 +1,293 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/opportunity-radar-2.0.json",
+  "title": "Vera opportunity radar workbench",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plugin", "radar_id", "scope", "reference_date", "revision", "created_at", "updated_at", "workspace_binding", "profile_evidence", "profiles", "source_plan", "opportunities", "matches", "monitoring", "review_events", "operations", "limitations"],
+  "properties": {
+    "schema_version": {"const": "2.0"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "radar_id": {"$ref": "#/$defs/id"},
+    "scope": {"enum": ["single_client", "portfolio"]},
+    "reference_date": {"type": "string", "format": "date"},
+    "revision": {"type": "integer", "minimum": 0},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "workspace_binding": {"$ref": "#/$defs/workspaceBinding"},
+    "profile_evidence": {"type": "array", "items": {"$ref": "#/$defs/profileEvidence"}},
+    "profiles": {"type": "array", "items": {"$ref": "#/$defs/profile"}},
+    "source_plan": {"$ref": "#/$defs/sourcePlan"},
+    "opportunities": {"type": "array", "items": {"$ref": "#/$defs/opportunity"}},
+    "matches": {"type": "array", "items": {"$ref": "#/$defs/match"}},
+    "monitoring": {"$ref": "#/$defs/monitoring"},
+    "review_events": {"type": "array", "items": {"$ref": "#/$defs/reviewEvent"}},
+    "operations": {"type": "array", "items": {"$ref": "#/$defs/operation"}},
+    "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "idList": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "decimal": {"type": "string", "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"},
+    "reviewStatus": {"enum": ["proposed", "confirmed", "rejected", "blocked"]},
+    "workspaceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workspace_id", "workspace_path_sha256", "authorized_by", "authorization_basis", "identity_assurance", "authorized_at", "retention_owner", "portable_client_run_created"],
+      "properties": {
+        "workspace_id": {"$ref": "#/$defs/id"},
+        "workspace_path_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "authorized_by": {"$ref": "#/$defs/id"},
+        "authorization_basis": {"const": "explicit_user_confirmation"},
+        "identity_assurance": {"const": "asserted_not_authenticated"},
+        "authorized_at": {"type": "string", "format": "date-time"},
+        "retention_owner": {"type": "string", "minLength": 1},
+        "portable_client_run_created": {"const": false}
+      }
+    },
+    "contribution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["origin", "provider", "model", "prompt_template_version", "recorded_by", "recorded_at"],
+      "properties": {
+        "origin": {"enum": ["model_suggested", "user_supplied", "document_observation", "mechanical_observation"]},
+        "provider": {"type": "string", "minLength": 1},
+        "model": {"type": "string", "minLength": 1},
+        "prompt_template_version": {"type": "string", "minLength": 1},
+        "recorded_by": {"$ref": "#/$defs/id"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["client_ref", "revision", "revision_history", "facets", "review_status", "contribution"],
+      "properties": {
+        "client_ref": {"$ref": "#/$defs/id"},
+        "revision": {"type": "integer", "minimum": 1},
+        "revision_history": {"type": "array", "items": {"$ref": "#/$defs/revisionEvent"}},
+        "facets": {"type": "array", "items": {"$ref": "#/$defs/facet"}},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "profileEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "client_ref", "evidence_kind", "receipt_ref", "sha256", "as_of_date", "description", "review_status", "contribution"],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/id"},
+        "client_ref": {"$ref": "#/$defs/id"},
+        "evidence_kind": {"enum": ["document_receipt", "professional_assertion", "other_receipt"]},
+        "receipt_ref": {"$ref": "#/$defs/id"},
+        "sha256": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+        "as_of_date": {"type": "string", "format": "date"},
+        "description": {"type": "string", "minLength": 1},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "revisionEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["revision_id", "observed_at", "rationale", "evidence_refs", "source_ids", "changed_fields", "previous_sha256", "review_status"],
+      "properties": {
+        "revision_id": {"$ref": "#/$defs/id"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "rationale": {"type": "string", "minLength": 1},
+        "evidence_refs": {"$ref": "#/$defs/idList"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "changed_fields": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "previous_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "facet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["facet_id", "category", "value", "as_of_date", "evidence_refs", "provenance", "review_status"],
+      "properties": {
+        "facet_id": {"$ref": "#/$defs/id"},
+        "category": {"enum": ["territory", "ateco", "size", "legal_form", "company_age", "ownership", "planned_investment", "property", "workforce", "energy", "digitization", "vehicles", "export", "training", "innovation", "other"]},
+        "value": {"type": "string", "minLength": 1},
+        "as_of_date": {"type": "string", "format": "date"},
+        "evidence_refs": {"$ref": "#/$defs/idList"},
+        "provenance": {"enum": ["document_observation", "user_assertion", "model_inference"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "sourcePlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entries", "coverage"],
+      "properties": {
+        "entries": {"type": "array", "items": {"$ref": "#/$defs/sourcePlanEntry"}},
+        "coverage": {"$ref": "#/$defs/coverage"}
+      }
+    },
+    "sourcePlanEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "authority_level", "publisher", "official_url", "relevance_rationale", "profile_refs", "check_status", "checked_at", "next_check_on", "result_count", "error_code", "review_status", "check_review_status", "contribution"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "authority_level": {"enum": ["national", "regional", "regional_agency", "chamber", "municipality", "province", "eu", "sectoral", "other"]},
+        "publisher": {"type": "string", "minLength": 1},
+        "official_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "relevance_rationale": {"type": "string", "minLength": 1},
+        "profile_refs": {"$ref": "#/$defs/idList"},
+        "check_status": {"enum": ["planned", "checked", "unavailable", "failed", "not_applicable"]},
+        "checked_at": {"type": ["string", "null"], "format": "date-time"},
+        "next_check_on": {"type": ["string", "null"], "format": "date"},
+        "result_count": {"type": ["integer", "null"], "minimum": 0},
+        "error_code": {"type": ["string", "null"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "check_review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plan_entry_count", "planned_count", "completed_count", "unavailable_count", "failed_count", "unreviewed_count", "check_review_pending_count", "ratio_basis_points", "status", "statement"],
+      "properties": {
+        "plan_entry_count": {"type": "integer", "minimum": 0},
+        "planned_count": {"type": "integer", "minimum": 0},
+        "completed_count": {"type": "integer", "minimum": 0},
+        "unavailable_count": {"type": "integer", "minimum": 0},
+        "failed_count": {"type": "integer", "minimum": 0},
+        "unreviewed_count": {"type": "integer", "minimum": 0},
+        "check_review_pending_count": {"type": "integer", "minimum": 0},
+        "ratio_basis_points": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "status": {"enum": ["plan_unreviewed", "not_started", "partial", "planned_sources_checked"]},
+        "statement": {"type": "string", "minLength": 1}
+      }
+    },
+    "lifecycleObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observation_id", "status", "effective_date", "observed_at", "source_ids", "rationale", "review_status"],
+      "properties": {
+        "observation_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["announced", "upcoming", "open", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "effective_date": {"type": ["string", "null"], "format": "date"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "rationale": {"type": "string", "minLength": 1},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "opportunity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["opportunity_id", "revision", "revision_history", "official_title", "issuer", "official_url", "source_ids", "opening_date", "closing_date", "summary", "lifecycle_history", "current_lifecycle", "review_status", "contribution"],
+      "properties": {
+        "opportunity_id": {"$ref": "#/$defs/id"},
+        "revision": {"type": "integer", "minimum": 1},
+        "revision_history": {"type": "array", "items": {"$ref": "#/$defs/revisionEvent"}},
+        "official_title": {"type": "string", "minLength": 1},
+        "issuer": {"type": "string", "minLength": 1},
+        "official_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "opening_date": {"type": ["string", "null"], "format": "date"},
+        "closing_date": {"type": ["string", "null"], "format": "date"},
+        "summary": {"type": "string", "minLength": 1},
+        "lifecycle_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lifecycleObservation"}},
+        "current_lifecycle": {"enum": ["announced", "upcoming", "open", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "economicEstimate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["currency", "gross_benefit_min", "gross_benefit_max", "preparation_cost_min", "preparation_cost_max", "net_value_min", "net_value_max", "methodology", "assumptions", "review_status"],
+      "properties": {
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "gross_benefit_min": {"$ref": "#/$defs/decimal"},
+        "gross_benefit_max": {"$ref": "#/$defs/decimal"},
+        "preparation_cost_min": {"$ref": "#/$defs/decimal"},
+        "preparation_cost_max": {"$ref": "#/$defs/decimal"},
+        "net_value_min": {"$ref": "#/$defs/decimal"},
+        "net_value_max": {"$ref": "#/$defs/decimal"},
+        "methodology": {"const": "gross_benefit_range_minus_preparation_cost_range"},
+        "assumptions": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "match": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["match_id", "opportunity_id", "client_ref", "compatibility", "rationale", "profile_facet_ids", "source_ids", "missing_information", "contradictions", "application_complexity", "economic_estimate", "recommended_action", "review_status", "contribution"],
+      "properties": {
+        "match_id": {"$ref": "#/$defs/id"},
+        "opportunity_id": {"$ref": "#/$defs/id"},
+        "client_ref": {"$ref": "#/$defs/id"},
+        "compatibility": {"enum": ["high", "medium", "low", "no_match", "unknown"]},
+        "rationale": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "profile_facet_ids": {"$ref": "#/$defs/idList"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "missing_information": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "contradictions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "application_complexity": {"enum": ["simple", "moderate", "complex", "unknown"]},
+        "economic_estimate": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/economicEstimate"}]},
+        "recommended_action": {"enum": ["contact_client", "monitor", "deprioritize", "do_not_pursue", "professional_review"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "scan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scan_id", "started_at", "completed_at", "source_ids", "outcome", "error_codes"],
+      "properties": {
+        "scan_id": {"$ref": "#/$defs/id"},
+        "started_at": {"type": "string", "format": "date-time"},
+        "completed_at": {"type": ["string", "null"], "format": "date-time"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "outcome": {"enum": ["running", "complete", "partial", "failed"]},
+        "error_codes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["last_scan_at", "next_scan_on", "scan_history"],
+      "properties": {
+        "last_scan_at": {"type": ["string", "null"], "format": "date-time"},
+        "next_scan_on": {"type": ["string", "null"], "format": "date"},
+        "scan_history": {"type": "array", "items": {"$ref": "#/$defs/scan"}}
+      }
+    },
+    "reviewEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["event_id", "idempotency_key", "scope", "target_id", "target_sha256", "decision", "reviewer_id", "reviewer_role", "confirmation_basis", "identity_assurance", "reviewed_at", "notes"],
+      "properties": {
+        "event_id": {"$ref": "#/$defs/id"},
+        "idempotency_key": {"$ref": "#/$defs/id"},
+        "scope": {"enum": ["evidence", "profile", "source", "source_check", "opportunity", "match"]},
+        "target_id": {"$ref": "#/$defs/id"},
+        "target_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "decision": {"enum": ["accepted", "returned", "rejected"]},
+        "reviewer_id": {"$ref": "#/$defs/id"},
+        "reviewer_role": {"type": "string", "minLength": 1},
+        "confirmation_basis": {"const": "explicit_user_confirmation"},
+        "identity_assurance": {"const": "asserted_not_authenticated"},
+        "reviewed_at": {"type": "string", "format": "date-time"},
+        "notes": {"type": "string"}
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["idempotency_key", "operation", "payload_sha256", "recorded_at"],
+      "properties": {
+        "idempotency_key": {"$ref": "#/$defs/id"},
+        "operation": {"enum": ["record_profile_evidence", "record_profile", "record_source", "record_source_check", "record_opportunity", "record_match", "record_scan", "review"]},
+        "payload_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    }
+  }
+}

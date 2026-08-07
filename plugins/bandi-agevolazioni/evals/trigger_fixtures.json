@@ -3,6 +3,21 @@
   "version": 1,
   "should_trigger": [
     {
+      "id": "client-opportunity-radar",
+      "prompt": "Vera, costruisci il profilo agevolativo di questa impresa padovana e cerca in modo sistematico le opportunità ufficiali compatibili.",
+      "required_signals": ["profilo agevolativo", "opportunità ufficiali", "impresa"]
+    },
+    {
+      "id": "new-call-portfolio-match",
+      "prompt": "È uscito questo nuovo bando: confrontalo con i profili opachi del portafoglio e dimmi quali clienti meritano una revisione professionale.",
+      "required_signals": ["nuovo bando", "profili opachi", "revisione professionale"]
+    },
+    {
+      "id": "grant-source-monitoring",
+      "prompt": "Monitora le fonti ufficiali previste e conserva annunciato, prossima apertura, aperto, sospeso e chiuso senza contattare i clienti.",
+      "required_signals": ["fonti ufficiali", "prossima apertura", "senza contattare"]
+    },
+    {
       "id": "grant-application-dossier",
       "prompt": "Vera, prepara il dossier per questo bando usando avviso, allegati, FAQ e documenti dell'impresa.",
       "required_signals": ["bando", "FAQ", "dossier"]

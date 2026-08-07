@@ -20,8 +20,8 @@
     "classes": [
       {
         "id": "application-case-and-evidence",
-        "purpose": "Reconstruct source-backed requirements and prepare a reviewable grant-application dossier",
-        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
+        "purpose": "Discover and match source-backed opportunities, then prepare a reviewable grant-application dossier after selection",
+        "content": "Opaque client references, receipted profile-evidence references and dated revisionable opportunity-profile facets; separately reviewed official-source plans and source-check observations; opportunity lifecycle and amendment history; client/opportunity matches, gaps, contradictions, economic assumptions and reviewed recommendations; selected-client self-verifiable opportunity handoffs; call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -33,9 +33,9 @@
     {
       "id": "official-public-research",
       "kind": "public_research",
-      "destination": "Public issuing-authority, funding-program, official legal, and official FAQ sources relevant to the selected call",
-      "purpose": "Locate current official call materials and record provenance without disclosing applicant data",
-      "content": "Call identifier, authority, program and generic topical query; public document metadata and official URLs; no applicant identifiers, financial data, project narrative, quotations, declarations, credentials, or portal-session material",
+      "destination": "Public national, regional, local, chamber, EU, sectoral, issuing-authority, funding-program, official legal, and official FAQ sources selected for an opportunity radar or call",
+      "purpose": "Discover and monitor opportunities or locate current official call materials while recording source-plan coverage and provenance without disclosing client data",
+      "content": "Generic territory, activity, investment topic, call identifier, authority and program query; public document metadata, lifecycle observations and official URLs; no client identifiers, opaque client references, financial data, project narrative, quotations, declarations, credentials, or portal-session material",
       "optional": true,
       "requires_confirmation": false,
       "runtime_profiles": [
@@ -43,16 +43,17 @@
         "anthropic-cowork"
       ],
       "controls": [
-        "Use only official public sources and generic call-level queries; keep applicant and project facts inside the selected runtime context.",
+        "Use only official public sources and generic territory, activity, investment-topic, program or call-level queries; keep opaque client references, profiles, applicant and project facts inside the selected runtime context.",
         "Keep public research read-only and do not use login, upload, contact, assistance, form-save, signature, payment, or submission routes.",
+        "Record each planned source and actual check separately; the coverage ratio measures execution of that reviewed plan and never claims exhaustive discovery.",
         "Register exact selected source bytes and metadata before using them for confirmed requirements."
       ]
     }
   ],
   "security_controls": [
     {
-      "id": "private-bound-case-folder",
-      "control": "Initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root."
+      "id": "private-workspace-and-bound-case-folder",
+      "control": "Pre-client radar initialization requires explicit user confirmation, records asserted operator and retention ownership, binds owner-only files to one exact local path, and rejects Git or published roots. Application initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root."
     },
     {
       "id": "reject-secret-and-session-material",
@@ -77,12 +78,20 @@
     {
       "id": "sealed-model-contribution-boundary",
       "control": "Each bounded model contribution is reference-closed and sealed with exact input and packet hashes, model and prompt-template identity, starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
+    },
+    {
+      "id": "opaque-portfolio-radar-boundary",
+      "control": "The private portfolio radar accepts only opaque client references, closes document-observed facets to same-client receipted evidence, prevents one match from citing another client's evidence or profile facet, records exact provider and model provenance, requires fresh explicit professional review, and never sends client references or profile content in public discovery queries or contacts a client."
+    },
+    {
+      "id": "sealed-radar-handoff",
+      "control": "A radar handoff requires fresh confirmed profile evidence, profile, checked source-plan entries, source-check results, opportunity and match; contains only the selected client's subset; seals that embedded selection and its source entries with recomputable hashes; and is schema-, hash-, identity-, and reference-validated again before registration in one client-bound Studio Archive run."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "98d93fd586958a57302c321e17a8c4f35dcc1191bdb3d089b7642fdc4080cce6"
+    "source_fingerprint": "1ddff248460ea86d6841317bd7743cc2864a87fda9c3c815d43f18dfe7868b4c"
   }
 }

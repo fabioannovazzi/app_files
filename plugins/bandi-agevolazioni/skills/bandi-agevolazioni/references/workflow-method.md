@@ -3,6 +3,14 @@
 This reference governs the semantic work. Scripts enforce contracts and never
 decide legal meaning.
 
+Before a specific call is selected, follow `opportunity-radar.md`. Source-plan
+selection, source relevance, opportunity lifecycle and amendment meaning, compatibility,
+economic assumptions, application complexity and recommended action are
+model-led proposals. Coverage counts, reference closure, lifecycle-history
+preservation, append-only revision storage, exact range subtraction, review
+binding and recomputable handoff hashes are
+mechanical controls.
+
 ## 1. Source baseline and conflicts
 
 Build the baseline from the formal call, formal amendments, incorporated acts,
