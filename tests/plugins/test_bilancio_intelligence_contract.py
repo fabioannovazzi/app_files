@@ -36,6 +36,7 @@ def _mapping_case() -> dict[str, object]:
         "revision_id": "rev_3",
         "state": "MAPPING_REVIEW",
         "period": {"start": "2025-01-01", "end": "2025-12-31"},
+        "form_analysis": {"eligible_forms": ["ABBREVIATED"]},
         "selected_form": "ABBREVIATED",
         "entity": {
             "legal_name": "Rossi S.r.l.",
@@ -44,6 +45,7 @@ def _mapping_case() -> dict[str, object]:
             "legal_form": "SRL",
         },
         "trial_balance": {
+            "confirmed_convention": "TURNOVER_EXCLUDES_OPENING",
             "entries": [
                 {
                     "account_id": "acc_1",
@@ -56,7 +58,7 @@ def _mapping_case() -> dict[str, object]:
                     "prior_closing_signed": "90",
                     "source_refs": ["src_1"],
                 }
-            ]
+            ],
         },
         "mapping_candidates": [],
         "taxonomy_mapping_index": {
@@ -120,16 +122,91 @@ def test_auto_orchestration_selects_mapping_from_authoritative_case_state() -> N
     assert packet["orchestration"]["selected_automatically"] is True
 
 
-def test_auto_orchestration_requires_form_before_mapping() -> None:
+def test_auto_orchestration_requires_form_determination_before_selection() -> None:
     case = _mapping_case()
     case["selected_form"] = None
+    case["form_analysis"] = None
     case["trial_balance"]["confirmed_convention"] = "TURNOVER_EXCLUDES_OPENING"
     case["mappings"] = []
 
     packet = intelligence.build_next_intelligence_packet(case)
 
     assert packet["task"] == "WORKFLOW_GUIDANCE"
+    assert packet["orchestration"]["recommended_next_action"] == "DETERMINE_FORMS"
+    assert "Determine eligible statutory forms" in packet["orchestration"]["reason"]
+
+
+def test_auto_orchestration_selects_form_only_after_form_determination() -> None:
+    case = _mapping_case()
+    case["selected_form"] = None
+    case["form_analysis"] = {"eligible_forms": ["ABBREVIATED"]}
+    case["trial_balance"]["confirmed_convention"] = "TURNOVER_EXCLUDES_OPENING"
+    case["mappings"] = []
+
+    packet = intelligence.build_next_intelligence_packet(case)
+
+    assert packet["task"] == "WORKFLOW_GUIDANCE"
+    assert packet["orchestration"]["recommended_next_action"] == "SELECT_FORM"
     assert "Select the statutory form" in packet["orchestration"]["reason"]
+
+
+def test_pending_pdf_guidance_accepts_exact_dashboard_next_action() -> None:
+    case = _mapping_case()
+    case["pdf_trial_balance_candidate"] = {
+        "status": "PENDING_REVIEW",
+        "source_document_id": "doc_pdf",
+        "content_sha256": "a" * 64,
+        "page_count": 1,
+        "row_count": 1,
+        "ocr_used": False,
+        "columns": [],
+        "issues": [],
+        "rows": [],
+        "page_methods": [{"page": 1, "method": "PDF_TEXT_LAYOUT", "table_count": 1}],
+        "table_coverage": [],
+    }
+    packet = intelligence.build_next_intelligence_packet(case)
+    output = {
+        "summary_it": "Rivedere l'estrazione PDF.",
+        "recommended_next_action": "REVIEW_PDF_EXTRACTION",
+        "why_it_matters": "Nessun dato contabile esiste prima della revisione.",
+        "attention_items": [],
+        "confidence_band": "HIGH",
+    }
+
+    normalized = intelligence.validate_intelligence_output(packet, output)
+
+    assert normalized["recommended_next_action"] == "REVIEW_PDF_EXTRACTION"
+
+
+def test_pending_pdf_guidance_rejects_a_different_canonical_action() -> None:
+    case = _mapping_case()
+    case["pdf_trial_balance_candidate"] = {
+        "status": "PENDING_REVIEW",
+        "source_document_id": "doc_pdf",
+        "content_sha256": "a" * 64,
+        "page_count": 1,
+        "row_count": 1,
+        "ocr_used": False,
+        "columns": [],
+        "issues": [],
+        "rows": [],
+        "page_methods": [{"page": 1, "method": "PDF_TEXT_LAYOUT", "table_count": 1}],
+        "table_coverage": [],
+    }
+    packet = intelligence.build_next_intelligence_packet(case)
+
+    with pytest.raises(ValueError, match="exact next required action"):
+        intelligence.validate_intelligence_output(
+            packet,
+            {
+                "summary_it": "Rivedere l'estrazione PDF.",
+                "recommended_next_action": "INGEST_TRIAL_BALANCE",
+                "why_it_matters": "L'estrazione non è ancora un fatto contabile.",
+                "attention_items": [],
+                "confidence_band": "HIGH",
+            },
+        )
 
 
 def test_auto_orchestration_requires_official_index_before_mapping() -> None:
@@ -149,6 +226,7 @@ def test_auto_orchestration_requests_semantic_disclosure_activation_review() -> 
     case["trial_balance"]["confirmed_convention"] = "TURNOVER_EXCLUDES_OPENING"
     case["mappings"] = [{"account_id": "acc_1", "allocations": []}]
     case["statements"] = {"facts": []}
+    case["statutory_presentation"] = {"status": "COMPLETE"}
     case["disclosure_rule_pack"] = json.loads(
         DISCLOSURE_RULE_PACK.read_text(encoding="utf-8")
     )
@@ -217,10 +295,19 @@ def test_model_packet_strips_nested_case_routing_and_computation_metadata() -> N
 def test_auto_orchestration_prioritizes_only_active_questions() -> None:
     case = _mapping_case()
     case["mappings"] = [{"account_id": "acc_1"}]
+    case["statements"] = {"facts": []}
+    case["statutory_presentation"] = {"status": "COMPLETE"}
+    case["disclosure_rule_pack"] = json.loads(
+        DISCLOSURE_RULE_PACK.read_text(encoding="utf-8")
+    )
+    case["disclosure_trigger_decisions"] = [
+        {"flag": flag}
+        for flag in intelligence.manual_disclosure_flags(case["disclosure_rule_pack"])
+    ]
     case["questionnaire"] = [
         {
             "question_id": "q_open",
-            "state": "OPEN",
+            "state": "ASSIGNED",
             "title": "Informazione mancante",
             "reason": "Triggered rule",
             "blocking": True,
@@ -513,7 +600,7 @@ def test_record_workflow_guidance_does_not_change_authoritative_case_data(
     mappings_before = list(case["mappings"])
     output = {
         "summary_it": "Il caso richiede il bilancio di verifica.",
-        "recommended_next_action": "REVIEW_SOURCE",
+        "recommended_next_action": "INGEST_TRIAL_BALANCE",
         "why_it_matters": "Senza fonte contabile non è possibile comprendere i conti.",
         "attention_items": [],
         "confidence_band": "HIGH",
@@ -536,6 +623,7 @@ def test_record_workflow_guidance_does_not_change_authoritative_case_data(
     assert result["mappings"] == mappings_before
     assert result["intelligence_runs"][0]["status"] == "MODEL_SUGGESTED"
     assert (
-        result["latest_workflow_guidance"]["recommended_next_action"] == "REVIEW_SOURCE"
+        result["latest_workflow_guidance"]["recommended_next_action"]
+        == "INGEST_TRIAL_BALANCE"
     )
     assert result["audit_events"][-1]["action"] == "model_suggestion_recorded"

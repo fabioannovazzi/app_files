@@ -61,6 +61,20 @@ def test_vera_zip_expected_entries_embed_bilancio_xbrl_component() -> None:
     assert prefix + "mcp/server.cjs" in entries
 
 
+def test_vera_chatgpt_bilancio_skill_routes_to_complete_module_workflow() -> None:
+    builder = _load_builder()
+    bundle = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
+
+    entries = builder.chatgpt_upload_entries(bundle)
+    skill = entries["skills/bilancio-xbrl-it/SKILL.md"].decode("utf-8")
+
+    assert "`../../modules/bilancio-xbrl-it`" in skill
+    assert "`skills/bilancio-xbrl-it/SKILL.md`" in skill
+    assert "tutti i riferimenti che richiede" in skill
+    assert "directory di lavoro" in skill
+    assert "`python scripts/check_dependencies.py`" in skill
+
+
 def test_bilancio_xbrl_icon_uses_shared_theme_and_is_unique() -> None:
     icon_path = ROOT / "plugins" / "bilancio-xbrl-it" / "assets" / "icon.svg"
     icon = icon_path.read_text(encoding="utf-8")

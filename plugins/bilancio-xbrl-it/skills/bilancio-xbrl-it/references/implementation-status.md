@@ -18,12 +18,19 @@
   boundary. Embedded tables/text and optional PaddleOCR produce only a
   checksum-bound candidate; no accounting entry exists until an authenticated
   professional confirms all review declarations, the column mapping, every
-  correction, and every excluded row. Accepted anchors retain page/table/row/
+  correction, every page without a table, and every excluded row. Per-page
+  methods and per-table coverage are candidate-hash-bound; one page requiring
+  OCR, one incompatible table, or one unaligned row blocks the entire source.
+  Non-account exclusions require zero/blank monetary fields, while non-zero
+  summaries must name accepted account rows and reconcile every monetary field
+  within parser tolerance. Accepted anchors retain page/table/row/
   column coordinates, bounding boxes, raw and normalized values, OCR confidence,
   extraction method, correction reason, and reviewer identity. CLI, file-backed
   service, revision-bound queue, MCP, HTTP, source review, and bounded untrusted
   intelligence guidance use the same contract. The optional managed OCR runtime
-  is separately declared and requires explicit installation approval.
+  is separately declared, requires explicit installation approval and exact
+  dependency pins, and records/verifies installed package versions plus the
+  hash and size of every required model file before each reuse.
 - Closing-entry inclusion is never inferred from ambiguous turnover values.
   Calibration exposes it as requiring professional confirmation, and parser
   confirmation records the selected convention, reviewer, time, reason and

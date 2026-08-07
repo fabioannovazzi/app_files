@@ -85,7 +85,7 @@
       "controls": [
         "Ask the exact OCR installation question and proceed only after the user's explicit approval.",
         "Install only the separately declared requirements-ocr.txt contract into the fingerprinted managed runtime; do not transmit the PDF or extracted case content to package or model sources.",
-        "Reuse the checksum/fingerprint-bound runtime on later runs and surface installation failure instead of weakening the review gate."
+        "Accept exact dependency pins only; record the installed package versions and SHA-256 plus size of every required OCR model file; verify the complete receipt on every reuse; and surface drift, tampering, or installation failure instead of weakening the review gate."
       ],
       "runtime_profiles": [
         "openai-codex",
@@ -100,7 +100,7 @@
     },
     {
       "id": "reviewed-pdf-trial-balance-boundary",
-      "control": "A readable or scanned PDF extraction cannot create canonical entries. It remains PENDING_REVIEW with page, table, row, source column, bounding box, method, raw value and OCR confidence until an authenticated professional accepts the exact candidate hash, confirms all four review declarations, supplies or confirms a one-to-one accounting-column mapping, records corrections and excluded rows with reasons, and passes the reviewed rows through the existing Decimal/parser controls. Bounded model context may explain extraction issues but cannot accept, correct, exclude, or promote rows; parser-convention confirmation remains a separate gate."
+      "control": "A readable or scanned PDF extraction cannot create canonical entries. It remains PENDING_REVIEW with candidate-hash-bound page methods and table coverage plus page, table, row, source column, bounding box, method, raw value and OCR confidence. Any page still requiring OCR, incompatible table, or unaligned row blocks the whole source; pages without detected tables require exact reviewed non-accounting dispositions. An authenticated professional must accept the exact candidate hash, confirm all four review declarations, supply or confirm a one-to-one accounting-column mapping, and record corrections and exclusions with reasons. A non-account exclusion requires zero or blank selected monetary fields; a non-zero summary exclusion must name accepted account rows and reconcile every monetary field within parser tolerance. Only then may reviewed rows pass through the existing Decimal/parser controls. Bounded model context may explain extraction issues but cannot accept, correct, exclude, or promote rows; parser-convention confirmation remains a separate gate."
     },
     {
       "id": "revision-and-approval-integrity",
@@ -195,6 +195,6 @@
     "reviewed_at": "2026-08-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "68af6a88d219dfb2f94f497951d02ab73ac68309a151450af397333a3c6645c5"
+    "source_fingerprint": "0a96876a6e8797118a24dc93290735370a305c0bceb05e1b4744fc20b035960a"
   }
 }

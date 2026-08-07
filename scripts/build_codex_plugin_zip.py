@@ -1147,6 +1147,33 @@ def load_chatgpt_skill_cards(
             default_prompt=values["default_prompt"],
             instructions=instructions,
         )
+    if plugin_name == "vera":
+        router = cards[plugin_name].instructions
+        required_router_contracts = (
+            "opera esclusivamente come router",
+            "non risponde mai direttamente alla richiesta sostanziale",
+            "interpreta semanticamente la richiesta",
+            "`../<skill-selezionata>/SKILL.md`",
+            "Vera si ferma",
+        )
+        missing_contracts = [
+            contract for contract in required_router_contracts if contract not in router
+        ]
+        if missing_contracts:
+            raise ValueError(
+                "vera: Marketplace root card is missing mandatory router contracts: "
+                f"{missing_contracts}"
+            )
+        missing_specialists = sorted(
+            skill_name
+            for skill_name in expected_skills - {plugin_name}
+            if f"`{skill_name}`" not in router
+        )
+        if missing_specialists:
+            raise ValueError(
+                "vera: Marketplace root router catalog is incomplete; "
+                f"missing={missing_specialists}"
+            )
     return cards
 
 

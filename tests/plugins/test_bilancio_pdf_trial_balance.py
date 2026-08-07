@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
+from typing import Any
 
 import pytest
 from fastapi.testclient import TestClient
@@ -95,8 +96,47 @@ def _write_pdf(path: Path, *, text: bool = True) -> None:
     pdf.save()
 
 
+def _write_two_page_pdf(
+    path: Path, *, continuation: bool, include_summary: bool = False
+) -> None:
+    pdf = canvas.Canvas(str(path), pagesize=landscape(A4))
+    x_positions = (20, 100, 280, 390, 480, 570, 670)
+    first_page = [
+        (
+            "account_code",
+            "account_description",
+            "opening_signed",
+            "period_debit",
+            "period_credit",
+            "closing_signed",
+            "prior_closing_signed",
+        ),
+        ("100", "Cassa", "100", "50", "10", "140", "90"),
+        ("200", "Patrimonio netto", "-100", "10", "50", "-140", "-90"),
+    ]
+    if include_summary:
+        first_page.append(("TOTALE", "Totale generale", "0", "60", "60", "0", "0"))
+    for row_index, row in enumerate(first_page):
+        y = 560 - row_index * 24
+        for x, value in zip(x_positions, row, strict=True):
+            pdf.drawString(x, y, value)
+    pdf.showPage()
+    if continuation:
+        second_page = (
+            ("300", "Disponibilita", "25", "5", "0", "30", "20"),
+            ("400", "Debiti", "-25", "0", "5", "-30", "-20"),
+        )
+        for row_index, row in enumerate(second_page):
+            y = 560 - row_index * 24
+            for x, value in zip(x_positions, row, strict=True):
+                pdf.drawString(x, y, value)
+    pdf.showPage()
+    pdf.save()
+
+
 def _accepted_review(candidate: dict[str, object]) -> dict[str, object]:
     account_row = candidate["rows"][0]
+    second_account_row = candidate["rows"][1]
     total_row = candidate["rows"][2]
     return {
         "decision": "ACCEPTED",
@@ -118,6 +158,11 @@ def _accepted_review(candidate: dict[str, object]) -> dict[str, object]:
         "excluded_rows": [
             {
                 "row_id": total_row["row_id"],
+                "row_kind": "SUMMARY",
+                "summarizes_row_ids": [
+                    account_row["row_id"],
+                    second_account_row["row_id"],
+                ],
                 "reason": "Summary total, not an account.",
             }
         ],
@@ -154,6 +199,168 @@ def test_readable_pdf_requires_review_before_installing_trial_balance(
     packet = intelligence_contract.build_next_intelligence_packet(result)
     assert packet["untrusted_evidence"]["pdf_trial_balance_candidate"]["row_count"] == 3
     assert packet["policy"]["professional_review_required"] is True
+
+
+def test_headerless_continuation_page_remains_in_review_candidate(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "continued-trial-balance.pdf"
+    _write_two_page_pdf(source, continuation=True)
+    case = _created_case(tmp_path)
+
+    result = xbrl_case.ingest_pdf_trial_balance(
+        case, source, "preparer_pdf", case["revision_id"]
+    )
+
+    candidate = result["pdf_trial_balance_candidate"]
+    assert candidate["row_count"] == 4
+    assert [row["page"] for row in candidate["rows"]] == [1, 1, 2, 2]
+    assert [item["disposition"] for item in candidate["table_coverage"]] == [
+        "INCLUDED_HEADER",
+        "INCLUDED_CONTINUATION",
+    ]
+    source_view = review_views.build_review_view(result, "SOURCE_REVIEW")
+    assert source_view["pdf_extraction"]["page_methods"] == candidate["page_methods"]
+    assert (
+        source_view["pdf_extraction"]["table_coverage"] == candidate["table_coverage"]
+    )
+    packet = intelligence_contract.build_next_intelligence_packet(result)
+    packet_candidate = packet["untrusted_evidence"]["pdf_trial_balance_candidate"]
+    assert packet_candidate["page_methods"] == candidate["page_methods"]
+    assert packet_candidate["table_coverage"] == candidate["table_coverage"]
+
+
+def test_mixed_readable_and_unreadable_pdf_requires_ocr_for_every_page(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "mixed-trial-balance.pdf"
+    _write_two_page_pdf(source, continuation=False)
+
+    with pytest.raises(pdf_trial_balance.OcrSetupRequired, match="OCR_SETUP_REQUIRED"):
+        pdf_trial_balance.extract_pdf_tables(
+            source,
+            ocr_enabled=False,
+            max_bytes=1024 * 1024,
+        )
+
+
+def test_pdf_review_requires_disposition_for_every_page_without_a_table(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "cover-page-trial-balance.pdf"
+    _write_two_page_pdf(source, continuation=False, include_summary=True)
+    extraction = pdf_trial_balance.extract_pdf_tables(
+        source,
+        max_bytes=1024 * 1024,
+        ocr_word_provider=lambda *_args, **_kwargs: [],
+    )
+    monkeypatch.setattr(
+        xbrl_case, "extract_pdf_tables", lambda *_args, **_kwargs: extraction
+    )
+    case = _created_case(tmp_path)
+    case = xbrl_case.ingest_pdf_trial_balance(
+        case, source, "preparer_pdf", case["revision_id"]
+    )
+    review = _accepted_review(case["pdf_trial_balance_candidate"])
+
+    with pytest.raises(ValueError, match="page dispositions"):
+        xbrl_case.record_pdf_trial_balance_review(
+            case, review, "reviewer_pdf", case["revision_id"]
+        )
+
+    review["page_dispositions"] = [
+        {
+            "page": 2,
+            "decision": "EXCLUDED_NON_ACCOUNTING",
+            "reason": "Blank trailing page confirmed against the source PDF.",
+        }
+    ]
+    accepted = xbrl_case.record_pdf_trial_balance_review(
+        case, review, "reviewer_pdf", case["revision_id"]
+    )
+    assert accepted["pdf_trial_balance_candidate"]["coverage_status"] == (
+        "REVIEWED_COMPLETE"
+    )
+    assert (
+        accepted["pdf_trial_balance_candidate"]["page_dispositions"]
+        == review["page_dispositions"]
+    )
+
+
+def test_pdf_candidate_hash_binds_page_and_table_coverage(tmp_path: Path) -> None:
+    source = tmp_path / "trial-balance.pdf"
+    _write_pdf(source)
+    case = _created_case(tmp_path)
+    case = xbrl_case.ingest_pdf_trial_balance(
+        case, source, "preparer_pdf", case["revision_id"]
+    )
+    review = _accepted_review(case["pdf_trial_balance_candidate"])
+    case["pdf_trial_balance_candidate"]["page_methods"][0]["table_count"] = 0
+
+    with pytest.raises(ValueError, match="content hash"):
+        xbrl_case.record_pdf_trial_balance_review(
+            case, review, "reviewer_pdf", case["revision_id"]
+        )
+
+
+def test_pdf_review_rejects_balanced_nonzero_account_exclusions(tmp_path: Path) -> None:
+    source = tmp_path / "continued-trial-balance.pdf"
+    _write_two_page_pdf(source, continuation=True)
+    case = _created_case(tmp_path)
+    case = xbrl_case.ingest_pdf_trial_balance(
+        case, source, "preparer_pdf", case["revision_id"]
+    )
+    candidate = case["pdf_trial_balance_candidate"]
+    review = {
+        "decision": "ACCEPTED",
+        "reason": "Reviewed the extracted rows.",
+        "declarations": {
+            "headers_and_columns_reviewed": True,
+            "account_rows_reviewed": True,
+            "monetary_values_reviewed": True,
+            "excluded_rows_reviewed": True,
+        },
+        "corrections": [],
+        "excluded_rows": [
+            {
+                "row_id": candidate["rows"][2]["row_id"],
+                "row_kind": "NON_ACCOUNT",
+                "summarizes_row_ids": [],
+                "reason": "Incorrectly marked as non-accounting.",
+            },
+            {
+                "row_id": candidate["rows"][3]["row_id"],
+                "row_kind": "NON_ACCOUNT",
+                "summarizes_row_ids": [],
+                "reason": "Incorrectly marked as non-accounting.",
+            },
+        ],
+    }
+
+    with pytest.raises(ValueError, match="non-zero non-account row"):
+        xbrl_case.record_pdf_trial_balance_review(
+            case, review, "reviewer_pdf", case["revision_id"]
+        )
+
+
+def test_pdf_summary_exclusion_must_reconcile_to_named_account_rows(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "trial-balance.pdf"
+    _write_pdf(source)
+    case = _created_case(tmp_path)
+    case = xbrl_case.ingest_pdf_trial_balance(
+        case, source, "preparer_pdf", case["revision_id"]
+    )
+    review = _accepted_review(case["pdf_trial_balance_candidate"])
+    review["excluded_rows"][0]["summarizes_row_ids"] = [
+        case["pdf_trial_balance_candidate"]["rows"][0]["row_id"]
+    ]
+
+    with pytest.raises(ValueError, match="does not reconcile"):
+        xbrl_case.record_pdf_trial_balance_review(
+            case, review, "reviewer_pdf", case["revision_id"]
+        )
 
 
 def test_reviewed_pdf_corrections_and_exclusions_retain_cell_provenance(
@@ -268,9 +475,9 @@ def test_image_only_pdf_with_ocr_disabled_requests_setup(tmp_path: Path) -> None
         )
 
 
-def test_managed_ocr_install_prepares_declared_packages_and_models(
+def _install_managed_ocr_test_runtime(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+) -> tuple[Path, Any]:
     requirements = tmp_path / "requirements-ocr.txt"
     requirements.write_text("paddleocr==3.5.0\npaddlepaddle==3.3.1\n", encoding="utf-8")
     monkeypatch.setattr(
@@ -283,6 +490,17 @@ def test_managed_ocr_install_prepares_declared_packages_and_models(
             package = target / module
             package.mkdir(parents=True)
             (package / "__init__.py").write_text("", encoding="utf-8")
+        for package_name, version in (
+            ("paddleocr", "3.5.0"),
+            ("paddlepaddle", "3.3.1"),
+            ("requests", "2.32.3"),
+        ):
+            metadata = target / f"{package_name}-{version}.dist-info"
+            metadata.mkdir()
+            (metadata / "METADATA").write_text(
+                f"Name: {package_name}\nVersion: {version}\n",
+                encoding="utf-8",
+            )
         return subprocess.CompletedProcess(arguments, 0, "", "")
 
     def model_runner(arguments: list[str], **kwargs: object):
@@ -300,6 +518,13 @@ def test_managed_ocr_install_prepares_declared_packages_and_models(
         runner=package_runner,
         model_runner=model_runner,
     )
+    return requirements, result
+
+
+def test_managed_ocr_install_prepares_declared_packages_and_models(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    requirements, result = _install_managed_ocr_test_runtime(tmp_path, monkeypatch)
 
     assert result.status == "ready"
     assert result.reused is False
@@ -311,7 +536,43 @@ def test_managed_ocr_install_prepares_declared_packages_and_models(
             encoding="utf-8"
         )
     )
-    assert receipt["models"] == list(managed_ocr_runtime.OCR_MODEL_NAMES)
+    assert receipt["schema_version"] == 2
+    assert receipt["packages"] == {
+        "paddleocr": "3.5.0",
+        "paddlepaddle": "3.3.1",
+        "requests": "2.32.3",
+    }
+    assert set(receipt["models"]) == set(managed_ocr_runtime.OCR_MODEL_NAMES)
+    assert all(
+        len(files["inference.pdiparams"]["sha256"]) == 64
+        for files in receipt["models"].values()
+    )
+
+
+def test_managed_ocr_runtime_rejects_tampered_model(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    requirements, result = _install_managed_ocr_test_runtime(tmp_path, monkeypatch)
+    model = (
+        Path(result.runtime_path)
+        / "model-cache"
+        / "official_models"
+        / managed_ocr_runtime.OCR_MODEL_NAMES[0]
+        / "inference.pdiparams"
+    )
+    model.write_bytes(b"tampered")
+
+    activated = managed_ocr_runtime.activate_ocr_runtime(requirements)
+
+    assert activated is None
+
+
+def test_managed_ocr_runtime_requires_exact_package_pins(tmp_path: Path) -> None:
+    requirements = tmp_path / "requirements-ocr.txt"
+    requirements.write_text("paddleocr>=3.0\n", encoding="utf-8")
+
+    with pytest.raises(ValueError, match="exact package==version pins"):
+        managed_ocr_runtime.activate_ocr_runtime(requirements)
 
 
 def test_pdf_ingest_rejects_symlink_source(tmp_path: Path) -> None:

@@ -1,6 +1,6 @@
 # Optional managed runtime used only for scanned or image-only trial-balance PDFs.
-Pillow>=11.1
-numpy>=2.0,<3
-opencv-python-headless>=4.8
-paddleocr>=3.0
-paddlepaddle>=3.0
+Pillow==11.1.0
+numpy==2.2.6
+opencv-python-headless==4.9.0.80
+paddleocr==3.5.0
+paddlepaddle==3.3.1

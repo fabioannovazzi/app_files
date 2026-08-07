@@ -88,17 +88,24 @@ def _normalized_bbox(value: object) -> tuple[float, float, float, float] | None:
 
 
 def _mapping_words(value: Mapping[str, Any]) -> list[OcrWord]:
-    texts = value.get("rec_texts") or value.get("texts")
+    texts = value.get("rec_texts")
+    if texts is None:
+        texts = value.get("texts")
     if not isinstance(texts, Sequence) or isinstance(texts, (str, bytes, bytearray)):
         return []
-    scores = value.get("rec_scores") or value.get("scores") or []
-    boxes = (
-        value.get("rec_boxes")
-        or value.get("dt_polys")
-        or value.get("rec_polys")
-        or value.get("boxes")
-        or []
-    )
+    scores = value.get("rec_scores")
+    if scores is None:
+        scores = value.get("scores")
+    if scores is None:
+        scores = []
+    boxes: object = None
+    for key in ("rec_boxes", "dt_polys", "rec_polys", "boxes"):
+        candidate = value.get(key)
+        if candidate is not None:
+            boxes = candidate
+            break
+    if boxes is None:
+        boxes = []
     if not isinstance(boxes, Sequence) or isinstance(boxes, (str, bytes, bytearray)):
         return []
     words: list[OcrWord] = []
@@ -464,9 +471,12 @@ def extract_pdf_tables(
                 }
             )
         page_count = len(pdf.pages)
+    if any(item["method"] == "OCR_REQUIRED" for item in page_methods):
+        # A partial PDF is not a complete accounting source. Requiring OCR for
+        # every unreadable page is mechanically verifiable and prevents silent
+        # omission before professional review begins.
+        raise OcrSetupRequired(OCR_SETUP_MESSAGE)
     if not tables:
-        if any(item["method"] == "OCR_REQUIRED" for item in page_methods):
-            raise OcrSetupRequired(OCR_SETUP_MESSAGE)
         raise ValueError("No reviewable table was found in the PDF trial balance")
     methods = sorted({str(item["method"]) for item in page_methods})
     return {
