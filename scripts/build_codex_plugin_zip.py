@@ -136,6 +136,16 @@ CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
+VERA_CHATGPT_ROOT_VISIBLE_INSTRUCTIONS = (
+    "Seleziona @Vera e formula normalmente la richiesta. Vera interpreta il "
+    "lavoro, sceglie il workflow specialistico più pertinente e non risponde "
+    "direttamente senza averlo applicato. Se nessun workflow è adatto, si ferma "
+    "senza improvvisare una risposta generica."
+)
+VERA_CHATGPT_WORKFLOW_DIRECTIVE = (
+    "Prima di svolgere il lavoro, Vera deve leggere e seguire integralmente "
+    "`WORKFLOW.md`, che contiene il workflow operativo completo."
+)
 VERA_CHATGPT_ROUTER_TARGETS = {
     "audit-reconciliation": "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
     "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
@@ -1041,6 +1051,7 @@ def project_chatgpt_card_skill(
     content: bytes,
     *,
     instructions: str,
+    description: str | None = None,
 ) -> bytes:
     """Project concise, source-owned instructions for one Marketplace card."""
 
@@ -1050,7 +1061,21 @@ def project_chatgpt_card_skill(
         raise ValueError("Marketplace skill must contain workflow instructions")
     if not instructions.strip():
         raise ValueError("Marketplace card instructions must not be empty")
-    projected = text[:body_index] + "\n" + instructions.strip() + "\n"
+    frontmatter = text[:body_index]
+    if description is not None:
+        description_lines = [
+            line
+            for line in frontmatter.splitlines(keepends=True)
+            if line.startswith("description:")
+        ]
+        if len(description_lines) != 1:
+            raise ValueError("Marketplace skill must define one description")
+        frontmatter = frontmatter.replace(
+            description_lines[0],
+            f"description: {json.dumps(description.strip(), ensure_ascii=False)}\n",
+            1,
+        )
+    projected = frontmatter + "\n" + instructions.strip() + "\n"
     return projected.encode("utf-8")
 
 
@@ -1073,6 +1098,21 @@ def project_chatgpt_source_skill(content: bytes) -> bytes:
     section_end = min(following_headings)
     projected = text[:section_start] + text[section_end + 1 :]
     return projected.encode("utf-8")
+
+
+def vera_chatgpt_card_instructions(
+    skill_name: str,
+    *,
+    visible_instructions: str,
+) -> str:
+    """Return concise visible copy plus one mandatory workflow handoff."""
+
+    visible_copy = (
+        VERA_CHATGPT_ROOT_VISIBLE_INSTRUCTIONS
+        if skill_name == "vera"
+        else visible_instructions.strip()
+    )
+    return f"{visible_copy}\n\n{VERA_CHATGPT_WORKFLOW_DIRECTIVE}"
 
 
 def chatgpt_skill_interface(card: ChatGPTSkillCard) -> bytes:
@@ -1337,7 +1377,21 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
         ):
-            content = project_chatgpt_source_skill(content)
+            skill_name = path_parts[1]
+            # OpenAI displays SKILL.md in the card. Keep that surface concise,
+            # while a mechanically generated companion preserves the complete
+            # source workflow and its exact relative paths.
+            entries[f"skills/{skill_name}/WORKFLOW.md"] = project_chatgpt_source_skill(
+                content
+            )
+            content = project_chatgpt_card_skill(
+                content,
+                instructions=vera_chatgpt_card_instructions(
+                    skill_name,
+                    visible_instructions=skill_cards[skill_name].instructions,
+                ),
+                description=skill_cards[skill_name].short_description,
+            )
         entries[name] = content
     for skill_name in sorted(public_skill_names):
         card = skill_cards[skill_name]

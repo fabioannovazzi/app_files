@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.93"
+    assert manifest["version"] == "0.1.94"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -501,14 +501,18 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "consiglia Codex Desktop" not in approved_description
 
     router_path = "skills/vera/SKILL.md"
+    router_workflow_path = "skills/vera/WORKFLOW.md"
     wrapper_path = "skills/studio-archive/SKILL.md"
+    wrapper_workflow_path = "skills/studio-archive/WORKFLOW.md"
     reference_path = "skills/studio-archive/references/marketplace-gmail.md"
     whatsapp_reference_path = "skills/studio-archive/references/whatsapp-desktop.md"
     gmail_evals_path = "evals/marketplace_gmail_cases.json"
     whatsapp_evals_path = "evals/whatsapp_desktop_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert router_path in entries
+    assert router_workflow_path in entries
     assert wrapper_path in entries
+    assert wrapper_workflow_path in entries
     assert reference_path in entries
     assert whatsapp_reference_path in entries
     assert gmail_evals_path in entries
@@ -516,11 +520,16 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert module_skill_path in entries
     router = entries[router_path].decode("utf-8")
     wrapper = entries[wrapper_path].decode("utf-8")
+    router_workflow = entries[router_workflow_path].decode("utf-8")
+    wrapper_workflow = entries[wrapper_workflow_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
-    assert "studio-archive" in router
-    assert "No matching specialist workflow" in router
-    assert "../<skill-name>/SKILL.md" in router
-    assert "../../modules/studio-archive" in wrapper
+    assert "sceglie il workflow specialistico più pertinente" in router
+    assert "`WORKFLOW.md`" in router
+    assert "Plugin Improvement Feedback" not in wrapper
+    assert "`WORKFLOW.md`" in wrapper
+    assert "No matching specialist workflow" in router_workflow
+    assert "../<skill-name>/SKILL.md" in router_workflow
+    assert "../../modules/studio-archive" in wrapper_workflow
     assert "## Connected Gmail workflow" in module_skill
     assert module_skill.index("get_profile") < module_skill.index("search_emails")
     assert module_skill.index("search_emails") < module_skill.index("batch_read_email")
@@ -598,15 +607,21 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     )
     public_skill_names = set(instruction_config["skills"])
     if plugin_name == "vera":
-        expected_card_bodies = {}
-        for skill_name in public_skill_names:
-            source = (
-                ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
-            ).read_bytes()
-            projected = builder.project_chatgpt_source_skill(source).decode("utf-8")
-            expected_card_bodies[f"skills/{skill_name}/SKILL.md"] = projected[
-                builder.skill_body_start(projected) :
-            ].strip()
+        expected_card_bodies = {
+            f"skills/{skill_name}/SKILL.md": builder.vera_chatgpt_card_instructions(
+                skill_name,
+                visible_instructions=card["instructions"],
+            )
+            for skill_name, card in instruction_config["skills"].items()
+        }
+        for skill_name, card in instruction_config["skills"].items():
+            frontmatter = projected_skills[f"skills/{skill_name}/SKILL.md"].split(
+                "---\n", maxsplit=2
+            )[1]
+            assert (
+                f"description: {json.dumps(card['short_description'], ensure_ascii=False)}"
+                in frontmatter
+            )
     else:
         expected_card_bodies = {
             f"skills/{skill_name}/SKILL.md": card["instructions"]
@@ -624,6 +639,14 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
         if plugin_name == "clara":
             assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
+        else:
+            assert "WORKFLOW.md" in packaged_skill_files
+            source_workflow = (
+                ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
+            ).read_bytes()
+            assert entries[f"skills/{skill_name}/WORKFLOW.md"] == (
+                builder.project_chatgpt_source_skill(source_workflow)
+            )
     for name, body in card_bodies.items():
         skill_name = name.split("/")[1]
         interface_name = f"skills/{skill_name}/agents/openai.yaml"
@@ -656,7 +679,16 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
         assert len(card_bodies) == 21
-        audit_wrapper = card_bodies["skills/audit-reconciliation/SKILL.md"]
+        assert all("`WORKFLOW.md`" in body for body in card_bodies.values())
+        assert all(
+            "Plugin Improvement Feedback" not in body for body in card_bodies.values()
+        )
+        assert all(
+            "Resolve `../../modules" not in body for body in card_bodies.values()
+        )
+        audit_wrapper = entries["skills/audit-reconciliation/WORKFLOW.md"].decode(
+            "utf-8"
+        )
         assert "Resolve `../../modules/audit-reconciliation`" in audit_wrapper
         full_workflow = entries[
             "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
@@ -677,15 +709,13 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
     )
     public_skill_names = set(instruction_config["skills"])
     if plugin_name == "vera":
-        expected_bodies = {}
-        for skill_name in public_skill_names:
-            source = (
-                ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
-            ).read_bytes()
-            projected = builder.project_chatgpt_source_skill(source).decode("utf-8")
-            expected_bodies[f"skills/{skill_name}/SKILL.md"] = projected[
-                builder.skill_body_start(projected) :
-            ].strip()
+        expected_bodies = {
+            f"skills/{skill_name}/SKILL.md": builder.vera_chatgpt_card_instructions(
+                skill_name,
+                visible_instructions=card["instructions"],
+            )
+            for skill_name, card in instruction_config["skills"].items()
+        }
     else:
         expected_bodies = {
             f"skills/{skill_name}/SKILL.md": card["instructions"]
@@ -712,6 +742,14 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
             assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
             if plugin_name == "clara":
                 assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
+            else:
+                assert "WORKFLOW.md" in packaged_skill_files
+                source_workflow = (
+                    ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
+                ).read_bytes()
+                assert archive.read(f"skills/{skill_name}/WORKFLOW.md") == (
+                    builder.project_chatgpt_source_skill(source_workflow)
+                )
 
     assert actual_bodies == expected_bodies
     assert len(actual_bodies) == len(public_skill_names)
