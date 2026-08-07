@@ -39,7 +39,10 @@ def validate_artifact_schema(
     validator = Draft202012Validator(schema, format_checker=FormatChecker())
     errors = sorted(
         validator.iter_errors(payload),
-        key=lambda error: (list(error.absolute_path), str(error.validator)),
+        key=lambda error: (
+            tuple(str(part) for part in error.absolute_path),
+            str(error.validator),
+        ),
     )
     return [
         {

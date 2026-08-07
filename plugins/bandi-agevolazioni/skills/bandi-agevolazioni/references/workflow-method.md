@@ -28,6 +28,12 @@ Every requirement needs an exact source fragment, an applicability statement,
 expected evidence, and professional confirmation. Do not collapse several
 conditions into one conclusion or import a rule from another call.
 
+Store the exact excerpt text beside its UTF-8 SHA-256. The deterministic hash
+protects the stored excerpt from unnoticed change; it does not prove that the
+excerpt was extracted correctly from a PDF or that it supports the proposed
+meaning. The professional confirms that source, locator, excerpt, and
+interpretation match.
+
 ## 3. Facts and assessments
 
 Record company, financial, quotation, declaration, and project facts with an
@@ -106,3 +112,11 @@ Package only after deterministic validation passes. The dossier remains a
 professional-review artifact with `ready_to_file=false`. Studio Archive owns
 the final artifact declaration and retention lifecycle; do not invent a local
 retention period or claim control over provider-account retention.
+The package manifest seals the intake, source register, workbench, review log,
+run state, validation audit, and rendered dossier so a post-validation change
+cannot be silently packaged.
+
+Review-log identity is deliberately bounded: the user must explicitly confirm
+each recorded decision, while reviewer ID and role remain locally asserted and
+are not authenticated by this workflow. Do not describe that metadata as an
+authenticated signature, professional identity proof, or filing approval.

@@ -181,11 +181,16 @@ python scripts/record_review.py \
   --scope source_baseline \
   --decision accepted \
   --reviewer-id <reviewer> \
-  --reviewer-role commercialista
+  --reviewer-role commercialista \
+  --confirmed-by-user
 ```
 
    Review scopes are `source_baseline`, `requirements`, `assessments`, and
    `dossier`. A changed bound artifact invalidates the prior review hash.
+   Use `--confirmed-by-user` only after the user explicitly confirms that exact
+   scope and decision. The local reviewer ID and role are asserted metadata,
+   not authenticated identity; the dossier states this boundary and remains
+   for authorized professional review.
 6. Validate and package the private review dossier:
 
 ```bash

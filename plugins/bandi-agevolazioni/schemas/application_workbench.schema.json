@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/application-workbench-1.0.json",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/application-workbench-1.2.json",
   "title": "Source-backed grant application workbench",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schema_version", "plugin", "run_id", "case_summary", "requirements", "facts", "assessments", "document_checklist", "expenses", "form_fields", "narratives", "consistency_checks", "issues", "authority_simulation", "dossier", "professional_review"],
+  "required": ["schema_version", "plugin", "run_id", "case_summary", "requirements", "facts", "assessments", "document_checklist", "expenses", "form_fields", "narratives", "consistency_checks", "issues", "authority_simulation", "dossier"],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.2"},
     "plugin": {"const": "bandi-agevolazioni"},
     "run_id": {"$ref": "#/$defs/id"},
     "case_summary": {"type": "string"},
@@ -29,8 +29,7 @@
         "ready_to_file": {"const": false},
         "limitations": {"type": "array", "items": {"type": "string"}}
       }
-    },
-    "professional_review": {"$ref": "#/$defs/reviewState"}
+    }
   },
   "$defs": {
     "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
@@ -41,23 +40,12 @@
     "sourceRef": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_id", "locator", "excerpt_sha256"],
+      "required": ["source_id", "locator", "excerpt", "excerpt_sha256"],
       "properties": {
         "source_id": {"$ref": "#/$defs/id"},
         "locator": {"type": "string", "minLength": 1},
+        "excerpt": {"type": "string", "minLength": 1},
         "excerpt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
-      }
-    },
-    "reviewState": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": ["status", "reviewer_id", "reviewer_role", "reviewed_at", "notes"],
-      "properties": {
-        "status": {"enum": ["pending", "reviewed", "rejected"]},
-        "reviewer_id": {"type": ["string", "null"]},
-        "reviewer_role": {"type": ["string", "null"]},
-        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
-        "notes": {"type": ["string", "null"]}
       }
     },
     "requirement": {
@@ -69,8 +57,8 @@
         "category": {"enum": ["eligibility", "exclusion", "cost", "document", "deadline", "procedure", "form", "narrative"]},
         "statement": {"type": "string", "minLength": 1},
         "source_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sourceRef"}},
-        "applicability": {"type": "string"},
-        "expected_evidence": {"type": "array", "items": {"type": "string"}},
+        "applicability": {"type": "string", "minLength": 1},
+        "expected_evidence": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },
@@ -98,7 +86,7 @@
         "fact_ids": {"$ref": "#/$defs/idList"},
         "readiness": {"$ref": "#/$defs/readiness"},
         "outcome": {"$ref": "#/$defs/outcome"},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "evaluation_method": {"enum": ["model_led", "deterministic", "hybrid"]},
         "deterministic_rule": {"anyOf": [{"$ref": "#/$defs/deterministicRule"}, {"type": "null"}]},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
@@ -114,7 +102,7 @@
         "requirement_ids": {"$ref": "#/$defs/idList"},
         "material_source_ids": {"$ref": "#/$defs/idList"},
         "readiness": {"$ref": "#/$defs/readiness"},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },
@@ -131,7 +119,7 @@
         "source_ids": {"$ref": "#/$defs/idList"},
         "readiness": {"$ref": "#/$defs/readiness"},
         "outcome": {"enum": ["eligible", "ineligible", "partially_eligible", "uncertain", "not_assessed"]},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },
@@ -146,7 +134,7 @@
         "fact_ids": {"$ref": "#/$defs/idList"},
         "proposed_value": {},
         "readiness": {"$ref": "#/$defs/readiness"},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "manual_only": {"type": "boolean"},
         "declaration_control": {"type": "boolean"},
         "signature_control": {"type": "boolean"},
@@ -165,7 +153,7 @@
         "requirement_ids": {"$ref": "#/$defs/idList"},
         "fact_ids": {"$ref": "#/$defs/idList"},
         "readiness": {"$ref": "#/$defs/readiness"},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },
@@ -209,7 +197,7 @@
         "fact_ids": {"$ref": "#/$defs/idList"},
         "source_ids": {"$ref": "#/$defs/idList"},
         "outcome": {"enum": ["consistent", "conflict", "verify", "not_applicable"]},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },
@@ -222,7 +210,7 @@
         "question": {"type": "string", "minLength": 1},
         "related_ids": {"$ref": "#/$defs/idList"},
         "outcome": {"enum": ["pass", "fail", "verify", "not_applicable"]},
-        "rationale": {"type": "string"},
+        "rationale": {"type": "string", "minLength": 1},
         "review_status": {"$ref": "#/$defs/reviewStatus"}
       }
     },

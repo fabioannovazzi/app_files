@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
@@ -47,6 +48,7 @@ def _scripts() -> dict[str, ModuleType]:
         )
         sys.modules["record_review"] = review
         return {
+            "core": core,
             "initialize": _module_from_path(
                 "bandi_test_initialize", SCRIPTS_ROOT / "initialize_case.py"
             ),
@@ -215,7 +217,8 @@ def _reviewable_workbench(output_dir: Path) -> None:
     _write(source_path, sources)
     workbench_path = output_dir / "application_workbench.json"
     workbench = _read(workbench_path)
-    excerpt_hash = "a" * 64
+    excerpt = "Requisito sintetico selezionato esclusivamente per il test."
+    excerpt_hash = hashlib.sha256(excerpt.encode("utf-8")).hexdigest()
     workbench.update(
         {
             "case_summary": "Dossier sintetico per verifica del workflow.",
@@ -228,6 +231,7 @@ def _reviewable_workbench(output_dir: Path) -> None:
                         {
                             "source_id": "SRC-CALL-001",
                             "locator": "paragrafo 1",
+                            "excerpt": excerpt,
                             "excerpt_sha256": excerpt_hash,
                         }
                     ],
@@ -287,6 +291,20 @@ def _reviewable_workbench(output_dir: Path) -> None:
             ],
             "form_fields": [
                 {
+                    "field_id": "FIELD-LEGAL-NAME",
+                    "label": "Denominazione",
+                    "requirement_ids": ["REQ-001"],
+                    "fact_ids": ["FACT-001"],
+                    "proposed_value": "Impresa Demo SPA",
+                    "readiness": "ready",
+                    "rationale": "Valore proposto dal fatto confermato.",
+                    "manual_only": False,
+                    "declaration_control": False,
+                    "signature_control": False,
+                    "submission_control": False,
+                    "review_status": "confirmed",
+                },
+                {
                     "field_id": "FIELD-SIGNATURE",
                     "label": "Firma",
                     "requirement_ids": [],
@@ -299,7 +317,7 @@ def _reviewable_workbench(output_dir: Path) -> None:
                     "signature_control": True,
                     "submission_control": False,
                     "review_status": "confirmed",
-                }
+                },
             ],
             "narratives": [
                 {
@@ -333,7 +351,17 @@ def _reviewable_workbench(output_dir: Path) -> None:
                     {
                         "check_id": "AUTH-001",
                         "question": "Il requisito ha evidenza e valutazione?",
-                        "related_ids": ["REQ-001", "ASM-001", "DOC-001"],
+                        "related_ids": [
+                            "REQ-001",
+                            "FACT-001",
+                            "ASM-001",
+                            "DOC-001",
+                            "EXP-001",
+                            "FIELD-LEGAL-NAME",
+                            "FIELD-SIGNATURE",
+                            "NAR-001",
+                            "CONS-001",
+                        ],
                         "outcome": "pass",
                         "rationale": "Requisito, fatto e documento sono collegati.",
                         "review_status": "confirmed",
@@ -361,6 +389,7 @@ def _accept_all_reviews(
             decision="accepted",
             reviewer_id="reviewer-001",
             reviewer_role="commercialista",
+            confirmed_by_user=True,
         )
 
 
@@ -429,7 +458,7 @@ def test_protected_portal_control_cannot_be_prefilled(tmp_path: Path) -> None:
     _reviewable_workbench(workspace["output_dir"])
     workbench_path = workspace["output_dir"] / "application_workbench.json"
     workbench = _read(workbench_path)
-    workbench["form_fields"][0]["proposed_value"] = "signed"  # type: ignore[index]
+    workbench["form_fields"][1]["proposed_value"] = "signed"  # type: ignore[index]
     _write(workbench_path, workbench)
 
     audit = scripts["validate"].validate_application(
@@ -455,6 +484,7 @@ def test_reviewed_dossier_packages_without_filing_claims(tmp_path: Path) -> None
             decision="accepted",
             reviewer_id="reviewer-001",
             reviewer_role="commercialista",
+            confirmed_by_user=True,
         )
 
     audit = scripts["validate"].validate_application(
@@ -473,6 +503,26 @@ def test_reviewed_dossier_packages_without_filing_claims(tmp_path: Path) -> None
     assert manifest["signature_actions_performed"] is False
     assert manifest["submission_actions_performed"] is False
     assert "NON FIRMATA E NON INVIATA" in dossier
+    assert "1000.00" in dossier
+    assert "Bozza narrativa sintetica." in dossier
+    assert "Impresa Demo SPA" in dossier
+    assert "excerpt=" in dossier
+    assert "reviewer-001" in dossier
+    assert "asserted_not_authenticated" in dossier
+    assert "CALL-2026-001" in dossier
+    assert "01234567890" in dossier
+    assert "Progetto sintetico per la prova del workflow." in dossier
+    assert "Il dossier è completo e coerente?" in dossier
+    assert "ASM-001" in dossier
+    assert "FACT-001" in dossier
+    assert "model_led" in dossier
+    assert {item["artifact_id"] for item in manifest["artifacts"]} >= {
+        "evidence.case_intake",
+        "evidence.source_register",
+        "evidence.application_workbench",
+        "evidence.review_log",
+        "evidence.run_state",
+    }
 
 
 def test_source_change_makes_existing_reviews_stale(tmp_path: Path) -> None:
@@ -487,6 +537,7 @@ def test_source_change_makes_existing_reviews_stale(tmp_path: Path) -> None:
             decision="accepted",
             reviewer_id="reviewer-001",
             reviewer_role="commercialista",
+            confirmed_by_user=True,
         )
     register_path = output_dir / "source_register.json"
     register = _read(register_path)
@@ -724,6 +775,403 @@ def test_package_manifest_hashes_rendered_artifacts(tmp_path: Path) -> None:
     ].sha256_file(workspace["output_dir"] / "validation_audit.json")
 
 
+def test_ready_dossier_rejects_missing_traceability_and_authority_coverage(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["expenses"][0]["requirement_ids"] = []  # type: ignore[index]
+    workbench["form_fields"][0]["fact_ids"] = []  # type: ignore[index]
+    workbench["narratives"][0]["fact_ids"] = []  # type: ignore[index]
+    workbench["authority_simulation"]["checks"][0]["related_ids"] = [  # type: ignore[index]
+        "REQ-001"
+    ]
+    _write(workbench_path, workbench)
+    _accept_all_reviews(scripts, workspace)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    codes = {issue["code"] for issue in audit["issues"]}
+    assert audit["status"] == "failed"
+    assert "ready_item_missing_traceability" in codes
+    assert "authority_simulation_coverage_gap" in codes
+
+
+@pytest.mark.parametrize(
+    ("mutation", "expected_code"),
+    [
+        (
+            lambda workbench: workbench["form_fields"][0].update(
+                {"proposed_value": None}
+            ),
+            "ready_form_field_missing_value",
+        ),
+        (
+            lambda workbench: workbench["narratives"][0].update({"draft": ""}),
+            "ready_narrative_missing_draft",
+        ),
+        (
+            lambda workbench: workbench["expenses"][0].update(
+                {
+                    "readiness": "not_applicable",
+                    "outcome": "ineligible",
+                    "rationale": "Synthetic reviewed N/A.",
+                }
+            ),
+            "expense_not_applicable_outcome_mismatch",
+        ),
+        (
+            lambda workbench: workbench.update({"case_summary": ""}),
+            "ready_disposition_has_unconfirmed_intake",
+        ),
+        (
+            lambda workbench: workbench["facts"][0].update({"value": None}),
+            "ready_disposition_has_empty_facts",
+        ),
+    ],
+)
+def test_ready_dossier_rejects_materially_empty_or_contradictory_content(
+    tmp_path: Path,
+    mutation,
+    expected_code: str,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    mutation(workbench)
+    _write(workbench_path, workbench)
+    _accept_all_reviews(scripts, workspace)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert audit["status"] == "failed"
+    assert expected_code in {issue["code"] for issue in audit["issues"]}
+
+
+def test_ready_dossier_requires_governing_call_dates_and_relationships(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    source_path = workspace["output_dir"] / "source_register.json"
+    sources = _read(source_path)
+    sources["sources"][0].update(  # type: ignore[index]
+        {
+            "source_type": "official_faq",
+            "authority_role": "clarifying",
+            "publication_date": None,
+            "effective_from": None,
+            "relationships": [],
+        }
+    )
+    _write(source_path, sources)
+    _accept_all_reviews(scripts, workspace)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    codes = {issue["code"] for issue in audit["issues"]}
+    assert {
+        "ready_disposition_missing_governing_call",
+        "ready_disposition_has_undated_official_sources",
+        "ready_disposition_has_unbound_dependent_sources",
+    } <= codes
+
+
+def test_requirement_contract_and_rationales_must_be_nonempty(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["requirements"][0]["applicability"] = ""  # type: ignore[index]
+    workbench["requirements"][0]["expected_evidence"] = []  # type: ignore[index]
+    workbench["assessments"][0]["rationale"] = ""  # type: ignore[index]
+    _write(workbench_path, workbench)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert audit["status"] == "failed"
+    assert "schema_violation" in {issue["code"] for issue in audit["issues"]}
+
+
+def test_exact_excerpt_hash_must_match_stored_excerpt(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["requirements"][0]["source_refs"][0]["excerpt_sha256"] = "a" * 64  # type: ignore[index]
+    _write(workbench_path, workbench)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert "excerpt_sha256_mismatch" in {issue["code"] for issue in audit["issues"]}
+
+
+def test_material_issue_closure_requires_confirmed_review(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["issues"] = [
+        {
+            "issue_id": "ISSUE-001",
+            "category": "document",
+            "severity": "blocking",
+            "detail": "Synthetic issue for closure review.",
+            "related_ids": ["DOC-001"],
+            "status": "resolved",
+            "review_status": "proposed",
+        }
+    ]
+    workbench["authority_simulation"]["checks"][0]["related_ids"].append(  # type: ignore[index]
+        "ISSUE-001"
+    )
+    _write(workbench_path, workbench)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert "material_issue_closure_requires_confirmed_review" in {
+        issue["code"] for issue in audit["issues"]
+    }
+
+
+def test_cross_type_id_collision_is_rejected(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["facts"][0]["fact_id"] = "REQ-001"  # type: ignore[index]
+    _write(workbench_path, workbench)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert "cross_type_duplicate_id" in {issue["code"] for issue in audit["issues"]}
+
+
+def test_malformed_relationship_returns_failed_audit_instead_of_crashing(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    register_path = workspace["output_dir"] / "source_register.json"
+    register = _read(register_path)
+    register["sources"][0]["relationships"] = [  # type: ignore[index]
+        {"kind": ["clarifies"], "target_source_id": {"bad": "shape"}}
+    ]
+    _write(register_path, register)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert audit["status"] == "failed"
+    assert "schema_violation" in {issue["code"] for issue in audit["issues"]}
+
+
+def test_run_state_change_after_validation_blocks_packaging(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+    _accept_all_reviews(scripts, workspace)
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+    assert audit["status"] == "passed"
+    state_path = workspace["output_dir"] / "run_state.json"
+    state = _read(state_path)
+    state["portal_actions_performed"] = True
+    _write(state_path, state)
+
+    with pytest.raises(ValueError, match="validated artifacts changed"):
+        scripts["package"].package_dossier(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+        )
+
+
+def test_concurrent_case_change_during_render_blocks_packaging(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output_dir = workspace["output_dir"]
+    _reviewable_workbench(output_dir)
+    _accept_all_reviews(scripts, workspace)
+    audit = scripts["validate"].validate_application(
+        output_dir=output_dir,
+        client_engagement=workspace["context_path"],
+    )
+    assert audit["status"] == "passed"
+    package_module = scripts["package"]
+    original_write = package_module.write_private_text
+
+    def mutate_after_render(path: Path, text: str) -> Path:
+        rendered = original_write(path, text)
+        if path.name == "review_dossier.md":
+            workbench_path = output_dir / "application_workbench.json"
+            workbench = _read(workbench_path)
+            workbench["dossier"]["limitations"].append(  # type: ignore[index]
+                "Changed during packaging."
+            )
+            _write(workbench_path, workbench)
+        return rendered
+
+    monkeypatch.setattr(package_module, "write_private_text", mutate_after_render)
+
+    with pytest.raises(ValueError, match="changed during packaging"):
+        package_module.package_dossier(
+            output_dir=output_dir,
+            client_engagement=workspace["context_path"],
+        )
+    assert not (output_dir / "dossier_manifest.json").exists()
+
+
+def test_source_revision_mismatch_fails_validation(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    state_path = workspace["output_dir"] / "run_state.json"
+    state = _read(state_path)
+    state["source_set_revision"] = 0
+    _write(state_path, state)
+
+    audit = scripts["validate"].validate_application(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+    )
+
+    assert "source_set_revision_mismatch" in {
+        issue["code"] for issue in audit["issues"]
+    }
+
+
+def test_initialization_is_idempotent_and_recovers_stale_lock_file(
+    tmp_path: Path,
+) -> None:
+    scripts = _scripts()
+    workspace = _running_workspace(tmp_path)
+    lock_path = workspace["output_dir"] / ".bandi-agevolazioni.lock"
+    lock_path.write_text("stale owner metadata", encoding="utf-8")
+    first = scripts["initialize"].initialize_case(
+        workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        reference_date="2026-08-07",
+        client_reference="CLIENT-001",
+    )
+    second = scripts["initialize"].initialize_case(
+        workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        reference_date="2026-08-07",
+        client_reference="CLIENT-001",
+    )
+    second["run_state"].unlink()
+    recovered = scripts["initialize"].initialize_case(
+        workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        reference_date="2026-08-07",
+        client_reference="CLIENT-001",
+    )
+
+    assert first == second
+    assert recovered == second
+    assert all(path.exists() for path in recovered.values())
+
+
+def test_active_case_lock_rejects_a_concurrent_writer(tmp_path: Path) -> None:
+    scripts = _scripts()
+    workspace = _running_workspace(tmp_path)
+
+    with scripts["initialize"].case_lock(workspace["output_dir"]):
+        with pytest.raises(RuntimeError, match="mutation is in progress"):
+            with scripts["initialize"].case_lock(workspace["output_dir"]):
+                pytest.fail("a concurrent writer acquired the active case lock")
+
+
+def test_case_lock_uses_windows_locking_backend_when_required(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    scripts = _scripts()
+    workspace = _running_workspace(tmp_path)
+    core = scripts["core"]
+    calls: list[int] = []
+
+    class FakeMsvcrt:
+        LK_NBLCK = 1
+        LK_UNLCK = 2
+
+        @staticmethod
+        def locking(_descriptor: int, mode: int, _byte_count: int) -> None:
+            calls.append(mode)
+
+    original_import = core.importlib.import_module
+
+    def import_backend(name: str):
+        return FakeMsvcrt if name == "msvcrt" else original_import(name)
+
+    monkeypatch.setattr(core.os, "name", "nt")
+    monkeypatch.delattr(core.os, "fchmod", raising=False)
+    monkeypatch.setattr(core.importlib, "import_module", import_backend)
+
+    with core.case_lock(workspace["output_dir"]):
+        assert calls == [FakeMsvcrt.LK_NBLCK]
+
+    assert calls == [FakeMsvcrt.LK_NBLCK, FakeMsvcrt.LK_UNLCK]
+
+
+def test_review_record_requires_explicit_user_confirmation(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+
+    with pytest.raises(ValueError, match="explicit user confirmation"):
+        scripts["review"].record_review(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            scope="source_baseline",
+            decision="accepted",
+            reviewer_id="reviewer-001",
+            reviewer_role="commercialista",
+            confirmed_by_user=False,
+        )
+
+
+def test_review_record_discloses_asserted_identity_boundary(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+
+    event = scripts["review"].record_review(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        scope="source_baseline",
+        decision="accepted",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+    )
+
+    assert event["confirmation_basis"] == "explicit_user_confirmation"
+    assert event["identity_assurance"] == "asserted_not_authenticated"
+
+
 def test_source_relationship_rejects_self_link(tmp_path: Path) -> None:
     scripts, workspace = _initialized_case(tmp_path)
 
@@ -752,3 +1200,13 @@ def test_workflow_acceptance_cases_include_real_exemplar_without_rules() -> None
     }
     assert "must be supplied" in veneto["fixture_limit"]
     assert "eligibility_rules" not in veneto
+    synthetic = next(
+        case
+        for case in cases  # type: ignore[union-attr]
+        if case["case_id"] == "synthetic-reviewed-dossier-regression"
+    )
+    assert "contains no reusable eligibility or cost rule" in synthetic["fixture_limit"]
+    assert (
+        "a complete traceable state validates and packages"
+        in synthetic["expected_public_behavior"]
+    )

@@ -21,7 +21,7 @@
       {
         "id": "application-case-and-evidence",
         "purpose": "Reconstruct source-backed requirements and prepare a reviewable grant-application dossier",
-        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence; extracted requirements and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues and professional-review decisions",
+        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues and professional-review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -61,12 +61,24 @@
     {
       "id": "no-portal-transaction",
       "control": "The workflow may prepare field-by-field guidance but never authenticates, writes to a live portal, saves an application, accepts declarations, signs, pays, files, or submits; protected controls remain manual and empty."
+    },
+    {
+      "id": "crash-safe-case-mutation-lock",
+      "control": "Mutating commands use a non-blocking operating-system file lock on an owner-only regular file on POSIX and Windows; the operating system releases the lock when a process exits, while concurrent writers fail closed."
+    },
+    {
+      "id": "sealed-review-package",
+      "control": "Validation and packaging hold the same case lock across one atomic state snapshot; packaging rechecks canonical state hashes after rendering, rejects any change, and records byte hashes for every input JSON artifact, the validation audit, and the rendered dossier."
+    },
+    {
+      "id": "explicit-review-confirmation",
+      "control": "A review event is recorded only after the caller supplies explicit user confirmation; the event marks the reviewer identity as locally asserted and not authenticated, so the dossier cannot misrepresent identity assurance."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cbb1348b98e0c493890c2b356929f29eb52423fe4a69c7aa65252a362c4f2a1a"
+    "source_fingerprint": "d140a856a008ba6a52473b3d832810c7fce0719e667f18d975b8f85df89d9e58"
   }
 }
