@@ -54,6 +54,27 @@
         "provide manual field guidance only",
         "leave authentication, saving, signature, payment, and transmission to the authorized person"
       ]
+    },
+    {
+      "case_id": "synthetic-reviewed-dossier-regression",
+      "kind": "synthetic_end_to_end_contract",
+      "fixture_limit": "Synthetic contract fixture only; it contains no reusable eligibility or cost rule and does not validate the semantics of a real call.",
+      "required_inputs": [
+        "one reviewed synthetic governing call with publication and effective dates",
+        "one exact stored excerpt and matching SHA-256",
+        "one confirmed atomic requirement with non-empty applicability, expected evidence, rationale, and a material fact",
+        "one assessment, document, expense, protected portal field, non-empty narrative draft, and consistency check",
+        "authority checks covering every material artifact ID",
+        "accepted current reviews for every review scope, recorded only after explicit user confirmation"
+      ],
+      "expected_public_behavior": [
+        "a complete traceable state validates and packages",
+        "the dossier renders intake identifiers, source excerpts, assessment facts and methods, amounts, proposed values, narrative drafts, rationales, and links",
+        "the manifest seals every input state JSON, the validation audit, and the Markdown dossier",
+        "the review record labels reviewer identity as asserted and not authenticated",
+        "missing governing calls, dates, dependent-source relationships, values, drafts, rationales, evidence, links, authority coverage, or current reviews fail safely",
+        "cross-type ID collisions, malformed relationships, incompatible not-applicable statuses, unreviewed issue closure, or any state mutation during packaging fail safely"
+      ]
     }
   ]
 }

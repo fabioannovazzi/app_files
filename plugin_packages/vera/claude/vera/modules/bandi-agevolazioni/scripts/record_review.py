@@ -69,15 +69,18 @@ def record_review(
     decision: str,
     reviewer_id: str,
     reviewer_role: str,
+    confirmed_by_user: bool,
     notes: str = "",
 ) -> dict[str, Any]:
-    """Append an auditable human decision for one exact scope hash."""
+    """Append a user-confirmed decision with explicitly bounded identity assurance."""
 
     if scope not in SCOPES or decision not in DECISIONS:
         raise ValueError("unsupported review scope or decision")
     reviewer_id = safe_identifier(reviewer_id, field="reviewer_id")
     if not reviewer_role.strip():
         raise ValueError("reviewer_role is required")
+    if confirmed_by_user is not True:
+        raise ValueError("explicit user confirmation is required")
     context = load_running_context(client_engagement, output_dir=output_dir)
     run_id = safe_identifier(context["run_id"], field="run_id")
     output_dir = output_dir.resolve()
@@ -89,6 +92,8 @@ def record_review(
             "decision": decision,
             "reviewer_id": reviewer_id,
             "reviewer_role": reviewer_role.strip(),
+            "confirmation_basis": "explicit_user_confirmation",
+            "identity_assurance": "asserted_not_authenticated",
             "reviewed_at": iso_now(),
             "notes": notes.strip(),
         }
@@ -121,6 +126,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--decision", required=True, choices=sorted(DECISIONS))
     parser.add_argument("--reviewer-id", required=True)
     parser.add_argument("--reviewer-role", required=True)
+    parser.add_argument(
+        "--confirmed-by-user",
+        action="store_true",
+        help="Record only after the user explicitly confirms this exact decision.",
+    )
     parser.add_argument("--notes", default="")
     args = parser.parse_args(argv)
     event = record_review(
@@ -130,6 +140,7 @@ def main(argv: list[str] | None = None) -> int:
         decision=args.decision,
         reviewer_id=args.reviewer_id,
         reviewer_role=args.reviewer_role,
+        confirmed_by_user=args.confirmed_by_user,
         notes=args.notes,
     )
     LOGGER.info("Recorded %s for %s", event["decision"], event["scope"])

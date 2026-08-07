@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import logging
 import re
 from pathlib import Path
@@ -11,6 +12,7 @@ from typing import Any, Iterable
 from case_core import (
     PLUGIN_NAME,
     canonical_json_sha256,
+    case_lock,
     iso_now,
     load_running_context,
     require_run_artifact,
@@ -110,6 +112,12 @@ def _object(payload: dict[str, Any], key: str) -> dict[str, Any]:
     return value if isinstance(value, dict) else {}
 
 
+def _has_material_value(value: object) -> bool:
+    """Return whether a mechanically required draft value is present."""
+
+    return value is not None and not (isinstance(value, str) and not value.strip())
+
+
 def _id_set(
     items: Iterable[dict[str, Any]],
     field: str,
@@ -146,7 +154,9 @@ def _check_refs(
     if not isinstance(values, list):
         _issue(issues, "invalid_references", path, "references must be a list")
         return []
-    refs = [str(value) for value in values]
+    refs = [value for value in values if isinstance(value, str)]
+    if len(refs) != len(values):
+        _issue(issues, "invalid_reference", path, "references must be strings")
     if require_one and not refs:
         _issue(issues, "missing_reference", path, "at least one reference is required")
     if len(refs) != len(set(refs)):
@@ -221,6 +231,8 @@ def _latest_review_state(
             if isinstance(event, dict)
             and event.get("scope") == scope
             and event.get("scope_sha256") == expected_hash
+            and event.get("confirmation_basis") == "explicit_user_confirmation"
+            and event.get("identity_assurance") == "asserted_not_authenticated"
         ]
         states[scope] = (
             str(matching[-1].get("decision")) if matching else "stale_or_missing"
@@ -234,8 +246,17 @@ def validate_application(
     """Validate contracts and traceability without deciding semantic correctness."""
 
     context = load_running_context(client_engagement, output_dir=output_dir)
-    run_id = safe_identifier(context["run_id"], field="run_id")
     output_dir = output_dir.resolve()
+    with case_lock(output_dir):
+        return _validate_application_locked(output_dir=output_dir, context=context)
+
+
+def _validate_application_locked(
+    *, output_dir: Path, context: dict[str, Any]
+) -> dict[str, Any]:
+    """Validate one immutable case snapshot while cooperative writers are locked."""
+
+    run_id = safe_identifier(context["run_id"], field="run_id")
     intake = require_run_artifact(output_dir / "case_intake.json", run_id=run_id)
     sources = require_run_artifact(output_dir / "source_register.json", run_id=run_id)
     workbench = require_run_artifact(
@@ -255,6 +276,13 @@ def validate_application(
         issues.extend(validate_artifact_schema(label, payload))
         if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
             _issue(issues, "artifact_identity_mismatch", label, "plugin/run mismatch")
+    if run_state.get("source_set_revision") != sources.get("source_set_revision"):
+        _issue(
+            issues,
+            "source_set_revision_mismatch",
+            "run_state.source_set_revision",
+            "run state and source register revisions must match",
+        )
 
     source_items = _items(sources, "sources", issues=issues)
     source_ids = _id_set(source_items, "source_id", path="sources", issues=issues)
@@ -280,6 +308,8 @@ def validate_application(
                 )
                 for item in relationships
                 if isinstance(item, dict)
+                and isinstance(item.get("kind"), str)
+                and isinstance(item.get("target_source_id"), str)
             ]
             if len(normalized_relationships) != len(set(normalized_relationships)):
                 _issue(
@@ -339,7 +369,7 @@ def validate_application(
         path="consistency_checks",
         issues=issues,
     )
-    _id_set(issue_items, "issue_id", path="issues", issues=issues)
+    issue_ids = _id_set(issue_items, "issue_id", path="issues", issues=issues)
     fact_by_id = {str(item.get("fact_id")): item for item in facts}
 
     for index, requirement in enumerate(requirements):
@@ -386,6 +416,18 @@ def validate_application(
                     f"{ref_path}.excerpt_sha256",
                     "invalid excerpt SHA-256",
                 )
+            excerpt = ref.get("excerpt")
+            if isinstance(excerpt, str) and excerpt:
+                expected_excerpt_hash = hashlib.sha256(
+                    excerpt.encode("utf-8")
+                ).hexdigest()
+                if ref.get("excerpt_sha256") != expected_excerpt_hash:
+                    _issue(
+                        issues,
+                        "excerpt_sha256_mismatch",
+                        f"{ref_path}.excerpt_sha256",
+                        "excerpt_sha256 must hash the exact stored UTF-8 excerpt",
+                    )
             if (
                 requirement.get("review_status") == "confirmed"
                 and source_by_id.get(source_id, {}).get("review_status") != "reviewed"
@@ -484,7 +526,7 @@ def validate_application(
             path = f"{key}[{index}]"
             _review_status(item, path=path, issues=issues)
             _readiness(item, path=path, issues=issues)
-            _check_refs(
+            requirement_refs = _check_refs(
                 item.get("requirement_ids"),
                 requirement_ids,
                 path=f"{path}.requirement_ids",
@@ -496,14 +538,23 @@ def validate_application(
                     if key == "document_checklist"
                     else "source_ids"
                 )
-                _check_refs(
+                source_refs = _check_refs(
                     item.get(source_field),
                     source_ids,
                     path=f"{path}.{source_field}",
                     issues=issues,
                 )
+                if item.get("readiness") == "ready" and (
+                    not requirement_refs or not source_refs
+                ):
+                    _issue(
+                        issues,
+                        "ready_item_missing_traceability",
+                        path,
+                        "ready documents and expenses require requirement and source links",
+                    )
             if key in {"form_fields", "narratives"}:
-                _check_refs(
+                fact_refs = _check_refs(
                     item.get("fact_ids"),
                     fact_ids,
                     path=f"{path}.fact_ids",
@@ -532,23 +583,89 @@ def validate_application(
                         path,
                         "protected controls cannot have a proposed value",
                     )
+                if (
+                    item.get("readiness") == "ready"
+                    and not protected
+                    and (not requirement_refs or not fact_refs)
+                ):
+                    _issue(
+                        issues,
+                        "ready_item_missing_traceability",
+                        path,
+                        "ready ordinary form fields require requirement and fact links",
+                    )
+                if (
+                    item.get("readiness") == "ready"
+                    and not protected
+                    and not _has_material_value(item.get("proposed_value"))
+                ):
+                    _issue(
+                        issues,
+                        "ready_form_field_missing_value",
+                        f"{path}.proposed_value",
+                        "ready ordinary form fields require a proposed value",
+                    )
+            if (
+                key == "narratives"
+                and item.get("readiness") == "ready"
+                and (not requirement_refs or not fact_refs)
+            ):
+                _issue(
+                    issues,
+                    "ready_item_missing_traceability",
+                    path,
+                    "ready narratives require requirement and fact links",
+                )
+            if (
+                key == "narratives"
+                and item.get("readiness") == "ready"
+                and not str(item.get("draft") or "").strip()
+            ):
+                _issue(
+                    issues,
+                    "ready_narrative_missing_draft",
+                    f"{path}.draft",
+                    "ready narratives require a non-empty draft",
+                )
+            if (
+                key == "expenses"
+                and item.get("readiness") == "not_applicable"
+                and item.get("outcome") != "not_assessed"
+            ):
+                _issue(
+                    issues,
+                    "expense_not_applicable_outcome_mismatch",
+                    path,
+                    "not_applicable expenses require outcome not_assessed",
+                )
 
     consistency_conflict = False
     for index, item in enumerate(consistency_checks):
         path = f"consistency_checks[{index}]"
         _review_status(item, path=path, issues=issues)
-        _check_refs(
+        consistency_fact_refs = _check_refs(
             item.get("fact_ids"),
             fact_ids,
             path=f"{path}.fact_ids",
             issues=issues,
         )
-        _check_refs(
+        consistency_source_refs = _check_refs(
             item.get("source_ids"),
             source_ids,
             path=f"{path}.source_ids",
             issues=issues,
         )
+        if (
+            item.get("outcome") == "consistent"
+            and item.get("review_status") == "confirmed"
+            and len(set(consistency_fact_refs + consistency_source_refs)) < 2
+        ):
+            _issue(
+                issues,
+                "consistency_check_missing_evidence",
+                path,
+                "a confirmed consistency check requires at least two evidence links",
+            )
         outcome = item.get("outcome")
         consistency_conflict = consistency_conflict or outcome == "conflict"
         if outcome == "not_applicable":
@@ -572,6 +689,7 @@ def validate_application(
         | form_field_ids
         | narrative_ids
         | consistency_check_ids
+        | issue_ids
     )
     authority = workbench.get("authority_simulation")
     authority_checks: list[dict[str, Any]] = []
@@ -585,12 +703,39 @@ def validate_application(
         authority = {}
     else:
         authority_checks = _items(authority, "checks", issues=issues)
-    _id_set(
+    authority_check_ids = _id_set(
         authority_checks,
         "check_id",
         path="authority_simulation.checks",
         issues=issues,
     )
+    # IDs form one global namespace because issue and authority links carry no
+    # type discriminator. Global uniqueness makes every reference auditable.
+    id_collections = (
+        ("source", source_ids),
+        ("requirement", requirement_ids),
+        ("fact", fact_ids),
+        ("assessment", assessment_ids),
+        ("document", document_ids),
+        ("expense", expense_ids),
+        ("form_field", form_field_ids),
+        ("narrative", narrative_ids),
+        ("consistency_check", consistency_check_ids),
+        ("issue", issue_ids),
+        ("authority_check", authority_check_ids),
+    )
+    owners: dict[str, str] = {}
+    for kind, identifiers in id_collections:
+        for identifier in identifiers:
+            if identifier in owners:
+                _issue(
+                    issues,
+                    "cross_type_duplicate_id",
+                    kind,
+                    f"{identifier} is already used as {owners[identifier]}",
+                )
+            else:
+                owners[identifier] = kind
     for index, item in enumerate(authority_checks):
         path = f"authority_simulation.checks[{index}]"
         _review_status(item, path=path, issues=issues)
@@ -625,6 +770,17 @@ def validate_application(
             path=f"issues[{index}].related_ids",
             issues=issues,
         )
+        if (
+            item.get("severity") in {"blocking", "review_required"}
+            and item.get("status") != "open"
+            and item.get("review_status") != "confirmed"
+        ):
+            _issue(
+                issues,
+                "material_issue_closure_requires_confirmed_review",
+                f"issues[{index}]",
+                "closing a material issue requires confirmed professional review",
+            )
 
     dossier = workbench.get("dossier")
     if not isinstance(dossier, dict):
@@ -687,6 +843,9 @@ def validate_application(
             "application.procedure_id": application.get("procedure_id"),
             "applicant.legal_name": applicant.get("legal_name"),
             "project.title": project.get("title"),
+            "project.summary": project.get("summary"),
+            "professional_question": intake.get("professional_question"),
+            "workbench.case_summary": workbench.get("case_summary"),
         }
         unconfirmed_intake.extend(
             field
@@ -708,6 +867,70 @@ def validate_application(
                 "source_register.sources",
                 "every source in a ready dossier must be reviewed",
             )
+        governing_calls = [
+            source
+            for source in source_items
+            if source.get("source_type") == "call"
+            and source.get("review_status") == "reviewed"
+        ]
+        if not governing_calls:
+            _issue(
+                issues,
+                "ready_disposition_missing_governing_call",
+                "source_register.sources",
+                "ready disposition requires at least one reviewed governing call",
+            )
+        formal_source_types = {"call", "formal_amendment", "official_faq"}
+        undated_official_sources = sorted(
+            str(source.get("source_id"))
+            for source in source_items
+            if source.get("source_type") in formal_source_types
+            and (
+                source.get("publication_date") is None
+                or source.get("effective_from") is None
+            )
+        )
+        if undated_official_sources:
+            _issue(
+                issues,
+                "ready_disposition_has_undated_official_sources",
+                "source_register.sources",
+                "publication_date and effective_from are required for: "
+                + ", ".join(undated_official_sources),
+            )
+        relationship_gaps: list[str] = []
+        for source in source_items:
+            source_type = source.get("source_type")
+            expected_kinds = (
+                {"clarifies"}
+                if source_type == "official_faq"
+                else (
+                    {"amends", "supersedes"}
+                    if source_type == "formal_amendment"
+                    else set()
+                )
+            )
+            if not expected_kinds:
+                continue
+            valid_relationship = any(
+                isinstance(relationship, dict)
+                and relationship.get("kind") in expected_kinds
+                and source_by_id.get(str(relationship.get("target_source_id")), {}).get(
+                    "source_type"
+                )
+                in {"call", "formal_amendment"}
+                for relationship in source.get("relationships", [])
+            )
+            if not valid_relationship:
+                relationship_gaps.append(str(source.get("source_id")))
+        if relationship_gaps:
+            _issue(
+                issues,
+                "ready_disposition_has_unbound_dependent_sources",
+                "source_register.sources",
+                "FAQ and amendment sources require explicit formal-source relationships: "
+                + ", ".join(sorted(relationship_gaps)),
+            )
         if any(
             requirement.get("review_status") != "confirmed"
             for requirement in requirements
@@ -717,6 +940,26 @@ def validate_application(
                 "ready_disposition_has_unconfirmed_requirements",
                 "requirements",
                 "every requirement in a ready dossier must be confirmed",
+            )
+        if any(fact.get("review_status") != "confirmed" for fact in facts):
+            _issue(
+                issues,
+                "ready_disposition_has_unconfirmed_facts",
+                "facts",
+                "every fact in a ready dossier must be confirmed",
+            )
+        empty_fact_ids = sorted(
+            str(fact.get("fact_id"))
+            for fact in facts
+            if not _has_material_value(fact.get("value"))
+        )
+        if empty_fact_ids:
+            _issue(
+                issues,
+                "ready_disposition_has_empty_facts",
+                "facts",
+                "ready disposition requires material fact values: "
+                + ", ".join(empty_fact_ids),
             )
         assessed_requirement_ids = [
             str(assessment.get("requirement_id")) for assessment in assessments
@@ -761,6 +1004,36 @@ def validate_application(
             if item.get("outcome") not in {"pass", "not_applicable"}
             or item.get("review_status") != "confirmed"
         ]
+        authority_covered_ids = {
+            related_id
+            for item in authority_checks
+            for related_id in item.get("related_ids", [])
+            if isinstance(related_id, str)
+        }
+        material_ids = (
+            requirement_ids
+            | fact_ids
+            | assessment_ids
+            | document_ids
+            | expense_ids
+            | form_field_ids
+            | narrative_ids
+            | consistency_check_ids
+            | {
+                str(item.get("issue_id"))
+                for item in issue_items
+                if item.get("severity") in {"blocking", "review_required"}
+            }
+        )
+        missing_authority_coverage = sorted(material_ids - authority_covered_ids)
+        if missing_authority_coverage:
+            _issue(
+                issues,
+                "authority_simulation_coverage_gap",
+                "authority_simulation.checks",
+                "authority simulation does not cover: "
+                + ", ".join(missing_authority_coverage),
+            )
         if (
             authority.get("status") != "reviewed"
             or authority.get("overall_outcome") != "pass"
@@ -785,6 +1058,19 @@ def validate_application(
                 "ready_disposition_has_adverse_result",
                 "dossier.disposition",
                 "ready disposition cannot contain unresolved assessments or open review issues",
+            )
+        adverse_expenses = [
+            str(item.get("expense_id"))
+            for item in expenses
+            if item.get("readiness") == "ready" and item.get("outcome") != "eligible"
+        ]
+        if adverse_expenses:
+            _issue(
+                issues,
+                "ready_disposition_has_adverse_expenses",
+                "expenses",
+                "ready disposition requires eligible expense outcomes: "
+                + ", ".join(adverse_expenses),
             )
         stale = [
             scope for scope, decision in review_states.items() if decision != "accepted"
@@ -817,17 +1103,18 @@ def validate_application(
         "source_register": canonical_json_sha256(sources),
         "application_workbench": canonical_json_sha256(workbench),
         "review_log": canonical_json_sha256(reviews),
+        "run_state": canonical_json_sha256(run_state),
     }
     audit = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "plugin": PLUGIN_NAME,
         "run_id": run_id,
         "validated_at": iso_now(),
         "status": "passed" if not issues else "failed",
         "ready_to_file": False,
-        "portal_actions_performed": False,
-        "signature_actions_performed": False,
-        "submission_actions_performed": False,
+        "portal_actions_performed": run_state.get("portal_actions_performed"),
+        "signature_actions_performed": run_state.get("signature_actions_performed"),
+        "submission_actions_performed": run_state.get("submission_actions_performed"),
         "artifact_hashes": artifact_hashes,
         "review_states": review_states,
         "counts": {

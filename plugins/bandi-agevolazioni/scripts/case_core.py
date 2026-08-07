@@ -3,7 +3,9 @@
 from __future__ import annotations
 
 import hashlib
+import importlib
 import json
+import os
 import re
 import stat
 import sys
@@ -192,18 +194,54 @@ def require_run_artifact(path: Path, *, run_id: str) -> dict[str, Any]:
 
 @contextmanager
 def case_lock(output_dir: Path) -> Iterator[None]:
-    """Enforce one mechanical writer for a short case mutation."""
+    """Enforce one writer with a crash-safe operating-system file lock."""
 
     lock_path = output_dir / ".bandi-agevolazioni.lock"
+    flags = os.O_CREAT | os.O_RDWR
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
     try:
-        with lock_path.open("x", encoding="utf-8") as handle:
-            handle.write(iso_now())
-        lock_path.chmod(stat.S_IRUSR | stat.S_IWUSR)
-    except FileExistsError as exc:
-        raise RuntimeError(
-            "another bandi-agevolazioni mutation is in progress"
-        ) from exc
-    try:
-        yield
-    finally:
-        lock_path.unlink(missing_ok=True)
+        descriptor = os.open(lock_path, flags, stat.S_IRUSR | stat.S_IWUSR)
+    except OSError as exc:
+        raise RuntimeError("cannot open the case mutation lock") from exc
+    with os.fdopen(descriptor, "r+", encoding="utf-8") as handle:
+        metadata = os.fstat(handle.fileno())
+        if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
+            raise RuntimeError("case mutation lock must be one regular file")
+        if hasattr(os, "fchmod"):
+            os.fchmod(handle.fileno(), stat.S_IRUSR | stat.S_IWUSR)
+        else:
+            # ``fchmod`` is not available on every Windows Python build.
+            # The lock lives in the already-bound private case directory, so
+            # path-based chmod is the narrow cross-platform fallback.
+            os.chmod(lock_path, stat.S_IRUSR | stat.S_IWUSR)
+        try:
+            if os.name == "nt":
+                lock_module = importlib.import_module("msvcrt")
+                handle.seek(0)
+                if not handle.read(1):
+                    handle.write("\0")
+                    handle.flush()
+                handle.seek(0)
+                lock_module.locking(handle.fileno(), lock_module.LK_NBLCK, 1)
+            else:
+                lock_module = importlib.import_module("fcntl")
+                lock_module.flock(
+                    handle.fileno(), lock_module.LOCK_EX | lock_module.LOCK_NB
+                )
+        except OSError as exc:
+            raise RuntimeError(
+                "another bandi-agevolazioni mutation is in progress"
+            ) from exc
+        handle.seek(0)
+        handle.truncate()
+        handle.write(f"pid={os.getpid()} acquired_at={iso_now()}\n")
+        handle.flush()
+        try:
+            yield
+        finally:
+            if os.name == "nt":
+                handle.seek(0)
+                lock_module.locking(handle.fileno(), lock_module.LK_UNLCK, 1)
+            else:
+                lock_module.flock(handle.fileno(), lock_module.LOCK_UN)

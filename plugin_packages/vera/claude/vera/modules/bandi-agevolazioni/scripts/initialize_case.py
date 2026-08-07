@@ -5,12 +5,12 @@ from __future__ import annotations
 import argparse
 import logging
 from pathlib import Path
-from typing import Any
 
 from case_core import (
     PLUGIN_NAME,
     case_lock,
     iso_now,
+    load_json_object,
     load_running_context,
     relative_run_path,
     safe_identifier,
@@ -21,16 +21,6 @@ from case_core import (
 __all__ = ["initialize_case", "main"]
 
 LOGGER = logging.getLogger(__name__)
-
-
-def _review_state() -> dict[str, Any]:
-    return {
-        "status": "pending",
-        "reviewer_id": None,
-        "reviewer_role": None,
-        "reviewed_at": None,
-        "notes": None,
-    }
 
 
 def initialize_case(
@@ -59,10 +49,84 @@ def initialize_case(
         "run_state": output_dir / "run_state.json",
     }
     with case_lock(output_dir):
-        if any(path.exists() for path in files.values()):
-            raise FileExistsError(
-                "case artifacts already exist; resume the existing run"
-            )
+        if files["run_state"].exists():
+            missing = [path.name for path in files.values() if not path.exists()]
+            if missing:
+                raise ValueError(
+                    "initialized case is incomplete; missing: " + ", ".join(missing)
+                )
+            state = load_json_object(files["run_state"])
+            intake = load_json_object(files["case_intake"])
+            if state.get("plugin") != PLUGIN_NAME or state.get("run_id") != run_id:
+                raise ValueError("existing run_state belongs to another plugin run")
+            if (
+                intake.get("reference_date") != reference_date
+                or intake.get("client_reference") != client_reference
+                or state.get("language") != language
+            ):
+                raise ValueError("existing initialization parameters do not match")
+            return files
+        # run_state is committed last. Existing draft files therefore represent
+        # an interrupted initialization and are safely replaced, making retry
+        # idempotent without overwriting a completed run.
+        for label, path in files.items():
+            if label == "run_state" or not path.exists():
+                continue
+            payload = load_json_object(path)
+            collections = {
+                "sources": ("sources", "source_set_revision"),
+                "workbench": (
+                    "requirements",
+                    "facts",
+                    "assessments",
+                    "document_checklist",
+                    "expenses",
+                    "form_fields",
+                    "narratives",
+                    "consistency_checks",
+                    "issues",
+                ),
+                "reviews": ("events",),
+            }
+            if payload.get("plugin") != PLUGIN_NAME or payload.get("run_id") != run_id:
+                raise ValueError(f"partial {label} belongs to another plugin run")
+            if label == "case_intake":
+                material_values = (
+                    payload.get("professional_question"),
+                    *(
+                        payload.get(section, {}).get(field)
+                        for section, field in (
+                            ("application", "title"),
+                            ("application", "issuing_authority"),
+                            ("application", "procedure_id"),
+                            ("applicant", "legal_name"),
+                            ("applicant", "tax_code"),
+                            ("applicant", "vat_number"),
+                            ("project", "title"),
+                            ("project", "summary"),
+                            ("project", "requested_amount"),
+                        )
+                        if isinstance(payload.get(section), dict)
+                    ),
+                )
+                if any(value not in (None, "") for value in material_values):
+                    raise ValueError(
+                        "run_state is missing but intake contains case work; "
+                        "manual recovery is required"
+                    )
+            if label in collections and any(
+                payload.get(key) not in ([], 0) for key in collections[label]
+            ):
+                raise ValueError(
+                    "run_state is missing but existing artifacts contain case work; "
+                    "manual recovery is required"
+                )
+            if label == "workbench" and payload.get("case_summary") not in (None, ""):
+                raise ValueError(
+                    "run_state is missing but workbench contains case work; "
+                    "manual recovery is required"
+                )
+        created_at = iso_now()
         write_private_json(
             files["case_intake"],
             {
@@ -107,7 +171,7 @@ def initialize_case(
         write_private_json(
             files["workbench"],
             {
-                "schema_version": "1.0",
+                "schema_version": "1.2",
                 "plugin": PLUGIN_NAME,
                 "run_id": run_id,
                 "case_summary": "",
@@ -133,13 +197,12 @@ def initialize_case(
                         "Bozza per revisione professionale; Vera non firma e non invia la domanda."
                     ],
                 },
-                "professional_review": _review_state(),
             },
         )
         write_private_json(
             files["reviews"],
             {
-                "schema_version": "1.0",
+                "schema_version": "1.1",
                 "plugin": PLUGIN_NAME,
                 "run_id": run_id,
                 "events": [],
@@ -152,8 +215,8 @@ def initialize_case(
                 "plugin": PLUGIN_NAME,
                 "workflow": PLUGIN_NAME,
                 "run_id": run_id,
-                "created_at": iso_now(),
-                "updated_at": iso_now(),
+                "created_at": created_at,
+                "updated_at": created_at,
                 "language": language,
                 "phase": "intake",
                 "status": "needs_review",
