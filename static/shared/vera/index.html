@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -364,6 +364,194 @@
     .bilancio-boundary h3 { margin-bottom: 16px; font-size: 1.25rem; }
     .bilancio-boundary p { max-width: 53ch; color: var(--blue); }
 
+    #bandi-agevolazioni { scroll-margin-top: 76px; }
+
+    .bandi-head {
+      align-items: start;
+      margin-bottom: clamp(48px, 7vw, 76px);
+    }
+
+    .bandi-head h2 { max-width: 760px; }
+    .bandi-head > p {
+      max-width: 610px;
+      padding-top: 6px;
+      color: var(--blue);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.45;
+    }
+
+    .bandi-position {
+      padding-block: clamp(32px, 5vw, 56px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.28fr) minmax(260px, 0.72fr);
+      gap: clamp(32px, 7vw, 96px);
+      align-items: end;
+      border-block: 2px solid var(--navy);
+    }
+
+    .bandi-position__statement {
+      max-width: 22ch;
+      font-size: clamp(1.85rem, 4vw, 3.65rem);
+      font-weight: 650;
+      line-height: 1.08;
+      letter-spacing: -0.045em;
+    }
+
+    .bandi-position__coverage {
+      padding-left: clamp(24px, 4vw, 48px);
+      border-left: 1px solid var(--cyan);
+    }
+
+    .bandi-position__coverage strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .bandi-position__coverage p { color: var(--blue); }
+
+    .bandi-evidence-chain {
+      padding-block: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .bandi-evidence-chain span {
+      min-height: 56px;
+      padding: 8px 20px 8px 0;
+      display: flex;
+      align-items: center;
+      color: var(--blue);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .bandi-evidence-chain span + span {
+      padding-left: 20px;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .bandi-stages {
+      margin-top: clamp(64px, 9vw, 104px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-block: 2px solid var(--navy);
+    }
+
+    .bandi-stage { padding: clamp(32px, 5vw, 56px) clamp(32px, 5vw, 56px) clamp(36px, 5vw, 60px) 0; }
+    .bandi-stage + .bandi-stage { padding-inline: clamp(32px, 5vw, 56px) 0; border-left: 1px solid var(--cyan); }
+    .bandi-stage__index {
+      display: block;
+      margin-bottom: clamp(44px, 7vw, 76px);
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .bandi-stage h3 { margin-bottom: 16px; font-size: clamp(1.7rem, 3vw, 2.55rem); }
+    .bandi-stage > p { max-width: 48ch; color: var(--blue); }
+    .bandi-stage__sources {
+      margin: 28px 0 0;
+      padding: 20px 0 0;
+      border-top: 1px solid var(--cyan);
+      color: var(--navy);
+      font-size: 0.88rem;
+      line-height: 1.55;
+    }
+    .bandi-stage__output {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+      color: var(--blue);
+      font-size: 0.86rem;
+    }
+    .bandi-stage__output strong { color: var(--navy); }
+
+    .bandi-pipeline { margin-top: clamp(64px, 9vw, 104px); }
+    .bandi-pipeline__head {
+      margin-bottom: 24px;
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 24px;
+    }
+    .bandi-pipeline__head h3 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
+    .bandi-pipeline__head p { max-width: 48ch; color: var(--blue); }
+    .bandi-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 2px solid var(--navy);
+    }
+    .bandi-step {
+      min-height: 225px;
+      padding: 26px 28px 30px 0;
+      border-bottom: 1px solid var(--cyan);
+    }
+    .bandi-step:not(:nth-child(3n + 1)) { padding-left: 28px; border-left: 1px solid var(--cyan); }
+    .bandi-step__number {
+      display: block;
+      margin-bottom: 40px;
+      color: var(--cyan);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+    .bandi-step h4 { margin: 0 0 10px; font-size: 1.08rem; line-height: 1.2; }
+    .bandi-step p { max-width: 38ch; color: var(--blue); font-size: 0.94rem; }
+
+    .bandi-proof { margin-top: clamp(64px, 9vw, 104px); }
+    .bandi-proof__head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
+      gap: clamp(32px, 8vw, 112px);
+      align-items: end;
+      margin-bottom: 28px;
+    }
+    .bandi-proof__head h3 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
+    .bandi-proof__head p { max-width: 58ch; color: var(--blue); }
+    .bandi-proof__ledger { border-top: 2px solid var(--navy); }
+    .bandi-proof__row {
+      min-height: 100px;
+      padding-block: 22px;
+      display: grid;
+      grid-template-columns: minmax(190px, 0.65fr) minmax(0, 1.35fr) minmax(150px, 0.42fr);
+      gap: 28px;
+      align-items: center;
+      border-bottom: 1px solid var(--cyan);
+    }
+    .bandi-proof__row h4 { margin: 0; font-size: 1rem; }
+    .bandi-proof__row p { color: var(--blue); font-size: 0.92rem; }
+    .bandi-proof__status {
+      justify-self: end;
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      color: var(--navy);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .bandi-proof__status::before { width: 8px; height: 8px; background: var(--blue); content: ""; }
+    .bandi-proof__status--pilot { color: var(--blue); }
+    .bandi-proof__status--pilot::before { background: transparent; border: 1px solid var(--blue); }
+
+    .bandi-boundary {
+      margin-top: clamp(52px, 8vw, 84px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-block: 2px solid var(--navy);
+    }
+    .bandi-boundary article { padding: 28px 32px 34px 0; }
+    .bandi-boundary article + article { padding-inline: 32px 0; border-left: 1px solid var(--cyan); }
+    .bandi-boundary h3 { margin-bottom: 16px; font-size: 1.25rem; }
+    .bandi-boundary p { max-width: 54ch; color: var(--blue); }
+
     .assurance-sequence {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -659,6 +847,18 @@
       .bilancio-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .bilancio-step:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
       .bilancio-step:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--cyan); }
+      .bandi-position { grid-template-columns: 1fr; align-items: start; }
+      .bandi-position__coverage { padding: 28px 0 0; border-top: 1px solid var(--cyan); border-left: 0; }
+      .bandi-evidence-chain { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .bandi-evidence-chain span:nth-child(4) { padding-left: 0; border-left: 0; }
+      .bandi-evidence-chain span:nth-child(n + 4) { border-top: 1px solid var(--cyan); }
+      .bandi-pipeline__head { align-items: flex-start; flex-direction: column; }
+      .bandi-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .bandi-step:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
+      .bandi-step:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--cyan); }
+      .bandi-proof__head { grid-template-columns: 1fr; gap: 20px; align-items: start; }
+      .bandi-proof__row { grid-template-columns: minmax(170px, 0.58fr) minmax(0, 1.42fr); }
+      .bandi-proof__status { grid-column: 2; justify-self: start; }
       .assurance-sequence { grid-template-columns: 1fr; }
       .assurance-step,
       .assurance-step + .assurance-step {
@@ -699,6 +899,26 @@
       .bilancio-boundary article,
       .bilancio-boundary article + article { padding: 28px 0 32px; border-left: 0; }
       .bilancio-boundary article + article { border-top: 1px solid var(--cyan); }
+      .bandi-evidence-chain { grid-template-columns: 1fr; padding-block: 0; }
+      .bandi-evidence-chain span,
+      .bandi-evidence-chain span + span,
+      .bandi-evidence-chain span:nth-child(4) { padding: 15px 0; border-top: 1px solid var(--cyan); border-left: 0; }
+      .bandi-evidence-chain span:first-child { border-top: 0; }
+      .bandi-stages { grid-template-columns: 1fr; }
+      .bandi-stage,
+      .bandi-stage + .bandi-stage { padding: 32px 0 36px; border-left: 0; }
+      .bandi-stage + .bandi-stage { border-top: 1px solid var(--cyan); }
+      .bandi-stage__index { margin-bottom: 36px; }
+      .bandi-steps { grid-template-columns: 1fr; }
+      .bandi-step,
+      .bandi-step:nth-child(even) { min-height: 0; padding: 26px 0 30px; border-left: 0; }
+      .bandi-step__number { margin-bottom: 28px; }
+      .bandi-proof__row { grid-template-columns: 1fr; gap: 10px; align-items: start; }
+      .bandi-proof__status { grid-column: 1; justify-self: start; margin-top: 4px; }
+      .bandi-boundary { grid-template-columns: 1fr; }
+      .bandi-boundary article,
+      .bandi-boundary article + article { padding: 28px 0 32px; border-left: 0; }
+      .bandi-boundary article + article { border-top: 1px solid var(--cyan); }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
@@ -749,6 +969,7 @@
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
           <a href="#bilancio-intelligente" data-bilancio-nav hidden>Bilancio intelligente</a>
+          <a href="#bandi-agevolazioni" data-bandi-nav hidden>Bandi e agevolazioni</a>
           <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
           <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
           <a href="#data-boundary" data-i18n="nav.data">Dati</a>
@@ -776,7 +997,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, bandi, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
@@ -981,6 +1202,133 @@
       </div>
     </section>
 
+    <section class="section-block" id="bandi-agevolazioni" data-bandi-section hidden>
+      <div class="section-head bandi-head">
+        <div class="section-head__title">
+          <span class="section-index">Bandi e agevolazioni · Italia</span>
+          <h2>Dall’opportunità al dossier, senza perdere la fonte.</h2>
+        </div>
+        <p>Vera collega il monitoraggio delle misure al lavoro istruttorio del singolo cliente. Ogni proposta resta distinta dall’evidenza che la sostiene e dalla decisione del professionista.</p>
+      </div>
+
+      <div class="bandi-position">
+        <p class="bandi-position__statement">Non un elenco di bandi. Un percorso rivedibile dal profilo dell’impresa alla domanda.</p>
+        <div class="bandi-position__coverage">
+          <strong>Che cosa significa “copertura”</strong>
+          <p>Fonti confermate e controllate diviso fonti applicabili confermate. Misura l’esecuzione del piano di ricerca; non è la probabilità di aver trovato tutte le agevolazioni disponibili.</p>
+        </div>
+      </div>
+
+      <div class="bandi-evidence-chain" aria-label="Catena delle evidenze del workflow bandi">
+        <span>Profilo impresa con riferimenti opachi</span>
+        <span>Fonti ufficiali e relativi atti</span>
+        <span>Controlli registrati e datati</span>
+        <span>Decisioni professionali tracciate</span>
+        <span>Dossier e handoff verificabili</span>
+      </div>
+
+      <div class="bandi-stages">
+        <article class="bandi-stage">
+          <span class="bandi-stage__index">Fase A · Radar dello studio</span>
+          <h3>Trova ciò che merita attenzione.</h3>
+          <p>Costruisce profili agevolativi con riferimenti cliente opachi, propone un piano di fonti ufficiali, registra i controlli realmente eseguiti e confronta opportunità e imprese in entrambe le direzioni.</p>
+          <p class="bandi-stage__sources"><strong>Evidenze:</strong> visura e dati societari selezionati, territorio, ATECO, dimensione, investimenti previsti, proprietà, personale, energia, digitalizzazione, export e altri fatti pertinenti, ciascuno con data e provenienza.</p>
+          <p class="bandi-stage__output"><strong>Output</strong><span>Opportunità da riesaminare, dati mancanti, contraddizioni, complessità e prossima azione proposta.</span></p>
+        </article>
+        <article class="bandi-stage">
+          <span class="bandi-stage__index">Fase B · Dossier del cliente</span>
+          <h3>Prepara l’istruttoria completa.</h3>
+          <p>Importa l’opportunità selezionata nel fascicolo del cliente e ricostruisce requisiti, esclusioni, spese, documenti, moduli, testi narrativi e controlli incrociati.</p>
+          <p class="bandi-stage__sources"><strong>Evidenze:</strong> bando e atti modificativi, allegati, FAQ ufficiali, moduli, visure, bilanci, preventivi, dichiarazioni e informazioni di progetto. Le FAQ chiariscono: non sostituiscono silenziosamente un atto formale.</p>
+          <p class="bandi-stage__output"><strong>Output</strong><span>Matrice ready / missing / verify / not applicable, esito separato, simulazione del controllo dell’ente e mappa manuale del portale.</span></p>
+        </article>
+      </div>
+
+      <div class="bandi-pipeline">
+        <div class="bandi-pipeline__head">
+          <h3>Un solo filo, sei passaggi controllabili.</h3>
+          <p>Il modello interpreta e propone. Il professionista conferma. Il codice conserva ricevute, riferimenti, calcoli e revisioni.</p>
+        </div>
+        <div class="bandi-steps">
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">01</span>
+            <h4>Qualifica il profilo</h4>
+            <p>Ogni fatto osservato in un documento deve chiudersi su una ricevuta dello stesso cliente; ciò che manca rimane mancante.</p>
+          </article>
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">02</span>
+            <h4>Pianifica e controlla le fonti</h4>
+            <p>Il piano è specifico per impresa e territorio. Una fonte prevista non conta come controllata finché il controllo non è registrato e riesaminato.</p>
+          </article>
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">03</span>
+            <h4>Segue il ciclo della misura</h4>
+            <p>Annuncio, apertura, sospensione, chiusura e rifinanziamento restano osservazioni datate. Modifiche e nuove FAQ non cancellano la storia.</p>
+          </article>
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">04</span>
+            <h4>Confronta opportunità e clienti</h4>
+            <p>Compatibilità, beneficio, costi, complessità e prossima azione sono proposte motivate, non punteggi automatici di eleggibilità.</p>
+          </article>
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">05</span>
+            <h4>Costruisce il dossier</h4>
+            <p>Collega ogni requisito, controllo, spesa, documento, campo e testo alla fonte e all’evidenza del cliente che lo sostengono.</p>
+          </article>
+          <article class="bandi-step">
+            <span class="bandi-step__number" aria-hidden="true">06</span>
+            <h4>Consegna alla revisione</h4>
+            <p>Mostra punti pronti, mancanti, da verificare e non applicabili. Firma, dichiarazioni, accesso e invio restano alla persona autorizzata.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="bandi-proof">
+        <div class="bandi-proof__head">
+          <h3>Le evidenze della funzione, senza scorciatoie.</h3>
+          <p>I controlli strutturali dimostrano che il workflow conserva confini e tracciabilità. Non dimostrano da soli la correttezza giuridica o la capacità di trovare ogni misura: questi risultati richiedono casi pilota riesaminati da professionisti.</p>
+        </div>
+        <div class="bandi-proof__ledger">
+          <article class="bandi-proof__row">
+            <h4>Spazio di lavoro privato</h4>
+            <p>Autorizzazione esplicita, percorso vincolato, file owner-only e blocco delle cartelle Git o pubblicate.</p>
+            <span class="bandi-proof__status">Implementato e testato</span>
+          </article>
+          <article class="bandi-proof__row">
+            <h4>Isolamento delle evidenze</h4>
+            <p>Ricevute con hash, chiusura dei riferimenti e rifiuto di evidenze o facet appartenenti a un altro cliente.</p>
+            <span class="bandi-proof__status">Implementato e testato</span>
+          </article>
+          <article class="bandi-proof__row">
+            <h4>Revisioni e modifiche</h4>
+            <p>Eventi append-only per profili e opportunità, invalidazione degli abbinamenti dipendenti e review non più valide dopo un cambiamento.</p>
+            <span class="bandi-proof__status">Implementato e testato</span>
+          </article>
+          <article class="bandi-proof__row">
+            <h4>Passaggio al fascicolo cliente</h4>
+            <p>Handoff limitato al cliente selezionato, schema rigoroso, hash ricalcolabili e rifiuto delle manomissioni all’importazione.</p>
+            <span class="bandi-proof__status">Implementato e testato</span>
+          </article>
+          <article class="bandi-proof__row">
+            <h4>Qualità sul lavoro reale</h4>
+            <p>Precisione delle opportunità, misure mancate, falsi abbinamenti, tempestività, override e calibrazione economica devono essere misurati su casi professionali rappresentativi.</p>
+            <span class="bandi-proof__status bandi-proof__status--pilot">Da provare nel pilot</span>
+          </article>
+        </div>
+      </div>
+
+      <div class="bandi-boundary">
+        <article>
+          <h3>Vera partecipa</h3>
+          <p>Legge fonti ed evidenze, propone il piano di ricerca, ricostruisce il caso, segnala lacune e conflitti, prepara moduli e narrative e simula la revisione dell’ente.</p>
+        </article>
+        <article>
+          <h3>Revisione, firma e invio</h3>
+          <p>Conferma fonti, significato, applicabilità, eleggibilità, costi e dichiarazioni. Vera non garantisce completezza, non contatta il cliente, non riceve credenziali, non accede al portale, non firma e non invia.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="section-block" id="assurance">
       <div class="section-head">
         <div class="section-head__title">
@@ -1023,6 +1371,11 @@
         <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Bilancio intelligente</h3>
           <p>Da CSV, Excel o PDF riveduti a prospetti, nota integrativa e XBRL, con mappature, domande e decisioni professionali visibili.</p>
+          <span class="module-row__arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="module-row" href="index.html#bandi-agevolazioni" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+          <h3>Bandi e agevolazioni</h3>
+          <p>Dal radar privato delle opportunità al dossier del cliente, con fonti ufficiali, evidenze, revisioni e limiti visibili.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../check-entries/index.html#italy-adapter" data-module-link data-jurisdiction-item="it" hidden>
@@ -1192,7 +1545,7 @@
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
@@ -1204,7 +1557,7 @@
         "language.label": "Lingua",
         "hero.eyebrow": "AI companion per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara Plan, controlli, riconciliazioni, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
+        "hero.lead": "Prepara Plan, controlli, riconciliazioni, bandi, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
@@ -1868,8 +2221,11 @@
       });
       const jurisdiction = jurisdictionsByPage[lang];
       const showBilancio = lang === "it";
+      const showBandi = lang === "it";
       document.querySelector("[data-bilancio-section]").hidden = !showBilancio;
       document.querySelector("[data-bilancio-nav]").hidden = !showBilancio;
+      document.querySelector("[data-bandi-section]").hidden = !showBandi;
+      document.querySelector("[data-bandi-nav]").hidden = !showBandi;
       const bilancioVideo = document.querySelector("[data-bilancio-video]");
       const bilancioSource = bilancioVideo.querySelector("[data-video-src]");
       const bilancioCaptions = bilancioVideo.querySelector("[data-caption-src]");
