@@ -123,6 +123,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("registro-imprese-sari", "check_dependencies.py"),
     ("bandi-agevolazioni", "check_dependencies.py"),
     ("bandi-agevolazioni", "evaluate_intelligence.py"),
+    ("bandi-agevolazioni", "opportunity_radar.py"),
 )
 
 OUTPUT_DISCOVERY_REVIEW_WRITER_WORKFLOWS = (

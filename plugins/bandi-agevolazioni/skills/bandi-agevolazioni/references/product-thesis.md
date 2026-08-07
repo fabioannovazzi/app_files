@@ -1,5 +1,20 @@
 # Product thesis — intelligent grant execution
 
+## Radar before instruction
+
+The workflow supports both opportunity discovery and application instruction.
+Before a call is selected, Vera maintains a private, reviewable radar: an opaque
+company opportunity profile, a professionally selected official-source plan,
+time-aware opportunity observations, bidirectional portfolio matches and
+economic ranges with explicit assumptions. A confirmed match becomes a sealed
+handoff into the existing client-bound dossier; it never becomes an eligibility
+decision by itself.
+
+This makes the unit of discovery intelligence one source/profile/opportunity
+proposal, not an autonomous alert. Vera may recommend contacting a client, but
+does not contact one. Monitoring metadata records intended scans; it does not
+claim that an external scheduler or exhaustive official-source feed exists.
+
 ## Thesis
 
 The professional grant process already exists: select the governing call,
@@ -55,6 +70,19 @@ authority.
 - Automatic next-task selection uses only mechanically observable completeness
   and review states. It does not infer legal importance, applicability, source
   authority, or eligibility.
+- Radar coverage divides review-confirmed checks by applicable, professionally
+  confirmed plan entries because those counts are closed, reproducible
+  execution facts. Proposed, returned and rejected entries are disclosed and
+  excluded. It does not estimate the probability of finding all grants.
+- Lifecycle preservation and radar reference closure are deterministic because
+  auditability requires confirmed history and opaque client boundaries not to
+  be silently rewritten or crossed.
+- Studio-workspace path binding, same-client profile-evidence closure, review
+  freshness, and recomputable handoff hashes are deterministic because they are
+  security and audit contracts; they never decide source meaning or eligibility.
+- Economic net ranges use exact subtraction because every benefit, cost and
+  assumption is supplied semantically while the arithmetic must reproduce. The
+  code does not infer award probability, eligible spend, fees, effort or value.
 - Exact decimal and ISO-date comparisons remain the only semantic-adjacent rule
   families, for the bounded reasons in `workflow-method.md`.
 

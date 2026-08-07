@@ -23,7 +23,7 @@
       "required": ["source_id", "source_type", "title", "issuer", "authority_role", "path", "byte_count", "sha256", "publication_date", "effective_from", "effective_to", "retrieved_at", "selected_by", "review_status", "relationships"],
       "properties": {
         "source_id": {"$ref": "#/$defs/id"},
-        "source_type": {"enum": ["call", "formal_amendment", "annex", "official_faq", "portal_instructions", "form_template", "incorporated_law", "beneficiary_evidence", "quotation", "other"]},
+        "source_type": {"enum": ["call", "formal_amendment", "annex", "official_faq", "portal_instructions", "form_template", "incorporated_law", "beneficiary_evidence", "quotation", "opportunity_handoff", "other"]},
         "title": {"type": "string", "minLength": 1},
         "issuer": {"type": "string", "minLength": 1},
         "authority_role": {"enum": ["primary", "amending", "incorporated", "clarifying", "mechanical", "evidentiary", "unknown"]},

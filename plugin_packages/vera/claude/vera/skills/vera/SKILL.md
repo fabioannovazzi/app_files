@@ -183,10 +183,14 @@ them without changing the capability catalog:
 - `registro-imprese-sari`: source-backed preparation of Registro Imprese, REA,
   Comunicazione Unica, and DIRE work from official guidance. Never receive
   credentials, access a filing session, sign, pay, or submit a practice.
-- `bandi-agevolazioni`: source-traceable preparation and professional review of
-  grant and subsidized-finance applications from calls, amendments, annexes,
-  official FAQs, forms, and beneficiary evidence. Never invent eligibility,
-  treat FAQ as an amendment, receive portal credentials, sign, or submit.
+- `bandi-agevolazioni`: reviewable discovery and monitoring from an explicitly
+  authorized private studio-radar workspace and a
+  professionally selected official-source plan, bidirectional matching against
+  opaque client profiles, and source-traceable preparation of grant and
+  subsidized-finance applications from calls, amendments, annexes, official
+  FAQs, forms, and beneficiary evidence. Never claim exhaustive discovery,
+  invent eligibility, treat FAQ as an amendment, contact clients automatically,
+  receive portal credentials, sign, or submit.
 
 ## Workflow provenance
 

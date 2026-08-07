@@ -11,6 +11,7 @@ from case_core import (
     PLUGIN_NAME,
     case_lock,
     iso_now,
+    load_json_object,
     load_running_context,
     relative_run_path,
     require_run_artifact,
@@ -19,6 +20,7 @@ from case_core import (
     validate_iso_date,
     write_private_json,
 )
+from opportunity_radar import validate_opportunity_handoff_payload
 
 __all__ = ["register_source", "main"]
 
@@ -33,6 +35,7 @@ SOURCE_TYPES = {
     "incorporated_law",
     "beneficiary_evidence",
     "quotation",
+    "opportunity_handoff",
     "other",
 }
 AUTHORITY_ROLES = {
@@ -81,6 +84,14 @@ def register_source(
     )
     run_id = safe_identifier(context["run_id"], field="run_id")
     output_dir = output_dir.resolve()
+    if source_type == "opportunity_handoff":
+        if authority_role != "mechanical":
+            raise ValueError("opportunity handoff authority_role must be mechanical")
+        intake = require_run_artifact(output_dir / "case_intake.json", run_id=run_id)
+        validate_opportunity_handoff_payload(
+            load_json_object(source),
+            expected_client_ref=str(intake["client_reference"]),
+        )
     digest = sha256_file(source)
     record = {
         "source_id": source_id,

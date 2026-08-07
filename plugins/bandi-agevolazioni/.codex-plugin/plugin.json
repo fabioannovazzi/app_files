@@ -1,7 +1,7 @@
 {
   "name": "bandi-agevolazioni",
-  "version": "0.2.0",
-  "description": "Prepara dossier rivedibili per bandi e agevolazioni da fonti ufficiali e dati cliente, senza firma o invio.",
+  "version": "0.2.2",
+  "description": "Scopre e monitora opportunità agevolative, le abbina a profili opachi e prepara dossier rivedibili senza firma o invio.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -22,8 +22,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Bandi e agevolazioni",
-    "shortDescription": "Prepara dossier agevolativi rivedibili, senza invio.",
-    "longDescription": "Vera organizza il bando, gli allegati, le modifiche, le FAQ, i moduli e le evidenze del cliente in un dossier rivedibile. Collega requisiti, verifiche, costi, documenti, campi e testi alle fonti, mantiene separati completezza ed esito e segnala dati mancanti, conflitti e punti da confermare. Non accede ai portali, non firma e non invia domande.",
+    "shortDescription": "Trova opportunità e prepara dossier rivedibili.",
+    "longDescription": "Vera costruisce un profilo agevolativo opaco dell'impresa, propone e registra il controllo delle fonti ufficiali pertinenti, monitora annunci, aperture, sospensioni e chiusure e abbina le opportunità ai clienti in entrambe le direzioni. La copertura misura le fonti previste effettivamente controllate, non la probabilità di trovare tutti i bandi. Per la misura selezionata organizza bando, allegati, modifiche, FAQ, moduli ed evidenze in un dossier rivedibile, collegando requisiti, verifiche, costi, documenti, campi e testi alle fonti. Non contatta clienti, non accede ai portali, non firma e non invia domande.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
@@ -32,9 +32,9 @@
     "supportURL": "https://mparanza.com/support",
     "capabilities": ["Interactive", "Write", "Analysis"],
     "defaultPrompt": [
-      "Ricostruisci i requisiti di questo bando e prepara il dossier rivedibile usando soltanto le fonti ufficiali e le evidenze del cliente.",
-      "Controlla requisiti, esclusioni, spese, documenti, moduli e testi; separa completezza ed esito.",
-      "Non accedere ai portali, non firmare e non inviare nulla."
+      "Costruisci il profilo agevolativo di questa impresa e controlla sistematicamente le fonti ufficiali pertinenti.",
+      "Confronta questa nuova opportunità con i profili opachi del portafoglio e segnala chi merita una revisione professionale.",
+      "Ricostruisci i requisiti e prepara il dossier da fonti ufficiali ed evidenze cliente, senza contattare, accedere al portale, firmare o inviare."
     ],
     "brandColor": "#315F72",
     "composerIcon": "./assets/icon.svg",

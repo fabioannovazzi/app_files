@@ -113,8 +113,13 @@ deployment's actual account settings.
 
 ## Client-first workflow in Codex
 
-Every local Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Do not infer the client from a
+Every local client-bound Vera workflow run begins in Studio Archive, and the selected
+customer folder is its durable source of truth. The one explicit exception is
+the pre-client `bandi-agevolazioni` studio opportunity radar: a portfolio cannot
+belong to one customer folder, so it uses an owner-only, explicitly authorized
+local workspace bound to its exact path and retention owner. It creates no
+portable client run. A selected, self-verifiable handoff must enter a new exact
+client engagement before application instruction begins. Do not infer the client from a
 filename or assume that a similarly named folder is registered. Follow this
 explicit sequence:
 
@@ -210,10 +215,14 @@ them without changing the capability catalog:
 - `registro-imprese-sari`: source-backed preparation of Registro Imprese, REA,
   Comunicazione Unica, and DIRE work from official guidance. Never receive
   credentials, access a filing session, sign, pay, or submit a practice.
-- `bandi-agevolazioni`: source-traceable preparation and professional review of
-  grant and subsidized-finance applications from calls, amendments, annexes,
-  official FAQs, forms, and beneficiary evidence. Never invent eligibility,
-  treat FAQ as an amendment, receive portal credentials, sign, or submit.
+- `bandi-agevolazioni`: reviewable discovery and monitoring from an explicitly
+  authorized private studio-radar workspace and a
+  professionally selected official-source plan, bidirectional matching against
+  opaque client profiles, and source-traceable preparation of grant and
+  subsidized-finance applications from calls, amendments, annexes, official
+  FAQs, forms, and beneficiary evidence. Never claim exhaustive discovery,
+  invent eligibility, treat FAQ as an amendment, contact clients automatically,
+  receive portal credentials, sign, or submit.
 
 ## Workflow provenance
 

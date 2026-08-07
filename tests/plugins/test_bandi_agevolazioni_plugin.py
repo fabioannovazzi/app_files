@@ -31,6 +31,7 @@ def _scripts() -> dict[str, ModuleType]:
         "record_review",
         "schema_validation",
         "deterministic_rules",
+        "opportunity_radar",
     )
     previous = {name: sys.modules.get(name) for name in dependency_names}
     core = _module_from_path("bandi_test_case_core", SCRIPTS_ROOT / "case_core.py")
@@ -44,6 +45,11 @@ def _scripts() -> dict[str, ModuleType]:
         )
         sys.modules["schema_validation"] = schema_validation
         sys.modules["deterministic_rules"] = deterministic_rules
+        opportunity_radar = _module_from_path(
+            "bandi_test_opportunity_radar",
+            SCRIPTS_ROOT / "opportunity_radar.py",
+        )
+        sys.modules["opportunity_radar"] = opportunity_radar
         intelligence_contract = _module_from_path(
             "bandi_test_intelligence_contract",
             SCRIPTS_ROOT / "intelligence_contract.py",
@@ -61,6 +67,7 @@ def _scripts() -> dict[str, ModuleType]:
             "register": _module_from_path(
                 "bandi_test_register", SCRIPTS_ROOT / "register_source.py"
             ),
+            "opportunity_radar": opportunity_radar,
             "link": _module_from_path(
                 "bandi_test_link", SCRIPTS_ROOT / "link_sources.py"
             ),
@@ -100,7 +107,9 @@ def _write(path: Path, payload: dict[str, object]) -> None:
     )
 
 
-def _running_workspace(tmp_path: Path) -> dict[str, object]:
+def _running_workspace(
+    tmp_path: Path, *, selected_source: Path | None = None
+) -> dict[str, object]:
     archive = _module_from_path("bandi_test_archive_core", ARCHIVE_CORE_PATH)
     archive_root = tmp_path / "Studio"
     client_root = archive_root / "Impresa Demo SPA"
@@ -123,8 +132,11 @@ def _running_workspace(tmp_path: Path) -> dict[str, object]:
         "Bando regionale 2026",
         state_dir=state_dir,
     )["engagement"]
-    evidence = tmp_path / "bando.txt"
-    evidence.write_text("Bando sintetico selezionato per il test.\n", encoding="utf-8")
+    evidence = selected_source or tmp_path / "bando.txt"
+    if selected_source is None:
+        evidence.write_text(
+            "Bando sintetico selezionato per il test.\n", encoding="utf-8"
+        )
     imported = archive.import_studio_client_document(
         client["client_id"],
         evidence,
@@ -522,7 +534,8 @@ def test_component_contract_and_vera_wrapper_are_present() -> None:
 
     assert manifest["name"] == "bandi-agevolazioni"
     assert "Never invent" in skill
-    assert "never authenticates, signs, or files" in skill
+    assert "Never contact a matched client automatically" in skill
+    assert "without contacting clients, authenticating, signing, or filing" in wrapper
     assert "modules/bandi-agevolazioni" in wrapper
 
 
@@ -1176,6 +1189,148 @@ def test_source_registration_is_idempotent_after_professional_review(
 
     assert repeated["review_status"] == "reviewed"
     assert _read(register_path)["source_set_revision"] == 1
+
+
+def test_opportunity_handoff_is_validated_before_source_registration(
+    tmp_path: Path,
+) -> None:
+    scripts = _scripts()
+    malformed_handoff = tmp_path / "malformed-handoff.json"
+    _write(malformed_handoff, {"schema_version": "2.0"})
+    workspace = _running_workspace(tmp_path, selected_source=malformed_handoff)
+    scripts["initialize"].initialize_case(
+        workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        reference_date="2026-08-07",
+        client_reference="CLIENT-001",
+    )
+
+    with pytest.raises(ValueError, match="opportunity_handoff"):
+        scripts["register"].register_source(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            source=workspace["source"],
+            source_id="SRC-HANDOFF-001",
+            source_type="opportunity_handoff",
+            title="Reviewed radar selection",
+            issuer="Vera opportunity radar",
+            authority_role="mechanical",
+            selected_by="reviewer-001",
+        )
+
+    assert _read(workspace["output_dir"] / "source_register.json")["sources"] == []
+
+
+def test_verified_opportunity_handoff_registers_as_mechanical_source(
+    tmp_path: Path,
+) -> None:
+    from tests.plugins.test_bandi_opportunity_radar import (
+        _contribution_args,
+        _evidence,
+        _match,
+        _opportunity,
+        _profile,
+        _source,
+    )
+
+    scripts = _scripts()
+    radar = scripts["opportunity_radar"]
+    radar_workspace = tmp_path / "private-radar"
+    radar.initialize_radar(
+        radar_workspace,
+        radar_id="RADAR-001",
+        workspace_id="WORKSPACE-001",
+        reference_date="2026-08-07",
+        scope="single_client",
+        authorized_by="reviewer-001",
+        retention_owner="Studio Demo",
+        confirmed_by_user=True,
+    )
+    radar.record_profile_evidence(
+        radar_workspace,
+        evidence=_evidence(),
+        idempotency_key="evidence-1",
+        **_contribution_args(),
+    )
+    radar.record_profile(
+        radar_workspace,
+        profile=_profile(),
+        idempotency_key="profile-1",
+        **_contribution_args(),
+    )
+    radar.record_source(
+        radar_workspace,
+        source=_source(),
+        idempotency_key="source-1",
+        **_contribution_args(),
+    )
+    radar.record_source_check(
+        radar_workspace,
+        source_id="SOURCE-REGION",
+        check_status="checked",
+        checked_at="2026-08-07T11:00:00+00:00",
+        next_check_on="2026-08-08",
+        result_count=1,
+        error_code=None,
+        idempotency_key="source-check-1",
+    )
+    radar.record_opportunity(
+        radar_workspace,
+        opportunity=_opportunity(),
+        idempotency_key="opportunity-1",
+        **_contribution_args(),
+    )
+    radar.record_match(
+        radar_workspace,
+        match=_match(),
+        idempotency_key="match-1",
+        **_contribution_args(),
+    )
+    for scope, target in (
+        ("evidence", "EVIDENCE-CLIENT-001"),
+        ("profile", "CLIENT-001"),
+        ("source", "SOURCE-REGION"),
+        ("source_check", "SOURCE-REGION"),
+        ("opportunity", "OPP-001"),
+        ("match", "MATCH-CLIENT-001"),
+    ):
+        radar.review_item(
+            radar_workspace,
+            scope=scope,
+            target_id=target,
+            decision="accepted",
+            reviewer_id="reviewer-001",
+            reviewer_role="commercialista",
+            confirmed_by_user=True,
+            idempotency_key=f"review-{scope}",
+        )
+    handoff = radar.create_handoff(
+        radar_workspace,
+        match_id="MATCH-CLIENT-001",
+        output_path=radar_workspace / "handoff.json",
+    )
+
+    workspace = _running_workspace(tmp_path, selected_source=handoff)
+    scripts["initialize"].initialize_case(
+        workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        reference_date="2026-08-07",
+        client_reference="CLIENT-001",
+    )
+    record = scripts["register"].register_source(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        source=workspace["source"],
+        source_id="SRC-HANDOFF-001",
+        source_type="opportunity_handoff",
+        title="Reviewed radar selection",
+        issuer="Vera opportunity radar",
+        authority_role="mechanical",
+        selected_by="reviewer-001",
+    )
+
+    assert record["source_type"] == "opportunity_handoff"
+    assert record["authority_role"] == "mechanical"
 
 
 def test_protected_portal_control_cannot_be_prefilled(tmp_path: Path) -> None:
