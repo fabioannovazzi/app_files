@@ -136,16 +136,6 @@ CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
-VERA_CHATGPT_ROOT_VISIBLE_INSTRUCTIONS = (
-    "Seleziona @Vera e formula normalmente la richiesta. Vera interpreta il "
-    "lavoro, sceglie il workflow specialistico più pertinente e non risponde "
-    "direttamente senza averlo applicato. Se nessun workflow è adatto, si ferma "
-    "senza improvvisare una risposta generica."
-)
-VERA_CHATGPT_WORKFLOW_DIRECTIVE = (
-    "Prima di svolgere il lavoro, Vera deve leggere e seguire integralmente "
-    "`WORKFLOW.md`, che contiene il workflow operativo completo."
-)
 VERA_CHATGPT_ROUTER_TARGETS = {
     "audit-reconciliation": "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
     "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
@@ -1100,21 +1090,6 @@ def project_chatgpt_source_skill(content: bytes) -> bytes:
     return projected.encode("utf-8")
 
 
-def vera_chatgpt_card_instructions(
-    skill_name: str,
-    *,
-    visible_instructions: str,
-) -> str:
-    """Return concise visible copy plus one mandatory workflow handoff."""
-
-    visible_copy = (
-        VERA_CHATGPT_ROOT_VISIBLE_INSTRUCTIONS
-        if skill_name == "vera"
-        else visible_instructions.strip()
-    )
-    return f"{visible_copy}\n\n{VERA_CHATGPT_WORKFLOW_DIRECTIVE}"
-
-
 def chatgpt_skill_interface(card: ChatGPTSkillCard) -> bytes:
     """Return one deterministic OpenAI skill-interface file."""
 
@@ -1377,21 +1352,10 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
         ):
-            skill_name = path_parts[1]
-            # OpenAI displays SKILL.md in the card. Keep that surface concise,
-            # while a mechanically generated companion preserves the complete
-            # source workflow and its exact relative paths.
-            entries[f"skills/{skill_name}/WORKFLOW.md"] = project_chatgpt_source_skill(
-                content
-            )
-            content = project_chatgpt_card_skill(
-                content,
-                instructions=vera_chatgpt_card_instructions(
-                    skill_name,
-                    visible_instructions=skill_cards[skill_name].instructions,
-                ),
-                description=skill_cards[skill_name].short_description,
-            )
+            # Vera's routing and specialist handoffs are mandatory runtime
+            # instructions. Keep them in the registered SKILL.md instead of an
+            # arbitrary sibling file that the upload scanner may not include.
+            content = project_chatgpt_source_skill(content)
         entries[name] = content
     for skill_name in sorted(public_skill_names):
         card = skill_cards[skill_name]
