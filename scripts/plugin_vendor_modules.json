@@ -116,6 +116,11 @@
         "vera_assurance"
       ]
     },
+    "bandi-agevolazioni": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "studio-archive": {
       "module_roots": [
         "vera_assurance",

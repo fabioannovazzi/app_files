@@ -55,6 +55,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "deep-research-validator",
   "previdenza-inps",
   "registro-imprese-sari",
+  "bandi-agevolazioni",
 ]);
 
 function objectSchema(properties, required = []) {

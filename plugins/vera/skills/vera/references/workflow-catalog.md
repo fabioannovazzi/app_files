@@ -10,6 +10,9 @@ skill to imitate a missing operational workflow.
 - `audit-reconciliation`: reconcile ledgers, statements, payments, factoring,
   advances, compensation, and other accounting evidence into reviewable
   workpapers.
+- `bandi-agevolazioni`: prepare a source-traceable Italian grant, subsidy,
+  tax-credit, or subsidized-finance application dossier from official call
+  materials and client evidence without authenticating, signing, or filing.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
 - `bilancio-xbrl-it`: understand accounting evidence and prepare, update,

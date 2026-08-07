@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Bandi e agevolazioni" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#79B66A"/>
+  <circle cx="51" cy="50" r="7" fill="#79B66A"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M16 12h28l8 9v32H16z" fill="#F7F0DF"/>
+  <path d="M44 12v10h8" fill="#DCE5E8"/>
+  <path d="M23 27h17M23 35h12M23 43h10" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="45" cy="42" r="10" fill="#79B66A"/>
+  <path d="M48 36c-1-1-5-1-6 1-2 4 7 3 5 7-1 2-5 2-7 0M44 33v18" fill="none" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

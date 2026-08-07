@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/application-workbench-1.0.json",
+  "title": "Source-backed grant application workbench",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plugin", "run_id", "case_summary", "requirements", "facts", "assessments", "document_checklist", "expenses", "form_fields", "narratives", "consistency_checks", "issues", "authority_simulation", "dossier", "professional_review"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "case_summary": {"type": "string"},
+    "requirements": {"type": "array", "items": {"$ref": "#/$defs/requirement"}},
+    "facts": {"type": "array", "items": {"$ref": "#/$defs/fact"}},
+    "assessments": {"type": "array", "items": {"$ref": "#/$defs/assessment"}},
+    "document_checklist": {"type": "array", "items": {"$ref": "#/$defs/checklistItem"}},
+    "expenses": {"type": "array", "items": {"$ref": "#/$defs/expense"}},
+    "form_fields": {"type": "array", "items": {"$ref": "#/$defs/formField"}},
+    "narratives": {"type": "array", "items": {"$ref": "#/$defs/narrative"}},
+    "consistency_checks": {"type": "array", "items": {"$ref": "#/$defs/consistencyCheck"}},
+    "issues": {"type": "array", "items": {"$ref": "#/$defs/issue"}},
+    "authority_simulation": {"$ref": "#/$defs/authoritySimulation"},
+    "dossier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "ready_to_file", "limitations"],
+      "properties": {
+        "disposition": {"enum": ["review_required", "ready_for_authorized_review", "not_ready_missing", "not_ready_verify", "not_eligible_or_excluded", "not_recommended_professional_judgement", "superseded"]},
+        "ready_to_file": {"const": false},
+        "limitations": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "professional_review": {"$ref": "#/$defs/reviewState"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "idList": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+    "readiness": {"enum": ["ready", "missing", "verify", "not_applicable"]},
+    "outcome": {"enum": ["satisfied", "not_satisfied", "uncertain", "not_applicable", "not_assessed"]},
+    "reviewStatus": {"enum": ["proposed", "confirmed", "rejected", "blocked"]},
+    "sourceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "locator", "excerpt_sha256"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "locator": {"type": "string", "minLength": 1},
+        "excerpt_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "reviewState": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer_id", "reviewer_role", "reviewed_at", "notes"],
+      "properties": {
+        "status": {"enum": ["pending", "reviewed", "rejected"]},
+        "reviewer_id": {"type": ["string", "null"]},
+        "reviewer_role": {"type": ["string", "null"]},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["requirement_id", "category", "statement", "source_refs", "applicability", "expected_evidence", "review_status"],
+      "properties": {
+        "requirement_id": {"$ref": "#/$defs/id"},
+        "category": {"enum": ["eligibility", "exclusion", "cost", "document", "deadline", "procedure", "form", "narrative"]},
+        "statement": {"type": "string", "minLength": 1},
+        "source_refs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/sourceRef"}},
+        "applicability": {"type": "string"},
+        "expected_evidence": {"type": "array", "items": {"type": "string"}},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "field_code", "value", "as_of", "source_ids", "kind", "review_status"],
+      "properties": {
+        "fact_id": {"$ref": "#/$defs/id"},
+        "field_code": {"type": "string", "minLength": 1},
+        "value": {},
+        "as_of": {"type": ["string", "null"], "format": "date"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "kind": {"enum": ["document_observation", "user_assertion", "model_inference", "professional_judgement"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["assessment_id", "requirement_id", "fact_ids", "readiness", "outcome", "rationale", "evaluation_method", "review_status"],
+      "properties": {
+        "assessment_id": {"$ref": "#/$defs/id"},
+        "requirement_id": {"$ref": "#/$defs/id"},
+        "fact_ids": {"$ref": "#/$defs/idList"},
+        "readiness": {"$ref": "#/$defs/readiness"},
+        "outcome": {"$ref": "#/$defs/outcome"},
+        "rationale": {"type": "string"},
+        "evaluation_method": {"enum": ["model_led", "deterministic", "hybrid"]},
+        "deterministic_rule": {"anyOf": [{"$ref": "#/$defs/deterministicRule"}, {"type": "null"}]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "checklistItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["document_id", "title", "requirement_ids", "material_source_ids", "readiness", "rationale", "review_status"],
+      "properties": {
+        "document_id": {"$ref": "#/$defs/id"},
+        "title": {"type": "string", "minLength": 1},
+        "requirement_ids": {"$ref": "#/$defs/idList"},
+        "material_source_ids": {"$ref": "#/$defs/idList"},
+        "readiness": {"$ref": "#/$defs/readiness"},
+        "rationale": {"type": "string"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "expense": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["expense_id", "description", "amount", "currency", "requirement_ids", "source_ids", "readiness", "outcome", "rationale", "review_status"],
+      "properties": {
+        "expense_id": {"$ref": "#/$defs/id"},
+        "description": {"type": "string", "minLength": 1},
+        "amount": {"type": "string", "pattern": "^-?(?:0|[1-9][0-9]*)(?:\\.[0-9]+)?$"},
+        "currency": {"type": "string", "pattern": "^[A-Z]{3}$"},
+        "requirement_ids": {"$ref": "#/$defs/idList"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "readiness": {"$ref": "#/$defs/readiness"},
+        "outcome": {"enum": ["eligible", "ineligible", "partially_eligible", "uncertain", "not_assessed"]},
+        "rationale": {"type": "string"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "formField": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["field_id", "label", "requirement_ids", "fact_ids", "proposed_value", "readiness", "rationale", "manual_only", "declaration_control", "signature_control", "submission_control", "review_status"],
+      "properties": {
+        "field_id": {"$ref": "#/$defs/id"},
+        "label": {"type": "string", "minLength": 1},
+        "requirement_ids": {"$ref": "#/$defs/idList"},
+        "fact_ids": {"$ref": "#/$defs/idList"},
+        "proposed_value": {},
+        "readiness": {"$ref": "#/$defs/readiness"},
+        "rationale": {"type": "string"},
+        "manual_only": {"type": "boolean"},
+        "declaration_control": {"type": "boolean"},
+        "signature_control": {"type": "boolean"},
+        "submission_control": {"type": "boolean"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["narrative_id", "prompt", "draft", "requirement_ids", "fact_ids", "readiness", "rationale", "review_status"],
+      "properties": {
+        "narrative_id": {"$ref": "#/$defs/id"},
+        "prompt": {"type": "string", "minLength": 1},
+        "draft": {"type": "string"},
+        "requirement_ids": {"$ref": "#/$defs/idList"},
+        "fact_ids": {"$ref": "#/$defs/idList"},
+        "readiness": {"$ref": "#/$defs/readiness"},
+        "rationale": {"type": "string"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "deterministicRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "version", "reason", "inputs", "result", "outcome_map"],
+      "properties": {
+        "rule_id": {"enum": ["exact_decimal_compare", "exact_date_compare"]},
+        "version": {"const": "1"},
+        "reason": {"type": "string", "minLength": 1},
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["left", "operator", "right"],
+          "properties": {
+            "left": {"type": "string", "minLength": 1},
+            "operator": {"enum": ["<", "<=", "==", ">=", ">"]},
+            "right": {"type": "string", "minLength": 1}
+          }
+        },
+        "result": {"type": "boolean"},
+        "outcome_map": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["true", "false"],
+          "properties": {
+            "true": {"$ref": "#/$defs/outcome"},
+            "false": {"$ref": "#/$defs/outcome"}
+          }
+        }
+      }
+    },
+    "consistencyCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "question", "fact_ids", "source_ids", "outcome", "rationale", "review_status"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "question": {"type": "string", "minLength": 1},
+        "fact_ids": {"$ref": "#/$defs/idList"},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "outcome": {"enum": ["consistent", "conflict", "verify", "not_applicable"]},
+        "rationale": {"type": "string"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "authoritySimulationCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "question", "related_ids", "outcome", "rationale", "review_status"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "question": {"type": "string", "minLength": 1},
+        "related_ids": {"$ref": "#/$defs/idList"},
+        "outcome": {"enum": ["pass", "fail", "verify", "not_applicable"]},
+        "rationale": {"type": "string"},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "authoritySimulation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer_perspective", "overall_outcome", "checks"],
+      "properties": {
+        "status": {"enum": ["not_run", "proposed", "reviewed", "returned"]},
+        "reviewer_perspective": {"type": "string"},
+        "overall_outcome": {"enum": ["not_run", "pass", "fail", "verify"]},
+        "checks": {"type": "array", "items": {"$ref": "#/$defs/authoritySimulationCheck"}}
+      }
+    },
+    "issue": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["issue_id", "category", "severity", "detail", "related_ids", "status", "review_status"],
+      "properties": {
+        "issue_id": {"$ref": "#/$defs/id"},
+        "category": {"enum": ["missing_information", "source_conflict", "fact_conflict", "eligibility", "exclusion", "cost", "document", "form", "narrative", "portal", "other"]},
+        "severity": {"enum": ["informational", "review_required", "blocking"]},
+        "detail": {"type": "string", "minLength": 1},
+        "related_ids": {"$ref": "#/$defs/idList"},
+        "status": {"enum": ["open", "resolved", "accepted", "superseded"]},
+        "review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    }
+  }
+}

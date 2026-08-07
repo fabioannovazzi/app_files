@@ -1,0 +1,72 @@
+{
+  "schema_version": 3,
+  "workstream": "bandi-agevolazioni",
+  "display_name": "Bandi e agevolazioni",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "application-case-and-evidence",
+        "purpose": "Reconstruct source-backed requirements and prepare a reviewable grant-application dossier",
+        "content": "Call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence; extracted requirements and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues and professional-review decisions",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-public-research",
+      "kind": "public_research",
+      "destination": "Public issuing-authority, funding-program, official legal, and official FAQ sources relevant to the selected call",
+      "purpose": "Locate current official call materials and record provenance without disclosing applicant data",
+      "content": "Call identifier, authority, program and generic topical query; public document metadata and official URLs; no applicant identifiers, financial data, project narrative, quotations, declarations, credentials, or portal-session material",
+      "optional": true,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use only official public sources and generic call-level queries; keep applicant and project facts inside the selected runtime context.",
+        "Keep public research read-only and do not use login, upload, contact, assistance, form-save, signature, payment, or submission routes.",
+        "Register exact selected source bytes and metadata before using them for confirmed requirements."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "private-bound-case-folder",
+      "control": "Initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root."
+    },
+    {
+      "id": "reject-secret-and-session-material",
+      "control": "Exhaustive JSON Schema validation rejects unknown artifact fields, and a recursive normalized-key guard rejects the bounded credential/session classes password, passcode, PIN, OTP or one-time code, cookie or session cookie, token, API key, client secret, private or secret key, signature material, SPID, CIE, CNS, and credential fields before a dossier can pass."
+    },
+    {
+      "id": "no-portal-transaction",
+      "control": "The workflow may prepare field-by-field guidance but never authenticates, writes to a live portal, saves an application, accepts declarations, signs, pays, files, or submits; protected controls remain manual and empty."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-07",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "cbb1348b98e0c493890c2b356929f29eb52423fe4a69c7aa65252a362c4f2a1a"
+  }
+}

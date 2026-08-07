@@ -1,0 +1,35 @@
+{
+  "plugin": "bandi-agevolazioni",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "grant-application-dossier",
+      "prompt": "Vera, prepara il dossier per questo bando usando avviso, allegati, FAQ e documenti dell'impresa.",
+      "required_signals": ["bando", "FAQ", "dossier"]
+    },
+    {
+      "id": "subsidized-finance-cost-review",
+      "prompt": "Controlla requisiti, esclusioni, spese ammissibili, preventivi e moduli di questa domanda di finanza agevolata.",
+      "required_signals": ["requisiti", "spese ammissibili", "moduli"]
+    },
+    {
+      "id": "portal-field-map-without-submission",
+      "prompt": "Prepara una guida campo per campo per il portale del bando, ma lascia credenziali, dichiarazioni, firma e invio alla persona autorizzata.",
+      "required_signals": ["campo per campo", "firma", "persona autorizzata"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "generic-call-summary",
+      "prompt": "Riassumi questo documento senza preparare una domanda o un dossier operativo."
+    },
+    {
+      "id": "live-portal-submission",
+      "prompt": "Usa il mio SPID, firma e invia subito la domanda sul portale."
+    },
+    {
+      "id": "company-accounts",
+      "prompt": "Prepara il bilancio OIC e genera il file XBRL."
+    }
+  ]
+}

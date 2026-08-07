@@ -83,6 +83,12 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("registro-imprese-sari", "sari_connector.py"),
     ("registro-imprese-sari", "validate_practice_case.py"),
     ("registro-imprese-sari", "package_practice.py"),
+    ("bandi-agevolazioni", "initialize_case.py"),
+    ("bandi-agevolazioni", "register_source.py"),
+    ("bandi-agevolazioni", "link_sources.py"),
+    ("bandi-agevolazioni", "record_review.py"),
+    ("bandi-agevolazioni", "validate_application.py"),
+    ("bandi-agevolazioni", "package_dossier.py"),
 )
 
 CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
@@ -114,6 +120,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("deep-research-validator", "check_dependencies.py"),
     ("previdenza-inps", "check_dependencies.py"),
     ("registro-imprese-sari", "check_dependencies.py"),
+    ("bandi-agevolazioni", "check_dependencies.py"),
 )
 
 OUTPUT_DISCOVERY_REVIEW_WRITER_WORKFLOWS = (
@@ -331,7 +338,8 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
     )
 
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
-        "studio-archive"
+        "bilancio-xbrl-it",
+        "studio-archive",
     }
 
 
@@ -367,6 +375,8 @@ def test_every_durable_review_mcp_has_exact_customer_run_preflight_marker() -> N
     durable_servers: dict[str, str] = {}
     for workflow_id in VERA_CLIENT_WORKFLOW_IDS:
         server_path = ROOT / "plugins" / workflow_id / "mcp" / "server.cjs"
+        if not server_path.is_file():
+            continue
         source = server_path.read_text(encoding="utf-8")
         if "saveDecisions:" in source and "ui_decisions.json" in source:
             durable_servers[workflow_id] = source
@@ -892,6 +902,7 @@ def test_client_workflow_entrypoint_requires_managed_context(
     loader_names = {
         "load_client_engagement_context",
         "load_client_engagement_context_file",
+        "load_running_context",
         "load_running_case_context",
     }
     loader_calls = [

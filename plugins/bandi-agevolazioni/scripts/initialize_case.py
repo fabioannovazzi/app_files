@@ -1,0 +1,193 @@
+"""Initialize a bounded Bandi e agevolazioni Studio Archive run."""
+
+from __future__ import annotations
+
+import argparse
+import logging
+from pathlib import Path
+from typing import Any
+
+from case_core import (
+    PLUGIN_NAME,
+    case_lock,
+    iso_now,
+    load_running_context,
+    relative_run_path,
+    safe_identifier,
+    validate_iso_date,
+    write_private_json,
+)
+
+__all__ = ["initialize_case", "main"]
+
+LOGGER = logging.getLogger(__name__)
+
+
+def _review_state() -> dict[str, Any]:
+    return {
+        "status": "pending",
+        "reviewer_id": None,
+        "reviewer_role": None,
+        "reviewed_at": None,
+        "notes": None,
+    }
+
+
+def initialize_case(
+    output_dir: Path,
+    *,
+    client_engagement: Path,
+    reference_date: str,
+    client_reference: str,
+    language: str = "it",
+) -> dict[str, Path]:
+    """Create empty drafts without choosing any legal or semantic conclusion."""
+
+    client_reference = safe_identifier(client_reference, field="client_reference")
+    reference_date = validate_iso_date(reference_date, field="reference_date")
+    language = str(language or "").strip().lower()
+    if not 2 <= len(language) <= 12 or not language.replace("-", "").isalpha():
+        raise ValueError("language must be a short language tag")
+    context = load_running_context(client_engagement, output_dir=output_dir)
+    run_id = safe_identifier(context["run_id"], field="run_id")
+    output_dir = output_dir.resolve()
+    files = {
+        "case_intake": output_dir / "case_intake.json",
+        "sources": output_dir / "source_register.json",
+        "workbench": output_dir / "application_workbench.json",
+        "reviews": output_dir / "review_log.json",
+        "run_state": output_dir / "run_state.json",
+    }
+    with case_lock(output_dir):
+        if any(path.exists() for path in files.values()):
+            raise FileExistsError(
+                "case artifacts already exist; resume the existing run"
+            )
+        write_private_json(
+            files["case_intake"],
+            {
+                "schema_version": "1.0",
+                "plugin": PLUGIN_NAME,
+                "run_id": run_id,
+                "reference_date": reference_date,
+                "client_reference": client_reference,
+                "application": {
+                    "title": "",
+                    "issuing_authority": "",
+                    "procedure_id": "",
+                    "submission_deadline": None,
+                    "status": "unknown",
+                },
+                "applicant": {
+                    "legal_name": "",
+                    "tax_code": "",
+                    "vat_number": "",
+                    "confirmation_status": "unknown",
+                },
+                "project": {
+                    "title": "",
+                    "summary": "",
+                    "requested_amount": None,
+                    "currency": None,
+                    "confirmation_status": "unknown",
+                },
+                "professional_question": "",
+            },
+        )
+        write_private_json(
+            files["sources"],
+            {
+                "schema_version": "1.0",
+                "plugin": PLUGIN_NAME,
+                "run_id": run_id,
+                "source_set_revision": 0,
+                "sources": [],
+            },
+        )
+        write_private_json(
+            files["workbench"],
+            {
+                "schema_version": "1.0",
+                "plugin": PLUGIN_NAME,
+                "run_id": run_id,
+                "case_summary": "",
+                "requirements": [],
+                "facts": [],
+                "assessments": [],
+                "document_checklist": [],
+                "expenses": [],
+                "form_fields": [],
+                "narratives": [],
+                "consistency_checks": [],
+                "issues": [],
+                "authority_simulation": {
+                    "status": "not_run",
+                    "reviewer_perspective": "",
+                    "overall_outcome": "not_run",
+                    "checks": [],
+                },
+                "dossier": {
+                    "disposition": "review_required",
+                    "ready_to_file": False,
+                    "limitations": [
+                        "Bozza per revisione professionale; Vera non firma e non invia la domanda."
+                    ],
+                },
+                "professional_review": _review_state(),
+            },
+        )
+        write_private_json(
+            files["reviews"],
+            {
+                "schema_version": "1.0",
+                "plugin": PLUGIN_NAME,
+                "run_id": run_id,
+                "events": [],
+            },
+        )
+        write_private_json(
+            files["run_state"],
+            {
+                "schema_version": "1.0",
+                "plugin": PLUGIN_NAME,
+                "workflow": PLUGIN_NAME,
+                "run_id": run_id,
+                "created_at": iso_now(),
+                "updated_at": iso_now(),
+                "language": language,
+                "phase": "intake",
+                "status": "needs_review",
+                "source_set_revision": 0,
+                "output_dir": relative_run_path(output_dir, context),
+                "ready_to_file": False,
+                "portal_actions_performed": False,
+                "signature_actions_performed": False,
+                "submission_actions_performed": False,
+            },
+        )
+    return files
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output-dir", required=True, type=Path)
+    parser.add_argument("--client-engagement", required=True, type=Path)
+    parser.add_argument("--reference-date", required=True)
+    parser.add_argument("--client-reference", required=True)
+    parser.add_argument("--language", default="it")
+    args = parser.parse_args(argv)
+    paths = initialize_case(
+        args.output_dir,
+        client_engagement=args.client_engagement,
+        reference_date=args.reference_date,
+        client_reference=args.client_reference,
+        language=args.language,
+    )
+    for label, path in paths.items():
+        LOGGER.info("%s: %s", label, path)
+    return 0
+
+
+if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
+    raise SystemExit(main())

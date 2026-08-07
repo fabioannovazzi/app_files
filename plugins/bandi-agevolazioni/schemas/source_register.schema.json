@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/source-register-1.0.json",
+  "title": "Bandi e agevolazioni source register",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plugin", "run_id", "source_set_revision", "sources"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "plugin": {"const": "bandi-agevolazioni"},
+    "run_id": {"$ref": "#/$defs/id"},
+    "source_set_revision": {"type": "integer", "minimum": 0},
+    "sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/source"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,79}$"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "source_type", "title", "issuer", "authority_role", "path", "byte_count", "sha256", "publication_date", "effective_from", "effective_to", "retrieved_at", "selected_by", "review_status", "relationships"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "source_type": {"enum": ["call", "formal_amendment", "annex", "official_faq", "portal_instructions", "form_template", "incorporated_law", "beneficiary_evidence", "quotation", "other"]},
+        "title": {"type": "string", "minLength": 1},
+        "issuer": {"type": "string", "minLength": 1},
+        "authority_role": {"enum": ["primary", "amending", "incorporated", "clarifying", "mechanical", "evidentiary", "unknown"]},
+        "path": {"type": "string", "minLength": 1},
+        "byte_count": {"type": "integer", "minimum": 0},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "publication_date": {"type": ["string", "null"], "format": "date"},
+        "effective_from": {"type": ["string", "null"], "format": "date"},
+        "effective_to": {"type": ["string", "null"], "format": "date"},
+        "retrieved_at": {"type": "string", "format": "date-time"},
+        "selected_by": {"type": "string", "minLength": 1},
+        "review_status": {"enum": ["candidate", "reviewed", "rejected", "superseded"]},
+        "relationships": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "target_source_id"],
+            "properties": {
+              "kind": {"enum": ["amends", "supersedes", "clarifies", "implements", "incorporated_by"]},
+              "target_source_id": {"$ref": "#/$defs/id"}
+            }
+          }
+        }
+      }
+    }
+  }
+}
