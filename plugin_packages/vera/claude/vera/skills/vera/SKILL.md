@@ -156,6 +156,11 @@ The catalog distinguishes user-facing workflows, cross-cutting assurance
 skills, subordinate intake skills, and developer governance. A cross-cutting
 skill is not a substitute for a missing operational workflow.
 
+After selecting a workflow, open `../<skill-name>/SKILL.md` using the exact bare
+skill name from the catalog, read that file completely, and follow it before
+doing substantive work. That registered specialist skill resolves the full
+internal module; do not substitute Marketplace card copy or a generic answer.
+
 The names in that catalog are bare internal routing names. Claude supplies the
 plugin namespace. Whenever a skill identity is shown to a user, logged as
 workflow provenance, or referenced outside this plugin's implementation, use

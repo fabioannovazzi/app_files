@@ -1042,6 +1042,7 @@ def project_chatgpt_card_skill(
     content: bytes,
     *,
     instructions: str,
+    description: str | None = None,
 ) -> bytes:
     """Project concise, source-owned instructions for one Marketplace card."""
 
@@ -1051,7 +1052,42 @@ def project_chatgpt_card_skill(
         raise ValueError("Marketplace skill must contain workflow instructions")
     if not instructions.strip():
         raise ValueError("Marketplace card instructions must not be empty")
-    projected = text[:body_index] + "\n" + instructions.strip() + "\n"
+    frontmatter = text[:body_index]
+    if description is not None:
+        description_lines = [
+            line
+            for line in frontmatter.splitlines(keepends=True)
+            if line.startswith("description:")
+        ]
+        if len(description_lines) != 1:
+            raise ValueError("Marketplace skill must define one description")
+        frontmatter = frontmatter.replace(
+            description_lines[0],
+            f"description: {json.dumps(description.strip(), ensure_ascii=False)}\n",
+            1,
+        )
+    projected = frontmatter + "\n" + instructions.strip() + "\n"
+    return projected.encode("utf-8")
+
+
+def project_chatgpt_source_skill(content: bytes) -> bytes:
+    """Keep the source workflow while removing its Codex-only runtime section."""
+
+    text = content.decode("utf-8")
+    body_index = skill_body_start(text)
+    section_start = text.find(REQUIRED_CHATGPT_HEADING, body_index)
+    if section_start < 0:
+        return content
+    following_headings = [
+        index
+        for marker in ("\n# ", "\n## ")
+        for index in [text.find(marker, section_start + len(REQUIRED_CHATGPT_HEADING))]
+        if index >= 0
+    ]
+    if not following_headings:
+        return text[:section_start].rstrip().encode("utf-8") + b"\n"
+    section_end = min(following_headings)
+    projected = text[:section_start] + text[section_end + 1 :]
     return projected.encode("utf-8")
 
 
@@ -1252,7 +1288,6 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         )
     public_skill_names = set(skill_cards)
     if plugin_name == "vera":
-        public_skill_names = {plugin_name}
         missing_targets = sorted(
             target
             for target in VERA_CHATGPT_ROUTER_TARGETS.values()
@@ -1271,19 +1306,11 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         path_parts = name.split("/")
         if name == CHATGPT_SKILL_CARDS_FILE:
             continue
-        if (
-            plugin_name == "vera"
-            and len(path_parts) >= 2
-            and path_parts[0] == "skills"
-            and path_parts[1] not in public_skill_names
-        ):
-            # Vera has one public ChatGPT entrypoint. Full specialist workflows
-            # remain internal modules and are loaded by the model-led root router.
-            continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
+            and plugin_name != "vera"
             and len(path_parts) >= 3
             and path_parts[0] == "skills"
             and path_parts[1] in skill_cards
@@ -1310,6 +1337,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             content = project_chatgpt_component_manifest(content)
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
+            and plugin_name != "vera"
             and len(path_parts) == 3
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
@@ -1319,6 +1347,16 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
                 content,
                 instructions=skill_cards[skill_name].instructions,
             )
+        elif (
+            plugin_name == "vera"
+            and len(path_parts) == 3
+            and path_parts[0] == "skills"
+            and path_parts[2] == "SKILL.md"
+        ):
+            # Vera's routing and specialist handoffs are mandatory runtime
+            # instructions. Keep them in the registered SKILL.md instead of an
+            # arbitrary sibling file that the upload scanner may not include.
+            content = project_chatgpt_source_skill(content)
         entries[name] = content
     for skill_name in sorted(public_skill_names):
         card = skill_cards[skill_name]
