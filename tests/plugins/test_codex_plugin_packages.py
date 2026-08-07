@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.89"
+    assert manifest["version"] == "0.1.91"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -859,6 +859,25 @@ def test_chatgpt_card_config_rejects_internal_runtime_copy() -> None:
             config,
             plugin_name="clara",
             expected_skills={"deck-correction"},
+        )
+
+
+def test_vera_chatgpt_card_config_rejects_incomplete_router_catalog() -> None:
+    builder = load_builder()
+    config_path = ROOT / "plugins" / "vera" / builder.CHATGPT_SKILL_CARDS_FILE
+    payload = json.loads(config_path.read_text(encoding="utf-8"))
+    payload["skills"]["vera"]["instructions"] = payload["skills"]["vera"][
+        "instructions"
+    ].replace("`sales-plan`, ", "", 1)
+
+    with pytest.raises(
+        ValueError,
+        match=r"Marketplace root router catalog is incomplete; missing=\['sales-plan'\]",
+    ):
+        builder.load_chatgpt_skill_cards(
+            json.dumps(payload).encode("utf-8"),
+            plugin_name="vera",
+            expected_skills=set(payload["skills"]),
         )
 
 

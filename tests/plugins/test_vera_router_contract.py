@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 VERA_ROOT = ROOT / "plugins" / "vera"
 ROUTER_PATH = VERA_ROOT / "skills" / "vera" / "SKILL.md"
 CATALOG_PATH = VERA_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
+MARKETPLACE_CARDS_PATH = VERA_ROOT / "marketplace_skill_instructions.json"
 
 
 def _read_text(path: Path) -> str:
@@ -91,3 +92,20 @@ def test_vera_trigger_fixtures_cover_explicit_scope_boundaries() -> None:
     assert "vera-explicit-unrelated" in trigger_ids
     assert "vera-professional-capability-gap" in trigger_ids
     assert "generic-pizza" in non_trigger_ids
+
+
+def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
+    payload = json.loads(_read_text(MARKETPLACE_CARDS_PATH))
+    instructions = payload["skills"]["vera"]["instructions"]
+    expected_specialists = {
+        path.parent.name
+        for path in (VERA_ROOT / "skills").glob("*/SKILL.md")
+        if path.parent.name != "vera"
+    }
+
+    assert "opera esclusivamente come router" in instructions
+    assert "non risponde mai direttamente alla richiesta sostanziale" in instructions
+    assert "interpreta semanticamente la richiesta" in instructions
+    assert "`../<skill-selezionata>/SKILL.md`" in instructions
+    assert "Vera si ferma" in instructions
+    assert all(f"`{skill_name}`" in instructions for skill_name in expected_specialists)
