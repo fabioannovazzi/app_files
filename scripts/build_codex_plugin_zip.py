@@ -1054,6 +1054,27 @@ def project_chatgpt_card_skill(
     return projected.encode("utf-8")
 
 
+def project_chatgpt_source_skill(content: bytes) -> bytes:
+    """Keep the source workflow while removing its Codex-only runtime section."""
+
+    text = content.decode("utf-8")
+    body_index = skill_body_start(text)
+    section_start = text.find(REQUIRED_CHATGPT_HEADING, body_index)
+    if section_start < 0:
+        return content
+    following_headings = [
+        index
+        for marker in ("\n# ", "\n## ")
+        for index in [text.find(marker, section_start + len(REQUIRED_CHATGPT_HEADING))]
+        if index >= 0
+    ]
+    if not following_headings:
+        return text[:section_start].rstrip().encode("utf-8") + b"\n"
+    section_end = min(following_headings)
+    projected = text[:section_start] + text[section_end + 1 :]
+    return projected.encode("utf-8")
+
+
 def chatgpt_skill_interface(card: ChatGPTSkillCard) -> bytes:
     """Return one deterministic OpenAI skill-interface file."""
 
@@ -1251,7 +1272,6 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         )
     public_skill_names = set(skill_cards)
     if plugin_name == "vera":
-        public_skill_names = {plugin_name}
         missing_targets = sorted(
             target
             for target in VERA_CHATGPT_ROUTER_TARGETS.values()
@@ -1270,19 +1290,11 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         path_parts = name.split("/")
         if name == CHATGPT_SKILL_CARDS_FILE:
             continue
-        if (
-            plugin_name == "vera"
-            and len(path_parts) >= 2
-            and path_parts[0] == "skills"
-            and path_parts[1] not in public_skill_names
-        ):
-            # Vera has one public ChatGPT entrypoint. Full specialist workflows
-            # remain internal modules and are loaded by the model-led root router.
-            continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
+            and plugin_name != "vera"
             and len(path_parts) >= 3
             and path_parts[0] == "skills"
             and path_parts[1] in skill_cards
@@ -1309,6 +1321,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             content = project_chatgpt_component_manifest(content)
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
+            and plugin_name != "vera"
             and len(path_parts) == 3
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
@@ -1318,6 +1331,13 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
                 content,
                 instructions=skill_cards[skill_name].instructions,
             )
+        elif (
+            plugin_name == "vera"
+            and len(path_parts) == 3
+            and path_parts[0] == "skills"
+            and path_parts[2] == "SKILL.md"
+        ):
+            content = project_chatgpt_source_skill(content)
         entries[name] = content
     for skill_name in sorted(public_skill_names):
         card = skill_cards[skill_name]

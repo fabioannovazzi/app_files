@@ -466,7 +466,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.92"
+    assert manifest["version"] == "0.1.93"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
@@ -508,18 +508,19 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     whatsapp_evals_path = "evals/whatsapp_desktop_cases.json"
     module_skill_path = "modules/studio-archive/skills/studio-archive/SKILL.md"
     assert router_path in entries
-    assert wrapper_path not in entries
-    assert reference_path not in entries
-    assert whatsapp_reference_path not in entries
+    assert wrapper_path in entries
+    assert reference_path in entries
+    assert whatsapp_reference_path in entries
     assert gmail_evals_path in entries
     assert whatsapp_evals_path in entries
     assert module_skill_path in entries
     router = entries[router_path].decode("utf-8")
-    compact_router = " ".join(router.split())
+    wrapper = entries[wrapper_path].decode("utf-8")
     module_skill = entries[module_skill_path].decode("utf-8")
     assert "studio-archive" in router
-    assert "non dispone di un workflow specialistico adatto" in router
-    assert "Codex Desktop" not in compact_router
+    assert "No matching specialist workflow" in router
+    assert "../<skill-name>/SKILL.md" in router
+    assert "../../modules/studio-archive" in wrapper
     assert "## Connected Gmail workflow" in module_skill
     assert module_skill.index("get_profile") < module_skill.index("search_emails")
     assert module_skill.index("search_emails") < module_skill.index("batch_read_email")
@@ -595,31 +596,35 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             encoding="utf-8"
         )
     )
-    public_skill_names = (
-        {plugin_name} if plugin_name == "vera" else set(instruction_config["skills"])
-    )
-    expected_card_bodies = {
-        f"skills/{skill_name}/SKILL.md": card["instructions"]
-        for skill_name, card in instruction_config["skills"].items()
-        if skill_name in public_skill_names
-    }
+    public_skill_names = set(instruction_config["skills"])
+    if plugin_name == "vera":
+        expected_card_bodies = {}
+        for skill_name in public_skill_names:
+            source = (
+                ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
+            ).read_bytes()
+            projected = builder.project_chatgpt_source_skill(source).decode("utf-8")
+            expected_card_bodies[f"skills/{skill_name}/SKILL.md"] = projected[
+                builder.skill_body_start(projected) :
+            ].strip()
+    else:
+        expected_card_bodies = {
+            f"skills/{skill_name}/SKILL.md": card["instructions"]
+            for skill_name, card in instruction_config["skills"].items()
+        }
     assert card_bodies == expected_card_bodies
-    assert len(set(card_bodies.values())) == len(card_bodies)
     assert builder.CHATGPT_SKILL_CARDS_FILE not in entries
     for skill_name in public_skill_names:
         skill_prefix = f"skills/{skill_name}/"
-        assert {
+        packaged_skill_files = {
             name.removeprefix(skill_prefix)
             for name in entries
             if name.startswith(skill_prefix)
-        } == {"SKILL.md", "agents/openai.yaml"}
+        }
+        assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
+        if plugin_name == "clara":
+            assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
     for name, body in card_bodies.items():
-        assert "\n\n" not in body, name
-        assert builder.REQUIRED_CHATGPT_HEADING not in body, name
-        assert builder.REQUIRED_CODEX_RECOMMENDATION not in body, name
-        assert "Lavoro meglio con Codex perché" not in body, name
-        assert builder.CODEX_DOWNLOAD_URL not in body, name
-        assert not body.startswith("#"), name
         skill_name = name.split("/")[1]
         interface_name = f"skills/{skill_name}/agents/openai.yaml"
         card = instruction_config["skills"][skill_name]
@@ -632,6 +637,13 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             )
         )
         assert entries[interface_name] == expected_interface
+        if plugin_name == "clara":
+            assert "\n\n" not in body, name
+            assert builder.REQUIRED_CHATGPT_HEADING not in body, name
+            assert builder.REQUIRED_CODEX_RECOMMENDATION not in body, name
+            assert "Lavoro meglio con Codex perché" not in body, name
+            assert builder.CODEX_DOWNLOAD_URL not in body, name
+            assert not body.startswith("#"), name
     if plugin_name == "clara":
         deck_correction = card_bodies["skills/deck-correction/SKILL.md"]
         assert deck_correction.startswith("Attach the current presentation")
@@ -643,10 +655,9 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert set(card_bodies) == {"skills/vera/SKILL.md"}
-        assert not any(
-            name.startswith("skills/audit-reconciliation/") for name in entries
-        )
+        assert len(card_bodies) == 21
+        audit_wrapper = card_bodies["skills/audit-reconciliation/SKILL.md"]
+        assert "Resolve `../../modules/audit-reconciliation`" in audit_wrapper
         full_workflow = entries[
             "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
         ].decode("utf-8")
@@ -664,14 +675,22 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
             encoding="utf-8"
         )
     )
-    public_skill_names = (
-        {plugin_name} if plugin_name == "vera" else set(instruction_config["skills"])
-    )
-    expected_bodies = {
-        f"skills/{skill_name}/SKILL.md": card["instructions"]
-        for skill_name, card in instruction_config["skills"].items()
-        if skill_name in public_skill_names
-    }
+    public_skill_names = set(instruction_config["skills"])
+    if plugin_name == "vera":
+        expected_bodies = {}
+        for skill_name in public_skill_names:
+            source = (
+                ROOT / "plugins" / plugin_name / "skills" / skill_name / "SKILL.md"
+            ).read_bytes()
+            projected = builder.project_chatgpt_source_skill(source).decode("utf-8")
+            expected_bodies[f"skills/{skill_name}/SKILL.md"] = projected[
+                builder.skill_body_start(projected) :
+            ].strip()
+    else:
+        expected_bodies = {
+            f"skills/{skill_name}/SKILL.md": card["instructions"]
+            for skill_name, card in instruction_config["skills"].items()
+        }
     upload_zip = (
         ROOT / "plugin_packages" / plugin_name / f"{plugin_name}-chatgpt-upload.zip"
     )
@@ -685,14 +704,17 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
         }
         for skill_name in public_skill_names:
             skill_prefix = f"skills/{skill_name}/"
-            assert {
+            packaged_skill_files = {
                 name.removeprefix(skill_prefix)
                 for name in archive.namelist()
                 if name.startswith(skill_prefix) and not name.endswith("/")
-            } == {"SKILL.md", "agents/openai.yaml"}
+            }
+            assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
+            if plugin_name == "clara":
+                assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
 
     assert actual_bodies == expected_bodies
-    assert len(set(actual_bodies.values())) == len(actual_bodies)
+    assert len(actual_bodies) == len(public_skill_names)
     assert not any(
         body.startswith("Attach the relevant source material")
         or body.startswith("Allega i documenti pertinenti")

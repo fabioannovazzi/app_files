@@ -67,14 +67,14 @@ def test_vera_chatgpt_bilancio_skill_routes_to_complete_module_workflow() -> Non
 
     entries = builder.chatgpt_upload_entries(bundle)
     router = entries["skills/vera/SKILL.md"].decode("utf-8")
+    wrapper = entries["skills/bilancio-xbrl-it/SKILL.md"].decode("utf-8")
     skill = entries["modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"].decode(
         "utf-8"
     )
 
-    assert "skills/bilancio-xbrl-it/SKILL.md`" in router
-    assert "skills/bilancio-xbrl-it/SKILL.md" not in {
-        name for name in entries if name.startswith("skills/")
-    }
+    assert "../<skill-name>/SKILL.md" in router
+    assert "../../modules/bilancio-xbrl-it" in wrapper
+    assert "skills/bilancio-xbrl-it/SKILL.md" in entries
     assert "# Bilancio intelligente" in skill
     assert "scripts/check_dependencies.py" in skill
 
