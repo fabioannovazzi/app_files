@@ -68,14 +68,13 @@ def test_vera_chatgpt_bilancio_skill_routes_to_complete_module_workflow() -> Non
     entries = builder.chatgpt_upload_entries(bundle)
     router = entries["skills/vera/SKILL.md"].decode("utf-8")
     wrapper = entries["skills/bilancio-xbrl-it/SKILL.md"].decode("utf-8")
-    wrapper_workflow = entries["skills/bilancio-xbrl-it/WORKFLOW.md"].decode("utf-8")
     skill = entries["modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md"].decode(
         "utf-8"
     )
 
-    assert "`WORKFLOW.md`" in router
-    assert "`WORKFLOW.md`" in wrapper
-    assert "../../modules/bilancio-xbrl-it" in wrapper_workflow
+    assert "../<skill-name>/SKILL.md" in router
+    assert "../../modules/bilancio-xbrl-it" in wrapper
+    assert "skills/bilancio-xbrl-it/WORKFLOW.md" not in entries
     assert "skills/bilancio-xbrl-it/SKILL.md" in entries
     assert "# Bilancio intelligente" in skill
     assert "scripts/check_dependencies.py" in skill
