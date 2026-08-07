@@ -2339,27 +2339,48 @@ def _aligned_pdf_cells(
     return aligned
 
 
+PDF_CANDIDATE_HASH_FIELDS = (
+    "source_document_id",
+    "page_count",
+    "page_methods",
+    "methods",
+    "ocr_used",
+    "columns",
+    "rows",
+    "table_coverage",
+    "issues",
+)
+
+
+def _pdf_candidate_hashed_content(candidate: Mapping[str, Any]) -> dict[str, Any]:
+    """Return every review-relevant extraction field bound by the candidate hash."""
+
+    return {key: candidate[key] for key in PDF_CANDIDATE_HASH_FIELDS}
+
+
 def _pdf_candidate_from_extraction(
     extraction: Mapping[str, Any], *, document_id: str, first_year: bool
 ) -> dict[str, Any]:
-    """Build a bounded, review-only trial-balance candidate from PDF geometry."""
+    """Build a complete, review-only trial-balance candidate from PDF geometry."""
 
-    table_headers: list[tuple[Mapping[str, Any], dict[str, Any]]] = []
-    for table in extraction.get("tables", []):
-        candidate = _pdf_header_candidate(table, first_year=first_year)
-        if candidate is not None:
-            table_headers.append((table, candidate))
+    tables = [
+        table for table in extraction.get("tables", []) if isinstance(table, Mapping)
+    ]
+    table_headers = [
+        (table, candidate)
+        for table in tables
+        if (candidate := _pdf_header_candidate(table, first_year=first_year))
+        is not None
+    ]
     if not table_headers:
         raise ValueError("No plausible tabular header was found in the PDF")
-    table_headers.sort(
-        key=lambda item: int(item[1]["score"]),
-        reverse=True,
-    )
-    selected = table_headers[0][1]
+    table_headers.sort(key=lambda item: int(item[1]["score"]), reverse=True)
+    selected_table, selected = table_headers[0]
     selected_values = list(selected["values"])
     selected_signature = tuple(selected["normalized"])
+    selected_header_row = selected["row"]
     columns = []
-    header_cells = list(selected["row"].get("cells", []))
+    header_cells = list(selected_header_row.get("cells", []))
     for position, raw_header in enumerate(selected_values, start=1):
         normalized = _normalized_header(raw_header)
         columns.append(
@@ -2376,45 +2397,114 @@ def _pdf_candidate_from_extraction(
                 ),
             }
         )
+
+    header_by_table = {
+        str(table["table_id"]): header for table, header in table_headers
+    }
     candidate_rows: list[dict[str, Any]] = []
-    for table, header in table_headers:
-        if tuple(header["normalized"]) != selected_signature:
+    table_coverage: list[dict[str, Any]] = []
+    for table in tables:
+        table_id = str(table["table_id"])
+        header = header_by_table.get(table_id)
+        if table_id == str(selected_table["table_id"]):
+            disposition = "INCLUDED_HEADER"
+            alignment_header = selected_header_row
+            first_data_row = int(selected_header_row["row_index"]) + 1
+        elif header is not None and tuple(header["normalized"]) == selected_signature:
+            disposition = "INCLUDED_HEADER"
+            alignment_header = header["row"]
+            first_data_row = int(header["row"]["row_index"]) + 1
+        elif header is not None and (
+            bool(header["complete"]) or int(header["recognized"]) > 0
+        ):
+            table_coverage.append(
+                {
+                    "table_id": table_id,
+                    "page": int(table["page"]),
+                    "disposition": "BLOCKED_INCOMPATIBLE_HEADER",
+                    "source_row_count": len(table.get("rows", [])),
+                    "candidate_row_count": 0,
+                    "unresolved_row_ids": [],
+                }
+            )
             continue
-        header_index = int(header["row"]["row_index"])
+        else:
+            # Reusing selected column geometry for a headerless continuation is
+            # mechanical layout alignment. All resulting rows remain untrusted
+            # and require the same professional review as the first page.
+            disposition = "INCLUDED_CONTINUATION"
+            alignment_header = selected_header_row
+            first_data_row = 1
+
+        unresolved_row_ids: list[str] = []
+        blank_row_count = 0
+        included_count = 0
         for row in table.get("rows", []):
-            if int(row["row_index"]) <= header_index:
+            source_row = int(row["row_index"])
+            if source_row < first_data_row:
                 continue
-            cells = _aligned_pdf_cells(row, header["row"])
+            cells = _aligned_pdf_cells(row, alignment_header)
+            row_id = f"{table_id}_r{source_row:04d}"
             if len(cells) != len(columns):
+                unresolved_row_ids.append(row_id)
                 continue
             if not any(str(item.get("raw_value") or "").strip() for item in cells):
+                blank_row_count += 1
                 continue
-            row_id = f"{table['table_id']}_r{int(row['row_index']):04d}"
-            candidate_cells = []
-            for position, cell in enumerate(cells, start=1):
-                candidate_cells.append(
-                    {
-                        "candidate_source_ref": f"{row_id}_c{position:03d}",
-                        "column_index": position,
-                        "raw_value": str(cell.get("raw_value") or "").strip(),
-                        "bbox": cell.get("bbox"),
-                        "confidence": float(cell.get("confidence", 0.0)),
-                    }
-                )
+            candidate_cells = [
+                {
+                    "candidate_source_ref": f"{row_id}_c{position:03d}",
+                    "column_index": position,
+                    "raw_value": str(cell.get("raw_value") or "").strip(),
+                    "bbox": cell.get("bbox"),
+                    "confidence": float(cell.get("confidence", 0.0)),
+                }
+                for position, cell in enumerate(cells, start=1)
+            ]
             candidate_rows.append(
                 {
                     "row_id": row_id,
                     "page": int(table["page"]),
-                    "table_id": str(table["table_id"]),
-                    "source_row": int(row["row_index"]),
+                    "table_id": table_id,
+                    "source_row": source_row,
                     "extraction_method": str(table["method"]),
                     "cells": candidate_cells,
                 }
             )
+            included_count += 1
             if len(candidate_rows) > MAX_TEMPLATE_ROWS:
                 raise ValueError("PDF table exceeds the 20,000-row MVP limit")
+        table_coverage.append(
+            {
+                "table_id": table_id,
+                "page": int(table["page"]),
+                "disposition": (
+                    "BLOCKED_ROW_ALIGNMENT" if unresolved_row_ids else disposition
+                ),
+                "source_row_count": len(table.get("rows", [])),
+                "candidate_row_count": included_count,
+                "blank_row_count": blank_row_count,
+                "unresolved_row_ids": unresolved_row_ids,
+            }
+        )
     if not candidate_rows:
         raise ValueError("No candidate accounting rows followed the PDF header")
+
+    page_count = int(extraction["page_count"])
+    page_methods = [dict(item) for item in extraction["page_methods"]]
+    if [int(item.get("page", 0)) for item in page_methods] != list(
+        range(1, page_count + 1)
+    ):
+        raise ValueError("PDF extraction must account for every page exactly once")
+    actual_table_counts = {
+        page: sum(int(table["page"]) == page for table in tables)
+        for page in range(1, page_count + 1)
+    }
+    if any(
+        int(item.get("table_count", -1)) != actual_table_counts[int(item["page"])]
+        for item in page_methods
+    ):
+        raise ValueError("PDF page table counts do not match extracted table coverage")
     proposed = {
         int(item["column_index"]): item.get("proposed_normalized_column")
         for item in columns
@@ -2478,27 +2568,74 @@ def _pdf_candidate_from_extraction(
                 "sample_refs": [],
             }
         )
-    content = {
+    continuation_tables = [
+        item["table_id"]
+        for item in table_coverage
+        if item["disposition"] == "INCLUDED_CONTINUATION"
+    ]
+    if continuation_tables:
+        issues.append(
+            {
+                "code": "CONTINUATION_HEADER_INHERITED",
+                "count": len(continuation_tables),
+                "sample_refs": continuation_tables[:50],
+            }
+        )
+    pages_requiring_disposition = [
+        int(item["page"]) for item in page_methods if int(item["table_count"]) == 0
+    ]
+    if pages_requiring_disposition:
+        issues.append(
+            {
+                "code": "PAGE_DISPOSITION_REQUIRED",
+                "count": len(pages_requiring_disposition),
+                "sample_refs": [str(page) for page in pages_requiring_disposition[:50]],
+            }
+        )
+    blocked_tables = [
+        str(item["table_id"])
+        for item in table_coverage
+        if str(item["disposition"]).startswith("BLOCKED_")
+    ]
+    if blocked_tables:
+        issues.append(
+            {
+                "code": "TABLE_COVERAGE_BLOCKED",
+                "count": len(blocked_tables),
+                "sample_refs": blocked_tables[:50],
+            }
+        )
+    candidate = {
+        "schema_version": 1,
+        "status": "PENDING_REVIEW",
         "source_document_id": document_id,
         "columns": columns,
         "rows": candidate_rows,
-    }
-    return {
-        "schema_version": 1,
-        "status": "PENDING_REVIEW",
-        **content,
-        "content_sha256": _sha256_bytes(_canonical_json(content)),
         "parser_profile": str(extraction["parser_profile"]),
-        "page_count": int(extraction["page_count"]),
-        "page_methods": list(extraction["page_methods"]),
+        "page_count": page_count,
+        "page_methods": page_methods,
         "methods": list(extraction["methods"]),
         "ocr_used": bool(extraction["ocr_used"]),
         "row_count": len(candidate_rows),
+        "table_coverage": table_coverage,
+        "coverage_status": (
+            "BLOCKED"
+            if blocked_tables
+            else (
+                "PENDING_PAGE_DISPOSITIONS"
+                if pages_requiring_disposition
+                else "COMPLETE"
+            )
+        ),
         "proposed_headers": proposed_headers,
         "proposed_mapping_complete": mapping_complete,
         "issues": issues,
         "created_at": _now(),
     }
+    candidate["content_sha256"] = _sha256_bytes(
+        _canonical_json(_pdf_candidate_hashed_content(candidate))
+    )
+    return candidate
 
 
 def ingest_pdf_trial_balance(
@@ -2607,12 +2744,9 @@ def record_pdf_trial_balance_review(
     reason = str(payload.get("reason") or "").strip()
     if not reason:
         raise ValueError("PDF extraction review requires a reason")
-    content = {
-        "source_document_id": candidate["source_document_id"],
-        "columns": candidate["columns"],
-        "rows": candidate["rows"],
-    }
-    if _sha256_bytes(_canonical_json(content)) != candidate.get("content_sha256"):
+    if _sha256_bytes(
+        _canonical_json(_pdf_candidate_hashed_content(candidate))
+    ) != candidate.get("content_sha256"):
         raise ValueError("PDF extraction candidate content hash does not match")
     if decision == "REJECTED":
         _mutate(case, reviewer, "pdf_trial_balance_reviewed")
@@ -2653,6 +2787,44 @@ def record_pdf_trial_balance_review(
             "PDF extraction declarations are not confirmed: "
             + ", ".join(missing_declarations)
         )
+    blocked_tables = [
+        str(item["table_id"])
+        for item in candidate.get("table_coverage", [])
+        if str(item.get("disposition", "")).startswith("BLOCKED_")
+    ]
+    if blocked_tables:
+        raise ValueError(
+            "PDF extraction contains unresolved table coverage: "
+            + ", ".join(blocked_tables)
+        )
+    required_page_dispositions = {
+        int(item["page"])
+        for item in candidate.get("page_methods", [])
+        if int(item.get("table_count", 0)) == 0
+    }
+    page_dispositions = _review_list(payload, "page_dispositions")
+    reviewed_pages: dict[int, dict[str, Any]] = {}
+    for item in page_dispositions:
+        page = int(item.get("page", 0))
+        page_decision = str(item.get("decision") or "").upper()
+        page_reason = str(item.get("reason") or "").strip()
+        if (
+            page not in required_page_dispositions
+            or page in reviewed_pages
+            or page_decision != "EXCLUDED_NON_ACCOUNTING"
+            or not page_reason
+        ):
+            raise ValueError("PDF review contains invalid page dispositions")
+        reviewed_pages[page] = {
+            "page": page,
+            "decision": page_decision,
+            "reason": page_reason,
+        }
+    if set(reviewed_pages) != required_page_dispositions:
+        raise ValueError(
+            "PDF acceptance requires exact page dispositions for every page "
+            "without a reviewable table"
+        )
     candidate_columns = {
         int(item["column_index"]): item for item in candidate.get("columns", [])
     }
@@ -2692,13 +2864,35 @@ def record_pdf_trial_balance_review(
     )
     rows = {str(item["row_id"]): item for item in candidate.get("rows", [])}
     exclusions = _review_list(payload, "excluded_rows")
-    excluded: dict[str, str] = {}
+    excluded: dict[str, dict[str, Any]] = {}
     for item in exclusions:
         row_id = str(item.get("row_id") or "")
+        row_kind = str(item.get("row_kind") or "").upper()
+        summarized = item.get("summarizes_row_ids", [])
         exclusion_reason = str(item.get("reason") or "").strip()
-        if row_id not in rows or row_id in excluded or not exclusion_reason:
+        if (
+            row_id not in rows
+            or row_id in excluded
+            or row_kind not in {"NON_ACCOUNT", "SUMMARY"}
+            or isinstance(summarized, (str, bytes, bytearray))
+            or not isinstance(summarized, Sequence)
+            or any(not isinstance(value, str) for value in summarized)
+            or len(summarized) != len(set(summarized))
+            or not exclusion_reason
+        ):
             raise ValueError("PDF review contains an invalid or duplicate excluded row")
-        excluded[row_id] = exclusion_reason
+        summarized_ids = [str(value) for value in summarized]
+        if (row_kind == "SUMMARY") != bool(summarized_ids):
+            raise ValueError(
+                "PDF summary exclusions require named accepted rows; non-account "
+                "exclusions must not summarize rows"
+            )
+        excluded[row_id] = {
+            "row_id": row_id,
+            "row_kind": row_kind,
+            "summarizes_row_ids": summarized_ids,
+            "reason": exclusion_reason,
+        }
     corrections = _review_list(payload, "corrections")
     corrected: dict[tuple[str, int], dict[str, str]] = {}
     for item in corrections:
@@ -2720,6 +2914,51 @@ def record_pdf_trial_balance_review(
             "value": "" if value is None else str(value),
             "reason": correction_reason,
         }
+
+    monetary_columns = [
+        (source_index, normalized_name)
+        for source_index, normalized_name in zip(
+            selected_indices, selected_names, strict=True
+        )
+        if normalized_name not in {"account_code", "account_description"}
+    ]
+
+    def reviewed_decimal(row_id: str, source_index: int) -> Decimal:
+        """Read one reviewed monetary value for mechanical exclusion checks."""
+
+        row = rows[row_id]
+        cell_lookup = {int(item["column_index"]): item for item in row["cells"]}
+        if source_index not in cell_lookup:
+            raise ValueError("PDF review row is missing a selected monetary column")
+        correction = corrected.get((row_id, source_index))
+        raw_value = str(cell_lookup[source_index].get("raw_value") or "")
+        reviewed_value = correction["value"] if correction else raw_value
+        return normalize_decimal(reviewed_value if str(reviewed_value).strip() else "0")
+
+    accepted_ids = set(rows) - set(excluded)
+    for row_id, exclusion in excluded.items():
+        if exclusion["row_kind"] == "NON_ACCOUNT":
+            if any(
+                reviewed_decimal(row_id, source_index) != Decimal("0")
+                for source_index, _normalized_name in monetary_columns
+            ):
+                raise ValueError("PDF review cannot exclude a non-zero non-account row")
+            continue
+        summarized_ids = set(exclusion["summarizes_row_ids"])
+        if not summarized_ids <= accepted_ids:
+            raise ValueError(
+                "PDF summary exclusions may reference only accepted candidate rows"
+            )
+        for source_index, normalized_name in monetary_columns:
+            summary_value = reviewed_decimal(row_id, source_index)
+            accepted_total = sum(
+                (reviewed_decimal(item, source_index) for item in summarized_ids),
+                Decimal("0"),
+            )
+            if abs(summary_value - accepted_total) > tolerance:
+                raise ValueError(
+                    "PDF summary exclusion does not reconcile for " + normalized_name
+                )
     raw_rows: list[list[Any]] = []
     anchor_metadata: dict[tuple[int, int], dict[str, Any]] = {}
     accepted_row_ids: list[str] = []
@@ -2788,10 +3027,8 @@ def record_pdf_trial_balance_review(
         "declarations": dict(declarations),
         "column_mapping": selected_mapping,
         "accepted_row_count": len(accepted_row_ids),
-        "excluded_rows": [
-            {"row_id": row_id, "reason": exclusion_reason}
-            for row_id, exclusion_reason in sorted(excluded.items())
-        ],
+        "page_dispositions": [reviewed_pages[page] for page in sorted(reviewed_pages)],
+        "excluded_rows": [excluded[row_id] for row_id in sorted(excluded)],
         "correction_count": len(corrected),
         "reviewed_by": reviewer,
         "reviewed_at": reviewed_at,
@@ -2811,8 +3048,12 @@ def record_pdf_trial_balance_review(
         "content_sha256": candidate["content_sha256"],
         "row_count": candidate["row_count"],
         "page_count": candidate["page_count"],
+        "page_methods": candidate["page_methods"],
         "methods": candidate["methods"],
         "ocr_used": candidate["ocr_used"],
+        "table_coverage": candidate["table_coverage"],
+        "coverage_status": "REVIEWED_COMPLETE",
+        "page_dispositions": review_summary["page_dispositions"],
         "issues": candidate["issues"],
         "review": review_summary,
     }

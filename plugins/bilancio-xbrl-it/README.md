@@ -90,16 +90,22 @@ PDF follows a two-stage contract. `ingest-pdf` (service operation
 `ingest_pdf`, document kind `PDF_TRIAL_BALANCE`) extracts embedded text/table
 geometry or PaddleOCR tokens into a checksum-bound `PENDING_REVIEW` candidate.
 It retains page, table, row, source-column, bounding box, extraction method,
-raw value, and OCR confidence, but creates no canonical accounting entry.
+raw value, OCR confidence, per-page extraction method, and per-table coverage,
+but creates no canonical accounting entry. Extraction fails closed when any
+page still requires OCR or any detected table cannot be aligned. A page with no
+detected table requires an explicit reviewed non-accounting disposition.
 
 The authenticated professional then uses `review-pdf-extraction` (service
 operation `review_pdf_extraction`) to accept or reject the candidate. Acceptance
 requires all four explicit declarations covering headers/columns, account rows,
 monetary values, and excluded rows. The review may provide a one-to-one column
 mapping, cell corrections with reasons, and explicit row exclusions with
-reasons. Only the accepted reviewed rows pass through the existing Decimal
-normalizer and deterministic trial-balance parser. Debit/credit convention
-confirmation remains a separate subsequent gate.
+reasons. A non-account row can be excluded only when all selected monetary
+fields are zero or blank. A non-zero summary row must identify the accepted
+account rows it summarizes and reconcile every selected monetary field within
+the parser tolerance. Only the accepted reviewed rows pass through the
+existing Decimal normalizer and deterministic trial-balance parser.
+Debit/credit convention confirmation remains a separate subsequent gate.
 
 Run the input-aware dependency check before a PDF import:
 
@@ -115,6 +121,10 @@ image-only PDF needs the optional OCR runtime, the checker returns
 package/model downloads contain no case document bytes. The PDF remains local
 to the configured case input root; only bounded extracted evidence may enter
 the selected Vera model context for non-authoritative explanation.
+The managed runtime accepts exact package pins only and records the installed
+package versions plus the SHA-256 and size of every required OCR model file;
+reuse verifies the complete receipt and fails closed after any drift or
+tampering.
 
 A non-first-year case must provide the exact comparative start and end dates;
 the renderer does not infer a conventional prior year. The selected OIC pack

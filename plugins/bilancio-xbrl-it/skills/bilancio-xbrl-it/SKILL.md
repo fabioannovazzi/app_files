@@ -122,10 +122,14 @@ and final professional approval always require the user's explicit choice.
    `PDF_TRIAL_BALANCE` through the service). This creates only a
    `PENDING_REVIEW` extraction candidate: embedded PDF geometry or OCR output
    is never a canonical accounting fact. Inspect the paginated source review,
-   confirm or replace the proposed column mapping, record every cell
-   correction and every excluded summary/non-account row with a reason, and
-   submit all four review declarations through `review-pdf-extraction`. Only
-   an accepted review may install the trial balance. OCR confidence and model
+   inspect every page method and table-coverage disposition, confirm or replace
+   the proposed column mapping, record every cell correction, and dispose every
+   page without a detected table as reviewed non-accounting content. An
+   excluded non-account row must have only zero/blank monetary fields; a
+   non-zero summary row must name accepted account rows and reconcile every
+   selected monetary field within tolerance. Submit all four review
+   declarations through `review-pdf-extraction`. Only an accepted review may
+   install the trial balance. OCR confidence and model
    explanation may direct attention, but may never accept, correct, exclude,
    or promote a row. Then review the canonical source-anchor inventory,
    including page, table, row, column, bounding box, extraction method,
@@ -336,9 +340,14 @@ Do not declare the review complete unless every probe passes. The gate must
 prove that non-zero accounts cannot be excluded, mapping requests preserve
 unsubmitted decisions, selected OIC packs change the professional checklist,
 failed review/export jobs leave no partial destination and can be retried,
-symbolic links in destination ancestors fail closed, and the Vera privacy
-fingerprint matches the governed source. A general green test suite does not
-replace these named adversarial probes.
+symbolic links in destination ancestors fail closed, mixed PDF pages cannot be
+partially accepted, headerless continuation tables remain visible, empty pages
+require dispositions, candidate hashes bind page/table coverage, non-zero PDF
+summary exclusions reconcile to named account rows, OCR package/model receipts
+detect drift or tampering, workflow guidance cannot skip form prerequisites or
+recommend a different action, and the Vera privacy fingerprint matches the
+governed source. A general green test suite does not replace these named
+adversarial probes.
 
 ## Current implementation boundary
 

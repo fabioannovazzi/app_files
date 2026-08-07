@@ -5,7 +5,43 @@ from __future__ import annotations
 
 from typing import Any, Mapping, Sequence
 
-__all__ = ["REVIEW_VIEWS", "build_review_view"]
+__all__ = [
+    "ACTIVE_QUESTION_STATES",
+    "NEXT_REVIEW_ACTIONS",
+    "REVIEW_VIEWS",
+    "build_review_view",
+    "next_review_action",
+]
+
+ACTIVE_QUESTION_STATES = frozenset(
+    {"OPEN", "ASSIGNED", "ANSWERED_UNREVIEWED", "REJECTED"}
+)
+
+NEXT_REVIEW_ACTIONS = frozenset(
+    {
+        "STOP_UNSUPPORTED",
+        "REVIEW_PDF_EXTRACTION",
+        "REPLACE_PDF_SOURCE",
+        "INGEST_TRIAL_BALANCE",
+        "CONFIRM_PARSER",
+        "DETERMINE_FORMS",
+        "SELECT_FORM",
+        "BUILD_TAXONOMY_MAPPING_INDEX",
+        "REVIEW_MAPPINGS",
+        "COMPUTE_STATEMENTS",
+        "REVIEW_STATUTORY_PRESENTATION",
+        "ACTIVATE_DISCLOSURES",
+        "REVIEW_DISCLOSURE_APPLICABILITY",
+        "ANSWER_CONTEXTUAL_QUESTIONS",
+        "CREATE_PREVIEW",
+        "VALIDATE",
+        "RESOLVE_VALIDATION_ISSUES",
+        "PREPARE_XBRL_REVIEW",
+        "PROFESSIONAL_REVIEW_AND_APPROVAL",
+        "EXPORT_APPROVED_SNAPSHOT",
+        "REVIEW_EXPORTED_ARTIFACTS",
+    }
+)
 
 REVIEW_VIEWS = frozenset(
     {
@@ -43,7 +79,9 @@ def _page(
     }
 
 
-def _next_action(case: Mapping[str, Any]) -> str:
+def next_review_action(case: Mapping[str, Any]) -> str:
+    """Return the mechanically required next workflow action for this case state."""
+
     if case.get("unsupported_reasons"):
         return "STOP_UNSUPPORTED"
     pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
@@ -88,7 +126,7 @@ def _next_action(case: Mapping[str, Any]) -> str:
     if manual_flags - reviewed_flags:
         return "REVIEW_DISCLOSURE_APPLICABILITY"
     if any(
-        question.get("state") in {"OPEN", "BLOCKED"}
+        question.get("state") in ACTIVE_QUESTION_STATES
         for question in case.get("questionnaire", [])
     ):
         return "ANSWER_CONTEXTUAL_QUESTIONS"
@@ -155,7 +193,7 @@ def _dashboard(case: Mapping[str, Any]) -> dict[str, Any]:
             }
             for item in case.get("schedules", [])
         ],
-        "next_action": _next_action(case),
+        "next_action": next_review_action(case),
     }
 
 
@@ -195,6 +233,10 @@ def build_review_view(
                 "row_count": pdf_candidate.get("row_count", 0),
                 "methods": list(pdf_candidate.get("methods", [])),
                 "ocr_used": pdf_candidate.get("ocr_used", False),
+                "coverage_status": pdf_candidate.get("coverage_status"),
+                "page_methods": list(pdf_candidate.get("page_methods", [])),
+                "table_coverage": list(pdf_candidate.get("table_coverage", [])),
+                "page_dispositions": list(pdf_candidate.get("page_dispositions", [])),
                 "columns": list(pdf_candidate.get("columns", [])),
                 "issues": list(pdf_candidate.get("issues", [])),
                 "review": pdf_candidate.get("review"),

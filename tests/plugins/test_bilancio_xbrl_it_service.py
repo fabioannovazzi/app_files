@@ -1163,7 +1163,7 @@ def _workflow_guidance_response() -> dict[str, object]:
     return {
         "output": {
             "summary_it": "Occorre acquisire il bilancio di verifica.",
-            "recommended_next_action": "REVIEW_SOURCE",
+            "recommended_next_action": "INGEST_TRIAL_BALANCE",
             "why_it_matters": "La fonte contabile non è ancora disponibile.",
             "attention_items": [],
             "confidence_band": "HIGH",

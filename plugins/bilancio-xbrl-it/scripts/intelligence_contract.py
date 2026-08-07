@@ -17,6 +17,11 @@ from enum import StrEnum
 from typing import Any, Mapping, Sequence
 
 from disclosure_engine import manual_disclosure_flags, normalize_narrative_blocks
+from review_views import (
+    ACTIVE_QUESTION_STATES,
+    NEXT_REVIEW_ACTIONS,
+    next_review_action,
+)
 from schedule_engine import schedule_fact_records
 
 __all__ = [
@@ -40,21 +45,7 @@ class IntelligenceTask(StrEnum):
     ISSUE_EXPLANATION = "ISSUE_EXPLANATION"
 
 
-NEXT_ACTIONS = {
-    "REVIEW_SOURCE",
-    "CONFIRM_PARSER",
-    "SELECT_FORM",
-    "REVIEW_MAPPINGS",
-    "REVIEW_STATUTORY_PRESENTATION",
-    "PROVIDE_SCHEDULE",
-    "ANSWER_QUESTIONS",
-    "REVIEW_NOTES",
-    "RESOLVE_ISSUES",
-    "REVIEW_PREVIEW",
-    "APPROVE",
-    "EXPORT",
-    "REQUEST_PROFESSIONAL_JUDGMENT",
-}
+NEXT_ACTIONS = NEXT_REVIEW_ACTIONS
 CONFIDENCE_BANDS = {"HIGH", "MEDIUM", "LOW"}
 QNAME_PATTERN = re.compile(r"^[A-Za-z_][A-Za-z0-9_.-]*:[A-Za-z_][A-Za-z0-9_.-]*$")
 
@@ -232,7 +223,7 @@ def build_intelligence_packet(
             "questions": [
                 item
                 for item in case.get("questionnaire", [])
-                if item.get("state") in {"OPEN", "ASSIGNED", "REJECTED"}
+                if item.get("state") in ACTIVE_QUESTION_STATES
             ],
             "prior_answer_suggestions": list(
                 (case.get("client_history_suggestions") or {}).get(
@@ -266,6 +257,9 @@ def build_intelligence_packet(
                     "page_count": pdf_candidate.get("page_count"),
                     "row_count": pdf_candidate.get("row_count"),
                     "ocr_used": pdf_candidate.get("ocr_used"),
+                    "coverage_status": pdf_candidate.get("coverage_status"),
+                    "page_methods": list(pdf_candidate.get("page_methods", [])),
+                    "table_coverage": list(pdf_candidate.get("table_coverage", [])),
                     "columns": list(pdf_candidate.get("columns", [])),
                     "issues": list(pdf_candidate.get("issues", []))[:50],
                     "sample_rows": list(pdf_candidate.get("rows", []))[:20],
@@ -345,6 +339,7 @@ def build_intelligence_packet(
                 "status": (case.get("validation") or {}).get("status"),
                 "issues": (case.get("validation") or {}).get("issues", []),
             },
+            "next_required_action": next_review_action(case),
         }
     return _strip_model_routing_metadata(base)
 
@@ -363,43 +358,39 @@ def build_next_intelligence_packet(case: Mapping[str, Any]) -> dict[str, Any]:
         for item in entries
         if str(item["account_id"]) not in mapped_ids
     ]
-    pdf_candidate = case.get("pdf_trial_balance_candidate") or {}
-    if pdf_candidate.get("status") == "PENDING_REVIEW":
+    required_action = next_review_action(case)
+    if required_action == "REVIEW_PDF_EXTRACTION":
         reason = (
             "Explain the extracted PDF rows, uncertain cells, and column proposals "
             "that require professional review before any accounting fact exists."
         )
-    elif pdf_candidate.get("status") == "REJECTED":
+    elif required_action == "REPLACE_PDF_SOURCE":
         reason = "Explain why a replacement trial-balance source is required."
-    elif trial_balance.get("confirmed_convention") and not case.get("selected_form"):
+    elif required_action == "DETERMINE_FORMS":
+        reason = (
+            "Determine eligible statutory forms from the reviewed threshold metrics "
+            "before asking the professional to select one."
+        )
+    elif required_action == "SELECT_FORM":
         reason = (
             "Select the statutory form before semantic mapping so candidates use "
             "the correct official presentation network."
         )
-    elif (
-        trial_balance.get("confirmed_convention")
-        and case.get("selected_form")
-        and case.get("statutory_presentation_required", True)
-        and not case.get("taxonomy_mapping_index")
-    ):
+    elif required_action == "BUILD_TAXONOMY_MAPPING_INDEX":
         reason = (
             "Build the selected-form official taxonomy mapping index before asking "
             "for semantic account classifications."
         )
-    elif trial_balance.get("confirmed_convention") and unmapped_ids:
+    elif required_action == "REVIEW_MAPPINGS" and unmapped_ids:
         task = IntelligenceTask.ACCOUNT_MAPPING
         subject_ids = unmapped_ids[:50]
         reason = "Propose evidence-linked classifications for unresolved accounts."
-    elif (
-        case.get("statutory_presentation_required") is True
-        and case.get("statements")
-        and (case.get("statutory_presentation") or {}).get("status") != "COMPLETE"
-    ):
+    elif required_action == "REVIEW_STATUTORY_PRESENTATION":
         reason = (
             "Explain which statutory presentation gaps require evidence or an "
             "explicit professional decision, without inferring zeroes."
         )
-    elif case.get("disclosure_rule_pack") and (
+    elif required_action == "REVIEW_DISCLOSURE_APPLICABILITY" and (
         unresolved_flags := sorted(
             manual_disclosure_flags(case["disclosure_rule_pack"])
             - {
@@ -414,10 +405,7 @@ def build_next_intelligence_packet(case: Mapping[str, Any]) -> dict[str, Any]:
             "Assess ambiguous disclosure applicability from the available evidence; "
             "return suggestions only for professional review."
         )
-    elif case.get("questionnaire") and any(
-        item.get("state") in {"OPEN", "ASSIGNED", "REJECTED"}
-        for item in case["questionnaire"]
-    ):
+    elif required_action == "ANSWER_CONTEXTUAL_QUESTIONS":
         task = IntelligenceTask.QUESTION_PRIORITIZATION
         reason = "Order only the active questions by professional usefulness."
     elif (
@@ -450,6 +438,7 @@ def build_next_intelligence_packet(case: Mapping[str, Any]) -> dict[str, Any]:
         "selected_automatically": True,
         "reason": reason,
         "subject_ids": subject_ids,
+        "recommended_next_action": required_action,
     }
     return packet
 
@@ -489,7 +478,9 @@ def _allowed_refs(packet: Mapping[str, Any]) -> set[str]:
     return refs
 
 
-def _validate_workflow_guidance(output: Mapping[str, Any]) -> dict[str, Any]:
+def _validate_workflow_guidance(
+    packet: Mapping[str, Any], output: Mapping[str, Any]
+) -> dict[str, Any]:
     _exact_keys(
         output,
         {
@@ -506,6 +497,15 @@ def _validate_workflow_guidance(output: Mapping[str, Any]) -> dict[str, Any]:
     if action not in NEXT_ACTIONS or confidence not in CONFIDENCE_BANDS:
         raise ValueError(
             "Workflow guidance contains an unsupported action or confidence"
+        )
+    expected_action = str(
+        (packet.get("reviewed_context") or {}).get("next_required_action") or ""
+    )
+    if action != expected_action:
+        # Workflow prerequisites and immutable state are mechanically verifiable;
+        # a semantic explanation may add judgment but cannot reorder those gates.
+        raise ValueError(
+            "Workflow guidance must recommend the case's exact next required action"
         )
     attention = []
     for item in output["attention_items"]:
@@ -599,7 +599,7 @@ def validate_intelligence_output(
 
     task = IntelligenceTask(str(packet["task"]))
     if task is IntelligenceTask.WORKFLOW_GUIDANCE:
-        normalized = _validate_workflow_guidance(output)
+        normalized = _validate_workflow_guidance(packet, output)
     elif task is IntelligenceTask.ACCOUNT_MAPPING:
         normalized = _validate_mapping(output)
     elif task is IntelligenceTask.DISCLOSURE_ACTIVATION:
