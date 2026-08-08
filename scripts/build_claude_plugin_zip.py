@@ -2215,7 +2215,11 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         if relative.startswith("modules/") and any(
             part in {"evals", "tests", "__pycache__"} for part in relative_parts[2:]
         ):
-            continue
+            # Comunicazione professionale uses its blinded editorial corpus at
+            # runtime to qualify the exact model-led assessor. Cowork must carry
+            # the governed bytes or the assurance and privacy bindings are stale.
+            if not relative.startswith("modules/comunicazione-professionale/evals/"):
+                continue
         if Path(relative).suffix == ".pyc":
             continue
         if relative.startswith("evals/"):

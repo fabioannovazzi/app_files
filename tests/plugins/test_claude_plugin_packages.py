@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.103"
+    assert manifest["version"] == "0.1.105"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -138,8 +138,17 @@ def test_only_root_anthropic_manifest_is_discoverable_and_root_app_is_omitted(
         name.startswith("skills/privacy-surface-review/") for name in vera_entries
     )
     assert not any(name.startswith("evals/") for name in vera_entries)
+    communication_eval_prefix = "modules/comunicazione-professionale/evals/"
+    assert {
+        name for name in vera_entries if name.startswith(communication_eval_prefix)
+    } == {
+        f"{communication_eval_prefix}editorial_quality_cases.json",
+        f"{communication_eval_prefix}editorial_quality_expected.json",
+        f"{communication_eval_prefix}trigger_fixtures.json",
+    }
     assert not any(
         name.startswith("modules/")
+        and not name.startswith(communication_eval_prefix)
         and any(
             part in {"evals", "tests", "__pycache__"} for part in Path(name).parts[2:]
         )

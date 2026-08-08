@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "question_domain",
+    "document_type",
+    "purpose",
+    "audience",
+    "output_language",
+    "jurisdiction",
+    "jurisdiction_status",
+    "generation_route",
+    "evidence_display",
+    "validation_profile",
+    "validation_scope",
+    "correction_policy",
+    "judgment_policy",
+    "generation_instructions",
+    "contract_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "question_domain": {"enum": ["legal", "tax", "compliance", "accounting", "mixed"]},
+    "document_type": {"const": "professional_communication_package"},
+    "purpose": {"type": "string", "minLength": 20, "maxLength": 3000},
+    "audience": {"type": "string", "minLength": 3, "maxLength": 1000},
+    "output_language": {"type": "string", "minLength": 2, "maxLength": 16},
+    "jurisdiction": {"type": "string", "minLength": 2, "maxLength": 200},
+    "jurisdiction_status": {"enum": ["confirmed", "assumed", "unresolved", "not_applicable"]},
+    "generation_route": {"const": "codex_direct"},
+    "evidence_display": {"enum": ["inline_citations", "footnotes", "source_record_only", "mixed"]},
+    "validation_profile": {"const": "source_identity_support_reasoning_and_judgment"},
+    "validation_scope": {"const": "all_material_claims"},
+    "correction_policy": {"const": "correct_when_supported"},
+    "judgment_policy": {"const": "flag_for_professional_review"},
+    "generation_instructions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_hierarchy", "preserve", "must_distinguish", "prohibited"],
+      "properties": {
+        "source_hierarchy": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 500}},
+        "preserve": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 500}},
+        "must_distinguish": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 500}},
+        "prohibited": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 3, "maxLength": 500}}
+      }
+    },
+    "contract_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

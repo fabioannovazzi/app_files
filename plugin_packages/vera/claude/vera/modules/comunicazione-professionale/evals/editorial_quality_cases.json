@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "assessment_template_version": "professional-communication-editorial-v3",
+  "comparison_class": "strong_practitioner_authored_publication",
+  "cases": [
+    {
+      "case_id": "EQ-001",
+      "channel": "linkedin",
+      "source_basis": "An official measure has a defined effective date and eligibility perimeter.",
+      "candidate": "È arrivata una nuova misura importante. Le imprese devono prestare attenzione, prepararsi per tempo e rivolgersi a un professionista. Ogni situazione è diversa e richiede prudenza.",
+      "visual_summary": "No visual proposed.",
+      "evaluation_question": "Does this express source-specific professional value beyond generic caution?"
+    },
+    {
+      "case_id": "EQ-002",
+      "channel": "linkedin_with_carousel",
+      "source_basis": "A subsidized-finance measure states eligibility, timing, exclusions and guarantee conditions.",
+      "candidate": "Un finanziamento agevolato non rende buono un investimento sbagliato. Prima di investire bisogna fare bene i conti.",
+      "visual_summary": "Five slides paraphrase that businesses should not waste money and should ask an adviser.",
+      "evaluation_question": "Does either the post or carousel give a bounded, non-obvious decision aid grounded in the source?"
+    },
+    {
+      "case_id": "EQ-003",
+      "channel": "linkedin_with_carousel",
+      "source_basis": "The post already lists the date, two eligibility conditions and the professional-review limit.",
+      "candidate": "The post contains the complete useful explanation.",
+      "visual_summary": "The carousel splits the same sentences over six slides and adds no comparison, sequence, source detail or decision tool.",
+      "evaluation_question": "Should the visual be rendered merely because a carousel was requested?"
+    },
+    {
+      "case_id": "EQ-004",
+      "channel": "linkedin_with_carousel",
+      "source_basis": "The official circular fixes a restart date, a six-month condition, exclusions, two guarantee percentages and a visibility obligation above a threshold.",
+      "candidate": "The post explains why the measure affects the financing route before it affects the investment decision, identifies the restart date and states that eligibility cannot be inferred from the headline percentage.",
+      "visual_summary": "The carousel separately maps the two routes, the temporal gate, exclusions, the threshold obligation and the exact questions to verify; each slide cites the public circular.",
+      "evaluation_question": "Does the package provide source-specific expertise and incremental visual value with an explicit decision limit?"
+    },
+    {
+      "case_id": "EQ-005",
+      "channel": "client_email",
+      "source_basis": "The new item repeats an already communicated deadline and adds no amendment, interpretation or action.",
+      "candidate": "A reminder email could be sent because the publication calendar has an open slot.",
+      "visual_summary": "No visual proposed.",
+      "evaluation_question": "Is there a current audience-specific reason to communicate?"
+    },
+    {
+      "case_id": "EQ-006",
+      "channel": "client_alert",
+      "source_basis": "An official amendment changes the filing deadline, identifies the affected cohort and preserves one documented exception.",
+      "candidate": "The alert states the old and new dates, identifies who is affected, isolates the exception and tells recipients which evidence to check without asserting individual applicability.",
+      "visual_summary": "A two-step timeline shows the changed deadline and the exception checkpoint, adding sequence rather than repeating the alert.",
+      "evaluation_question": "Does the communication enable a concrete bounded verification that would be lost by silence?"
+    },
+    {
+      "case_id": "EQ-007",
+      "channel": "linkedin_with_carousel",
+      "source_basis": "The exact authority, instrument title, instrument number, publication date and public URL are available in the source register.",
+      "candidate": "The post gives a useful bounded comparison and accurately explains the affected cohort.",
+      "visual_summary": "Every slide uses only ‘Fonte: fonte ufficiale’ even though the exact public instrument is available; the reader cannot identify or retrieve the evidence from the published artifact.",
+      "evaluation_question": "Is strong substantive copy ready when its public evidence note is generic and not independently identifiable?"
+    }
+  ]
+}

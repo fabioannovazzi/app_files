@@ -23,12 +23,16 @@
     "editorial_value": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["reason_now", "audience_value", "distinct_angle", "practical_use", "repetition_check", "publication_judgment"],
+      "required": ["reason_now", "audience_value", "distinct_angle", "practical_use", "source_specific_information", "decision_enabled", "decision_limit", "banality_check", "repetition_check", "publication_judgment"],
       "properties": {
         "reason_now": {"type": "string", "minLength": 5, "maxLength": 2000},
         "audience_value": {"type": "string", "minLength": 5, "maxLength": 2000},
         "distinct_angle": {"type": "string", "minLength": 5, "maxLength": 2000},
         "practical_use": {"type": "string", "minLength": 5, "maxLength": 2000},
+        "source_specific_information": {"type": "string", "minLength": 20, "maxLength": 3000},
+        "decision_enabled": {"type": "string", "minLength": 20, "maxLength": 2000},
+        "decision_limit": {"type": "string", "minLength": 20, "maxLength": 2000},
+        "banality_check": {"type": "string", "minLength": 20, "maxLength": 2000},
         "repetition_check": {"type": "string", "minLength": 5, "maxLength": 2000},
         "publication_judgment": {"type": "string", "minLength": 5, "maxLength": 2000}
       }
@@ -39,9 +43,36 @@
         {
           "type": "object",
           "additionalProperties": false,
-          "required": ["derived_from_history_ids", "voice", "document", "email", "website", "social"],
+          "required": ["derived_from_history_ids", "field_provenance", "voice", "document", "email", "website", "social"],
           "properties": {
             "derived_from_history_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "field_provenance": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["field_paths", "basis", "history_ids", "analysis"],
+                "properties": {
+                  "field_paths": {
+                    "type": "array",
+                    "minItems": 1,
+                    "uniqueItems": true,
+                    "items": {"type": "string", "pattern": "^(voice|document|email|website|social)(\\.[A-Za-z0-9_]+)+$"}
+                  },
+                  "basis": {"enum": ["observed_history", "user_supplied", "vera_default_proposal"]},
+                  "history_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                  "analysis": {"type": "string", "minLength": 20, "maxLength": 2000}
+                },
+                "allOf": [
+                  {
+                    "if": {"properties": {"basis": {"const": "observed_history"}}},
+                    "then": {"properties": {"history_ids": {"minItems": 1}}},
+                    "else": {"properties": {"history_ids": {"maxItems": 0}}}
+                  }
+                ]
+              }
+            },
             "voice": {"$ref": "#/$defs/voiceProfile"},
             "document": {"$ref": "#/$defs/documentProfile"},
             "email": {"$ref": "#/$defs/emailProfile"},
@@ -135,8 +166,11 @@
     "visual_story": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["title", "slides"],
+      "required": ["decision", "decision_reason", "incremental_value", "title", "slides"],
       "properties": {
+        "decision": {"enum": ["render", "omit"]},
+        "decision_reason": {"type": "string", "minLength": 20, "maxLength": 2000},
+        "incremental_value": {"type": "string", "maxLength": 3000},
         "title": {"type": "string", "maxLength": 500},
         "slides": {
           "type": "array",
@@ -144,19 +178,42 @@
           "items": {
             "type": "object",
             "additionalProperties": false,
-            "required": ["kind", "eyebrow", "title", "body", "bullets", "highlight", "source_ids"],
+            "required": ["kind", "layout_variant", "eyebrow", "title", "body", "bullets", "highlight", "source_ids", "source_note", "reader_use", "relationship_to_post"],
             "properties": {
               "kind": {"enum": ["cover", "change", "audience", "timeline", "action", "caveat", "close"]},
+              "layout_variant": {"enum": ["editorial_cover", "scope_register", "dual_gate", "exclusion_register", "evidence_dossier", "threshold_notice", "route_comparison", "responsibility_map", "editorial_standard"]},
               "eyebrow": {"type": "string", "maxLength": 120},
               "title": {"type": "string", "minLength": 1, "maxLength": 220},
               "body": {"type": "string", "maxLength": 1600},
               "bullets": {"type": "array", "maxItems": 6, "items": {"type": "string", "minLength": 1, "maxLength": 400}},
               "highlight": {"type": "string", "maxLength": 100},
-              "source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+              "source_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+              "source_note": {"type": "string", "maxLength": 180},
+              "reader_use": {"type": "string", "minLength": 20, "maxLength": 1000},
+              "relationship_to_post": {"enum": ["adds_source_detail", "adds_decision_tool", "adds_sequence", "adds_comparison", "restates_post"]}
             }
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"decision": {"const": "render"}}},
+          "then": {
+            "properties": {
+              "incremental_value": {"minLength": 20},
+              "title": {"minLength": 1},
+              "slides": {"minItems": 2}
+            }
+          },
+          "else": {
+            "properties": {
+              "incremental_value": {"maxLength": 0},
+              "title": {"maxLength": 0},
+              "slides": {"maxItems": 0}
+            }
+          }
+        }
+      ]
     }
   },
   "$defs": {
@@ -242,13 +299,14 @@
     "socialProfile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["preferred_format", "opening_style", "closing_style", "hashtags", "show_source_note"],
+      "required": ["preferred_format", "opening_style", "closing_style", "hashtags", "show_source_note", "carousel_identity_placement"],
       "properties": {
         "preferred_format": {"enum": ["text", "single_visual", "portrait_carousel"]},
         "opening_style": {"type": "string", "maxLength": 500},
         "closing_style": {"type": "string", "maxLength": 500},
         "hashtags": {"type": "array", "maxItems": 12, "uniqueItems": true, "items": {"type": "string", "maxLength": 80}},
-        "show_source_note": {"type": "boolean"}
+        "show_source_note": {"type": "boolean"},
+        "carousel_identity_placement": {"enum": ["close_only", "cover_and_close", "every_slide"]}
       }
     }
   }

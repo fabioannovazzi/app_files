@@ -1,6 +1,6 @@
 ---
 name: comunicazione-professionale
-description: Use when Vera must decide whether a professional development is worth communicating and prepare source-backed client emails, LinkedIn posts, newsletters, articles, FAQs, client alerts, or branded visual explainers in an approved studio voice without sending or publishing before professional review.
+description: Use when Vera must decide whether a professional development is worth communicating and prepare claim-assured, source-backed client emails, LinkedIn posts, newsletters, articles, FAQs, client alerts, or branded visual explainers in an evidence-aware approved studio voice, with optional selected Creative Production art direction, without sending or publishing before professional review.
 ---
 
 ## Cowork execution contract

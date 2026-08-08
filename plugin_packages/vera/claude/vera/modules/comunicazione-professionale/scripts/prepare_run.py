@@ -317,6 +317,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "Do not treat file registration or source-ID closure as semantic support.",
                     "Use the selected studio examples to propose or follow the studio format without copying passages.",
                     "A schedule is not evidence that communication is worthwhile.",
+                    "Creative Production is an optional art-direction route, never a source of claims or exact public copy; use it only when explicitly selected and continue with Vera's internal renderer when unavailable.",
                 ],
             }
             atomic_write_json(staging_dir / "run_intake.json", intake_payload)

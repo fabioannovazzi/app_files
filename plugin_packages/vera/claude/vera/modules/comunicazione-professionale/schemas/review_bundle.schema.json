@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "decisions"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "decisions": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["scope", "decision", "note"],
+        "properties": {
+          "scope": {"type": "string", "minLength": 1, "maxLength": 120},
+          "decision": {"enum": ["accepted", "returned", "rejected"]},
+          "note": {"type": "string", "maxLength": 2000}
+        }
+      }
+    }
+  }
+}

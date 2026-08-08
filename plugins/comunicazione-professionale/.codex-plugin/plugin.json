@@ -1,6 +1,6 @@
 {
   "name": "comunicazione-professionale",
-  "version": "0.1.0",
+  "version": "0.1.3",
   "description": "Source-backed professional communications and branded explainers for Vera.",
   "author": {
     "name": "Mparanza",
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Comunicazione professionale",
     "shortDescription": "Comunicazioni nel formato studio",
-    "longDescription": "Vera trasforma una novità fiscale, normativa o professionale in un pacchetto di comunicazione fondato su fonti, coerente con la voce dello studio e pronto per la revisione. Può preparare email ai clienti, post LinkedIn, newsletter, articoli per il sito, FAQ, avvisi e caroselli grafici brandizzati. Conserva separati fonti, affermazioni, interpretazioni, bozze e decisioni del professionista; può anche concludere che non vi è nulla di utile da pubblicare. Non inventa casi, non assume l'applicabilità della norma e non invia o pubblica senza una scelta esplicita del professionista.",
+    "longDescription": "Vera trasforma una novità fiscale, normativa o professionale in un pacchetto di comunicazione fondato su fonti, coerente con la voce dello studio e pronto per la revisione. Prima della scrittura definisce il contratto della risposta; poi verifica separatamente identità e supporto delle fonti, ragionamento e limiti del giudizio professionale per ogni claim materiale. L'assessore editoriale deve superare un benchmark anti-slop e può chiedere revisioni o concludere che non vi è nulla di utile da pubblicare. Ogni elemento del formato Studio dichiara se deriva da esempi osservati, da istruzioni fornite o da una proposta Vera. Un carosello viene omesso se non aggiunge informazione al testo. Se il professionista seleziona Creative Production, Vera registra il board, la direzione scelta e la traduzione applicata dal renderer deterministico; testi, numeri, fonti, logo e controlli restano esatti. Vera non inventa casi, non assume l'applicabilità della norma e non invia o pubblica senza una scelta esplicita del professionista.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -39,7 +39,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Trasforma questa novità fiscale in una email chiara ai clienti e in un carosello grafico revisionabile.",
+      "Trasforma questa novità fiscale in una email chiara ai clienti e valuta un carosello solo se aggiunge informazione utile.",
       "Studia questi post precedenti e prepara una nuova comunicazione nella voce dello studio, con fonti e claim verificabili.",
       "Valuta se oggi esiste davvero qualcosa di utile da comunicare; se sì, prepara il pacchetto multicanale."
     ],

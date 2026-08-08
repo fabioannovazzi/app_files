@@ -468,7 +468,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.103"
+    assert manifest["version"] == "0.1.105"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3064,6 +3064,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
         "../financial-analysis/index.html",
+        "index.html#comunicazione-professionale",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -3071,6 +3072,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
+        "index.html#bandi-agevolazioni",
         "../check-entries/index.html#italy-adapter",
         "../report-builder/index.html#italy-preset",
         "../concordato-plan-review/index.html",
@@ -3078,9 +3080,9 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 11
-    assert core.count('class="module-row"') == 11
-    assert italy.count('data-jurisdiction-item="it"') == 6
+    assert core.count(" data-module-link") == 12
+    assert core.count('class="module-row"') == 12
+    assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
     assert italy.count('data-jurisdiction-item="de"') == 1
@@ -3176,6 +3178,7 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.reconciliation.title",
         "module.plan.title",
         "module.financialAnalysis.title",
+        "module.communication.title",
         "module.report.title",
         "module.prompt.title",
         "module.research.title",
@@ -3230,14 +3233,19 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "adjusted EBITDA" in page
     assert "net debt" in page
     for localized_count in (
+        "Quindici funzioni",
+        "Fifteen capabilities",
+        "Quinze fonctions",
+        "Fünfzehn Funktionen",
+        "Quince funciones",
+    ):
+        assert localized_count in page
+    for stale_count in (
         "Quattordici funzioni",
         "Fourteen capabilities",
         "Quatorze fonctions",
         "Vierzehn Funktionen",
         "Catorce funciones",
-    ):
-        assert localized_count in page
-    for stale_count in (
         "Tredici funzioni",
         "Thirteen capabilities",
         "Treize fonctions",
@@ -3245,6 +3253,31 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
         "Trece funciones",
     ):
         assert stale_count not in page
+
+
+def test_vera_page_explains_professional_communication_quality_contract() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    section_start = page.index('id="comunicazione-professionale"')
+    section_end = page.index("</section>", section_start)
+    section = page[section_start:section_end]
+
+    for required_copy in (
+        "La risposta giusta può essere non pubblicare.",
+        "Più informazione del post, oppure niente carosello.",
+        "Fonte pubblica: autorità · atto · data",
+        "Il formato appartiene allo Studio.",
+        "Creative Production può alzare il livello estetico. Non può cambiare i fatti.",
+        "Il commercialista decide",
+    ):
+        assert required_copy in section
+    assert section.count('class="comms-step"') == 4
+    assert section.count('class="comms-profile__item"') == 3
+    assert section.count('class="comms-assurance__row"') == 4
+    assert "counter-reset: comms-point" in page
+    assert 'content: "0" counter(comms-point)' in page
+    assert "Fonte: fonte ufficiale" not in section
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
@@ -4199,10 +4232,17 @@ def test_clara_public_icon_matches_plugin_source() -> None:
     ("page_name", "expected_home_href", "expected_product", "expected_links"),
     (
         (
-            "vera",
-            "/?lang=it",
-            "Vera",
-            ("#core", "#assurance", "#jurisdiction", "#data-boundary", "#video"),
+                "vera",
+                "/?lang=it",
+                "Vera",
+                (
+                    "#core",
+                    "#comunicazione-professionale",
+                    "#assurance",
+                    "#jurisdiction",
+                    "#data-boundary",
+                    "#video",
+                ),
         ),
         (
             "clara",

@@ -19,7 +19,10 @@ of two professionally reviewable conclusions:
    actionable for the selected audience.
 
 One reviewed technical basis may support several channel adaptations. Each
-channel changes expression and length, never the underlying claim set.
+channel changes expression and length, never the underlying claim set. A
+carousel is not an automatic adaptation of a post. It exists only when it adds
+useful detail, structure, comparison, sequence, or a bounded decision aid. If
+it merely divides or paraphrases the post, omit it.
 
 A studio's format is part of professional identity. Preserve its reviewed
 letterhead, numbering, recipient and subject conventions, section hierarchy,

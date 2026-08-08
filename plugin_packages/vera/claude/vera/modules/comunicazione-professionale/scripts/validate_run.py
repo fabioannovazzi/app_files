@@ -76,7 +76,7 @@ def _validate_run_locked(root: Path) -> list[str]:
     needs_render = bool(
         workbench["contribution"]["recommendation"] == "publish"
         and (
-            load_json(root / "run_intake.json")["visual_requested"]
+            workbench["contribution"]["visual_story"]["slides"]
             or "client_circular"
             in load_json(root / "run_intake.json")["requested_channels"]
         )

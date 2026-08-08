@@ -187,7 +187,11 @@ def _social_text(draft: dict[str, Any], *, profile: dict[str, Any]) -> str:
 
 
 def _technical_basis(
-    contribution: dict[str, Any], source_register: dict[str, Any]
+    contribution: dict[str, Any],
+    source_register: dict[str, Any],
+    answer_contract: dict[str, Any],
+    claim_assurance: dict[str, Any],
+    editorial_assessment: dict[str, Any],
 ) -> str:
     source_by_id = {
         row["id"]: row
@@ -198,11 +202,43 @@ def _technical_basis(
         "",
         f"Recommendation: **{contribution['recommendation']}**",
         "",
+        "## Answer contract",
+        "",
+        f"Purpose: {answer_contract['purpose']}",
+        "",
+        f"Audience: {answer_contract['audience']}",
+        "",
+        f"Jurisdiction: {answer_contract['jurisdiction']} ({answer_contract['jurisdiction_status']})",
+        "",
+        f"Validation scope: `{answer_contract['validation_scope']}`",
+        "",
+        "## Independent claim assurance",
+        "",
+        claim_assurance["overall_assessment"]["analysis"],
+        "",
+        f"Outcome: `{claim_assurance['overall_assessment']['outcome']}`",
+        "",
         "## Editorial value",
         "",
     ]
     for key, value in contribution["editorial_value"].items():
         lines.extend((f"### {key.replace('_', ' ').title()}", "", value, ""))
+    lines.extend(("## Independent editorial assessment", ""))
+    for key, value in editorial_assessment.items():
+        if key in {
+            "schema_version",
+            "run_id",
+            "assessed_contribution_digest",
+            "channel_assessments",
+            "slide_assessments",
+        }:
+            continue
+        heading = key.replace("_", " ").title()
+        if isinstance(value, list):
+            rendered = "\n".join(f"- {item}" for item in value) or "- None"
+        else:
+            rendered = str(value)
+        lines.extend((f"### {heading}", "", rendered, ""))
     lines.extend(("## Sources", ""))
     for assessment in contribution["source_assessments"]:
         source = source_by_id[assessment["source_id"]]
@@ -276,7 +312,16 @@ def _package_communications_locked(root: Path) -> Path:
     artifacts: list[dict[str, Any]] = []
 
     basis_path = root / "technical_basis.md"
-    atomic_write_text(basis_path, _technical_basis(contribution, source_register))
+    atomic_write_text(
+        basis_path,
+        _technical_basis(
+            contribution,
+            source_register,
+            workbench["answer_contract"],
+            workbench["claim_assurance"],
+            workbench["editorial_assessment"],
+        ),
+    )
     artifacts.append(
         _artifact(
             root,
@@ -284,9 +329,58 @@ def _package_communications_locked(root: Path) -> Path:
             kind="technical_basis",
             required_text=[
                 "# Technical and editorial basis",
+                "## Answer contract",
+                "## Independent claim assurance",
                 "## Editorial value",
+                "## Independent editorial assessment",
                 "## Sources",
             ],
+        )
+    )
+    answer_contract_path = root / "answer_contract_record.json"
+    atomic_write_json(
+        answer_contract_path,
+        {
+            "schema_version": 1,
+            "workflow": "comunicazione-professionale",
+            "run_id": workbench["run_id"],
+            "contribution_digest": workbench["contribution_digest"],
+            "answer_contract": workbench["answer_contract"],
+        },
+    )
+    artifacts.append(_artifact(root, answer_contract_path, kind="answer_contract"))
+    claim_assurance_path = root / "claim_assurance_record.json"
+    atomic_write_json(
+        claim_assurance_path,
+        {
+            "schema_version": 1,
+            "workflow": "comunicazione-professionale",
+            "run_id": workbench["run_id"],
+            "contribution_digest": workbench["contribution_digest"],
+            "model_provenance": workbench["model_provenance"]["claim_assessor"],
+            "assessment": workbench["claim_assurance"],
+        },
+    )
+    artifacts.append(
+        _artifact(root, claim_assurance_path, kind="claim_model_assessment")
+    )
+    editorial_assessment_path = root / "editorial_assessment_record.json"
+    atomic_write_json(
+        editorial_assessment_path,
+        {
+            "schema_version": 1,
+            "workflow": "comunicazione-professionale",
+            "run_id": workbench["run_id"],
+            "contribution_digest": workbench["contribution_digest"],
+            "model_provenance": workbench["model_provenance"]["editorial_assessor"],
+            "assessment": workbench["editorial_assessment"],
+        },
+    )
+    artifacts.append(
+        _artifact(
+            root,
+            editorial_assessment_path,
+            kind="editorial_model_assessment",
         )
     )
 
@@ -310,7 +404,7 @@ def _package_communications_locked(root: Path) -> Path:
     else:
         profile = _studio_profile(intake, contribution)
         needs_render = bool(
-            intake["visual_requested"]
+            contribution["visual_story"]["slides"]
             or "client_circular" in intake["requested_channels"]
         )
         visual_manifest = None
@@ -371,6 +465,14 @@ def _package_communications_locked(root: Path) -> Path:
             artifacts.append(
                 _artifact(root, visual_manifest_path, kind="visual_manifest")
             )
+            visual_assessment_path = root / "visual_assessment_record.json"
+            artifacts.append(
+                _artifact(
+                    root,
+                    visual_assessment_path,
+                    kind="visual_model_assessment",
+                )
+            )
         target_status = "final_ready"
 
     handoff_path = root / "artifact_card.md"
@@ -426,7 +528,8 @@ def _package_communications_locked(root: Path) -> Path:
         ),
     }
     if target_status == "final_ready" and (
-        intake["visual_requested"] or "client_circular" in intake["requested_channels"]
+        contribution["visual_story"]["slides"]
+        or "client_circular" in intake["requested_channels"]
     ):
         final["review_status"]["rendered_output"] = "accepted"
     final["package_digest"] = package_digest(final)

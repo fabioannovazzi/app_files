@@ -17,6 +17,7 @@ REQUIRED_IMPORTS = {
     "Pillow": "PIL",
     "reportlab": "reportlab",
     "pypdf": "pypdf",
+    "fonttools": "fontTools",
 }
 REQUIRED_FONTS = (
     "InstrumentSans-Regular.ttf",
@@ -48,11 +49,32 @@ def main(argv: list[str] | None = None) -> int:
     missing_fonts = [
         name for name in REQUIRED_FONTS if not (font_root / name).is_file()
     ]
-    if missing or missing_fonts:
+    invalid_fonts: list[str] = []
+    if "fonttools" not in missing:
+        from fontTools.ttLib import TTFont
+
+        required_characters = (
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzàèéìòù€→"
+        )
+        for name in REQUIRED_FONTS:
+            path = font_root / name
+            if not path.is_file():
+                continue
+            try:
+                font = TTFont(path, lazy=True)
+                cmap = font.getBestCmap() or {}
+                if any(ord(character) not in cmap for character in required_characters):
+                    invalid_fonts.append(name)
+                font.close()
+            except (OSError, ValueError):
+                invalid_fonts.append(name)
+    if missing or missing_fonts or invalid_fonts:
         for package in missing:
             LOGGER.error("MISSING_DEPENDENCY: %s", package)
         for font in missing_fonts:
             LOGGER.error("MISSING_ASSET: assets/fonts/%s", font)
+        for font in invalid_fonts:
+            LOGGER.error("INVALID_FONT_ASSET: assets/fonts/%s", font)
         return 1
 
     LOGGER.info("OK: dependencies and bundled visual assets are available")

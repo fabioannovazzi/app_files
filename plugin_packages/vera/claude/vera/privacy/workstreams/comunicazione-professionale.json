@@ -7,7 +7,8 @@
     "skills",
     "scripts",
     "schemas",
-    "assets"
+    "assets",
+    "evals"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -19,7 +20,7 @@
       {
         "id": "professional-communication-material",
         "purpose": "Assess whether a professional development warrants communication and prepare source-backed studio-formatted drafts and visual stories for review",
-        "content": "Explicitly selected current source documents and official-source snapshots; selected prior studio emails, circulars, website articles, newsletters, FAQs, alerts and social posts; studio name, logo, colors, contact lines and approved format profile; intended audience and client-segment descriptions; source-authority assessments, editorial-value judgment, atomic claims, temporal qualifications, uncertainty, professional judgment, master brief, channel drafts, visual story, review decisions and packaged artifacts. Real professional names and contact details may enter the selected runtime model context when present in selected material. The workflow does not promise automatic anonymization.",
+        "content": "Explicitly selected current source documents and official-source snapshots; selected prior studio emails, circulars, website articles, newsletters, FAQs, alerts and social posts; studio name, logo, colors, contact lines and approved format profile with field-level evidence basis; intended audience and client-segment descriptions; answer contract, source-authority assessments, claim-assurance review, editorial-value judgment, atomic claims, temporal qualifications, uncertainty, professional judgment, master brief, channel drafts, visual story, editorial-assessor benchmark cases and result, optional creative-direction handoff and selected board-reference metadata, review decisions and packaged artifacts. Real professional names and contact details may enter the selected runtime model context when present in selected material. The workflow does not promise automatic anonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -65,6 +66,23 @@
       ]
     },
     {
+      "id": "optional-creative-production-board",
+      "kind": "hosted_service",
+      "destination": "The Creative Production board in the exact OpenAI Codex workspace selected by the professional",
+      "purpose": "Compare four to six non-publishable art-direction references for a render story accepted by the independent editorial assessor before Vera creates exact final graphics",
+      "content": "The exact editorially accepted public slide copy, reader-use descriptions, public source notes, contribution and story digests, minimal Studio colors and social-format rules, and the selected logo snapshot path and hash when present. The handoff excludes source bytes, selected prior communications, client facts, recipient data, credentials, session material and internal source or claim IDs. Returned board metadata, reference images and the user-selected item are snapshotted only in the owner-controlled run for translation and review.",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "The intake records explicit Creative Production route selection, exact board destination and asserted approval metadata; that route choice is the confirmation and is not requested again.",
+        "The deterministic handoff builder rechecks input and contribution integrity, allows only a reviewed publish contribution with a render story, binds every exact slide and the minimal Studio visual context to digests, and excludes source bytes, history text, client facts, recipient data and internal traceability IDs.",
+        "Creative Production output is declared non-publishable and cannot change claims, copy, dates, numbers, public source notes, Studio identity or logo. A user-confirmed decision records the exact board, revisions, item IDs, snapshotted references, selected item and supported translation tokens. Every preview and release manifest binds that decision and the renderer consumes its tokens. If the skill or board is unavailable, an explicit fallback is recorded and the run continues with the internal visual system."
+      ]
+    },
+    {
       "id": "approved-send-or-publication",
       "kind": "send_or_publish",
       "destination": "The exact recipient set, email account, website destination or social account selected by the professional",
@@ -102,17 +120,25 @@
     },
     {
       "id": "studio-profile-isolation-and-promotion",
-      "control": "Selected prior communications can create only a reviewable profile proposal. Persistence requires a fresh accepted studio-profile review, versions the prior profile and logo asset in the same exact bound workspace, records source history IDs and contribution provenance, and writes a format digest over brand, asset and profile. Later no-history runs snapshot the stored profile and logo and reject conflicting brand or logo intake."
+      "control": "Selected prior communications can create only a reviewable profile proposal. Every profile field is labelled observed-history, user-supplied or Vera-default with exact evidence coverage; unsupported channels cannot silently become observed Studio practice. Persistence requires a fresh accepted studio-profile review, versions the prior profile and logo asset in the same exact bound workspace, preserves the field basis and adoption record, and writes a format digest over brand, asset and profile. Later no-history runs snapshot the stored profile and logo and reject conflicting brand or logo intake."
     },
     {
       "id": "accepted-package-render-and-receipt",
       "control": "Deterministic renderers operate only after required semantic review acceptance, reject text that cannot fit declared safe geometry, and record exact output, layout, font and visual-manifest hashes. Packaging requires user-confirmed acceptance of the current render digest when present, writes validation_pending, and validation additionally requires user-confirmed acceptance bound to the exact package digest before it can create a receipt and finalize status. External receipt recording rechecks current outputs and receipt bindings, requires the approved exact destination and user-confirmed visible evidence, and cannot overwrite prior evidence."
+    },
+    {
+      "id": "digest-bound-creative-direction-handoff",
+      "control": "The optional Creative Production handoff is emitted only for an explicitly selected route and a contribution already accepted by the independent editorial assessor. It recomputes input and immutable contribution integrity, binds the visual story and each exact slide to SHA-256 digests, limits shared context to public slide copy and minimal Studio visual identity, and labels every direction non-publishable. Rendering is blocked until a current user-confirmed selected-board decision or explicit fallback exists; the decision snapshots references, binds board and translation digests, and the final manifest proves the deterministic renderer consumed that route outcome."
+    },
+    {
+      "id": "qualified-editorial-and-claim-assurance",
+      "control": "A live editorial assessor is accepted only when its exact provider, model and template has a current digest-bound result on the blinded product-reviewed high-bar corpus, with no false-ready critical case. Each contribution is also bound to an answer contract and a separate full-material-claim assurance record that keeps source identity, semantic support, reasoning and professional judgment distinct. Deterministic code scores fixed benchmark outcomes and enforces record closure; it never assigns semantic quality or source support."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e1bc76669df9aabc9c8ab968e1b673e19d283ec5862d6175b44a044a420a4671"
+    "source_fingerprint": "78cbbc83c0b097e3299dd5c8d4f6cabb68c83f3fa296aa2b187d88a662ca26d0"
   }
 }
