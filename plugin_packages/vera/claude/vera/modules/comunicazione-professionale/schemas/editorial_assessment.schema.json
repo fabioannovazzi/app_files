@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "assessed_contribution_digest",
+    "claim_assurance_digest",
+    "assessment_protocol",
+    "verdict",
+    "interestingness_judgment",
+    "source_specific_value",
+    "public_evidence_readability",
+    "reader_payoff",
+    "expertise_beyond_summary",
+    "genericity_challenge",
+    "counterfactual_value",
+    "weakest_element",
+    "practical_use",
+    "professional_limit",
+    "banality_risk",
+    "channel_assessments",
+    "visual_verdict",
+    "visual_incremental_value",
+    "slide_assessments",
+    "required_changes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "assessed_contribution_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "claim_assurance_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assessment_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "assessor_session_id",
+        "assessment_template_version",
+        "generation_transcript_seen",
+        "generator_prompt_reused",
+        "comparison_class",
+        "completed_at"
+      ],
+      "properties": {
+        "method": {"const": "blind_adversarial_exact_artifact_review"},
+        "assessor_session_id": {"type": "string", "minLength": 8, "maxLength": 200},
+        "assessment_template_version": {"const": "professional-communication-editorial-v3"},
+        "generation_transcript_seen": {"const": false},
+        "generator_prompt_reused": {"const": false},
+        "comparison_class": {"const": "strong_practitioner_authored_publication"},
+        "completed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "verdict": {"enum": ["ready", "revise", "no_publish"]},
+    "interestingness_judgment": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "source_specific_value": {"type": "string", "minLength": 20, "maxLength": 3000},
+    "public_evidence_readability": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "reader_payoff": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "expertise_beyond_summary": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "genericity_challenge": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "counterfactual_value": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "weakest_element": {"type": "string", "minLength": 40, "maxLength": 3000},
+    "practical_use": {"type": "string", "minLength": 20, "maxLength": 3000},
+    "professional_limit": {"type": "string", "minLength": 20, "maxLength": 3000},
+    "banality_risk": {"type": "string", "minLength": 20, "maxLength": 3000},
+    "channel_assessments": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["channel", "verdict", "reader_payoff", "weakest_point"],
+        "properties": {
+          "channel": {"type": "string", "minLength": 1, "maxLength": 120},
+          "verdict": {"enum": ["ready", "revise", "omit"]},
+          "reader_payoff": {"type": "string", "minLength": 20, "maxLength": 2000},
+          "weakest_point": {"type": "string", "minLength": 20, "maxLength": 2000}
+        }
+      }
+    },
+    "visual_verdict": {"enum": ["render", "omit", "revise"]},
+    "visual_incremental_value": {"type": "string", "maxLength": 3000},
+    "slide_assessments": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["slide_index", "verdict", "information_delta", "reader_payoff"],
+        "properties": {
+          "slide_index": {"type": "integer", "minimum": 1, "maximum": 8},
+          "verdict": {"enum": ["adds_information", "adds_structure", "weak", "redundant"]},
+          "information_delta": {"type": "string", "minLength": 20, "maxLength": 2000},
+          "reader_payoff": {"type": "string", "minLength": 20, "maxLength": 2000}
+        }
+      }
+    },
+    "required_changes": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {"type": "string", "minLength": 5, "maxLength": 1000}
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"verdict": {"const": "ready"}}},
+      "then": {"properties": {"required_changes": {"maxItems": 0}}},
+      "else": {"properties": {"required_changes": {"minItems": 1}}}
+    },
+    {
+      "if": {"properties": {"visual_verdict": {"const": "render"}}},
+      "then": {
+        "properties": {
+          "visual_incremental_value": {"minLength": 20},
+          "slide_assessments": {"minItems": 2}
+        }
+      },
+      "else": {
+        "properties": {
+          "visual_incremental_value": {"maxLength": 0},
+          "slide_assessments": {"maxItems": 0}
+        }
+      }
+    }
+  ]
+}

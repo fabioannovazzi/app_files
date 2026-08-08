@@ -40,7 +40,9 @@ skill to imitate a missing operational workflow.
   source-backed, studio-formatted client email, circular, LinkedIn post,
   newsletter, website article, FAQ, client alert, or graphical explainer for
   professional review and optional publication. `no_publish` is a successful
-  editorial outcome.
+  editorial outcome. This studio-wide workflow embeds the validated-answer
+  journey through its own `answer_contract` and separate `claim_assurance`
+  artifacts; do not duplicate it with client-bound assurance runs.
 - `financial-analysis`: prepare controlled historical accounting analysis and
   fixed financial due-diligence calculations.
 - `journal-bank-reconciliation`: reconcile bank statements with journal or
@@ -83,7 +85,9 @@ only when the request is specifically limited to their bounded output.
 Use these two skills automatically for accepted source-backed question and
 drafting work. They do not establish the completeness or correctness of an
 operational return, declaration, filing, or other unsupported professional
-artifact.
+artifact. The studio-wide `comunicazione-professionale` workflow satisfies this
+requirement with its registered in-workstream equivalent because it cannot be
+stored in a single client's Studio Archive engagement.
 
 ## Developer governance
 

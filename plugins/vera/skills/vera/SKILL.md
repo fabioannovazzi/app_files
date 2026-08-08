@@ -233,7 +233,13 @@ them without changing the capability catalog:
   input snapshots, review freshness, source-ID closure, rendering, and hashes.
   Never turn a schedule into a publication reason, mix studio profiles, copy
   distinctive prior passages, infer recipient applicability, or send or publish
-  without an accepted exact package and explicit route selection.
+  without an accepted exact package and explicit route selection. Because this
+  is a studio-wide exception rather than a client engagement, it implements the
+  validated-answer journey inside the workstream: `answer_contract` precedes
+  drafting and a separate `claim_assurance` record covers source identity,
+  semantic support, reasoning, and professional judgment before editorial
+  acceptance. Do not create duplicate client-bound prompt-optimizer or
+  deep-research-validator runs for the same communication contribution.
 
 ## Workflow provenance
 
@@ -266,6 +272,13 @@ depends on complete client data, field mapping, reconciliation, filing schema,
 or submission controls. Use a dedicated workflow for that artifact. If none is
 available, stop under the no-matching-specialist-workflow outcome instead of
 treating Prompt Optimizer and Deep Research Validator as a substitute.
+
+The registered studio-wide `comunicazione-professionale` workflow is the only
+in-workstream implementation of this journey. Its exact answer-contract and
+claim-assurance schemas preserve the same validation dimensions without
+placing studio-wide editorial work in one client's Studio Archive engagement.
+Treat those artifacts as the prompt-optimizer and deep-research-validator
+stages for that contribution; do not run the client-bound modules again.
 
 1. Route the question internally through `prompt-optimizer`. Complete only the
    material intake, jurisdiction confirmation, source curation, answer

@@ -1,7 +1,7 @@
 interface:
   display_name: "Comunicazione professionale"
-  short_description: "Prepara comunicazioni tecniche verificabili"
-  default_prompt: "Use $comunicazione-professionale to turn this verified development into reviewed client communications and branded visuals."
+  short_description: "Prepara comunicazioni utili, verificate e nello stile Studio"
+  default_prompt: "Use $comunicazione-professionale to decide whether this development is worth communicating, assure every material claim, and prepare Studio-specific copy and visuals for professional review."
 
 policy:
   allow_implicit_invocation: true

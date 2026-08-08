@@ -15,8 +15,12 @@ from workflow_core import (
     load_json,
     required_review_scopes,
     utc_now,
+    validate_answer_contract,
+    validate_claim_assurance,
     validate_contribution_semantics,
     validate_input_integrity,
+    validate_schema,
+    verify_editorial_assessor_qualification,
     workflow_lock,
 )
 
@@ -25,8 +29,40 @@ __all__ = ["record_contribution", "main"]
 LOGGER = logging.getLogger(__name__)
 
 
-def _review_items(contribution: dict[str, Any]) -> list[dict[str, Any]]:
+def _review_items(
+    contribution: dict[str, Any],
+    answer_contract: dict[str, Any],
+    claim_assurance: dict[str, Any],
+    editorial_assessment: dict[str, Any],
+) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = [
+        {
+            "id": "answer-contract",
+            "item_type": "answer_contract",
+            "title": "Question-to-validated-answer contract",
+            "allowed_actions": ["accept", "reject", "edit", "mark_unclear"],
+            "recommended_action": "mark_unclear",
+            "data": answer_contract,
+            "evidence": [],
+        },
+        {
+            "id": "claim-assurance",
+            "item_type": "claim_assurance",
+            "title": "Independent source-support and reasoning review",
+            "allowed_actions": ["accept", "reject", "edit", "mark_unclear"],
+            "recommended_action": "mark_unclear",
+            "data": claim_assurance,
+            "evidence": [],
+        },
+        {
+            "id": "editorial-assessment",
+            "item_type": "editorial_assessment",
+            "title": "Independent editorial challenge",
+            "allowed_actions": ["accept", "reject", "edit", "mark_unclear"],
+            "recommended_action": "mark_unclear",
+            "data": editorial_assessment,
+            "evidence": [],
+        },
         {
             "id": "recommendation",
             "item_type": "recommendation",
@@ -39,7 +75,7 @@ def _review_items(contribution: dict[str, Any]) -> list[dict[str, Any]]:
             ),
             "data": {"reason": contribution["recommendation_reason"]},
             "evidence": [],
-        }
+        },
     ]
     for assessment in contribution["source_assessments"]:
         items.append(
@@ -112,15 +148,20 @@ def _review_items(contribution: dict[str, Any]) -> list[dict[str, Any]]:
                 "evidence": [{"claim_ids": draft["claim_ids"]}],
             }
         )
-    if contribution["visual_story"]["slides"]:
+    if contribution["recommendation"] == "publish":
+        visual_story = contribution["visual_story"]
         items.append(
             {
                 "id": "visual-story",
                 "item_type": "visual_story",
-                "title": contribution["visual_story"]["title"],
+                "title": (
+                    visual_story["title"]
+                    if visual_story["decision"] == "render"
+                    else "Visual recommendation: omit"
+                ),
                 "allowed_actions": ["accept", "reject", "edit", "mark_unclear"],
                 "recommended_action": "edit",
-                "data": contribution["visual_story"],
+                "data": visual_story,
                 "evidence": [],
             }
         )
@@ -150,10 +191,18 @@ def _handoff_markdown(
         "",
         contribution["recommendation_reason"],
         "",
+        "## Visual decision",
+        "",
+        f"- Decision: **{contribution['visual_story']['decision']}**",
+        f"- Reason: {contribution['visual_story']['decision_reason']}",
+        f"- Incremental value over channel copy: {contribution['visual_story']['incremental_value'] or 'none'}",
+        "",
+        "Reject a visual story that merely splits or paraphrases the post, uses a large number without decision value, repeats the same proposition across title/highlight/body, exposes internal source IDs, repeats Studio identity without an approved convention, or presents a preliminary checklist as sufficient for a professional conclusion.",
+        "",
         "## Review files",
         "",
         "- `source_register.json`: exact input snapshots and hashes",
-        "- `content_workbench.json`: model contribution and provenance",
+        "- `content_workbench.json`: answer contract, claim assurance, contribution, editorial assessment, and provenance",
         "- `review_payload.json`: item-level review queue",
         "- `review_log.json`: scope decisions bound to this digest",
         "",
@@ -165,11 +214,18 @@ def _handoff_markdown(
 def record_contribution(
     run_dir: Path,
     contribution_path: Path,
+    answer_contract_path: Path,
+    claim_assurance_path: Path,
+    editorial_assessment_path: Path,
     *,
     provider: str,
     model: str,
     template_version: str,
     recorded_by: str,
+    assessment_provider: str,
+    assessment_model: str,
+    claim_assessment_provider: str,
+    claim_assessment_model: str,
     supersede: bool,
 ) -> Path:
     """Validate and record one contribution without overwriting history."""
@@ -179,10 +235,17 @@ def record_contribution(
         return _record_contribution_locked(
             root,
             contribution_path,
+            answer_contract_path,
+            claim_assurance_path,
+            editorial_assessment_path,
             provider=provider,
             model=model,
             template_version=template_version,
             recorded_by=recorded_by,
+            assessment_provider=assessment_provider,
+            assessment_model=assessment_model,
+            claim_assessment_provider=claim_assessment_provider,
+            claim_assessment_model=claim_assessment_model,
             supersede=supersede,
         )
 
@@ -190,11 +253,18 @@ def record_contribution(
 def _record_contribution_locked(
     root: Path,
     contribution_path: Path,
+    answer_contract_path: Path,
+    claim_assurance_path: Path,
+    editorial_assessment_path: Path,
     *,
     provider: str,
     model: str,
     template_version: str,
     recorded_by: str,
+    assessment_provider: str,
+    assessment_model: str,
+    claim_assessment_provider: str,
+    claim_assessment_model: str,
     supersede: bool,
 ) -> Path:
     """Perform a contribution mutation while the run writer lock is held."""
@@ -203,6 +273,10 @@ def _record_contribution_locked(
     source_register = load_json(root / "source_register.json")
     validate_input_integrity(root)
     contribution = load_json(contribution_path)
+    answer_contract = load_json(answer_contract_path)
+    claim_assurance = load_json(claim_assurance_path)
+    editorial_assessment = load_json(editorial_assessment_path)
+    validate_schema(editorial_assessment, "editorial_assessment.schema.json")
     intake_contract = {
         "run_id": intake["run_id"],
         "channels": intake["requested_channels"],
@@ -214,6 +288,84 @@ def _record_contribution_locked(
         intake=intake_contract,
         source_register=source_register,
     )
+    answer_contract_digest = validate_answer_contract(
+        answer_contract,
+        intake={
+            "run_id": intake["run_id"],
+            "audience": intake["audience"],
+            "language": intake["language"],
+            "jurisdiction": intake["jurisdiction"],
+        },
+    )
+    raw_contribution_digest = canonical_digest(contribution)
+    validate_claim_assurance(
+        claim_assurance,
+        contribution=contribution,
+        answer_contract_digest=answer_contract_digest,
+        source_register=source_register,
+    )
+    claim_assurance_digest = canonical_digest(claim_assurance)
+    if editorial_assessment["run_id"] != contribution["run_id"]:
+        raise ValueError("Editorial assessment run_id does not match contribution")
+    if editorial_assessment["assessed_contribution_digest"] != raw_contribution_digest:
+        raise ValueError("Editorial assessment is stale for this contribution")
+    if editorial_assessment["claim_assurance_digest"] != claim_assurance_digest:
+        raise ValueError("Editorial assessment is stale for claim assurance")
+    protocol = editorial_assessment["assessment_protocol"]
+    if (
+        protocol["assessment_template_version"]
+        != "professional-communication-editorial-v3"
+    ):
+        raise ValueError("Unsupported editorial assessment template")
+    workspace = Path(intake["workspace_path"]).resolve()
+    qualification = verify_editorial_assessor_qualification(
+        workspace,
+        provider=assessment_provider,
+        model=assessment_model,
+        template_version=protocol["assessment_template_version"],
+    )
+    if (
+        protocol["assessor_session_id"]
+        == qualification["assessor_identity"]["assessor_session_id"]
+    ):
+        raise ValueError(
+            "Live editorial assessment must use a session separate from qualification"
+        )
+    if editorial_assessment["verdict"] != "ready":
+        raise ValueError(
+            "Editorial assessment must be ready before contribution recording"
+        )
+    if (
+        editorial_assessment["visual_verdict"]
+        != contribution["visual_story"]["decision"]
+    ):
+        raise ValueError(
+            "Editorial assessment visual verdict disagrees with contribution"
+        )
+    channel_assessments = editorial_assessment["channel_assessments"]
+    expected_channels = [draft["channel"] for draft in contribution["channel_drafts"]]
+    assessed_channels = [row["channel"] for row in channel_assessments]
+    if len(assessed_channels) != len(set(assessed_channels)):
+        raise ValueError("Editorial assessment repeats a channel verdict")
+    if set(assessed_channels) != set(expected_channels):
+        raise ValueError(
+            "Editorial assessment must cover every contribution channel exactly"
+        )
+    if any(row["verdict"] != "ready" for row in channel_assessments):
+        raise ValueError("Editorial assessment contains a non-ready channel verdict")
+    slide_assessments = editorial_assessment["slide_assessments"]
+    expected_slide_indices = list(
+        range(1, len(contribution["visual_story"]["slides"]) + 1)
+    )
+    assessed_slide_indices = [row["slide_index"] for row in slide_assessments]
+    if assessed_slide_indices != expected_slide_indices:
+        raise ValueError(
+            "Editorial assessment must cover visual slides once and in order"
+        )
+    if any(row["verdict"] in {"weak", "redundant"} for row in slide_assessments):
+        raise ValueError(
+            "Editorial assessment contains a weak or redundant visual slide"
+        )
 
     workbench_path = root / "content_workbench.json"
     previous = load_json(workbench_path) if workbench_path.is_file() else None
@@ -236,17 +388,35 @@ def _record_contribution_locked(
             )
 
     version = int(previous["version"]) + 1 if previous else 1
+    recorded_at = utc_now()
     provenance = {
-        "provider": provider,
-        "model": model,
-        "template_version": template_version,
+        "generator": {
+            "provider": provider,
+            "model": model,
+            "template_version": template_version,
+        },
+        "editorial_assessor": {
+            "provider": assessment_provider,
+            "model": assessment_model,
+            "template_version": protocol["assessment_template_version"],
+            "assessor_session_id": protocol["assessor_session_id"],
+            "qualification_digest": qualification["qualification_digest"],
+        },
+        "claim_assessor": {
+            "provider": claim_assessment_provider,
+            "model": claim_assessment_model,
+            "template_version": "professional-communication-claim-assurance-v1",
+        },
         "recorded_by": recorded_by,
-        "recorded_at": utc_now(),
+        "recorded_at": recorded_at,
     }
     digest = canonical_digest(
         {
             "input_digest": intake["input_digest"],
             "contribution": contribution,
+            "answer_contract": answer_contract,
+            "claim_assurance": claim_assurance,
+            "editorial_assessment": editorial_assessment,
             "provenance": provenance,
         }
     )
@@ -255,7 +425,10 @@ def _record_contribution_locked(
         visual_requested=bool(intake["visual_requested"]),
     )
     post_generation_scopes = ["packaged_output"]
-    if intake["visual_requested"] or "client_circular" in intake["requested_channels"]:
+    if (
+        contribution["visual_story"]["slides"]
+        or "client_circular" in intake["requested_channels"]
+    ):
         post_generation_scopes.insert(0, "rendered_output")
     workbench = {
         "schema_version": 1,
@@ -268,9 +441,17 @@ def _record_contribution_locked(
         "required_review_scopes": required_scopes,
         "post_generation_review_scopes": post_generation_scopes,
         "model_provenance": provenance,
+        "answer_contract": answer_contract,
+        "claim_assurance": claim_assurance,
+        "editorial_assessment": editorial_assessment,
         "contribution": contribution,
     }
-    items = _review_items(contribution)
+    items = _review_items(
+        contribution,
+        answer_contract,
+        claim_assurance,
+        editorial_assessment,
+    )
     review_payload = {
         "schema_version": "1.0",
         "plugin": "comunicazione-professionale",
@@ -322,20 +503,34 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run-dir", type=Path, required=True)
     parser.add_argument("--contribution", type=Path, required=True)
+    parser.add_argument("--answer-contract", type=Path, required=True)
+    parser.add_argument("--claim-assurance", type=Path, required=True)
+    parser.add_argument("--editorial-assessment", type=Path, required=True)
     parser.add_argument("--provider", required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--template-version", required=True)
     parser.add_argument("--recorded-by", required=True)
+    parser.add_argument("--assessment-provider", required=True)
+    parser.add_argument("--assessment-model", required=True)
+    parser.add_argument("--claim-assessment-provider", required=True)
+    parser.add_argument("--claim-assessment-model", required=True)
     parser.add_argument("--supersede", action="store_true")
     args = parser.parse_args(argv)
     try:
         path = record_contribution(
             args.run_dir,
             args.contribution,
+            args.answer_contract,
+            args.claim_assurance,
+            args.editorial_assessment,
             provider=args.provider,
             model=args.model,
             template_version=args.template_version,
             recorded_by=args.recorded_by,
+            assessment_provider=args.assessment_provider,
+            assessment_model=args.assessment_model,
+            claim_assessment_provider=args.claim_assessment_provider,
+            claim_assessment_model=args.claim_assessment_model,
             supersede=args.supersede,
         )
     except (OSError, ValueError) as exc:

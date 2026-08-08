@@ -43,16 +43,24 @@ __all__ = [
     "run_dir_from_workspace",
     "utc_now",
     "validate_contribution_semantics",
+    "validate_answer_contract",
+    "validate_claim_assurance",
     "validate_finalized_package",
     "validate_input_integrity",
     "validate_schema",
     "verify_visual_manifest",
+    "verify_visual_preview_manifest",
+    "verify_visual_assessment",
     "verify_package_manifest",
+    "verify_creative_direction_decision",
+    "verify_editorial_assessor_qualification",
     "workflow_lock",
 ]
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_ROOT = PLUGIN_ROOT / "schemas"
+EDITORIAL_CASES_PATH = PLUGIN_ROOT / "evals" / "editorial_quality_cases.json"
+EDITORIAL_EXPECTED_PATH = PLUGIN_ROOT / "evals" / "editorial_quality_expected.json"
 ALLOWED_CHANNELS = {
     "client_email",
     "client_circular",
@@ -213,6 +221,17 @@ def canonical_digest(payload: object) -> str:
         payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")
     ).encode("utf-8")
     return hashlib.sha256(data).hexdigest()
+
+
+def _verify_embedded_digest(payload: dict[str, Any], field: str) -> str:
+    """Verify a mechanical canonical digest embedded in one JSON record."""
+
+    expected = str(payload.get(field) or "")
+    stable = {key: value for key, value in payload.items() if key != field}
+    current = canonical_digest(stable)
+    if expected != current:
+        raise ValueError(f"{field} mismatch")
+    return current
 
 
 def file_digest(path: Path) -> str:
@@ -386,6 +405,9 @@ def recompute_contribution_digest(run_dir: Path) -> str:
         {
             "input_digest": input_digest,
             "contribution": workbench.get("contribution"),
+            "answer_contract": workbench.get("answer_contract"),
+            "claim_assurance": workbench.get("claim_assurance"),
+            "editorial_assessment": workbench.get("editorial_assessment"),
             "provenance": workbench.get("model_provenance"),
         }
     )
@@ -398,6 +420,194 @@ def _unique(values: Iterable[str], label: str) -> None:
     items = list(values)
     if len(items) != len(set(items)):
         raise ValueError(f"Duplicate {label}")
+
+
+def verify_editorial_assessor_qualification(
+    workspace: Path,
+    *,
+    provider: str,
+    model: str,
+    template_version: str,
+) -> dict[str, Any]:
+    """Require a current model-led benchmark receipt for the live assessor."""
+
+    root = workspace.resolve()
+    cases = load_json(EDITORIAL_CASES_PATH)
+    expected = load_json(EDITORIAL_EXPECTED_PATH)
+    cases_digest = canonical_digest(cases)
+    expected_digest = canonical_digest(expected)
+    candidates = list((root / "editorial-qualifications").glob("qualification-*.json"))
+    current = root / "editorial_assessor_qualification.json"
+    if current.is_file():
+        candidates.append(current)
+    matching: dict[str, dict[str, Any]] = {}
+    for path in candidates:
+        record = load_json(path)
+        digest = _verify_embedded_digest(record, "qualification_digest")
+        identity = record.get("assessor_identity")
+        if not isinstance(identity, dict):
+            continue
+        if (
+            identity.get("provider"),
+            identity.get("model"),
+            identity.get("assessment_template_version"),
+        ) != (provider, model, template_version):
+            continue
+        if (
+            record.get("cases_digest") != cases_digest
+            or record.get("expected_digest") != expected_digest
+        ):
+            continue
+        matching[digest] = record
+    if not matching:
+        raise ValueError(
+            "Editorial assessor is not qualified for this exact model/template"
+        )
+    record = max(matching.values(), key=lambda row: str(row.get("qualified_at", "")))
+    if record.get("status") != "qualified":
+        raise ValueError("Editorial assessor benchmark did not qualify")
+    metrics = record.get("metrics")
+    if not isinstance(metrics, dict):
+        raise ValueError("Editorial assessor qualification metrics are missing")
+    if metrics.get("critical_cases_passed") is not True:
+        raise ValueError("Editorial assessor failed a critical anti-slop case")
+    if int(metrics.get("false_ready_count", -1)) != 0:
+        raise ValueError("Editorial assessor has a false-ready benchmark result")
+    return record
+
+
+def validate_answer_contract(
+    answer_contract: dict[str, Any],
+    *,
+    intake: dict[str, Any],
+) -> str:
+    """Validate the communication-specific answer contract and exact intake binding."""
+
+    validate_schema(answer_contract, "answer_contract.schema.json")
+    digest = _verify_embedded_digest(answer_contract, "contract_digest")
+    if answer_contract["run_id"] != intake["run_id"]:
+        raise ValueError("Answer contract run_id does not match run intake")
+    if answer_contract["audience"] != intake["audience"]:
+        raise ValueError("Answer contract audience does not match run intake")
+    if answer_contract["output_language"] != intake["language"]:
+        raise ValueError("Answer contract language does not match run intake")
+    if answer_contract["jurisdiction"] != intake["jurisdiction"]:
+        raise ValueError("Answer contract jurisdiction does not match run intake")
+    return digest
+
+
+def validate_claim_assurance(
+    claim_assurance: dict[str, Any],
+    *,
+    contribution: dict[str, Any],
+    answer_contract_digest: str,
+    source_register: dict[str, Any],
+) -> None:
+    """Honor model-led claim verdicts while enforcing exact coverage and closure."""
+
+    validate_schema(claim_assurance, "claim_assurance.schema.json")
+    if claim_assurance["run_id"] != contribution["run_id"]:
+        raise ValueError("Claim assurance run_id does not match contribution")
+    if claim_assurance["assessed_contribution_digest"] != canonical_digest(
+        contribution
+    ):
+        raise ValueError("Claim assurance is stale for this contribution")
+    if claim_assurance["answer_contract_digest"] != answer_contract_digest:
+        raise ValueError("Claim assurance is stale for this answer contract")
+    claim_ids = [row["id"] for row in contribution["claims"]]
+    assessed_ids = [row["claim_id"] for row in claim_assurance["claims"]]
+    if assessed_ids != claim_ids:
+        raise ValueError("Claim assurance must cover every claim once and in order")
+    coverage = claim_assurance["coverage_review"]
+    if coverage["reviewed_claim_ids"] != claim_ids:
+        raise ValueError("Claim assurance coverage must list every claim in order")
+    if claim_assurance["contract_review"]["reviewer_action"] != "accept" or any(
+        dimension["status"] != "conforms"
+        for name, dimension in claim_assurance["contract_review"].items()
+        if name != "reviewer_action"
+    ):
+        raise ValueError("Claim assurance found an unresolved answer-contract defect")
+    source_ids = {row["id"] for row in source_register["sources"]}
+    for claim, assessment in zip(
+        contribution["claims"], claim_assurance["claims"], strict=True
+    ):
+        checked_ids = [row["source_id"] for row in assessment["source_checks"]]
+        if set(checked_ids) != set(claim["source_ids"]):
+            raise ValueError(
+                f"Claim assurance source coverage mismatch for {claim['id']}"
+            )
+        if set(checked_ids) - source_ids:
+            raise ValueError(
+                f"Claim assurance references an unknown source: {claim['id']}"
+            )
+        if any(
+            row["identity_status"] != "matches_registered_source"
+            for row in assessment["source_checks"]
+        ):
+            raise ValueError(
+                f"Claim assurance has unresolved source identity: {claim['id']}"
+            )
+        if assessment["support"]["status"] != "supported":
+            raise ValueError(f"Claim assurance has unresolved support: {claim['id']}")
+        if assessment["reasoning"]["status"] not in {"sound", "not_applicable"}:
+            raise ValueError(f"Claim assurance has unresolved reasoning: {claim['id']}")
+        if assessment["reasoning"]["missing_premises"]:
+            raise ValueError(f"Claim assurance has missing premises: {claim['id']}")
+        if assessment["professional_judgment"]["status"] in {
+            "contested",
+            "uncertain",
+        }:
+            raise ValueError(
+                f"Claim assurance has unresolved professional judgment: {claim['id']}"
+            )
+        if (
+            assessment["disposition"] != "retain"
+            or assessment["reviewer_action"] != "accept"
+        ):
+            raise ValueError(
+                f"Claim assurance requires contribution revision: {claim['id']}"
+            )
+        issue_types = {row["type"] for row in assessment["issues"]}
+        if "none" in issue_types and len(issue_types) != 1:
+            raise ValueError(f"Claim assurance mixes none with defects: {claim['id']}")
+        if (
+            assessment["professional_judgment"]["status"]
+            == "professional_judgment_required"
+        ):
+            if "judgment_dependent" not in issue_types or not any(
+                row["type"] == "judgment_dependent"
+                and row["treatment"] == "professional_review"
+                for row in assessment["issues"]
+            ):
+                raise ValueError(
+                    f"Claim assurance must route judgment to professional review: {claim['id']}"
+                )
+        elif issue_types != {"none"}:
+            raise ValueError(
+                f"Claim assurance retains an unresolved defect: {claim['id']}"
+            )
+    expected_outcome = (
+        "no_publication_supported"
+        if contribution["recommendation"] == "no_publish"
+        else "ready_for_professional_review"
+    )
+    if claim_assurance["overall_assessment"]["outcome"] != expected_outcome:
+        raise ValueError("Claim assurance outcome does not support this contribution")
+
+
+def _profile_leaf_paths(value: object, *, prefix: str = "") -> list[str]:
+    """List mechanically addressable Studio-profile leaves for evidence coverage."""
+
+    if isinstance(value, dict):
+        paths: list[str] = []
+        for key, child in value.items():
+            if key in {"derived_from_history_ids", "field_provenance"}:
+                continue
+            child_prefix = f"{prefix}.{key}" if prefix else key
+            paths.extend(_profile_leaf_paths(child, prefix=child_prefix))
+        return paths
+    # Arrays are one profile field: their individual entries share one basis.
+    return [prefix]
 
 
 def required_review_scopes(
@@ -434,22 +644,133 @@ def fresh_review_decisions(run_dir: Path) -> dict[str, dict[str, Any]]:
     return decisions
 
 
+def verify_creative_direction_decision(run_dir: Path) -> dict[str, Any]:
+    """Verify the selected Creative Production direction or explicit fallback."""
+
+    root = run_dir.resolve()
+    intake = load_json(root / "run_intake.json")
+    workbench = load_json(root / "content_workbench.json")
+    contribution_digest = recompute_contribution_digest(root)
+    story = workbench["contribution"]["visual_story"]
+    route = intake["external_routes"]["creative_production"]
+    if not route["selected"]:
+        return {
+            "route_status": "not_selected",
+            "decision_digest": "",
+            "handoff_digest": "",
+            "translation_digest": "",
+            "tokens": None,
+        }
+    if story["decision"] != "render" or not story["slides"]:
+        return {
+            "route_status": "not_applicable",
+            "decision_digest": "",
+            "handoff_digest": "",
+            "translation_digest": "",
+            "tokens": None,
+        }
+    version = int(workbench["version"])
+    directory = root / "creative-direction"
+    handoff = load_json(directory / f"handoff-v{version:03d}.json")
+    validate_schema(handoff, "creative_direction_handoff.schema.json")
+    handoff_digest = _verify_embedded_digest(handoff, "handoff_digest")
+    if handoff["binding"] != {
+        "input_digest": workbench["input_digest"],
+        "contribution_digest": contribution_digest,
+        "visual_story_digest": canonical_digest(story),
+    }:
+        raise ValueError("Creative direction handoff is stale")
+    decision = load_json(directory / f"decision-v{version:03d}.json")
+    validate_schema(decision, "creative_direction_decision.schema.json")
+    decision_digest = _verify_embedded_digest(decision, "decision_digest")
+    if decision["run_id"] != workbench["run_id"]:
+        raise ValueError("Creative direction decision run_id mismatch")
+    if decision["binding"] != {
+        "handoff_digest": handoff_digest,
+        **handoff["binding"],
+    }:
+        raise ValueError("Creative direction decision is stale")
+    selection = decision["selection"]
+    if decision["outcome"] == "fallback":
+        return {
+            "route_status": "fallback",
+            "decision_digest": decision_digest,
+            "handoff_digest": handoff_digest,
+            "translation_digest": "",
+            "fallback_reason": selection["reason"],
+            "tokens": None,
+        }
+    item_ids = [row["item_id"] for row in selection["directions"]]
+    _unique(item_ids, "Creative Production direction item")
+    if selection["selected_item_id"] not in item_ids:
+        raise ValueError(
+            "Selected Creative Production item is not on the recorded board"
+        )
+    for row in selection["directions"]:
+        path = (root / row["snapshot_path"]).resolve()
+        if not path.is_relative_to(root) or not path.is_file():
+            raise ValueError("Creative Production reference snapshot is missing")
+        if (
+            path.stat().st_size != row["size_bytes"]
+            or file_digest(path) != row["sha256"]
+        ):
+            raise ValueError("Creative Production reference snapshot changed")
+    translation = selection["translation"]
+    if translation["contribution_change_required"]:
+        raise ValueError(
+            "Selected direction requires a superseding contribution before rendering"
+        )
+    return {
+        "route_status": "selected",
+        "decision_digest": decision_digest,
+        "handoff_digest": handoff_digest,
+        "translation_digest": canonical_digest(translation),
+        "board_id": selection["board_id"],
+        "board_revision": selection["board_revision"],
+        "selected_item_id": selection["selected_item_id"],
+        "tokens": translation["tokens"],
+    }
+
+
 def _visual_manifest_digest(payload: dict[str, Any]) -> str:
     stable = {key: value for key, value in payload.items() if key != "manifest_digest"}
     return canonical_digest(stable)
 
 
-def verify_visual_manifest(run_dir: Path) -> str:
-    """Verify rendered-file hashes and geometry recorded by the renderer."""
+def _verify_visual_manifest(
+    run_dir: Path, *, filename: str, expected_state: str
+) -> str:
+    """Verify one exact render manifest and every file it binds."""
 
     root = run_dir.resolve()
     contribution_digest = recompute_contribution_digest(root)
-    manifest = load_json(root / "visual_manifest.json")
+    manifest = load_json(root / filename)
+    if manifest.get("render_state") != expected_state:
+        raise ValueError(f"Visual manifest is not a {expected_state} render")
     if manifest.get("contribution_digest") != contribution_digest:
         raise ValueError("Visual manifest is stale for the current contribution")
+    creative = verify_creative_direction_decision(root)
+    recorded_creative = manifest.get("creative_direction")
+    expected_creative = {
+        key: value for key, value in creative.items() if key != "tokens"
+    }
+    if recorded_creative != expected_creative:
+        raise ValueError(
+            "Visual manifest is stale for the Creative Production decision"
+        )
     current_digest = _visual_manifest_digest(manifest)
     if current_digest != manifest.get("manifest_digest"):
         raise ValueError("Visual manifest digest mismatch")
+    quality_gate = manifest.get("quality_gate")
+    if not isinstance(quality_gate, dict):
+        raise ValueError("Visual quality gate is missing")
+    mechanical_checks = quality_gate.get("mechanical_checks")
+    if not isinstance(mechanical_checks, dict) or any(
+        value != "passed" for value in mechanical_checks.values()
+    ):
+        raise ValueError("Visual mechanical quality checks are incomplete")
+    if quality_gate.get("model_led_review_required") is not True:
+        raise ValueError("Visual model-led review requirement is missing")
     for output in manifest.get("outputs", []):
         relative = output.get("path")
         if not isinstance(relative, str):
@@ -467,6 +788,10 @@ def verify_visual_manifest(run_dir: Path) -> str:
         ):
             raise ValueError(f"Visual layout validation is missing: {relative}")
         if output.get("kind") == "carousel_slide" and isinstance(layout, dict):
+            if layout.get("internal_id_leakage") is not False:
+                raise ValueError(
+                    f"Visual internal identifier leakage recorded: {relative}"
+                )
             if float(layout.get("max_line_width_px", 1)) > float(
                 layout.get("available_width_px", 0)
             ):
@@ -480,6 +805,63 @@ def verify_visual_manifest(run_dir: Path) -> str:
             ):
                 raise ValueError(f"Visual content overflow recorded: {relative}")
     return current_digest
+
+
+def verify_visual_manifest(run_dir: Path) -> str:
+    """Verify release-candidate rendered files and geometry."""
+
+    return _verify_visual_manifest(
+        run_dir,
+        filename="visual_manifest.json",
+        expected_state="accepted_semantics",
+    )
+
+
+def verify_visual_preview_manifest(run_dir: Path) -> str:
+    """Verify isolated QA-preview rendered files and geometry."""
+
+    return _verify_visual_manifest(
+        run_dir,
+        filename="visual_preview_manifest.json",
+        expected_state="qa_preview",
+    )
+
+
+def verify_visual_assessment(run_dir: Path) -> str:
+    """Verify the model-led assessment bound to the exact release render."""
+
+    root = run_dir.resolve()
+    manifest_digest = verify_visual_manifest(root)
+    record = load_json(root / "visual_assessment_record.json")
+    stable_record = {
+        key: value for key, value in record.items() if key != "record_digest"
+    }
+    record_digest = canonical_digest(stable_record)
+    if record.get("record_digest") != record_digest:
+        raise ValueError("Visual assessment record digest mismatch")
+    assessment = record.get("assessment")
+    if not isinstance(assessment, dict):
+        raise ValueError("Visual model-led assessment is missing")
+    validate_schema(assessment, "visual_assessment.schema.json")
+    workbench = load_json(root / "content_workbench.json")
+    if assessment["run_id"] != workbench["run_id"]:
+        raise ValueError("Visual assessment run_id mismatch")
+    if assessment["render_state"] != "accepted_semantics":
+        raise ValueError("Visual assessment is not for accepted-semantics render")
+    if assessment["assessed_manifest_digest"] != manifest_digest:
+        raise ValueError("Visual assessment is stale for the current render")
+    if assessment["verdict"] != "ready":
+        raise ValueError("Visual model-led assessment must be ready")
+    slide_count = len(workbench["contribution"]["visual_story"]["slides"])
+    assessed_indices = [row["slide_index"] for row in assessment["slide_assessments"]]
+    if assessed_indices != list(range(1, slide_count + 1)):
+        raise ValueError("Visual assessment must cover every slide once and in order")
+    if any(
+        row["verdict"] in {"weak", "redundant"}
+        for row in assessment["slide_assessments"]
+    ):
+        raise ValueError("Visual assessment contains a weak or redundant slide")
+    return record_digest
 
 
 def fresh_render_review_decision(run_dir: Path) -> dict[str, Any] | None:
@@ -504,7 +886,14 @@ def require_accepted_render_review(run_dir: Path) -> dict[str, Any]:
     """Require professional acceptance of the exact current rendered bytes."""
 
     event = fresh_render_review_decision(run_dir)
-    if not event or event.get("decision") != "accepted":
+    if (
+        not event
+        or event.get("decision") != "accepted"
+        or event.get("quality_checklist_confirmed") is not True
+    ):
+        raise ValueError("Fresh accepted review required for: rendered_output")
+    visual_assessment_digest = verify_visual_assessment(run_dir)
+    if event.get("visual_assessment_digest") != visual_assessment_digest:
         raise ValueError("Fresh accepted review required for: rendered_output")
     return event
 
@@ -674,7 +1063,8 @@ def validate_contribution_semantics(
                 "client_circular requires at least two structured sections"
             )
 
-    slides = contribution["visual_story"]["slides"]
+    visual_story = contribution["visual_story"]
+    slides = visual_story["slides"]
     for index, slide in enumerate(slides, start=1):
         unknown = set(slide["source_ids"]) - source_ids
         if unknown:
@@ -683,6 +1073,57 @@ def validate_contribution_semantics(
             )
         if slide["kind"] not in {"cover", "close"} and not slide["source_ids"]:
             raise ValueError(f"Substantive visual slide {index} requires source_ids")
+        if slide["source_ids"] and not slide["source_note"].strip():
+            raise ValueError(
+                f"Visual slide {index} requires a reader-facing source_note"
+            )
+        if slide["relationship_to_post"] == "restates_post":
+            raise ValueError(
+                f"Visual slide {index} only restates the post; omit or redesign it"
+            )
+
+    # Public copy must never expose internal traceability keys. Exact-ID
+    # matching is deterministic because these identifiers are mechanically
+    # registered; deciding whether the prose is useful remains model-led.
+    public_texts: list[tuple[str, str]] = []
+    for draft in drafts:
+        public_texts.extend(
+            [
+                (f"draft {draft['channel']} title", draft["title"]),
+                (f"draft {draft['channel']} subject", draft.get("subject", "")),
+                (f"draft {draft['channel']} body", draft["body"]),
+            ]
+        )
+        for section in draft["sections"]:
+            public_texts.extend(
+                [
+                    (f"draft {draft['channel']} section heading", section["heading"]),
+                    (f"draft {draft['channel']} section body", section["body"]),
+                    *(
+                        (f"draft {draft['channel']} section bullet", bullet)
+                        for bullet in section["bullets"]
+                    ),
+                ]
+            )
+    for index, slide in enumerate(slides, start=1):
+        public_texts.extend(
+            [
+                (f"visual slide {index} eyebrow", slide["eyebrow"]),
+                (f"visual slide {index} title", slide["title"]),
+                (f"visual slide {index} body", slide["body"]),
+                (f"visual slide {index} highlight", slide["highlight"]),
+                (f"visual slide {index} source note", slide["source_note"]),
+                *(
+                    (f"visual slide {index} bullet", bullet)
+                    for bullet in slide["bullets"]
+                ),
+            ]
+        )
+    internal_ids = known_ids | claim_id_set
+    for label, text in public_texts:
+        leaked = sorted(identifier for identifier in internal_ids if identifier in text)
+        if leaked:
+            raise ValueError(f"{label} exposes internal ids: {leaked}")
 
     profile_proposal = contribution["studio_profile_proposal"]
     if intake["history_inputs"] and profile_proposal is None:
@@ -698,6 +1139,29 @@ def validate_contribution_semantics(
                 "Studio profile references unknown history ids: "
                 f"{sorted(unknown_history)}"
             )
+        expected_profile_paths = _profile_leaf_paths(profile_proposal)
+        covered_profile_paths = [
+            field_path
+            for record in profile_proposal["field_provenance"]
+            for field_path in record["field_paths"]
+        ]
+        _unique(covered_profile_paths, "studio profile provenance field path")
+        if set(covered_profile_paths) != set(expected_profile_paths):
+            missing = sorted(set(expected_profile_paths) - set(covered_profile_paths))
+            unexpected = sorted(
+                set(covered_profile_paths) - set(expected_profile_paths)
+            )
+            raise ValueError(
+                "Studio profile field provenance must cover every field exactly; "
+                f"missing={missing}, unexpected={unexpected}"
+            )
+        for record in profile_proposal["field_provenance"]:
+            unknown_evidence = set(record["history_ids"]) - history_ids
+            if unknown_evidence:
+                raise ValueError(
+                    "Studio profile provenance references unknown history ids: "
+                    f"{sorted(unknown_evidence)}"
+                )
         document = profile_proposal["document"]
         layout = document["layout"]
         rail_width = (
@@ -710,7 +1174,13 @@ def validate_contribution_semantics(
 
     recommendation = contribution["recommendation"]
     if recommendation == "no_publish":
-        if claims or drafts or slides or contribution["master_brief"] is not None:
+        if (
+            claims
+            or drafts
+            or slides
+            or contribution["master_brief"] is not None
+            or visual_story["decision"] != "omit"
+        ):
             raise ValueError(
                 "no_publish cannot contain claims, drafts, visual slides, or a master brief"
             )
@@ -724,7 +1194,10 @@ def validate_contribution_semantics(
             raise ValueError(
                 f"Missing requested channel drafts: {sorted(missing_channels)}"
             )
-        if intake["visual_requested"] and not 2 <= len(slides) <= 8:
-            raise ValueError("Requested visual story requires two to eight slides")
-        if not intake["visual_requested"] and slides:
-            raise ValueError("Visual slides were not requested")
+        if intake["visual_requested"]:
+            if visual_story["decision"] == "render" and not 2 <= len(slides) <= 8:
+                raise ValueError("Rendered visual story requires two to eight slides")
+            if visual_story["decision"] == "omit" and slides:
+                raise ValueError("Omitted visual story cannot contain slides")
+        elif visual_story["decision"] != "omit" or slides:
+            raise ValueError("Visual output was not requested and must be omitted")

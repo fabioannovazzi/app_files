@@ -93,6 +93,10 @@ Studio Archive engagement. The professional owns its retention.
   client.
 - Never send an email, upload an asset, or publish a post unless the user has
   explicitly chosen that route and the exact final package is accepted.
+- Creative Production is an optional art-direction collaborator, not a legal,
+  tax, editorial, copywriting, source, or publishing authority. Its board
+  output is never a final deliverable. Do not let it rewrite exact copy,
+  numbers, dates, sources, Studio identity, or the approved logo.
 - Reserve explicit approval for external, destructive, approval-sensitive, or
   material steps. Do not interrupt ordinary read-only intake, local analysis,
   or deterministic validation with ceremonial confirmation prompts.
@@ -145,9 +149,32 @@ ZIPs during a professional communication run.
      --confirmed-by-user
    ```
 
+   Before the first contribution from a new editorial-assessor model, or after
+   its template or benchmark changes, qualify that assessor. Give the assessor
+   only `evals/editorial_quality_cases.json`; never read or expose
+   `evals/editorial_quality_expected.json` while producing its judgments.
+   Write the model result against
+   `schemas/editorial_benchmark_results.schema.json`, then run:
+
+   ```bash
+   python scripts/qualify_editorial_assessor.py \
+     --workspace <private-workspace> \
+     --results <editorial_benchmark_results.json> \
+     --recorded-by <operator>
+   ```
+
+   The deterministic scorer only compares model judgments with fixed
+   product-reviewed high-bar outcomes. A false `ready` on a critical generic or
+   redundant case prevents that exact provider/model/template combination from
+   assessing live work.
+
 3. Create `communication_intake.json` from actual user choices and selected
    material. Include the objective, audience, channels, selected source files,
-   selected prior communications, and an optional brand profile. Prepare a run:
+   selected prior communications, an optional brand profile, and the four
+   external-route records `public_research`, `history_connector`,
+   `creative_production`, and `send_or_publish`. Set `creative_production` to
+   selected only when the user explicitly chose that route and record its
+   visible destination. Prepare a run:
 
    ```bash
    python scripts/prepare_run.py \
@@ -159,28 +186,163 @@ ZIPs during a professional communication run.
    with generic topic-level queries and record exact official source snapshots
    or user-readable source files in a new prepared run before confirming
    claims. Do not treat a URL string as captured evidence.
-5. Use model-led reasoning to write `model_contribution.json` according to the
+5. Before drafting, write `answer_contract.json` against its schema. Bind the
+   purpose, audience, language, jurisdiction, source hierarchy, preservation
+   rules, evidence display, full-claim validation scope, correction policy, and
+   professional-judgment boundary. Compute `contract_digest` over the exact
+   object before that field is added.
+
+   Then use model-led reasoning to write `model_contribution.json` according to the
    contract. A `publish` contribution contains a studio profile proposal when
    history is present, source assessments, atomic claims, a master brief,
-   channel drafts, and a visual story. A `no_publish` contribution explains why
-   communication is not useful and contains no promotional filler. Every
-   contribution includes a model-led `editorial_value` judgment; a calendar,
-   generic awareness, or available word count is never sufficient.
-6. Record the exact provider, model, template version, and operator:
+   channel drafts, and a model-led `render` or `omit` visual decision. A
+   `no_publish` contribution explains why communication is not useful and
+   contains no promotional filler. Every Studio-profile field must have one
+   `field_provenance` record with basis `observed_history`, `user_supplied`, or
+   `vera_default_proposal`. Never describe an unsupported cross-channel
+   convention as observed. Every contribution includes a model-led
+   `editorial_value` judgment; a calendar, generic awareness, available word
+   count, or generic business advice is never sufficient.
+
+   Next run a separate model-led claim-assurance pass and write
+   `claim_assurance.json`. Bind it to the exact contribution and answer-contract
+   digests; cover every material claim once; and keep source identity, semantic
+   support, reasoning, and professional judgment separate. Correct or remove an
+   unsupported, contradicted, overbroad, temporally distorted, or unsound claim
+   before continuing. This is the communication-specific equivalent of Vera's
+   deep-research validation record; do not start a separate client-bound
+   validator run for the same studio-wide contribution.
+
+   Finally run a separate skeptical model-led editorial pass and write
+   `editorial_assessment.json` according to its schema. Bind it to the exact
+   canonical contribution and claim-assurance digests. Use a fresh assessor
+   session that has not seen the generation transcript and does not reuse the
+   generator prompt; record this in `assessment_protocol`. The verdict may be
+   `ready`, `revise`, or `no_publish`. Do not record a
+   contribution until this second pass is `ready`; regenerate when it is not.
+   The assessment is adversarial, not ceremonial: compare the work against a
+   strong practitioner-authored publication, identify its weakest element, test
+   whether it expresses expertise beyond source summary, and give a separate
+   semantic verdict for every channel and proposed slide. Judge public evidence
+   readability explicitly: where a public source note is warranted, it must let
+   the intended reader identify the actual authority and instrument (and the
+   relevant date, number, version, or link when material). Labels such as
+   `Fonte`, `fonte ufficiale`, or an internal source ID are not useful evidence
+   by themselves. A `weak` or `redundant` slide, or a non-identifiable public
+   evidence note when exact evidence is available, requires revision or
+   omission.
+6. Record the exact generator and editorial-assessor provider/model provenance,
+   template version, and operator:
 
    ```bash
    python scripts/record_contribution.py \
      --run-dir <run-dir> \
      --contribution <model_contribution.json> \
+     --answer-contract <answer_contract.json> \
+     --claim-assurance <claim_assurance.json> \
+     --editorial-assessment <editorial_assessment.json> \
      --provider <provider> --model <model> \
-     --template-version professional-communication-v1 \
+     --claim-assessment-provider <provider> \
+     --claim-assessment-model <model> \
+     --assessment-provider <provider> --assessment-model <model> \
+     --template-version professional-communication-v2 \
      --recorded-by <operator>
    ```
 
-7. Review the visible `review_handoff.md`, claims, drafts, and visual story.
-   Record each required scope with `accepted`, `returned`, or `rejected` and
-   `--confirmed-by-user`. Required scopes are generated from the actual package;
-   do not invent an approval:
+   If and only if the intake selected Creative Production and the reviewed
+   contribution contains a `render` visual story, prepare its locked handoff:
+
+   ```bash
+   python scripts/prepare_creative_direction_handoff.py \
+     --run-dir <run-dir> --directions 4
+   ```
+
+   Then read the exact JSON and Markdown handoff completely and invoke
+   `creative-production:produce` when that skill and its
+   `creative_production_board` tool are callable. Use the board tools directly,
+   keep one board for the workflow, and generate four to six materially
+   different art-direction references. Send only the locked visual copy and
+   minimal Studio visual context in the handoff; do not send source bytes,
+   selected history, client facts, recipient data, or internal source IDs.
+   Treat the references as non-publishable: they may explore composition,
+   hierarchy, spacing, rules, shapes, brand-constrained color balance, and
+   non-factual texture, but they may not add information or rasterize final
+   copy. Show the directions and let the professional select one.
+
+   After the board returns four to six completed items, write
+   `creative_direction_selection_input.json` against its schema with the exact
+   board ID, revision, item IDs, image paths, selected item, selection rationale,
+   and a translation into Vera's supported renderer tokens. Record it only
+   after the professional selects the direction:
+
+   ```bash
+   python scripts/record_creative_direction_decision.py \
+     --run-dir <run-dir> \
+     --decision <creative_direction_selection_input.json> \
+     --recorded-by <operator> --confirmed-by-user
+   ```
+
+   If the tool is unavailable, generation fails, or the professional chooses
+   Vera's internal system, record the corresponding `fallback` outcome with the
+   same command. A selected Creative Production route must have one current
+   selected decision or fallback before any preview or release render. The
+   renderer snapshots every direction reference, binds the selected board item
+   and translation digest, applies the supported tokens, and records that
+   binding in the visual manifest. It must never silently render the unchanged
+   internal style while claiming a Creative Production selection.
+
+   Translate the selected direction back into Vera's supported visual system
+   and deterministic renderer. If that translation changes the contribution,
+   record the affected scope as `returned`, create a superseding contribution,
+   and repeat the independent editorial assessment. Never edit reviewed JSON in
+   place. When the Creative Production skill or board is unavailable, say so
+   briefly, record the fallback, and continue with Vera's internal visual
+   system; the workflow must not fail and no plugin installation is a
+   precondition for a valid run.
+
+7. Review the visible `review_handoff.md`, editorial assessment, claims, drafts,
+   and visual decision or story.
+   When the exact visual is needed to perform that review, first render an
+   isolated QA preview:
+
+   ```bash
+   python scripts/render_visuals.py --run-dir <run-dir> --qa-preview
+   ```
+
+   The QA preview writes `visual_preview_manifest.json` and
+   `visuals-preview/`. It is deliberately non-packageable and is not evidence
+   of professional approval. Never copy or rename it into the release path.
+   Open every exact PNG/PDF, compare it with the channel draft, and write a
+   model-led `visual_assessment.json` against
+   `schemas/visual_assessment.schema.json`. Record it with:
+
+   ```bash
+   python scripts/record_visual_assessment.py \
+     --run-dir <run-dir> --assessment <visual_assessment.json> \
+     --provider <provider> --model <model> --qa-preview
+   ```
+
+   A `revise`/`omit` verdict or any `weak`/`redundant` slide requires a new
+   contribution and preview. Do not let a clean layout overrule the semantic
+   visual assessment. A selected Creative Production direction also cannot
+   overrule it: inspect only Vera's exact deterministic QA preview and release
+   render when deciding whether the output is accurate, useful, on-brand, and
+   ready.
+
+   Present every current semantic scope in one visible review matrix. After one
+   explicit professional confirmation, write `review_bundle.json` against its
+   schema and record the matrix atomically. This creates separate digest-bound
+   events under one review session, so auditability does not create ceremonial
+   prompts:
+
+   ```bash
+   python scripts/record_review.py \
+     --run-dir <run-dir> --bundle <review_bundle.json> \
+     --reviewer <professional> --confirmed-by-user
+   ```
+
+   A later isolated decision may still use the single-scope form below.
+   Required scopes are generated from the actual package; do not invent an approval:
 
    ```bash
    python scripts/record_review.py \
@@ -215,16 +377,29 @@ ZIPs during a professional communication run.
    and the preview gallery. It rejects content that cannot fit without
    clipping. It never decides what a norm means or whether a claim is
    supported. Inspect every rendered PNG and PDF, then accept the exact render
-   digest separately:
+   digest separately. Before professional acceptance, repeat the model-led
+   inspection against the exact release manifest and record a `ready`
+   assessment without `--qa-preview`:
+
+   ```bash
+   python scripts/record_visual_assessment.py \
+     --run-dir <run-dir> --assessment <visual_assessment.json> \
+     --provider <provider> --model <model>
+   ```
+
+   The professional acceptance requires both that assessment and explicit
+   confirmation of the visible checklist:
 
    ```bash
    python scripts/record_review.py \
      --run-dir <run-dir> --scope rendered_output \
      --decision accepted|returned|rejected \
-     --reviewer <professional> --confirmed-by-user
+     --reviewer <professional> --confirmed-by-user \
+     --quality-checklist-confirmed
    ```
 
-11. Package the accepted drafts, technical basis, exact accepted visuals, and a
+11. Package the accepted drafts, technical basis, complete editorial and visual
+    model-assessment records, exact accepted visuals, and a
     `validation_pending` final manifest. Inspect the exact packaged email,
     Markdown, HTML, graphics, PDF, technical basis, and artifact card, then
     accept that package digest. Only after this exact-package review may
@@ -260,12 +435,25 @@ ZIPs during a professional communication run.
 - `run_intake.json` records selected files, requested channels, local data
   posture, and optional external routes.
 - `source_register.json` proves exact immutable input snapshots.
+- `editorial_assessor_qualification.json` in the workspace proves that the
+  exact editorial provider/model/template passed the current blinded anti-slop
+  benchmark without a false-ready critical case.
 - `content_workbench.json` preserves the model contribution and provenance.
+- The workbench and package preserve `answer_contract` and `claim_assurance`,
+  binding the professional objective to full material-claim support, reasoning,
+  and judgment review.
 - `review_payload.json` and `review_handoff.md` expose the review queue.
 - `review_log.json` binds professional decisions to one exact contribution
   digest and binds `rendered_output` decisions to one exact visual-manifest
   digest and `packaged_output` decisions to one exact package digest.
 - `visual_manifest.json` proves PNG dimensions, font assets, and byte hashes.
+- `creative-direction/handoff-vNNN.json`, when the route was explicitly
+  selected, binds only the reviewed visual story and minimal Studio visual
+  context to a non-publishable Creative Production request. It is an internal
+  direction artifact and is never a packaged communication.
+- `creative-direction/decision-vNNN.json` records either the exact board result,
+  selected item, user-confirmed translation and snapshotted references, or the
+  explicit internal fallback. Its digest is bound into every visual manifest.
 - An accepted `studio_profile_proposal` may be promoted to the private
   workspace with an authoritative format digest and a versioned logo asset.
   Later runs snapshot that exact approved profile and reject unreviewed brand

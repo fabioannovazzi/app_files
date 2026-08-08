@@ -91,6 +91,18 @@ def _promote_studio_profile_locked(root: Path) -> Path:
             "size_bytes": asset_path.stat().st_size,
         }
     brand_assets = {"logo": logo_record}
+    provenance_summary = {
+        basis: sum(
+            len(record["field_paths"])
+            for record in profile["field_provenance"]
+            if record["basis"] == basis
+        )
+        for basis in (
+            "observed_history",
+            "user_supplied",
+            "vera_default_proposal",
+        )
+    }
     format_digest = canonical_digest(
         {
             "studio_name": intake["brand_profile"]["studio_name"],
@@ -108,6 +120,8 @@ def _promote_studio_profile_locked(root: Path) -> Path:
         "brand_profile": intake["brand_profile"],
         "brand_assets": brand_assets,
         "profile": profile,
+        "profile_provenance_summary": provenance_summary,
+        "accepted_as_studio_standard": True,
         "format_digest": format_digest,
         "approved_from": {
             "run_id": intake["run_id"],

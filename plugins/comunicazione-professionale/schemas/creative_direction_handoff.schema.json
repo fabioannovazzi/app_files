@@ -1,0 +1,184 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow",
+    "run_id",
+    "contribution_version",
+    "created_at",
+    "status",
+    "binding",
+    "route",
+    "studio_visual_context",
+    "production_request",
+    "exact_content",
+    "content_locks",
+    "allowed_exploration",
+    "prohibited_output",
+    "fallback",
+    "handoff_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "workflow": {"const": "comunicazione-professionale"},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{2,79}$"},
+    "contribution_version": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "status": {"const": "ready_for_optional_creative_direction"},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_digest", "contribution_digest", "visual_story_digest"],
+      "properties": {
+        "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "contribution_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "visual_story_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["plugin", "skill", "board_tool", "destination", "approved_by", "approved_at"],
+      "properties": {
+        "plugin": {"const": "creative-production"},
+        "skill": {"const": "creative-production:produce"},
+        "board_tool": {"const": "creative_production_board"},
+        "destination": {"type": "string", "minLength": 1, "maxLength": 500},
+        "approved_by": {"type": "string", "minLength": 1, "maxLength": 200},
+        "approved_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "studio_visual_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_status", "brand", "social", "logo"],
+      "properties": {
+        "profile_status": {
+          "enum": ["unreviewed_run_profile_proposal", "stored_approved_profile"]
+        },
+        "brand": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["studio_name", "primary_color", "accent_color", "background_color", "text_color"],
+          "properties": {
+            "studio_name": {"type": "string", "minLength": 1, "maxLength": 120},
+            "primary_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "accent_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "background_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+            "text_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"}
+          }
+        },
+        "social": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["preferred_format", "carousel_identity_placement", "show_source_note"],
+          "properties": {
+            "preferred_format": {"type": "string", "minLength": 1},
+            "carousel_identity_placement": {"type": "string", "minLength": 1},
+            "show_source_note": {"type": "boolean"}
+          }
+        },
+        "logo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["present", "snapshot_path", "sha256"],
+          "properties": {
+            "present": {"type": "boolean"},
+            "snapshot_path": {"type": "string"},
+            "sha256": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"}
+          }
+        }
+      }
+    },
+    "production_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "direction_count",
+        "target_width_px",
+        "target_height_px",
+        "output_kind",
+        "publishable",
+        "human_selection_required",
+        "final_renderer"
+      ],
+      "properties": {
+        "direction_count": {"type": "integer", "minimum": 4, "maximum": 6},
+        "target_width_px": {"const": 1080},
+        "target_height_px": {"const": 1350},
+        "output_kind": {"const": "art_direction_references"},
+        "publishable": {"const": false},
+        "human_selection_required": {"const": true},
+        "final_renderer": {"const": "vera_deterministic_renderer"}
+      }
+    },
+    "exact_content": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 8,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "slide_index",
+          "kind",
+          "layout_variant",
+          "eyebrow",
+          "title",
+          "body",
+          "bullets",
+          "highlight",
+          "source_note",
+          "reader_use",
+          "relationship_to_post",
+          "content_digest"
+        ],
+        "properties": {
+          "slide_index": {"type": "integer", "minimum": 1, "maximum": 8},
+          "kind": {"type": "string", "minLength": 1},
+          "layout_variant": {"type": "string", "minLength": 1},
+          "eyebrow": {"type": "string"},
+          "title": {"type": "string", "minLength": 1},
+          "body": {"type": "string"},
+          "bullets": {"type": "array", "items": {"type": "string"}},
+          "highlight": {"type": "string"},
+          "source_note": {"type": "string"},
+          "reader_use": {"type": "string", "minLength": 1},
+          "relationship_to_post": {"type": "string", "minLength": 1},
+          "content_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    },
+    "content_locks": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "allowed_exploration": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "prohibited_output": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "fallback": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["when_unavailable", "renderer", "run_must_continue"],
+      "properties": {
+        "when_unavailable": {"const": "use_internal_visual_system"},
+        "renderer": {"const": "vera_deterministic_renderer"},
+        "run_must_continue": {"const": true}
+      }
+    },
+    "handoff_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

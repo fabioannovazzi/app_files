@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -552,6 +552,302 @@
     .bandi-boundary h3 { margin-bottom: 16px; font-size: 1.25rem; }
     .bandi-boundary p { max-width: 54ch; color: var(--blue); }
 
+    #comunicazione-professionale { scroll-margin-top: 76px; }
+
+    .comms-head {
+      align-items: start;
+      margin-bottom: clamp(48px, 7vw, 76px);
+    }
+
+    .comms-head h2 { max-width: 700px; }
+    .comms-head > p {
+      max-width: 620px;
+      padding-top: 6px;
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.45;
+    }
+
+    .comms-decision {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      border-block: 2px solid var(--navy);
+    }
+
+    .comms-decision__thesis {
+      min-height: 410px;
+      padding: clamp(32px, 5vw, 58px) clamp(32px, 6vw, 72px) clamp(36px, 6vw, 64px) 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: clamp(56px, 8vw, 96px);
+      border-right: 1px solid var(--cyan);
+    }
+
+    .comms-decision__statement {
+      max-width: 14ch;
+      font-size: clamp(2.15rem, 5vw, 4.8rem);
+      font-weight: 650;
+      line-height: 1.02;
+      letter-spacing: -0.055em;
+    }
+
+    .comms-decision__thesis > p:last-child {
+      max-width: 48ch;
+      color: var(--blue);
+      font-size: 1.02rem;
+    }
+
+    .comms-outcomes {
+      margin: 0;
+      padding: 0 0 0 clamp(28px, 5vw, 56px);
+      display: grid;
+      list-style: none;
+    }
+
+    .comms-outcome {
+      min-height: 136px;
+      padding-block: 28px;
+      display: grid;
+      grid-template-columns: minmax(112px, 0.42fr) minmax(0, 1fr);
+      gap: 26px;
+      align-content: center;
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .comms-outcome:last-child { border-bottom: 0; }
+    .comms-outcome strong {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      font-size: 0.78rem;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .comms-outcome strong::before {
+      width: 24px;
+      height: 2px;
+      flex: 0 0 auto;
+      background: var(--cyan);
+      content: "";
+    }
+
+    .comms-outcome--revise strong::before { background: var(--blue); }
+    .comms-outcome--silence strong::before {
+      height: 8px;
+      background: transparent;
+      border: 1px solid var(--blue);
+    }
+    .comms-outcome p { max-width: 40ch; color: var(--blue); font-size: 0.92rem; }
+
+    .comms-journey { margin-top: clamp(64px, 9vw, 104px); }
+    .comms-subhead {
+      margin-bottom: 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
+      gap: clamp(28px, 8vw, 100px);
+      align-items: end;
+    }
+    .comms-subhead h3 { font-size: clamp(1.8rem, 3.5vw, 3.15rem); }
+    .comms-subhead p { max-width: 58ch; color: var(--blue); }
+
+    .comms-steps {
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      border-top: 2px solid var(--navy);
+      list-style: none;
+      counter-reset: comms-step;
+    }
+
+    .comms-step {
+      min-height: 260px;
+      padding: 28px 28px 34px 0;
+      border-bottom: 1px solid var(--cyan);
+      counter-increment: comms-step;
+    }
+
+    .comms-step + .comms-step {
+      padding-left: 28px;
+      border-left: 1px solid var(--cyan);
+    }
+
+    .comms-step::before {
+      display: block;
+      margin-bottom: clamp(42px, 7vw, 76px);
+      color: var(--cyan);
+      content: "0" counter(comms-step);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .comms-step h4 { margin: 0 0 12px; font-size: 1.08rem; line-height: 1.2; }
+    .comms-step p { max-width: 34ch; color: var(--blue); font-size: 0.92rem; }
+
+    .comms-output {
+      margin-top: clamp(72px, 10vw, 120px);
+      display: grid;
+      grid-template-columns: minmax(280px, 0.82fr) minmax(0, 1.18fr);
+      border-block: 2px solid var(--navy);
+    }
+
+    .comms-output__copy {
+      padding: clamp(34px, 6vw, 64px) clamp(32px, 6vw, 72px) clamp(40px, 6vw, 68px) 0;
+      border-right: 1px solid var(--cyan);
+    }
+
+    .comms-output__copy h3 {
+      max-width: 13ch;
+      margin-top: 14px;
+      font-size: clamp(2rem, 4vw, 3.75rem);
+    }
+
+    .comms-output__copy > p { max-width: 43ch; margin-top: 24px; color: var(--blue); }
+    .comms-channel-list { margin: 36px 0 0; padding: 0; border-top: 1px solid var(--cyan); list-style: none; }
+    .comms-channel-list li {
+      padding-block: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      border-bottom: 1px solid var(--cyan);
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+    .comms-channel-list li::after { color: var(--cyan); content: "↗"; }
+
+    .comms-specimen-wrap {
+      min-width: 0;
+      padding: clamp(34px, 6vw, 64px) 0 clamp(40px, 6vw, 68px) clamp(32px, 6vw, 72px);
+      display: grid;
+      align-items: center;
+    }
+
+    .comms-specimen {
+      min-height: 520px;
+      padding: clamp(28px, 4vw, 48px);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      border: 1px solid var(--navy);
+      background: var(--white);
+    }
+
+    .comms-specimen::before {
+      position: absolute;
+      inset: 0 66% auto 0;
+      height: 10px;
+      background: var(--navy);
+      content: "";
+    }
+
+    .comms-specimen::after {
+      position: absolute;
+      inset: 0 0 auto 34%;
+      height: 10px;
+      background: var(--cyan);
+      content: "";
+    }
+
+    .comms-specimen__header {
+      padding-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 3px double var(--cyan);
+      color: var(--blue);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .comms-specimen h4 {
+      max-width: 12ch;
+      margin: clamp(42px, 7vw, 72px) 0 34px;
+      font-size: clamp(1.9rem, 3.8vw, 3.4rem);
+      line-height: 1.02;
+      letter-spacing: -0.045em;
+    }
+
+    .comms-specimen__points { margin: 0; padding: 0; list-style: none; counter-reset: comms-point; }
+    .comms-specimen__points li {
+      min-height: 58px;
+      padding: 16px 0;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 16px;
+      align-items: baseline;
+      border-top: 1px solid var(--navy);
+      color: var(--blue);
+    }
+    .comms-specimen__points li::before { color: var(--cyan); content: "0" counter(comms-point); counter-increment: comms-point; font-size: 0.76rem; font-weight: 700; }
+    .comms-specimen__source {
+      margin-top: auto;
+      padding-top: 22px;
+      border-top: 2px solid var(--navy);
+      color: var(--blue);
+      font-size: 0.76rem;
+    }
+
+    .comms-profile { margin-top: clamp(72px, 10vw, 120px); }
+    .comms-profile__intro {
+      margin-bottom: 28px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
+      gap: clamp(28px, 8vw, 100px);
+      align-items: end;
+    }
+    .comms-profile__intro h3 { font-size: clamp(1.8rem, 3.5vw, 3.15rem); }
+    .comms-profile__intro p { max-width: 58ch; color: var(--blue); }
+    .comms-profile__ledger { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 2px solid var(--navy); }
+    .comms-profile__item { min-height: 220px; padding: 30px 30px 36px 0; }
+    .comms-profile__item + .comms-profile__item { padding-left: 30px; border-left: 1px solid var(--cyan); }
+    .comms-profile__basis { display: block; margin-bottom: clamp(46px, 7vw, 76px); color: var(--cyan); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+    .comms-profile__item h4 { margin: 0 0 12px; font-size: 1.08rem; }
+    .comms-profile__item p { max-width: 38ch; color: var(--blue); font-size: 0.92rem; }
+
+    .comms-assurance { margin-top: clamp(72px, 10vw, 120px); }
+    .comms-assurance > h3 { max-width: 14ch; margin-bottom: 28px; font-size: clamp(2rem, 4vw, 3.75rem); }
+    .comms-assurance__ledger { border-top: 2px solid var(--navy); }
+    .comms-assurance__row {
+      min-height: 104px;
+      padding-block: 24px;
+      display: grid;
+      grid-template-columns: minmax(220px, 0.68fr) minmax(0, 1.32fr);
+      gap: 34px;
+      align-items: center;
+      border-bottom: 1px solid var(--cyan);
+    }
+    .comms-assurance__row h4 { margin: 0; font-size: 1rem; }
+    .comms-assurance__row p { max-width: 70ch; color: var(--blue); font-size: 0.92rem; }
+
+    .comms-creative {
+      margin-top: clamp(64px, 9vw, 104px);
+      padding: clamp(34px, 5vw, 56px) 0;
+      display: grid;
+      grid-template-columns: minmax(220px, 0.55fr) minmax(0, 1.45fr);
+      gap: clamp(28px, 8vw, 96px);
+      border-block: 2px solid var(--navy);
+    }
+    .comms-creative__kicker { color: var(--blue); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
+    .comms-creative h3 { max-width: 760px; font-size: clamp(1.8rem, 3.5vw, 3.1rem); }
+    .comms-creative p { max-width: 65ch; margin-top: 20px; color: var(--blue); }
+
+    .comms-boundary {
+      margin-top: clamp(56px, 8vw, 88px);
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      border-top: 1px solid var(--cyan);
+    }
+    .comms-boundary article { padding: 30px 34px 36px 0; }
+    .comms-boundary article + article { padding-inline: 30px 0; border-left: 1px solid var(--cyan); }
+    .comms-boundary h3 { margin-bottom: 14px; font-size: 1.2rem; }
+    .comms-boundary p { max-width: 54ch; color: var(--blue); }
+    .comms-action { margin-top: 34px; }
+
     .assurance-sequence {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -859,6 +1155,17 @@
       .bandi-proof__head { grid-template-columns: 1fr; gap: 20px; align-items: start; }
       .bandi-proof__row { grid-template-columns: minmax(170px, 0.58fr) minmax(0, 1.42fr); }
       .bandi-proof__status { grid-column: 2; justify-self: start; }
+      .comms-decision { grid-template-columns: 1fr; }
+      .comms-decision__thesis { min-height: 0; padding-right: 0; border-right: 0; border-bottom: 1px solid var(--cyan); }
+      .comms-outcomes { padding-left: 0; }
+      .comms-subhead, .comms-profile__intro { grid-template-columns: 1fr; gap: 20px; align-items: start; }
+      .comms-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .comms-step + .comms-step { padding-left: 0; border-left: 0; }
+      .comms-step:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--cyan); }
+      .comms-output { grid-template-columns: 1fr; }
+      .comms-output__copy { padding-right: 0; border-right: 0; border-bottom: 1px solid var(--cyan); }
+      .comms-specimen-wrap { padding-left: 0; }
+      .comms-creative { grid-template-columns: 1fr; gap: 20px; }
       .assurance-sequence { grid-template-columns: 1fr; }
       .assurance-step,
       .assurance-step + .assurance-step {
@@ -919,6 +1226,22 @@
       .bandi-boundary article,
       .bandi-boundary article + article { padding: 28px 0 32px; border-left: 0; }
       .bandi-boundary article + article { border-top: 1px solid var(--cyan); }
+      .comms-outcome { grid-template-columns: 1fr; gap: 10px; }
+      .comms-steps { grid-template-columns: 1fr; }
+      .comms-step,
+      .comms-step:nth-child(even) { min-height: 0; padding: 26px 0 30px; border-left: 0; }
+      .comms-step::before { margin-bottom: 28px; }
+      .comms-specimen { min-height: 460px; }
+      .comms-profile__ledger { grid-template-columns: 1fr; }
+      .comms-profile__item,
+      .comms-profile__item + .comms-profile__item { min-height: 0; padding: 28px 0 32px; border-left: 0; }
+      .comms-profile__item + .comms-profile__item { border-top: 1px solid var(--cyan); }
+      .comms-profile__basis { margin-bottom: 28px; }
+      .comms-assurance__row { grid-template-columns: 1fr; gap: 10px; align-items: start; }
+      .comms-boundary { grid-template-columns: 1fr; }
+      .comms-boundary article,
+      .comms-boundary article + article { padding: 28px 0 32px; border-left: 0; }
+      .comms-boundary article + article { border-top: 1px solid var(--cyan); }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
@@ -968,6 +1291,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
+          <a href="#comunicazione-professionale" data-i18n="nav.communication">Comunicazione</a>
           <a href="#bilancio-intelligente" data-bilancio-nav hidden>Bilancio intelligente</a>
           <a href="#bandi-agevolazioni" data-bandi-nav hidden>Bandi e agevolazioni</a>
           <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
@@ -997,7 +1321,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, bandi, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, bandi, comunicazioni professionali, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
@@ -1104,6 +1428,11 @@
             <p data-i18n="stream.outputs.copy">Dalle fonti al report, dal quesito alla validazione.</p>
           </header>
           <div class="module-directory">
+            <a class="module-row" id="professional-communication" href="index.html#comunicazione-professionale" data-module-link>
+              <h3 data-i18n="module.communication.title">Comunicazione professionale</h3>
+              <p data-i18n="module.communication">Decide se una novità merita davvero di essere comunicata e prepara email, articoli, post e visuali nel formato approvato dello Studio.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
             <a class="module-row" href="../report-builder/index.html" data-module-link>
               <h3 data-i18n="module.report.title">Genera report</h3>
               <p data-i18n="module.report">Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.</p>
@@ -1122,6 +1451,157 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="section-block" id="comunicazione-professionale">
+      <div class="section-head comms-head">
+        <div class="section-head__title">
+          <span class="section-index" data-i18n="communication.index">Comunicazione professionale</span>
+          <h2 data-i18n="communication.title">Pubblicare non è il punto.</h2>
+        </div>
+        <p data-i18n="communication.copy">Vera parte da fonti selezionate e dal formato reale dello Studio. Decide se esiste qualcosa di utile da dire; poi prepara un pacchetto che il commercialista può verificare, correggere o fermare.</p>
+      </div>
+
+      <div class="comms-decision">
+        <div class="comms-decision__thesis">
+          <p class="comms-decision__statement" data-i18n="communication.thesis">La risposta giusta può essere non pubblicare.</p>
+          <p data-i18n="communication.thesisCopy">Una scadenza nel calendario non basta. Il contenuto deve offrire al destinatario un fatto preciso, un passaggio utile o una decisione meglio impostata.</p>
+        </div>
+        <ul class="comms-outcomes" aria-label="Possibili decisioni editoriali" data-i18n-aria-label="communication.outcomes.label">
+          <li class="comms-outcome">
+            <strong data-i18n="communication.outcomes.publish.title">Pubblicare</strong>
+            <p data-i18n="communication.outcomes.publish.copy">C’è un’informazione specifica che merita di arrivare al pubblico scelto.</p>
+          </li>
+          <li class="comms-outcome comms-outcome--revise">
+            <strong data-i18n="communication.outcomes.revise.title">Rivedere</strong>
+            <p data-i18n="communication.outcomes.revise.copy">La base è utile, ma claim, taglio o formato non sono ancora all’altezza.</p>
+          </li>
+          <li class="comms-outcome comms-outcome--silence">
+            <strong data-i18n="communication.outcomes.silence.title">Non pubblicare</strong>
+            <p data-i18n="communication.outcomes.silence.copy">La novità è ripetitiva, immateriale o non abbastanza sostenuta.</p>
+          </li>
+        </ul>
+      </div>
+
+      <div class="comms-journey">
+        <div class="comms-subhead">
+          <h3 data-i18n="communication.journey.title">Dalla fonte alla comunicazione, senza scorciatoie.</h3>
+          <p data-i18n="communication.journey.copy">Il giudizio editoriale resta al modello; registri, versioni, rendering e approvazioni restano verificabili.</p>
+        </div>
+        <ol class="comms-steps">
+          <li class="comms-step">
+            <h4 data-i18n="communication.steps.sources.title">Fonti scelte</h4>
+            <p data-i18n="communication.steps.sources.copy">Vera conserva il documento esatto e distingue la fonte primaria dal commento.</p>
+          </li>
+          <li class="comms-step">
+            <h4 data-i18n="communication.steps.claims.title">Claim assicurati</h4>
+            <p data-i18n="communication.steps.claims.copy">Ogni affermazione separa supporto della fonte, ragionamento, incertezza e giudizio professionale.</p>
+          </li>
+          <li class="comms-step">
+            <h4 data-i18n="communication.steps.editor.title">Giudizio anti-slop</h4>
+            <p data-i18n="communication.steps.editor.copy">Un assessore distinto cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.</p>
+          </li>
+          <li class="comms-step">
+            <h4 data-i18n="communication.steps.review.title">Revisione professionale</h4>
+            <p data-i18n="communication.steps.review.copy">Il professionista rivede contenuto, grafica e pacchetto finale legati alle versioni esatte.</p>
+          </li>
+        </ol>
+      </div>
+
+      <div class="comms-output">
+        <div class="comms-output__copy">
+          <span class="section-index" data-i18n="communication.outputs.index">Una base · più canali</span>
+          <h3 data-i18n="communication.outputs.title">Forme davvero diverse. Stessi fatti.</h3>
+          <p data-i18n="communication.outputs.copy">Email, articolo, post e visuale condividono gli stessi claim approvati; cambiano struttura, profondità e uso per il lettore.</p>
+          <ul class="comms-channel-list">
+            <li data-i18n="communication.outputs.email">Email ai clienti</li>
+            <li data-i18n="communication.outputs.article">Articolo per il sito</li>
+            <li data-i18n="communication.outputs.post">Post LinkedIn</li>
+            <li data-i18n="communication.outputs.visual">Spiegazione grafica</li>
+          </ul>
+        </div>
+        <div class="comms-specimen-wrap">
+          <article class="comms-specimen">
+            <div class="comms-specimen__header">
+              <span data-i18n="communication.specimen.kicker">Spiegazione grafica</span>
+              <span aria-hidden="true">02/04</span>
+            </div>
+            <h4 data-i18n="communication.specimen.title">Più informazione del post, oppure niente carosello.</h4>
+            <ol class="comms-specimen__points">
+              <li data-i18n="communication.specimen.point1">La differenza materiale</li>
+              <li data-i18n="communication.specimen.point2">Il perimetro da verificare</li>
+              <li data-i18n="communication.specimen.point3">Il limite della conclusione</li>
+            </ol>
+            <p class="comms-specimen__source" data-i18n="communication.specimen.source">Fonte pubblica: autorità · atto · data</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="comms-profile">
+        <div class="comms-profile__intro">
+          <h3 data-i18n="communication.profile.title">Il formato appartiene allo Studio.</h3>
+          <p data-i18n="communication.profile.copy">Vera non confonde una convenzione osservata con una scelta fornita o con una propria proposta.</p>
+        </div>
+        <div class="comms-profile__ledger">
+          <article class="comms-profile__item">
+            <span class="comms-profile__basis" data-i18n="communication.profile.observed.basis">Osservato</span>
+            <h4 data-i18n="communication.profile.observed.title">Dalla storia selezionata</h4>
+            <p data-i18n="communication.profile.observed.copy">Voce, gerarchia, firma e impaginazione derivano solo dagli esempi che lo Studio ha scelto.</p>
+          </article>
+          <article class="comms-profile__item">
+            <span class="comms-profile__basis" data-i18n="communication.profile.supplied.basis">Fornito</span>
+            <h4 data-i18n="communication.profile.supplied.title">Dallo Studio</h4>
+            <p data-i18n="communication.profile.supplied.copy">Logo, colori, geometrie e istruzioni esplicite restano distinti dalle abitudini inferite.</p>
+          </article>
+          <article class="comms-profile__item">
+            <span class="comms-profile__basis" data-i18n="communication.profile.proposed.basis">Proposto</span>
+            <h4 data-i18n="communication.profile.proposed.title">Da Vera</h4>
+            <p data-i18n="communication.profile.proposed.copy">Una proposta diventa il nuovo standard soltanto dopo l’approvazione professionale.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="comms-assurance">
+        <h3 data-i18n="communication.assurance.title">Quattro modi per non produrre slop.</h3>
+        <div class="comms-assurance__ledger">
+          <article class="comms-assurance__row">
+            <h4 data-i18n="communication.assurance.claims.title">Ogni claim deve reggere</h4>
+            <p data-i18n="communication.assurance.claims.copy">Una fonte registrata non basta: devono reggere identità, supporto semantico e ragionamento.</p>
+          </article>
+          <article class="comms-assurance__row">
+            <h4 data-i18n="communication.assurance.editor.title">Un altro modello fa l’editor</h4>
+            <p data-i18n="communication.assurance.editor.copy">Non difende la bozza: la confronta con una pubblicazione firmata da un professionista esigente.</p>
+          </article>
+          <article class="comms-assurance__row">
+            <h4 data-i18n="communication.assurance.visual.title">La grafica si guadagna il posto</h4>
+            <p data-i18n="communication.assurance.visual.copy">Ogni slide deve aggiungere informazione o struttura; dividere il post in pagine non è valore.</p>
+          </article>
+          <article class="comms-assurance__row">
+            <h4 data-i18n="communication.assurance.package.title">Si approvano i byte finali</h4>
+            <p data-i18n="communication.assurance.package.copy">Testo, immagini, PDF e HTML vengono rivisti nelle versioni esatte prima di qualsiasi invio o pubblicazione.</p>
+          </article>
+        </div>
+      </div>
+
+      <aside class="comms-creative">
+        <p class="comms-creative__kicker" data-i18n="communication.creative.kicker">Direzione visiva opzionale</p>
+        <div>
+          <h3 data-i18n="communication.creative.title">Creative Production può alzare il livello estetico. Non può cambiare i fatti.</h3>
+          <p data-i18n="communication.creative.copy">Dopo l’accettazione del contenuto, propone quattro-sei direzioni. Il professionista ne sceglie una; Vera la traduce nel sistema dello Studio e ricostruisce testo, fonti e logo in modo esatto.</p>
+        </div>
+      </aside>
+
+      <div class="comms-boundary">
+        <article>
+          <h3 data-i18n="communication.boundary.vera.title">Vera prepara</h3>
+          <p data-i18n="communication.boundary.vera.copy">Legge le fonti, propone il taglio, assicura i claim, adatta i canali e costruisce il pacchetto rivedibile.</p>
+        </article>
+        <article>
+          <h3 data-i18n="communication.boundary.professional.title">Il commercialista decide</h3>
+          <p data-i18n="communication.boundary.professional.copy">Conferma la posizione professionale, corregge il contenuto, sceglie destinatari e tempi e autorizza l’eventuale pubblicazione.</p>
+        </article>
+      </div>
+      <a class="text-link comms-action" href="#installa"><span data-i18n="communication.action">Lavora su una comunicazione con Vera</span><span aria-hidden="true">→</span></a>
     </section>
 
     <section class="section-block" id="bilancio-intelligente" data-bilancio-section hidden>
@@ -1545,11 +2025,12 @@
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi e fascicoli cliente con fonti qualificate, calcoli esatti, eccezioni e decisioni rivedibili.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
+        "nav.communication": "Comunicazione",
         "nav.assurance": "Metodo",
         "nav.jurisdiction": "Per l’Italia",
         "nav.data": "Dati",
@@ -1557,11 +2038,11 @@
         "language.label": "Lingua",
         "hero.eyebrow": "AI companion per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara Plan, controlli, riconciliazioni, bandi, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
+        "hero.lead": "Prepara Plan, controlli, riconciliazioni, bandi, comunicazioni professionali, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
-        "work.index": "Quattordici funzioni",
+        "work.index": "Quindici funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area di lavoro 1 di 3",
@@ -1600,6 +2081,71 @@
         "module.prompt": "Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.",
         "module.research.title": "Valida Deep Research",
         "module.research": "Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.",
+        "module.communication.title": "Comunicazione professionale",
+        "module.communication": "Decide se una novità merita davvero di essere comunicata e prepara email, articoli, post e visuali nel formato approvato dello Studio.",
+        "communication.index": "Comunicazione professionale",
+        "communication.title": "Pubblicare non è il punto.",
+        "communication.copy": "Vera parte da fonti selezionate e dal formato reale dello Studio. Decide se esiste qualcosa di utile da dire; poi prepara un pacchetto che il commercialista può verificare, correggere o fermare.",
+        "communication.thesis": "La risposta giusta può essere non pubblicare.",
+        "communication.thesisCopy": "Una scadenza nel calendario non basta. Il contenuto deve offrire al destinatario un fatto preciso, un passaggio utile o una decisione meglio impostata.",
+        "communication.outcomes.label": "Possibili decisioni editoriali",
+        "communication.outcomes.publish.title": "Pubblicare",
+        "communication.outcomes.publish.copy": "C’è un’informazione specifica che merita di arrivare al pubblico scelto.",
+        "communication.outcomes.revise.title": "Rivedere",
+        "communication.outcomes.revise.copy": "La base è utile, ma claim, taglio o formato non sono ancora all’altezza.",
+        "communication.outcomes.silence.title": "Non pubblicare",
+        "communication.outcomes.silence.copy": "La novità è ripetitiva, immateriale o non abbastanza sostenuta.",
+        "communication.journey.title": "Dalla fonte alla comunicazione, senza scorciatoie.",
+        "communication.journey.copy": "Il giudizio editoriale resta al modello; registri, versioni, rendering e approvazioni restano verificabili.",
+        "communication.steps.sources.title": "Fonti scelte",
+        "communication.steps.sources.copy": "Vera conserva il documento esatto e distingue la fonte primaria dal commento.",
+        "communication.steps.claims.title": "Claim assicurati",
+        "communication.steps.claims.copy": "Ogni affermazione separa supporto della fonte, ragionamento, incertezza e giudizio professionale.",
+        "communication.steps.editor.title": "Giudizio anti-slop",
+        "communication.steps.editor.copy": "Un assessore distinto cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.",
+        "communication.steps.review.title": "Revisione professionale",
+        "communication.steps.review.copy": "Il professionista rivede contenuto, grafica e pacchetto finale legati alle versioni esatte.",
+        "communication.outputs.index": "Una base · più canali",
+        "communication.outputs.title": "Forme davvero diverse. Stessi fatti.",
+        "communication.outputs.copy": "Email, articolo, post e visuale condividono gli stessi claim approvati; cambiano struttura, profondità e uso per il lettore.",
+        "communication.outputs.email": "Email ai clienti",
+        "communication.outputs.article": "Articolo per il sito",
+        "communication.outputs.post": "Post LinkedIn",
+        "communication.outputs.visual": "Spiegazione grafica",
+        "communication.specimen.kicker": "Spiegazione grafica",
+        "communication.specimen.title": "Più informazione del post, oppure niente carosello.",
+        "communication.specimen.point1": "La differenza materiale",
+        "communication.specimen.point2": "Il perimetro da verificare",
+        "communication.specimen.point3": "Il limite della conclusione",
+        "communication.specimen.source": "Fonte pubblica: autorità · atto · data",
+        "communication.profile.title": "Il formato appartiene allo Studio.",
+        "communication.profile.copy": "Vera non confonde una convenzione osservata con una scelta fornita o con una propria proposta.",
+        "communication.profile.observed.basis": "Osservato",
+        "communication.profile.observed.title": "Dalla storia selezionata",
+        "communication.profile.observed.copy": "Voce, gerarchia, firma e impaginazione derivano solo dagli esempi che lo Studio ha scelto.",
+        "communication.profile.supplied.basis": "Fornito",
+        "communication.profile.supplied.title": "Dallo Studio",
+        "communication.profile.supplied.copy": "Logo, colori, geometrie e istruzioni esplicite restano distinti dalle abitudini inferite.",
+        "communication.profile.proposed.basis": "Proposto",
+        "communication.profile.proposed.title": "Da Vera",
+        "communication.profile.proposed.copy": "Una proposta diventa il nuovo standard soltanto dopo l’approvazione professionale.",
+        "communication.assurance.title": "Quattro modi per non produrre slop.",
+        "communication.assurance.claims.title": "Ogni claim deve reggere",
+        "communication.assurance.claims.copy": "Una fonte registrata non basta: devono reggere identità, supporto semantico e ragionamento.",
+        "communication.assurance.editor.title": "Un altro modello fa l’editor",
+        "communication.assurance.editor.copy": "Non difende la bozza: la confronta con una pubblicazione firmata da un professionista esigente.",
+        "communication.assurance.visual.title": "La grafica si guadagna il posto",
+        "communication.assurance.visual.copy": "Ogni slide deve aggiungere informazione o struttura; dividere il post in pagine non è valore.",
+        "communication.assurance.package.title": "Si approvano i byte finali",
+        "communication.assurance.package.copy": "Testo, immagini, PDF e HTML vengono rivisti nelle versioni esatte prima di qualsiasi invio o pubblicazione.",
+        "communication.creative.kicker": "Direzione visiva opzionale",
+        "communication.creative.title": "Creative Production può alzare il livello estetico. Non può cambiare i fatti.",
+        "communication.creative.copy": "Dopo l’accettazione del contenuto, propone quattro-sei direzioni. Il professionista ne sceglie una; Vera la traduce nel sistema dello Studio e ricostruisce testo, fonti e logo in modo esatto.",
+        "communication.boundary.vera.title": "Vera prepara",
+        "communication.boundary.vera.copy": "Legge le fonti, propone il taglio, assicura i claim, adatta i canali e costruisce il pacchetto rivedibile.",
+        "communication.boundary.professional.title": "Il commercialista decide",
+        "communication.boundary.professional.copy": "Conferma la posizione professionale, corregge il contenuto, sceglie destinatari e tempi e autorizza l’eventuale pubblicazione.",
+        "communication.action": "Lavora su una comunicazione con Vera",
         "assurance.index": "Metodo di assurance",
         "assurance.title": "Prima il significato. Poi il calcolo.",
         "assurance.copy": "Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.",
@@ -1656,11 +2202,12 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera prepares checks, reconciliations, financial analysis, client files and reports with qualified sources, exact calculations, visible exceptions and reviewable decisions.",
+        "meta.description": "Vera prepares checks, reconciliations, financial analysis, professional communications, client files and reports with qualified sources, exact calculations and reviewable decisions.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
+        "nav.communication": "Communication",
         "nav.assurance": "Method",
         "nav.jurisdiction": "For the UK",
         "nav.data": "Data",
@@ -1668,11 +2215,11 @@
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
-        "hero.lead": "Prepare Plans, checks, reconciliations, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
+        "hero.lead": "Prepare Plans, checks, reconciliations, professional communications, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
         "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
-        "work.index": "Fourteen capabilities",
+        "work.index": "Fifteen capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Work area 1 of 3",
@@ -1711,6 +2258,71 @@
         "module.prompt": "Turns a legal, tax or compliance question into research with a defined scope, sources and checks.",
         "module.research.title": "Validate Deep Research",
         "module.research": "Checks claims against cited sources and prepares the consolidated material.",
+        "module.communication.title": "Professional communication",
+        "module.communication": "Decides whether a development is genuinely worth communicating and prepares emails, articles, posts and visuals in the firm’s approved format.",
+        "communication.index": "Professional communication",
+        "communication.title": "Publishing is not the point.",
+        "communication.copy": "Vera starts from selected sources and the firm’s real format. She decides whether there is something useful to say, then prepares a package the accountant can verify, correct or stop.",
+        "communication.thesis": "The right answer may be not to publish.",
+        "communication.thesisCopy": "An open slot in the calendar is not a reason. The content must give its audience a precise fact, a useful step or a better-framed decision.",
+        "communication.outcomes.label": "Possible editorial decisions",
+        "communication.outcomes.publish.title": "Publish",
+        "communication.outcomes.publish.copy": "There is specific information worth bringing to the chosen audience.",
+        "communication.outcomes.revise.title": "Revise",
+        "communication.outcomes.revise.copy": "The basis is useful, but the claims, angle or format are not yet good enough.",
+        "communication.outcomes.silence.title": "Do not publish",
+        "communication.outcomes.silence.copy": "The development is repetitive, immaterial or insufficiently supported.",
+        "communication.journey.title": "From source to communication, without shortcuts.",
+        "communication.journey.copy": "Editorial judgment remains model-led; records, versions, rendering and approvals remain verifiable.",
+        "communication.steps.sources.title": "Selected sources",
+        "communication.steps.sources.copy": "Vera preserves the exact document and distinguishes primary sources from commentary.",
+        "communication.steps.claims.title": "Assured claims",
+        "communication.steps.claims.copy": "Each claim separates source support, reasoning, uncertainty and professional judgment.",
+        "communication.steps.editor.title": "Anti-slop judgment",
+        "communication.steps.editor.copy": "A separate assessor looks for banality, repetition and insufficient value before the draft reaches the firm.",
+        "communication.steps.review.title": "Professional review",
+        "communication.steps.review.copy": "The professional reviews content, graphics and the final package tied to the exact versions.",
+        "communication.outputs.index": "One basis · multiple channels",
+        "communication.outputs.title": "Genuinely different forms. The same facts.",
+        "communication.outputs.copy": "Email, article, post and visual share the same approved claims; their structure, depth and use for the reader change.",
+        "communication.outputs.email": "Client email",
+        "communication.outputs.article": "Website article",
+        "communication.outputs.post": "LinkedIn post",
+        "communication.outputs.visual": "Graphic explainer",
+        "communication.specimen.kicker": "Graphic explainer",
+        "communication.specimen.title": "More information than the post, or no carousel.",
+        "communication.specimen.point1": "The material difference",
+        "communication.specimen.point2": "The scope to verify",
+        "communication.specimen.point3": "The limit of the conclusion",
+        "communication.specimen.source": "Public source: authority · instrument · date",
+        "communication.profile.title": "The format belongs to the firm.",
+        "communication.profile.copy": "Vera does not confuse an observed convention with a supplied choice or with her own proposal.",
+        "communication.profile.observed.basis": "Observed",
+        "communication.profile.observed.title": "From selected history",
+        "communication.profile.observed.copy": "Voice, hierarchy, signature and layout derive only from examples selected by the firm.",
+        "communication.profile.supplied.basis": "Supplied",
+        "communication.profile.supplied.title": "By the firm",
+        "communication.profile.supplied.copy": "Logos, colours, geometry and explicit instructions remain distinct from inferred habits.",
+        "communication.profile.proposed.basis": "Proposed",
+        "communication.profile.proposed.title": "By Vera",
+        "communication.profile.proposed.copy": "A proposal becomes the new standard only after professional approval.",
+        "communication.assurance.title": "Four ways not to produce slop.",
+        "communication.assurance.claims.title": "Every claim must hold up",
+        "communication.assurance.claims.copy": "A registered source is not enough: identity, semantic support and reasoning must all hold up.",
+        "communication.assurance.editor.title": "Another model acts as editor",
+        "communication.assurance.editor.copy": "It does not defend the draft; it compares it with a publication signed by a demanding professional.",
+        "communication.assurance.visual.title": "The graphic earns its place",
+        "communication.assurance.visual.copy": "Every slide must add information or structure; splitting a post into pages is not value.",
+        "communication.assurance.package.title": "The final bytes are approved",
+        "communication.assurance.package.copy": "Text, images, PDF and HTML are reviewed in their exact versions before any send or publication.",
+        "communication.creative.kicker": "Optional visual direction",
+        "communication.creative.title": "Creative Production can raise the visual standard. It cannot change the facts.",
+        "communication.creative.copy": "After the content is accepted, it proposes four to six directions. The professional selects one; Vera translates it into the firm’s system and rebuilds text, sources and logo exactly.",
+        "communication.boundary.vera.title": "Vera prepares",
+        "communication.boundary.vera.copy": "She reads the sources, proposes the angle, assures the claims, adapts the channels and builds the reviewable package.",
+        "communication.boundary.professional.title": "The accountant decides",
+        "communication.boundary.professional.copy": "They confirm the professional position, correct the content, choose audience and timing, and authorize any publication.",
+        "communication.action": "Prepare a communication with Vera",
         "assurance.index": "Assurance method",
         "assurance.title": "Meaning first. Calculation second.",
         "assurance.copy": "Vera separates interpretation, professional confirmation and mechanical controls. A reproducible result does not automatically become a correct conclusion.",
@@ -1767,11 +2379,12 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera prépare contrôles, rapprochements, analyses financières, dossiers clients et rapports avec des sources qualifiées, des calculs exacts, des exceptions visibles et des décisions révisables.",
+        "meta.description": "Vera prépare contrôles, rapprochements, analyses financières, communications professionnelles, dossiers clients et rapports avec des sources qualifiées et des décisions révisables.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
+        "nav.communication": "Communication",
         "nav.assurance": "Méthode",
         "nav.jurisdiction": "Pour Genève",
         "nav.data": "Données",
@@ -1779,11 +2392,11 @@
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Préparez Plans, contrôles, rapprochements, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
+        "hero.lead": "Préparez Plans, contrôles, rapprochements, communications professionnelles, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
         "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
-        "work.index": "Quatorze fonctions",
+        "work.index": "Quinze fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine de travail 1 sur 3",
@@ -1822,6 +2435,71 @@
         "module.prompt": "Transforme une question juridique, fiscale ou de conformité en recherche avec périmètre, sources et contrôles définis.",
         "module.research.title": "Valider Deep Research",
         "module.research": "Contrôle les affirmations par rapport aux sources citées et prépare le matériel consolidé.",
+        "module.communication.title": "Communication professionnelle",
+        "module.communication": "Décide si une évolution mérite vraiment d’être communiquée et prépare e-mails, articles, publications et visuels dans le format approuvé du cabinet.",
+        "communication.index": "Communication professionnelle",
+        "communication.title": "Publier n’est pas le but.",
+        "communication.copy": "Vera part des sources sélectionnées et du format réel du cabinet. Elle décide s’il y a quelque chose d’utile à dire, puis prépare un dossier que l’expert-comptable peut vérifier, corriger ou arrêter.",
+        "communication.thesis": "La bonne réponse peut être de ne pas publier.",
+        "communication.thesisCopy": "Une place libre dans le calendrier ne suffit pas. Le contenu doit apporter un fait précis, une étape utile ou une décision mieux cadrée.",
+        "communication.outcomes.label": "Décisions éditoriales possibles",
+        "communication.outcomes.publish.title": "Publier",
+        "communication.outcomes.publish.copy": "Une information précise mérite d’atteindre le public choisi.",
+        "communication.outcomes.revise.title": "Réviser",
+        "communication.outcomes.revise.copy": "La base est utile, mais les affirmations, l’angle ou le format ne sont pas encore au niveau.",
+        "communication.outcomes.silence.title": "Ne pas publier",
+        "communication.outcomes.silence.copy": "L’évolution est répétitive, peu significative ou insuffisamment étayée.",
+        "communication.journey.title": "De la source à la communication, sans raccourci.",
+        "communication.journey.copy": "Le jugement éditorial reste confié au modèle ; registres, versions, rendus et validations restent vérifiables.",
+        "communication.steps.sources.title": "Sources sélectionnées",
+        "communication.steps.sources.copy": "Vera conserve le document exact et distingue les sources primaires des commentaires.",
+        "communication.steps.claims.title": "Affirmations assurées",
+        "communication.steps.claims.copy": "Chaque affirmation distingue l’appui de la source, le raisonnement, l’incertitude et le jugement professionnel.",
+        "communication.steps.editor.title": "Jugement anti-contenu creux",
+        "communication.steps.editor.copy": "Un évaluateur distinct recherche banalités, répétitions et valeur insuffisante avant que le projet n’arrive au cabinet.",
+        "communication.steps.review.title": "Révision professionnelle",
+        "communication.steps.review.copy": "Le professionnel révise contenu, graphisme et dossier final liés aux versions exactes.",
+        "communication.outputs.index": "Une base · plusieurs canaux",
+        "communication.outputs.title": "Des formes réellement différentes. Les mêmes faits.",
+        "communication.outputs.copy": "E-mail, article, publication et visuel partagent les mêmes affirmations approuvées ; leur structure, profondeur et utilité changent.",
+        "communication.outputs.email": "E-mail aux clients",
+        "communication.outputs.article": "Article pour le site",
+        "communication.outputs.post": "Publication LinkedIn",
+        "communication.outputs.visual": "Explication graphique",
+        "communication.specimen.kicker": "Explication graphique",
+        "communication.specimen.title": "Plus d’information que la publication, sinon pas de carrousel.",
+        "communication.specimen.point1": "La différence significative",
+        "communication.specimen.point2": "Le périmètre à vérifier",
+        "communication.specimen.point3": "La limite de la conclusion",
+        "communication.specimen.source": "Source publique : autorité · acte · date",
+        "communication.profile.title": "Le format appartient au cabinet.",
+        "communication.profile.copy": "Vera ne confond pas une convention observée avec un choix fourni ou avec sa propre proposition.",
+        "communication.profile.observed.basis": "Observé",
+        "communication.profile.observed.title": "Dans l’historique sélectionné",
+        "communication.profile.observed.copy": "Voix, hiérarchie, signature et mise en page proviennent uniquement des exemples choisis par le cabinet.",
+        "communication.profile.supplied.basis": "Fourni",
+        "communication.profile.supplied.title": "Par le cabinet",
+        "communication.profile.supplied.copy": "Logo, couleurs, géométrie et consignes explicites restent distincts des habitudes déduites.",
+        "communication.profile.proposed.basis": "Proposé",
+        "communication.profile.proposed.title": "Par Vera",
+        "communication.profile.proposed.copy": "Une proposition ne devient la nouvelle norme qu’après validation professionnelle.",
+        "communication.assurance.title": "Quatre moyens de ne pas produire de contenu médiocre.",
+        "communication.assurance.claims.title": "Chaque affirmation doit tenir",
+        "communication.assurance.claims.copy": "Une source enregistrée ne suffit pas : identité, appui sémantique et raisonnement doivent tenir.",
+        "communication.assurance.editor.title": "Un autre modèle fait l’éditeur",
+        "communication.assurance.editor.copy": "Il ne défend pas le projet ; il le compare à une publication signée par un professionnel exigeant.",
+        "communication.assurance.visual.title": "Le graphisme mérite sa place",
+        "communication.assurance.visual.copy": "Chaque page doit ajouter information ou structure ; découper une publication en pages n’apporte aucune valeur.",
+        "communication.assurance.package.title": "Les fichiers finaux sont validés",
+        "communication.assurance.package.copy": "Textes, images, PDF et HTML sont révisés dans leurs versions exactes avant tout envoi ou publication.",
+        "communication.creative.kicker": "Direction visuelle facultative",
+        "communication.creative.title": "Creative Production peut élever le niveau visuel. Il ne peut pas changer les faits.",
+        "communication.creative.copy": "Après acceptation du contenu, quatre à six directions sont proposées. Le professionnel en choisit une ; Vera la traduit dans le système du cabinet et reconstruit exactement textes, sources et logo.",
+        "communication.boundary.vera.title": "Vera prépare",
+        "communication.boundary.vera.copy": "Elle lit les sources, propose l’angle, assure les affirmations, adapte les canaux et construit le dossier révisable.",
+        "communication.boundary.professional.title": "L’expert-comptable décide",
+        "communication.boundary.professional.copy": "Il confirme la position professionnelle, corrige le contenu, choisit public et calendrier, puis autorise toute publication.",
+        "communication.action": "Préparer une communication avec Vera",
         "assurance.index": "Méthode d’assurance",
         "assurance.title": "D’abord le sens. Ensuite le calcul.",
         "assurance.copy": "Vera sépare interprétation, confirmation professionnelle et contrôles mécaniques. Un résultat reproductible ne devient pas automatiquement une conclusion correcte.",
@@ -1878,11 +2556,12 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Finanzanalysen, Mandantenakten und Berichte mit qualifizierten Quellen, exakten Berechnungen, sichtbaren Ausnahmen und prüfbaren Entscheidungen vor.",
+        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Finanzanalysen, professionelle Kommunikation, Mandantenakten und Berichte mit qualifizierten Quellen und prüfbaren Entscheidungen vor.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
+        "nav.communication": "Kommunikation",
         "nav.assurance": "Methode",
         "nav.jurisdiction": "Für Zürich",
         "nav.data": "Daten",
@@ -1890,11 +2569,11 @@
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Bereiten Sie Pläne, Prüfungen, Abstimmungen, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
+        "hero.lead": "Bereiten Sie Pläne, Prüfungen, Abstimmungen, professionelle Kommunikation, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
         "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
-        "work.index": "Vierzehn Funktionen",
+        "work.index": "Fünfzehn Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Arbeitsbereich 1 von 3",
@@ -1933,6 +2612,71 @@
         "module.prompt": "Überführt eine rechtliche, steuerliche oder Compliance-Frage in eine Recherche mit festgelegtem Umfang, Quellen und Prüfungen.",
         "module.research.title": "Deep Research prüfen",
         "module.research": "Prüft Aussagen gegen zitierte Quellen und erstellt das konsolidierte Material.",
+        "module.communication.title": "Professionelle Kommunikation",
+        "module.communication": "Entscheidet, ob eine Entwicklung wirklich kommunikationswürdig ist, und erstellt E-Mails, Artikel, Beiträge und Visualisierungen im freigegebenen Kanzleiformat.",
+        "communication.index": "Professionelle Kommunikation",
+        "communication.title": "Veröffentlichen ist nicht der Punkt.",
+        "communication.copy": "Vera beginnt mit ausgewählten Quellen und dem tatsächlichen Format der Kanzlei. Sie entscheidet, ob es etwas Nützliches zu sagen gibt, und erstellt ein Paket, das die Steuerberatung prüfen, korrigieren oder stoppen kann.",
+        "communication.thesis": "Die richtige Antwort kann lauten: nicht veröffentlichen.",
+        "communication.thesisCopy": "Ein freier Platz im Kalender reicht nicht. Der Inhalt muss eine präzise Tatsache, einen nützlichen Schritt oder eine besser gefasste Entscheidung bieten.",
+        "communication.outcomes.label": "Mögliche redaktionelle Entscheidungen",
+        "communication.outcomes.publish.title": "Veröffentlichen",
+        "communication.outcomes.publish.copy": "Eine konkrete Information sollte die gewählte Zielgruppe erreichen.",
+        "communication.outcomes.revise.title": "Überarbeiten",
+        "communication.outcomes.revise.copy": "Die Grundlage ist nützlich, aber Aussagen, Perspektive oder Format reichen noch nicht.",
+        "communication.outcomes.silence.title": "Nicht veröffentlichen",
+        "communication.outcomes.silence.copy": "Die Entwicklung ist wiederholend, unwesentlich oder unzureichend belegt.",
+        "communication.journey.title": "Von der Quelle zur Kommunikation – ohne Abkürzungen.",
+        "communication.journey.copy": "Das redaktionelle Urteil bleibt modellgeführt; Register, Versionen, Renderings und Freigaben bleiben prüfbar.",
+        "communication.steps.sources.title": "Ausgewählte Quellen",
+        "communication.steps.sources.copy": "Vera bewahrt das exakte Dokument und trennt Primärquellen von Kommentaren.",
+        "communication.steps.claims.title": "Abgesicherte Aussagen",
+        "communication.steps.claims.copy": "Jede Aussage trennt Quellenbeleg, Begründung, Unsicherheit und professionelles Urteil.",
+        "communication.steps.editor.title": "Urteil gegen KI-Beliebigkeit",
+        "communication.steps.editor.copy": "Ein separates Modell sucht nach Banalität, Wiederholung und zu geringem Nutzen, bevor der Entwurf die Kanzlei erreicht.",
+        "communication.steps.review.title": "Professionelle Prüfung",
+        "communication.steps.review.copy": "Die Fachperson prüft Inhalt, Grafik und Endpaket anhand der exakten Versionen.",
+        "communication.outputs.index": "Eine Grundlage · mehrere Kanäle",
+        "communication.outputs.title": "Wirklich unterschiedliche Formen. Dieselben Fakten.",
+        "communication.outputs.copy": "E-Mail, Artikel, Beitrag und Visualisierung teilen dieselben freigegebenen Aussagen; Struktur, Tiefe und Nutzen ändern sich.",
+        "communication.outputs.email": "Mandanten-E-Mail",
+        "communication.outputs.article": "Website-Artikel",
+        "communication.outputs.post": "LinkedIn-Beitrag",
+        "communication.outputs.visual": "Grafische Erklärung",
+        "communication.specimen.kicker": "Grafische Erklärung",
+        "communication.specimen.title": "Mehr Information als der Beitrag – oder kein Karussell.",
+        "communication.specimen.point1": "Der wesentliche Unterschied",
+        "communication.specimen.point2": "Der zu prüfende Umfang",
+        "communication.specimen.point3": "Die Grenze der Schlussfolgerung",
+        "communication.specimen.source": "Öffentliche Quelle: Behörde · Rechtsakt · Datum",
+        "communication.profile.title": "Das Format gehört der Kanzlei.",
+        "communication.profile.copy": "Vera verwechselt beobachtete Konventionen weder mit gelieferten Vorgaben noch mit eigenen Vorschlägen.",
+        "communication.profile.observed.basis": "Beobachtet",
+        "communication.profile.observed.title": "Aus ausgewählter Historie",
+        "communication.profile.observed.copy": "Stimme, Hierarchie, Signatur und Layout stammen nur aus den von der Kanzlei ausgewählten Beispielen.",
+        "communication.profile.supplied.basis": "Geliefert",
+        "communication.profile.supplied.title": "Von der Kanzlei",
+        "communication.profile.supplied.copy": "Logo, Farben, Geometrie und explizite Vorgaben bleiben von abgeleiteten Gewohnheiten getrennt.",
+        "communication.profile.proposed.basis": "Vorgeschlagen",
+        "communication.profile.proposed.title": "Von Vera",
+        "communication.profile.proposed.copy": "Ein Vorschlag wird erst nach professioneller Freigabe zum neuen Standard.",
+        "communication.assurance.title": "Vier Schutzmechanismen gegen beliebige KI-Inhalte.",
+        "communication.assurance.claims.title": "Jede Aussage muss standhalten",
+        "communication.assurance.claims.copy": "Eine registrierte Quelle genügt nicht: Identität, semantische Stützung und Begründung müssen tragen.",
+        "communication.assurance.editor.title": "Ein anderes Modell redigiert",
+        "communication.assurance.editor.copy": "Es verteidigt den Entwurf nicht, sondern vergleicht ihn mit einer Veröffentlichung einer anspruchsvollen Fachperson.",
+        "communication.assurance.visual.title": "Die Grafik verdient ihren Platz",
+        "communication.assurance.visual.copy": "Jede Seite muss Information oder Struktur ergänzen; einen Beitrag nur aufzuteilen schafft keinen Wert.",
+        "communication.assurance.package.title": "Die finalen Dateien werden freigegeben",
+        "communication.assurance.package.copy": "Text, Bilder, PDF und HTML werden in ihren exakten Versionen vor Versand oder Veröffentlichung geprüft.",
+        "communication.creative.kicker": "Optionale visuelle Richtung",
+        "communication.creative.title": "Creative Production kann das visuelle Niveau heben. Die Fakten kann es nicht verändern.",
+        "communication.creative.copy": "Nach Annahme des Inhalts werden vier bis sechs Richtungen vorgeschlagen. Die Fachperson wählt eine; Vera überträgt sie in das Kanzleisystem und baut Text, Quellen und Logo exakt neu auf.",
+        "communication.boundary.vera.title": "Vera bereitet vor",
+        "communication.boundary.vera.copy": "Sie liest Quellen, schlägt die Perspektive vor, sichert Aussagen ab, passt Kanäle an und baut das prüfbare Paket.",
+        "communication.boundary.professional.title": "Die Steuerberatung entscheidet",
+        "communication.boundary.professional.copy": "Sie bestätigt die fachliche Position, korrigiert Inhalte, wählt Zielgruppe und Zeitpunkt und genehmigt jede Veröffentlichung.",
+        "communication.action": "Mit Vera eine Kommunikation vorbereiten",
         "assurance.index": "Assurance-Methode",
         "assurance.title": "Erst die Bedeutung. Dann die Berechnung.",
         "assurance.copy": "Vera trennt Interpretation, fachliche Bestätigung und mechanische Kontrollen. Ein reproduzierbares Ergebnis ist nicht automatisch eine richtige Schlussfolgerung.",
@@ -1989,11 +2733,12 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera prepara controles, conciliaciones, análisis financieros, expedientes e informes con fuentes cualificadas, cálculos exactos, excepciones visibles y decisiones revisables.",
+        "meta.description": "Vera prepara controles, conciliaciones, análisis financieros, comunicaciones profesionales, expedientes e informes con fuentes cualificadas y decisiones revisables.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
+        "nav.communication": "Comunicación",
         "nav.assurance": "Método",
         "nav.jurisdiction": "Trabajo local",
         "nav.data": "Datos",
@@ -2001,11 +2746,11 @@
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Prepara planes, controles, conciliaciones, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
+        "hero.lead": "Prepara planes, controles, conciliaciones, comunicaciones profesionales, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
         "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
-        "work.index": "Catorce funciones",
+        "work.index": "Quince funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área de trabajo 1 de 3",
@@ -2044,6 +2789,71 @@
         "module.prompt": "Convierte una pregunta jurídica, fiscal o de cumplimiento en una investigación con ámbito, fuentes y comprobaciones definidos.",
         "module.research.title": "Validar Deep Research",
         "module.research": "Comprueba las afirmaciones frente a las fuentes citadas y prepara el material consolidado.",
+        "module.communication.title": "Comunicación profesional",
+        "module.communication": "Decide si una novedad merece realmente comunicarse y prepara correos, artículos, publicaciones y visuales en el formato aprobado del despacho.",
+        "communication.index": "Comunicación profesional",
+        "communication.title": "Publicar no es el objetivo.",
+        "communication.copy": "Vera parte de fuentes seleccionadas y del formato real del despacho. Decide si hay algo útil que decir y prepara un paquete que el asesor puede verificar, corregir o detener.",
+        "communication.thesis": "La respuesta correcta puede ser no publicar.",
+        "communication.thesisCopy": "Un hueco libre en el calendario no basta. El contenido debe aportar un hecho preciso, un paso útil o una decisión mejor planteada.",
+        "communication.outcomes.label": "Posibles decisiones editoriales",
+        "communication.outcomes.publish.title": "Publicar",
+        "communication.outcomes.publish.copy": "Hay información concreta que merece llegar al público elegido.",
+        "communication.outcomes.revise.title": "Revisar",
+        "communication.outcomes.revise.copy": "La base es útil, pero las afirmaciones, el enfoque o el formato todavía no están a la altura.",
+        "communication.outcomes.silence.title": "No publicar",
+        "communication.outcomes.silence.copy": "La novedad es repetitiva, irrelevante o no está suficientemente respaldada.",
+        "communication.journey.title": "De la fuente a la comunicación, sin atajos.",
+        "communication.journey.copy": "El juicio editorial sigue guiado por el modelo; registros, versiones, renderizados y aprobaciones siguen siendo verificables.",
+        "communication.steps.sources.title": "Fuentes seleccionadas",
+        "communication.steps.sources.copy": "Vera conserva el documento exacto y distingue las fuentes primarias de los comentarios.",
+        "communication.steps.claims.title": "Afirmaciones aseguradas",
+        "communication.steps.claims.copy": "Cada afirmación separa el respaldo de la fuente, el razonamiento, la incertidumbre y el juicio profesional.",
+        "communication.steps.editor.title": "Juicio contra el contenido vacío",
+        "communication.steps.editor.copy": "Un evaluador distinto busca banalidad, repetición y valor insuficiente antes de que el borrador llegue al despacho.",
+        "communication.steps.review.title": "Revisión profesional",
+        "communication.steps.review.copy": "El profesional revisa contenido, gráfica y paquete final vinculados a las versiones exactas.",
+        "communication.outputs.index": "Una base · varios canales",
+        "communication.outputs.title": "Formatos realmente distintos. Los mismos hechos.",
+        "communication.outputs.copy": "Correo, artículo, publicación y visual comparten las mismas afirmaciones aprobadas; cambian su estructura, profundidad y utilidad.",
+        "communication.outputs.email": "Correo a clientes",
+        "communication.outputs.article": "Artículo para la web",
+        "communication.outputs.post": "Publicación en LinkedIn",
+        "communication.outputs.visual": "Explicación gráfica",
+        "communication.specimen.kicker": "Explicación gráfica",
+        "communication.specimen.title": "Más información que la publicación, o no hay carrusel.",
+        "communication.specimen.point1": "La diferencia material",
+        "communication.specimen.point2": "El alcance que debe verificarse",
+        "communication.specimen.point3": "El límite de la conclusión",
+        "communication.specimen.source": "Fuente pública: autoridad · acto · fecha",
+        "communication.profile.title": "El formato pertenece al despacho.",
+        "communication.profile.copy": "Vera no confunde una convención observada con una elección proporcionada ni con su propia propuesta.",
+        "communication.profile.observed.basis": "Observado",
+        "communication.profile.observed.title": "Del historial seleccionado",
+        "communication.profile.observed.copy": "Voz, jerarquía, firma y maquetación proceden solo de los ejemplos elegidos por el despacho.",
+        "communication.profile.supplied.basis": "Proporcionado",
+        "communication.profile.supplied.title": "Por el despacho",
+        "communication.profile.supplied.copy": "Logo, colores, geometría e instrucciones explícitas siguen separados de los hábitos inferidos.",
+        "communication.profile.proposed.basis": "Propuesto",
+        "communication.profile.proposed.title": "Por Vera",
+        "communication.profile.proposed.copy": "Una propuesta solo se convierte en nuevo estándar tras la aprobación profesional.",
+        "communication.assurance.title": "Cuatro formas de no producir contenido vacío.",
+        "communication.assurance.claims.title": "Cada afirmación debe sostenerse",
+        "communication.assurance.claims.copy": "Una fuente registrada no basta: identidad, respaldo semántico y razonamiento deben sostenerse.",
+        "communication.assurance.editor.title": "Otro modelo hace de editor",
+        "communication.assurance.editor.copy": "No defiende el borrador; lo compara con una publicación firmada por un profesional exigente.",
+        "communication.assurance.visual.title": "La gráfica se gana su lugar",
+        "communication.assurance.visual.copy": "Cada página debe añadir información o estructura; dividir una publicación en páginas no aporta valor.",
+        "communication.assurance.package.title": "Se aprueban los archivos finales",
+        "communication.assurance.package.copy": "Texto, imágenes, PDF y HTML se revisan en sus versiones exactas antes de cualquier envío o publicación.",
+        "communication.creative.kicker": "Dirección visual opcional",
+        "communication.creative.title": "Creative Production puede elevar el nivel visual. No puede cambiar los hechos.",
+        "communication.creative.copy": "Tras aceptar el contenido, propone entre cuatro y seis direcciones. El profesional elige una; Vera la traduce al sistema del despacho y reconstruye con exactitud texto, fuentes y logo.",
+        "communication.boundary.vera.title": "Vera prepara",
+        "communication.boundary.vera.copy": "Lee las fuentes, propone el enfoque, asegura las afirmaciones, adapta los canales y construye el paquete revisable.",
+        "communication.boundary.professional.title": "El asesor decide",
+        "communication.boundary.professional.copy": "Confirma la posición profesional, corrige el contenido, elige público y calendario y autoriza cualquier publicación.",
+        "communication.action": "Preparar una comunicación con Vera",
         "assurance.index": "Método de aseguramiento",
         "assurance.title": "Primero el significado. Después el cálculo.",
         "assurance.copy": "Vera separa interpretación, confirmación profesional y controles mecánicos. Un resultado reproducible no se convierte automáticamente en una conclusión correcta.",
