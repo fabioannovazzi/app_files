@@ -143,6 +143,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "bilancio-xbrl-it": "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md",
     "check-entries": "modules/check-entries/skills/check-entries/SKILL.md",
     "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+    "comunicazione-professionale": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
     "dati-fiscali-strutturati": "modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md",
     "deep-research-validator": "modules/deep-research-validator/skills/deep-research-validator/SKILL.md",
     "email-cliente": "modules/client-file-preparation/skills/email-cliente/SKILL.md",

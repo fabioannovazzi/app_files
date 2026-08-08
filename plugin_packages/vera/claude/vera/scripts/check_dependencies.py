@@ -24,6 +24,7 @@ COMPONENTS = (
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
+    "comunicazione-professionale",
     "prompt-optimizer",
     "deep-research-validator",
     "previdenza-inps",

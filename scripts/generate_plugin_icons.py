@@ -175,6 +175,13 @@ SPECS = (
         "concordato",
     ),
     IconSpec(
+        "comunicazione-professionale",
+        "Comunicazione professionale",
+        "#002060",
+        "#00B0F0",
+        "communication",
+    ),
+    IconSpec(
         "registro-imprese-sari",
         "Registro Imprese e SARI",
         "#145F5A",
@@ -387,6 +394,12 @@ def _body(spec: IconSpec) -> str:
   <path d="M26 31h18M26 39h15" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
   <path d="M32 47h11" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>
   <path d="m44 44 4 4 8-11" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "communication": f"""
+  <path d="M15 14h29l7 8v30H15z" fill="{paper}"/>
+  <path d="M44 14v9h7" fill="#DCE5E8"/>
+  <path d="M22 27h20M22 35h15M22 43h11" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <path d="M43 33c5 0 9 4 9 9v10l-6-4h-3a9 9 0 1 1 0-15z" fill="{accent}"/>
+  <path d="M40 39h7M40 44h5" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>""",
         "registry": f"""
   <path d="M31 12 12 23h38z" fill="{paper}"/>
   <path d="M16 27h28M17 47h26" stroke="{paper}" stroke-width="5" stroke-linecap="round"/>

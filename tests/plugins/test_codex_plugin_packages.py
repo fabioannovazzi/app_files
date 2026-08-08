@@ -20,6 +20,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "bilancio-xbrl-it",
     "check-entries",
     "concordato-plan-review",
+    "comunicazione-professionale",
     "deep-research-validator",
     "financial-analysis",
     "sales-plan",
@@ -467,11 +468,11 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.101"
+    assert manifest["version"] == "0.1.103"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
-        "Riconcilia partite, mastrini, estratti conto e pagamenti. Prepara Excel "
-        "e Word con abbinamenti, residui ed eccezioni."
+        "Studia il formato dello studio e prepara email, articolo web e grafica "
+        "su questa novità, oppure non pubblicare."
     )
     assert any(
         "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
@@ -658,7 +659,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 22
+        assert len(card_bodies) == 23
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -1180,7 +1181,10 @@ def test_vera_routes_every_commercialista_module() -> None:
 
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
-    assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {"bandi-agevolazioni"}
+    assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "bandi-agevolazioni",
+        "comunicazione-professionale",
+    }
     assert COMMERCIALISTA_MODULE_NAMES - {"client-file-preparation"} <= skill_names
     assert "client-file-preparation" not in skill_names
     assert components["workflow_roles"] == {
@@ -4132,6 +4136,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "new-client": ("https://mparanza.com/static/shared/new-client/index.html"),
         "concordato-plan-review": (
             "https://mparanza.com/static/shared/concordato-plan-review/index.html"
+        ),
+        "comunicazione-professionale": (
+            "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
         "journal-bank-reconciliation": (
             "https://mparanza.com/static/shared/journal-bank-reconciliation/index.html"

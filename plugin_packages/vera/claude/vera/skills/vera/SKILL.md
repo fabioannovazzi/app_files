@@ -191,6 +191,14 @@ them without changing the capability catalog:
   FAQs, forms, and beneficiary evidence. Never claim exhaustive discovery,
   invent eligibility, treat FAQ as an amendment, contact clients automatically,
   receive portal credentials, sign, or submit.
+- `comunicazione-professionale`: event-driven editorial work from exact selected
+  sources and prior studio communications in a private studio-wide workspace.
+  It uses model-led judgment for meaning, authority, audience value, voice,
+  claims, and `publish` versus `no_publish`; deterministic scripts own only
+  input snapshots, review freshness, source-ID closure, rendering, and hashes.
+  Never turn a schedule into a publication reason, mix studio profiles, copy
+  distinctive prior passages, infer recipient applicability, or send or publish
+  without an accepted exact package and explicit route selection.
 
 ## Workflow provenance
 

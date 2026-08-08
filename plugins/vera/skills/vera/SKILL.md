@@ -114,12 +114,15 @@ deployment's actual account settings.
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. The one explicit exception is
-the pre-client `bandi-agevolazioni` studio opportunity radar: a portfolio cannot
-belong to one customer folder, so it uses an owner-only, explicitly authorized
-local workspace bound to its exact path and retention owner. It creates no
-portable client run. A selected, self-verifiable handoff must enter a new exact
-client engagement before application instruction begins. Do not infer the client from a
+customer folder is its durable source of truth. Two studio-wide workflows are
+explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
+cannot belong to one customer folder. `comunicazione-professionale` learns the
+studio's approved editorial voice and output formats across communications and
+must not be stored as one client's engagement. Each uses its own owner-only,
+explicitly authorized local workspace bound to its exact path and retention
+owner. Neither creates a portable client run. A selected, self-verifiable bandi
+handoff must enter a new exact client engagement before application instruction
+begins. Do not infer the client from a
 filename or assume that a similarly named folder is registered. Follow this
 explicit sequence:
 
@@ -223,6 +226,14 @@ them without changing the capability catalog:
   FAQs, forms, and beneficiary evidence. Never claim exhaustive discovery,
   invent eligibility, treat FAQ as an amendment, contact clients automatically,
   receive portal credentials, sign, or submit.
+- `comunicazione-professionale`: event-driven editorial work from exact selected
+  sources and prior studio communications in a private studio-wide workspace.
+  It uses model-led judgment for meaning, authority, audience value, voice,
+  claims, and `publish` versus `no_publish`; deterministic scripts own only
+  input snapshots, review freshness, source-ID closure, rendering, and hashes.
+  Never turn a schedule into a publication reason, mix studio profiles, copy
+  distinctive prior passages, infer recipient applicability, or send or publish
+  without an accepted exact package and explicit route selection.
 
 ## Workflow provenance
 
