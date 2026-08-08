@@ -3275,6 +3275,7 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     assert section.count('class="comms-step"') == 4
     assert section.count('class="comms-profile__item"') == 3
     assert section.count('class="comms-assurance__row"') == 4
+    assert ".comms-channel-list li::after" not in page
     assert "counter-reset: comms-point" in page
     assert 'content: "0" counter(comms-point)' in page
     assert "Fonte: fonte ufficiale" not in section
