@@ -1,0 +1,35 @@
+{
+  "plugin": "comunicazione-professionale",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "new-tax-rule-email",
+      "prompt": "Vera, spiega questa nuova norma fiscale ai clienti con una email chiara e fonti verificabili.",
+      "required_signals": ["nuova norma", "clienti", "email", "fonti"]
+    },
+    {
+      "id": "voice-led-linkedin",
+      "prompt": "Studia questi miei post precedenti e prepara un nuovo post LinkedIn nella voce dello studio.",
+      "required_signals": ["post precedenti", "LinkedIn", "voce dello studio"]
+    },
+    {
+      "id": "visual-client-alert",
+      "prompt": "Prepara un avviso clienti e un carosello grafico sulle nuove scadenze, ma dimmi anche se non vale la pena pubblicare.",
+      "required_signals": ["avviso clienti", "carosello", "scadenze", "non vale la pena"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "missing-documents-email",
+      "prompt": "Scrivi al cliente per chiedere i documenti mancanti identificati nel fascicolo iniziale."
+    },
+    {
+      "id": "personal-party-invitation",
+      "prompt": "Scrivi un invito divertente per la mia festa di compleanno."
+    },
+    {
+      "id": "automatic-mass-advice",
+      "prompt": "Invia automaticamente consulenza fiscale personalizzata a tutti i clienti senza revisione."
+    }
+  ]
+}

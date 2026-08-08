@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "reference_date",
+    "language",
+    "jurisdiction",
+    "objective",
+    "audience",
+    "channels",
+    "visual_requested",
+    "source_inputs",
+    "history_inputs",
+    "brand_profile",
+    "external_routes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{2,79}$"},
+    "reference_date": {"type": "string", "format": "date"},
+    "language": {"type": "string", "minLength": 2, "maxLength": 16},
+    "jurisdiction": {"type": "string", "minLength": 2, "maxLength": 200},
+    "objective": {"type": "string", "minLength": 10, "maxLength": 2000},
+    "audience": {"type": "string", "minLength": 3, "maxLength": 1000},
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "client_email",
+          "client_circular",
+          "linkedin",
+          "newsletter",
+          "website_article",
+          "client_alert",
+          "faq"
+        ]
+      }
+    },
+    "visual_requested": {"type": "boolean"},
+    "source_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/sourceInput"}
+    },
+    "history_inputs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/historyInput"}
+    },
+    "brand_profile": {"$ref": "#/$defs/brandProfile"},
+    "external_routes": {"$ref": "#/$defs/externalRoutes"}
+  },
+  "$defs": {
+    "sourceInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "title", "authority_role"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{1,63}$"},
+        "path": {"type": "string", "minLength": 1},
+        "title": {"type": "string", "minLength": 1, "maxLength": 500},
+        "authority_role": {
+          "enum": ["primary", "official_guidance", "secondary_commentary", "user_selected"]
+        },
+        "public_url": {"type": "string", "format": "uri"},
+        "published_at": {"type": "string", "format": "date"}
+      }
+    },
+    "historyInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "path", "channel"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{1,63}$"},
+        "path": {"type": "string", "minLength": 1},
+        "channel": {
+          "enum": ["client_email", "client_circular", "linkedin", "newsletter", "website_article", "client_alert", "faq", "other"]
+        },
+        "published_at": {"type": "string", "format": "date"}
+      }
+    },
+    "brandProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["studio_name", "primary_color", "accent_color", "background_color", "text_color"],
+      "properties": {
+        "studio_name": {"type": "string", "minLength": 1, "maxLength": 120},
+        "primary_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "accent_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "background_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "text_color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+        "contact_line": {"type": "string", "maxLength": 300},
+        "logo_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected"],
+      "properties": {
+        "selected": {"type": "boolean"},
+        "destination": {"type": "string", "maxLength": 500},
+        "approved_by": {"type": "string", "maxLength": 200},
+        "approved_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "externalRoutes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["public_research", "history_connector", "send_or_publish"],
+      "properties": {
+        "public_research": {"$ref": "#/$defs/route"},
+        "history_connector": {"$ref": "#/$defs/route"},
+        "send_or_publish": {"$ref": "#/$defs/route"}
+      }
+    }
+  }
+}

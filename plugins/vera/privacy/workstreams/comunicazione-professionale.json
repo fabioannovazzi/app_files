@@ -1,0 +1,118 @@
+{
+  "schema_version": 3,
+  "workstream": "comunicazione-professionale",
+  "display_name": "Comunicazione professionale",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "professional-communication-material",
+        "purpose": "Assess whether a professional development warrants communication and prepare source-backed studio-formatted drafts and visual stories for review",
+        "content": "Explicitly selected current source documents and official-source snapshots; selected prior studio emails, circulars, website articles, newsletters, FAQs, alerts and social posts; studio name, logo, colors, contact lines and approved format profile; intended audience and client-segment descriptions; source-authority assessments, editorial-value judgment, atomic claims, temporal qualifications, uncertainty, professional judgment, master brief, channel drafts, visual story, review decisions and packaged artifacts. Real professional names and contact details may enter the selected runtime model context when present in selected material. The workflow does not promise automatic anonymization.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "official-public-research",
+      "kind": "public_research",
+      "destination": "Public official legal, tax, regulatory, social-security, corporate, accounting, grant and issuing-authority sources selected for the communication topic",
+      "purpose": "Locate current authoritative material using generic topic-level queries before a professional claim is proposed",
+      "content": "Generic norm, authority, measure, date, topic and document queries plus public source metadata and bytes; no client identity, case facts, recipient list, private prior communication, credentials, cookies or session material",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records explicit route selection, destination and asserted approval metadata before a run is prepared.",
+        "Use generic topic-level queries and keep client identity, case facts and private studio history out of public search requests.",
+        "Capture exact selected source bytes into the run before confirming claims; a URL string alone is not registered evidence."
+      ]
+    },
+    {
+      "id": "selected-studio-history-connector",
+      "kind": "external_connector",
+      "destination": "A callable connected account or already authenticated supported browser surface explicitly selected to read prior studio communications",
+      "purpose": "Retrieve only user-selected prior studio communications for a proposed voice and format profile",
+      "content": "Selected prior post, article, email, newsletter, FAQ, alert or circular content and its channel and date metadata; no credential, cookie, session token, one-time code or unrelated account history",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records explicit connector route selection, destination and asserted approval metadata before a run is prepared.",
+        "Read only the exact history items selected for learning; stop at account ambiguity, security checkpoints or unavailable callable access.",
+        "Store selected history as immutable local snapshots and use it only to propose a reviewable profile; do not copy distinctive passages or infer private beliefs."
+      ]
+    },
+    {
+      "id": "approved-send-or-publication",
+      "kind": "send_or_publish",
+      "destination": "The exact recipient set, email account, website destination or social account selected by the professional",
+      "purpose": "Send, upload or publish the exact accepted final communication package after visible destination verification",
+      "content": "Accepted communication copy and selected accepted attachments or graphics plus destination metadata; no credentials, cookies, session tokens, one-time codes or unaccepted drafts",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records explicit send-or-publish route selection, exact destination and asserted approval metadata before a run is prepared.",
+        "Require fresh accepted semantic reviews, separate acceptance of exact rendered bytes when present, acceptance of the exact packaged channel files, a successful validation receipt, and final_ready status; immediately before receipt recording, recompute input, contribution, package, output-file and validation-receipt integrity.",
+        "Never request or store authentication secrets and never mark sent, uploaded or published without a user-confirmed visible receipt or URL bound to the exact accepted package digest and validation-receipt digest."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "path-bound-private-studio-workspace",
+      "control": "Workspace initialization requires explicit user confirmation, asserted owner and retention owner, owner-only permissions and an exact bound path outside the Git repository or published roots. Run creation commits from a private staging directory, cleans incomplete same-run staging state on retry, and every mutating command uses a non-blocking operating-system writer lock plus atomic file replacement."
+    },
+    {
+      "id": "integrity-bound-selected-input-snapshots",
+      "control": "Preparation accepts only regular non-symlink selected files, copies them into owner-only run storage, records byte size and SHA-256, rejects duplicate identities, and binds the complete intake plus source register to one digest. Review, render, package, validation and delivery gates recompute that digest and fail when a source, history item, profile snapshot, logo, register field or intake field is missing or changed."
+    },
+    {
+      "id": "exhaustive-artifact-and-secret-field-validation",
+      "control": "Exhaustive JSON Schemas reject unknown intake and contribution fields; a recursive normalized-key guard rejects password, passcode, PIN, OTP, cookie, session-cookie, token, API-key, client-secret, private-key, secret-key and credential fields from model contributions."
+    },
+    {
+      "id": "digest-bound-professional-review",
+      "control": "Each model contribution is stored with an exact version snapshot and bound to recomputed input and contribution digests plus explicit model provenance. Every gate compares the current workbench with its version snapshot. Review events require user confirmation and locally asserted reviewer identity; superseding a returned or rejected contribution creates a new version and invalidates prior decisions. Rendered-output decisions additionally bind the exact visual-manifest digest."
+    },
+    {
+      "id": "studio-profile-isolation-and-promotion",
+      "control": "Selected prior communications can create only a reviewable profile proposal. Persistence requires a fresh accepted studio-profile review, versions the prior profile and logo asset in the same exact bound workspace, records source history IDs and contribution provenance, and writes a format digest over brand, asset and profile. Later no-history runs snapshot the stored profile and logo and reject conflicting brand or logo intake."
+    },
+    {
+      "id": "accepted-package-render-and-receipt",
+      "control": "Deterministic renderers operate only after required semantic review acceptance, reject text that cannot fit declared safe geometry, and record exact output, layout, font and visual-manifest hashes. Packaging requires user-confirmed acceptance of the current render digest when present, writes validation_pending, and validation additionally requires user-confirmed acceptance bound to the exact package digest before it can create a receipt and finalize status. External receipt recording rechecks current outputs and receipt bindings, requires the approved exact destination and user-confirmed visible evidence, and cannot overwrite prior evidence."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-08",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "8d27a9aca8428ae7b0776b23c1b68eed484e3af7f83da507f36ddfd96aae8d00"
+  }
+}
