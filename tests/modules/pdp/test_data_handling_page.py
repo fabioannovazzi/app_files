@@ -124,6 +124,9 @@ def test_data_handling_page_is_public_and_localized(
     assert page["video"]["title"] == video_title
     assert page["boundary"]["title"] == boundary_title
     assert page["closing"] == closing
+    privacy_register = context["privacy_register"]
+    assert isinstance(privacy_register, dict)
+    assert privacy_register["entry_count"] > 0
 
 
 def test_data_handling_template_links_localized_accessible_youtube_video() -> None:
