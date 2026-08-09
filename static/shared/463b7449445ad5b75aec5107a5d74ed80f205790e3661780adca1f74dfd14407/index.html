@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="description" content="Monica Manfredini, Dottore Commercialista e Revisore Legale. Consulenza per imprenditori, società e Terzo Settore.">
+  <title>Monica Manfredini | Commercialista e Revisore Legale</title>
+  <style>
+    @font-face {
+      font-family: "Instrument Sans";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("assets/fonts/instrument-sans-400.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Instrument Sans";
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url("assets/fonts/instrument-sans-500.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Instrument Sans";
+      font-style: normal;
+      font-weight: 600;
+      font-display: swap;
+      src: url("assets/fonts/instrument-sans-600.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Instrument Sans";
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url("assets/fonts/instrument-sans-700.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Newsreader";
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url("assets/fonts/newsreader-400.ttf") format("truetype");
+    }
+
+    @font-face {
+      font-family: "Newsreader";
+      font-style: normal;
+      font-weight: 500;
+      font-display: swap;
+      src: url("assets/fonts/newsreader-500.ttf") format("truetype");
+    }
+
+    :root {
+      color-scheme: light;
+      --paper: #f7f4ed;
+      --paper-deep: #eee9df;
+      --ink: #142936;
+      --ink-soft: #49606b;
+      --line: #cfd5d2;
+      --blue: #075f8a;
+      --blue-deep: #09364d;
+      --orange: #c65c2e;
+      --white: #fffdf8;
+      --sans: "Instrument Sans", "Segoe UI", sans-serif;
+      --serif: "Newsreader", Georgia, serif;
+      --page: min(1180px, calc(100vw - 48px));
+      --ease: cubic-bezier(.16, 1, .3, 1);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 1rem;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: linear-gradient(to right, rgba(20, 41, 54, .035) 1px, transparent 1px);
+      background-size: calc((100vw - max(48px, (100vw - 1180px))) / 12) 100%;
+      content: "";
+      pointer-events: none;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a { color: inherit; }
+
+    button,
+    summary,
+    a { -webkit-tap-highlight-color: transparent; }
+
+    :focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--orange) 80%, white);
+      outline-offset: 4px;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: 100;
+      padding: 10px 14px;
+      background: var(--ink);
+      color: var(--white);
+      text-decoration: none;
+      transform: translateY(-160%);
+    }
+
+    .skip-link:focus { transform: translateY(0); }
+
+    .shell {
+      width: var(--page);
+      margin-inline: auto;
+    }
+
+    .site-header {
+      position: relative;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--paper) 94%, transparent);
+    }
+
+    .nav-row {
+      min-height: 92px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+    }
+
+    .brand-copy strong,
+    .brand-copy span { display: block; }
+
+    .brand-copy strong {
+      font-size: .98rem;
+      font-weight: 650;
+      letter-spacing: -.02em;
+    }
+
+    .brand-copy span {
+      color: var(--ink-soft);
+      font-size: .72rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .desktop-nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .desktop-nav a {
+      position: relative;
+      font-size: .9rem;
+      text-decoration: none;
+    }
+
+    .desktop-nav > a:not(.nav-cta)::after {
+      position: absolute;
+      right: 0;
+      bottom: -7px;
+      left: 0;
+      height: 1px;
+      background: var(--orange);
+      content: "";
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 220ms var(--ease);
+    }
+
+    .desktop-nav > a:not(.nav-cta):hover::after {
+      transform: scaleX(1);
+      transform-origin: left;
+    }
+
+    .nav-cta,
+    .button {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 19px;
+      border: 1px solid var(--ink);
+      background: var(--ink);
+      color: var(--white);
+      font-weight: 600;
+      text-decoration: none;
+      transition: background 180ms var(--ease), color 180ms var(--ease), transform 180ms var(--ease);
+    }
+
+    .nav-cta:hover,
+    .button:hover {
+      background: var(--orange);
+      border-color: var(--orange);
+      transform: translateY(-2px);
+    }
+
+    .button--quiet {
+      border-color: var(--line);
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .button--quiet:hover {
+      border-color: var(--ink);
+      background: transparent;
+      color: var(--ink);
+    }
+
+    .mobile-menu { display: none; }
+
+    .hero {
+      padding: clamp(72px, 9vw, 132px) 0 82px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(360px, .72fr);
+      gap: clamp(52px, 8vw, 118px);
+      align-items: end;
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 28px;
+      color: var(--blue);
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      width: 42px;
+      height: 2px;
+      background: var(--orange);
+      content: "";
+    }
+
+    h1,
+    h2,
+    h3,
+    p { margin-top: 0; }
+
+    h1,
+    .display {
+      margin-bottom: 30px;
+      font-family: var(--serif);
+      font-size: clamp(3.75rem, 7.4vw, 7.3rem);
+      font-weight: 400;
+      letter-spacing: -.055em;
+      line-height: .91;
+      text-wrap: balance;
+    }
+
+    h1 em {
+      color: var(--blue);
+      font-weight: inherit;
+    }
+
+    .hero-lede {
+      max-width: 59ch;
+      margin-bottom: 34px;
+      color: var(--ink-soft);
+      font-size: 1.12rem;
+      line-height: 1.72;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .hero-visual {
+      position: relative;
+      padding: 0 0 34px 34px;
+    }
+
+    .hero-visual::before {
+      position: absolute;
+      inset: 36px 32px 0 0;
+      border: 1px solid var(--blue);
+      content: "";
+    }
+
+    .hero-visual img {
+      position: relative;
+      width: 100%;
+      min-height: 530px;
+      object-fit: cover;
+      object-position: 69% center;
+      filter: saturate(.86) contrast(.98);
+    }
+
+    .image-note {
+      position: absolute;
+      right: -18px;
+      bottom: 0;
+      width: min(245px, 74%);
+      padding: 18px 20px;
+      background: var(--orange);
+      color: var(--white);
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      line-height: 1.22;
+    }
+
+    .proof-rail {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+    }
+
+    .proof-item {
+      min-height: 130px;
+      display: flex;
+      align-items: flex-end;
+      padding: 28px 26px;
+      border-left: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: .9rem;
+      line-height: 1.35;
+    }
+
+    .proof-item:last-child { border-right: 1px solid var(--line); }
+
+    .proof-item strong {
+      display: block;
+      color: var(--ink);
+      font-size: 1.02rem;
+      font-weight: 600;
+    }
+
+    .manifesto {
+      padding: clamp(100px, 13vw, 190px) 0;
+    }
+
+    .manifesto-grid {
+      display: grid;
+      grid-template-columns: minmax(160px, .32fr) minmax(0, 1fr);
+      gap: 48px;
+      align-items: start;
+    }
+
+    .section-label {
+      margin: 10px 0 0;
+      color: var(--orange);
+      font-size: .75rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .manifesto blockquote {
+      max-width: 900px;
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.8rem, 5.3vw, 5.2rem);
+      letter-spacing: -.045em;
+      line-height: .98;
+    }
+
+    .manifesto blockquote span { color: var(--blue); }
+
+    .manifesto-note {
+      max-width: 58ch;
+      margin: 42px 0 0 auto;
+      color: var(--ink-soft);
+      font-size: 1.08rem;
+    }
+
+    .expertise {
+      padding: 110px 0 130px;
+      background: var(--blue-deep);
+      color: var(--white);
+    }
+
+    .expertise-head {
+      display: grid;
+      grid-template-columns: .7fr 1.3fr;
+      gap: 48px;
+      margin-bottom: 70px;
+      align-items: end;
+    }
+
+    .expertise .section-label { color: #f5a57f; }
+
+    .expertise h2,
+    .story h2,
+    .cta-band h2 {
+      margin-bottom: 0;
+      font-family: var(--serif);
+      font-size: clamp(2.9rem, 5vw, 5rem);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: .98;
+      text-wrap: balance;
+    }
+
+    .service-list {
+      border-top: 1px solid rgba(255, 253, 248, .28);
+    }
+
+    .service-row {
+      display: grid;
+      grid-template-columns: minmax(220px, .7fr) minmax(0, 1.3fr);
+      gap: 48px;
+      padding: 34px 0 38px;
+      border-bottom: 1px solid rgba(255, 253, 248, .28);
+    }
+
+    .service-row h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(1.65rem, 2.4vw, 2.25rem);
+      font-weight: 400;
+      line-height: 1.1;
+    }
+
+    .service-row p {
+      max-width: 64ch;
+      margin: 0;
+      color: #d7e4e8;
+    }
+
+    .story { padding: clamp(105px, 13vw, 180px) 0; }
+
+    .story-grid {
+      display: grid;
+      grid-template-columns: minmax(300px, .78fr) minmax(0, 1.1fr);
+      gap: clamp(56px, 9vw, 130px);
+      align-items: center;
+    }
+
+    .story-portrait {
+      position: relative;
+      margin-left: 28px;
+    }
+
+    .story-portrait::after {
+      position: absolute;
+      inset: 28px 28px -28px -28px;
+      z-index: -1;
+      background: var(--paper-deep);
+      content: "";
+    }
+
+    .story-portrait img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      object-position: center top;
+      filter: saturate(.82);
+    }
+
+    .story h2 { margin: 26px 0 32px; }
+
+    .story-copy > p {
+      max-width: 62ch;
+      color: var(--ink-soft);
+      font-size: 1.06rem;
+    }
+
+    .story-copy > p strong { color: var(--ink); }
+
+    .credentials {
+      margin-top: 44px;
+      border-top: 1px solid var(--line);
+    }
+
+    .credential {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 14px;
+      padding: 17px 0;
+      border-bottom: 1px solid var(--line);
+      font-size: .92rem;
+    }
+
+    .credential::before {
+      color: var(--orange);
+      content: "↗";
+    }
+
+    .studio {
+      padding: 100px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .studio-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(45px, 8vw, 110px);
+      align-items: center;
+    }
+
+    .studio-image {
+      min-height: 430px;
+      background: var(--paper-deep) url("assets/images/studio.webp") center / cover no-repeat;
+    }
+
+    .studio-copy h2 {
+      max-width: 14ch;
+      margin: 22px 0 28px;
+      font-family: var(--serif);
+      font-size: clamp(2.7rem, 4.6vw, 4.4rem);
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: 1;
+    }
+
+    .studio-copy p {
+      max-width: 55ch;
+      color: var(--ink-soft);
+    }
+
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+      color: var(--blue);
+      font-weight: 650;
+      text-underline-offset: 5px;
+    }
+
+    .cta-band {
+      padding: 100px 0;
+      background: var(--orange);
+      color: var(--white);
+    }
+
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 50px;
+      align-items: end;
+    }
+
+    .cta-band .section-label { color: var(--white); }
+
+    .cta-band h2 {
+      max-width: 15ch;
+      margin-top: 24px;
+    }
+
+    .contact-list {
+      display: grid;
+      gap: 12px;
+      justify-items: start;
+    }
+
+    .contact-list a {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 253, 248, .62);
+      font-size: 1.04rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: border-color 180ms ease, transform 180ms var(--ease);
+    }
+
+    .contact-list a:hover {
+      border-color: var(--white);
+      transform: translateX(5px);
+    }
+
+    .site-footer {
+      padding: 48px 0;
+      background: var(--ink);
+      color: #d5dfe2;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 30px;
+      align-items: end;
+    }
+
+    .footer-grid strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--white);
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      font-weight: 400;
+    }
+
+    .footer-grid p {
+      margin: 0;
+      font-size: .85rem;
+    }
+
+    .footer-meta { text-align: right; }
+
+    @media (max-width: 920px) {
+      :root { --page: min(100% - 36px, 760px); }
+
+      .desktop-nav { display: none; }
+
+      .mobile-menu {
+        position: relative;
+        display: block;
+      }
+
+      .mobile-menu summary {
+        min-width: 74px;
+        min-height: 46px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--ink);
+        cursor: pointer;
+        font-size: .88rem;
+        font-weight: 650;
+        list-style: none;
+      }
+
+      .mobile-menu summary::-webkit-details-marker { display: none; }
+
+      .mobile-menu nav {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        width: min(300px, calc(100vw - 36px));
+        display: grid;
+        border: 1px solid var(--ink);
+        background: var(--paper);
+      }
+
+      .mobile-menu nav a {
+        min-height: 52px;
+        display: flex;
+        align-items: center;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--line);
+        text-decoration: none;
+      }
+
+      .mobile-menu nav a:last-child {
+        border-bottom: 0;
+        background: var(--ink);
+        color: var(--white);
+      }
+
+      .hero { padding-top: 72px; }
+
+      .hero-grid,
+      .story-grid,
+      .studio-grid,
+      .cta-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-visual {
+        width: min(600px, 92%);
+        margin-left: auto;
+      }
+
+      .hero-visual img { min-height: 580px; }
+
+      .proof-grid { grid-template-columns: 1fr 1fr; }
+      .proof-item:nth-child(3) { border-top: 1px solid var(--line); }
+      .proof-item:nth-child(4) { border-top: 1px solid var(--line); }
+
+      .manifesto-grid,
+      .expertise-head,
+      .service-row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .manifesto-note { margin-left: 0; }
+      .expertise { padding: 92px 0 105px; }
+      .expertise-head { margin-bottom: 50px; }
+      .service-row { gap: 15px; }
+
+      .story-portrait {
+        width: min(530px, 88%);
+        margin-left: 28px;
+      }
+
+      .studio-image { min-height: 520px; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer-meta { text-align: left; }
+    }
+
+    @media (max-width: 580px) {
+      :root { --page: calc(100% - 30px); }
+
+      .nav-row { min-height: 78px; }
+      .brand-mark { width: 38px; height: 38px; }
+      .brand-copy span { display: none; }
+
+      .hero { padding: 54px 0 62px; }
+      h1 { font-size: clamp(3.25rem, 16vw, 5rem); }
+      .hero-lede { font-size: 1rem; }
+      .hero-actions { display: grid; }
+      .button { width: 100%; }
+
+      .hero-visual {
+        width: calc(100% - 14px);
+        padding: 0 0 22px 20px;
+      }
+
+      .hero-visual::before { inset: 22px 20px 0 0; }
+      .hero-visual img { min-height: 430px; }
+      .image-note { right: -14px; font-size: 1rem; }
+
+      .proof-grid { grid-template-columns: 1fr; }
+      .proof-item,
+      .proof-item:nth-child(2) { border-top: 1px solid var(--line); }
+      .proof-item:first-child { border-top: 0; }
+      .proof-item { min-height: 94px; padding: 20px 18px; }
+
+      .manifesto { padding: 94px 0; }
+      .manifesto blockquote { font-size: clamp(2.65rem, 13vw, 4rem); }
+      .manifesto-note { margin-top: 30px; }
+
+      .expertise { padding: 78px 0 90px; }
+      .expertise h2,
+      .story h2,
+      .cta-band h2 { font-size: clamp(2.7rem, 13vw, 4rem); }
+
+      .service-row { padding: 27px 0 31px; }
+
+      .story { padding: 95px 0 118px; }
+      .story-portrait { width: calc(100% - 22px); margin-left: 22px; }
+
+      .credential { font-size: .88rem; }
+      .studio { padding: 78px 0; }
+      .studio-image { min-height: 370px; }
+      .cta-band { padding: 78px 0; }
+      .contact-list a { overflow-wrap: anywhere; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+
+    @media print {
+      body::before,
+      .site-header,
+      .hero-actions,
+      .mobile-menu { display: none !important; }
+
+      body { background: white; color: black; }
+      .hero, .manifesto, .story, .studio, .expertise, .cta-band { padding: 32px 0; }
+      .expertise, .cta-band { background: white; color: black; }
+      .service-row p { color: #333; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+
+  <header class="site-header">
+    <div class="shell nav-row">
+      <a class="brand" href="#top" aria-label="Monica Manfredini, torna all'inizio">
+        <span class="brand-mark" aria-hidden="true">MM</span>
+        <span class="brand-copy">
+          <strong>Monica Manfredini</strong>
+          <span>Commercialista &amp; Revisore Legale</span>
+        </span>
+      </a>
+
+      <nav class="desktop-nav" aria-label="Navigazione principale">
+        <a href="#approccio">Approccio</a>
+        <a href="#competenze">Competenze</a>
+        <a href="#profilo">Profilo</a>
+        <a href="#studio">Studio</a>
+        <a class="nav-cta" href="mailto:info@studiomanfredinionline.it">Parliamone <span aria-hidden="true">↗</span></a>
+      </nav>
+
+      <details class="mobile-menu">
+        <summary>Menu</summary>
+        <nav aria-label="Navigazione mobile">
+          <a href="#approccio">Approccio</a>
+          <a href="#competenze">Competenze</a>
+          <a href="#profilo">Profilo</a>
+          <a href="#studio">Studio</a>
+          <a href="mailto:info@studiomanfredinionline.it">Parliamone</a>
+        </nav>
+      </details>
+    </div>
+  </header>
+
+  <main id="contenuto">
+    <section class="hero" id="top">
+      <div class="shell hero-grid">
+        <div>
+          <p class="eyebrow">Pozzolo Formigaro · Alessandria</p>
+          <h1>I numeri servono a <em>decidere</em>, non solo a dichiarare.</h1>
+          <p class="hero-lede">Affianco imprenditori e organizzazioni nella lettura dei numeri, nelle scelte societarie e nella costruzione di un'impresa più consapevole.</p>
+          <div class="hero-actions">
+            <a class="button" href="tel:+390143418164">Chiama lo studio <span aria-hidden="true">↗</span></a>
+            <a class="button button--quiet" href="#competenze">Scopri le competenze</a>
+          </div>
+        </div>
+
+        <figure class="hero-visual">
+          <img src="assets/images/hero.webp" width="1310" height="608" alt="Monica Manfredini nel suo studio davanti a una presentazione di analisi finanziaria">
+          <figcaption class="image-note">Competenza tecnica, relazione diretta, visione d'impresa.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <aside class="proof-rail" aria-label="Aree di esperienza">
+      <div class="shell proof-grid">
+        <div class="proof-item"><span><strong>Revisore Legale</strong>e Revisore Enti Locali</span></div>
+        <div class="proof-item"><span><strong>Finanza d'impresa</strong>e strategia societaria</span></div>
+        <div class="proof-item"><span><strong>Terzo Settore</strong>associazioni culturali e sportive</span></div>
+        <div class="proof-item"><span><strong>Sostenibilità</strong>Revisore della Sostenibilità</span></div>
+      </div>
+    </aside>
+
+    <section class="manifesto" id="approccio">
+      <div class="shell manifesto-grid">
+        <p class="section-label">Il mio approccio</p>
+        <div>
+          <blockquote>Il commercialista non è “l'uomo delle tasse”. È il <span>partner dell'imprenditore.</span></blockquote>
+          <p class="manifesto-note">Un professionista che aiuta a leggere i numeri, valutare le alternative e prendere decisioni più solide per il futuro dell'impresa.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="expertise" id="competenze">
+      <div class="shell">
+        <div class="expertise-head">
+          <p class="section-label">Competenze</p>
+          <h2>Il lavoro ordinario, con lo sguardo rivolto alle decisioni.</h2>
+        </div>
+
+        <div class="service-list">
+          <article class="service-row">
+            <h3>Contabilità, paghe e dichiarazioni</h3>
+            <p>Gestione contabile, dichiarazioni dei redditi, paghe, pratiche e attività CAF, con un rapporto chiaro e continuativo con lo studio.</p>
+          </article>
+          <article class="service-row">
+            <h3>Società e patrimonio</h3>
+            <p>Costituzioni societarie, cessioni di quote, consulenza societaria e sistemazione del patrimonio, lette nel quadro complessivo dell'impresa.</p>
+          </article>
+          <article class="service-row">
+            <h3>Finanza e strategia d'impresa</h3>
+            <p>Analisi economico-finanziaria e supporto alle scelte per imprenditori che vogliono comprendere meglio l'andamento e le prospettive della propria attività.</p>
+          </article>
+          <article class="service-row">
+            <h3>Terzo Settore</h3>
+            <p>Esperienza nella costituzione e nella gestione contabile di associazioni culturali e sportive, lungo le diverse fasi della loro vita.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="story" id="profilo">
+      <div class="shell story-grid">
+        <figure class="story-portrait">
+          <img src="assets/images/portrait.webp" width="504" height="595" loading="lazy" alt="Ritratto professionale di Monica Manfredini nel suo studio">
+        </figure>
+
+        <div class="story-copy">
+          <p class="section-label">Profilo</p>
+          <h2>“Non chi comincia, ma quel che persevera.”</h2>
+          <p>Ho sempre amato i numeri e le persone. Ho costruito il mio percorso con la convinzione che i numeri possano aiutare gli imprenditori a realizzare progetti, affrontare i momenti difficili e scegliere con maggiore consapevolezza.</p>
+          <p><strong>Oggi lavoro al loro fianco con la stessa determinazione:</strong> competenza, responsabilità e una relazione professionale concreta.</p>
+
+          <div class="credentials" aria-label="Incarichi e qualifiche">
+            <div class="credential">Membro del Consiglio dell'Ordine dei Commercialisti di Alessandria</div>
+            <div class="credential">Membro di commissioni di studio su financial reporting e Terzo Settore</div>
+            <div class="credential">Revisore Legale, Revisore Enti Locali e Revisore della Sostenibilità</div>
+            <div class="credential">Certified Early Warning European Mentor Academy</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="studio" id="studio">
+      <div class="shell studio-grid">
+        <div class="studio-image" role="img" aria-label="Monica Manfredini durante un incontro professionale"></div>
+        <div class="studio-copy">
+          <p class="section-label">Lo studio</p>
+          <h2>Una struttura fondata sulle persone.</h2>
+          <p>Lo studio opera insieme a due centri elaborazione dati. I collaboratori sono parte essenziale dell'organizzazione: affidabili, sensibili e presenti nel lavoro quotidiano con i clienti.</p>
+          <a class="text-link" href="https://www.monicamanfredinicommercialista.it/il-mio-staff">Conosci lo staff <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta-band" id="contatti">
+      <div class="shell cta-grid">
+        <div>
+          <p class="section-label">Primo contatto</p>
+          <h2>Parliamo della tua impresa.</h2>
+        </div>
+        <div class="contact-list">
+          <a href="tel:+390143418164"><span aria-hidden="true">01</span> 0143 418164</a>
+          <a href="mailto:info@studiomanfredinionline.it"><span aria-hidden="true">02</span> info@studiomanfredinionline.it</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-grid">
+      <div>
+        <strong>Monica Manfredini</strong>
+        <p>Dottore Commercialista e Revisore Legale</p>
+      </div>
+      <div class="footer-meta">
+        <p>Via Leardi, 26 · 15068 Pozzolo Formigaro (AL)</p>
+        <p>Tel. 0143 418164 · info@studiomanfredinionline.it</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
