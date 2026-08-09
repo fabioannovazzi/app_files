@@ -20,8 +20,10 @@ _sys.pycache_prefix = (
 import os as _os
 
 __all__ = [
+    "CHATGPT_IMPLEMENTATION_CONTRACT",
     "IMPLEMENTATION_CONTRACT",
     "activate_implementation_boundary",
+    "implementation_contract",
     "validate_implementation_tree",
 ]
 
@@ -50,6 +52,19 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_assurance", "relationships.py"),
     ("shared_assurance", "review_output_transaction.cjs"),
     ("shared_assurance", "serialization.py"),
+)
+CHATGPT_IMPLEMENTATION_CONTRACT = tuple(
+    entry
+    for entry in IMPLEMENTATION_CONTRACT
+    if entry
+    not in {
+        ("plugin", ".app.json"),
+        ("plugin", ".mcp.json"),
+        ("plugin", "mcp/server.cjs"),
+    }
+) + (
+    ("plugin", "scripts/review_mcp_server.cjs"),
+    ("plugin", "scripts/review_server.py"),
 )
 
 _DIRECTORY_MODE = 0o040000
@@ -88,9 +103,34 @@ def _shared_assurance_root(plugin_root: str) -> str:
     raise RuntimeError("The required vera_assurance module is not available.")
 
 
-def _expected_directories() -> set[tuple[str, str]]:
+def implementation_contract(plugin_root: str) -> tuple[tuple[str, str], ...]:
+    """Select the exact mechanically verifiable contract for one host layout."""
+
+    full_paths = (".app.json", ".mcp.json", "mcp/server.cjs")
+    projected_paths = (
+        "scripts/review_mcp_server.cjs",
+        "scripts/review_server.py",
+    )
+    full_present = any(
+        _os.path.lexists(_os.path.join(plugin_root, path)) for path in full_paths
+    )
+    projected_present = any(
+        _os.path.lexists(_os.path.join(plugin_root, path)) for path in projected_paths
+    )
+    if full_present and projected_present:
+        raise RuntimeError("implementation host layouts cannot be mixed")
+    if full_present:
+        return IMPLEMENTATION_CONTRACT
+    if projected_present:
+        return CHATGPT_IMPLEMENTATION_CONTRACT
+    raise RuntimeError("implementation host layout is not recognized")
+
+
+def _expected_directories(
+    contract: tuple[tuple[str, str], ...],
+) -> set[tuple[str, str]]:
     expected: set[tuple[str, str]] = set()
-    for root_id, relative_path in IMPLEMENTATION_CONTRACT:
+    for root_id, relative_path in contract:
         parent = _os.path.dirname(relative_path)
         while parent:
             expected.add((root_id, parent.replace(_os.sep, "/")))
@@ -166,22 +206,27 @@ def validate_implementation_tree(
         else _shared_assurance_root(root)
     )
     roots = {"plugin": root, "shared_assurance": shared_root}
+    contract = implementation_contract(root)
     observed_files: set[tuple[str, str]] = set()
     observed_directories: set[tuple[str, str]] = set()
-    for relative_path in (".app.json", ".mcp.json"):
+    for root_id, relative_path in contract:
+        if root_id != "plugin" or _os.path.dirname(relative_path):
+            continue
         _record_file(
             root_id="plugin",
             root=root,
             path=_os.path.join(root, relative_path),
             observed_files=observed_files,
         )
-    for root_id, scan_root in (
+    scan_roots = [
         ("plugin", _os.path.join(root, ".codex-plugin")),
         ("plugin", _os.path.join(root, "assets")),
-        ("plugin", _os.path.join(root, "mcp")),
         ("plugin", _os.path.join(root, "scripts")),
         ("shared_assurance", shared_root),
-    ):
+    ]
+    if contract == IMPLEMENTATION_CONTRACT:
+        scan_roots.insert(2, ("plugin", _os.path.join(root, "mcp")))
+    for root_id, scan_root in scan_roots:
         _scan_tree(
             root_id=root_id,
             root=roots[root_id],
@@ -189,12 +234,12 @@ def validate_implementation_tree(
             observed_files=observed_files,
             observed_directories=observed_directories,
         )
-    if observed_files != set(IMPLEMENTATION_CONTRACT):
+    if observed_files != set(contract):
         raise RuntimeError(
             "implementation filesystem does not match the exact "
-            f"{len(IMPLEMENTATION_CONTRACT)}-file contract"
+            f"{len(contract)}-file contract"
         )
-    if observed_directories != _expected_directories():
+    if observed_directories != _expected_directories(contract):
         raise RuntimeError("implementation directories do not match the exact contract")
     return roots
 
