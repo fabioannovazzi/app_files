@@ -56,6 +56,12 @@ skill to imitate a missing operational workflow.
   engagement, privacy, AML, missing evidence, and monitoring.
 - `previdenza-inps`: review an Italian INPS social-security case from supplied
   documents, official exports, and permitted read-only evidence.
+- `presenza-digitale-studio`: assess and refresh an existing informational
+  website for a commercialista or professional studio, or create the studio's
+  first website from verified materials and conservative proposed defaults;
+  produce a working responsive implementation, unlisted review preview and
+  approval-bound release package without inventing professional claims or
+  autonomously publishing.
 - `registro-imprese-sari`: prepare Registro Imprese, REA, Comunicazione Unica,
   or DIRE work from official guidance without filing or signing.
 - `report-builder`: map financial Excel, CSV, or text-PDF evidence into
