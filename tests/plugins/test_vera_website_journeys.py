@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
 VERA_PLUGIN_ROOT = ROOT / "plugins" / "vera"
 VERA_SITE_MODULES = {
+    "archive-organization",
     "new-client",
     "journal-sampling",
     "check-entries",
@@ -35,6 +36,7 @@ VERA_CORE_PAGES = (
     *(
         VERA_MODULE_PAGES[module]
         for module in (
+            "archive-organization",
             "journal-sampling",
             "check-entries",
             "journal-bank-reconciliation",
@@ -687,7 +689,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
     for expected_href in (
         "../new-client/index.html#journey",
-        "#installa",
+        "../archive-organization/index.html",
         "../studio-archive/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
@@ -861,6 +863,36 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
     assert "<video" not in page
     assert "video-production/rendered" not in page
     assert "transcript.txt" not in page
+
+
+def test_archive_organization_page_explains_reviewed_local_and_drive_changes() -> None:
+    page = (SHARED_ROOT / "archive-organization" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))
+    language_buttons = set(re.findall(r'data-lang="([a-z]{2})"', page))
+    copy_languages = set(re.findall(r"^      ([a-z]{2}): \{$", page, re.MULTILINE))
+
+    assert page.count("<h1") == 1
+    assert language_buttons == copy_languages == {"it", "en", "fr", "de", "es"}
+    for key in visible_keys:
+        assert page.count(f'"{key}":') == len(copy_languages), key
+    for phrase in (
+        "Il modello interpreta. Il codice protegge. Il collaboratore decide.",
+        "SHA-256",
+        "Google Drive and Shared Drive",
+        "ID, link, permissions, and revision history remain in Google Workspace.",
+        "Approve the plan first. Authorize execution second.",
+        "It does not overwrite or automatically delete.",
+        "a second explicit approval in Codex Desktop",
+        "A proposal is never authorization to move files.",
+        "ChatGPT can explain the method or review a prepared plan",
+        "but it does not scan or change the folder.",
+    ):
+        assert phrase in page
+    assert 'href="../vera/index.html?lang=it"' in page
+    assert 'id="prompt-example"' in page
+    assert 'id="result"' in page
 
 
 @pytest.mark.parametrize(
