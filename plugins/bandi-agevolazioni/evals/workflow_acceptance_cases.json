@@ -8,8 +8,16 @@
       "required_behavior": [
         "build dated reviewable profile facets from supplied evidence and assertions using an opaque client reference",
         "use model-led reasoning to propose a territory and profile-specific official-source plan",
+        "persist a professionally reviewed priority registry with source surface and relevant act-family metadata",
+        "propose and professionally review a query-scoped source selection with one covered-or-gap claim for every requested territory and category",
+        "scan the explicit temporal window on priority institutional sources before complementary semantic web search",
+        "inspect relevant DGR, DDR, BUR and annex publications even when no public-facing call page is available",
         "record planned, checked, unavailable and failed sources separately",
-        "report coverage only as checked sources in the reviewed applicable plan",
+        "reject complete when a priority source is missing, failed, unavailable or unreviewed and list that source explicitly",
+        "reject complete when the query-scoped selection is unreviewed or contains a declared territory or category gap",
+        "exclude rejected unselected registry proposals from later scan coverage and classify attempted failures as partial rather than not started",
+        "report checked sources, temporal window, last verification and semantic-web posture without claiming exhaustive discovery",
+        "preserve the latest stable publication cursor when one is available",
         "preserve opportunity lifecycle observations and economic assumptions",
         "keep compatibility and recommended client action proposed until professional review"
       ]

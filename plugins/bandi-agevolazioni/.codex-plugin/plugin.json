@@ -1,7 +1,7 @@
 {
   "name": "bandi-agevolazioni",
-  "version": "0.2.2",
-  "description": "Scopre e monitora opportunità agevolative, le abbina a profili opachi e prepara dossier rivedibili senza firma o invio.",
+  "version": "0.3.1",
+  "description": "Scopre opportunità source-first, verifica la copertura delle fonti e prepara dossier rivedibili senza firma o invio.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -23,7 +23,7 @@
   "interface": {
     "displayName": "Bandi e agevolazioni",
     "shortDescription": "Trova opportunità e prepara dossier rivedibili.",
-    "longDescription": "Vera costruisce un profilo agevolativo opaco dell'impresa, propone e registra il controllo delle fonti ufficiali pertinenti, monitora annunci, aperture, sospensioni e chiusure e abbina le opportunità ai clienti in entrambe le direzioni. La copertura misura le fonti previste effettivamente controllate, non la probabilità di trovare tutti i bandi. Per la misura selezionata organizza bando, allegati, modifiche, FAQ, moduli ed evidenze in un dossier rivedibile, collegando requisiti, verifiche, costi, documenti, campi e testi alle fonti. Non contatta clienti, non accede ai portali, non firma e non invia domande.",
+    "longDescription": "Vera costruisce un profilo agevolativo opaco dell'impresa e un registro revisionato di fonti istituzionali prioritarie per territorio, categoria e famiglia di atti. Ogni nuova ricerca propone una selezione di fonti specifica per i territori e le categorie richiesti: il commercialista revisiona quali fonti coprono ciascuna dimensione e quali restano scoperte. Solo dopo questa revisione Vera controlla direttamente la finestra temporale, inclusi DGR, DDR, BUR, allegati e modifiche pertinenti, prima della ricerca web complementare; conserva l'ultimo atto visto e dichiara ogni fonte o ambito non verificato. Una scansione non può risultare completa con selezione non revisionata, gap dichiarati o fonti prioritarie irrisolte. La copertura misura l'esecuzione della selezione revisionata, non la probabilità di trovare tutti i bandi. Vera monitora gli stati della misura, abbina le opportunità ai clienti e, dopo la selezione, organizza fonti ed evidenze in un dossier rivedibile. Non contatta clienti, non accede ai portali, non firma e non invia domande.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com/static/shared/vera/index.html?lang=it",
@@ -32,7 +32,7 @@
     "supportURL": "https://mparanza.com/support",
     "capabilities": ["Interactive", "Write", "Analysis"],
     "defaultPrompt": [
-      "Costruisci il profilo agevolativo di questa impresa e controlla sistematicamente le fonti ufficiali pertinenti.",
+      "Costruisci il profilo agevolativo e controlla source-first le pubblicazioni istituzionali degli ultimi 60 giorni, dichiarando le fonti non verificate.",
       "Confronta questa nuova opportunità con i profili opachi del portafoglio e segnala chi merita una revisione professionale.",
       "Ricostruisci i requisiti e prepara il dossier da fonti ufficiali ed evidenze cliente, senza contattare, accedere al portale, firmare o inviare."
     ],

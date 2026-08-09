@@ -7,8 +7,17 @@
 | Document-observed profile facets close to same-client receipted evidence | Missing and cross-client evidence negative tests | Required |
 | Radar workspace is explicitly authorized, path-bound, private and outside Git/published roots | Missing-confirmation, path-binding and prohibited-root tests | Required |
 | Source-plan coverage measures checks, not discovery probability | Exact ratio, failed/unavailable, and disclosure tests | Required |
-| Unreviewed plan entries never inflate reviewed-plan coverage | Proposed/returned/rejected denominator tests | Required |
+| Pending plan entries never inflate reviewed-plan coverage and rejected entries are separately excluded | Proposed/returned/rejected denominator tests | Required |
 | Semantic source selection never becomes a universal deterministic map | Skill/reference inspection and representative source-plan review | Required |
+| Every scan binds every exact query territory and category to a model-led, professionally reviewed covered-or-gap claim | Cross-territory claim-closure, missing-review and rendered-worklist tests | Required |
+| A rejected source outside the reviewed query-scoped selection cannot deadlock later complete scans | Veneto-rejected/Lazio-selected end-to-end scan test | Required |
+| Recent discovery executes the reviewed priority-source registry before semantic web search | Worklist ordering and early-semantic-search rejection tests | Required |
+| A temporal scan cannot claim complete with failed, unavailable, missing or unreviewed priority sources | Coverage-gate and explicit-unverified-source report tests | Required |
+| Attempted failed or unavailable source checks report partial rather than not-started coverage | Attempted-failure status regression test | Required |
+| Coverage evidence states checked sources, requested window, last verification and semantic-web posture | Rendered-report assertions | Required |
+| Source cursors persist across zero-result scans without replacing the requested historical window | Multi-scan cursor test | Required |
+| DGR, DDR, BUR, annex, FAQ and amendment families remain reviewed metadata, not deterministic authority rules | Schema, skill and deterministic-boundary inspection | Required |
+| Announced, approved, published, future, open, expiring, extended, modified and closed observations are source-backed proposals | Lifecycle contract tests and professional review | Required |
 | Opportunity status history is time-aware and append-only after confirmation | Lifecycle extension and rewrite rejection tests | Required |
 | Formal amendments revise confirmed dates through append-only events and invalidate dependent matches | Deadline-amendment and stale-match tests | Required |
 | Monitoring is resumable and completed scans are immutable | Running-to-complete and rewrite rejection tests | Required |

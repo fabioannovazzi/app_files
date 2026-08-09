@@ -90,6 +90,11 @@ def _source(client_refs: list[str] | None = None) -> dict[str, object]:
         "authority_level": "regional",
         "publisher": "Regione Veneto",
         "official_url": "https://www.regione.veneto.it/bandi",
+        "discovery_role": "priority_direct",
+        "source_surface": "official_gazette",
+        "territories": ["Regione Veneto"],
+        "categories": ["artigianato", "investimenti"],
+        "act_families": ["dgr", "ddr", "bur_issue", "annex", "amendment"],
         "relevance_rationale": "Fonte ufficiale regionale pertinente al territorio dei profili.",
         "profile_refs": client_refs or ["CLIENT-001"],
         "next_check_on": "2026-08-08",
@@ -235,17 +240,155 @@ def _review(
     )
 
 
+def _scan(
+    *,
+    scan_id: str = "SCAN-001",
+    started_at: str = "2026-08-07T10:00:00+00:00",
+    completed_at: str | None = None,
+    outcome: str = "running",
+    semantic_web_check: dict[str, object] | None = None,
+    territories: list[str] | None = None,
+    categories: list[str] | None = None,
+    source_selection: dict[str, object] | None = None,
+) -> dict[str, object]:
+    query_territories = territories or ["Regione Veneto"]
+    query_categories = categories or ["artigianato"]
+    return {
+        "scan_id": scan_id,
+        "query_context": {
+            "territories": query_territories,
+            "categories": query_categories,
+            "request_summary": (
+                "Ricerca sintetica per " + ", ".join(query_territories)
+            ),
+        },
+        "source_selection": source_selection
+        or _source_selection(
+            territories=query_territories,
+            categories=query_categories,
+        ),
+        "started_at": started_at,
+        "completed_at": completed_at,
+        "window_start": "2026-06-09",
+        "window_end": "2026-08-07",
+        "semantic_web_check": semantic_web_check
+        or {
+            "status": "not_run",
+            "checked_at": None,
+            "result_count": None,
+            "error_code": None,
+        },
+        "outcome": outcome,
+        "error_codes": [],
+    }
+
+
+def _source_selection(
+    *,
+    territories: list[str] | None = None,
+    categories: list[str] | None = None,
+    priority_source_ids: list[str] | None = None,
+    supplemental_source_ids: list[str] | None = None,
+    gaps: set[tuple[str, str]] | None = None,
+) -> dict[str, object]:
+    selected_priority = (
+        ["SOURCE-REGION"] if priority_source_ids is None else priority_source_ids
+    )
+    selected_supplemental = (
+        [] if supplemental_source_ids is None else supplemental_source_ids
+    )
+    selected_ids = [*selected_priority, *selected_supplemental]
+    gap_keys = gaps or set()
+    claims: list[dict[str, object]] = []
+    for dimension, values in (
+        ("territory", territories or ["Regione Veneto"]),
+        ("category", categories or ["artigianato"]),
+    ):
+        for value in values:
+            is_gap = (dimension, value) in gap_keys
+            claims.append(
+                {
+                    "dimension": dimension,
+                    "query_value": value,
+                    "status": "gap" if is_gap else "covered",
+                    "source_ids": [] if is_gap else selected_ids,
+                    "rationale": (
+                        "Nessuna fonte ancora selezionata per questa dimensione."
+                        if is_gap
+                        else "La pertinenza è proposta semanticamente per revisione professionale."
+                    ),
+                }
+            )
+    return {
+        "priority_source_ids": selected_priority,
+        "supplemental_source_ids": selected_supplemental,
+        "scope_coverage": claims,
+        "selection_rationale": "Selezione sintetica query-scoped per il test pubblico.",
+    }
+
+
+def _start_scan(
+    radar: ModuleType,
+    workspace: Path,
+    *,
+    scan_id: str = "SCAN-001",
+    key: str = "scan-start",
+    started_at: str = "2026-08-07T10:00:00+00:00",
+    source_selection: dict[str, object] | None = None,
+    review_selection: bool = True,
+    territories: list[str] | None = None,
+    categories: list[str] | None = None,
+) -> None:
+    radar.record_scan(
+        workspace,
+        scan=_scan(
+            scan_id=scan_id,
+            started_at=started_at,
+            territories=territories,
+            categories=categories,
+            source_selection=source_selection,
+        ),
+        next_scan_on=None,
+        idempotency_key=key,
+        **_contribution_args(),
+    )
+    if review_selection:
+        _review(
+            radar,
+            workspace,
+            scope="scan_source_selection",
+            target_id=scan_id,
+            key=f"{key}-selection-review",
+        )
+
+
 def _record_reviewed_source_check(
     radar: ModuleType, workspace: Path, *, key_suffix: str = "1"
 ) -> None:
+    scan_id = f"SCAN-{key_suffix}"
+    _start_scan(
+        radar,
+        workspace,
+        scan_id=scan_id,
+        key=f"scan-start-{key_suffix}",
+    )
     radar.record_source_check(
         workspace,
         source_id="SOURCE-REGION",
+        check_id=f"CHECK-{key_suffix}",
+        scan_id=scan_id,
         check_status="checked",
         checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
         next_check_on="2026-08-08",
         result_count=3,
         error_code=None,
+        cursor_after={
+            "external_id": f"BUR-2026-{key_suffix}",
+            "publication_date": "2026-08-07",
+            "official_url": "https://bur.regione.veneto.it/",
+        },
         idempotency_key=f"source-check-{key_suffix}",
     )
     _review(
@@ -271,11 +414,17 @@ def _confirmed_radar(radar: ModuleType, workspace: Path) -> None:
         idempotency_key="match-1",
         **_contribution_args(),
     )
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source",
+    )
     _record_reviewed_source_check(radar, workspace)
     for scope, target, key in (
         ("evidence", "EVIDENCE-CLIENT-001", "review-evidence"),
         ("profile", "CLIENT-001", "review-profile"),
-        ("source", "SOURCE-REGION", "review-source"),
         ("opportunity", "OPP-001", "review-opportunity"),
         ("match", "MATCH-CLIENT-001", "review-match"),
     ):
@@ -342,23 +491,7 @@ def test_source_coverage_counts_checked_plan_not_discovery_probability(
         key="review-source-plan",
     )
 
-    radar.record_source_check(
-        workspace,
-        source_id="SOURCE-REGION",
-        check_status="checked",
-        checked_at="2026-08-07T11:00:00+00:00",
-        next_check_on="2026-08-08",
-        result_count=3,
-        error_code=None,
-        idempotency_key="source-check-1",
-    )
-    _review(
-        radar,
-        workspace,
-        scope="source_check",
-        target_id="SOURCE-REGION",
-        key="review-source-check",
-    )
+    _record_reviewed_source_check(radar, workspace, key_suffix="coverage")
     coverage = radar.load_validated_radar(workspace)["source_plan"]["coverage"]
 
     assert coverage == {
@@ -368,10 +501,11 @@ def test_source_coverage_counts_checked_plan_not_discovery_probability(
         "unavailable_count": 0,
         "failed_count": 0,
         "unreviewed_count": 0,
+        "rejected_count": 0,
         "check_review_pending_count": 0,
         "ratio_basis_points": 10000,
         "status": "planned_sources_checked",
-        "statement": "1/1 professionally confirmed applicable plan sources checked and review-confirmed; 0 unreviewed plan entries excluded; this measures execution of the reviewed plan, not the probability that all opportunities were found.",
+        "statement": "1/1 professionally confirmed applicable plan sources checked and review-confirmed; 0 pending plan entries and 0 rejected entries excluded; this measures execution of the reviewed plan, not the probability that all opportunities were found.",
     }
 
 
@@ -514,6 +648,13 @@ def test_review_requires_explicit_confirmation_and_handoff_requires_all_reviews(
             output_path=workspace / "handoff.json",
         )
 
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source",
+    )
     _record_reviewed_source_check(radar, workspace)
     _review(
         radar,
@@ -524,9 +665,6 @@ def test_review_requires_explicit_confirmation_and_handoff_requires_all_reviews(
     )
     _review(
         radar, workspace, scope="profile", target_id="CLIENT-001", key="review-profile"
-    )
-    _review(
-        radar, workspace, scope="source", target_id="SOURCE-REGION", key="review-source"
     )
     _review(
         radar,
@@ -650,25 +788,51 @@ def test_monitoring_scan_is_resumable_but_completed_scan_is_immutable(
 ) -> None:
     radar, workspace = _initialized_radar(tmp_path)
     _record_baseline(radar, workspace)
-    running = {
-        "scan_id": "SCAN-001",
-        "started_at": "2026-08-07T10:00:00+00:00",
-        "completed_at": None,
-        "source_ids": ["SOURCE-REGION"],
-        "outcome": "running",
-        "error_codes": [],
-    }
-    radar.record_scan(
+    _review(
+        radar,
         workspace,
-        scan=running,
-        next_scan_on=None,
-        idempotency_key="scan-start",
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-for-scan",
     )
-    complete = {
-        **running,
-        "completed_at": "2026-08-07T10:05:00+00:00",
-        "outcome": "complete",
-    }
+    _start_scan(radar, workspace)
+    worklist = radar.render_scan_worklist(workspace, scan_id="SCAN-001")
+    radar.record_source_check(
+        workspace,
+        source_id="SOURCE-REGION",
+        check_id="CHECK-SCAN-001",
+        scan_id="SCAN-001",
+        check_status="checked",
+        checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
+        next_check_on="2026-08-08",
+        result_count=1,
+        error_code=None,
+        cursor_after={
+            "external_id": "BUR-2026-098",
+            "publication_date": "2026-08-07",
+            "official_url": "https://bur.regione.veneto.it/",
+        },
+        idempotency_key="source-check-for-scan",
+    )
+    _review(
+        radar,
+        workspace,
+        scope="source_check",
+        target_id="SOURCE-REGION",
+        key="review-source-check-for-scan",
+    )
+    complete = _scan(
+        completed_at="2026-08-07T11:10:00+00:00",
+        outcome="complete",
+        semantic_web_check={
+            "status": "checked",
+            "checked_at": "2026-08-07T11:05:00+00:00",
+            "result_count": 2,
+            "error_code": None,
+        },
+    )
     radar.record_scan(
         workspace,
         scan=complete,
@@ -686,6 +850,559 @@ def test_monitoring_scan_is_resumable_but_completed_scan_is_immutable(
     monitoring = radar.load_validated_radar(workspace)["monitoring"]
     assert monitoring["next_scan_on"] == "2026-08-08"
     assert monitoring["scan_history"][0]["outcome"] == "complete"
+    assert monitoring["scan_history"][0]["coverage"]["status"] == (
+        "priority_sources_verified"
+    )
+    assert "Ricerca web semantica complementare" in worklist.read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("check_status", "error_code"),
+    [("failed", "publisher_unavailable"), ("unavailable", None)],
+)
+def test_complete_scan_rejects_unverified_priority_source_and_reports_gap(
+    tmp_path: Path, check_status: str, error_code: str | None
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-gap",
+    )
+    _start_scan(radar, workspace, scan_id="SCAN-GAP", key="scan-gap-start")
+    radar.record_source_check(
+        workspace,
+        source_id="SOURCE-REGION",
+        check_id="CHECK-GAP",
+        scan_id="SCAN-GAP",
+        check_status=check_status,
+        checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
+        next_check_on="2026-08-08",
+        result_count=None,
+        error_code=error_code,
+        cursor_after=None,
+        idempotency_key="source-check-gap",
+    )
+    _review(
+        radar,
+        workspace,
+        scope="source_check",
+        target_id="SOURCE-REGION",
+        key="review-source-check-gap",
+    )
+    terminal = _scan(
+        scan_id="SCAN-GAP",
+        completed_at="2026-08-07T11:05:00+00:00",
+        outcome="complete",
+    )
+
+    with pytest.raises(
+        ValueError, match="source selection, query scope, or priority sources"
+    ):
+        radar.record_scan(
+            workspace,
+            scan=terminal,
+            next_scan_on="2026-08-08",
+            idempotency_key="scan-gap-complete",
+        )
+
+    radar.record_scan(
+        workspace,
+        scan={**terminal, "outcome": "partial"},
+        next_scan_on="2026-08-08",
+        idempotency_key="scan-gap-partial",
+    )
+    scan = radar.load_validated_radar(workspace)["monitoring"]["scan_history"][0]
+    report = radar.render_radar_report(workspace).read_text(encoding="utf-8")
+
+    assert scan["coverage"]["unverified_priority_source_ids"] == ["SOURCE-REGION"]
+    assert scan["coverage"]["status"] == "partial"
+    assert "Fonti prioritarie non verificate: SOURCE-REGION" in report
+    assert "2026-06-09 → 2026-08-07" in report
+
+
+def test_query_scope_requires_exact_claims_and_professional_review(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-query-scope",
+    )
+    mismatched = _source_selection()
+
+    with pytest.raises(ValueError, match="every query territory and category"):
+        radar.record_scan(
+            workspace,
+            scan=_scan(
+                scan_id="SCAN-LAZIO-MISMATCH",
+                territories=["Regione Lazio"],
+                source_selection=mismatched,
+            ),
+            next_scan_on=None,
+            idempotency_key="scan-lazio-mismatch",
+            **_contribution_args(),
+        )
+
+    selection = _source_selection(territories=["Regione Lazio"])
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-LAZIO",
+        key="scan-lazio-start",
+        territories=["Regione Lazio"],
+        source_selection=selection,
+        review_selection=False,
+    )
+    running = radar.load_validated_radar(workspace)["monitoring"]["scan_history"][0]
+
+    assert running["coverage"]["status"] == "selection_unreviewed"
+    with pytest.raises(ValueError, match="confirmed query-scoped source selection"):
+        radar.render_scan_worklist(workspace, scan_id="SCAN-LAZIO")
+    with pytest.raises(ValueError, match="confirmed query-scoped source selection"):
+        radar.record_source_check(
+            workspace,
+            source_id="SOURCE-REGION",
+            check_id="CHECK-LAZIO-EARLY",
+            scan_id="SCAN-LAZIO",
+            check_status="checked",
+            checked_at="2026-08-07T11:00:00+00:00",
+            window_start="2026-06-09",
+            window_end="2026-08-07",
+            next_check_on=None,
+            result_count=0,
+            error_code=None,
+            cursor_after=None,
+            idempotency_key="check-lazio-before-selection-review",
+        )
+
+    _review(
+        radar,
+        workspace,
+        scope="scan_source_selection",
+        target_id="SCAN-LAZIO",
+        key="review-lazio-selection",
+    )
+    worklist = radar.render_scan_worklist(workspace, scan_id="SCAN-LAZIO")
+
+    assert "Regione Lazio" in worklist.read_text(encoding="utf-8")
+
+
+def test_rejected_unselected_source_does_not_block_lazio_scan(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    lazio_source = _source()
+    lazio_source.update(
+        {
+            "source_id": "SOURCE-LAZIO",
+            "publisher": "Regione Lazio",
+            "official_url": "https://www.regione.lazio.it/bandi",
+            "territories": ["Regione Lazio"],
+        }
+    )
+    radar.record_source(
+        workspace,
+        source=lazio_source,
+        idempotency_key="source-lazio",
+        **_contribution_args(),
+    )
+    radar.review_item(
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        decision="rejected",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+        idempotency_key="reject-veneto-source",
+    )
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-LAZIO",
+        key="review-lazio-source",
+    )
+    selection = _source_selection(
+        territories=["Regione Lazio"], priority_source_ids=["SOURCE-LAZIO"]
+    )
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-LAZIO-COMPLETE",
+        key="scan-lazio-complete-start",
+        territories=["Regione Lazio"],
+        source_selection=selection,
+    )
+    radar.record_source_check(
+        workspace,
+        source_id="SOURCE-LAZIO",
+        check_id="CHECK-LAZIO",
+        scan_id="SCAN-LAZIO-COMPLETE",
+        check_status="checked",
+        checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
+        next_check_on=None,
+        result_count=1,
+        error_code=None,
+        cursor_after=None,
+        idempotency_key="check-lazio",
+    )
+    _review(
+        radar,
+        workspace,
+        scope="source_check",
+        target_id="SOURCE-LAZIO",
+        key="review-check-lazio",
+    )
+    complete = radar.record_scan(
+        workspace,
+        scan=_scan(
+            scan_id="SCAN-LAZIO-COMPLETE",
+            territories=["Regione Lazio"],
+            source_selection=selection,
+            completed_at="2026-08-07T11:05:00+00:00",
+            outcome="complete",
+        ),
+        next_scan_on=None,
+        idempotency_key="scan-lazio-complete-finish",
+    )
+
+    assert complete["coverage"]["status"] == "priority_sources_verified"
+    assert complete["unreviewed_priority_source_ids"] == []
+    assert complete["priority_source_ids"] == ["SOURCE-LAZIO"]
+
+
+def test_returned_scan_source_selection_can_be_revised_before_checks(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-selection-revision",
+    )
+    original = _source_selection()
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-SELECTION-REVISION",
+        key="scan-selection-revision-start",
+        source_selection=original,
+        review_selection=False,
+    )
+    radar.review_item(
+        workspace,
+        scope="scan_source_selection",
+        target_id="SCAN-SELECTION-REVISION",
+        decision="returned",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+        idempotency_key="return-scan-selection",
+    )
+    revised = {
+        **original,
+        "selection_rationale": "Razionale corretto dopo il ritorno professionale.",
+    }
+
+    result = radar.record_scan(
+        workspace,
+        scan=_scan(scan_id="SCAN-SELECTION-REVISION", source_selection=revised),
+        next_scan_on=None,
+        idempotency_key="revise-scan-selection",
+        **_contribution_args(),
+    )
+
+    assert result["source_selection"]["review_status"] == "proposed"
+    assert result["source_selection"]["selection_rationale"] == (
+        "Razionale corretto dopo il ritorno professionale."
+    )
+    assert result["coverage"]["status"] == "selection_unreviewed"
+
+
+def test_declared_query_scope_gap_blocks_complete_scan(tmp_path: Path) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-scope-gap",
+    )
+    selection = _source_selection(
+        gaps={("territory", "Regione Veneto")},
+    )
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-SCOPE-GAP",
+        key="scan-scope-gap-start",
+        source_selection=selection,
+    )
+    radar.record_source_check(
+        workspace,
+        source_id="SOURCE-REGION",
+        check_id="CHECK-SCOPE-GAP",
+        scan_id="SCAN-SCOPE-GAP",
+        check_status="checked",
+        checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
+        next_check_on=None,
+        result_count=0,
+        error_code=None,
+        cursor_after=None,
+        idempotency_key="check-scope-gap",
+    )
+    _review(
+        radar,
+        workspace,
+        scope="source_check",
+        target_id="SOURCE-REGION",
+        key="review-check-scope-gap",
+    )
+    terminal = _scan(
+        scan_id="SCAN-SCOPE-GAP",
+        source_selection=selection,
+        completed_at="2026-08-07T11:05:00+00:00",
+        outcome="complete",
+    )
+
+    with pytest.raises(
+        ValueError, match="source selection, query scope, or priority sources"
+    ):
+        radar.record_scan(
+            workspace,
+            scan=terminal,
+            next_scan_on=None,
+            idempotency_key="scan-scope-gap-complete",
+        )
+
+    partial = radar.record_scan(
+        workspace,
+        scan={**terminal, "outcome": "partial"},
+        next_scan_on=None,
+        idempotency_key="scan-scope-gap-partial",
+    )
+
+    assert partial["coverage"]["status"] == "scope_gaps"
+    assert partial["coverage"]["uncovered_scope_keys"] == ["territory:Regione Veneto"]
+
+
+def test_semantic_web_cannot_run_before_priority_source_attempts(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-order",
+    )
+    _start_scan(radar, workspace, scan_id="SCAN-ORDER", key="scan-order-start")
+
+    with pytest.raises(ValueError, match="cannot precede priority-source attempts"):
+        radar.record_scan(
+            workspace,
+            scan=_scan(
+                scan_id="SCAN-ORDER",
+                completed_at="2026-08-07T10:05:00+00:00",
+                outcome="partial",
+                semantic_web_check={
+                    "status": "checked",
+                    "checked_at": "2026-08-07T10:01:00+00:00",
+                    "result_count": 1,
+                    "error_code": None,
+                },
+            ),
+            next_scan_on=None,
+            idempotency_key="scan-order-finish",
+        )
+
+
+def test_source_check_must_cover_the_entire_requested_window(tmp_path: Path) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-window",
+    )
+    _start_scan(radar, workspace, scan_id="SCAN-WINDOW", key="scan-window-start")
+
+    with pytest.raises(ValueError, match="does not cover the scan window"):
+        radar.record_source_check(
+            workspace,
+            source_id="SOURCE-REGION",
+            check_id="CHECK-WINDOW",
+            scan_id="SCAN-WINDOW",
+            check_status="checked",
+            checked_at="2026-08-07T11:00:00+00:00",
+            window_start="2026-07-01",
+            window_end="2026-08-07",
+            next_check_on="2026-08-08",
+            result_count=1,
+            error_code=None,
+            cursor_after=None,
+            idempotency_key="source-check-window",
+        )
+
+
+def test_running_scan_ignores_unselected_source_registry_changes(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-drift",
+    )
+    _start_scan(radar, workspace, scan_id="SCAN-DRIFT", key="scan-drift-start")
+    additional = _source()
+    additional.update(
+        {
+            "source_id": "SOURCE-AGENCY",
+            "publisher": "Agenzia regionale sintetica",
+            "official_url": "https://example.invalid/official-source",
+        }
+    )
+    radar.record_source(
+        workspace,
+        source=additional,
+        idempotency_key="source-agency",
+        **_contribution_args(),
+    )
+
+    result = radar.record_scan(
+        workspace,
+        scan=_scan(
+            scan_id="SCAN-DRIFT",
+            completed_at="2026-08-07T11:00:00+00:00",
+            outcome="partial",
+        ),
+        next_scan_on=None,
+        idempotency_key="scan-drift-finish",
+    )
+
+    assert result["outcome"] == "partial"
+    assert result["priority_source_ids"] == ["SOURCE-REGION"]
+
+
+def test_source_cursor_persists_when_later_scan_finds_no_new_publication(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-cursor",
+    )
+    _record_reviewed_source_check(radar, workspace, key_suffix="cursor-1")
+    radar.record_scan(
+        workspace,
+        scan=_scan(
+            scan_id="SCAN-cursor-1",
+            completed_at="2026-08-07T11:05:00+00:00",
+            outcome="complete",
+        ),
+        next_scan_on="2026-08-08",
+        idempotency_key="scan-cursor-1-complete",
+    )
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-cursor-2",
+        key="scan-cursor-2-start",
+        started_at="2026-08-08T10:00:00+00:00",
+    )
+
+    current = radar.record_source_check(
+        workspace,
+        source_id="SOURCE-REGION",
+        check_id="CHECK-cursor-2",
+        scan_id="SCAN-cursor-2",
+        check_status="checked",
+        checked_at="2026-08-08T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
+        next_check_on="2026-08-09",
+        result_count=0,
+        error_code=None,
+        cursor_after=None,
+        idempotency_key="source-check-cursor-2",
+    )
+
+    assert current["cursor_before"] == current["cursor_after"]
+    assert current["cursor_after"]["external_id"] == "BUR-2026-cursor-1"
+
+
+@pytest.mark.parametrize(
+    "status",
+    [
+        "announced",
+        "approved",
+        "published",
+        "upcoming",
+        "open",
+        "closing_soon",
+        "extended",
+        "modified",
+        "closed",
+    ],
+)
+def test_lifecycle_contract_accepts_source_backed_discovery_states(
+    tmp_path: Path, status: str
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    _record_baseline(radar, workspace)
+    opportunity = _opportunity(
+        history=[
+            {
+                "observation_id": "OBS-STATE",
+                "status": status,
+                "effective_date": "2026-08-07",
+                "observed_at": "2026-08-07T10:00:00+00:00",
+                "source_ids": ["SOURCE-REGION"],
+                "rationale": "Synthetic source-backed lifecycle proposal.",
+            }
+        ]
+    )
+
+    recorded = radar.record_opportunity(
+        workspace,
+        opportunity=opportunity,
+        idempotency_key=f"opportunity-{status}",
+        **_contribution_args(),
+    )
+
+    assert recorded["current_lifecycle"] == status
 
 
 def test_workspace_requires_explicit_authorization_and_rejects_git_tree(
@@ -730,9 +1447,12 @@ def test_unreviewed_source_is_excluded_from_reviewed_plan_coverage(
     assert coverage["status"] == "plan_unreviewed"
 
 
-@pytest.mark.parametrize("decision", ["returned", "rejected"])
+@pytest.mark.parametrize(
+    ("decision", "pending_count", "rejected_count"),
+    [("returned", 1, 0), ("rejected", 0, 1)],
+)
 def test_nonaccepted_source_is_excluded_from_reviewed_plan_coverage(
-    tmp_path: Path, decision: str
+    tmp_path: Path, decision: str, pending_count: int, rejected_count: int
 ) -> None:
     radar, workspace = _initialized_radar(tmp_path)
     _record_baseline(radar, workspace)
@@ -750,7 +1470,8 @@ def test_nonaccepted_source_is_excluded_from_reviewed_plan_coverage(
     coverage = radar.load_validated_radar(workspace)["source_plan"]["coverage"]
 
     assert coverage["planned_count"] == 0
-    assert coverage["unreviewed_count"] == 1
+    assert coverage["unreviewed_count"] == pending_count
+    assert coverage["rejected_count"] == rejected_count
 
 
 def test_profile_cannot_reference_another_clients_evidence(tmp_path: Path) -> None:
@@ -775,15 +1496,37 @@ def test_source_check_change_invalidates_review_and_blocks_handoff(
 ) -> None:
     radar, workspace = _initialized_radar(tmp_path)
     _confirmed_radar(radar, workspace)
+    radar.record_scan(
+        workspace,
+        scan=_scan(
+            scan_id="SCAN-1",
+            completed_at="2026-08-07T11:05:00+00:00",
+            outcome="partial",
+        ),
+        next_scan_on="2026-08-08",
+        idempotency_key="scan-1-partial",
+    )
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-FAILED",
+        key="scan-failed-start",
+        started_at="2026-08-08T10:00:00+00:00",
+    )
 
     changed = radar.record_source_check(
         workspace,
         source_id="SOURCE-REGION",
+        check_id="CHECK-FAILED",
+        scan_id="SCAN-FAILED",
         check_status="failed",
         checked_at="2026-08-08T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
         next_check_on="2026-08-09",
         result_count=None,
         error_code="temporary_failure",
+        cursor_after=None,
         idempotency_key="source-check-failed",
     )
 
@@ -889,18 +1632,30 @@ def test_confirmed_profile_revision_preserves_history_and_invalidates_match(
 def test_scan_cannot_complete_before_it_starts(tmp_path: Path) -> None:
     radar, workspace = _initialized_radar(tmp_path)
     _record_baseline(radar, workspace)
+    _review(
+        radar,
+        workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        key="review-source-invalid-scan",
+    )
 
+    _start_scan(
+        radar,
+        workspace,
+        scan_id="SCAN-INVALID",
+        key="scan-invalid-start",
+        started_at="2026-08-07T11:00:00+00:00",
+    )
     with pytest.raises(ValueError, match="completes before it starts"):
         radar.record_scan(
             workspace,
-            scan={
-                "scan_id": "SCAN-INVALID",
-                "started_at": "2026-08-07T11:00:00+00:00",
-                "completed_at": "2026-08-07T10:00:00+00:00",
-                "source_ids": ["SOURCE-REGION"],
-                "outcome": "failed",
-                "error_codes": ["clock_error"],
-            },
+            scan=_scan(
+                scan_id="SCAN-INVALID",
+                started_at="2026-08-07T11:00:00+00:00",
+                completed_at="2026-08-07T10:00:00+00:00",
+                outcome="failed",
+            ),
             next_scan_on=None,
             idempotency_key="scan-invalid",
         )
@@ -1040,3 +1795,221 @@ def test_radar_cli_initializes_records_profile_and_renders_report(
     assert recorded == 0
     assert rendered == 0
     assert (workspace / "opportunity_radar_review.md").is_file()
+
+
+def test_radar_cli_executes_source_first_scan_with_coverage_evidence(
+    tmp_path: Path,
+) -> None:
+    radar = _radar_module()
+    workspace = tmp_path / "source-first-cli-radar"
+    source_path = tmp_path / "source.json"
+    running_path = tmp_path / "running-scan.json"
+    terminal_path = tmp_path / "terminal-scan.json"
+    cursor_path = tmp_path / "cursor.json"
+    source = _source()
+    source["profile_refs"] = []
+    source_path.write_text(json.dumps(source), encoding="utf-8")
+    running_path.write_text(json.dumps(_scan()), encoding="utf-8")
+    terminal_path.write_text(
+        json.dumps(
+            _scan(
+                completed_at="2026-08-07T11:10:00+00:00",
+                outcome="complete",
+                semantic_web_check={
+                    "status": "checked",
+                    "checked_at": "2026-08-07T11:05:00+00:00",
+                    "result_count": 1,
+                    "error_code": None,
+                },
+            )
+        ),
+        encoding="utf-8",
+    )
+    cursor_path.write_text(
+        json.dumps(
+            {
+                "external_id": "BUR-2026-CLI",
+                "publication_date": "2026-08-07",
+                "official_url": "https://example.invalid/publication",
+            }
+        ),
+        encoding="utf-8",
+    )
+    base = ["--workspace", str(workspace)]
+
+    assert (
+        radar.main(
+            [
+                *base,
+                "initialize",
+                "--radar-id",
+                "RADAR-CLI-SOURCE-FIRST",
+                "--workspace-id",
+                "WORKSPACE-CLI-SOURCE-FIRST",
+                "--reference-date",
+                "2026-08-07",
+                "--scope",
+                "portfolio",
+                "--authorized-by",
+                "reviewer-001",
+                "--retention-owner",
+                "Studio Demo",
+                "--confirmed-by-user",
+            ]
+        )
+        == 0
+    )
+    assert (
+        radar.main(
+            [
+                *base,
+                "record-source",
+                "--input",
+                str(source_path),
+                "--idempotency-key",
+                "source-cli-first",
+                "--origin",
+                "model_suggested",
+                "--provider",
+                "openai",
+                "--model",
+                "gpt-test-pinned",
+                "--prompt-template-version",
+                "bandi-radar-v1",
+                "--recorded-by",
+                "codex-local",
+            ]
+        )
+        == 0
+    )
+    for scope, key in (
+        ("source", "review-source-cli-first"),
+        ("source_check", "review-source-check-cli-first"),
+    ):
+        if scope == "source_check":
+            assert (
+                radar.main(
+                    [
+                        *base,
+                        "record-source-check",
+                        "--source-id",
+                        "SOURCE-REGION",
+                        "--check-id",
+                        "CHECK-CLI-FIRST",
+                        "--scan-id",
+                        "SCAN-001",
+                        "--check-status",
+                        "checked",
+                        "--checked-at",
+                        "2026-08-07T11:00:00+00:00",
+                        "--window-start",
+                        "2026-06-09",
+                        "--window-end",
+                        "2026-08-07",
+                        "--next-check-on",
+                        "2026-08-08",
+                        "--result-count",
+                        "1",
+                        "--cursor-input",
+                        str(cursor_path),
+                        "--idempotency-key",
+                        "source-check-cli-first",
+                    ]
+                )
+                == 0
+            )
+        assert (
+            radar.main(
+                [
+                    *base,
+                    "review",
+                    "--scope",
+                    scope,
+                    "--target-id",
+                    "SOURCE-REGION",
+                    "--decision",
+                    "accepted",
+                    "--reviewer-id",
+                    "reviewer-001",
+                    "--reviewer-role",
+                    "commercialista",
+                    "--confirmed-by-user",
+                    "--idempotency-key",
+                    key,
+                ]
+            )
+            == 0
+        )
+        if scope == "source":
+            assert (
+                radar.main(
+                    [
+                        *base,
+                        "record-scan",
+                        "--input",
+                        str(running_path),
+                        "--idempotency-key",
+                        "scan-cli-first-start",
+                        "--origin",
+                        "model_suggested",
+                        "--provider",
+                        "openai",
+                        "--model",
+                        "gpt-test-pinned",
+                        "--prompt-template-version",
+                        "bandi-source-selection-v1",
+                        "--recorded-by",
+                        "codex-local",
+                    ]
+                )
+                == 0
+            )
+            assert (
+                radar.main(
+                    [
+                        *base,
+                        "review",
+                        "--scope",
+                        "scan_source_selection",
+                        "--target-id",
+                        "SCAN-001",
+                        "--decision",
+                        "accepted",
+                        "--reviewer-id",
+                        "reviewer-001",
+                        "--reviewer-role",
+                        "commercialista",
+                        "--confirmed-by-user",
+                        "--idempotency-key",
+                        "review-scan-source-selection-cli-first",
+                    ]
+                )
+                == 0
+            )
+            assert radar.main([*base, "worklist", "--scan-id", "SCAN-001"]) == 0
+    assert (
+        radar.main(
+            [
+                *base,
+                "record-scan",
+                "--input",
+                str(terminal_path),
+                "--next-scan-on",
+                "2026-08-08",
+                "--idempotency-key",
+                "scan-cli-first-finish",
+            ]
+        )
+        == 0
+    )
+    assert radar.main([*base, "report"]) == 0
+
+    payload = radar.load_validated_radar(workspace)
+    report = (workspace / "opportunity_radar_review.md").read_text(encoding="utf-8")
+
+    assert payload["monitoring"]["scan_history"][0]["coverage"]["status"] == (
+        "priority_sources_verified"
+    )
+    assert "Territori richiesti: **Regione Veneto**" in report
+    assert "Selezione fonti: **confirmed**" in report
+    assert "Ricerca web complementare: **checked**" in report

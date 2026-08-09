@@ -26,7 +26,7 @@ schema enforces only allowed categories, dates, identifiers, provenance and
 review state. A `single_client` radar rejects a second profile; use `portfolio`
 only for an explicitly selected private portfolio scope.
 
-## Source coverage plan
+## Reviewed priority-source registry
 
 The model proposes a source plan from the reviewed profile and jurisdiction.
 There is no universal deterministic list. Depending on the facts, a plan may
@@ -34,8 +34,20 @@ include national bodies and incentive portals, a region and its agencies, the
 competent chamber of commerce, province, municipality, EU programmes, and
 sector-specific official publishers. The professional confirms relevance.
 
-Each plan entry records one official HTTPS source, authority level, publisher,
-relevance rationale, profile references, next check date and review state.
+The persistent plan is the radar's source registry. Each entry records one
+official HTTPS source, authority level, publisher, `priority_direct` or
+`supplemental_direct` role, source surface, territories, categories, act
+families, relevance rationale, profile references, next check date and review
+state. These fields explain a reviewed semantic choice; code does not match
+territory or category strings to domains.
+
+For a recent discovery, follow `source-first-discovery.md`: start a scan with an
+explicit window and a model-led query-scoped source selection, review the exact
+selection, render its worklist, check every selected priority source directly,
+inspect relevant DGR/DDR/BUR publications and attachments, then use semantic web
+search only as a complementary phase. Each territory and category in the query
+must have an explicit reviewed `covered` or `gap` claim. Code validates claim
+closure and IDs but never decides semantic territorial or category relevance.
 Public discovery queries contain generic call, territory, programme and topic
 terms only; they exclude client identity and client evidence.
 
@@ -46,27 +58,35 @@ checked reviewed-plan sources / applicable reviewed-plan sources
 ```
 
 A proposed, returned or rejected plan entry never enters the reviewed-plan
-denominator. A professionally confirmed `not_applicable` source leaves the
-denominator only after its exact check disposition is separately confirmed.
-Unavailable and failed sources remain visible and uncompleted. The percentage
-is never a discovery probability and never supports “all available grants were
-found.”
+denominator. Returned entries remain pending; rejected entries are counted
+separately and do not block a scan that does not select them. A professionally
+confirmed `not_applicable` source leaves the denominator only after its exact
+check disposition is separately confirmed. Unavailable and failed sources
+remain visible and uncompleted. The percentage is never a discovery probability
+and never supports “all available grants were found.”
 
 ## Opportunity lifecycle and monitoring
 
 Store every status observation with its source references, observed time,
 effective date, rationale and review state. Allowed observations are
-`announced`, `upcoming`, `open`, `funds_available`, `suspended`, `closed`,
-`refinanced`, and `unknown`. Their meaning is model-led and reviewed. Code only
+`announced`, `approved`, `published`, `upcoming`, `open`, `closing_soon`,
+`extended`, `modified`, `funds_available`, `suspended`, `closed`, `refinanced`,
+and `unknown`. Their meaning is model-led and reviewed. Code only
 requires chronological observed times, requires the current value to equal the
 last preserved observation, and rejects rewriting confirmed history. Confirmed
 dates, URLs, titles and summaries may change only through a source-referenced
 append-only revision event; affected matches become proposed.
 
-Monitoring scans are idempotent and resumable. A running scan can be completed;
-a completed scan is immutable. Failed and partial scans retain error codes and
-do not masquerade as complete coverage. Scheduling metadata records the next
-intended check but does not create an external background job by itself.
+Monitoring scans are idempotent and resumable. A running scan seals its query
+context, professionally reviewed query-scoped source selection, selected-source
+registry hash and requested temporal window. A returned selection can be
+revised before checks. A completed scan embeds immutable per-source check
+snapshots; later source checks do not rewrite it. Selection review gaps, declared
+query-scope gaps, and failed, unavailable, missing or newly unreviewed selected
+priority sources remain explicit and block `complete`. Source cursors retain the
+latest stable act or publication identifier, date or URL across scans, while
+the requested window still has to be checked. Scheduling metadata records the
+next intended check but does not create an external background job by itself.
 
 ## Bidirectional matching
 

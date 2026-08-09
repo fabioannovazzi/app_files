@@ -468,7 +468,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.105"
+    assert manifest["version"] == "0.1.107"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -4233,17 +4233,17 @@ def test_clara_public_icon_matches_plugin_source() -> None:
     ("page_name", "expected_home_href", "expected_product", "expected_links"),
     (
         (
-                "vera",
-                "/?lang=it",
-                "Vera",
-                (
-                    "#core",
-                    "#comunicazione-professionale",
-                    "#assurance",
-                    "#jurisdiction",
-                    "#data-boundary",
-                    "#video",
-                ),
+            "vera",
+            "/?lang=it",
+            "Vera",
+            (
+                "#core",
+                "#comunicazione-professionale",
+                "#assurance",
+                "#jurisdiction",
+                "#data-boundary",
+                "#video",
+            ),
         ),
         (
             "clara",

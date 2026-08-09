@@ -1230,6 +1230,7 @@ def test_verified_opportunity_handoff_registers_as_mechanical_source(
         _match,
         _opportunity,
         _profile,
+        _scan,
         _source,
     )
 
@@ -1264,14 +1265,46 @@ def test_verified_opportunity_handoff_registers_as_mechanical_source(
         idempotency_key="source-1",
         **_contribution_args(),
     )
+    radar.review_item(
+        radar_workspace,
+        scope="source",
+        target_id="SOURCE-REGION",
+        decision="accepted",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+        idempotency_key="review-source",
+    )
+    radar.record_scan(
+        radar_workspace,
+        scan=_scan(),
+        next_scan_on=None,
+        idempotency_key="scan-start-1",
+        **_contribution_args(),
+    )
+    radar.review_item(
+        radar_workspace,
+        scope="scan_source_selection",
+        target_id="SCAN-001",
+        decision="accepted",
+        reviewer_id="reviewer-001",
+        reviewer_role="commercialista",
+        confirmed_by_user=True,
+        idempotency_key="review-scan-source-selection",
+    )
     radar.record_source_check(
         radar_workspace,
         source_id="SOURCE-REGION",
+        check_id="CHECK-001",
+        scan_id="SCAN-001",
         check_status="checked",
         checked_at="2026-08-07T11:00:00+00:00",
+        window_start="2026-06-09",
+        window_end="2026-08-07",
         next_check_on="2026-08-08",
         result_count=1,
         error_code=None,
+        cursor_after=None,
         idempotency_key="source-check-1",
     )
     radar.record_opportunity(
@@ -1289,7 +1322,6 @@ def test_verified_opportunity_handoff_registers_as_mechanical_source(
     for scope, target in (
         ("evidence", "EVIDENCE-CLIENT-001"),
         ("profile", "CLIENT-001"),
-        ("source", "SOURCE-REGION"),
         ("source_check", "SOURCE-REGION"),
         ("opportunity", "OPP-001"),
         ("match", "MATCH-CLIENT-001"),

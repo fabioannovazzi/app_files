@@ -12,6 +12,18 @@
 - Model-led, professionally reviewed official-source plans; separately reviewed
   source-check results and exact coverage that excludes unreviewed plan entries
   and remains explicitly distinguished from discovery probability.
+- A persistent, professionally reviewed priority-source registry with explicit
+  territory, category, discovery role, official surface and act-family metadata;
+  no deterministic domain or legal-source selection.
+- Source-first temporal scans with sealed caller-selected windows (commonly
+  30–60 days), model-led and professionally reviewed query-scoped source
+  selections, exact territory/category coverage-or-gap claims, direct-source
+  worklists, DGR/DDR/BUR/annex coverage metadata, immutable check snapshots,
+  optional publication cursors, complementary semantic-web evidence, explicit
+  scope gaps and unverified-source lists, and a completion coverage gate.
+- Rejected registry proposals are counted separately from pending review and do
+  not block later scans that exclude them; failed or unavailable attempted
+  checks render `partial`, never `not_started`.
 - Time-aware opportunity lifecycle history, resumable monitoring scans,
   bidirectional profile/opportunity matching, missing information,
   contradictions, complexity and recommended actions.
@@ -48,6 +60,9 @@
 
 - A universal deterministic publisher list, keyword matcher, eligibility rule
   library, statistical discovery-completeness claim or autonomous client alert.
+- A bundled official-source crawler or claim that every publisher exposes a
+  stable incremental cursor. The selected runtime performs read-only checks
+  from the worklist; cursors are retained only when the source exposes one.
 - A background scheduler or authenticated publisher feed. Monitoring records
   scans performed by the current authorized runtime and the intended next date.
 - Automatic client contact. `contact_client` is a reviewed recommendation only.

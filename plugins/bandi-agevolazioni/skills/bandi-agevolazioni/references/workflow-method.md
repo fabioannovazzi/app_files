@@ -3,13 +3,16 @@
 This reference governs the semantic work. Scripts enforce contracts and never
 decide legal meaning.
 
-Before a specific call is selected, follow `opportunity-radar.md`. Source-plan
-selection, source relevance, opportunity lifecycle and amendment meaning, compatibility,
+Before a specific call is selected, follow `opportunity-radar.md` and
+`source-first-discovery.md`. Source-plan selection, source relevance,
+opportunity lifecycle and amendment meaning, compatibility,
 economic assumptions, application complexity and recommended action are
 model-led proposals. Coverage counts, reference closure, lifecycle-history
-preservation, append-only revision storage, exact range subtraction, review
-binding and recomputable handoff hashes are
-mechanical controls.
+preservation, exact query-dimension claim closure, query-scoped selection
+reference closure, temporal-window containment, source-first execution
+ordering, cursor preservation, append-only revision storage, exact range
+subtraction, review binding and recomputable handoff hashes are mechanical
+controls. The code never infers which source covers a territory or category.
 
 ## 1. Source baseline and conflicts
 
