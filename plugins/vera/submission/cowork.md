@@ -22,20 +22,20 @@ remain drafts for review by a qualified professional.
 
 **Public description**
 
-> Assistente AI per commercialisti. Vera aiuta il commercialista a seguire il
-> lavoro di ogni cliente, dall’inizio alla revisione finale. Raccoglie, ordina e
-> ritrova i documenti del cliente, controlla i dati contabili, seleziona
-> campioni, riconcilia movimenti e prepara analisi finanziarie e report. Aiuta
-> anche a riesaminare casi di concordato preventivo e a preparare pratiche INPS
-> e Registro Imprese/DIRE. Quando riconosce una domanda legale, fiscale o
-> normativa, definisce internamente il tipo di risposta, il percorso di
-> generazione e il contratto di validazione, produce o coordina la risposta e la
-> controlla. La validazione distingue identità e accesso della fonte, supporto
-> semantico, ragionamento, trattamento del difetto e ciò che resta affidato al
-> giudizio professionale. La completezza del registro non certifica la
-> correttezza legale, e una correzione proposta deve essere applicata alla
-> risposta prima della consegna. Il giudizio professionale resta al
-> commercialista.
+> Assistente AI per commercialisti. Vera affianca commercialisti e studi
+> professionali nel lavoro di ogni cliente. Organizza e ritrova i documenti,
+> controlla dati e scritture contabili, seleziona campioni, riconcilia movimenti
+> e prepara analisi finanziarie, report e carte di lavoro rivedibili.
+>
+> Supporta la preparazione del bilancio civilistico OIC, anche da PDF leggibili
+> o scansionati, fino alla revisione e all’esportazione XBRL. Aiuta inoltre con
+> bandi e agevolazioni, avvisi e cartelle, casi INPS, Registro Imprese e DIRE,
+> concordato preventivo, ricerche fiscali o normative e comunicazioni ai
+> clienti.
+>
+> Vera mostra fonti, passaggi, ambiguità e informazioni mancanti prima di usare
+> o consegnare il risultato. Firma, approvazione, deposito, invio e giudizio
+> professionale restano al commercialista.
 
 ## Required review prompts
 

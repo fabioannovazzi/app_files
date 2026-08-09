@@ -38,6 +38,7 @@
         "method",
         "assessor_session_id",
         "assessment_template_version",
+        "template_sha256",
         "generation_transcript_seen",
         "generator_prompt_reused",
         "comparison_class",
@@ -46,7 +47,8 @@
       "properties": {
         "method": {"const": "blind_adversarial_exact_artifact_review"},
         "assessor_session_id": {"type": "string", "minLength": 8, "maxLength": 200},
-        "assessment_template_version": {"const": "professional-communication-editorial-v3"},
+        "assessment_template_version": {"const": "professional-communication-editorial-v4"},
+        "template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
         "generation_transcript_seen": {"const": false},
         "generator_prompt_reused": {"const": false},
         "comparison_class": {"const": "strong_practitioner_authored_publication"},

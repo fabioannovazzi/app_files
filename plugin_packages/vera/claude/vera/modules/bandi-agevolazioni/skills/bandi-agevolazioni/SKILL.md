@@ -89,6 +89,10 @@ private Studio Archive client-run output described below.
 - Never describe a source-plan coverage ratio as the probability that all
   opportunities were found. It measures only checked sources in the reviewed
   plan.
+- Never begin semantic web discovery for a recent-opportunity scan before every
+  reviewed priority source has been directly attempted for the requested
+  window. Disclose every failed, unavailable, missing or unreviewed priority
+  source instead of calling the scan complete.
 - Never place client identity, financial data, project narrative, quotations,
   or declarations in public discovery queries. Portfolio radar profiles use
   opaque client references.
@@ -141,9 +145,9 @@ lifecycle state, or completed artifact declaration.
 ## Workflow
 
 Read `references/product-thesis.md`, `references/workflow-method.md`,
-`references/opportunity-radar.md`, and `references/implementation-status.md`
-completely before interpreting sources, requesting a model contribution, or
-editing either workbench. Use
+`references/opportunity-radar.md`, `references/source-first-discovery.md`, and
+`references/implementation-status.md` completely before interpreting sources,
+requesting a model contribution, or editing either workbench. Use
 `references/acceptance-matrix.md` when reviewing or releasing the workflow.
 
 ### Stage A — opportunity radar
@@ -181,6 +185,79 @@ Record actual source checks separately with
 the plan. Use `record-scan` for resumable monitoring runs and preserve lifecycle
 history rather than overwriting an earlier status.
 
+For recent discovery, treat the reviewed source plan as a persistent priority
+registry. Each source proposal must state `discovery_role`, `source_surface`,
+`territories`, `categories`, and `act_families`; those fields remain model-led
+and professionally reviewed. For each temporal scan, use model reasoning to
+propose an exact query-scoped selection from confirmed registry entries. The
+selection must declare one `covered` or `gap` claim for every territory and
+category in the generic query context, cite the selected source IDs and explain
+the semantic rationale. Code checks only exact claim presence, IDs and roles; it
+does not match territory or category strings to publishers.
+
+Start the scan with exact selection provenance, review the selection explicitly,
+then render its direct-source worklist:
+
+```bash
+python scripts/opportunity_radar.py \
+  --workspace <private-radar-workspace> \
+  record-scan \
+  --input <running-scan.json> \
+  --idempotency-key <stable-scan-start-id> \
+  --origin model_suggested \
+  --provider <provider> \
+  --model <exact-model> \
+  --prompt-template-version bandi-source-selection-v1 \
+  --recorded-by <operator>
+
+python scripts/opportunity_radar.py \
+  --workspace <private-radar-workspace> \
+  review \
+  --scope scan_source_selection \
+  --target-id <scan-id> \
+  --decision accepted \
+  --reviewer-id <reviewer> \
+  --reviewer-role commercialista \
+  --confirmed-by-user \
+  --idempotency-key <stable-selection-review-id>
+
+python scripts/opportunity_radar.py \
+  --workspace <private-radar-workspace> \
+  worklist \
+  --scan-id <scan-id>
+```
+
+Inspect every priority URL directly across the requested window, including
+relevant DGR, DDR, BUR issues, annexes, FAQs and amendments. Record each check
+against the running scan; optionally pass a cursor JSON containing the latest
+stable publication ID, publication date or official URL:
+
+```bash
+python scripts/opportunity_radar.py \
+  --workspace <private-radar-workspace> \
+  record-source-check \
+  --source-id <source-id> \
+  --check-id <stable-check-id> \
+  --scan-id <scan-id> \
+  --check-status checked \
+  --checked-at <ISO-date-time> \
+  --window-start YYYY-MM-DD \
+  --window-end YYYY-MM-DD \
+  --result-count <count> \
+  --cursor-input <optional-cursor.json> \
+  --idempotency-key <stable-check-operation-id>
+```
+
+Review each check, then use semantic web research only as a complementary last
+phase. Finish the same scan with a terminal payload. `complete` is rejected
+unless the selection is confirmed, every query dimension is declared covered,
+and the sealed coverage snapshot resolves every selected priority source.
+Otherwise record `partial` or `failed` and report the exact scope gaps and
+unverified source IDs. A rejected registry proposal outside the reviewed scan
+selection never blocks that scan. A source cursor accelerates delta detection
+but never replaces the stated historical window. Read
+`references/source-first-discovery.md` for the complete contract.
+
 Review each evidence receipt, source-plan entry, source-check result, profile,
 opportunity and match explicitly. `source` confirms plan relevance;
 `source_check` separately confirms the exact observed check result:
@@ -189,7 +266,7 @@ opportunity and match explicitly. `source` confirms plan relevance;
 python scripts/opportunity_radar.py \
   --workspace <private-radar-workspace> \
   review \
-  --scope evidence|profile|source|source_check|opportunity|match \
+  --scope evidence|profile|source|source_check|scan_source_selection|opportunity|match \
   --target-id <id> \
   --decision accepted|returned|rejected \
   --reviewer-id <reviewer> \
@@ -358,7 +435,10 @@ rationale. A conclusive negative assessment may therefore be documentary
 Use deterministic code only for mechanically verifiable work: exhaustive JSON
 Schema and ID validation, exact hashes, path containment, source/reference
 closure, workspace and handoff path binding, review freshness, source-plan
-check ratios, chronological lifecycle-history preservation, exact
+check ratios, source-registry revision binding, exact query-dimension claim
+closure, query-scoped selection reference closure, temporal-window containment,
+direct-before-semantic execution order, cursor preservation, scan completion
+coverage, chronological lifecycle-history preservation, exact
 economic range subtraction from supplied assumptions, the versioned
 `exact_decimal_compare` and `exact_date_compare` rule families after their
 inputs and outcome mapping are professionally confirmed, status invariants,

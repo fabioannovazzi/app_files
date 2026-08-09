@@ -7,6 +7,7 @@
     "provider",
     "model",
     "assessment_template_version",
+    "template_sha256",
     "assessor_session_id",
     "evaluated_at",
     "judgments"
@@ -15,7 +16,8 @@
     "schema_version": {"const": 1},
     "provider": {"type": "string", "minLength": 1, "maxLength": 200},
     "model": {"type": "string", "minLength": 1, "maxLength": 200},
-    "assessment_template_version": {"const": "professional-communication-editorial-v3"},
+    "assessment_template_version": {"const": "professional-communication-editorial-v4"},
+    "template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "assessor_session_id": {"type": "string", "minLength": 8, "maxLength": 200},
     "evaluated_at": {"type": "string", "format": "date-time"},
     "judgments": {

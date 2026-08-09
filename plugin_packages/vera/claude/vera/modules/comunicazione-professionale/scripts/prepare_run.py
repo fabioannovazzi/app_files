@@ -13,12 +13,14 @@ from typing import Any
 
 from workflow_core import (
     PLUGIN_ROOT,
+    PROMPT_TEMPLATES,
     atomic_write_json,
     canonical_digest,
     copy_input_snapshot,
     file_digest,
     load_json,
     load_workspace,
+    prompt_template_digest,
     run_dir_from_workspace,
     utc_now,
     validate_schema,
@@ -85,6 +87,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
     validate_schema(intake, "communication_intake.schema.json")
     for label, route in intake["external_routes"].items():
         _approved_route(route, label)
+    studio_format_brief = str(intake.get("studio_format_brief") or "").strip()
 
     workspace_root = workspace.expanduser().resolve()
     run_dir = run_dir_from_workspace(workspace, intake["run_id"])
@@ -140,11 +143,15 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     raise ValueError(
                         "Stored studio profile has no authoritative brand profile"
                     )
-                if requested_brand != stored_brand and not history:
+                if requested_brand != stored_brand and not (
+                    history or studio_format_brief
+                ):
                     raise ValueError(
-                        "Brand settings differ from the approved Studio profile; selected history and a new profile review are required"
+                        "Brand settings differ from the approved Studio profile; selected history or an explicit Studio-format brief is required"
                     )
-                brand_profile = requested_brand if history else stored_brand
+                brand_profile = (
+                    requested_brand if history or studio_format_brief else stored_brand
+                )
                 profile_copy = copy_input_snapshot(
                     studio_profile_path,
                     destination_dir=staging_dir / "inputs" / "profile",
@@ -185,21 +192,24 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     raise ValueError("Stored Studio format digest mismatch")
             else:
                 brand_profile = requested_brand
-            if studio_profile is None and not history:
-                raise ValueError(
-                    "A new studio needs selected prior communications before its first formatted output"
-                )
+            profile_revision_required = bool(
+                studio_profile is None or history or studio_format_brief
+            )
 
             selected_logo_path = (
                 Path(requested_logo_path) if requested_logo_path else stored_logo_path
             )
-            if requested_logo_path and stored_logo_path and not history:
+            if (
+                requested_logo_path
+                and stored_logo_path
+                and not (history or studio_format_brief)
+            ):
                 if (
                     file_digest(Path(requested_logo_path).resolve(strict=True))
                     != stored_logo_sha256
                 ):
                     raise ValueError(
-                        "Studio logo differs from the approved profile; selected history and a new profile review are required"
+                        "Studio logo differs from the approved profile; selected history or an explicit Studio-format brief is required"
                     )
             logo_snapshot = None
             if selected_logo_path:
@@ -235,6 +245,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 "jurisdiction": intake["jurisdiction"],
                 "objective": intake["objective"],
                 "audience": intake["audience"],
+                "studio_format_brief": studio_format_brief,
                 "requested_channels": intake["channels"],
                 "visual_requested": intake["visual_requested"],
                 "workspace_id": workspace_payload["workspace_id"],
@@ -242,6 +253,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 "output_dir": str(run_dir),
                 "brand_profile": brand_profile,
                 "studio_profile": studio_profile,
+                "profile_revision_required": profile_revision_required,
                 "external_routes": intake["external_routes"],
                 "data_posture": {
                     "selected_source_files_snapshotted_locally": len(sources),
@@ -281,10 +293,13 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 "input_digest": input_digest,
                 "objective": intake["objective"],
                 "audience": intake["audience"],
+                "language": intake["language"],
                 "jurisdiction": intake["jurisdiction"],
                 "reference_date": intake["reference_date"],
                 "requested_channels": intake["channels"],
                 "visual_requested": intake["visual_requested"],
+                "studio_format_brief": studio_format_brief,
+                "profile_revision_required": profile_revision_required,
                 "source_snapshots": [
                     {
                         key: row[key]
@@ -292,30 +307,54 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                             "id",
                             "title",
                             "authority_role",
+                            "public_url",
+                            "published_at",
                             "snapshot_path",
                             "sha256",
                         )
+                        if key in row
                     }
                     for row in sources
                 ],
                 "history_snapshots": [
                     {
                         key: row[key]
-                        for key in ("id", "channel", "snapshot_path", "sha256")
+                        for key in (
+                            "id",
+                            "channel",
+                            "published_at",
+                            "snapshot_path",
+                            "sha256",
+                        )
+                        if key in row
                     }
                     for row in history
                 ],
                 "existing_studio_profile": studio_profile,
                 "brand_profile": brand_profile,
-                "contribution_schema": str(
-                    (
-                        PLUGIN_ROOT / "schemas" / "model_contribution.schema.json"
-                    ).resolve()
-                ),
+                "artifact_schemas": {
+                    name: str((PLUGIN_ROOT / "schemas" / filename).resolve())
+                    for name, filename in {
+                        "answer_contract": "answer_contract.schema.json",
+                        "model_contribution": "model_contribution.schema.json",
+                        "claim_assurance": "claim_assurance.schema.json",
+                        "editorial_assessment": "editorial_assessment.schema.json",
+                        "visual_assessment": "visual_assessment.schema.json",
+                    }.items()
+                },
+                "model_pass_templates": {
+                    kind: {
+                        "version": version,
+                        "path": str(path.resolve()),
+                        "sha256": prompt_template_digest(kind, version),
+                    }
+                    for kind, (version, path) in PROMPT_TEMPLATES.items()
+                },
                 "instructions": [
                     "Use semantic judgment for topic relevance, source authority, meaning, claims, voice, and no_publish.",
                     "Do not treat file registration or source-ID closure as semantic support.",
                     "Use the selected studio examples to propose or follow the studio format without copying passages.",
+                    "When no prior Studio communication is selected, distinguish user-supplied format facts from Vera default proposals and never claim observed history.",
                     "A schedule is not evidence that communication is worthwhile.",
                     "Creative Production is an optional art-direction route, never a source of claims or exact public copy; use it only when explicitly selected and continue with Vera's internal renderer when unavailable.",
                 ],

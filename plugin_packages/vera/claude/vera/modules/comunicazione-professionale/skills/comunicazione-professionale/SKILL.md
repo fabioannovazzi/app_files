@@ -150,7 +150,9 @@ ZIPs during a professional communication run.
    ```
 
    Before the first contribution from a new editorial-assessor model, or after
-   its template or benchmark changes, qualify that assessor. Give the assessor
+   its template or benchmark changes, qualify that assessor. Use the exact
+   bundled `prompts/editorial-assessment-v4.md` and record its SHA-256 in the
+   benchmark result. Give the assessor
    only `evals/editorial_quality_cases.json`; never read or expose
    `evals/editorial_quality_expected.json` while producing its judgments.
    Write the model result against
@@ -170,7 +172,8 @@ ZIPs during a professional communication run.
 
 3. Create `communication_intake.json` from actual user choices and selected
    material. Include the objective, audience, channels, selected source files,
-   selected prior communications, an optional brand profile, and the four
+   selected prior communications, an optional `studio_format_brief`, an
+   optional brand profile, and the four
    external-route records `public_research`, `history_connector`,
    `creative_production`, and `send_or_publish`. Set `creative_production` to
    selected only when the user explicitly chose that route and record its
@@ -182,6 +185,11 @@ ZIPs during a professional communication run.
      --intake <communication_intake.json>
    ```
 
+   A new Studio may start without prior communications. Vera then proposes the
+   complete first format from explicit instructions, supplied brand assets,
+   and clearly labelled Vera defaults. No field may use `observed_history`
+   unless its cited history was selected and snapshotted in this run.
+
 4. Read the exact bound inputs. When public research was selected, research
    with generic topic-level queries and record exact official source snapshots
    or user-readable source files in a new prepared run before confirming
@@ -192,9 +200,11 @@ ZIPs during a professional communication run.
    professional-judgment boundary. Compute `contract_digest` over the exact
    object before that field is added.
 
-   Then use model-led reasoning to write `model_contribution.json` according to the
-   contract. A `publish` contribution contains a studio profile proposal when
-   history is present, source assessments, atomic claims, a master brief,
+   Then open the exact bundled `prompts/generation-v3.md` in a fresh host
+   session and use model-led reasoning to write `model_contribution.json`
+   according to the contract. A `publish` contribution contains a studio
+   profile proposal whenever the run says `profile_revision_required`, source
+   assessments, atomic claims, a master brief,
    channel drafts, and a model-led `render` or `omit` visual decision. A
    `no_publish` contribution explains why communication is not useful and
    contains no promotional filler. Every Studio-profile field must have one
@@ -204,8 +214,13 @@ ZIPs during a professional communication run.
    `editorial_value` judgment; a calendar, generic awareness, available word
    count, or generic business advice is never sufficient.
 
-   Next run a separate model-led claim-assurance pass and write
-   `claim_assurance.json`. Bind it to the exact contribution and answer-contract
+   Every channel draft also carries its exact reviewed `public_source_notes`.
+   The note identifies the real authority and instrument, plus the material
+   date, number, version, or public URL when available. Packaging may escape
+   text for HTML but must not replace these notes with a generic Studio phrase.
+
+   Next open `prompts/claim-assurance-v2.md` in a separate fresh host session
+   and write `claim_assurance.json`. Bind it to the exact contribution and answer-contract
    digests; cover every material claim once; and keep source identity, semantic
    support, reasoning, and professional judgment separate. Correct or remove an
    unsupported, contradicted, overbroad, temporally distorted, or unsound claim
@@ -213,8 +228,8 @@ ZIPs during a professional communication run.
    deep-research validation record; do not start a separate client-bound
    validator run for the same studio-wide contribution.
 
-   Finally run a separate skeptical model-led editorial pass and write
-   `editorial_assessment.json` according to its schema. Bind it to the exact
+   Finally open `prompts/editorial-assessment-v4.md` in a third fresh host
+   session and write `editorial_assessment.json` according to its schema. Bind it to the exact
    canonical contribution and claim-assurance digests. Use a fresh assessor
    session that has not seen the generation transcript and does not reuse the
    generator prompt; record this in `assessment_protocol`. The verdict may be
@@ -232,7 +247,9 @@ ZIPs during a professional communication run.
    evidence note when exact evidence is available, requires revision or
    omission.
 6. Record the exact generator and editorial-assessor provider/model provenance,
-   template version, and operator:
+   template versions, template digests, distinct host session IDs, and
+   operator. These are operator-attested host records, not
+   provider-authenticated API receipts; never describe them otherwise:
 
    ```bash
    python scripts/record_contribution.py \
@@ -245,7 +262,8 @@ ZIPs during a professional communication run.
      --claim-assessment-provider <provider> \
      --claim-assessment-model <model> \
      --assessment-provider <provider> --assessment-model <model> \
-     --template-version professional-communication-v2 \
+     --template-version professional-communication-v3 \
+     --generation-session-id <fresh-generator-session-id> \
      --recorded-by <operator>
    ```
 
@@ -312,8 +330,9 @@ ZIPs during a professional communication run.
    The QA preview writes `visual_preview_manifest.json` and
    `visuals-preview/`. It is deliberately non-packageable and is not evidence
    of professional approval. Never copy or rename it into the release path.
-   Open every exact PNG/PDF, compare it with the channel draft, and write a
-   model-led `visual_assessment.json` against
+   Open `prompts/visual-assessment-v2.md` in another fresh host session, then
+   open every exact PNG and every PDF page, compare them with the channel draft,
+   and write a model-led `visual_assessment.json` against
    `schemas/visual_assessment.schema.json`. Record it with:
 
    ```bash
@@ -353,7 +372,10 @@ ZIPs during a professional communication run.
 
 8. A returned or rejected draft may be replaced with
    `record_contribution.py --supersede`; this creates a new immutable version and
-   invalidates prior reviews. Never edit a reviewed version in place.
+   invalidates prior reviews. It also archives the earlier derived render,
+   package, and assessment artifacts under `versions/artifacts-vNNN/`, so a
+   revised contribution can be rendered and packaged without overwriting
+   history. Never edit a reviewed version in place.
 9. When the reviewed contribution contains an accepted studio profile proposal,
    promote it so later runs reuse the approved brand colors, persisted logo,
    document geometry, font family, voice, email, website, and social formats.

@@ -7,6 +7,7 @@
     "run_id",
     "assessed_contribution_digest",
     "answer_contract_digest",
+    "assessment_protocol",
     "validation_method",
     "coverage_review",
     "contract_review",
@@ -18,6 +19,19 @@
     "run_id": {"type": "string", "minLength": 1},
     "assessed_contribution_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "answer_contract_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assessment_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "assessor_session_id", "assessment_template_version", "template_sha256", "generation_transcript_seen", "completed_at"],
+      "properties": {
+        "method": {"const": "isolated_host_session_exact_artifact_review"},
+        "assessor_session_id": {"type": "string", "minLength": 8, "maxLength": 200},
+        "assessment_template_version": {"const": "professional-communication-claim-assurance-v2"},
+        "template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "generation_transcript_seen": {"const": false},
+        "completed_at": {"type": "string", "format": "date-time"}
+      }
+    },
     "validation_method": {"const": "model_led_source_support_reasoning_and_judgment_review"},
     "coverage_review": {
       "type": "object",
@@ -33,12 +47,21 @@
     "contract_review": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["question_answered", "document_type", "audience", "evidence_display", "reviewer_action"],
+      "required": ["purpose", "document_type", "audience", "output_language", "jurisdiction", "source_hierarchy", "preservation", "required_distinctions", "prohibited_content", "evidence_display", "validation_scope", "correction_policy", "judgment_policy", "reviewer_action"],
       "properties": {
-        "question_answered": {"$ref": "#/$defs/contractDimension"},
+        "purpose": {"$ref": "#/$defs/contractDimension"},
         "document_type": {"$ref": "#/$defs/contractDimension"},
         "audience": {"$ref": "#/$defs/contractDimension"},
+        "output_language": {"$ref": "#/$defs/contractDimension"},
+        "jurisdiction": {"$ref": "#/$defs/contractDimension"},
+        "source_hierarchy": {"$ref": "#/$defs/contractDimension"},
+        "preservation": {"$ref": "#/$defs/contractDimension"},
+        "required_distinctions": {"$ref": "#/$defs/contractDimension"},
+        "prohibited_content": {"$ref": "#/$defs/contractDimension"},
         "evidence_display": {"$ref": "#/$defs/contractDimension"},
+        "validation_scope": {"$ref": "#/$defs/contractDimension"},
+        "correction_policy": {"$ref": "#/$defs/contractDimension"},
+        "judgment_policy": {"$ref": "#/$defs/contractDimension"},
         "reviewer_action": {"enum": ["accept", "revise", "reject"]}
       }
     },

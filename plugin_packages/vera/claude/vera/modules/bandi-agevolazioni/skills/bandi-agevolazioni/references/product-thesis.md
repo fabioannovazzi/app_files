@@ -14,16 +14,19 @@ Later host-specific instructions in this reference cannot override this rule.
 
 The workflow supports both opportunity discovery and application instruction.
 Before a call is selected, Vera maintains a private, reviewable radar: an opaque
-company opportunity profile, a professionally selected official-source plan,
-time-aware opportunity observations, bidirectional portfolio matches and
-economic ranges with explicit assumptions. A confirmed match becomes a sealed
+company opportunity profile, a professionally selected priority-source
+registry, professionally reviewed query-scoped source selections, source-first
+temporal scans, time-aware opportunity observations,
+bidirectional portfolio matches and economic ranges with explicit assumptions.
+A confirmed match becomes a sealed
 handoff into the existing client-bound dossier; it never becomes an eligibility
 decision by itself.
 
 This makes the unit of discovery intelligence one source/profile/opportunity
 proposal, not an autonomous alert. Vera may recommend contacting a client, but
-does not contact one. Monitoring metadata records intended scans; it does not
-claim that an external scheduler or exhaustive official-source feed exists.
+does not contact one. Monitoring metadata records intended scans, immutable
+coverage snapshots and optional publication cursors; it does not claim that an
+external scheduler or exhaustive official-source feed exists.
 
 ## Thesis
 
@@ -84,6 +87,13 @@ authority.
   confirmed plan entries because those counts are closed, reproducible
   execution facts. Proposed, returned and rejected entries are disclosed and
   excluded. It does not estimate the probability of finding all grants.
+- Source-first phasing, exact query-dimension claim closure, query-scoped source
+  reference closure, exact temporal-window containment, selected-source registry
+  hash binding, cursor preservation and the scan completion gate are
+  deterministic because their correctness follows from a closed execution and
+  audit contract. Model reasoning proposes which sources cover every category
+  and territory; professional review confirms that semantic selection and still
+  interprets every publication.
 - Lifecycle preservation and radar reference closure are deterministic because
   auditability requires confirmed history and opaque client boundaries not to
   be silently rewritten or crossed.

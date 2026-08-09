@@ -1,12 +1,12 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/opportunity-radar-2.0.json",
+  "$id": "https://mparanza.com/schemas/bandi-agevolazioni/opportunity-radar-3.0.json",
   "title": "Vera opportunity radar workbench",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "plugin", "radar_id", "scope", "reference_date", "revision", "created_at", "updated_at", "workspace_binding", "profile_evidence", "profiles", "source_plan", "opportunities", "matches", "monitoring", "review_events", "operations", "limitations"],
   "properties": {
-    "schema_version": {"const": "2.0"},
+    "schema_version": {"const": "3.0"},
     "plugin": {"const": "bandi-agevolazioni"},
     "radar_id": {"$ref": "#/$defs/id"},
     "scope": {"enum": ["single_client", "portfolio"]},
@@ -128,28 +128,55 @@
     "sourcePlanEntry": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["source_id", "authority_level", "publisher", "official_url", "relevance_rationale", "profile_refs", "check_status", "checked_at", "next_check_on", "result_count", "error_code", "review_status", "check_review_status", "contribution"],
+      "required": ["source_id", "authority_level", "publisher", "official_url", "discovery_role", "source_surface", "territories", "categories", "act_families", "relevance_rationale", "profile_refs", "check_id", "last_scan_id", "check_status", "checked_at", "window_start", "window_end", "next_check_on", "result_count", "error_code", "cursor_before", "cursor_after", "review_status", "check_review_status", "contribution"],
       "properties": {
         "source_id": {"$ref": "#/$defs/id"},
         "authority_level": {"enum": ["national", "regional", "regional_agency", "chamber", "municipality", "province", "eu", "sectoral", "other"]},
         "publisher": {"type": "string", "minLength": 1},
         "official_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "discovery_role": {"enum": ["priority_direct", "supplemental_direct"]},
+        "source_surface": {"enum": ["official_register", "official_gazette", "act_repository", "funding_portal", "publisher_page", "other_official"]},
+        "territories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "categories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "act_families": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["call", "dgr", "ddr", "bur_issue", "annex", "faq", "amendment", "portal_notice", "other"]}},
         "relevance_rationale": {"type": "string", "minLength": 1},
         "profile_refs": {"$ref": "#/$defs/idList"},
+        "check_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
+        "last_scan_id": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/id"}]},
         "check_status": {"enum": ["planned", "checked", "unavailable", "failed", "not_applicable"]},
         "checked_at": {"type": ["string", "null"], "format": "date-time"},
+        "window_start": {"type": ["string", "null"], "format": "date"},
+        "window_end": {"type": ["string", "null"], "format": "date"},
         "next_check_on": {"type": ["string", "null"], "format": "date"},
         "result_count": {"type": ["integer", "null"], "minimum": 0},
         "error_code": {"type": ["string", "null"]},
+        "cursor_before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
+        "cursor_after": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
         "review_status": {"$ref": "#/$defs/reviewStatus"},
         "check_review_status": {"$ref": "#/$defs/reviewStatus"},
         "contribution": {"$ref": "#/$defs/contribution"}
       }
     },
+    "sourceCursor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["external_id", "publication_date", "official_url", "recorded_at"],
+      "anyOf": [
+        {"properties": {"external_id": {"type": "string", "minLength": 1}}},
+        {"properties": {"publication_date": {"type": "string", "format": "date"}}},
+        {"properties": {"official_url": {"type": "string", "format": "uri", "pattern": "^https://"}}}
+      ],
+      "properties": {
+        "external_id": {"type": ["string", "null"], "minLength": 1},
+        "publication_date": {"type": ["string", "null"], "format": "date"},
+        "official_url": {"type": ["string", "null"], "format": "uri", "pattern": "^https://"},
+        "recorded_at": {"type": "string", "format": "date-time"}
+      }
+    },
     "coverage": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["plan_entry_count", "planned_count", "completed_count", "unavailable_count", "failed_count", "unreviewed_count", "check_review_pending_count", "ratio_basis_points", "status", "statement"],
+      "required": ["plan_entry_count", "planned_count", "completed_count", "unavailable_count", "failed_count", "unreviewed_count", "rejected_count", "check_review_pending_count", "ratio_basis_points", "status", "statement"],
       "properties": {
         "plan_entry_count": {"type": "integer", "minimum": 0},
         "planned_count": {"type": "integer", "minimum": 0},
@@ -157,6 +184,7 @@
         "unavailable_count": {"type": "integer", "minimum": 0},
         "failed_count": {"type": "integer", "minimum": 0},
         "unreviewed_count": {"type": "integer", "minimum": 0},
+        "rejected_count": {"type": "integer", "minimum": 0},
         "check_review_pending_count": {"type": "integer", "minimum": 0},
         "ratio_basis_points": {"type": "integer", "minimum": 0, "maximum": 10000},
         "status": {"enum": ["plan_unreviewed", "not_started", "partial", "planned_sources_checked"]},
@@ -169,7 +197,7 @@
       "required": ["observation_id", "status", "effective_date", "observed_at", "source_ids", "rationale", "review_status"],
       "properties": {
         "observation_id": {"$ref": "#/$defs/id"},
-        "status": {"enum": ["announced", "upcoming", "open", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "status": {"enum": ["announced", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
         "effective_date": {"type": ["string", "null"], "format": "date"},
         "observed_at": {"type": "string", "format": "date-time"},
         "source_ids": {"$ref": "#/$defs/idList"},
@@ -193,7 +221,7 @@
         "closing_date": {"type": ["string", "null"], "format": "date"},
         "summary": {"type": "string", "minLength": 1},
         "lifecycle_history": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/lifecycleObservation"}},
-        "current_lifecycle": {"enum": ["announced", "upcoming", "open", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
+        "current_lifecycle": {"enum": ["announced", "approved", "published", "upcoming", "open", "closing_soon", "extended", "modified", "funds_available", "suspended", "closed", "refinanced", "unknown"]},
         "review_status": {"$ref": "#/$defs/reviewStatus"},
         "contribution": {"$ref": "#/$defs/contribution"}
       }
@@ -239,14 +267,111 @@
     "scan": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["scan_id", "started_at", "completed_at", "source_ids", "outcome", "error_codes"],
+      "required": ["scan_id", "query_context", "source_selection", "started_at", "completed_at", "window_start", "window_end", "source_plan_sha256", "priority_source_ids", "unreviewed_priority_source_ids", "source_ids", "source_check_snapshots", "semantic_web_check", "coverage", "outcome", "error_codes"],
       "properties": {
         "scan_id": {"$ref": "#/$defs/id"},
+        "query_context": {"$ref": "#/$defs/queryContext"},
+        "source_selection": {"$ref": "#/$defs/sourceSelection"},
         "started_at": {"type": "string", "format": "date-time"},
         "completed_at": {"type": ["string", "null"], "format": "date-time"},
+        "window_start": {"type": "string", "format": "date"},
+        "window_end": {"type": "string", "format": "date"},
+        "source_plan_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "priority_source_ids": {"$ref": "#/$defs/idList"},
+        "unreviewed_priority_source_ids": {"$ref": "#/$defs/idList"},
         "source_ids": {"$ref": "#/$defs/idList"},
+        "source_check_snapshots": {"type": "array", "items": {"$ref": "#/$defs/sourceCheckSnapshot"}},
+        "semantic_web_check": {"$ref": "#/$defs/semanticWebCheck"},
+        "coverage": {"$ref": "#/$defs/scanCoverage"},
         "outcome": {"enum": ["running", "complete", "partial", "failed"]},
         "error_codes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "queryContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["territories", "categories", "request_summary"],
+      "properties": {
+        "territories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "categories": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "request_summary": {"type": "string", "minLength": 1}
+      }
+    },
+    "sourceSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["priority_source_ids", "supplemental_source_ids", "scope_coverage", "selection_rationale", "review_status", "contribution"],
+      "properties": {
+        "priority_source_ids": {"$ref": "#/$defs/idList"},
+        "supplemental_source_ids": {"$ref": "#/$defs/idList"},
+        "scope_coverage": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/scopeCoverageClaim"}},
+        "selection_rationale": {"type": "string", "minLength": 1},
+        "review_status": {"$ref": "#/$defs/reviewStatus"},
+        "contribution": {"$ref": "#/$defs/contribution"}
+      }
+    },
+    "scopeCoverageClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dimension", "query_value", "status", "source_ids", "rationale"],
+      "properties": {
+        "dimension": {"enum": ["territory", "category"]},
+        "query_value": {"type": "string", "minLength": 1},
+        "status": {"enum": ["covered", "gap"]},
+        "source_ids": {"$ref": "#/$defs/idList"},
+        "rationale": {"type": "string", "minLength": 1}
+      }
+    },
+    "sourceCheckSnapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "check_id", "last_scan_id", "check_status", "checked_at", "window_start", "window_end", "result_count", "error_code", "cursor_before", "cursor_after", "check_review_status"],
+      "properties": {
+        "source_id": {"$ref": "#/$defs/id"},
+        "check_id": {"$ref": "#/$defs/id"},
+        "last_scan_id": {"$ref": "#/$defs/id"},
+        "check_status": {"enum": ["checked", "unavailable", "failed", "not_applicable"]},
+        "checked_at": {"type": "string", "format": "date-time"},
+        "window_start": {"type": "string", "format": "date"},
+        "window_end": {"type": "string", "format": "date"},
+        "result_count": {"type": ["integer", "null"], "minimum": 0},
+        "error_code": {"type": ["string", "null"]},
+        "cursor_before": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
+        "cursor_after": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sourceCursor"}]},
+        "check_review_status": {"$ref": "#/$defs/reviewStatus"}
+      }
+    },
+    "semanticWebCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checked_at", "result_count", "error_code"],
+      "properties": {
+        "status": {"enum": ["not_run", "checked", "unavailable", "failed"]},
+        "checked_at": {"type": ["string", "null"], "format": "date-time"},
+        "result_count": {"type": ["integer", "null"], "minimum": 0},
+        "error_code": {"type": ["string", "null"]}
+      }
+    },
+    "scanCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["priority_source_count", "completed_priority_count", "verified_priority_count", "not_applicable_priority_count", "unavailable_priority_count", "failed_priority_count", "unreviewed_priority_count", "selection_review_status", "scope_gap_count", "uncovered_scope_keys", "unverified_priority_source_ids", "ratio_basis_points", "last_checked_at", "status", "statement"],
+      "properties": {
+        "priority_source_count": {"type": "integer", "minimum": 0},
+        "completed_priority_count": {"type": "integer", "minimum": 0},
+        "verified_priority_count": {"type": "integer", "minimum": 0},
+        "not_applicable_priority_count": {"type": "integer", "minimum": 0},
+        "unavailable_priority_count": {"type": "integer", "minimum": 0},
+        "failed_priority_count": {"type": "integer", "minimum": 0},
+        "unreviewed_priority_count": {"type": "integer", "minimum": 0},
+        "selection_review_status": {"$ref": "#/$defs/reviewStatus"},
+        "scope_gap_count": {"type": "integer", "minimum": 0},
+        "uncovered_scope_keys": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "unverified_priority_source_ids": {"$ref": "#/$defs/idList"},
+        "ratio_basis_points": {"type": "integer", "minimum": 0, "maximum": 10000},
+        "last_checked_at": {"type": ["string", "null"], "format": "date-time"},
+        "status": {"enum": ["selection_unreviewed", "plan_unreviewed", "scope_gaps", "no_priority_sources", "not_started", "partial", "priority_sources_verified"]},
+        "statement": {"type": "string", "minLength": 1}
       }
     },
     "monitoring": {
@@ -266,7 +391,7 @@
       "properties": {
         "event_id": {"$ref": "#/$defs/id"},
         "idempotency_key": {"$ref": "#/$defs/id"},
-        "scope": {"enum": ["evidence", "profile", "source", "source_check", "opportunity", "match"]},
+        "scope": {"enum": ["evidence", "profile", "source", "source_check", "scan_source_selection", "opportunity", "match"]},
         "target_id": {"$ref": "#/$defs/id"},
         "target_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
         "decision": {"enum": ["accepted", "returned", "rejected"]},

@@ -21,7 +21,7 @@
       {
         "id": "application-case-and-evidence",
         "purpose": "Discover and match source-backed opportunities, then prepare a reviewable grant-application dossier after selection",
-        "content": "Opaque client references, receipted profile-evidence references and dated revisionable opportunity-profile facets; separately reviewed official-source plans and source-check observations; opportunity lifecycle and amendment history; client/opportunity matches, gaps, contradictions, economic assumptions and reviewed recommendations; selected-client self-verifiable opportunity handoffs; call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
+        "content": "Opaque client references, receipted profile-evidence references and dated revisionable opportunity-profile facets; professionally reviewed priority-source registry metadata for territory, category, official surface and act families; model-led query-scoped source selections with exact provider provenance, one professionally reviewed covered-or-gap claim for every requested territory and category, selected source IDs and rationales; scan windows, immutable source-check snapshots, explicit coverage gaps and optional last-seen publication cursors; opportunity lifecycle and amendment history; client/opportunity matches, gaps, contradictions, economic assumptions and reviewed recommendations; selected-client self-verifiable opportunity handoffs; call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -33,9 +33,9 @@
     {
       "id": "official-public-research",
       "kind": "public_research",
-      "destination": "Public national, regional, local, chamber, EU, sectoral, issuing-authority, funding-program, official legal, and official FAQ sources selected for an opportunity radar or call",
-      "purpose": "Discover and monitor opportunities or locate current official call materials while recording source-plan coverage and provenance without disclosing client data",
-      "content": "Generic territory, activity, investment topic, call identifier, authority and program query; public document metadata, lifecycle observations and official URLs; no client identifiers, opaque client references, financial data, project narrative, quotations, declarations, credentials, or portal-session material",
+      "destination": "Direct official national, regional, local, chamber, EU, sectoral, issuing-authority, official-gazette, act-repository, funding-program and FAQ sources selected for an opportunity radar or call; general semantic web search only after priority-source attempts",
+      "purpose": "Discover and monitor opportunities source-first across an explicit temporal window, including relevant DGR, DDR, BUR, annex and amendment publications, while recording registry coverage and provenance without disclosing client data",
+      "content": "Generic territory, activity, investment topic, call identifier, authority, act family, program and temporal-window query; public document metadata, lifecycle observations, last-seen public publication cursor and official URLs; no client identifiers, opaque client references, financial data, project narrative, quotations, declarations, credentials, or portal-session material",
       "optional": true,
       "requires_confirmation": false,
       "runtime_profiles": [
@@ -45,7 +45,9 @@
       "controls": [
         "Use only official public sources and generic territory, activity, investment-topic, program or call-level queries; keep opaque client references, profiles, applicant and project facts inside the selected runtime context.",
         "Keep public research read-only and do not use login, upload, contact, assistance, form-save, signature, payment, or submission routes.",
-        "Record each planned source and actual check separately; the coverage ratio measures execution of that reviewed plan and never claims exhaustive discovery.",
+        "Use a model-led, professionally reviewed query-scoped selection from the priority-source registry; disclose one covered-or-gap claim for every requested territory and category, then inspect each selected institutional URL and relevant underlying act for the requested window before complementary semantic web search.",
+        "Record each planned source and actual check separately; failed, unavailable, missing and unreviewed priority sources remain explicit and block a complete scan, while full registry coverage never claims exhaustive discovery.",
+        "Keep source cursors, scan snapshots and coverage history in the owner-only private radar workspace; send only the public act identifier, date or URL needed for read-only source retrieval.",
         "Register exact selected source bytes and metadata before using them for confirmed requirements."
       ]
     }
@@ -86,12 +88,16 @@
     {
       "id": "sealed-radar-handoff",
       "control": "A radar handoff requires fresh confirmed profile evidence, profile, checked source-plan entries, source-check results, opportunity and match; contains only the selected client's subset; seals that embedded selection and its source entries with recomputable hashes; and is schema-, hash-, identity-, and reference-validated again before registration in one client-bound Studio Archive run."
+    },
+    {
+      "id": "source-first-coverage-gate",
+      "control": "Each recent discovery scan binds an exact model-provenanced and professionally reviewed query-scoped source selection, one covered-or-gap claim for every requested territory and category, the selected-source registry revision and temporal window; it records immutable per-source check snapshots and optional public publication cursors, prevents semantic web research from preceding selected priority-source attempts, and rejects a complete outcome while the selection is unreviewed, a scope gap remains, or any selected priority source is failed, unavailable, missing or unreviewed."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8597deb7b209da09c74816cbce9b8ad29a6bb677c28fa528056c82b0e5e191dd"
+    "source_fingerprint": "b3852d7bba4f82c78c32924133fb7029a91da966529c26ec8ef862d5f04b47b4"
   }
 }

@@ -6,13 +6,16 @@ from __future__ import annotations
 import argparse
 import html
 import logging
+import os
 import re
+import tempfile
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
 from fontTools.ttLib import TTFont as FontToolsTTFont
 from PIL import Image, ImageDraw, ImageFont
+from pypdf import PdfReader
 from reportlab.lib.colors import HexColor
 from reportlab.lib.enums import TA_LEFT
 from reportlab.lib.pagesizes import A4
@@ -32,6 +35,7 @@ from workflow_core import (
     atomic_write_json,
     atomic_write_text,
     canonical_digest,
+    creative_token_application,
     file_digest,
     load_json,
     recompute_contribution_digest,
@@ -55,6 +59,12 @@ FONT_PATHS = {
     "bold": FONT_ROOT / "InstrumentSans-Bold.ttf",
 }
 INTERNAL_ID_PATTERN = re.compile(r"\b(?:SRC|HIST|CLAIM)-[A-Za-z0-9_.-]+\b")
+SOURCE_HEADINGS = {
+    "en": "Sources",
+    "fr": "Sources",
+    "de": "Quellen",
+    "es": "Fuentes",
+}
 
 
 def _font(weight: str, size: int) -> ImageFont.FreeTypeFont:
@@ -359,6 +369,7 @@ def _draw_indexed_rows(
     text: str,
     measured_lines: list[tuple[str, ImageFont.FreeTypeFont]],
     boxed: bool = False,
+    row_marker: str = "numeral",
 ) -> int:
     """Draw exact bullet copy as an editorial register."""
 
@@ -386,12 +397,28 @@ def _draw_indexed_rows(
             number_x = x
             copy_x = x + 72
             copy_width = width - 72
-        draw.text(
-            (number_x, row_top + 25),
-            f"{row_index:02d}",
-            font=number_font,
-            fill=accent,
-        )
+        marker_top = row_top + 25
+        if row_marker == "numeral":
+            draw.text(
+                (number_x, marker_top),
+                f"{row_index:02d}",
+                font=number_font,
+                fill=accent,
+            )
+        elif row_marker == "circle":
+            draw.ellipse(
+                (number_x, marker_top, number_x + 30, marker_top + 30),
+                fill=accent,
+            )
+        elif row_marker == "bar":
+            draw.rectangle(
+                (number_x, marker_top, number_x + 9, marker_top + 42),
+                fill=accent,
+            )
+        else:
+            raise ValueError(
+                f"Unsupported Creative Production row marker: {row_marker}"
+            )
         _draw_text_block(
             draw,
             bullet,
@@ -419,6 +446,7 @@ def _draw_dual_gate(
     accent: str,
     text: str,
     measured_lines: list[tuple[str, ImageFont.FreeTypeFont]],
+    row_marker: str = "numeral",
 ) -> int:
     """Draw two exact conditions as a connected, two-gate sequence."""
 
@@ -432,18 +460,36 @@ def _draw_dual_gate(
     number_font = _font("semibold", 21)
     for row_index, bullet in enumerate(bullets, start=1):
         row_top = y + (row_index - 1) * row_height
-        draw.ellipse(
-            (line_x - 24, row_top + 18, line_x + 24, row_top + 66),
-            fill=accent,
-        )
         label = f"{row_index:02d}"
-        label_width = draw.textlength(label, font=number_font)
-        draw.text(
-            (line_x - label_width / 2, row_top + 28),
-            label,
-            font=number_font,
-            fill="#FFFFFF",
-        )
+        if row_marker == "circle":
+            draw.ellipse(
+                (line_x - 24, row_top + 18, line_x + 24, row_top + 66),
+                fill=accent,
+            )
+            label_width = draw.textlength(label, font=number_font)
+            draw.text(
+                (line_x - label_width / 2, row_top + 28),
+                label,
+                font=number_font,
+                fill="#FFFFFF",
+            )
+        elif row_marker == "bar":
+            draw.rectangle(
+                (line_x - 8, row_top + 18, line_x + 8, row_top + 66),
+                fill=accent,
+            )
+        elif row_marker == "numeral":
+            label_width = draw.textlength(label, font=number_font)
+            draw.text(
+                (line_x - label_width / 2, row_top + 28),
+                label,
+                font=number_font,
+                fill=accent,
+            )
+        else:
+            raise ValueError(
+                f"Unsupported Creative Production row marker: {row_marker}"
+            )
         _draw_text_block(
             draw,
             bullet,
@@ -471,6 +517,7 @@ def _draw_route_comparison(
     accent: str,
     text: str,
     measured_lines: list[tuple[str, ImageFont.FreeTypeFont]],
+    row_marker: str = "numeral",
 ) -> int:
     """Draw two exact routes side by side with an optional shared conclusion."""
 
@@ -484,12 +531,28 @@ def _draw_route_comparison(
     for column_index, bullet in enumerate(bullets[:2]):
         column_x = MARGIN + column_index * (column_width + gutter)
         draw.rectangle((column_x, y, column_x + column_width, y + 8), fill=accent)
-        draw.text(
-            (column_x, y + 28),
-            f"0{column_index + 1}",
-            font=_font("semibold", 22),
-            fill=primary,
-        )
+        marker_y = y + 28
+        if row_marker == "numeral":
+            draw.text(
+                (column_x, marker_y),
+                f"0{column_index + 1}",
+                font=_font("semibold", 22),
+                fill=primary,
+            )
+        elif row_marker == "circle":
+            draw.ellipse(
+                (column_x, marker_y, column_x + 30, marker_y + 30),
+                fill=accent,
+            )
+        elif row_marker == "bar":
+            draw.rectangle(
+                (column_x, marker_y, column_x + 9, marker_y + 42),
+                fill=accent,
+            )
+        else:
+            raise ValueError(
+                f"Unsupported Creative Production row marker: {row_marker}"
+            )
         _draw_text_block(
             draw,
             bullet,
@@ -614,13 +677,17 @@ def _render_slide(
     text = brand["text_color"]
     image = Image.new("RGBA", (WIDTH, HEIGHT), background)
     draw = ImageDraw.Draw(image)
+    row_marker = "numeral"
+    rhythm_gap = 0
     if creative_tokens is not None:
         frame = creative_tokens["frame_style"]
         rule = creative_tokens["rule_style"]
         accent_geometry = creative_tokens["accent_geometry"]
         header = creative_tokens["header_treatment"]
         rhythm = creative_tokens["spacing_rhythm"]
-        stroke = {"compact": 6, "balanced": 4, "airy": 2}[rhythm]
+        row_marker = creative_tokens["row_marker"]
+        rhythm_gap = {"compact": -14, "balanced": 0, "airy": 18}[rhythm]
+        stroke = 4
         if frame == "hairline":
             draw.rectangle((22, 22, WIDTH - 22, HEIGHT - 22), outline=primary, width=2)
         elif frame == "inset":
@@ -708,7 +775,7 @@ def _render_slide(
             draw,
             slide["body"],
             x=MARGIN,
-            y=900,
+            y=900 + rhythm_gap,
             width=WIDTH - 2 * MARGIN,
             height=230,
             weight="regular",
@@ -735,7 +802,7 @@ def _render_slide(
             draw,
             slide["highlight"],
             x=MARGIN,
-            y=y + 26,
+            y=y + 26 + rhythm_gap,
             width=WIDTH - 2 * MARGIN,
             height=150,
             weight="bold",
@@ -761,13 +828,14 @@ def _render_slide(
             draw,
             slide["bullets"],
             x=MARGIN,
-            y=875,
+            y=875 + rhythm_gap,
             width=WIDTH - 2 * MARGIN,
             max_bottom=content_limit,
             primary=primary,
             accent=accent,
             text=text,
             measured_lines=measured_lines,
+            row_marker=row_marker,
         )
     else:
         y = _draw_text_block(
@@ -788,7 +856,7 @@ def _render_slide(
                 draw,
                 slide["highlight"],
                 x=MARGIN,
-                y=y + 18,
+                y=y + 18 + rhythm_gap,
                 width=WIDTH - 2 * MARGIN,
                 height=120,
                 weight="bold",
@@ -801,7 +869,7 @@ def _render_slide(
             draw,
             slide["body"],
             x=MARGIN,
-            y=y + 26,
+            y=y + 26 + rhythm_gap,
             width=WIDTH - 2 * MARGIN,
             height=210,
             weight="regular",
@@ -810,7 +878,7 @@ def _render_slide(
             fill=text,
             measured_lines=measured_lines,
         )
-        y += 26
+        y += 26 + rhythm_gap
         if layout_variant == "dual_gate":
             y = _draw_dual_gate(
                 draw,
@@ -821,6 +889,7 @@ def _render_slide(
                 accent=accent,
                 text=text,
                 measured_lines=measured_lines,
+                row_marker=row_marker,
             )
         elif layout_variant == "route_comparison":
             y = _draw_route_comparison(
@@ -832,6 +901,7 @@ def _render_slide(
                 accent=accent,
                 text=text,
                 measured_lines=measured_lines,
+                row_marker=row_marker,
             )
         else:
             y = _draw_indexed_rows(
@@ -846,6 +916,7 @@ def _render_slide(
                 text=text,
                 measured_lines=measured_lines,
                 boxed=layout_variant == "evidence_dossier",
+                row_marker=row_marker,
             )
 
     if y > content_limit:
@@ -924,6 +995,68 @@ def _paragraphs(text: str, style: ParagraphStyle) -> list[Any]:
     return rows
 
 
+def _wrap_pdf_text(
+    value: str, *, font_name: str, font_size: float, max_width: float
+) -> list[str]:
+    """Wrap exact PDF text by measured glyph width, including long tokens."""
+
+    def pieces(word: str) -> list[str]:
+        rows: list[str] = []
+        current = ""
+        for character in word:
+            candidate = current + character
+            if (
+                current
+                and pdfmetrics.stringWidth(candidate, font_name, font_size) > max_width
+            ):
+                rows.append(current)
+                current = character
+            else:
+                current = candidate
+            if pdfmetrics.stringWidth(current, font_name, font_size) > max_width:
+                raise ValueError("One PDF glyph exceeds the available width")
+        if current:
+            rows.append(current)
+        return rows
+
+    words = [
+        part
+        for word in value.split()
+        for part in (
+            [word]
+            if pdfmetrics.stringWidth(word, font_name, font_size) <= max_width
+            else pieces(word)
+        )
+    ]
+    if not words:
+        return [""]
+    lines: list[str] = []
+    current = words[0]
+    for word in words[1:]:
+        candidate = f"{current} {word}"
+        if pdfmetrics.stringWidth(candidate, font_name, font_size) <= max_width:
+            current = candidate
+        else:
+            lines.append(current)
+            current = word
+    lines.append(current)
+    if any(
+        pdfmetrics.stringWidth(line, font_name, font_size) > max_width for line in lines
+    ):
+        raise ValueError("Wrapped PDF line exceeds the available width")
+    return lines
+
+
+def _normalized_pdf_text(value: str) -> str:
+    return " ".join(value.split())
+
+
+def _pdf_match_key(value: str) -> str:
+    """Normalize extractor-added spacing around punctuation for presence checks."""
+
+    return "".join(character for character in value.casefold() if character.isalnum())
+
+
 def _render_circular_pdf(
     draft: dict[str, Any],
     *,
@@ -931,9 +1064,10 @@ def _render_circular_pdf(
     studio_profile: dict[str, Any],
     studio_name: str,
     reference_date: str,
+    language: str,
     logo_path: Path | None,
     output_path: Path,
-) -> None:
+) -> dict[str, Any]:
     document_profile = studio_profile["document"]
     font_names = _pdf_font_names(document_profile["font_family"])
     layout = document_profile["layout"]
@@ -943,12 +1077,51 @@ def _render_circular_pdf(
     use_rail = bool(
         document_profile["use_contact_rail"] and document_profile["contact_rail_lines"]
     )
+    page_width, page_height = A4
+    rail_rows: list[tuple[str, list[str]]] = []
+    if use_rail:
+        rail_width = max(8 * mm, (layout["contact_rail_width_mm"] - 8) * mm)
+        rail_height = 0.0
+        for index, line in enumerate(document_profile["contact_rail_lines"]):
+            font_role = "semibold" if index == 0 else "regular"
+            wrapped = (
+                _wrap_pdf_text(
+                    line,
+                    font_name=font_names[font_role],
+                    font_size=8.5,
+                    max_width=rail_width,
+                )
+                if line
+                else [""]
+            )
+            rail_rows.append((font_role, wrapped))
+            rail_height += len(wrapped) * 11 + (4 if not line else 0)
+        if rail_height > page_height - 76 * mm:
+            raise ValueError("Studio contact rail cannot fit without omission")
+
+    header_lines: list[str] = []
+    if logo_path is None:
+        header_lines = _wrap_pdf_text(
+            studio_name,
+            font_name=font_names["bold"],
+            font_size=18,
+            max_width=page_width
+            - (layout["left_margin_mm"] + layout["right_margin_mm"]) * mm,
+        )
+        if len(header_lines) > 2:
+            raise ValueError("Studio name cannot fit the circular header")
 
     class CircularDocument(BaseDocTemplate):
         pass
 
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{output_path.stem}.", suffix=".pdf", dir=output_path.parent
+    )
+    os.close(descriptor)
+    temporary_path = Path(temporary_name)
     doc = CircularDocument(
-        str(output_path),
+        str(temporary_path),
         pagesize=A4,
         leftMargin=layout["left_margin_mm"] * mm,
         rightMargin=layout["right_margin_mm"] * mm,
@@ -957,7 +1130,6 @@ def _render_circular_pdf(
         title=draft["title"],
         author=studio_name,
     )
-    page_width, page_height = A4
     horizontal_margins = (layout["left_margin_mm"] + layout["right_margin_mm"]) * mm
     vertical_margins = (layout["top_margin_mm"] + layout["bottom_margin_mm"]) * mm
     first_width = (
@@ -996,11 +1168,10 @@ def _render_circular_pdf(
         else:
             canvas.setFont(font_names["bold"], 18)
             canvas.setFillColor(primary)
-            canvas.drawString(
-                layout["left_margin_mm"] * mm,
-                page_height - (layout["top_margin_mm"] - 13) * mm,
-                studio_name,
-            )
+            header_y = page_height - (layout["top_margin_mm"] - 13) * mm
+            for line in header_lines:
+                canvas.drawString(layout["left_margin_mm"] * mm, header_y, line)
+                header_y -= 20
         canvas.setStrokeColor(accent)
         canvas.setLineWidth(layout["rule_width_pt"])
         canvas.line(
@@ -1014,11 +1185,19 @@ def _render_circular_pdf(
         footer = document_profile["footer_pattern"].replace(
             "{page}", str(document.page)
         )
-        canvas.drawCentredString(
-            page_width / 2,
-            max(5, layout["bottom_margin_mm"] - 9) * mm,
+        footer_lines = _wrap_pdf_text(
             footer or f"pag. {document.page}",
+            font_name=font_names["regular"],
+            font_size=8,
+            max_width=page_width
+            - (layout["left_margin_mm"] + layout["right_margin_mm"]) * mm,
         )
+        if len(footer_lines) > 2:
+            raise ValueError("Studio footer cannot fit the circular page")
+        footer_y = max(5, layout["bottom_margin_mm"] - 9) * mm
+        for line in footer_lines:
+            canvas.drawCentredString(page_width / 2, footer_y, line)
+            footer_y += 9
         if first and use_rail:
             rail_x = (
                 page_width
@@ -1030,15 +1209,13 @@ def _render_circular_pdf(
             text = canvas.beginText(rail_x + 4 * mm, page_height - 48 * mm)
             text.setFont(font_names["semibold"], 8.5)
             text.setFillColor(primary)
-            for index, line in enumerate(document_profile["contact_rail_lines"]):
-                if not line:
+            for font_role, wrapped_lines in rail_rows:
+                if wrapped_lines == [""]:
                     text.moveCursor(0, 4)
                     continue
-                text.setFont(
-                    font_names["semibold"] if index == 0 else font_names["regular"],
-                    8.5,
-                )
-                text.textLine(line[:70])
+                text.setFont(font_names[font_role], 8.5)
+                for wrapped_line in wrapped_lines:
+                    text.textLine(wrapped_line)
             canvas.drawText(text)
         canvas.restoreState()
 
@@ -1096,32 +1273,40 @@ def _render_circular_pdf(
         firstLineIndent=-4 * mm,
         spaceAfter=1.5 * mm,
     )
+    recipient_line = (
+        draft.get("recipient_line") or document_profile["recipient_pattern"]
+    )
+    date_line = draft.get("date_line") or document_profile["date_pattern"].replace(
+        "{date}", reference_date
+    )
+    circular_line = " ".join(
+        part
+        for part in (
+            document_profile["circular_label"],
+            draft.get("circular_number", ""),
+        )
+        if part
+    )
+    subject_line = " ".join(
+        part
+        for part in (
+            document_profile["subject_prefix"],
+            draft.get("subject") or draft["title"],
+        )
+        if part
+    )
     story: list[Any] = [
         Paragraph(
-            html.escape(
-                draft.get("recipient_line") or document_profile["recipient_pattern"]
-            ),
+            html.escape(recipient_line),
             meta,
         ),
         Paragraph(
-            html.escape(
-                draft.get("date_line")
-                or document_profile["date_pattern"].replace("{date}", reference_date)
-            ),
+            html.escape(date_line),
             meta,
         ),
         Spacer(1, 3 * mm),
         Paragraph(
-            html.escape(
-                " ".join(
-                    part
-                    for part in (
-                        document_profile["circular_label"],
-                        draft.get("circular_number", ""),
-                    )
-                    if part
-                )
-            ),
+            html.escape(circular_line),
             ParagraphStyle(
                 "Circular",
                 parent=meta,
@@ -1130,9 +1315,7 @@ def _render_circular_pdf(
             ),
         ),
         Paragraph(
-            html.escape(
-                f"{document_profile['subject_prefix']} {draft.get('subject') or draft['title']}"
-            ).strip(),
+            html.escape(subject_line),
             subject,
         ),
     ]
@@ -1150,6 +1333,24 @@ def _render_circular_pdf(
                 Paragraph(f"- {html.escape(item)}", bullet_style)
                 for item in section["bullets"]
             )
+    source_lines = [
+        (
+            f"{note['text']} — {note['public_url']}"
+            if note.get("public_url") and note["public_url"] not in note["text"]
+            else note["text"]
+        )
+        for note in draft["public_source_notes"]
+    ]
+    source_heading = ""
+    if source_lines:
+        language_key = language.replace("_", "-").split("-", maxsplit=1)[0].lower()
+        source_heading = (
+            studio_profile["website"]["source_heading"]
+            if language_key == "it"
+            else SOURCE_HEADINGS.get(language_key, "Sources")
+        )
+        story.append(Paragraph(html.escape(source_heading), heading))
+        story.extend(Paragraph(html.escape(line), normal) for line in source_lines)
     story.extend(
         (Spacer(1, 6 * mm), Paragraph(html.escape(document_profile["closing"]), normal))
     )
@@ -1162,17 +1363,77 @@ def _render_circular_pdf(
                 ),
             )
         )
-    doc.build(story)
+    try:
+        doc.build(story)
+        reader = PdfReader(str(temporary_path))
+        extracted = _normalized_pdf_text(
+            "\n".join(page.extract_text() or "" for page in reader.pages)
+        )
+        required_text = [
+            recipient_line,
+            date_line,
+            circular_line,
+            subject_line,
+            draft["body"],
+            *(
+                value
+                for section in draft["sections"]
+                for value in (
+                    section["heading"],
+                    section["body"],
+                    *section["bullets"],
+                )
+                if value
+            ),
+            source_heading,
+            *source_lines,
+            document_profile["closing"],
+            *(line for line in document_profile["signature_lines"] if line),
+            *(header_lines if logo_path is None else []),
+            *(
+                line
+                for line in document_profile["contact_rail_lines"]
+                if use_rail and line
+            ),
+            *(
+                document_profile["footer_pattern"].replace("{page}", str(page))
+                or f"pag. {page}"
+                for page in range(1, len(reader.pages) + 1)
+            ),
+        ]
+        missing = [
+            value
+            for value in required_text
+            if _pdf_match_key(value) not in _pdf_match_key(extracted)
+        ]
+        if missing:
+            raise ValueError(
+                "Circular PDF omitted reviewed text: " + ", ".join(missing[:3])
+            )
+        os.chmod(temporary_path, 0o600)
+        temporary_path.replace(output_path)
+        return {
+            "overflow_free": True,
+            "page_layout_engine": "reportlab_platypus",
+            "page_count": len(reader.pages),
+            "text_extraction_verified": True,
+            "contact_rail_exact": True,
+            "manual_regions_fit": True,
+            "silent_truncation": False,
+        }
+    finally:
+        if temporary_path.exists():
+            temporary_path.unlink()
 
 
-def _preview_html(entries: list[dict[str, Any]], *, title: str) -> str:
+def _preview_html(entries: list[dict[str, Any]], *, title: str, language: str) -> str:
     cards = "\n".join(
         f'<figure><img src="{html.escape(Path(row["path"]).name)}" alt="Slide {index}"><figcaption>{html.escape(row["kind"])} · {row["width"]} × {row["height"]}</figcaption></figure>'
         for index, row in enumerate(entries, start=1)
         if row["kind"] == "carousel_slide"
     )
     return f"""<!doctype html>
-<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{html.escape(language.replace('_', '-'), quote=True)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(title)}</title><style>
 body{{margin:0;background:#f5f6f8;color:#171816;font-family:"Instrument Sans",Arial,sans-serif}}
 main{{max-width:1280px;margin:auto;padding:48px}}h1{{font-size:32px;font-weight:650;margin:0 0 32px}}
@@ -1227,6 +1488,19 @@ def _visual_review_markdown(
                 "",
             ]
         )
+    document_entries = [row for row in entries if row["kind"] == "client_circular_pdf"]
+    if document_entries:
+        lines.extend(("## Rendered documents", ""))
+        for entry in document_entries:
+            validation = entry["layout_validation"]
+            lines.extend(
+                (
+                    f"- Exact PDF: `{entry['path']}` · `{entry['sha256']}`",
+                    f"- Pages: `{validation['page_count']}`",
+                    "- Exact text extraction, contact rail, footer, and manual-region fit: `passed`",
+                    "",
+                )
+            )
     lines.extend(
         [
             "## Required model-led inspection",
@@ -1241,6 +1515,7 @@ def _visual_review_markdown(
             "- Is the most prominent number or phrase useful for a decision, rather than decorative emphasis?",
             "- At LinkedIn mobile size, are title, body, source note, and footer still legible and balanced?",
             "- Does the output look authored for this Studio, or like a generic AI carousel?",
+            "- For every PDF page: are pagination, header, footer, contact rail, source notes, closing, and signature visibly complete and balanced?",
             "",
             "Mechanical checks cannot answer these questions. Record acceptance only after the model-led inspection is complete.",
             "",
@@ -1284,6 +1559,9 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
     slides = contribution["visual_story"]["slides"]
     creative_direction = verify_creative_direction_decision(root)
     creative_tokens = creative_direction["tokens"]
+    applied_creative_tokens, inapplicable_creative_tokens = creative_token_application(
+        creative_tokens, slides
+    )
     circular = next(
         (
             draft
@@ -1369,12 +1647,13 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
 
     if circular is not None:
         circular_path = visuals_dir / "circolare-clienti.pdf"
-        _render_circular_pdf(
+        circular_validation = _render_circular_pdf(
             circular,
             brand=brand,
             studio_profile=studio_profile,
             studio_name=studio_name,
             reference_date=intake["reference_date"],
+            language=intake["language"],
             logo_path=logo,
             output_path=circular_path,
         )
@@ -1392,10 +1671,7 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
                         for source_id in claim["source_ids"]
                     }
                 ),
-                "layout_validation": {
-                    "overflow_free": True,
-                    "page_layout_engine": "reportlab_platypus",
-                },
+                "layout_validation": circular_validation,
             }
         )
 
@@ -1405,7 +1681,7 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
     )
     atomic_write_text(
         preview,
-        _preview_html(entries, title=preview_title),
+        _preview_html(entries, title=preview_title, language=intake["language"]),
     )
     entries.append(
         {
@@ -1446,7 +1722,7 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
         "contribution_digest": workbench["contribution_digest"],
         "rendered_at": utc_now(),
         "render_state": render_state,
-        "renderer": "deterministic_pillow_reportlab_v4",
+        "renderer": "deterministic_pillow_reportlab_v5",
         "creative_direction": {
             key: value for key, value in creative_direction.items() if key != "tokens"
         },
@@ -1462,6 +1738,7 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
                 "internal_id_leakage": "passed",
                 "identity_duplicates": "passed",
                 "overflow": "passed",
+                "pdf_text_preservation": "passed",
             },
             "model_led_review_required": True,
             "review_artifact": str(review_path.relative_to(root)),
@@ -1471,6 +1748,8 @@ def _render_visuals_locked(root: Path, *, qa_preview: bool) -> Path:
             "studio_format_status": profile_status,
             "studio_format_provenance_summary": profile_provenance_summary,
             "official_logo_asset_present": logo is not None,
+            "creative_tokens_consumed": applied_creative_tokens,
+            "creative_tokens_not_applicable": inapplicable_creative_tokens,
         },
         "outputs": entries,
     }

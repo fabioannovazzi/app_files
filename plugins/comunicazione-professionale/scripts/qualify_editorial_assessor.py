@@ -15,6 +15,7 @@ from workflow_core import (
     canonical_digest,
     load_json,
     load_workspace,
+    prompt_template_digest,
     utc_now,
     validate_schema,
     workflow_lock,
@@ -37,9 +38,24 @@ def qualify_editorial_assessor(
     load_workspace(root)
     results = load_json(results_path)
     validate_schema(results, "editorial_benchmark_results.schema.json")
+    current_template_digest = prompt_template_digest(
+        "editorial_assessment", results["assessment_template_version"]
+    )
+    if results["template_sha256"] != current_template_digest:
+        raise ValueError("Editorial benchmark template digest mismatch")
     corpus = load_json(EDITORIAL_CASES_PATH)
+    if (
+        corpus.get("assessment_template_version")
+        != results["assessment_template_version"]
+    ):
+        raise ValueError("Editorial benchmark corpus template version mismatch")
     cases = corpus["cases"]
     expectations = load_json(EDITORIAL_EXPECTED_PATH)
+    if (
+        expectations.get("assessment_template_version")
+        != results["assessment_template_version"]
+    ):
+        raise ValueError("Editorial benchmark rubric template version mismatch")
     expected_by_id = {row["case_id"]: row for row in expectations["expectations"]}
     case_ids = {row["case_id"] for row in cases}
     if set(expected_by_id) != case_ids:
@@ -97,6 +113,7 @@ def qualify_editorial_assessor(
         },
         "cases_digest": canonical_digest(corpus),
         "expected_digest": canonical_digest(expectations),
+        "template_sha256": current_template_digest,
         "results_digest": canonical_digest(results),
         "metrics": metrics,
         "scored_cases": scored,
