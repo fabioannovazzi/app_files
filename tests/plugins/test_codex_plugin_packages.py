@@ -63,6 +63,7 @@ VERA_DISCOVERY_TERMS = (
     "circolari clienti",
 )
 VERA_PUBLIC_PAGE_PATHS = (
+    Path("static/shared/archive-organization/index.html"),
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
     Path("static/shared/deep-research-validator/index.html"),
@@ -284,6 +285,7 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
 }
 ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "vera" / "index.html",
+    ROOT / "static" / "shared" / "archive-organization" / "index.html",
     ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
     ROOT / "static" / "shared" / "new-client" / "index.html",
     ROOT / "static" / "shared" / "journal-sampling" / "index.html",
@@ -301,6 +303,7 @@ STANDALONE_STATIC_PLUGIN_PAGES = (ROOT / "static" / "shared" / "clara" / "index.
 STATIC_PLUGIN_PAGES = ACCOUNTING_STATIC_PLUGIN_PAGES + STANDALONE_STATIC_PLUGIN_PAGES
 PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "clara" / "index.html",
+    ROOT / "static" / "shared" / "archive-organization" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
@@ -2635,9 +2638,9 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     for page_path in ACCOUNTING_STATIC_PLUGIN_PAGES:
         page = page_path.read_text(encoding="utf-8")
 
-        if page_path.parent.name == "new-client":
+        if '../vera-journey.css?v=' in page:
             assert re.search(
-                r'href="\.\./vera-journey\.css\?v=20260721-new-client-[^"]+"',
+                r'href="\.\./vera-journey\.css\?v=[^"]+"',
                 page,
             )
             continue
@@ -3205,6 +3208,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
 
     for module_link in (
         "../new-client/index.html#journey",
+        "../archive-organization/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
@@ -3362,7 +3366,7 @@ def test_vera_page_places_reviewed_archive_organization_between_intake_and_searc
     )
 
     assert organization is not None
-    assert 'href="#installa"' in organization.group(0)
+    assert 'href="../archive-organization/index.html"' in organization.group(0)
     assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
     assert 'data-i18n="module.archiveOrganization"' in organization.group(0)
     assert page.index('id="new-client"') < page.index('id="archive-organization"')
