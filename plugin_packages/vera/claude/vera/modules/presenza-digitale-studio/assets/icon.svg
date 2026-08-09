@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Presenza digitale dello studio" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#C65C2E"/>
+  <circle cx="51" cy="50" r="7" fill="#C65C2E"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <rect x="12" y="15" width="40" height="34" rx="5" fill="#F7F0DF"/>
+  <path d="M12 24h40" stroke="#1F211D" stroke-width="3"/>
+  <circle cx="18" cy="20" r="2" fill="#C65C2E"/>
+  <circle cx="24" cy="20" r="2" fill="#1F211D"/>
+  <path d="M19 32h16M19 38h11" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <rect x="38" y="30" width="9" height="13" rx="2" fill="#C65C2E"/>
+  <path d="M22 53h20" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+</svg>

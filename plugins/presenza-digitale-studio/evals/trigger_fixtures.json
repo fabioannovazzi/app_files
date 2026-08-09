@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "plugin": "presenza-digitale-studio",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "first-site-from-verified-materials",
+      "prompt": "Il mio studio non ha ancora un sito: costruiscine uno professionale dai materiali che ti allego.",
+      "required_signals": ["first_site", "verified materials", "responsive preview", "publication approval"]
+    },
+    {
+      "id": "refresh-existing-site",
+      "prompt": "Analizza il sito attuale del commercialista e prepara una versione più moderna e responsive.",
+      "required_signals": ["refresh", "existing-site evidence", "working site", "desktop and phone review"]
+    },
+    {
+      "id": "publish-unlisted-preview",
+      "prompt": "Create an unlisted review link for the approved redesign of our accounting firm's website.",
+      "required_signals": ["selected preview route", "noindex", "exact package", "visible receipt"]
+    },
+    {
+      "id": "reviewable-studio-site",
+      "prompt": "Riorganizza testi, servizi e profilo dello studio in un sito chiaro da rivedere prima della pubblicazione.",
+      "required_signals": ["verified claims", "studio profile", "responsive implementation", "review before publication"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "social-post", "prompt": "Prepara un post LinkedIn sulla nuova circolare fiscale."},
+    {"id": "transactional-portal", "prompt": "Costruisci un portale clienti con pagamenti e autenticazione."},
+    {"id": "bank-reconciliation", "prompt": "Riconcilia questi movimenti bancari con il giornale contabile."},
+    {"id": "e-commerce", "prompt": "Disegna un e-commerce completo per vendere prodotti online."}
+  ]
+}

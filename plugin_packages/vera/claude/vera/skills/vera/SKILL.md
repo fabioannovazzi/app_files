@@ -205,6 +205,15 @@ them without changing the capability catalog:
   semantic support, reasoning, and professional judgment before editorial
   acceptance. Do not create duplicate client-bound prompt-optimizer or
   deep-research-validator runs for the same communication contribution.
+- `presenza-digitale-studio`: studio-wide website work in `refresh` or
+  `first_site` mode from selected public-site captures, source files, approved
+  identity material and professional facts. Model-led skills own information
+  architecture, copy, visual direction and rendered quality judgment;
+  deterministic scripts own snapshots, file/link closure, hashes, review
+  freshness and package binding. Public inspection, creative assistance,
+  unlisted preview hosting and final publication are independent optional
+  routes. Never invent services, credentials, testimonials, legal text or
+  brand history, and never publish without the exact route and current review.
 
 ## Workflow provenance
 

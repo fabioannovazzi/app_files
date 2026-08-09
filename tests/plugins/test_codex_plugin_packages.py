@@ -21,6 +21,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "check-entries",
     "concordato-plan-review",
     "comunicazione-professionale",
+    "presenza-digitale-studio",
     "deep-research-validator",
     "financial-analysis",
     "sales-plan",
@@ -511,14 +512,15 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.108"
+    assert manifest["version"] == "0.1.109"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
         "su questa novità, oppure non pubblicare."
     )
     assert any(
-        "ricerca fiscale" in prompt and "fonti citate" in prompt for prompt in prompts
+        "sito dello studio" in prompt and "preview responsive" in prompt
+        for prompt in prompts
     )
     assert prompts[2] == (
         "Prepara un bilancio OIC intelligente anche da PDF: fammi rivedere "
@@ -704,7 +706,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 23
+        assert len(card_bodies) == 24
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -1321,6 +1323,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
         "bandi-agevolazioni",
         "comunicazione-professionale",
+        "presenza-digitale-studio",
     }
     assert COMMERCIALISTA_MODULE_NAMES - {"client-file-preparation"} <= skill_names
     assert "client-file-preparation" not in skill_names
@@ -3202,6 +3205,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../sales-plan/index.html",
         "../financial-analysis/index.html",
         "index.html#comunicazione-professionale",
+        "#installa",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -3217,8 +3221,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 12
-    assert core.count('class="module-row"') == 12
+    assert core.count(" data-module-link") == 13
+    assert core.count('class="module-row"') == 13
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -3370,11 +3374,11 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "adjusted EBITDA" in page
     assert "net debt" in page
     for localized_count in (
-        "Quindici funzioni",
-        "Fifteen capabilities",
-        "Quinze fonctions",
-        "Fünfzehn Funktionen",
-        "Quince funciones",
+        "Sedici funzioni",
+        "Sixteen capabilities",
+        "Seize fonctions",
+        "Sechzehn Funktionen",
+        "Dieciséis funciones",
     ):
         assert localized_count in page
     for stale_count in (
@@ -4309,6 +4313,9 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
             "https://mparanza.com/static/shared/concordato-plan-review/index.html"
         ),
         "comunicazione-professionale": (
+            "https://mparanza.com/static/shared/vera/index.html?lang=it"
+        ),
+        "presenza-digitale-studio": (
             "https://mparanza.com/static/shared/vera/index.html?lang=it"
         ),
         "journal-bank-reconciliation": (

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/site-brief-v1.json",
+  "title": "Model-led website brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mode",
+    "evidence_summary",
+    "observed_facts",
+    "open_questions",
+    "target_audiences",
+    "sitemap",
+    "studio_profile",
+    "content_plan",
+    "visual_direction",
+    "implementation",
+    "claims",
+    "exclusions"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "mode": {"enum": ["refresh", "first_site"]},
+    "evidence_summary": {"type": "string", "minLength": 1},
+    "observed_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement", "source_ids"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "statement": {"type": "string", "minLength": 1},
+          "source_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    },
+    "target_audiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "sitemap": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page_id", "path", "purpose", "sections"],
+        "properties": {
+          "page_id": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "purpose": {"type": "string", "minLength": 1},
+          "sections": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "studio_profile": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["field", "value", "basis", "evidence_ids"],
+        "properties": {
+          "field": {"type": "string", "minLength": 1},
+          "value": {},
+          "basis": {"enum": ["observed", "user_supplied", "vera_default_proposal"]},
+          "evidence_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"basis": {"enum": ["observed", "user_supplied"]}}},
+            "then": {"properties": {"evidence_ids": {"minItems": 1}}}
+          }
+        ]
+      }
+    },
+    "content_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["page_id", "primary_message", "primary_action", "required_facts"],
+        "properties": {
+          "page_id": {"type": "string", "minLength": 1},
+          "primary_message": {"type": "string", "minLength": 1},
+          "primary_action": {"type": "string", "minLength": 1},
+          "required_facts": {
+            "type": "array",
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "visual_direction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["intent", "palette", "typography", "image_strategy", "avoid"],
+      "properties": {
+        "intent": {"type": "string", "minLength": 1},
+        "palette": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "typography": {"type": "string", "minLength": 1},
+        "image_strategy": {"type": "string", "minLength": 1},
+        "avoid": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "implementation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["approach", "skills_used", "skills_unavailable"],
+      "properties": {
+        "approach": {"type": "string", "minLength": 1},
+        "skills_used": {"type": "array", "uniqueItems": true, "items": {"type": "string"}},
+        "skills_unavailable": {"type": "array", "uniqueItems": true, "items": {"type": "string"}}
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim", "evidence_ids", "status"],
+        "properties": {
+          "claim": {"type": "string", "minLength": 1},
+          "evidence_ids": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "status": {"enum": ["verified", "requires_professional_confirmation"]}
+        }
+      }
+    },
+    "exclusions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+  }
+}

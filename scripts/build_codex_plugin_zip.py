@@ -153,6 +153,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "journal-sampling": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
     "new-client": "modules/new-client/skills/new-client/SKILL.md",
     "previdenza-inps": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+    "presenza-digitale-studio": "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md",
     "prompt-optimizer": "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
     "registro-imprese-sari": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
     "report-builder": "modules/report-builder/skills/report-builder/SKILL.md",

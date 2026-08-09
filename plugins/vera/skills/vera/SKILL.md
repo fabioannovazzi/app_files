@@ -114,13 +114,15 @@ deployment's actual account settings.
 ## Client-first workflow in Codex
 
 Every local client-bound Vera workflow run begins in Studio Archive, and the selected
-customer folder is its durable source of truth. Two studio-wide workflows are
+customer folder is its durable source of truth. Three studio-wide workflows are
 explicit exceptions. The pre-client `bandi-agevolazioni` opportunity radar
 cannot belong to one customer folder. `comunicazione-professionale` learns the
-studio's approved editorial voice and output formats across communications and
-must not be stored as one client's engagement. Each uses its own owner-only,
+studio's approved editorial voice and output formats across communications,
+while `presenza-digitale-studio` prepares the studio's website identity,
+working site, preview and release package. Neither belongs in one client's
+engagement. Each exception uses its own owner-only,
 explicitly authorized local workspace bound to its exact path and retention
-owner. Neither creates a portable client run. A selected, self-verifiable bandi
+owner. These studio-wide workflows do not create a portable client run. A selected, self-verifiable bandi
 handoff must enter a new exact client engagement before application instruction
 begins. Do not infer the client from a
 filename or assume that a similarly named folder is registered. Follow this
@@ -240,6 +242,15 @@ them without changing the capability catalog:
   semantic support, reasoning, and professional judgment before editorial
   acceptance. Do not create duplicate client-bound prompt-optimizer or
   deep-research-validator runs for the same communication contribution.
+- `presenza-digitale-studio`: studio-wide website work in `refresh` or
+  `first_site` mode from selected public-site captures, source files, approved
+  identity material and professional facts. Model-led skills own information
+  architecture, copy, visual direction and rendered quality judgment;
+  deterministic scripts own snapshots, file/link closure, hashes, review
+  freshness and package binding. Public inspection, creative assistance,
+  unlisted preview hosting and final publication are independent optional
+  routes. Never invent services, credentials, testimonials, legal text or
+  brand history, and never publish without the exact route and current review.
 
 ## Workflow provenance
 

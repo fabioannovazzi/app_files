@@ -1,0 +1,7 @@
+interface:
+  display_name: "Presenza digitale dello studio"
+  short_description: "Rinnova siti professionali con metodo"
+  default_prompt: "Use $presenza-digitale-studio to assess this professional website and prepare a contemporary, reviewable redesign."
+
+policy:
+  allow_implicit_invocation: true

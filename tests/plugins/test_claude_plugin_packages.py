@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.106"
+    assert manifest["version"] == "0.1.107"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -663,7 +663,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-            "All 17 Vera modules are available.",
+            "All 18 Vera modules are available.",
         ),
         (
             isolated.output_directory

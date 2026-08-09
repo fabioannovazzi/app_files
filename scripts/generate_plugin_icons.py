@@ -182,6 +182,13 @@ SPECS = (
         "communication",
     ),
     IconSpec(
+        "presenza-digitale-studio",
+        "Presenza digitale dello studio",
+        "#002060",
+        "#C65C2E",
+        "website",
+    ),
+    IconSpec(
         "registro-imprese-sari",
         "Registro Imprese e SARI",
         "#145F5A",
@@ -400,6 +407,14 @@ def _body(spec: IconSpec) -> str:
   <path d="M22 27h20M22 35h15M22 43h11" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
   <path d="M43 33c5 0 9 4 9 9v10l-6-4h-3a9 9 0 1 1 0-15z" fill="{accent}"/>
   <path d="M40 39h7M40 44h5" stroke="#171816" stroke-width="2.5" stroke-linecap="round"/>""",
+        "website": f"""
+  <rect x="12" y="15" width="40" height="34" rx="5" fill="{paper}"/>
+  <path d="M12 24h40" stroke="{color}" stroke-width="3"/>
+  <circle cx="18" cy="20" r="2" fill="{accent}"/>
+  <circle cx="24" cy="20" r="2" fill="{color}"/>
+  <path d="M19 32h16M19 38h11" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <rect x="38" y="30" width="9" height="13" rx="2" fill="{accent}"/>
+  <path d="M22 53h20" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>""",
         "registry": f"""
   <path d="M31 12 12 23h38z" fill="{paper}"/>
   <path d="M16 27h28M17 47h26" stroke="{paper}" stroke-width="5" stroke-linecap="round"/>

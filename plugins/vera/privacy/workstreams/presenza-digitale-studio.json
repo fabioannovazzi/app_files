@@ -1,0 +1,153 @@
+{
+  "schema_version": 3,
+  "workstream": "presenza-digitale-studio",
+  "display_name": "Presenza digitale dello studio",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "assets"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "studio-website-material",
+        "purpose": "Assess or create a professional studio website, propose its information architecture, copy and visual system, implement a responsive site, and prepare exact preview and release packages for review",
+        "content": "Selected captures of an existing public website; selected source code, screenshots, studio documents, approved communications, logo, photographs, contact details, team and professional biography, verified services and qualifications, supplied legal text, intended audiences, proposed sitemap, page copy, studio-profile fields with observed, user-supplied or Vera-default basis, design tokens, implementation files, browser screenshots, model-led quality assessments, deterministic validation findings, review decisions, package hashes and visible preview or publication receipts. Professional names, portraits, contact details and other real studio information may enter the selected runtime model context when supplied or selected for the website. The workflow does not promise automatic anonymization or local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "selected-public-site-inspection",
+      "kind": "public_research",
+      "destination": "The exact existing public website and directly referenced public assets selected by the professional",
+      "purpose": "Observe the current website's content, structure, rendered behavior and public assets before proposing a refresh",
+      "content": "The selected public URL, ordinary page and asset requests, and captured public HTML, text, metadata and screenshots; no private studio files, client facts, credentials, cookies, tokens or unrelated browsing history",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records the exact selected website destination and asserted user approval before inspection.",
+        "Inspect only the selected public site and directly relevant pages or assets; do not request credentials, cookies, analytics accounts or private administration access.",
+        "Capture the exact evidence used into the private run because a URL alone is not a durable source snapshot."
+      ]
+    },
+    {
+      "id": "selected-studio-material-connector",
+      "kind": "external_connector",
+      "destination": "A callable connected Drive, document store or supported authenticated browser surface explicitly selected by the professional",
+      "purpose": "Read only selected studio identity, copy, logo, photography, service, qualification or legal-text material for the website",
+      "content": "The exact selected studio files and their metadata; no credentials, cookies, one-time codes, unrelated account contents or client-case archive",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records the exact connector destination and asserted approval; that route choice is the confirmation and is not requested again.",
+        "Read only the selected items, stop at account ambiguity or security checkpoints, and snapshot selected bytes into the owner-controlled run.",
+        "Do not infer permission to publish merely because material was readable through the connector."
+      ]
+    },
+    {
+      "id": "optional-creative-assistance",
+      "kind": "hosted_service",
+      "destination": "The exact Creative Production board or image-generation service selected by the professional in the active runtime",
+      "purpose": "Explore or produce a bounded website visual direction or image when selected studio assets are insufficient",
+      "content": "The approved public-use studio identity context, exact requested visual purpose and non-sensitive selected reference assets; no client-case files, credentials, private correspondence, unpublished professional claims or unrelated source material",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "The intake records the selected service and destination plus asserted user approval before any handoff.",
+        "Creative output is a proposal and cannot add services, claims, qualifications, testimonials, people or publication approval.",
+        "The exact returned asset is stored in the private run, inspected in the working site and included only after professional review."
+      ]
+    },
+    {
+      "id": "unlisted-preview-publication",
+      "kind": "send_or_publish",
+      "destination": "The exact tokenized preview host or platform selected by the professional",
+      "purpose": "Publish the exact validated website package at a hard-to-guess review URL",
+      "content": "The exact preview website files, approved public-use studio facts and assets, noindex directives, destination metadata and visible preview URL; no credentials, cookies, tokens, unselected source files or unrelated run artifacts",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records explicit preview-publication selection, destination and asserted user approval before packaging.",
+        "Packaging requires current mechanical validation and a ready desktop-and-phone quality assessment; every HTML page must carry noindex before an external preview package is created.",
+        "Use a hard-to-guess path, omit public navigation, verify the visible URL and bind its receipt to the exact preview package digest. The URL is unlisted, not access-controlled."
+      ]
+    },
+    {
+      "id": "approved-final-publication",
+      "kind": "send_or_publish",
+      "destination": "The exact production website platform, repository, account or domain selected by the professional",
+      "purpose": "Publish the exact accepted release package after professional and destination review",
+      "content": "The exact accepted website files and public assets plus destination metadata and visible production URL or provider receipt; no credentials, cookies, tokens, unaccepted drafts or unrelated run files",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records explicit final-publication selection, exact destination and asserted user approval; publication is never inferred from design or preview approval.",
+        "Release packaging requires current mechanical validation, a ready rendered quality assessment and accepted identity-and-claims, responsive-preview and publication-destination reviews bound to the current site digest.",
+        "Use a callable connector or supported authenticated browser without reading credentials, verify the live URL after publication and bind visible evidence to the exact release package digest."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "owner-controlled-private-workspace",
+      "control": "Workspace initialization requires asserted owner, retention owner, explicit user confirmation and an exact path outside a Git repository or published static/shared root. Run outputs use owner-only permissions, atomic JSON replacement and a private staging directory before the run becomes visible."
+    },
+    {
+      "id": "immutable-selected-source-snapshots",
+      "control": "Run preparation accepts only regular non-symlink selected files, copies each into the private run, records byte size and SHA-256, rejects duplicate source IDs and binds intake and source register to one digest. A public URL is not treated as captured evidence."
+    },
+    {
+      "id": "model-led-design-and-fact-provenance",
+      "control": "Information architecture, copy, visual direction and rendered quality remain model-led proposals. Every studio-profile field is labelled observed, user supplied or Vera default; observed and user-supplied fields require selected evidence IDs, and claim records cannot reference an unknown source ID. Deterministic code does not decide aesthetics, professional truth, accessibility compliance or legal sufficiency."
+    },
+    {
+      "id": "mechanical-site-validation",
+      "control": "The validator recomputes a complete file inventory and site digest and checks only mechanically verifiable HTML properties including metadata, one H1, alternative-text presence, duplicate IDs, local reference closure, unsafe schemes, placeholders and preview noindex posture. It records external asset dependencies as warnings rather than silently treating them as local."
+    },
+    {
+      "id": "digest-bound-render-and-professional-review",
+      "control": "The model-led browser assessment must cover at least two exact viewports, bind current site and validation digests, identify its weakest element and require correction unless ready. Identity-and-claims, responsive-preview and publication-destination decisions are recorded separately against the same current site, validation and quality-assessment digests; changed site bytes invalidate stale reviews and packages."
+    },
+    {
+      "id": "exact-package-and-visible-delivery-binding",
+      "control": "Preview and release packages copy exact site bytes, record every file hash and bind validation and quality-assessment digests. Preview packaging additionally requires an explicitly selected route and noindex on every HTML page; release packaging requires all current professional review scopes. Delivery recording requires the exact selected destination, user confirmation and a visible URL or provider receipt bound to the current package digest."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-09",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "0734cff46d8939a88a825c3be2b80e357fc514ba16241d6c791b762b3be55c02"
+  }
+}
