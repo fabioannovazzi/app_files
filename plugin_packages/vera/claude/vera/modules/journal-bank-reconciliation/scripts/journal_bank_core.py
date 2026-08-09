@@ -27,6 +27,7 @@ import polars as pl
 from excel_sanitization import excel_safe_value
 from implementation_bootstrap import (
     IMPLEMENTATION_CONTRACT,
+    implementation_contract,
     validate_implementation_tree,
 )
 from openpyxl.utils.exceptions import InvalidFileException
@@ -298,6 +299,22 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "implementation.shared.vera_assurance.serialization_py",
         "shared_implementation",
         "serialization.py",
+    ),
+)
+CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS = tuple(
+    spec
+    for spec in IMPLEMENTATION_ARTIFACT_SPECS
+    if spec[2] not in {".app.json", ".mcp.json", "mcp/server.cjs"}
+) + (
+    (
+        "implementation.plugin.scripts.review_mcp_server_cjs",
+        "implementation",
+        "scripts/review_mcp_server.cjs",
+    ),
+    (
+        "implementation.plugin.scripts.review_server_py",
+        "implementation",
+        "scripts/review_server.py",
     ),
 )
 RUN_SCOPED_ARTIFACT_FILES = (
@@ -5807,14 +5824,20 @@ def _ordinary_single_link_implementation_file(
 def _validate_implementation_spec_coverage(roots: dict[str, Path]) -> None:
     """Keep the declared transitive implementation set complete and closed."""
 
+    contract = implementation_contract(str(roots["implementation"]))
+    specs = (
+        IMPLEMENTATION_ARTIFACT_SPECS
+        if contract == IMPLEMENTATION_CONTRACT
+        else CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS
+    )
     declared_contract = tuple(
         (
             "plugin" if root_id == "implementation" else "shared_assurance",
             relative_path,
         )
-        for _, root_id, relative_path in IMPLEMENTATION_ARTIFACT_SPECS
+        for _, root_id, relative_path in specs
     )
-    if declared_contract != IMPLEMENTATION_CONTRACT:
+    if declared_contract != contract:
         raise ValueError("implementation receipt specification is incomplete")
     validate_implementation_tree(
         str(roots["implementation"]),
@@ -5827,8 +5850,14 @@ def build_implementation_artifact_receipts() -> list[dict[str, Any]]:
 
     roots = implementation_artifact_roots()
     _validate_implementation_spec_coverage(roots)
+    specs = (
+        IMPLEMENTATION_ARTIFACT_SPECS
+        if implementation_contract(str(roots["implementation"]))
+        == IMPLEMENTATION_CONTRACT
+        else CHATGPT_IMPLEMENTATION_ARTIFACT_SPECS
+    )
     receipts: list[dict[str, Any]] = []
-    for artifact_id, root_id, relative_path in IMPLEMENTATION_ARTIFACT_SPECS:
+    for artifact_id, root_id, relative_path in specs:
         artifact_path = _ordinary_single_link_implementation_file(
             roots[root_id],
             relative_path,

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import html as html_lib
 import importlib
 import json
 import os
@@ -10,6 +11,7 @@ from pathlib import Path
 
 import pytest
 from PIL import Image
+from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN = ROOT / "plugins" / "comunicazione-professionale"
@@ -124,7 +126,7 @@ def _profile() -> dict[str, object]:
             "byline_pattern": "A cura di {studio}",
             "date_pattern": "{date}",
             "heading_style": "editorial",
-            "source_note": "Fonti e aggiornamento disponibili presso lo Studio.",
+            "source_heading": "Fonti",
             "cta": "Contattate lo Studio per verificare la situazione specifica.",
             "show_update_date": True,
         },
@@ -157,6 +159,28 @@ def _profile() -> dict[str, object]:
             "history_ids": [],
             "analysis": "Questi canali non sono osservabili nella storia selezionata e restano proposte Vera da adottare solo con approvazione professionale.",
         },
+    ]
+    return profile
+
+
+def _new_studio_profile() -> dict[str, object]:
+    """Build a first-run profile that makes no history-derived claim."""
+
+    profile = _clone(_profile())
+    profile["derived_from_history_ids"] = []
+    profile["field_provenance"] = [
+        {
+            "field_paths": [
+                *_profile_paths(profile["voice"], "voice"),
+                *_profile_paths(profile["document"], "document"),
+                *_profile_paths(profile["email"], "email"),
+                *_profile_paths(profile["website"], "website"),
+                *_profile_paths(profile["social"], "social"),
+            ],
+            "basis": "vera_default_proposal",
+            "history_ids": [],
+            "analysis": "Il nuovo Studio non ha esempi selezionati: tutte le convenzioni restano proposte Vera da approvare o correggere.",
+        }
     ]
     return profile
 
@@ -225,6 +249,12 @@ def _publish_contribution() -> dict[str, object]:
                 "body": "Il provvedimento entra nella fase operativa dal 30 settembre 2026. Prima di assumere iniziative occorre verificare se la misura riguarda la vostra impresa.",
                 "claim_ids": claim_ids,
                 "audience_note": "Clienti impresa potenzialmente interessati.",
+                "public_source_notes": [
+                    {
+                        "source_ids": source_ids,
+                        "text": "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026",
+                    }
+                ],
                 "sections": [],
             },
             {
@@ -237,6 +267,12 @@ def _publish_contribution() -> dict[str, object]:
                 "circular_number": "08/2026",
                 "recipient_line": "Gentili Clienti",
                 "date_line": "Milano, 8 agosto 2026",
+                "public_source_notes": [
+                    {
+                        "source_ids": source_ids,
+                        "text": "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026",
+                    }
+                ],
                 "sections": [
                     {
                         "heading": "Cosa cambia",
@@ -264,6 +300,12 @@ def _publish_contribution() -> dict[str, object]:
                 "body": "Dal 30 settembre 2026 la misura entra nella fase operativa. Il punto utile non è creare allarme, ma verificare perimetro e documenti. Fonte ufficiale; applicabilità da valutare caso per caso.",
                 "claim_ids": claim_ids,
                 "audience_note": "Imprese e professionisti.",
+                "public_source_notes": [
+                    {
+                        "source_ids": source_ids,
+                        "text": "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026",
+                    }
+                ],
                 "sections": [],
             },
             {
@@ -272,6 +314,12 @@ def _publish_contribution() -> dict[str, object]:
                 "body": "Il provvedimento ufficiale porta la misura nella fase operativa.",
                 "claim_ids": claim_ids,
                 "audience_note": "Imprese che cercano un primo orientamento.",
+                "public_source_notes": [
+                    {
+                        "source_ids": source_ids,
+                        "text": "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026",
+                    }
+                ],
                 "sections": [
                     {
                         "heading": "Cosa cambia",
@@ -354,10 +402,16 @@ def _canonical_digest(payload: dict[str, object]) -> str:
     ).hexdigest()
 
 
+def _prompt_digest(name: str) -> str:
+    return hashlib.sha256((PLUGIN / "prompts" / name).read_bytes()).hexdigest()
+
+
 def _answer_contract(
     contribution: dict[str, object],
     *,
     audience: str = "Clienti impresa potenzialmente interessati",
+    output_language: str = "it",
+    jurisdiction: str = "Italia",
 ) -> dict[str, object]:
     contract: dict[str, object] = {
         "schema_version": 1,
@@ -366,8 +420,8 @@ def _answer_contract(
         "document_type": "professional_communication_package",
         "purpose": "Decidere se la misura merita comunicazione e preparare contenuti professionali verificabili.",
         "audience": audience,
-        "output_language": "it",
-        "jurisdiction": "Italia",
+        "output_language": output_language,
+        "jurisdiction": jurisdiction,
         "jurisdiction_status": "confirmed",
         "generation_route": "codex_direct",
         "evidence_display": "source_record_only",
@@ -451,6 +505,14 @@ def _claim_assurance(
         "run_id": contribution["run_id"],
         "assessed_contribution_digest": _canonical_digest(contribution),
         "answer_contract_digest": answer_contract["contract_digest"],
+        "assessment_protocol": {
+            "method": "isolated_host_session_exact_artifact_review",
+            "assessor_session_id": "test-claim-session-001",
+            "assessment_template_version": "professional-communication-claim-assurance-v2",
+            "template_sha256": _prompt_digest("claim-assurance-v2.md"),
+            "generation_transcript_seen": False,
+            "completed_at": "2026-08-08T11:30:00+00:00",
+        },
         "validation_method": "model_led_source_support_reasoning_and_judgment_review",
         "coverage_review": {
             "scope": "all_material_claims",
@@ -459,7 +521,7 @@ def _claim_assurance(
             "analysis": "L'intero contributo è stato letto e ogni claim materiale è stato selezionato per la verifica separata.",
         },
         "contract_review": {
-            "question_answered": {
+            "purpose": {
                 "status": "conforms",
                 "analysis": "Il contributo risponde all'obiettivo editoriale registrato.",
             },
@@ -471,9 +533,45 @@ def _claim_assurance(
                 "status": "conforms",
                 "analysis": "Il linguaggio e i limiti sono adatti ai clienti impresa indicati.",
             },
+            "output_language": {
+                "status": "conforms",
+                "analysis": "La lingua del pacchetto corrisponde al contratto registrato.",
+            },
+            "jurisdiction": {
+                "status": "conforms",
+                "analysis": "La giurisdizione italiana resta esplicita e circoscritta.",
+            },
+            "source_hierarchy": {
+                "status": "conforms",
+                "analysis": "La fonte ufficiale selezionata precede ogni commento secondario.",
+            },
+            "preservation": {
+                "status": "conforms",
+                "analysis": "Date, modalità, perimetro e limiti sono conservati nel pacchetto.",
+            },
+            "required_distinctions": {
+                "status": "conforms",
+                "analysis": "Il contributo distingue orientamento generale e applicabilità individuale.",
+            },
+            "prohibited_content": {
+                "status": "conforms",
+                "analysis": "Non risultano autorità inventate, urgenza artificiale o conclusioni non supportate.",
+            },
             "evidence_display": {
                 "status": "conforms",
                 "analysis": "Le fonti restano nel record tecnico e nelle note pubbliche previste.",
+            },
+            "validation_scope": {
+                "status": "conforms",
+                "analysis": "La revisione copre tutti i claim materiali una volta e nell'ordine.",
+            },
+            "correction_policy": {
+                "status": "conforms",
+                "analysis": "Ogni difetto correggibile deve essere corretto prima dell'accettazione.",
+            },
+            "judgment_policy": {
+                "status": "conforms",
+                "analysis": "L'applicabilità individuale resta assegnata alla revisione professionale.",
             },
             "reviewer_action": "accept",
         },
@@ -509,7 +607,8 @@ def _editorial_assessment(
         "assessment_protocol": {
             "method": "blind_adversarial_exact_artifact_review",
             "assessor_session_id": "test-editorial-session-001",
-            "assessment_template_version": "professional-communication-editorial-v3",
+            "assessment_template_version": "professional-communication-editorial-v4",
+            "template_sha256": _prompt_digest("editorial-assessment-v4.md"),
             "generation_transcript_seen": False,
             "generator_prompt_reused": False,
             "comparison_class": "strong_practitioner_authored_publication",
@@ -569,7 +668,8 @@ def _qualify_editorial_assessor(workspace: Path, tmp_path: Path) -> None:
             "schema_version": 1,
             "provider": "test-provider",
             "model": "test-editor-model",
-            "assessment_template_version": "professional-communication-editorial-v3",
+            "assessment_template_version": "professional-communication-editorial-v4",
+            "template_sha256": _prompt_digest("editorial-assessment-v4.md"),
             "assessor_session_id": "test-benchmark-session-001",
             "evaluated_at": "2026-08-08T11:00:00+00:00",
             "judgments": [
@@ -616,6 +716,9 @@ def _recorded_publish_run(
     contribution: dict[str, object] | None = None,
     brand: dict[str, str] | None = None,
     routes: dict[str, dict[str, object]] | None = None,
+    language: str = "it",
+    include_history: bool = True,
+    studio_format_brief: str = "",
 ) -> tuple[Path, Path, dict[str, object]]:
     workspace = tmp_path / "studio-workspace"
     source = tmp_path / "official-source.txt"
@@ -629,6 +732,13 @@ def _recorded_publish_run(
         encoding="utf-8",
     )
     prepared_contribution = _clone(contribution or _publish_contribution())
+    if not include_history:
+        prepared_contribution["studio_profile_proposal"] = _new_studio_profile()
+        prepared_contribution["source_assessments"] = [
+            row
+            for row in prepared_contribution["source_assessments"]
+            if row["source_id"] != "HIST-001"
+        ]
     prepared_contribution["channel_drafts"] = [
         draft
         for draft in prepared_contribution["channel_drafts"]
@@ -646,10 +756,11 @@ def _recorded_publish_run(
         "schema_version": 1,
         "run_id": prepared_contribution["run_id"],
         "reference_date": "2026-08-08",
-        "language": "it",
+        "language": language,
         "jurisdiction": "Italia",
         "objective": "Spiegare la misura senza assumere applicabilità automatica.",
         "audience": "Clienti impresa potenzialmente interessati",
+        "studio_format_brief": studio_format_brief,
         "channels": channels,
         "visual_requested": visual_requested,
         "source_inputs": [
@@ -658,11 +769,20 @@ def _recorded_publish_run(
                 "path": str(source),
                 "title": "Provvedimento ufficiale sulla misura",
                 "authority_role": "primary",
+                "public_url": "https://example.test/provvedimento-12345-2026",
             }
         ],
-        "history_inputs": [
-            {"id": "HIST-001", "path": str(history), "channel": "client_circular"}
-        ],
+        "history_inputs": (
+            [
+                {
+                    "id": "HIST-001",
+                    "path": str(history),
+                    "channel": "client_circular",
+                }
+            ]
+            if include_history
+            else []
+        ),
         "brand_profile": brand or _brand(),
         "external_routes": routes or _routes(),
     }
@@ -670,11 +790,22 @@ def _recorded_publish_run(
     contribution_path = _write_json(
         tmp_path / "contribution.json", prepared_contribution
     )
+    answer_contract = _answer_contract(
+        prepared_contribution,
+        output_language=language,
+    )
     assessment_path = _write_json(
         tmp_path / "editorial-assessment.json",
-        _editorial_assessment(prepared_contribution),
+        _editorial_assessment(
+            prepared_contribution,
+            answer_contract=answer_contract,
+        ),
     )
-    answer_path, assurance_path = _assurance_paths(tmp_path, prepared_contribution)
+    answer_path, assurance_path = _assurance_paths(
+        tmp_path,
+        prepared_contribution,
+        answer_contract=answer_contract,
+    )
     _run(
         "initialize_workspace.py",
         "--workspace",
@@ -707,7 +838,9 @@ def _recorded_publish_run(
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -748,12 +881,26 @@ def _accept_rendered_output(run_dir: Path) -> None:
     slides = [
         output for output in manifest["outputs"] if output["kind"] == "carousel_slide"
     ]
+    documents = [
+        output
+        for output in manifest["outputs"]
+        if output["kind"] == "client_circular_pdf"
+    ]
     assessment = _write_json(
         run_dir / "visual-assessment-input.json",
         {
             "schema_version": 1,
             "run_id": manifest["run_id"],
             "assessed_manifest_digest": manifest["manifest_digest"],
+            "assessment_protocol": {
+                "method": "isolated_host_session_exact_render_review",
+                "assessor_session_id": "test-visual-release-session-001",
+                "assessment_template_version": "professional-visual-editor-v2",
+                "template_sha256": _prompt_digest("visual-assessment-v2.md"),
+                "generation_transcript_seen": False,
+                "editorial_transcript_seen": False,
+                "completed_at": "2026-08-08T13:00:00+00:00",
+            },
             "render_state": "accepted_semantics",
             "verdict": "ready",
             "post_comparison": "Le immagini aggiungono struttura e dettagli operativi oltre la bozza testuale selezionata per il canale.",
@@ -774,6 +921,18 @@ def _accept_rendered_output(run_dir: Path) -> None:
                     "required_change": "",
                 }
                 for index, _slide in enumerate(slides, start=1)
+            ],
+            "document_assessments": [
+                {
+                    "path": document["path"],
+                    "assessed_page_count": document["layout_validation"]["page_count"],
+                    "verdict": "ready",
+                    "pagination_judgment": "Ogni pagina usa margini coerenti e mantiene sezioni, chiusura e numerazione in un ordine leggibile.",
+                    "legibility_judgment": "Corpo, titoli, fonti, contatti e firma restano completi e leggibili nel PDF esatto.",
+                    "identity_judgment": "Logo, contatti, piè di pagina e firma rispettano il profilo Studio accettato.",
+                    "required_change": "",
+                }
+                for document in documents
             ],
             "required_changes": [],
         },
@@ -856,6 +1015,7 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
                     "path": str(source),
                     "title": "Provvedimento ufficiale sulla misura",
                     "authority_role": "primary",
+                    "public_url": "https://example.test/provvedimento-12345-2026",
                     "published_at": "2026-08-01",
                 }
             ],
@@ -889,6 +1049,19 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     _qualify_editorial_assessor(workspace, tmp_path)
     _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
     run_dir = workspace / "runs" / "norma-2026-001"
+    task_packet = json.loads(
+        (run_dir / "model_task_packet.json").read_text(encoding="utf-8")
+    )
+    assert task_packet["source_snapshots"][0]["public_url"] == (
+        "https://example.test/provvedimento-12345-2026"
+    )
+    assert set(task_packet["artifact_schemas"]) == {
+        "answer_contract",
+        "claim_assurance",
+        "editorial_assessment",
+        "model_contribution",
+        "visual_assessment",
+    }
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -906,7 +1079,9 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -1082,7 +1257,9 @@ def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -1167,7 +1344,9 @@ def test_independent_editorial_revision_blocks_contribution_recording(
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -1222,7 +1401,9 @@ def test_public_source_note_cannot_expose_internal_traceability_id(
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -1405,6 +1586,12 @@ def test_all_structured_sections_survive_and_email_has_no_false_attachment(
                 "body": f"Introduzione {channel} da conservare.",
                 "claim_ids": ["CLAIM-001"],
                 "audience_note": "Clienti impresa potenzialmente interessati.",
+                "public_source_notes": [
+                    {
+                        "source_ids": ["SRC-001"],
+                        "text": "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026",
+                    }
+                ],
                 "sections": [
                     {
                         "heading": f"Sezione {channel}",
@@ -1696,6 +1883,15 @@ def test_qa_preview_is_available_before_review_but_cannot_be_packaged(
             "schema_version": 1,
             "run_id": preview_manifest["run_id"],
             "assessed_manifest_digest": preview_manifest["manifest_digest"],
+            "assessment_protocol": {
+                "method": "isolated_host_session_exact_render_review",
+                "assessor_session_id": "test-visual-preview-session-001",
+                "assessment_template_version": "professional-visual-editor-v2",
+                "template_sha256": _prompt_digest("visual-assessment-v2.md"),
+                "generation_transcript_seen": False,
+                "editorial_transcript_seen": False,
+                "completed_at": "2026-08-08T12:30:00+00:00",
+            },
             "render_state": "qa_preview",
             "verdict": "revise",
             "post_comparison": "La preview ripete parte della bozza e non dimostra ancora un vantaggio sufficiente per il lettore del carosello.",
@@ -1717,6 +1913,7 @@ def test_qa_preview_is_available_before_review_but_cannot_be_packaged(
                 }
                 for index, _slide in enumerate(slides, start=1)
             ],
+            "document_assessments": [],
             "required_changes": [
                 "Sostituire la seconda slide con informazione incrementale verificabile."
             ],
@@ -1976,7 +2173,8 @@ def test_editorial_assessor_with_false_ready_does_not_qualify(
             "schema_version": 1,
             "provider": "test-provider",
             "model": "weak-editor-model",
-            "assessment_template_version": "professional-communication-editorial-v3",
+            "assessment_template_version": "professional-communication-editorial-v4",
+            "template_sha256": _prompt_digest("editorial-assessment-v4.md"),
             "assessor_session_id": "weak-benchmark-session-001",
             "evaluated_at": "2026-08-08T11:00:00+00:00",
             "judgments": judgments,
@@ -2046,7 +2244,9 @@ def test_claim_assurance_blocks_unsupported_live_claim(
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -2097,7 +2297,9 @@ def test_studio_profile_requires_field_level_evidence_coverage(
         "--model",
         "test-model",
         "--template-version",
-        "professional-communication-v2",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
         "--recorded-by",
         "test-operator",
         "--assessment-provider",
@@ -2438,3 +2640,584 @@ def test_creative_direction_selection_changes_renderer_and_completes_lifecycle(
     )
     assert fallback_manifest["creative_direction"]["route_status"] == "fallback"
     assert selected_slide_hash != fallback_slide_hash
+
+
+def _record_test_creative_selection(
+    root: Path,
+    run_dir: Path,
+    *,
+    tokens: dict[str, str],
+) -> None:
+    _run(
+        "prepare_creative_direction_handoff.py",
+        "--run-dir",
+        str(run_dir),
+        "--directions",
+        "4",
+    )
+    handoff = json.loads(
+        (run_dir / "creative-direction" / "handoff-v001.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    directions: list[dict[str, object]] = []
+    for index in range(1, 5):
+        path = root / f"token-direction-{index}.png"
+        Image.new("RGB", (1080, 1350), f"#{index}{index}3355").save(path)
+        directions.append(
+            {
+                "item_id": f"token-direction-{index}",
+                "item_revision": index,
+                "title": f"Token direction {index}",
+                "image_path": str(path),
+            }
+        )
+    decision = _write_json(
+        root / "token-selection.json",
+        {
+            "schema_version": 1,
+            "run_id": handoff["run_id"],
+            "handoff_digest": handoff["handoff_digest"],
+            "outcome": "selected",
+            "selection": {
+                "board_id": f"board-{root.name}",
+                "board_revision": 1,
+                "directions": directions,
+                "selected_item_id": "token-direction-1",
+                "selection_rationale": "La direzione consente di verificare isolatamente che ogni token supportato modifichi il render esatto.",
+                "translation": {
+                    "art_direction_summary": "Direzione editoriale di prova con contenuto bloccato e variazione isolata dei token del renderer.",
+                    "exact_content_preserved": True,
+                    "source_preservation_confirmed": True,
+                    "contribution_change_required": False,
+                    "contribution_change_explanation": "",
+                    "tokens": tokens,
+                },
+            },
+        },
+    )
+    _run(
+        "record_creative_direction_decision.py",
+        "--run-dir",
+        str(run_dir),
+        "--decision",
+        str(decision),
+        "--recorded-by",
+        "test-operator",
+        "--confirmed-by-user",
+    )
+
+
+def test_creative_row_marker_and_spacing_rhythm_each_change_exact_bytes(
+    tmp_path: Path,
+) -> None:
+    routes = _routes()
+    routes["creative_production"] = {
+        "selected": True,
+        "destination": "Creative Production test board",
+        "approved_by": "Dott.ssa Revisore",
+        "approved_at": "2026-08-08T15:00:00+00:00",
+    }
+    common = {
+        "frame_style": "hairline",
+        "accent_geometry": "underline",
+        "rule_style": "single",
+        "row_marker": "numeral",
+        "spacing_rhythm": "compact",
+        "header_treatment": "solid",
+    }
+    hashes: list[str] = []
+    token_sets = [
+        common,
+        {**common, "row_marker": "bar"},
+        {**common, "spacing_rhythm": "airy"},
+    ]
+    for index, tokens in enumerate(token_sets, start=1):
+        case_root = tmp_path / f"tokens-{index}"
+        case_root.mkdir()
+        _, run_dir, _ = _recorded_publish_run(
+            case_root,
+            channels=["linkedin"],
+            visual_requested=True,
+            routes=routes,
+        )
+        _record_test_creative_selection(case_root, run_dir, tokens=tokens)
+        _run("render_visuals.py", "--run-dir", str(run_dir), "--qa-preview")
+        manifest = json.loads(
+            (run_dir / "visual_preview_manifest.json").read_text(encoding="utf-8")
+        )
+        assert manifest["quality_gate"]["creative_tokens_consumed"] == sorted(tokens)
+        hashes.append(
+            next(
+                row["sha256"]
+                for row in manifest["outputs"]
+                if row["path"].endswith("slide-02.png")
+            )
+        )
+
+    assert len(set(hashes)) == 3
+
+
+def test_creative_manifest_does_not_claim_inapplicable_row_marker(
+    tmp_path: Path,
+) -> None:
+    routes = _routes()
+    routes["creative_production"] = {
+        "selected": True,
+        "destination": "Creative Production test board",
+        "approved_by": "Dott.ssa Revisore",
+        "approved_at": "2026-08-08T15:00:00+00:00",
+    }
+    contribution = _publish_contribution()
+    for slide in contribution["visual_story"]["slides"]:
+        slide["bullets"] = []
+    _, run_dir, _ = _recorded_publish_run(
+        tmp_path,
+        channels=["linkedin"],
+        visual_requested=True,
+        routes=routes,
+        contribution=contribution,
+    )
+    tokens = {
+        "frame_style": "hairline",
+        "accent_geometry": "underline",
+        "rule_style": "single",
+        "row_marker": "bar",
+        "spacing_rhythm": "compact",
+        "header_treatment": "solid",
+    }
+    _record_test_creative_selection(tmp_path, run_dir, tokens=tokens)
+
+    _run("render_visuals.py", "--run-dir", str(run_dir), "--qa-preview")
+
+    manifest = json.loads(
+        (run_dir / "visual_preview_manifest.json").read_text(encoding="utf-8")
+    )
+    quality_gate = manifest["quality_gate"]
+    assert quality_gate["creative_tokens_not_applicable"] == ["row_marker"]
+    assert quality_gate["creative_tokens_consumed"] == sorted(
+        name for name in tokens if name != "row_marker"
+    )
+
+
+def test_superseded_final_render_can_be_rendered_and_packaged_again(
+    tmp_path: Path,
+) -> None:
+    _, run_dir, contribution = _recorded_publish_run(
+        tmp_path,
+        channels=["linkedin"],
+        visual_requested=True,
+    )
+    _accept_required_reviews(run_dir)
+    _run("render_visuals.py", "--run-dir", str(run_dir))
+    _accept_rendered_output(run_dir)
+    _run("package_communications.py", "--run-dir", str(run_dir))
+    _accept_packaged_output(run_dir)
+    _run("validate_run.py", "--run-dir", str(run_dir))
+    first_manifest = json.loads(
+        (run_dir / "visual_manifest.json").read_text(encoding="utf-8")
+    )
+
+    _run(
+        "record_review.py",
+        "--run-dir",
+        str(run_dir),
+        "--scope",
+        "copy",
+        "--decision",
+        "returned",
+        "--reviewer",
+        "Dott.ssa Revisore",
+        "--confirmed-by-user",
+    )
+    revised = _clone(contribution)
+    revised["channel_drafts"][0][
+        "title"
+    ] = "Una data ufficiale, tre verifiche prima di concludere"
+    answer = _answer_contract(revised)
+    assurance = _claim_assurance(revised, answer)
+    assurance["assessment_protocol"]["assessor_session_id"] = "test-claim-session-002"
+    editorial = _editorial_assessment(revised, answer_contract=answer)
+    editorial["assessment_protocol"][
+        "assessor_session_id"
+    ] = "test-editorial-session-002"
+    editorial["claim_assurance_digest"] = _canonical_digest(assurance)
+    contribution_path = _write_json(tmp_path / "revised-contribution.json", revised)
+    answer_path = _write_json(tmp_path / "revised-answer.json", answer)
+    assurance_path = _write_json(tmp_path / "revised-assurance.json", assurance)
+    editorial_path = _write_json(tmp_path / "revised-editorial.json", editorial)
+
+    _run(
+        "record_contribution.py",
+        "--run-dir",
+        str(run_dir),
+        "--contribution",
+        str(contribution_path),
+        "--answer-contract",
+        str(answer_path),
+        "--claim-assurance",
+        str(assurance_path),
+        "--editorial-assessment",
+        str(editorial_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-model",
+        "--template-version",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-002",
+        "--recorded-by",
+        "test-operator",
+        "--assessment-provider",
+        "test-provider",
+        "--assessment-model",
+        "test-editor-model",
+        "--claim-assessment-provider",
+        "test-provider",
+        "--claim-assessment-model",
+        "test-claim-model",
+        "--supersede",
+    )
+
+    archived_manifest = json.loads(
+        (run_dir / "versions" / "artifacts-v001" / "visual_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert archived_manifest["manifest_digest"] == first_manifest["manifest_digest"]
+    assert (run_dir / "versions" / "artifacts-v001" / "drafts").is_dir()
+    assert not (run_dir / "visual_manifest.json").exists()
+
+    _accept_required_reviews(run_dir)
+    _run("render_visuals.py", "--run-dir", str(run_dir))
+    _accept_rendered_output(run_dir)
+    _run("package_communications.py", "--run-dir", str(run_dir))
+    _accept_packaged_output(run_dir)
+    _run("validate_run.py", "--run-dir", str(run_dir))
+    final = json.loads((run_dir / "final_artifacts.json").read_text(encoding="utf-8"))
+    assert final["status"] == "final_ready"
+    assert (
+        json.loads((run_dir / "content_workbench.json").read_text(encoding="utf-8"))[
+            "version"
+        ]
+        == 2
+    )
+
+
+def test_model_passes_reject_reused_host_session(
+    tmp_path: Path,
+) -> None:
+    _, run_dir, contribution = _recorded_publish_run(
+        tmp_path,
+        channels=["client_email"],
+        visual_requested=False,
+    )
+    _run(
+        "record_review.py",
+        "--run-dir",
+        str(run_dir),
+        "--scope",
+        "copy",
+        "--decision",
+        "returned",
+        "--reviewer",
+        "Dott.ssa Revisore",
+        "--confirmed-by-user",
+    )
+    answer = _answer_contract(contribution)
+    assurance = _claim_assurance(contribution, answer)
+    assurance["assessment_protocol"][
+        "assessor_session_id"
+    ] = "test-generation-session-002"
+    editorial = _editorial_assessment(contribution, answer_contract=answer)
+    editorial["assessment_protocol"][
+        "assessor_session_id"
+    ] = "test-editorial-session-002"
+    editorial["claim_assurance_digest"] = _canonical_digest(assurance)
+
+    completed = _run_result(
+        "record_contribution.py",
+        "--run-dir",
+        str(run_dir),
+        "--contribution",
+        str(_write_json(tmp_path / "same-session-contribution.json", contribution)),
+        "--answer-contract",
+        str(_write_json(tmp_path / "same-session-answer.json", answer)),
+        "--claim-assurance",
+        str(_write_json(tmp_path / "same-session-assurance.json", assurance)),
+        "--editorial-assessment",
+        str(_write_json(tmp_path / "same-session-editorial.json", editorial)),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-model",
+        "--template-version",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-002",
+        "--recorded-by",
+        "test-operator",
+        "--assessment-provider",
+        "test-provider",
+        "--assessment-model",
+        "test-editor-model",
+        "--claim-assessment-provider",
+        "test-provider",
+        "--claim-assessment-model",
+        "test-claim-model",
+        "--supersede",
+    )
+
+    assert completed.returncode == 1
+    assert "must use distinct host sessions" in completed.stderr
+
+
+def test_changed_editorial_template_digest_requires_fresh_qualification(
+    tmp_path: Path,
+) -> None:
+    workspace = tmp_path / "studio-workspace"
+    _run(
+        "initialize_workspace.py",
+        "--workspace",
+        str(workspace),
+        "--workspace-id",
+        "studio-aurora",
+        "--owner",
+        "Studio Aurora",
+        "--retention-owner",
+        "Studio Aurora",
+        "--confirmed-by-user",
+    )
+    expectations = json.loads(
+        (PLUGIN / "evals" / "editorial_quality_expected.json").read_text(
+            encoding="utf-8"
+        )
+    )["expectations"]
+    results = _write_json(
+        tmp_path / "stale-template-benchmark.json",
+        {
+            "schema_version": 1,
+            "provider": "test-provider",
+            "model": "test-editor-model",
+            "assessment_template_version": "professional-communication-editorial-v4",
+            "template_sha256": "0" * 64,
+            "assessor_session_id": "stale-template-session-001",
+            "evaluated_at": "2026-08-08T11:00:00+00:00",
+            "judgments": [
+                {
+                    "case_id": row["case_id"],
+                    "verdict": row["expected_verdict"],
+                    "analysis": "Il test usa i risultati attesi ma un digest di template deliberatamente non corrente.",
+                }
+                for row in expectations
+            ],
+        },
+    )
+
+    completed = _run_result(
+        "qualify_editorial_assessor.py",
+        "--workspace",
+        str(workspace),
+        "--results",
+        str(results),
+        "--recorded-by",
+        "test-operator",
+    )
+
+    assert completed.returncode == 1
+    assert "template digest mismatch" in completed.stderr
+
+
+def test_new_studio_without_history_can_adopt_a_reviewed_vera_profile(
+    tmp_path: Path,
+) -> None:
+    _, run_dir, contribution = _recorded_publish_run(
+        tmp_path,
+        channels=["website_article"],
+        visual_requested=False,
+        include_history=False,
+        studio_format_brief="Studio sobrio, titoli informativi e fonti pubbliche identificabili.",
+    )
+    profile = contribution["studio_profile_proposal"]
+    assert profile["derived_from_history_ids"] == []
+    assert {row["basis"] for row in profile["field_provenance"]} == {
+        "vera_default_proposal"
+    }
+    _accept_required_reviews(run_dir)
+    _run("promote_studio_profile.py", "--run-dir", str(run_dir))
+    _run("package_communications.py", "--run-dir", str(run_dir))
+    _accept_packaged_output(run_dir)
+    _run("validate_run.py", "--run-dir", str(run_dir))
+    assert (run_dir.parent.parent / "studio_profile.json").is_file()
+
+
+def test_packaging_preserves_reviewed_public_sources_and_output_language(
+    tmp_path: Path,
+) -> None:
+    contribution = _clone(_publish_contribution())
+    contribution["studio_profile_proposal"]["website"]["source_heading"] = "Sources"
+    newsletter = _clone(contribution["channel_drafts"][3])
+    newsletter["channel"] = "newsletter"
+    newsletter["title"] = "Measure update: facts and verification"
+    contribution["channel_drafts"].append(newsletter)
+    for draft in contribution["channel_drafts"]:
+        for note in draft["public_source_notes"]:
+            note["public_url"] = "https://example.test/provvedimento-12345-2026"
+    exact_source = (
+        "Agenzia delle Entrate — Provvedimento n. 12345/2026 dell'8 agosto 2026"
+    )
+    _, run_dir, _ = _recorded_publish_run(
+        tmp_path,
+        channels=["client_email", "linkedin", "newsletter", "website_article"],
+        visual_requested=True,
+        contribution=contribution,
+        language="en",
+    )
+    _run("render_visuals.py", "--run-dir", str(run_dir), "--qa-preview")
+    preview = (run_dir / "visuals-preview" / "visual-preview.html").read_text(
+        encoding="utf-8"
+    )
+    assert '<html lang="en">' in preview
+    _accept_required_reviews(run_dir)
+    _run("render_visuals.py", "--run-dir", str(run_dir))
+    _accept_rendered_output(run_dir)
+    _run("package_communications.py", "--run-dir", str(run_dir))
+    for relative in (
+        "drafts/client_email.txt",
+        "drafts/linkedin.txt",
+        "drafts/newsletter.md",
+        "drafts/website_article.html",
+    ):
+        assert exact_source in html_lib.unescape(
+            (run_dir / relative).read_text(encoding="utf-8")
+        )
+    email = (run_dir / "drafts" / "client_email.txt").read_text(encoding="utf-8")
+    newsletter = (run_dir / "drafts" / "newsletter.md").read_text(encoding="utf-8")
+    website = (run_dir / "drafts" / "website_article.html").read_text(encoding="utf-8")
+    assert email.startswith("Subject:")
+    assert "## Sources" in newsletter
+    assert '<html lang="en">' in website
+    assert 'href="https://example.test/provvedimento-12345-2026"' in website
+    assert "Fonti e aggiornamento disponibili" not in website
+
+
+def test_circular_wraps_long_contact_text_without_silent_truncation(
+    tmp_path: Path,
+) -> None:
+    contribution = _clone(_publish_contribution())
+    long_contact = "studio-" + "commercialistiassociati" * 8 + ".example"
+    contribution["studio_profile_proposal"]["document"]["contact_rail_lines"] = [
+        "Studio Aurora",
+        long_contact,
+    ]
+    _, run_dir, _ = _recorded_publish_run(
+        tmp_path,
+        channels=["client_circular"],
+        visual_requested=False,
+        contribution=contribution,
+    )
+    _accept_required_reviews(run_dir)
+    _run("render_visuals.py", "--run-dir", str(run_dir))
+    manifest = json.loads(
+        (run_dir / "visual_manifest.json").read_text(encoding="utf-8")
+    )
+    circular = next(
+        row for row in manifest["outputs"] if row["kind"] == "client_circular_pdf"
+    )
+    validation = circular["layout_validation"]
+    assert validation["silent_truncation"] is False
+    assert validation["contact_rail_exact"] is True
+    extracted = "".join(
+        page.extract_text() or ""
+        for page in PdfReader(str(run_dir / circular["path"])).pages
+    )
+    assert "".join(
+        character for character in long_contact if character.isalnum()
+    ) in "".join(character for character in extracted if character.isalnum())
+
+
+def test_circular_rejects_contact_rail_that_cannot_fit(
+    tmp_path: Path,
+) -> None:
+    contribution = _clone(_publish_contribution())
+    contribution["studio_profile_proposal"]["document"]["contact_rail_lines"] = [
+        f"{index:02d}-" + "commercialistiassociati" * 12 for index in range(40)
+    ]
+    _, run_dir, _ = _recorded_publish_run(
+        tmp_path,
+        channels=["client_circular"],
+        visual_requested=False,
+        contribution=contribution,
+    )
+    _accept_required_reviews(run_dir)
+
+    completed = _run_result("render_visuals.py", "--run-dir", str(run_dir))
+
+    assert completed.returncode == 1
+    assert "contact rail cannot fit" in completed.stderr
+    assert not (run_dir / "visual_manifest.json").exists()
+    assert not (run_dir / "visuals" / "circolare-clienti.pdf").exists()
+
+
+def test_claim_assurance_must_review_every_answer_contract_dimension(
+    tmp_path: Path,
+) -> None:
+    _, run_dir, contribution = _recorded_publish_run(
+        tmp_path,
+        channels=["client_email"],
+        visual_requested=False,
+    )
+    _run(
+        "record_review.py",
+        "--run-dir",
+        str(run_dir),
+        "--scope",
+        "claims",
+        "--decision",
+        "returned",
+        "--reviewer",
+        "Dott.ssa Revisore",
+        "--confirmed-by-user",
+    )
+    answer = _answer_contract(contribution)
+    assurance = _claim_assurance(contribution, answer)
+    del assurance["contract_review"]["source_hierarchy"]
+    editorial = _editorial_assessment(contribution, answer_contract=answer)
+    editorial["claim_assurance_digest"] = _canonical_digest(assurance)
+
+    completed = _run_result(
+        "record_contribution.py",
+        "--run-dir",
+        str(run_dir),
+        "--contribution",
+        str(_write_json(tmp_path / "contract-contribution.json", contribution)),
+        "--answer-contract",
+        str(_write_json(tmp_path / "contract-answer.json", answer)),
+        "--claim-assurance",
+        str(_write_json(tmp_path / "contract-assurance.json", assurance)),
+        "--editorial-assessment",
+        str(_write_json(tmp_path / "contract-editorial.json", editorial)),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-model",
+        "--template-version",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-002",
+        "--recorded-by",
+        "test-operator",
+        "--assessment-provider",
+        "test-provider",
+        "--assessment-model",
+        "test-editor-model",
+        "--claim-assessment-provider",
+        "test-provider",
+        "--claim-assessment-model",
+        "test-claim-model",
+        "--supersede",
+    )
+
+    assert completed.returncode == 1
+    assert "source_hierarchy" in completed.stderr

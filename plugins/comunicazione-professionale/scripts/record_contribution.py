@@ -9,10 +9,12 @@ from pathlib import Path
 from typing import Any
 
 from workflow_core import (
+    archive_superseded_artifacts,
     atomic_write_json,
     atomic_write_text,
     canonical_digest,
     load_json,
+    prompt_template_digest,
     required_review_scopes,
     utc_now,
     validate_answer_contract,
@@ -226,6 +228,7 @@ def record_contribution(
     assessment_model: str,
     claim_assessment_provider: str,
     claim_assessment_model: str,
+    generation_session_id: str,
     supersede: bool,
 ) -> Path:
     """Validate and record one contribution without overwriting history."""
@@ -246,6 +249,7 @@ def record_contribution(
             assessment_model=assessment_model,
             claim_assessment_provider=claim_assessment_provider,
             claim_assessment_model=claim_assessment_model,
+            generation_session_id=generation_session_id,
             supersede=supersede,
         )
 
@@ -265,6 +269,7 @@ def _record_contribution_locked(
     assessment_model: str,
     claim_assessment_provider: str,
     claim_assessment_model: str,
+    generation_session_id: str,
     supersede: bool,
 ) -> Path:
     """Perform a contribution mutation while the run writer lock is held."""
@@ -277,16 +282,28 @@ def _record_contribution_locked(
     claim_assurance = load_json(claim_assurance_path)
     editorial_assessment = load_json(editorial_assessment_path)
     validate_schema(editorial_assessment, "editorial_assessment.schema.json")
+    proposed_profile = contribution.get("studio_profile_proposal")
+    stored_profile = intake.get("studio_profile")
+    effective_profile = proposed_profile
+    if effective_profile is None and isinstance(stored_profile, dict):
+        stored_payload = stored_profile.get("payload")
+        if isinstance(stored_payload, dict):
+            effective_profile = stored_payload.get("profile")
     intake_contract = {
         "run_id": intake["run_id"],
         "channels": intake["requested_channels"],
         "visual_requested": intake["visual_requested"],
         "history_inputs": source_register["history"],
+        "social_show_source_note": bool(
+            isinstance(effective_profile, dict)
+            and effective_profile.get("social", {}).get("show_source_note")
+        ),
     }
     validate_contribution_semantics(
         contribution,
         intake=intake_contract,
         source_register=source_register,
+        profile_revision_required=bool(intake["profile_revision_required"]),
     )
     answer_contract_digest = validate_answer_contract(
         answer_contract,
@@ -312,11 +329,16 @@ def _record_contribution_locked(
     if editorial_assessment["claim_assurance_digest"] != claim_assurance_digest:
         raise ValueError("Editorial assessment is stale for claim assurance")
     protocol = editorial_assessment["assessment_protocol"]
-    if (
-        protocol["assessment_template_version"]
-        != "professional-communication-editorial-v3"
-    ):
-        raise ValueError("Unsupported editorial assessment template")
+    editorial_template_digest = prompt_template_digest(
+        "editorial_assessment", protocol["assessment_template_version"]
+    )
+    if protocol["template_sha256"] != editorial_template_digest:
+        raise ValueError("Editorial assessment template digest mismatch")
+    generation_template_digest = prompt_template_digest("generation", template_version)
+    claim_protocol = claim_assurance["assessment_protocol"]
+    claim_session_id = claim_protocol["assessor_session_id"]
+    if len(generation_session_id.strip()) < 8:
+        raise ValueError("Generation session id must identify one exact host session")
     workspace = Path(intake["workspace_path"]).resolve()
     qualification = verify_editorial_assessor_qualification(
         workspace,
@@ -330,6 +352,16 @@ def _record_contribution_locked(
     ):
         raise ValueError(
             "Live editorial assessment must use a session separate from qualification"
+        )
+    session_ids = {
+        generation_session_id.strip(),
+        claim_session_id,
+        protocol["assessor_session_id"],
+        qualification["assessor_identity"]["assessor_session_id"],
+    }
+    if len(session_ids) != 4:
+        raise ValueError(
+            "Generation, claim assurance, live editorial assessment, and benchmark qualification must use distinct host sessions"
         )
     if editorial_assessment["verdict"] != "ready":
         raise ValueError(
@@ -390,22 +422,37 @@ def _record_contribution_locked(
     version = int(previous["version"]) + 1 if previous else 1
     recorded_at = utc_now()
     provenance = {
+        "assurance_level": "operator_attested_host_sessions_not_provider_authenticated",
         "generator": {
             "provider": provider,
             "model": model,
             "template_version": template_version,
+            "template_sha256": generation_template_digest,
+            "session_id": generation_session_id.strip(),
+            "execution_mode": "isolated_host_session_attestation",
+            "provider_authenticated": False,
         },
         "editorial_assessor": {
             "provider": assessment_provider,
             "model": assessment_model,
             "template_version": protocol["assessment_template_version"],
+            "template_sha256": editorial_template_digest,
             "assessor_session_id": protocol["assessor_session_id"],
             "qualification_digest": qualification["qualification_digest"],
+            "qualification_session_id": qualification["assessor_identity"][
+                "assessor_session_id"
+            ],
+            "execution_mode": "isolated_host_session_attestation",
+            "provider_authenticated": False,
         },
         "claim_assessor": {
             "provider": claim_assessment_provider,
             "model": claim_assessment_model,
-            "template_version": "professional-communication-claim-assurance-v1",
+            "template_version": claim_protocol["assessment_template_version"],
+            "template_sha256": claim_protocol["template_sha256"],
+            "assessor_session_id": claim_session_id,
+            "execution_mode": "isolated_host_session_attestation",
+            "provider_authenticated": False,
         },
         "recorded_by": recorded_by,
         "recorded_at": recorded_at,
@@ -479,6 +526,8 @@ def _record_contribution_locked(
     versions_dir = root / "versions"
     versions_dir.mkdir(exist_ok=True)
     version_path = versions_dir / f"content_workbench-v{version:03d}.json"
+    if previous is not None:
+        archive_superseded_artifacts(root, version=int(previous["version"]))
     atomic_write_json(root / "review_payload.json", review_payload)
     atomic_write_json(review_log_path, review_log)
     atomic_write_text(
@@ -509,6 +558,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--provider", required=True)
     parser.add_argument("--model", required=True)
     parser.add_argument("--template-version", required=True)
+    parser.add_argument("--generation-session-id", required=True)
     parser.add_argument("--recorded-by", required=True)
     parser.add_argument("--assessment-provider", required=True)
     parser.add_argument("--assessment-model", required=True)
@@ -531,6 +581,7 @@ def main(argv: list[str] | None = None) -> int:
             assessment_model=args.assessment_model,
             claim_assessment_provider=args.claim_assessment_provider,
             claim_assessment_model=args.claim_assessment_model,
+            generation_session_id=args.generation_session_id,
             supersede=args.supersede,
         )
     except (OSError, ValueError) as exc:

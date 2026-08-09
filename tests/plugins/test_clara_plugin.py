@@ -20,6 +20,25 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "clara"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
+CLARA_DISCOVERY_TERMS = (
+    "consultant",
+    "consultants",
+    "advisory",
+    "management consulting",
+    "strategy consulting",
+    "due diligence",
+    "evidence synthesis",
+    "business analysis",
+    "market analysis",
+    "customer analysis",
+    "competitive analysis",
+    "product analysis",
+    "interview research",
+    "reports",
+    "presentation",
+    "reviewable workpapers",
+    "retailer signals",
+)
 
 
 @pytest.mark.parametrize(
@@ -783,7 +802,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.135"
+    assert manifest["version"] == "0.1.136"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -802,8 +821,8 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         )
     ).lower()
     assert (
-        "clara supports commercial due-diligence preparation—market, customer, "
-        "product, competitive, and operating evidence."
+        "clara supports consultants with commercial due diligence, evidence "
+        "synthesis, interviews, business analysis, reports and presentations."
     ) in marketplace_copy
     long_description = manifest["interface"]["longDescription"]
     approved_description = (
@@ -812,6 +831,8 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         .strip()
     )
     assert long_description == approved_description
+    assert len(long_description.split()) <= 90
+    assert len(long_description.split("\n\n")) == 3
     assert "Clara helps consultants" in long_description
     assert "presentations, reports and reviewable workpapers" in long_description
     assert "internal Reporting Engine" not in long_description
@@ -863,6 +884,25 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert "hosted interview" not in main_description.lower()
     assert "transcrib" not in main_description.lower()
     assert "deck-correction" not in main_description.lower()
+
+
+@pytest.mark.parametrize("term", CLARA_DISCOVERY_TERMS)
+def test_clara_manifest_preserves_discovery_term(term: str) -> None:
+    manifest = json.loads(
+        (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+    )
+    # This verifies the agreed metadata contract, not marketplace search ranking.
+    discovery_text = " ".join(
+        (
+            manifest["description"],
+            manifest["interface"]["shortDescription"],
+            manifest["interface"]["longDescription"],
+            *manifest["keywords"],
+        )
+    ).casefold()
+    normalized_discovery_text = discovery_text.replace("-", " ")
+
+    assert term in normalized_discovery_text
 
 
 def test_hosted_interview_manager_prepares_exact_campaign(monkeypatch) -> None:

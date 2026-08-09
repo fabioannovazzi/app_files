@@ -74,6 +74,16 @@ the chosen direction only into the supported `frame_style`, `accent_geometry`,
 The manifest must bind the handoff, decision, translation, board and selected
 item digests. If the route cannot complete, record an explicit fallback; never
 claim Creative Production influenced a render whose bytes ignore the selection.
+Every supported token must control its named visual property: `row_marker`
+changes row markers and `spacing_rhythm` changes spatial rhythm, not an
+unrelated stroke width. Record the exact applied-token set in the manifest and
+list any selected token with no visible target as not applicable; never claim
+that a token influenced bytes when it could not do so.
+
+For a circular PDF, measure header, footer, contact rail, and long unbroken
+tokens before release. Preserve the exact reviewed source notes, closing, and
+signature. Verify extractable text and page coverage from the completed PDF;
+fail instead of slicing, clipping, or silently dropping copy.
 
 The manifest must say whether the format is an unreviewed run proposal, an
 accepted run profile, or a stored approved profile, and whether an official logo

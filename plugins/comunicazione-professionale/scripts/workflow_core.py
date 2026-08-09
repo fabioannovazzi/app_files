@@ -21,12 +21,15 @@ import jsonschema
 __all__ = [
     "ALLOWED_CHANNELS",
     "PLUGIN_ROOT",
+    "PROMPT_TEMPLATES",
     "REQUIRED_REVIEW_SCOPES",
     "atomic_copy_file",
     "atomic_write_text",
+    "archive_superseded_artifacts",
     "atomic_write_json",
     "canonical_digest",
     "copy_input_snapshot",
+    "creative_token_application",
     "file_digest",
     "fresh_package_review_decision",
     "fresh_review_decisions",
@@ -34,6 +37,7 @@ __all__ = [
     "load_json",
     "load_workspace",
     "package_digest",
+    "prompt_template_digest",
     "recompute_contribution_digest",
     "recompute_input_digest",
     "required_review_scopes",
@@ -59,6 +63,25 @@ __all__ = [
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_ROOT = PLUGIN_ROOT / "schemas"
+PROMPT_ROOT = PLUGIN_ROOT / "prompts"
+PROMPT_TEMPLATES = {
+    "generation": (
+        "professional-communication-v3",
+        PROMPT_ROOT / "generation-v3.md",
+    ),
+    "claim_assurance": (
+        "professional-communication-claim-assurance-v2",
+        PROMPT_ROOT / "claim-assurance-v2.md",
+    ),
+    "editorial_assessment": (
+        "professional-communication-editorial-v4",
+        PROMPT_ROOT / "editorial-assessment-v4.md",
+    ),
+    "visual_assessment": (
+        "professional-visual-editor-v2",
+        PROMPT_ROOT / "visual-assessment-v2.md",
+    ),
+}
 EDITORIAL_CASES_PATH = PLUGIN_ROOT / "evals" / "editorial_quality_cases.json"
 EDITORIAL_EXPECTED_PATH = PLUGIN_ROOT / "evals" / "editorial_quality_expected.json"
 ALLOWED_CHANNELS = {
@@ -99,6 +122,32 @@ def utc_now() -> str:
     """Return a stable UTC timestamp without fractional seconds."""
 
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+
+
+def creative_token_application(
+    tokens: dict[str, str] | None,
+    slides: list[dict[str, Any]],
+) -> tuple[list[str], list[str]]:
+    """Classify selected visual tokens as applied or inapplicable.
+
+    This is a mechanical renderer fact, not a judgment about visual quality.
+    Creative tokens affect carousel rendering only, and ``row_marker`` has no
+    visible target when every slide has an empty bullet collection.
+    """
+
+    if tokens is None:
+        return [], []
+    token_names = sorted(tokens)
+    if not slides:
+        return [], token_names
+    not_applicable = (
+        ["row_marker"]
+        if "row_marker" in tokens
+        and not any(bool(slide.get("bullets")) for slide in slides)
+        else []
+    )
+    applied = [name for name in token_names if name not in not_applicable]
+    return applied, not_applicable
 
 
 def load_json(path: Path) -> dict[str, Any]:
@@ -242,6 +291,75 @@ def file_digest(path: Path) -> str:
         for chunk in iter(lambda: stream.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def prompt_template_digest(kind: str, version: str) -> str:
+    """Return the digest of one exact bundled model-pass template."""
+
+    configured = PROMPT_TEMPLATES.get(kind)
+    if configured is None or configured[0] != version:
+        raise ValueError(f"Unsupported {kind} template version: {version}")
+    return file_digest(configured[1])
+
+
+def archive_superseded_artifacts(root: Path, *, version: int) -> Path | None:
+    """Move derived files for one returned contribution into an immutable archive.
+
+    The exact allow-list is deterministic because these are workflow-owned
+    derived artifacts. User inputs, review history, and versioned contribution
+    records are never moved or deleted.
+    """
+
+    names = (
+        "review_payload.json",
+        "review_handoff.md",
+        "visual_manifest.json",
+        "visual_preview_manifest.json",
+        "visual_assessment_record.json",
+        "visual_preview_assessment_record.json",
+        "final_artifacts.json",
+        "technical_basis.md",
+        "answer_contract_record.json",
+        "claim_assurance_record.json",
+        "editorial_assessment_record.json",
+        "artifact_card.md",
+        "no-publication-recommendation.md",
+        "external_delivery.json",
+        "drafts",
+        "visuals",
+        "visuals-preview",
+    )
+    present = [root / name for name in names if (root / name).exists()]
+    if not present:
+        return None
+    archive = root / "versions" / f"artifacts-v{version:03d}"
+    if archive.exists():
+        raise ValueError(f"Superseded artifact archive already exists: {archive}")
+    archive.mkdir(parents=True)
+    moved: list[str] = []
+    moved_paths: list[tuple[Path, Path]] = []
+    try:
+        for path in present:
+            destination = archive / path.name
+            path.replace(destination)
+            moved.append(path.name)
+            moved_paths.append((path, destination))
+        record = {
+            "schema_version": 1,
+            "workflow": "comunicazione-professionale",
+            "contribution_version": version,
+            "archived_at": utc_now(),
+            "artifacts": moved,
+        }
+        atomic_write_json(archive / "archive_record.json", record)
+    except OSError:
+        for original, destination in reversed(moved_paths):
+            if destination.exists() and not original.exists():
+                destination.replace(original)
+        if archive.exists() and not any(archive.iterdir()):
+            archive.rmdir()
+        raise
+    return archive
 
 
 def validate_schema(payload: dict[str, Any], schema_name: str) -> None:
@@ -432,6 +550,7 @@ def verify_editorial_assessor_qualification(
     """Require a current model-led benchmark receipt for the live assessor."""
 
     root = workspace.resolve()
+    template_digest = prompt_template_digest("editorial_assessment", template_version)
     cases = load_json(EDITORIAL_CASES_PATH)
     expected = load_json(EDITORIAL_EXPECTED_PATH)
     cases_digest = canonical_digest(cases)
@@ -456,6 +575,7 @@ def verify_editorial_assessor_qualification(
         if (
             record.get("cases_digest") != cases_digest
             or record.get("expected_digest") != expected_digest
+            or record.get("template_sha256") != template_digest
         ):
             continue
         matching[digest] = record
@@ -506,6 +626,11 @@ def validate_claim_assurance(
     """Honor model-led claim verdicts while enforcing exact coverage and closure."""
 
     validate_schema(claim_assurance, "claim_assurance.schema.json")
+    protocol = claim_assurance["assessment_protocol"]
+    if protocol["template_sha256"] != prompt_template_digest(
+        "claim_assurance", protocol["assessment_template_version"]
+    ):
+        raise ValueError("Claim-assurance template digest mismatch")
     if claim_assurance["run_id"] != contribution["run_id"]:
         raise ValueError("Claim assurance run_id does not match contribution")
     if claim_assurance["assessed_contribution_digest"] != canonical_digest(
@@ -744,6 +869,7 @@ def _verify_visual_manifest(
 
     root = run_dir.resolve()
     contribution_digest = recompute_contribution_digest(root)
+    workbench = load_json(root / "content_workbench.json")
     manifest = load_json(root / filename)
     if manifest.get("render_state") != expected_state:
         raise ValueError(f"Visual manifest is not a {expected_state} render")
@@ -771,6 +897,16 @@ def _verify_visual_manifest(
         raise ValueError("Visual mechanical quality checks are incomplete")
     if quality_gate.get("model_led_review_required") is not True:
         raise ValueError("Visual model-led review requirement is missing")
+    expected_applied, expected_not_applicable = creative_token_application(
+        creative["tokens"],
+        workbench["contribution"]["visual_story"]["slides"],
+    )
+    if quality_gate.get("creative_tokens_consumed") != expected_applied:
+        raise ValueError("Visual manifest does not prove Creative tokens were consumed")
+    if quality_gate.get("creative_tokens_not_applicable") != expected_not_applicable:
+        raise ValueError(
+            "Visual manifest does not identify inapplicable Creative tokens exactly"
+        )
     for output in manifest.get("outputs", []):
         relative = output.get("path")
         if not isinstance(relative, str):
@@ -804,6 +940,20 @@ def _verify_visual_manifest(
                 > float(safe_area[3])
             ):
                 raise ValueError(f"Visual content overflow recorded: {relative}")
+        if output.get("kind") == "client_circular_pdf":
+            if not isinstance(layout, dict) or any(
+                (
+                    layout.get("overflow_free") is not True,
+                    layout.get("text_extraction_verified") is not True,
+                    layout.get("contact_rail_exact") is not True,
+                    layout.get("manual_regions_fit") is not True,
+                    layout.get("silent_truncation") is not False,
+                    int(layout.get("page_count", 0)) < 1,
+                )
+            ):
+                raise ValueError(
+                    f"Circular PDF layout validation is incomplete: {relative}"
+                )
     return current_digest
 
 
@@ -843,6 +993,11 @@ def verify_visual_assessment(run_dir: Path) -> str:
     if not isinstance(assessment, dict):
         raise ValueError("Visual model-led assessment is missing")
     validate_schema(assessment, "visual_assessment.schema.json")
+    protocol = assessment["assessment_protocol"]
+    if protocol["template_sha256"] != prompt_template_digest(
+        "visual_assessment", protocol["assessment_template_version"]
+    ):
+        raise ValueError("Visual-assessment template digest mismatch")
     workbench = load_json(root / "content_workbench.json")
     if assessment["run_id"] != workbench["run_id"]:
         raise ValueError("Visual assessment run_id mismatch")
@@ -861,6 +1016,22 @@ def verify_visual_assessment(run_dir: Path) -> str:
         for row in assessment["slide_assessments"]
     ):
         raise ValueError("Visual assessment contains a weak or redundant slide")
+    manifest = load_json(root / "visual_manifest.json")
+    documents = [
+        (row["path"], row["layout_validation"]["page_count"])
+        for row in manifest.get("outputs", [])
+        if row.get("kind") == "client_circular_pdf"
+    ]
+    assessed_documents = [
+        (row["path"], row["assessed_page_count"])
+        for row in assessment["document_assessments"]
+    ]
+    if assessed_documents != documents:
+        raise ValueError(
+            "Visual assessment must cover every rendered document page once and in order"
+        )
+    if any(row["verdict"] != "ready" for row in assessment["document_assessments"]):
+        raise ValueError("Visual assessment contains a non-ready document")
     return record_digest
 
 
@@ -1016,6 +1187,7 @@ def validate_contribution_semantics(
     *,
     intake: dict[str, Any],
     source_register: dict[str, Any],
+    profile_revision_required: bool,
 ) -> None:
     """Enforce mechanical closure without deciding semantic professional meaning."""
 
@@ -1062,6 +1234,36 @@ def validate_contribution_semantics(
             raise ValueError(
                 "client_circular requires at least two structured sections"
             )
+        for note in draft["public_source_notes"]:
+            unknown_sources = set(note["source_ids"]) - source_ids
+            if unknown_sources:
+                raise ValueError(
+                    f"Draft {draft['channel']} public source note references unknown sources: {sorted(unknown_sources)}"
+                )
+            public_url = note.get("public_url")
+            if public_url:
+                registered_urls = {
+                    row.get("public_url")
+                    for row in source_register["sources"]
+                    if row["id"] in note["source_ids"] and row.get("public_url")
+                }
+                if public_url not in registered_urls:
+                    raise ValueError(
+                        f"Draft {draft['channel']} public source URL is not bound to its registered sources"
+                    )
+
+    source_note_channels = {"website_article", "newsletter", "client_circular"}
+    if intake.get("social_show_source_note"):
+        source_note_channels.add("linkedin")
+    for draft in drafts:
+        if (
+            contribution["recommendation"] == "publish"
+            and draft["channel"] in source_note_channels
+            and not draft["public_source_notes"]
+        ):
+            raise ValueError(
+                f"Draft {draft['channel']} requires an exact reviewed public source note"
+            )
 
     visual_story = contribution["visual_story"]
     slides = visual_story["slides"]
@@ -1094,6 +1296,14 @@ def validate_contribution_semantics(
                 (f"draft {draft['channel']} body", draft["body"]),
             ]
         )
+        for note in draft["public_source_notes"]:
+            public_texts.append(
+                (f"draft {draft['channel']} public source note", note["text"])
+            )
+            if note.get("public_url"):
+                public_texts.append(
+                    (f"draft {draft['channel']} public source URL", note["public_url"])
+                )
         for section in draft["sections"]:
             public_texts.extend(
                 [
@@ -1126,10 +1336,10 @@ def validate_contribution_semantics(
             raise ValueError(f"{label} exposes internal ids: {leaked}")
 
     profile_proposal = contribution["studio_profile_proposal"]
-    if intake["history_inputs"] and profile_proposal is None:
-        raise ValueError("Selected history requires a studio_profile_proposal")
-    if not intake["history_inputs"] and profile_proposal is not None:
-        raise ValueError("studio_profile_proposal requires selected history inputs")
+    if profile_revision_required and profile_proposal is None:
+        raise ValueError("This run requires a studio_profile_proposal")
+    if not profile_revision_required and profile_proposal is not None:
+        raise ValueError("No Studio-profile revision was requested for this run")
     if profile_proposal is not None:
         unknown_history = (
             set(profile_proposal["derived_from_history_ids"]) - history_ids
@@ -1139,6 +1349,8 @@ def validate_contribution_semantics(
                 "Studio profile references unknown history ids: "
                 f"{sorted(unknown_history)}"
             )
+        if not history_ids and profile_proposal["derived_from_history_ids"]:
+            raise ValueError("A new Studio profile cannot claim unselected history")
         expected_profile_paths = _profile_leaf_paths(profile_proposal)
         covered_profile_paths = [
             field_path
@@ -1161,6 +1373,10 @@ def validate_contribution_semantics(
                 raise ValueError(
                     "Studio profile provenance references unknown history ids: "
                     f"{sorted(unknown_evidence)}"
+                )
+            if record["basis"] == "observed_history" and not history_ids:
+                raise ValueError(
+                    "A Studio with no selected history cannot use observed_history provenance"
                 )
         document = profile_proposal["document"]
         layout = document["layout"]

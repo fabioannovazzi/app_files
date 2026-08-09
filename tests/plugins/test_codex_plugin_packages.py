@@ -37,6 +37,29 @@ COMMERCIALISTA_MODULE_NAMES = {
 STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara"}
 PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
 UNIFIED_PLUGIN_NAMES = {"vera"}
+VERA_DISCOVERY_TERMS = (
+    "commercialista",
+    "studi professionali",
+    "contabilità",
+    "controlli contabili",
+    "scritture contabili",
+    "riconciliazione bancaria",
+    "bilancio civilistico",
+    "ricerca fiscale",
+    "ricerca normativa",
+    "avvisi",
+    "cartelle",
+    "inps",
+    "registro imprese",
+    "dire",
+    "concordato",
+    "xbrl",
+    "oic",
+    "bandi",
+    "agevolazioni",
+    "comunicazione professionale",
+    "circolari clienti",
+)
 VERA_PUBLIC_PAGE_PATHS = (
     Path("static/shared/check-entries/index.html"),
     Path("static/shared/concordato-plan-review/index.html"),
@@ -397,6 +420,26 @@ def test_vera_source_manifest_uses_approved_subtitle() -> None:
     )
 
 
+@pytest.mark.parametrize("term", VERA_DISCOVERY_TERMS)
+def test_vera_source_manifest_preserves_discovery_term(term: str) -> None:
+    manifest = json.loads(
+        (ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    # This is a mechanical metadata contract, not a claim about marketplace rank.
+    discovery_text = " ".join(
+        (
+            manifest["description"],
+            manifest["interface"]["shortDescription"],
+            *manifest["keywords"],
+        )
+    ).casefold()
+    normalized_discovery_text = discovery_text.replace("-", " ")
+
+    assert term in normalized_discovery_text
+
+
 def test_vera_uses_one_public_skill_namespace() -> None:
     builder = load_builder()
     plugin_root = ROOT / "plugins" / "vera"
@@ -487,20 +530,22 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         .strip()
     )
     assert manifest["interface"]["longDescription"] == approved_description
-    assert "casi di concordato preventivo" in approved_description
-    assert "Quando riconosce una domanda legale" in approved_description
-    assert "identità e accesso della fonte" in approved_description
-    assert "supporto semantico" in approved_description
-    assert "Raccoglie, ordina e ritrova i documenti del cliente" in (
-        approved_description
-    )
+    assert len(approved_description.split()) <= 120
+    assert len(approved_description.split("\n\n")) == 3
+    assert "bilancio civilistico OIC" in approved_description
+    assert "concordato preventivo" in approved_description
+    assert "ricerche fiscali o normative" in approved_description
     assert "Cerca la corrispondenza del cliente." not in approved_description
-    assert "Il giudizio professionale resta al commercialista." in (
-        approved_description
-    )
+    assert "giudizio professionale restano al commercialista." in approved_description
     assert "New Client" not in approved_description
     assert "indicizzare" not in approved_description
     assert "consiglia Codex Desktop" not in approved_description
+    assert "sessioni host" not in approved_description
+    assert "claim assurance" not in approved_description
+    assert "token" not in approved_description
+    assert "Creative Production" not in approved_description
+    assert "commercialista" in manifest["keywords"]
+    assert "ricerca-fiscale" in manifest["keywords"]
 
     router_path = "skills/vera/SKILL.md"
     wrapper_path = "skills/studio-archive/SKILL.md"

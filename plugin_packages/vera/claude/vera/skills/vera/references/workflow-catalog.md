@@ -21,9 +21,12 @@ skill to imitate a missing operational workflow.
   advances, compensation, and other accounting evidence into reviewable
   workpapers.
 - `bandi-agevolazioni`: discover and monitor source-backed Italian grant,
-  subsidy, tax-credit, or subsidized-finance opportunities, match them to opaque
-  client profiles, and prepare a traceable application dossier after selection,
-  without contacting clients, authenticating, signing, or filing.
+  subsidy, tax-credit, or subsidized-finance opportunities through a reviewed
+  priority-source registry, a professionally reviewed query-scoped source
+  selection for every territory and category, and explicit temporal scans of
+  institutional sources before complementary semantic web search; match them to
+  opaque client profiles and prepare a traceable application dossier after
+  selection, without contacting clients, authenticating, signing, or filing.
 - `avviso-intake`: prepare first-intake analysis for Italian notices, avvisi,
   cartelle, HMRC letters, or Swiss cantonal tax letters.
 - `bilancio-xbrl-it`: understand accounting evidence and prepare, update,

@@ -37,6 +37,54 @@ EXTENSIONS = {
     "faq": ".md",
 }
 
+LABELS = {
+    "it": {
+        "subject": "Oggetto",
+        "sources": "Fonti",
+        "no_publish": "Nessuna pubblicazione consigliata",
+    },
+    "en": {
+        "subject": "Subject",
+        "sources": "Sources",
+        "no_publish": "No publication recommended",
+    },
+    "fr": {
+        "subject": "Objet",
+        "sources": "Sources",
+        "no_publish": "Publication non recommandée",
+    },
+    "de": {
+        "subject": "Betreff",
+        "sources": "Quellen",
+        "no_publish": "Keine Veröffentlichung empfohlen",
+    },
+    "es": {
+        "subject": "Asunto",
+        "sources": "Fuentes",
+        "no_publish": "No se recomienda publicar",
+    },
+}
+
+
+def _language_key(language: str) -> str:
+    """Select deterministic interface labels without judging content language."""
+
+    key = language.replace("_", "-").split("-", maxsplit=1)[0].lower()
+    return key if key in LABELS else "en"
+
+
+def _public_source_lines(draft: dict[str, Any]) -> list[str]:
+    """Return the exact reviewed public notes, preserving their public URLs."""
+
+    lines: list[str] = []
+    for note in draft["public_source_notes"]:
+        text = note["text"].strip()
+        public_url = str(note.get("public_url") or "").strip()
+        lines.append(
+            f"{text} — {public_url}" if public_url and public_url not in text else text
+        )
+    return lines
+
 
 def _artifact(
     root: Path, path: Path, *, kind: str, required_text: list[str] | None = None
@@ -69,6 +117,7 @@ def _website_html(
     brand: dict[str, str],
     profile: dict[str, Any],
     reference_date: str,
+    language: str,
 ) -> str:
     website = profile["website"]
     sections = "".join(
@@ -105,8 +154,28 @@ def _website_html(
     contact_html = (
         f'<footer class="contact">{html.escape(contact)}</footer>' if contact else ""
     )
+    source_items = "".join(
+        (
+            f'<li>{html.escape(note["text"])} — <a href="{html.escape(note["public_url"], quote=True)}">{html.escape(note["public_url"])}</a></li>'
+            if note.get("public_url") and note["public_url"] not in note["text"]
+            else f'<li>{html.escape(note["text"])}</li>'
+        )
+        for note in draft["public_source_notes"]
+    )
+    language_key = _language_key(language)
+    source_heading = (
+        website["source_heading"]
+        if language_key == "it"
+        else LABELS[language_key]["sources"]
+    )
+    source_block = (
+        f'<section class="sources"><h2>{html.escape(source_heading)}</h2><ul>{source_items}</ul></section>'
+        if source_items
+        else ""
+    )
+    html_language = html.escape(language.replace("_", "-"), quote=True)
     return f"""<!doctype html>
-<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="{html_language}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{html.escape(draft['title'])}</title><style>
 :root{{--primary:{brand['primary_color']};--accent:{brand['accent_color']};--background:{brand['background_color']};--text:{brand['text_color']}}}
 *{{box-sizing:border-box}}body{{margin:0;background:var(--background);color:var(--text);font-family:"Instrument Sans","Segoe UI",sans-serif;line-height:1.62}}
@@ -114,8 +183,8 @@ article{{max-width:820px;margin:0 auto;padding:72px 32px 96px}}header{{border-to
 .studio{{color:var(--primary);font-weight:650;letter-spacing:.02em}}h1{{font-size:clamp(2.35rem,6vw,4.6rem);line-height:.98;letter-spacing:-.045em;color:var(--primary);margin:.6rem 0 1.5rem}}
 .meta{{display:flex;gap:1rem;flex-wrap:wrap;color:#59636d;font-size:.92rem}}h2{{font-size:1.45rem;line-height:1.2;color:var(--primary);margin:2.8rem 0 1rem;padding-top:1rem;border-top:1px solid #d7dce2}}
 p,li{{font-size:1.05rem}}ul{{padding-left:1.2rem}}aside{{margin-top:3.5rem;padding:1.5rem 0;border-top:3px solid var(--accent);color:var(--primary);font-weight:550}}
-.sources{{margin-top:2.5rem;color:#59636d;font-size:.9rem}}.contact{{margin-top:2.5rem;padding-top:1rem;border-top:1px solid #d7dce2;color:#59636d;font-size:.9rem}}
-</style></head><body><article><header><div class="studio">{html.escape(brand['studio_name'])}</div><h1>{html.escape(draft['title'])}</h1><div class="meta"><span>{html.escape(byline)}</span>{update}</div></header>{sections}<p class="sources">{html.escape(website['source_note'])}</p><aside>{html.escape(website['cta'])}</aside>{contact_html}</article></body></html>"""
+.sources{{margin-top:2.5rem;color:#59636d;font-size:.9rem}}.sources h2{{font-size:1rem}}.sources li{{font-size:.9rem}}.contact{{margin-top:2.5rem;padding-top:1rem;border-top:1px solid #d7dce2;color:#59636d;font-size:.9rem}}
+</style></head><body><article><header><div class="studio">{html.escape(brand['studio_name'])}</div><h1>{html.escape(draft['title'])}</h1><div class="meta"><span>{html.escape(byline)}</span>{update}</div></header>{sections}{source_block}<aside>{html.escape(website['cta'])}</aside>{contact_html}</article></body></html>"""
 
 
 def _structured_plain_text(draft: dict[str, Any]) -> str:
@@ -129,12 +198,14 @@ def _structured_plain_text(draft: dict[str, Any]) -> str:
     return "\n\n".join(part for part in parts if part)
 
 
-def _structured_markdown(draft: dict[str, Any]) -> str:
+def _structured_markdown(draft: dict[str, Any], *, language: str) -> str:
     """Preserve body, headings, and bullets for every Markdown channel."""
 
     parts = [f"# {draft['title']}"]
     if draft.get("subject"):
-        parts.append(f"**Oggetto:** {draft['subject']}")
+        parts.append(
+            f"**{LABELS[_language_key(language)]['subject']}:** {draft['subject']}"
+        )
     if draft["body"].strip():
         parts.append(draft["body"].strip())
     for section in draft["sections"]:
@@ -144,10 +215,16 @@ def _structured_markdown(draft: dict[str, Any]) -> str:
         if section["bullets"]:
             block.append("\n".join(f"- {item}" for item in section["bullets"]))
         parts.append("\n\n".join(block))
+    source_lines = _public_source_lines(draft)
+    if source_lines:
+        parts.append(
+            f"## {LABELS[_language_key(language)]['sources']}\n\n"
+            + "\n".join(f"- {line}" for line in source_lines)
+        )
     return "\n\n".join(parts).rstrip() + "\n"
 
 
-def _draft_required_text(draft: dict[str, Any]) -> list[str]:
+def _draft_content_required_text(draft: dict[str, Any]) -> list[str]:
     values = [draft["title"], draft["body"][:80]]
     for section in draft["sections"]:
         values.extend([section["heading"], section["body"][:80]])
@@ -155,8 +232,16 @@ def _draft_required_text(draft: dict[str, Any]) -> list[str]:
     return [value for value in values if value]
 
 
+def _draft_required_text(draft: dict[str, Any]) -> list[str]:
+    return [*_draft_content_required_text(draft), *_public_source_lines(draft)]
+
+
 def _client_email_text(
-    draft: dict[str, Any], *, profile: dict[str, Any], include_attachment_note: bool
+    draft: dict[str, Any],
+    *,
+    profile: dict[str, Any],
+    include_attachment_note: bool,
+    language: str,
 ) -> str:
     email_profile = profile["email"]
     subject = draft.get("subject") or draft["title"]
@@ -164,10 +249,16 @@ def _client_email_text(
     subject_line = pattern.replace("{subject}", subject).replace(
         "{title}", draft["title"]
     )
-    parts = [f"Subject: {subject_line}"]
+    parts = [f"{LABELS[_language_key(language)]['subject']}: {subject_line}"]
     if email_profile["salutation"]:
         parts.append(email_profile["salutation"])
     parts.append(_structured_plain_text(draft))
+    source_lines = _public_source_lines(draft)
+    if source_lines:
+        parts.append(
+            f"{LABELS[_language_key(language)]['sources']}:\n"
+            + "\n".join(f"- {line}" for line in source_lines)
+        )
     if include_attachment_note and email_profile["attachment_note"]:
         parts.append(email_profile["attachment_note"])
     if email_profile["closing"]:
@@ -179,7 +270,12 @@ def _client_email_text(
 
 def _social_text(draft: dict[str, Any], *, profile: dict[str, Any]) -> str:
     social = profile["social"]
-    body = _structured_plain_text(draft)
+    body = f"{draft['title']}\n\n{_structured_plain_text(draft)}"
+    if social["show_source_note"]:
+        source_lines = _public_source_lines(draft)
+        if not source_lines:
+            raise ValueError("LinkedIn format requires reviewed public source notes")
+        body = f"{body}\n\n" + "\n".join(source_lines)
     hashtags = [tag for tag in social["hashtags"] if tag not in body]
     if hashtags:
         body = f"{body}\n\n{' '.join(hashtags)}"
@@ -388,7 +484,7 @@ def _package_communications_locked(root: Path) -> Path:
         recommendation_path = root / "no-publication-recommendation.md"
         atomic_write_text(
             recommendation_path,
-            "# No publication recommended\n\n"
+            f"# {LABELS[_language_key(intake['language'])]['no_publish']}\n\n"
             + contribution["recommendation_reason"].strip()
             + "\n",
         )
@@ -397,7 +493,7 @@ def _package_communications_locked(root: Path) -> Path:
                 root,
                 recommendation_path,
                 kind="no_publication_recommendation",
-                required_text=["# No publication recommended"],
+                required_text=[LABELS[_language_key(intake["language"])]["no_publish"]],
             )
         )
         target_status = "no_publication_recommended"
@@ -430,23 +526,40 @@ def _package_communications_locked(root: Path) -> Path:
                     brand=intake["brand_profile"],
                     profile=profile,
                     reference_date=intake["reference_date"],
+                    language=intake["language"],
                 )
                 required_text = [
                     "<article>",
-                    *(html.escape(value) for value in _draft_required_text(draft)),
+                    *(
+                        html.escape(value)
+                        for value in _draft_content_required_text(draft)
+                    ),
+                    *(
+                        html.escape(note["text"])
+                        for note in draft["public_source_notes"]
+                    ),
+                    *(
+                        html.escape(note["public_url"])
+                        for note in draft["public_source_notes"]
+                        if note.get("public_url")
+                    ),
                 ]
             elif channel == "client_email":
                 content = _client_email_text(
                     draft,
                     profile=profile,
                     include_attachment_note=circular_attachment_present,
+                    language=intake["language"],
                 )
-                required_text = ["Subject:", *_draft_required_text(draft)]
+                required_text = [
+                    f"{LABELS[_language_key(intake['language'])]['subject']}:",
+                    *_draft_required_text(draft),
+                ]
             elif channel == "linkedin":
                 content = _social_text(draft, profile=profile)
-                required_text = [draft["body"][:40]]
+                required_text = _draft_required_text(draft)
             else:
-                content = _structured_markdown(draft)
+                content = _structured_markdown(draft, language=intake["language"])
                 required_text = _draft_required_text(draft)
             atomic_write_text(path, content)
             artifacts.append(

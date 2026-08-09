@@ -24,6 +24,9 @@ For `publish`:
   IDs;
 - the master brief contains only conclusions represented in the claim set;
 - channel drafts adapt the same claim set to requested channels;
+- every channel draft carries its exact reviewed `public_source_notes`; the
+  packager may escape them for HTML but may not replace them with a generic
+  Studio sentence or silently omit a registered public URL;
 - `visual_story.decision` is `render` only when its stated incremental value is
   credible relative to the channel draft; otherwise it is `omit` with no
   slides;
@@ -42,8 +45,10 @@ For `publish`:
   asset; use `vera_default_proposal` for a proposed convention the evidence
   does not establish. Professional approval may adopt a default as the future
   Studio standard, but it does not make that convention historically observed;
-- `studio_profile_proposal` is present only when selected prior communications
-  were read. It covers voice plus document, email, website, social, letterhead,
+- `studio_profile_proposal` is present whenever the prepared run marks a profile
+  revision as required. A first Studio profile may be proposed without history,
+  but then `derived_from_history_ids` is empty and no field may use
+  `observed_history`. It covers voice plus document, email, website, social, letterhead,
   numbering, heading, byline, footer, sign-off, CTA conventions, PDF font
   family, margins, logo geometry, contact-rail geometry, type sizes, leading,
   and rule weight. Do not reduce studio format to logo and colors.
@@ -89,3 +94,8 @@ identify the authority and instrument and include the material date, number,
 version, or link needed to retrieve it. This remains a model-led,
 context-sensitive editorial judgment; deterministic validation only prevents
 empty notes and internal traceability IDs from being published.
+
+Generation, claim assurance, editorial assessment, and visual assessment use
+distinct host sessions and exact bundled prompt-template digests. The run
+records this as operator-attested host provenance and explicitly states that it
+is not a provider-authenticated model-call receipt.

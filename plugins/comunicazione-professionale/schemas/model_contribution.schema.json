@@ -45,7 +45,7 @@
           "additionalProperties": false,
           "required": ["derived_from_history_ids", "field_provenance", "voice", "document", "email", "website", "social"],
           "properties": {
-            "derived_from_history_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "derived_from_history_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
             "field_provenance": {
               "type": "array",
               "minItems": 1,
@@ -136,7 +136,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["channel", "title", "body", "claim_ids", "audience_note", "sections"],
+        "required": ["channel", "title", "body", "claim_ids", "audience_note", "public_source_notes", "sections"],
         "properties": {
           "channel": {"enum": ["client_email", "client_circular", "linkedin", "newsletter", "website_article", "client_alert", "faq"]},
           "title": {"type": "string", "minLength": 1, "maxLength": 500},
@@ -144,6 +144,20 @@
           "body": {"type": "string", "minLength": 1, "maxLength": 50000},
           "claim_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
           "audience_note": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "public_source_notes": {
+            "type": "array",
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source_ids", "text"],
+              "properties": {
+                "source_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+                "text": {"type": "string", "minLength": 20, "maxLength": 1000},
+                "public_url": {"type": "string", "format": "uri"}
+              }
+            }
+          },
           "circular_number": {"type": "string", "maxLength": 100},
           "recipient_line": {"type": "string", "maxLength": 300},
           "date_line": {"type": "string", "maxLength": 200},
@@ -286,12 +300,12 @@
     "websiteProfile": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["byline_pattern", "date_pattern", "heading_style", "source_note", "cta", "show_update_date"],
+      "required": ["byline_pattern", "date_pattern", "heading_style", "source_heading", "cta", "show_update_date"],
       "properties": {
         "byline_pattern": {"type": "string", "maxLength": 300},
         "date_pattern": {"type": "string", "maxLength": 100},
         "heading_style": {"enum": ["numbered", "editorial", "question_led"]},
-        "source_note": {"type": "string", "maxLength": 500},
+        "source_heading": {"type": "string", "minLength": 1, "maxLength": 120},
         "cta": {"type": "string", "maxLength": 500},
         "show_update_date": {"type": "boolean"}
       }

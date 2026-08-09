@@ -18,6 +18,11 @@ communications, and optional brand profile. Ask only when a missing choice
 changes the governing source, audience, channel, external destination, or
 authorized write scope.
 
+A Studio may start without prior communications. Build a complete proposed
+profile from explicit instructions, supplied brand facts, and Vera defaults;
+make that provenance visible and require professional acceptance before
+promotion. Never fabricate observed history to unlock formatting.
+
 ## Evidence and relevance
 
 Use model-led judgment to choose and rank sources, interpret the development,
@@ -44,6 +49,11 @@ practical use, professional limits, banality risk, and any visual's incremental
 value over the channel copy. Do not record a contribution until this second
 judgment is `ready`. Code verifies the binding and state; it never decides
 interestingness with keywords, scores, or fixed rules.
+
+Run generation, claim assurance, editorial assessment, and visual assessment in
+separate host sessions using the exact bundled versioned prompts. Bind their
+session IDs and prompt hashes. These are auditable runtime attestations, not
+provider-authenticated API-call logs.
 
 Set the comparison class deliberately high: the question is whether an exacting
 commercialista would be willing to put their name on the work, not whether it is
