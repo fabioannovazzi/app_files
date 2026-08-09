@@ -678,7 +678,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 11
+    expected_core_module_count = 14
 
     assert core.count('class="module-row"') == expected_core_module_count
     assert jurisdiction.count('data-jurisdiction-item="it"') == 7
@@ -687,6 +687,7 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
     for expected_href in (
         "../new-client/index.html#journey",
+        "#installa",
         "../studio-archive/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
@@ -698,6 +699,8 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
         "../deep-research-validator/index.html",
     ):
         assert f'href="{expected_href}"' in core
+    assert core.index('id="new-client"') < core.index('id="archive-organization"')
+    assert core.index('id="archive-organization"') < core.index('id="studio-archive"')
     for expected_href in (
         "../check-entries/index.html#italy-adapter",
         "../report-builder/index.html#italy-preset",
@@ -1083,7 +1086,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 21
+    expected_module_link_count = 24
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
@@ -1093,7 +1096,11 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     assert len(module_hrefs) == expected_module_link_count
     for href in module_hrefs:
         target = urlsplit(href)
-        target_path = (hub_path.parent / target.path).resolve()
+        target_path = (
+            hub_path
+            if not target.path
+            else (hub_path.parent / target.path).resolve()
+        )
         assert target_path.is_relative_to(SHARED_ROOT.resolve())
         assert target_path.is_file(), href
         if target.fragment:

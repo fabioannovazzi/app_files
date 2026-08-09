@@ -3228,8 +3228,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 13
-    assert core.count('class="module-row"') == 13
+    assert core.count(" data-module-link") == 14
+    assert core.count('class="module-row"') == 14
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -3320,6 +3320,8 @@ def test_vera_page_localizes_every_module_title() -> None:
 
     title_keys = (
         "module.newClient.title",
+        "module.archiveOrganization.title",
+        "module.archive.title",
         "module.sampling.title",
         "module.entries.title",
         "module.bank.title",
@@ -3347,6 +3349,35 @@ def test_vera_page_localizes_every_module_title() -> None:
         "pacchetto corretto",
     ):
         assert untranslated_italian_copy not in page
+
+
+def test_vera_page_places_reviewed_archive_organization_between_intake_and_search() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    organization = re.search(
+        r'<a[^>]+id="archive-organization".*?</a>',
+        page,
+        flags=re.DOTALL,
+    )
+
+    assert organization is not None
+    assert 'href="#installa"' in organization.group(0)
+    assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
+    assert 'data-i18n="module.archiveOrganization"' in organization.group(0)
+    assert page.index('id="new-client"') < page.index('id="archive-organization"')
+    assert page.index('id="archive-organization"') < page.index('id="studio-archive"')
+    for required_concept in (
+        "Google Workspace",
+        "duplicati",
+        "approva prima di ogni modifica",
+        "può ripristinarlo",
+        "can roll it back",
+        "peut le rétablir",
+        "kann sie zurücksetzen",
+        "puede revertirlo",
+    ):
+        assert required_concept in page
 
 
 def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
@@ -3381,14 +3412,19 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "adjusted EBITDA" in page
     assert "net debt" in page
     for localized_count in (
+        "Diciassette funzioni",
+        "Seventeen capabilities",
+        "Dix-sept fonctions",
+        "Siebzehn Funktionen",
+        "Diecisiete funciones",
+    ):
+        assert localized_count in page
+    for stale_count in (
         "Sedici funzioni",
         "Sixteen capabilities",
         "Seize fonctions",
         "Sechzehn Funktionen",
         "Dieciséis funciones",
-    ):
-        assert localized_count in page
-    for stale_count in (
         "Quattordici funzioni",
         "Fourteen capabilities",
         "Quatorze fonctions",
