@@ -15,6 +15,11 @@ __all__ = ["main"]
 
 LOGGER = logging.getLogger(__name__)
 PACKAGE_IMPORTS = {
+    "google-api-core": "google.api_core",
+    "google-api-python-client": "googleapiclient",
+    "google-auth": "google.auth",
+    "google-auth-oauthlib": "google_auth_oauthlib",
+    "protobuf": "google.protobuf",
     "huggingface-hub": "huggingface_hub",
     "numpy": "numpy",
     "openpyxl": "openpyxl",

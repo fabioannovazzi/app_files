@@ -2,6 +2,7 @@
   "schema_version": 1,
   "plugins": [
     "audit-reconciliation",
+    "archive-organization",
     "client-file-preparation",
     "new-client",
     "journal-sampling",

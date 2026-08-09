@@ -1,11 +1,13 @@
 # Vera · Archivio dello Studio
 
 This Vera component owns the portable customer-folder ledger used by local
-Codex workflows. Its three evidence routes search one selected client's Gmail
-correspondence in ChatGPT or Codex through the separately connected OpenAI
-Gmail connector. Codex Desktop additionally inspects one verified one-to-one
-chat in the local WhatsApp application through Computer Use or makes one shared
-studio folder searchable without a shared ChatGPT account or central database.
+Codex workflows. It has four independent evidence routes. In ChatGPT or Codex,
+the separately connected OpenAI Gmail connector searches one selected client's
+correspondence. Codex Desktop can additionally inspect one verified one-to-one
+chat in the local WhatsApp application through Computer Use, make one shared
+studio folder searchable without a shared ChatGPT account or central database,
+or bind one client to a My Drive or Shared Drive folder for native Drive
+snapshots and transient evidence opening.
 
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in Codex Desktop. Each computer builds its own
@@ -88,6 +90,19 @@ sends, replies, forwards, downloads, exports, or changes settings. There is no
 Mparanza WhatsApp webhook, connector, database, background synchronization, or
 retention period. Opening a chat may mark messages as read.
 
+Google Drive mode uses Drive API v3 with the restricted
+`https://www.googleapis.com/auth/drive` scope. It stores the refresh token only
+in the owner-only Studio Archive state directory, binds one stable Vera client
+ID to one exact Drive folder ID, and supports Shared Drive listings. Snapshot
+records stable file and parent IDs, version, MIME type, capabilities, and
+available binary checksums; shortcuts are skipped. Opening evidence revalidates
+the immutable snapshot, transiently downloads a supported binary or exports a
+common Google-native document, extracts bounded text, and deletes the temporary
+bytes. Riordino archivio performs any later parent/name changes only after its
+persistent review and separate explicit apply approval. A public or
+multi-tenant deployment must complete Google's applicable OAuth verification
+and security assessment.
+
 For a Gmail question, Vera first verifies the connected account, selects one
 client, and either uses an address supplied by the user or runs a bounded
 candidate search and asks for one address confirmation. It then searches again
@@ -143,6 +158,11 @@ python scripts/studio_archive.py refresh
 python scripts/studio_archive.py status
 python scripts/studio_archive.py clients
 python scripts/studio_archive.py client-folder --client-id client_...
+python scripts/studio_archive.py authorize-google-drive --client-secrets /private/path/oauth-client.json
+python scripts/studio_archive.py google-drive-status
+python scripts/studio_archive.py bind-google-drive --client-id client_... --folder-id DRIVE_FOLDER_ID
+python scripts/studio_archive.py snapshot-google-drive --client-id client_... --engagement-id eng_...
+python scripts/studio_archive.py open-google-drive --client-id client_... --engagement-id eng_... --snapshot-input-id input_... --file-id DRIVE_FILE_ID
 python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
 python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 analysis"
 python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/source.xlsx --role source

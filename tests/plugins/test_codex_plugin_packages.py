@@ -15,6 +15,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 BUILD_SCRIPT = ROOT / "scripts" / "build_codex_plugin_zip.py"
 COMMERCIALISTA_MODULE_NAMES = {
+    "archive-organization",
     "audit-reconciliation",
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
@@ -202,6 +203,12 @@ def test_plugin_scripts_do_not_call_model_apis_except_voice() -> None:
 
 
 NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
+    "archive-organization": (
+        "validate_archive_organization_review",
+        "render_archive_organization_review",
+        "save_archive_organization_decisions",
+        "apply_archive_organization_decisions",
+    ),
     "audit-reconciliation": (
         "validate_audit_reconciliation_review",
         "render_audit_reconciliation_review",
@@ -512,7 +519,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.109"
+    assert manifest["version"] == "0.1.110"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -706,7 +713,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 24
+        assert len(card_bodies) == 25
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -4293,6 +4300,9 @@ def test_reporting_component_manifests_use_clara_homepage() -> None:
 
 def test_standard_family_plugin_manifests_use_family_homepages() -> None:
     expected_homepages = {
+        "archive-organization": (
+            "https://mparanza.com/static/shared/vera/index.html?lang=it"
+        ),
         "audit-reconciliation": (
             "https://mparanza.com/static/shared/riconciliazione-partite/index.html"
         ),

@@ -10,6 +10,7 @@ __all__ = ["adapter_config", "main", "render_target"]
 ROOT = Path(__file__).resolve().parents[1]
 LOGGER = logging.getLogger(__name__)
 SAVE_TOOLS = {
+    "archive-organization": "save_archive_organization_decisions",
     "check-entries": "save_check_entries_decisions",
     "deep-research-validator": "save_deep_research_decisions",
     "client-file-preparation": "save_client_file_preparation_decisions",
@@ -22,6 +23,7 @@ SAVE_TOOLS = {
     "concordato-plan-review": "save_concordato_plan_decisions",
 }
 APPLY_TOOLS = {
+    "archive-organization": "apply_archive_organization_decisions",
     "check-entries": "apply_check_entries_decisions",
     "deep-research-validator": "apply_deep_research_decisions",
     "client-file-preparation": "apply_client_file_preparation_decisions",
@@ -36,6 +38,116 @@ APPLY_TOOLS = {
 
 
 TARGETS: list[dict[str, Any]] = [
+    {
+        "plugin": "archive-organization",
+        "asset": "archive-organization-review-widget.html",
+        "title": "Vera · Archive Organization",
+        "reviewTitle": "Client Folder Organization Review",
+        "queueTitle": "Files to Review",
+        "detailTitle": "File Decision",
+        "detailMode": "intake-board",
+        "detailHelp": "Review the current path, proposed destination, duplicate evidence, anomalies, and confidence before any filesystem action.",
+        "detailGroups": [
+            {
+                "title": "Current File",
+                "variant": "document",
+                "fields": ["source_path", "proposed_action", "category", "confidence"],
+                "empty": "No source-file fields.",
+            },
+            {
+                "title": "Proposed Destination",
+                "variant": "draft",
+                "fields": ["target_path", "blocked_reasons", "edit_hint"],
+                "empty": "No proposed destination.",
+            },
+            {
+                "title": "Duplicate and Anomaly Evidence",
+                "variant": "finding",
+                "fields": ["exact_duplicate_of", "probable_duplicate_of", "anomalies"],
+                "empty": "No duplicate or anomaly evidence.",
+            },
+        ],
+        "search": "Search current path, destination, category, duplicate, anomaly",
+        "panels": ["Current file", "Proposed destination", "Evidence"],
+        "requiresReviewerAlias": True,
+        "demo": {
+            "review_type": "archive_organization_review",
+            "items": [
+                {
+                    "id": "file.demo-36bis",
+                    "item_type": "archive_file_proposal",
+                    "title": "cliente/Comunicazione_36bis_2024.pdf",
+                    "source_path": "cliente/Comunicazione_36bis_2024.pdf",
+                    "output_path": "AdE/2024/36-bis/2024-06-14_comunicazione-36-bis_Example-Srl.pdf",
+                    "allowed_actions": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "skip",
+                    ],
+                    "recommended_action": "accept",
+                    "data": {
+                        "source_path": "cliente/Comunicazione_36bis_2024.pdf",
+                        "proposed_action": "move",
+                        "target_path": "AdE/2024/36-bis/2024-06-14_comunicazione-36-bis_Example-Srl.pdf",
+                        "category": "ade",
+                        "confidence": "high",
+                        "target_artifact": "approved_plan.json",
+                        "target_id_field": "item_id",
+                        "target_record_id": "file.demo-36bis",
+                        "target_field": "target_relative_path",
+                        "edit_hint": "Editing changes the client-relative destination path.",
+                    },
+                    "evidence": [
+                        {
+                            "kind": "semantic_classification",
+                            "reason": "The readable document identifies a 36-bis communication.",
+                        },
+                        {
+                            "kind": "deterministic_identity",
+                            "sha256": "demo",
+                            "byte_count": 12000,
+                        },
+                    ],
+                },
+                {
+                    "id": "file.demo-duplicate",
+                    "item_type": "exact_duplicate_proposal",
+                    "title": "Downloads/Comunicazione_36bis_copia.pdf",
+                    "source_path": "Downloads/Comunicazione_36bis_copia.pdf",
+                    "output_path": "Da_verificare/Duplicati_esatti/run_demo/Downloads/Comunicazione_36bis_copia.pdf",
+                    "allowed_actions": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "skip",
+                    ],
+                    "recommended_action": "mark_unclear",
+                    "data": {
+                        "source_path": "Downloads/Comunicazione_36bis_copia.pdf",
+                        "proposed_action": "quarantine_exact_duplicate",
+                        "target_path": "Da_verificare/Duplicati_esatti/run_demo/Downloads/Comunicazione_36bis_copia.pdf",
+                        "exact_duplicate_of": "cliente/Comunicazione_36bis_2024.pdf",
+                        "confidence": "high",
+                        "target_artifact": "approved_plan.json",
+                        "target_id_field": "item_id",
+                        "target_record_id": "file.demo-duplicate",
+                        "target_field": "target_relative_path",
+                        "edit_hint": "Accept quarantines but never deletes the exact duplicate.",
+                    },
+                    "evidence": [
+                        {
+                            "kind": "deterministic_identity",
+                            "sha256": "same-demo-hash",
+                            "byte_count": 12000,
+                        }
+                    ],
+                },
+            ],
+        },
+    },
     {
         "plugin": "check-entries",
         "asset": "check-entries-review-widget.html",
@@ -2472,6 +2584,52 @@ GROUP_I18N: dict[str, dict[str, str]] = {
 
 
 WORKFLOW_I18N: dict[str, dict[str, dict[str, str]]] = {
+    "archive-organization": {
+        "es": {
+            "title": "Vera · Organización del archivo",
+            "reviewTitle": "Revisión de la carpeta del cliente",
+            "queueTitle": "Archivos para revisar",
+            "detailTitle": "Decisión sobre el archivo",
+            "detailHelp": "Revise la ruta actual, el destino propuesto, duplicados, anomalías y confianza antes de modificar archivos.",
+            "search": "Buscar ruta, destino, categoría, duplicado, anomalía",
+            "reviewerAlias": "Revisor",
+            "reviewerAliasHelp": "Use una referencia estable del colaborador responsable. No introduzca credenciales ni datos de sesión.",
+            "reviewerAliasInvalid": "La referencia del revisor debe ser breve y no contener credenciales ni datos de sesión.",
+        },
+        "it": {
+            "title": "Vera · Riordino archivio",
+            "reviewTitle": "Revisione riordino cartella cliente",
+            "queueTitle": "File da rivedere",
+            "detailTitle": "Decisione file",
+            "detailHelp": "Rivedi percorso attuale, destinazione proposta, duplicati, anomalie e confidenza prima di qualsiasi modifica ai file.",
+            "search": "Cerca percorso, destinazione, categoria, duplicato, anomalia",
+            "reviewerAlias": "Revisore",
+            "reviewerAliasHelp": "Usa un riferimento stabile del collaboratore responsabile del cliente. Non inserire credenziali o dati di sessione.",
+            "reviewerAliasInvalid": "Il riferimento del revisore deve essere breve e non contenere credenziali o dati di sessione.",
+        },
+        "fr": {
+            "title": "Vera · Organisation des archives",
+            "reviewTitle": "Revue du dossier client",
+            "queueTitle": "Fichiers à revoir",
+            "detailTitle": "Décision sur le fichier",
+            "detailHelp": "Examinez le chemin actuel, la destination proposée, les doublons, les anomalies et le niveau de confiance avant toute modification.",
+            "search": "Chercher chemin, destination, catégorie, doublon, anomalie",
+            "reviewerAlias": "Réviseur",
+            "reviewerAliasHelp": "Utilisez une référence stable du collaborateur responsable. Ne saisissez ni identifiants ni données de session.",
+            "reviewerAliasInvalid": "La référence du réviseur doit être courte et ne contenir ni identifiants ni données de session.",
+        },
+        "de": {
+            "title": "Vera · Archiv organisieren",
+            "reviewTitle": "Prüfung des Mandantenordners",
+            "queueTitle": "Zu prüfende Dateien",
+            "detailTitle": "Dateientscheidung",
+            "detailHelp": "Prüfen Sie aktuellen Pfad, vorgeschlagenes Ziel, Duplikate, Auffälligkeiten und Konfidenz vor jeder Dateiänderung.",
+            "search": "Pfad, Ziel, Kategorie, Duplikat, Auffälligkeit suchen",
+            "reviewerAlias": "Prüfer",
+            "reviewerAliasHelp": "Verwenden Sie eine stabile Referenz des verantwortlichen Mitarbeiters. Keine Zugangsdaten oder Sitzungsdaten eingeben.",
+            "reviewerAliasInvalid": "Die Prüferreferenz muss kurz sein und darf keine Zugangsdaten oder Sitzungsdaten enthalten.",
+        },
+    },
     "check-entries": {
         "es": {
             "title": "Revisión de Check Entries",

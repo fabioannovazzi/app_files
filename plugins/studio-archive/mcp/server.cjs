@@ -21,6 +21,11 @@ const TOOL_NAMES = {
   createClient: "create_studio_archive_client",
   createEngagement: "create_studio_client_engagement",
   importDocument: "import_studio_client_document",
+  snapshotFolder: "snapshot_studio_client_folder",
+  googleDriveStatus: "studio_archive_google_drive_status",
+  bindGoogleDrive: "bind_studio_client_google_drive",
+  snapshotGoogleDrive: "snapshot_studio_client_google_drive",
+  openGoogleDrive: "open_studio_google_drive_source",
   engagements: "list_studio_client_engagements",
   prepareWorkflow: "prepare_studio_client_workflow",
   startCheckEntriesFromSample: "start_check_entries_from_sample",
@@ -42,6 +47,7 @@ const TOOL_NAMES = {
 };
 const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "audit-reconciliation",
+  "archive-organization",
   "client-file-preparation",
   "new-client",
   "journal-sampling",
@@ -83,12 +89,12 @@ function runIdentitySchema() {
   ]);
 }
 
-function annotations(readOnly, idempotent = true) {
+function annotations(readOnly, idempotent = true, openWorld = false) {
   return {
     readOnlyHint: readOnly,
     destructiveHint: false,
     idempotentHint: idempotent,
-    openWorldHint: false,
+    openWorldHint: openWorld,
   };
 }
 
@@ -187,6 +193,76 @@ function toolDefinitions() {
         ["client_id", "source_path", "role", "engagement_id"],
       ),
       annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.snapshotFolder,
+      title: "Snapshot one Studio Archive client folder",
+      description:
+        "After selecting one registered client and open engagement, hash a bounded client-folder view and import only its JSON receipt. Client documents are not copied or moved.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+        },
+        ["client_id", "engagement_id"],
+      ),
+      annotations: annotations(false, false),
+    },
+    {
+      name: TOOL_NAMES.googleDriveStatus,
+      title: "Check Studio Archive Google Drive status",
+      description:
+        "Read whether a private Google Drive OAuth token and exact client-folder bindings are present. This does not call Google Drive.",
+      inputSchema: objectSchema({}),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.bindGoogleDrive,
+      title: "Bind one client to one Google Drive folder",
+      description:
+        "After explicit client and Google Drive folder selection, validate the remote folder ID and persist a one-to-one private binding. This calls Google Drive but does not move documents.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          folder_id: {
+            type: "string",
+            pattern: "^[A-Za-z0-9_-]{3,256}$",
+            description: "Exact Google Drive client-folder ID selected by the user.",
+          },
+        },
+        ["client_id", "folder_id"],
+      ),
+      annotations: annotations(false, false, true),
+    },
+    {
+      name: TOOL_NAMES.snapshotGoogleDrive,
+      title: "Snapshot one bound Google Drive client folder",
+      description:
+        "Recursively read one exact bound My Drive or Shared Drive folder, record stable IDs, versions, parents, capabilities, and available checksums, and import only the JSON receipt into the selected engagement.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+        },
+        ["client_id", "engagement_id"],
+      ),
+      annotations: annotations(false, false, true),
+    },
+    {
+      name: TOOL_NAMES.openGoogleDrive,
+      title: "Open one snapshotted Google Drive source",
+      description:
+        "Revalidate one exact Drive file ID against an immutable engagement snapshot, download or export it transiently, extract bounded citable text, and delete the temporary bytes. This never changes Drive.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+          snapshot_input_id: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+          file_id: { type: "string", pattern: "^[A-Za-z0-9_-]{3,256}$" },
+        },
+        ["client_id", "engagement_id", "snapshot_input_id", "file_id"],
+      ),
+      annotations: annotations(true, true, true),
     },
     {
       name: TOOL_NAMES.createEngagement,
@@ -813,6 +889,91 @@ function commandForTool(name, rawArgs) {
       clientId,
       "--engagement-label",
       requireString(args.engagement_label, "engagement_label"),
+    ];
+  }
+  if (name === TOOL_NAMES.snapshotFolder) {
+    assertOnlyKeys(args, new Set(["client_id", "engagement_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    return [
+      "snapshot-client-folder",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+    ];
+  }
+  if (name === TOOL_NAMES.googleDriveStatus) {
+    assertOnlyKeys(args, new Set());
+    return ["google-drive-status"];
+  }
+  if (name === TOOL_NAMES.bindGoogleDrive) {
+    assertOnlyKeys(args, new Set(["client_id", "folder_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    const folderId = requireString(args.folder_id, "folder_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^[A-Za-z0-9_-]{3,256}$/.test(folderId)) {
+      throw new Error("folder_id must be an exact Google Drive folder ID.");
+    }
+    return ["bind-google-drive", "--client-id", clientId, "--folder-id", folderId];
+  }
+  if (name === TOOL_NAMES.snapshotGoogleDrive) {
+    assertOnlyKeys(args, new Set(["client_id", "engagement_id"]));
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    return [
+      "snapshot-google-drive",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+    ];
+  }
+  if (name === TOOL_NAMES.openGoogleDrive) {
+    assertOnlyKeys(
+      args,
+      new Set(["client_id", "engagement_id", "snapshot_input_id", "file_id"]),
+    );
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    const inputId = requireString(args.snapshot_input_id, "snapshot_input_id");
+    const fileId = requireString(args.file_id, "file_id");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
+      throw new Error("snapshot_input_id is invalid.");
+    }
+    if (!/^[A-Za-z0-9_-]{3,256}$/.test(fileId)) {
+      throw new Error("file_id is invalid.");
+    }
+    return [
+      "open-google-drive",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+      "--snapshot-input-id",
+      inputId,
+      "--file-id",
+      fileId,
     ];
   }
   if (name === TOOL_NAMES.engagements) {

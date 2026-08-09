@@ -26,6 +26,7 @@ from vera_assurance import (  # noqa: E402
 )
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("archive-organization", "archive_organization.py"),
     ("audit-reconciliation", "audit_assurance.py"),
     ("audit-reconciliation", "build_missing_evidence_requests.py"),
     ("audit-reconciliation", "build_review_sample.py"),
@@ -101,6 +102,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 )
 
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
+    ("archive-organization", "check_dependencies.py"),
     ("audit-reconciliation", "check_dependencies.py"),
     ("client-file-preparation", "check_dependencies.py"),
     ("client-file-preparation", "check_environment.py"),
@@ -342,6 +344,8 @@ def test_client_workflow_registry_covers_every_vera_component() -> None:
 
     assert set(VERA_CLIENT_WORKFLOW_IDS) == set(components["plugins"]) - {
         "bilancio-xbrl-it",
+        "comunicazione-professionale",
+        "presenza-digitale-studio",
         "studio-archive",
     }
 

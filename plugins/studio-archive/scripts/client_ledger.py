@@ -34,6 +34,7 @@ __all__ = [
     "ARTIFACT_AUDIENCES",
     "CLIENT_MANIFEST_SCHEMA",
     "ENGAGEMENT_MANIFEST_SCHEMA",
+    "FOLDER_SNAPSHOT_SCHEMA",
     "INPUT_RECEIPT_SCHEMA",
     "LEDGER_DIRECTORY",
     "LedgerError",
@@ -57,6 +58,7 @@ __all__ = [
     "load_run",
     "prepare_run",
     "retention_report",
+    "snapshot_client_folder",
     "start_run",
     "validate_run_artifacts",
 ]
@@ -66,6 +68,7 @@ LEDGER_DIRECTORY = "Vera"
 CLIENT_MANIFEST_SCHEMA = "vera.customer_folder.v1"
 ENGAGEMENT_MANIFEST_SCHEMA = "vera.engagement.v1"
 INPUT_RECEIPT_SCHEMA = "vera.input_receipt.v1"
+FOLDER_SNAPSHOT_SCHEMA = "vera.archive_folder_snapshot.v1"
 INPUT_MANIFEST_SCHEMA = "vera.run_inputs.v1"
 RUN_CONTEXT_SCHEMA = "vera.client_workflow_context.v2"
 RUN_MANIFEST_SCHEMA = "vera.workflow_run.v1"
@@ -102,6 +105,8 @@ _MAX_JSON_BYTES = 16 * 1024 * 1024
 _MAX_INPUTS = 10_000
 _MAX_RUNS = 50_000
 _MAX_ARTIFACTS = 20_000
+_MAX_FOLDER_SNAPSHOT_FILES = 5_000
+_MAX_FOLDER_SNAPSHOT_BYTES = 2 * 1024 * 1024 * 1024
 _ENGAGEMENT_LOCK_NAME = ".vera-engagement.lock"
 _ENGAGEMENT_LOCK_CONTENT = b"Vera engagement mutation lock\n"
 _ENGAGEMENT_THREAD_LOCKS_GUARD = threading.Lock()
@@ -948,6 +953,133 @@ def import_document(
             "original_preserved": True,
             "source_archive_mutated": True,
         }
+
+
+def snapshot_client_folder(
+    client_root: Path,
+    client_id: str,
+    engagement_id: str,
+    *,
+    max_files: int = _MAX_FOLDER_SNAPSHOT_FILES,
+    max_total_bytes: int = _MAX_FOLDER_SNAPSHOT_BYTES,
+) -> dict[str, Any]:
+    """Create and import one bounded, immutable client-folder snapshot receipt."""
+
+    root = _ordinary_directory(client_root, label="client folder")
+    client = load_client_manifest(root)
+    engagement = load_engagement_manifest(root, engagement_id)
+    if client["client_id"] != client_id or engagement["client_id"] != client_id:
+        raise LedgerError("Selected client and engagement do not match.")
+    if engagement["status"] != "open":
+        raise LedgerError("A closed engagement cannot receive a folder snapshot.")
+    if (
+        not isinstance(max_files, int)
+        or isinstance(max_files, bool)
+        or not 1 <= max_files <= _MAX_FOLDER_SNAPSHOT_FILES
+        or not isinstance(max_total_bytes, int)
+        or isinstance(max_total_bytes, bool)
+        or not 1 <= max_total_bytes <= _MAX_FOLDER_SNAPSHOT_BYTES
+    ):
+        raise LedgerError("Folder snapshot bounds are invalid.")
+
+    files: list[dict[str, Any]] = []
+    excluded: list[dict[str, str]] = []
+    total_bytes = 0
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        for entry in sorted(
+            directory.iterdir(), key=lambda item: (item.name.casefold(), item.name)
+        ):
+            relative = entry.relative_to(root).as_posix()
+            if relative == LEDGER_DIRECTORY or relative.startswith(
+                f"{LEDGER_DIRECTORY}/"
+            ):
+                continue
+            observed = entry.lstat()
+            if entry.is_symlink():
+                excluded.append({"relative_path": relative, "reason": "symbolic_link"})
+                continue
+            if stat.S_ISDIR(observed.st_mode):
+                pending.append(entry)
+                continue
+            if entry.name == ".DS_Store":
+                excluded.append(
+                    {"relative_path": relative, "reason": "system_metadata"}
+                )
+                continue
+            if not stat.S_ISREG(observed.st_mode):
+                excluded.append(
+                    {"relative_path": relative, "reason": "non_regular_entry"}
+                )
+                continue
+            if len(files) >= max_files:
+                raise LedgerError(
+                    f"Client folder exceeds the {max_files}-file snapshot boundary."
+                )
+            byte_count, sha256 = _stable_file_identity(
+                entry,
+                label="client folder snapshot source",
+            )
+            total_bytes += byte_count
+            if total_bytes > max_total_bytes:
+                raise LedgerError(
+                    "Client folder exceeds the bounded snapshot byte total."
+                )
+            files.append(
+                {
+                    "relative_path": relative,
+                    "byte_count": byte_count,
+                    "modified_ns": observed.st_mtime_ns,
+                    "sha256": sha256,
+                }
+            )
+    files.sort(
+        key=lambda item: (item["relative_path"].casefold(), item["relative_path"])
+    )
+    excluded.sort(
+        key=lambda item: (item["relative_path"].casefold(), item["relative_path"])
+    )
+    content = {
+        "schema_version": FOLDER_SNAPSHOT_SCHEMA,
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "captured_at": _now_iso(),
+        "file_count": len(files),
+        "total_bytes": total_bytes,
+        "files": files,
+        "excluded": excluded,
+    }
+    snapshot = {**content, "content_sha256": _canonical_json_sha256(content)}
+    engagement_root = _engagement_root(root, engagement_id)
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".vera-folder-snapshot-",
+        suffix=".json",
+        dir=engagement_root,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(snapshot, handle, ensure_ascii=False, indent=2, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        imported = import_document(
+            root,
+            client_id,
+            engagement_id,
+            temporary,
+            "source",
+        )
+    finally:
+        temporary.unlink(missing_ok=True)
+    return {
+        "status": imported["status"],
+        "snapshot": snapshot,
+        "receipt": imported["receipt"],
+        "input_id": imported["receipt"]["input_id"],
+        "source_archive_mutated": imported["source_archive_mutated"],
+    }
 
 
 def _validate_artifact_record(record: Mapping[str, Any]) -> dict[str, Any]:

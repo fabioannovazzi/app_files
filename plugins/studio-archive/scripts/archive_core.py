@@ -47,6 +47,7 @@ if str(_SCRIPT_DIRECTORY) not in sys.path:
     sys.path.insert(0, str(_SCRIPT_DIRECTORY))
 
 import client_ledger as ledger  # noqa: E402
+import google_drive as drive  # noqa: E402
 from vera_assurance import (  # noqa: E402
     JOURNAL_SAMPLING_CHECK_ENTRIES_HANDOFF,
     VERA_CLIENT_WORKFLOW_IDS,
@@ -66,11 +67,14 @@ __all__ = [
     "fail_studio_client_workflow",
     "finalize_studio_client_workflow",
     "get_studio_client_folder",
+    "authorize_studio_google_drive",
+    "bind_studio_client_google_drive",
     "import_studio_client_document",
     "list_studio_client_engagements",
     "list_studio_client_identities",
     "match_studio_email_client",
     "open_archive_source",
+    "open_studio_google_drive_source",
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
     "recover_studio_client_ledger",
@@ -78,9 +82,12 @@ __all__ = [
     "report_studio_client_retention",
     "search_archive",
     "set_studio_client_identity",
+    "snapshot_studio_client_folder",
+    "snapshot_studio_client_google_drive",
     "start_check_entries_from_sample",
     "start_studio_client_workflow",
     "studio_archive_status",
+    "studio_google_drive_status",
 ]
 
 SCHEMA_VERSION = "2"
@@ -90,6 +97,18 @@ STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
 DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
 CLIENT_IDENTITIES_FILENAME = "client-identities.json"
+GOOGLE_DRIVE_BINDINGS_FILENAME = "google-drive-bindings.json"
+GOOGLE_DRIVE_AUTH_FILENAME = "google-drive-token.json"
+GOOGLE_DRIVE_BINDINGS_SCHEMA = "vera.studio_archive_google_drive_bindings.v1"
+GOOGLE_DRIVE_EXPORTS = {
+    "application/vnd.google-apps.document": ("text/plain", ".txt"),
+    "application/vnd.google-apps.spreadsheet": (
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        ".xlsx",
+    ),
+    "application/vnd.google-apps.presentation": ("application/pdf", ".pdf"),
+    "application/vnd.google-apps.drawing": ("application/pdf", ".pdf"),
+}
 DATABASE_FILENAME = "archive.sqlite3"
 MANAGED_ENGAGEMENTS_DIRECTORY = ledger.LEDGER_DIRECTORY
 
@@ -374,6 +393,14 @@ def _config_path(state_dir: Path) -> Path:
 
 def _client_identities_path(state_dir: Path) -> Path:
     return state_dir / CLIENT_IDENTITIES_FILENAME
+
+
+def _google_drive_bindings_path(state_dir: Path) -> Path:
+    return state_dir / GOOGLE_DRIVE_BINDINGS_FILENAME
+
+
+def _google_drive_token_path(state_dir: Path) -> Path:
+    return state_dir / GOOGLE_DRIVE_AUTH_FILENAME
 
 
 def _database_path(state_dir: Path) -> Path:
@@ -1285,6 +1312,533 @@ def create_studio_client_engagement(
         "engagement": {**engagement, "imports": []},
         "input_dir": str(input_root.resolve(strict=True)),
         "source_archive_mutated": True,
+    }
+
+
+def snapshot_studio_client_folder(
+    client_id: str,
+    engagement_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Capture and import a bounded file-identity snapshot for one client folder."""
+
+    private_state = _state_dir(state_dir)
+    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    try:
+        result = ledger.snapshot_client_folder(root, client_id, engagement_id)
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Client-folder snapshot failed: {exc}") from exc
+    return {
+        "status": result["status"],
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "input_id": result["input_id"],
+        "input_receipt": result["receipt"],
+        "snapshot_summary": {
+            "captured_at": result["snapshot"]["captured_at"],
+            "file_count": result["snapshot"]["file_count"],
+            "total_bytes": result["snapshot"]["total_bytes"],
+            "excluded": result["snapshot"]["excluded"],
+            "content_sha256": result["snapshot"]["content_sha256"],
+        },
+        "documents_copied": False,
+        "source_archive_mutated": result["source_archive_mutated"],
+    }
+
+
+def _drive_bindings_digest(content: Mapping[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            content,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def _load_google_drive_bindings(state_dir: Path) -> list[dict[str, Any]]:
+    path = _google_drive_bindings_path(state_dir)
+    if not path.is_file():
+        return []
+    _assert_private_file(path, "Google Drive bindings")
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArchiveError(f"Google Drive bindings are unreadable: {exc}") from exc
+    if not isinstance(payload, dict) or set(payload) != {
+        "schema_version",
+        "bindings",
+        "content_sha256",
+    }:
+        raise ArchiveError("Google Drive bindings are malformed.")
+    content = {
+        "schema_version": payload["schema_version"],
+        "bindings": payload["bindings"],
+    }
+    if (
+        payload["schema_version"] != GOOGLE_DRIVE_BINDINGS_SCHEMA
+        or payload["content_sha256"] != _drive_bindings_digest(content)
+        or not isinstance(payload["bindings"], list)
+    ):
+        raise ArchiveError("Google Drive bindings are invalid or stale.")
+    normalized: list[dict[str, Any]] = []
+    seen_clients: set[str] = set()
+    seen_folders: set[str] = set()
+    for item in payload["bindings"]:
+        if not isinstance(item, dict) or set(item) != {
+            "client_id",
+            "folder_id",
+            "drive_id",
+            "display_name",
+            "bound_at",
+        }:
+            raise ArchiveError("Google Drive binding shape is invalid.")
+        client_id = str(item["client_id"])
+        folder_id = str(item["folder_id"])
+        if client_id in seen_clients or folder_id in seen_folders:
+            raise ArchiveError("Google Drive bindings are not one-to-one.")
+        if re.fullmatch(r"client_[0-9a-f]{24}", client_id) is None:
+            raise ArchiveError("Google Drive binding client ID is invalid.")
+        if re.fullmatch(r"[A-Za-z0-9_-]{3,256}", folder_id) is None:
+            raise ArchiveError("Google Drive binding folder ID is invalid.")
+        drive_id = item["drive_id"]
+        if drive_id is not None and (
+            not isinstance(drive_id, str)
+            or re.fullmatch(r"[A-Za-z0-9_-]{3,256}", drive_id) is None
+        ):
+            raise ArchiveError("Google Drive binding Shared Drive ID is invalid.")
+        display_name = str(item["display_name"]).strip()
+        bound_at = str(item["bound_at"]).strip()
+        if not display_name or not bound_at:
+            raise ArchiveError("Google Drive binding metadata is invalid.")
+        normalized.append(
+            {
+                "client_id": client_id,
+                "folder_id": folder_id,
+                "drive_id": drive_id,
+                "display_name": display_name,
+                "bound_at": bound_at,
+            }
+        )
+        seen_clients.add(client_id)
+        seen_folders.add(folder_id)
+    return normalized
+
+
+def _write_google_drive_bindings(
+    state_dir: Path, bindings: Sequence[Mapping[str, Any]]
+) -> None:
+    ordered = sorted(
+        (dict(item) for item in bindings), key=lambda item: item["client_id"]
+    )
+    content = {
+        "schema_version": GOOGLE_DRIVE_BINDINGS_SCHEMA,
+        "bindings": ordered,
+    }
+    _write_private_json(
+        _google_drive_bindings_path(state_dir),
+        {**content, "content_sha256": _drive_bindings_digest(content)},
+    )
+
+
+def authorize_studio_google_drive(
+    client_secrets_path: Path,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Run the explicit Drive OAuth flow and store its token in private state."""
+
+    private_state = _state_dir(state_dir, create=True)
+    try:
+        drive.authorize_google_drive(
+            client_secrets_path,
+            _google_drive_token_path(private_state),
+        )
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    return {
+        "status": "authorized",
+        "scope": drive.DRIVE_SCOPE,
+        "token_path": str(_google_drive_token_path(private_state)),
+        "credentials_persisted_privately": True,
+        "external_service": "google-drive",
+    }
+
+
+def studio_google_drive_status(
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Report local authorization and client-to-folder bindings without an API call."""
+
+    private_state = _state_dir(state_dir)
+    token_path = _google_drive_token_path(private_state)
+    if token_path.exists():
+        _assert_private_file(token_path, "Google Drive token")
+    bindings = _load_google_drive_bindings(private_state)
+    return {
+        "status": "ready" if token_path.is_file() else "authorization_required",
+        "oauth_scope": drive.DRIVE_SCOPE,
+        "restricted_scope": True,
+        "token_present": token_path.is_file(),
+        "binding_count": len(bindings),
+        "bindings": bindings,
+        "google_drive_api_called": False,
+    }
+
+
+def _drive_gateway(
+    state_dir: Path,
+    gateway: drive.DriveGateway | None,
+) -> drive.DriveGateway:
+    if gateway is not None:
+        return gateway
+    try:
+        return drive.load_google_drive_gateway(_google_drive_token_path(state_dir))
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+
+
+def bind_studio_client_google_drive(
+    client_id: str,
+    folder_id: str,
+    *,
+    state_dir: Path | None = None,
+    gateway: drive.DriveGateway | None = None,
+) -> dict[str, Any]:
+    """Bind one registered Studio Archive client to one exact Drive folder ID."""
+
+    private_state = _state_dir(state_dir, create=True)
+    get_studio_client_folder(client_id, state_dir=private_state)
+    selected_gateway = _drive_gateway(private_state, gateway)
+    try:
+        folder = selected_gateway.get_file(folder_id)
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    if (
+        folder.get("mimeType") != drive.DRIVE_FOLDER_MIME_TYPE
+        or folder.get("trashed") is True
+    ):
+        raise ArchiveError("Selected Google Drive item is not an active folder.")
+    observed_id = folder.get("id")
+    display_name = folder.get("name")
+    if (
+        observed_id != folder_id
+        or not isinstance(display_name, str)
+        or not display_name.strip()
+        or len(display_name.strip()) > 768
+    ):
+        raise ArchiveError("Google Drive returned invalid root-folder metadata.")
+    drive_id = folder.get("driveId")
+    if drive_id is not None and (
+        not isinstance(drive_id, str)
+        or re.fullmatch(r"[A-Za-z0-9_-]{3,256}", drive_id) is None
+    ):
+        raise ArchiveError("Google Drive returned an invalid Shared Drive ID.")
+    existing_bindings = _load_google_drive_bindings(private_state)
+    if any(
+        item["folder_id"] == folder_id and item["client_id"] != client_id
+        for item in existing_bindings
+    ):
+        raise ArchiveError(
+            "This Google Drive folder is already bound to another Vera client."
+        )
+    bindings = [item for item in existing_bindings if item["client_id"] != client_id]
+    binding = {
+        "client_id": client_id,
+        "folder_id": folder_id,
+        "drive_id": drive_id,
+        "display_name": display_name.strip(),
+        "bound_at": _now_iso(),
+    }
+    bindings.append(binding)
+    _write_google_drive_bindings(private_state, bindings)
+    return {
+        "status": "bound",
+        "binding": binding,
+        "google_drive_api_called": True,
+        "source_archive_mutated": False,
+    }
+
+
+def _google_drive_binding(client_id: str, state_dir: Path) -> dict[str, Any]:
+    matches = [
+        item
+        for item in _load_google_drive_bindings(state_dir)
+        if item["client_id"] == client_id
+    ]
+    if len(matches) != 1:
+        raise ArchiveError(
+            "Select and bind exactly one Google Drive folder for this client first."
+        )
+    return matches[0]
+
+
+def snapshot_studio_client_google_drive(
+    client_id: str,
+    engagement_id: str,
+    *,
+    state_dir: Path | None = None,
+    gateway: drive.DriveGateway | None = None,
+) -> dict[str, Any]:
+    """Snapshot one bound Drive tree and import only its immutable JSON receipt."""
+
+    private_state = _state_dir(state_dir)
+    client_root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state
+    )
+    binding = _google_drive_binding(client_id, private_state)
+    selected_gateway = _drive_gateway(private_state, gateway)
+    try:
+        snapshot = drive.snapshot_google_drive_folder(
+            selected_gateway,
+            binding["folder_id"],
+            client_id,
+            engagement_id,
+        )
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    if (
+        snapshot["root_name"] != binding["display_name"]
+        or snapshot["drive_id"] != binding["drive_id"]
+    ):
+        raise ArchiveError(
+            "The bound Google Drive root changed identity; review the binding."
+        )
+    engagement_root = (
+        client_root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id
+    )
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".vera-google-drive-snapshot-",
+        suffix=".json",
+        dir=engagement_root,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(snapshot, handle, ensure_ascii=False, indent=2, sort_keys=True)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        imported = ledger.import_document(
+            client_root,
+            client_id,
+            engagement_id,
+            temporary,
+            "source",
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Google Drive snapshot import failed: {exc}") from exc
+    finally:
+        temporary.unlink(missing_ok=True)
+    return {
+        "status": imported["status"],
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "input_id": imported["receipt"]["input_id"],
+        "input_receipt": imported["receipt"],
+        "snapshot_summary": {
+            "captured_at": snapshot["captured_at"],
+            "file_count": snapshot["file_count"],
+            "folder_count": snapshot["folder_count"],
+            "known_total_bytes": snapshot["known_total_bytes"],
+            "excluded": snapshot["excluded"],
+            "root_folder_id": snapshot["root_folder_id"],
+            "drive_id": snapshot["drive_id"],
+            "content_sha256": snapshot["content_sha256"],
+        },
+        "documents_copied": False,
+        "google_drive_api_called": True,
+        "remote_archive_mutated": False,
+        "studio_ledger_mutated": True,
+    }
+
+
+def open_studio_google_drive_source(
+    client_id: str,
+    engagement_id: str,
+    snapshot_input_id: str,
+    file_id: str,
+    *,
+    state_dir: Path | None = None,
+    gateway: drive.DriveGateway | None = None,
+) -> dict[str, Any]:
+    """Revalidate and extract one bounded file from an immutable Drive snapshot."""
+
+    private_state = _state_dir(state_dir, create=True)
+    client_root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state
+    )
+    binding = _google_drive_binding(client_id, private_state)
+    try:
+        receipt = ledger.load_input_receipt(
+            client_root,
+            engagement_id,
+            snapshot_input_id,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError(f"Google Drive snapshot input is invalid: {exc}") from exc
+    try:
+        snapshot = json.loads(Path(receipt["path"]).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArchiveError(f"Google Drive snapshot is unreadable: {exc}") from exc
+    if (
+        not isinstance(snapshot, dict)
+        or snapshot.get("schema_version") != drive.DRIVE_SNAPSHOT_SCHEMA
+        or snapshot.get("client_id") != client_id
+        or snapshot.get("engagement_id") != engagement_id
+        or snapshot.get("root_folder_id") != binding["folder_id"]
+    ):
+        raise ArchiveError("Google Drive snapshot identity is invalid.")
+    content = {key: value for key, value in snapshot.items() if key != "content_sha256"}
+    if snapshot.get("content_sha256") != _drive_bindings_digest(content):
+        raise ArchiveError("Google Drive snapshot digest is stale.")
+    files = snapshot.get("files")
+    if not isinstance(files, list):
+        raise ArchiveError("Google Drive snapshot files are invalid.")
+    matches = [item for item in files if item.get("file_id") == file_id]
+    if len(matches) != 1:
+        raise ArchiveError("Drive file ID is not present exactly once in the snapshot.")
+    expected = matches[0]
+    selected_gateway = _drive_gateway(private_state, gateway)
+    try:
+        current = drive.normalize_file_metadata(
+            selected_gateway.get_file(file_id), expected["parent_id"]
+        )
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    for key in (
+        "file_id",
+        "parent_id",
+        "name",
+        "mime_type",
+        "version",
+        "md5_checksum",
+        "sha256_checksum",
+        "drive_id",
+    ):
+        if current[key] != expected[key]:
+            raise SourceChangedError(
+                "Google Drive source changed after the selected snapshot."
+            )
+    if not current["capabilities"]["can_download"]:
+        raise ArchiveError("Google Drive does not permit this file to be downloaded.")
+    mime_type = current["mime_type"]
+    export = GOOGLE_DRIVE_EXPORTS.get(mime_type)
+    try:
+        if export is not None:
+            payload = selected_gateway.export_bytes(file_id, export[0])
+            suffix = export[1]
+            evidence_mode = "export"
+        elif mime_type.startswith("application/vnd.google-apps."):
+            raise ArchiveError(
+                "This Google-native file type has no supported evidence export."
+            )
+        else:
+            payload = selected_gateway.download_bytes(file_id)
+            suffix = Path(current["name"]).suffix.lower()
+            if suffix not in SUPPORTED_SUFFIXES:
+                if mime_type.startswith("text/"):
+                    suffix = ".txt"
+                else:
+                    raise ArchiveError(
+                        "This Drive binary file type is not supported for extraction."
+                    )
+            evidence_mode = "download"
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    if len(payload) > drive.MAX_EVIDENCE_BYTES:
+        raise ArchiveError("Google Drive evidence exceeds the 100 MB read boundary.")
+    try:
+        current_after_read = drive.normalize_file_metadata(
+            selected_gateway.get_file(file_id), expected["parent_id"]
+        )
+    except drive.DriveError as exc:
+        raise ArchiveError(str(exc)) from exc
+    for key in (
+        "file_id",
+        "parent_id",
+        "name",
+        "mime_type",
+        "version",
+        "md5_checksum",
+        "sha256_checksum",
+        "drive_id",
+    ):
+        if current_after_read[key] != expected[key]:
+            raise SourceChangedError(
+                "Google Drive source changed while the evidence was being read."
+            )
+    if evidence_mode == "download":
+        if current["sha256_checksum"] is not None and (
+            hashlib.sha256(payload).hexdigest() != current["sha256_checksum"]
+        ):
+            raise SourceChangedError(
+                "Downloaded Google Drive evidence does not match its SHA-256."
+            )
+        if current["md5_checksum"] is not None and (
+            hashlib.md5(payload, usedforsecurity=False).hexdigest()
+            != current["md5_checksum"]
+        ):
+            raise SourceChangedError(
+                "Downloaded Google Drive evidence does not match its MD5 checksum."
+            )
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=".vera-drive-evidence-",
+        suffix=suffix,
+        dir=private_state,
+    )
+    temporary = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "wb") as handle:
+            handle.write(payload)
+            handle.flush()
+            os.fsync(handle.fileno())
+        extraction = _extract_document(temporary, enable_ocr=False)
+    finally:
+        temporary.unlink(missing_ok=True)
+    text_parts: list[str] = []
+    locators: list[dict[str, str]] = []
+    consumed = 0
+    for chunk in extraction.chunks:
+        remaining = MAX_OPEN_CHARS - consumed
+        if remaining <= 0:
+            break
+        selected_text = chunk.text[:remaining]
+        text_parts.append(selected_text)
+        consumed += len(selected_text)
+        locators.append(
+            {
+                "kind": chunk.locator_kind,
+                "value": chunk.locator_value,
+            }
+        )
+    limitations = list(extraction.limitations)
+    if len(extraction.chunks) > len(locators):
+        limitations.append("open_text_truncated")
+    return {
+        "status": extraction.status,
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "snapshot_input_id": snapshot_input_id,
+        "file_id": file_id,
+        "relative_path": expected["relative_path"],
+        "name": current["name"],
+        "mime_type": mime_type,
+        "version": current["version"],
+        "citation": (
+            f"gdrive:{file_id}@v{current['version']} " f"({expected['relative_path']})"
+        ),
+        "text": "\n\n".join(text_parts),
+        "locators": locators,
+        "extraction_method": extraction.extraction_method,
+        "evidence_mode": evidence_mode,
+        "limitations": limitations,
+        "google_drive_api_called": True,
+        "remote_archive_mutated": False,
+        "temporary_content_deleted": True,
     }
 
 

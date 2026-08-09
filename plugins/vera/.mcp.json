@@ -1,5 +1,13 @@
 {
   "mcpServers": {
+    "archiveOrganizationWidgets": {
+      "title": "Vera · Riordino archivio",
+      "description": "Validate, render, save, and compile review decisions for a client-folder organization plan.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "archive-organization"]
+    },
     "auditReconciliationWidgets": {
       "title": "Riconciliazione partite",
       "description": "Validate and render Audit Reconciliation review-session payloads.",

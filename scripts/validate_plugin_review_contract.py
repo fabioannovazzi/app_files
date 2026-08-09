@@ -185,6 +185,12 @@ REVIEW_HANDOFF_REQUIRED_TEXT = [
     "final_artifacts.json",
 ]
 REVIEW_HANDOFF_TOOLS = {
+    "archive-organization": [
+        "validate_archive_organization_review",
+        "render_archive_organization_review",
+        "save_archive_organization_decisions",
+        "apply_archive_organization_decisions",
+    ],
     "variance-analysis": [
         "validate_variance_analysis_review",
         "render_variance_analysis_review",
