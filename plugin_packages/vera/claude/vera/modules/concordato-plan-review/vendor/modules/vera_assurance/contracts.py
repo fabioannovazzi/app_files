@@ -124,6 +124,7 @@ _RUN_TRANSITIONS = {
 # an independently reviewed package that New Client consumes.
 VERA_CLIENT_WORKFLOW_IDS = (
     "audit-reconciliation",
+    "archive-organization",
     "client-file-preparation",
     "new-client",
     "journal-sampling",

@@ -17,6 +17,13 @@ skill to imitate a missing operational workflow.
 
 ## Professional workflows
 
+- `archive-organization`: screen one registered local or Google Drive client folder, use semantic
+  judgment to propose studio-policy categories and destinations, detect exact
+  duplicates by hash and probable duplicates by reviewed model judgment,
+  collect persistent collaborator decisions, and only then apply explicit
+  no-overwrite local or Drive moves with a journal and rollback; Drive mode
+  preserves file IDs, links, permissions, and history while changing parent
+  and name.
 - `audit-reconciliation`: reconcile ledgers, statements, payments, factoring,
   advances, compensation, and other accounting evidence into reviewable
   workpapers.
@@ -69,8 +76,8 @@ skill to imitate a missing operational workflow.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
 - `studio-archive`: create or resume a durable client engagement and use its
-  authorized document, Gmail, or capability-gated WhatsApp evidence routes
-  without mixing clients.
+  authorized local-document, Google Drive or Shared Drive, Gmail, or
+  capability-gated WhatsApp evidence routes without mixing clients.
 
 ## Subordinate intake workflows
 

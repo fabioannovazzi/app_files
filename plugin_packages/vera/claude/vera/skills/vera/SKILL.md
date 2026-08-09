@@ -173,6 +173,13 @@ which would duplicate the host namespace.
 Keep these host-sensitive boundaries inline so package projections can narrow
 them without changing the capability catalog:
 
+- `archive-organization`: a Claude Desktop-only, client-bound workflow that
+  snapshots a bounded registered local or Google Drive client folder, proposes semantic filing
+  decisions, persists collaborator review, and requires a separate explicit
+  apply action. Drive mode preserves stable file IDs and revalidates versions,
+  parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
+  duplicates are quarantine candidates and every applied move has a journal
+  and rollback path;
 - `studio-archive`: connected-folder evidence and one client's callable, read-only Anthropic Gmail connector. Cowork v1 does not support WhatsApp or local archive indexing;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `previdenza-inps`: evidence-backed INPS case review from connected
