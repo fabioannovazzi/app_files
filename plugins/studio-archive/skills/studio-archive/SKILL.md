@@ -1,19 +1,19 @@
 ---
 name: studio-archive
-description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
+description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, bind and snapshot one Google Drive client folder, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
 ---
 
 ## Surface routing
 
 Connected Gmail may run in ChatGPT or Codex whenever its read tools are
-callable. WhatsApp Desktop control and local archive indexing require Codex
-Desktop. Without those local capabilities, continue with user-supplied material
-and any useful preparation available in chat; do not reduce the whole workflow
-to a redirect.
+callable. WhatsApp Desktop control, local archive indexing, and native Google
+Drive access require Codex Desktop. Without those local capabilities, continue
+with user-supplied material and any useful preparation available in chat; do
+not reduce the whole workflow to a redirect.
 
 ## Runtime split
 
-This component has three independent routes:
+This component has four independent routes:
 
 - **Gmail:** works in ChatGPT or Codex with the separately installed and
   connected OpenAI Gmail connector. It uses Gmail read tools
@@ -28,6 +28,11 @@ This component has three independent routes:
   folder in Codex Desktop. This route uses the local MCP server and a private
   per-professional SQLite index. Its private client identity registry can also
   persist confirmed Gmail identities on that computer.
+- **Google Drive client archive:** works in Codex Desktop through the Drive v3
+  API after explicit restricted-scope OAuth authorization. It binds one stable
+  client ID to one exact My Drive or Shared Drive folder, snapshots remote
+  identity and version state, and supplies the controlled input for Riordino
+  archivio. It does not make Google Drive a general search backend.
 
 Never require local archive configuration before running the Gmail or WhatsApp
 Desktop route.
@@ -56,7 +61,8 @@ shared account, vector service, or permissions layer in this first version.
 
 ChatGPT web and mobile may run the connected Gmail route and may review material
 supplied in the conversation. They must not claim to control WhatsApp Desktop,
-index local folders, run local scripts, or create a persistent local archive.
+index local folders, call Google Drive directly, run local scripts, or create a
+persistent local archive.
 
 Search, indexing, and source opening never edit existing source documents.
 Immediate child directories become exact search scopes; supported root-level
@@ -67,6 +73,29 @@ import copies one user-selected regular file into that customer's
 renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
+
+A third bounded intake action supports `archive-organization`:
+`snapshot_studio_client_folder` hashes at most 5,000 ordinary client files and
+2 GB, excludes `Vera/`, follows no symlinks, and imports only its JSON snapshot
+receipt into the selected engagement. It never copies or moves the client
+documents. Actual path changes remain owned by the separate reviewed and
+explicitly approved Riordino archivio workflow.
+
+For Google Workspace archives, the equivalent bounded intake is
+`snapshot_studio_client_google_drive`. First inspect
+`studio_archive_google_drive_status`; if authorization is absent, use the
+explicit CLI OAuth setup with a Google Cloud desktop client. Then bind the
+exact user-selected folder with `bind_studio_client_google_drive`. The snapshot
+recursively records at most 5,000 Drive files, stable file and parent IDs,
+versions, MIME types, capabilities, and available checksums; it skips
+shortcuts, supports Shared Drives, and imports only its JSON receipt. The
+restricted `https://www.googleapis.com/auth/drive` scope and any required
+Google verification/security assessment must be disclosed before deployment.
+For semantic evidence, `open_studio_google_drive_source` accepts only a file ID
+present in that exact immutable snapshot, revalidates its remote identity and
+version, transiently downloads a supported binary or exports a common
+Google-native document, returns bounded citable text, and deletes the temporary
+bytes. It never persists a Drive content cache.
 
 ## Client and engagement intake
 
@@ -133,7 +162,15 @@ Use this exact chat workflow whenever a professional starts client work:
    `client_id`. It returns imported-file receipts and persisted workflow runs,
    including lifecycle, exact input manifests, artifact purposes, and
    mechanical availability. Resume the exact engagement and run instead of
-   relying on chat history.
+relying on chat history.
+
+For `archive-organization`, select the intake that matches the real archive:
+`snapshot_studio_client_folder` for a local tree, or Drive status, exact binding,
+and `snapshot_studio_client_google_drive` for Google Workspace. Prepare the
+workflow with only the returned snapshot `input_id`; do not import every client
+document. Either snapshot receipt is a read-only observation and does not
+authorize later file moves. Follow the separate `archive-organization` review
+and explicit apply boundary for those changes.
 
 For the journal-specific flow, prepare Journal Sampling from the exact journal
 `input_id`. Its finalized artifact manifest must identify the normalized
@@ -152,7 +189,10 @@ batch has the same exact byte selection as an earlier run, with a new
 Users do not operate the CLI. If Codex must use the internal fallback, the
 corresponding commands are `clients`, `configure-client`, `create-client`,
 `create-engagement`, `import-document`, `engagements`, `prepare-workflow`, and
-`start-check-entries-from-sample` in `scripts/studio_archive.py`.
+`start-check-entries-from-sample` in `scripts/studio_archive.py`. Google Drive
+first-time setup additionally uses `authorize-google-drive --client-secrets`,
+then `google-drive-status`, `bind-google-drive`, and `snapshot-google-drive`.
+Never place OAuth client secrets or token contents in chat or run artifacts.
 
 `get_studio_client_folder --client-id client_...` returns a digest-bound
 `vera.studio_client_folder.v2` object containing both the stable client ID and

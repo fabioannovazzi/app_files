@@ -1,0 +1,4 @@
+interface:
+  display_name: "Riordino archivio"
+  short_description: "Propone, fa revisionare e applica un riordino cliente sicuro."
+  default_prompt: "Use $archive-organization to propose, review, and safely apply an archive-organization plan for this client folder."

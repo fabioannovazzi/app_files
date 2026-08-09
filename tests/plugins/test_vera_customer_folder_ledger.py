@@ -7,6 +7,7 @@ import multiprocessing
 import os
 import sys
 from concurrent.futures import ThreadPoolExecutor
+from copy import deepcopy
 from pathlib import Path
 from threading import Barrier
 from types import ModuleType, SimpleNamespace
@@ -15,6 +16,61 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
 ARCHIVE_CORE_PATH = ROOT / "plugins" / "studio-archive" / "scripts" / "archive_core.py"
+
+
+class _FakeGoogleDriveGateway:
+    def __init__(self, archive_core: ModuleType) -> None:
+        self.mutate_after_export = False
+        capabilities = {
+            "canEdit": True,
+            "canDownload": True,
+            "canMoveItemWithinDrive": True,
+        }
+        self.files = {
+            "root_workspace": {
+                "id": "root_workspace",
+                "name": "Zecca Workspace",
+                "mimeType": archive_core.drive.DRIVE_FOLDER_MIME_TYPE,
+                "parents": [],
+                "driveId": "shared_workspace",
+                "modifiedTime": "2026-08-09T12:00:00Z",
+                "version": "1",
+                "trashed": False,
+                "capabilities": capabilities,
+            },
+            "google_doc_1": {
+                "id": "google_doc_1",
+                "name": "Verbale",
+                "mimeType": "application/vnd.google-apps.document",
+                "parents": ["root_workspace"],
+                "driveId": "shared_workspace",
+                "modifiedTime": "2026-08-09T12:00:00Z",
+                "version": "7",
+                "trashed": False,
+                "capabilities": capabilities,
+            },
+        }
+
+    def get_file(self, file_id: str) -> dict[str, object]:
+        return deepcopy(self.files[file_id])
+
+    def list_children(self, parent_id: str) -> list[dict[str, object]]:
+        return [
+            deepcopy(item)
+            for item in self.files.values()
+            if item["parents"] == [parent_id]
+        ]
+
+    def export_bytes(self, file_id: str, mime_type: str) -> bytes:
+        assert file_id == "google_doc_1"
+        assert mime_type == "text/plain"
+        payload = b"Verbale assemblea approved by the client."
+        if self.mutate_after_export:
+            self.files[file_id]["version"] = "8"
+        return payload
+
+    def download_bytes(self, file_id: str) -> bytes:
+        raise AssertionError(f"Unexpected binary download for {file_id}")
 
 
 @pytest.fixture(scope="module")
@@ -172,6 +228,102 @@ def test_import_requires_an_explicit_engagement(
             client_case.source,
             "journal",
             state_dir=client_case.state_dir,
+        )
+
+
+def test_google_drive_binding_snapshot_and_transient_open(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    gateway = _FakeGoogleDriveGateway(archive_core)
+
+    bound = archive_core.bind_studio_client_google_drive(
+        client_case.client_id,
+        "root_workspace",
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    snapshotted = archive_core.snapshot_studio_client_google_drive(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    opened = archive_core.open_studio_google_drive_source(
+        client_case.client_id,
+        client_case.engagement_id,
+        snapshotted["input_id"],
+        "google_doc_1",
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+
+    assert bound["binding"]["folder_id"] == "root_workspace"
+    assert snapshotted["snapshot_summary"]["file_count"] == 1
+    assert snapshotted["documents_copied"] is False
+    assert opened["citation"].startswith("gdrive:google_doc_1@v7")
+    assert opened["text"] == "Verbale assemblea approved by the client."
+    assert opened["temporary_content_deleted"] is True
+
+
+def test_google_drive_binding_rejects_folder_already_bound_to_another_client(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    gateway = _FakeGoogleDriveGateway(archive_core)
+    archive_core.bind_studio_client_google_drive(
+        client_case.client_id,
+        "root_workspace",
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    other = archive_core.create_studio_client(
+        "Other Client SRL",
+        state_dir=client_case.state_dir,
+    )
+
+    with pytest.raises(
+        archive_core.ArchiveError,
+        match="already bound to another Vera client",
+    ):
+        archive_core.bind_studio_client_google_drive(
+            other["client"]["client_id"],
+            "root_workspace",
+            state_dir=client_case.state_dir,
+            gateway=gateway,
+        )
+
+
+def test_google_drive_open_rejects_change_during_export(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    gateway = _FakeGoogleDriveGateway(archive_core)
+    archive_core.bind_studio_client_google_drive(
+        client_case.client_id,
+        "root_workspace",
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    snapshotted = archive_core.snapshot_studio_client_google_drive(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    gateway.mutate_after_export = True
+
+    with pytest.raises(
+        archive_core.SourceChangedError,
+        match="changed while the evidence was being read",
+    ):
+        archive_core.open_studio_google_drive_source(
+            client_case.client_id,
+            client_case.engagement_id,
+            snapshotted["input_id"],
+            "google_doc_1",
+            state_dir=client_case.state_dir,
+            gateway=gateway,
         )
 
 

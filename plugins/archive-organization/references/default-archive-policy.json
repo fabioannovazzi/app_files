@@ -1,0 +1,45 @@
+{
+  "schema_version": "vera.archive_organization_policy.v1",
+  "policy_id": "mparanza-studio-default-it",
+  "version": "1.0.0",
+  "folder_template": "{Categoria}/{Anno}/{Pratica}",
+  "filename_template": "{Data}_{TipoDocumento}_{Soggetto}_{Riferimento}",
+  "categories": [
+    {
+      "id": "contratti",
+      "label": "Contratti",
+      "folder": "Contratti"
+    },
+    {
+      "id": "ade",
+      "label": "Agenzia delle Entrate",
+      "folder": "AdE"
+    },
+    {
+      "id": "adr",
+      "label": "Agenzia delle Entrate-Riscossione",
+      "folder": "ADR"
+    },
+    {
+      "id": "documenti-societari",
+      "label": "Documenti societari",
+      "folder": "Documenti societari"
+    },
+    {
+      "id": "contabilita",
+      "label": "Contabilita",
+      "folder": "Contabilita"
+    },
+    {
+      "id": "lavoro",
+      "label": "Lavoro",
+      "folder": "Lavoro"
+    },
+    {
+      "id": "da-classificare",
+      "label": "Da classificare",
+      "folder": "Da classificare"
+    }
+  ],
+  "content_sha256": "0a7aa1238dd1daf75b9e7fbd1a2683eb04ca5df21b224b99577bce5e1864e179"
+}

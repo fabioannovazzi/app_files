@@ -28,6 +28,13 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "archive-organization",
+        "Vera · Riordino archivio",
+        "#002060",
+        "#00B0F0",
+        "organize",
+    ),
+    IconSpec(
         "audit-reconciliation",
         "Riconciliazione partite",
         "#17365D",
@@ -280,6 +287,10 @@ def _body(spec: IconSpec) -> str:
     color = "#1F211D"
     accent = spec.accent
     bodies = {
+        "organize": f"""
+  <path d="M12 23a5 5 0 0 1 5-5h10l5 6h15a5 5 0 0 1 5 5v17a5 5 0 0 1-5 5H17a5 5 0 0 1-5-5z" fill="{paper}"/>
+  <path d="M20 32h20M20 40h13" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <path d="m38 38 5 5 10-13" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
         "studio": f"""
   <path d="M12 17 32 31v8L22 31v18H12zm40 0L32 31v8l10-8v18h10z" fill="{paper}"/>
   <path d="m18 26 9 7v12M46 26l-9 7v12" fill="none" stroke="#171816" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>""",

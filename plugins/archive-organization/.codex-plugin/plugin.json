@@ -1,0 +1,51 @@
+{
+  "name": "archive-organization",
+  "version": "0.1.0",
+  "description": "Analizza una cartella cliente, propone classificazione, rinomina e spostamenti, e applica solo decisioni revisionate con journal e rollback.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "vera",
+    "commercialisti",
+    "archivio",
+    "cartella-cliente",
+    "duplicati",
+    "classificazione-documenti",
+    "riordino",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Vera · Riordino archivio",
+    "shortDescription": "Propone e applica in sicurezza il riordino di una cartella cliente.",
+    "longDescription": "Vera fotografa una cartella cliente registrata, locale oppure Google Drive, usa il modello per comprenderne i documenti e proporre categoria, pratica e nome, rileva deterministicamente i duplicati esatti quando è disponibile uno SHA-256 e presenta ogni cambiamento al collaboratore. Nessun file viene spostato durante l'analisi: l'esecuzione richiede decisioni persistite e un'approvazione distinta, ricontrolla hash oppure identità e versione Drive, non sovrascrive e registra un journal reversibile.",
+    "developerName": "Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "defaultPrompt": [
+      "Usa Riordino archivio per analizzare questa cartella cliente e preparare una proposta senza spostare file.",
+      "Mostrami duplicati, anomalie e destinazioni proposte per la revisione del collaboratore.",
+      "Applica solo le modifiche che ho approvato e conserva journal e rollback."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

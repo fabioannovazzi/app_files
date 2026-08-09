@@ -137,6 +137,7 @@ CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "archive-organization": "modules/archive-organization/skills/archive-organization/SKILL.md",
     "audit-reconciliation": "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md",
     "bandi-agevolazioni": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
     "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",

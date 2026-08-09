@@ -1,0 +1,18 @@
+{
+  "mcpServers": {
+    "veraArchiveOrganization": {
+      "title": "Vera · Riordino archivio",
+      "description": "Validate, render, save, and apply review decisions for one client-folder organization plan. Filesystem execution remains a separate explicit command.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": ["24x24"]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./mcp/server.cjs", "--stdio"]
+    }
+  }
+}

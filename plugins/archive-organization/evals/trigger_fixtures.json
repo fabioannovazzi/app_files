@@ -1,0 +1,37 @@
+{
+  "plugin": "archive-organization",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "messy-client-folder",
+      "prompt": "Vera, analizza la cartella di questo cliente, trova i doppioni e proponi come archiviarla secondo le regole dello studio prima di spostare qualunque file.",
+      "required_signals": [
+        "uses one registered client folder",
+        "creates a bounded snapshot receipt",
+        "uses semantic classification for document meaning",
+        "persists reviewer decisions",
+        "does not mutate files before explicit apply"
+      ]
+    },
+    {
+      "id": "misplaced-ade-files",
+      "prompt": "Controlla se comunicazioni 36-bis e piani di ammortamento sono fuori dalla cartella AdE, poi fammi validare la proposta.",
+      "required_signals": [
+        "does not route from filename alone",
+        "proposes AdE only from reviewed semantic evidence",
+        "requires collaborator review",
+        "prevents overwrite"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "read-only-archive-search",
+      "prompt": "Cerca nell'archivio dello studio il contratto firmato del cliente Rossi."
+    },
+    {
+      "id": "generic-file-manager",
+      "prompt": "Delete every duplicate file on my computer."
+    }
+  ]
+}

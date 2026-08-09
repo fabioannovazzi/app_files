@@ -13,6 +13,8 @@ from typing import Any
 from archive_core import (
     VERA_CLIENT_WORKFLOW_IDS,
     ArchiveError,
+    authorize_studio_google_drive,
+    bind_studio_client_google_drive,
     cancel_studio_client_workflow,
     close_studio_client_engagement,
     complete_studio_client_workflow,
@@ -27,6 +29,7 @@ from archive_core import (
     list_studio_client_identities,
     match_studio_email_client,
     open_archive_source,
+    open_studio_google_drive_source,
     plan_gmail_client_search,
     prepare_studio_client_workflow,
     recover_studio_client_ledger,
@@ -34,9 +37,12 @@ from archive_core import (
     report_studio_client_retention,
     search_archive,
     set_studio_client_identity,
+    snapshot_studio_client_folder,
+    snapshot_studio_client_google_drive,
     start_check_entries_from_sample,
     start_studio_client_workflow,
     studio_archive_status,
+    studio_google_drive_status,
 )
 
 __all__ = ["main"]
@@ -78,6 +84,29 @@ def _parser() -> argparse.ArgumentParser:
 
     engagements = subparsers.add_parser("engagements")
     engagements.add_argument("--client-id", required=True)
+
+    snapshot_folder = subparsers.add_parser("snapshot-client-folder")
+    snapshot_folder.add_argument("--client-id", required=True)
+    snapshot_folder.add_argument("--engagement-id", required=True)
+
+    authorize_drive = subparsers.add_parser("authorize-google-drive")
+    authorize_drive.add_argument("--client-secrets", type=Path, required=True)
+
+    subparsers.add_parser("google-drive-status")
+
+    bind_drive = subparsers.add_parser("bind-google-drive")
+    bind_drive.add_argument("--client-id", required=True)
+    bind_drive.add_argument("--folder-id", required=True)
+
+    snapshot_drive = subparsers.add_parser("snapshot-google-drive")
+    snapshot_drive.add_argument("--client-id", required=True)
+    snapshot_drive.add_argument("--engagement-id", required=True)
+
+    open_drive = subparsers.add_parser("open-google-drive")
+    open_drive.add_argument("--client-id", required=True)
+    open_drive.add_argument("--engagement-id", required=True)
+    open_drive.add_argument("--snapshot-input-id", required=True)
+    open_drive.add_argument("--file-id", required=True)
 
     prepare_workflow = subparsers.add_parser("prepare-workflow")
     prepare_workflow.add_argument("--engagement-id", required=True)
@@ -211,6 +240,32 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "engagements":
             result = list_studio_client_engagements(args.client_id)
+        elif args.command == "snapshot-client-folder":
+            result = snapshot_studio_client_folder(
+                args.client_id,
+                args.engagement_id,
+            )
+        elif args.command == "authorize-google-drive":
+            result = authorize_studio_google_drive(args.client_secrets)
+        elif args.command == "google-drive-status":
+            result = studio_google_drive_status()
+        elif args.command == "bind-google-drive":
+            result = bind_studio_client_google_drive(
+                args.client_id,
+                args.folder_id,
+            )
+        elif args.command == "snapshot-google-drive":
+            result = snapshot_studio_client_google_drive(
+                args.client_id,
+                args.engagement_id,
+            )
+        elif args.command == "open-google-drive":
+            result = open_studio_google_drive_source(
+                args.client_id,
+                args.engagement_id,
+                args.snapshot_input_id,
+                args.file_id,
+            )
         elif args.command == "prepare-workflow":
             upstream_artifacts = []
             for raw_reference in args.upstream_artifact:

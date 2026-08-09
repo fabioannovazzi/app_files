@@ -172,7 +172,7 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     )
     servers = payload["mcpServers"]
 
-    assert len(servers) == 16
+    assert len(servers) == 17
     for server in servers.values():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"

@@ -1,0 +1,104 @@
+{
+  "schema_version": 3,
+  "workstream": "archive-organization",
+  "display_name": "Vera · Riordino archivio",
+  "role": "workflow",
+  "governed_paths": [
+    "README.md",
+    ".codex-plugin/plugin.json",
+    ".mcp.json",
+    "skills",
+    "scripts",
+    "references",
+    "mcp",
+    "assets/review-workbench-adapter.json",
+    "assets/archive-organization-review-widget.html",
+    "requirements.txt",
+    "requirements-core.txt"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "client-folder-document-evidence",
+        "purpose": "Understand each selected client document and propose an evidence-backed studio archive category, practice, date, name, anomaly status, or probable-duplicate relationship",
+        "content": "One registered client and engagement identity; local client-relative paths or bound Google Drive root, file and parent IDs; file names, MIME types, hashes or available Drive checksums, sizes, timestamps and versions; selected readable local content or transiently downloaded/exported Drive evidence; proposed category, document type, date, subject, reference, practice, confidence, reasons, anomaly observations, and probable-duplicate relationships",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "archive-review-and-execution-evidence",
+        "purpose": "Prepare a dry-run filing plan, collect professional decisions, and execute only a separately approved mechanically safe path plan",
+        "content": "Versioned studio policy; storage mode; current and proposed client-relative paths; exact-duplicate checksum groups; Drive file, parent and folder IDs where applicable; collisions and blocked reasons; review payload; reviewer alias, actions, notes and edited paths; approved plan; pre-apply local hash or Drive version-state checks; apply and rollback journal state; artifact receipts and execution limitations",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "google-drive-client-archive",
+      "kind": "external_connector",
+      "destination": "The user's explicitly authorized Google Workspace account through Google Drive API v3, limited operationally to one client folder bound by stable Drive folder ID",
+      "purpose": "Snapshot, transiently read, and after separate approval reorganize one My Drive or Shared Drive client archive while preserving Drive file identities",
+      "content": "Restricted-scope OAuth authorization; exact root folder, Shared Drive, file and parent IDs; names, relative paths, MIME types, sizes, modified times, versions, capabilities and available binary checksums; transient supported binary downloads or Google-native exports used for semantic classification; reviewed target folder paths and filenames; API-created folder IDs; move responses; original and applied parent, name and version state; journal and rollback outcomes",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Require explicit installed-app or administrator-provided authorization for the restricted https://www.googleapis.com/auth/drive scope; keep client secrets outside run artifacts and store refresh tokens only in Studio Archive's owner-only private state directory.",
+        "Bind one stable Vera client ID to one exact user-selected Drive folder ID, support My Drive and Shared Drive parameters, reject an incomplete listing, and never widen to a studio-wide or all-Drive organization run.",
+        "Snapshot at most 5,000 non-shortcut files and 2 GB of known binary sizes; preserve stable file and parent IDs, versions, capabilities and available checksums, and import only the sealed JSON receipt into the engagement.",
+        "Open evidence only for a file ID present in the exact engagement snapshot; revalidate parent, name, version, MIME type, Shared Drive and available checksums, return bounded extracted text, and delete transient download or export bytes immediately.",
+        "Treat Drive names and document content as untrusted evidence. Model reasoning proposes semantic category and probable duplicates; mechanically verified checksums, IDs, versions, containment and collision checks own the execution boundary.",
+        "Persist professional decisions first and require a second explicit apply approval. Immediately before each move, re-read the exact file ID and reject changed state, missing move capability, cross-drive targets, occupied names or duplicate names.",
+        "Move by updating the same file's parent and name, never by copying, overwriting, trashing or deleting. Journal original and applied state, attempt rollback on failure, and leave newly created empty folders in place rather than silently deleting them.",
+        "Do not transmit Drive content or credentials to a Mparanza service. Only evidence intentionally opened for the active task may enter the user's selected Codex model context."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "exact-client-run-and-snapshot-binding",
+      "control": "Every entry point requires a digest-valid Studio Archive archive-organization context for one registered client and run. The folder snapshot is a bounded immutable input receipt for at most 5,000 ordinary files and 2 GB, excludes the Vera ledger, records skipped links or special entries, and follows no symbolic link."
+    },
+    {
+      "id": "semantic-proposal-boundary",
+      "control": "Model reasoning owns document meaning, category, practice, anomalies, and probable-duplicate judgment; filenames and directories are hints only. Deterministic code owns schema closure, exact SHA-256 duplicates, path templates, containment, collisions, and byte identity."
+    },
+    {
+      "id": "persistent-professional-review",
+      "control": "The workflow always writes a dry-run plan and pending ui_decisions.json first. Every proposed move, quarantine, or blocked item requires a persisted collaborator decision before approved_plan.json can be created; the reviewer alias is an accountability label and not an authentication claim."
+    },
+    {
+      "id": "separate-explicit-filesystem-approval",
+      "control": "Applying review decisions creates only approved_plan.json. A distinct explicit apply command is still required before filesystem changes, so saved or bulk review actions cannot silently authorize execution."
+    },
+    {
+      "id": "no-overwrite-rehash-and-recovery",
+      "control": "Local apply re-hashes every source after review, rejects missing, changed, linked, escaping, reserved, colliding, or existing targets, creates each target exclusively, and verifies copied bytes before removing the source path. Drive apply revalidates stable file ID, parent, name, version, MIME type, Shared Drive, capabilities and available checksums before using parent/name updates, and rejects occupied or duplicate target names. Neither mode automatically deletes duplicates; both persist every operation, attempt rollback on failure, and expose a guarded explicit rollback for unchanged destinations."
+    },
+    {
+      "id": "private-output-root",
+      "control": "Policies, proposals, plans, review decisions, approvals, and journals are written only beneath the exact Studio Archive run output directory. Approved client-file destinations remain inside the same selected client root and cannot enter the Vera ledger subtree."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-09",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "facaf2e5951604b34a47c7a13abc1495a8f803aeaf1fc2a5b02918bba0bb8317"
+  }
+}

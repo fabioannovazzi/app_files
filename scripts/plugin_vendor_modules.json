@@ -50,6 +50,11 @@
         "vera_assurance"
       ]
     },
+    "archive-organization": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "client-file-preparation": {
       "module_roots": [
         "vera_assurance"
