@@ -468,7 +468,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.107"
+    assert manifest["version"] == "0.1.108"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -1066,6 +1066,98 @@ def test_projected_vera_upload_keeps_executable_new_client_review_bridges(
             output_dir=tmp_path,
         )
         assert workbench.mcp_server_path == projected_server
+
+
+def test_projected_vera_journal_bank_dependency_check_succeeds(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    extracted = tmp_path / "projected-vera"
+    builder.write_entries_to_directory(
+        extracted,
+        builder.chatgpt_upload_entries(vera),
+    )
+    component_root = extracted / "modules" / "journal-bank-reconciliation"
+
+    completed = subprocess.run(
+        [sys.executable, "scripts/check_dependencies.py"],
+        cwd=component_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert "OK: all selected plugin dependencies are importable" in completed.stdout
+
+
+def test_projected_vera_journal_bank_dependency_check_rejects_mixed_layout(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    extracted = tmp_path / "projected-vera"
+    builder.write_entries_to_directory(
+        extracted,
+        builder.chatgpt_upload_entries(vera),
+    )
+    component_root = extracted / "modules" / "journal-bank-reconciliation"
+    (component_root / ".app.json").write_bytes(
+        (ROOT / "plugins" / "journal-bank-reconciliation" / ".app.json").read_bytes()
+    )
+
+    completed = subprocess.run(
+        [sys.executable, "scripts/check_dependencies.py"],
+        cwd=component_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode != 0
+    assert "implementation host layouts cannot be mixed" in completed.stderr
+
+
+def test_projected_vera_journal_bank_builds_exact_implementation_receipts(
+    tmp_path: Path,
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    extracted = tmp_path / "projected-vera"
+    builder.write_entries_to_directory(
+        extracted,
+        builder.chatgpt_upload_entries(vera),
+    )
+    component_root = extracted / "modules" / "journal-bank-reconciliation"
+    receipt_probe = (
+        "import json, sys; "
+        "sys.path.insert(0, 'scripts'); "
+        "import journal_bank_core as core; "
+        "print(json.dumps(core.build_implementation_artifact_receipts()))"
+    )
+
+    completed = subprocess.run(
+        [sys.executable, "-c", receipt_probe],
+        cwd=component_root,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    receipt_paths = {
+        (receipt["root_id"], receipt["path"])
+        for receipt in json.loads(completed.stdout)
+    }
+    assert ("implementation", "scripts/review_mcp_server.cjs") in receipt_paths
+    assert ("implementation", "scripts/review_server.py") in receipt_paths
+    assert ("implementation", ".app.json") not in receipt_paths
+    assert ("implementation", ".mcp.json") not in receipt_paths
+    assert ("implementation", "mcp/server.cjs") not in receipt_paths
 
 
 def test_configured_bundle_zip_matches_repo_source() -> None:
