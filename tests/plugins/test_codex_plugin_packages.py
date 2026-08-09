@@ -3212,7 +3212,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../sales-plan/index.html",
         "../financial-analysis/index.html",
         "index.html#comunicazione-professionale",
-        "#installa",
+        "index.html#presenza-digitale-studio",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -3463,6 +3463,33 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     assert "counter-reset: comms-point" in page
     assert 'content: "0" counter(comms-point)' in page
     assert "Fonte: fonte ufficiale" not in section
+
+
+def test_vera_page_explains_studio_website_quality_contract() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    section_start = page.index('id="presenza-digitale-studio"')
+    section_end = page.index("</section>", section_start)
+    section = page[section_start:section_end]
+
+    for required_copy in (
+        "Un sito decente, attuale e credibile.",
+        "Il sito deve fare bene il suo lavoro, non sembrare un progetto tecnologico.",
+        "Primo sito",
+        "Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura",
+        "Desktop e telefono",
+        "L’identità resta dello Studio.",
+        "Non basta un mock-up",
+        "Sites può costruire e ospitare la versione approvata.",
+        "Il commercialista decide",
+    ):
+        assert required_copy in section
+    assert section.count('class="comms-step"') == 4
+    assert section.count('class="comms-profile__item"') == 3
+    assert section.count('class="comms-assurance__row"') == 4
+    assert 'href="index.html#presenza-digitale-studio"' in page
+    assert 'href="#presenza-digitale-studio"' in page
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
@@ -4429,6 +4456,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             (
                 "#core",
                 "#comunicazione-professionale",
+                "#presenza-digitale-studio",
                 "#assurance",
                 "#jurisdiction",
                 "#data-boundary",
