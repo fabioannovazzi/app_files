@@ -208,16 +208,16 @@
   `TEXT_ONLY`. See `docs/bilancio_schedule_taxonomy_audit.json` at the
   repository root.
 - A checked-in 24-case synthetic regression register covers every scenario in
-  specification section 23.3. On 2026-08-06, twenty controlled XBRL instances
+  specification section 23.3. On 2026-08-10, twenty controlled XBRL instances
   passed the checksum-pinned offline Arelle validator and four unsupported,
   adversarial, or professional-treatment cases passed their production boundary
   contracts. All twenty XBRL cases traverse the public lifecycle, complete
   selected-form presentation and disclosure coverage, and bind approval to a
   passing local processor result. Every ordinary case reconciles its reviewed
-  cash-flow schedule to the statutory XBRL root. The eight non-cash families
-  present when the controlled suite was recorded exercise a complete adapter
-  disposition and emit representative official schedule facts; inventory has
-  separate contract, disclosure, and official-catalogue audit tests. The run records exact
+  cash-flow schedule to the statutory XBRL root. All nine non-cash families
+  exercise a complete adapter disposition and emit representative official
+  schedule facts; inventory additionally has contract, disclosure, statement-line,
+  terminal-review-state, and official-catalogue audit tests. The run records exact
   suite, catalogue, package, rule-pack, instance, and report checksums and
   explicitly leaves TEBENI as a user-controlled open gate. Golden case 5 is a
   true first-year instance with a current-only source file and no comparative

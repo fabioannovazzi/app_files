@@ -64,6 +64,33 @@ def _catalogue() -> dict[str, object]:
                 "label_it": "Classe",
             },
             {
+                "qname": "itcc:InventoryTable",
+                "type": "xbrli:stringItemType",
+                "period_type": "instant",
+                "abstract": True,
+                "is_item": True,
+                "is_tuple": False,
+                "label_it": "Rimanenze",
+            },
+            {
+                "qname": "itcc:InventoryClosing",
+                "type": "xbrli:monetaryItemType",
+                "period_type": "instant",
+                "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
+                "label_it": "Rimanenze finali",
+            },
+            {
+                "qname": "itcc:InventoryMovement",
+                "type": "xbrli:monetaryItemType",
+                "period_type": "duration",
+                "abstract": False,
+                "is_item": True,
+                "is_tuple": False,
+                "label_it": "Variazione rimanenze",
+            },
+            {
                 "qname": "itcc:ProvisionTuple",
                 "type": "xbrli:stringItemType",
                 "period_type": None,
@@ -137,6 +164,20 @@ def _catalogue() -> dict[str, object]:
                     "to": "itcc:TupleLabel",
                     "order": "2",
                 },
+                {
+                    "form": "ORDINARY",
+                    "role": ROLE,
+                    "from": "itcc:InventoryTable",
+                    "to": "itcc:InventoryClosing",
+                    "order": "1",
+                },
+                {
+                    "form": "ORDINARY",
+                    "role": ROLE,
+                    "from": "itcc:InventoryTable",
+                    "to": "itcc:InventoryMovement",
+                    "order": "2",
+                },
             ]
         },
     }
@@ -154,7 +195,11 @@ def _rule_pack() -> dict[str, object]:
                 "PROVISIONS": {
                     "strategy": "TABLE_FACTS",
                     "table_roots": ["itcc:ProvisionTable"],
-                }
+                },
+                "INVENTORIES": {
+                    "strategy": "TABLE_FACTS",
+                    "table_roots": ["itcc:InventoryTable"],
+                },
             }
         },
     }
@@ -237,6 +282,113 @@ def _decisions() -> list[dict[str, object]]:
     ]
 
 
+def _inventory_case() -> dict[str, object]:
+    row = {
+        field: "0" for field in schedule_engine.schedule_template_fields("INVENTORIES")
+    }
+    row.update(
+        {
+            "row_id": "finished_goods",
+            "source_refs": ["inventory_ledger_1"],
+            "opening_amount": "90",
+            "increases": "20",
+            "decreases": "5",
+            "write_downs": "3",
+            "other_movements": "-2",
+            "closing_amount": "100",
+            "inventory_class": "FINISHED_GOODS",
+            "valuation_basis": "LOWER_OF_COST_AND_NRV",
+            "costing_method": "WEIGHTED_AVERAGE",
+            "nrv_assessment_status": "REVIEWED",
+            "obsolescence_assessment_status": "REVIEWED",
+            "count_evidence_status": "COUNT_RECONCILED",
+            "pledged_status": "NOT_PLEDGED_CONFIRMED",
+        }
+    )
+    return {
+        "selected_form": "ORDINARY",
+        "output_language": "it",
+        "statements": {"facts": []},
+        "statutory_presentation": {"status": "COMPLETE", "output_facts": []},
+        "taxonomy_facts": [],
+        "schedules": [
+            {
+                "schedule_id": "inventories_1",
+                "schedule_type": "INVENTORIES",
+                "status": "COMPLETE",
+                "rows": [row],
+            }
+        ],
+    }
+
+
+def _inventory_decisions() -> list[dict[str, object]]:
+    prefix = "schedule:inventories_1:finished_goods:"
+    mapped = {
+        "closing_amount",
+        "increases",
+        "decreases",
+        "reclassifications",
+        "write_downs",
+        "write_down_reversals",
+        "other_movements",
+    }
+    all_fields = {
+        *schedule_engine.schedule_template_fields("INVENTORIES"),
+        *schedule_engine.schedule_template_text_fields("INVENTORIES"),
+    }
+    return [
+        {
+            "schedule_type": "INVENTORIES",
+            "strategy": "TABLE_FACTS",
+            "outputs": [
+                {
+                    "xbrl_concept": "itcc:InventoryClosing",
+                    "period": "current_instant",
+                    "inputs": [
+                        {
+                            "schedule_fact_id": f"{prefix}closing_amount",
+                            "multiplier": "1",
+                        }
+                    ],
+                },
+                {
+                    "xbrl_concept": "itcc:InventoryMovement",
+                    "period": "current_duration",
+                    "inputs": [
+                        {"schedule_fact_id": f"{prefix}increases", "multiplier": "1"},
+                        {"schedule_fact_id": f"{prefix}decreases", "multiplier": "-1"},
+                        {
+                            "schedule_fact_id": f"{prefix}reclassifications",
+                            "multiplier": "1",
+                        },
+                        {
+                            "schedule_fact_id": f"{prefix}write_downs",
+                            "multiplier": "-1",
+                        },
+                        {
+                            "schedule_fact_id": f"{prefix}write_down_reversals",
+                            "multiplier": "1",
+                        },
+                        {
+                            "schedule_fact_id": f"{prefix}other_movements",
+                            "multiplier": "1",
+                        },
+                    ],
+                },
+            ],
+            "omissions": [
+                {
+                    "schedule_fact_id": f"{prefix}{field}",
+                    "status": "REPRESENTED_ELSEWHERE_CONFIRMED",
+                    "reason": "Not represented by this controlled miniature table.",
+                }
+                for field in sorted(all_fields - mapped)
+            ],
+        }
+    ]
+
+
 def test_compile_schedule_taxonomy_adapter_derives_reviewed_table_facts() -> None:
     result = adapter.compile_schedule_taxonomy_adapter(
         _case(), _catalogue(), _rule_pack(), _decisions(), "reviewer_1"
@@ -251,6 +403,27 @@ def test_compile_schedule_taxonomy_adapter_derives_reviewed_table_facts() -> Non
     } == {
         ("itcc:ProvisionOpening", "MONETARY", "10"),
         ("itcc:ProvisionClass", "TEXT", "Fondo contenzioso"),
+    }
+
+
+def test_compile_inventory_schedule_derives_closing_and_movement_facts() -> None:
+    result = adapter.compile_schedule_taxonomy_adapter(
+        _inventory_case(),
+        _catalogue(),
+        _rule_pack(),
+        _inventory_decisions(),
+        "reviewer_1",
+    )
+
+    assert result["status"] == "COMPLETE"
+    assert result["coverage"][0]["input_fact_count"] == 15
+    assert result["coverage"][0]["mapped_input_count"] == 7
+    assert {
+        (fact["xbrl_concept"], fact["period"], fact["value"])
+        for fact in result["generated_facts"]
+    } == {
+        ("itcc:InventoryClosing", "current_instant", "100"),
+        ("itcc:InventoryMovement", "current_duration", "10"),
     }
 
 

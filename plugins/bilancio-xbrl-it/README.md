@@ -165,7 +165,13 @@ The inventory template reconciles opening and closing classes through reviewed
 increases, decreases, reclassifications, write-downs, reversals, and other
 movements. Costing method, valuation basis, net-realisable-value,
 obsolescence, count evidence, and pledged-stock status are required
-professional inputs; the engine checks their presence but does not infer them.
+professional inputs; the engine does not infer them. The four assessment fields
+close only with controlled terminal review states, and the selected statement
+line must be backed exclusively by reviewed mappings to the selected form's
+inventory concepts.
+Reclassifications may cross another balance-sheet class because the movement
+and opening/closing statement tie-outs, rather than an assumed net-zero rule,
+provide the mechanical control.
 
 Cases default to Italian output (`output_language: "it"`) and may explicitly
 select English (`"en"`). Accepted narrative blocks and taxonomy text facts must
