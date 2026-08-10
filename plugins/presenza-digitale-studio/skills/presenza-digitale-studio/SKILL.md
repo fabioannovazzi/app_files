@@ -27,7 +27,8 @@ Read completely before execution:
 - `references/product-thesis.md`;
 - `references/workflow-method.md`;
 - `references/website-quality-standard.md`;
-- `references/skill-orchestration.md`.
+- `references/skill-orchestration.md`;
+- `references/sites-handoff.md` when a preview or final route uses Sites.
 
 ## Output location
 
@@ -55,8 +56,10 @@ working directory.
   Use a callable connector, a supported authenticated browser, or a user-run
   handoff without exposing credentials.
 - Keep transactional portals, client areas, e-commerce, booking/payment flows,
-  bespoke applications and regulatory legal drafting outside this workflow.
-  Identify them as separate scoped work.
+  contact forms, third-party embeds, remote executable scripts, bespoke
+  applications and regulatory legal drafting outside this workflow. Identify
+  them as separate, explicitly reviewed integrations rather than hiding them
+  inside an informational-site build.
 - Reserve explicit approval for external, destructive, approval-sensitive, or
   materially unresolved steps. Do not add ceremonial pauses to reversible
   inspection, drafting, implementation or local validation.
@@ -95,9 +98,11 @@ website run.
 2. Determine `refresh` or `first_site` from the evidence. Do not ask when the
    presence or absence of an existing website is clear.
 3. Show a compact Run Intake with studio, mode, objective, audiences, selected
-   materials, requested pages, current platform when known, and four external
-   route records: `public_site_inspection`, `creative_assistance`,
-   `preview_publication`, and `final_publication`.
+   materials, requested pages, current platform when known, and five external
+   route records: `public_site_inspection`, `studio_material_connector`,
+   `creative_assistance`, `preview_publication`, and `final_publication`. Each
+   route records its provider; use `sites` only when that exact hosting route
+   was selected.
 4. Before helper scripts or write-heavy work, identify material choices that
    would change execution: public identity, audience, information scope,
    destination or review posture. Ask only those unresolved choices in chat.
@@ -122,8 +127,12 @@ website run.
      --intake <website_intake.json>
    ```
 
-   Preparation snapshots every selected local file, records SHA-256 and creates
-   `work/site/`. A URL is not a source snapshot. When public inspection was
+   Preparation requires at least one selected evidence file or one exact fact
+   explicitly confirmed by the professional. Put chat-confirmed first-site facts
+   in `confirmed_facts`; preparation snapshots each fact as immutable evidence
+   without asking the professional to manufacture a document. It snapshots every
+   selected local file, records SHA-256 and creates `work/site/` plus the
+   optional `work/sites-project/`. A URL is not a source snapshot. When public inspection was
    selected, capture the exact HTML, screenshots or extracted evidence used and
    add those local files to a new prepared run.
 6. Inspect evidence and write `site_brief.json` against its schema. In
@@ -150,13 +159,14 @@ website run.
 
    The validator checks only mechanically verifiable properties: file
    integrity, required HTML metadata, heading shape, alternative-text
-   presence, duplicate IDs, local link/asset closure, unsafe schemes,
-   placeholders and preview-indexing posture. It does not judge aesthetics,
+   presence, duplicate IDs, local link/asset closure, unsafe schemes, out-of-scope
+   forms and active embeds, placeholders and preview-indexing posture. It does not judge aesthetics,
    copy quality, accessibility conformance or professional truth.
 9. Render the exact site in a browser at desktop and phone widths. Inspect the
    full page, interaction state, overflow, navigation, images, typography,
-   hierarchy and console errors. Write `quality_assessment.json` against its
-   schema and record it:
+   hierarchy and console errors. Save the exact full-page PNG for each claimed
+   viewport below `reviews/browser/`, record its run-relative path and SHA-256
+   in `quality_assessment.json`, then record it:
 
    ```bash
    python scripts/record_quality_assessment.py \
@@ -172,9 +182,11 @@ website run.
     python scripts/package_website.py --run-dir <run-dir> --kind preview
     ```
 
-    The preview package requires `noindex` and binds exact bytes. Publish it
-    only to the selected destination, verify the visible URL, then record the
-    receipt with `record_external_delivery.py`.
+    The preview package requires `noindex, nofollow, noarchive` on every page
+    and binds exact bytes. Publish it only to the selected destination and
+    verify the visible URL. For Sites, follow `references/sites-handoff.md` and
+    use `record_sites_delivery.py`; for another selected provider, use
+    `record_external_delivery.py`.
 11. Present one visible review matrix for `identity_and_claims`,
     `responsive_preview` and `publication_destination`. Record only explicit
     decisions against the current site digest:
@@ -185,7 +197,9 @@ website run.
       --reviewer <professional> --confirmed-by-user
     ```
 
-12. Package the release only after all three scopes are accepted:
+12. Remove every preview robots directive, then revalidate, repeat browser
+    assessment and obtain current reviews for the changed release bytes.
+    Package the release only after all three scopes are accepted:
 
     ```bash
     python scripts/package_website.py --run-dir <run-dir> --kind release
@@ -194,6 +208,12 @@ website run.
 
     Publish only through the exact selected route. Verify the live site and
     record the exact URL or receipt. A package is not evidence of publication.
+
+    When the selected provider is Sites, do not use the generic delivery
+    recorder. Follow `references/sites-handoff.md`, place the current binding
+    and the exact approved-site payload inside the deployment archive, capture
+    desktop and phone PNG evidence from the succeeded deployed URL, and record
+    the Sites receipt with `record_sites_delivery.py`.
 
 ## Completion
 

@@ -18,8 +18,8 @@ the Artifact Card.
 | Quality review | `audit` | Review accessibility, resilience, performance and interface quality. |
 | Optional imagery | `imagegen` | Create or edit a visual only when the studio selects that route and the result is reviewed. |
 | Optional art direction | `creative-production:produce` | Explore non-final art directions; never supply claims, copy or publication approval. |
-| Optional hosted build | `sites:sites-building` | Build on Sites only when the user selects that platform. |
-| Optional Sites publication | `sites:sites-hosting` | Publish an accepted exact site on Sites; always follow a Sites build. |
+| Optional hosted build | `sites:sites-building` | Build the run-owned adapter in `work/sites-project/` only when the selected route provider is `sites`; Vera browser QA remains mandatory. |
+| Optional Sites publication | `sites:sites-hosting` | Save and deploy the bound Sites archive after the Vera package and review chain are current; always follow a Sites build and `sites-handoff.md`. |
 
 Do not require every skill. Skip irrelevant stages and state unavailable
 optional capabilities. When no design skill is callable, apply

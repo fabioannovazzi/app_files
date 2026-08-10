@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/sites-delivery-v2.json",
+  "title": "Sites publication receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "provider",
+    "kind",
+    "destination",
+    "project_id",
+    "commit_sha",
+    "archive_path",
+    "archive_sha256",
+    "binding_member",
+    "site_payload_member",
+    "site_payload_sha256",
+    "site_version_id",
+    "deployment_id",
+    "deployment_status",
+    "access_level",
+    "access_approved_by_user",
+    "deployed_url",
+    "browser_review",
+    "site_digest",
+    "validation_digest",
+    "quality_assessment_digest",
+    "reviews_digest",
+    "package_digest"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "provider": {"const": "sites"},
+    "kind": {"enum": ["preview", "release"]},
+    "destination": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40,64}$"},
+    "archive_path": {"type": "string", "minLength": 1},
+    "archive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "binding_member": {"type": "string", "pattern": "(^|/)dist/\\.openai/vera-release-binding\\.json$"},
+    "site_payload_member": {"type": "string", "pattern": "(^|/)dist/\\.openai/vera-site-package\\.zip$"},
+    "site_payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "site_version_id": {"type": "string", "minLength": 1},
+    "deployment_id": {"type": "string", "minLength": 1},
+    "deployment_status": {"const": "succeeded"},
+    "access_level": {"enum": ["private", "shared", "public"]},
+    "access_approved_by_user": {"type": "boolean"},
+    "deployed_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+    "browser_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed_url",
+        "deployment_id",
+        "viewports",
+        "console_issues"
+      ],
+      "properties": {
+        "reviewed_url": {"type": "string", "format": "uri", "pattern": "^https://"},
+        "deployment_id": {"type": "string", "minLength": 1},
+        "viewports": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "width",
+              "height",
+              "full_page_reviewed",
+              "screenshot_path",
+              "screenshot_sha256",
+              "issues"
+            ],
+            "properties": {
+              "name": {"type": "string", "minLength": 1},
+              "width": {"type": "integer", "minimum": 280},
+              "height": {"type": "integer", "minimum": 400},
+              "full_page_reviewed": {"const": true},
+              "screenshot_path": {
+                "type": "string",
+                "pattern": "^reviews/sites/.+\\.png$"
+              },
+              "screenshot_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "issues": {"type": "array", "maxItems": 0}
+            }
+          },
+          "allOf": [
+            {"contains": {"properties": {"width": {"maximum": 600}}}},
+            {"contains": {"properties": {"width": {"minimum": 1024}}}}
+          ]
+        },
+        "console_issues": {"type": "array", "maxItems": 0}
+      }
+    },
+    "site_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "validation_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "quality_assessment_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reviews_digest": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "package_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"access_level": {"enum": ["shared", "public"]}}},
+      "then": {"properties": {"access_approved_by_user": {"const": true}}}
+    },
+    {
+      "if": {"properties": {"kind": {"const": "release"}}},
+      "then": {"properties": {"reviews_digest": {"type": "string"}}},
+      "else": {"properties": {"reviews_digest": {"type": "null"}}}
+    }
+  ]
+}

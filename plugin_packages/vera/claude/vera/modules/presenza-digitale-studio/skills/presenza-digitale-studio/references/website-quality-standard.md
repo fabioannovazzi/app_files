@@ -47,10 +47,14 @@ Later host-specific instructions in this reference cannot override this rule.
 - Do not claim WCAG conformance without a dedicated audit against the claimed
   level and representative assistive-technology testing.
 - Keep core content usable when remote fonts or optional scripts fail.
+- Keep forms, third-party frames or embeds, and remote executable scripts out of
+  an informational-site run unless they enter a separately scoped and reviewed
+  integration with its own visitor-data and security controls.
 
 ## Evidence standard
 
 The mechanical validator proves only what it measures. Visual quality,
 professional truth, information architecture, copy clarity and accessibility
 quality require explicit model-led and professional review of the rendered
-site.
+site. Bind each claimed desktop or phone review to a correctly sized full-page
+PNG so the review state cannot be created from viewport labels alone.

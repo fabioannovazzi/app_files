@@ -1343,6 +1343,55 @@ def _project_new_client_wrapper_cowork_skill(text: str) -> str:
     return text
 
 
+def _project_presenza_digitale_cowork_skill(text: str) -> str:
+    """Remove callable OpenAI Sites instructions from the Cowork workflow."""
+
+    replacements = (
+        (
+            "- `references/sites-handoff.md` when a preview or final route uses "
+            "Sites.",
+            "- `references/sites-handoff.md` when supplied artifacts already name "
+            "Sites, to preserve the Cowork-unavailable publication boundary.",
+        ),
+        (
+            "route records its provider; use `sites` only when that exact hosting "
+            "route\n   was selected.",
+            "route records its provider. Cowork must not select `sites` for a new "
+            "route;\n   use another provider only when the professional explicitly "
+            "selects it.",
+        ),
+        (
+            "verify the visible URL. For Sites, follow `references/sites-handoff.md` "
+            "and\n    use `record_sites_delivery.py`; for another selected provider, "
+            "use\n    `record_external_delivery.py`.",
+            "verify the visible URL. Cowork cannot initiate a Sites publication. "
+            "For\n    another explicitly selected provider, use "
+            "`record_external_delivery.py`;\n    for supplied Sites artifacts, "
+            "follow `references/sites-handoff.md` and\n    keep any unproven "
+            "publication pending.",
+        ),
+        (
+            "When the selected provider is Sites, do not use the generic delivery\n"
+            "    recorder. Follow `references/sites-handoff.md`, place the current "
+            "binding\n    and the exact approved-site payload inside the deployment "
+            "archive, capture\n    desktop and phone PNG evidence from the succeeded "
+            "deployed URL, and record\n    the Sites receipt with "
+            "`record_sites_delivery.py`.",
+            "When supplied artifacts name Sites, follow "
+            "`references/sites-handoff.md`,\n    review the existing binding and "
+            "receipt as evidence, and keep publication\n    pending unless those "
+            "artifacts already prove a succeeded deployment.",
+        ),
+    )
+    for source, target in replacements:
+        if text.count(source) != 1:
+            raise ValueError(
+                "Presenza digitale Cowork projection expected one Sites instruction"
+            )
+        text = text.replace(source, target)
+    return text
+
+
 def _project_registro_imprese_sari_cowork_skill(text: str) -> str:
     text = text.replace(
         "### Default: browser-assisted public SARI lookup",
@@ -1623,6 +1672,11 @@ def project_cowork_skill(
     elif relative_path == "modules/check-entries/skills/check-entries/SKILL.md":
         text = _project_check_entries_cowork_skill(text)
     elif (
+        relative_path
+        == "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md"
+    ):
+        text = _project_presenza_digitale_cowork_skill(text)
+    elif (
         relative_path == "modules/journal-bank-reconciliation/skills/"
         "journal-bank-reconciliation/SKILL.md"
     ):
@@ -1688,6 +1742,72 @@ def _project_cowork_reference(
         text = _remove_optional_section(
             text,
             "## Codex-Only Residual Resolution Funnel",
+        )
+    elif (
+        relative_path
+        == "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/sites-handoff.md"
+    ):
+        text = """# Sites handoff unavailable in Cowork
+
+OpenAI Sites is not callable from this Cowork package. Never select
+`provider: sites`, run the Sites binding or delivery recorders, invoke Sites
+build or hosting skills, or claim that Cowork created a Sites preview, version,
+deployment, or publication receipt.
+
+When reviewing artifacts from an existing Vera run whose selected provider is
+Sites, inspect the supplied evidence, package digests, binding, and receipt only
+as documents. Keep preview or final publication pending unless the supplied
+artifacts already prove a succeeded deployment. A compatible OpenAI Sites
+runtime must perform any new build or hosting action. Use another provider only
+when the professional explicitly selects that different route.
+"""
+    elif (
+        relative_path
+        == "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/skill-orchestration.md"
+    ):
+        source_rows = (
+            "| Optional hosted build | `sites:sites-building` | Build the run-owned "
+            "adapter in `work/sites-project/` only when the selected route provider "
+            "is `sites`; Vera browser QA remains mandatory. |\n"
+            "| Optional Sites publication | `sites:sites-hosting` | Save and deploy "
+            "the bound Sites archive after the Vera package and review chain are "
+            "current; always follow a Sites build and `sites-handoff.md`. |"
+        )
+        if text.count(source_rows) != 1:
+            raise ValueError(
+                "Presenza digitale Cowork orchestration expected two Sites rows"
+            )
+        text = text.replace(
+            source_rows,
+            "| OpenAI Sites build and publication | Unavailable in Cowork | Review "
+            "only supplied Sites artifacts through `sites-handoff.md`; never claim "
+            "a new build or deployment. |",
+        )
+    elif (
+        relative_path
+        == "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/workflow-method.md"
+    ):
+        source_paragraph = (
+            "When Sites is selected, also bind the exact Vera package to the Sites "
+            "source\ncommit, deployment archive, saved version and succeeded "
+            "deployment. The archive\nmust contain both the current Vera binding and "
+            "a re-verifiable ZIP of the exact\napproved site files. Treat the deployed "
+            "URL as proof only after desktop and\nphone PNG evidence covers that exact "
+            "succeeded deployment."
+        )
+        if text.count(source_paragraph) != 1:
+            raise ValueError(
+                "Presenza digitale Cowork method expected one Sites paragraph"
+            )
+        text = text.replace(
+            source_paragraph,
+            "OpenAI Sites is unavailable for new Cowork publication. When supplied "
+            "artifacts\nalready name Sites, review their package, binding, archive, "
+            "version and deployment\nreceipts as evidence and keep publication "
+            "pending unless that exact evidence proves\na succeeded deployment.",
         )
     if "Cowork execution note" not in text:
         text = f"{COWORK_REFERENCE_CONTRACT.strip()}\n\n{text.lstrip()}"

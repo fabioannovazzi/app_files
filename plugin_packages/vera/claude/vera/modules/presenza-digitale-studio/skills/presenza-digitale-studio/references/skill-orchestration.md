@@ -28,8 +28,7 @@ the Artifact Card.
 | Quality review | `audit` | Review accessibility, resilience, performance and interface quality. |
 | Optional imagery | `imagegen` | Create or edit a visual only when the studio selects that route and the result is reviewed. |
 | Optional art direction | `creative-production:produce` | Explore non-final art directions; never supply claims, copy or publication approval. |
-| Optional hosted build | `sites:sites-building` | Build on Sites only when the user selects that platform. |
-| Optional Sites publication | `sites:sites-hosting` | Publish an accepted exact site on Sites; always follow a Sites build. |
+| OpenAI Sites build and publication | Unavailable in Cowork | Review only supplied Sites artifacts through `sites-handoff.md`; never claim a new build or deployment. |
 
 Do not require every skill. Skip irrelevant stages and state unavailable
 optional capabilities. When no design skill is callable, apply
