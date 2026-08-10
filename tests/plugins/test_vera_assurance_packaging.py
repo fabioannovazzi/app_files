@@ -27,6 +27,7 @@ ASSURANCE_CONSUMERS = {
     "registro-imprese-sari",
     "report-builder",
     "sales-plan",
+    "variance-analysis",
     "studio-archive",
     "vera",
 }

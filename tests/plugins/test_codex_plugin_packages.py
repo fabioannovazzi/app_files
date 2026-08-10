@@ -26,6 +26,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "deep-research-validator",
     "financial-analysis",
     "sales-plan",
+    "variance-analysis",
     "client-file-preparation",
     "new-client",
     "journal-bank-reconciliation",
@@ -716,7 +717,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 25
+        assert len(card_bodies) == 26
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -2638,7 +2639,7 @@ def test_static_plugin_pages_share_quiet_white_theme() -> None:
     for page_path in ACCOUNTING_STATIC_PLUGIN_PAGES:
         page = page_path.read_text(encoding="utf-8")
 
-        if '../vera-journey.css?v=' in page:
+        if "../vera-journey.css?v=" in page:
             assert re.search(
                 r'href="\.\./vera-journey\.css\?v=[^"]+"',
                 page,
@@ -3214,6 +3215,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
+        "index.html#analisi-scostamenti",
         "../financial-analysis/index.html",
         "index.html#comunicazione-professionale",
         "index.html#presenza-digitale-studio",
@@ -3232,8 +3234,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 14
-    assert core.count('class="module-row"') == 14
+    assert core.count(" data-module-link") == 15
+    assert core.count('class="module-row"') == 15
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -3331,6 +3333,7 @@ def test_vera_page_localizes_every_module_title() -> None:
         "module.bank.title",
         "module.reconciliation.title",
         "module.plan.title",
+        "module.variance.title",
         "module.financialAnalysis.title",
         "module.communication.title",
         "module.report.title",
@@ -3355,7 +3358,9 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_places_reviewed_archive_organization_between_intake_and_search() -> None:
+def test_vera_page_places_reviewed_archive_organization_between_intake_and_search() -> (
+    None
+):
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3416,14 +3421,19 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "adjusted EBITDA" in page
     assert "net debt" in page
     for localized_count in (
+        "Diciotto funzioni",
+        "Eighteen capabilities",
+        "Dix-huit fonctions",
+        "Achtzehn Funktionen",
+        "Dieciocho funciones",
+    ):
+        assert localized_count in page
+    for stale_count in (
         "Diciassette funzioni",
         "Seventeen capabilities",
         "Dix-sept fonctions",
         "Siebzehn Funktionen",
         "Diecisiete funciones",
-    ):
-        assert localized_count in page
-    for stale_count in (
         "Sedici funzioni",
         "Sixteen capabilities",
         "Seize fonctions",
@@ -3441,6 +3451,49 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
         "Trece funciones",
     ):
         assert stale_count not in page
+
+
+def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    module = re.search(
+        r'<a[^>]+id="variance-analysis".*?</a>',
+        page,
+        flags=re.DOTALL,
+    )
+    section_start = page.index('id="analisi-scostamenti"')
+    section_end = page.index("</section>", section_start)
+    section = page[section_start:section_end]
+
+    assert module is not None
+    assert 'href="index.html#analisi-scostamenti"' in module.group(0)
+    assert 'data-i18n="module.variance.title"' in module.group(0)
+    assert 'data-i18n="module.variance"' in module.group(0)
+    for required_concept in (
+        "consuntivo (Actual), Budget, Forecast o periodo precedente",
+        "analisi a soli valori",
+        "prezzo-volume-mix",
+        "Waterfall, bridge per componente e dimensione, viste esplose e drilldown",
+        "classificazione favorevole/sfavorevole",
+        "richiedono conferma professionale",
+    ):
+        assert required_concept in section
+    for localized_title in (
+        "Analisi degli scostamenti",
+        "Variance analysis",
+        "Analyse des écarts",
+        "Abweichungsanalyse",
+        "Análisis de desviaciones",
+    ):
+        assert localized_title in page
+    for localized_value_only_boundary in (
+        "value-only analysis",
+        "analyse en valeur uniquement",
+        "nur Wertabweichungen",
+        "análisis solo de valor",
+    ):
+        assert localized_value_only_boundary in page
 
 
 def test_vera_page_explains_professional_communication_quality_contract() -> None:

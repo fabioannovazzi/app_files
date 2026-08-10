@@ -76,7 +76,8 @@ network count that differs from the versioned policy, requires explicit current
 and comparative decisions for every absent leaf, and uses the official
 calculation weights to derive or verify totals.
 
-Observed on 2026-08-05 with the same package and catalogue:
+Observed on 2026-08-10 with the same package and catalogue after adding the
+inventory-balance schedule trigger:
 
 | Form | Unique required leaves | Unique totals | Emitted facts | Local XBRL result |
 | --- | ---: | ---: | ---: | --- |
@@ -100,8 +101,9 @@ compatibility.
 ## Controlled schedule-table boundaries
 
 The schedule adapter at `scripts/schedule_taxonomy_adapter.py` uses a versioned
-policy to select official presentation roots for fixed assets, receivables,
-payables, equity, provisions, TFR, tax and guarantees/commitments. It derives
+policy to select official presentation roots for fixed assets, inventories,
+receivables, payables, equity, provisions, TFR, tax and
+guarantees/commitments. It derives
 the permitted descendants from the locked catalogue, requires a reviewed
 mapping or omission for every normalized schedule cell, derives fact values
 without model arithmetic, and reconciles any concept already emitted by the
@@ -111,20 +113,20 @@ The checked audit at `scripts/audit_schedule_taxonomy.py` observed:
 
 | Form | Schedule families | Permitted unique monetary table concepts | Route |
 | --- | ---: | ---: | --- |
-| Ordinary | 8 | 623 | `TABLE_FACTS` |
-| Abbreviated | 8 | 453 | `TABLE_FACTS` |
-| Micro | 8 | 0 | `TEXT_ONLY` |
+| Ordinary | 9 | 635 | `TABLE_FACTS` |
+| Abbreviated | 9 | 465 | `TABLE_FACTS` |
+| Micro | 9 | 0 | `TEXT_ONLY` |
 
 The ordinary inventory SHA-256 is
-`ee0178b2e8fb35cbab1d3ecca5782de3c04f7abc02f9d964c78dbac06b8db376`;
+`1a2a7faa9e444f3359f14f7ef8ab9c199c84a2abd882e5cff608b6334280baec`;
 the abbreviated inventory SHA-256 is
-`eb59426cfc2bdc11e4fb2529fa90a070cb861dc0dea84e3ea9baedfefb61c598`;
+`99efd0f104da6bfc6b699f37418766a22eca67fcf01e2b1cfc8cbb37574f2b4b`;
 the micro inventory SHA-256 is
-`b86889e511bad1f958044f9cb0b3d72bf252a6db57c77f8b26a71b922e53d4a7`.
+`4b967f4ee316a3aa2b31f28bab4cf77b8d7bc55a1b8d8d5844497b63e2a9ee0b`.
 The adapter policy SHA-256 is
-`e8e90f6954003c4c2e768fbd4eca81635fc9a3503f25b98d9aae1c09fd197cd4`,
+`030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599`,
 and the checked audit report SHA-256 is
-`6624a549971d3b84ce609f15938c86d2ad18e4d9ab436d091eab6161fe0bea45`.
+`9ede099209c7bf9e4a2dd577ae1371e7a4251399294178a270637f9a28ecb020`.
 
 The corrected counts exclude tuple containers and non-item schema concepts.
 Reportable descendants inside tuple tables remain available with exact
@@ -150,7 +152,7 @@ XBRL fixture through the public case lifecycle from source ingestion through
 professional approval and export. It checks rendered values, invokes offline
 Arelle, and writes a checksum manifest.
 
-Re-executed on 2026-08-06 with the package and catalogue above:
+Re-executed on 2026-08-10 with the package and catalogue above:
 
 - suite status: `PASS`;
 - cases passed: `24/24`;
@@ -167,15 +169,17 @@ Re-executed on 2026-08-06 with the package and catalogue above:
 - generated catalogue SHA-256:
   `0699148330d4d905b85649a558efe94d1c0e40fcaea5c16d988f1699b9ffc30f`;
 - statutory-presentation rule-pack SHA-256:
-  `6a58a1fd61f6327c9a21c57de765a0f66e6485f3359bb9dd9d288f1362bc3e0d`;
+  `d7d8b189b36a5177c24954a1956253b89f9b14d2d39fbd0174b9a5df4a73b857`;
 - schedule-taxonomy rule-pack SHA-256:
-  `e8e90f6954003c4c2e768fbd4eca81635fc9a3503f25b98d9aae1c09fd197cd4`;
+  `030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599`;
 - golden-suite input SHA-256:
   `2d7930aecbd42867b34260a5449702f755c86f61d33612111378e3d39aeef5a6`;
-- eight non-cash schedule workflows record complete per-cell adapter
-  dispositions and emit representative official schedule facts;
+- all nine non-cash schedule families record complete per-cell adapter
+  dispositions and emit representative official schedule facts; inventory is
+  exercised by golden case 6 and emits the official total inventory-movement
+  concept;
 - final controlled run manifest SHA-256:
-  `cba338586e33bae658c17d94ca67c395a70a46185358c79968bbe7ae4f46d841`;
+  `d3e2d8edb97bf7115971272cd745e89b313046e3d60a2d0858645197d71c28b2`;
 - external TEBENI status: `NOT_RUN_USER_CONTROLLED`.
 
 This evidence proves the controlled renderer and boundary paths used by the

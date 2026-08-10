@@ -4,9 +4,31 @@ from __future__ import annotations
 
 import argparse
 import logging
+import sys
 from pathlib import Path
 
-from variance_core import add_common_args, configure_logging, run_variance_analysis
+from variance_core import (
+    add_common_args,
+    configure_logging,
+    is_vera_managed_host,
+    run_variance_analysis,
+)
+
+PLUGIN_ROOT = Path(__file__).resolve().parents[1]
+for _vendor_root in (
+    PLUGIN_ROOT / "vendor" / "modules",
+    PLUGIN_ROOT.parent.parent / "vendor" / "modules",
+    PLUGIN_ROOT.parent / "_shared" / "vendor" / "modules",
+):
+    if (_vendor_root / "vera_assurance").is_dir():
+        if str(_vendor_root) not in sys.path:
+            sys.path.insert(0, str(_vendor_root))
+        break
+
+from vera_assurance import (  # noqa: E402
+    AssuranceContractError,
+    load_client_engagement_context_file,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -201,9 +223,38 @@ def main() -> int:
         "--currency",
         help="Currency code for monetary outputs. Defaults to EUR when omitted.",
     )
+    parser.add_argument(
+        "--client-engagement",
+        type=Path,
+        required=False,
+        help=(
+            "Optional absolute Studio Archive context.json. Vera requires it; "
+            "standalone and Clara runs may omit it."
+        ),
+    )
     add_common_args(parser)
     args = parser.parse_args()
     configure_logging(args.verbose)
+
+    vera_managed_host = is_vera_managed_host()
+    if vera_managed_host and args.client_engagement is None:
+        parser.error("--client-engagement is required by the Vera packaged runner")
+    client_engagement = None
+    if args.client_engagement is not None:
+        if not args.currency:
+            parser.error("--currency is required for a Vera managed variance run")
+        input_paths = [args.input_file]
+        if args.recipe is not None:
+            input_paths.append(args.recipe)
+        try:
+            client_engagement = load_client_engagement_context_file(
+                args.client_engagement,
+                expected_workflow_id="variance-analysis",
+                input_paths=input_paths,
+                output_dir=args.output_dir,
+            )
+        except AssuranceContractError as exc:
+            parser.error(str(exc))
 
     result = run_variance_analysis(
         args.input_file,
@@ -271,6 +322,7 @@ def main() -> int:
         currency=args.currency,
         language=args.language,
         artifact_mode=args.artifact_mode,
+        client_engagement=client_engagement,
     )
     LOGGER.info("result_rows=%s", result.frame.height)
     LOGGER.info("outputs=%s", sorted(result.audit["outputs"]))

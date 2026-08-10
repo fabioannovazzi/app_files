@@ -4806,6 +4806,44 @@ def record_schedule(
     if not statements:
         raise ValueError("Statements must be computed before schedules")
     reviewed_payload = deepcopy(dict(payload))
+    schedule_type = str(reviewed_payload.get("schedule_type", "")).upper()
+    if schedule_type == "INVENTORIES":
+        statement_line = str(reviewed_payload.get("statement_line", ""))
+        inventory_concepts = {
+            str(item["xbrl_concept"])
+            for item in (case.get("taxonomy_mapping_index") or {}).get("concepts", [])
+            if schedule_type
+            in {str(value).upper() for value in item.get("schedule_types", [])}
+        }
+        line_classifications: dict[str, list[bool]] = {}
+        for mapping in case.get("mappings", []):
+            for allocation in mapping.get("allocations", []):
+                line = str(allocation["canonical_line"])
+                is_inventory = (
+                    str(allocation.get("xbrl_concept") or "") in inventory_concepts
+                )
+                if case.get("statutory_presentation_required") is False:
+                    is_inventory = is_inventory or schedule_type in {
+                        str(value).upper()
+                        for value in allocation.get("schedule_triggers", [])
+                    }
+                line_classifications.setdefault(line, []).append(is_inventory)
+        for adjustment in case.get("adjustments", []):
+            for line_item in adjustment.get("lines", []):
+                line = str(line_item["canonical_line"])
+                line_classifications.setdefault(line, []).append(
+                    str(line_item.get("xbrl_concept") or "") in inventory_concepts
+                )
+        allowed_lines = {
+            line
+            for line, classifications in line_classifications.items()
+            if classifications and all(classifications)
+        }
+        if statement_line not in allowed_lines:
+            raise ValueError(
+                "Inventory schedules require a statement line backed only by "
+                "reviewed inventory mappings"
+            )
     valid_evidence_refs = _available_evidence_refs(case)
     schedule_id = str(reviewed_payload.get("schedule_id", "schedule"))
     collections = [

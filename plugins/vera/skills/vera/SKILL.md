@@ -221,6 +221,13 @@ them without changing the capability catalog:
   messages, modifies existing source documents or mail, shares a local index,
   uses WhatsApp Web or an unofficial API, or downloads OCR weights;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
+- `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
+  analysis using the shared calculation and plot suite. It requires reviewed
+  perimeter, currency, sign convention, period/scenario mappings, and source
+  total tie-outs; amount-only analysis is valid without units, while
+  price-volume-mix requires a reviewed units basis. Calculated facts and bridge
+  closure are deterministic; accounting meaning, causes, classification, and
+  materiality remain model/professional judgments;
 - `previdenza-inps`: evidence-backed INPS case review from supplied documents,
   official exports, and a conditional read-only snapshot of an already-open
   authorized browser tab. Never receive credentials, activate delegations, or

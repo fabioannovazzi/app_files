@@ -56,6 +56,14 @@
       "command": "node",
       "args": ["./scripts/run_component_mcp.cjs", "journal-bank-reconciliation"]
     },
+    "varianceAnalysisWidgets": {
+      "title": "Vera · Analisi degli scostamenti",
+      "description": "Validate, render, save, and apply review decisions for accounting variance calculations and plots.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "variance-analysis"]
+    },
     "financialAnalysisContracts": {
       "title": "Vera Financial Analysis",
       "description": "Describe Vera's registered accounting-analysis and financial due-diligence packs, contracts, and reviewed registers.",

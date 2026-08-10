@@ -182,6 +182,13 @@ them without changing the capability catalog:
   and rollback path;
 - `studio-archive`: connected-folder evidence and one client's callable, read-only Anthropic Gmail connector. Cowork v1 does not support WhatsApp or local archive indexing;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
+- `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
+  analysis using the shared calculation and plot suite. It requires reviewed
+  perimeter, currency, sign convention, period/scenario mappings, and source
+  total tie-outs; amount-only analysis is valid without units, while
+  price-volume-mix requires a reviewed units basis. Calculated facts and bridge
+  closure are deterministic; accounting meaning, causes, classification, and
+  materiality remain model/professional judgments;
 - `previdenza-inps`: evidence-backed INPS case review from connected
   documents and official portal exports, with local OCR when callable,
   approved arithmetic, source validation, and professional-review

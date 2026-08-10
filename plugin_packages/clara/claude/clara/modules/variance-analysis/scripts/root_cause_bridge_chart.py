@@ -214,10 +214,77 @@ def _active_filter(
     )
 
 
-def _filter_label(filters: tuple[tuple[str, str], ...]) -> str:
+def _display_labels(recipe: dict[str, Any]) -> dict[str, str]:
+    language = (
+        str(recipe.get("language") or "en")
+        .lower()
+        .replace("_", "-")
+        .split("-", maxsplit=1)[0]
+    )
+    return {
+        "it": {
+            "Price & volume & mix": "Prezzo, Volume e Mix",
+            "Price & units & mix": "Prezzo, Unità e Mix",
+            "Units & mix": "Unità e Mix",
+            "Total": "Totale",
+            "Other": "Altro",
+            "Price": "Prezzo",
+            "Units": "Unità",
+            "Volume": "Volume",
+            "Mix": "Mix",
+        },
+        "es": {
+            "Price & volume & mix": "Precio, Volumen y Mix",
+            "Price & units & mix": "Precio, Unidades y Mix",
+            "Units & mix": "Unidades y Mix",
+            "Total": "Total",
+            "Other": "Otros",
+            "Price": "Precio",
+            "Units": "Unidades",
+            "Volume": "Volumen",
+            "Mix": "Mix",
+        },
+        "fr": {
+            "Price & volume & mix": "Prix, Volume et Mix",
+            "Price & units & mix": "Prix, Unités et Mix",
+            "Units & mix": "Unités et Mix",
+            "Total": "Total",
+            "Other": "Autres",
+            "Price": "Prix",
+            "Units": "Unités",
+            "Volume": "Volume",
+            "Mix": "Mix",
+        },
+        "de": {
+            "Price & volume & mix": "Preis, Volumen und Mix",
+            "Price & units & mix": "Preis, Menge und Mix",
+            "Units & mix": "Menge und Mix",
+            "Total": "Gesamt",
+            "Other": "Sonstige",
+            "Price": "Preis",
+            "Units": "Menge",
+            "Volume": "Volumen",
+            "Mix": "Mix",
+        },
+    }.get(language, {})
+
+
+def _translate_variance_type(value: str, labels: dict[str, str]) -> str:
+    translated = value
+    for source in sorted(labels, key=len, reverse=True):
+        translated = translated.replace(source, labels[source])
+    return translated
+
+
+def _filter_label(
+    filters: tuple[tuple[str, str], ...],
+    labels: dict[str, str],
+) -> str:
     """Return a compact chart label for active filters."""
 
-    return " / ".join(value for _dimension, value in filters) or "Total"
+    return " / ".join(value for _dimension, value in filters) or labels.get(
+        "Total", "Total"
+    )
 
 
 def _sequence_label(
@@ -225,17 +292,18 @@ def _sequence_label(
     filters: tuple[tuple[str, str], ...],
     *,
     include_variance_type: bool,
+    labels: dict[str, str],
 ) -> str:
     """Return the chart label for one legacy sequence row."""
 
-    label = _filter_label(filters)
+    label = _filter_label(filters, labels)
     variance_type = str(row.get("variance_type") or "").strip()
     if (
         include_variance_type
         and variance_type
         and variance_type.lower() not in {"total", "none"}
     ):
-        return f"{label} - {variance_type}"
+        return f"{label} - {_translate_variance_type(variance_type, labels)}"
     return label
 
 
@@ -245,10 +313,12 @@ def _legacy_sequence_driver_rows(
     max_drivers: int = MAX_DRIVER_ROWS,
     *,
     include_variance_type: bool = True,
+    labels: dict[str, str] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     """Return driver rows directly from ``process_node_combinations`` output."""
 
     dimensions = _dimension_columns(bridge)
+    display_labels = labels or {}
     all_selected_rows: list[dict[str, Any]] = []
     for row in bridge.to_dicts():
         value = _safe_float(row.get("variance_amount"))
@@ -265,6 +335,7 @@ def _legacy_sequence_driver_rows(
                     row,
                     filters,
                     include_variance_type=include_variance_type,
+                    labels=display_labels,
                 ),
                 "kind": "driver",
                 "value": value,
@@ -291,7 +362,7 @@ def _legacy_sequence_driver_rows(
     if abs(residual) > TOLERANCE:
         selected_rows.append(
             {
-                "label": "Other",
+                "label": display_labels.get("Other", "Other"),
                 "kind": "driver",
                 "value": residual,
                 "source_value": residual,
@@ -309,35 +380,46 @@ def _legacy_sequence_driver_rows(
     active_dimension_labels = [
         ",".join(row["bridge_dimensions"])
         for row in selected_rows
-        if row["label"] != "Other"
+        if row["label"] != display_labels.get("Other", "Other")
     ]
     unique_active_dimension_labels = list(dict.fromkeys(active_dimension_labels))
     audit = {
         "candidate_count": bridge.height,
         "selected_driver_count": requested_driver_count,
         "displayed_legacy_driver_count": len(
-            [row for row in selected_rows if row["label"] != "Other"]
+            [
+                row
+                for row in selected_rows
+                if row["label"] != display_labels.get("Other", "Other")
+            ]
         ),
         "selected_driver_filters": [
             " / ".join(f"{dimension}={value}" for dimension, value in row["filters"])
             for row in selected_rows
-            if row["label"] != "Other"
+            if row["label"] != display_labels.get("Other", "Other")
         ],
         "selected_driver_bridge_dimensions": [
             [",".join(row["bridge_dimensions"])]
             for row in selected_rows
-            if row["label"] != "Other"
+            if row["label"] != display_labels.get("Other", "Other")
         ],
         "selected_driver_active_dimensions": [
-            row["bridge_dimensions"] for row in selected_rows if row["label"] != "Other"
+            row["bridge_dimensions"]
+            for row in selected_rows
+            if row["label"] != display_labels.get("Other", "Other")
         ],
         "selected_bridge_levels": [
-            row["bridge_level"] for row in selected_rows if row["label"] != "Other"
+            row["bridge_level"]
+            for row in selected_rows
+            if row["label"] != display_labels.get("Other", "Other")
         ],
         "selected_sequence_unique_bridge_dimensions": unique_active_dimension_labels,
         "selected_sequence_has_mixed_dimensions": len(unique_active_dimension_labels)
         > 1,
-        "other_included": any(row["label"] == "Other" for row in selected_rows),
+        "other_included": any(
+            row["label"] == display_labels.get("Other", "Other")
+            for row in selected_rows
+        ),
         "selection_strategy": "legacy_process_node_combinations",
         "selection_truncated": requested_driver_count > display_limit,
     }
@@ -368,6 +450,7 @@ def build_root_cause_bridge_chart_rows(
         total_delta,
         max_drivers=max_drivers,
         include_variance_type=include_variance_type,
+        labels=_display_labels(recipe),
     )
     rows = [
         {

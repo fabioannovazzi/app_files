@@ -50,6 +50,8 @@ CLIENT_WORKFLOW_ENTRYPOINTS = (
     ("journal-bank-reconciliation", "semantic_review.py"),
     ("sales-plan", "prepare_sales_plan_case.py"),
     ("sales-plan", "run_plan.py"),
+    ("variance-analysis", "inspect_inputs.py"),
+    ("variance-analysis", "run_variance.py"),
     ("financial-analysis", "run_pack.py"),
     ("financial-analysis", "validate_case_contracts.py"),
     ("financial-analysis", "prepare_customer_concentration_case.py"),
@@ -99,6 +101,7 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
     ("journal-bank-reconciliation", "apply_review_edits.py"),
     ("prompt-optimizer", "apply_review_edits.py"),
     ("deep-research-validator", "apply_review_edits.py"),
+    ("variance-analysis", "review_preflight.py"),
 )
 
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
@@ -112,6 +115,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("check-entries", "check_dependencies.py"),
     ("journal-bank-reconciliation", "check_dependencies.py"),
     ("sales-plan", "check_dependencies.py"),
+    ("variance-analysis", "check_dependencies.py"),
     ("financial-analysis", "check_dependencies.py"),
     ("report-builder", "check_dependencies.py"),
     ("report-builder", "prepared_contract.py"),
@@ -146,7 +150,7 @@ OUTPUT_DISCOVERY_REVIEW_WRITER_WORKFLOWS = (
 )
 
 PORTABLE_CONTEXT_REVIEW_MCP_WORKFLOWS = frozenset(
-    {"prompt-optimizer", "deep-research-validator"}
+    {"prompt-optimizer", "deep-research-validator", "variance-analysis"}
 )
 
 DURABLE_REVIEW_MCP_WORKFLOWS = (
@@ -158,6 +162,7 @@ DURABLE_REVIEW_MCP_WORKFLOWS = (
         "review_artifact",
         "concordato_plan",
     ),
+    ("variance-analysis", "1.0", "variance_driver", "variance_analysis"),
 )
 
 
@@ -905,7 +910,8 @@ def test_client_workflow_entrypoint_requires_managed_context(
         None,
     )
     assert isinstance(required, ast.Constant)
-    assert required.value is True
+    expected_required = workflow_id != "variance-analysis"
+    assert required.value is expected_required
     loader_names = {
         "load_client_engagement_context",
         "load_client_engagement_context_file",

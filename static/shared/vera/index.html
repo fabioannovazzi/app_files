@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
+  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
+  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -552,6 +552,7 @@
     .bandi-boundary h3 { margin-bottom: 16px; font-size: 1.25rem; }
     .bandi-boundary p { max-width: 54ch; color: var(--blue); }
 
+    #analisi-scostamenti,
     #comunicazione-professionale,
     #presenza-digitale-studio { scroll-margin-top: 76px; }
 
@@ -1321,7 +1322,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, analisi degli scostamenti, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
@@ -1390,7 +1391,7 @@
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.accounting.index">Area di lavoro 2 di 3</span>
             <h3 data-i18n="stream.accounting.title">Controlla numeri, movimenti e supporti</h3>
-            <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche, alle partite aperte, al Plan e all’analisi finanziaria.</p>
+            <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.</p>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link>
@@ -1416,6 +1417,11 @@
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link>
               <h3 data-i18n="module.plan.title">Plan</h3>
               <p data-i18n="module.plan">Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="variance-analysis" href="index.html#analisi-scostamenti" data-module-link>
+              <h3 data-i18n="module.variance.title">Analisi degli scostamenti</h3>
+              <p data-i18n="module.variance">Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link>
@@ -1461,6 +1467,36 @@
           </div>
         </article>
       </div>
+    </section>
+
+    <section class="section-block" id="analisi-scostamenti">
+      <div class="section-head">
+        <div class="section-head__title">
+          <span class="section-index" data-i18n="variance.index">Analisi degli scostamenti</span>
+          <h2 data-i18n="variance.title">Capire dove nasce lo scostamento.</h2>
+        </div>
+        <p data-i18n="variance.copy">Confronta consuntivo (Actual), Budget, Forecast o periodo precedente. Vera riconcilia le basi alle fonti e costruisce un bridge che chiude allo scostamento totale; il calcolo non diventa automaticamente una spiegazione.</p>
+      </div>
+
+      <div class="assurance-sequence">
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">01</span>
+          <h3 data-i18n="variance.scope.title">Definisci il confronto</h3>
+          <p data-i18n="variance.scope.copy">Entità e perimetro, periodi, valuta, convenzione dei segni e dimensioni restano espliciti prima del calcolo.</p>
+        </article>
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">02</span>
+          <h3 data-i18n="variance.calculate.title">Riconcilia e scomponi</h3>
+          <p data-i18n="variance.calculate.copy">Vera lega base e confronto a P&amp;L, bilancio di verifica o management accounts. Senza unità affidabili usa l’analisi a soli valori; il prezzo-volume-mix richiede unità riviste.</p>
+        </article>
+        <article class="assurance-step">
+          <span class="assurance-step__number" aria-hidden="true">03</span>
+          <h3 data-i18n="variance.plots.title">Leggi i grafici</h3>
+          <p data-i18n="variance.plots.copy">Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.</p>
+        </article>
+      </div>
+
+      <p class="assurance-closing" data-i18n="variance.boundary">Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.</p>
     </section>
 
     <section class="section-block" id="comunicazione-professionale">
@@ -2157,7 +2193,7 @@
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.",
+        "meta.description": "Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
@@ -2171,11 +2207,11 @@
         "language.label": "Lingua",
         "hero.eyebrow": "AI companion per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara Plan, controlli, riconciliazioni, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
+        "hero.lead": "Prepara Plan, controlli, riconciliazioni, analisi degli scostamenti, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
-        "work.index": "Diciassette funzioni",
+        "work.index": "Diciotto funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area di lavoro 1 di 3",
@@ -2183,7 +2219,7 @@
         "stream.clients.copy": "Dalla corrispondenza e dai documenti ricevuti a un primo fascicolo riutilizzabile.",
         "stream.accounting.index": "Area di lavoro 2 di 3",
         "stream.accounting.title": "Controlla numeri, movimenti e supporti",
-        "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte, al Plan e all’analisi finanziaria.",
+        "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.",
         "stream.outputs.index": "Area di lavoro 3 di 3",
         "stream.outputs.title": "Costruisci risultati e ricerca",
         "stream.outputs.copy": "Dalle fonti al report, dal quesito alla validazione.",
@@ -2208,8 +2244,20 @@
         "module.reconciliation": "Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.",
         "module.plan.title": "Plan",
         "module.plan": "Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.",
+        "module.variance.title": "Analisi degli scostamenti",
+        "module.variance": "Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.",
         "module.financialAnalysis.title": "Analisi finanziaria e due diligence",
         "module.financialAnalysis": "Prepara analisi contabili e financial due diligence: conto economico mensile, capitale circolante, concentrazione clienti, adjusted EBITDA, PFN, Capex e bridge di transazione, con evidenze riconciliate e riproducibili.",
+        "variance.index": "Analisi degli scostamenti",
+        "variance.title": "Capire dove nasce lo scostamento.",
+        "variance.copy": "Confronta consuntivo (Actual), Budget, Forecast o periodo precedente. Vera riconcilia le basi alle fonti e costruisce un bridge che chiude allo scostamento totale; il calcolo non diventa automaticamente una spiegazione.",
+        "variance.scope.title": "Definisci il confronto",
+        "variance.scope.copy": "Entità e perimetro, periodi, valuta, convenzione dei segni e dimensioni restano espliciti prima del calcolo.",
+        "variance.calculate.title": "Riconcilia e scomponi",
+        "variance.calculate.copy": "Vera lega base e confronto a P&L, bilancio di verifica o management accounts. Senza unità affidabili usa l’analisi a soli valori; il prezzo-volume-mix richiede unità riviste.",
+        "variance.plots.title": "Leggi i grafici",
+        "variance.plots.copy": "Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.",
+        "variance.boundary": "Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.",
         "module.report.title": "Genera report",
         "module.report": "Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.",
         "module.prompt.title": "Ottimizza prompt",
@@ -2389,7 +2437,7 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera prepares checks, reconciliations, financial analysis, professional communications, client files and reports with qualified sources, exact calculations and reviewable decisions.",
+        "meta.description": "Vera prepares checks, reconciliations, variance analysis, financial analysis, professional communications, client files and reports with qualified sources, exact calculations and reviewable decisions.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
@@ -2403,11 +2451,11 @@
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
-        "hero.lead": "Prepare Plans, checks, reconciliations, professional communications, firm websites, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
+        "hero.lead": "Prepare Plans, checks, reconciliations, variance analysis, professional communications, firm websites, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
         "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
-        "work.index": "Seventeen capabilities",
+        "work.index": "Eighteen capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Work area 1 of 3",
@@ -2415,7 +2463,7 @@
         "stream.clients.copy": "From live correspondence and incoming documents to a reusable work file.",
         "stream.accounting.index": "Work area 2 of 3",
         "stream.accounting.title": "Check figures, movements and support",
-        "stream.accounting.copy": "From the journal to entries, banks, open items, the Plan and financial analysis.",
+        "stream.accounting.copy": "From the journal to entries, banks, open items, the Plan, variance analysis and financial analysis.",
         "stream.outputs.index": "Work area 3 of 3",
         "stream.outputs.title": "Build outputs and research",
         "stream.outputs.copy": "From sources to a report, from the question to validation.",
@@ -2440,8 +2488,20 @@
         "module.reconciliation": "Brings open items, ledgers, banks and support into Excel and Word with relationships, residuals and evidence visible.",
         "module.plan.title": "Plan",
         "module.plan": "Turns reviewed Actual sales into a Plan using only confirmed commercial and FX assumptions, with scopes, periods, priorities and reconciliation kept visible.",
+        "module.variance.title": "Variance analysis",
+        "module.variance": "Compares Actual with Budget, Forecast or prior periods; ties totals to sources, calculates value variances and, with reliable units, price, volume and mix effects, then prepares reviewable tables and plots.",
         "module.financialAnalysis.title": "Financial analysis and due diligence",
         "module.financialAnalysis": "Prepares accounting analysis and financial due diligence: monthly P&L, working capital, customer concentration, adjusted EBITDA, net debt, Capex and deal bridges, with reconciled, reproducible evidence.",
+        "variance.index": "Variance analysis",
+        "variance.title": "See where the variance comes from.",
+        "variance.copy": "Compare Actual with Budget, Forecast or a prior period. Vera ties both bases to source records and builds a bridge that closes to total variance; the calculation does not automatically become an explanation.",
+        "variance.scope.title": "Define the comparison",
+        "variance.scope.copy": "Entity and perimeter, periods, currency, sign convention and dimensions remain explicit before calculation.",
+        "variance.calculate.title": "Reconcile and decompose",
+        "variance.calculate.copy": "Vera ties baseline and comparison to the P&L, trial balance or management accounts. Without reliable units it uses value-only analysis; price-volume-mix requires reviewed units.",
+        "variance.plots.title": "Read the plots",
+        "variance.plots.copy": "Waterfalls, component and dimension bridges, exploded views and drilldowns show calculated drivers and must reconcile to total variance.",
+        "variance.boundary": "Vera delivers reviewable tables, variance plots and workpapers. Operating causes, favorable/adverse classification, materiality and management commentary remain separate from calculated facts and require professional confirmation.",
         "module.report.title": "Build Report",
         "module.report": "Prepares Word and Markdown from confirmed tables and keeps every material number connected to its source and supporting check.",
         "module.prompt.title": "Optimize Prompt",
@@ -2621,7 +2681,7 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera prépare contrôles, rapprochements, analyses financières, communications professionnelles, dossiers clients et rapports avec des sources qualifiées et des décisions révisables.",
+        "meta.description": "Vera prépare contrôles, rapprochements, analyses des écarts, analyses financières, communications professionnelles, dossiers clients et rapports avec des sources qualifiées et des décisions révisables.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
@@ -2635,11 +2695,11 @@
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Préparez Plans, contrôles, rapprochements, communications professionnelles, sites de cabinet, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
+        "hero.lead": "Préparez Plans, contrôles, rapprochements, analyses des écarts, communications professionnelles, sites de cabinet, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
         "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
-        "work.index": "Dix-sept fonctions",
+        "work.index": "Dix-huit fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine de travail 1 sur 3",
@@ -2647,7 +2707,7 @@
         "stream.clients.copy": "Des échanges et documents reçus à un dossier de travail réutilisable.",
         "stream.accounting.index": "Domaine de travail 2 sur 3",
         "stream.accounting.title": "Contrôler chiffres, mouvements et justificatifs",
-        "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts, au Plan et à l’analyse financière.",
+        "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts, au Plan, à l’analyse des écarts et à l’analyse financière.",
         "stream.outputs.index": "Domaine de travail 3 sur 3",
         "stream.outputs.title": "Construire les résultats et la recherche",
         "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
@@ -2672,8 +2732,20 @@
         "module.reconciliation": "Réunit postes ouverts, grands livres, banques et justificatifs dans Excel et Word en rendant visibles relations, résiduels et preuves.",
         "module.plan.title": "Plan",
         "module.plan": "Transforme les ventes réelles révisées en Plan en appliquant uniquement des hypothèses commerciales et de change confirmées, avec périmètres, périodes, priorités et rapprochement visibles.",
+        "module.variance.title": "Analyse des écarts",
+        "module.variance": "Compare le Réel au Budget, à la Prévision ou aux périodes antérieures ; rapproche les totaux des sources, calcule les écarts en valeur et, avec des unités fiables, les effets prix, volume et mix, puis prépare des tableaux et graphiques révisables.",
         "module.financialAnalysis.title": "Analyse financière et due diligence",
         "module.financialAnalysis": "Prépare des analyses comptables et de due diligence financière : compte de résultat mensuel, fonds de roulement, concentration clients, EBITDA ajusté, dette nette, Capex et passerelles de transaction, avec des éléments rapprochés et reproductibles.",
+        "variance.index": "Analyse des écarts",
+        "variance.title": "Comprendre d’où vient l’écart.",
+        "variance.copy": "Comparez le Réel au Budget, à la Prévision ou à une période antérieure. Vera rapproche les deux bases des sources et construit une passerelle qui se solde sur l’écart total ; le calcul ne devient pas automatiquement une explication.",
+        "variance.scope.title": "Définir la comparaison",
+        "variance.scope.copy": "Entité et périmètre, périodes, devise, convention de signe et dimensions restent explicites avant le calcul.",
+        "variance.calculate.title": "Rapprocher et décomposer",
+        "variance.calculate.copy": "Vera relie la base et la comparaison au compte de résultat, à la balance générale ou aux comptes de gestion. Sans unités fiables, elle utilise une analyse en valeur uniquement ; le prix-volume-mix exige des unités révisées.",
+        "variance.plots.title": "Lire les graphiques",
+        "variance.plots.copy": "Cascades, passerelles par composante et dimension, vues éclatées et analyses détaillées montrent les facteurs calculés et doivent se rapprocher de l’écart total.",
+        "variance.boundary": "Vera livre des tableaux, graphiques d’écarts et feuilles de travail révisables. Les causes opérationnelles, la classification favorable/défavorable, la matérialité et le commentaire de gestion restent séparés des faits calculés et exigent une confirmation professionnelle.",
         "module.report.title": "Générer un rapport",
         "module.report": "Prépare Word et Markdown à partir de tableaux confirmés et relie chaque chiffre significatif à sa source et au contrôle qui l’étaye.",
         "module.prompt.title": "Optimiser le prompt",
@@ -2853,7 +2925,7 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Finanzanalysen, professionelle Kommunikation, Mandantenakten und Berichte mit qualifizierten Quellen und prüfbaren Entscheidungen vor.",
+        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Abweichungsanalysen, Finanzanalysen, professionelle Kommunikation, Mandantenakten und Berichte mit qualifizierten Quellen und prüfbaren Entscheidungen vor.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
@@ -2867,11 +2939,11 @@
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Bereiten Sie Pläne, Prüfungen, Abstimmungen, professionelle Kommunikation, Kanzlei-Websites, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
+        "hero.lead": "Bereiten Sie Pläne, Prüfungen, Abstimmungen, Abweichungsanalysen, professionelle Kommunikation, Kanzlei-Websites, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
         "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
-        "work.index": "Siebzehn Funktionen",
+        "work.index": "Achtzehn Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Arbeitsbereich 1 von 3",
@@ -2879,7 +2951,7 @@
         "stream.clients.copy": "Von Korrespondenz und eingegangenen Dokumenten zur wiederverwendbaren Arbeitsakte.",
         "stream.accounting.index": "Arbeitsbereich 2 von 3",
         "stream.accounting.title": "Zahlen, Bewegungen und Belege prüfen",
-        "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten, zum Plan und zur Finanzanalyse.",
+        "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten, zum Plan, zur Abweichungsanalyse und zur Finanzanalyse.",
         "stream.outputs.index": "Arbeitsbereich 3 von 3",
         "stream.outputs.title": "Ergebnisse und Recherche aufbauen",
         "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
@@ -2904,8 +2976,20 @@
         "module.reconciliation": "Führt offene Posten, Hauptbücher, Banken und Nachweise in Excel und Word mit sichtbaren Beziehungen, Restbeträgen und Belegen zusammen.",
         "module.plan.title": "Plan",
         "module.plan": "Überführt geprüfte Ist-Umsätze in einen Plan und verwendet dabei nur bestätigte Vertriebs- und Währungsannahmen; Umfang, Zeiträume, Prioritäten und Abstimmung bleiben sichtbar.",
+        "module.variance.title": "Abweichungsanalyse",
+        "module.variance": "Vergleicht Ist mit Budget, Forecast oder Vorperioden; stimmt Summen mit Quellen ab, berechnet Wertabweichungen und bei verlässlichen Einheiten Preis-, Mengen- und Mixeffekte und erstellt prüfbare Tabellen und Grafiken.",
         "module.financialAnalysis.title": "Finanzanalyse und Due Diligence",
         "module.financialAnalysis": "Bereitet Buchhaltungsanalysen und Financial Due Diligence vor: monatliche GuV, Working Capital, Kundenkonzentration, bereinigtes EBITDA, Nettoverschuldung, Capex und Transaktionsüberleitungen – mit abgestimmten, reproduzierbaren Nachweisen.",
+        "variance.index": "Abweichungsanalyse",
+        "variance.title": "Erkennen, wo die Abweichung entsteht.",
+        "variance.copy": "Vergleichen Sie Ist mit Budget, Forecast oder Vorperiode. Vera stimmt beide Grundlagen mit den Quellen ab und erstellt eine Überleitung, die zur Gesamtabweichung schließt; die Berechnung wird nicht automatisch zur Erklärung.",
+        "variance.scope.title": "Vergleich festlegen",
+        "variance.scope.copy": "Einheit und Umfang, Zeiträume, Währung, Vorzeichenkonvention und Dimensionen bleiben vor der Berechnung explizit.",
+        "variance.calculate.title": "Abstimmen und zerlegen",
+        "variance.calculate.copy": "Vera verbindet Basis und Vergleich mit GuV, Summen- und Saldenliste oder Management-Reporting. Ohne verlässliche Einheiten nutzt sie nur Wertabweichungen; Preis-Menge-Mix erfordert geprüfte Einheiten.",
+        "variance.plots.title": "Grafiken lesen",
+        "variance.plots.copy": "Waterfalls, Komponenten- und Dimensionsüberleitungen, aufgegliederte Ansichten und Drilldowns zeigen berechnete Treiber und müssen zur Gesamtabweichung abstimmen.",
+        "variance.boundary": "Vera liefert prüfbare Tabellen, Abweichungsgrafiken und Arbeitspapiere. Operative Ursachen, die Einordnung als günstig oder ungünstig, Wesentlichkeit und Managementkommentar bleiben von berechneten Fakten getrennt und erfordern professionelle Bestätigung.",
         "module.report.title": "Bericht erstellen",
         "module.report": "Erstellt Word und Markdown aus bestätigten Tabellen und verbindet jede wesentliche Zahl mit Quelle und stützendem Kontrollschritt.",
         "module.prompt.title": "Prompt optimieren",
@@ -3085,7 +3169,7 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera prepara controles, conciliaciones, análisis financieros, comunicaciones profesionales, expedientes e informes con fuentes cualificadas y decisiones revisables.",
+        "meta.description": "Vera prepara controles, conciliaciones, análisis de desviaciones, análisis financieros, comunicaciones profesionales, expedientes e informes con fuentes cualificadas y decisiones revisables.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
@@ -3099,11 +3183,11 @@
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Prepara planes, controles, conciliaciones, comunicaciones profesionales, sitios web del despacho, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
+        "hero.lead": "Prepara planes, controles, conciliaciones, análisis de desviaciones, comunicaciones profesionales, sitios web del despacho, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
         "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
-        "work.index": "Diecisiete funciones",
+        "work.index": "Dieciocho funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área de trabajo 1 de 3",
@@ -3111,7 +3195,7 @@
         "stream.clients.copy": "De la correspondencia y los documentos recibidos a un expediente de trabajo reutilizable.",
         "stream.accounting.index": "Área de trabajo 2 de 3",
         "stream.accounting.title": "Comprobar cifras, movimientos y justificantes",
-        "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas, el Plan y el análisis financiero.",
+        "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas, el Plan, el análisis de desviaciones y el análisis financiero.",
         "stream.outputs.index": "Área de trabajo 3 de 3",
         "stream.outputs.title": "Preparar resultados e investigación",
         "stream.outputs.copy": "De las fuentes al informe, de la pregunta a la validación.",
@@ -3136,8 +3220,20 @@
         "module.reconciliation": "Reúne partidas, mayores, bancos y justificantes en Excel y Word mostrando relaciones, residuales y evidencias.",
         "module.plan.title": "Plan",
         "module.plan": "Convierte ventas reales revisadas en un Plan aplicando únicamente supuestos comerciales y de cambio confirmados, con ámbitos, periodos, prioridades y conciliación visibles.",
+        "module.variance.title": "Análisis de desviaciones",
+        "module.variance": "Compara Real con Presupuesto, Previsión o periodos anteriores; concilia los totales con las fuentes, calcula desviaciones de valor y, con unidades fiables, efectos de precio, volumen y mix, y prepara tablas y gráficos revisables.",
         "module.financialAnalysis.title": "Análisis financiero y due diligence",
         "module.financialAnalysis": "Prepara análisis contables y due diligence financiera: cuenta de resultados mensual, capital circulante, concentración de clientes, EBITDA ajustado, deuda neta, Capex y puentes de transacción, con evidencia conciliada y reproducible.",
+        "variance.index": "Análisis de desviaciones",
+        "variance.title": "Entender de dónde surge la desviación.",
+        "variance.copy": "Compara Real con Presupuesto, Previsión o un periodo anterior. Vera concilia ambas bases con las fuentes y construye un puente que cierra con la desviación total; el cálculo no se convierte automáticamente en una explicación.",
+        "variance.scope.title": "Definir la comparación",
+        "variance.scope.copy": "Entidad y perímetro, periodos, moneda, convención de signos y dimensiones permanecen explícitos antes del cálculo.",
+        "variance.calculate.title": "Conciliar y descomponer",
+        "variance.calculate.copy": "Vera vincula la base y la comparación con la PyG, el balance de comprobación o las cuentas de gestión. Sin unidades fiables usa un análisis solo de valor; el precio-volumen-mix requiere unidades revisadas.",
+        "variance.plots.title": "Leer los gráficos",
+        "variance.plots.copy": "Cascadas, puentes por componente y dimensión, vistas desglosadas y drilldowns muestran los factores calculados y deben conciliar con la desviación total.",
+        "variance.boundary": "Vera entrega tablas, gráficos de desviaciones y papeles de trabajo revisables. Las causas operativas, la clasificación favorable/desfavorable, la materialidad y el comentario de gestión permanecen separados de los hechos calculados y requieren confirmación profesional.",
         "module.report.title": "Crear informe",
         "module.report": "Prepara Word y Markdown a partir de tablas confirmadas y vincula cada cifra material con su fuente y el control que la respalda.",
         "module.prompt.title": "Optimizar prompt",

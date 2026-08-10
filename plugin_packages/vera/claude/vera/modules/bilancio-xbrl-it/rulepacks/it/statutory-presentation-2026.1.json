@@ -35,6 +35,9 @@
       "itcc-ci:TotaleImmobilizzazioniImmateriali",
       "itcc-ci:TotaleImmobilizzazioniMateriali"
     ],
+    "INVENTORIES": [
+      "itcc-ci:TotaleRimanenze"
+    ],
     "RECEIVABLES": [
       "itcc-ci:TotaleCrediti"
     ],

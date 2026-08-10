@@ -216,10 +216,17 @@ and final professional approval always require the user's explicit choice.
    derive or verify totals. Never infer zero from absence. Continue only when
    coverage is `COMPLETE` and all total mismatches are resolved.
 9. Collect reviewer-triggered schedules and structured disclosure answers. Use
-   `ingest-schedule` for the documented CSV/XLSX fixed-asset, receivable,
-   payable, equity, provision, TFR, tax, and guarantee templates, or use
-   `record-schedule` for normalized fixed-asset, receivable, payable, equity,
-   provision, TFR, tax, guarantees/commitments, and cash-flow evidence. Ordinary
+   `ingest-schedule` for the documented CSV/XLSX fixed-asset, inventory,
+   receivable, payable, equity, provision, TFR, tax, and guarantee templates,
+   or use `record-schedule` for normalized fixed-asset, inventory, receivable,
+   payable, equity, provision, TFR, tax, guarantees/commitments, and cash-flow
+   evidence. Inventory classification, costing method, net-realisable-value,
+   obsolescence, count, and pledged-stock conclusions must remain explicit
+   professional evidence; Vera validates terminal review states and the reviewed
+   movement and statement arithmetic, but never infers the conclusions. Bind the
+   inventory schedule only to a statement line backed exclusively by reviewed
+   mappings to the selected form's inventory concepts; do not relabel an
+   unrelated line or add a trigger to satisfy the gate. Ordinary
    cases require an indirect cash-flow schedule whose evidence-backed items
    reconcile opening to closing cash; never derive investing or financing
    classifications from a trial balance alone. Use `record-answers` for accepted

@@ -46,6 +46,39 @@ def _extract_variance_component(tmp_path: Path) -> Path:
     )
 
 
+def _extract_vera_variance_component(tmp_path: Path) -> Path:
+    builder = _load_builder()
+    package = {item.name: item for item in builder.load_bundles()}["vera"]
+    entries = builder.expected_zip_entries(package)
+    archive_path = tmp_path / "vera-plugin.zip"
+    with ZipFile(archive_path, "w", compression=ZIP_DEFLATED) as archive:
+        for name, content in entries.items():
+            archive.writestr(name, content)
+    install_root = tmp_path / "vera-install"
+    with ZipFile(archive_path) as archive:
+        archive.extractall(install_root)
+    return (
+        install_root
+        / package.package_root
+        / "plugins"
+        / "vera"
+        / "modules"
+        / "variance-analysis"
+    )
+
+
+def _extract_vera_chatgpt_variance_component(tmp_path: Path) -> Path:
+    builder = _load_builder()
+    package = {item.name: item for item in builder.load_bundles()}["vera"]
+    archive_path = builder.build_chatgpt_upload(
+        package, tmp_path / "vera-chatgpt-upload.zip"
+    )
+    install_root = tmp_path / "vera-chatgpt-install"
+    with ZipFile(archive_path) as archive:
+        archive.extractall(install_root)
+    return install_root / "modules" / "variance-analysis"
+
+
 def _isolated_environment(tmp_path: Path) -> dict[str, str]:
     environment = os.environ.copy()
     environment.pop("PYTHONPATH", None)
@@ -158,3 +191,72 @@ def test_extracted_clara_variance_runner_completes_data_only_run(
     assert result.returncode == 0, result.stderr
     assert (output_dir / "variance_results.csv").stat().st_size > 0
     assert (output_dir / "variance_audit.json").stat().st_size > 0
+
+
+def test_extracted_vera_variance_runner_rejects_unmanaged_execution(
+    tmp_path: Path,
+) -> None:
+    component_root = _extract_vera_variance_component(tmp_path)
+    work_dir = tmp_path / "vera-work"
+    work_dir.mkdir()
+    input_path = work_dir / "sales.csv"
+    _write_sales_fixture(input_path)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(component_root / "scripts" / "run_variance.py"),
+            str(input_path),
+            "--output-dir",
+            str(work_dir / "output"),
+            "--currency",
+            "EUR",
+            "--artifact-mode",
+            "data_only",
+        ],
+        cwd=work_dir,
+        env=_isolated_environment(tmp_path),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 2
+    assert (
+        "--client-engagement is required by the Vera packaged runner" in result.stderr
+    )
+    assert not (work_dir / "output").exists()
+
+
+def test_extracted_vera_chatgpt_upload_rejects_unmanaged_inspection(
+    tmp_path: Path,
+) -> None:
+    component_root = _extract_vera_chatgpt_variance_component(tmp_path)
+    work_dir = tmp_path / "vera-chatgpt-work"
+    work_dir.mkdir()
+    input_path = work_dir / "sales.csv"
+    _write_sales_fixture(input_path)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(component_root / "scripts" / "inspect_inputs.py"),
+            str(input_path),
+            "--output-dir",
+            str(work_dir / "inspection"),
+        ],
+        cwd=work_dir,
+        env=_isolated_environment(tmp_path),
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=60,
+    )
+
+    assert result.returncode == 2
+    assert (
+        "--client-engagement is required by the Vera packaged inspector"
+        in result.stderr
+    )
+    assert not (work_dir / "inspection").exists()

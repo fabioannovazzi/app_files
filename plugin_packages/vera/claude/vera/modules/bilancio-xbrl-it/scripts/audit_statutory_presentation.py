@@ -153,6 +153,7 @@ def validate_complete_form_instances(
             "entity": {
                 "legal_name": f"Controlled Complete {form.title()} S.r.l.",
                 "tax_identifier": "IT00000000000",
+                "prior_period_start": "2024-01-01",
                 "prior_period_end": "2024-12-31",
             },
             "period": {"start": "2025-01-01", "end": "2025-12-31"},

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import importlib
 import logging
+import re
 import warnings
 from dataclasses import dataclass, replace
 from pathlib import Path
@@ -128,6 +129,106 @@ def _apply_ibcs_title(
     return replace(rendered, audit=audit)
 
 
+def _display_translations(recipe: dict[str, Any]) -> dict[str, str]:
+    """Return display-only chart translations without changing calculation keys."""
+
+    language = (
+        str(recipe.get("language") or "en")
+        .lower()
+        .replace("_", "-")
+        .split("-", maxsplit=1)[0]
+    )
+    return {
+        "it": {
+            "Price & volume & mix": "Prezzo, Volume e Mix",
+            "Price & units & mix": "Prezzo, Unità e Mix",
+            "Units & mix": "Unità e Mix",
+            "Total variance": "Varianza totale",
+            "Others aggregated": "Altri aggregati",
+            "Price": "Prezzo",
+            "Units": "Unità",
+            "Volume": "Volume",
+            "Other": "Altro",
+            "Balance": "Saldo",
+        },
+        "es": {
+            "Price & volume & mix": "Precio, Volumen y Mix",
+            "Price & units & mix": "Precio, Unidades y Mix",
+            "Units & mix": "Unidades y Mix",
+            "Total variance": "Varianza total",
+            "Others aggregated": "Otros agregados",
+            "Price": "Precio",
+            "Units": "Unidades",
+            "Volume": "Volumen",
+            "Other": "Otros",
+            "Balance": "Saldo",
+        },
+        "fr": {
+            "Price & volume & mix": "Prix, Volume et Mix",
+            "Price & units & mix": "Prix, Unités et Mix",
+            "Units & mix": "Unités et Mix",
+            "Total variance": "Écart total",
+            "Others aggregated": "Autres agrégés",
+            "Price": "Prix",
+            "Units": "Unités",
+            "Volume": "Volume",
+            "Other": "Autres",
+            "Balance": "Solde",
+        },
+        "de": {
+            "Price & volume & mix": "Preis, Volumen und Mix",
+            "Price & units & mix": "Preis, Menge und Mix",
+            "Units & mix": "Menge und Mix",
+            "Total variance": "Gesamtabweichung",
+            "Others aggregated": "Sonstige aggregiert",
+            "Price": "Preis",
+            "Units": "Menge",
+            "Volume": "Volumen",
+            "Other": "Sonstige",
+            "Balance": "Saldo",
+        },
+    }.get(language, {})
+
+
+def _translate_display_text(value: Any, translations: dict[str, str]) -> Any:
+    if isinstance(value, str):
+        translated = value
+        for source in sorted(translations, key=len, reverse=True):
+            translated = re.sub(
+                rf"(?<![\w]){re.escape(source)}(?![\w])",
+                translations[source],
+                translated,
+            )
+        return translated
+    if isinstance(value, tuple):
+        return tuple(_translate_display_text(item, translations) for item in value)
+    if isinstance(value, list):
+        return [_translate_display_text(item, translations) for item in value]
+    if hasattr(value, "tolist"):
+        return _translate_display_text(value.tolist(), translations)
+    return value
+
+
+def _localize_rendered_labels(rendered: Any, recipe: dict[str, Any]) -> Any:
+    """Translate visible Plotly labels while preserving source-data semantics."""
+
+    translations = _display_translations(recipe)
+    if not translations:
+        return rendered
+    for trace in rendered.figure.data:
+        for attribute in ("name", "text", "hovertext", "x", "y"):
+            value = getattr(trace, attribute, None)
+            if value is not None:
+                setattr(trace, attribute, _translate_display_text(value, translations))
+    for annotation in rendered.figure.layout.annotations or ():
+        annotation.text = _translate_display_text(annotation.text, translations)
+    for axis_name in ("xaxis", "yaxis"):
+        axis = getattr(rendered.figure.layout, axis_name, None)
+        if axis is not None and axis.ticktext is not None:
+            axis.ticktext = _translate_display_text(axis.ticktext, translations)
+    return rendered
+
+
 def write_waterfall_png(
     result: pl.DataFrame,
     recipe: dict[str, Any],
@@ -178,6 +279,7 @@ def write_waterfall_png(
                     small_multiples_dimension=None,
                     legacy_frame=legacy_frame,
                 )
+                rendered = _localize_rendered_labels(rendered, recipe)
                 rendered = _apply_ibcs_title(
                     rendered,
                     recipe,
@@ -227,6 +329,7 @@ def write_waterfall_png(
                     small_multiples_dimension=small_multiples_dimension,
                     legacy_frame=legacy_frame,
                 )
+                small_rendered = _localize_rendered_labels(small_rendered, recipe)
                 chart_dimension = small_multiples_dimension or small_rendered.audit.get(
                     "small_multiples_dimension"
                 )
@@ -308,6 +411,7 @@ def write_pvm_decomposition_ladder_png(
                 recipe,
                 legacy_frame=legacy_frame,
             )
+            rendered = _localize_rendered_labels(rendered, recipe)
             rendered = _apply_ibcs_title(
                 rendered,
                 recipe,

@@ -489,6 +489,35 @@ def test_ibcs_title_localizes_spanish_period_modes(
     assert title.when == expected_when
 
 
+def test_ibcs_title_localizes_italian_chart_and_period_text() -> None:
+    titles = load_ibcs_titles()
+    recipe = {
+        "language": "it",
+        "mappings": {"baseline_period": "2023", "comparison_period": "2024"},
+        "options": {
+            "currency": "EUR",
+            "comparison_basis": "period",
+            "period_comparison_mode": "calendar_period",
+        },
+    }
+
+    title = titles.build_ibcs_title(
+        recipe,
+        chart_kind="pvm_decomposition_ladder",
+    )
+
+    assert title.lines() == [
+        "Vendite",
+        "Varianza vendite: prezzo, unità, mix | EUR",
+        "2024 vs 2023, periodo di calendario",
+    ]
+    assert titles.measure_line_segments(title.what) == (
+        ("Varianza ", False),
+        ("vendite", True),
+        (": prezzo, unità, mix | EUR", False),
+    )
+
+
 def test_ibcs_title_html_emphasizes_only_sales_measure_subject() -> None:
     titles = load_ibcs_titles()
     title = titles.IBCSTitle(
@@ -581,12 +610,65 @@ def test_variance_spanish_run_writes_localized_review_and_strict_contract(
     assert "## Principales factores por valor absoluto" in summary
     assert "Variance Analysis Source Data" not in summary
     assert "Largest Absolute Drivers" not in summary
-    assert all(
-        "Los datos" in text or "permanece" in text
-        for text in final_artifacts["caveats"]
-    )
+    assert any("Confirme el perímetro" in text for text in final_artifacts["caveats"])
+    assert all("Confirm the" not in text for text in final_artifacts["caveats"])
     assert "Revisión del análisis de variaciones" in widget
     assert "function language()" in widget
+    contract_report = validate_contract(
+        output_dir,
+        strict_data_posture=True,
+        strict_execution_trace=True,
+        strict_output_paths=True,
+    )
+    assert contract_report.ok, contract_report.as_dict()
+
+
+def test_variance_italian_run_writes_localized_review_contract(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "vendite.csv"
+    output_dir = tmp_path / "varianze"
+    _write_sales_fixture(input_path)
+
+    core.run_variance_analysis(
+        input_path,
+        output_dir,
+        language="it",
+        artifact_mode="data_only",
+        waterfall_chart=False,
+        waterfall_small_multiples=False,
+        root_cause_bridge=False,
+        root_cause_bridge_alternative_sweep=False,
+        total_by_dimension_bridge=False,
+        exploded_variance_bridge=False,
+    )
+
+    run_intake = json.loads((output_dir / "run_intake.json").read_text())
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
+    handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
+
+    assert run_intake["language"] == "it"
+    assert "Codex deve eseguire" in run_intake["dependency_check"]["note"]
+    assert any(
+        "Confermare il perimetro" in question
+        for question in run_intake["unresolved_questions"]
+    )
+    assert [column["label"] for column in review_payload["columns"]] == [
+        "Tipo",
+        "Elemento",
+        "Azione suggerita",
+        "Fonte",
+        "Output",
+        "Stato",
+    ]
+    assert "Controlli contabili e stato della revisione" in {
+        item["title"] for item in review_payload["items"]
+    }
+    assert "Consegna per la revisione" in handoff
+    assert "Revisione in Codex" in handoff
+    assert any("Confermare il perimetro" in text for text in final_artifacts["caveats"])
     contract_report = validate_contract(
         output_dir,
         strict_data_posture=True,
@@ -1787,7 +1869,10 @@ def test_root_cause_client_report_uses_period_comparison_labels(
     client_report = (tmp_path / "root_cause_client_report.md").read_text(
         encoding="utf-8"
     )
-    assert audit["status"] == "written"
+    assert audit["status"] == "draft_pending_professional_review"
+    assert audit["selection_method"] == "mechanical_draft_reference"
+    assert "# Draft Sales Variance Analysis" in client_report
+    assert "not a business-cause conclusion" in client_report
     assert (
         "current period vs prior-year period (~Dec-2024 vs ~Dec-2023)" in client_report
     )
@@ -1831,7 +1916,7 @@ def test_root_cause_client_report_localizes_spanish_markdown_and_docx(
     client_report = (tmp_path / "root_cause_client_report.md").read_text(
         encoding="utf-8"
     )
-    assert audit["status"] == "written"
+    assert audit["status"] == "draft_pending_professional_review"
     assert set(report._text("en")) <= set(report._text("es"))
     assert (
         report._comparison_metadata(
@@ -1843,7 +1928,7 @@ def test_root_cause_client_report_localizes_spanish_markdown_and_docx(
         )["comparison"]
         == "Real frente a Plan (AC frente a PL)"
     )
-    assert "# Análisis de las causas de la varianza de ventas" in client_report
+    assert "# Borrador de análisis de variaciones de ventas" in client_report
     assert "## Datos de soporte principales" in client_report
     assert "## Notas de lectura" in client_report
     assert (
@@ -1863,8 +1948,108 @@ def test_root_cause_client_report_localizes_spanish_markdown_and_docx(
         assert english_text not in client_report
     with ZipFile(tmp_path / "root_cause_client_report.docx") as docx_file:
         document_xml = docx_file.read("word/document.xml").decode("utf-8")
-    assert "Análisis de las causas de la varianza de ventas" in document_xml
+    assert "Borrador de análisis de variaciones de ventas" in document_xml
     assert "periodo actual frente a periodo del año anterior" in document_xml
+
+
+def test_root_cause_client_report_localizes_italian_draft_and_controls(
+    tmp_path: Path,
+) -> None:
+    report = load_root_cause_client_report()
+    summary_rows = [
+        {
+            "alternative_result": 1,
+            "selected_labels": "Prodotto A - Price & volume & mix",
+            "selected_amounts": "300",
+            "other_residual": "0",
+            "row_count": 1,
+            "chart_path": "",
+        }
+    ]
+    recipe = {
+        "language": "it",
+        "source_file": "vendite.csv",
+        "mappings": {"baseline_period": "2023", "comparison_period": "2024"},
+        "options": {
+            "comparison_basis": "period",
+            "period_comparison_mode": "calendar_period",
+            "currency": "EUR",
+        },
+        "accounting_review": {},
+        "accounting_readiness": {
+            "client_report_status": "draft_pending_professional_review",
+            "accounting_status": "partial",
+            "unresolved_items": [],
+        },
+    }
+
+    _paths, audit = report.write_root_cause_client_report(
+        summary_rows=summary_rows,
+        recipe=recipe,
+        output_dir=tmp_path,
+    )
+
+    markdown = (tmp_path / "root_cause_client_report.md").read_text(encoding="utf-8")
+    assert audit["status"] == "draft_pending_professional_review"
+    assert "# Bozza di analisi delle varianze vendite" in markdown
+    assert "## Perimetro e controlli contabili" in markdown
+    assert "Prodotto A - Prezzo, Volume e Mix" in markdown
+    assert "calendar period" not in markdown
+    assert "main driver" not in markdown.lower()
+
+
+def test_root_cause_client_report_uses_explicit_reviewed_alternative(
+    tmp_path: Path,
+) -> None:
+    report = load_root_cause_client_report()
+    summary_rows = [
+        {
+            "alternative_result": 1,
+            "selected_labels": "A - Volume",
+            "selected_amounts": "100",
+            "other_residual": "0",
+            "row_count": 1,
+            "chart_path": "",
+        },
+        {
+            "alternative_result": 2,
+            "selected_labels": "B - Price",
+            "selected_amounts": "100",
+            "other_residual": "0",
+            "row_count": 1,
+            "chart_path": "",
+        },
+    ]
+    recipe = {
+        "language": "en",
+        "source_file": "sales.csv",
+        "mappings": {"baseline_period": "PL", "comparison_period": "AC"},
+        "options": {"comparison_basis": "scenario", "currency": "EUR"},
+        "accounting_review": {
+            "root_cause_review": {
+                "status": "approved",
+                "selected_alternative": 2,
+                "rationale": "Alternative 2 is the reviewed business-readable bridge.",
+            }
+        },
+        "accounting_readiness": {
+            "client_report_status": "approved_for_client_use",
+            "accounting_status": "ready_for_professional_review",
+            "unresolved_items": [],
+        },
+    }
+
+    _paths, audit = report.write_root_cause_client_report(
+        summary_rows=summary_rows,
+        recipe=recipe,
+        output_dir=tmp_path,
+    )
+
+    markdown = (tmp_path / "root_cause_client_report.md").read_text(encoding="utf-8")
+    assert audit["status"] == "approved_for_client_use"
+    assert audit["selection_method"] == "explicit_professional_or_model_review"
+    assert "B - Price +100" in markdown
+    assert "A - Volume +100" not in markdown
 
 
 def test_variance_plugin_root_cause_alternative_result_uses_legacy_option(
@@ -2275,6 +2460,218 @@ def test_run_variance_cli_passes_root_cause_legacy_options(
     assert captured["kwargs"]["total_by_dimension_bridge_dimension"] == "company"
     assert captured["kwargs"]["total_by_dimension_bridge_top_n"] == 6
     assert captured["kwargs"]["currency"] == "USD"
+    assert captured["kwargs"]["client_engagement"] is None
+
+
+def test_managed_variance_cli_requires_explicit_currency(
+    monkeypatch: Any,
+    tmp_path: Path,
+    capsys: Any,
+) -> None:
+    runner = load_run_variance()
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "run_variance.py",
+            str(tmp_path / "source.csv"),
+            "--output-dir",
+            str(tmp_path / "outputs"),
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+        ],
+    )
+
+    with pytest.raises(SystemExit) as exc_info:
+        runner.main()
+
+    assert exc_info.value.code == 2
+    assert (
+        "--currency is required for a Vera managed variance run"
+        in capsys.readouterr().err
+    )
+
+
+def test_managed_variance_core_requires_explicit_currency(tmp_path: Path) -> None:
+    core = load_core()
+
+    with pytest.raises(ValueError, match="require an explicit currency"):
+        core.run_variance_analysis(
+            tmp_path / "source.csv",
+            tmp_path / "outputs",
+            client_engagement={"run_id": "run_" + "1" * 24},
+        )
+
+
+def test_managed_run_intake_uses_portable_paths_and_client_run_id(
+    tmp_path: Path,
+) -> None:
+    load_core()
+    review_session = sys.modules["review_session"]
+    run_root = (
+        tmp_path
+        / "Customer"
+        / "Vera"
+        / "engagements"
+        / "eng_test"
+        / "runs"
+        / "run_test"
+    )
+    input_path = run_root / "inputs" / "source.csv"
+    recipe_path = run_root / "outputs" / "inspection" / "suggested_recipe.json"
+    output_dir = run_root / "outputs" / "variance"
+    input_path.parent.mkdir(parents=True)
+    recipe_path.parent.mkdir(parents=True)
+    output_dir.mkdir(parents=True)
+    input_path.write_text("period,amount\nA,1\n", encoding="utf-8")
+    recipe_path.write_text("{}\n", encoding="utf-8")
+    client_engagement = {
+        "schema_version": "vera.client_workflow_context.v2",
+        "client_id": "client_" + "1" * 24,
+        "engagement_id": "eng_" + "2" * 24,
+        "workflow_id": "variance-analysis",
+        "workflow_version": "0.1.90",
+        "run_id": "run_" + "3" * 24,
+        "label": "Actual vs Budget",
+        "purpose": "Prepare a reviewed variance analysis",
+        "created_at": "2026-08-10T00:00:00+00:00",
+        "input_manifest": "input_manifest.json",
+        "input_manifest_sha256": "4" * 64,
+        "run_relative_path": "Vera/engagements/eng_test/runs/run_test",
+        "output_relative_path": "outputs",
+        "content_sha256": "5" * 64,
+        "run_root": str(run_root),
+    }
+
+    result = review_session.write_run_intake(
+        output_dir,
+        input_path,
+        recipe_path=recipe_path,
+        recipe={"language": "en", "mappings": {}, "options": {"currency": "USD"}},
+        source_row_count=1,
+        client_engagement=client_engagement,
+    )
+
+    payload = json.loads(result.path.read_text(encoding="utf-8"))
+    assert payload["run_id"] == client_engagement["run_id"]
+    assert payload["path_reference"] == "run_root_relative"
+    assert payload["input_paths"] == ["inputs/source.csv"]
+    assert payload["output_dir"] == "outputs/variance"
+    assert (
+        payload["assumptions"]["recipe_path"]
+        == "outputs/inspection/suggested_recipe.json"
+    )
+    assert "run_root" not in payload["client_engagement"]
+    assert str(tmp_path) not in json.dumps(payload)
+
+
+def test_accounting_readiness_blocks_failed_source_tie_out() -> None:
+    load_core()
+    controls = sys.modules["accounting_controls"]
+    review = {
+        "perimeter": {"status": "established", "description": "Entity A"},
+        "source_tie_out": {
+            "baseline_source_total": 100.0,
+            "comparison_source_total": 120.0,
+            "tolerance": 0.01,
+        },
+        "favorable_adverse_convention": {
+            "status": "established",
+            "description": "Positive sales variance is favorable.",
+        },
+        "materiality": {"status": "not_applied"},
+    }
+
+    readiness = controls.evaluate_accounting_readiness(
+        review,
+        amount_baseline=100.0,
+        amount_comparison=125.0,
+        max_abs_component_reconciliation_delta=0.0,
+    )
+
+    assert readiness["source_tie_out"]["status"] == "failed"
+    assert readiness["component_bridge"]["status"] == "passed"
+    assert readiness["accounting_status"] == "blocked"
+    assert readiness["client_report_status"] == "draft_pending_professional_review"
+
+
+def test_managed_variance_artifacts_use_only_run_relative_source_paths(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    run_root = tmp_path / "Customer" / "Vera" / "runs" / "run_test"
+    input_path = run_root / "inputs" / "sales.csv"
+    inspection_dir = run_root / "outputs" / "inspection"
+    variance_dir = run_root / "outputs" / "variance"
+    input_path.parent.mkdir(parents=True)
+    _write_sales_fixture(input_path)
+    client_engagement = {
+        "schema_version": "vera.client_workflow_context.v2",
+        "client_id": "client_" + "1" * 24,
+        "engagement_id": "eng_" + "2" * 24,
+        "workflow_id": "variance-analysis",
+        "workflow_version": "0.1.90",
+        "run_id": "run_" + "3" * 24,
+        "label": "Actual vs prior period",
+        "purpose": "Prepare a reviewed variance analysis",
+        "created_at": "2026-08-10T00:00:00+00:00",
+        "input_manifest": "input_manifest.json",
+        "input_manifest_sha256": "4" * 64,
+        "run_relative_path": "Vera/runs/run_test",
+        "output_relative_path": "outputs",
+        "content_sha256": "5" * 64,
+        "run_root": str(run_root),
+    }
+
+    core.inspect_variance_inputs(
+        input_path,
+        inspection_dir,
+        language="it",
+        client_engagement=client_engagement,
+    )
+    recipe_path = inspection_dir / "suggested_recipe.json"
+    recipe = json.loads(recipe_path.read_text(encoding="utf-8"))
+    recipe["accounting_review"] = {
+        "perimeter": {"status": "established", "description": "Synthetic entity"},
+        "source_tie_out": {
+            "baseline_source_total": 300.0,
+            "comparison_source_total": 330.0,
+            "tolerance": 0.01,
+        },
+        "favorable_adverse_convention": {
+            "status": "established",
+            "description": "Positive sales variance is favorable.",
+        },
+        "materiality": {"status": "not_applied"},
+    }
+    recipe_path.write_text(json.dumps(recipe), encoding="utf-8")
+
+    core.run_variance_analysis(
+        input_path,
+        variance_dir,
+        recipe_path,
+        currency="EUR",
+        language="it",
+        artifact_mode="data_only",
+        waterfall_chart=False,
+        waterfall_small_multiples=False,
+        root_cause_bridge=False,
+        root_cause_bridge_alternative_sweep=False,
+        total_by_dimension_bridge=False,
+        exploded_variance_bridge=False,
+        client_engagement=client_engagement,
+    )
+
+    for path in (
+        inspection_dir / "inspection.json",
+        inspection_dir / "suggested_recipe.json",
+        variance_dir / "used_recipe.json",
+        variance_dir / "variance_audit.json",
+        variance_dir / "prepared_data_manifest.json",
+    ):
+        text = path.read_text(encoding="utf-8")
+        assert str(run_root) not in text
+        assert "inputs/sales.csv" in text
 
 
 def test_variance_plugin_uses_bottom_up_mix_for_coarser_reporting(
