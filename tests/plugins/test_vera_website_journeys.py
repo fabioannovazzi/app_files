@@ -676,13 +676,14 @@ def _section_markup(page: str, section_id: str) -> str:
     return page[section_start:section_end]
 
 
-def test_vera_hub_separates_general_workflows_from_market_specific_work() -> None:
+def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 14
+    expected_core_module_count = 17
 
     assert core.count('class="module-row"') == expected_core_module_count
+    assert core.count('data-primary-workflow-link="') == 2
     assert jurisdiction.count('data-jurisdiction-item="it"') == 7
     assert jurisdiction.count('data-jurisdiction-item="en"') == 1
     assert jurisdiction.count('data-jurisdiction-item="fr"') == 1
@@ -695,7 +696,9 @@ def test_vera_hub_separates_general_workflows_from_market_specific_work() -> Non
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
+        "index.html#bilancio-intelligente",
         "../financial-analysis/index.html",
+        "index.html#bandi-agevolazioni",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -1133,7 +1136,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 24
+    expected_module_link_count = 27
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
@@ -1263,6 +1266,10 @@ def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> No
 
     assert 'id="bilancio-intelligente" data-bilancio-section hidden' in page
     assert 'data-bilancio-nav hidden' in page
+    assert (
+        'data-jurisdiction-item="it" '
+        'data-primary-workflow-link="bilancio-intelligente" hidden'
+    ) in page
     assert 'const showBilancio = lang === "it";' in page
     assert (
         'document.querySelector("[data-bilancio-section]").hidden = !showBilancio;'
@@ -1289,6 +1296,10 @@ def test_vera_hub_explains_bandi_with_evidence_and_professional_boundaries() -> 
 
     assert 'id="bandi-agevolazioni" data-bandi-section hidden' in page
     assert 'data-bandi-nav hidden' in page
+    assert (
+        'data-jurisdiction-item="it" '
+        'data-primary-workflow-link="bandi-agevolazioni" hidden'
+    ) in page
     assert 'const showBandi = lang === "it";' in page
     assert (
         'document.querySelector("[data-bandi-section]").hidden = !showBandi;'
