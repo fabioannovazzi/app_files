@@ -976,7 +976,11 @@ def test_determine_forms_rejects_silent_rule_pack_replacement(tmp_path: Path) ->
 
 
 def _prepared_case(
-    tmp_path: Path, selected_form: str = "ABBREVIATED"
+    tmp_path: Path,
+    selected_form: str = "ABBREVIATED",
+    *,
+    asset_canonical_line: str = "SP.ATTIVO.CASSA",
+    asset_schedule_triggers: tuple[str, ...] = (),
 ) -> dict[str, object]:
     _, case = _created_case(tmp_path)
     # This compact synthetic helper uses a five-concept catalogue. Dedicated
@@ -1006,13 +1010,14 @@ def _prepared_case(
             "decision": "ACCEPTED",
             "allocations": [
                 {
-                    "canonical_line": "SP.ATTIVO.CASSA",
+                    "canonical_line": asset_canonical_line,
                     "statement_section": "ASSETS",
                     "xbrl_concept": "itcc:Assets",
                     "xbrl_sign_multiplier": "1",
                     "current_amount": "100",
                     "prior_amount": "90",
                     "evidence_status": "OBSERVED",
+                    "schedule_triggers": list(asset_schedule_triggers),
                 }
             ],
         },
@@ -3119,37 +3124,56 @@ def test_fixed_asset_schedule_reconciles_components_and_movements(
     assert result["schedules"][0]["status"] == "COMPLETE"
 
 
+def _inventory_schedule_payload(
+    row_updates: dict[str, object] | None = None,
+    *,
+    statement_line: str = "SP.ATTIVO.RIMANENZE",
+) -> dict[str, object]:
+    row: dict[str, object] = {
+        "row_id": "finished_goods",
+        "source_refs": ["inventory_ledger_1", "count_report_1"],
+        "evidence_status": "USER_CONFIRMED",
+        "opening_amount": "90",
+        "increases": "20",
+        "decreases": "5",
+        "reclassifications": "0",
+        "write_downs": "3",
+        "write_down_reversals": "0",
+        "other_movements": "-2",
+        "closing_amount": "100",
+        "inventory_class": "FINISHED_GOODS",
+        "valuation_basis": "LOWER_OF_COST_AND_NRV",
+        "costing_method": "WEIGHTED_AVERAGE",
+        "nrv_assessment_status": "REVIEWED",
+        "obsolescence_assessment_status": "REVIEWED",
+        "count_evidence_status": "COUNT_RECONCILED",
+        "pledged_status": "NOT_PLEDGED_CONFIRMED",
+    }
+    row.update(row_updates or {})
+    return {
+        "schedule_id": "inventories",
+        "schedule_type": "INVENTORIES",
+        "statement_line": statement_line,
+        "rows": [row],
+    }
+
+
+def _prepared_inventory_case(tmp_path: Path) -> dict[str, object]:
+    case = _prepared_case(
+        tmp_path,
+        asset_canonical_line="SP.ATTIVO.RIMANENZE",
+    )
+    case["taxonomy_mapping_index"] = {
+        "concepts": [{"xbrl_concept": "itcc:Assets", "schedule_types": ["INVENTORIES"]}]
+    }
+    return case
+
+
 def test_inventory_schedule_reconciles_movements_and_requires_valuation_evidence(
     tmp_path: Path,
 ) -> None:
-    case = _prepared_case(tmp_path)
-    payload = {
-        "schedule_id": "inventories",
-        "schedule_type": "INVENTORIES",
-        "statement_line": "SP.ATTIVO.CASSA",
-        "rows": [
-            {
-                "row_id": "finished_goods",
-                "source_refs": ["inventory_ledger_1", "count_report_1"],
-                "evidence_status": "USER_CONFIRMED",
-                "opening_amount": "90",
-                "increases": "20",
-                "decreases": "5",
-                "reclassifications": "0",
-                "write_downs": "3",
-                "write_down_reversals": "0",
-                "other_movements": "-2",
-                "closing_amount": "100",
-                "inventory_class": "FINISHED_GOODS",
-                "valuation_basis": "LOWER_OF_COST_AND_NRV",
-                "costing_method": "WEIGHTED_AVERAGE",
-                "nrv_assessment_status": "REVIEWED",
-                "obsolescence_assessment_status": "REVIEWED",
-                "count_evidence_status": "COUNT_RECONCILED",
-                "pledged_status": "NOT_PLEDGED_CONFIRMED",
-            }
-        ],
-    }
+    case = _prepared_inventory_case(tmp_path)
+    payload = _inventory_schedule_payload()
 
     result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
     result = xbrl_case.activate_disclosures(
@@ -3176,34 +3200,20 @@ def test_inventory_schedule_reconciles_movements_and_requires_valuation_evidence
 def test_inventory_schedule_keeps_unknown_professional_assessment_open(
     tmp_path: Path,
 ) -> None:
-    case = _prepared_case(tmp_path)
-    payload = {
-        "schedule_id": "inventories",
-        "schedule_type": "INVENTORIES",
-        "statement_line": "SP.ATTIVO.CASSA",
-        "rows": [
-            {
-                "row_id": "raw_materials",
-                "source_refs": ["inventory_ledger_1"],
-                "evidence_status": "USER_CONFIRMED",
-                "opening_amount": "90",
-                "increases": "10",
-                "decreases": "0",
-                "reclassifications": "0",
-                "write_downs": "0",
-                "write_down_reversals": "0",
-                "other_movements": "0",
-                "closing_amount": "100",
-                "inventory_class": "RAW_MATERIALS",
-                "valuation_basis": "LOWER_OF_COST_AND_NRV",
-                "costing_method": "FIFO",
-                "nrv_assessment_status": "UNKNOWN",
-                "obsolescence_assessment_status": "REVIEWED",
-                "count_evidence_status": "COUNT_RECONCILED",
-                "pledged_status": "NOT_PLEDGED_CONFIRMED",
-            }
-        ],
-    }
+    case = _prepared_inventory_case(tmp_path)
+    payload = _inventory_schedule_payload(
+        {
+            "row_id": "raw_materials",
+            "source_refs": ["inventory_ledger_1"],
+            "increases": "10",
+            "decreases": "0",
+            "write_downs": "0",
+            "other_movements": "0",
+            "inventory_class": "RAW_MATERIALS",
+            "costing_method": "FIFO",
+            "nrv_assessment_status": "UNKNOWN",
+        }
+    )
 
     result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
 
@@ -3216,6 +3226,78 @@ def test_inventory_schedule_keeps_unknown_professional_assessment_open(
             "field": "nrv_assessment_status",
         }
     ]
+
+
+def test_inventory_schedule_rejects_unrelated_statement_line(tmp_path: Path) -> None:
+    case = _prepared_case(tmp_path)
+
+    with pytest.raises(ValueError, match="reviewed inventory mappings"):
+        xbrl_case.record_schedule(
+            case,
+            _inventory_schedule_payload(statement_line="SP.ATTIVO.CASSA"),
+            "preparer_1",
+            case["revision_id"],
+        )
+
+
+def test_inventory_schedule_keeps_nonterminal_review_states_open(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_inventory_case(tmp_path)
+    payload = _inventory_schedule_payload(
+        {
+            "nrv_assessment_status": "NOT_REVIEWED",
+            "obsolescence_assessment_status": "PENDING",
+            "count_evidence_status": "NO_COUNT_EVIDENCE",
+            "pledged_status": "UNDETERMINED",
+        }
+    )
+
+    result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
+
+    schedule = result["schedules"][0]
+    assert schedule["status"] == "INCOMPLETE"
+    assert {issue["field"] for issue in schedule["issues"]} == {
+        "nrv_assessment_status",
+        "obsolescence_assessment_status",
+        "count_evidence_status",
+        "pledged_status",
+    }
+
+
+def test_inventory_schedule_allows_external_reclassification(tmp_path: Path) -> None:
+    case = _prepared_inventory_case(tmp_path)
+    payload = _inventory_schedule_payload(
+        {
+            "increases": "5",
+            "decreases": "0",
+            "reclassifications": "5",
+            "write_downs": "0",
+            "other_movements": "0",
+        }
+    )
+
+    result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
+
+    assert result["schedules"][0]["status"] == "COMPLETE"
+
+
+def test_inventory_schedule_rejects_explicit_trigger_on_noninventory_concept(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path, asset_schedule_triggers=("INVENTORIES",))
+    case["statutory_presentation_required"] = True
+    case["taxonomy_mapping_index"] = {
+        "concepts": [{"xbrl_concept": "itcc:Assets", "schedule_types": []}]
+    }
+
+    with pytest.raises(ValueError, match="reviewed inventory mappings"):
+        xbrl_case.record_schedule(
+            case,
+            _inventory_schedule_payload(statement_line="SP.ATTIVO.CASSA"),
+            "preparer_1",
+            case["revision_id"],
+        )
 
 
 @pytest.mark.parametrize("schedule_type", ["PROVISIONS", "TFR"])

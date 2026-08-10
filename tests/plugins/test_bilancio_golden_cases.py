@@ -65,6 +65,14 @@ def _fake_catalogue(suite: dict[str, object], checksum: str) -> dict[str, object
             "balance": "debit",
             "forms": ["ORDINARY"],
         },
+        "itcc-ci:RimanenzeProdottiFinitiMerci": {
+            "qname": "itcc-ci:RimanenzeProdottiFinitiMerci",
+            "abstract": False,
+            "type": "xbrli:monetaryItemType",
+            "period_type": "instant",
+            "balance": "debit",
+            "forms": ["ORDINARY"],
+        },
         "itcc-ci:PassivoRateiRisconti": {
             "qname": "itcc-ci:PassivoRateiRisconti",
             "abstract": False,
@@ -167,6 +175,17 @@ def _fake_catalogue(suite: dict[str, object], checksum: str) -> dict[str, object
             }
             presentation.append(row)
             calculation.append(row)
+        if form == "ORDINARY":
+            inventory_row = {
+                "form": form,
+                "role": balance_role,
+                "from": "itcc-ci:TotaleAttivo",
+                "to": "itcc-ci:RimanenzeProdottiFinitiMerci",
+                "order": "3",
+                "weight": "1",
+            }
+            presentation.append(inventory_row)
+            calculation.append(inventory_row)
         income_row = {
             "form": form,
             "role": income_role,
@@ -278,7 +297,10 @@ def _fake_presentation_rule_pack(path: Path) -> Path:
                 "canonical_multiplier": "1",
             },
         },
-        "schedule_trigger_roots": {"TAXES": ["itcc-ci:NotInInventory"]},
+        "schedule_trigger_roots": {
+            "INVENTORIES": ["itcc-ci:RimanenzeProdottiFinitiMerci"],
+            "TAXES": ["itcc-ci:NotInInventory"],
+        },
         "cash_flow_contract": {
             "form": "ORDINARY",
             "net_change_root_concept": "itcc-ci:IncrementoDecrementoDisponibilitaLiquide",
@@ -391,6 +413,10 @@ def test_golden_runner_renders_and_records_all_cases(tmp_path: Path) -> None:
         for item in xbrl_results
     )
     assert manifest["results"][1]["workflow_checks"]["schedule_types"] == ["CASH_FLOW"]
+    assert set(manifest["results"][5]["workflow_checks"]["schedule_types"]) == {
+        "CASH_FLOW",
+        "INVENTORIES",
+    }
     assert set(manifest["results"][13]["workflow_checks"]["schedule_types"]) == {
         "CASH_FLOW",
         "PROVISIONS",

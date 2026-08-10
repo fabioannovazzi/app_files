@@ -93,6 +93,26 @@ INVENTORY_FIELDS = (
     "other_movements",
     "closing_amount",
 )
+INVENTORY_TERMINAL_STATUSES = {
+    "nrv_assessment_status": frozenset({"REVIEWED", "NOT_APPLICABLE_CONFIRMED"}),
+    "obsolescence_assessment_status": frozenset(
+        {"REVIEWED", "NOT_APPLICABLE_CONFIRMED"}
+    ),
+    "count_evidence_status": frozenset(
+        {
+            "COUNT_RECONCILED",
+            "ALTERNATIVE_PROCEDURES_RECONCILED",
+            "NOT_APPLICABLE_CONFIRMED",
+        }
+    ),
+    "pledged_status": frozenset(
+        {
+            "PLEDGED_CONFIRMED",
+            "NOT_PLEDGED_CONFIRMED",
+            "NOT_APPLICABLE_CONFIRMED",
+        }
+    ),
+}
 MOVEMENT_FIELDS = (
     "opening_amount",
     "additions",
@@ -338,6 +358,8 @@ def _normalize_row(
     fields: Sequence[str],
     schedule_type: str,
     issues: list[dict[str, str]],
+    *,
+    terminal_text_values: Mapping[str, frozenset[str]] | None = None,
 ) -> dict[str, Any]:
     source_refs = sorted(
         {str(value) for value in row.get("source_refs", []) if str(value)}
@@ -357,7 +379,9 @@ def _normalize_row(
         normalized[field] = _text(_decimal(row[field], field))
     for field in schedule_template_text_fields(schedule_type):
         value = str(row.get(field, "")).strip()
-        if not value or value.upper() == "UNKNOWN":
+        normalized_value = value.upper()
+        allowed_values = (terminal_text_values or {}).get(field)
+        if not value or normalized_value == "UNKNOWN":
             normalized[field] = "UNKNOWN"
             issues.append(
                 {
@@ -366,8 +390,20 @@ def _normalize_row(
                     "field": field,
                 }
             )
+        elif allowed_values is not None and normalized_value not in allowed_values:
+            # These values are workflow terminal markers, not accounting
+            # conclusions. Fixed membership is mechanically auditable while
+            # the professional remains responsible for selecting the state.
+            normalized[field] = normalized_value
+            issues.append(
+                {
+                    "rule_id": f"SCHEDULE.{schedule_type}.{field.upper()}_REQUIRED",
+                    "row_id": normalized["row_id"],
+                    "field": field,
+                }
+            )
         else:
-            normalized[field] = value
+            normalized[field] = normalized_value if allowed_values else value
     return normalized
 
 
@@ -566,7 +602,14 @@ def _inventories(
     """Validate reviewer-classified inventory movements and valuation evidence."""
 
     normalized = [
-        _normalize_row(row, INVENTORY_FIELDS, "INVENTORIES", issues) for row in rows
+        _normalize_row(
+            row,
+            INVENTORY_FIELDS,
+            "INVENTORIES",
+            issues,
+            terminal_text_values=INVENTORY_TERMINAL_STATUSES,
+        )
+        for row in rows
     ]
     unsigned_fields = (
         "opening_amount",
@@ -598,17 +641,9 @@ def _inventories(
                     "row_id": row["row_id"],
                 }
             )
-    if (
-        sum(
-            (
-                _decimal(row["reclassifications"], "reclassifications")
-                for row in normalized
-            ),
-            Decimal("0"),
-        )
-        != 0
-    ):
-        issues.append({"rule_id": "SCHEDULE.RECLASSIFICATIONS_NET_ZERO", "row_id": "*"})
+    # Inventory reclassifications may cross into or out of another balance-
+    # sheet class. Their exact movement and opening/closing statement tie-outs
+    # remain deterministic; their accounting meaning remains reviewer-owned.
     return normalized
 
 

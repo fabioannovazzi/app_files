@@ -82,6 +82,7 @@ GENERIC_ASSET_CONCEPTS = {
 }
 GENERIC_LIABILITY_CONCEPT = "itcc-ci:PassivoRateiRisconti"
 SCENARIO_SCHEDULES = {
+    6: ("INVENTORIES",),
     7: ("FIXED_ASSETS",),
     8: ("FIXED_ASSETS",),
     9: ("RECEIVABLES",),
@@ -92,6 +93,18 @@ SCENARIO_SCHEDULES = {
     16: ("EQUITY",),
 }
 GOLDEN_SCHEDULE_BINDINGS = {
+    "INVENTORIES": {
+        "xbrl_concept": "itcc-ci:TotaleRimanenzeVariazioneEsercizio",
+        "period": "current_duration",
+        "inputs": [
+            ("increases", "1"),
+            ("decreases", "-1"),
+            ("reclassifications", "1"),
+            ("write_downs", "-1"),
+            ("write_down_reversals", "1"),
+            ("other_movements", "1"),
+        ],
+    },
     "FIXED_ASSETS": {
         "xbrl_concept": "itcc-ci:VariazioniEsercizioAltreVariazioniTotaleImmobilizzazioniMateriali",
         "period": "current_duration",
@@ -463,6 +476,18 @@ def _balance_plan(
                 ),
             ]
         )
+    elif int(fixture["number"]) == 6:
+        cash_balance = Decimal("1")
+        assets.extend(
+            [
+                (
+                    "itcc-ci:RimanenzeProdottiFinitiMerci",
+                    current_total - cash_balance,
+                    prior_total - cash_balance,
+                ),
+                (generic_asset_concept, cash_balance, cash_balance),
+            ]
+        )
     else:
         assets.append((generic_asset_concept, current_total, prior_total))
     if marker_is_balance_leaf and concepts[marker_qname].get("balance") == "credit":
@@ -506,7 +531,7 @@ def _balance_plan(
     for schedule_type in sorted(schedules):
         target_section = (
             "ASSETS"
-            if schedule_type in {"FIXED_ASSETS", "RECEIVABLES", "TAXES"}
+            if schedule_type in {"FIXED_ASSETS", "INVENTORIES", "RECEIVABLES", "TAXES"}
             else "LIABILITIES_EQUITY"
         )
         target = next(
@@ -920,7 +945,23 @@ def _schedule_payload(
     }
     for field in schedule_template_fields(schedule_type):
         row[field] = "0"
-    if schedule_type == "FIXED_ASSETS":
+    if schedule_type == "INVENTORIES":
+        row.update(
+            {
+                "opening_amount": _decimal_text(opening),
+                "increases": _decimal_text(increase),
+                "decreases": _decimal_text(decrease),
+                "closing_amount": _decimal_text(closing),
+                "inventory_class": "FINISHED_GOODS",
+                "valuation_basis": "LOWER_OF_COST_AND_NRV",
+                "costing_method": "WEIGHTED_AVERAGE",
+                "nrv_assessment_status": "REVIEWED",
+                "obsolescence_assessment_status": "REVIEWED",
+                "count_evidence_status": "COUNT_RECONCILED",
+                "pledged_status": "NOT_PLEDGED_CONFIRMED",
+            }
+        )
+    elif schedule_type == "FIXED_ASSETS":
         row.update(
             {
                 "opening_gross_cost": _decimal_text(opening),

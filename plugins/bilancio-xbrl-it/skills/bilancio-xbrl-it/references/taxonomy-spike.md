@@ -142,7 +142,7 @@ XBRL fixture through the public case lifecycle from source ingestion through
 professional approval and export. It checks rendered values, invokes offline
 Arelle, and writes a checksum manifest.
 
-Re-executed on 2026-08-06 with the package and catalogue above:
+Re-executed on 2026-08-10 with the package and catalogue above:
 
 - suite status: `PASS`;
 - cases passed: `24/24`;
@@ -159,15 +159,17 @@ Re-executed on 2026-08-06 with the package and catalogue above:
 - generated catalogue SHA-256:
   `0699148330d4d905b85649a558efe94d1c0e40fcaea5c16d988f1699b9ffc30f`;
 - statutory-presentation rule-pack SHA-256:
-  `6a58a1fd61f6327c9a21c57de765a0f66e6485f3359bb9dd9d288f1362bc3e0d`;
-- schedule-taxonomy rule-pack SHA-256 at the time of this controlled run:
-  `e8e90f6954003c4c2e768fbd4eca81635fc9a3503f25b98d9aae1c09fd197cd4`;
+  `d7d8b189b36a5177c24954a1956253b89f9b14d2d39fbd0174b9a5df4a73b857`;
+- schedule-taxonomy rule-pack SHA-256:
+  `030f62d38592dc7cd4a497c2695bed271246bc3aa149806c24ce1361397aa599`;
 - golden-suite input SHA-256:
   `2d7930aecbd42867b34260a5449702f755c86f61d33612111378e3d39aeef5a6`;
-- the eight non-cash schedule workflows included at the time record complete per-cell adapter
-  dispositions and emit representative official schedule facts;
+- all nine non-cash schedule families record complete per-cell adapter
+  dispositions and emit representative official schedule facts; inventory is
+  exercised by golden case 6 and emits the official total inventory-movement
+  concept;
 - final controlled run manifest SHA-256:
-  `cba338586e33bae658c17d94ca67c395a70a46185358c79968bbe7ae4f46d841`;
+  `d3e2d8edb97bf7115971272cd745e89b313046e3d60a2d0858645197d71c28b2`;
 - external TEBENI status: `NOT_RUN_USER_CONTROLLED`.
 
 This evidence proves the controlled renderer and boundary paths used by the
