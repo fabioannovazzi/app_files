@@ -256,6 +256,7 @@ def test_extracted_vera_chatgpt_upload_rejects_unmanaged_inspection(
 
     assert result.returncode == 2
     assert (
-        "--client-engagement is required by the Vera packaged runner" in result.stderr
+        "--client-engagement is required by the Vera packaged inspector"
+        in result.stderr
     )
     assert not (work_dir / "inspection").exists()

@@ -1,6 +1,6 @@
 ---
 name: variance-analysis
-description: Use when a user wants Claude to inspect a sales CSV/XLSX file, map periods and metrics, run sales variance, price-volume-mix, net sales and margin analysis, and interpret the resulting source data.
+description: Use when a user wants Claude to inspect a sales or management-accounting CSV/XLSX file, compare scenarios or periods, run amount or price-volume-mix variance calculations, and produce reviewable plots and interpretation.
 ---
 
 ## Cowork execution contract
@@ -30,19 +30,19 @@ labels, or status summaries.
 
 ## Output Location Rule
 
-Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. For a managed host workflow, write only below the exact host-provided run output directory. For other user-data runs, choose an output directory outside the repo, preferably a sibling `output/<plugin-name-or-run-id>` folder next to the user-provided input folder, and pass that path to every `--output-dir` or `--out` argument. If a script has a safe default next to the input folder, use that default instead of inventing `out/...` under the repo.
 
 # Variance Analysis
 
-Use this skill when a sales or revenue dataset needs period-over-period variance analysis. The plugin is a guided Claude workflow: Claude inspects the file, confirms unresolved mappings, runs deterministic helper scripts, reviews diagnostics, and explains the largest business drivers.
+Use this skill when a sales, revenue, P&L, or management-accounting dataset needs scenario or period variance analysis. The plugin is a guided Claude workflow: Claude inspects the file, confirms unresolved mappings, runs deterministic helper scripts, reviews diagnostics and plots, and explains the largest source-supported drivers. Amount-only comparison is valid when units are absent; price-volume-mix requires a reviewed units basis.
 
 ## Cowork-native Run UX
 
-Before running helper scripts or write-heavy work, identify only material choices that cannot be inferred from the file: ambiguous comparison basis, baseline and comparison periods, period column, amount column, units column, reporting dimensions, calculation grain, output folder, and working language. Root-cause variance, the alternative sweep, automatic drilldowns, standard waterfall output, charts, audit files, diagnostics, model-context files, and client-ready Word report outputs are default behavior; do not ask the user whether to enable them. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named variance modes, business dimensions, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value.
+Before running helper scripts or write-heavy work, identify only material choices that cannot be inferred from the file: ambiguous comparison basis, baseline and comparison periods, period column, amount column, units column, reporting dimensions, calculation grain, output folder, and working language. Root-cause variance, the alternative sweep, automatic drilldowns, standard waterfall output, charts, audit files, diagnostics, model-context files, and professional-review Word draft outputs are default behavior; do not ask the user whether to enable them. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named variance modes, business dimensions, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value.
 
 Default output policy: produce the richest normal package for the workflow. DOCX/Word, Excel/CSV, JSON audit, diagnostics, charts, packaged reports, review notes, and Vera-written review files are not choices to propose when they are natural outputs of this plugin; generate them whenever dependencies and source data permit. Ask only when an output is technically impossible, unsafe, or the user explicitly requests a reduced/debug run.
 
-Default currency policy: use Euro (`EUR`) unless the user or source file explicitly states another currency. Do not ask for currency when it is otherwise unresolved; record `EUR` as the assumption.
+Default currency policy for standalone and Clara runs: use Euro (`EUR`) unless the user or source file explicitly states another currency, and record it as an assumption. A managed Vera run must pass an explicit reviewed currency and may not inherit this default.
 
 The plugin has two host-mode behaviors:
 
@@ -65,7 +65,7 @@ the run when the mapped data and dependencies support them.
 Use Cowork-native UI artifacts as part of the workflow:
 
 1. Start with a visible markdown checklist covering intake, dependency check, inspection, user decisions, deterministic run, Claude interpretation, and delivery.
-2. Before helper scripts, show a Run Intake table with input path, output folder, working language, assumed mappings, and note that root-cause sweep and client report outputs run automatically.
+2. Before helper scripts, show a Run Intake table with input path, output folder, working language, assumed mappings, and note that the root-cause sweep and professional-review report draft run automatically.
 3. After inspection, show a compact Decision Table for missing or low-confidence mappings and ask only unresolved decisions.
 4. Before a long-running or write-heavy step, show an execution checkpoint or approval checkpoint with command intent, input, output folder, and expected artifacts. Ask for approval only when the step is external, destructive, approval-sensitive, or still depends on an unresolved material choice.
 5. End with an Artifact Card listing output paths, review status, unresolved caveats, and next action.
@@ -120,7 +120,20 @@ Root-cause variance is a sequential residual bridge, not a normal pivot-table de
 
 Every variance run enables root-cause variance when the mapped data has enough dimensions. The alternative sweep is not optional: run `alternativeResult` values `1..10` in one deterministic plugin run. For large files this may take time; that is acceptable because the plugin is expected to produce the most complete analysis rather than ask the user to choose technical modes. Use `--no-waterfall-chart` only for explicit debug runs where the normal waterfall is not useful.
 
-The sweep writes `root_cause_bridge_alt_<n>.csv`, `root_cause_bridge_alt_<n>.png`, `root_cause_sweep_summary.csv`, `root_cause_sweep_summary.json`, `root_cause_sweep_model_context.json`, `root_cause_sweep_interpretation_brief.md`, and a client-ready Word package: `root_cause_client_report.md` and `root_cause_client_report.docx`. Review the model context, interpretation brief, generated charts, and client report before writing any extra business interpretation.
+The sweep writes `root_cause_bridge_alt_<n>.csv`, `root_cause_bridge_alt_<n>.png`, `root_cause_sweep_summary.csv`, `root_cause_sweep_summary.json`, `root_cause_sweep_model_context.json`, `root_cause_sweep_interpretation_brief.md`, and a professional-review Word package: `root_cause_client_report.md` and `root_cause_client_report.docx`. The automatic report is a visible draft. It becomes `approved_for_client_use` only after the recipe records completed accounting controls, named professional approval, and an explicitly selected root-cause alternative with rationale. Review the model context, interpretation brief, generated charts, and report before writing any extra business interpretation.
+
+## Accounting Review Lifecycle
+
+The recipe's `accounting_review` object is the control record for accounting use. Record these sections rather than converting them into inferred narrative:
+
+- `perimeter`: `status: established` plus the reviewed entity or consolidation description;
+- `source_tie_out`: `status: established`, approved baseline and comparison source totals, and the named source basis;
+- `favorable_adverse_convention`: `status: established` plus the reviewed sign convention;
+- `materiality`: `status: applied` with threshold and basis, or `status: not_applied` with an explicit reason;
+- `professional_review`: `status: approved`, reviewer, timestamp, and optional note only after the professional-review step;
+- `root_cause_review`: `status: approved`, the explicitly selected alternative, reviewer, timestamp, and rationale after Claude or the professional compares the sweep alternatives.
+
+The engine deterministically checks numeric source totals against the calculated baseline and comparison, checks bridge closure, and exposes unresolved controls in the run intake and review artifacts. It must not choose the most meaningful root-cause alternative from concentration or row-count heuristics. Until the accounting and root-cause review record is complete, the generated narrative is a draft and must not claim client readiness.
 
 For each alternative, review the sweep context and build a commentary with:
 
@@ -146,11 +159,12 @@ Automatic sweep drilldown defaults to every selected row (`all_selected`) so the
 
 Required:
 
-- a `.csv`, `.tsv`, `.psv`, `.xlsx`, or `.xlsm` sales dataset.
+- a `.csv`, `.tsv`, `.psv`, `.xlsx`, or `.xlsm` sales, P&L, or management-accounting dataset with an amount measure and two comparable period/scenario buckets.
 
 Optional:
 
 - mapping hints for period, baseline period, comparison period, amount/sales, units, discount, COGS, and dimensions;
+- accounting context such as entity/perimeter, sign convention, source totals, account hierarchy, cost center, department, or consolidation dimension;
 - calculation grain hints when mix should be calculated bottom-up below the reporting dimensions;
 - working language: `it`, `en`, `fr`, `de`, or `es`;
 - root-cause variance analysis runs by default when dimensions support it.
@@ -191,6 +205,10 @@ fallback in chart audit metadata.
 python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de|es>
 ```
 
+Managed Vera runs also pass `--client-engagement <absolute-context.json>` to
+inspection and execution, and pass an explicit `--currency <ISO-code>` to
+execution.
+
 4. Read `inspection.json` and `suggested_recipe.json`. Summarize columns, periods, suggested mappings, warnings, comparison basis, period comparison style, and missing required choices.
 5. If a mapping or comparison decision is needed, ask the smallest business question and update the recipe JSON in the work folder yourself.
 6. Run deterministic variance:
@@ -220,12 +238,14 @@ local MCP widget when the `varianceAnalysisWidgets` server is available:
 1. Read `variance/run_intake.json`, `variance/review_payload.json`,
    `variance/ui_decisions.json`, and `variance/final_artifacts.json`.
 2. Call `validate_variance_analysis_review` with the review payload and optional
-   intake/decision/final-artifact objects.
+   intake/decision/final-artifact objects. For a managed Vera run, include the
+   current absolute `client_engagement` context path.
 3. If validation succeeds, call `render_variance_analysis_review` with the same
    payload so Claude can show the HTML review widget.
 4. Use `save_variance_analysis_decisions` to persist reviewer actions to
    `ui_decisions.json`, then `apply_variance_analysis_decisions` to write
-   `applied_decisions.json` and update `final_artifacts.json` status.
+   `applied_decisions.json` and update `final_artifacts.json` status. Include
+   `client_engagement` for managed Vera persistence.
 5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
    based on `review_payload.json`; do not block the deterministic run.
 
