@@ -13,6 +13,7 @@ const COMPONENTS = new Set([
   "check-entries",
   "journal-bank-reconciliation",
   "sales-plan",
+  "variance-analysis",
   "financial-analysis",
   "report-builder",
   "concordato-plan-review",
@@ -49,6 +50,7 @@ if (!serverPath) {
 
 const child = spawn(process.execPath, [serverPath, "--stdio"], {
   cwd: componentRoot,
+  env: { ...process.env, VERA_COMPONENT_HOST: "1" },
   stdio: "inherit",
 });
 

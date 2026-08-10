@@ -7,6 +7,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Sequence
 
+from accounting_controls import accounting_intake_questions
+
 __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
@@ -49,6 +51,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "artifact": "Artifact",
         "followup": "Follow-up {index}",
         "context_title": "Standard variance context",
+        "accounting_title": "Accounting controls and review status",
         "dependency_note": (
             "Codex should run scripts/check_dependencies.py before helper scripts."
         ),
@@ -95,6 +98,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "artifact": "Artefacto",
         "followup": "Seguimiento {index}",
         "context_title": "Contexto estándar de variaciones",
+        "accounting_title": "Controles contables y estado de revisión",
         "dependency_note": (
             "Codex debe ejecutar scripts/check_dependencies.py antes de los scripts auxiliares."
         ),
@@ -112,6 +116,130 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "Redacte codex_business_analysis.md a partir de los artefactos fuente revisados y las salvedades.",
         ],
     },
+    "it": {
+        "product_title": "Analisi delle varianze",
+        "handoff_title": "Consegna per la revisione",
+        "run_id": "ID esecuzione",
+        "review_payload": "Pacchetto di revisione",
+        "run_intake": "Dati iniziali dell’esecuzione",
+        "pending_decisions": "Decisioni in sospeso",
+        "applied_decisions": "Decisioni applicate",
+        "final_artifacts": "Artefatti finali",
+        "review_in_codex": "Revisione in Codex",
+        "validate_step": "Convalida il pacchetto con `{tool}`.",
+        "render_step": "Apri l’area di revisione con `{tool}`.",
+        "save_step": "Salva le decisioni del revisore con `{tool}`.",
+        "apply_step": "Applica le decisioni del revisore con `{tool}`.",
+        "columns": (
+            "Tipo",
+            "Elemento",
+            "Azione suggerita",
+            "Fonte",
+            "Output",
+            "Stato",
+        ),
+        "driver_row": "Riga driver {index}",
+        "driver_rows_truncated": "Righe driver limitate nel widget",
+        "artifact": "Artefatto",
+        "followup": "Approfondimento {index}",
+        "context_title": "Contesto standard delle varianze",
+        "accounting_title": "Controlli contabili e stato della revisione",
+        "dependency_note": (
+            "Codex deve eseguire scripts/check_dependencies.py prima degli script ausiliari."
+        ),
+        "data_posture_notes": [
+            "Gli script leggono localmente la tabella sorgente e la ricetta opzionale e producono artefatti limitati per la revisione.",
+            "Per impostazione predefinita non vengono usati connettori esterni, percorsi di caricamento, SQL remoto o notebook ospitati.",
+        ],
+        "caveats": [
+            "I dati dei grafici sono limitati per la revisione; usare variance_results.csv e i file di contesto come fonti complete.",
+            "ui_decisions.json resta in sospeso finché Codex, l’interfaccia MCP o la revisione alternativa non registrano le decisioni.",
+        ],
+        "next_actions": [
+            "Aprire review_payload.json con il widget MCP quando disponibile.",
+            "Usare il contesto standard prima di interpretare i grafici.",
+            "Redigere codex_business_analysis.md dagli artefatti sorgente e dalle riserve esaminate.",
+        ],
+    },
+    "fr": {
+        "product_title": "Analyse des écarts",
+        "handoff_title": "Dossier de revue",
+        "run_id": "ID d’exécution",
+        "review_payload": "Données de revue",
+        "run_intake": "Données initiales",
+        "pending_decisions": "Décisions en attente",
+        "applied_decisions": "Décisions appliquées",
+        "final_artifacts": "Livrables finaux",
+        "review_in_codex": "Revue dans Codex",
+        "validate_step": "Validez les données avec `{tool}`.",
+        "render_step": "Ouvrez l’espace de revue avec `{tool}`.",
+        "save_step": "Enregistrez les décisions avec `{tool}`.",
+        "apply_step": "Appliquez les décisions avec `{tool}`.",
+        "columns": ("Type", "Élément", "Action proposée", "Source", "Sortie", "Statut"),
+        "driver_row": "Ligne de facteur {index}",
+        "driver_rows_truncated": "Lignes de facteurs limitées dans le widget",
+        "artifact": "Livrable",
+        "followup": "Suivi {index}",
+        "context_title": "Contexte standard des écarts",
+        "accounting_title": "Contrôles comptables et état de la revue",
+        "dependency_note": "Codex doit exécuter scripts/check_dependencies.py avant les scripts auxiliaires.",
+        "data_posture_notes": [
+            "Les scripts lisent localement la table source et la recette facultative et produisent des éléments bornés pour la revue.",
+            "Aucun connecteur externe, chargement, SQL distant ou notebook hébergé n’est utilisé par défaut.",
+        ],
+        "caveats": [
+            "Les données de graphiques sont bornées pour la revue; utilisez variance_results.csv et les fichiers de contexte comme sources complètes.",
+            "ui_decisions.json reste en attente jusqu’à l’enregistrement des décisions de revue.",
+        ],
+        "next_actions": [
+            "Ouvrir review_payload.json avec le widget MCP lorsqu’il est disponible.",
+            "Utiliser le contexte standard avant d’interpréter les graphiques.",
+            "Rédiger codex_business_analysis.md à partir des sources revues et des réserves.",
+        ],
+    },
+    "de": {
+        "product_title": "Abweichungsanalyse",
+        "handoff_title": "Prüfungsübergabe",
+        "run_id": "Ausführungs-ID",
+        "review_payload": "Prüfdaten",
+        "run_intake": "Ausgangsdaten",
+        "pending_decisions": "Offene Entscheidungen",
+        "applied_decisions": "Angewandte Entscheidungen",
+        "final_artifacts": "Endgültige Artefakte",
+        "review_in_codex": "Prüfung in Codex",
+        "validate_step": "Validieren Sie die Daten mit `{tool}`.",
+        "render_step": "Öffnen Sie den Prüfbereich mit `{tool}`.",
+        "save_step": "Speichern Sie die Prüferentscheidungen mit `{tool}`.",
+        "apply_step": "Wenden Sie die Prüferentscheidungen mit `{tool}` an.",
+        "columns": (
+            "Typ",
+            "Element",
+            "Vorgeschlagene Aktion",
+            "Quelle",
+            "Ausgabe",
+            "Status",
+        ),
+        "driver_row": "Treiberzeile {index}",
+        "driver_rows_truncated": "Treiberzeilen im Widget begrenzt",
+        "artifact": "Artefakt",
+        "followup": "Nachverfolgung {index}",
+        "context_title": "Standardkontext der Abweichung",
+        "accounting_title": "Buchhalterische Kontrollen und Prüfstatus",
+        "dependency_note": "Codex muss scripts/check_dependencies.py vor den Hilfsskripten ausführen.",
+        "data_posture_notes": [
+            "Die Skripte lesen Quelltabelle und optionale Rezeptur lokal und schreiben begrenzte Prüfartefakte.",
+            "Standardmäßig werden keine externen Konnektoren, Uploadpfade, Remote-SQL- oder gehosteten Notebooks verwendet.",
+        ],
+        "caveats": [
+            "Diagrammdaten sind für die Prüfung begrenzt; variance_results.csv und Kontextdateien bilden die vollständige Quellenbasis.",
+            "ui_decisions.json bleibt offen, bis Prüfentscheidungen gespeichert wurden.",
+        ],
+        "next_actions": [
+            "review_payload.json nach Verfügbarkeit im MCP-Widget öffnen.",
+            "Vor der Diagramminterpretation den Standardkontext verwenden.",
+            "codex_business_analysis.md aus geprüften Quellen und Vorbehalten erstellen.",
+        ],
+    },
 }
 
 
@@ -123,6 +251,53 @@ def _normalize_language(language: object | None) -> str:
 
 def _review_copy(language: object | None) -> dict[str, Any]:
     return _REVIEW_COPY[_normalize_language(language)]
+
+
+_ACCOUNTING_QUESTION_TRANSLATIONS = {
+    "it": {
+        "Confirm the entity and consolidation perimeter.": "Confermare il perimetro societario e di consolidamento.",
+        "Provide approved baseline and comparison source totals for tie-out.": "Fornire i totali approvati della fonte per base e confronto.",
+        "Confirm the favorable/adverse sign convention.": "Confermare la convenzione favorevole/sfavorevole.",
+        "Confirm materiality or explicitly record that it is not applied.": "Confermare la materialità o registrare esplicitamente che non è applicata.",
+        "Complete the applied materiality threshold and basis.": "Completare la soglia di materialità applicata e il relativo criterio.",
+        "Resolve the failed source-total tie-out.": "Risolvere la quadratura non riuscita con i totali della fonte.",
+        "Resolve the component-bridge reconciliation control.": "Risolvere il controllo di chiusura del bridge dei componenti.",
+    },
+    "es": {
+        "Confirm the entity and consolidation perimeter.": "Confirme el perímetro de entidad y consolidación.",
+        "Provide approved baseline and comparison source totals for tie-out.": "Proporcione los totales fuente aprobados de base y comparación.",
+        "Confirm the favorable/adverse sign convention.": "Confirme la convención favorable/desfavorable.",
+        "Confirm materiality or explicitly record that it is not applied.": "Confirme la materialidad o registre expresamente que no se aplica.",
+        "Complete the applied materiality threshold and basis.": "Complete el umbral de materialidad aplicado y su base.",
+        "Resolve the failed source-total tie-out.": "Resuelva la conciliación fallida con los totales fuente.",
+        "Resolve the component-bridge reconciliation control.": "Resuelva el control de cierre del puente de componentes.",
+    },
+    "fr": {
+        "Confirm the entity and consolidation perimeter.": "Confirmer le périmètre d’entité et de consolidation.",
+        "Provide approved baseline and comparison source totals for tie-out.": "Fournir les totaux source approuvés de référence et de comparaison.",
+        "Confirm the favorable/adverse sign convention.": "Confirmer la convention favorable/défavorable.",
+        "Confirm materiality or explicitly record that it is not applied.": "Confirmer le seuil de signification ou indiquer qu’il ne s’applique pas.",
+        "Complete the applied materiality threshold and basis.": "Compléter le seuil de signification appliqué et sa base.",
+        "Resolve the failed source-total tie-out.": "Résoudre l’échec du rapprochement avec les totaux source.",
+        "Resolve the component-bridge reconciliation control.": "Résoudre le contrôle de bouclage du pont des composantes.",
+    },
+    "de": {
+        "Confirm the entity and consolidation perimeter.": "Unternehmens- und Konsolidierungskreis bestätigen.",
+        "Provide approved baseline and comparison source totals for tie-out.": "Freigegebene Quellsummen für Basis und Vergleich angeben.",
+        "Confirm the favorable/adverse sign convention.": "Konvention für günstige/ungünstige Abweichungen bestätigen.",
+        "Confirm materiality or explicitly record that it is not applied.": "Wesentlichkeit bestätigen oder ausdrücklich als nicht angewendet kennzeichnen.",
+        "Complete the applied materiality threshold and basis.": "Angewendete Wesentlichkeitsschwelle und Grundlage vervollständigen.",
+        "Resolve the failed source-total tie-out.": "Fehlgeschlagenen Abgleich mit Quellsummen klären.",
+        "Resolve the component-bridge reconciliation control.": "Abstimmungskontrolle der Komponentenbrücke klären.",
+    },
+}
+
+
+def _localize_accounting_questions(
+    questions: Sequence[str], language: str
+) -> list[str]:
+    translations = _ACCOUNTING_QUESTION_TRANSLATIONS.get(language, {})
+    return [translations.get(question, question) for question in questions]
 
 
 @dataclass(frozen=True)
@@ -200,7 +375,7 @@ def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
     copy = _review_copy(language)
     localized_required_text = (
         [copy["handoff_title"], copy["review_in_codex"]]
-        if _normalize_language(language) == "es"
+        if _normalize_language(language) != "en"
         else []
     )
     return {
@@ -289,12 +464,66 @@ def _as_output_ref(path: Path | None, output_dir: Path) -> str | None:
         return path.as_posix()
 
 
+def _portable_client_engagement(
+    client_engagement: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Remove runtime-only absolute paths from a persisted managed context."""
+
+    if (
+        not isinstance(client_engagement, dict)
+        or client_engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return client_engagement
+    portable_fields = (
+        "schema_version",
+        "client_id",
+        "engagement_id",
+        "workflow_id",
+        "workflow_version",
+        "run_id",
+        "label",
+        "purpose",
+        "created_at",
+        "input_manifest",
+        "input_manifest_sha256",
+        "run_relative_path",
+        "output_relative_path",
+        "content_sha256",
+    )
+    return {field: client_engagement[field] for field in portable_fields}
+
+
+def _run_path_reference(
+    path: Path,
+    client_engagement: dict[str, Any] | None,
+) -> str:
+    """Return an absolute unmanaged path or a portable managed-run reference."""
+
+    if client_engagement is None:
+        return path.as_posix()
+    run_root_value = client_engagement.get("run_root")
+    if not isinstance(run_root_value, str) or not run_root_value.strip():
+        raise ValueError("Managed Variance Analysis context has no run_root.")
+    run_root = Path(run_root_value).expanduser().resolve(strict=True)
+    resolved = path.expanduser().resolve(strict=True)
+    try:
+        relative = resolved.relative_to(run_root)
+    except ValueError as exc:
+        raise ValueError("Variance Analysis path is outside the current run.") from exc
+    if not relative.parts:
+        raise ValueError("Variance Analysis path must identify a run artifact.")
+    return relative.as_posix()
+
+
 def _data_posture(
-    input_path: Path, recipe_path: Path | None, language: str
+    input_path: Path,
+    recipe_path: Path | None,
+    language: str,
+    client_engagement: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    local_files = [input_path.as_posix()]
+    local_files = [_run_path_reference(input_path, client_engagement)]
     if recipe_path is not None:
-        local_files.append(recipe_path.as_posix())
+        local_files.append(_run_path_reference(recipe_path, client_engagement))
     return {
         "local_files_read": local_files,
         "external_connectors_used": [],
@@ -466,18 +695,27 @@ def _artifact_items(manifest: dict[str, Any], language: str) -> list[dict[str, A
         record for record in manifest.get("artifacts", []) if isinstance(record, dict)
     ][:MAX_ARTIFACT_ITEMS]
     items: list[dict[str, Any]] = []
+    draft_report = manifest.get("client_report_status") != "approved_for_client_use"
     for index, record in enumerate(records, start=1):
         item_type = _artifact_item_type(record)
         missing = record.get("status") not in {"copied", "written"}
+        path = str(record.get("pack_path") or record.get("path") or "")
+        requires_professional_review = draft_report and path.startswith(
+            "root_cause_client_report"
+        )
         items.append(
             _base_item(
                 f"artifact-{index}",
                 item_type,
                 _artifact_title(record, language),
                 source_path=str(record.get("source_path") or ""),
-                output_path=str(record.get("pack_path") or record.get("path") or ""),
+                output_path=path,
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
-                recommended_action="mark_unclear" if missing else "accept",
+                recommended_action=(
+                    "mark_unclear"
+                    if missing or requires_professional_review
+                    else "accept"
+                ),
                 data=dict(record),
             )
         )
@@ -548,28 +786,55 @@ def write_run_intake(
     recipe_path: Path | None,
     recipe: dict[str, Any],
     source_row_count: int,
+    client_engagement: dict[str, Any] | None = None,
 ) -> RunIntakeResult:
     """Write run intake before the heavy legacy variance calculation."""
 
     language = _normalize_language(recipe.get("language"))
     copy = _review_copy(language)
-    run_id = _run_id(input_path)
+    context_run_id = (
+        str(client_engagement["run_id"]) if client_engagement is not None else None
+    )
+    run_id = context_run_id or _run_id(input_path)
     options = recipe.get("options") or {}
     mappings = recipe.get("mappings") or {}
+    accounting_review = recipe.get("accounting_review") or {}
+    unresolved_questions = _localize_accounting_questions(
+        accounting_intake_questions(accounting_review),
+        language,
+    )
+    input_ref = _run_path_reference(input_path, client_engagement)
+    output_ref = _run_path_reference(output_dir, client_engagement)
+    recipe_ref = (
+        _run_path_reference(recipe_path, client_engagement)
+        if recipe_path is not None
+        else None
+    )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": _portable_client_engagement(client_engagement),
+        **(
+            {"path_reference": "run_root_relative"}
+            if client_engagement is not None
+            else {}
+        ),
         "created_at": _utc_now(),
         "language": language,
-        "input_paths": [input_path.as_posix()],
-        "output_dir": output_dir.as_posix(),
+        "input_paths": [input_ref],
+        "output_dir": output_ref,
         "inferred_task": "variance_chart_report_payload",
-        "data_posture": _data_posture(input_path, recipe_path, language),
+        "data_posture": _data_posture(
+            input_path,
+            recipe_path,
+            language,
+            client_engagement,
+        ),
         "assumptions": {
             "source_row_count": source_row_count,
-            "recipe_path": recipe_path.as_posix() if recipe_path else None,
+            "recipe_path": recipe_ref,
             "mappings": mappings,
             "comparison_basis": options.get("comparison_basis"),
             "period_comparison_mode": options.get("period_comparison_mode"),
@@ -581,8 +846,9 @@ def write_run_intake(
             "root_cause_component_bridge": options.get("root_cause_component_bridge"),
             "waterfall_chart": options.get("waterfall_chart"),
             "waterfall_small_multiples": options.get("waterfall_small_multiples"),
+            "accounting_review": accounting_review,
         },
-        "unresolved_questions": [],
+        "unresolved_questions": unresolved_questions,
         "dependency_check": {
             "status": "not_run_by_script",
             "note": copy["dependency_note"],
@@ -605,6 +871,7 @@ def write_review_session_artifacts(
     recipe: dict[str, Any],
     result_rows: Sequence[dict[str, Any]],
     audit: dict[str, Any],
+    client_engagement: dict[str, Any] | None = None,
 ) -> ReviewSessionResult:
     """Write chart/report review payload, pending decisions, and artifacts."""
 
@@ -613,9 +880,43 @@ def write_review_session_artifacts(
     outputs = _output_records(output_dir)
     standard_context = _load_json(output_dir / "standard_variance_context.json")
     standard_summary = _standard_context_summary(standard_context)
+    accounting_readiness = audit.get("accounting_readiness") or {}
+    accounting_status = str(accounting_readiness.get("accounting_status") or "partial")
+    client_report_status = str(
+        accounting_readiness.get("client_report_status")
+        or "draft_pending_professional_review"
+    )
     items: list[dict[str, Any]] = []
     items.extend(_driver_items(result_rows, language))
-    items.extend(_artifact_items({"artifacts": outputs}, language))
+    items.extend(
+        _artifact_items(
+            {
+                "artifacts": outputs,
+                "client_report_status": client_report_status,
+            },
+            language,
+        )
+    )
+    items.append(
+        _base_item(
+            "accounting-readiness",
+            "context_artifact",
+            str(copy["accounting_title"]),
+            output_path="variance_audit.json",
+            allowed_actions=(
+                "accept",
+                "edit",
+                "mark_unclear",
+                "request_more_documents",
+            ),
+            recommended_action=(
+                "accept"
+                if client_report_status == "approved_for_client_use"
+                else "mark_unclear"
+            ),
+            data=accounting_readiness,
+        )
+    )
     items.append(
         _base_item(
             "standard-variance-context",
@@ -640,14 +941,16 @@ def write_review_session_artifacts(
     )
     mappings = recipe.get("mappings") or {}
     options = recipe.get("options") or {}
+    source_ref = _run_path_reference(input_path, client_engagement)
     review_payload = {
         "schema_version": SCHEMA_VERSION,
         "plugin": PLUGIN_NAME,
         "workflow": WORKFLOW_NAME,
         "run_id": run_id,
+        "client_engagement": _portable_client_engagement(client_engagement),
         "created_at": _utc_now(),
         "language": language,
-        "source_paths": [input_path.as_posix()],
+        "source_paths": [source_ref],
         "review_type": "variance_chart_report_review",
         "items": items,
         "item_count": len(items),
@@ -669,7 +972,11 @@ def write_review_session_artifacts(
             "request_more_documents",
             "skip",
         ],
-        "status": "ready_for_review",
+        "status": (
+            "blocked"
+            if accounting_status == "blocked"
+            else "ready_for_professional_review"
+        ),
         "summary": {
             "result_row_count": len(result_rows),
             "chart_count": chart_count,
@@ -681,6 +988,7 @@ def write_review_session_artifacts(
             "amount_column": mappings.get("amount_column"),
             "dimensions": mappings.get("dimensions") or [],
             "currency": options.get("currency") or "EUR",
+            "accounting_readiness": accounting_readiness,
             **standard_summary,
         },
     }
@@ -720,6 +1028,14 @@ def write_review_session_artifacts(
     ]
     outputs.append(_review_handoff_output_record(review_handoff_path, language))
 
+    unresolved_items = _localize_accounting_questions(
+        [
+            str(item)
+            for item in accounting_readiness.get("unresolved_items", [])
+            if str(item).strip()
+        ],
+        language,
+    )
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
         {
@@ -729,9 +1045,14 @@ def write_review_session_artifacts(
             "run_id": run_id,
             "completed_at": _utc_now(),
             "outputs": outputs,
-            "caveats": list(copy["caveats"]),
+            "caveats": [*list(copy["caveats"]), *unresolved_items],
             "next_actions": list(copy["next_actions"]),
-            "status": "written_pending_review",
+            "accounting_readiness": accounting_readiness,
+            "status": (
+                "blocked"
+                if accounting_status == "blocked"
+                else "written_pending_review"
+            ),
         },
     )
     _append_execution_trace(

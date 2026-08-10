@@ -24,7 +24,8 @@
         {
           "source_root": "plugins/_shared/vendor/modules",
           "module_roots": [
-            "chart_harness"
+            "chart_harness",
+            "vera_assurance"
           ]
         }
       ]

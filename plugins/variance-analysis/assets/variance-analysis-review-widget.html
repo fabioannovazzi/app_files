@@ -447,9 +447,10 @@
           followup_request: "Follow-up",
           report_artifact: "Report",
           review_artifact: "Artifact",
+          accounting_control: "Accounting control",
         },
         actions: { accept: "Accept", reject: "Reject", edit: "Edit", mark_unclear: "Mark unclear", request_more_documents: "Request more documents", skip: "Skip", review: "Review" },
-        statuses: { ready_for_review: "Ready for review", needs_review: "Needs review", pending_review: "Pending review", reviewed: "Reviewed", partial_review: "Partially reviewed", empty: "Empty" },
+        statuses: { ready_for_review: "Ready for review", ready_for_professional_review: "Ready for professional review", blocked: "Blocked", blocked_accounting_control: "Blocked by accounting control", needs_review: "Needs review", pending_review: "Pending review", reviewed: "Reviewed", partial_review: "Partially reviewed", empty: "Empty" },
       },
       es: {
         pageTitle: "Revisión del análisis de variaciones",
@@ -473,9 +474,35 @@
           followup_request: "Seguimiento",
           report_artifact: "Informe",
           review_artifact: "Artefacto",
+          accounting_control: "Control contable",
         },
         actions: { accept: "Aceptar", reject: "Rechazar", edit: "Editar", mark_unclear: "Marcar como dudoso", request_more_documents: "Solicitar más documentos", skip: "Omitir", review: "Revisar" },
-        statuses: { ready_for_review: "Listo para revisión", needs_review: "Requiere revisión", pending_review: "Revisión pendiente", reviewed: "Revisado", partial_review: "Revisado parcialmente", empty: "Vacío" },
+        statuses: { ready_for_review: "Listo para revisión", ready_for_professional_review: "Listo para revisión profesional", blocked: "Bloqueado", blocked_accounting_control: "Bloqueado por control contable", needs_review: "Requiere revisión", pending_review: "Revisión pendiente", reviewed: "Revisado", partial_review: "Revisado parcialmente", empty: "Vacío" },
+      },
+      it: {
+        pageTitle: "Revisione dell’analisi delle varianze",
+        loading: "Caricamento dati...",
+        widget: "Widget MCP",
+        search: "Cerca driver, grafico, contesto, approfondimento o artefatto",
+        itemsTitle: "Elementi da revisionare",
+        detailTitle: "Dettaglio",
+        run: "Esecuzione",
+        all: "Tutti",
+        noMatches: "Nessun elemento corrisponde ai filtri correnti.",
+        selectItem: "Seleziona un elemento da revisionare.",
+        data: "Dati",
+        sourceRecords: "Registrazioni sorgente",
+        metrics: ["Righe", "Grafici", "Tabelle", "Approfondimenti", "Varianza totale", "Principale"],
+        fields: ["Tipo", "Azione", "Fonte", "Output", "Stato"],
+        types: { variance_driver: "Driver", chart_artifact: "Grafico", context_artifact: "Contesto", followup_request: "Approfondimento", report_artifact: "Relazione", review_artifact: "Artefatto", accounting_control: "Controllo contabile" },
+        actions: { accept: "Accetta", reject: "Rifiuta", edit: "Modifica", mark_unclear: "Segna come non chiaro", request_more_documents: "Richiedi altri documenti", skip: "Salta", review: "Revisiona" },
+        statuses: { ready_for_review: "Pronto per la revisione", ready_for_professional_review: "Pronto per la revisione professionale", blocked: "Bloccato", blocked_accounting_control: "Bloccato da un controllo contabile", needs_review: "Da revisionare", pending_review: "Revisione in sospeso", reviewed: "Revisionato", partial_review: "Revisionato parzialmente", empty: "Vuoto" },
+      },
+      fr: {
+        pageTitle: "Revue de l’analyse des écarts", loading: "Chargement...", widget: "Widget MCP", search: "Rechercher un facteur, graphique, contexte ou livrable", itemsTitle: "Éléments à revoir", detailTitle: "Détail", run: "Exécution", all: "Tous", noMatches: "Aucun élément ne correspond aux filtres.", selectItem: "Sélectionnez un élément.", data: "Données", sourceRecords: "Enregistrements source", metrics: ["Lignes", "Graphiques", "Tableaux", "Suivis", "Écart total", "Principal"], fields: ["Type", "Action", "Source", "Sortie", "Statut"], types: { variance_driver: "Facteur", chart_artifact: "Graphique", context_artifact: "Contexte", followup_request: "Suivi", report_artifact: "Rapport", review_artifact: "Livrable", accounting_control: "Contrôle comptable" }, actions: { accept: "Accepter", reject: "Rejeter", edit: "Modifier", mark_unclear: "Signaler comme incertain", request_more_documents: "Demander d’autres documents", skip: "Ignorer", review: "Revoir" }, statuses: { ready_for_review: "Prêt pour revue", ready_for_professional_review: "Prêt pour revue professionnelle", blocked: "Bloqué", blocked_accounting_control: "Bloqué par un contrôle comptable", needs_review: "À revoir", pending_review: "Revue en attente", reviewed: "Revu", partial_review: "Partiellement revu", empty: "Vide" },
+      },
+      de: {
+        pageTitle: "Prüfung der Abweichungsanalyse", loading: "Daten werden geladen...", widget: "MCP-Widget", search: "Treiber, Diagramm, Kontext oder Artefakt suchen", itemsTitle: "Prüfelemente", detailTitle: "Detail", run: "Ausführung", all: "Alle", noMatches: "Kein Element entspricht den Filtern.", selectItem: "Wählen Sie ein Prüfelement.", data: "Daten", sourceRecords: "Quelldatensätze", metrics: ["Zeilen", "Diagramme", "Tabellen", "Nachverfolgungen", "Gesamtabweichung", "Hauptkomponente"], fields: ["Typ", "Aktion", "Quelle", "Ausgabe", "Status"], types: { variance_driver: "Treiber", chart_artifact: "Diagramm", context_artifact: "Kontext", followup_request: "Nachverfolgung", report_artifact: "Bericht", review_artifact: "Artefakt", accounting_control: "Buchhalterische Kontrolle" }, actions: { accept: "Akzeptieren", reject: "Ablehnen", edit: "Bearbeiten", mark_unclear: "Als unklar markieren", request_more_documents: "Weitere Unterlagen anfordern", skip: "Überspringen", review: "Prüfen" }, statuses: { ready_for_review: "Prüfbereit", ready_for_professional_review: "Bereit für professionelle Prüfung", blocked: "Blockiert", blocked_accounting_control: "Durch buchhalterische Kontrolle blockiert", needs_review: "Prüfung erforderlich", pending_review: "Prüfung ausstehend", reviewed: "Geprüft", partial_review: "Teilweise geprüft", empty: "Leer" },
       },
     };
     const FALLBACK = {
@@ -516,7 +543,7 @@
     function language() {
       const value = reviewPayload().language || state.payload.run_intake?.language || "en";
       const code = String(value).trim().toLowerCase().replace("_", "-").split("-", 1)[0];
-      return code === "es" ? "es" : "en";
+      return ["en", "es", "it", "fr", "de"].includes(code) ? code : "en";
     }
 
     function copy() {
@@ -563,7 +590,8 @@
       if (value == null || value === "") return "n/a";
       const number = Number(value);
       if (!Number.isFinite(number)) return String(value);
-      return new Intl.NumberFormat(language() === "es" ? "es-ES" : undefined, { maximumFractionDigits: 1 }).format(number);
+      const locales = { es: "es-ES", it: "it-IT", fr: "fr-FR", de: "de-DE" };
+      return new Intl.NumberFormat(locales[language()], { maximumFractionDigits: 1 }).format(number);
     }
 
     function dominantComponent(summary) {

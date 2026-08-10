@@ -48,6 +48,11 @@
       "required_signals": ["Vera", "bando", "dossier", "firma e invio"]
     },
     {
+      "id": "vera-variance-analysis",
+      "prompt": "Vera, confronta Actual e Budget di questo P&L, riconcilia i totali e mostrami gli scostamenti per conto e centro di costo con i grafici di varianza.",
+      "required_signals": ["Vera", "Actual e Budget", "riconcilia", "scostamenti", "grafici di varianza"]
+    },
+    {
       "id": "vera-comunicazione-professionale",
       "prompt": "Vera, studia le circolari approvate del mio studio e prepara una email, un articolo per il sito e una grafica su questa nuova norma; se non aggiunge valore, non pubblicare nulla.",
       "required_signals": ["Vera", "formato dello studio", "email", "articolo per il sito", "grafica", "non pubblicare"]

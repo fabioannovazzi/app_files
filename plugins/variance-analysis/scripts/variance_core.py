@@ -16,6 +16,11 @@ from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 import polars as pl
+from accounting_controls import (
+    default_accounting_review,
+    evaluate_accounting_readiness,
+    normalize_accounting_review,
+)
 from ibcs_titles import build_ibcs_title
 from legacy_adapter import (
     cleanup_legacy_imports,
@@ -70,6 +75,31 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 SHARED_VENDOR_ROOT = REPO_ROOT / "plugins" / "_shared" / "vendor"
 
 
+def is_vera_managed_host(plugin_root: Path | None = None) -> bool:
+    """Return whether this component is embedded in a Vera package.
+
+    Host detection is deterministic because it enforces a package-layout and
+    package-manifest security contract: an embedded Vera component must never
+    silently fall back to the standalone execution boundary.
+    """
+
+    root = (plugin_root or PLUGIN_ROOT).resolve()
+    layout_is_vera = (
+        root.name == "variance-analysis"
+        and root.parent.name == "modules"
+        and root.parent.parent.name == "vera"
+    )
+    host_manifest = root.parent.parent / ".codex-plugin" / "plugin.json"
+    manifest_is_vera = False
+    if host_manifest.is_file():
+        try:
+            manifest = json.loads(host_manifest.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            manifest = {}
+        manifest_is_vera = manifest.get("name") == "vera"
+    return layout_is_vera or manifest_is_vera
+
+
 def _ensure_shared_modules_path() -> None:
     """Make shared plugin harness modules importable in repo and ZIP runs."""
 
@@ -117,6 +147,7 @@ __all__ = [
     "add_common_args",
     "configure_logging",
     "inspect_variance_inputs",
+    "is_vera_managed_host",
     "run_variance_analysis",
 ]
 
@@ -1473,6 +1504,7 @@ def build_recipe(
         "schema_version": SCHEMA_VERSION,
         "language": language,
         "source_file": str(source_path),
+        "accounting_review": default_accounting_review(),
         "mappings": {
             "period_column": mapping["period_column"],
             "baseline_period": baseline_period,
@@ -1531,7 +1563,25 @@ def build_recipe(
         **existing_recipe.get("mappings", {}),
     }
     merged["options"] = {**suggested["options"], **existing_recipe.get("options", {})}
+    merged["accounting_review"] = normalize_accounting_review(
+        existing_recipe.get("accounting_review")
+    )
     return merged
+
+
+def _source_reference(
+    input_path: Path,
+    client_engagement: dict[str, Any] | None,
+) -> str:
+    """Return an unmanaged path or a portable managed-run source reference."""
+
+    if client_engagement is None:
+        return input_path.as_posix()
+    run_root = Path(str(client_engagement["run_root"])).resolve(strict=True)
+    try:
+        return input_path.resolve(strict=True).relative_to(run_root).as_posix()
+    except ValueError as exc:
+        raise ValueError("Variance input is outside the managed run.") from exc
 
 
 def inspect_variance_inputs(
@@ -1540,9 +1590,14 @@ def inspect_variance_inputs(
     recipe_path: Path | None = None,
     *,
     language: str = "en",
+    client_engagement: dict[str, Any] | None = None,
 ) -> InspectionResult:
     """Inspect a variance input file and write inspection and recipe JSON."""
 
+    if is_vera_managed_host() and client_engagement is None:
+        raise ValueError(
+            "The Vera-packaged variance inspector requires --client-engagement."
+        )
     df = read_table(input_path)
     columns, schema = get_schema_and_column_names(df)
     existing_recipe = load_json(recipe_path) if recipe_path else None
@@ -1550,11 +1605,19 @@ def inspect_variance_inputs(
         input_path, df, language=language, existing_recipe=existing_recipe
     )
     mappings = recipe["mappings"]
+    source_file = _source_reference(input_path, client_engagement)
+    if client_engagement is not None:
+        recipe["source_file"] = source_file
     payload = {
         "schema_version": SCHEMA_VERSION,
+        **(
+            {"path_reference": "run_root_relative"}
+            if client_engagement is not None
+            else {}
+        ),
         "generated_at": utc_now(),
         "language": language,
-        "source_file": str(input_path),
+        "source_file": source_file,
         "row_count": df.height,
         "columns": [{"name": column, "dtype": schema[column]} for column in columns],
         "available_analysis_context": available_analysis_context(df),
@@ -3581,15 +3644,18 @@ def build_audit(
     recipe: dict[str, Any],
     result: pl.DataFrame,
     artifact_paths: list[str],
+    *,
+    client_engagement: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build audit metadata for a variance run."""
 
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": utc_now(),
-        "source_file": str(input_path),
+        "source_file": _source_reference(input_path, client_engagement),
         "row_count": result.height,
         "recipe": recipe,
+        "accounting_readiness": recipe.get("accounting_readiness"),
         "checks": {
             "max_abs_component_reconciliation_delta": max_abs(
                 result, "component_reconciliation_delta"
@@ -4752,9 +4818,19 @@ def run_variance_analysis(
     currency: str | None = None,
     language: str = "en",
     artifact_mode: str = ARTIFACT_MODE_DATA_AND_RENDER,
+    client_engagement: dict[str, Any] | None = None,
 ) -> VarianceRunResult:
     """Run deterministic variance analysis and write output artifacts."""
 
+    vera_managed_host = is_vera_managed_host()
+    if vera_managed_host and client_engagement is None:
+        raise ValueError(
+            "The Vera-packaged variance runner requires --client-engagement."
+        )
+    if (vera_managed_host or client_engagement is not None) and not str(
+        currency or ""
+    ).strip():
+        raise ValueError("Managed Vera variance runs require an explicit currency.")
     artifact_mode = _normalize_artifact_mode(artifact_mode)
     try:
         df = read_table(input_path)
@@ -4770,6 +4846,17 @@ def run_variance_analysis(
             )
         recipe = preserve_recipe_filters(recipe, existing_recipe)
         recipe = preserve_recipe_cohorts(recipe, existing_recipe)
+        recipe["accounting_review"] = normalize_accounting_review(
+            recipe.get("accounting_review")
+        )
+        recipe["source_file"] = _source_reference(input_path, client_engagement)
+        recipe["execution_context"] = {
+            "host_mode": (
+                "vera_managed"
+                if vera_managed_host or client_engagement is not None
+                else "standalone_or_clara"
+            )
+        }
         if currency is not None:
             recipe.setdefault("options", {})["currency"] = currency
         recipe = validate_recipe(df, recipe)
@@ -4883,12 +4970,27 @@ def run_variance_analysis(
             recipe_path=recipe_path,
             recipe=recipe,
             source_row_count=df.height,
+            client_engagement=client_engagement,
         )
 
         legacy_result = run_legacy_variance(
             df, recipe, list(recipe["mappings"].get("dimensions") or [])
         )
         result = legacy_result.frame
+        amount_baseline = float(
+            result.select(pl.col("amount_baseline").sum()).item() or 0.0
+        )
+        amount_comparison = float(
+            result.select(pl.col("amount_comparison").sum()).item() or 0.0
+        )
+        recipe["accounting_readiness"] = evaluate_accounting_readiness(
+            recipe["accounting_review"],
+            amount_baseline=amount_baseline,
+            amount_comparison=amount_comparison,
+            max_abs_component_reconciliation_delta=max_abs(
+                result, "component_reconciliation_delta"
+            ),
+        )
         if bool(recipe["options"].get("waterfall_small_multiples")):
             small_multiples_selection = select_waterfall_small_multiples_dimension(
                 result,
@@ -5221,7 +5323,13 @@ def run_variance_analysis(
             *total_by_dimension_export.paths,
             *exploded_bridge_export.paths,
         ]
-        audit = build_audit(input_path, recipe, result, artifact_paths)
+        audit = build_audit(
+            input_path,
+            recipe,
+            result,
+            artifact_paths,
+            client_engagement=client_engagement,
+        )
         audit["legacy_runtime"] = legacy_result.audit
         audit["legacy_runtime"]["variable_dimension_bridge"] = bridge_audit
         audit["legacy_runtime"]["variable_dimension_bridge_chart"] = bridge_chart_audit
@@ -5302,7 +5410,7 @@ def run_variance_analysis(
             output_dir=output_dir,
             plugin="variance-analysis",
             chart_family="variance_analysis",
-            source_file=input_path,
+            source_file=str(recipe["source_file"]),
             prepared_path=output_dir / "variance_results.csv",
             frame=result,
             recipe=recipe,
@@ -5340,6 +5448,7 @@ def run_variance_analysis(
             recipe=recipe,
             result_rows=result.to_dicts(),
             audit=audit,
+            client_engagement=client_engagement,
         )
         audit["review_session"] = {
             "run_intake_path": review_session.run_intake_path.name,

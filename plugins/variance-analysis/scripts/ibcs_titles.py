@@ -76,7 +76,12 @@ def _entity_name(recipe: dict[str, Any]) -> str:
     subject = reporting_subject_label_from_recipe(recipe)
     if subject:
         return subject
-    return "Ventas" if _language(recipe) == "es" else "Sales"
+    return {
+        "it": "Vendite",
+        "es": "Ventas",
+        "fr": "Ventes",
+        "de": "Umsatz",
+    }.get(_language(recipe), "Sales")
 
 
 def _currency_unit(recipe: dict[str, Any]) -> str:
@@ -95,8 +100,18 @@ def _comparison_text(recipe: dict[str, Any]) -> str:
     mappings = recipe.get("mappings") or {}
     options = recipe.get("options") or {}
     language = _language(recipe)
-    baseline_default = "base" if language == "es" else "baseline"
-    comparison_default = "comparación" if language == "es" else "comparison"
+    baseline_default = {
+        "it": "base",
+        "es": "base",
+        "fr": "référence",
+        "de": "Basis",
+    }.get(language, "baseline")
+    comparison_default = {
+        "it": "confronto",
+        "es": "comparación",
+        "fr": "comparaison",
+        "de": "Vergleich",
+    }.get(language, "comparison")
     baseline = _clean_text(mappings.get("baseline_period")) or baseline_default
     comparison = _clean_text(mappings.get("comparison_period")) or comparison_default
     text = f"{comparison} vs {baseline}"
@@ -107,9 +122,58 @@ def _comparison_text(recipe: dict[str, Any]) -> str:
         current_label=comparison,
         previous_label=baseline,
     )
-    if language != "es":
-        return period_text
-    return _spanish_period_text(period_text)
+    return _localized_period_text(period_text, language)
+
+
+def _localized_period_text(text: str, language: str) -> str:
+    """Translate stable framework period suffixes for supported languages."""
+
+    if language == "es":
+        return _spanish_period_text(text)
+    translations = {
+        "it": {
+            ", calendar period": ", periodo di calendario",
+            ", rolling period": ", periodo mobile",
+            ", year to date": ", progressivo anno",
+            ", period to date": ", progressivo periodo",
+            ", custom": ", confronto personalizzato",
+            ", not applicable": ", non applicabile",
+        },
+        "fr": {
+            ", calendar period": ", période calendaire",
+            ", rolling period": ", période glissante",
+            ", year to date": ", cumul annuel",
+            ", period to date": ", cumul de période",
+            ", custom": ", comparaison personnalisée",
+            ", not applicable": ", non applicable",
+        },
+        "de": {
+            ", calendar period": ", Kalenderperiode",
+            ", rolling period": ", rollierende Periode",
+            ", year to date": ", seit Jahresbeginn",
+            ", period to date": ", seit Periodenbeginn",
+            ", custom": ", benutzerdefinierter Vergleich",
+            ", not applicable": ", nicht anwendbar",
+        },
+    }.get(language, {})
+    localized = text
+    replacements = {
+        "it": (
+            (", through ", ", fino al "),
+            (", rolling through ", ", mobile fino al "),
+        ),
+        "fr": (
+            (", through ", ", jusqu’au "),
+            (", rolling through ", ", glissant jusqu’au "),
+        ),
+        "de": ((", through ", ", bis "), (", rolling through ", ", rollierend bis ")),
+    }.get(language, ())
+    for source, target in replacements:
+        localized = localized.replace(source, target)
+    for source, target in translations.items():
+        if localized.endswith(source):
+            return f"{localized[: -len(source)]}{target}"
+    return localized
 
 
 def _spanish_period_text(text: str) -> str:
@@ -151,12 +215,12 @@ def _what_text(
 
     language = _language(recipe)
     unit = _currency_unit(recipe)
-    dimension_text = _clean_text(dimension)
+    dimension_text = _localized_dimension_text(dimension, language)
     selection_text = _clean_text(selection_label)
     if language == "it":
         base = {
             "standard_variance": "Varianza vendite",
-            "pvm_decomposition_ladder": "Varianza vendite: price, units, mix",
+            "pvm_decomposition_ladder": "Varianza vendite: prezzo, unità, mix",
             "standard_small_multiples": (
                 f"Varianza vendite per {dimension_text}"
                 if dimension_text
@@ -167,17 +231,17 @@ def _what_text(
                 if dimension_text
                 else "Varianza totale vendite per dimensione"
             ),
-            "root_cause": "Varianza root-cause vendite",
-            "root_cause_total": "Varianza root-cause totale vendite",
+            "root_cause": "Varianza vendite per cause",
+            "root_cause_total": "Varianza totale vendite per cause",
             "variable_root_cause_total": (
-                "Varianza root-cause totale vendite a dimensione variabile"
+                "Varianza totale vendite per cause a dimensione variabile"
             ),
-            "root_cause_component": "Varianza root-cause componenti vendite",
-            "variable_root_cause": "Varianza root-cause vendite a dimensione variabile",
+            "root_cause_component": "Varianza componenti vendite per cause",
+            "variable_root_cause": "Varianza vendite per cause a dimensione variabile",
             "root_cause_drilldown": (
-                f"Drilldown root-cause vendite: {selection_text}"
+                f"Dettaglio delle cause della varianza vendite: {selection_text}"
                 if selection_text
-                else "Drilldown root-cause vendite"
+                else "Dettaglio delle cause della varianza vendite"
             ),
         }.get(chart_kind, "Varianza vendite")
     elif language == "es":
@@ -211,6 +275,48 @@ def _what_text(
                 else "Desglose de causa raíz de ventas"
             ),
         }.get(chart_kind, "Varianza de ventas")
+    elif language == "fr":
+        base = {
+            "standard_variance": "Écart de ventes",
+            "pvm_decomposition_ladder": "Écart de ventes : prix, unités, mix",
+            "standard_small_multiples": (
+                f"Écart de ventes par {dimension_text}"
+                if dimension_text
+                else "Écart de ventes par dimension"
+            ),
+            "total_by_dimension": "Écart total de ventes par dimension",
+            "root_cause": "Écart de ventes — causes",
+            "root_cause_total": "Écart total de ventes — causes",
+            "variable_root_cause_total": "Écart total de ventes à dimensions variables",
+            "root_cause_component": "Écart des composantes de ventes — causes",
+            "variable_root_cause": "Écart de ventes à dimensions variables",
+            "root_cause_drilldown": (
+                f"Détail de l’écart de ventes : {selection_text}"
+                if selection_text
+                else "Détail de l’écart de ventes"
+            ),
+        }.get(chart_kind, "Écart de ventes")
+    elif language == "de":
+        base = {
+            "standard_variance": "Umsatzabweichung",
+            "pvm_decomposition_ladder": "Umsatzabweichung: Preis, Menge, Mix",
+            "standard_small_multiples": (
+                f"Umsatzabweichung nach {dimension_text}"
+                if dimension_text
+                else "Umsatzabweichung nach Dimension"
+            ),
+            "total_by_dimension": "Gesamte Umsatzabweichung nach Dimension",
+            "root_cause": "Umsatzabweichung — Ursachen",
+            "root_cause_total": "Gesamte Umsatzabweichung — Ursachen",
+            "variable_root_cause_total": "Gesamte Umsatzabweichung mit variablen Dimensionen",
+            "root_cause_component": "Komponenten der Umsatzabweichung — Ursachen",
+            "variable_root_cause": "Umsatzabweichung mit variablen Dimensionen",
+            "root_cause_drilldown": (
+                f"Detail der Umsatzabweichung: {selection_text}"
+                if selection_text
+                else "Detail der Umsatzabweichung"
+            ),
+        }.get(chart_kind, "Umsatzabweichung")
     else:
         base = {
             "standard_variance": "Sales variance",
@@ -241,6 +347,43 @@ def _what_text(
     return f"{base} | {unit}" if unit else base
 
 
+def _localized_dimension_text(value: Any, language: str) -> str:
+    """Translate common dimension names for display-only chart titles."""
+
+    raw_value = _clean_text(value)
+    translations = {
+        "it": {
+            "product": "prodotto",
+            "region": "area",
+            "subregion": "sottoarea",
+            "customer": "cliente",
+            "channel": "canale",
+        },
+        "es": {
+            "product": "producto",
+            "region": "región",
+            "subregion": "subregión",
+            "customer": "cliente",
+            "channel": "canal",
+        },
+        "fr": {
+            "product": "produit",
+            "region": "région",
+            "subregion": "sous-région",
+            "customer": "client",
+            "channel": "canal",
+        },
+        "de": {
+            "product": "Produkt",
+            "region": "Region",
+            "subregion": "Teilregion",
+            "customer": "Kunde",
+            "channel": "Kanal",
+        },
+    }.get(language, {})
+    return translations.get(raw_value.casefold(), raw_value)
+
+
 def build_ibcs_title(
     recipe: dict[str, Any],
     *,
@@ -268,10 +411,23 @@ def measure_line_segments(text: str) -> tuple[tuple[str, bool], ...]:
     cleaned = _clean_text(text)
     if not cleaned:
         return ()
-    if cleaned == "Sales":
-        return (("Sales", True),)
-    if cleaned.startswith("Sales "):
-        return (("Sales", True), (cleaned[len("Sales") :], False))
+    for subject in ("Sales", "Vendite", "Ventas", "Ventes", "Umsatz"):
+        index = cleaned.casefold().find(subject.casefold())
+        if index < 0:
+            continue
+        end = index + len(subject)
+        before_ok = index == 0 or not cleaned[index - 1].isalnum()
+        after_ok = end == len(cleaned) or not cleaned[end].isalnum()
+        if before_ok and after_ok:
+            return tuple(
+                segment
+                for segment in (
+                    (cleaned[:index], False),
+                    (cleaned[index:end], True),
+                    (cleaned[end:], False),
+                )
+                if segment[0]
+            )
     return ((cleaned, False),)
 
 

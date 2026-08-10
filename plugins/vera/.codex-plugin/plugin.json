@@ -1,7 +1,7 @@
 {
   "name": "vera",
   "version": "0.1.113",
-  "description": "Vera affianca commercialisti e studi professionali in contabilità, bilanci OIC/XBRL, riconciliazioni, ricerche, comunicazioni e presenza digitale rivedibile.",
+  "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
   "author": {
     "name": "Mparanza",
     "email": "hello@mparanza.com",
@@ -40,6 +40,9 @@
     "aml",
     "reconciliation",
     "financial-analysis",
+    "variance-analysis",
+    "analisi-scostamenti",
+    "actual-budget",
     "working-capital",
     "customer-concentration",
     "sales-plan",
@@ -75,7 +78,7 @@
   "interface": {
     "displayName": "Vera",
     "shortDescription": "Assistente AI x commercialisti",
-    "longDescription": "Vera affianca commercialisti e studi professionali nel lavoro di studio. Organizza e ritrova documenti, controlla dati e scritture contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie, report e carte di lavoro.\n\nSupporta la preparazione del bilancio civilistico OIC, anche da PDF o scansioni, fino alla revisione e all’esportazione XBRL. Aiuta con bandi e agevolazioni, avvisi e cartelle, casi INPS, Registro Imprese e DIRE, concordato preventivo, ricerche fiscali o normative e comunicazioni ai clienti. Può rinnovare il sito informativo dello studio o prepararne uno iniziale da materiali verificati, con preview responsive e pubblicazione subordinata all'approvazione.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
+    "longDescription": "Vera affianca commercialisti e studi professionali. Organizza e ritrova documenti, controlla dati e scritture contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie, analisi degli scostamenti con grafici, report e carte di lavoro.\n\nSupporta la preparazione del bilancio civilistico OIC, anche da PDF o scansioni, fino alla revisione e all’esportazione XBRL. Aiuta con bandi e agevolazioni, avvisi e cartelle, casi INPS, Registro Imprese e DIRE, concordato preventivo, ricerche fiscali o normative e comunicazioni ai clienti. Può rinnovare il sito informativo dello studio o prepararne uno iniziale da materiali verificati, con preview responsive e pubblicazione subordinata all'approvazione.\n\nVera mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [

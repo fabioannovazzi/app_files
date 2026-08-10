@@ -65,6 +65,11 @@ skill to imitate a missing operational workflow.
   reviewable Markdown, DOCX, or JSON reports.
 - `sales-plan`: create a forward-looking sales Plan from reviewed Actuals and
   confirmed commercial or FX assumptions.
+- `variance-analysis`: compare Actual, Budget, Forecast, or prior-period
+  accounting performance; reconcile source totals; calculate amount-only or
+  price-volume-mix variances when the data contract supports them; and produce
+  reviewable waterfall, bridge, small-multiple, and drilldown plots without
+  assigning semantic causes or materiality automatically.
 - `studio-archive`: create or resume a durable client engagement and use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
   capability-gated WhatsApp evidence routes without mixing clients.

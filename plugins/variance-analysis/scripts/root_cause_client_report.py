@@ -1,4 +1,4 @@
-"""Client-ready root-cause variance report writer."""
+"""Reviewed or clearly labelled draft root-cause variance report writer."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ from typing import Any
 
 import polars as pl
 from docx import Document
-from docx.enum.section import WD_SECTION
 from docx.enum.table import WD_CELL_VERTICAL_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
@@ -104,18 +103,26 @@ def _text(language: str) -> dict[str, str]:
     if language == "it":
         return {
             "title": "Analisi delle cause della varianza vendite",
+            "draft_title": "Bozza di analisi delle varianze vendite",
+            "draft_notice": (
+                "Bozza di lavoro: il bridge di riferimento è selezionato con criteri "
+                "meccanici e non costituisce una causa aziendale approvata."
+            ),
+            "accounting_controls": "Perimetro e controlli contabili",
+            "accounting_field": "Controllo",
+            "accounting_value": "Esito",
             "subtitle": "Actual vs Plan (AC vs PL)",
             "summary": "Sintesi",
             "source_data": "Dati di supporto principali",
             "reading_notes": "Note di lettura",
-            "bridge_summary": "Bridge di sintesi",
-            "product_line_drilldown": "Drilldown linea prodotto",
+            "bridge_summary": "Bridge di riferimento",
+            "product_line_drilldown": "Dettaglio della prima riga",
             "mixed_deep_dive": "Approfondimento misto",
-            "chart_1": "Fonte 1 - Driver principale",
-            "chart_2": "Fonte 2 - Dettaglio linea prodotto",
-            "chart_3": "Fonte 3 - Approfondimento per area e product line",
+            "chart_1": "Fonte 1 - Bridge di riferimento",
+            "chart_2": "Fonte 2 - Dettaglio della prima riga",
+            "chart_3": "Fonte 3 - Approfondimento per area e linea di prodotto",
             "chart_small_multiples": "Bridge standard per {dimension}",
-            "chart_pvm_ladder": "Bridge Price / Units / Mix",
+            "chart_pvm_ladder": "Bridge Prezzo / Unità / Mix",
             "drilldown_findings": "Cosa emerge dai drilldown selezionati",
             "source_units": (
                 "Gli importi sono in unità della sorgente: il file non "
@@ -135,7 +142,7 @@ def _text(language: str) -> dict[str, str]:
                 "({dominant_amount}); componenti principali: {components}."
             ),
             "residual_note": (
-                "Le righe del bridge root-cause sono residuali: una riga "
+                "Le righe del bridge delle cause sono residuali: una riga "
                 "successiva non va letta come totale assoluto della relativa "
                 "dimensione."
             ),
@@ -145,9 +152,9 @@ def _text(language: str) -> dict[str, str]:
             ),
             "chart_footer": (
                 "Driver selezionati in sequenza; il saldo residuo è "
-                "riconciliato in Other."
+                "riconciliato in Altro."
             ),
-            "chart_summary_title": "Bridge di sintesi root-cause",
+            "chart_summary_title": "Bridge di sintesi delle cause",
             "chart_summary_subtitle": (
                 "{comparison}, driver selezionati dall'analisi root-cause"
             ),
@@ -155,7 +162,7 @@ def _text(language: str) -> dict[str, str]:
             "chart_drilldown_subtitle": (
                 "{comparison}, dettaglio della riga selezionata"
             ),
-            "chart_mixed_title": "Approfondimento: bridge root-cause misto",
+            "chart_mixed_title": "Approfondimento: bridge delle cause misto",
             "chart_mixed_subtitle": "{comparison}, sequenza con dimensioni diverse",
             "summary_intro": (
                 "La differenza tra {comparison_name} e {baseline_name} è {delta}. "
@@ -163,21 +170,33 @@ def _text(language: str) -> dict[str, str]:
                 "il movimento con {driver_count} driver selezionati ({items}) "
                 "e un residuo di {residual}."
             ),
+            "draft_summary_intro": (
+                "La differenza calcolata tra {comparison_name} e {baseline_name} è "
+                "{delta}. Per questa bozza il motore mostra il bridge di riferimento "
+                "più compatto fra quelli riconciliati: {driver_count} righe ({items}) "
+                "e residuo {residual}. La scelta non è un giudizio sulle cause."
+            ),
             "drilldown_intro": (
                 "Il drilldown della riga principale dettaglia il contributo: "
                 "{items}. Il contributo è quindi concentrato soprattutto su "
                 "{top_label}."
             ),
+            "draft_drilldown_intro": (
+                "Il dettaglio della prima riga mostra i contributi calcolati: "
+                "{items}. La rilevanza aziendale richiede conferma professionale."
+            ),
             "mixed_intro": (
-                "Una lettura più analitica conferma che il movimento non è "
-                "distribuito in modo uniforme: emergono {items}. Questa vista "
-                "resta un approfondimento perché lascia {residual} in residuo."
+                "Una vista alternativa calcolata presenta la sequenza {items}. "
+                "La vista lascia {residual} in residuo e deve essere letta "
+                "secondo la logica residuale delle righe."
             ),
-            "bridge_reading": (
-                "Riconcilia il delta con la sequenza di driver selezionata."
+            "draft_mixed_intro": (
+                "È disponibile anche una sequenza a dimensioni miste ({items}) con "
+                "residuo {residual}; va valutata come spiegazione alternativa."
             ),
-            "drilldown_reading": "Scompone il driver principale.",
-            "mixed_reading": "Individua dove il residuo aggiunge informazione.",
+            "bridge_reading": "Mostra la chiusura matematica della sequenza.",
+            "drilldown_reading": "Scompone la prima riga selezionata.",
+            "mixed_reading": "Presenta una sequenza residuale alternativa.",
             "data_key": "Dato chiave",
             "reading": "Lettura",
             "residual": "residuo",
@@ -185,51 +204,53 @@ def _text(language: str) -> dict[str, str]:
             "analysis_area": "Area di analisi",
             "useful_reading": "Lettura utile",
             "chart_1_reading": (
-                "La sequenza selezionata ({items}) riconcilia il movimento "
+                "La sequenza di riferimento ({items}) chiude il movimento "
                 "{comparison} con residuo finale {residual}."
             ),
             "chart_2_reading": (
-                "Il driver principale è soprattutto {top_label}, seguito "
-                "dagli altri contributi per linea prodotto."
+                "Il dettaglio della prima riga include {top_label} e gli altri "
+                "contributi calcolati per linea prodotto."
             ),
             "chart_3_reading": (
-                "Il secondo livello di analisi mostra che il residuo utile si "
-                "concentra su {items}."
+                "La sequenza alternativa a dimensioni miste include {items}."
             ),
             "chart_small_multiples_reading": (
-                "Il bridge standard per {dimension} mostra che la varianza si "
-                "concentra soprattutto su {items}."
+                "Il bridge standard per {dimension} presenta i contributi "
+                "calcolati di maggiore valore assoluto: {items}."
             ),
             "chart_pvm_ladder_reading": (
                 "La stessa varianza è letta a tre livelli: totale combinato, "
-                "Price separato da Units & Mix, e Price / Units / Mix. "
+                "Prezzo separato da Unità e Mix, e Prezzo / Unità / Mix. "
                 "Componenti principali: {items}."
             ),
             "chart_1_caption": (
-                "Il bridge riconcilia il movimento tra i due periodi/scenari e isola "
-                "il driver principale."
+                "Il bridge dimostra la chiusura matematica; la scelta della sequenza "
+                "richiede revisione professionale."
+            ),
+            "chart_1_caption_approved": (
+                "Il bridge dimostra la chiusura matematica; la scelta della sequenza "
+                "è registrata nella revisione professionale."
             ),
             "chart_2_caption": (
-                "Il dettaglio per linea prodotto traduce il driver principale in "
-                "una lettura commerciale immediata."
+                "Il dettaglio espone i contributi misurati della prima riga selezionata."
             ),
             "chart_3_caption": (
                 "Questa vista va letta come sequenza residuale: le righe "
                 "successive sono al netto delle righe precedenti."
             ),
             "chart_small_multiples_caption": (
-                "Ogni pannello ripete il bridge compatto Price / "
-                "Units & Mix / Balance; la dimensione separa i pannelli."
+                "Ogni pannello ripete il bridge compatto Prezzo / "
+                "Unità e Mix / Saldo; la dimensione separa i pannelli."
             ),
             "chart_pvm_ladder_caption": (
                 "La scala e i totali sono gli stessi in ogni pannello: cambia "
                 "solo il livello di decomposizione della varianza."
             ),
-            "pvm_ladder_source": "Lettura Price / Units / Mix",
+            "pvm_ladder_source": "Lettura Prezzo / Unità / Mix",
             "pvm_ladder_reading": (
                 "Confronta tre decomposizioni dello stesso movimento."
             ),
-            "small_multiples_source": "Small multiples standard",
+            "small_multiples_source": "Bridge standard in pannelli",
             "small_multiples_reading": (
                 "Mostra lo stesso bridge standard per ciascun elemento della "
                 "dimensione selezionata."
@@ -240,10 +261,40 @@ def _text(language: str) -> dict[str, str]:
             "drilldown_concentration": "Il contributo non dipende da un solo elemento.",
             "drilldown_composition": "Il residuo è concentrato su pochi contributi.",
             "top_contributions": "Principali contributi: {items}",
+            "root_cause_bridge": "Bridge delle cause",
+            "dimension": "dimensione",
+            "dimension_product": "prodotto",
+            "dimension_region": "area",
+            "dimension_subregion": "sottoarea",
+            "dimension_customer": "cliente",
+            "dimension_channel": "canale",
+            "sales": "Vendite",
+            "total": "Totale",
+            "variance_type_price": "Prezzo",
+            "variance_type_units": "Unità",
+            "variance_type_volume": "Volume",
+            "variance_type_mix": "Mix",
+            "variance_type_other": "Altro",
+            "variance_type_balance": "Saldo",
+            "variance_type_net_sales": "Vendite nette",
+            "variance_type_discount": "Sconto",
+            "variance_type_cogs": "Costo del venduto",
+            "variance_type_gross_margin": "Margine lordo",
+            "variance_type_units_and_mix": "Unità e Mix",
+            "variance_type_price_and_units_and_mix": "Prezzo, Unità e Mix",
+            "variance_type_price_and_volume_and_mix": "Prezzo, Volume e Mix",
         }
     if language == "es":
         return {
             "title": "Análisis de las causas de la varianza de ventas",
+            "draft_title": "Borrador de análisis de variaciones de ventas",
+            "draft_notice": (
+                "Borrador de trabajo: el puente de referencia se selecciona con "
+                "criterios mecánicos y no constituye una causa empresarial aprobada."
+            ),
+            "accounting_controls": "Perímetro y controles contables",
+            "accounting_field": "Control",
+            "accounting_value": "Resultado",
             "subtitle": "Real frente a Plan (AC frente a PL)",
             "summary": "Resumen",
             "source_data": "Datos de soporte principales",
@@ -251,8 +302,8 @@ def _text(language: str) -> dict[str, str]:
             "bridge_summary": "Puente de resumen",
             "product_line_drilldown": "Desglose por línea de producto",
             "mixed_deep_dive": "Análisis detallado multidimensional",
-            "chart_1": "Fuente 1 - Impulsor principal",
-            "chart_2": "Fuente 2 - Detalle por línea de producto",
+            "chart_1": "Fuente 1 - Puente de referencia",
+            "chart_2": "Fuente 2 - Detalle de la primera fila",
             "chart_3": "Fuente 3 - Detalle por área y línea de producto",
             "chart_small_multiples": "Puente estándar por {dimension}",
             "chart_pvm_ladder": "Puente de Precio / Unidades / Mix",
@@ -305,24 +356,33 @@ def _text(language: str) -> dict[str, str]:
                 "{driver_count} impulsores seleccionados ({items}) y un residual "
                 "de {residual}."
             ),
+            "draft_summary_intro": (
+                "La diferencia calculada entre {comparison_name} y {baseline_name} "
+                "es {delta}. Este borrador muestra el puente de referencia mecánico "
+                "con {driver_count} filas ({items}) y residual {residual}; no es una "
+                "conclusión sobre las causas empresariales."
+            ),
             "drilldown_intro": (
                 "El desglose de la fila principal detalla la contribución: "
                 "{items}. Por tanto, la contribución se concentra principalmente "
                 "en {top_label}."
             ),
+            "draft_drilldown_intro": (
+                "El detalle de la primera fila muestra las contribuciones calculadas: "
+                "{items}. Su relevancia empresarial requiere revisión profesional."
+            ),
             "mixed_intro": (
-                "Un análisis más detallado confirma que el movimiento no se "
-                "distribuye de manera uniforme: destacan {items}. Esta vista "
-                "sigue siendo un análisis detallado porque deja {residual} como "
-                "saldo residual."
+                "Una vista alternativa calculada presenta la secuencia {items}. "
+                "La vista deja {residual} como saldo residual y debe leerse "
+                "según la lógica residual de las filas."
             ),
-            "bridge_reading": (
-                "Concilia la diferencia con la secuencia de impulsores seleccionada."
+            "draft_mixed_intro": (
+                "También existe una secuencia de dimensiones mixtas ({items}) con "
+                "residual {residual}; debe evaluarse como explicación alternativa."
             ),
-            "drilldown_reading": "Descompone el impulsor principal.",
-            "mixed_reading": (
-                "Identifica dónde aporta información el detalle residual."
-            ),
+            "bridge_reading": "Muestra el cierre matemático de la secuencia.",
+            "drilldown_reading": "Descompone la primera fila seleccionada.",
+            "mixed_reading": "Presenta una secuencia residual alternativa.",
             "data_key": "Dato clave",
             "reading": "Lectura",
             "residual": "residual",
@@ -330,20 +390,19 @@ def _text(language: str) -> dict[str, str]:
             "analysis_area": "Área de análisis",
             "useful_reading": "Lectura útil",
             "chart_1_reading": (
-                "La secuencia seleccionada ({items}) concilia el movimiento "
+                "La secuencia de referencia ({items}) cierra el movimiento "
                 "{comparison} con un residual final de {residual}."
             ),
             "chart_2_reading": (
-                "El impulsor principal es sobre todo {top_label}, seguido por "
-                "otras contribuciones por línea de producto."
+                "El detalle de la primera fila incluye {top_label} y las demás "
+                "contribuciones calculadas por línea de producto."
             ),
             "chart_3_reading": (
-                "El segundo nivel de análisis muestra que el detalle residual "
-                "útil se concentra en {items}."
+                "La secuencia alternativa de dimensiones mixtas incluye {items}."
             ),
             "chart_small_multiples_reading": (
-                "El puente estándar por {dimension} muestra que la varianza se "
-                "concentra principalmente en {items}."
+                "El puente estándar por {dimension} presenta las contribuciones "
+                "calculadas de mayor valor absoluto: {items}."
             ),
             "chart_pvm_ladder_reading": (
                 "La misma varianza se presenta en tres niveles: total combinado, "
@@ -351,12 +410,15 @@ def _text(language: str) -> dict[str, str]:
                 "Componentes principales: {items}."
             ),
             "chart_1_caption": (
-                "El puente concilia el movimiento entre los dos periodos o "
-                "escenarios y aísla el impulsor principal."
+                "El puente demuestra el cierre matemático; la selección de la "
+                "secuencia requiere revisión profesional."
+            ),
+            "chart_1_caption_approved": (
+                "El puente demuestra el cierre matemático; la selección de la "
+                "secuencia queda registrada en la revisión profesional."
             ),
             "chart_2_caption": (
-                "El detalle por línea de producto convierte el impulsor principal "
-                "en una lectura comercial inmediata."
+                "El detalle muestra las contribuciones medidas de la primera fila."
             ),
             "chart_3_caption": (
                 "Esta vista debe leerse como una secuencia residual: las filas "
@@ -410,6 +472,14 @@ def _text(language: str) -> dict[str, str]:
         }
     return {
         "title": "Sales Variance Root-Cause Analysis",
+        "draft_title": "Draft Sales Variance Analysis",
+        "draft_notice": (
+            "Working draft: the reference bridge is selected mechanically and is "
+            "not an approved business-cause conclusion."
+        ),
+        "accounting_controls": "Perimeter and accounting controls",
+        "accounting_field": "Control",
+        "accounting_value": "Result",
         "subtitle": "Actual vs Plan",
         "summary": "Summary",
         "source_data": "Key Source Data",
@@ -417,8 +487,8 @@ def _text(language: str) -> dict[str, str]:
         "bridge_summary": "Summary bridge",
         "product_line_drilldown": "Product-line drilldown",
         "mixed_deep_dive": "Mixed-dimension deep dive",
-        "chart_1": "Source 1 - Main Driver",
-        "chart_2": "Source 2 - Product-line Detail",
+        "chart_1": "Source 1 - Reference Bridge",
+        "chart_2": "Source 2 - First-row Detail",
         "chart_3": "Source 3 - Area And Product-Line Detail",
         "chart_small_multiples": "Standard bridge by {dimension}",
         "chart_pvm_ladder": "Price / Units / Mix bridge",
@@ -462,18 +532,32 @@ def _text(language: str) -> dict[str, str]:
             "the movement with {driver_count} selected drivers ({items}) and "
             "residual of {residual}."
         ),
+        "draft_summary_intro": (
+            "The calculated difference between {comparison_name} and "
+            "{baseline_name} is {delta}. This draft shows the mechanically compact "
+            "reference bridge with {driver_count} rows ({items}) and residual "
+            "{residual}; it is not a business-cause conclusion."
+        ),
         "drilldown_intro": (
             "The main-row drilldown details the contribution: {items}. The "
             "contribution is therefore concentrated mainly in {top_label}."
         ),
-        "mixed_intro": (
-            "A more analytical reading confirms that the movement is not "
-            "evenly distributed: {items} stand out. This view remains a deep "
-            "dive because it leaves {residual} in residual balance."
+        "draft_drilldown_intro": (
+            "The first-row detail shows the calculated contributions: {items}. "
+            "Their business relevance requires professional review."
         ),
-        "bridge_reading": "Reconciles the delta with the selected driver sequence.",
-        "drilldown_reading": "Breaks the main driver into components.",
-        "mixed_reading": "Identifies where residual detail adds information.",
+        "mixed_intro": (
+            "An alternative calculated view presents the sequence {items}. "
+            "It leaves {residual} in residual balance and must be read using "
+            "the rows' residual logic."
+        ),
+        "draft_mixed_intro": (
+            "A mixed-dimension sequence is also available ({items}) with residual "
+            "{residual}; it must be assessed as an alternative explanation."
+        ),
+        "bridge_reading": "Shows the mathematical closure of the sequence.",
+        "drilldown_reading": "Breaks down the first selected row.",
+        "mixed_reading": "Presents an alternative residual sequence.",
         "data_key": "Key data",
         "reading": "Reading",
         "residual": "residual",
@@ -481,20 +565,19 @@ def _text(language: str) -> dict[str, str]:
         "analysis_area": "Analysis area",
         "useful_reading": "Useful reading",
         "chart_1_reading": (
-            "The selected sequence ({items}) reconciles the {comparison} "
+            "The reference sequence ({items}) closes the {comparison} "
             "movement with final residual {residual}."
         ),
         "chart_2_reading": (
-            "The main driver is mostly {top_label}, followed by other "
+            "The first-row detail includes {top_label} and the other calculated "
             "product-line contributions."
         ),
         "chart_3_reading": (
-            "The second-level analysis shows that useful residual detail is "
-            "concentrated in {items}."
+            "The alternative mixed-dimension sequence includes {items}."
         ),
         "chart_small_multiples_reading": (
-            "The standard bridge by {dimension} shows that variance is "
-            "concentrated mainly in {items}."
+            "The standard bridge by {dimension} presents the calculated "
+            "contributions with the largest absolute values: {items}."
         ),
         "chart_pvm_ladder_reading": (
             "The same variance is read at three levels: combined total, Price "
@@ -502,12 +585,15 @@ def _text(language: str) -> dict[str, str]:
             "components: {items}."
         ),
         "chart_1_caption": (
-            "The bridge reconciles the movement between the two periods/scenarios and "
-            "isolates the main driver."
+            "The bridge demonstrates mathematical closure; sequence selection "
+            "requires professional review."
+        ),
+        "chart_1_caption_approved": (
+            "The bridge demonstrates mathematical closure; sequence selection "
+            "is recorded in the professional review."
         ),
         "chart_2_caption": (
-            "The product-line detail translates the main driver into a "
-            "commercial reading."
+            "The detail exposes the measured contributions of the first selected row."
         ),
         "chart_3_caption": (
             "This view should be read as a residual sequence: later rows are "
@@ -558,6 +644,14 @@ def _variance_type_label(value: Any, labels: dict[str, str]) -> str:
     }
     label_key = label_keys.get(raw_value.casefold())
     return labels.get(label_key, raw_value) if label_key else raw_value
+
+
+def _dimension_label(value: Any, labels: dict[str, str]) -> str:
+    """Return a localized display label for common source dimensions."""
+
+    raw_value = str(value or "").strip()
+    label_key = f"dimension_{raw_value.casefold().replace(' ', '_')}"
+    return labels.get(label_key, raw_value)
 
 
 def _localized_selected_label(value: Any, labels: dict[str, str]) -> str:
@@ -659,16 +753,30 @@ def _chart_path(output_dir: Path, value: Any) -> Path | None:
     return candidate if candidate.exists() else None
 
 
-def _select_summary(summary_rows: list[dict[str, Any]]) -> dict[str, Any] | None:
+def _select_summary(
+    summary_rows: list[dict[str, Any]],
+    recipe: dict[str, Any],
+) -> tuple[dict[str, Any] | None, str]:
+    """Return an explicitly reviewed alternative or a mechanical draft reference."""
+
     if not summary_rows:
-        return None
-    return min(
-        summary_rows,
-        key=lambda row: (
-            abs(_summary_float(row, "other_residual")),
-            int(row.get("row_count") or 999),
-            int(row.get("alternative_result") or 999),
+        return None, "none"
+    root_cause_review = recipe.get("accounting_review", {}).get("root_cause_review", {})
+    if root_cause_review.get("status") == "approved":
+        selected = root_cause_review.get("selected_alternative")
+        for row in summary_rows:
+            if row.get("alternative_result") == selected:
+                return row, "explicit_professional_or_model_review"
+    return (
+        min(
+            summary_rows,
+            key=lambda row: (
+                abs(_summary_float(row, "other_residual")),
+                int(row.get("row_count") or 999),
+                int(row.get("alternative_result") or 999),
+            ),
         ),
+        "mechanical_draft_reference",
     )
 
 
@@ -836,7 +944,9 @@ def _small_multiples_info(
         return None
     if context.get("status") != "written":
         return None
-    dimension = str(context.get("dimension") or labels.get("dimension", "dimension"))
+    dimension = _dimension_label(
+        context.get("dimension") or labels.get("dimension", "dimension"), labels
+    )
     panels = [
         panel
         for panel in context.get("panels", [])
@@ -1065,14 +1175,14 @@ def _write_localized_chart(
                 (58, 75),
                 title_lines[2],
                 fill=(80, 85, 92),
-                font=_load_font(17),
+                font=_load_font(18),
             )
     else:
-        draw.text((58, 40), title, fill=(34, 40, 49), font=_load_font(34, bold=True))
-        draw.text((58, 82), subtitle, fill=(80, 85, 92), font=_load_font(19))
+        draw.text((58, 40), title, fill=(34, 40, 49), font=_load_font(18, bold=True))
+        draw.text((58, 82), subtitle, fill=(80, 85, 92), font=_load_font(18))
     note_top = image.height - 48
     draw.rectangle((0, note_top, image.width, image.height), fill="white")
-    draw.text((58, note_top + 10), footer, fill=(105, 105, 105), font=_load_font(14))
+    draw.text((58, note_top + 10), footer, fill=(105, 105, 105), font=_load_font(18))
     image.save(target)
     return target
 
@@ -1089,6 +1199,7 @@ def _add_docx_table(
 ) -> None:
     table = document.add_table(rows=1, cols=len(headers))
     table.style = "Table Grid"
+    table.autofit = False
     for idx, header in enumerate(headers):
         cell = table.rows[0].cells[idx]
         cell.text = header
@@ -1102,6 +1213,62 @@ def _add_docx_table(
         for idx, value in enumerate(row):
             cells[idx].text = value
             cells[idx].vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+    if len(headers) == 2:
+        widths = [2700, 6660]
+    elif len(headers) == 3:
+        widths = [2000, 3000, 4360]
+    else:
+        base_width = 9360 // max(len(headers), 1)
+        widths = [base_width] * len(headers)
+        widths[-1] += 9360 - sum(widths)
+    _set_table_geometry(table, widths)
+
+
+def _set_table_geometry(table: Any, widths: list[int]) -> None:
+    """Apply the standard-business-brief fixed DXA table geometry."""
+
+    table_pr = table._tbl.tblPr
+    table_width = table_pr.find(qn("w:tblW"))
+    if table_width is None:
+        table_width = OxmlElement("w:tblW")
+        table_pr.append(table_width)
+    table_width.set(qn("w:type"), "dxa")
+    table_width.set(qn("w:w"), str(sum(widths)))
+    table_indent = table_pr.find(qn("w:tblInd"))
+    if table_indent is None:
+        table_indent = OxmlElement("w:tblInd")
+        table_pr.append(table_indent)
+    table_indent.set(qn("w:type"), "dxa")
+    table_indent.set(qn("w:w"), "120")
+    table_layout = table_pr.find(qn("w:tblLayout"))
+    if table_layout is None:
+        table_layout = OxmlElement("w:tblLayout")
+        table_pr.append(table_layout)
+    table_layout.set(qn("w:type"), "fixed")
+
+    for grid_col, width in zip(table._tbl.tblGrid.gridCol_lst, widths):
+        grid_col.set(qn("w:w"), str(width))
+    for row in table.rows:
+        for cell, width in zip(row.cells, widths):
+            cell_width = cell._tc.get_or_add_tcPr().get_or_add_tcW()
+            cell_width.set(qn("w:type"), "dxa")
+            cell_width.set(qn("w:w"), str(width))
+            margins = cell._tc.get_or_add_tcPr().first_child_found_in("w:tcMar")
+            if margins is None:
+                margins = OxmlElement("w:tcMar")
+                cell._tc.get_or_add_tcPr().append(margins)
+            for name, value in (
+                ("top", 80),
+                ("bottom", 80),
+                ("start", 120),
+                ("end", 120),
+            ):
+                margin = margins.find(qn(f"w:{name}"))
+                if margin is None:
+                    margin = OxmlElement(f"w:{name}")
+                    margins.append(margin)
+                margin.set(qn("w:w"), str(value))
+                margin.set(qn("w:type"), "dxa")
 
 
 def _add_docx_caption(document: Document, text: str) -> None:
@@ -1133,6 +1300,229 @@ def _add_docx_chart(
     _add_docx_caption(document, caption)
 
 
+def _accounting_rows(
+    recipe: dict[str, Any],
+    language: str,
+) -> list[list[str]]:
+    """Return localized display rows for explicit accounting-review controls."""
+
+    readiness = recipe.get("accounting_readiness") or {}
+    review = recipe.get("accounting_review") or {}
+    fields = {
+        "it": {
+            "perimeter": "Perimetro",
+            "tie_out": "Quadratura con la fonte",
+            "bridge": "Chiusura del bridge",
+            "convention": "Convenzione favorevole/sfavorevole",
+            "materiality": "Materialità",
+            "professional": "Revisione professionale",
+            "root_cause": "Revisione delle alternative",
+            "unresolved": "Elementi irrisolti",
+            "none": "Nessuno",
+            "baseline": "base",
+            "comparison": "confronto",
+            "calculated": "calcolato",
+            "source": "fonte",
+            "max_delta": "scostamento massimo",
+            "reviewer": "revisore",
+            "reviewed_at": "data",
+            "alternative": "alternativa",
+            "rationale": "motivazione",
+        },
+        "es": {
+            "perimeter": "Perímetro",
+            "tie_out": "Conciliación con la fuente",
+            "bridge": "Cierre del puente",
+            "convention": "Convención favorable/desfavorable",
+            "materiality": "Materialidad",
+            "professional": "Revisión profesional",
+            "root_cause": "Revisión de alternativas",
+            "unresolved": "Elementos pendientes",
+            "none": "Ninguno",
+            "baseline": "base",
+            "comparison": "comparación",
+            "calculated": "calculado",
+            "source": "fuente",
+            "max_delta": "diferencia máxima",
+            "reviewer": "revisor",
+            "reviewed_at": "fecha",
+            "alternative": "alternativa",
+            "rationale": "justificación",
+        },
+        "en": {
+            "perimeter": "Perimeter",
+            "tie_out": "Source tie-out",
+            "bridge": "Bridge closure",
+            "convention": "Favorable/adverse convention",
+            "materiality": "Materiality",
+            "professional": "Professional review",
+            "root_cause": "Alternative review",
+            "unresolved": "Unresolved items",
+            "none": "None",
+            "baseline": "baseline",
+            "comparison": "comparison",
+            "calculated": "calculated",
+            "source": "source",
+            "max_delta": "maximum delta",
+            "reviewer": "reviewer",
+            "reviewed_at": "date",
+            "alternative": "alternative",
+            "rationale": "rationale",
+        },
+    }.get(language, {})
+    if not fields:
+        fields = {
+            "perimeter": "Perimeter",
+            "tie_out": "Source tie-out",
+            "bridge": "Bridge closure",
+            "convention": "Favorable/adverse convention",
+            "materiality": "Materiality",
+            "professional": "Professional review",
+            "root_cause": "Alternative review",
+            "unresolved": "Unresolved items",
+            "none": "None",
+            "baseline": "baseline",
+            "comparison": "comparison",
+            "calculated": "calculated",
+            "source": "source",
+            "max_delta": "maximum delta",
+            "reviewer": "reviewer",
+            "reviewed_at": "date",
+            "alternative": "alternative",
+            "rationale": "rationale",
+        }
+    perimeter = readiness.get("perimeter") or review.get("perimeter") or {}
+    tie_out = readiness.get("source_tie_out") or {}
+    bridge = readiness.get("component_bridge") or {}
+    convention = (
+        readiness.get("favorable_adverse_convention")
+        or review.get("favorable_adverse_convention")
+        or {}
+    )
+    materiality = readiness.get("materiality") or review.get("materiality") or {}
+    professional = readiness.get("professional_review") or {}
+    root_cause = readiness.get("root_cause_review") or {}
+    unresolved = [
+        _localized_control_text(value, language)
+        for value in readiness.get("unresolved_items", [])
+        if str(value).strip()
+    ]
+    status_labels = {
+        "it": {
+            "pending": "in sospeso",
+            "established": "confermato",
+            "passed": "superato",
+            "failed": "non superato",
+            "not_established": "non disponibile",
+            "applied": "applicata",
+            "not_applied": "non applicata",
+            "approved": "approvata",
+        },
+        "es": {
+            "pending": "pendiente",
+            "established": "confirmado",
+            "passed": "superado",
+            "failed": "no superado",
+            "not_established": "no disponible",
+            "applied": "aplicada",
+            "not_applied": "no aplicada",
+            "approved": "aprobada",
+        },
+    }.get(language, {})
+
+    def status(value: Any, default: str) -> str:
+        raw = str(value or default)
+        return status_labels.get(raw, raw)
+
+    professional_details = [status(professional.get("status"), "pending")]
+    if professional.get("reviewed_by"):
+        professional_details.append(
+            f"{fields['reviewer']}: {professional.get('reviewed_by')}"
+        )
+    if professional.get("reviewed_at"):
+        professional_details.append(
+            f"{fields['reviewed_at']}: {professional.get('reviewed_at')}"
+        )
+    root_cause_details = [status(root_cause.get("status"), "pending")]
+    if root_cause.get("selected_alternative") is not None:
+        root_cause_details.append(
+            f"{fields['alternative']}: {root_cause.get('selected_alternative')}"
+        )
+    if root_cause.get("rationale"):
+        root_cause_details.append(
+            f"{fields['rationale']}: {root_cause.get('rationale')}"
+        )
+    return [
+        [
+            fields["perimeter"],
+            f"{status(perimeter.get('status'), 'pending')} — "
+            f"{perimeter.get('description') or '-'}",
+        ],
+        [
+            fields["tie_out"],
+            (
+                f"{status(tie_out.get('status'), 'not_established')}; "
+                f"{fields['baseline']}: {fields['calculated']} "
+                f"{tie_out.get('baseline_calculated_total')} / {fields['source']} "
+                f"{tie_out.get('baseline_source_total')}; {fields['comparison']}: "
+                f"{fields['calculated']} {tie_out.get('comparison_calculated_total')} / "
+                f"{fields['source']} {tie_out.get('comparison_source_total')}"
+            ),
+        ],
+        [
+            fields["bridge"],
+            f"{status(bridge.get('status'), 'not_established')}; "
+            f"{fields['max_delta']} {bridge.get('max_abs_reconciliation_delta')}",
+        ],
+        [
+            fields["convention"],
+            f"{status(convention.get('status'), 'pending')} — "
+            f"{convention.get('description') or '-'}",
+        ],
+        [
+            fields["materiality"],
+            f"{status(materiality.get('status'), 'pending')} — "
+            f"{materiality.get('threshold') if materiality.get('threshold') is not None else '-'}; "
+            f"{materiality.get('basis') or '-'}",
+        ],
+        [fields["professional"], "; ".join(professional_details)],
+        [fields["root_cause"], "; ".join(root_cause_details)],
+        [fields["unresolved"], "; ".join(unresolved) or fields["none"]],
+    ]
+
+
+def _localized_control_text(value: Any, language: str) -> str:
+    """Translate stable accounting-control messages for report display."""
+
+    raw = str(value)
+    translations = {
+        "it": {
+            "Confirm the entity and consolidation perimeter.": (
+                "Confermare il perimetro societario e di consolidamento."
+            ),
+            "Provide approved baseline and comparison source totals for tie-out.": (
+                "Fornire i totali approvati della fonte per base e confronto."
+            ),
+            "Confirm the favorable/adverse sign convention.": (
+                "Confermare la convenzione favorevole/sfavorevole."
+            ),
+            "Complete the applied materiality threshold and basis.": (
+                "Completare la soglia e il criterio di materialità applicati."
+            ),
+            "Confirm materiality or explicitly record that it is not applied.": (
+                "Confermare la materialità o registrare che non è applicata."
+            ),
+            "Resolve the failed source-total tie-out.": (
+                "Risolvere la quadratura non superata con i totali della fonte."
+            ),
+            "Resolve the component-bridge reconciliation control.": (
+                "Risolvere il controllo di riconciliazione del bridge."
+            ),
+        }
+    }
+    return translations.get(language, {}).get(raw, raw)
+
+
 def _write_docx(
     output_path: Path,
     payload: dict[str, Any],
@@ -1140,23 +1530,34 @@ def _write_docx(
 ) -> None:
     document = Document()
     section = document.sections[0]
+    section.page_width = Inches(8.5)
+    section.page_height = Inches(11)
     section.top_margin = Inches(1)
     section.bottom_margin = Inches(1)
     section.left_margin = Inches(1)
     section.right_margin = Inches(1)
+    section.header_distance = Inches(0.492)
+    section.footer_distance = Inches(0.492)
     normal = document.styles["Normal"]
     normal.font.name = "Calibri"
     normal.font.size = Pt(11)
     normal.paragraph_format.space_after = Pt(6)
-    for style_name, size in (("Heading 1", 16), ("Heading 2", 13)):
+    normal.paragraph_format.line_spacing = 1.1
+    for style_name, size, before, after in (
+        ("Heading 1", 16, 16, 8),
+        ("Heading 2", 13, 12, 6),
+        ("Heading 3", 12, 8, 4),
+    ):
         style = document.styles[style_name]
         style.font.name = "Calibri"
         style.font.size = Pt(size)
-        style.font.color.rgb = RGBColor.from_string("2E74B5")
-        style.paragraph_format.space_before = Pt(12)
-        style.paragraph_format.space_after = Pt(6)
+        style.font.color.rgb = RGBColor.from_string(
+            "1F4D78" if style_name == "Heading 3" else "2E74B5"
+        )
+        style.paragraph_format.space_before = Pt(before)
+        style.paragraph_format.space_after = Pt(after)
     title = document.add_paragraph()
-    title_run = title.add_run(labels["title"])
+    title_run = title.add_run(payload["title"])
     title_run.bold = True
     title_run.font.size = Pt(22)
     title_run.font.color.rgb = RGBColor(36, 48, 38)
@@ -1165,6 +1566,12 @@ def _write_docx(
     document.add_heading(labels["summary"], level=1)
     for paragraph in payload["summary_paragraphs"]:
         document.add_paragraph(paragraph)
+    document.add_heading(labels["accounting_controls"], level=1)
+    _add_docx_table(
+        document,
+        [labels["accounting_field"], labels["accounting_value"]],
+        payload["accounting_rows"],
+    )
     document.add_heading(labels["source_data"], level=1)
     _add_docx_table(document, payload["source_headers"], payload["source_rows"])
     _add_docx_caption(document, labels["source_caption"])
@@ -1172,10 +1579,10 @@ def _write_docx(
     for note in payload["notes"]:
         document.add_paragraph(note, style="List Bullet")
     if payload["chart_sections"]:
-        document.add_section(WD_SECTION.NEW_PAGE)
+        document.add_page_break()
     for index, chart_section in enumerate(payload["chart_sections"]):
         if index > 0 and chart_section["page_break_before"]:
-            document.add_section(WD_SECTION.NEW_PAGE)
+            document.add_page_break()
         _add_docx_chart(
             document,
             chart_section["title"],
@@ -1199,9 +1606,24 @@ def _write_docx(
         _add_docx_caption(document, labels["drilldown_caption"])
     for section in document.sections:
         header = section.header.paragraphs[0]
-        header.text = labels["title"]
+        header.text = payload["title"]
         header.runs[0].font.size = Pt(9)
         header.runs[0].font.color.rgb = RGBColor(108, 118, 110)
+        footer = section.footer.paragraphs[0]
+        footer.alignment = WD_ALIGN_PARAGRAPH.RIGHT
+        page_run = footer.add_run()
+        page_run.font.size = Pt(9)
+        page_run.font.color.rgb = RGBColor(108, 118, 110)
+        field_begin = OxmlElement("w:fldChar")
+        field_begin.set(qn("w:fldCharType"), "begin")
+        instruction = OxmlElement("w:instrText")
+        instruction.set(qn("xml:space"), "preserve")
+        instruction.text = " PAGE "
+        field_separate = OxmlElement("w:fldChar")
+        field_separate.set(qn("w:fldCharType"), "separate")
+        field_end = OxmlElement("w:fldChar")
+        field_end.set(qn("w:fldCharType"), "end")
+        page_run._r.extend([field_begin, instruction, field_separate, field_end])
     output_path.parent.mkdir(parents=True, exist_ok=True)
     document.save(output_path)
 
@@ -1212,13 +1634,19 @@ def _write_markdown(
     labels: dict[str, str],
 ) -> None:
     lines = [
-        f"# {labels['title']}",
+        f"# {payload['title']}",
         "",
         payload["subtitle"],
         "",
         f"## {labels['summary']}",
         "",
         *payload["summary_paragraphs"],
+        "",
+        f"## {labels['accounting_controls']}",
+        "",
+        f"| {labels['accounting_field']} | {labels['accounting_value']} |",
+        "| --- | --- |",
+        *(f"| {row[0]} | {row[1]} |" for row in payload["accounting_rows"]),
         "",
         f"## {labels['source_data']}",
         "",
@@ -1254,9 +1682,14 @@ def _build_payload(
     language = _language(recipe)
     labels = _text(language)
     comparison = _comparison_metadata(recipe, language)
-    summary_row = _select_summary(summary_rows)
+    summary_row, selection_method = _select_summary(summary_rows, recipe)
     if summary_row is None:
         return None
+    readiness = recipe.get("accounting_readiness") or {}
+    approved_for_client_use = (
+        readiness.get("client_report_status") == "approved_for_client_use"
+        and selection_method == "explicit_professional_or_model_review"
+    )
     pvm_ladder = _pvm_ladder_info(output_dir, labels)
     small_multiples = _small_multiples_info(output_dir, labels)
     summary_alt = int(summary_row.get("alternative_result") or 0)
@@ -1330,8 +1763,13 @@ def _build_payload(
         f"{Path(str(recipe.get('source_file') or '')).stem or labels.get('sales', 'Sales')} | "
         f"{comparison['comparison']}"
     )
+    summary_template = (
+        labels["summary_intro"]
+        if approved_for_client_use
+        else labels["draft_summary_intro"]
+    )
     summary_paragraphs = [
-        labels["summary_intro"].format(
+        summary_template.format(
             delta=_format_amount(total_delta),
             driver_count=driver_count,
             items=summary_key_text,
@@ -1340,15 +1778,25 @@ def _build_payload(
         )
     ]
     if has_drilldown:
+        drilldown_template = (
+            labels["drilldown_intro"]
+            if approved_for_client_use
+            else labels["draft_drilldown_intro"]
+        )
         summary_paragraphs.append(
-            labels["drilldown_intro"].format(
+            drilldown_template.format(
                 items=product_text or summary_label,
                 top_label=top_product,
             )
         )
     if mixed_row is not None:
+        mixed_template = (
+            labels["mixed_intro"]
+            if approved_for_client_use
+            else labels["draft_mixed_intro"]
+        )
         summary_paragraphs.append(
-            labels["mixed_intro"].format(
+            mixed_template.format(
                 items=mixed_text,
                 residual=_format_residual(mixed_residual),
             )
@@ -1413,8 +1861,14 @@ def _build_payload(
                 **comparison,
             ),
             "image_path": summary_chart,
-            "caption": labels["chart_1_caption"],
-            "page_break_before": False,
+            "caption": labels[
+                (
+                    "chart_1_caption_approved"
+                    if approved_for_client_use
+                    else "chart_1_caption"
+                )
+            ],
+            "page_break_before": True,
         }
     )
     if has_drilldown:
@@ -1439,13 +1893,19 @@ def _build_payload(
         )
     component_note = _standard_component_note(output_dir, labels, comparison)
     notes = [_currency_note(recipe, labels)]
+    if not approved_for_client_use:
+        notes.insert(0, labels["draft_notice"])
     if component_note:
         notes.append(component_note)
     notes.append(labels["residual_note"])
     payload = {
         "labels": labels,
+        "title": (
+            labels["title"] if approved_for_client_use else labels["draft_title"]
+        ),
         "subtitle": subtitle,
         "summary_paragraphs": summary_paragraphs,
+        "accounting_rows": _accounting_rows(recipe, language),
         "source_headers": [
             labels["source_col"],
             labels["reading"],
@@ -1455,6 +1915,12 @@ def _build_payload(
         "notes": notes,
         "chart_sections": chart_sections,
         "drilldown_findings": _drilldown_finding_rows(output_dir, mixed_row, labels),
+        "report_status": (
+            "approved_for_client_use"
+            if approved_for_client_use
+            else "draft_pending_professional_review"
+        ),
+        "selection_method": selection_method,
     }
     return payload
 
@@ -1465,7 +1931,7 @@ def write_root_cause_client_report(
     recipe: dict[str, Any],
     output_dir: Path,
 ) -> tuple[list[str], dict[str, Any]]:
-    """Write client-ready Markdown and DOCX root-cause reports."""
+    """Write an approved report or a visibly labelled professional-review draft."""
 
     payload = _build_payload(summary_rows, recipe, output_dir)
     if payload is None:
@@ -1486,7 +1952,8 @@ def write_root_cause_client_report(
         if Path(path).suffix.lower() in {".png", ".jpg", ".jpeg"}
     ]
     return paths, {
-        "status": "written",
+        "status": payload["report_status"],
+        "selection_method": payload["selection_method"],
         "markdown": md_path.name,
         "docx": docx_path.name,
         "selected_row_count": len(payload["source_rows"]),

@@ -3,6 +3,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
+const { spawnSync } = require("node:child_process");
 
 const SERVER_NAME = "variance-analysis-widgets";
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
@@ -188,6 +189,10 @@ function toolDefinitions() {
   const inputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object." },
+      client_engagement: {
+        type: "string",
+        description: "Current absolute path to the managed Vera run context.json.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
@@ -211,6 +216,10 @@ function toolDefinitions() {
   const decisionInputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
+      client_engagement: {
+        type: "string",
+        description: "Current absolute path to the managed Vera run context.json.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       decisions: { type: "array", items: decisionSchema },
@@ -390,10 +399,8 @@ function validateReviewPayload(inputArgs) {
 }
 
 function resolveDecisionOutputPath(inputArgs) {
-  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputDir) return null;
-  return path.join(path.resolve(outputDir), "ui_decisions.json");
+  const outputDir = resolveRunOutputDir(inputArgs);
+  return outputDir ? path.join(outputDir, "ui_decisions.json") : null;
 }
 
 function normalizeRequestedDocuments(value, fieldPath) {
@@ -517,6 +524,7 @@ function saveDecisionPayload(inputArgs) {
   const { uiDecisions, decisionOutputPath } = buildUiDecisions(inputArgs);
   let persisted = false;
   if (decisionOutputPath) {
+    preflightClientRun(inputArgs, uiDecisions.run_id);
     fs.mkdirSync(path.dirname(decisionOutputPath), { recursive: true });
     fs.writeFileSync(decisionOutputPath, `${JSON.stringify(uiDecisions, null, 2)}\n`, "utf8");
     persisted = true;
@@ -539,8 +547,48 @@ function saveDecisionPayload(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  return outputDir ? path.resolve(outputDir) : null;
+  const outputRef = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  if (!outputRef) return null;
+  const contextRef =
+    typeof inputArgs.client_engagement === "string"
+      ? inputArgs.client_engagement.trim()
+      : "";
+  if (runIntake?.path_reference !== "run_root_relative") {
+    if (contextRef || process.env.VERA_COMPONENT_HOST === "1") {
+      throw new Error("Vera persistence requires a portable managed-run output reference");
+    }
+    return path.resolve(outputRef);
+  }
+  if (!contextRef) {
+    throw new Error(
+      "Vera Variance Analysis persistence requires the current client_engagement context",
+    );
+  }
+  if (
+    !path.isAbsolute(contextRef) ||
+    path.normalize(contextRef) !== contextRef ||
+    path.basename(contextRef) !== "context.json"
+  ) {
+    throw new Error("client_engagement must be the current absolute context.json path");
+  }
+  if (outputRef.includes("\\")) {
+    throw new Error("run_intake.output_dir must use a canonical relative path");
+  }
+  const parts = outputRef.split("/");
+  if (
+    parts[0] !== "outputs" ||
+    parts.some((part) => !part || part === "." || part === "..") ||
+    parts.join("/") !== outputRef
+  ) {
+    throw new Error("run_intake.output_dir must stay inside the managed run outputs");
+  }
+  const runRoot = path.dirname(contextRef);
+  const outputRoot = path.join(runRoot, "outputs");
+  const resolved = path.join(runRoot, ...parts);
+  if (resolved !== outputRoot && !resolved.startsWith(`${outputRoot}${path.sep}`)) {
+    throw new Error("run_intake.output_dir escapes the managed run outputs");
+  }
+  return resolved;
 }
 
 function resolveAppliedDecisionOutputPath(inputArgs) {
@@ -1430,6 +1478,7 @@ function applyDecisionPayload(inputArgs) {
     buildApplicationEffect(decision, itemById.get(decision.item_id), appliedAt),
   );
   const outputDir = resolveRunOutputDir(inputArgs);
+  if (outputDir) preflightClientRun(inputArgs, uiDecisions.run_id);
   const revisionOutputs = writeRevisionArtifacts(outputDir, effects);
   const textUpdates = writeDirectTextArtifactUpdates(outputDir, effects);
   const structuredUpdates = writeStructuredArtifactUpdates(outputDir, effects);
@@ -1558,6 +1607,57 @@ function applyWorkflowSpecificReviewApplication(
   _finalArtifactsPath,
 ) {
   return null;
+}
+
+function pythonExecutable() {
+  const candidates = [
+    process.env.PYTHON,
+    process.env.VIRTUAL_ENV ? path.join(process.env.VIRTUAL_ENV, "bin", "python") : "",
+    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", "bin", "python"),
+    "python3",
+    "python",
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    return candidate;
+  }
+  return "python3";
+}
+
+function preflightClientRun(inputArgs, expectedRunId) {
+  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
+  const managedRun = runIntake?.path_reference === "run_root_relative";
+  if (!managedRun) return null;
+  const outputDir = resolveRunOutputDir(inputArgs);
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "review_preflight.py");
+  const completed = spawnSync(
+    pythonExecutable(),
+    [scriptPath, "--output-dir", outputDir, "--client-run-preflight-only"],
+    { cwd: PLUGIN_ROOT, encoding: "utf8" },
+  );
+  if (completed.error) throw completed.error;
+  if (completed.status !== 0) {
+    throw new Error(
+      completed.stderr ||
+        completed.stdout ||
+        "Variance Analysis customer-run preflight failed.",
+    );
+  }
+  const output = completed.stdout.trim().split(/\r?\n/).filter(Boolean).pop();
+  if (!output) throw new Error("Variance Analysis customer-run preflight failed.");
+  const parsed = JSON.parse(output);
+  if (
+    !isPlainObject(parsed) ||
+    parsed.ok !== true ||
+    parsed.schema_version !== "vera.client_workflow_context.v2" ||
+    parsed.workflow_id !== "variance-analysis" ||
+    typeof parsed.client_run_id !== "string" ||
+    !parsed.client_run_id.trim() ||
+    parsed.client_run_id !== expectedRunId
+  ) {
+    throw new Error("Variance Analysis customer-run preflight returned an invalid result.");
+  }
+  return parsed;
 }
 
 function callTool(name, args = {}) {

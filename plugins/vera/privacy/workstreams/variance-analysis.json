@@ -1,0 +1,67 @@
+{
+  "schema_version": 3,
+  "workstream": "variance-analysis",
+  "display_name": "Variance Analysis",
+  "role": "workflow",
+  "governed_paths": [
+    ".codex-plugin/plugin.json",
+    "skills",
+    "scripts",
+    "mcp",
+    "assets"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "variance-analysis-evidence",
+        "purpose": "Establish the accounting perimeter, comparison, mappings, source tie-outs, calculated variances, review status, and evidence-supported commentary for a management variance analysis",
+        "content": "User instructions; P&L, trial-balance, management-account, sales, budget, forecast, and prior-period data; entity and consolidation perimeter; accounts, cost centers, departments, products, customers, channels, and other reporting dimensions; periods and scenarios; amounts, units, discounts, COGS, currencies, FX treatment, and sign conventions; mappings and recipes; source totals and tie-outs; materiality supplied by the professional; calculated value and price-volume-mix results; bridge reconciliation; chart data and images; root-cause alternatives and drilldowns; diagnostics, audit records, review decisions, limitations, hypotheses, and final narrative",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "client-engagement-path-isolation",
+      "control": "When hosted by Vera in Codex, inspection and execution validate a digest-valid Studio Archive variance-analysis context, accept only its exact receipted inputs or current-run outputs, and write only to that run's output root or a descendant. Standalone and Clara execution remain explicitly outside this Vera lifecycle."
+    },
+    {
+      "id": "portable-review-persistence",
+      "control": "Managed run intake persists run-root-relative paths and a portable client identity; the Vera MCP host requires the current absolute context only at execution time and preflights workflow and run identity before saving or applying review decisions."
+    },
+    {
+      "id": "explicit-managed-currency",
+      "control": "A Vera-managed execution rejects a missing currency argument so the standalone EUR default cannot silently become an accounting assumption in a client run."
+    },
+    {
+      "id": "calculation-judgment-separation",
+      "control": "The shared variance engine owns exact arithmetic, component calculation, source-total comparison, and reconciliation. Professional or model-led review establishes the accounting perimeter, source basis, semantic causes, favorable/adverse convention, classification, materiality, and selected root-cause alternative; automatic cause attribution is prohibited."
+    },
+    {
+      "id": "draft-until-explicit-review",
+      "control": "The deterministic Word report is visibly draft_pending_professional_review until the accounting controls pass and the recipe records named professional approval plus an explicitly reviewed root-cause alternative and rationale."
+    },
+    {
+      "id": "structured-data-before-chart-review",
+      "control": "The workflow requires review of structured result, context, and audit artifacts before chart pixels and treats generated plots as communication and visual-QA artifacts rather than the numerical source of truth."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-10",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "f1b9124d1869fe3dbc6bcb6a685b298ed54c82bb97e3257f961e0674c912fd99"
+  }
+}

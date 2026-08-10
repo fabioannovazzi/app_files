@@ -79,6 +79,7 @@ The shared specialist workflows cover:
 - forward-looking sales Plan scenarios from reviewed Actuals and confirmed
   commercial or FX assumptions;
 - source-bound historical financial analysis and fixed due-diligence recipes,
+  management variance analysis with the shared calculation and plot suite,
   plus reviewable financial reports and concordato preventivo review;
 - source-backed legal, tax, and compliance research prompts and validation;
 - evidence-backed INPS case review from supplied documents or official exports;
