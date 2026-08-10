@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.107"
+    assert manifest["version"] == "0.1.108"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
@@ -232,6 +232,42 @@ def test_claude_package_vendors_every_registered_vera_component(
     ]
     assert "studio-archive" not in projected_components
     assert set(projected_components) == set(components) - {"studio-archive"}
+
+
+def test_sites_handoff_remains_openai_only_in_cowork(vera_entries) -> None:
+    skill = vera_entries[
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md"
+    ].decode("utf-8")
+    reference = vera_entries[
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/sites-handoff.md"
+    ].decode("utf-8")
+    orchestration = vera_entries[
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/skill-orchestration.md"
+    ].decode("utf-8")
+    method = vera_entries[
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/workflow-method.md"
+    ].decode("utf-8")
+
+    assert "Cowork must not select `sites`" in skill
+    assert "Cowork cannot initiate a Sites publication" in skill
+    assert "# Sites handoff unavailable in Cowork" in reference
+    assert "OpenAI Sites is not callable" in reference
+    assert "Keep preview or final publication pending" in reference
+    assert "compatible OpenAI Sites" in reference
+    assert "runtime must perform" in reference
+    assert "OpenAI Sites build and publication" in orchestration
+    assert "Unavailable in Cowork" in orchestration
+    assert "OpenAI Sites is unavailable for new Cowork publication" in method
+    assert "Anthropic Claude route" not in reference
+    assert all(
+        "sites:sites-building" not in text
+        and "sites:sites-hosting" not in text
+        and "record_sites_delivery.py" not in text
+        for text in (skill, reference, orchestration, method)
+    )
 
 
 def test_cowork_privacy_register_omits_unavailable_routes(vera_entries) -> None:

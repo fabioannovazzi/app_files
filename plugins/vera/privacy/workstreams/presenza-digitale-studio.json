@@ -19,7 +19,7 @@
       {
         "id": "studio-website-material",
         "purpose": "Assess or create a professional studio website, propose its information architecture, copy and visual system, implement a responsive site, and prepare exact preview and release packages for review",
-        "content": "Selected captures of an existing public website; selected source code, screenshots, studio documents, approved communications, logo, photographs, contact details, team and professional biography, verified services and qualifications, supplied legal text, intended audiences, proposed sitemap, page copy, studio-profile fields with observed, user-supplied or Vera-default basis, design tokens, implementation files, browser screenshots, model-led quality assessments, deterministic validation findings, review decisions, package hashes and visible preview or publication receipts. Professional names, portraits, contact details and other real studio information may enter the selected runtime model context when supplied or selected for the website. The workflow does not promise automatic anonymization or local-only model processing.",
+        "content": "Selected captures of an existing public website; selected source code, screenshots, studio documents, approved communications, logo, photographs, contact details, team and professional biography, verified services and qualifications, exact studio facts explicitly confirmed in conversation, supplied legal text, intended audiences, proposed sitemap, page copy, studio-profile fields with observed, user-supplied or Vera-default basis, design tokens, implementation files, browser screenshot evidence, model-led quality assessments, deterministic validation findings, review decisions, package hashes and visible preview or publication receipts. Professional names, portraits, contact details and other real studio information may enter the selected runtime model context when supplied, selected or explicitly confirmed for the website. The workflow does not promise automatic anonymization or local-only model processing.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -116,16 +116,34 @@
         "Release packaging requires current mechanical validation, a ready rendered quality assessment and accepted identity-and-claims, responsive-preview and publication-destination reviews bound to the current site digest.",
         "Use a callable connector or supported authenticated browser without reading credentials, verify the live URL after publication and bind visible evidence to the exact release package digest."
       ]
+    },
+    {
+      "id": "optional-openai-sites-build-and-hosting",
+      "kind": "send_or_publish",
+      "destination": "The exact OpenAI Sites project selected by the professional in Codex",
+      "purpose": "Build, version and deploy the accepted informational website through the selected Sites project",
+      "content": "The exact accepted public website payload and assets, a digest-only Vera release binding, Sites source commit and deployment archive, project and version identifiers, selected access level, deployed URL and desktop-and-phone deployed-page screenshots; no source evidence files, credentials, cookies, authorization headers, tokens or unrelated run artifacts",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "The preview or final route records provider sites, the exact destination and asserted user approval before any Sites handoff.",
+        "The Sites project lives in the private run, stores only project_id in hosting metadata and keeps temporary source credentials outside Vera artifacts.",
+        "The workflow builds and rehashes a deterministic website payload from the current Vera package, requires that exact payload and current binding inside the retained deployment archive, and checks that hosting metadata names the same Sites project and that the server bundle is present.",
+        "Delivery is recorded only for a succeeded version and deployment whose URL and deployment identifier match a completed desktop-and-phone browser review with retained PNG evidence. Shared or public access additionally requires explicit user approval."
+      ]
     }
   ],
   "security_controls": [
     {
       "id": "owner-controlled-private-workspace",
-      "control": "Workspace initialization requires asserted owner, retention owner, explicit user confirmation and an exact path outside a Git repository or published static/shared root. Run outputs use owner-only permissions, atomic JSON replacement and a private staging directory before the run becomes visible."
+      "control": "Workspace initialization requires asserted owner, retention owner, explicit user confirmation and an exact directory outside a Git repository or published static/shared root. Files, symlinks, filesystem roots, the home directory and non-empty unmanaged directories are rejected. Run outputs use owner-only permissions, atomic JSON replacement and a private staging directory before the run becomes visible."
     },
     {
       "id": "immutable-selected-source-snapshots",
-      "control": "Run preparation accepts only regular non-symlink selected files, copies each into the private run, records byte size and SHA-256, rejects duplicate source IDs and binds intake and source register to one digest. A public URL is not treated as captured evidence."
+      "control": "Run preparation requires at least one regular non-symlink selected file or one exact fact explicitly confirmed by the user in conversation. Files are copied into the private run and confirmed facts are serialized into immutable evidence snapshots; each records byte size and SHA-256, duplicate evidence IDs are rejected and intake plus source register are bound to one digest. Every later gate rehashes the snapshots. A public URL alone is not treated as captured evidence."
     },
     {
       "id": "model-led-design-and-fact-provenance",
@@ -133,21 +151,21 @@
     },
     {
       "id": "mechanical-site-validation",
-      "control": "The validator recomputes a complete file inventory and site digest and checks only mechanically verifiable HTML properties including metadata, one H1, alternative-text presence, duplicate IDs, local reference closure, unsafe schemes, placeholders and preview noindex posture. It records external asset dependencies as warnings rather than silently treating them as local."
+      "control": "The validator recomputes a complete file inventory and site digest and checks only mechanically verifiable properties including metadata, one H1, alternative-text presence, duplicate IDs, local reference closure, unsafe schemes, placeholders and preview indexing posture. Forms, embedded documents, iframes, remote active scripts and executable data URLs are blocked because the workflow is scoped to informational sites; passive HTTPS assets remain visible warnings."
     },
     {
       "id": "digest-bound-render-and-professional-review",
-      "control": "The model-led browser assessment must cover at least two exact viewports, bind current site and validation digests, identify its weakest element and require correction unless ready. Identity-and-claims, responsive-preview and publication-destination decisions are recorded separately against the same current site, validation and quality-assessment digests; changed site bytes invalidate stale reviews and packages."
+      "control": "The model-led browser assessment must include distinct desktop and phone viewports with retained PNG paths, hashes and verified dimensions, bind current site and validation digests, identify its weakest element and cannot be ready with viewport issues, console issues or weak or blocked dimensions. Identity-and-claims, responsive-preview and publication-destination decisions are recorded separately against the same current evidence, brief, site, validation and quality-assessment digests; any changed dependency or screenshot bytes invalidate stale reviews and packages."
     },
     {
       "id": "exact-package-and-visible-delivery-binding",
-      "control": "Preview and release packages copy exact site bytes, record every file hash and bind validation and quality-assessment digests. Preview packaging additionally requires an explicitly selected route and noindex on every HTML page; release packaging requires all current professional review scopes. Delivery recording requires the exact selected destination, user confirmation and a visible URL or provider receipt bound to the current package digest."
+      "control": "Preview and release packages reject every symlink and non-regular file, copy exact site bytes atomically, record and rehash every packaged file, and bind intake, brief, validation, quality-assessment and current review digests. Preview packaging additionally requires an explicitly selected route and noindex, nofollow and noarchive on every HTML page; release packaging rejects every preview robots directive and requires all current professional review scopes. Delivery recording revalidates the complete package, exact selected destination, non-empty user confirmation and visible URL or provider receipt. Sites deliveries additionally bind the exact website payload to the current Vera package, source commit, deployment archive, project metadata, server bundle, saved version, succeeded deployment and deployed browser evidence."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0734cff46d8939a88a825c3be2b80e357fc514ba16241d6c791b762b3be55c02"
+    "source_fingerprint": "bbdfb03f29aec8a8ec6f01f271dc70ec4b6ecf6ad1c14734d172b5b0f1434120"
   }
 }

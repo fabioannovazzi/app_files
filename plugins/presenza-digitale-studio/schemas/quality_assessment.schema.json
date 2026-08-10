@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/quality-assessment-v1.json",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/quality-assessment-v2.json",
   "title": "Rendered website quality assessment",
   "type": "object",
   "additionalProperties": false,
@@ -16,21 +16,38 @@
     "required_changes"
   ],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "site_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "validation_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "viewports": {
       "type": "array",
       "minItems": 2,
+      "uniqueItems": true,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["name", "width", "height", "full_page_reviewed", "issues"],
+        "required": [
+          "name",
+          "width",
+          "height",
+          "full_page_reviewed",
+          "screenshot_path",
+          "screenshot_sha256",
+          "issues"
+        ],
         "properties": {
           "name": {"type": "string", "minLength": 1},
           "width": {"type": "integer", "minimum": 280},
           "height": {"type": "integer", "minimum": 400},
           "full_page_reviewed": {"const": true},
+          "screenshot_path": {
+            "type": "string",
+            "pattern": "^reviews/browser/.+\\.png$"
+          },
+          "screenshot_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
           "issues": {"type": "array", "items": {"type": "string", "minLength": 1}}
         }
       }
@@ -62,6 +79,42 @@
     "verdict": {"enum": ["ready", "revise", "blocked"]},
     "required_changes": {"type": "array", "items": {"type": "string", "minLength": 1}}
   },
+  "allOf": [
+    {
+      "properties": {
+        "viewports": {
+          "allOf": [
+            {"contains": {"properties": {"width": {"maximum": 600}}}},
+            {"contains": {"properties": {"width": {"minimum": 1024}}}}
+          ]
+        }
+      }
+    },
+    {
+      "if": {"properties": {"verdict": {"const": "ready"}}},
+      "then": {
+        "properties": {
+          "required_changes": {"maxItems": 0},
+          "console_issues": {"maxItems": 0},
+          "viewports": {
+            "items": {"properties": {"issues": {"maxItems": 0}}}
+          },
+          "dimensions": {
+            "properties": {
+              "hierarchy": {"$ref": "#/$defs/readyDimension"},
+              "copy_clarity": {"$ref": "#/$defs/readyDimension"},
+              "visual_consistency": {"$ref": "#/$defs/readyDimension"},
+              "responsiveness": {"$ref": "#/$defs/readyDimension"},
+              "accessibility_signals": {"$ref": "#/$defs/readyDimension"},
+              "resilience": {"$ref": "#/$defs/readyDimension"},
+              "professional_appropriateness": {"$ref": "#/$defs/readyDimension"}
+            }
+          }
+        }
+      },
+      "else": {"properties": {"required_changes": {"minItems": 1}}}
+    }
+  ],
   "$defs": {
     "dimension": {
       "type": "object",
@@ -71,13 +124,10 @@
         "status": {"enum": ["strong", "adequate", "weak", "blocked"]},
         "rationale": {"type": "string", "minLength": 1}
       }
+    },
+    "readyDimension": {
+      "type": "object",
+      "properties": {"status": {"enum": ["strong", "adequate"]}}
     }
-  },
-  "allOf": [
-    {
-      "if": {"properties": {"verdict": {"const": "ready"}}},
-      "then": {"properties": {"required_changes": {"maxItems": 0}}},
-      "else": {"properties": {"required_changes": {"minItems": 1}}}
-    }
-  ]
+  }
 }
