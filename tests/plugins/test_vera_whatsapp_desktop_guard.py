@@ -145,11 +145,13 @@ def _run_guard(
     *,
     phone: str = "+12 345 678",
     expected_name: str = "Client Alpha",
+    reject_search_shortcut: bool = False,
 ) -> dict[str, Any]:
     scenario = {
         "states": states,
         "phone": phone,
         "expectedName": expected_name,
+        "rejectSearchShortcut": reject_search_shortcut,
     }
     source = f"""
 import {{ guardedPhoneSearch }} from {json.dumps(GUARD.as_uri())};
@@ -167,7 +169,12 @@ const sky = {{
     return {{ app: args.app, screenshot: null, text: states.shift() }};
   }},
   async click(args) {{ calls.push({{ method: "click", args }}); }},
-  async press_key(args) {{ calls.push({{ method: "press_key", args }}); }},
+  async press_key(args) {{
+    calls.push({{ method: "press_key", args }});
+    if (scenario.rejectSearchShortcut && args.key === "super+f") {{
+      throw new Error("Computer Use rejected modifier chord");
+    }}
+  }},
   async set_value(args) {{ calls.push({{ method: "set_value", args }}); }},
   async type_text(args) {{ calls.push({{ method: "type_text", args }}); }},
 }};
@@ -347,6 +354,54 @@ def test_guard_uses_the_exact_prefix_when_focus_metadata_is_absent() -> None:
     assert observed["result"]["status"] == "ready_to_open_target"
     assert observed["result"]["digitsEntered"] == len(phone_digits)
     assert observed["result"]["composerEmpty"] is True
+
+
+def test_guard_clicks_fresh_empty_search_when_shortcut_is_rejected() -> None:
+    phone_digits = "12345678"
+    states = [
+        _accessibility_state(),
+        _accessibility_state(),
+        _accessibility_state(search_focused=True),
+        *[
+            _accessibility_state(
+                search_value=phone_digits[:length],
+                search_focused=True,
+                results=length == len(phone_digits),
+            )
+            for length in range(1, len(phone_digits) + 1)
+        ],
+    ]
+
+    observed = _run_guard(states, reject_search_shortcut=True)
+
+    assert observed["result"]["status"] == "ready_to_open_target"
+    assert observed["result"]["digitsEntered"] == len(phone_digits)
+    assert observed["result"]["composerEmpty"] is True
+    assert [
+        call["args"]["element_index"]
+        for call in observed["calls"]
+        if call["method"] == "click"
+    ] == [16]
+
+
+def test_guard_stops_if_controls_change_after_shortcut_rejection() -> None:
+    states = [
+        _accessibility_state(),
+        _accessibility_state(composer_value="unexpected draft", show_send=True),
+    ]
+
+    observed = _run_guard(states, reject_search_shortcut=True)
+
+    assert observed["result"]["status"] == "blocked"
+    assert observed["result"]["reason"] == "search_focus_not_proven"
+    assert observed["result"]["digitsEntered"] == 0
+    assert observed["result"]["composerEmpty"] is False
+    assert all(call["method"] != "click" for call in observed["calls"])
+    assert all(
+        call["args"].get("key") == "super+f"
+        for call in observed["calls"]
+        if call["method"] == "press_key"
+    )
 
 
 def test_guard_verifies_more_info_before_opening_only_the_exact_chat() -> None:
