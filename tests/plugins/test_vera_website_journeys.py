@@ -809,6 +809,21 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
+def test_vera_website_section_links_the_unlisted_monica_preview() -> None:
+    preview_path = (
+        SHARED_ROOT
+        / "463b7449445ad5b75aec5107a5d74ed80f205790e3661780adca1f74dfd14407"
+        / "index.html"
+    )
+    preview_href = f"/static/shared/{preview_path.parent.name}/index.html"
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    preview = preview_path.read_text(encoding="utf-8")
+
+    assert f'href="{preview_href}"' in page
+    assert 'rel="noopener noreferrer nofollow"' in page
+    assert '<meta name="robots" content="noindex, nofollow, noarchive">' in preview
+
+
 def test_studio_archive_page_explains_documents_and_live_sources() -> None:
     page = (SHARED_ROOT / "studio-archive" / "index.html").read_text(encoding="utf-8")
     visible_keys = set(re.findall(r'data-i18n(?:-aria-label)?="([^"]+)"', page))

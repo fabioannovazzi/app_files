@@ -845,7 +845,14 @@
     .comms-boundary article + article { padding-inline: 30px 0; border-left: 1px solid var(--cyan); }
     .comms-boundary h3 { margin-bottom: 14px; font-size: 1.2rem; }
     .comms-boundary p { max-width: 54ch; color: var(--blue); }
-    .comms-action { margin-top: 34px; }
+    .comms-actions {
+      margin-top: 34px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 32px;
+      align-items: baseline;
+    }
+    .comms-actions .comms-action { margin-top: 0; }
 
     .assurance-sequence {
       display: grid;
@@ -1733,7 +1740,10 @@
           <p data-i18n="website.boundary.professional.copy">Conferma identità e claim, rivede desktop e telefono, sceglie la destinazione e autorizza l’eventuale pubblicazione.</p>
         </article>
       </div>
-      <a class="text-link comms-action" href="#installa"><span data-i18n="website.action">Lavora sulla presenza digitale con Vera</span><span aria-hidden="true">→</span></a>
+      <div class="comms-actions">
+        <a class="text-link comms-action" href="/static/shared/463b7449445ad5b75aec5107a5d74ed80f205790e3661780adca1f74dfd14407/index.html" target="_blank" rel="noopener noreferrer nofollow"><span data-i18n="website.example">Guarda un sito preparato con Vera: Monica Manfredini</span><span aria-hidden="true">↗</span></a>
+        <a class="text-link comms-action" href="#installa"><span data-i18n="website.action">Lavora sulla presenza digitale con Vera</span><span aria-hidden="true">→</span></a>
+      </div>
     </section>
 
     <section class="section-block" id="bilancio-intelligente" data-bilancio-section hidden>
@@ -2332,6 +2342,7 @@
         "website.boundary.vera.copy": "Analizza i materiali, propone struttura e sistema visivo, costruisce il sito responsive, lo valida e prepara preview o release.",
         "website.boundary.professional.title": "Il commercialista decide",
         "website.boundary.professional.copy": "Conferma identità e claim, rivede desktop e telefono, sceglie la destinazione e autorizza l’eventuale pubblicazione.",
+        "website.example": "Guarda un sito preparato con Vera: Monica Manfredini",
         "website.action": "Lavora sulla presenza digitale con Vera",
         "assurance.index": "Metodo di assurance",
         "assurance.title": "Prima il significato. Poi il calcolo.",
@@ -2564,6 +2575,7 @@
         "website.boundary.vera.copy": "Analyses the materials, proposes structure and visual system, builds the responsive website, validates it and prepares a preview or release.",
         "website.boundary.professional.title": "The accountant decides",
         "website.boundary.professional.copy": "Confirms identity and claims, reviews desktop and phone, chooses the destination and authorises any publication.",
+        "website.example": "See a website prepared with Vera: Monica Manfredini",
         "website.action": "Work on your digital presence with Vera",
         "assurance.index": "Assurance method",
         "assurance.title": "Meaning first. Calculation second.",
@@ -2796,6 +2808,7 @@
         "website.boundary.vera.copy": "Analyse les éléments, propose structure et système visuel, construit le site responsive, le valide et prépare aperçu ou version finale.",
         "website.boundary.professional.title": "L’expert-comptable décide",
         "website.boundary.professional.copy": "Confirme identité et affirmations, révise ordinateur et téléphone, choisit la destination et autorise toute publication.",
+        "website.example": "Voir un site préparé avec Vera : Monica Manfredini",
         "website.action": "Travailler sur votre présence numérique avec Vera",
         "assurance.index": "Méthode d’assurance",
         "assurance.title": "D’abord le sens. Ensuite le calcul.",
@@ -3028,6 +3041,7 @@
         "website.boundary.vera.copy": "Analysiert Materialien, schlägt Struktur und visuelles System vor, baut die responsive Website, validiert sie und bereitet Vorschau oder Release vor.",
         "website.boundary.professional.title": "Die Steuerberatung entscheidet",
         "website.boundary.professional.copy": "Bestätigt Identität und Aussagen, prüft Desktop und Smartphone, wählt das Ziel und genehmigt jede Veröffentlichung.",
+        "website.example": "Eine mit Vera erstellte Website ansehen: Monica Manfredini",
         "website.action": "Mit Vera an Ihrer digitalen Präsenz arbeiten",
         "assurance.index": "Assurance-Methode",
         "assurance.title": "Erst die Bedeutung. Dann die Berechnung.",
@@ -3260,6 +3274,7 @@
         "website.boundary.vera.copy": "Analiza los materiales, propone estructura y sistema visual, construye el sitio responsive, lo valida y prepara vista previa o versión final.",
         "website.boundary.professional.title": "El asesor decide",
         "website.boundary.professional.copy": "Confirma identidad y afirmaciones, revisa ordenador y teléfono, elige el destino y autoriza cualquier publicación.",
+        "website.example": "Ver un sitio preparado con Vera: Monica Manfredini",
         "website.action": "Trabajar en tu presencia digital con Vera",
         "assurance.index": "Método de aseguramiento",
         "assurance.title": "Primero el significado. Después el cálculo.",
