@@ -43,6 +43,18 @@
       "question": {"question_id": "Q_FIXED_ASSET_MOVEMENTS", "answer_key": "fixed_asset_movements", "title": "Fixed-asset movements and impairment", "requested_fields": [{"key": "register_complete", "type": "boolean"}], "evidence_requested": "Fixed-asset register and ledger detail"}
     },
     {
+      "id": "IT.OIC.INVENTORIES",
+      "category": "inventories_valuation_and_obsolescence",
+      "forms": ["ORDINARY", "ABBREVIATED", "MICRO"],
+      "trigger": {"kind": "SCHEDULE_TYPE", "schedule_type": "INVENTORIES"},
+      "requirements": [{"kind": "SCHEDULE", "key": "INVENTORIES"}, {"kind": "NARRATIVE_SECTION", "key": "ASSETS"}],
+      "severity_if_missing": "BLOCKER",
+      "note_section": "ASSETS",
+      "legal_references": ["Applicable Civil Code inventory valuation and disclosure requirements"],
+      "oic_references": ["OIC 13"],
+      "question": {"question_id": "Q_INVENTORIES", "answer_key": "inventories_review", "title": "Inventory movements and valuation evidence", "requested_fields": [{"key": "inventory_classes", "type": "structured_table"}, {"key": "costing_methods", "type": "structured_table"}, {"key": "nrv_and_obsolescence_assessments", "type": "structured_table"}, {"key": "count_and_pledge_evidence", "type": "structured_table"}], "evidence_requested": "Inventory ledger, count or alternative procedures, costing records, net-realisable-value and obsolescence assessments, and pledge evidence"}
+    },
+    {
       "id": "IT.CC.RECEIVABLES_MATURITY",
       "category": "receivables_maturity_geography",
       "forms": ["ORDINARY", "ABBREVIATED"],

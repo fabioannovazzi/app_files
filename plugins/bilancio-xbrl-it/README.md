@@ -161,6 +161,11 @@ rejects concepts outside the table, and requires every remaining cell to carry
 an explicit reviewed omission reason. A table policy cannot omit every cell.
 The payable template includes a separately evidenced `secured_amount`, which
 must be from zero through the row closing balance.
+The inventory template reconciles opening and closing classes through reviewed
+increases, decreases, reclassifications, write-downs, reversals, and other
+movements. Costing method, valuation basis, net-realisable-value,
+obsolescence, count evidence, and pledged-stock status are required
+professional inputs; the engine checks their presence but does not infer them.
 
 Cases default to Italian output (`output_language: "it"`) and may explicitly
 select English (`"en"`). Accepted narrative blocks and taxonomy text facts must
@@ -284,8 +289,8 @@ python scripts/audit_schedule_taxonomy.py \
 ```
 
 This verifies the effective adapter pack against the official presentation
-graph for fixed assets, receivables, payables, equity, provisions, TFR, taxes,
-and guarantees/commitments. Reportable item descendants retain their exact
+graph for fixed assets, inventories, receivables, payables, equity, provisions,
+TFR, taxes, and guarantees/commitments. Reportable item descendants retain their exact
 role, root, and tuple path so repeated table rows are not flattened into
 duplicate facts. It proves structural concept eligibility, not the professional
 classification of an arbitrary client schedule.

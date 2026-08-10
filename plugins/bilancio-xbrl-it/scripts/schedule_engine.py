@@ -25,6 +25,7 @@ __all__ = [
 
 SCHEDULE_TYPES = {
     "FIXED_ASSETS",
+    "INVENTORIES",
     "RECEIVABLES",
     "PAYABLES",
     "EQUITY",
@@ -82,6 +83,16 @@ RECEIVABLE_ALLOWANCE_FIELDS = (
     "allowance_other_movements",
     "allowance_closing",
 )
+INVENTORY_FIELDS = (
+    "opening_amount",
+    "increases",
+    "decreases",
+    "reclassifications",
+    "write_downs",
+    "write_down_reversals",
+    "other_movements",
+    "closing_amount",
+)
 MOVEMENT_FIELDS = (
     "opening_amount",
     "additions",
@@ -117,6 +128,15 @@ TAX_FIELDS = (
 )
 SCHEDULE_TEXT_FIELDS = {
     "FIXED_ASSETS": ("asset_class", "ownership_status", "pledged_status"),
+    "INVENTORIES": (
+        "inventory_class",
+        "valuation_basis",
+        "costing_method",
+        "nrv_assessment_status",
+        "obsolescence_assessment_status",
+        "count_evidence_status",
+        "pledged_status",
+    ),
     "RECEIVABLES": (
         "receivable_class",
         "geography",
@@ -164,6 +184,8 @@ def schedule_template_fields(schedule_type: str) -> tuple[str, ...]:
     normalized = schedule_type.upper()
     if normalized == "FIXED_ASSETS":
         return FIXED_ASSET_FIELDS
+    if normalized == "INVENTORIES":
+        return INVENTORY_FIELDS
     if normalized == "RECEIVABLES":
         return (*MATURITY_FIELDS, *RECEIVABLE_ALLOWANCE_FIELDS)
     if normalized == "PAYABLES":
@@ -538,6 +560,58 @@ def _movement(
     return normalized
 
 
+def _inventories(
+    rows: Sequence[Mapping[str, Any]], issues: list[dict[str, str]]
+) -> list[dict[str, Any]]:
+    """Validate reviewer-classified inventory movements and valuation evidence."""
+
+    normalized = [
+        _normalize_row(row, INVENTORY_FIELDS, "INVENTORIES", issues) for row in rows
+    ]
+    unsigned_fields = (
+        "opening_amount",
+        "increases",
+        "decreases",
+        "write_downs",
+        "write_down_reversals",
+        "closing_amount",
+    )
+    for row in normalized:
+        value = lambda field: _decimal(row[field], field)
+        if any(value(field) < 0 for field in unsigned_fields):
+            raise ValueError(
+                "Inventory balance and directional movements must not be negative"
+            )
+        calculated = (
+            value("opening_amount")
+            + value("increases")
+            - value("decreases")
+            + value("reclassifications")
+            - value("write_downs")
+            + value("write_down_reversals")
+            + value("other_movements")
+        )
+        if calculated != value("closing_amount"):
+            issues.append(
+                {
+                    "rule_id": "SCHEDULE.INVENTORIES_MOVEMENT",
+                    "row_id": row["row_id"],
+                }
+            )
+    if (
+        sum(
+            (
+                _decimal(row["reclassifications"], "reclassifications")
+                for row in normalized
+            ),
+            Decimal("0"),
+        )
+        != 0
+    ):
+        issues.append({"rule_id": "SCHEDULE.RECLASSIFICATIONS_NET_ZERO", "row_id": "*"})
+    return normalized
+
+
 def _cash_flow(
     payload: Mapping[str, Any],
     statement_facts: Sequence[Mapping[str, Any]],
@@ -672,6 +746,10 @@ def normalize_schedule(
                         "row_id": "*",
                     }
                 )
+        elif schedule_type == "INVENTORIES":
+            normalized_rows = _inventories(rows, issues)
+            closing_field = "closing_amount"
+            opening_field = "opening_amount"
         elif schedule_type in {"RECEIVABLES", "PAYABLES"}:
             normalized_rows = _maturity(rows, schedule_type, issues)
             closing_field = "closing_amount"
