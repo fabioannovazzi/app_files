@@ -476,6 +476,88 @@ def test_payable_schedule_rejects_secured_amount_above_closing_balance() -> None
     }
 
 
+def test_inventory_schedule_rejects_movement_mismatch_and_negative_direction() -> None:
+    row = {
+        field: "0" for field in schedule_engine.schedule_template_fields("INVENTORIES")
+    }
+    row.update(
+        {
+            "row_id": "goods",
+            "source_refs": ["inventory_ledger_1"],
+            "evidence_status": "OBSERVED",
+            "opening_amount": "10",
+            "closing_amount": "11",
+            "inventory_class": "GOODS",
+            "valuation_basis": "LOWER_OF_COST_AND_NRV",
+            "costing_method": "FIFO",
+            "nrv_assessment_status": "REVIEWED",
+            "obsolescence_assessment_status": "REVIEWED",
+            "count_evidence_status": "ALTERNATIVE_PROCEDURES_RECONCILED",
+            "pledged_status": "NOT_PLEDGED_CONFIRMED",
+        }
+    )
+    payload = {
+        "schedule_id": "inventories_1",
+        "schedule_type": "INVENTORIES",
+        "statement_line": "INVENTORY",
+        "rows": [row],
+    }
+    statement_facts = [
+        {"canonical_line": "INVENTORY", "current_value": "11", "prior_value": "10"}
+    ]
+
+    result = schedule_engine.normalize_schedule(payload, statement_facts)
+
+    assert result["status"] == "INCOMPLETE"
+    assert result["issues"] == [
+        {"rule_id": "SCHEDULE.INVENTORIES_MOVEMENT", "row_id": "goods"}
+    ]
+    row["increases"] = "1"
+    row["write_downs"] = "-1"
+    with pytest.raises(ValueError, match="must not be negative"):
+        schedule_engine.normalize_schedule(payload, statement_facts)
+
+
+def test_inventory_schedule_exposes_monetary_and_professional_review_cells() -> None:
+    row = {
+        field: "0" for field in schedule_engine.schedule_template_fields("INVENTORIES")
+    }
+    row.update(
+        {
+            "row_id": "goods",
+            "source_refs": ["inventory_ledger_1"],
+            "evidence_status": "OBSERVED",
+            "opening_amount": "10",
+            "closing_amount": "10",
+            "inventory_class": "GOODS",
+            "valuation_basis": "LOWER_OF_COST_AND_NRV",
+            "costing_method": "FIFO",
+            "nrv_assessment_status": "REVIEWED",
+            "obsolescence_assessment_status": "REVIEWED",
+            "count_evidence_status": "COUNT_RECONCILED",
+            "pledged_status": "NOT_PLEDGED_CONFIRMED",
+        }
+    )
+    schedule = schedule_engine.normalize_schedule(
+        {
+            "schedule_id": "inventories_1",
+            "schedule_type": "INVENTORIES",
+            "statement_line": "INVENTORY",
+            "rows": [row],
+        },
+        [{"canonical_line": "INVENTORY", "current_value": "10", "prior_value": "10"}],
+    )
+
+    records = schedule_engine.schedule_adapter_records(schedule)
+
+    assert len(records) == 15
+    assert {item["fact_type"] for item in records} == {"MONETARY", "TEXT"}
+    assert {item["key"] for item in records} == {
+        *schedule_engine.schedule_template_fields("INVENTORIES"),
+        *schedule_engine.schedule_template_text_fields("INVENTORIES"),
+    }
+
+
 def test_schedule_taxonomy_audit_reports_missing_configured_families() -> None:
     catalogue = _catalogue()
     ordinary_relationships = list(catalogue["relationships"]["presentation"])

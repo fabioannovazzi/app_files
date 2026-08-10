@@ -3119,6 +3119,105 @@ def test_fixed_asset_schedule_reconciles_components_and_movements(
     assert result["schedules"][0]["status"] == "COMPLETE"
 
 
+def test_inventory_schedule_reconciles_movements_and_requires_valuation_evidence(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    payload = {
+        "schedule_id": "inventories",
+        "schedule_type": "INVENTORIES",
+        "statement_line": "SP.ATTIVO.CASSA",
+        "rows": [
+            {
+                "row_id": "finished_goods",
+                "source_refs": ["inventory_ledger_1", "count_report_1"],
+                "evidence_status": "USER_CONFIRMED",
+                "opening_amount": "90",
+                "increases": "20",
+                "decreases": "5",
+                "reclassifications": "0",
+                "write_downs": "3",
+                "write_down_reversals": "0",
+                "other_movements": "-2",
+                "closing_amount": "100",
+                "inventory_class": "FINISHED_GOODS",
+                "valuation_basis": "LOWER_OF_COST_AND_NRV",
+                "costing_method": "WEIGHTED_AVERAGE",
+                "nrv_assessment_status": "REVIEWED",
+                "obsolescence_assessment_status": "REVIEWED",
+                "count_evidence_status": "COUNT_RECONCILED",
+                "pledged_status": "NOT_PLEDGED_CONFIRMED",
+            }
+        ],
+    }
+
+    result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
+    result = xbrl_case.activate_disclosures(
+        result,
+        _disclosure_rule_pack(),
+        "preparer_1",
+        result["revision_id"],
+    )
+
+    assert result["schedules"][0]["status"] == "COMPLETE"
+    assert len(xbrl_case.schedule_fact_records(result["schedules"][0])) == 8
+    inventory_coverage = next(
+        item
+        for item in result["disclosure_coverage"]["coverage"]
+        if item["rule_id"] == "IT.OIC.INVENTORIES"
+    )
+    assert inventory_coverage["triggered"] is True
+    assert inventory_coverage["requirements"] == [
+        {"kind": "SCHEDULE", "key": "INVENTORIES", "complete": True},
+        {"kind": "NARRATIVE_SECTION", "key": "ASSETS", "complete": False},
+    ]
+
+
+def test_inventory_schedule_keeps_unknown_professional_assessment_open(
+    tmp_path: Path,
+) -> None:
+    case = _prepared_case(tmp_path)
+    payload = {
+        "schedule_id": "inventories",
+        "schedule_type": "INVENTORIES",
+        "statement_line": "SP.ATTIVO.CASSA",
+        "rows": [
+            {
+                "row_id": "raw_materials",
+                "source_refs": ["inventory_ledger_1"],
+                "evidence_status": "USER_CONFIRMED",
+                "opening_amount": "90",
+                "increases": "10",
+                "decreases": "0",
+                "reclassifications": "0",
+                "write_downs": "0",
+                "write_down_reversals": "0",
+                "other_movements": "0",
+                "closing_amount": "100",
+                "inventory_class": "RAW_MATERIALS",
+                "valuation_basis": "LOWER_OF_COST_AND_NRV",
+                "costing_method": "FIFO",
+                "nrv_assessment_status": "UNKNOWN",
+                "obsolescence_assessment_status": "REVIEWED",
+                "count_evidence_status": "COUNT_RECONCILED",
+                "pledged_status": "NOT_PLEDGED_CONFIRMED",
+            }
+        ],
+    }
+
+    result = xbrl_case.record_schedule(case, payload, "preparer_1", case["revision_id"])
+
+    schedule = result["schedules"][0]
+    assert schedule["status"] == "INCOMPLETE"
+    assert schedule["issues"] == [
+        {
+            "rule_id": "SCHEDULE.INVENTORIES.NRV_ASSESSMENT_STATUS_REQUIRED",
+            "row_id": "raw_materials",
+            "field": "nrv_assessment_status",
+        }
+    ]
+
+
 @pytest.mark.parametrize("schedule_type", ["PROVISIONS", "TFR"])
 def test_provision_and_tfr_schedules_reconcile_exact_movements(
     tmp_path: Path, schedule_type: str

@@ -13,6 +13,12 @@
           "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
         ]
       },
+      "INVENTORIES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniRimanenzeProspetto"
+        ]
+      },
       "RECEIVABLES": {
         "strategy": "TABLE_FACTS",
         "table_roots": [
@@ -67,6 +73,12 @@
           "itcc-ci:AnalisiMovimentiImmobilizzazioniMaterialiProspetto"
         ]
       },
+      "INVENTORIES": {
+        "strategy": "TABLE_FACTS",
+        "table_roots": [
+          "itcc-ci:AnalisiVariazioniRimanenzeProspetto"
+        ]
+      },
       "RECEIVABLES": {
         "strategy": "TABLE_FACTS",
         "table_roots": [
@@ -114,6 +126,7 @@
     },
     "MICRO": {
       "FIXED_ASSETS": {"strategy": "TEXT_ONLY", "table_roots": []},
+      "INVENTORIES": {"strategy": "TEXT_ONLY", "table_roots": []},
       "RECEIVABLES": {"strategy": "TEXT_ONLY", "table_roots": []},
       "PAYABLES": {"strategy": "TEXT_ONLY", "table_roots": []},
       "EQUITY": {"strategy": "TEXT_ONLY", "table_roots": []},

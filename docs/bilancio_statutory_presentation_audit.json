@@ -8,7 +8,7 @@
   "forms": [
     {
       "form": "ABBREVIATED",
-      "inventory_sha256": "cf1e366fd25a00c255f2a723b4cc54559f6453e22ca3c0e14c3d198e140dbeb2",
+      "inventory_sha256": "4d25cea67ce309a6a50730cf241f0aa83c0fe4a71c9ef748ab43e38ab2376aed",
       "roles": [
         {
           "kind": "BALANCE_SHEET",
@@ -51,7 +51,7 @@
         "instance_file": "controlled-complete-abbreviated.xbrl",
         "instance_sha256": "6e6110bec4b3a6c8b508e97e8854de39a96de3f39e47fb4e1cdb74f5d762133e",
         "validation_report_file": "controlled-complete-abbreviated.json",
-        "validation_report_sha256": "0e42559e3d0f9813ecaf3629304585ec1805510cb717698e0acf2e9939390bdc",
+        "validation_report_sha256": "d16c03b50a751987e37eb8e308abacad14dedef91bf383ccbe67a7db54952eca",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -59,7 +59,7 @@
     },
     {
       "form": "MICRO",
-      "inventory_sha256": "5c4816c00e2d4fbccdbcab45190baaca05eed7a811788f841ea73bde923e0693",
+      "inventory_sha256": "c90c8d924d0e162ba833a612d0f0d7bf43ba7997a94f95e07f8fbdaac3c69595",
       "roles": [
         {
           "kind": "BALANCE_SHEET",
@@ -102,7 +102,7 @@
         "instance_file": "controlled-complete-micro.xbrl",
         "instance_sha256": "3877f5419b0c5a6635a11111b8849e49a4d7cc63927f89d3019af7b84901a80c",
         "validation_report_file": "controlled-complete-micro.json",
-        "validation_report_sha256": "5c4d2955045df2c3840e369cf4b1570801aad888a5e1d949102a4146250e9eec",
+        "validation_report_sha256": "77eb205d8c59bf68fd900f8f91a6b924018936627823413220609b087cef5bcd",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
@@ -110,7 +110,7 @@
     },
     {
       "form": "ORDINARY",
-      "inventory_sha256": "43c850ac430ba323648ad8d79ad28f76a1e2d7fd811026874710e229cd2b7590",
+      "inventory_sha256": "25dd70d2394ab3e4a2e9103b9bfd793da540f19775ea2b08a1e3382c7f5d2757",
       "roles": [
         {
           "kind": "BALANCE_SHEET",
@@ -165,14 +165,14 @@
         "instance_file": "controlled-complete-ordinary.xbrl",
         "instance_sha256": "0482337f9499970ff27cede24d1106e513a75f7cf40887a01a72795f99a4d443",
         "validation_report_file": "controlled-complete-ordinary.json",
-        "validation_report_sha256": "53f19b581fefb8c1b9891550d817b54d7bb3decfc53bc21e73ab51dc1299fb3e",
+        "validation_report_sha256": "76d25f1efab70501f6ee96a1a36b626e2c51aa10559f607bf6bd19416cdfa9e2",
         "processor": "arelle-release",
         "message_count": 2,
         "error_messages": []
       }
     }
   ],
-  "report_sha256": "6dba7c8044852cf319de60f73aff67ad943c4360a20e9844ab3d5b8c791eb637",
+  "report_sha256": "800cf36f962347748e0624c115de2f92d52f62822de86e9b0049fbbcaf134555",
   "catalogue_file_sha256": "0699148330d4d905b85649a558efe94d1c0e40fcaea5c16d988f1699b9ffc30f",
-  "rule_pack_file_sha256": "6a58a1fd61f6327c9a21c57de765a0f66e6485f3359bb9dd9d288f1362bc3e0d"
+  "rule_pack_file_sha256": "d7d8b189b36a5177c24954a1956253b89f9b14d2d39fbd0174b9a5df4a73b857"
 }

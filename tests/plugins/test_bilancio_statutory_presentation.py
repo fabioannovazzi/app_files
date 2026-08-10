@@ -218,7 +218,12 @@ def _created_case(tmp_path: Path) -> dict[str, object]:
     return case
 
 
-def test_complete_leaf_facts_derive_official_calculation_total() -> None:
+@pytest.mark.parametrize("schedule_type", ["FIXED_ASSETS", "INVENTORIES"])
+def test_complete_leaf_facts_derive_official_calculation_total(
+    schedule_type: str,
+) -> None:
+    rule_pack = deepcopy(_presentation_rule_pack())
+    rule_pack["schedule_trigger_roots"] = {schedule_type: ["itcc:A"]}
     result = statutory_presentation.build_statutory_presentation_coverage(
         _coverage_case(
             _fact("itcc:A", "100", "90"),
@@ -227,7 +232,7 @@ def test_complete_leaf_facts_derive_official_calculation_total() -> None:
             prior_total="80",
         ),
         _catalogue(),
-        _presentation_rule_pack(),
+        rule_pack,
         [],
         "reviewer_1",
     )
@@ -260,7 +265,7 @@ def test_complete_leaf_facts_derive_official_calculation_total() -> None:
     ]
     assert result["derived_schedule_triggers"] == [
         {
-            "schedule_type": "FIXED_ASSETS",
+            "schedule_type": schedule_type,
             "basis": "OFFICIAL_TAXONOMY_CALCULATION_DESCENDANT",
             "fact_refs": ["itcc_A"],
             "xbrl_concepts": ["itcc:A"],

@@ -91,9 +91,11 @@
   validation and rendering until coverage is complete. The controlled official
   catalogue audit closed 87 abbreviated, 84 micro, and 224 ordinary unique
   leaves and all three complete-form instances passed pinned offline Arelle.
-- Explicit fixed-asset, receivable, payable, equity, provision, TFR, tax, and
-  guarantees/commitments schedule contracts with exact movement, maturity,
-  opening/closing, reclassification, and statement reconciliation checks.
+- Explicit fixed-asset, inventory, receivable, payable, equity, provision, TFR,
+  tax, and guarantees/commitments schedule contracts with exact movement,
+  maturity, opening/closing, reclassification, and statement reconciliation
+  checks. Inventory rows separately retain professional costing-method,
+  net-realisable-value, obsolescence, count, and pledged-stock conclusions.
 - A checksum-locked schedule-to-taxonomy adapter derives the selected form's
   permitted note-table concepts from the official presentation graph. A
   professional records an exact disposition for every stable schedule cell;
@@ -200,9 +202,9 @@
   package; all three passed the pinned Arelle validator. See
   `taxonomy-spike.md` for the reproducible evidence and remaining gates.
 - A checked official schedule-taxonomy audit binds the adapter policy to the
-  locked package and catalogue. It found 623 permitted ordinary and 453
-  permitted abbreviated monetary table concepts across the eight non-cash
-  schedule families, while all eight micro families are explicitly
+  locked package and catalogue. It found 635 permitted ordinary and 465
+  permitted abbreviated monetary table concepts across the nine non-cash
+  schedule families, while all nine micro families are explicitly
   `TEXT_ONLY`. See `docs/bilancio_schedule_taxonomy_audit.json` at the
   repository root.
 - A checked-in 24-case synthetic regression register covers every scenario in
@@ -212,9 +214,10 @@
   contracts. All twenty XBRL cases traverse the public lifecycle, complete
   selected-form presentation and disclosure coverage, and bind approval to a
   passing local processor result. Every ordinary case reconciles its reviewed
-  cash-flow schedule to the statutory XBRL root. All eight non-cash schedule
-  families exercise a complete adapter disposition in the relevant golden
-  cases and emit representative official schedule facts. The run records exact
+  cash-flow schedule to the statutory XBRL root. The eight non-cash families
+  present when the controlled suite was recorded exercise a complete adapter
+  disposition and emit representative official schedule facts; inventory has
+  separate contract, disclosure, and official-catalogue audit tests. The run records exact
   suite, catalogue, package, rule-pack, instance, and report checksums and
   explicitly leaves TEBENI as a user-controlled open gate. Golden case 5 is a
   true first-year instance with a current-only source file and no comparative

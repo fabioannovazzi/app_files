@@ -22,7 +22,7 @@
       {
         "id": "annual-accounts-evidence",
         "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
-        "content": "User instructions; entity profile and tax identifier; CSV/XLSX and readable/scanned PDF trial balances and account descriptions; bounded PDF extraction candidates, page/table/cell geometry, OCR text and confidence, proposed headers, professional corrections and exclusions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
+        "content": "User instructions; entity profile and tax identifier; CSV/XLSX and readable/scanned PDF trial balances and account descriptions; bounded PDF extraction candidates, page/table/cell geometry, OCR text and confidence, proposed headers, professional corrections and exclusions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, inventory ledger, count, costing, net-realisable-value, obsolescence and pledged-stock, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -124,7 +124,7 @@
     },
     {
       "id": "schedule-evidence-integrity",
-      "control": "Movement and cash-flow schedules accept only normalized decimal fields with observed or user-confirmed source references; exact opening, closing, maturity, secured-payable, movement, statement, reclassification, and cash-change failures remain blocking instead of being repaired by assumptions."
+      "control": "Movement and cash-flow schedules accept only normalized decimal fields with observed or user-confirmed source references; exact opening, closing, maturity, secured-payable, inventory movement, statement, reclassification, and cash-change failures remain blocking instead of being repaired by assumptions. Inventory costing method, valuation basis, net-realisable-value, obsolescence, count evidence, and pledged-stock status remain professional evidence and cannot be inferred by the deterministic engine."
     },
     {
       "id": "schedule-taxonomy-adapter-boundary",
@@ -195,6 +195,6 @@
     "reviewed_at": "2026-08-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "a23a968b3da36563d2b25e962fdf7edd4915d683bc48d4b3a870debcb33d5270"
+    "source_fingerprint": "9e2d6cdf087c78749ea4ae605667252786802d5310206a86dbca24fe5dcd4f90"
   }
 }
