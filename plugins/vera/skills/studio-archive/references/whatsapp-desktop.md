@@ -61,9 +61,12 @@ community, channel, broadcast, or ambiguous searches.
 4. Call `guardedPhoneSearch({sky, confirmedPhone, expectedChatName})`. The guard
    receives the exact confirmed international phone number, reads a fresh
    accessibility snapshot before every action, and
-   requests the known chat-list Search control with Command-F, re-resolves and
-   clicks that exact indexed control, and enters the normalized phone one digit
-   at a time with `press_key`. When accessibility reports focus, it must name
+   attempts to request the known chat-list Search control with Command-F. If
+   Computer Use rejects that modifier chord, it continues only after a fresh
+   full snapshot still proves one empty Search, one empty composer, and no send
+   control. It then re-resolves and clicks that exact indexed Search control and
+   enters the normalized phone one digit at a time with `press_key`. When
+   accessibility reports focus, it must name
    that Search control; when WhatsApp omits focus metadata, the first single
    digit is the bounded destination proof. A fresh full snapshot after every
    digit must show the exact expected Search prefix, an empty composer, and no

@@ -314,7 +314,8 @@ export async function guardedPhoneSearch({
   try {
     await sky.press_key({ app, key: "super+f" });
   } catch {
-    return response("blocked", { reason: "search_shortcut_failed" });
+    // Some Computer Use builds reject modifier chords. The fresh empty-control
+    // checks and exact indexed click below mechanically preserve safe routing.
   }
   state = await readFullState(sky, app);
   if (!state) {

@@ -449,9 +449,12 @@ local WhatsApp Desktop application on the same computer.
    `scripts/whatsapp_desktop_guard.mjs` from this module in the same persistent
    `node_repl` session as Computer Use. Require one empty known chat-list Search
    control, one empty composer, and no send control before entering anything.
-3. Call `guardedPhoneSearch({sky, confirmedPhone, expectedChatName})`. It uses
-   Command-F, re-resolves and clicks the exact indexed Search control, and
-   enters one phone digit at a time with `press_key`. If focus metadata is
+3. Call `guardedPhoneSearch({sky, confirmedPhone, expectedChatName})`. It
+   attempts Command-F. If Computer Use rejects that modifier chord, the guard
+   continues only after a fresh full snapshot still proves one empty Search,
+   one empty composer, and no send control. It then re-resolves and clicks the
+   exact indexed Search control and enters one phone digit at a time with
+   `press_key`. If focus metadata is
    exposed, it must name Search; if WhatsApp omits it, the first single digit is
    the bounded destination proof. Refresh full accessibility state after every
    digit. Never use `type_text`, paste, dictation, coordinates, or a full-phone
