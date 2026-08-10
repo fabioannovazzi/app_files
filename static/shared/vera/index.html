@@ -235,6 +235,42 @@
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
 
+    .module-row[data-vera-workflow="new-client"] { align-items: start; }
+    .module-row[data-vera-workflow="new-client"] h3 { grid-column: 1; grid-row: 1 / span 2; }
+    .module-row[data-vera-workflow="new-client"] > p { grid-column: 2; grid-row: 1; }
+    .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 3; grid-row: 1 / span 2; }
+    .module-row__included {
+      grid-column: 2;
+      grid-row: 2;
+      padding-top: 14px;
+      border-top: 1px solid var(--cyan);
+    }
+    .module-row__included-label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+    .module-row__included ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px 0;
+      margin: 0;
+      padding: 0;
+      color: var(--blue);
+      list-style: none;
+    }
+    .module-row__included li { display: inline-flex; align-items: center; }
+    .module-row__included li + li::before {
+      content: "·";
+      margin: 0 9px;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
     .bilancio-head {
       align-items: start;
       margin-bottom: clamp(48px, 7vw, 76px);
@@ -1254,6 +1290,10 @@
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
+      .module-row[data-vera-workflow="new-client"] h3 { grid-column: 1; grid-row: 1; }
+      .module-row[data-vera-workflow="new-client"] > p { grid-column: 1; grid-row: 2; }
+      .module-row[data-vera-workflow="new-client"] .module-row__included { grid-column: 1; grid-row: 3; }
+      .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
       .overview-video { grid-template-columns: 1fr; }
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
       .video-library { grid-template-columns: 1fr; }
@@ -1376,17 +1416,40 @@
             <p data-i18n="stream.clients.copy">Dalla corrispondenza e dai documenti ricevuti a un fascicolo operativo riutilizzabile.</p>
           </header>
           <div class="module-directory">
-            <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link>
+            <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
               <h3 data-i18n="module.newClient.title">Nuovo cliente</h3>
               <p data-i18n="module.newClient">Dalla cartella ricevuta al fascicolo operativo: documenti, anagrafica, incarico, privacy, AML e monitoraggio in un solo percorso.</p>
+              <div class="module-row__included">
+                <span class="module-row__included-label" data-i18n="module.newClient.includesLabel">Funzioni incluse</span>
+                <ul>
+                  <li data-vera-subordinate-workflow="dati-fiscali-strutturati" data-i18n="module.newClient.includes.data">Dati fiscali strutturati</li>
+                  <li data-vera-subordinate-workflow="email-cliente" data-i18n="module.newClient.includes.email">Email al cliente</li>
+                  <li data-vera-subordinate-workflow="fatture-xml-check" data-i18n="module.newClient.includes.xml" data-jurisdiction-item="it" hidden>Controllo FatturaPA XML</li>
+                </ul>
+              </div>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link>
+            <a class="module-row" href="../new-client/index.html#file-preparation" data-module-link data-vera-workflow="avviso-intake">
+              <h3 data-i18n="module.notice.title">Istruttoria avviso</h3>
+              <p data-i18n="module.notice">Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
+              <h3>Previdenza INPS</h3>
+              <p>Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
+              <h3>Registro Imprese e SARI</h3>
+              <p>Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
               <h3 data-i18n="module.archiveOrganization.title">Riordino dell’archivio</h3>
               <p data-i18n="module.archiveOrganization">Analizza una cartella cliente locale o su Google Workspace e propone categorie, nomi, spostamenti, duplicati e anomalie. Il collaboratore approva prima di ogni modifica; Vera registra ciò che applica e può ripristinarlo.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link>
+            <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
               <h3 data-i18n="module.archive.title">Archivio dello studio</h3>
               <p data-i18n="module.archive">Trova la corrispondenza e le evidenze di un cliente. Gmail collegato può funzionare in ChatGPT o Codex; WhatsApp Desktop e le cartelle locali o Google Workspace richiedono Codex.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1401,42 +1464,42 @@
             <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.</p>
           </header>
           <div class="module-directory">
-            <a class="module-row" href="../journal-sampling/index.html" data-module-link>
+            <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
               <h3 data-i18n="module.sampling.title">Campionamento del giornale</h3>
               <p data-i18n="module.sampling">Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../check-entries/index.html#journey" data-module-link>
+            <a class="module-row" href="../check-entries/index.html#journey" data-module-link data-vera-workflow="check-entries">
               <h3 data-i18n="module.entries.title">Controllo scritture</h3>
               <p data-i18n="module.entries">Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link>
+            <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
               <h3 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h3>
               <p data-i18n="module.bank">Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link>
+            <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link data-vera-workflow="audit-reconciliation">
               <h3 data-i18n="module.reconciliation.title">Riconciliazione partite</h3>
               <p data-i18n="module.reconciliation">Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link>
+            <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
               <h3 data-i18n="module.plan.title">Plan</h3>
               <p data-i18n="module.plan">Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="variance-analysis" href="index.html#analisi-scostamenti" data-module-link>
+            <a class="module-row" id="variance-analysis" href="index.html#analisi-scostamenti" data-module-link data-vera-workflow="variance-analysis">
               <h3 data-i18n="module.variance.title">Analisi degli scostamenti</h3>
               <p data-i18n="module.variance">Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
+            <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
               <h3>Bilancio intelligente</h3>
               <p>Da CSV, Excel o PDF riveduti a prospetti, nota integrativa e XBRL, con mappature, domande e decisioni professionali visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link>
+            <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
               <h3 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h3>
               <p data-i18n="module.financialAnalysis">Prepara analisi contabili e financial due diligence: conto economico mensile, capitale circolante, concentrazione clienti, adjusted EBITDA, PFN, Capex e bridge di transazione, con evidenze riconciliate e riproducibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1451,32 +1514,37 @@
             <p data-i18n="stream.outputs.copy">Dalle fonti al report, dal quesito alla validazione.</p>
           </header>
           <div class="module-directory">
-            <a class="module-row" href="index.html#bandi-agevolazioni" data-module-link data-native-language="it" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
+            <a class="module-row" href="index.html#bandi-agevolazioni" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
               <h3>Bandi e agevolazioni</h3>
               <p>Dal radar privato delle opportunità al dossier del cliente, con fonti ufficiali, evidenze, revisioni e limiti visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="professional-communication" href="index.html#comunicazione-professionale" data-module-link>
+            <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
+              <h3>Concordato Preventivo</h3>
+              <p>Riesamina procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte. Il tie-out numerico resta un’appendice opzionale.</p>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="professional-communication" href="index.html#comunicazione-professionale" data-module-link data-vera-workflow="comunicazione-professionale">
               <h3 data-i18n="module.communication.title">Comunicazione professionale</h3>
               <p data-i18n="module.communication">Decide se una novità merita davvero di essere comunicata e prepara email, articoli, post e visuali nel formato approvato dello Studio.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="studio-website" href="index.html#presenza-digitale-studio" data-module-link>
+            <a class="module-row" id="studio-website" href="index.html#presenza-digitale-studio" data-module-link data-vera-workflow="presenza-digitale-studio">
               <h3 data-i18n="module.website.title">Presenza digitale dello studio</h3>
               <p data-i18n="module.website">Rinnova il sito esistente o ne prepara uno iniziale dai materiali verificati, con preview responsive e pubblicazione subordinata all’approvazione.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../report-builder/index.html" data-module-link>
+            <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
               <h3 data-i18n="module.report.title">Genera report</h3>
               <p data-i18n="module.report">Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../prompt-optimizer/index.html" data-module-link>
+            <a class="module-row" href="../prompt-optimizer/index.html" data-module-link data-vera-assurance-workflow="prompt-optimizer">
               <h3 data-i18n="module.prompt.title">Ottimizza prompt</h3>
               <p data-i18n="module.prompt">Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../deep-research-validator/index.html" data-module-link>
+            <a class="module-row" href="../deep-research-validator/index.html" data-module-link data-vera-assurance-workflow="deep-research-validator">
               <h3 data-i18n="module.research.title">Valida Deep Research</h3>
               <p data-i18n="module.research">Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -2231,7 +2299,7 @@
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
         "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
-        "work.index": "Diciotto funzioni",
+        "work.index": "Tutte le funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area di lavoro 1 di 3",
@@ -2247,6 +2315,12 @@
         "stream.research.copy": "Dal quesito iniziale a una base di ricerca controllabile.",
         "module.newClient.title": "Nuovo cliente",
         "module.newClient": "Dalla cartella ricevuta al fascicolo operativo: documenti, anagrafica, incarico, privacy, AML e monitoraggio in un solo percorso.",
+        "module.newClient.includesLabel": "Funzioni incluse",
+        "module.newClient.includes.data": "Dati fiscali strutturati",
+        "module.newClient.includes.email": "Email al cliente",
+        "module.newClient.includes.xml": "Controllo FatturaPA XML",
+        "module.notice.title": "Istruttoria avviso",
+        "module.notice": "Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.",
         "module.archiveOrganization.title": "Riordino dell’archivio",
         "module.archiveOrganization": "Analizza una cartella cliente locale o su Google Workspace e propone categorie, nomi, spostamenti, duplicati e anomalie. Il collaboratore approva prima di ogni modifica; Vera registra ciò che applica e può ripristinarlo.",
         "module.archive.title": "Archivio dello studio",
@@ -2476,7 +2550,7 @@
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
         "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
-        "work.index": "Eighteen capabilities",
+        "work.index": "All capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Work area 1 of 3",
@@ -2492,6 +2566,12 @@
         "stream.research.copy": "From the initial question to a controllable research base.",
         "module.newClient.title": "New Client",
         "module.newClient": "Organize an incoming UK tax folder, identify missing material, and prepare a firm memo and client request.",
+        "module.newClient.includesLabel": "Included workflows",
+        "module.newClient.includes.data": "Structured fiscal data",
+        "module.newClient.includes.email": "Client email",
+        "module.newClient.includes.xml": "FatturaPA XML check",
+        "module.notice.title": "Notice intake",
+        "module.notice": "Organizes tax notices, collection notices, HMRC letters or cantonal tax letters into a first file with sources, deadlines, amounts and open questions.",
         "module.archiveOrganization.title": "Archive organization",
         "module.archiveOrganization": "Analyze a local or Google Workspace client folder and propose categories, names, moves, duplicates, and anomalies. The collaborator approves before any change; Vera records what it applies and can roll it back.",
         "module.archive.title": "Studio archive",
@@ -2721,7 +2801,7 @@
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
         "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
-        "work.index": "Dix-huit fonctions",
+        "work.index": "Toutes les fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine de travail 1 sur 3",
@@ -2737,6 +2817,12 @@
         "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
         "module.newClient.title": "Nouveau client",
         "module.newClient": "Organise un dossier fiscal genevois, relève les pièces manquantes et prépare le mémo du cabinet et la demande au client.",
+        "module.newClient.includesLabel": "Fonctions incluses",
+        "module.newClient.includes.data": "Données fiscales structurées",
+        "module.newClient.includes.email": "E-mail au client",
+        "module.newClient.includes.xml": "Contrôle XML FatturaPA",
+        "module.notice.title": "Instruction d’un avis",
+        "module.notice": "Organise les avis fiscaux, lettres de recouvrement ou courriers fiscaux cantonaux dans un premier dossier avec sources, échéances, montants et questions ouvertes.",
         "module.archiveOrganization.title": "Organisation des archives",
         "module.archiveOrganization": "Analysez un dossier client local ou Google Workspace et proposez catégories, noms, déplacements, doublons et anomalies. Le collaborateur approuve avant toute modification ; Vera consigne ce qu’elle applique et peut le rétablir.",
         "module.archive.title": "Archives du cabinet",
@@ -2966,7 +3052,7 @@
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
         "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
-        "work.index": "Achtzehn Funktionen",
+        "work.index": "Alle Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Arbeitsbereich 1 von 3",
@@ -2982,6 +3068,12 @@
         "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
         "module.newClient.title": "Neuer Mandant",
         "module.newClient": "Ordnet eine Zürcher Steuerakte, erkennt fehlende Unterlagen und erstellt Kanzleivermerk und Mandantenanfrage.",
+        "module.newClient.includesLabel": "Enthaltene Workflows",
+        "module.newClient.includes.data": "Strukturierte Steuerdaten",
+        "module.newClient.includes.email": "Mandanten-E-Mail",
+        "module.newClient.includes.xml": "FatturaPA-XML-Prüfung",
+        "module.notice.title": "Steuerschreiben erfassen",
+        "module.notice": "Ordnet Steuerbescheide, Inkassomitteilungen oder kantonale Steuerschreiben in einer ersten Akte mit Quellen, Fristen, Beträgen und offenen Fragen.",
         "module.archiveOrganization.title": "Archiv organisieren",
         "module.archiveOrganization": "Analysiert einen lokalen Mandantenordner oder einen Ordner in Google Workspace und schlägt Kategorien, Namen, Verschiebungen, Duplikate und Auffälligkeiten vor. Der zuständige Mitarbeiter genehmigt vor jeder Änderung; Vera protokolliert die Ausführung und kann sie zurücksetzen.",
         "module.archive.title": "Kanzleiarchiv",
@@ -3211,7 +3303,7 @@
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
         "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
-        "work.index": "Dieciocho funciones",
+        "work.index": "Todas las funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área de trabajo 1 de 3",
@@ -3227,6 +3319,12 @@
         "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
         "module.newClient.title": "Nuevo cliente",
         "module.newClient": "Organiza la carpeta recibida, identifica lo que falta y prepara un primer expediente de trabajo.",
+        "module.newClient.includesLabel": "Flujos incluidos",
+        "module.newClient.includes.data": "Datos fiscales estructurados",
+        "module.newClient.includes.email": "Correo al cliente",
+        "module.newClient.includes.xml": "Control XML FatturaPA",
+        "module.notice.title": "Recepción de notificaciones",
+        "module.notice": "Organiza avisos fiscales, requerimientos de cobro o cartas tributarias cantonales en un primer expediente con fuentes, plazos, importes y preguntas abiertas.",
         "module.archiveOrganization.title": "Organización del archivo",
         "module.archiveOrganization": "Analiza una carpeta de cliente local o de Google Workspace y propone categorías, nombres, traslados, duplicados y anomalías. El colaborador aprueba antes de cada cambio; Vera registra lo que aplica y puede revertirlo.",
         "module.archive.title": "Archivo del despacho",

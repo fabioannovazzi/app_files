@@ -676,11 +676,45 @@ def _section_markup(page: str, section_id: str) -> str:
     return page[section_start:section_end]
 
 
+def _catalog_workflow_names(catalog: str, heading: str, next_heading: str) -> set[str]:
+    section_start = catalog.index(f"## {heading}")
+    section_end = catalog.index(f"## {next_heading}", section_start)
+    return set(
+        re.findall(r"^- `([^`]+)`:", catalog[section_start:section_end], re.MULTILINE)
+    )
+
+
+def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    catalog = (
+        VERA_PLUGIN_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
+    ).read_text(encoding="utf-8")
+    core = _section_markup(page, "core")
+
+    # Exact identity closure is mechanically verifiable and prevents public
+    # inventory drift without classifying workflow meaning or user intent.
+    assert set(re.findall(r'data-vera-workflow="([^"]+)"', core)) == (
+        _catalog_workflow_names(
+            catalog, "Professional workflows", "Subordinate intake workflows"
+        )
+    )
+    assert set(
+        re.findall(r'data-vera-subordinate-workflow="([^"]+)"', core)
+    ) == _catalog_workflow_names(
+        catalog, "Subordinate intake workflows", "Cross-cutting answer assurance"
+    )
+    assert set(re.findall(r'data-vera-assurance-workflow="([^"]+)"', core)) == (
+        _catalog_workflow_names(
+            catalog, "Cross-cutting answer assurance", "Developer governance"
+        )
+    )
+
+
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 17
+    expected_core_module_count = 21
 
     assert core.count('class="module-row"') == expected_core_module_count
     assert core.count('data-primary-workflow-link="') == 2
@@ -690,6 +724,9 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
     for expected_href in (
         "../new-client/index.html#journey",
+        "../new-client/index.html#file-preparation",
+        "../previdenza-inps/index.html",
+        "../registro-imprese-sari/index.html",
         "../archive-organization/index.html",
         "../studio-archive/index.html",
         "../journal-sampling/index.html",
@@ -699,6 +736,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "index.html#bilancio-intelligente",
         "../financial-analysis/index.html",
         "index.html#bandi-agevolazioni",
+        "../concordato-plan-review/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -718,7 +756,9 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     ):
         assert f'href="{expected_href}"' in jurisdiction
 
-    assert "FatturaPA" not in core
+    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
+    assert 'data-jurisdiction-item="it" hidden>Controllo FatturaPA XML' in core
+    assert "Controllo scritture · FatturaPA" not in core
     assert "FatturaPA" in jurisdiction
     assert 'href="#core"' in page
     assert 'href="#jurisdiction"' in page
@@ -1136,7 +1176,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 27
+    expected_module_link_count = 31
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
