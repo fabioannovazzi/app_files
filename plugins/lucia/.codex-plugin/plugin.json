@@ -1,0 +1,64 @@
+{
+  "name": "lucia",
+  "version": "0.1.0",
+  "description": "Lucia affianca avvocati indipendenti e studi legali nell'impostare quesiti professionali e verificare risposte, memorie, pareri e lettere rispetto a fonti, ragionamento e giudizio professionale.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/lucia/index.html",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "lucia",
+    "avvocati",
+    "avvocato",
+    "avvocati-indipendenti",
+    "studio-legale",
+    "studi-legali",
+    "ricerca-legale",
+    "ricerca-giuridica",
+    "quesito-legale",
+    "fonti-legali",
+    "pareri-legali",
+    "memorie-legali",
+    "lettere-legali",
+    "revisione-legale",
+    "revisione-documenti",
+    "validazione",
+    "verifica-fonti",
+    "italiano",
+    "legal-research",
+    "legal-review"
+  ],
+  "skills": "./skills/",
+  "apps": "./.app.json",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Lucia",
+    "shortDescription": "Assistente AI x avvocati",
+    "longDescription": "Lucia affianca avvocati indipendenti e studi legali. Imposta quesiti professionali, definisce il perimetro della risposta, separa lingua e giurisdizione, individua le fonti necessarie e prepara piani di risposta con fonti e controlli espliciti.\n\nVerifica risposte, memorie, pareri, lettere e report rispetto alle fonti disponibili. Controlla identità e accessibilità delle fonti, supporto delle affermazioni e ragionamento, quindi indica ciò che va corretto o confermato e quali passaggi richiedono giudizio professionale.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio e giudizio professionale restano all'avvocato.",
+    "developerName": "Fabio Annovazzi · Mparanza",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write",
+      "Analysis"
+    ],
+    "websiteURL": "https://mparanza.com/static/shared/lucia/index.html",
+    "privacyPolicyURL": "https://mparanza.com/privacy",
+    "termsOfServiceURL": "https://mparanza.com/terms",
+    "supportURL": "https://mparanza.com/support",
+    "defaultPrompt": [
+      "Trasforma questo quesito professionale in un piano di risposta con fonti e controlli espliciti.",
+      "Verifica questa risposta professionale contro le fonti e indica ciò che va corretto o confermato.",
+      "Dal quesito alla risposta: pianifica, prepara e valida il risultato finale."
+    ],
+    "brandColor": "#002060",
+    "composerIcon": "./assets/icon.svg",
+    "logo": "./assets/icon.svg",
+    "screenshots": []
+  }
+}

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lucia" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#002060"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#0070C0"/>
+  <circle cx="51" cy="50" r="7" fill="#0070C0"/>
+  <circle cx="51" cy="50" r="3" fill="#002060"/>
+  <path d="M15 13h29l8 9v31H15z" fill="#FFFFFF"/>
+  <path d="M44 13v10h8" fill="#DCEEFF"/>
+  <path d="M23 27h18M23 35h13M23 43h9" stroke="#002060" stroke-width="3" stroke-linecap="round"/>
+  <path d="m39 42 4 4 10-13" fill="none" stroke="#00B0F0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

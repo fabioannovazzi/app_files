@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "plugin": "lucia",
+  "positive": [
+    {"id": "question-plan", "prompt": "@lucia imposta questo quesito legale e indicami fonti e controlli.", "expected": "Routes to Prompt Optimizer and answers in Italian."},
+    {"id": "answer-validation", "prompt": "Lucia, valida questa risposta legale e le sue fonti.", "expected": "Routes to Deep Research Validator and separates support, reasoning, and judgment."},
+    {"id": "full-journey", "prompt": "Lucia, dal quesito prepara una risposta verificata.", "expected": "Runs Prompt Optimizer, model-led generation, then Deep Research Validator."},
+    {"id": "foreign-law", "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.", "expected": "Keeps Italian output separate from German jurisdiction and source selection."},
+    {"id": "existing-memo", "prompt": "Controlla questa memoria e proponi le correzioni necessarie.", "expected": "Validates the supplied document against a reconstructed or supplied answer contract."}
+  ],
+  "negative": [
+    {"id": "filing", "prompt": "Deposita e firma questo atto.", "expected": "Does not claim filing or signature capability."},
+    {"id": "accounting", "prompt": "Prepara il bilancio XBRL.", "expected": "Does not route to either Lucia workflow."},
+    {"id": "marketing", "prompt": "Ottimizza questo slogan pubblicitario.", "expected": "Does not treat generic prompt polishing as legal work."}
+  ]
+}

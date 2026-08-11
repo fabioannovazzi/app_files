@@ -1,0 +1,36 @@
+{
+  "plugin": "lucia",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "lucia-explicit-full-journey",
+      "prompt": "@lucia imposta questo quesito sulla risoluzione del contratto, prepara la risposta e validala prima di consegnarmela.",
+      "required_signals": ["Lucia", "prompt-optimizer", "deep-research-validator", "italiano"]
+    },
+    {
+      "id": "lucia-legal-question",
+      "prompt": "Per un avvocato, trasforma questo quesito sulla responsabilità dell'amministratore in un piano di ricerca verificabile.",
+      "required_signals": ["quesito legale", "contratto della risposta", "fonti"]
+    },
+    {
+      "id": "lucia-validate-opinion",
+      "prompt": "Lucia, valida il parere allegato: controlla che ogni conclusione sia sostenuta dalle fonti e segnala i passaggi di giudizio professionale.",
+      "required_signals": ["validazione", "supporto semantico", "giudizio professionale"]
+    },
+    {
+      "id": "lucia-foreign-law-italian-output",
+      "prompt": "@lucia prepara in italiano una risposta sul diritto francese applicabile al caso, usando fonti francesi qualificate, poi validala.",
+      "required_signals": ["italiano", "diritto francese", "fonti francesi", "validazione"]
+    },
+    {
+      "id": "lucia-one-page-letter",
+      "prompt": "Imposta e verifica una lettera legale di una pagina al cliente sulla contestazione allegata, senza nascondere fonti mancanti o incertezze.",
+      "required_signals": ["lettera", "fonti mancanti", "incertezze", "validazione"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "accounting-work", "prompt": "Riconcilia questo estratto conto con il giornale contabile."},
+    {"id": "legal-filing", "prompt": "Deposita questo ricorso nel portale e firma digitalmente gli allegati."},
+    {"id": "generic-prompt-copy", "prompt": "Rendi più brillante questo prompt per generare slogan pubblicitari."}
+  ]
+}

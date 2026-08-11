@@ -1,0 +1,44 @@
+Lucia - pacchetto plugin per ChatGPT Work e Codex
+
+Codice sorgente: https://github.com/fabioannovazzi/app_files/tree/agent/lucia-public-page/plugins/lucia
+Licenza GNU AGPLv3: https://github.com/fabioannovazzi/app_files/blob/main/LICENSE
+Supporto e accesso: https://mparanza.com/support
+
+Lucia è pensata per avvocati indipendenti e studi legali. Il catalogo
+iniziale comprende:
+
+- Prompt Optimizer: imposta un quesito legale come piano di risposta verificabile;
+- Deep Research Validator: controlla una risposta contro contratto, fonti,
+  ragionamento e confini del giudizio professionale.
+
+Le due implementazioni sono le stesse incorporate in Vera. Studio Archive è
+incluso soltanto come infrastruttura privata per legare input, run e risultati a
+un incarico; Lucia non espone ricerca d'archivio, Gmail, Drive o WhatsApp.
+
+Installazione locale in Codex
+
+1. Estrai lo ZIP.
+2. In Codex, aggiungi come marketplace locale la cartella estratta che contiene
+   `.agents/plugins/marketplace.json`.
+3. Abilita `Lucia` e apri una nuova chat Codex nello stesso workspace.
+
+Primo utilizzo
+
+Formula normalmente la richiesta in italiano. Per esempio:
+
+Lucia, imposta questo quesito sulla responsabilità dell'amministratore, prepara
+una risposta documentata e validala prima della consegna.
+
+Oppure:
+
+Lucia, valida il parere allegato e separa problemi di fonte, ragionamento e
+giudizio professionale.
+
+In Codex, il lavoro locale usa uno spazio cliente e un incarico espliciti. Lucia
+non scrive risultati dentro la cartella del plugin e non riutilizza input tra
+clienti o incarichi. In ChatGPT, Lucia può svolgere una versione utile in chat
+con i materiali disponibili, ma non dichiara di aver eseguito script locali o
+creato artefatti persistenti.
+
+Lucia non firma pareri, non deposita atti, non invia comunicazioni e non
+sostituisce la revisione dell'avvocato.

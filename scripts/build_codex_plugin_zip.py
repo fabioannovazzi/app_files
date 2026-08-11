@@ -133,7 +133,9 @@ CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"apps", "mcpServers"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES = {".app.json", ".mcp.json"}
 CHATGPT_UPLOAD_REVIEW_MCP_SERVER = "scripts/review_mcp_server.cjs"
-CROSS_SURFACE_PLUGINS = frozenset({"clara", "vera"})
+CROSS_SURFACE_PLUGINS = frozenset({"clara", "lucia", "vera"})
+SOURCE_PRESERVING_CHATGPT_PLUGINS = frozenset({"lucia", "vera"})
+CHATGPT_HIDDEN_COMPONENTS = {"lucia": frozenset({"studio-archive"})}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
@@ -161,6 +163,12 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "sales-plan": "modules/sales-plan/skills/sales-plan/SKILL.md",
     "variance-analysis": "modules/variance-analysis/skills/variance-analysis/SKILL.md",
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
+}
+LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "prompt-optimizer": "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
+    "deep-research-validator": (
+        "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"
+    ),
 }
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (
@@ -1009,6 +1017,34 @@ def project_chatgpt_component_manifest(content: bytes) -> bytes:
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
 
+def project_chatgpt_components(
+    content: bytes,
+    *,
+    hidden_components: frozenset[str],
+) -> bytes:
+    """Remove Codex-only runtime components from a skills-only upload."""
+
+    payload = json.loads(content.decode("utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError("ChatGPT components manifest must be a JSON object")
+    plugins = payload.get("plugins")
+    if not isinstance(plugins, list) or not all(
+        isinstance(plugin, str) for plugin in plugins
+    ):
+        raise ValueError("ChatGPT components manifest plugins must be strings")
+    payload["plugins"] = [
+        plugin for plugin in plugins if plugin not in hidden_components
+    ]
+    workflow_roles = payload.get("workflow_roles")
+    if isinstance(workflow_roles, dict):
+        payload["workflow_roles"] = {
+            name: role
+            for name, role in workflow_roles.items()
+            if name not in hidden_components
+        }
+    return (json.dumps(payload, indent=2) + "\n").encode("utf-8")
+
+
 def skill_body_start(text: str) -> int:
     """Return the first byte after valid YAML frontmatter."""
 
@@ -1261,6 +1297,41 @@ def load_chatgpt_skill_cards(
                 "vera: Marketplace root router must use one no-match outcome; "
                 f"found={present_branches}"
             )
+    if plugin_name == "lucia":
+        router = cards[plugin_name].instructions
+        required_router_contracts = (
+            "opera esclusivamente come router",
+            "non risponde mai direttamente alla richiesta sostanziale",
+            "interpreta semanticamente la richiesta",
+            "considera l'intero catalogo corrente",
+            "Se nessun workflow elencato copre la richiesta, Lucia si ferma",
+            "non risponde alla richiesta né offre percorsi alternativi",
+        )
+        missing_contracts = [
+            contract for contract in required_router_contracts if contract not in router
+        ]
+        if missing_contracts:
+            raise ValueError(
+                "lucia: Marketplace root card is missing mandatory router contracts: "
+                f"{missing_contracts}"
+            )
+        expected_router_skills = expected_skills - {plugin_name}
+        if set(LUCIA_CHATGPT_ROUTER_TARGETS) != expected_router_skills:
+            raise ValueError(
+                "lucia: Marketplace router target coverage differs; "
+                f"missing={sorted(expected_router_skills - set(LUCIA_CHATGPT_ROUTER_TARGETS))}, "
+                f"unexpected={sorted(set(LUCIA_CHATGPT_ROUTER_TARGETS) - expected_router_skills)}"
+            )
+        missing_routes = sorted(
+            skill_name
+            for skill_name, target in LUCIA_CHATGPT_ROUTER_TARGETS.items()
+            if f"`{skill_name}` → `../../{target}`" not in router
+        )
+        if missing_routes:
+            raise ValueError(
+                "lucia: Marketplace root router paths are incomplete; "
+                f"missing={missing_routes}"
+            )
     return cards
 
 
@@ -1291,30 +1362,40 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             expected_skills=expected_cards,
         )
     public_skill_names = set(skill_cards)
-    if plugin_name == "vera":
+    router_targets = (
+        VERA_CHATGPT_ROUTER_TARGETS
+        if plugin_name == "vera"
+        else LUCIA_CHATGPT_ROUTER_TARGETS if plugin_name == "lucia" else {}
+    )
+    if router_targets:
         missing_targets = sorted(
             target
-            for target in VERA_CHATGPT_ROUTER_TARGETS.values()
+            for target in router_targets.values()
             if f"{prefix}{target}" not in packaged_entries
         )
         if missing_targets:
             raise ValueError(
-                "vera: Marketplace router targets are missing from the package: "
+                f"{plugin_name}: Marketplace router targets are missing from the package: "
                 f"{missing_targets}"
             )
     entries: dict[str, bytes] = {"LICENSE": LICENSE_PATH.read_bytes()}
+    hidden_components = CHATGPT_HIDDEN_COMPONENTS.get(plugin_name, frozenset())
     for packaged_name, content in packaged_entries.items():
         if not packaged_name.startswith(prefix):
             continue
         name = packaged_name.removeprefix(prefix)
         path_parts = name.split("/")
+        if any(
+            name.startswith(f"modules/{component}/") for component in hidden_components
+        ):
+            continue
         if name == CHATGPT_SKILL_CARDS_FILE:
             continue
         if path_parts[-1] in CHATGPT_UPLOAD_UNSUPPORTED_CONFIG_FILES:
             continue
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
-            and plugin_name != "vera"
+            and plugin_name not in SOURCE_PRESERVING_CHATGPT_PLUGINS
             and len(path_parts) >= 3
             and path_parts[0] == "skills"
             and path_parts[1] in skill_cards
@@ -1337,11 +1418,16 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         if name == ".codex-plugin/plugin.json":
             content = project_chatgpt_manifest(content)
+        elif name == "components.json" and hidden_components:
+            content = project_chatgpt_components(
+                content,
+                hidden_components=hidden_components,
+            )
         elif name.endswith("/.codex-plugin/plugin.json"):
             content = project_chatgpt_component_manifest(content)
         if (
             plugin_name in CROSS_SURFACE_PLUGINS
-            and plugin_name != "vera"
+            and plugin_name not in SOURCE_PRESERVING_CHATGPT_PLUGINS
             and len(path_parts) == 3
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
@@ -1352,12 +1438,12 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
                 instructions=skill_cards[skill_name].instructions,
             )
         elif (
-            plugin_name == "vera"
+            plugin_name in SOURCE_PRESERVING_CHATGPT_PLUGINS
             and len(path_parts) == 3
             and path_parts[0] == "skills"
             and path_parts[2] == "SKILL.md"
         ):
-            # Vera's routing and specialist handoffs are mandatory runtime
+            # Router and specialist handoffs are mandatory runtime
             # instructions. Keep them in the registered SKILL.md instead of an
             # arbitrary sibling file that the upload scanner may not include.
             content = project_chatgpt_source_skill(content)

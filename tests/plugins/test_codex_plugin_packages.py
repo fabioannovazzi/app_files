@@ -37,7 +37,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "report-builder",
     "studio-archive",
 }
-STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara"}
+STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara", "lucia"}
 PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
 UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_DISCOVERY_TERMS = (
@@ -300,10 +300,14 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
 )
-STANDALONE_STATIC_PLUGIN_PAGES = (ROOT / "static" / "shared" / "clara" / "index.html",)
+STANDALONE_STATIC_PLUGIN_PAGES = (
+    ROOT / "static" / "shared" / "clara" / "index.html",
+    ROOT / "static" / "shared" / "lucia" / "index.html",
+)
 STATIC_PLUGIN_PAGES = ACCOUNTING_STATIC_PLUGIN_PAGES + STANDALONE_STATIC_PLUGIN_PAGES
 PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "clara" / "index.html",
+    ROOT / "static" / "shared" / "lucia" / "index.html",
     ROOT / "static" / "shared" / "archive-organization" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
@@ -615,7 +619,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert not any(name.endswith("marketplace.json") for name in entries)
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     plugin_name: str,
 ) -> None:
@@ -657,7 +661,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         )
     )
     public_skill_names = set(instruction_config["skills"])
-    if plugin_name == "vera":
+    if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_card_bodies = {}
         for skill_name in public_skill_names:
             source = (
@@ -729,9 +733,31 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         ].decode("utf-8")
         assert "# Audit Reconciliation" in full_workflow
         assert "## Required Questions" in full_workflow
+    if plugin_name == "lucia":
+        assert set(card_bodies) == {
+            "skills/lucia/SKILL.md",
+            "skills/prompt-optimizer/SKILL.md",
+            "skills/deep-research-validator/SKILL.md",
+        }
+        router = card_bodies["skills/lucia/SKILL.md"]
+        normalized_router = " ".join(router.split())
+        assert "catalogo cresce attraverso workflow specialistici" in normalized_router
+        assert (
+            "aggiorna questa tabella quando entra una nuova funzione Lucia"
+            in normalized_router
+        )
+        assert "esattamente due" not in normalized_router
+        assert (
+            "../../modules/prompt-optimizer"
+            in card_bodies["skills/prompt-optimizer/SKILL.md"]
+        )
+        assert (
+            "../../modules/deep-research-validator"
+            in card_bodies["skills/deep-research-validator/SKILL.md"]
+        )
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_committed_chatgpt_upload_uses_approved_card_copy(
     plugin_name: str,
 ) -> None:
@@ -742,7 +768,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
         )
     )
     public_skill_names = set(instruction_config["skills"])
-    if plugin_name == "vera":
+    if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_bodies = {}
         for skill_name in public_skill_names:
             source = (
@@ -790,7 +816,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
     )
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     plugin_name: str,
 ) -> None:
@@ -2241,6 +2267,7 @@ def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
     }
     expected_install_zip_paths = {
         "plugin_packages/clara/clara-plugin.zip",
+        "plugin_packages/lucia/lucia-plugin.zip",
         "plugin_packages/vera/vera-plugin.zip",
     }
     allowed_upload_zip_paths = {
@@ -2256,7 +2283,11 @@ def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
         package["output_zip"] for package in claude_config["packages"]
     }
 
-    assert {target.target_name for target in configured_targets} == {"clara", "vera"}
+    assert {target.target_name for target in configured_targets} == {
+        "clara",
+        "lucia",
+        "vera",
+    }
     assert set(configured_zip_paths) == expected_install_zip_paths
     assert expected_install_zip_paths <= zip_paths
     assert zip_paths <= (
@@ -2458,7 +2489,9 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
-            if plugin_root.name == "vera" and skill_file.parent.name != "vera":
+            if plugin_root.name in {"lucia", "vera"} and (
+                skill_file.parent.name != plugin_root.name
+            ):
                 assert "Read that module's" in normalized_skill_text
                 assert "plugin working directory" in normalized_skill_text
                 continue
@@ -2717,8 +2750,10 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
     for page_path in PUBLIC_PLUGIN_EXPLAINER_PAGES:
         page = page_path.read_text(encoding="utf-8")
 
-        if page_path == ROOT / "static" / "shared" / "clara" / "index.html":
-            assert 'href="clara-page.css?v=' in page, page_path.as_posix()
+        if page_path.parent.name in {"clara", "lucia"}:
+            assert (
+                f'href="{page_path.parent.name}-page.css?v=' in page
+            ), page_path.as_posix()
         else:
             assert 'href="../plugin-page-shell.css' in page, page_path.as_posix()
 
@@ -4479,6 +4514,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),
+        "lucia": ("https://mparanza.com/static/shared/lucia/index.html"),
     }
 
     assert set(expected_homepages) | REPORTING_ENGINE_PLUGIN_NAMES == (
@@ -4603,7 +4639,7 @@ def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
     assert 'querySelector("summary")?.focus()' in script
 
 
-@pytest.mark.parametrize("page_name", ("vera", "clara"))
+@pytest.mark.parametrize("page_name", ("vera", "clara", "lucia"))
 def test_companion_pages_leave_improvement_guidance_on_support(
     page_name: str,
 ) -> None:
@@ -4615,7 +4651,7 @@ def test_companion_pages_leave_improvement_guidance_on_support(
     assert '"improvement.' not in page
 
 
-@pytest.mark.parametrize("page_name", ("vera", "clara"))
+@pytest.mark.parametrize("page_name", ("vera", "clara", "lucia"))
 def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> None:
     page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
         encoding="utf-8"
@@ -4628,8 +4664,10 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     assert '<a class="skip-link" href="#main-content"' in page
     assert '<main id="main-content">' in page
     assert "github.com/fabioannovazzi/app_files/tree/main/plugins/" not in header
+    source_branch = "agent/lucia-public-page" if page_name == "lucia" else "main"
     assert (
-        f"github.com/fabioannovazzi/app_files/tree/main/plugins/{page_name}" in footer
+        f"github.com/fabioannovazzi/app_files/tree/{source_branch}/plugins/{page_name}"
+        in footer
     )
 
 

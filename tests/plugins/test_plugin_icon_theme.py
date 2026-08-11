@@ -15,7 +15,7 @@ def test_all_plugin_icons_use_shared_theme_marker() -> None:
         svg = path.read_text(encoding="utf-8")
         assert f'data-theme="{THEME_MARKER}"' in svg, path
         assert 'viewBox="0 0 64 64"' in svg, path
-        if path.parent.parent.name in {"clara", "vera"}:
+        if path.parent.parent.name in {"clara", "lucia", "vera"}:
             assert 'fill="#002060"' in svg, path
             assert 'fill="#171816"' not in svg, path
             assert all(color in svg for color in ("#0070C0", "#00B0F0", "#FFFFFF")), path

@@ -22,6 +22,15 @@
       "output_zip": "plugin_packages/clara/clara-plugin.zip",
       "install_readme": "static/shared/clara/LEGGIMI_INSTALLAZIONE.txt",
       "category": "Productivity"
+    },
+    {
+      "plugin": "lucia",
+      "package_root": "lucia-codex-plugin",
+      "marketplace_name": "mp-lucia",
+      "marketplace_display": "MP Lucia",
+      "output_zip": "plugin_packages/lucia/lucia-plugin.zip",
+      "install_readme": "static/shared/lucia/LEGGIMI_INSTALLAZIONE.txt",
+      "category": "Productivity"
     }
   ],
   "non_downloadable_plugins": []
