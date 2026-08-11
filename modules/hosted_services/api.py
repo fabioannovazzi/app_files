@@ -227,46 +227,48 @@ def _static_asset_version(path: str) -> str:
 TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     "en": {
         "clara_plugin": "Organizes case materials, notes, and reviewed judgements into shareable client outputs.",
-        "lucia_plugin": "Prepares reviewable legal work, professional communications and law-firm websites.",
+        "lucia_plugin": "Prepares research and validation for independent lawyers.",
         "vera": "Vera works with accounting-firm files to prepare new-client work, checks, reconciliations, INPS case review, reports and tax or regulatory research.",
         "codex_accountants_group": "Guided procedures for documents, controls, reports, and tax or regulatory research.",
         "codex_consultants_group": "Guided procedures for turning materials, analysis, and expert judgement into client-ready outputs.",
-        "codex_lawyers_group": "Guided procedures for legal research, professional communications and law-firm websites.",
+        "codex_lawyers_group": "Guided procedures for framing legal research, checking sources and reviewing conclusions.",
     },
     "it": {
         "clara_plugin": "Organizza materiali, note e valutazioni approvate in output condivisibili per il cliente.",
-        "lucia_plugin": "Prepara lavoro legale, comunicazioni professionali e siti di studio rivedibili.",
+        "lucia_plugin": "Prepara ricerca e validazione per avvocati indipendenti.",
         "vera": "Vera lavora sui file dello studio per svolgere istruttorie, controlli, riconciliazioni, pratiche previdenziali INPS, report e ricerca fiscale o normativa.",
         "codex_accountants_group": "Procedure guidate per lavorare su documenti, controlli, report e ricerca fiscale.",
         "codex_consultants_group": "Procedure guidate per trasformare materiali, analisi e giudizio esperto in output per il cliente.",
-        "codex_lawyers_group": "Procedure guidate per ricerca legale, comunicazioni professionali e siti dello studio.",
+        "codex_lawyers_group": "Procedure guidate per impostare la ricerca legale, verificare le fonti e rivedere le conclusioni.",
     },
     "fr": {
         "clara_plugin": "Organise les matériaux, notes et jugements validés en livrables client partageables.",
-        "lucia_plugin": "Prépare travail juridique, communications professionnelles et sites de cabinet révisables.",
+        "lucia_plugin": "Prépare recherche et validation pour les avocats indépendants.",
         "vera": "Vera travaille sur les fichiers du cabinet pour réaliser les revues de dossiers clients, contrôles, rapprochements, dossiers INPS, rapports et recherches fiscales ou réglementaires.",
         "codex_accountants_group": "Procédures guidées pour documents, contrôles, rapports et recherche fiscale ou réglementaire.",
         "codex_consultants_group": "Procédures guidées pour transformer matériaux, analyses et jugement expert en livrables client.",
-        "codex_lawyers_group": "Procédures guidées pour recherche juridique, communications professionnelles et sites de cabinet.",
+        "codex_lawyers_group": "Procédures guidées pour cadrer la recherche juridique, vérifier les sources et revoir les conclusions.",
     },
     "de": {
         "clara_plugin": "Organisiert Fallmaterialien, Notizen und freigegebene Einschätzungen zu teilbaren Kundenergebnissen.",
-        "lucia_plugin": "Erstellt überprüfbare Rechtsarbeit, Fachkommunikation und Kanzleiwebsites.",
+        "lucia_plugin": "Bereitet Recherche und Validierung für selbständige Anwälte vor.",
         "vera": "Vera arbeitet mit Kanzleidateien an Mandantenaufnahme, Prüfungen, Abstimmungen, INPS-Fällen, Berichten sowie steuerlicher oder regulatorischer Recherche.",
         "codex_accountants_group": "Geführte Verfahren für Dokumente, Kontrollen, Berichte sowie Steuer- und Regulierungsrecherche.",
         "codex_consultants_group": "Geführte Verfahren, um Materialien, Analysen und Expertenurteile in Kundenergebnisse zu verwandeln.",
-        "codex_lawyers_group": "Geführte Verfahren für Rechtsrecherche, fachliche Kommunikation und Kanzleiwebsites.",
+        "codex_lawyers_group": "Geführte Verfahren zur Strukturierung juristischer Recherche, Quellenprüfung und Überprüfung von Schlussfolgerungen.",
     },
     "es": {
         "clara_plugin": "Organiza materiales del caso, notas y valoraciones revisadas en entregables que pueden compartirse con el cliente.",
-        "lucia_plugin": "Prepara trabajo jurídico, comunicaciones profesionales y sitios de despacho revisables.",
+        "lucia_plugin": "Prepara investigación y validación para abogados independientes.",
         "vera": "Vera trabaja con los archivos del despacho para preparar nuevos clientes, comprobaciones, conciliaciones, revisiones de expedientes del INPS, informes e investigación fiscal o regulatoria.",
         "codex_accountants_group": "Procedimientos guiados para documentos, controles, informes e investigación fiscal o regulatoria.",
         "codex_consultants_group": "Procedimientos guiados para convertir materiales, análisis y criterio experto en entregables listos para el cliente.",
-        "codex_lawyers_group": "Procedimientos guiados para investigación jurídica, comunicaciones profesionales y sitios de despacho.",
+        "codex_lawyers_group": "Procedimientos guiados para estructurar la investigación jurídica, comprobar fuentes y revisar conclusiones.",
     },
 }
 
+# Product-card leads are stable positioning, not a live inventory of skills.
+# New skills belong on the detailed product pages and must not rewrite these leads.
 LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
     "en": {
         "primary": {
@@ -344,18 +346,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_lawyers_group",
                         "audience": "For independent lawyers",
                         "lead": (
-                            "A specialist plugin for reviewable legal work, professional "
-                            "communications and the firm’s informational website."
+                            "A specialist plugin for framing legal research and "
+                            "checking sources, claims and reasoning."
                         ),
                         "description": (
-                            "Lucia frames and checks legal work, prepares source-backed "
-                            "communications and builds informational law-firm websites "
-                            "from verified material."
+                            "Lucia prepares research and validation for independent "
+                            "lawyers, while keeping sources, claims, uncertainties and "
+                            "professional decisions reviewable."
                         ),
                         "proof": [
                             "Legal questions with a defined scope",
-                            "Professional communications with sources and approval gates",
-                            "Informational websites built from verified firm facts",
+                            "Sources and claims checked before delivery",
+                            "Conclusions ready for the lawyer's review",
                         ],
                         "cta_label": "Explore Lucia",
                         "icon": "/static/shared/lucia/icon.svg",
@@ -568,18 +570,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_lawyers_group",
                         "audience": "Per avvocati indipendenti",
                         "lead": (
-                            "Un plugin specialistico per lavoro legale rivedibile, "
-                            "comunicazioni professionali e sito informativo dello studio."
+                            "Un plugin specialistico per impostare la ricerca legale e "
+                            "verificare fonti, affermazioni e ragionamento."
                         ),
                         "description": (
-                            "Lucia imposta e verifica il lavoro legale, prepara "
-                            "comunicazioni fondate su fonti e realizza siti informativi "
-                            "dello studio da materiali verificati."
+                            "Lucia prepara ricerca e validazione per avvocati indipendenti, "
+                            "mantenendo fonti, affermazioni, incertezze e decisioni "
+                            "professionali rivedibili."
                         ),
                         "proof": [
                             "Quesiti legali con un perimetro definito",
-                            "Comunicazioni professionali con fonti e approvazioni",
-                            "Siti informativi costruiti su fatti verificati dello studio",
+                            "Fonti e affermazioni verificate prima della consegna",
+                            "Conclusioni pronte per la revisione dell'avvocato",
                         ],
                         "cta_label": "Scopri Lucia",
                         "icon": "/static/shared/lucia/icon.svg",
@@ -786,18 +788,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_lawyers_group",
                         "audience": "Pour les avocats indépendants",
                         "lead": (
-                            "Un plugin spécialisé pour le travail juridique révisable, les "
-                            "communications professionnelles et le site du cabinet."
+                            "Un plugin spécialisé pour cadrer la recherche juridique et "
+                            "vérifier les sources, les affirmations et le raisonnement."
                         ),
                         "description": (
-                            "Lucia cadre et contrôle le travail juridique, prépare des "
-                            "communications fondées sur des sources et crée le site "
-                            "d’information du cabinet à partir de documents vérifiés."
+                            "Lucia prépare recherche et validation pour les avocats "
+                            "indépendants, tout en gardant sources, affirmations, "
+                            "incertitudes et décisions professionnelles révisables."
                         ),
                         "proof": [
                             "Questions juridiques au périmètre défini",
-                            "Communications professionnelles avec sources et approbations",
-                            "Sites d’information construits sur des faits vérifiés",
+                            "Sources et affirmations vérifiées avant livraison",
+                            "Conclusions prêtes pour la revue de l'avocat",
                         ],
                         "cta_label": "Découvrir Lucia",
                         "icon": "/static/shared/lucia/icon.svg",
@@ -1008,18 +1010,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_lawyers_group",
                         "audience": "Für selbständige Anwälte",
                         "lead": (
-                            "Ein spezialisiertes Plugin für überprüfbare Rechtsarbeit, "
-                            "fachliche Kommunikation und die Kanzleiwebsite."
+                            "Ein spezialisiertes Plugin, das juristische Recherchen "
+                            "strukturiert und Quellen, Aussagen und Argumentation prüft."
                         ),
                         "description": (
-                            "Lucia strukturiert und prüft Rechtsarbeit, erstellt "
-                            "quellengestützte Kommunikation und baut informative "
-                            "Kanzleiwebsites aus geprüften Materialien."
+                            "Lucia bereitet Recherche und Validierung für selbständige "
+                            "Anwälte vor und hält Quellen, Aussagen, Unsicherheiten und "
+                            "berufliche Entscheidungen überprüfbar."
                         ),
                         "proof": [
                             "Rechtsfragen mit festgelegtem Umfang",
-                            "Fachliche Kommunikation mit Quellen und Freigaben",
-                            "Informationswebsites auf Grundlage geprüfter Kanzleidaten",
+                            "Quellen und Aussagen vor der Übergabe geprüft",
+                            "Schlussfolgerungen für die anwaltliche Prüfung",
                         ],
                         "cta_label": "Lucia kennenlernen",
                         "icon": "/static/shared/lucia/icon.svg",
@@ -1230,18 +1232,18 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                         "tooltip_key": "codex_lawyers_group",
                         "audience": "Para abogados independientes",
                         "lead": (
-                            "Un plugin especializado para trabajo jurídico revisable, "
-                            "comunicaciones profesionales y el sitio del despacho."
+                            "Un plugin especializado para estructurar la investigación "
+                            "jurídica y comprobar fuentes, afirmaciones y razonamiento."
                         ),
                         "description": (
-                            "Lucia estructura y revisa el trabajo jurídico, prepara "
-                            "comunicaciones basadas en fuentes y crea sitios informativos "
-                            "del despacho a partir de materiales verificados."
+                            "Lucia prepara investigación y validación para abogados "
+                            "independientes, manteniendo revisables las fuentes, "
+                            "afirmaciones, incertidumbres y decisiones profesionales."
                         ),
                         "proof": [
                             "Preguntas jurídicas con un alcance definido",
-                            "Comunicaciones profesionales con fuentes y aprobaciones",
-                            "Sitios informativos construidos sobre hechos verificados",
+                            "Fuentes y afirmaciones comprobadas antes de la entrega",
+                            "Conclusiones listas para la revisión del abogado",
                         ],
                         "cta_label": "Descubrir Lucia",
                         "icon": "/static/shared/lucia/icon.svg",

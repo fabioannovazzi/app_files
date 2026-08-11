@@ -3231,10 +3231,37 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         "source_domains.txt",
         "source_domains_comma.txt",
         "README_HUMAN.md",
-        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${safeLang}",
     ):
         assert snippet in page
+
+    assert VERA_PRODUCT_PAGE_HREF not in page
+
+
+def test_prompt_optimizer_workflow_hides_internal_file_handoff_in_every_locale() -> (
+    None
+):
+    page = (ROOT / "static" / "shared" / "prompt-optimizer" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for user_facing_copy in (
+        "Avvia Deep Research con il brief e i siti già preparati.",
+        "Start Deep Research with the prepared brief and source sites.",
+        "Lancez Deep Research avec le brief et les sites sources déjà préparés.",
+        "Inicie Deep Research con el encargo y los sitios fuente ya preparados.",
+        "Starten Sie Deep Research mit dem vorbereiteten Briefing und den Quellwebsites.",
+    ):
+        assert user_facing_copy in page
+
+    for internal_handoff in (
+        "Usa optimized_prompt.md come istruzione",
+        "Use optimized_prompt.md as the instruction",
+        "Utilisez optimized_prompt.md comme instruction",
+        "Use optimized_prompt.md como instrucción",
+        "Nutzen Sie optimized_prompt.md als Anweisung",
+    ):
+        assert internal_handoff not in page
 
 
 def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_preparation() -> (
@@ -4809,43 +4836,106 @@ def test_homepage_content_exposes_companions_without_reporting_or_pro_badges(
 
 
 @pytest.mark.parametrize(
-    ("lang", "expected_lead"),
+    ("lang", "expected_leads"),
     (
-        ("en", "A specialist plugin for presentations and ongoing project work."),
+        (
+            "en",
+            {
+                "clara": (
+                    "A specialist plugin for presentations and ongoing project work."
+                ),
+                "vera": (
+                    "A specialist plugin for client files, accounting checks, "
+                    "reconciliations and reporting."
+                ),
+                "lucia": (
+                    "A specialist plugin for framing legal research and checking "
+                    "sources, claims and reasoning."
+                ),
+            },
+        ),
         (
             "it",
-            "Un plugin specialistico per creare presentazioni e dare continuità "
-            "al lavoro sui progetti.",
+            {
+                "clara": (
+                    "Un plugin specialistico per creare presentazioni e dare "
+                    "continuità al lavoro sui progetti."
+                ),
+                "vera": (
+                    "Un plugin specialistico per lavorare su fascicoli, controlli "
+                    "contabili, riconciliazioni e report."
+                ),
+                "lucia": (
+                    "Un plugin specialistico per impostare la ricerca legale e "
+                    "verificare fonti, affermazioni e ragionamento."
+                ),
+            },
         ),
         (
             "fr",
-            "Un plugin spécialisé pour créer des présentations et poursuivre "
-            "le travail sur les projets dans la durée.",
+            {
+                "clara": (
+                    "Un plugin spécialisé pour créer des présentations et "
+                    "poursuivre le travail sur les projets dans la durée."
+                ),
+                "vera": (
+                    "Un plugin spécialisé pour les dossiers clients, les contrôles "
+                    "comptables, les rapprochements et les rapports."
+                ),
+                "lucia": (
+                    "Un plugin spécialisé pour cadrer la recherche juridique et "
+                    "vérifier les sources, les affirmations et le raisonnement."
+                ),
+            },
         ),
         (
             "de",
-            "Ein spezialisiertes Plugin für Präsentationen und die fortlaufende "
-            "Arbeit an Projekten.",
+            {
+                "clara": (
+                    "Ein spezialisiertes Plugin für Präsentationen und die "
+                    "fortlaufende Arbeit an Projekten."
+                ),
+                "vera": (
+                    "Ein spezialisiertes Plugin für Mandantendateien, "
+                    "Buchungsprüfungen, Abstimmungen und Berichte."
+                ),
+                "lucia": (
+                    "Ein spezialisiertes Plugin, das juristische Recherchen "
+                    "strukturiert und Quellen, Aussagen und Argumentation prüft."
+                ),
+            },
         ),
         (
             "es",
-            "Un plugin especializado para presentaciones y trabajo continuo en proyectos.",
+            {
+                "clara": (
+                    "Un plugin especializado para presentaciones y trabajo continuo "
+                    "en proyectos."
+                ),
+                "vera": (
+                    "Un plugin especializado para expedientes de clientes, controles "
+                    "contables, conciliaciones e informes."
+                ),
+                "lucia": (
+                    "Un plugin especializado para estructurar la investigación "
+                    "jurídica y comprobar fuentes, afirmaciones y razonamiento."
+                ),
+            },
         ),
     ),
 )
-def test_homepage_clara_lead_localizes_ongoing_project_work(
+def test_homepage_product_propositions_remain_stable_when_skills_change(
     lang: str,
-    expected_lead: str,
+    expected_leads: dict[str, str],
 ) -> None:
     _restore_application_import_path()
 
     from modules.hosted_services import api as pdp_api
 
     groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
-    clara = next(group for group in groups if group["id"] == "clara")
 
-    assert clara["id"] == "clara"
-    assert clara["lead"] == expected_lead
+    # These are product propositions, not a live inventory of installed skills.
+    assert {group["id"]: group["lead"] for group in groups} == expected_leads
 
 
 @pytest.mark.parametrize(
