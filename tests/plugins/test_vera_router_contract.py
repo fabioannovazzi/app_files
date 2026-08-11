@@ -85,6 +85,7 @@ def test_vera_routes_paolo_agenzia_teaching_request_to_studio_archive() -> None:
         "registratore privacy-bounded di Codex Desktop"
         in cards["studio-archive"]["instructions"]
     )
+    assert "Never look for `requirements.txt` or `scripts/`" in wrapper
 
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:

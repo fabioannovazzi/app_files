@@ -33,10 +33,18 @@ Choose the route before resolving any module:
    `../../modules/studio-archive` from this skill directory when it exists;
    otherwise resolve `../../../studio-archive` in the repository. Read that
    module's `skills/studio-archive/SKILL.md` completely and follow its
-   `Teach Vera the Agenzia invoice-download flow` section. On another surface,
-   explain that the privacy-bounded recorder requires Codex Desktop and a local
-   visible Chrome session; never request credentials or substitute a video or
-   browser session controlled by Vera.
+   `Teach Vera the Agenzia invoice-download flow` section, with this packaged
+   Vera runtime override: resolve the Vera root as `../..` from this wrapper
+   directory, then run `python <vera-root>/scripts/managed_python_runtime.py
+   install` for preflight and start the PTY with `python
+   <vera-root>/scripts/managed_python_runtime.py run
+   scripts/record_agenzia_invoice_flow.py --output-dir
+   <fresh-private-directory>`. The Vera-root entrypoint resolves the embedded
+   module itself. Never look for `requirements.txt` or `scripts/` inside this
+   wrapper directory. On another surface, explain that the privacy-bounded
+   recorder requires Codex Desktop and a local visible Chrome session; never
+   request credentials or substitute a video or browser session controlled by
+   Vera.
 2. When the user asks to inspect WhatsApp messages, confirm that Computer Use
    can control the local WhatsApp Desktop application on the same computer.
    - If it is available, read `references/whatsapp-desktop.md` completely and

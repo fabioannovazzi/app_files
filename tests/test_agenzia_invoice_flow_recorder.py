@@ -8,7 +8,9 @@ from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDIO_ARCHIVE_ROOT = ROOT / "plugins" / "studio-archive"
+VERA_ROOT = ROOT / "plugins" / "vera"
 RECORDER_PATH = STUDIO_ARCHIVE_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
+VERA_RECORDER_PATH = VERA_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
 
 
 def _load_recorder() -> ModuleType:
@@ -177,6 +179,25 @@ def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
     assert "va bene anche `done`" in skill
     assert "Do not read the JSON into model context" in skill
     assert "requirements-portal-recorder.txt" in skill
+
+
+def test_vera_packages_recorder_in_its_managed_core_runtime() -> None:
+    requirements = (VERA_ROOT / "requirements.txt").read_text(encoding="utf-8")
+    wrapper = (VERA_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "test_vera_agenzia_recorder_entrypoint",
+        VERA_RECORDER_PATH,
+    )
+    assert spec is not None
+    assert spec.loader is not None
+    entrypoint = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(entrypoint)
+
+    assert "playwright>=1.48.0" in requirements.splitlines()
+    assert "<vera-root>/scripts/managed_python_runtime.py" in wrapper
+    assert entrypoint._implementation_path() == RECORDER_PATH
 
 
 def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
