@@ -35,13 +35,16 @@ Choose the route before resolving any module:
    module's `skills/studio-archive/SKILL.md` completely and follow its
    `Teach Vera the Agenzia invoice-download flow` section, with this packaged
    Vera runtime override: resolve the Vera root as `../..` from this wrapper
-   directory, then run `python <vera-root>/scripts/managed_python_runtime.py
-   install` for preflight and start the PTY with `python
-   <vera-root>/scripts/managed_python_runtime.py run
+   directory, then run `python <vera-root>/scripts/check_dependencies.py
+   --module studio-archive --requirements
+   requirements-portal-recorder.txt`. This command must install the selected
+   optional requirements into CR-19's managed runtime before it validates
+   them; a missing-Playwright result is not a completed preflight. Start the
+   PTY with `python <vera-root>/scripts/managed_python_runtime.py --module
+   studio-archive --requirements requirements-portal-recorder.txt run
    scripts/record_agenzia_invoice_flow.py --output-dir
-   <fresh-private-directory>`. The Vera-root entrypoint resolves the embedded
-   module itself. Never look for `requirements.txt` or `scripts/` inside this
-   wrapper directory. On another surface, explain that the privacy-bounded
+   <fresh-private-directory>`. Never look for `requirements.txt` or `scripts/`
+   inside this wrapper directory. On another surface, explain that the privacy-bounded
    recorder requires Codex Desktop and a local visible Chrome session; never
    request credentials or substitute a video or browser session controlled by
    Vera.

@@ -10,7 +10,6 @@ ROOT = Path(__file__).resolve().parents[1]
 STUDIO_ARCHIVE_ROOT = ROOT / "plugins" / "studio-archive"
 VERA_ROOT = ROOT / "plugins" / "vera"
 RECORDER_PATH = STUDIO_ARCHIVE_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
-VERA_RECORDER_PATH = VERA_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
 
 
 def _load_recorder() -> ModuleType:
@@ -181,23 +180,20 @@ def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
     assert "requirements-portal-recorder.txt" in skill
 
 
-def test_vera_packages_recorder_in_its_managed_core_runtime() -> None:
-    requirements = (VERA_ROOT / "requirements.txt").read_text(encoding="utf-8")
+def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime() -> (
+    None
+):
+    requirements = (STUDIO_ARCHIVE_ROOT / "requirements-portal-recorder.txt").read_text(
+        encoding="utf-8"
+    )
     wrapper = (VERA_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
         encoding="utf-8"
     )
-    spec = importlib.util.spec_from_file_location(
-        "test_vera_agenzia_recorder_entrypoint",
-        VERA_RECORDER_PATH,
-    )
-    assert spec is not None
-    assert spec.loader is not None
-    entrypoint = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(entrypoint)
 
     assert "playwright>=1.48.0" in requirements.splitlines()
-    assert "<vera-root>/scripts/managed_python_runtime.py" in wrapper
-    assert entrypoint._implementation_path() == RECORDER_PATH
+    assert "--module studio-archive --requirements" in wrapper
+    assert "requirements-portal-recorder.txt run" in wrapper
+    assert "a missing-Playwright result is not a completed preflight" in wrapper
 
 
 def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
@@ -207,7 +203,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.16"
+    assert manifest["version"] == "0.1.17"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(

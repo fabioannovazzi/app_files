@@ -1,2 +1,1 @@
 # Vera delegates runtime dependencies to the selected specialist module.
-playwright>=1.48.0

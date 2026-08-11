@@ -12,6 +12,7 @@ import shutil
 import subprocess
 import sys
 import sysconfig
+from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable
@@ -43,8 +44,14 @@ class RuntimeSelection:
 
     plugin_root: Path
     requirement_root: Path
-    requirements_file: Path
+    requirements_files: tuple[Path, ...]
     scope: str
+
+    @property
+    def requirements_file(self) -> Path:
+        """Return the first selected requirements file for compatibility."""
+
+        return self.requirements_files[0]
 
 
 def _included_requirement_files(
@@ -74,7 +81,11 @@ def _included_requirement_files(
     return files
 
 
-def select_runtime(plugin_root: Path, module: str | None = None) -> RuntimeSelection:
+def select_runtime(
+    plugin_root: Path,
+    module: str | None = None,
+    requirements: Sequence[str | Path] | None = None,
+) -> RuntimeSelection:
     """Resolve the requirements owned by a plugin or embedded component."""
 
     root = plugin_root.resolve()
@@ -98,15 +109,25 @@ def select_runtime(plugin_root: Path, module: str | None = None) -> RuntimeSelec
         source = root.parent / module
         requirement_root = packaged if packaged.is_dir() else source
         scope = f"modules/{module}"
-    requirements_file = requirement_root / "requirements.txt"
     if not requirement_root.is_dir():
         raise ValueError(f"Unknown plugin component: {module}")
-    if not requirements_file.is_file():
-        raise ValueError(f"Requirements file not found: {requirements_file}")
+    selected_names = requirements or ("requirements.txt",)
+    requirements_files: list[Path] = []
+    for name in selected_names:
+        candidate = Path(name)
+        if candidate.is_absolute():
+            raise ValueError(f"Requirements file must be relative: {candidate}")
+        resolved = (requirement_root / candidate).resolve()
+        if not resolved.is_relative_to(requirement_root):
+            raise ValueError(f"Requirements file is outside component: {candidate}")
+        if not resolved.is_file():
+            raise ValueError(f"Requirements file not found: {resolved}")
+        if resolved not in requirements_files:
+            requirements_files.append(resolved)
     return RuntimeSelection(
         plugin_root=root,
         requirement_root=requirement_root.resolve(),
-        requirements_file=requirements_file.resolve(),
+        requirements_files=tuple(requirements_files),
         scope=scope,
     )
 
@@ -115,15 +136,17 @@ def requirements_fingerprint(selection: RuntimeSelection) -> str:
     """Return a stable fingerprint for the selected requirement graph."""
 
     digest = hashlib.sha256()
-    for path in _included_requirement_files(selection.requirements_file):
-        try:
-            relative = path.relative_to(selection.plugin_root)
-        except ValueError:
-            relative = path.relative_to(selection.requirement_root)
-        digest.update(relative.as_posix().encode("utf-8"))
-        digest.update(b"\0")
-        digest.update(path.read_bytes())
-        digest.update(b"\0")
+    seen: set[Path] = set()
+    for requirements_file in selection.requirements_files:
+        for path in _included_requirement_files(requirements_file, seen=seen):
+            try:
+                relative = path.relative_to(selection.plugin_root)
+            except ValueError:
+                relative = path.relative_to(selection.requirement_root)
+            digest.update(relative.as_posix().encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(path.read_bytes())
+            digest.update(b"\0")
     return digest.hexdigest()[:16]
 
 
@@ -220,6 +243,13 @@ def _validation_command(selection: RuntimeSelection, target: Path) -> list[str]:
     command = [str(runtime_python(target)), str(checker)]
     if selection.scope == "core":
         command.append("--managed-verify")
+    relative_requirements = [
+        path.relative_to(selection.requirement_root).as_posix()
+        for path in selection.requirements_files
+    ]
+    if relative_requirements != ["requirements.txt"]:
+        for requirement in relative_requirements:
+            command.extend(("--requirements", requirement))
     return command
 
 
@@ -256,12 +286,13 @@ def ensure_runtime(
     plugin_root: Path,
     module: str | None = None,
     *,
+    requirements: Sequence[str | Path] | None = None,
     data_dir: Path | None = None,
     runner: Runner = subprocess.run,
 ) -> tuple[bool, Path, str]:
     """Install or reuse one persistent managed dependency target."""
 
-    selection = select_runtime(plugin_root, module)
+    selection = select_runtime(plugin_root, module, requirements)
     target = dependency_target(selection, data_dir)
     if _dependencies_ready(
         selection,
@@ -289,17 +320,18 @@ def ensure_runtime(
             detail = (created.stderr or created.stdout).strip()
             shutil.rmtree(target, ignore_errors=True)
             return False, target, detail or "virtual environment creation failed"
+        install_command = [
+            str(runtime_python(target)),
+            "-m",
+            "pip",
+            "install",
+            "--disable-pip-version-check",
+            "--no-input",
+        ]
+        for requirements_file in selection.requirements_files:
+            install_command.extend(("-r", str(requirements_file)))
         installed = runner(
-            [
-                str(runtime_python(target)),
-                "-m",
-                "pip",
-                "install",
-                "--disable-pip-version-check",
-                "--no-input",
-                "-r",
-                str(selection.requirements_file),
-            ],
+            install_command,
             cwd=selection.requirement_root,
             capture_output=True,
             check=False,
@@ -331,11 +363,15 @@ def ensure_runtime(
         return False, target, str(error)
 
 
-def activate_runtime(plugin_root: Path, module: str | None = None) -> Path | None:
+def activate_runtime(
+    plugin_root: Path,
+    module: str | None = None,
+    requirements: Sequence[str | Path] | None = None,
+) -> Path | None:
     """Return a ready managed virtual environment without installing anything."""
 
     try:
-        selection = select_runtime(plugin_root, module)
+        selection = select_runtime(plugin_root, module, requirements)
         target = dependency_target(selection)
     except (OSError, ValueError):
         return None
@@ -349,6 +385,11 @@ def main(plugin_root: Path, argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module")
+    parser.add_argument(
+        "--requirements",
+        action="append",
+        help="Requirements file relative to the selected plugin or component.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
     subparsers.add_parser("install")
     subparsers.add_parser("status")
@@ -359,14 +400,18 @@ def main(plugin_root: Path, argv: list[str] | None = None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
 
     if args.command == "status":
-        target = activate_runtime(plugin_root, args.module)
+        target = activate_runtime(plugin_root, args.module, args.requirements)
         if target is None:
             LOGGER.error("Managed Python runtime is not ready.")
             return 1
         LOGGER.info("Managed Python runtime is ready at %s", target)
         return 0
 
-    ready, target, detail = ensure_runtime(plugin_root, args.module)
+    ready, target, detail = ensure_runtime(
+        plugin_root,
+        args.module,
+        requirements=args.requirements,
+    )
     if not ready:
         LOGGER.error("Managed Python runtime setup failed: %s", detail)
         return 1
@@ -374,7 +419,7 @@ def main(plugin_root: Path, argv: list[str] | None = None) -> int:
         LOGGER.info("%s", detail)
         return 0
 
-    selection = select_runtime(plugin_root, args.module)
+    selection = select_runtime(plugin_root, args.module, args.requirements)
     script = (selection.requirement_root / args.script).resolve()
     if not script.is_relative_to(selection.requirement_root) or not script.is_file():
         LOGGER.error("Managed runtime script not found: %s", script)

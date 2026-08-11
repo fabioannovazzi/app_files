@@ -53,7 +53,7 @@ def main(argv: list[str] | None = None) -> int:
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module", choices=COMPONENTS)
-    parser.add_argument("--requirements", type=Path)
+    parser.add_argument("--requirements", action="append")
     args, remaining = parser.parse_known_args(argv)
 
     missing = [name for name in COMPONENTS if not _component_root(name).is_dir()]
@@ -70,9 +70,13 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.error("Dependency checker not found for %s: %s", args.module, checker)
         return 1
     delegated_args = list(remaining)
-    if args.requirements is not None:
-        delegated_args = ["--requirements", str(args.requirements), *delegated_args]
-    ready, target, detail = ensure_runtime(PLUGIN_ROOT, args.module)
+    for requirement in args.requirements or []:
+        delegated_args = ["--requirements", requirement, *delegated_args]
+    ready, target, detail = ensure_runtime(
+        PLUGIN_ROOT,
+        args.module,
+        requirements=args.requirements,
+    )
     if not ready:
         LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
         return 1
