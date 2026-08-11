@@ -507,8 +507,6 @@
 
   <main>
     <nav class="journey-breadcrumb" aria-label="Breadcrumb" data-journey-aria="breadcrumbAria">
-      <a href="../vera/index.html?lang=it" data-vera-link data-journey="breadcrumb.vera">Vera</a>
-      <span aria-hidden="true">/</span>
       <span data-journey="breadcrumb.area">Controlli contabili</span>
       <span aria-hidden="true">/</span>
       <strong data-journey="breadcrumb.module">Campionamento del giornale</strong>
@@ -1128,7 +1126,6 @@
         node.setAttribute("aria-label", accessibilityLabels[safeLang][node.dataset.accessibilityLabel]);
       });
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.querySelector("[data-vera-link]").href = `../vera/index.html?lang=${safeLang}`;
 
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const path = node.getAttribute("data-i18n").split(".");
@@ -1320,9 +1317,7 @@
         if (value) node.textContent = value;
       });
       document.querySelectorAll("[data-journey-aria]").forEach((node) => node.setAttribute("aria-label", data[node.dataset.journeyAria]));
-      const veraLink = document.querySelector("[data-vera-link]");
       const relatedLink = document.querySelector("[data-related-link]");
-      if (veraLink) veraLink.href = `../vera/index.html?lang=${language}`;
       if (relatedLink) relatedLink.href = `../check-entries/index.html?lang=${language}`;
       const proofVideoId = proofVideoIds[language];
       document.getElementById("proof-video-link").href = `https://youtu.be/${proofVideoId}`;

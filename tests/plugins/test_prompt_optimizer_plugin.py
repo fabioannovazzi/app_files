@@ -1221,11 +1221,8 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "brief controllabile",
         "encargo revisable",
         "File prodotti",
-        'id="vera-link"',
         "question_inventory.json",
         "prompt_audit.json",
-        "../vera/index.html?lang=it",
-        'document.getElementById("vera-link").href = `../vera/index.html?lang=${safeLang}`',
         "/?lang=${safeLang}",
     ):
         assert snippet in page

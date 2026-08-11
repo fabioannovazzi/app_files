@@ -33,6 +33,16 @@ VERA_SITE_MODULES = {
 VERA_MODULE_PAGES = {
     module: SHARED_ROOT / module / "index.html" for module in VERA_SITE_MODULES
 }
+PIPELINE_LABEL_PAGES = tuple(
+    sorted(
+        (
+            *VERA_MODULE_PAGES.values(),
+            SHARED_ROOT / "financial-analysis" / "index.html",
+            SHARED_ROOT / "sales-plan" / "index.html",
+        ),
+        key=str,
+    )
+)
 VERA_CORE_PAGES = (
     SHARED_ROOT / "vera" / "index.html",
     *(
@@ -536,7 +546,26 @@ def test_vera_module_pages_present_an_outcome_led_connected_journey(
     assert "Ricevi" in page
     assert 'id="proof"' in page or 'id="result"' in page
     assert len(prompt_nodes) == 1
-    assert "../vera/index.html?lang=it" in page
+
+
+@pytest.mark.parametrize(
+    "page_path",
+    PIPELINE_LABEL_PAGES,
+    ids=lambda path: path.parent.name,
+)
+def test_pipeline_labels_omit_redundant_product_names(page_path: Path) -> None:
+    page = page_path.read_text(encoding="utf-8")
+    breadcrumb = re.search(
+        r'<(?P<tag>nav|p)\b[^>]*class="(?:journey-)?breadcrumb"[^>]*>'
+        r"(?P<body>.*?)</(?P=tag)>",
+        page,
+        re.DOTALL,
+    )
+
+    assert breadcrumb is not None
+    visible_text = re.sub(r"<[^>]+>", " ", html.unescape(breadcrumb.group("body")))
+    assert not re.search(r"\b(?:Vera|Clara|Lucia)\b", visible_text)
+    assert "data-vera-link" not in breadcrumb.group(0)
 
 
 @pytest.mark.parametrize(
@@ -1351,7 +1380,7 @@ def test_vera_hub_keeps_only_the_overview_video_inside_the_method_story() -> Non
     assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert page.count('<a class="overview-video') == 1
     assurance = _section_markup(page, "assurance")
-    assert 'data-featured-video' in assurance
+    assert "data-featured-video" in assurance
     assert 'id="video"' not in page
     assert "data-video-index=" not in page
     assert 'data-video-library="vera"' not in page
@@ -1363,12 +1392,8 @@ def test_vera_hub_keeps_only_the_overview_video_inside_the_method_story() -> Non
 
 def test_vera_formerly_unplaced_guides_are_mounted_on_subject_pages() -> None:
     hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-    new_client = (SHARED_ROOT / "new-client" / "index.html").read_text(
-        encoding="utf-8"
-    )
-    concordato = VERA_MODULE_PAGES["concordato-plan-review"].read_text(
-        encoding="utf-8"
-    )
+    new_client = (SHARED_ROOT / "new-client" / "index.html").read_text(encoding="utf-8")
+    concordato = VERA_MODULE_PAGES["concordato-plan-review"].read_text(encoding="utf-8")
 
     assert (
         'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"'
@@ -1702,7 +1727,9 @@ process.stdout.write(JSON.stringify(catalogs));
             in {"dati-fiscali-strutturati", "avviso-intake", "email-cliente"}
         ]
         assert file_preparation_videos
-        assert all(video["pageTargets"] == [target] for video in file_preparation_videos)
+        assert all(
+            video["pageTargets"] == [target] for video in file_preparation_videos
+        )
     expected_studio_archive = {
         "it": ("bsEbR9XegrU", "1:22"),
         "en": ("QTpEVHvP45Q", "1:19"),
