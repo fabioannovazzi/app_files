@@ -23,6 +23,7 @@ except ImportError:
 ROOT = Path(__file__).resolve().parents[2]
 COMPONENT_ROOT = ROOT / "plugins" / "studio-archive"
 ARCHIVE_CORE_PATH = COMPONENT_ROOT / "scripts" / "archive_core.py"
+CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
     "audit-reconciliation",
@@ -112,6 +113,30 @@ def _fitz_or_skip() -> ModuleType:
     if _fitz is None:
         pytest.skip("PyMuPDF creates the test PDF.")
     return _fitz
+
+
+def test_dependency_preflight_reports_missing_google_namespace_without_crashing() -> (
+    None
+):
+    # Arrange
+    command = [sys.executable, "-S", str(CHECK_DEPENDENCIES_PATH)]
+
+    # Act
+    result = subprocess.run(
+        command,
+        cwd=COMPONENT_ROOT,
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+
+    # Assert
+    assert result.returncode == 1
+    assert (
+        "Missing dependency google-api-core (import google.api_core)." in result.stderr
+    )
+    assert "ModuleNotFoundError" not in result.stderr
+    assert "Traceback" not in result.stderr
 
 
 def test_client_folder_binding_uses_exact_scope_without_mutating_sources(

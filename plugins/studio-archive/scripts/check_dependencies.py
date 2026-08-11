@@ -93,7 +93,11 @@ def main(argv: list[str] | None = None) -> int:
             if not package:
                 continue
             module_name = PACKAGE_IMPORTS.get(package, package.replace("-", "_"))
-            if importlib.util.find_spec(module_name) is None:
+            try:
+                available = importlib.util.find_spec(module_name) is not None
+            except (ImportError, ModuleNotFoundError):
+                available = False
+            if not available:
                 missing.append((package, module_name))
     if missing:
         for package, module_name in missing:
