@@ -614,9 +614,9 @@
 
     <section class="section-block" id="video">
       <div class="video-layout">
-        <a class="video-card" href="https://youtu.be/bsEbR9XegrU" target="_blank" rel="noopener noreferrer" aria-label="Guarda il video sull'Archivio dello Studio su YouTube" data-i18n-aria-label="video.aria">
+        <a class="video-card" data-video-link href="https://youtu.be/bsEbR9XegrU" target="_blank" rel="noopener noreferrer" aria-label="Guarda il video sull'Archivio dello Studio su YouTube" data-i18n-aria-label="video.aria">
           <span class="video-image" aria-hidden="true">
-            <img src="https://i.ytimg.com/vi/bsEbR9XegrU/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
+            <img data-video-thumbnail src="https://i.ytimg.com/vi/bsEbR9XegrU/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
             <span class="video-play">▶</span>
           </span>
           <span class="video-meta" data-i18n="video.meta">Italiano · 1:22 · Si apre su YouTube</span>
@@ -919,7 +919,7 @@
         "people.two.copy": "Fabio and Paolo can sync the same studio folder to their Macs. Each creates a local index and connects their own Gmail and WhatsApp.",
         "people.two.note": "The documents may be the same; the index, email, chats, and Codex sessions remain separate for each professional.",
         "video.aria": "Watch the Studio Archive video on YouTube",
-        "video.meta": "Italian audio · 1:22 · Opens on YouTube",
+        "video.meta": "English · 1:19 · Opens on YouTube",
         "video.index": "Video",
         "video.title": "See the complete workflow.",
         "video.copy": "From the studio folder to fixed-rule retrieval, then Gmail and WhatsApp only when needed.",
@@ -1047,7 +1047,7 @@
         "people.two.copy": "Fabio et Paolo peuvent synchroniser le même dossier du cabinet sur leurs Mac. Chacun crée son index local et connecte ses propres Gmail et WhatsApp.",
         "people.two.note": "Les documents peuvent être identiques ; l’index, les e-mails, les conversations et les sessions Codex restent séparés pour chaque professionnel.",
         "video.aria": "Regarder la vidéo sur les Archives du cabinet sur YouTube",
-        "video.meta": "Audio italien · 1:22 · S’ouvre sur YouTube",
+        "video.meta": "Français · 1:33 · S’ouvre sur YouTube",
         "video.index": "Vidéo",
         "video.title": "Découvrez le parcours complet.",
         "video.copy": "Du dossier du cabinet à la recherche selon des règles fixes, puis Gmail et WhatsApp uniquement si nécessaire.",
@@ -1175,7 +1175,7 @@
         "people.two.copy": "Fabio und Paolo können denselben Kanzleiordner mit ihren Macs synchronisieren. Jeder erstellt einen lokalen Index und verbindet eigenes Gmail und WhatsApp.",
         "people.two.note": "Die Dokumente können gleich sein; Index, E-Mails, Chats und Codex-Sitzungen bleiben für jeden Berufsträger getrennt.",
         "video.aria": "Video zum Kanzleiarchiv auf YouTube ansehen",
-        "video.meta": "Italienischer Ton · 1:22 · Öffnet YouTube",
+        "video.meta": "Deutsch · 1:33 · Öffnet YouTube",
         "video.index": "Video",
         "video.title": "Den gesamten Ablauf ansehen.",
         "video.copy": "Vom Kanzleiordner zur Suche nach festen Regeln, dann Gmail und WhatsApp nur bei Bedarf.",
@@ -1303,7 +1303,7 @@
         "people.two.copy": "Fabio y Paolo pueden sincronizar la misma carpeta del despacho con sus Macs. Cada uno crea su índice local y conecta su propio Gmail y WhatsApp.",
         "people.two.note": "Los documentos pueden ser los mismos; el índice, los correos, los chats y las sesiones de Codex permanecen separados para cada profesional.",
         "video.aria": "Ver el vídeo sobre el Archivo del despacho en YouTube",
-        "video.meta": "Audio en italiano · 1:22 · Se abre en YouTube",
+        "video.meta": "Español · 1:34 · Se abre en YouTube",
         "video.index": "Vídeo",
         "video.title": "Mira el flujo completo.",
         "video.copy": "De la carpeta del despacho a la búsqueda con reglas fijas y después Gmail y WhatsApp solo cuando hacen falta.",
@@ -1342,6 +1342,13 @@
     };
 
     const locales = { it: "it_IT", en: "en_GB", fr: "fr_FR", de: "de_DE", es: "es_ES" };
+    const videoByLanguage = {
+      it: { id: "bsEbR9XegrU" },
+      en: { id: "QTpEVHvP45Q" },
+      fr: { id: "8esGoF6olCs" },
+      de: { id: "R8PCjl6TsdQ" },
+      es: { id: "fpQtVH6son8" }
+    };
     const supported = new Set(Object.keys(copy));
     const params = new URLSearchParams(window.location.search);
     let lang = params.get("lang") || localStorage.getItem("mparanza-language") || "it";
@@ -1355,6 +1362,10 @@
       document.querySelector('meta[name="description"]').content = selected["meta.description"];
       document.querySelector('meta[property="og:title"]').content = selected["meta.title"];
       document.querySelector('meta[property="og:description"]').content = selected["meta.description"];
+      const selectedVideo = videoByLanguage[lang];
+      document.querySelector("[data-video-link]").href = `https://youtu.be/${selectedVideo.id}`;
+      document.querySelector("[data-video-thumbnail]").src = `https://i.ytimg.com/vi/${selectedVideo.id}/maxresdefault.jpg`;
+      document.querySelector('meta[property="og:image"]').content = `https://i.ytimg.com/vi/${selectedVideo.id}/maxresdefault.jpg`;
       document.getElementById("og-locale").content = locales[lang];
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const value = selected[node.dataset.i18n];
