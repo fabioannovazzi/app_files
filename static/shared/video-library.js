@@ -472,8 +472,8 @@
   }
 };
 
-  const catalogVersion = "4.3.0";
-  const lastVerifiedAt = "2026-07-26";
+  const catalogVersion = "4.4.0";
+  const lastVerifiedAt = "2026-08-11";
 
   const veraYoutubeDefinitions = Object.freeze([
     {
@@ -603,6 +603,7 @@
   const veraModuleCopy = {
     en: {
       "new-client": ["New Client", "Move from source documents to a working client file with connected actions and history."],
+      "studio-archive": ["Studio Archive", "Index documents on the Mac and consult Gmail or WhatsApp Desktop only when needed."],
       "journal-sampling": ["Journal Sampling", "Qualify the journal layout, preserve the population link and apply a reproducible sample."],
       "check-entries": ["Check Entries", "Close entry-to-support relationships only when the confirmed evidence contract supports them."],
       "journal-bank-reconciliation": ["Bank reconciliation", "Use confirmed mappings and exact relationship controls to separate matches, candidates and open rows."],
@@ -636,6 +637,7 @@
     },
     fr: {
       "new-client": ["Nouveau client", "Des documents au dossier client de travail, avec actions et historique reliés."],
+      "studio-archive": ["Archives du cabinet", "Indexe les documents sur le Mac et consulte Gmail ou WhatsApp Desktop uniquement lorsque nécessaire."],
       "journal-sampling": ["Échantillonnage du journal", "Qualifie la structure, conserve le lien avec la population et applique un échantillon reproductible."],
       "check-entries": ["Contrôle des écritures", "Clôt les relations écriture-justificatif uniquement lorsque le contrat de preuve confirmé les étaye."],
       "journal-bank-reconciliation": ["Rapprochement bancaire", "Utilise des mappings confirmés et des contrôles exacts pour séparer rapprochements, candidats et lignes ouvertes."],
@@ -652,6 +654,7 @@
     },
     de: {
       "new-client": ["Neuer Mandant", "Von Quelldokumenten zur Arbeitsakte mit verknüpften Aufgaben und Historie."],
+      "studio-archive": ["Kanzleiarchiv", "Indexiert Dokumente auf dem Mac und konsultiert Gmail oder WhatsApp Desktop nur bei Bedarf."],
       "journal-sampling": ["Journal-Stichprobe", "Qualifiziert das Format, erhält den Bezug zur Grundgesamtheit und führt eine reproduzierbare Stichprobe aus."],
       "check-entries": ["Buchungen prüfen", "Schließt Buchungs-Beleg-Beziehungen nur, wenn der bestätigte Nachweisvertrag sie trägt."],
       "journal-bank-reconciliation": ["Bankabstimmung", "Trennt mit bestätigten Mappings und exakten Kontrollen Treffer, Kandidaten und offene Zeilen."],
@@ -668,6 +671,7 @@
     },
     es: {
       "new-client": ["Nuevo cliente", "Pasa de los documentos fuente a un expediente operativo con acciones e historial vinculados."],
+      "studio-archive": ["Archivo del despacho", "Indexa documentos en el Mac y consulta Gmail o WhatsApp Desktop solo cuando es necesario."],
       "journal-sampling": ["Muestreo del diario", "Cualifica el formato, conserva el vínculo con la población y aplica una muestra reproducible."],
       "check-entries": ["Comprobación de asientos", "Cierra relaciones asiento-justificante solo cuando el contrato de evidencia confirmado las respalda."],
       "journal-bank-reconciliation": ["Conciliación bancaria", "Usa mapeos confirmados y controles exactos para separar coincidencias, candidatos y líneas abiertas."],
@@ -739,12 +743,29 @@
       scope: "core",
       jurisdiction: null,
       duration: "1:22",
-      localizations: { it: "bsEbR9XegrU" },
+      durations: {
+        it: "1:22",
+        en: "1:19",
+        fr: "1:33",
+        de: "1:33",
+        es: "1:34"
+      },
+      localizations: {
+        it: "bsEbR9XegrU",
+        en: "QTpEVHvP45Q",
+        fr: "8esGoF6olCs",
+        de: "R8PCjl6TsdQ",
+        es: "fpQtVH6son8"
+      },
       pageTargets: [
         "/static/shared/studio-archive/index.html"
       ],
       titles: {
-        it: "Vera | Documenti, Gmail e WhatsApp nell’Archivio dello Studio"
+        it: "Vera | Documenti, Gmail e WhatsApp nell’Archivio dello Studio",
+        en: "Vera | Documents, Gmail, and WhatsApp in Studio Archive",
+        fr: "Vera | Documents, Gmail et WhatsApp dans les Archives du cabinet",
+        de: "Vera | Dokumente, Gmail und WhatsApp im Kanzleiarchiv",
+        es: "Vera | Documentos, Gmail y WhatsApp en el Archivo del despacho"
       }
     },
     {
@@ -919,7 +940,7 @@
           audioLanguage: lang,
           shortTitle: stripProductPrefix(title),
           description,
-          duration,
+          duration: definition.durations?.[lang] || duration,
           status: "published",
           pageTargets,
           lastVerifiedAt

@@ -971,7 +971,7 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
     assert 'href="../vera/index.html"' in page
     assert "90 days" not in page
     assert "90 giorni" not in page
-    assert page.count("https://youtu.be/") == 1
+    assert page.count('href="https://youtu.be/') == 1
     assert "<video" not in page
     assert "video-production/rendered" not in page
     assert "transcript.txt" not in page
@@ -1676,7 +1676,7 @@ process.stdout.write(JSON.stringify(catalogs));
     )
     catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
-    assert all(catalog["version"] == "4.3.0" for catalog in catalogs.values())
+    assert all(catalog["version"] == "4.4.0" for catalog in catalogs.values())
     assert all(
         video["pageTargets"]
         for catalog in catalogs.values()
@@ -1703,29 +1703,33 @@ process.stdout.write(JSON.stringify(catalogs));
         ]
         assert file_preparation_videos
         assert all(video["pageTargets"] == [target] for video in file_preparation_videos)
-    studio_archive = next(
-        video
-        for video in catalogs["it"]["videos"]
-        if video["module"] == "studio-archive"
-    )
-    assert studio_archive["id"] == "bsEbR9XegrU"
-    assert studio_archive["conceptId"] == "document-index-and-live-sources"
-    assert studio_archive["edition"] == "core"
-    assert studio_archive["scope"] == "core"
-    assert studio_archive["jurisdiction"] is None
-    assert studio_archive["duration"] == "1:22"
-    assert studio_archive["workstream"] == "client"
-    assert studio_archive["pageTargets"] == [
-        "/static/shared/studio-archive/index.html",
-    ]
-    for language in ("en", "fr", "de", "es"):
-        assert all(
-            video["module"] != "studio-archive"
+    expected_studio_archive = {
+        "it": ("bsEbR9XegrU", "1:22"),
+        "en": ("QTpEVHvP45Q", "1:19"),
+        "fr": ("8esGoF6olCs", "1:33"),
+        "de": ("R8PCjl6TsdQ", "1:33"),
+        "es": ("fpQtVH6son8", "1:34"),
+    }
+    for language, (youtube_id, duration) in expected_studio_archive.items():
+        studio_archive = next(
+            video
             for video in catalogs[language]["videos"]
+            if video["module"] == "studio-archive"
         )
+        assert studio_archive["id"] == youtube_id
+        assert studio_archive["conceptId"] == "document-index-and-live-sources"
+        assert studio_archive["edition"] == "core"
+        assert studio_archive["scope"] == "core"
+        assert studio_archive["jurisdiction"] is None
+        assert studio_archive["duration"] == duration
+        assert studio_archive["workstream"] == "client"
+        assert studio_archive["audioLanguage"] == language
+        assert studio_archive["pageTargets"] == [
+            "/static/shared/studio-archive/index.html",
+        ]
     assert catalogs["es"]["featured"]["id"] == "XbmQqWA5sYk"
     assert catalogs["es"]["featured"]["audioLanguage"] == "es"
-    assert len(catalogs["es"]["videos"]) == 8
+    assert len(catalogs["es"]["videos"]) == 9
     assert {video["audioLanguage"] for video in catalogs["es"]["videos"]} == {"es"}
     assert {video["id"] for video in catalogs["es"]["videos"]} == {
         "X3BOp9ZxiAQ",
@@ -1736,6 +1740,7 @@ process.stdout.write(JSON.stringify(catalogs));
         "-TnYwnglpqE",
         "Q351IGPEPxg",
         "lHOahBSRknQ",
+        "fpQtVH6son8",
     }
 
     expected_jurisdictions = {
@@ -1780,7 +1785,19 @@ def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
     assert "HW8amlcU0Lk" in sampling
     for youtube_id in ("xakA0V5-3-8", "I1dp3FYVy2w"):
         assert youtube_id in entries
-    assert "bsEbR9XegrU" in studio_archive
+    for youtube_id in (
+        "bsEbR9XegrU",
+        "QTpEVHvP45Q",
+        "8esGoF6olCs",
+        "R8PCjl6TsdQ",
+        "fpQtVH6son8",
+    ):
+        assert youtube_id in studio_archive
+    assert "const videoByLanguage" in studio_archive
+    assert "Italian audio" not in studio_archive
+    assert "Audio italien" not in studio_archive
+    assert "Italienischer Ton" not in studio_archive
+    assert "Audio en italiano" not in studio_archive
     for page in (new_client, sampling, entries, studio_archive):
         assert "https://youtu.be/" in page
         assert "video-production/rendered" not in page
