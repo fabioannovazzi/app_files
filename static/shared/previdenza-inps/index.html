@@ -237,8 +237,6 @@
 
   <main>
     <nav class="breadcrumb" aria-label="Percorso pagina" data-accessibility-label="breadcrumb">
-      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a>
-      <span aria-hidden="true">/</span>
       <span aria-current="page" data-i18n="breadcrumb.current">Pacchetto Italia · Previdenza INPS</span>
     </nav>
 
@@ -488,7 +486,6 @@
       document.getElementById("og-image").content = `https://i.ytimg.com/vi/${data.guide.id}/hqdefault.jpg`;
       document.getElementById("og-locale").content = data.meta.locale;
       document.getElementById("home-link").href = `/?lang=${safeLang}`;
-      document.getElementById("vera-link").href = `../vera/index.html?lang=${safeLang}`;
       document.getElementById("next-link").href = `../report-builder/index.html?lang=${safeLang}`;
       document.querySelectorAll("[data-i18n]").forEach((node) => {
         const value = data[node.dataset.i18n];

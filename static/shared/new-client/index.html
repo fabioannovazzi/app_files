@@ -42,7 +42,6 @@
 
   <main class="page-shell" id="main-content">
     <p class="breadcrumb">
-      <a id="vera-link" href="../vera/index.html?lang=it">Vera</a><span>/</span>
       <strong data-i18n="breadcrumb.current">Nuovo cliente</strong>
     </p>
 
@@ -381,7 +380,6 @@
       });
       document.getElementById("prompt-example").textContent = strings.prompt;
       document.getElementById("home-link").href = `/?lang=${lang}`;
-      document.getElementById("vera-link").href = localizedHref("../vera/index.html", lang);
       document.getElementById("footer-vera-link").href = localizedHref("../vera/index.html", lang);
       document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
       if (isItaly) loadYoutubeVideo("proof", videoIds.proof);

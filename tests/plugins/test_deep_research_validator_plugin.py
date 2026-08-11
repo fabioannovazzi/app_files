@@ -17,7 +17,6 @@ ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "deep-research-validator"
 SCRIPTS_DIR = PLUGIN_ROOT / "scripts"
 MCP_SERVER_PATH = PLUGIN_ROOT / "mcp" / "server.cjs"
-VERA_PRODUCT_PAGE_LINK = "../vera/index.html"
 
 
 def _running_customer_output(
@@ -1804,10 +1803,6 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        VERA_PRODUCT_PAGE_LINK,
-        'id="vera-link"',
-        "../vera/index.html?lang=it",
-        'document.getElementById("vera-link").href = `../vera/index.html?lang=${lang}`',
         "/?lang=${lang}",
     ):
         assert snippet in page
