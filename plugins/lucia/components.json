@@ -3,6 +3,8 @@
   "plugins": [
     "prompt-optimizer",
     "deep-research-validator",
+    "comunicazione-professionale",
+    "presenza-digitale-studio",
     "studio-archive"
   ],
   "workflow_roles": {
@@ -11,6 +13,14 @@
     },
     "deep-research-validator": {
       "kind": "public_workflow"
+    },
+    "comunicazione-professionale": {
+      "kind": "public_workflow",
+      "profile": "lucia-lawyer"
+    },
+    "presenza-digitale-studio": {
+      "kind": "public_workflow",
+      "profile": "lucia-lawyer"
     },
     "studio-archive": {
       "kind": "internal_runtime",

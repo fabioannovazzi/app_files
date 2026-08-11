@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "assessment_template_version": "professional-communication-editorial-v4",
+  "expectations": [
+    {"case_id": "EQ-001", "critical": true, "expected_verdict": "revise"},
+    {"case_id": "EQ-002", "critical": true, "expected_verdict": "revise"},
+    {"case_id": "EQ-003", "critical": true, "expected_verdict": "revise"},
+    {"case_id": "EQ-004", "critical": false, "expected_verdict": "ready"},
+    {"case_id": "EQ-005", "critical": false, "expected_verdict": "no_publish"},
+    {"case_id": "EQ-006", "critical": false, "expected_verdict": "ready"},
+    {"case_id": "EQ-007", "critical": true, "expected_verdict": "revise"}
+  ]
+}

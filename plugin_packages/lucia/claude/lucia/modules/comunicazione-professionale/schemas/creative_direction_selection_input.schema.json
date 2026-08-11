@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "handoff_digest", "outcome", "selection"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "handoff_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "outcome": {"enum": ["selected", "fallback"]},
+    "selection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["board_id", "board_revision", "directions", "selected_item_id", "selection_rationale", "translation"],
+          "properties": {
+            "board_id": {"type": "string", "minLength": 1, "maxLength": 200},
+            "board_revision": {"type": "integer", "minimum": 1},
+            "directions": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["item_id", "item_revision", "title", "image_path"],
+                "properties": {
+                  "item_id": {"type": "string", "minLength": 1, "maxLength": 200},
+                  "item_revision": {"type": "integer", "minimum": 1},
+                  "title": {"type": "string", "minLength": 3, "maxLength": 300},
+                  "image_path": {"type": "string", "minLength": 1}
+                }
+              }
+            },
+            "selected_item_id": {"type": "string", "minLength": 1, "maxLength": 200},
+            "selection_rationale": {"type": "string", "minLength": 30, "maxLength": 3000},
+            "translation": {"$ref": "#/$defs/translation"}
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason", "details"],
+          "properties": {
+            "reason": {"enum": ["tool_unavailable", "generation_failed", "user_selected_internal"]},
+            "details": {"type": "string", "minLength": 20, "maxLength": 2000}
+          }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "translation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["art_direction_summary", "exact_content_preserved", "source_preservation_confirmed", "contribution_change_required", "contribution_change_explanation", "tokens"],
+      "properties": {
+        "art_direction_summary": {"type": "string", "minLength": 30, "maxLength": 2000},
+        "exact_content_preserved": {"const": true},
+        "source_preservation_confirmed": {"const": true},
+        "contribution_change_required": {"type": "boolean"},
+        "contribution_change_explanation": {"type": "string", "maxLength": 2000},
+        "tokens": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["frame_style", "accent_geometry", "rule_style", "row_marker", "spacing_rhythm", "header_treatment"],
+          "properties": {
+            "frame_style": {"enum": ["none", "hairline", "inset"]},
+            "accent_geometry": {"enum": ["underline", "corner_stamp", "side_bar"]},
+            "rule_style": {"enum": ["single", "double", "offset"]},
+            "row_marker": {"enum": ["numeral", "circle", "bar"]},
+            "spacing_rhythm": {"enum": ["compact", "balanced", "airy"]},
+            "header_treatment": {"enum": ["solid", "outline", "split"]}
+          }
+        }
+      }
+    }
+  }
+}

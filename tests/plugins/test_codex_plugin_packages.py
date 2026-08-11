@@ -738,6 +738,8 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             "skills/lucia/SKILL.md",
             "skills/prompt-optimizer/SKILL.md",
             "skills/deep-research-validator/SKILL.md",
+            "skills/comunicazione-professionale/SKILL.md",
+            "skills/presenza-digitale-studio/SKILL.md",
         }
         router = card_bodies["skills/lucia/SKILL.md"]
         normalized_router = " ".join(router.split())
@@ -754,6 +756,14 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert (
             "../../modules/deep-research-validator"
             in card_bodies["skills/deep-research-validator/SKILL.md"]
+        )
+        assert (
+            "../../modules/comunicazione-professionale"
+            in card_bodies["skills/comunicazione-professionale/SKILL.md"]
+        )
+        assert (
+            "../../modules/presenza-digitale-studio"
+            in card_bodies["skills/presenza-digitale-studio/SKILL.md"]
         )
 
 

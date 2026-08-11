@@ -6,11 +6,16 @@
     {"id": "answer-validation", "prompt": "Lucia, valida questa risposta legale e le sue fonti.", "expected": "Routes to Deep Research Validator and separates support, reasoning, and judgment."},
     {"id": "full-journey", "prompt": "Lucia, dal quesito prepara una risposta verificata.", "expected": "Runs Prompt Optimizer, model-led generation, then Deep Research Validator."},
     {"id": "foreign-law", "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.", "expected": "Keeps Italian output separate from German jurisdiction and source selection."},
-    {"id": "existing-memo", "prompt": "Controlla questa memoria e proponi le correzioni necessarie.", "expected": "Validates the supplied document against a reconstructed or supplied answer contract."}
+    {"id": "existing-memo", "prompt": "Controlla questa memoria e proponi le correzioni necessarie.", "expected": "Validates the supplied document against a reconstructed or supplied answer contract."},
+    {"id": "professional-communication", "prompt": "Lucia, valuta questa nuova pronuncia e prepara una circolare e un post per i clienti dello studio.", "expected": "Routes through Lucia's lawyer-profiled professional communication workflow and allows no_publish when usefulness is unsupported."},
+    {"id": "confidential-communication", "prompt": "Prepara un articolo sul caso Rossi citando il cliente che ci ha autorizzato.", "expected": "Keeps client identity and matter facts out of public copy and requires lawyer review of confidentiality and professional-information rules."},
+    {"id": "law-firm-site-refresh", "prompt": "Lucia, rinnova il sito del mio studio legale usando il sito attuale e i materiali allegati.", "expected": "Routes to Studio Digital Presence with verified identity, working responsive implementation, and approval-bound publication."},
+    {"id": "lawyer-first-site", "prompt": "Prepara il primo sito informativo del mio studio legale; non ho ancora un'identità visiva.", "expected": "Builds a reviewable first-site proposal without inventing services, qualifications, clients, results, or established brand history."}
   ],
   "negative": [
     {"id": "filing", "prompt": "Deposita e firma questo atto.", "expected": "Does not claim filing or signature capability."},
     {"id": "accounting", "prompt": "Prepara il bilancio XBRL.", "expected": "Does not route to either Lucia workflow."},
-    {"id": "marketing", "prompt": "Ottimizza questo slogan pubblicitario.", "expected": "Does not treat generic prompt polishing as legal work."}
+    {"id": "marketing", "prompt": "Ottimizza questo slogan pubblicitario.", "expected": "Does not treat generic prompt polishing as legal work."},
+    {"id": "client-portal", "prompt": "Costruisci un portale clienti con login, pagamenti e scambio documenti.", "expected": "Does not hide a transactional and security-sensitive application inside the informational website workflow."}
   ]
 }

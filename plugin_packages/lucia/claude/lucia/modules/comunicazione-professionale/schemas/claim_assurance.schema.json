@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "assessed_contribution_digest",
+    "answer_contract_digest",
+    "assessment_protocol",
+    "validation_method",
+    "coverage_review",
+    "contract_review",
+    "claims",
+    "overall_assessment"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "assessed_contribution_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "answer_contract_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "assessment_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "assessor_session_id", "assessment_template_version", "template_sha256", "generation_transcript_seen", "completed_at"],
+      "properties": {
+        "method": {"const": "isolated_host_session_exact_artifact_review"},
+        "assessor_session_id": {"type": "string", "minLength": 8, "maxLength": 200},
+        "assessment_template_version": {"const": "professional-communication-claim-assurance-v2"},
+        "template_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "generation_transcript_seen": {"const": false},
+        "completed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "validation_method": {"const": "model_led_source_support_reasoning_and_judgment_review"},
+    "coverage_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "reviewed_claim_ids", "omitted_claim_ids", "analysis"],
+      "properties": {
+        "scope": {"const": "all_material_claims"},
+        "reviewed_claim_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^CLAIM-[0-9]{3,}$"}},
+        "omitted_claim_ids": {"type": "array", "maxItems": 0},
+        "analysis": {"type": "string", "minLength": 30, "maxLength": 3000}
+      }
+    },
+    "contract_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["purpose", "document_type", "audience", "output_language", "jurisdiction", "source_hierarchy", "preservation", "required_distinctions", "prohibited_content", "evidence_display", "validation_scope", "correction_policy", "judgment_policy", "reviewer_action"],
+      "properties": {
+        "purpose": {"$ref": "#/$defs/contractDimension"},
+        "document_type": {"$ref": "#/$defs/contractDimension"},
+        "audience": {"$ref": "#/$defs/contractDimension"},
+        "output_language": {"$ref": "#/$defs/contractDimension"},
+        "jurisdiction": {"$ref": "#/$defs/contractDimension"},
+        "source_hierarchy": {"$ref": "#/$defs/contractDimension"},
+        "preservation": {"$ref": "#/$defs/contractDimension"},
+        "required_distinctions": {"$ref": "#/$defs/contractDimension"},
+        "prohibited_content": {"$ref": "#/$defs/contractDimension"},
+        "evidence_display": {"$ref": "#/$defs/contractDimension"},
+        "validation_scope": {"$ref": "#/$defs/contractDimension"},
+        "correction_policy": {"$ref": "#/$defs/contractDimension"},
+        "judgment_policy": {"$ref": "#/$defs/contractDimension"},
+        "reviewer_action": {"enum": ["accept", "revise", "reject"]}
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["claim_id", "source_checks", "support", "reasoning", "professional_judgment", "issues", "disposition", "reviewer_action"],
+        "properties": {
+          "claim_id": {"type": "string", "pattern": "^CLAIM-[0-9]{3,}$"},
+          "source_checks": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source_id", "identity_status", "identity_analysis", "support_analysis"],
+              "properties": {
+                "source_id": {"type": "string", "minLength": 1},
+                "identity_status": {"enum": ["matches_registered_source", "uncertain", "mismatch"]},
+                "identity_analysis": {"type": "string", "minLength": 20, "maxLength": 2000},
+                "support_analysis": {"type": "string", "minLength": 20, "maxLength": 3000}
+              }
+            }
+          },
+          "support": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "analysis"],
+            "properties": {
+              "status": {"enum": ["supported", "partially_supported", "not_supported", "contradicted", "uncertain"]},
+              "analysis": {"type": "string", "minLength": 30, "maxLength": 3000}
+            }
+          },
+          "reasoning": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "analysis", "supported_premises", "missing_premises"],
+            "properties": {
+              "status": {"enum": ["sound", "partially_sound", "unsound", "uncertain", "not_applicable"]},
+              "analysis": {"type": "string", "minLength": 30, "maxLength": 3000},
+              "supported_premises": {"type": "array", "items": {"type": "string", "minLength": 3, "maxLength": 1000}},
+              "missing_premises": {"type": "array", "items": {"type": "string", "minLength": 3, "maxLength": 1000}}
+            }
+          },
+          "professional_judgment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "analysis", "professional_review_items"],
+            "properties": {
+              "status": {"enum": ["not_judgment_dependent", "professional_judgment_required", "contested", "uncertain"]},
+              "analysis": {"type": "string", "minLength": 20, "maxLength": 3000},
+              "professional_review_items": {"type": "array", "items": {"type": "string", "minLength": 3, "maxLength": 1000}}
+            }
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["type", "explanation", "treatment"],
+              "properties": {
+                "type": {"enum": ["none", "source_identity", "source_support", "scope_or_qualification", "temporal_or_modality", "reasoning_gap", "judgment_dependent"]},
+                "explanation": {"type": "string", "minLength": 10, "maxLength": 2000},
+                "treatment": {"enum": ["none", "corrected", "professional_review", "blocked"]}
+              }
+            }
+          },
+          "disposition": {"enum": ["retain", "revise", "omit"]},
+          "reviewer_action": {"enum": ["accept", "revise", "reject"]}
+        }
+      }
+    },
+    "overall_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["outcome", "analysis", "residual_uncertainties", "professional_review_items"],
+      "properties": {
+        "outcome": {"enum": ["ready_for_professional_review", "no_publication_supported", "requires_revision", "blocked"]},
+        "analysis": {"type": "string", "minLength": 30, "maxLength": 4000},
+        "residual_uncertainties": {"type": "array", "items": {"type": "string", "minLength": 3, "maxLength": 1000}},
+        "professional_review_items": {"type": "array", "items": {"type": "string", "minLength": 3, "maxLength": 1000}}
+      }
+    }
+  },
+  "$defs": {
+    "contractDimension": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "analysis"],
+      "properties": {
+        "status": {"enum": ["conforms", "attention", "fails"]},
+        "analysis": {"type": "string", "minLength": 20, "maxLength": 2000}
+      }
+    }
+  }
+}

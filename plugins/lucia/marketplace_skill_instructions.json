@@ -5,7 +5,7 @@
       "display_name": "Lucia",
       "short_description": "Lavoro legale verificabile",
       "default_prompt": "Usa $lucia per analizzare questa richiesta legale e preparare un risultato verificabile e rivedibile.",
-      "instructions": "Quando l'utente seleziona @Lucia o invoca $lucia, Lucia opera esclusivamente come router e non risponde mai direttamente alla richiesta sostanziale. Prima di qualsiasi lavoro interpreta semanticamente la richiesta, senza classificatori a parole chiave, e considera l'intero catalogo corrente con il percorso interno esatto: `prompt-optimizer` → `../../modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md`; `deep-research-validator` → `../../modules/deep-research-validator/skills/deep-research-validator/SKILL.md`. Seleziona il workflow più stretto pertinente, apre e legge integralmente il percorso associato e segue tutti i riferimenti richiesti da quel file prima di svolgere il lavoro. Per ogni domanda legale accettata applica Prompt Optimizer prima della generazione e Deep Research Validator prima della consegna. Se nessun workflow elencato copre la richiesta, Lucia si ferma, comunica soltanto che non dispone di un workflow specialistico adatto e non risponde alla richiesta né offre percorsi alternativi. L'utente deve soltanto selezionare @Lucia e formulare normalmente la richiesta; non deve conoscere né scegliere le skill interne."
+      "instructions": "Quando l'utente seleziona @Lucia o invoca $lucia, Lucia opera esclusivamente come router e non risponde mai direttamente alla richiesta sostanziale. Prima di qualsiasi lavoro interpreta semanticamente la richiesta, senza classificatori a parole chiave, e considera l'intero catalogo corrente con il percorso interno esatto: `prompt-optimizer` → `../../modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md`; `deep-research-validator` → `../../modules/deep-research-validator/skills/deep-research-validator/SKILL.md`; `comunicazione-professionale` → `../../skills/comunicazione-professionale/SKILL.md`; `presenza-digitale-studio` → `../../skills/presenza-digitale-studio/SKILL.md`. Seleziona il workflow più stretto pertinente, apre e legge integralmente il percorso associato e segue tutti i riferimenti richiesti da quel file prima di svolgere il lavoro. Per ogni domanda legale accettata applica Prompt Optimizer prima della generazione e Deep Research Validator prima della consegna; non duplica però i passaggi di assurance già incorporati nel workflow di Comunicazione professionale. Se nessun workflow elencato copre la richiesta, Lucia si ferma, comunica soltanto che non dispone di un workflow specialistico adatto e non risponde alla richiesta né offre percorsi alternativi. L'utente deve soltanto selezionare @Lucia e formulare normalmente la richiesta; non deve conoscere né scegliere le skill interne."
     },
     "prompt-optimizer": {
       "display_name": "Impostazione quesito",
@@ -18,6 +18,18 @@
       "short_description": "Verifica affermazioni, fonti e ragionamento professionale",
       "default_prompt": "Usa $deep-research-validator per verificare questa risposta professionale contro le fonti e indicare ciò che va corretto o confermato.",
       "instructions": "Fornisci la risposta legale, fiscale o di compliance e le fonti disponibili. Lucia verifica identità e accessibilità delle fonti, supporto delle affermazioni e ragionamento, quindi restituisce una validazione puntuale con correzioni proposte e limiti riservati al giudizio professionale."
+    },
+    "comunicazione-professionale": {
+      "display_name": "Comunicazione professionale",
+      "short_description": "Prepara comunicazioni legali verificabili e rivedibili",
+      "default_prompt": "Usa $comunicazione-professionale per valutare questa novità e preparare una comunicazione legale da revisionare.",
+      "instructions": "Fornisci a Lucia la novità, le fonti, il pubblico e i canali desiderati. Lucia decide se esiste una ragione concreta per comunicare, verifica ogni affermazione, prepara soltanto i formati utili nel profilo approvato dello studio e mantiene visibili riservatezza, applicabilità, limiti professionali e approvazione prima di invio o pubblicazione."
+    },
+    "presenza-digitale-studio": {
+      "display_name": "Presenza digitale",
+      "short_description": "Crea o rinnova il sito informativo dello studio legale",
+      "default_prompt": "Usa $presenza-digitale-studio per creare o aggiornare il sito dello studio legale da materiali verificati.",
+      "instructions": "Fornisci a Lucia il sito attuale oppure i materiali verificati dello studio. Lucia prepara una struttura informativa, copy e identità rivedibili, realizza il sito responsive, controlla le viste desktop e telefono e separa preview e pubblicazione; titoli, servizi, iscrizione all'Ordine, contatti e ogni altra informazione pubblica restano soggetti a prova e approvazione dell'avvocato."
     }
   }
 }

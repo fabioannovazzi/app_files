@@ -43,12 +43,38 @@ def test_public_register_covers_every_canonical_workflow_and_service() -> None:
     assert workflows["Clara"] == _manifest_ids(
         ROOT / "plugins" / "clara" / "privacy" / "workflows", "workflow"
     )
+    lucia_components = json.loads(
+        (ROOT / "plugins" / "lucia" / "components.json").read_text(encoding="utf-8")
+    )
+    assert workflows["Lucia"] == {
+        identifier
+        for identifier, role in lucia_components["workflow_roles"].items()
+        if role["kind"] == "public_workflow"
+    }
     assert services["Vera"] == _manifest_ids(
         ROOT / "plugins" / "vera" / "privacy" / "services", "service_id"
     )
     assert services["Clara"] == _manifest_ids(
         ROOT / "plugins" / "clara" / "privacy" / "hosted-services", "service_id"
     )
+
+
+def test_lucia_register_projects_canonical_boundaries_through_lucia_identity() -> None:
+    register = get_public_privacy_register("it")
+    lucia = next(
+        product for product in register["products"] if product["name"] == "Lucia"
+    )
+    workflows = {workflow["id"]: workflow for workflow in lucia["workflows"]}
+
+    communication = workflows["comunicazione-professionale"]
+    website = workflows["presenza-digitale-studio"]
+    assert communication["model_intro_key"] == "model_intro_lucia"
+    assert website["model_intro_key"] == "model_intro_lucia"
+    assert communication["other_boundaries"]
+    assert website["other_boundaries"]
+    projected_text = json.dumps((communication, website), ensure_ascii=False)
+    assert "Lucia" in projected_text
+    assert "Vera package" not in projected_text
 
 
 def test_public_register_omits_internal_manifest_implementation_fields() -> None:
