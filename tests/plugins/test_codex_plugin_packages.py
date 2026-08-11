@@ -3179,7 +3179,7 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
-def test_new_client_pages_use_fixed_native_presentations() -> None:
+def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_preparation() -> None:
     page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3188,7 +3188,10 @@ def test_new_client_pages_use_fixed_native_presentations() -> None:
     ).read_text(encoding="utf-8")
 
     assert '<html lang="it">' in page
-    assert 'const lang = "it";' in page
+    assert 'new URLSearchParams(window.location.search).get("lang")' in page
+    assert 'const isItaly = lang === "it";' in page
+    assert 'document.querySelectorAll("[data-italy-only]")' in page
+    assert 'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"' in page
     assert 'data-lang="' not in page
     assert 'id="market-' not in page
     assert "const language = page.defaultLanguage;" in jurisdiction_source
@@ -3244,7 +3247,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert 'id="modello"' not in page
     assert 'id="core"' in page
     assert 'id="jurisdiction"' in page
-    assert 'id="video"' in page
+    assert 'id="video"' not in page
     assert 'id="installa"' in page
     assert "Core multilingue + pacchetto Italia" not in page
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
@@ -4517,7 +4520,6 @@ def test_clara_public_icon_matches_plugin_source() -> None:
                 "#assurance",
                 "#jurisdiction",
                 "#data-boundary",
-                "#video",
             ),
         ),
         (
@@ -4675,7 +4677,12 @@ def test_companion_overview_video_follows_the_intended_product_story(
     if companion == "vera":
         assert page.index('id="installa"') < page.index('id="core"')
         assert page.index('id="core"') < page.index('id="jurisdiction"')
-        assert page.index('id="jurisdiction"') < page.index('id="video"')
+        assert page.index('id="core"') < page.index('id="assurance"')
+        assurance = page.split(
+            '<section class="section-block" id="assurance">', maxsplit=1
+        )[1].split("</section>", maxsplit=1)[0]
+        assert 'data-featured-video' in assurance
+        assert 'id="video"' not in page
         assert page.count('class="overview-video"') == 1
         assert "install-panel__video" not in page
         return

@@ -695,12 +695,24 @@
     "concordato-plan-review": ["/static/shared/concordato-plan-review/index.html"],
     "previdenza-inps": ["/static/shared/previdenza-inps/index.html"],
     "registro-imprese-sari": ["/static/shared/registro-imprese-sari/index.html"],
-    "dati-fiscali-strutturati": ["/static/shared/new-client/index.html#file-preparation"],
-    "avviso-intake": ["/static/shared/new-client/index.html#file-preparation"],
-    "email-cliente": ["/static/shared/new-client/index.html#file-preparation"],
     "prompt-optimizer": ["/static/shared/prompt-optimizer/index.html"],
     "deep-research-validator": ["/static/shared/deep-research-validator/index.html"]
   };
+
+  const filePreparationPageTargets = {
+    it: ["/static/shared/new-client/index.html#file-preparation"],
+    en: ["/static/shared/new-client/uk.html#file-preparation"],
+    fr: ["/static/shared/new-client/geneva.html#file-preparation"],
+    de: ["/static/shared/new-client/zurich.html#file-preparation"],
+    es: ["/static/shared/new-client/index.html?lang=es#file-preparation"]
+  };
+
+  function pageTargetsFor(module, language) {
+    if (["dati-fiscali-strutturati", "avviso-intake", "email-cliente"].includes(module)) {
+      return filePreparationPageTargets[language];
+    }
+    return veraPageTargets[module];
+  }
 
   const publishedGuideDefinitions = Object.freeze([
     {
@@ -712,7 +724,6 @@
       duration: "1:10",
       localizations: { it: "FWjVBeJYLF8" },
       pageTargets: [
-        "/static/shared/vera/index.html",
         "/static/shared/new-client/index.html#italy"
       ],
       titles: { it: "Vera | Incarico, privacy e AML per il nuovo cliente" },
@@ -730,7 +741,6 @@
       duration: "1:22",
       localizations: { it: "bsEbR9XegrU" },
       pageTargets: [
-        "/static/shared/vera/index.html",
         "/static/shared/studio-archive/index.html"
       ],
       titles: {
@@ -752,7 +762,6 @@
         es: "Q351IGPEPxg"
       },
       pageTargets: [
-        "/static/shared/vera/index.html",
         "/static/shared/journal-sampling/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
@@ -779,7 +788,6 @@
         es: "lHOahBSRknQ"
       },
       pageTargets: [
-        "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#journey"
       ],
       titles: {
@@ -799,7 +807,6 @@
       duration: "0:50",
       localizations: { it: "I1dp3FYVy2w" },
       pageTargets: [
-        "/static/shared/vera/index.html",
         "/static/shared/check-entries/index.html#italy-adapter"
       ],
       titles: {
@@ -880,7 +887,7 @@
       description,
       duration: video.duration || null,
       status: "published",
-      pageTargets: identity.pageTargets || veraPageTargets[module],
+      pageTargets: identity.pageTargets || pageTargetsFor(module, lang),
       lastVerifiedAt
     };
   }
@@ -1038,6 +1045,10 @@
 
   function selectVideos(catalog, container) {
     const module = container.dataset.videoModule;
+    const modules = (container.dataset.videoModules || "")
+      .split(",")
+      .map((value) => value.trim())
+      .filter(Boolean);
     const edition = container.dataset.videoEdition;
     const jurisdiction = container.dataset.videoJurisdiction || null;
     const relevantToJurisdiction = (video) => {
@@ -1046,9 +1057,9 @@
       if (video.jurisdiction === jurisdiction) return true;
       return Array.isArray(video.jurisdictions) && video.jurisdictions.includes(jurisdiction);
     };
-    if (module) {
+    if (module || modules.length) {
       return catalog.videos.filter((video) => (
-        video.module === module
+        (module ? video.module === module : modules.includes(video.module))
         && (!edition || video.edition === edition)
         && relevantToJurisdiction(video)
       ));
@@ -1070,9 +1081,13 @@
     if (!selection || !container) return;
 
     updateFeaturedVideo(selection.featured);
+    const videos = selectVideos(selection, container);
     const fragment = document.createDocumentFragment();
-    selectVideos(selection, container).forEach((video) => fragment.append(buildGuide(video, openLabel)));
+    videos.forEach((video) => fragment.append(buildGuide(video, openLabel)));
     container.replaceChildren(fragment);
+    container.dataset.videoCount = String(videos.length);
+    const section = container.closest("[data-video-section]");
+    if (section) section.hidden = videos.length === 0;
   }
 
   window.MparanzaVideos = Object.freeze({
