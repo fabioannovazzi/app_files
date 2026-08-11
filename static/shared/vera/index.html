@@ -127,6 +127,11 @@
     .text-link span[aria-hidden="true"] { color: var(--cyan); transition: transform 160ms ease-out; }
     .text-link:hover span[aria-hidden="true"] { transform: translateX(4px); }
 
+    .variance-report-action {
+      width: fit-content;
+      margin-top: 28px;
+    }
+
     .vera-mark {
       margin: 0;
       padding-left: clamp(32px, 5vw, 64px);
@@ -1492,6 +1497,14 @@
       </div>
 
       <p class="assurance-closing" data-i18n="variance.boundary">Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.</p>
+      <a
+        class="text-link variance-report-action"
+        data-variance-report-link
+        hidden
+      >
+        <span data-i18n="variance.report.action">Apri il report PDF di esempio</span>
+        <span aria-hidden="true">↗</span>
+      </a>
     </section>
 
     <section class="section-block" id="comunicazione-professionale">
@@ -2223,6 +2236,7 @@
         "variance.plots.title": "Leggi i grafici",
         "variance.plots.copy": "Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.",
         "variance.boundary": "Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.",
+        "variance.report.action": "Apri il report PDF di esempio",
         "module.report.title": "Genera report",
         "module.report": "Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.",
         "module.prompt.title": "Ottimizza prompt",
@@ -2464,6 +2478,7 @@
         "variance.plots.title": "Read the plots",
         "variance.plots.copy": "Waterfalls, component and dimension bridges, exploded views and drilldowns show calculated drivers and must reconcile to total variance.",
         "variance.boundary": "Vera delivers reviewable tables, variance plots and workpapers. Operating causes, favorable/adverse classification, materiality and management commentary remain separate from calculated facts and require professional confirmation.",
+        "variance.report.action": "Open the sample PDF report",
         "module.report.title": "Build Report",
         "module.report": "Prepares Word and Markdown from confirmed tables and keeps every material number connected to its source and supporting check.",
         "module.prompt.title": "Optimize Prompt",
@@ -2705,6 +2720,7 @@
         "variance.plots.title": "Lire les graphiques",
         "variance.plots.copy": "Cascades, passerelles par composante et dimension, vues éclatées et analyses détaillées montrent les facteurs calculés et doivent se rapprocher de l’écart total.",
         "variance.boundary": "Vera livre des tableaux, graphiques d’écarts et feuilles de travail révisables. Les causes opérationnelles, la classification favorable/défavorable, la matérialité et le commentaire de gestion restent séparés des faits calculés et exigent une confirmation professionnelle.",
+        "variance.report.action": "Ouvrir l’exemple de rapport PDF",
         "module.report.title": "Générer un rapport",
         "module.report": "Prépare Word et Markdown à partir de tableaux confirmés et relie chaque chiffre significatif à sa source et au contrôle qui l’étaye.",
         "module.prompt.title": "Optimiser le prompt",
@@ -2946,6 +2962,7 @@
         "variance.plots.title": "Grafiken lesen",
         "variance.plots.copy": "Waterfalls, Komponenten- und Dimensionsüberleitungen, aufgegliederte Ansichten und Drilldowns zeigen berechnete Treiber und müssen zur Gesamtabweichung abstimmen.",
         "variance.boundary": "Vera liefert prüfbare Tabellen, Abweichungsgrafiken und Arbeitspapiere. Operative Ursachen, die Einordnung als günstig oder ungünstig, Wesentlichkeit und Managementkommentar bleiben von berechneten Fakten getrennt und erfordern professionelle Bestätigung.",
+        "variance.report.action": "PDF-Beispielbericht öffnen",
         "module.report.title": "Bericht erstellen",
         "module.report": "Erstellt Word und Markdown aus bestätigten Tabellen und verbindet jede wesentliche Zahl mit Quelle und stützendem Kontrollschritt.",
         "module.prompt.title": "Prompt optimieren",
@@ -3187,6 +3204,7 @@
         "variance.plots.title": "Leer los gráficos",
         "variance.plots.copy": "Cascadas, puentes por componente y dimensión, vistas desglosadas y drilldowns muestran los factores calculados y deben conciliar con la desviación total.",
         "variance.boundary": "Vera entrega tablas, gráficos de desviaciones y papeles de trabajo revisables. Las causas operativas, la clasificación favorable/desfavorable, la materialidad y el comentario de gestión permanecen separados de los hechos calculados y requieren confirmación profesional.",
+        "variance.report.action": "Abrir el informe PDF de ejemplo",
         "module.report.title": "Crear informe",
         "module.report": "Prepara Word y Markdown a partir de tablas confirmadas y vincula cada cifra material con su fuente y el control que la respalda.",
         "module.prompt.title": "Optimizar prompt",
@@ -3387,6 +3405,23 @@
       de: "../new-client/zurich.html#file-preparation",
       es: "../new-client/index.html#file-preparation"
     };
+    const varianceReports = {
+      it: {
+        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-it.pdf"
+      },
+      en: {
+        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-en.pdf"
+      },
+      fr: {
+        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-fr.pdf"
+      },
+      de: {
+        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-de.pdf"
+      },
+      es: {
+        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-es.pdf"
+      }
+    };
     const installVideos = {
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
       en: { id: "vU4eow_MMDA", duration: "1:16" },
@@ -3520,6 +3555,22 @@
       document.querySelectorAll("[data-compliance-video-link]").forEach((link) => {
         link.setAttribute("href", `/data-handling?lang=${lang}#data-handling-video`);
       });
+      const varianceReportLink = document.querySelector("[data-variance-report-link]");
+      const varianceReport = varianceReports[lang];
+      varianceReportLink.hidden = !varianceReport;
+      if (varianceReport) {
+        varianceReportLink.href = varianceReport.href;
+        varianceReportLink.setAttribute("hreflang", lang);
+        varianceReportLink.setAttribute("target", "_blank");
+        varianceReportLink.setAttribute("rel", "noopener noreferrer");
+        varianceReportLink.removeAttribute("download");
+      } else {
+        varianceReportLink.removeAttribute("href");
+        varianceReportLink.removeAttribute("hreflang");
+        varianceReportLink.removeAttribute("target");
+        varianceReportLink.removeAttribute("rel");
+        varianceReportLink.removeAttribute("download");
+      }
       setVideos(lang, strings);
 
       if (updateHistory) {

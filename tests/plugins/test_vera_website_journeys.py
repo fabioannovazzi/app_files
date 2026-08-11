@@ -6,10 +6,12 @@ import json
 import re
 import shutil
 import subprocess
+import zipfile
 from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
+from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
@@ -853,6 +855,57 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
+def test_vera_hub_opens_language_specific_variance_pdf_examples() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+
+    assert page.count('"variance.report.action":') == 5
+    assert "data-variance-report-link" in page
+    assert "const varianceReports = {" in page
+    assert set(
+        re.findall(
+            r'href: "(/static/shared/vera/downloads/variance-analysis/'
+            r'variance-analysis-example-[a-z]{2}\.pdf)"',
+            page,
+        )
+    ) == {
+        "/static/shared/vera/downloads/variance-analysis/"
+        f"variance-analysis-example-{locale}.pdf"
+        for locale in ("it", "en", "fr", "de", "es")
+    }
+    assert "varianceReportLink.hidden = !varianceReport;" in page
+    assert 'varianceReportLink.setAttribute("target", "_blank");' in page
+    assert 'varianceReportLink.setAttribute("rel", "noopener noreferrer");' in page
+    assert 'varianceReportLink.setAttribute("download",' not in page
+
+
+@pytest.mark.parametrize(
+    ("locale", "heading"),
+    (
+        ("it", "Analisi delle cause della varianza vendite"),
+        ("en", "Sales Variance Root-Cause Analysis"),
+        ("fr", "Analyse des causes des écarts de ventes"),
+        ("de", "Ursachenanalyse der Umsatzabweichung"),
+        ("es", "Análisis de las causas de la desviación de ventas"),
+    ),
+)
+def test_vera_variance_pdf_example_matches_language_and_has_four_pages(
+    locale: str,
+    heading: str,
+) -> None:
+    report = (
+        SHARED_ROOT
+        / "vera"
+        / "downloads"
+        / "variance-analysis"
+        / f"variance-analysis-example-{locale}.pdf"
+    )
+
+    assert report.stat().st_size > 0
+    reader = PdfReader(report)
+    assert len(reader.pages) == 4
+    assert heading in (reader.pages[0].extract_text() or "")
+
+
 def test_vera_website_section_links_the_unlisted_monica_preview() -> None:
     preview_path = (
         SHARED_ROOT
@@ -1188,9 +1241,7 @@ def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     for href in module_hrefs:
         target = urlsplit(href)
         target_path = (
-            hub_path
-            if not target.path
-            else (hub_path.parent / target.path).resolve()
+            hub_path if not target.path else (hub_path.parent / target.path).resolve()
         )
         assert target_path.is_relative_to(SHARED_ROOT.resolve())
         assert target_path.is_file(), href
@@ -1344,7 +1395,7 @@ def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> No
     page = page_path.read_text(encoding="utf-8")
 
     assert 'id="bilancio-intelligente" data-bilancio-section hidden' in page
-    assert 'data-bilancio-nav hidden' in page
+    assert "data-bilancio-nav hidden" in page
     assert (
         'data-jurisdiction-item="it" '
         'data-primary-workflow-link="bilancio-intelligente" hidden'
@@ -1361,7 +1412,7 @@ def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> No
         'data-caption-src="media/bilancio-intelligente.vtt" default'
     ) in page
     assert 'const showBilancio = lang === "it";' in page
-    assert "bilancioSource.removeAttribute(\"src\");" in page
+    assert 'bilancioSource.removeAttribute("src");' in page
     for filename in (
         "bilancio-intelligente.mp4",
         "bilancio-intelligente-poster.jpg",
@@ -1374,16 +1425,13 @@ def test_vera_hub_explains_bandi_with_evidence_and_professional_boundaries() -> 
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
     assert 'id="bandi-agevolazioni" data-bandi-section hidden' in page
-    assert 'data-bandi-nav hidden' in page
+    assert "data-bandi-nav hidden" in page
     assert (
         'data-jurisdiction-item="it" '
         'data-primary-workflow-link="bandi-agevolazioni" hidden'
     ) in page
     assert 'const showBandi = lang === "it";' in page
-    assert (
-        'document.querySelector("[data-bandi-section]").hidden = !showBandi;'
-        in page
-    )
+    assert 'document.querySelector("[data-bandi-section]").hidden = !showBandi;' in page
     assert "Radar dello studio" in page
     assert "Dossier del cliente" in page
     assert "non è la probabilità di aver trovato tutte le agevolazioni" in page
