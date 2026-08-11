@@ -256,13 +256,13 @@ SPECS = (
         "Lucia",
         "#002060",
         "#00B0F0",
-        "assurance",
+        "counsel",
     ),
 )
 
 
 def _frame(spec: IconSpec, body: str) -> str:
-    if spec.motif in {"advisor", "reviewer", "assurance"}:
+    if spec.motif in {"advisor", "reviewer", "counsel"}:
         return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="{spec.label}" data-theme="{THEME_MARKER}">
   <rect width="64" height="64" rx="14" fill="{spec.color}"/>
   <path d="M49 0h1l14 14v1H49z" fill="#0070C0"/>
@@ -290,7 +290,7 @@ def _frame(spec: IconSpec, body: str) -> str:
 
 def _body(spec: IconSpec) -> str:
     paper = (
-        "#FFFFFF" if spec.motif in {"advisor", "reviewer", "assurance"} else "#F7F0DF"
+        "#FFFFFF" if spec.motif in {"advisor", "reviewer", "counsel"} else "#F7F0DF"
     )
     ink = "#22302A"
     color = "#1F211D"
@@ -485,11 +485,12 @@ def _body(spec: IconSpec) -> str:
   <path d="M14 51c1.8-11.8 7.9-18 16-18s14.2 6.2 16 18z" fill="{paper}"/>
   <path d="M23 35l7 12 7-12" fill="none" stroke="{spec.color}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M19 51h22" stroke="{paper}" stroke-width="5" stroke-linecap="round"/>""",
-        "assurance": f"""
-  <path d="M15 13h29l8 9v31H15z" fill="{paper}"/>
-  <path d="M44 13v10h8" fill="#DCEEFF"/>
-  <path d="M23 27h18M23 35h13M23 43h9" stroke="{spec.color}" stroke-width="3" stroke-linecap="round"/>
-  <path d="m39 42 4 4 10-13" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "counsel": f"""
+  <path d="M22 20c0-7 4.4-11 10-11s10 4 10 11v8h-5l-1-9h-8l-1 9h-5z" fill="{accent}"/>
+  <circle cx="32" cy="21" r="7.5" fill="{paper}"/>
+  <path d="M15 51c1.8-11.5 8.2-17 17-17s15.2 5.5 17 17z" fill="{paper}"/>
+  <path d="m23 35 9 10 9-10M32 45v6" fill="none" stroke="{spec.color}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m29 36 3 4 3-4" fill="{accent}"/>""",
     }
     return bodies[spec.motif]
 

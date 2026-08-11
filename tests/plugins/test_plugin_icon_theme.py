@@ -28,3 +28,13 @@ def test_plugin_icons_are_not_duplicated() -> None:
     contents = [path.read_text(encoding="utf-8") for path in icon_paths]
 
     assert len(contents) == len(set(contents))
+
+
+def test_lucia_icon_is_a_human_companion() -> None:
+    svg = (PLUGIN_ROOT / "lucia" / "assets" / "icon.svg").read_text(
+        encoding="utf-8"
+    )
+
+    assert '<circle cx="32" cy="21" r="7.5" fill="#FFFFFF"/>' in svg
+    assert 'd="M15 51c1.8-11.5 8.2-17 17-17s15.2 5.5 17 17z"' in svg
+    assert 'd="M15 13h29l8 9v31H15z"' not in svg
