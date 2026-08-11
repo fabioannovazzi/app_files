@@ -1,6 +1,6 @@
 ---
 name: lucia
-description: Use whenever Lucia is explicitly invoked, including through @lucia, and for a lawyer's professional work covered by Lucia's current workflow catalog. Select the narrowest registered workflow, automatically apply the shared Prompt Optimizer and Deep Research Validator assurance stages when relevant, and do not fall back to a generic legal assistant.
+description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Prompt Optimizer and Deep Research Validator assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
 
 ## ChatGPT and Codex Runtime

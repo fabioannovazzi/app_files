@@ -70,6 +70,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert manifest["version"] == "0.1.1"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
+    assert manifest["author"]["name"] == interface["developerName"]
     assert interface["shortDescription"] == "Assistente AI x avvocati"
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
@@ -77,6 +78,28 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert "Lucia mostra fonti" in interface["longDescription"]
     assert "esattamente due" not in interface["longDescription"]
     assert "prima versione" not in interface["longDescription"]
+
+    keywords = set(manifest["keywords"])
+    assert {
+        "ricerca-legale",
+        "ricerca-giuridica",
+        "giurisprudenza",
+        "normativa",
+        "verifica-fonti",
+        "analisi-legale",
+        "controllo-documenti",
+        "revisione-documenti",
+        "pareri-legali",
+        "memorie-legali",
+        "lettere-legali",
+    } <= keywords
+    assert {"diritto", "fiscale", "tributario"}.isdisjoint(keywords)
+
+    router = _json(LUCIA_ROOT / "marketplace_skill_instructions.json")["skills"][
+        "lucia"
+    ]
+    assert router["short_description"] == "Lavoro legale verificabile"
+    assert "questa richiesta legale" in router["default_prompt"]
 
 
 def test_lucia_current_catalog_has_two_public_workflows_and_one_hidden_runtime() -> (
