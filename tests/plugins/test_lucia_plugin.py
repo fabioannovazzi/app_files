@@ -72,11 +72,11 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.3"
+    assert manifest["version"] == "0.1.4"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
-    assert interface["shortDescription"] == "Assistente AI x avvocati"
+    assert interface["shortDescription"] == "Assistente AI per avvocati"
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
     assert "avvocati indipendenti" in interface["longDescription"]
