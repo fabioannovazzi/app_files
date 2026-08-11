@@ -763,7 +763,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert 'href="#core"' in page
     assert 'href="#jurisdiction"' in page
     assert page.index('id="core"') < page.index('id="jurisdiction"')
-    assert page.index('id="jurisdiction"') < page.index('id="video"')
+    assert 'href="#video"' not in page
+    assert 'id="video"' not in page
 
 
 def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> None:
@@ -982,7 +983,7 @@ def test_product_install_copy_explains_chatgpt_codex_and_cowork_options(
 
 def _vera_data_boundary_section(page: str) -> str:
     section_start = page.index('<section class="section-block" id="data-boundary">')
-    section_end = page.index('<section class="section-block" id="video">')
+    section_end = page.index("</main>", section_start)
     return page[section_start:section_end]
 
 
@@ -1255,6 +1256,8 @@ def test_new_client_jurisdiction_pages_use_one_native_language() -> None:
         page = (jurisdiction_root / filename).read_text(encoding="utf-8")
         assert f'data-jurisdiction="{jurisdiction}"' in page
         assert f'data-presentation-language="{default_language}"' in page
+        assert 'href="../video-library.css?v=' in page
+        assert 'src="../video-library.js?v=' in page
         assert 'src="jurisdiction-pages.js?v=' in page
         assert set(re.findall(r'hreflang="([a-z-]+)"', page)) == {
             default_language,
@@ -1276,28 +1279,64 @@ def test_new_client_jurisdiction_pages_use_one_native_language() -> None:
     assert "renderLanguageSwitch(language)" not in jurisdiction_script
     assert "coreVideoIds" not in jurisdiction_script
     assert "Report Builder" not in jurisdiction_script
+    assert 'id="file-preparation" data-video-section' in jurisdiction_script
+    assert (
+        'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"'
+        in jurisdiction_script
+    )
+    for jurisdiction in ("CH-GE", "CH-ZH", "UK"):
+        assert f'videoJurisdiction: "{jurisdiction}"' in jurisdiction_script
+    assert "window.MparanzaVideos.mount" in jurisdiction_script
     assert not re.search(r'title: "[123]\. ', jurisdiction_script)
     assert "dataset.jurisdiction =" not in jurisdiction_script
     assert "window.location.replace" not in jurisdiction_script
 
 
-def test_vera_hub_uses_the_central_curated_video_catalog() -> None:
+def test_vera_hub_keeps_only_the_overview_video_inside_the_method_story() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
     assert re.search(r'src="\.\./video-library\.js\?v=[^"]+"', page)
     assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
     assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
-    assert (
-        'const curatedVideoModules = ["new-client", '
-        '"journal-bank-reconciliation", "report-builder", "prompt-optimizer"]'
-    ) in page
-    assert page.count("data-video-index=") == 4
     assert page.count('<a class="overview-video') == 1
+    assurance = _section_markup(page, "assurance")
+    assert 'data-featured-video' in assurance
+    assert 'id="video"' not in page
+    assert "data-video-index=" not in page
+    assert 'data-video-library="vera"' not in page
+    assert "curatedVideoModules" not in page
     assert "install-panel__video" not in page
     assert "UwLsy2FuP8o" not in page
-    assert "link.href = `https://youtu.be/${item.id}`" in page
-    assert 'link.querySelector("img").src = thumbnailUrl(item.id)' in page
     assert 'es: { id: "RKcy1G79RAs", duration: "1:20" }' in page
+
+
+def test_vera_formerly_unplaced_guides_are_mounted_on_subject_pages() -> None:
+    hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    new_client = (SHARED_ROOT / "new-client" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    concordato = VERA_MODULE_PAGES["concordato-plan-review"].read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+        'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"'
+        in new_client
+    )
+    assert 'id="file-preparation"' in new_client
+    assert 'src="../video-library.js?v=' in new_client
+    assert "window.MparanzaVideos.mount" in new_client
+    assert 'data-video-module="concordato-plan-review"' in concordato
+    assert 'src="../video-library.js?v=' in concordato
+    assert "window.MparanzaVideos.mount" in concordato
+    for target in (
+        'it: "../new-client/index.html#file-preparation"',
+        'en: "../new-client/uk.html#file-preparation"',
+        'fr: "../new-client/geneva.html#file-preparation"',
+        'de: "../new-client/zurich.html#file-preparation"',
+        'es: "../new-client/index.html#file-preparation"',
+    ):
+        assert target in hub
 
 
 def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> None:
@@ -1590,6 +1629,32 @@ process.stdout.write(JSON.stringify(catalogs));
     catalogs = {catalog["language"]: catalog for catalog in json.loads(result.stdout)}
 
     assert all(catalog["version"] == "4.3.0" for catalog in catalogs.values())
+    assert all(
+        video["pageTargets"]
+        for catalog in catalogs.values()
+        for video in catalog["videos"]
+    )
+    assert all(
+        "/static/shared/vera/index.html" not in video["pageTargets"]
+        for catalog in catalogs.values()
+        for video in catalog["videos"]
+    )
+    expected_file_preparation_targets = {
+        "it": "/static/shared/new-client/index.html#file-preparation",
+        "en": "/static/shared/new-client/uk.html#file-preparation",
+        "fr": "/static/shared/new-client/geneva.html#file-preparation",
+        "de": "/static/shared/new-client/zurich.html#file-preparation",
+        "es": "/static/shared/new-client/index.html?lang=es#file-preparation",
+    }
+    for language, target in expected_file_preparation_targets.items():
+        file_preparation_videos = [
+            video
+            for video in catalogs[language]["videos"]
+            if video["module"]
+            in {"dati-fiscali-strutturati", "avviso-intake", "email-cliente"}
+        ]
+        assert file_preparation_videos
+        assert all(video["pageTargets"] == [target] for video in file_preparation_videos)
     studio_archive = next(
         video
         for video in catalogs["it"]["videos"]
@@ -1603,7 +1668,6 @@ process.stdout.write(JSON.stringify(catalogs));
     assert studio_archive["duration"] == "1:22"
     assert studio_archive["workstream"] == "client"
     assert studio_archive["pageTargets"] == [
-        "/static/shared/vera/index.html",
         "/static/shared/studio-archive/index.html",
     ]
     for language in ("en", "fr", "de", "es"):

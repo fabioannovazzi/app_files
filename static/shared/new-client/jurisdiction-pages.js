@@ -61,6 +61,12 @@
           },
         ],
       },
+      videos: {
+        eyebrow: "Il lavoro, nel suo contesto",
+        title: "Guarda il dossier prendere forma.",
+        copy: "Le guide seguono i dati fiscali, la prima istruttoria e la richiesta al cliente dentro questo stesso percorso.",
+        open: "Si apre su YouTube",
+      },
       outputs: {
         eyebrow: "Risultati",
         title: "Un dossier di lavoro per lo studio",
@@ -153,6 +159,12 @@
               "The summary connects the documents read, reading status and open points to a concise practice memo and specific client questions.",
           },
         ],
+      },
+      videos: {
+        eyebrow: "The work, in context",
+        title: "See the client file take shape.",
+        copy: "The guides follow structured tax data, first-pass notice review, and the client request inside this workflow.",
+        open: "Opens on YouTube",
       },
       outputs: {
         eyebrow: "Outputs",
@@ -247,6 +259,12 @@
           },
         ],
       },
+      videos: {
+        eyebrow: "Le travail, dans son contexte",
+        title: "Voyez le dossier de travail prendre forme.",
+        copy: "Les guides suivent les données fiscales structurées, la première instruction et la demande au client dans ce même parcours.",
+        open: "S’ouvre sur YouTube",
+      },
       outputs: {
         eyebrow: "Livrables",
         title: "Un dossier de travail pour le cabinet",
@@ -339,6 +357,12 @@
               "El resumen vincula los documentos leídos, el estado de lectura y los puntos abiertos con un informe conciso del despacho y preguntas concretas para el cliente.",
           },
         ],
+      },
+      videos: {
+        eyebrow: "El trabajo, en contexto",
+        title: "Vea cómo toma forma el expediente.",
+        copy: "Las guías siguen los datos fiscales estructurados, la primera revisión y la solicitud al cliente dentro de este recorrido.",
+        open: "Se abre en YouTube",
       },
       outputs: {
         eyebrow: "Salidas",
@@ -433,6 +457,12 @@
           },
         ],
       },
+      videos: {
+        eyebrow: "Die Arbeit im Zusammenhang",
+        title: "Sehen Sie, wie die Arbeitsakte entsteht.",
+        copy: "Die Anleitungen zeigen strukturierte Steuerdaten, die erste Prüfung und die Mandantenanfrage innerhalb dieses Ablaufs.",
+        open: "Öffnet YouTube",
+      },
       outputs: {
         eyebrow: "Ergebnisse",
         title: "Arbeitsunterlagen für die Kanzlei",
@@ -482,6 +512,7 @@
     geneva: {
       slug: "geneva.html",
       defaultLanguage: "fr",
+      videoJurisdiction: "CH-GE",
       documentSectionId: "documents",
       outputSectionId: "outputs",
       copy: {
@@ -750,6 +781,7 @@
     zurich: {
       slug: "zurich.html",
       defaultLanguage: "de",
+      videoJurisdiction: "CH-ZH",
       documentSectionId: "belege",
       outputSectionId: "output",
       copy: {
@@ -1018,6 +1050,7 @@
     uk: {
       slug: "uk.html",
       defaultLanguage: "en",
+      videoJurisdiction: "UK",
       documentSectionId: "documents",
       outputSectionId: "outputs",
       copy: {
@@ -1462,6 +1495,18 @@
         )}</div>
       </section>
 
+      <section class="section-block" id="file-preparation" data-video-section>
+        <div class="section-head">
+          <div><p class="eyebrow">${escapeHtml(
+            ui.videos.eyebrow,
+          )}</p><h2>${escapeHtml(ui.videos.title)}</h2></div>
+          <p>${escapeHtml(ui.videos.copy)}</p>
+        </div>
+        <div class="video-library" data-video-library="vera" data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente" data-video-jurisdiction="${escapeHtml(
+          page.videoJurisdiction,
+        )}"></div>
+      </section>
+
       <section class="section-block" id="${escapeHtml(
         page.outputSectionId,
       )}">
@@ -1496,5 +1541,10 @@
 
   setMetadata(page, page.copy[language], language);
   renderPage(page, language);
+  window.MparanzaVideos.mount({
+    product: "vera",
+    lang: language,
+    openLabel: interfaceCopy[language].videos.open,
+  });
   document.body.dataset.rendered = "true";
 })();

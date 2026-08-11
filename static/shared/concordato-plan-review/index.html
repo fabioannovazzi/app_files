@@ -14,6 +14,7 @@
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/concordato-plan-review/index.html">
   <title>Concordato Preventivo | Vera</title>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260720-logo">
+  <link rel="stylesheet" href="../video-library.css?v=20260811-distributed">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -646,6 +647,17 @@
       </div>
     </section>
 
+    <section class="section" id="video-proof" data-video-section>
+      <div class="section-head">
+        <div>
+          <p class="eyebrow">Vera al lavoro</p>
+          <h2>Dal fascicolo a una revisione strutturata.</h2>
+        </div>
+        <p>La guida segue procedura, creditori, alternativa liquidatoria, liquidità ed evidenze mantenendo separate la valutazione dello studio e i controlli meccanici.</p>
+      </div>
+      <div class="video-library" data-video-library="vera" data-video-module="concordato-plan-review" data-video-jurisdiction="IT"></div>
+    </section>
+
     <section class="section" id="metodo">
       <div class="section-head">
         <div>
@@ -784,6 +796,7 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
       <a class="button" href="../vera/index.html?lang=it" data-vera-link data-copy="cta.button">Vera</a>
     </section>
   </main>
+  <script src="../video-library.js?v=20260811-distributed"></script>
   <script>
     const copy = {
       it: {
@@ -1417,6 +1430,18 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
     document.querySelector("[data-home-link]").href = `/?lang=${safeLang}`;
     document.querySelectorAll("[data-vera-link]").forEach((link) => {
       link.href = `../vera/index.html?lang=${safeLang}`;
+    });
+    const videoOpenLabels = {
+      it: "Si apre su YouTube",
+      en: "Opens on YouTube",
+      fr: "S’ouvre sur YouTube",
+      de: "Öffnet YouTube",
+      es: "Se abre en YouTube"
+    };
+    window.MparanzaVideos.mount({
+      product: "vera",
+      lang: safeLang,
+      openLabel: videoOpenLabels[safeLang]
     });
   </script>
 </body>

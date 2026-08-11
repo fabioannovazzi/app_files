@@ -1015,8 +1015,7 @@
       text-decoration: none;
     }
 
-    .overview-video__thumb,
-    .video-guide__thumb {
+    .overview-video__thumb {
       position: relative;
       display: block;
       overflow: hidden;
@@ -1025,8 +1024,7 @@
     }
 
     .overview-video__thumb { border-right: 1px solid var(--cyan); }
-    .overview-video__thumb img,
-    .video-guide__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 180ms ease-out; }
+    .overview-video__thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 180ms ease-out; }
 
     .video-play {
       position: absolute;
@@ -1064,94 +1062,9 @@
 
     .overview-video strong { margin-top: 12px; font-size: clamp(1.5rem, 3vw, 2.4rem); line-height: 1.15; letter-spacing: -0.03em; }
     .video-meta { margin-top: 18px; color: var(--blue); font-size: 0.875rem; }
-
-    .video-library {
-      margin-top: clamp(48px, 7vw, 72px);
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 48px 28px;
-    }
-
-    .video-guide { min-width: 0; color: inherit; text-decoration: none; }
-    .video-guide__thumb { border-bottom: 1px solid var(--cyan); }
-    .video-guide__body { display: grid; gap: 10px; padding-top: 18px; }
-    .video-guide strong { font-size: 1.2rem; line-height: 1.28; }
-    .video-description { max-width: 54ch; color: var(--blue); font-size: 0.94rem; }
-    .video-guide .video-meta { margin-top: 0; }
-    .overview-video:hover img, .video-guide:hover img { transform: scale(1.015); }
-    .overview-video:hover strong, .video-guide:hover strong { color: var(--blue); }
-
-    .all-videos {
-      margin-top: clamp(72px, 10vw, 120px);
-      padding-top: clamp(40px, 6vw, 64px);
-      border-top: 2px solid var(--navy);
-    }
-
-    .all-videos__head {
-      margin-bottom: clamp(32px, 5vw, 52px);
-      display: grid;
-      grid-template-columns: minmax(0, 0.85fr) minmax(280px, 1.15fr);
-      gap: clamp(28px, 7vw, 88px);
-      align-items: end;
-    }
-
-    .all-videos__title { display: grid; gap: 14px; }
-    .all-videos__title h3 { font-size: clamp(1.8rem, 3.6vw, 3.2rem); }
-    .all-videos__head > p { max-width: 620px; color: var(--blue); font-size: 1.025rem; }
-
-    .all-video-library {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0 32px;
-      border-top: 1px solid var(--cyan);
-    }
-
-    .all-video-library .video-guide {
-      min-height: 176px;
-      display: grid;
-      grid-template-columns: minmax(124px, 0.42fr) minmax(0, 0.58fr);
-      gap: 20px;
-      align-items: start;
-      padding-block: 24px;
-      border-bottom: 1px solid var(--cyan);
-    }
-
-    .all-video-library .video-guide__thumb { border: 0; }
-    .all-video-library .video-guide__body { gap: 7px; padding: 0; }
-    .all-video-library .video-guide__module {
-      color: var(--blue);
-      font-size: 0.7rem;
-      font-weight: 650;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-    }
-
-    .all-video-library .video-guide strong { font-size: 1rem; line-height: 1.25; }
-    .all-video-library .video-guide__description {
-      display: -webkit-box;
-      overflow: hidden;
-      color: var(--blue);
-      font-size: 0.82rem;
-      line-height: 1.45;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 2;
-    }
-
-    .all-video-library .video-guide__meta { color: var(--blue); font-size: 0.76rem; }
-    .all-video-library .video-guide__play {
-      position: absolute;
-      inset: 50% auto auto 50%;
-      width: 38px;
-      height: 38px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.82);
-      border-radius: 50%;
-      background: rgba(0, 32, 96, 0.9);
-      color: var(--white);
-      font-size: 0.75rem;
-      transform: translate(-50%, -50%);
-    }
+    .assurance-overview { margin-top: clamp(48px, 7vw, 76px); }
+    .overview-video:hover img { transform: scale(1.015); }
+    .overview-video:hover strong { color: var(--blue); }
 
     footer { padding-block: 38px max(38px, env(safe-area-inset-bottom)); }
 
@@ -1296,8 +1209,6 @@
       .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
       .overview-video { grid-template-columns: 1fr; }
       .overview-video__thumb { border-right: 0; border-bottom: 1px solid var(--cyan); }
-      .video-library { grid-template-columns: 1fr; }
-      .all-videos__head, .all-video-library { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 440px) {
@@ -1316,7 +1227,7 @@
       html { scroll-behavior: auto; }
       *, *::before, *::after { transition-duration: 0.01ms !important; }
       .button:hover, .module-row:hover, .text-link:hover span[aria-hidden="true"] { transform: none; }
-      .overview-video:hover img, .video-guide:hover img { transform: none; }
+      .overview-video:hover img { transform: none; }
     }
   </style>
 </head>
@@ -1345,7 +1256,6 @@
           <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
           <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
           <a href="#data-boundary" data-i18n="nav.data">Dati</a>
-          <a href="#video" data-i18n="nav.videos">Video</a>
         </nav>
       </div>
       <details class="product-nav__language" data-product-nav-disclosure>
@@ -1429,7 +1339,7 @@
               </div>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="../new-client/index.html#file-preparation" data-module-link data-vera-workflow="avviso-intake">
+            <a class="module-row" id="notice-intake" href="../new-client/index.html#file-preparation" data-module-link data-vera-workflow="avviso-intake">
               <h3 data-i18n="module.notice.title">Istruttoria avviso</h3>
               <p data-i18n="module.notice">Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -2093,6 +2003,21 @@
       </div>
 
       <p class="assurance-closing" data-i18n="assurance.closing">Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.</p>
+
+      <div class="assurance-overview">
+        <a class="overview-video" href="https://youtu.be/2rJ0T5bZp2k" target="_blank" rel="noopener noreferrer" data-featured-video>
+          <span class="overview-video__thumb" aria-hidden="true">
+            <img src="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-featured-video-thumb>
+            <span class="video-play">▶</span>
+            <span class="video-duration" data-featured-video-duration>1:07</span>
+          </span>
+          <span class="overview-video__body">
+            <span class="video-kicker" data-i18n="videos.overview.kicker">Panoramica</span>
+            <strong data-i18n="videos.overview.title">Dal lavoro dello studio a un risultato rivedibile</strong>
+            <span class="video-meta" data-i18n="videos.open">Si apre su YouTube</span>
+          </span>
+        </a>
+      </div>
     </section>
 
     <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
@@ -2209,59 +2134,6 @@
         </a>
       </div>
     </section>
-    <section class="section-block" id="video">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="videos.index">Metodo e casi di lavoro</span>
-          <h2 data-i18n="videos.title">Vera al lavoro.</h2>
-        </div>
-        <p data-i18n="videos.copy">Una panoramica del metodo e quattro esempi del lavoro che Vera prepara.</p>
-      </div>
-
-      <a class="overview-video" href="https://youtu.be/2rJ0T5bZp2k" target="_blank" rel="noopener noreferrer" data-featured-video>
-        <span class="overview-video__thumb" aria-hidden="true">
-          <img src="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-featured-video-thumb>
-          <span class="video-play">▶</span>
-          <span class="video-duration" data-featured-video-duration>1:07</span>
-        </span>
-        <span class="overview-video__body">
-          <span class="video-kicker" data-i18n="videos.overview.kicker">Panoramica</span>
-          <strong data-i18n="videos.overview.title">Dal lavoro dello studio a un risultato rivedibile</strong>
-          <span class="video-meta" data-i18n="videos.open">Si apre su YouTube</span>
-        </span>
-      </a>
-
-      <div class="video-library" data-curated-videos>
-        <a class="video-guide" target="_blank" rel="noopener noreferrer" data-video-index="0" hidden>
-          <span class="video-guide__thumb" aria-hidden="true"><img alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
-          <span class="video-guide__body"><span class="video-kicker">Nuovo cliente · Modello comune</span><strong>Dai documenti al fascicolo cliente</strong><span class="video-description">Spiega i campi stabili su cui le implementazioni nazionali collegano documenti, regole e azioni.</span><span class="video-meta">Apri la guida</span></span>
-        </a>
-        <a class="video-guide" href="https://youtu.be/x2u-AAAuxfc" target="_blank" rel="noopener noreferrer" data-video-index="1">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/x2u-AAAuxfc/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
-          <span class="video-guide__body"><span class="video-kicker">Contabilità</span><strong>Dall’estratto conto a una riconciliazione verificabile</strong><span class="video-description">Porta movimenti bancari e contabili in una riconciliazione rivedibile.</span><span class="video-meta">Si apre su YouTube</span></span>
-        </a>
-        <a class="video-guide" href="https://youtu.be/-2gcDE8iz4A" target="_blank" rel="noopener noreferrer" data-video-index="2">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/-2gcDE8iz4A/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
-          <span class="video-guide__body"><span class="video-kicker">Pratiche e risultati</span><strong>Dalle tabelle sorgente a un report Word rivedibile</strong><span class="video-description">Porta tabelle e fonti in un report Word strutturato.</span><span class="video-meta">Si apre su YouTube</span></span>
-        </a>
-        <a class="video-guide" href="https://youtu.be/F7BmRTl7s1o" target="_blank" rel="noopener noreferrer" data-video-index="3">
-          <span class="video-guide__thumb" aria-hidden="true"><img src="https://i.ytimg.com/vi/F7BmRTl7s1o/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy"><span class="video-play">▶</span></span>
-          <span class="video-guide__body"><span class="video-kicker">Ricerca</span><strong>Da un quesito disordinato a una ricerca controllabile</strong><span class="video-description">Trasforma il quesito professionale in istruzioni di ricerca controllabili.</span><span class="video-meta">Si apre su YouTube</span></span>
-        </a>
-      </div>
-
-      <div class="all-videos">
-        <div class="all-videos__head">
-          <div class="all-videos__title">
-            <span class="section-index" data-i18n="videos.all.index">Catalogo video completo</span>
-            <h3 data-i18n="videos.all.title">Tutte le guide rilevanti.</h3>
-          </div>
-          <p data-i18n="videos.all.copy">Workflow generali e lavoro specifico per l’Italia, riuniti in un unico indice.</p>
-        </div>
-        <div class="all-video-library" role="region" data-video-library="vera" data-video-mode="all" aria-label="Tutte le guide video di Vera" data-i18n-aria-label="videos.all.label"></div>
-      </div>
-    </section>
-
   </main>
 
   <footer>
@@ -2291,7 +2163,6 @@
         "nav.assurance": "Metodo",
         "nav.jurisdiction": "Per l’Italia",
         "nav.data": "Dati",
-        "nav.videos": "Video",
         "language.label": "Lingua",
         "hero.eyebrow": "AI companion per commercialisti",
         "hero.title": "Vera",
@@ -2505,18 +2376,9 @@
         "privacy.routes.hosted.copy": "Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.",
         "privacy.closing": "La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.",
         "privacy.dataLink": "Guarda il video sulla gestione dei dati",
-        "videos.index": "Metodo e casi di lavoro",
-        "videos.title": "Vera al lavoro.",
-        "videos.copy": "Una panoramica del metodo e quattro esempi del lavoro che Vera prepara.",
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
         "videos.open": "Si apre su YouTube",
-        "videos.openGuide": "Apri la guida",
-        "videos.all.index": "Catalogo video completo",
-        "videos.all.title": "Tutte le guide rilevanti.",
-        "videos.all.copy": "Workflow generali e lavoro specifico per l’Italia, riuniti in un unico indice.",
-        "videos.all.label": "Tutte le guide video di Vera",
-        "videos.all.open": "Apri la guida",
         "install.title": "Scegli dove lavorare con Vera.",
         "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Vera",
@@ -2542,7 +2404,6 @@
         "nav.assurance": "Method",
         "nav.jurisdiction": "For the UK",
         "nav.data": "Data",
-        "nav.videos": "Videos",
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
@@ -2756,18 +2617,9 @@
         "privacy.routes.hosted.copy": "A hosted service is a separate boundary and is documented once at service level. Searches, connectors, portals, or sends chosen by the user instead follow the external service’s terms; they are not a third Mparanza category.",
         "privacy.closing": "The same rule applies to Vera and Clara: one map per workflow, one description per hosted service, and no prompt-by-prompt documentation.",
         "privacy.dataLink": "Watch the data-handling video",
-        "videos.index": "Method and working cases",
-        "videos.title": "Vera at work.",
-        "videos.copy": "An overview of the method and four examples of the work Vera prepares.",
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to a reviewable result",
         "videos.open": "Opens on YouTube",
-        "videos.openGuide": "Open guide",
-        "videos.all.index": "Complete video catalog",
-        "videos.all.title": "Every relevant guide.",
-        "videos.all.copy": "General workflows and the UK client-file preparation available from this page.",
-        "videos.all.label": "All Vera video guides",
-        "videos.all.open": "Open guide",
         "install.title": "Choose where to work with Vera.",
         "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Vera installation options",
@@ -2793,7 +2645,6 @@
         "nav.assurance": "Méthode",
         "nav.jurisdiction": "Pour Genève",
         "nav.data": "Données",
-        "nav.videos": "Vidéos",
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
@@ -3007,18 +2858,9 @@
         "privacy.routes.hosted.copy": "Un service hébergé a un périmètre distinct et est documenté une fois au niveau du service. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe ; ils ne constituent pas une troisième catégorie Mparanza.",
         "privacy.closing": "La même règle s’applique à Vera et Clara : une cartographie par workflow, une description par service hébergé et aucune documentation prompt par prompt.",
         "privacy.dataLink": "Voir la vidéo sur le traitement des données",
-        "videos.index": "Méthode et cas de travail",
-        "videos.title": "Vera à l’œuvre.",
-        "videos.copy": "Une vue d’ensemble de la méthode et quatre exemples du travail préparé par Vera.",
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à un résultat révisable",
         "videos.open": "S’ouvre sur YouTube",
-        "videos.openGuide": "Ouvrir le guide",
-        "videos.all.index": "Catalogue vidéo complet",
-        "videos.all.title": "Tous les guides pertinents.",
-        "videos.all.copy": "Les workflows généraux et la préparation des dossiers genevois disponibles depuis cette page.",
-        "videos.all.label": "Tous les guides vidéo de Vera",
-        "videos.all.open": "Ouvrir le guide",
         "install.title": "Choisissez où travailler avec Vera.",
         "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Vera",
@@ -3044,7 +2886,6 @@
         "nav.assurance": "Methode",
         "nav.jurisdiction": "Für Zürich",
         "nav.data": "Daten",
-        "nav.videos": "Videos",
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
@@ -3258,18 +3099,9 @@
         "privacy.routes.hosted.copy": "Ein gehosteter Dienst hat eine separate Grenze und wird einmal auf Dienstebene dokumentiert. Vom Nutzer gewählte Suchen, Connectoren, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes; sie sind keine dritte Mparanza-Kategorie.",
         "privacy.closing": "Für Vera und Clara gilt dieselbe Regel: eine Zuordnung pro Workflow, eine Beschreibung pro gehostetem Dienst und keine Dokumentation für jeden Prompt.",
         "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
-        "videos.index": "Methode und Arbeitsfälle",
-        "videos.title": "Vera bei der Arbeit.",
-        "videos.copy": "Ein Überblick über die Methode und vier Beispiele der Arbeit, die Vera vorbereitet.",
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
         "videos.open": "Öffnet YouTube",
-        "videos.openGuide": "Anleitung öffnen",
-        "videos.all.index": "Vollständiger Videokatalog",
-        "videos.all.title": "Alle relevanten Anleitungen.",
-        "videos.all.copy": "Allgemeine Workflows und die Vorbereitung von Zürcher Steuerakten auf dieser Seite.",
-        "videos.all.label": "Alle Vera-Videoanleitungen",
-        "videos.all.open": "Anleitung öffnen",
         "install.title": "Wählen Sie, wo Sie mit Vera arbeiten.",
         "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Vera",
@@ -3295,7 +3127,6 @@
         "nav.assurance": "Método",
         "nav.jurisdiction": "Trabajo local",
         "nav.data": "Datos",
-        "nav.videos": "Vídeos",
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
@@ -3509,18 +3340,9 @@
         "privacy.routes.hosted.copy": "Un servicio alojado constituye un límite separado y se documenta una sola vez a nivel de servicio. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo; no forman una tercera categoría de Mparanza.",
         "privacy.closing": "La misma regla se aplica a Vera y Clara: un mapa por flujo de trabajo, una descripción por servicio alojado y ninguna documentación prompt por prompt.",
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
-        "videos.index": "Método y casos de trabajo",
-        "videos.title": "Vera en acción.",
-        "videos.copy": "Una visión general del método y cuatro ejemplos del trabajo que prepara Vera.",
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
         "videos.open": "Se abre en YouTube",
-        "videos.openGuide": "Abrir la guía",
-        "videos.all.index": "Catálogo completo de vídeos",
-        "videos.all.title": "Todas las guías en un solo lugar.",
-        "videos.all.copy": "Las guías publicadas con narración en español se reúnen en este índice.",
-        "videos.all.label": "Todas las guías en vídeo de Vera",
-        "videos.all.open": "Abrir la guía",
         "install.title": "Elige dónde trabajar con Vera.",
         "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Vera",
@@ -3556,9 +3378,15 @@
       en: "../new-client/uk.html",
       fr: "../new-client/geneva.html",
       de: "../new-client/zurich.html",
-      es: null
+      es: "../new-client/index.html#file-preparation"
     };
-    const curatedVideoModules = ["new-client", "journal-bank-reconciliation", "report-builder", "prompt-optimizer"];
+    const filePreparationPages = {
+      it: "../new-client/index.html#file-preparation",
+      en: "../new-client/uk.html#file-preparation",
+      fr: "../new-client/geneva.html#file-preparation",
+      de: "../new-client/zurich.html#file-preparation",
+      es: "../new-client/index.html#file-preparation"
+    };
     const installVideos = {
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
       en: { id: "vU4eow_MMDA", duration: "1:16" },
@@ -3579,9 +3407,6 @@
 
     function setVideos(lang, strings) {
       const selection = window.MparanzaVideos.getCatalog("vera", lang);
-      const curated = curatedVideoModules
-        .map((module) => selection.videos.find((video) => video.module === module && video.kind === "guide"))
-        .filter(Boolean);
       const featuredLink = document.querySelector("[data-featured-video]");
       const featuredImage = document.querySelector("[data-featured-video-thumb]");
       const featuredDuration = document.querySelector("[data-featured-video-duration]");
@@ -3596,33 +3421,10 @@
         featuredImage.removeAttribute("src");
       }
 
-      document.querySelectorAll("[data-video-index]").forEach((link) => {
-        const item = curated[Number(link.dataset.videoIndex)];
-        link.hidden = !item;
-        if (!item) {
-          link.removeAttribute("href");
-          link.querySelector("img").removeAttribute("src");
-          return;
-        }
-        link.href = `https://youtu.be/${item.id}`;
-        link.setAttribute("aria-label", item.shortTitle);
-        link.querySelector("img").src = thumbnailUrl(item.id);
-        link.querySelector(".video-kicker").textContent = item.moduleLabel;
-        link.querySelector("strong").textContent = item.shortTitle;
-        link.querySelector(".video-description").textContent = item.description;
-        link.querySelector(".video-meta").textContent = strings["videos.open"];
-      });
       const installVideo = installVideos[lang];
       document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
       document.getElementById("vera-install-video-duration").textContent = installVideo.duration;
-      const videoLibrary = document.querySelector('[data-video-library="vera"]');
-      videoLibrary.dataset.videoJurisdiction = jurisdictionsByPage[lang] || "";
-      window.MparanzaVideos.mount({
-        product: "vera",
-        lang,
-        openLabel: strings["videos.all.open"]
-      });
     }
 
     function setLanguage(requested, updateHistory = true) {
@@ -3686,11 +3488,22 @@
       newClientLink.hidden = !newClientPage;
       if (newClientPage) {
         newClientLink.dataset.baseHref = newClientPage;
-        newClientLink.dataset.nativeLanguage = lang;
+        if (lang === "es") {
+          delete newClientLink.dataset.nativeLanguage;
+        } else {
+          newClientLink.dataset.nativeLanguage = lang;
+        }
       } else {
         newClientLink.removeAttribute("href");
         delete newClientLink.dataset.baseHref;
         delete newClientLink.dataset.nativeLanguage;
+      }
+      const noticeLink = document.getElementById("notice-intake");
+      noticeLink.dataset.baseHref = filePreparationPages[lang];
+      if (["en", "fr", "de"].includes(lang)) {
+        noticeLink.dataset.nativeLanguage = lang;
+      } else {
+        delete noticeLink.dataset.nativeLanguage;
       }
       document.querySelectorAll("[data-module-link]").forEach((link) => {
         if (link.hidden) return;
