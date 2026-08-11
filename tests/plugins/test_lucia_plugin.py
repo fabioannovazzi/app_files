@@ -19,7 +19,13 @@ LUCIA_PUBLIC_COWORK_ZIP = (
     ROOT / "static" / "shared" / "lucia" / "downloads" / "lucia-cowork-plugin.zip"
 )
 VERA_CLAUDE_ZIP = ROOT / "plugin_packages" / "vera" / "vera-claude-plugin.zip"
-PUBLIC_WORKFLOWS = {"prompt-optimizer", "deep-research-validator"}
+SHARED_ASSURANCE_WORKFLOWS = {"prompt-optimizer", "deep-research-validator"}
+LAWYER_PROFILED_WORKFLOWS = {
+    "comunicazione-professionale",
+    "presenza-digitale-studio",
+}
+PUBLIC_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS
+PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS
 
 
 def _json(path: Path) -> dict[str, object]:
@@ -72,7 +78,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.5"
+    assert manifest["version"] == "0.1.6"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -80,7 +86,9 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
     assert "avvocati indipendenti" in interface["longDescription"]
-    assert "Lucia mostra fonti" in interface["longDescription"]
+    assert "Lucia mantiene visibili fonti" in interface["longDescription"]
+    assert "comunicazione professionale" in interface["longDescription"]
+    assert "presenza digitale" in interface["longDescription"]
     assert "esattamente due" not in interface["longDescription"]
     assert "prima versione" not in interface["longDescription"]
 
@@ -107,7 +115,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert "questa richiesta legale" in router["default_prompt"]
 
 
-def test_lucia_current_catalog_has_two_public_workflows_and_one_hidden_runtime() -> (
+def test_lucia_current_catalog_has_four_public_workflows_and_one_hidden_runtime() -> (
     None
 ):
     components = _json(LUCIA_ROOT / "components.json")
@@ -120,7 +128,9 @@ def test_lucia_current_catalog_has_two_public_workflows_and_one_hidden_runtime()
     assert set(components["plugins"]) == PUBLIC_WORKFLOWS | {"studio-archive"}
     assert {
         name for name, role in roles.items() if role["kind"] == "public_workflow"
-    } == (PUBLIC_WORKFLOWS)
+    } == PUBLIC_WORKFLOWS
+    for workflow in LAWYER_PROFILED_WORKFLOWS:
+        assert roles[workflow]["profile"] == "lucia-lawyer"
     assert roles["studio-archive"] == {
         "kind": "internal_runtime",
         "supports": ["prompt-optimizer", "deep-research-validator"],
@@ -130,7 +140,7 @@ def test_lucia_current_catalog_has_two_public_workflows_and_one_hidden_runtime()
     assert "studio-archive" not in cards
 
 
-@pytest.mark.parametrize("workflow", sorted(PUBLIC_WORKFLOWS))
+@pytest.mark.parametrize("workflow", sorted(SHARED_ASSURANCE_WORKFLOWS))
 def test_lucia_wrappers_resolve_canonical_shared_component(workflow: str) -> None:
     wrapper = (LUCIA_ROOT / "skills" / workflow / "SKILL.md").read_text(
         encoding="utf-8"
@@ -144,7 +154,27 @@ def test_lucia_wrappers_resolve_canonical_shared_component(workflow: str) -> Non
     assert "deliverables are in Italian" in wrapper
 
 
-@pytest.mark.parametrize("component", sorted(PUBLIC_WORKFLOWS))
+@pytest.mark.parametrize("workflow", sorted(LAWYER_PROFILED_WORKFLOWS))
+def test_lucia_profiled_wrappers_resolve_shared_mechanics_and_lawyer_contract(
+    workflow: str,
+) -> None:
+    wrapper_root = LUCIA_ROOT / "skills" / workflow
+    wrapper = (wrapper_root / "SKILL.md").read_text(encoding="utf-8")
+    profile = (wrapper_root / "references" / "lucia-lawyer-profile.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert f"../../modules/{workflow}" in wrapper
+    assert f"../../../{workflow}" in wrapper
+    assert f"`skills/{workflow}/SKILL.md`" in wrapper
+    assert "opaque internal provenance value" in wrapper
+    assert "does not weaken or replace" in wrapper
+    assert "Consiglio Nazionale Forense" in profile
+    assert "client" in profile.casefold()
+    assert "publication" in profile.casefold()
+
+
+@pytest.mark.parametrize("component", sorted(SHARED_ASSURANCE_WORKFLOWS))
 def test_lucia_and_vera_package_the_same_assurance_component_bytes(
     component: str,
 ) -> None:
@@ -231,18 +261,29 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
         "open_studio_google_drive_source",
     }.isdisjoint(listed_names)
     assert set(prepare_tool["inputSchema"]["properties"]["workflow_id"]["enum"]) == (
-        PUBLIC_WORKFLOWS
+        PRIVATE_LIFECYCLE_WORKFLOWS
     )
 
 
-def test_lucia_submission_fixture_has_five_positive_and_three_negative_cases() -> None:
+def test_lucia_submission_fixture_covers_all_current_public_workflows() -> None:
     submission = _json(LUCIA_ROOT / "evals" / "submission_cases.json")
     triggers = _json(LUCIA_ROOT / "evals" / "trigger_fixtures.json")
 
-    assert len(submission["positive"]) == 5
-    assert len(submission["negative"]) == 3
-    assert len(triggers["should_trigger"]) >= 5
-    assert len(triggers["should_not_trigger"]) >= 3
+    positive_ids = {case["id"] for case in submission["positive"]}
+    trigger_ids = {case["id"] for case in triggers["should_trigger"]}
+
+    assert {
+        "question-plan",
+        "answer-validation",
+        "professional-communication",
+        "law-firm-site-refresh",
+    } <= positive_ids
+    assert {
+        "lucia-professional-communication",
+        "lucia-law-firm-site-refresh",
+    } <= trigger_ids
+    assert len(submission["negative"]) >= 4
+    assert len(triggers["should_not_trigger"]) >= 4
 
 
 def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
@@ -251,7 +292,7 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
         ROOT / "plugins" / "vera" / "marketplace_skill_instructions.json"
     )["skills"]
 
-    for workflow in PUBLIC_WORKFLOWS:
+    for workflow in SHARED_ASSURANCE_WORKFLOWS:
         for field in ("display_name", "short_description", "default_prompt"):
             assert lucia_cards[workflow][field] == vera_cards[workflow][field]
         assert lucia_cards[workflow]["instructions"] == vera_cards[workflow][
@@ -271,6 +312,10 @@ def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
     assert not any(name.startswith("modules/studio-archive/") for name in names)
     assert any(name.startswith("modules/prompt-optimizer/") for name in names)
     assert any(name.startswith("modules/deep-research-validator/") for name in names)
+    assert any(
+        name.startswith("modules/comunicazione-professionale/") for name in names
+    )
+    assert any(name.startswith("modules/presenza-digitale-studio/") for name in names)
 
 
 def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None:
@@ -286,7 +331,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.4"
+        assert manifest["version"] == "0.1.5"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -302,7 +347,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
             name.startswith("modules/studio-archive/") for name in lucia_names
         )
 
-        for workflow in PUBLIC_WORKFLOWS:
+        for workflow in SHARED_ASSURANCE_WORKFLOWS:
             prefix = f"modules/{workflow}/"
             lucia_entries = {
                 name: lucia_archive.read(name)
@@ -316,6 +361,12 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
             }
             assert lucia_entries
             assert lucia_entries == vera_entries
+
+        for workflow in LAWYER_PROFILED_WORKFLOWS:
+            assert any(name.startswith(f"modules/{workflow}/") for name in lucia_names)
+            assert (
+                f"skills/{workflow}/references/lucia-lawyer-profile.md" in lucia_names
+            )
 
     assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
 
@@ -344,6 +395,10 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
         assert f'data-lang="{lang}"' in page
     assert "Prompt Optimizer" in page
     assert "Deep Research Validator" in page
+    assert 'id="comunicazione-professionale"' in page
+    assert 'id="presenza-digitale-studio"' in page
+    assert "Comunicazione professionale" in page
+    assert "Presenza digitale dello studio" in page
     assert "Ottimizza prompt" in page
     assert "Assistente Ai per avvocati indipendenti" in page
     assert (
@@ -434,6 +489,27 @@ def test_lucia_public_page_matches_vera_function_copy_in_every_language() -> Non
         vera_values = _javascript_string_values(vera_page, key)
         assert len(lucia_values) == 5
         assert lucia_values == vera_values
+
+
+def test_lucia_public_page_localizes_new_lawyer_profiled_workflows() -> None:
+    page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for key in (
+        "module.communication.title",
+        "module.communication",
+        "module.website.title",
+        "module.website",
+        "communication.title",
+        "website.title",
+    ):
+        assert len(_javascript_string_values(page, key)) == 5
+    assert "studio legale" in page
+    assert "law firm" in page
+    assert "cabinet" in page
+    assert "Kanzlei" in page
+    assert "despacho" in page
 
 
 def test_lucia_marketplace_long_description_matches_manifest() -> None:

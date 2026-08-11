@@ -2,7 +2,9 @@
   "schema_version": 1,
   "plugins": [
     "prompt-optimizer",
-    "deep-research-validator"
+    "deep-research-validator",
+    "comunicazione-professionale",
+    "presenza-digitale-studio"
   ],
   "workflow_roles": {
     "prompt-optimizer": {
@@ -10,6 +12,14 @@
     },
     "deep-research-validator": {
       "kind": "public_workflow"
+    },
+    "comunicazione-professionale": {
+      "kind": "public_workflow",
+      "profile": "lucia-lawyer"
+    },
+    "presenza-digitale-studio": {
+      "kind": "public_workflow",
+      "profile": "lucia-lawyer"
     }
   }
 }

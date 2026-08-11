@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/website-intake-v2.json",
+  "title": "Website intake",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "mode",
+    "studio",
+    "reference_date",
+    "objective",
+    "audiences",
+    "requested_pages",
+    "existing_site",
+    "selected_files",
+    "confirmed_facts",
+    "constraints",
+    "external_routes"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "mode": {"enum": ["refresh", "first_site"]},
+    "studio": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "owner", "language"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "owner": {"type": "string", "minLength": 1},
+        "language": {"type": "string", "minLength": 2},
+        "jurisdiction": {"type": ["string", "null"]}
+      }
+    },
+    "reference_date": {"type": "string", "format": "date"},
+    "objective": {"type": "string", "minLength": 1},
+    "audiences": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "requested_pages": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "existing_site": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url", "platform"],
+      "properties": {
+        "url": {"type": ["string", "null"], "format": "uri"},
+        "platform": {"type": ["string", "null"]}
+      }
+    },
+    "selected_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "role", "path"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "role": {
+            "enum": [
+              "current_site_snapshot",
+              "screenshot",
+              "studio_material",
+              "brand_asset",
+              "approved_photo",
+              "legal_text",
+              "source_code",
+              "other"
+            ]
+          },
+          "path": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "confirmed_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement", "confirmed_by", "confirmed_by_user"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
+          "statement": {"type": "string", "minLength": 1},
+          "confirmed_by": {"type": "string", "minLength": 1},
+          "confirmed_by_user": {"const": true}
+        }
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "external_routes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_site_inspection",
+        "studio_material_connector",
+        "creative_assistance",
+        "preview_publication",
+        "final_publication"
+      ],
+      "properties": {
+        "public_site_inspection": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {"properties": {"provider": {"enum": ["none", "public_web", "other"]}}}
+          ]
+        },
+        "studio_material_connector": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {"properties": {"provider": {"enum": ["none", "connector"]}}}
+          ]
+        },
+        "creative_assistance": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {"properties": {"provider": {"enum": ["none", "creative_service", "other"]}}}
+          ]
+        },
+        "preview_publication": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {"properties": {"provider": {"enum": ["none", "sites", "other"]}}}
+          ]
+        },
+        "final_publication": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {"properties": {"provider": {"enum": ["none", "sites", "other"]}}}
+          ]
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "anyOf": [
+        {"properties": {"selected_files": {"minItems": 1}}},
+        {"properties": {"confirmed_facts": {"minItems": 1}}}
+      ]
+    },
+    {
+      "if": {"properties": {"mode": {"const": "refresh"}}},
+      "then": {
+        "properties": {
+          "selected_files": {"minItems": 1},
+          "existing_site": {
+            "properties": {
+              "url": {"type": "string", "format": "uri", "pattern": "^https?://", "minLength": 1},
+              "platform": {
+                "oneOf": [
+                  {"type": "null"},
+                  {"type": "string", "minLength": 1}
+                ]
+              }
+            }
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "existing_site": {
+            "properties": {
+              "url": {"type": "null"},
+              "platform": {"type": "null"}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["selected", "provider", "destination", "approved_by_user"],
+      "properties": {
+        "selected": {"type": "boolean"},
+        "provider": {
+          "enum": ["none", "public_web", "connector", "creative_service", "sites", "other"]
+        },
+        "destination": {"type": "string"},
+        "approved_by_user": {"type": "boolean"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"selected": {"const": true}}},
+          "then": {
+            "properties": {
+              "provider": {"not": {"const": "none"}},
+              "destination": {"minLength": 1},
+              "approved_by_user": {"const": true}
+            }
+          },
+          "else": {
+            "properties": {
+              "provider": {"const": "none"},
+              "approved_by_user": {"const": false}
+            }
+          }
+        }
+      ]
+    }
+  }
+}

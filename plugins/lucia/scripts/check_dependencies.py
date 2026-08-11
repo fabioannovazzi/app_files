@@ -16,6 +16,8 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 COMPONENTS = (
     "prompt-optimizer",
     "deep-research-validator",
+    "comunicazione-professionale",
+    "presenza-digitale-studio",
     "studio-archive",
 )
 

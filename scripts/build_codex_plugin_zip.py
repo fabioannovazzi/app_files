@@ -169,6 +169,8 @@ LUCIA_CHATGPT_ROUTER_TARGETS = {
     "deep-research-validator": (
         "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"
     ),
+    "comunicazione-professionale": "skills/comunicazione-professionale/SKILL.md",
+    "presenza-digitale-studio": "skills/presenza-digitale-studio/SKILL.md",
 }
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (

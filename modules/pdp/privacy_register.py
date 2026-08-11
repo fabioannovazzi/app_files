@@ -1,4 +1,4 @@
-"""Build the public privacy register from Vera and Clara manifests."""
+"""Build the public privacy register from canonical product manifests."""
 
 from __future__ import annotations
 
@@ -52,7 +52,7 @@ _COPY = {
         "eyebrow": "Public function register",
         "title": "Check the boundary of each function.",
         "intro": (
-            "Choose a Vera or Clara function to see what the selected model may read, "
+            "Choose a Vera, Clara or Lucia function to see what the selected model may read, "
             "which additional destinations can be used, and whether a Mparanza-hosted "
             "service is part of the function."
         ),
@@ -76,6 +76,10 @@ _COPY = {
         "model_intro_clara": (
             "Real professional data needed for the work may enter the model context "
             "of the user’s selected ChatGPT or Codex account."
+        ),
+        "model_intro_lucia": (
+            "Real client, matter and law-firm data needed for the work may enter the "
+            "model context of the firm’s selected Codex or Cowork account."
         ),
         "data_classes": "Information the model may use",
         "purpose": "Purpose",
@@ -121,7 +125,7 @@ _COPY = {
         "eyebrow": "Registro pubblico delle funzioni",
         "title": "Controlla il confine di ogni funzione.",
         "intro": (
-            "Scegli una funzione di Vera o Clara per vedere che cosa può leggere il "
+            "Scegli una funzione di Vera, Clara o Lucia per vedere che cosa può leggere il "
             "modello selezionato, quali destinazioni aggiuntive può usare e se interviene "
             "un servizio hosted da Mparanza."
         ),
@@ -145,6 +149,11 @@ _COPY = {
         "model_intro_clara": (
             "I dati professionali reali necessari al lavoro possono entrare nel contesto "
             "del modello dell’account ChatGPT o Codex scelto dall’utente."
+        ),
+        "model_intro_lucia": (
+            "I dati reali del cliente, della pratica e dello studio legale necessari al "
+            "lavoro possono entrare nel contesto del modello dell’account Codex o "
+            "Cowork scelto dallo studio."
         ),
         "data_classes": "Informazioni che il modello può usare",
         "purpose": "Finalità",
@@ -355,6 +364,80 @@ def _clara_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
     return tuple(workflows)
 
 
+def _lucia_public_text(value: str) -> str:
+    """Project canonical Vera mechanics through Lucia's public identity."""
+
+    replacements = (
+        ("Vera-default", "Lucia-proposed"),
+        ("Vera defaults", "Lucia proposals"),
+        ("Vera default", "Lucia proposal"),
+        ("Vera package", "Lucia package"),
+        ("Vera", "Lucia"),
+        ("commercialista", "lawyer"),
+    )
+    result = value
+    for source, target in replacements:
+        result = result.replace(source, target)
+    return result
+
+
+def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
+    """Reuse canonical workstream boundaries for Lucia's registered workflows."""
+
+    lucia_root = root / "plugins" / "lucia"
+    components = _read_json(lucia_root / "components.json")
+    roles = components.get("workflow_roles", {})
+    public_ids = {
+        str(identifier)
+        for identifier in components.get("plugins", [])
+        if isinstance(roles.get(identifier), dict)
+        and roles[identifier].get("kind") == "public_workflow"
+    }
+    manifest_dir = root / "plugins" / "vera" / "privacy" / "workstreams"
+    manifest_paths = {path.stem: path for path in manifest_dir.glob("*.json")}
+    missing = sorted(public_ids - manifest_paths.keys())
+    if missing:
+        raise ValueError(
+            "Lucia workflow has no canonical privacy boundary: " + ", ".join(missing)
+        )
+
+    workflows = []
+    for identifier in sorted(public_ids):
+        path = manifest_paths[identifier]
+        manifest = _read_json(path)
+        workflows.append(
+            {
+                "id": identifier,
+                "product": "Lucia",
+                "name": _localized_name(
+                    identifier, str(manifest["display_name"]), lang
+                ),
+                "technical_name": str(manifest["display_name"]),
+                "model_intro_key": "model_intro_lucia",
+                "model_classes": [
+                    {
+                        "purpose": _lucia_public_text(str(item["purpose"])),
+                        "content": _lucia_public_text(str(item["content"])),
+                    }
+                    for item in manifest["model_context"]["classes"]
+                ],
+                "service_ids": [],
+                "other_boundaries": [
+                    {
+                        **_public_boundary(item),
+                        "destination": _lucia_public_text(str(item["destination"])),
+                        "purpose": _lucia_public_text(str(item["purpose"])),
+                        "content": _lucia_public_text(str(item["content"])),
+                    }
+                    for item in manifest["external_boundaries"]
+                ],
+                "reviewed_at": manifest["review"]["reviewed_at"],
+                "source_url": _source_url(path.relative_to(root)),
+            }
+        )
+    return tuple(workflows)
+
+
 @lru_cache(maxsize=10)
 def get_public_privacy_register(lang: str = "en") -> dict[str, Any]:
     """Return a safe public projection of the canonical privacy manifests."""
@@ -366,6 +449,7 @@ def get_public_privacy_register(lang: str = "en") -> dict[str, Any]:
     workflows = (
         *_vera_workflows(ROOT, resolved_lang),
         *_clara_workflows(ROOT, resolved_lang),
+        *_lucia_workflows(ROOT, resolved_lang),
     )
     public_workflows = []
     for workflow in workflows:
@@ -386,7 +470,7 @@ def get_public_privacy_register(lang: str = "en") -> dict[str, Any]:
                     item for item in public_workflows if item["product"] == product
                 ),
             }
-            for product in ("Vera", "Clara")
+            for product in ("Vera", "Clara", "Lucia")
         ),
         "services": services,
         "entry_count": len(public_workflows) + len(services),

@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "workflow", "run_id", "recorded_at", "recorded_by", "confirmed_by_user", "outcome", "binding", "selection", "decision_digest"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "workflow": {"const": "comunicazione-professionale"},
+    "run_id": {"type": "string", "minLength": 1},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "recorded_by": {"type": "string", "minLength": 1, "maxLength": 200},
+    "confirmed_by_user": {"const": true},
+    "outcome": {"enum": ["selected", "fallback"]},
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["handoff_digest", "input_digest", "contribution_digest", "visual_story_digest"],
+      "properties": {
+        "handoff_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "contribution_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "visual_story_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      }
+    },
+    "selection": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["board_id", "board_revision", "directions", "selected_item_id", "selection_rationale", "translation"],
+          "properties": {
+            "board_id": {"type": "string", "minLength": 1},
+            "board_revision": {"type": "integer", "minimum": 1},
+            "directions": {
+              "type": "array",
+              "minItems": 4,
+              "maxItems": 6,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["item_id", "item_revision", "title", "snapshot_path", "sha256", "size_bytes"],
+                "properties": {
+                  "item_id": {"type": "string", "minLength": 1},
+                  "item_revision": {"type": "integer", "minimum": 1},
+                  "title": {"type": "string", "minLength": 3},
+                  "snapshot_path": {"type": "string", "minLength": 1},
+                  "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                  "size_bytes": {"type": "integer", "minimum": 1}
+                }
+              }
+            },
+            "selected_item_id": {"type": "string", "minLength": 1},
+            "selection_rationale": {"type": "string", "minLength": 30},
+            "translation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["art_direction_summary", "exact_content_preserved", "source_preservation_confirmed", "contribution_change_required", "contribution_change_explanation", "tokens"],
+              "properties": {
+                "art_direction_summary": {"type": "string", "minLength": 30, "maxLength": 2000},
+                "exact_content_preserved": {"const": true},
+                "source_preservation_confirmed": {"const": true},
+                "contribution_change_required": {"type": "boolean"},
+                "contribution_change_explanation": {"type": "string", "maxLength": 2000},
+                "tokens": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["frame_style", "accent_geometry", "rule_style", "row_marker", "spacing_rhythm", "header_treatment"],
+                  "properties": {
+                    "frame_style": {"enum": ["none", "hairline", "inset"]},
+                    "accent_geometry": {"enum": ["underline", "corner_stamp", "side_bar"]},
+                    "rule_style": {"enum": ["single", "double", "offset"]},
+                    "row_marker": {"enum": ["numeral", "circle", "bar"]},
+                    "spacing_rhythm": {"enum": ["compact", "balanced", "airy"]},
+                    "header_treatment": {"enum": ["solid", "outline", "split"]}
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["reason", "details"],
+          "properties": {
+            "reason": {"enum": ["tool_unavailable", "generation_failed", "user_selected_internal"]},
+            "details": {"type": "string", "minLength": 20}
+          }
+        }
+      ]
+    },
+    "decision_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

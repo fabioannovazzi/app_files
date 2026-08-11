@@ -5,9 +5,9 @@
 [Licenza GNU AGPLv3](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Lucia è l’assistente AI di Mparanza per avvocati indipendenti e piccoli studi
-legali. Prepara ricerca e validazione
-mantenendo visibili perimetro, fonti, affermazioni, incertezze e passaggi
-riservati al giudizio professionale.
+legali. Prepara ricerca e validazione, comunicazioni professionali e siti
+informativi mantenendo visibili perimetro, fonti, affermazioni, incertezze e
+passaggi riservati al giudizio professionale.
 
 Lucia non sostituisce l’avvocato: strategia, conclusioni, approvazione e
 responsabilità restano al professionista.
@@ -21,11 +21,23 @@ attualmente pubbliche sono:
   in una ricerca con perimetro, fonti e verifiche definite.
 - **Valida Deep Research** — Controlla le affermazioni rispetto alle fonti
   citate e prepara il materiale consolidato.
+- **Comunicazione professionale** — Decide se una novità merita di essere
+  comunicata e prepara email, circolari, articoli, post, FAQ, alert e visuali
+  verificabili per la revisione dell’avvocato.
+- **Presenza digitale dello studio** — Crea o rinnova il sito informativo dello
+  studio legale da materiali verificati, con review desktop e telefono, preview
+  e pubblicazione subordinata all’approvazione.
 
 Prompt Optimizer e Deep Research Validator sono le stesse implementazioni
 canoniche incorporate in Vera. Lucia non ne mantiene copie divergenti: il
 builder include gli stessi file sorgente e i test verificano l’uguaglianza dei
 byte nei pacchetti generati.
+
+Comunicazione professionale e Presenza digitale riusano la stessa macchina
+canonica di Vera per evidenze, review, rendering, preview, hash e packaging, ma
+passano da wrapper Lucia con un profilo distinto per avvocati. Il profilo
+disciplina riservatezza, identità professionale, affermazioni pubbliche,
+applicabilità e approvazione della pubblicazione.
 
 ## Come lavora
 

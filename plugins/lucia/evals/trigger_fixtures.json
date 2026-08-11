@@ -26,11 +26,32 @@
       "id": "lucia-one-page-letter",
       "prompt": "Imposta e verifica una lettera legale di una pagina al cliente sulla contestazione allegata, senza nascondere fonti mancanti o incertezze.",
       "required_signals": ["lettera", "fonti mancanti", "incertezze", "validazione"]
+    },
+    {
+      "id": "lucia-professional-communication",
+      "prompt": "@lucia valuta se questa nuova sentenza merita una comunicazione ai clienti e, se sì, prepara email e post LinkedIn con fonti verificabili.",
+      "required_signals": ["comunicazione-professionale", "no_publish", "fonti", "revisione dell’avvocato"]
+    },
+    {
+      "id": "lucia-confidential-public-copy",
+      "prompt": "Lucia, prepara un articolo dal fascicolo allegato senza rendere riconoscibili cliente, controparte o strategia.",
+      "required_signals": ["riservatezza", "minimizzazione", "affermazioni", "approvazione"]
+    },
+    {
+      "id": "lucia-law-firm-site-refresh",
+      "prompt": "@lucia rinnova il sito del mio studio legale dai materiali allegati e prepara una preview desktop e telefono da approvare.",
+      "required_signals": ["presenza-digitale-studio", "materiali verificati", "desktop", "telefono", "preview"]
+    },
+    {
+      "id": "lucia-first-law-firm-site",
+      "prompt": "Lucia, crea il primo sito informativo dello studio: usa solo servizi, titoli, iscrizione all'Ordine e contatti che posso confermare.",
+      "required_signals": ["sito informativo", "identità verificata", "proposta Lucia", "approvazione"]
     }
   ],
   "should_not_trigger": [
     {"id": "accounting-work", "prompt": "Riconcilia questo estratto conto con il giornale contabile."},
     {"id": "legal-filing", "prompt": "Deposita questo ricorso nel portale e firma digitalmente gli allegati."},
-    {"id": "generic-prompt-copy", "prompt": "Rendi più brillante questo prompt per generare slogan pubblicitari."}
+    {"id": "generic-prompt-copy", "prompt": "Rendi più brillante questo prompt per generare slogan pubblicitari."},
+    {"id": "transactional-client-portal", "prompt": "Crea un portale clienti con login, pagamenti, appuntamenti e scambio documenti."}
   ]
 }

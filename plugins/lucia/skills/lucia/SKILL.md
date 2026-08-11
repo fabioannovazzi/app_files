@@ -64,6 +64,8 @@ funzione Lucia:
 | --- | --- |
 | Quesito da impostare, risposta da pianificare o ricerca da avviare | Leggi integralmente `../prompt-optimizer/SKILL.md` e seguilo. |
 | Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../deep-research-validator/SKILL.md` e seguilo. |
+| Novità giuridica o professionale da valutare e trasformare in email, circolare, articolo, post, FAQ, alert o visuale | Leggi integralmente `../comunicazione-professionale/SKILL.md` e seguilo. Non duplicare i passaggi di answer contract e claim assurance già incorporati nel workflow. |
+| Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
 | Percorso completo dal quesito alla consegna | Esegui prima `../prompt-optimizer/SKILL.md`, prepara la risposta con ragionamento model-led e fonti qualificate, poi esegui `../deep-research-validator/SKILL.md` prima della consegna. |
 | Nessun workflow registrato copre la richiesta | Fermati. Dì soltanto che Lucia non dispone di un workflow adatto; non rispondere al merito e non offrire un percorso generico. |
 
@@ -88,6 +90,13 @@ il modulo incorporato, leggono il suo `SKILL.md` completo e lo seguono. Non
 modificare la logica del Prompt Optimizer o del Deep Research Validator dentro
 Lucia.
 
+Comunicazione professionale e Presenza digitale dello studio riusano invece
+la macchina canonica di Vera attraverso wrapper Lucia. Le wrapper leggono il
+componente completo e aggiungono il profilo obbligatorio per avvocati su
+riservatezza, identità professionale, affermazioni pubbliche, applicabilità e
+pubblicazione. Il profilo Lucia può cambiare quei contratti professionali, ma
+non può indebolire evidenze, review, rendering, hash, preview o packaging.
+
 Studio Archive è solo l'infrastruttura privata necessaria al contratto di
 input, output e tracciabilità. Non presentarlo come capacità Lucia e non usarlo
 per ricerca d'archivio, Gmail, Drive, WhatsApp o altri lavori di studio.
@@ -100,10 +109,10 @@ Prima del primo comando verifica i requisiti dalla root Lucia:
 python scripts/check_dependencies.py
 ```
 
-Per una verifica mirata usa `--module prompt-optimizer` oppure
-`--module deep-research-validator`. Se manca un requisito, dichiaralo; non
-installare dipendenze a runtime. `requirements.txt` è l'unica dichiarazione dei
-pacchetti Python richiesti dal bundle.
+Per una verifica mirata usa `--module` con uno dei workflow registrati, per
+esempio `--module comunicazione-professionale`. Se manca un requisito,
+dichiaralo; non installare dipendenze a runtime. `requirements.txt` è l'unica
+dichiarazione dei pacchetti Python richiesti dal bundle.
 
 Never write run outputs inside this Git workspace. Nel lavoro locale usa
 soltanto l'`output_dir` restituito dal ciclo privato dell'incarico e richiesto
