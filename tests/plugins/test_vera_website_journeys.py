@@ -43,6 +43,15 @@ PIPELINE_LABEL_PAGES = tuple(
         key=str,
     )
 )
+WORKFLOW_HERO_LABEL_PAGES = tuple(
+    sorted(
+        (
+            *PIPELINE_LABEL_PAGES,
+            SHARED_ROOT / "studio-archive" / "index.html",
+        ),
+        key=str,
+    )
+)
 VERA_CORE_PAGES = (
     SHARED_ROOT / "vera" / "index.html",
     *(
@@ -566,6 +575,29 @@ def test_pipeline_labels_omit_redundant_product_names(page_path: Path) -> None:
     visible_text = re.sub(r"<[^>]+>", " ", html.unescape(breadcrumb.group("body")))
     assert not re.search(r"\b(?:Vera|Clara|Lucia)\b", visible_text)
     assert "data-vera-link" not in breadcrumb.group(0)
+
+
+@pytest.mark.parametrize(
+    "page_path",
+    WORKFLOW_HERO_LABEL_PAGES,
+    ids=lambda path: path.parent.name,
+)
+def test_workflow_hero_labels_omit_redundant_product_names(
+    page_path: Path,
+) -> None:
+    page = page_path.read_text(encoding="utf-8")
+    rendered_label = re.search(
+        r'<p\b[^>]*class="[^"]*eyebrow[^"]*"[^>]*'
+        r'data-(?:i18n|copy|journey)="hero\.eyebrow"[^>]*>(?P<label>.*?)</p>',
+        page,
+        re.DOTALL,
+    )
+
+    assert rendered_label is not None
+    labels = [html.unescape(rendered_label.group("label"))]
+    labels.extend(re.findall(r'"hero\.eyebrow"\s*:\s*"([^"]*)"', page))
+    labels.extend(re.findall(r'hero\s*:\s*{\s*eyebrow\s*:\s*"([^"]*)"', page))
+    assert not any(re.search(r"\b(?:Vera|Clara|Lucia)\b", label) for label in labels)
 
 
 @pytest.mark.parametrize(
