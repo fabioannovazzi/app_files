@@ -15,6 +15,7 @@
       "source_target": "vera",
       "output_directory": "plugin_packages/vera/claude/vera",
       "output_zip": "plugin_packages/vera/vera-claude-plugin.zip",
+      "public_zip": "static/shared/vera/downloads/vera-cowork-plugin.zip",
       "category": "productivity",
       "tags": [
         "accounting",
@@ -28,12 +29,28 @@
       "source_target": "clara",
       "output_directory": "plugin_packages/clara/claude/clara",
       "output_zip": "plugin_packages/clara/clara-claude-plugin.zip",
+      "public_zip": "static/shared/clara/downloads/clara-cowork-plugin.zip",
       "category": "productivity",
       "tags": [
         "consulting",
         "advisory",
         "commercial-due-diligence",
         "reporting",
+        "cowork"
+      ]
+    },
+    {
+      "plugin": "lucia",
+      "source_target": "lucia",
+      "output_directory": "plugin_packages/lucia/claude/lucia",
+      "output_zip": "plugin_packages/lucia/lucia-claude-plugin.zip",
+      "public_zip": "static/shared/lucia/downloads/lucia-cowork-plugin.zip",
+      "category": "productivity",
+      "tags": [
+        "legal",
+        "research",
+        "source-validation",
+        "professional-services",
         "cowork"
       ]
     }

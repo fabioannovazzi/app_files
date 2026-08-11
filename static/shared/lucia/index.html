@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta id="meta-description" name="description" content="Lucia prepara ricerca e validazione per avvocati indipendenti che lavorano nel contesto italiano, con fonti, affermazioni e decisioni rivedibili.">
+  <meta id="meta-description" name="description" content="Lucia prepara ricerca e validazione per avvocati indipendenti, con fonti, affermazioni e decisioni rivedibili.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/lucia/index.html">
   <meta id="og-title" property="og:title" content="Lucia · Codex per avvocati indipendenti">
-  <meta id="og-description" property="og:description" content="Lucia prepara ricerca e validazione per avvocati indipendenti che lavorano nel contesto italiano, con fonti, affermazioni e decisioni rivedibili.">
+  <meta id="og-description" property="og:description" content="Lucia prepara ricerca e validazione per avvocati indipendenti, con fonti, affermazioni e decisioni rivedibili.">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/lucia/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/lucia/index.html?lang=it">
@@ -69,16 +69,20 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion per avvocati indipendenti</p>
         <h1 data-i18n="hero.title">Lucia</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara ricerca e validazione per il lavoro legale nel contesto italiano, mantenendo fonti, affermazioni, incertezze e decisioni professionali rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Prepara ricerca e validazione per il lavoro legale, mantenendo fonti, affermazioni, incertezze e decisioni professionali rivedibili.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Lucia.</h2>
-            <p data-i18n="install.copy">Lucia è in preparazione per ChatGPT Work e Codex. Il collegamento di installazione sarà aggiunto appena la pubblicazione sarà attiva.</p>
+            <p data-i18n="install.copy">Installa Lucia per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.</p>
           </div>
-          <div class="hero-install__actions" role="group" aria-label="Accesso a Lucia" data-i18n-aria-label="install.actions.label">
+          <div class="hero-install__actions" role="group" aria-label="Opzioni di installazione di Lucia" data-i18n-aria-label="install.actions.label">
             <div class="install-option">
-              <a class="button" href="https://mparanza.com/support" data-i18n="install.button">Richiedi accesso a Lucia</a>
-              <p class="install-option__note" data-i18n="install.help">Apre il supporto Mparanza. Nessun collegamento provvisorio o repository privato.</p>
+              <a class="button" href="https://chatgpt.com/plugins/plugins_6a7aeb8b27dc8191aaef8e64146296ae?q=lucia" target="_blank" rel="noopener noreferrer" data-lucia-install-link data-i18n="install.button">Installa per ChatGPT Work e Codex</a>
+              <p class="install-option__note" data-i18n="install.chatgptHelp">Apre la pagina di installazione di Lucia per ChatGPT Work e Codex.</p>
+            </div>
+            <div class="install-option">
+              <a class="button" href="downloads/lucia-cowork-plugin.zip" download data-lucia-cowork-download-link data-i18n="install.coworkButton">Scarica per Claude Cowork</a>
+              <p class="install-option__note" data-i18n="install.coworkHelp">Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.</p>
             </div>
           </div>
         </div>
@@ -195,7 +199,7 @@
       <div class="footer-identity">
         <strong data-i18n="footer.product">Lucia · Codex per avvocati indipendenti</strong>
         <nav class="footer-links" aria-label="Informazioni" data-i18n-aria-label="footer.linksLabel">
-          <a href="https://github.com/fabioannovazzi/app_files/tree/agent/lucia-public-page/plugins/lucia" data-i18n="footer.source">Codice sorgente</a>
+          <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/lucia" data-i18n="footer.source">Codice sorgente</a>
           <a href="https://mparanza.com/support" data-i18n="footer.support">Supporto</a>
           <a href="/data-handling?lang=it" data-data-handling-link data-i18n="footer.data">Gestione dei dati</a>
         </nav>
@@ -207,11 +211,11 @@
     const copy = {
       it: {
         "meta.title": "Lucia · Codex per avvocati indipendenti",
-        "meta.description": "Lucia prepara ricerca e validazione per avvocati indipendenti che lavorano nel contesto italiano, con fonti, affermazioni e decisioni rivedibili.",
+        "meta.description": "Lucia prepara ricerca e validazione per avvocati indipendenti, con fonti, affermazioni e decisioni rivedibili.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina", "nav.menu": "Menu", "nav.capabilities": "Cosa fa", "nav.assurance": "Metodo", "nav.data": "Dati", "language.label": "Lingua",
-        "hero.eyebrow": "AI companion per avvocati indipendenti", "hero.title": "Lucia", "hero.lead": "Prepara ricerca e validazione per il lavoro legale nel contesto italiano, mantenendo fonti, affermazioni, incertezze e decisioni professionali rivedibili.",
-        "install.title": "Scegli dove lavorare con Lucia.", "install.copy": "Lucia è in preparazione per ChatGPT Work e Codex. Il collegamento di installazione sarà aggiunto appena la pubblicazione sarà attiva.", "install.actions.label": "Accesso a Lucia", "install.button": "Richiedi accesso a Lucia", "install.help": "Apre il supporto Mparanza. Nessun collegamento provvisorio o repository privato.",
+        "hero.eyebrow": "AI companion per avvocati indipendenti", "hero.title": "Lucia", "hero.lead": "Prepara ricerca e validazione per il lavoro legale, mantenendo fonti, affermazioni, incertezze e decisioni professionali rivedibili.",
+        "install.title": "Scegli dove lavorare con Lucia.", "install.copy": "Installa Lucia per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.", "install.actions.label": "Opzioni di installazione di Lucia", "install.button": "Installa per ChatGPT Work e Codex", "install.chatgptHelp": "Apre la pagina di installazione di Lucia per ChatGPT Work e Codex.", "install.coworkButton": "Scarica per Claude Cowork", "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
         "core.index": "Cosa può fare Lucia", "core.title": "Scegli il lavoro da fare.", "core.copy": "Il catalogo parte dai workflow condivisi con Vera e cresce attraverso funzioni legali specialistiche registrate e revisionabili.",
         "stream.research.index": "Area di lavoro", "stream.research.title": "Formula e verifica la ricerca", "stream.research.copy": "Dal quesito iniziale a una base di ricerca controllabile.",
         "module.prompt.title": "Ottimizza prompt", "module.prompt": "Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.", "module.research.title": "Valida Deep Research", "module.research": "Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.",
@@ -220,10 +224,10 @@
         "footer.product": "Lucia · Codex per avvocati indipendenti", "footer.linksLabel": "Informazioni", "footer.source": "Codice sorgente", "footer.support": "Supporto", "footer.data": "Gestione dei dati"
       },
       en: {
-        "meta.title": "Lucia · Codex for independent lawyers", "meta.description": "Lucia prepares research and validation for independent lawyers working in the Italian context, with reviewable sources, claims and decisions.", "skip": "Skip to content",
+        "meta.title": "Lucia · Codex for independent lawyers", "meta.description": "Lucia prepares research and validation for independent lawyers, with reviewable sources, claims and decisions.", "skip": "Skip to content",
         "nav.label": "Page navigation", "nav.menu": "Menu", "nav.capabilities": "What it does", "nav.assurance": "Method", "nav.data": "Data", "language.label": "Language",
-        "hero.eyebrow": "AI companion for independent lawyers", "hero.title": "Lucia", "hero.lead": "Prepares research and validation for legal work in the Italian context while keeping sources, claims, uncertainties and professional decisions reviewable.",
-        "install.title": "Choose where to work with Lucia.", "install.copy": "Lucia is being prepared for ChatGPT Work and Codex. The installation link will be added as soon as publication is live.", "install.actions.label": "Access to Lucia", "install.button": "Request access to Lucia", "install.help": "Opens Mparanza support. No temporary link or private repository.",
+        "hero.eyebrow": "AI companion for independent lawyers", "hero.title": "Lucia", "hero.lead": "Prepares research and validation for legal work while keeping sources, claims, uncertainties and professional decisions reviewable.",
+        "install.title": "Choose where to work with Lucia.", "install.copy": "Install Lucia for ChatGPT Work and Codex, or download the package for Claude Cowork.", "install.actions.label": "Lucia installation options", "install.button": "Install for ChatGPT Work and Codex", "install.chatgptHelp": "Opens Lucia’s installation page for ChatGPT Work and Codex.", "install.coworkButton": "Download for Claude Cowork", "install.coworkHelp": "Then upload the ZIP file from Customize → Plugins in Claude Cowork.",
         "core.index": "What Lucia can do", "core.title": "Choose the work to do.", "core.copy": "The catalog starts with workflows shared with Vera and grows through registered, reviewable specialist legal functions.",
         "stream.research.index": "Work area", "stream.research.title": "Frame and verify research", "stream.research.copy": "From the initial question to a controllable research basis.",
         "module.prompt.title": "Optimize Prompt", "module.prompt": "Turns a legal, tax or compliance question into research with a defined scope, sources and checks.", "module.research.title": "Validate Deep Research", "module.research": "Checks claims against cited sources and prepares the consolidated material.",
@@ -232,10 +236,10 @@
         "footer.product": "Lucia · Codex for independent lawyers", "footer.linksLabel": "Information", "footer.source": "Source code", "footer.support": "Support", "footer.data": "Data handling"
       },
       fr: {
-        "meta.title": "Lucia · Codex pour avocats indépendants", "meta.description": "Lucia prépare recherche et validation pour les avocats indépendants travaillant dans le contexte italien, avec des sources, affirmations et décisions révisables.", "skip": "Aller au contenu",
+        "meta.title": "Lucia · Codex pour avocats indépendants", "meta.description": "Lucia prépare recherche et validation pour les avocats indépendants, avec des sources, affirmations et décisions révisables.", "skip": "Aller au contenu",
         "nav.label": "Navigation de la page", "nav.menu": "Menu", "nav.capabilities": "Fonctions", "nav.assurance": "Méthode", "nav.data": "Données", "language.label": "Langue",
-        "hero.eyebrow": "AI companion pour avocats indépendants", "hero.title": "Lucia", "hero.lead": "Prépare recherche et validation pour le travail juridique dans le contexte italien, en gardant sources, affirmations, incertitudes et décisions professionnelles révisables.",
-        "install.title": "Choisissez où travailler avec Lucia.", "install.copy": "Lucia est en préparation pour ChatGPT Work et Codex. Le lien d’installation sera ajouté dès la publication.", "install.actions.label": "Accès à Lucia", "install.button": "Demander l’accès à Lucia", "install.help": "Ouvre l’assistance Mparanza. Aucun lien provisoire ni dépôt privé.",
+        "hero.eyebrow": "AI companion pour avocats indépendants", "hero.title": "Lucia", "hero.lead": "Prépare recherche et validation pour le travail juridique, en gardant sources, affirmations, incertitudes et décisions professionnelles révisables.",
+        "install.title": "Choisissez où travailler avec Lucia.", "install.copy": "Installez Lucia pour ChatGPT Work et Codex ou téléchargez le package pour Claude Cowork.", "install.actions.label": "Options d’installation de Lucia", "install.button": "Installer pour ChatGPT Work et Codex", "install.chatgptHelp": "Ouvre la page d’installation de Lucia pour ChatGPT Work et Codex.", "install.coworkButton": "Télécharger pour Claude Cowork", "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
         "core.index": "Ce que Lucia peut faire", "core.title": "Choisissez le travail à faire.", "core.copy": "Le catalogue commence par les workflows partagés avec Vera et s’enrichit de fonctions juridiques spécialisées, enregistrées et révisables.",
         "stream.research.index": "Domaine de travail", "stream.research.title": "Formuler et vérifier la recherche", "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
         "module.prompt.title": "Optimiser le prompt", "module.prompt": "Transforme une question juridique, fiscale ou de conformité en recherche avec périmètre, sources et contrôles définis.", "module.research.title": "Valider Deep Research", "module.research": "Contrôle les affirmations par rapport aux sources citées et prépare le matériel consolidé.",
@@ -244,10 +248,10 @@
         "footer.product": "Lucia · Codex pour avocats indépendants", "footer.linksLabel": "Informations", "footer.source": "Code source", "footer.support": "Assistance", "footer.data": "Traitement des données"
       },
       de: {
-        "meta.title": "Lucia · Codex für selbständige Anwälte", "meta.description": "Lucia bereitet Recherche und Validierung für selbständige Anwälte im italienischen Kontext vor – mit überprüfbaren Quellen, Aussagen und Entscheidungen.", "skip": "Zum Inhalt",
+        "meta.title": "Lucia · Codex für selbständige Anwälte", "meta.description": "Lucia bereitet Recherche und Validierung für selbständige Anwälte vor – mit überprüfbaren Quellen, Aussagen und Entscheidungen.", "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation", "nav.menu": "Menü", "nav.capabilities": "Funktionen", "nav.assurance": "Methode", "nav.data": "Daten", "language.label": "Sprache",
-        "hero.eyebrow": "AI companion für selbständige Anwälte", "hero.title": "Lucia", "hero.lead": "Bereitet Recherche und Validierung für Rechtsarbeit im italienischen Kontext vor und hält Quellen, Aussagen, Unsicherheiten und berufliche Entscheidungen überprüfbar.",
-        "install.title": "Wählen Sie, wo Sie mit Lucia arbeiten.", "install.copy": "Lucia wird für ChatGPT Work und Codex vorbereitet. Der Installationslink wird ergänzt, sobald die Veröffentlichung aktiv ist.", "install.actions.label": "Zugang zu Lucia", "install.button": "Zugang zu Lucia anfragen", "install.help": "Öffnet den Mparanza-Support. Kein provisorischer Link und kein privates Repository.",
+        "hero.eyebrow": "AI companion für selbständige Anwälte", "hero.title": "Lucia", "hero.lead": "Bereitet Recherche und Validierung für Rechtsarbeit vor und hält Quellen, Aussagen, Unsicherheiten und berufliche Entscheidungen überprüfbar.",
+        "install.title": "Wählen Sie, wo Sie mit Lucia arbeiten.", "install.copy": "Installieren Sie Lucia für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.", "install.actions.label": "Installationsoptionen für Lucia", "install.button": "Für ChatGPT Work und Codex installieren", "install.chatgptHelp": "Öffnet die Installationsseite von Lucia für ChatGPT Work und Codex.", "install.coworkButton": "Für Claude Cowork herunterladen", "install.coworkHelp": "Laden Sie anschließend die ZIP-Datei unter Anpassen → Plugins in Claude Cowork hoch.",
         "core.index": "Was Lucia kann", "core.title": "Wählen Sie die Aufgabe.", "core.copy": "Der Katalog beginnt mit den mit Vera geteilten Workflows und wächst um registrierte, überprüfbare juristische Fachfunktionen.",
         "stream.research.index": "Arbeitsbereich", "stream.research.title": "Recherche formulieren und prüfen", "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
         "module.prompt.title": "Prompt optimieren", "module.prompt": "Überführt eine rechtliche, steuerliche oder Compliance-Frage in eine Recherche mit festgelegtem Umfang, Quellen und Prüfungen.", "module.research.title": "Deep Research prüfen", "module.research": "Prüft Aussagen gegen zitierte Quellen und erstellt das konsolidierte Material.",
@@ -256,10 +260,10 @@
         "footer.product": "Lucia · Codex für selbständige Anwälte", "footer.linksLabel": "Informationen", "footer.source": "Quellcode", "footer.support": "Support", "footer.data": "Datenverarbeitung"
       },
       es: {
-        "meta.title": "Lucia · Codex para abogados independientes", "meta.description": "Lucia prepara investigación y validación para abogados independientes que trabajan en el contexto italiano, con fuentes, afirmaciones y decisiones revisables.", "skip": "Ir al contenido",
+        "meta.title": "Lucia · Codex para abogados independientes", "meta.description": "Lucia prepara investigación y validación para abogados independientes, con fuentes, afirmaciones y decisiones revisables.", "skip": "Ir al contenido",
         "nav.label": "Navegación de la página", "nav.menu": "Menú", "nav.capabilities": "Funciones", "nav.assurance": "Método", "nav.data": "Datos", "language.label": "Idioma",
-        "hero.eyebrow": "AI companion para abogados independientes", "hero.title": "Lucia", "hero.lead": "Prepara investigación y validación para el trabajo jurídico en el contexto italiano, manteniendo revisables las fuentes, afirmaciones, incertidumbres y decisiones profesionales.",
-        "install.title": "Elige dónde trabajar con Lucia.", "install.copy": "Lucia se está preparando para ChatGPT Work y Codex. El enlace de instalación se añadirá en cuanto la publicación esté activa.", "install.actions.label": "Acceso a Lucia", "install.button": "Solicitar acceso a Lucia", "install.help": "Abre el soporte de Mparanza. Sin enlaces provisionales ni repositorios privados.",
+        "hero.eyebrow": "AI companion para abogados independientes", "hero.title": "Lucia", "hero.lead": "Prepara investigación y validación para el trabajo jurídico, manteniendo revisables las fuentes, afirmaciones, incertidumbres y decisiones profesionales.",
+        "install.title": "Elige dónde trabajar con Lucia.", "install.copy": "Instala Lucia para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.", "install.actions.label": "Opciones de instalación de Lucia", "install.button": "Instalar para ChatGPT Work y Codex", "install.chatgptHelp": "Abre la página de instalación de Lucia para ChatGPT Work y Codex.", "install.coworkButton": "Descargar para Claude Cowork", "install.coworkHelp": "Después, carga el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
         "core.index": "Qué puede hacer Lucia", "core.title": "Elige el trabajo que quieres hacer.", "core.copy": "El catálogo comienza con los workflows compartidos con Vera y crece mediante funciones jurídicas especializadas, registradas y revisables.",
         "stream.research.index": "Área de trabajo", "stream.research.title": "Formular y verificar la investigación", "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
         "module.prompt.title": "Optimizar prompt", "module.prompt": "Convierte una pregunta jurídica, fiscal o de cumplimiento en una investigación con ámbito, fuentes y comprobaciones definidos.", "module.research.title": "Validar Deep Research", "module.research": "Comprueba las afirmaciones frente a las fuentes citadas y prepara el material consolidado.",

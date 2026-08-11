@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Validate Deep Research" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#8AA15F"/>
+  <circle cx="51" cy="50" r="7" fill="#8AA15F"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <rect x="15" y="15" width="34" height="34" rx="5" fill="#F7F0DF"/>
+  <path d="M23 25h17M23 33h19M23 41h10" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="M43 40l5 5 10-13" fill="none" stroke="#8AA15F" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="20" cy="25" r="2" fill="#8AA15F"/><circle cx="20" cy="33" r="2" fill="#8AA15F"/><circle cx="20" cy="41" r="2" fill="#8AA15F"/>
+</svg>

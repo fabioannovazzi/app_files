@@ -14,6 +14,11 @@ ROOT = Path(__file__).resolve().parents[2]
 LUCIA_ROOT = ROOT / "plugins" / "lucia"
 LUCIA_ZIP = ROOT / "plugin_packages" / "lucia" / "lucia-plugin.zip"
 VERA_ZIP = ROOT / "plugin_packages" / "vera" / "vera-plugin.zip"
+LUCIA_CLAUDE_ZIP = ROOT / "plugin_packages" / "lucia" / "lucia-claude-plugin.zip"
+LUCIA_PUBLIC_COWORK_ZIP = (
+    ROOT / "static" / "shared" / "lucia" / "downloads" / "lucia-cowork-plugin.zip"
+)
+VERA_CLAUDE_ZIP = ROOT / "plugin_packages" / "vera" / "vera-claude-plugin.zip"
 PUBLIC_WORKFLOWS = {"prompt-optimizer", "deep-research-validator"}
 
 
@@ -67,7 +72,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.1"
+    assert manifest["version"] == "0.1.2"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -268,6 +273,45 @@ def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
     assert any(name.startswith("modules/deep-research-validator/") for name in names)
 
 
+def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None:
+    with (
+        ZipFile(LUCIA_CLAUDE_ZIP) as lucia_archive,
+        ZipFile(VERA_CLAUDE_ZIP) as vera_archive,
+    ):
+        lucia_names = {
+            name for name in lucia_archive.namelist() if not name.endswith("/")
+        }
+        manifest = json.loads(lucia_archive.read(".claude-plugin/plugin.json"))
+        components = json.loads(lucia_archive.read("components.json"))
+
+        assert manifest["name"] == "lucia"
+        assert manifest["displayName"] == "Lucia"
+        assert manifest["skills"] == "./skills/"
+        assert set(components["plugins"]) == PUBLIC_WORKFLOWS
+        assert "skills/lucia/SKILL.md" in lucia_names
+        assert not any(".codex-plugin" in name for name in lucia_names)
+        assert not any(
+            name.startswith("modules/studio-archive/") for name in lucia_names
+        )
+
+        for workflow in PUBLIC_WORKFLOWS:
+            prefix = f"modules/{workflow}/"
+            lucia_entries = {
+                name: lucia_archive.read(name)
+                for name in lucia_names
+                if name.startswith(prefix)
+            }
+            vera_entries = {
+                name: vera_archive.read(name)
+                for name in vera_archive.namelist()
+                if name.startswith(prefix) and not name.endswith("/")
+            }
+            assert lucia_entries
+            assert lucia_entries == vera_entries
+
+    assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
+
+
 def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
@@ -286,7 +330,7 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     assert page.count('class="module-row"') == len(PUBLIC_WORKFLOWS)
     assert 'class="assurance-sequence"' in page
     assert 'class="data-position__facts"' in page
-    assert 'data-language-summary' in page
+    assert "data-language-summary" in page
     for lang in ("it", "en", "fr", "de", "es"):
         assert f'hreflang="{lang}"' in page
         assert f'data-lang="{lang}"' in page
@@ -304,11 +348,31 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     ) in page
     assert "Solo due" not in page
     assert "I due percorsi" not in page
-    assert (
-        "github.com/fabioannovazzi/app_files/tree/agent/lucia-public-page/plugins/lucia"
-        in page
-    )
+    assert "github.com/fabioannovazzi/app_files/tree/main/plugins/lucia" in page
     assert 'href="https://mparanza.com/support"' in page
+    assert (
+        'href="https://chatgpt.com/plugins/'
+        'plugins_6a7aeb8b27dc8191aaef8e64146296ae?q=lucia"'
+    ) in page
+    assert "data-lucia-install-link" in page
+    assert 'href="downloads/lucia-cowork-plugin.zip"' in page
+    assert "data-lucia-cowork-download-link" in page
+    for localized_chatgpt_button in (
+        "Installa per ChatGPT Work e Codex",
+        "Install for ChatGPT Work and Codex",
+        "Installer pour ChatGPT Work et Codex",
+        "Für ChatGPT Work und Codex installieren",
+        "Instalar para ChatGPT Work y Codex",
+    ):
+        assert localized_chatgpt_button in page
+    for localized_cowork_button in (
+        "Scarica per Claude Cowork",
+        "Download for Claude Cowork",
+        "Télécharger pour Claude Cowork",
+        "Für Claude Cowork herunterladen",
+        "Descargar para Claude Cowork",
+    ):
+        assert localized_cowork_button in page
     assert 'href="lucia-page.css?v=' in page
     assert 'src="icon.svg"' in page
     for selector in (
