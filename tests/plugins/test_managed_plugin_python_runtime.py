@@ -108,6 +108,59 @@ def test_missing_target_is_installed_before_dependency_validation(
     )
 
 
+def test_selected_optional_requirements_are_installed_before_validation(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    component = make_packaged_component(plugin_root)
+    optional_name = "requirements-portal-recorder.txt"
+    optional_file = component / optional_name
+    optional_file.write_text("playwright>=1.48.0\n", encoding="utf-8")
+    data_dir = tmp_path / "plugin-data"
+    commands: list[list[str]] = []
+
+    def fake_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        commands.append(command)
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    ready, target, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        requirements=[optional_name],
+        data_dir=data_dir,
+        runner=fake_runner,
+    )
+
+    assert ready is True, detail
+    assert commands[1][-2:] == ["-r", str(optional_file)]
+    assert commands[2][-2:] == ["--requirements", optional_name]
+    default_selection = runtime.select_runtime(plugin_root, "studio-archive")
+    default_target = runtime.dependency_target(default_selection, data_dir)
+    assert target != default_target
+
+
+def test_optional_requirements_cannot_escape_component_root(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    with pytest.raises(ValueError) as raised:
+        runtime.select_runtime(
+            plugin_root,
+            "studio-archive",
+            ["../requirements.txt"],
+        )
+
+    assert str(raised.value) == (
+        "Requirements file is outside component: ../requirements.txt"
+    )
+
+
 def test_first_setup_prevents_nested_google_probe_from_crashing(
     tmp_path: Path,
 ) -> None:

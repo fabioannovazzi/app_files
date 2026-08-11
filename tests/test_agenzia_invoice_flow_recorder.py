@@ -8,6 +8,7 @@ from types import ModuleType
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDIO_ARCHIVE_ROOT = ROOT / "plugins" / "studio-archive"
+VERA_ROOT = ROOT / "plugins" / "vera"
 RECORDER_PATH = STUDIO_ARCHIVE_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
 
 
@@ -179,6 +180,22 @@ def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
     assert "requirements-portal-recorder.txt" in skill
 
 
+def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime() -> (
+    None
+):
+    requirements = (STUDIO_ARCHIVE_ROOT / "requirements-portal-recorder.txt").read_text(
+        encoding="utf-8"
+    )
+    wrapper = (VERA_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+
+    assert "playwright>=1.48.0" in requirements.splitlines()
+    assert "--module studio-archive --requirements" in wrapper
+    assert "requirements-portal-recorder.txt run" in wrapper
+    assert "a missing-Playwright result is not a completed preflight" in wrapper
+
+
 def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
     manifest = json.loads(
         (STUDIO_ARCHIVE_ROOT / ".codex-plugin" / "plugin.json").read_text(
@@ -186,7 +203,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.16"
+    assert manifest["version"] == "0.1.17"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(

@@ -12,6 +12,7 @@ VERA_ROOT = ROOT / "plugins" / "vera"
 ROUTER_PATH = VERA_ROOT / "skills" / "vera" / "SKILL.md"
 CATALOG_PATH = VERA_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
 MARKETPLACE_CARDS_PATH = VERA_ROOT / "marketplace_skill_instructions.json"
+STUDIO_ARCHIVE_WRAPPER_PATH = VERA_ROOT / "skills" / "studio-archive" / "SKILL.md"
 
 
 def _read_text(path: Path) -> str:
@@ -60,6 +61,31 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     )
 
     assert catalogued_skills == expected_skills
+
+
+def test_vera_routes_paolo_agenzia_teaching_request_to_studio_archive() -> None:
+    router = _read_text(ROUTER_PATH)
+    catalog = _read_text(CATALOG_PATH)
+    wrapper = _read_text(STUDIO_ARCHIVE_WRAPPER_PATH)
+    cards = json.loads(_read_text(MARKETPLACE_CARDS_PATH))["skills"]
+
+    exact_request = (
+        "Mostra a Vera come scaricare le fatture attive "
+        "e passive dall’Agenzia delle Entrate"
+    )
+
+    assert "show or\n  teach Vera the Agenzia delle Entrate" in router
+    assert "active/passive invoice-download and ZIP-retrieval" in catalog
+    assert exact_request in " ".join(wrapper.split())
+    assert (
+        "select Studio Archive instead of the\n   no-matching-workflow outcome"
+        in wrapper
+    )
+    assert (
+        "registratore privacy-bounded di Codex Desktop"
+        in cards["studio-archive"]["instructions"]
+    )
+    assert "Never look for `requirements.txt` or `scripts/`" in wrapper
 
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:

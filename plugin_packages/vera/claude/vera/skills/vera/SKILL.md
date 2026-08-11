@@ -387,8 +387,21 @@ install` directly and do not combine different Vera modules into one dependency
 environment.
 
 If the module skill requires optional requirements or input-specific arguments,
-run its own `scripts/check_dependencies.py` from the resolved module root with
-those arguments.
+pass each optional file through Vera's delegating dependency check. The same
+selection must be repeated on the managed launcher so it reuses the exact
+fingerprinted environment:
+
+```bash
+python scripts/check_dependencies.py --module <module> \
+  --requirements requirements-optional.txt
+python scripts/managed_python_runtime.py --module <module> \
+  --requirements requirements-optional.txt run scripts/<helper>.py <arguments>
+```
+
+The dependency check installs declared optional requirements before validating
+them. Do not stop merely because the ambient or core module environment lacks
+one of those packages, and do not run the module checker directly outside the
+managed runtime.
 
 For PDFs and images, use the selected module's input-aware dependency check.
 When it reports `OCR_SETUP_REQUIRED`, ask only:
