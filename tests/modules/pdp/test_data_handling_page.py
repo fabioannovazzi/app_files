@@ -254,6 +254,8 @@ def test_homepage_passes_complete_spanish_locale_context(
         "clara_plugin",
         "codex_accountants_group",
         "codex_consultants_group",
+        "codex_lawyers_group",
+        "lucia_plugin",
         "vera",
     }
     assert context["language_tooltips"]["clara_plugin"] == (
@@ -313,7 +315,7 @@ def test_homepage_uses_the_approved_english_security_copy() -> None:
     assert security["title"] == "Secure by design."
     assert (
         security["lead"]
-        == "In ordinary Vera and Clara workflows, Mparanza does not receive your client work."
+        == "In ordinary Clara, Vera and Lucia workflows, Mparanza does not receive your client work."
     )
     assert (
         security["description"]

@@ -227,33 +227,43 @@ def _static_asset_version(path: str) -> str:
 TOOLTIP_CONTENT: Dict[str, Dict[str, str]] = {
     "en": {
         "clara_plugin": "Organizes case materials, notes, and reviewed judgements into shareable client outputs.",
+        "lucia_plugin": "Prepares research and validation for independent lawyers.",
         "vera": "Vera works with accounting-firm files to prepare new-client work, checks, reconciliations, INPS case review, reports and tax or regulatory research.",
         "codex_accountants_group": "Guided procedures for documents, controls, reports, and tax or regulatory research.",
         "codex_consultants_group": "Guided procedures for turning materials, analysis, and expert judgement into client-ready outputs.",
+        "codex_lawyers_group": "Guided procedures for framing legal research, checking sources and reviewing conclusions.",
     },
     "it": {
         "clara_plugin": "Organizza materiali, note e valutazioni approvate in output condivisibili per il cliente.",
+        "lucia_plugin": "Prepara ricerca e validazione per avvocati indipendenti.",
         "vera": "Vera lavora sui file dello studio per svolgere istruttorie, controlli, riconciliazioni, pratiche previdenziali INPS, report e ricerca fiscale o normativa.",
         "codex_accountants_group": "Procedure guidate per lavorare su documenti, controlli, report e ricerca fiscale.",
         "codex_consultants_group": "Procedure guidate per trasformare materiali, analisi e giudizio esperto in output per il cliente.",
+        "codex_lawyers_group": "Procedure guidate per impostare la ricerca legale, verificare le fonti e rivedere le conclusioni.",
     },
     "fr": {
         "clara_plugin": "Organise les matériaux, notes et jugements validés en livrables client partageables.",
+        "lucia_plugin": "Prépare recherche et validation pour les avocats indépendants.",
         "vera": "Vera travaille sur les fichiers du cabinet pour réaliser les revues de dossiers clients, contrôles, rapprochements, dossiers INPS, rapports et recherches fiscales ou réglementaires.",
         "codex_accountants_group": "Procédures guidées pour documents, contrôles, rapports et recherche fiscale ou réglementaire.",
         "codex_consultants_group": "Procédures guidées pour transformer matériaux, analyses et jugement expert en livrables client.",
+        "codex_lawyers_group": "Procédures guidées pour cadrer la recherche juridique, vérifier les sources et revoir les conclusions.",
     },
     "de": {
         "clara_plugin": "Organisiert Fallmaterialien, Notizen und freigegebene Einschätzungen zu teilbaren Kundenergebnissen.",
+        "lucia_plugin": "Bereitet Recherche und Validierung für selbständige Anwälte vor.",
         "vera": "Vera arbeitet mit Kanzleidateien an Mandantenaufnahme, Prüfungen, Abstimmungen, INPS-Fällen, Berichten sowie steuerlicher oder regulatorischer Recherche.",
         "codex_accountants_group": "Geführte Verfahren für Dokumente, Kontrollen, Berichte sowie Steuer- und Regulierungsrecherche.",
         "codex_consultants_group": "Geführte Verfahren, um Materialien, Analysen und Expertenurteile in Kundenergebnisse zu verwandeln.",
+        "codex_lawyers_group": "Geführte Verfahren zur Strukturierung juristischer Recherche, Quellenprüfung und Überprüfung von Schlussfolgerungen.",
     },
     "es": {
         "clara_plugin": "Organiza materiales del caso, notas y valoraciones revisadas en entregables que pueden compartirse con el cliente.",
+        "lucia_plugin": "Prepara investigación y validación para abogados independientes.",
         "vera": "Vera trabaja con los archivos del despacho para preparar nuevos clientes, comprobaciones, conciliaciones, revisiones de expedientes del INPS, informes e investigación fiscal o regulatoria.",
         "codex_accountants_group": "Procedimientos guiados para documentos, controles, informes e investigación fiscal o regulatoria.",
         "codex_consultants_group": "Procedimientos guiados para convertir materiales, análisis y criterio experto en entregables listos para el cliente.",
+        "codex_lawyers_group": "Procedimientos guiados para estructurar la investigación jurídica, comprobar fuentes y revisar conclusiones.",
     },
 }
 
@@ -328,6 +338,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             },
                         ],
                     },
+                    {
+                        "id": "lucia",
+                        "title": "For independent lawyers",
+                        "tooltip_key": "codex_lawyers_group",
+                        "audience": "For independent lawyers",
+                        "lead": (
+                            "A specialist plugin for framing legal research and "
+                            "checking sources, claims and reasoning."
+                        ),
+                        "description": (
+                            "Lucia prepares research and validation for independent "
+                            "lawyers, while keeping sources, claims, uncertainties and "
+                            "professional decisions reviewable."
+                        ),
+                        "proof": [
+                            "Legal questions with a defined scope",
+                            "Sources and claims checked before delivery",
+                            "Conclusions ready for the lawyer's review",
+                        ],
+                        "cta_label": "Explore Lucia",
+                        "icon": "/static/shared/lucia/icon.svg",
+                        "links": [
+                            {
+                                "label": "Lucia",
+                                "href": "/static/shared/lucia/index.html",
+                                "active": True,
+                                "tooltip_key": "lucia_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -372,7 +413,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Open by design.",
             "description": (
-                "Vera and Clara are open-source plugins. "
+                "Clara, Vera and Lucia are open-source plugins. "
                 "You can inspect the methods, controls, and code before using them—and "
                 "adapt them to your work."
             ),
@@ -392,7 +433,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "free",
             "title": "Free by design.",
             "description": (
-                "Vera and Clara are free to install and use. We welcome contributions "
+                "Clara, Vera and Lucia are free to install and use. We welcome contributions "
                 "to their development. We charge for consulting, implementation, "
                 "and hosted services."
             ),
@@ -401,7 +442,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Secure by design.",
             "lead": (
-                "In ordinary Vera and Clara workflows, Mparanza does not receive your client work."
+                "In ordinary Clara, Vera and Lucia workflows, Mparanza does not receive your client work."
             ),
             "description": (
                 "Ordinary plugin workflows run inside the AI workspace you choose. "
@@ -417,7 +458,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "Professional work may require the selected AI workspace to read real client data."
             ),
             "description": (
-                "Vera and Clara do not automatically anonymise data. They may use "
+                "Clara, Vera and Lucia do not automatically anonymise data. They may use "
                 "local Python to filter or aggregate information when useful. Data "
                 "supplied to the model is processed under the terms and controls of "
                 "the AI workspace the user chooses."
@@ -436,7 +477,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Ordinary plugin functions use the AI workspace the user chooses. Mparanza-hosted services form a separate processing boundary.",
                 },
             ],
-            "closing": "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
+            "closing": "One policy for Clara, Vera and Lucia. No prompt-by-prompt paperwork.",
             "cta_label": "See how your data is handled",
             "cta_href": "/data-handling",
         },
@@ -444,8 +485,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "plugins",
             "title": "Plugins by design.",
             "description": (
-                "Mparanza is Vera and Clara: two plugins that bring specialist methods "
-                "to two different professions."
+                "Mparanza is Clara, Vera and Lucia: three plugins that bring specialist "
+                "methods to three different professions."
             ),
         },
     },
@@ -521,6 +562,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             },
                         ],
                     },
+                    {
+                        "id": "lucia",
+                        "title": "Per avvocati indipendenti",
+                        "tooltip_key": "codex_lawyers_group",
+                        "audience": "Per avvocati indipendenti",
+                        "lead": (
+                            "Un plugin specialistico per impostare la ricerca legale e "
+                            "verificare fonti, affermazioni e ragionamento."
+                        ),
+                        "description": (
+                            "Lucia prepara ricerca e validazione per avvocati indipendenti, "
+                            "mantenendo fonti, affermazioni, incertezze e decisioni "
+                            "professionali rivedibili."
+                        ),
+                        "proof": [
+                            "Quesiti legali con un perimetro definito",
+                            "Fonti e affermazioni verificate prima della consegna",
+                            "Conclusioni pronte per la revisione dell'avvocato",
+                        ],
+                        "cta_label": "Scopri Lucia",
+                        "icon": "/static/shared/lucia/icon.svg",
+                        "links": [
+                            {
+                                "label": "Lucia",
+                                "href": "/static/shared/lucia/index.html",
+                                "active": True,
+                                "tooltip_key": "lucia_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -567,7 +639,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Aperti per scelta.",
             "description": (
-                "Vera e Clara sono plugin open source. "
+                "Clara, Vera e Lucia sono plugin open source. "
                 "Puoi esaminare i metodi, i controlli e il codice prima di usarli, e "
                 "adattarli al tuo lavoro."
             ),
@@ -587,7 +659,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "free",
             "title": "Gratuiti per scelta.",
             "description": (
-                "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
+                "Clara, Vera e Lucia si possono installare e usare gratuitamente. Accogliamo "
                 "volentieri contributi al loro sviluppo. Offriamo a pagamento "
                 "consulenza, implementazione e servizi hosted."
             ),
@@ -595,7 +667,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
         "security": {
             "id": "security",
             "title": "Sicuri per scelta.",
-            "lead": "Nei flussi ordinari di Vera e Clara, Mparanza non riceve il lavoro dei tuoi clienti.",
+            "lead": "Nei flussi ordinari di Clara, Vera e Lucia, Mparanza non riceve il lavoro dei tuoi clienti.",
             "description": (
                 "I normali workflow dei plugin operano nell'ambiente AI che scegli. "
                 "Prompt, file e risultati dei tuoi clienti non passano attraverso Mparanza."
@@ -607,7 +679,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Conformi per scelta.",
             "lead": "Il lavoro professionale può richiedere che l'ambiente AI scelto legga dati reali dei clienti.",
-            "description": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile. I dati forniti al modello vengono trattati secondo i termini e i controlli dell'ambiente AI scelto dall'utente.",
+            "description": "Clara, Vera e Lucia non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile. I dati forniti al modello vengono trattati secondo i termini e i controlli dell'ambiente AI scelto dall'utente.",
             "principles": [
                 {
                     "title": "Usa Python in locale quando serve",
@@ -622,7 +694,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Le normali funzioni dei plugin usano l'ambiente AI scelto dall'utente. I servizi hosted di Mparanza hanno un confine di trattamento separato.",
                 },
             ],
-            "closing": "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
+            "closing": "Una regola per Clara, Vera e Lucia. Nessuna burocrazia prompt per prompt.",
             "cta_label": "Scopri come vengono gestiti i tuoi dati",
             "cta_href": "/data-handling",
         },
@@ -630,8 +702,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "plugins",
             "title": "Plugin per scelta.",
             "description": (
-                "Mparanza è Vera e Clara: due plugin che incorporano metodi specialistici "
-                "per due professioni diverse."
+                "Mparanza è Clara, Vera e Lucia: tre plugin che incorporano metodi "
+                "specialistici per tre professioni diverse."
             ),
         },
     },
@@ -708,6 +780,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             },
                         ],
                     },
+                    {
+                        "id": "lucia",
+                        "title": "Pour les avocats indépendants",
+                        "tooltip_key": "codex_lawyers_group",
+                        "audience": "Pour les avocats indépendants",
+                        "lead": (
+                            "Un plugin spécialisé pour cadrer la recherche juridique et "
+                            "vérifier les sources, les affirmations et le raisonnement."
+                        ),
+                        "description": (
+                            "Lucia prépare recherche et validation pour les avocats "
+                            "indépendants, tout en gardant sources, affirmations, "
+                            "incertitudes et décisions professionnelles révisables."
+                        ),
+                        "proof": [
+                            "Questions juridiques au périmètre défini",
+                            "Sources et affirmations vérifiées avant livraison",
+                            "Conclusions prêtes pour la revue de l'avocat",
+                        ],
+                        "cta_label": "Découvrir Lucia",
+                        "icon": "/static/shared/lucia/icon.svg",
+                        "links": [
+                            {
+                                "label": "Lucia",
+                                "href": "/static/shared/lucia/index.html",
+                                "active": True,
+                                "tooltip_key": "lucia_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -754,7 +857,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Ouverts par conception.",
             "description": (
-                "Vera et Clara sont des plugins open source. Vous pouvez examiner "
+                "Clara, Vera et Lucia sont des plugins open source. Vous pouvez examiner "
                 "leurs méthodes, leurs contrôles et leur code avant de les utiliser — "
                 "et les adapter à votre travail."
             ),
@@ -774,7 +877,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "free",
             "title": "Gratuits par conception.",
             "description": (
-                "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
+                "Clara, Vera et Lucia sont gratuites à installer et à utiliser. Nous accueillons "
                 "volontiers les contributions à leur développement. Nous facturons nos "
                 "prestations de conseil et de mise en œuvre, ainsi que nos services "
                 "hébergés."
@@ -784,7 +887,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sécurisés par conception.",
             "lead": (
-                "Dans les flux ordinaires de Vera et Clara, Mparanza ne reçoit pas le travail de vos clients."
+                "Dans les flux ordinaires de Clara, Vera et Lucia, Mparanza ne reçoit pas le travail de vos clients."
             ),
             "description": (
                 "Les workflows ordinaires des plugins fonctionnent dans l'environnement "
@@ -798,7 +901,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Conformes par conception.",
             "lead": "Le travail professionnel peut nécessiter que l'environnement d'IA choisi lise de vraies données clients.",
-            "description": "Vera et Clara n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile. Les données fournies au modèle sont traitées selon les conditions et les contrôles de l'environnement d'IA choisi par l'utilisateur.",
+            "description": "Clara, Vera et Lucia n'anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile. Les données fournies au modèle sont traitées selon les conditions et les contrôles de l'environnement d'IA choisi par l'utilisateur.",
             "principles": [
                 {
                     "title": "Utiliser Python localement lorsque c'est utile",
@@ -813,7 +916,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Les fonctions ordinaires des plugins utilisent l'environnement d'IA choisi par l'utilisateur. Les services hébergés par Mparanza ont un périmètre de traitement distinct.",
                 },
             ],
-            "closing": "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
+            "closing": "Une règle pour Clara, Vera et Lucia. Aucune paperasse prompt par prompt.",
             "cta_label": "Voir comment vos données sont traitées",
             "cta_href": "/data-handling",
         },
@@ -821,8 +924,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "plugins",
             "title": "Plugins par conception.",
             "description": (
-                "Mparanza, c'est Vera et Clara : deux plugins qui intègrent des méthodes "
-                "spécialisées pour deux métiers différents."
+                "Mparanza, c'est Clara, Vera et Lucia : trois plugins qui intègrent des "
+                "méthodes spécialisées pour trois métiers différents."
             ),
         },
     },
@@ -899,6 +1002,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             },
                         ],
                     },
+                    {
+                        "id": "lucia",
+                        "title": "Für selbständige Anwälte",
+                        "tooltip_key": "codex_lawyers_group",
+                        "audience": "Für selbständige Anwälte",
+                        "lead": (
+                            "Ein spezialisiertes Plugin, das juristische Recherchen "
+                            "strukturiert und Quellen, Aussagen und Argumentation prüft."
+                        ),
+                        "description": (
+                            "Lucia bereitet Recherche und Validierung für selbständige "
+                            "Anwälte vor und hält Quellen, Aussagen, Unsicherheiten und "
+                            "berufliche Entscheidungen überprüfbar."
+                        ),
+                        "proof": [
+                            "Rechtsfragen mit festgelegtem Umfang",
+                            "Quellen und Aussagen vor der Übergabe geprüft",
+                            "Schlussfolgerungen für die anwaltliche Prüfung",
+                        ],
+                        "cta_label": "Lucia kennenlernen",
+                        "icon": "/static/shared/lucia/icon.svg",
+                        "links": [
+                            {
+                                "label": "Lucia",
+                                "href": "/static/shared/lucia/index.html",
+                                "active": True,
+                                "tooltip_key": "lucia_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -947,7 +1081,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Offen konzipiert.",
             "description": (
-                "Vera und Clara sind Open-Source-Plugins. Sie können Methoden, "
+                "Clara, Vera und Lucia sind Open-Source-Plugins. Sie können Methoden, "
                 "Kontrollen und Code vor der Verwendung prüfen und an Ihre Arbeit anpassen."
             ),
             "links_label": "Open-Source-Informationen",
@@ -966,7 +1100,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "free",
             "title": "Kostenlos konzipiert.",
             "description": (
-                "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
+                "Clara, Vera und Lucia können kostenlos installiert und genutzt werden. Wir "
                 "freuen uns über Beiträge zu ihrer Weiterentwicklung. Wir stellen "
                 "Beratungs- und Implementierungsleistungen sowie gehostete Services "
                 "in Rechnung."
@@ -976,7 +1110,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Sicher konzipiert.",
             "lead": (
-                "Bei normalen Vera- und Clara-Abläufen erhält Mparanza Ihre Mandantenarbeit nicht."
+                "Bei normalen Abläufen von Clara, Vera und Lucia erhält Mparanza Ihre Mandantenarbeit nicht."
             ),
             "description": (
                 "Normale Plugin-Abläufe laufen in der von Ihnen gewählten KI-Arbeitsumgebung. "
@@ -989,7 +1123,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "compliance",
             "title": "Für Compliance konzipiert.",
             "lead": "Professionelle Arbeit kann erfordern, dass die gewählte KI-Arbeitsumgebung echte Mandantendaten liest.",
-            "description": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, werden nach den Bedingungen und Kontrollen der vom Nutzer gewählten KI-Arbeitsumgebung verarbeitet.",
+            "description": "Clara, Vera und Lucia anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, werden nach den Bedingungen und Kontrollen der vom Nutzer gewählten KI-Arbeitsumgebung verarbeitet.",
             "principles": [
                 {
                     "title": "Python lokal einsetzen, wenn es nützt",
@@ -1004,7 +1138,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                     "blurb": "Normale Plugin-Funktionen nutzen die vom Nutzer gewählte KI-Arbeitsumgebung. Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze.",
                 },
             ],
-            "closing": "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
+            "closing": "Eine Regel für Clara, Vera und Lucia. Kein Papierkram für jeden Prompt.",
             "cta_label": "Erfahren Sie, wie Ihre Daten verarbeitet werden",
             "cta_href": "/data-handling",
         },
@@ -1012,8 +1146,8 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "plugins",
             "title": "Als Plugins konzipiert.",
             "description": (
-                "Mparanza, das sind Vera und Clara: zwei Plugins mit fachlichen Methoden "
-                "für zwei unterschiedliche Berufsgruppen."
+                "Mparanza, das sind Clara, Vera und Lucia: drei Plugins mit fachlichen "
+                "Methoden für drei unterschiedliche Berufsgruppen."
             ),
         },
     },
@@ -1090,6 +1224,37 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                             },
                         ],
                     },
+                    {
+                        "id": "lucia",
+                        "title": "Para abogados independientes",
+                        "tooltip_key": "codex_lawyers_group",
+                        "audience": "Para abogados independientes",
+                        "lead": (
+                            "Un plugin especializado para estructurar la investigación "
+                            "jurídica y comprobar fuentes, afirmaciones y razonamiento."
+                        ),
+                        "description": (
+                            "Lucia prepara investigación y validación para abogados "
+                            "independientes, manteniendo revisables las fuentes, "
+                            "afirmaciones, incertidumbres y decisiones profesionales."
+                        ),
+                        "proof": [
+                            "Preguntas jurídicas con un alcance definido",
+                            "Fuentes y afirmaciones comprobadas antes de la entrega",
+                            "Conclusiones listas para la revisión del abogado",
+                        ],
+                        "cta_label": "Descubrir Lucia",
+                        "icon": "/static/shared/lucia/icon.svg",
+                        "links": [
+                            {
+                                "label": "Lucia",
+                                "href": "/static/shared/lucia/index.html",
+                                "active": True,
+                                "tooltip_key": "lucia_plugin",
+                                "public": True,
+                            },
+                        ],
+                    },
                 ],
             },
         ],
@@ -1136,7 +1301,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "open-source",
             "title": "Abiertos por diseño.",
             "description": (
-                "Vera y Clara son plugins open source. Puedes examinar "
+                "Clara, Vera y Lucia son plugins open source. Puedes examinar "
                 "los métodos, los controles y el código antes de usarlos, y adaptarlos "
                 "a tu trabajo."
             ),
@@ -1156,7 +1321,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "free",
             "title": "Gratuitos por diseño.",
             "description": (
-                "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
+                "Clara, Vera y Lucia se pueden instalar y usar gratuitamente. Agradecemos las "
                 "contribuciones a su desarrollo. Cobramos por la consultoría, la "
                 "implementación y los servicios alojados."
             ),
@@ -1165,7 +1330,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "security",
             "title": "Seguros por diseño.",
             "lead": (
-                "En los flujos ordinarios de Vera y Clara, Mparanza no recibe el trabajo de tus clientes."
+                "En los flujos ordinarios de Clara, Vera y Lucia, Mparanza no recibe el trabajo de tus clientes."
             ),
             "description": (
                 "Los flujos ordinarios de los plugins funcionan dentro del entorno de "
@@ -1183,7 +1348,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 "datos reales de clientes."
             ),
             "description": (
-                "Vera y Clara no anonimizan los datos automáticamente. Pueden usar Python "
+                "Clara, Vera y Lucia no anonimizan los datos automáticamente. Pueden usar Python "
                 "en local para filtrar o agregar información cuando resulte útil. Los datos "
                 "facilitados al modelo se tratan según las condiciones y los controles del "
                 "entorno de IA elegido por el usuario."
@@ -1215,7 +1380,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
                 },
             ],
             "closing": (
-                "Una política para Vera y Clara. Sin documentación para cada prompt."
+                "Una política para Clara, Vera y Lucia. Sin documentación para cada prompt."
             ),
             "cta_label": "Ver cómo se tratan tus datos",
             "cta_href": "/data-handling",
@@ -1224,11 +1389,15 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "id": "plugins",
             "title": "Plugins por diseño.",
             "description": (
-                "Mparanza es Vera y Clara: dos plugins que incorporan métodos "
-                "especializados para dos profesiones distintas."
+                "Mparanza es Clara, Vera y Lucia: tres plugins que incorporan métodos "
+                "especializados para tres profesiones distintas."
             ),
         },
     },
+}
+
+LANDING_PRODUCT_RANK = {
+    product_id: rank for rank, product_id in enumerate(("clara", "vera", "lucia"))
 }
 
 
@@ -1507,10 +1676,16 @@ def _get_landing_page_content(lang: str) -> Dict[str, Any]:
     for section in content.get("sections", []):
         copied_section = {**section, "links": list(section.get("links", []))}
         if section.get("groups"):
-            copied_section["groups"] = [
+            copied_groups = [
                 {**group, "links": list(group.get("links", []))}
                 for group in section.get("groups", [])
             ]
+            copied_section["groups"] = sorted(
+                copied_groups,
+                key=lambda group: LANDING_PRODUCT_RANK.get(
+                    group["id"], len(LANDING_PRODUCT_RANK)
+                ),
+            )
         sections.append(copied_section)
     if lang != "en":
         reference_sections = LANDING_CONTENT["en"].get("sections", [])
