@@ -369,7 +369,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
     assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
 
 
-def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
+def test_lucia_public_page_uses_shared_reviewable_assurance_copy() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -391,8 +391,8 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     for lang in ("it", "en", "fr", "de", "es"):
         assert f'hreflang="{lang}"' in page
         assert f'data-lang="{lang}"' in page
-    assert "Prompt Optimizer" in page
-    assert "Deep Research Validator" in page
+    assert "Le funzioni di ricerca condividono lo stesso metodo" in page
+    assert "implementazioni canoniche" not in page
     assert 'id="comunicazione-professionale"' in page
     assert 'id="presenza-digitale-studio"' in page
     assert "Comunicazione professionale" in page

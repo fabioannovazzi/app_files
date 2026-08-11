@@ -1141,58 +1141,58 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     (
         (
             "Vera lavora sui dati reali del cliente.",
-            "Vera e Clara non anonimizzano automaticamente i dati.",
+            "Clara, Vera e Lucia non anonimizzano automaticamente i dati.",
             "Possono usare Python in locale per filtrare o aggregare le informazioni",
             "piano ChatGPT già utilizzato dall’utente",
             "non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello",
             "Password, chiavi API, cookie, token e dati di sessione",
             "Servizi hosted da Mparanza",
-            "Ogni workflow viene mappato quando viene aggiunto o quando cambia",
-            "non sono una terza categoria Mparanza",
+            "Per ogni funzione, la pagina indica che cosa resta normalmente sul computer",
+            "seguono invece le condizioni del servizio esterno",
         ),
         (
             "Vera works on real client data.",
-            "Vera and Clara do not automatically anonymise data.",
+            "Clara, Vera and Lucia do not automatically anonymise data.",
             "They may use local Python to filter or aggregate information",
             "user’s existing ChatGPT plan",
             "do not send client files, prompts, or model-context content to Mparanza",
             "Passwords, API keys, cookies, tokens, and session data",
             "Mparanza-hosted services",
-            "Each workflow is mapped when it is added or changed",
-            "not a third Mparanza category",
+            "For each function, the page makes clear what normally stays on your computer",
+            "follow the external service’s terms",
         ),
         (
             "Vera travaille sur les données réelles du client.",
-            "Vera et Clara n’anonymisent pas automatiquement les données.",
+            "Clara, Vera et Lucia n’anonymisent pas automatiquement les données.",
             "Elles peuvent utiliser Python localement pour filtrer ou agréger",
             "l’offre ChatGPT existante de l’utilisateur",
             "n’envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle",
             "Mots de passe, clés API, cookies, jetons et données de session",
             "Services hébergés par Mparanza",
-            "Chaque workflow est cartographié lorsqu’il est ajouté ou modifié",
-            "ne constituent pas une troisième catégorie Mparanza",
+            "Pour chaque fonction, la page indique ce qui reste normalement sur l’ordinateur",
+            "relèvent des conditions du service externe",
         ),
         (
             "Vera arbeitet mit echten Mandantendaten.",
-            "Vera und Clara anonymisieren Daten nicht automatisch.",
+            "Clara, Vera und Lucia anonymisieren Daten nicht automatisch.",
             "Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren",
             "bestehenden ChatGPT-Tarifs des Nutzers",
             "senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza",
             "Passwörter, API-Schlüssel, Cookies, Token und Sitzungsdaten",
             "Mparanza-gehostete Dienste",
-            "Jeder Workflow wird beim Hinzufügen oder Ändern zugeordnet",
-            "keine dritte Mparanza-Kategorie",
+            "Für jede Funktion zeigt die Seite, was normalerweise auf Ihrem Computer bleibt",
+            "unterliegen den Bedingungen des externen Dienstes",
         ),
         (
             "Vera trabaja con datos reales del cliente.",
-            "Vera y Clara no anonimizan automáticamente los datos.",
+            "Clara, Vera y Lucia no anonimizan automáticamente los datos.",
             "Pueden usar Python en local para filtrar o agregar información",
             "plan de ChatGPT que ya utiliza el usuario",
             "no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo",
             "contraseñas, claves de API, cookies, tokens y datos de sesión",
             "Servicios alojados por Mparanza",
-            "Cada flujo de trabajo se mapea cuando se añade o cambia",
-            "no forman una tercera categoría de Mparanza",
+            "Para cada función, la página indica qué permanece normalmente en el ordenador",
+            "se rigen por las condiciones del servicio externo",
         ),
     ),
 )
@@ -1492,8 +1492,8 @@ def test_vera_hub_explains_bandi_with_evidence_and_professional_boundaries() -> 
     assert "Radar dello studio" in page
     assert "Dossier del cliente" in page
     assert "non è la probabilità di aver trovato tutte le agevolazioni" in page
-    assert "Implementato e testato" in page
-    assert "Da provare nel pilot" in page
+    assert "Implementato e testato" not in page
+    assert "Da provare nel pilot" not in page
     assert "Vera non garantisce completezza" in page
     assert "non riceve credenziali" in page
     assert "non accede al portale" in page
