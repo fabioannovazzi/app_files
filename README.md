@@ -26,7 +26,7 @@ boundary and a Polars-first backend.
 
 ## Overview
 
-Vera and Clara run primarily as Codex plugins. Their deterministic Python
+Vera, Clara, and Lucia run primarily as Codex plugins. Their deterministic Python
 components process documents and structured data, build analyses, and create
 reviewable outputs locally. FastAPI is limited to the public site and the
 hosted services that require a server boundary: authentication, interviews,
@@ -42,6 +42,7 @@ plugin README links directly to its source folder.
 
 - Clara and reporting: [Clara](plugins/clara), including its internal [Reporting Engine](plugins/clara/modules/reporting-engine), plus [Attribute Reporting](plugins/attribute-reporting), [Distribution Analysis](plugins/distribution-analysis), [Funnel Analysis](plugins/funnel-analysis), [Mix & Contribution Analysis](plugins/mix-contribution-analysis), [Period Comparison](plugins/period-comparison), [Scatter & Bubble Analysis](plugins/scatter-bubble-analysis), [Set Overlap Analysis](plugins/set-overlap-analysis), [Statement Analysis](plugins/statement-analysis), and [Variance Analysis](plugins/variance-analysis).
 - Vera and accounting: [Vera](plugins/vera), [Audit Reconciliation](plugins/audit-reconciliation), [Check Entries](plugins/check-entries), [New Client](plugins/new-client), [Concordato Preventivo](plugins/concordato-plan-review), [Deep Research Validator](plugins/deep-research-validator), [Journal-Bank Reconciliation](plugins/journal-bank-reconciliation), [Journal Sampling](plugins/journal-sampling), [Previdenza INPS](plugins/previdenza-inps), [Prompt Optimizer](plugins/prompt-optimizer), [Registro Imprese e SARI](plugins/registro-imprese-sari), and [Report Builder](plugins/report-builder).
+- Lucia for independent lawyers and law firms: [Lucia](plugins/lucia), starting with the shared [Prompt Optimizer](plugins/prompt-optimizer) and [Deep Research Validator](plugins/deep-research-validator) workflows.
 
 ## OpenAI Build Week 2026: Vera
 

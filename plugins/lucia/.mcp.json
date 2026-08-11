@@ -1,0 +1,28 @@
+{
+  "mcpServers": {
+    "luciaPromptOptimizer": {
+      "title": "Lucia · Imposta la risposta",
+      "description": "Convalida e rende revisionabile il piano prodotto dal Prompt Optimizer condiviso con Vera.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "prompt-optimizer"]
+    },
+    "luciaDeepResearchValidator": {
+      "title": "Lucia · Valida la risposta",
+      "description": "Convalida e rende revisionabile il controllo prodotto dal Deep Research Validator condiviso con Vera.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/run_component_mcp.cjs", "deep-research-validator"]
+    },
+    "luciaAssuranceRuntime": {
+      "title": "Lucia · Spazio di lavoro",
+      "description": "Infrastruttura privata per legare input e risultati dei due percorsi Lucia a un incarico revisionabile.",
+      "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
+      "cwd": ".",
+      "command": "node",
+      "args": ["./scripts/assurance_runtime_mcp.cjs"]
+    }
+  }
+}

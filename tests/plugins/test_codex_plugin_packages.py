@@ -37,7 +37,7 @@ COMMERCIALISTA_MODULE_NAMES = {
     "report-builder",
     "studio-archive",
 }
-STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara"}
+STANDALONE_PLUGIN_NAMES = {"attribute-reporting", "clara", "lucia"}
 PRIVATE_STANDALONE_PLUGIN_NAMES = {"attribute-reporting"}
 UNIFIED_PLUGIN_NAMES = {"vera"}
 VERA_DISCOVERY_TERMS = (
@@ -300,10 +300,14 @@ ACCOUNTING_STATIC_PLUGIN_PAGES = (
     ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html",
     ROOT / "static" / "shared" / "deep-research-validator" / "index.html",
 )
-STANDALONE_STATIC_PLUGIN_PAGES = (ROOT / "static" / "shared" / "clara" / "index.html",)
+STANDALONE_STATIC_PLUGIN_PAGES = (
+    ROOT / "static" / "shared" / "clara" / "index.html",
+    ROOT / "static" / "shared" / "lucia" / "index.html",
+)
 STATIC_PLUGIN_PAGES = ACCOUNTING_STATIC_PLUGIN_PAGES + STANDALONE_STATIC_PLUGIN_PAGES
 PUBLIC_PLUGIN_EXPLAINER_PAGES = (
     ROOT / "static" / "shared" / "clara" / "index.html",
+    ROOT / "static" / "shared" / "lucia" / "index.html",
     ROOT / "static" / "shared" / "archive-organization" / "index.html",
     ROOT / "static" / "shared" / "check-entries" / "index.html",
     ROOT / "static" / "shared" / "concordato-plan-review" / "index.html",
@@ -615,7 +619,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert not any(name.endswith("marketplace.json") for name in entries)
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     plugin_name: str,
 ) -> None:
@@ -657,7 +661,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         )
     )
     public_skill_names = set(instruction_config["skills"])
-    if plugin_name == "vera":
+    if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_card_bodies = {}
         for skill_name in public_skill_names:
             source = (
@@ -729,9 +733,31 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         ].decode("utf-8")
         assert "# Audit Reconciliation" in full_workflow
         assert "## Required Questions" in full_workflow
+    if plugin_name == "lucia":
+        assert set(card_bodies) == {
+            "skills/lucia/SKILL.md",
+            "skills/prompt-optimizer/SKILL.md",
+            "skills/deep-research-validator/SKILL.md",
+        }
+        router = card_bodies["skills/lucia/SKILL.md"]
+        normalized_router = " ".join(router.split())
+        assert "catalogo cresce attraverso workflow specialistici" in normalized_router
+        assert (
+            "aggiorna questa tabella quando entra una nuova funzione Lucia"
+            in normalized_router
+        )
+        assert "esattamente due" not in normalized_router
+        assert (
+            "../../modules/prompt-optimizer"
+            in card_bodies["skills/prompt-optimizer/SKILL.md"]
+        )
+        assert (
+            "../../modules/deep-research-validator"
+            in card_bodies["skills/deep-research-validator/SKILL.md"]
+        )
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_committed_chatgpt_upload_uses_approved_card_copy(
     plugin_name: str,
 ) -> None:
@@ -742,7 +768,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
         )
     )
     public_skill_names = set(instruction_config["skills"])
-    if plugin_name == "vera":
+    if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_bodies = {}
         for skill_name in public_skill_names:
             source = (
@@ -790,7 +816,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
     )
 
 
-@pytest.mark.parametrize("plugin_name", ["clara", "vera"])
+@pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
 def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
     plugin_name: str,
 ) -> None:
@@ -2254,6 +2280,7 @@ def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
     }
     expected_install_zip_paths = {
         "plugin_packages/clara/clara-plugin.zip",
+        "plugin_packages/lucia/lucia-plugin.zip",
         "plugin_packages/vera/vera-plugin.zip",
     }
     allowed_upload_zip_paths = {
@@ -2269,7 +2296,11 @@ def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
         package["output_zip"] for package in claude_config["packages"]
     }
 
-    assert {target.target_name for target in configured_targets} == {"clara", "vera"}
+    assert {target.target_name for target in configured_targets} == {
+        "clara",
+        "lucia",
+        "vera",
+    }
     assert set(configured_zip_paths) == expected_install_zip_paths
     assert expected_install_zip_paths <= zip_paths
     assert zip_paths <= (
@@ -2471,7 +2502,9 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
-            if plugin_root.name == "vera" and skill_file.parent.name != "vera":
+            if plugin_root.name in {"lucia", "vera"} and (
+                skill_file.parent.name != plugin_root.name
+            ):
                 assert "Read that module's" in normalized_skill_text
                 assert "plugin working directory" in normalized_skill_text
                 continue
@@ -2730,8 +2763,10 @@ def test_public_plugin_explainer_pages_use_shared_white_shell() -> None:
     for page_path in PUBLIC_PLUGIN_EXPLAINER_PAGES:
         page = page_path.read_text(encoding="utf-8")
 
-        if page_path == ROOT / "static" / "shared" / "clara" / "index.html":
-            assert 'href="clara-page.css?v=' in page, page_path.as_posix()
+        if page_path.parent.name in {"clara", "lucia"}:
+            assert (
+                f'href="{page_path.parent.name}-page.css?v=' in page
+            ), page_path.as_posix()
         else:
             assert 'href="../plugin-page-shell.css' in page, page_path.as_posix()
 
@@ -4497,6 +4532,7 @@ def test_standard_family_plugin_manifests_use_family_homepages() -> None:
         "studio-archive": ("https://mparanza.com/static/shared/vera/index.html"),
         "vera": ("https://mparanza.com/static/shared/vera/index.html?lang=it"),
         "clara": ("https://mparanza.com/static/shared/clara/index.html?lang=en"),
+        "lucia": ("https://mparanza.com/static/shared/lucia/index.html"),
     }
 
     assert set(expected_homepages) | REPORTING_ENGINE_PLUGIN_NAMES == (
@@ -4621,7 +4657,7 @@ def test_companion_navigation_uses_one_scoped_responsive_system() -> None:
     assert 'querySelector("summary")?.focus()' in script
 
 
-@pytest.mark.parametrize("page_name", ("vera", "clara"))
+@pytest.mark.parametrize("page_name", ("vera", "clara", "lucia"))
 def test_companion_pages_leave_improvement_guidance_on_support(
     page_name: str,
 ) -> None:
@@ -4633,7 +4669,7 @@ def test_companion_pages_leave_improvement_guidance_on_support(
     assert '"improvement.' not in page
 
 
-@pytest.mark.parametrize("page_name", ("vera", "clara"))
+@pytest.mark.parametrize("page_name", ("vera", "clara", "lucia"))
 def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> None:
     page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
         encoding="utf-8"
@@ -4646,8 +4682,10 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     assert '<a class="skip-link" href="#main-content"' in page
     assert '<main id="main-content">' in page
     assert "github.com/fabioannovazzi/app_files/tree/main/plugins/" not in header
+    source_branch = "agent/lucia-public-page" if page_name == "lucia" else "main"
     assert (
-        f"github.com/fabioannovazzi/app_files/tree/main/plugins/{page_name}" in footer
+        f"github.com/fabioannovazzi/app_files/tree/{source_branch}/plugins/{page_name}"
+        in footer
     )
 
 
@@ -4722,7 +4760,7 @@ def test_companion_overview_video_follows_the_intended_product_story(
     assert "download-panel" not in page
 
 
-def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
+def test_homepage_links_all_three_companions_in_every_locale() -> None:
     source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
         encoding="utf-8"
     )
@@ -4730,6 +4768,8 @@ def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
     assert '"href": "/static/shared/reporting/index.html"' not in source
     assert "/static/shared/pro-charting/index.html" not in source
     assert source.count('"href": "/static/shared/clara/index.html"') == 5
+    assert source.count('"href": "/static/shared/vera/index.html"') == 5
+    assert source.count('"href": "/static/shared/lucia/index.html"') == 5
     assert '"href": "/static/shared/variance-analysis/index.html"' not in source
     assert '"href": "/static/shared/period-comparison/index.html"' not in source
     assert '"href": "/static/shared/mix-contribution-analysis/index.html"' not in source
@@ -4738,10 +4778,12 @@ def test_homepage_only_links_clara_for_consultants_in_all_locales() -> None:
     assert "pro_charting_plugin" not in source
     assert '"label": "Reporting"' not in source
     assert source.count('"label": "Clara"') == 5
+    assert source.count('"label": "Vera"') == 5
+    assert source.count('"label": "Lucia"') == 5
 
 
 @pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
-def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
+def test_homepage_content_exposes_companions_without_reporting_or_pro_badges(
     lang: str,
 ) -> None:
     _restore_application_import_path()
@@ -4749,16 +4791,13 @@ def test_homepage_content_exposes_clara_without_reporting_or_pro_badges(
     from modules.hosted_services import api as pdp_api
 
     content = pdp_api._get_landing_page_content(lang)
-    consultant_links = content["sections"][0]["groups"][1]["links"]
+    groups = content["sections"][0]["groups"]
 
-    assert consultant_links == [
-        {
-            "label": "Clara",
-            "href": "/static/shared/clara/index.html",
-            "active": True,
-            "tooltip_key": "clara_plugin",
-            "public": True,
-        }
+    assert [group["id"] for group in groups] == ["clara", "vera", "lucia"]
+    assert [group["links"][0]["href"] for group in groups] == [
+        "/static/shared/clara/index.html",
+        "/static/shared/vera/index.html",
+        "/static/shared/lucia/index.html",
     ]
 
 
@@ -4795,10 +4834,38 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
 
     from modules.hosted_services import api as pdp_api
 
-    clara = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"][1]
+    groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
+    clara = next(group for group in groups if group["id"] == "clara")
 
     assert clara["id"] == "clara"
     assert clara["lead"] == expected_lead
+
+
+@pytest.mark.parametrize(
+    ("lang", "expected_audience"),
+    (
+        ("en", "For independent lawyers"),
+        ("it", "Per avvocati indipendenti"),
+        ("fr", "Pour les avocats indépendants"),
+        ("de", "Für selbständige Anwälte"),
+        ("es", "Para abogados independientes"),
+    ),
+)
+def test_homepage_lucia_targets_independent_lawyers(
+    lang: str,
+    expected_audience: str,
+) -> None:
+    _restore_application_import_path()
+
+    from modules.hosted_services import api as pdp_api
+
+    groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
+    lucia = next(group for group in groups if group["id"] == "lucia")
+
+    assert lucia["audience"] == expected_audience
+    assert lucia["title"] == expected_audience
+    assert lucia["links"][0]["href"] == "/static/shared/lucia/index.html"
+    assert len(lucia["proof"]) == 3
 
 
 @pytest.mark.parametrize(
@@ -4811,49 +4878,64 @@ def test_homepage_clara_lead_localizes_ongoing_project_work(
     (
         (
             "en",
-            ("For accountants", "For consultants"),
-            ("For accountants", "For consultants"),
+            ("For consultants", "For accountants", "For independent lawyers"),
+            ("For consultants", "For accountants", "For independent lawyers"),
             ("Attribute Analysis", "Deck Toolkit"),
         ),
         (
             "it",
-            ("Per commercialisti", "Per consulenti"),
-            ("Per commercialisti", "Per consulenti"),
+            ("Per consulenti", "Per commercialisti", "Per avvocati indipendenti"),
+            ("Per consulenti", "Per commercialisti", "Per avvocati indipendenti"),
             ("Analisi attributi", "Toolkit presentazioni"),
         ),
         (
             "fr",
             (
-                "Pour les experts-comptables",
                 "Pour les consultants",
+                "Pour les experts-comptables",
+                "Pour les avocats indépendants",
             ),
-            ("Pour les experts-comptables", "Pour les consultants"),
+            (
+                "Pour les consultants",
+                "Pour les experts-comptables",
+                "Pour les avocats indépendants",
+            ),
             ("Analyse des attributs", "Toolkit deck"),
         ),
         (
             "de",
             (
-                "Für Steuerberaterinnen und Steuerberater",
                 "Für Beraterinnen und Berater",
+                "Für Steuerberaterinnen und Steuerberater",
+                "Für selbständige Anwälte",
             ),
             (
-                "Für Steuerberaterinnen und Steuerberater",
                 "Für Beraterinnen und Berater",
+                "Für Steuerberaterinnen und Steuerberater",
+                "Für selbständige Anwälte",
             ),
             ("Attributanalyse", "Deck-Toolkit"),
         ),
         (
             "es",
-            ("Para profesionales contables", "Para consultores"),
-            ("Para profesionales contables", "Para consultores"),
+            (
+                "Para consultores",
+                "Para profesionales contables",
+                "Para abogados independientes",
+            ),
+            (
+                "Para consultores",
+                "Para profesionales contables",
+                "Para abogados independientes",
+            ),
             ("Análisis de atributos", "Herramientas de presentación"),
         ),
     ),
 )
 def test_homepage_only_exposes_professional_role_groups(
     lang: str,
-    expected_group_titles: tuple[str, str],
-    expected_audiences: tuple[str, str],
+    expected_group_titles: tuple[str, str, str],
+    expected_audiences: tuple[str, str, str],
     removed_section_titles: tuple[str, str],
 ) -> None:
     _restore_application_import_path()
@@ -4866,15 +4948,13 @@ def test_homepage_only_exposes_professional_role_groups(
 
     assert len(sections) == 1
     assert sections[0]["preserve_order"] is True
-    assert sections[0]["groups"][0]["title"] == expected_group_titles[0]
-    assert sections[0]["groups"][1]["title"] == expected_group_titles[1]
-    assert sections[0]["groups"][0]["audience"] == expected_audiences[0]
-    assert sections[0]["groups"][1]["audience"] == expected_audiences[1]
-    assert sections[0]["groups"][0]["links"][0]["href"] == (
-        "/static/shared/vera/index.html"
-    )
-    assert sections[0]["groups"][1]["links"][0]["href"] == (
-        "/static/shared/clara/index.html"
+    groups = sections[0]["groups"]
+    assert tuple(group["title"] for group in groups) == expected_group_titles
+    assert tuple(group["audience"] for group in groups) == expected_audiences
+    assert tuple(group["links"][0]["href"] for group in groups) == (
+        "/static/shared/clara/index.html",
+        "/static/shared/vera/index.html",
+        "/static/shared/lucia/index.html",
     )
     assert removed_section_titles[0] not in serialized_sections
     assert removed_section_titles[1] not in serialized_sections
@@ -4886,57 +4966,17 @@ def test_homepage_only_exposes_professional_role_groups(
 
 
 def test_homepage_plugin_links_are_ordered_by_group_and_locale() -> None:
-    source = (ROOT / "modules" / "hosted_services" / "api.py").read_text(
-        encoding="utf-8"
-    )
+    _restore_application_import_path()
 
-    expected_orders = (
-        (
-            '"title": "For accountants"',
-            ("Vera",),
-        ),
-        (
-            '"title": "For consultants"',
-            ("Clara",),
-        ),
-        (
-            '"title": "Per commercialisti"',
-            ("Vera",),
-        ),
-        (
-            '"title": "Per consulenti"',
-            ("Clara",),
-        ),
-        (
-            '"title": "Pour les experts-comptables"',
-            ("Vera",),
-        ),
-        (
-            '"title": "Pour les consultants"',
-            ("Clara",),
-        ),
-        (
-            '"title": "Für Steuerberaterinnen und Steuerberater"',
-            ("Vera",),
-        ),
-        (
-            '"title": "Für Beraterinnen und Berater"',
-            ("Clara",),
-        ),
-        (
-            '"title": "Para profesionales contables"',
-            ("Vera",),
-        ),
-        (
-            '"title": "Para consultores"',
-            ("Clara",),
-        ),
-    )
+    from modules.hosted_services import api as pdp_api
 
-    for section_title, labels in expected_orders:
-        start = source.index(section_title)
-        positions = [source.index(label, start) for label in labels]
-        assert positions == sorted(positions)
+    for lang in ("en", "it", "fr", "de", "es"):
+        groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
+        assert [group["links"][0]["label"] for group in groups] == [
+            "Clara",
+            "Vera",
+            "Lucia",
+        ]
 
 
 def test_vera_module_links_preserve_language_without_changing_market() -> None:
@@ -5006,7 +5046,7 @@ def test_clara_install_flow_localizes_platform_choices(
     assert localized_guidance in page
 
 
-def test_homepage_is_one_semantic_story_with_both_plugins() -> None:
+def test_homepage_is_one_semantic_story_with_all_three_plugins() -> None:
     template = (ROOT / "templates" / "index.html").read_text(encoding="utf-8")
     css = (ROOT / "static" / "css" / "app.css").read_text(encoding="utf-8")
 
@@ -5108,21 +5148,21 @@ def test_homepage_makes_open_source_explicit(
         (
             "en",
             "Free by design.",
-            "Vera and Clara are free to install and use. We welcome contributions "
+            "Clara, Vera and Lucia are free to install and use. We welcome contributions "
             "to their development. We charge for consulting, implementation, "
             "and hosted services.",
         ),
         (
             "it",
             "Gratuiti per scelta.",
-            "Vera e Clara si possono installare e usare gratuitamente. Accogliamo "
+            "Clara, Vera e Lucia si possono installare e usare gratuitamente. Accogliamo "
             "volentieri contributi al loro sviluppo. Offriamo a pagamento "
             "consulenza, implementazione e servizi hosted.",
         ),
         (
             "fr",
             "Gratuits par conception.",
-            "Vera et Clara sont gratuites à installer et à utiliser. Nous accueillons "
+            "Clara, Vera et Lucia sont gratuites à installer et à utiliser. Nous accueillons "
             "volontiers les contributions à leur développement. Nous facturons nos "
             "prestations de conseil et de mise en œuvre, ainsi que nos services "
             "hébergés.",
@@ -5130,7 +5170,7 @@ def test_homepage_makes_open_source_explicit(
         (
             "de",
             "Kostenlos konzipiert.",
-            "Vera und Clara können kostenlos installiert und genutzt werden. Wir "
+            "Clara, Vera und Lucia können kostenlos installiert und genutzt werden. Wir "
             "freuen uns über Beiträge zu ihrer Weiterentwicklung. Wir stellen "
             "Beratungs- und Implementierungsleistungen sowie gehostete Services "
             "in Rechnung.",
@@ -5138,7 +5178,7 @@ def test_homepage_makes_open_source_explicit(
         (
             "es",
             "Gratuitos por diseño.",
-            "Vera y Clara se pueden instalar y usar gratuitamente. Agradecemos las "
+            "Clara, Vera y Lucia se pueden instalar y usar gratuitamente. Agradecemos las "
             "contribuciones a su desarrollo. Cobramos por la consultoría, la "
             "implementación y los servicios alojados.",
         ),
@@ -5210,7 +5250,8 @@ def test_homepage_tablet_header_reflows_before_mobile_breakpoint() -> None:
 
 @pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
 @pytest.mark.parametrize(
-    ("group_index", "expected_group_id"), ((0, "vera"), (1, "clara"))
+    ("group_index", "expected_group_id"),
+    ((0, "clara"), (1, "vera"), (2, "lucia")),
 )
 def test_homepage_content_explains_specialist_method_and_each_plugin(
     lang: str,
@@ -5238,8 +5279,7 @@ def test_homepage_content_explains_specialist_method_and_each_plugin(
     assert "consequence" not in content["harness"]
     assert "consequence_label" not in content["harness"]
     assert content["bridge"]["id"] == "plugins"
-    assert groups[0]["id"] == "vera"
-    assert groups[1]["id"] == "clara"
+    assert [item["id"] for item in groups] == ["clara", "vera", "lucia"]
     assert group["id"] == expected_group_id
     assert group["audience"]
     assert group["lead"]
@@ -5295,7 +5335,8 @@ def test_homepage_vera_describes_the_task_without_literal_or_internal_language(
 
     from modules.hosted_services import api as pdp_api
 
-    description = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"][0][
+    groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
+    description = next(group for group in groups if group["id"] == "vera")[
         "description"
     ]
 
@@ -5387,37 +5428,37 @@ def test_homepage_positions_control_as_the_specialist_method(
     (
         (
             "en",
-            "Mparanza is Vera and Clara: two plugins that bring specialist methods "
-            "to two different professions.",
+            "Mparanza is Clara, Vera and Lucia: three plugins that bring specialist "
+            "methods to three different professions.",
             "first two",
         ),
         (
             "it",
-            "Mparanza è Vera e Clara: due plugin che incorporano metodi specialistici "
-            "per due professioni diverse.",
+            "Mparanza è Clara, Vera e Lucia: tre plugin che incorporano metodi "
+            "specialistici per tre professioni diverse.",
             "primi due",
         ),
         (
             "fr",
-            "Mparanza, c'est Vera et Clara : deux plugins qui intègrent des méthodes "
-            "spécialisées pour deux métiers différents.",
+            "Mparanza, c'est Clara, Vera et Lucia : trois plugins qui intègrent des "
+            "méthodes spécialisées pour trois métiers différents.",
             "deux premiers",
         ),
         (
             "de",
-            "Mparanza, das sind Vera und Clara: zwei Plugins mit fachlichen Methoden "
-            "für zwei unterschiedliche Berufsgruppen.",
+            "Mparanza, das sind Clara, Vera und Lucia: drei Plugins mit fachlichen "
+            "Methoden für drei unterschiedliche Berufsgruppen.",
             "ersten beiden",
         ),
         (
             "es",
-            "Mparanza es Vera y Clara: dos plugins que incorporan métodos "
-            "especializados para dos profesiones distintas.",
+            "Mparanza es Clara, Vera y Lucia: tres plugins que incorporan métodos "
+            "especializados para tres profesiones distintas.",
             "los dos primeros",
         ),
     ),
 )
-def test_homepage_presents_vera_and_clara_as_the_complete_pair(
+def test_homepage_presents_clara_vera_and_lucia_as_the_complete_set(
     lang: str,
     expected_description: str,
     rejected_fragment: str,
