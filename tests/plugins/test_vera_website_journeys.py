@@ -11,6 +11,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 import pytest
+from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[2]
 SHARED_ROOT = ROOT / "static" / "shared"
@@ -853,7 +854,7 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
-def test_vera_hub_links_language_specific_variance_word_examples() -> None:
+def test_vera_hub_opens_language_specific_variance_pdf_examples() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
     assert page.count('"variance.report.action":') == 5
@@ -862,30 +863,32 @@ def test_vera_hub_links_language_specific_variance_word_examples() -> None:
     assert set(
         re.findall(
             r'href: "(/static/shared/vera/downloads/variance-analysis/'
-            r'variance-analysis-example-[a-z]{2}\.docx)"',
+            r'variance-analysis-example-[a-z]{2}\.pdf)"',
             page,
         )
     ) == {
         "/static/shared/vera/downloads/variance-analysis/"
-        f"variance-analysis-example-{locale}.docx"
+        f"variance-analysis-example-{locale}.pdf"
         for locale in ("it", "en", "fr", "de", "es")
     }
     assert "varianceReportLink.hidden = !varianceReport;" in page
+    assert 'varianceReportLink.setAttribute("target", "_blank");' in page
+    assert 'varianceReportLink.setAttribute("rel", "noopener noreferrer");' in page
+    assert 'varianceReportLink.setAttribute("download",' not in page
 
 
 @pytest.mark.parametrize(
-    ("locale", "document_language", "heading"),
+    ("locale", "heading"),
     (
-        ("it", "it-IT", "Analisi delle cause della varianza vendite"),
-        ("en", "en-US", "Sales Variance Root-Cause Analysis"),
-        ("fr", "fr-FR", "Analyse des causes des écarts de ventes"),
-        ("de", "de-DE", "Ursachenanalyse der Umsatzabweichung"),
-        ("es", "es-ES", "Análisis de las causas de la desviación de ventas"),
+        ("it", "Analisi delle cause della varianza vendite"),
+        ("en", "Sales Variance Root-Cause Analysis"),
+        ("fr", "Analyse des causes des écarts de ventes"),
+        ("de", "Ursachenanalyse der Umsatzabweichung"),
+        ("es", "Análisis de las causas de la desviación de ventas"),
     ),
 )
-def test_vera_variance_word_example_matches_language(
+def test_vera_variance_pdf_example_matches_language_and_has_four_pages(
     locale: str,
-    document_language: str,
     heading: str,
 ) -> None:
     report = (
@@ -893,16 +896,13 @@ def test_vera_variance_word_example_matches_language(
         / "vera"
         / "downloads"
         / "variance-analysis"
-        / f"variance-analysis-example-{locale}.docx"
+        / f"variance-analysis-example-{locale}.pdf"
     )
 
     assert report.stat().st_size > 0
-    with zipfile.ZipFile(report) as archive:
-        core_properties = archive.read("docProps/core.xml")
-        document = archive.read("word/document.xml")
-
-    assert document_language.encode() in core_properties
-    assert heading.encode() in document
+    reader = PdfReader(report)
+    assert len(reader.pages) == 4
+    assert heading in (reader.pages[0].extract_text() or "")
 
 
 def test_vera_website_section_links_the_unlisted_monica_preview() -> None:
