@@ -72,7 +72,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.4"
+    assert manifest["version"] == "0.1.5"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -286,6 +286,14 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
+        assert manifest["version"] == "0.1.4"
+        approved_description = (
+            (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
+            .read_text(encoding="utf-8")
+            .strip()
+        )
+        assert manifest["description"] == approved_description
+        assert manifest["description"].startswith("Assistente AI per avvocati.")
         assert manifest["skills"] == "./skills/"
         assert set(components["plugins"]) == PUBLIC_WORKFLOWS
         assert "skills/lucia/SKILL.md" in lucia_names

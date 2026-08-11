@@ -103,8 +103,8 @@
       "name": "lucia",
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
-      "description": "AI companion for lawyers. Lucia frames legal questions, plans source-led research, and validates draft answers while keeping professional judgment with the lawyer.",
-      "version": "0.1.3",
+      "description": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali. Imposta quesiti e incarichi, analizza materiali e fonti, verifica affermazioni e ragionamento e prepara ricerche, documenti e risultati rivedibili.\n\nSupporta il lavoro legale attraverso workflow specialistici adattati al contesto, alla giurisdizione e al risultato atteso. Aiuta a strutturare attività, controllare documenti e fonti e mantenere collegati materiali, passaggi e decisioni.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
+      "version": "0.1.4",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",
