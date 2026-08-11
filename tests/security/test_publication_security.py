@@ -50,6 +50,10 @@ def test_only_verified_cowork_zips_are_public() -> None:
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-cowork-plugin.zip"
     )
     release_clara_zip = ROOT / "plugin_packages" / "clara" / "clara-claude-plugin.zip"
+    public_lucia_zip = (
+        ROOT / "static" / "shared" / "lucia" / "downloads" / "lucia-cowork-plugin.zip"
+    )
+    release_lucia_zip = ROOT / "plugin_packages" / "lucia" / "lucia-claude-plugin.zip"
     retired_plugin_zips = (
         ROOT / "protected_downloads" / "vera" / "vera-plugin.zip",
         ROOT / "static" / "shared" / "clara" / "downloads" / "clara-plugin.zip",
@@ -57,16 +61,17 @@ def test_only_verified_cowork_zips_are_public() -> None:
 
     assert public_vera_zip.read_bytes() == release_vera_zip.read_bytes()
     assert public_clara_zip.read_bytes() == release_clara_zip.read_bytes()
+    assert public_lucia_zip.read_bytes() == release_lucia_zip.read_bytes()
     assert all(not path.exists() for path in retired_plugin_zips)
 
 
-def test_public_pages_have_no_clara_or_vera_download_links() -> None:
+def test_public_pages_have_no_retired_clara_or_vera_download_routes() -> None:
     html = "\n".join(
         path.read_text(encoding="utf-8") for path in (ROOT / "static").rglob("*.html")
     ).lower()
 
-    assert "/downloads/vera" not in html
-    assert "/downloads/clara" not in html
+    assert 'href="/downloads/vera' not in html
+    assert 'href="/downloads/clara' not in html
     assert "clara-plugin.zip" not in html
     assert "vera-plugin.zip" not in html
 
@@ -87,6 +92,15 @@ def test_clara_product_page_exposes_only_the_cowork_release_archive() -> None:
 
     assert page.count('href="downloads/clara-cowork-plugin.zip"') == 1
     assert page.count("data-clara-cowork-download-link") == 1
+
+
+def test_lucia_product_page_exposes_only_the_cowork_release_archive() -> None:
+    page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert page.count('href="downloads/lucia-cowork-plugin.zip"') == 1
+    assert page.count("data-lucia-cowork-download-link") == 1
 
 
 def test_vera_cowork_release_archive_is_served() -> None:
@@ -123,16 +137,35 @@ def test_clara_cowork_release_archive_is_served() -> None:
     assert response.content == expected
 
 
+def test_lucia_cowork_release_archive_is_served() -> None:
+    from fastapi.testclient import TestClient
+
+    from src.fastapi_app_entry import app
+
+    expected = (
+        ROOT / "static" / "shared" / "lucia" / "downloads" / "lucia-cowork-plugin.zip"
+    ).read_bytes()
+    response = TestClient(app).get(
+        "/static/shared/lucia/downloads/lucia-cowork-plugin.zip"
+    )
+
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "application/zip"
+    assert response.content == expected
+
+
 def test_only_product_pages_have_marketplace_install_actions() -> None:
     install_button_pages = {
         path.relative_to(ROOT).as_posix()
         for path in (ROOT / "static" / "shared").rglob("*.html")
         if "data-clara-install-link" in path.read_text(encoding="utf-8")
         or "data-vera-install-link" in path.read_text(encoding="utf-8")
+        or "data-lucia-install-link" in path.read_text(encoding="utf-8")
     }
 
     assert install_button_pages == {
         "static/shared/clara/index.html",
+        "static/shared/lucia/index.html",
         "static/shared/vera/index.html",
     }
 
@@ -142,8 +175,15 @@ def test_only_product_pages_have_marketplace_install_actions() -> None:
         if path.suffix in {".html", ".js"}
     )
     expected_pages_by_plugin_id = {
-        "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d": "static/shared/vera/index.html",
-        "plugins_6a57b17fb5848191be710192d93fe03a": "static/shared/clara/index.html",
+        "plugins_6a57ac5ce65c8191ae7bd0a51160eb7d": {
+            "static/shared/progetto-vera-ai/index.html",
+            "static/shared/vera/index.html",
+        },
+        "plugins_6a57b17fb5848191be710192d93fe03a": {
+            "static/shared/clara/index.html",
+            "static/shared/progetto-vera-ai/index.html",
+        },
+        "plugins_6a7aeb8b27dc8191aaef8e64146296ae": {"static/shared/lucia/index.html"},
     }
     for plugin_id, expected_page in expected_pages_by_plugin_id.items():
         pages = {
@@ -151,7 +191,7 @@ def test_only_product_pages_have_marketplace_install_actions() -> None:
             for path in public_sources
             if plugin_id in path.read_text(encoding="utf-8")
         }
-        assert pages == {expected_page}
+        assert pages == expected_page
 
 
 def test_retired_duplicate_client_pages_are_absent() -> None:

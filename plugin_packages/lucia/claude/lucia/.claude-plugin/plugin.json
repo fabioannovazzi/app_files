@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "lucia",
+  "displayName": "Lucia",
+  "version": "0.1.2",
+  "description": "AI companion for lawyers. Lucia frames legal questions, plans source-led research, and validates draft answers while keeping professional judgment with the lawyer.",
+  "author": {
+    "name": "Mparanza",
+    "email": "hello@mparanza.com",
+    "url": "https://mparanza.com"
+  },
+  "homepage": "https://mparanza.com/static/shared/lucia/index.html?lang=it",
+  "repository": "https://github.com/fabioannovazzi/app_files",
+  "license": "AGPL-3.0-only",
+  "keywords": [
+    "lucia",
+    "lawyers",
+    "legal-research",
+    "source-validation",
+    "professional-services"
+  ],
+  "skills": "./skills/"
+}

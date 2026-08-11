@@ -384,6 +384,22 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 """
+LUCIA_COWORK_COMPONENTS = frozenset({"prompt-optimizer", "deep-research-validator"})
+LUCIA_COWORK_README = """# Lucia for Claude Cowork
+
+Lucia helps lawyers frame a legal question and validate a draft answer against
+its sources. Use the `lucia` skill to route the work, or invoke Prompt Optimizer
+or Deep Research Validator directly.
+
+The two assurance workflows are projected from the same canonical components
+used by Vera. Lucia works in Italian by default, keeps jurisdiction separate
+from language, and leaves strategy, conclusions, approval, and professional
+responsibility with the lawyer.
+
+Work from files in the connected folder. Packaged scripts may be used only when
+their declared dependencies are already available; missing optional tooling
+does not prevent a file-based, reviewable result.
+"""
 
 
 @dataclass(frozen=True)
@@ -406,6 +422,7 @@ class ClaudePackage:
     output_zip: Path
     category: str
     tags: tuple[str, ...]
+    public_zip: Path | None = None
 
 
 def _absolute_repo_path(value: object, *, field: str) -> Path:
@@ -472,6 +489,14 @@ def load_configuration(
             ),
             category=str(raw_package.get("category", "productivity")),
             tags=tuple(str(tag) for tag in raw_package.get("tags", [])),
+            public_zip=(
+                _absolute_repo_path(
+                    raw_package["public_zip"],
+                    field=f"packages[{index}].public_zip",
+                )
+                if "public_zip" in raw_package
+                else None
+            ),
         )
         if (
             package.output_directory in output_paths
@@ -480,6 +505,13 @@ def load_configuration(
             raise ValueError("Claude package output paths must be unique")
         if package.output_directory == package.output_zip:
             raise ValueError("Claude package directory and ZIP must differ")
+        if package.public_zip is not None:
+            if package.public_zip in output_paths or package.public_zip in {
+                package.output_directory,
+                package.output_zip,
+            }:
+                raise ValueError("Claude package public ZIP path must be unique")
+            output_paths.add(package.public_zip)
         names.add(plugin)
         output_paths.update({package.output_directory, package.output_zip})
         packages.append(package)
@@ -2310,6 +2342,126 @@ def _clara_package_entries(
     return dict(sorted(entries.items()))
 
 
+def _lucia_package_entries(
+    package: ClaudePackage,
+    *,
+    builder: ModuleType,
+    source_target: object,
+) -> dict[str, bytes]:
+    """Return Lucia's bounded Cowork projection with Vera-identical assurance."""
+
+    source_entries = _full_codex_plugin_entries(
+        builder=builder,
+        source_target=source_target,
+        plugin_name="lucia",
+    )
+    source_manifest = source_entries.get(".codex-plugin/plugin.json")
+    if source_manifest is None:
+        raise ValueError("lucia: canonical manifest is missing")
+
+    template_root = ROOT / "plugins" / "lucia" / ".claude-plugin"
+    manifest_path = template_root / "plugin.json"
+    runtime_path = template_root / "cowork-runtime.md"
+    for template_path in (manifest_path, runtime_path):
+        if not template_path.is_file():
+            raise FileNotFoundError(
+                f"Lucia Cowork template does not exist: {template_path}"
+            )
+
+    _, configured = load_configuration()
+    vera_package = next(
+        (candidate for candidate in configured if candidate.plugin == "vera"),
+        None,
+    )
+    if vera_package is None:
+        raise ValueError("lucia: Vera must be configured for shared assurance")
+    vera_entries = claude_package_entries(vera_package)
+
+    entries: dict[str, bytes] = {}
+    for component in sorted(LUCIA_COWORK_COMPONENTS):
+        prefix = f"modules/{component}/"
+        shared_entries = {
+            name: content
+            for name, content in vera_entries.items()
+            if name.startswith(prefix)
+        }
+        if not shared_entries:
+            raise ValueError(f"lucia: Vera Cowork component is missing: {component}")
+        entries.update(shared_entries)
+
+    main_skill = source_entries.get("skills/lucia/SKILL.md")
+    if main_skill is None:
+        raise ValueError("lucia: router skill is missing")
+    main_text = main_skill.decode("utf-8")
+    entries["skills/lucia/SKILL.md"] = (
+        f"{_skill_frontmatter(main_text)}\n\n"
+        f"{runtime_path.read_text(encoding='utf-8').strip()}\n"
+    ).encode("utf-8")
+
+    for component in sorted(LUCIA_COWORK_COMPONENTS):
+        wrapper_name = f"skills/{component}/SKILL.md"
+        wrapper = source_entries.get(wrapper_name)
+        if wrapper is None:
+            raise ValueError(f"lucia: wrapper skill is missing: {component}")
+        wrapper_text = re.sub(
+            r"(?m)^After substantive use of this workflow,.*\n\n",
+            "",
+            wrapper.decode("utf-8"),
+            count=1,
+        )
+        entries[wrapper_name] = _project_cowork_instruction_markdown(
+            wrapper_text.encode("utf-8"),
+            relative_path=wrapper_name,
+        )
+
+    components = json.loads(source_entries["components.json"])
+    public_components = [
+        component
+        for component in components["plugins"]
+        if component in LUCIA_COWORK_COMPONENTS
+    ]
+    entries["components.json"] = _json_bytes(
+        {
+            "schema_version": components["schema_version"],
+            "plugins": public_components,
+            "workflow_roles": {
+                component: components["workflow_roles"][component]
+                for component in public_components
+            },
+        }
+    )
+    entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
+    if "assets/icon.svg" in source_entries:
+        entries["assets/icon.svg"] = source_entries["assets/icon.svg"]
+    entries[".claude-plugin/plugin.json"] = project_claude_manifest(
+        source_manifest,
+        include_agents=False,
+        template_content=manifest_path.read_bytes(),
+    )
+    entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
+
+    forbidden_parts = {".app.json", ".mcp.json", ".codex-plugin"}
+    for name in entries:
+        parts = set(Path(name).parts)
+        if parts & forbidden_parts or name.startswith("modules/studio-archive/"):
+            raise ValueError(f"Lucia Cowork retains forbidden path: {name}")
+    for component in LUCIA_COWORK_COMPONENTS:
+        prefix = f"modules/{component}/"
+        vera_component = {
+            name: content
+            for name, content in vera_entries.items()
+            if name.startswith(prefix)
+        }
+        lucia_component = {
+            name: content
+            for name, content in entries.items()
+            if name.startswith(prefix)
+        }
+        if lucia_component != vera_component:
+            raise ValueError(f"lucia: Cowork component differs from Vera: {component}")
+    return dict(sorted(entries.items()))
+
+
 def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     """Return a self-contained Anthropic plugin tree derived from repo source."""
 
@@ -2317,6 +2469,12 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
     source_target = _source_build_target(package)
     if package.plugin == "clara":
         return _clara_package_entries(
+            package,
+            builder=builder,
+            source_target=source_target,
+        )
+    if package.plugin == "lucia":
+        return _lucia_package_entries(
             package,
             builder=builder,
             source_target=source_target,
@@ -2558,6 +2716,8 @@ def build_package(package: ClaudePackage) -> tuple[Path, Path]:
     entries = claude_package_entries(package)
     _build_directory(package.output_directory, entries)
     _build_zip(package.output_zip, entries)
+    if package.public_zip is not None:
+        _build_zip(package.public_zip, entries)
     return package.output_directory, package.output_zip
 
 
@@ -2565,10 +2725,13 @@ def verify_package(package: ClaudePackage) -> list[str]:
     """Return all source-drift errors for one generated Cowork package."""
 
     entries = claude_package_entries(package)
-    return [
+    errors = [
         *verify_directory(package.output_directory, entries),
         *verify_zip(package.output_zip, entries),
     ]
+    if package.public_zip is not None:
+        errors.extend(verify_zip(package.public_zip, entries))
+    return errors
 
 
 def catalog_payload(

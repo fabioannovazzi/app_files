@@ -56,6 +56,10 @@ main, .footer-shell {
   column-gap: clamp(56px, 10vw, 144px);
   border-bottom: 1px solid var(--cyan);
 }
+.hero__content,
+.hero-install,
+.hero-install__actions,
+.install-option { min-width: 0; }
 
 .eyebrow, .section-index, .stream-number {
   color: var(--blue);
@@ -87,6 +91,8 @@ main, .footer-shell {
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 650;
+  text-align: center;
+  white-space: normal;
   transition: background-color 160ms ease-out, border-color 160ms ease-out, transform 160ms ease-out;
 }
 .button:hover { border-color: var(--blue); background: var(--blue); transform: translateY(-1px); }
@@ -248,7 +254,7 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
 }
 
 @media (max-width: 720px) {
-  .hero { min-height: 0; grid-template-columns: 1fr; padding-block: 64px 72px; }
+  .hero { min-height: 0; grid-template-columns: minmax(0, 1fr); padding-block: 64px 72px; }
   .hero-install__actions { grid-template-columns: 1fr; }
   .lucia-mark { width: 132px; grid-row: 1; padding: 0 0 28px; border-left: 0; border-bottom: 1px solid var(--cyan); }
   .section-head { grid-template-columns: 1fr; gap: 20px; }

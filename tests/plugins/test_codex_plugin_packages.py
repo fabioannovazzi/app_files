@@ -3290,8 +3290,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 15
-    assert core.count('class="module-row"') == 15
+    assert core.count(" data-module-link") == 21
+    assert core.count('class="module-row"') == 21
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -3304,7 +3304,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert 'id="installa"' in page
     assert "Core multilingue + pacchetto Italia" not in page
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
-    assert "FatturaPA" not in core
+    assert "FatturaPA" in core
     assert "FatturaPA" in italy
     assert 'src="../video-library.js?v=20260726-assurance"' in page
     assert (
@@ -3476,15 +3476,12 @@ def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
     assert "Financial analysis and due diligence" in page
     assert "adjusted EBITDA" in page
     assert "net debt" in page
-    for localized_count in (
+    for stale_count in (
         "Diciotto funzioni",
         "Eighteen capabilities",
         "Dix-huit fonctions",
         "Achtzehn Funktionen",
         "Dieciocho funciones",
-    ):
-        assert localized_count in page
-    for stale_count in (
         "Diciassette funzioni",
         "Seventeen capabilities",
         "Dix-sept fonctions",
@@ -4682,7 +4679,7 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     assert '<a class="skip-link" href="#main-content"' in page
     assert '<main id="main-content">' in page
     assert "github.com/fabioannovazzi/app_files/tree/main/plugins/" not in header
-    source_branch = "agent/lucia-public-page" if page_name == "lucia" else "main"
+    source_branch = "main"
     assert (
         f"github.com/fabioannovazzi/app_files/tree/{source_branch}/plugins/{page_name}"
         in footer

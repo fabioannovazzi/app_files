@@ -5,7 +5,7 @@
 [Licenza GNU AGPLv3](https://github.com/fabioannovazzi/app_files/blob/main/LICENSE)
 
 Lucia è l’assistente AI di Mparanza per avvocati indipendenti e piccoli studi
-legali che lavorano nel contesto italiano. Prepara ricerca e validazione
+legali. Prepara ricerca e validazione
 mantenendo visibili perimetro, fonti, affermazioni, incertezze e passaggi
 riservati al giudizio professionale.
 
@@ -59,7 +59,9 @@ pacchetto per ChatGPT non include questo runtime privato.
 La sorgente modificabile vive in `plugins/lucia`. I pacchetti generati sono:
 
 - `plugin_packages/lucia/lucia-plugin.zip` per Codex;
-- `plugin_packages/lucia/lucia-chatgpt-upload.zip` per la submission ChatGPT.
+- `plugin_packages/lucia/lucia-chatgpt-upload.zip` per la submission ChatGPT;
+- `plugin_packages/lucia/lucia-claude-plugin.zip` per Claude Cowork, pubblicato
+  anche come `static/shared/lucia/downloads/lucia-cowork-plugin.zip`.
 
 I pacchetti sono artefatti generati e non devono essere modificati a mano.
 
@@ -68,6 +70,8 @@ Per ricostruirli e verificare che corrispondano alla sorgente:
 ```bash
 .venv/bin/python scripts/build_codex_plugin_zip.py lucia
 .venv/bin/python scripts/build_codex_plugin_zip.py lucia --check
+.venv/bin/python scripts/build_claude_plugin_zip.py lucia
+.venv/bin/python scripts/build_claude_plugin_zip.py lucia --check
 ```
 
 ## Dati e confini professionali

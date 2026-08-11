@@ -53,7 +53,7 @@ def load_privacy_validator():
 def configured():
     builder = load_builder()
     marketplace, packages = builder.load_configuration()
-    assert [package.plugin for package in packages] == ["vera", "clara"]
+    assert [package.plugin for package in packages] == ["vera", "clara", "lucia"]
     vera_package = next(package for package in packages if package.plugin == "vera")
     return builder, marketplace, vera_package
 

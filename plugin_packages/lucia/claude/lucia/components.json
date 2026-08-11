@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "plugins": [
+    "prompt-optimizer",
+    "deep-research-validator"
+  ],
+  "workflow_roles": {
+    "prompt-optimizer": {
+      "kind": "public_workflow"
+    },
+    "deep-research-validator": {
+      "kind": "public_workflow"
+    }
+  }
+}
