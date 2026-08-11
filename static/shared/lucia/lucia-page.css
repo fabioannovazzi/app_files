@@ -120,7 +120,7 @@ main, .footer-shell {
   margin-top: 34px;
   padding-top: clamp(24px, 3vw, 32px);
   display: grid;
-  grid-template-areas: "copy" "action";
+  grid-template-areas: "copy" "action" "video";
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
   align-items: start;
@@ -140,6 +140,54 @@ main, .footer-shell {
 .install-option { display: grid; align-content: start; gap: 8px; }
 .install-option .button { width: 100%; }
 .install-option__note { max-width: 42ch; color: var(--blue); font-size: 0.82rem; line-height: 1.45; }
+.hero-install__video {
+  grid-area: video;
+  width: min(100%, 520px);
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.overview-video__thumb {
+  position: relative;
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--cyan);
+  background: var(--navy);
+}
+.overview-video__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 180ms ease-out;
+}
+.video-play {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 50%;
+  background: rgba(0, 32, 96, 0.9);
+  color: var(--white);
+  font-size: 1rem;
+  line-height: 1;
+  transform: translate(-50%, -50%);
+}
+.video-duration {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  padding: 4px 8px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 650;
+}
+.hero-install__video:hover img { transform: scale(1.015); }
 
 .section-block { padding-block: var(--space-section); border-bottom: 1px solid var(--cyan); }
 .section-head {
@@ -284,4 +332,5 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; }
   .button:hover, .module-row:hover, .text-link:hover span[aria-hidden="true"] { transform: none; }
+  .hero-install__video:hover img { transform: none; }
 }

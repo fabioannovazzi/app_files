@@ -358,6 +358,18 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     assert "data-lucia-install-link" in page
     assert 'href="downloads/lucia-cowork-plugin.zip"' in page
     assert "data-lucia-cowork-download-link" in page
+    assert 'id="lucia-install-video-link"' in page
+    assert 'data-i18n-aria-label="install.video.title"' in page
+    assert 'id="lucia-install-video-thumbnail"' in page
+    assert 'id="lucia-install-video-duration"' in page
+    for language, video_id in {
+        "it": "yAnkIabnQ1M",
+        "en": "vU4eow_MMDA",
+        "fr": "GPY7HqkH62c",
+        "de": "1LJCCTxGL_8",
+        "es": "RKcy1G79RAs",
+    }.items():
+        assert f'{language}: {{ id: "{video_id}"' in page
     for localized_chatgpt_button in (
         "Installa per ChatGPT Work e Codex",
         "Install for ChatGPT Work and Codex",
@@ -378,6 +390,10 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     assert 'src="icon.svg"' in page
     for selector in (
         ".hero-install",
+        ".hero-install__video",
+        ".overview-video__thumb",
+        ".video-play",
+        ".video-duration",
         ".section-block",
         ".section-head",
         ".workstreams",
