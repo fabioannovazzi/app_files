@@ -3330,7 +3330,7 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     ):
         assert localized_title in page
     for localized_eyebrow in (
-        "AI companion per commercialisti",
+        "Assistente AI per commercialisti",
         "AI companion for accountants",
         "AI companion pour les experts-comptables",
         "AI companion für Steuerberaterinnen und Steuerberater",
@@ -4039,7 +4039,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     for snippet in (
         "Clara",
         "AI companion for consultants",
-        "AI companion per consulenti",
+        "Assistente AI per consulenti",
         "Clara works with you in ChatGPT Work and Codex, or in Claude Cowork.",
         "Clara lavora con te in ChatGPT Work e Codex oppure in Claude Cowork.",
         "Create or correct a presentation in your corporate style",

@@ -337,6 +337,7 @@ def test_lucia_public_page_uses_vera_canonical_assurance_copy() -> None:
     assert "Prompt Optimizer" in page
     assert "Deep Research Validator" in page
     assert "Ottimizza prompt" in page
+    assert "Assistente Ai per avvocati indipendenti" in page
     assert (
         "Trasforma un quesito legale, fiscale o di conformità in una ricerca con "
         "perimetro, fonti e verifiche definite."
