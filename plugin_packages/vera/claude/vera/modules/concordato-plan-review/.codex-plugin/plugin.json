@@ -1,10 +1,10 @@
 {
   "name": "concordato-plan-review",
-  "version": "0.1.31",
+  "version": "0.1.32",
   "description": "Professional review workspace for Italian concordato preventivo cases: procedure, documents, creditors, treatment, liquidation alternative, sources and uses, liquidity, issues, and exact supporting schedules.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/concordato-plan-review/index.html",

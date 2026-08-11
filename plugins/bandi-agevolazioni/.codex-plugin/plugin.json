@@ -1,10 +1,10 @@
 {
   "name": "bandi-agevolazioni",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "Scopre opportunità source-first, verifica la copertura delle fonti e prepara dossier rivedibili senza firma o invio.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",

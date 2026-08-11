@@ -1,10 +1,10 @@
 {
   "name": "distribution-analysis",
-  "version": "0.1.41",
+  "version": "0.1.42",
   "description": "Legacy-backed distribution chart workflow with standard and small-multiple Plotly outputs.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html",

@@ -1,10 +1,10 @@
 {
   "name": "journal-sampling",
-  "version": "0.1.34",
+  "version": "0.1.35",
   "description": "Deterministic journal extraction and audit sample selection guided by Claude.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/journal-sampling/index.html",

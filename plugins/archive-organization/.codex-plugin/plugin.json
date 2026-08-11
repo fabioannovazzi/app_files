@@ -1,10 +1,10 @@
 {
   "name": "archive-organization",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Analizza una cartella cliente, propone classificazione, rinomina e spostamenti, e applica solo decisioni revisionate con journal e rollback.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",

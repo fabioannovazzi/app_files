@@ -1,10 +1,10 @@
 {
   "name": "financial-analysis",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Source-bound financial-analysis and due-diligence preparation for Vera.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",

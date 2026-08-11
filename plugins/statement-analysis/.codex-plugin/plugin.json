@@ -1,10 +1,10 @@
 {
   "name": "statement-analysis",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Deterministic profit-and-loss statement reporting table workflow.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html",

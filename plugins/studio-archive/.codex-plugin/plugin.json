@@ -1,10 +1,10 @@
 {
   "name": "studio-archive",
-  "version": "0.1.16",
+  "version": "0.1.17",
   "description": "Gmail, WhatsApp Desktop, flussi Agenzia e archivi cliente locali o Google Workspace tramite Codex.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/vera/index.html",

@@ -1,10 +1,10 @@
 {
   "name": "registro-imprese-sari",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Prepara una pratica Registro Imprese/DIRE da fonti ufficiali SARI e CCIAA, con provenienza e revisione professionale.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/registro-imprese-sari/index.html",
