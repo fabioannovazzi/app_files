@@ -1,10 +1,10 @@
 {
   "name": "funnel-analysis",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Deterministic funnel-stage reporting table workflow.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html",

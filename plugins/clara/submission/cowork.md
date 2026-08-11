@@ -11,7 +11,7 @@
 - **Terms:** https://mparanza.com/terms
 - **Support:** https://mparanza.com/support
 - **License:** AGPL-3.0-only
-- **Contact:** hello@mparanza.com
+- **Contact:** fabio@mparanza.com
 
 **Public description**
 
@@ -48,7 +48,7 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.125
+- **Version:** 0.1.126
 - **Files:** 823
 - **Bytes:** 4,264,862
 - **SHA-256:** `9e20ffc4af004416844dd4edc284abc4dd49e269014c2f5e95e37aea166ea36d`

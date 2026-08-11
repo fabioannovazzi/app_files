@@ -1,10 +1,10 @@
 {
   "name": "journal-bank-reconciliation",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "Deterministic journal-to-bank reconciliation guided by Codex.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/journal-bank-reconciliation/index.html",

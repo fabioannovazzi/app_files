@@ -1,10 +1,10 @@
 {
   "name": "report-builder",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Deterministic report-building workflow guided by Codex.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/report-builder/index.html",

@@ -3,7 +3,7 @@
   "description": "Mparanza professional-work plugins for Claude Cowork.",
   "owner": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "plugins": [
@@ -12,10 +12,10 @@
       "displayName": "Vera",
       "source": "./plugin_packages/vera/claude/vera",
       "description": "Assistente AI x commercialisti. Vera affianca commercialisti e studi professionali nel lavoro di ogni cliente. Organizza e ritrova i documenti, controlla dati e scritture contabili, seleziona campioni, riconcilia movimenti e prepara analisi finanziarie, analisi degli scostamenti con grafici, report e carte di lavoro rivedibili. Supporta la preparazione del bilancio civilistico OIC, anche da PDF leggibili o scansionati, fino alla revisione e all’esportazione XBRL. Aiuta inoltre con bandi e agevolazioni, avvisi e cartelle, casi INPS, Registro Imprese e DIRE, concordato preventivo, ricerche fiscali o normative, comunicazioni ai clienti e siti informativi dello studio. Vera mostra fonti, passaggi, ambiguità e informazioni mancanti prima di usare o consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano al commercialista.",
-      "version": "0.1.117",
+      "version": "0.1.118",
       "author": {
         "name": "Mparanza",
-        "email": "hello@mparanza.com",
+        "email": "fabio@mparanza.com",
         "url": "https://mparanza.com"
       },
       "homepage": "https://mparanza.com/static/shared/vera/index.html?lang=it",
@@ -70,10 +70,10 @@
       "displayName": "Clara",
       "source": "./plugin_packages/clara/claude/clara",
       "description": "AI companion for consultants. Clara organizes evidence, analyzes business data, and prepares reviewable advisory work, reports, and presentations.",
-      "version": "0.1.125",
+      "version": "0.1.126",
       "author": {
         "name": "Mparanza",
-        "email": "hello@mparanza.com",
+        "email": "fabio@mparanza.com",
         "url": "https://mparanza.com"
       },
       "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",
@@ -104,10 +104,10 @@
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
       "description": "AI companion for lawyers. Lucia frames legal questions, plans source-led research, and validates draft answers while keeping professional judgment with the lawyer.",
-      "version": "0.1.2",
+      "version": "0.1.3",
       "author": {
         "name": "Mparanza",
-        "email": "hello@mparanza.com",
+        "email": "fabio@mparanza.com",
         "url": "https://mparanza.com"
       },
       "homepage": "https://mparanza.com/static/shared/lucia/index.html?lang=it",

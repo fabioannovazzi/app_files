@@ -1,10 +1,10 @@
 {
   "name": "clara",
-  "version": "0.1.138",
+  "version": "0.1.139",
   "description": "Clara supports consultants with commercial due diligence, evidence synthesis, interviews, business analysis, reports and presentations.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",

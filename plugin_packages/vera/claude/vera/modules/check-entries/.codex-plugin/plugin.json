@@ -1,10 +1,10 @@
 {
   "name": "check-entries",
-  "version": "0.1.32",
+  "version": "0.1.33",
   "description": "Journal-entry testing against FatturaPA XML and PDF support, guided by Claude.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/check-entries/index.html",

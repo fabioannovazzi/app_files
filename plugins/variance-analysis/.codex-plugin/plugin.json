@@ -1,10 +1,10 @@
 {
   "name": "variance-analysis",
-  "version": "0.1.90",
+  "version": "0.1.91",
   "description": "Sales and management-accounting variance analysis with reviewable calculations, plots, drilldowns, and driver interpretation.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html",

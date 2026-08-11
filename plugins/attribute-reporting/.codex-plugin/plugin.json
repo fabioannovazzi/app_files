@@ -1,10 +1,10 @@
 {
   "name": "attribute-reporting",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "description": "Local Codex workflow for product attribute mapping, retailer-signal analysis, Brand Fit, HTML reporting, and evidence-backed correctness review.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com",

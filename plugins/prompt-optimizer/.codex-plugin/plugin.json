@@ -1,10 +1,10 @@
 {
   "name": "prompt-optimizer",
-  "version": "0.1.39",
+  "version": "0.1.40",
   "description": "Plan legal, tax, and compliance answers with an explicit document type, generation route, evidence posture, and validation contract.",
   "author": {
     "name": "Mparanza",
-    "email": "hello@mparanza.com",
+    "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
   "homepage": "https://mparanza.com/static/shared/prompt-optimizer/index.html",

@@ -65,7 +65,7 @@ def test_clara_routes_retail_attribute_requests_to_component_skill() -> None:
         if item.get("expected_skill") == "clara:attribute-reporting"
     }
 
-    assert manifest["version"] == "0.1.138"
+    assert manifest["version"] == "0.1.139"
     assert "retail-attribute-reporting" in manifest["keywords"]
     assert "Retailer Signals" in manifest["interface"]["longDescription"]
     assert "references/workflow-catalog.md" in router
@@ -97,17 +97,36 @@ def test_clara_dependency_checker_delegates_to_attribute_component(
     component_checker.write_text("# delegated checker\n", encoding="utf-8")
     calls: list[tuple[list[str], Path, bool]] = []
 
-    def fake_run(command: list[str], *, cwd: Path, check: bool) -> SimpleNamespace:
+    def fake_run(
+        command: list[str],
+        *,
+        cwd: Path,
+        env: dict[str, str],
+        check: bool,
+    ) -> SimpleNamespace:
         calls.append((command, cwd, check))
         return SimpleNamespace(returncode=0)
 
     monkeypatch.setattr(checker, "component_root", lambda _name: component_root)
+    runtime_target = tmp_path / "runtime"
+    runtime_python = runtime_target / "bin" / "python"
+    monkeypatch.setattr(
+        checker,
+        "ensure_runtime",
+        lambda _root, _module: (True, runtime_target, "ready"),
+    )
+    monkeypatch.setattr(checker, "runtime_python", lambda _target: runtime_python)
+    monkeypatch.setattr(
+        checker,
+        "runtime_environment",
+        lambda _target: {"MPARANZA_MANAGED_RUNTIME_VERIFY": "1"},
+    )
     monkeypatch.setattr(checker.subprocess, "run", fake_run)
 
     result = checker.main(["--module", "attribute-reporting"])
 
     assert result == 0
-    assert calls == [([sys.executable, str(component_checker)], component_root, False)]
+    assert calls == [([str(runtime_python), str(component_checker)], component_root, False)]
 
 
 def test_clara_package_entries_embed_attribute_reporting_and_vendor_runtime() -> None:
