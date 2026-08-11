@@ -283,6 +283,11 @@ For data analysis and charts:
 python scripts/check_dependencies.py --module reporting-engine
 ```
 
+These checks prepare fingerprinted, user-scoped managed virtual environments only when
+needed and reuse them across restarts. Run core or component helpers through
+`scripts/managed_python_runtime.py` so the selected environment is bound to the
+helper process. The optional shared OCR runtime remains separate.
+
 ## Two-Loop Advisory Delivery
 
 Clara's default delivery model has two loops. The first loop is advisory

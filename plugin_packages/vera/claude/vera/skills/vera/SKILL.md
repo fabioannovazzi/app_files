@@ -371,6 +371,21 @@ delegating form is:
 python scripts/check_dependencies.py --module <module>
 ```
 
+This command installs the selected module's published core requirements into a
+fingerprinted, user-scoped managed virtual environment only when it is absent,
+invalid, or no longer matches the requirements or Python platform. It reuses a
+ready environment across Claude restarts. Run every subsequent helper command for the
+selected module through Vera's managed launcher from the Vera root, even when a
+module skill shows the shorter standalone `python scripts/...` form:
+
+```bash
+python scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher uses that environment's own Python for the helper process. Do not run `pip
+install` directly and do not combine different Vera modules into one dependency
+environment.
+
 If the module skill requires optional requirements or input-specific arguments,
 run its own `scripts/check_dependencies.py` from the resolved module root with
 those arguments.
@@ -473,6 +488,8 @@ visually validated on the basis of structural inspection alone.
 - Never write run outputs inside this Git workspace. For client-bound Claude
   work, use only the prepared customer-folder run's exact `output_dir`; do not
   invent a parallel output folder.
-- Do not install packages at runtime except for the explicit, user-approved,
-  one-time managed PaddleOCR setup above. Report other missing requirements
-  without asking the user to run technical installation commands.
+- Install core packages only through Vera's managed dependency check, which is
+  limited to the selected module's published `requirements.txt` and persists
+  outside the case workspace. Keep the explicit, user-approved PaddleOCR setup
+  above separate. Never ask the user to run pip or technical installation
+  commands.

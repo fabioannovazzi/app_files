@@ -72,6 +72,7 @@
                 "activation": {
                   "enum": [
                     "automatic_session_start",
+                    "automatic_on_first_use",
                     "automatic_after_prior_submission",
                     "automatic_after_prior_connection"
                   ]
@@ -110,6 +111,7 @@
           "activation": {
             "enum": [
               "automatic_session_start",
+              "automatic_on_first_use",
               "automatic_after_prior_submission",
               "automatic_after_prior_connection",
               "explicit_user_choice"

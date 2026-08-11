@@ -123,13 +123,20 @@ def test_vera_shared_service_manifests_match_the_published_schema() -> None:
     assert all(not manifest_errors for manifest_errors in errors.values()), errors
 
 
-def test_vera_shared_services_separate_update_and_feedback() -> None:
+def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
     manifests = {manifest["service_id"]: manifest for manifest in _service_manifests()}
 
     assert set(manifests) == {
+        "managed-python-runtime",
         "plugin-update-check",
         "plugin-feedback",
     }
+    runtime_boundaries = manifests["managed-python-runtime"]["external_boundaries"]
+    assert [boundary["id"] for boundary in runtime_boundaries] == [
+        "declared-core-dependency-retrieval"
+    ]
+    assert runtime_boundaries[0]["activation"] == "automatic_on_first_use"
+    assert runtime_boundaries[0]["requires_confirmation"] is False
     update_boundaries = manifests["plugin-update-check"]["external_boundaries"]
     assert [boundary["id"] for boundary in update_boundaries] == [
         "automatic-version-check"

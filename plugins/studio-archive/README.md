@@ -165,15 +165,17 @@ Supported local sources are PDF, DOCX, XLSX, EML, TXT, Markdown, CSV, JSON,
 XML, PNG, JPEG, and TIFF. PDF, DOCX, XLSX, and plain-text extraction require:
 
 ```bash
-python -m pip install -r requirements.txt
-python scripts/check_dependencies.py
+cd <vera-plugin-root>
+python scripts/check_dependencies.py --module studio-archive
 ```
+
+The check installs the published core requirements into Vera's fingerprinted,
+user-scoped managed virtual environment only when needed and reuses it after restarts.
 
 Scans can use Vera's existing local OCR runtime. OCR is opt-in for refreshes and
 never downloads model weights:
 
 ```bash
-python -m pip install -r requirements-ocr.txt
 python scripts/check_dependencies.py --requirements requirements-ocr.txt
 ```
 

@@ -135,14 +135,15 @@
       "id": "declared-python-dependency-retrieval",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI)",
-      "purpose": "Install Clara's exact declared Python dependencies into the user-scoped Cowork plugin data directory when the fingerprinted dependency cache is absent or invalid",
+      "purpose": "Install Clara's exact declared Python dependencies into a user-scoped managed virtual environment when the fingerprinted dependency cache is absent, invalid, or no longer matches the Python platform",
       "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
       "optional": true,
       "requires_confirmation": false,
       "controls": [
-        "The trusted SessionStart hook installs only requirements declared in the published Clara package.",
+        "Claude Cowork's trusted SessionStart hook and Codex's first dependency check install only requirements declared in the published Clara package.",
         "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
-        "The bootstrap validates imports after installation, uses a requirements fingerprint for reuse, and fails open to file-based work."
+        "The manager validates imports after installation and keys reuse by the requirements fingerprint, Python ABI, and operating-system platform.",
+        "Clara helper scripts run with the managed virtual environment's own Python; delegated components use separate environments, while the optional shared OCR runtime remains separate."
       ]
     },
     {
@@ -174,6 +175,6 @@
     "reviewed_at": "2026-08-01",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d469c9bacb49c66785f9752981702cb039cf5ac331028c2822a03b6277649e19"
+    "source_fingerprint": "14b93ee5631d08cef5adaa8d4d29c997aca06376311458785a37d1ad219c0ce7"
   }
 }

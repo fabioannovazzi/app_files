@@ -24,6 +24,7 @@
     "studio-archive"
   ],
   "shared_services": [
+    "managed-python-runtime",
     "plugin-update-check",
     "plugin-feedback"
   ],

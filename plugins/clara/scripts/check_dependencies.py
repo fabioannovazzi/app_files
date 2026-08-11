@@ -5,13 +5,14 @@ from __future__ import annotations
 import argparse
 import importlib.util
 import logging
+import os
 import re
 import subprocess
-import sys
 from collections.abc import Sequence
 from pathlib import Path
 
 from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
+from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
 
 __all__ = [
     "check_dependencies",
@@ -259,6 +260,7 @@ def main(argv: list[str] | None = None) -> int:
         choices=COMPONENTS,
         help="Delegate dependency checks to an embedded Clara component.",
     )
+    parser.add_argument("--managed-verify", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument(
         "--requirements",
         type=Path,
@@ -296,14 +298,44 @@ def main(argv: list[str] | None = None) -> int:
             delegated_args.extend(("--requirements", str(requirement)))
         if args.include_optional:
             delegated_args.append("--include-optional")
+        ready, target, detail = ensure_runtime(plugin_root(), args.module)
+        if not ready:
+            LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+            return 1
         completed = subprocess.run(
-            [sys.executable, str(checker), *delegated_args],
+            [str(runtime_python(target)), str(checker), *delegated_args],
             cwd=root,
+            env=runtime_environment(target),
             check=False,
         )
         return completed.returncode
     if remaining:
         parser.error(f"unrecognized arguments: {' '.join(remaining)}")
+    if not args.managed_verify and not os.environ.get(
+        "MPARANZA_MANAGED_RUNTIME_VERIFY"
+    ):
+        ready, target, detail = ensure_runtime(plugin_root())
+        if not ready:
+            LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+            return 1
+        delegated_args = ["--managed-verify"]
+        for requirement in args.requirements or []:
+            delegated_args.extend(("--requirements", str(requirement)))
+        if args.include_optional:
+            delegated_args.append("--include-optional")
+        for input_path in args.input or []:
+            delegated_args.extend(("--input", str(input_path)))
+        completed = subprocess.run(
+            [
+                str(runtime_python(target)),
+                str(Path(__file__).resolve()),
+                *delegated_args,
+            ],
+            cwd=plugin_root(),
+            env=runtime_environment(target),
+            check=False,
+        )
+        return completed.returncode
     ocr_required = input_requires_ocr(args.input or [])
     if ocr_required:
         activate_ocr_runtime(plugin_root() / "requirements-ocr.txt")

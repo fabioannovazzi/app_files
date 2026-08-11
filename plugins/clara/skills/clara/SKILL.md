@@ -465,9 +465,20 @@ Optional:
 python scripts/check_dependencies.py
 ```
 
-If dependencies are missing, install from `requirements.txt` only when the
-environment allows it. Otherwise explain which dependency is missing and which
-output is affected.
+This command installs Clara's published core requirements into a fingerprinted,
+user-scoped managed virtual environment only when it is absent, invalid, or no
+longer matches the requirements or Python platform. It reuses a ready environment
+across Codex restarts. Run subsequent core helper commands through:
+
+```bash
+python scripts/managed_python_runtime.py run scripts/<helper>.py <arguments>
+```
+
+For a delegated component, use `python scripts/managed_python_runtime.py
+--module <component> run scripts/<helper>.py <arguments>` so its requirements
+stay in a separate persistent virtual environment. These managed forms supersede the shorter
+standalone `python scripts/...` examples below. Do not run `pip install`
+directly.
 
 Whenever the user supplies a PDF, image, or folder that may contain either,
 run the input-aware preflight:
