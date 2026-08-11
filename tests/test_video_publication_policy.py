@@ -15,6 +15,13 @@ SETUP_IDS = {
     "de": "1LJCCTxGL_8",
     "es": "RKcy1G79RAs",
 }
+SETUP_LABELS = {
+    "it": "Collega ChatGPT al computer con Codex",
+    "en": "Connect ChatGPT to your computer with Codex",
+    "fr": "Connectez ChatGPT à votre ordinateur avec Codex",
+    "de": "ChatGPT mit Codex mit Ihrem Computer verbinden",
+    "es": "Conecta ChatGPT al ordenador con Codex",
+}
 BAD_SETUP_IDS = {"XnxtkNGecqc", "2-jQCy1aQwA", "Jj8ENI1D8Eg", "3fseEPtIAG8"}
 ENGLISH_OUTWARD_IDS = {
     "3zvFm3fGdQ8",
@@ -135,11 +142,15 @@ def test_setup_guides_use_only_verified_localized_youtube_ids() -> None:
     clara_page = (STATIC_ROOT / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
-    combined = f"{vera_page}\n{clara_page}"
+    lucia_page = (STATIC_ROOT / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    combined = f"{vera_page}\n{clara_page}\n{lucia_page}"
 
     for youtube_id in SETUP_IDS.values():
         assert youtube_id in vera_page
         assert youtube_id in clara_page
+        assert youtube_id in lucia_page
     assert SETUP_IDS["es"] in combined
     assert BAD_SETUP_IDS.isdisjoint(set(re.findall(r"[\w-]{11}", combined)))
 
@@ -176,26 +187,8 @@ def test_vera_hero_consolidates_installation_and_localized_setup_video() -> None
     assert 'document.getElementById("vera-hero-install-video-link")' not in vera_page
     for language, youtube_id in SETUP_IDS.items():
         assert f'{language}: {{ id: "{youtube_id}",' in vera_page
-    assert (
-        '"install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex"'
-        in vera_page
-    )
-    assert (
-        '"install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex"'
-        in vera_page
-    )
-    assert (
-        '"install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex"'
-        in vera_page
-    )
-    assert (
-        '"install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex"'
-        in vera_page
-    )
-    assert (
-        '"install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex"'
-        in vera_page
-    )
+    for label in SETUP_LABELS.values():
+        assert f'"install.video.title": "{label}"' in vera_page
 
 
 def test_clara_hero_consolidates_installation_and_localized_setup_video() -> None:
@@ -234,26 +227,17 @@ def test_clara_hero_consolidates_installation_and_localized_setup_video() -> Non
     ) in clara_page
     for language, youtube_id in SETUP_IDS.items():
         assert f'{language}: {{ id: "{youtube_id}",' in clara_page
-    assert (
-        '"install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex"'
-        in clara_page
+    for label in SETUP_LABELS.values():
+        assert f'"install.video.title": "{label}"' in clara_page
+
+
+def test_lucia_uses_generic_localized_setup_video_labels() -> None:
+    lucia_page = (STATIC_ROOT / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
     )
-    assert (
-        '"install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex"'
-        in clara_page
-    )
-    assert (
-        '"install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex"'
-        in clara_page
-    )
-    assert (
-        '"install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex"'
-        in clara_page
-    )
-    assert (
-        '"install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex"'
-        in clara_page
-    )
+
+    for label in SETUP_LABELS.values():
+        assert f'"install.video.title": "{label}"' in lucia_page
 
 
 def test_spanish_catalog_uses_all_native_outward_videos_without_english_fallback() -> (

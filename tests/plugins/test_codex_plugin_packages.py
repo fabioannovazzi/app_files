@@ -3599,7 +3599,7 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
         "Più informazione del post, oppure niente carosello.",
         "Fonte pubblica: autorità · atto · data",
         "Il formato appartiene allo Studio.",
-        "Creative Production può alzare il livello estetico. Non può cambiare i fatti.",
+        "La direzione visiva resta subordinata ai fatti.",
         "Il commercialista decide",
     ):
         assert required_copy in section
@@ -3628,7 +3628,7 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
         "Desktop e telefono",
         "L’identità resta dello Studio.",
         "Non basta un mock-up",
-        "Sites può costruire e ospitare la versione approvata.",
+        "Design, costruzione e pubblicazione restano nello stesso percorso controllato.",
         "Il commercialista decide",
     ):
         assert required_copy in section
@@ -4077,8 +4077,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Clara",
         "AI companion for consultants",
         "Assistente AI per consulenti",
-        "Clara works with you in ChatGPT Work and Codex, or in Claude Cowork.",
-        "Clara lavora con te in ChatGPT Work e Codex oppure in Claude Cowork.",
+        "A specialist plugin for presentations and ongoing project work.",
+        "Un plugin specialistico per creare presentazioni e dare continuità al lavoro sui progetti.",
         "Create or correct a presentation in your corporate style",
         "Crea o correggi una presentazione nel tuo stile aziendale",
         "Choose the deck format",
@@ -4087,8 +4087,6 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Apri la cartella del progetto e descrivi ciò che ti serve",
         "The project is not just a presentation",
         "Il progetto non è solo una presentazione",
-        "Clara supports commercial due-diligence preparation—market, customer, product, competitive, and operating evidence.",
-        "Clara supporta la preparazione della due diligence commerciale: evidenze di mercato, clienti, prodotti, concorrenza e attività operative.",
         "Interviews, documents, and data analysis",
         "Interviste, documenti e analisi dati",
         "Conduct an interview with a dedicated link",
@@ -4099,8 +4097,8 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Dalle fonti al documento da rivedere",
         "From data to a clear answer",
         "Dai dati a una risposta chiara",
-        "Vera and Clara follow the same two-category policy.",
-        "Vera e Clara seguono la stessa regola con due categorie.",
+        "Clara, Vera and Lucia follow the same two-category data policy.",
+        "Clara, Vera e Lucia seguono la stessa regola con due categorie.",
         "Retail data and reviewed mappings use a Mparanza-hosted service",
         "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
         "No separate API key is required; model work uses your existing ChatGPT plan.",
@@ -4348,48 +4346,48 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
         "chatgpt_plan",
         "additional_recipient",
         "hosted_boundary",
-        "prompt_documentation",
+        "hosted_service_detail",
     ),
     (
         (
-            "Vera and Clara follow the same two-category policy.",
+            "Clara, Vera and Lucia follow the same two-category data policy.",
             "do not automatically anonymise data",
             "user’s existing ChatGPT plan",
             "do not send client files, prompts, or model-context content to Mparanza",
             "A separate processing boundary",
-            "There is no prompt-by-prompt documentation.",
+            "The data-handling page explains access, retention and deletion for each hosted service.",
         ),
         (
-            "Vera e Clara seguono la stessa regola con due categorie.",
+            "Clara, Vera e Lucia seguono la stessa regola con due categorie.",
             "non anonimizzano automaticamente i dati",
             "piano ChatGPT già utilizzato dall'utente",
             "non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello",
             "Un confine di trattamento separato",
-            "Non esiste documentazione prompt per prompt.",
+            "La pagina sulla gestione dei dati spiega accesso, conservazione e cancellazione per ogni servizio ospitato.",
         ),
         (
-            "Vera et Clara suivent la même règle en deux catégories.",
+            "Clara, Vera et Lucia suivent la même règle en deux catégories.",
             "n'anonymisent pas automatiquement les données",
             "l'offre ChatGPT existante de l'utilisateur",
             "n'envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle",
             "Un périmètre de traitement distinct",
-            "Il n'y a pas de documentation prompt par prompt.",
+            "La page sur le traitement des données explique l’accès, la conservation et la suppression pour chaque service hébergé.",
         ),
         (
-            "Für Vera und Clara gilt dieselbe Regel mit zwei Kategorien.",
+            "Für Clara, Vera und Lucia gilt dieselbe Regel mit zwei Kategorien.",
             "anonymisieren Daten nicht automatisch",
             "bestehenden ChatGPT-Tarif des Nutzers",
             "senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza",
             "Eine separate Verarbeitungsgrenze",
-            "Eine Dokumentation für jeden Prompt gibt es nicht.",
+            "Die Seite zur Datenverarbeitung erläutert Zugriff, Aufbewahrung und Löschung für jeden gehosteten Dienst.",
         ),
         (
-            "Vera y Clara siguen la misma política de dos categorías.",
+            "Clara, Vera y Lucia siguen la misma política de dos categorías.",
             "no anonimizan los datos automáticamente",
             "plan de ChatGPT que ya utiliza el usuario",
             "no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo",
             "Un límite de tratamiento separado",
-            "No existe documentación prompt por prompt.",
+            "La página sobre el tratamiento de datos explica el acceso, la conservación y la eliminación de cada servicio alojado.",
         ),
     ),
 )
@@ -4399,7 +4397,7 @@ def test_clara_public_page_localizes_two_category_data_policy(
     chatgpt_plan: str,
     additional_recipient: str,
     hosted_boundary: str,
-    prompt_documentation: str,
+    hosted_service_detail: str,
 ) -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
@@ -4411,7 +4409,7 @@ def test_clara_public_page_localizes_two_category_data_policy(
         chatgpt_plan,
         additional_recipient,
         hosted_boundary,
-        prompt_documentation,
+        hosted_service_detail,
     ):
         assert text in page
 
@@ -4936,6 +4934,73 @@ def test_homepage_product_propositions_remain_stable_when_skills_change(
 
     # These are product propositions, not a live inventory of installed skills.
     assert {group["id"]: group["lead"] for group in groups} == expected_leads
+
+
+@pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
+def test_product_pages_use_the_stable_homepage_proposition_for_hero_and_metadata(
+    lang: str,
+) -> None:
+    _restore_application_import_path()
+
+    from modules.hosted_services import api as pdp_api
+
+    groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
+
+    for group in groups:
+        page = (ROOT / "static" / "shared" / group["id"] / "index.html").read_text(
+            encoding="utf-8"
+        )
+        lead = group["lead"]
+        assert f'"hero.lead": "{lead}"' in page
+        assert f'"meta.description": "{lead}"' in page
+
+
+@pytest.mark.parametrize("product", ("clara", "vera", "lucia"))
+def test_product_pages_hide_internal_implementation_language(product: str) -> None:
+    page = (ROOT / "static" / "shared" / product / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for internal_phrase in (
+        "optimized_prompt.md",
+        "source_domains_comma.txt",
+        "owner-only",
+        "append-only",
+        "schema rigoroso",
+        "hash ricalcolabili",
+        "Implementato e testato",
+        "Da provare nel pilot",
+        "Giudizio anti-slop",
+        "Si approvano i byte finali",
+        "canonical implementations",
+        "implementazioni canoniche",
+        "registered, reviewable specialist legal functions",
+        "funzioni legali specialistiche registrate",
+        "Creative Production può",
+        "Design skills refine",
+        "Le skill di design",
+        "prompt-by-prompt documentation",
+        "documentazione prompt per prompt",
+    ):
+        assert internal_phrase.casefold() not in page.casefold()
+
+
+@pytest.mark.parametrize("product", ("clara", "vera", "lucia"))
+def test_product_pages_name_all_three_products_in_shared_data_copy(
+    product: str,
+) -> None:
+    page = (ROOT / "static" / "shared" / product / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for localized_names in (
+        "Clara, Vera and Lucia",
+        "Clara, Vera e Lucia",
+        "Clara, Vera et Lucia",
+        "Clara, Vera und Lucia",
+        "Clara, Vera y Lucia",
+    ):
+        assert localized_names in page
 
 
 @pytest.mark.parametrize(

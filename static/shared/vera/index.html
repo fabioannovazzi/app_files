@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
+  <meta name="description" content="Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali, siti di studio e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.">
+  <meta property="og:description" content="Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -545,43 +545,6 @@
     .bandi-step h4 { margin: 0 0 10px; font-size: 1.08rem; line-height: 1.2; }
     .bandi-step p { max-width: 38ch; color: var(--blue); font-size: 0.94rem; }
 
-    .bandi-proof { margin-top: clamp(64px, 9vw, 104px); }
-    .bandi-proof__head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.8fr) minmax(320px, 1.2fr);
-      gap: clamp(32px, 8vw, 112px);
-      align-items: end;
-      margin-bottom: 28px;
-    }
-    .bandi-proof__head h3 { font-size: clamp(1.7rem, 3.2vw, 2.7rem); }
-    .bandi-proof__head p { max-width: 58ch; color: var(--blue); }
-    .bandi-proof__ledger { border-top: 2px solid var(--navy); }
-    .bandi-proof__row {
-      min-height: 100px;
-      padding-block: 22px;
-      display: grid;
-      grid-template-columns: minmax(190px, 0.65fr) minmax(0, 1.35fr) minmax(150px, 0.42fr);
-      gap: 28px;
-      align-items: center;
-      border-bottom: 1px solid var(--cyan);
-    }
-    .bandi-proof__row h4 { margin: 0; font-size: 1rem; }
-    .bandi-proof__row p { color: var(--blue); font-size: 0.92rem; }
-    .bandi-proof__status {
-      justify-self: end;
-      display: inline-flex;
-      gap: 10px;
-      align-items: center;
-      color: var(--navy);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .bandi-proof__status::before { width: 8px; height: 8px; background: var(--blue); content: ""; }
-    .bandi-proof__status--pilot { color: var(--blue); }
-    .bandi-proof__status--pilot::before { background: transparent; border: 1px solid var(--blue); }
-
     .bandi-boundary {
       margin-top: clamp(52px, 8vw, 84px);
       display: grid;
@@ -1113,9 +1076,6 @@
       .bandi-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .bandi-step:not(:nth-child(3n + 1)) { padding-left: 0; border-left: 0; }
       .bandi-step:nth-child(even) { padding-left: 28px; border-left: 1px solid var(--cyan); }
-      .bandi-proof__head { grid-template-columns: 1fr; gap: 20px; align-items: start; }
-      .bandi-proof__row { grid-template-columns: minmax(170px, 0.58fr) minmax(0, 1.42fr); }
-      .bandi-proof__status { grid-column: 2; justify-self: start; }
       .comms-decision { grid-template-columns: 1fr; }
       .comms-decision__thesis { min-height: 0; padding-right: 0; border-right: 0; border-bottom: 1px solid var(--cyan); }
       .comms-outcomes { padding-left: 0; }
@@ -1181,8 +1141,6 @@
       .bandi-step,
       .bandi-step:nth-child(even) { min-height: 0; padding: 26px 0 30px; border-left: 0; }
       .bandi-step__number { margin-bottom: 28px; }
-      .bandi-proof__row { grid-template-columns: 1fr; gap: 10px; align-items: start; }
-      .bandi-proof__status { grid-column: 1; justify-self: start; margin-top: 4px; }
       .bandi-boundary { grid-template-columns: 1fr; }
       .bandi-boundary article,
       .bandi-boundary article + article { padding: 28px 0 32px; border-left: 0; }
@@ -1284,7 +1242,7 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">Assistente AI per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Prepara Plan, controlli, riconciliazioni, analisi degli scostamenti, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.</p>
+        <p class="lead" data-i18n="hero.lead">Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
             <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
@@ -1300,7 +1258,7 @@
               <p class="install-option__note" data-i18n="install.coworkHelp">Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.</p>
             </div>
           </div>
-          <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Da ChatGPT sul telefono a Vera o Clara in Codex" data-i18n-aria-label="install.video.title">
+          <a class="hero-install__video" id="vera-install-video-link" href="https://youtu.be/yAnkIabnQ1M" target="_blank" rel="noopener noreferrer" aria-label="Collega ChatGPT al computer con Codex" data-i18n-aria-label="install.video.title">
             <span class="overview-video__thumb" aria-hidden="true">
               <img id="vera-install-video-thumbnail" src="https://i.ytimg.com/vi/yAnkIabnQ1M/maxresdefault.jpg" alt="" width="1280" height="720" loading="eager">
               <span class="video-play">▶</span>
@@ -1320,7 +1278,7 @@
           <span class="section-index" data-i18n="core.index">Cosa può fare Vera</span>
           <h2 data-i18n="core.title">Scegli il lavoro da fare.</h2>
         </div>
-        <p data-i18n="core.copy">Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.</p>
+        <p data-i18n="core.copy">Ogni funzione parte dal materiale disponibile e prepara un risultato rivedibile.</p>
       </div>
 
       <div class="workstreams">
@@ -1540,7 +1498,7 @@
       <div class="comms-journey">
         <div class="comms-subhead">
           <h3 data-i18n="communication.journey.title">Dalla fonte alla comunicazione, senza scorciatoie.</h3>
-          <p data-i18n="communication.journey.copy">Il giudizio editoriale resta al modello; registri, versioni, rendering e approvazioni restano verificabili.</p>
+          <p data-i18n="communication.journey.copy">Vera propone il taglio; fonti, versioni e approvazioni restano visibili lungo tutto il percorso.</p>
         </div>
         <ol class="comms-steps">
           <li class="comms-step">
@@ -1548,16 +1506,16 @@
             <p data-i18n="communication.steps.sources.copy">Vera conserva il documento esatto e distingue la fonte primaria dal commento.</p>
           </li>
           <li class="comms-step">
-            <h4 data-i18n="communication.steps.claims.title">Claim assicurati</h4>
+            <h4 data-i18n="communication.steps.claims.title">Affermazioni verificate</h4>
             <p data-i18n="communication.steps.claims.copy">Ogni affermazione separa supporto della fonte, ragionamento, incertezza e conclusione del commercialista.</p>
           </li>
           <li class="comms-step">
-            <h4 data-i18n="communication.steps.editor.title">Giudizio anti-slop</h4>
-            <p data-i18n="communication.steps.editor.copy">Un assessore distinto cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.</p>
+            <h4 data-i18n="communication.steps.editor.title">Controllo editoriale indipendente</h4>
+            <p data-i18n="communication.steps.editor.copy">Una seconda revisione cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.</p>
           </li>
           <li class="comms-step">
             <h4 data-i18n="communication.steps.review.title">Revisione professionale</h4>
-            <p data-i18n="communication.steps.review.copy">Il professionista rivede contenuto, grafica e pacchetto finale legati alle versioni esatte.</p>
+            <p data-i18n="communication.steps.review.copy">Il professionista rivede contenuto e grafica, poi approva la versione finale.</p>
           </li>
         </ol>
       </div>
@@ -1616,23 +1574,23 @@
       </div>
 
       <div class="comms-assurance">
-        <h3 data-i18n="communication.assurance.title">Quattro modi per non produrre slop.</h3>
+        <h3 data-i18n="communication.assurance.title">Quattro controlli prima di pubblicare.</h3>
         <div class="comms-assurance__ledger">
           <article class="comms-assurance__row">
-            <h4 data-i18n="communication.assurance.claims.title">Ogni claim deve reggere</h4>
-            <p data-i18n="communication.assurance.claims.copy">Una fonte registrata non basta: devono reggere identità, supporto semantico e ragionamento.</p>
+            <h4 data-i18n="communication.assurance.claims.title">Ogni affermazione deve reggere</h4>
+            <p data-i18n="communication.assurance.claims.copy">Una fonte non basta: devono essere solidi il collegamento alla fonte, il ragionamento e il limite della conclusione.</p>
           </article>
           <article class="comms-assurance__row">
-            <h4 data-i18n="communication.assurance.editor.title">Un altro modello fa l’editor</h4>
-            <p data-i18n="communication.assurance.editor.copy">Non difende la bozza: la confronta con una pubblicazione firmata da un professionista esigente.</p>
+            <h4 data-i18n="communication.assurance.editor.title">Una revisione indipendente</h4>
+            <p data-i18n="communication.assurance.editor.copy">La bozza viene riletta con lo standard di una pubblicazione firmata da un professionista esigente.</p>
           </article>
           <article class="comms-assurance__row">
             <h4 data-i18n="communication.assurance.visual.title">La grafica si guadagna il posto</h4>
             <p data-i18n="communication.assurance.visual.copy">Ogni slide deve aggiungere informazione o struttura; dividere il post in pagine non è valore.</p>
           </article>
           <article class="comms-assurance__row">
-            <h4 data-i18n="communication.assurance.package.title">Si approvano i byte finali</h4>
-            <p data-i18n="communication.assurance.package.copy">Testo, immagini, PDF e HTML vengono rivisti nelle versioni esatte prima di qualsiasi invio o pubblicazione.</p>
+            <h4 data-i18n="communication.assurance.package.title">Si approva la versione finale</h4>
+            <p data-i18n="communication.assurance.package.copy">Il professionista rivede la versione che sarà effettivamente inviata o pubblicata.</p>
           </article>
         </div>
       </div>
@@ -1640,15 +1598,15 @@
       <aside class="comms-creative">
         <p class="comms-creative__kicker" data-i18n="communication.creative.kicker">Direzione visiva opzionale</p>
         <div>
-          <h3 data-i18n="communication.creative.title">Creative Production può alzare il livello estetico. Non può cambiare i fatti.</h3>
-          <p data-i18n="communication.creative.copy">Dopo l’accettazione del contenuto, propone quattro-sei direzioni. Il professionista ne sceglie una; Vera la traduce nel sistema dello Studio e ricostruisce testo, fonti e logo in modo esatto.</p>
+          <h3 data-i18n="communication.creative.title">La direzione visiva resta subordinata ai fatti.</h3>
+          <p data-i18n="communication.creative.copy">Dopo l’approvazione del contenuto, il professionista sceglie la direzione visiva e Vera la applica senza alterare testo, fonti o identità dello Studio.</p>
         </div>
       </aside>
 
       <div class="comms-boundary">
         <article>
           <h3 data-i18n="communication.boundary.vera.title">Vera prepara</h3>
-          <p data-i18n="communication.boundary.vera.copy">Legge le fonti, propone il taglio, assicura i claim, adatta i canali e costruisce il pacchetto rivedibile.</p>
+          <p data-i18n="communication.boundary.vera.copy">Legge le fonti, propone il taglio, verifica le affermazioni e adatta il materiale ai canali scelti.</p>
         </article>
         <article>
           <h3 data-i18n="communication.boundary.professional.title">Il commercialista decide</h3>
@@ -1691,7 +1649,7 @@
       <div class="comms-journey">
         <div class="comms-subhead">
           <h3 data-i18n="website.journey.title">Dai materiali al sito, con gli stessi controlli.</h3>
-          <p data-i18n="website.journey.copy">Il giudizio su contenuti e design resta al modello; evidenze, file, validazioni, rendering e approvazioni restano verificabili.</p>
+          <p data-i18n="website.journey.copy">Vera propone contenuti e design; fonti, versioni, controlli e approvazioni restano visibili lungo tutto il percorso.</p>
         </div>
         <ol class="comms-steps">
           <li class="comms-step">
@@ -1708,7 +1666,7 @@
           </li>
           <li class="comms-step">
             <h4 data-i18n="website.steps.review.title">Desktop e telefono</h4>
-            <p data-i18n="website.steps.review.copy">Controlla la pagina resa davvero, le interazioni, l’overflow, le immagini e gli errori della console a entrambe le larghezze.</p>
+            <p data-i18n="website.steps.review.copy">Controlla il sito funzionante su desktop e telefono: pagine, interazioni, immagini e testi devono essere completi e leggibili.</p>
           </li>
         </ol>
       </div>
@@ -1746,15 +1704,15 @@
           </article>
           <article class="comms-assurance__row">
             <h4 data-i18n="website.assurance.working.title">Non basta un mock-up</h4>
-            <p data-i18n="website.assurance.working.copy">Link, asset, titoli, testi alternativi, identificatori e metadati vengono controllati nel sito funzionante.</p>
+            <p data-i18n="website.assurance.working.copy">Link, immagini, titoli, testi alternativi e metadati vengono controllati nel sito funzionante.</p>
           </article>
           <article class="comms-assurance__row">
-            <h4 data-i18n="website.assurance.responsive.title">Due viewport reali</h4>
-            <p data-i18n="website.assurance.responsive.copy">La qualità viene giudicata sul rendering desktop e telefono; un solo screenshot non dimostra che il sito sia pronto.</p>
+            <h4 data-i18n="website.assurance.responsive.title">Desktop e telefono</h4>
+            <p data-i18n="website.assurance.responsive.copy">La qualità viene controllata su desktop e telefono; una sola immagine non dimostra che il sito sia pronto.</p>
           </article>
           <article class="comms-assurance__row">
-            <h4 data-i18n="website.assurance.package.title">Si approvano i file esatti</h4>
-            <p data-i18n="website.assurance.package.copy">Preview e release restano legate alle versioni validate; una modifica rende superata la revisione precedente.</p>
+            <h4 data-i18n="website.assurance.package.title">Si approva la versione da pubblicare</h4>
+            <p data-i18n="website.assurance.package.copy">La revisione vale per la versione controllata; ogni modifica richiede un nuovo controllo.</p>
           </article>
         </div>
       </div>
@@ -1762,8 +1720,8 @@
       <aside class="comms-creative">
         <p class="comms-creative__kicker" data-i18n="website.tools.kicker">Competenze coordinate</p>
         <div>
-          <h3 data-i18n="website.tools.title">Le skill di design curano l’esecuzione. Sites può costruire e ospitare la versione approvata.</h3>
-          <p data-i18n="website.tools.copy">Vera mantiene il filo tra fonti, brief, qualità e decisioni. Sites entra soltanto quando è la destinazione scelta; il passaggio conserva la versione esatta e la prova della pubblicazione.</p>
+          <h3 data-i18n="website.tools.title">Design, costruzione e pubblicazione restano nello stesso percorso controllato.</h3>
+          <p data-i18n="website.tools.copy">Vera mantiene il filo tra fonti, brief, qualità e decisioni fino alla destinazione scelta e alla conferma della pubblicazione.</p>
         </div>
       </aside>
 
@@ -1883,14 +1841,14 @@
         <span>Fonti ufficiali e relativi atti</span>
         <span>Controlli registrati e datati</span>
         <span>Decisioni professionali tracciate</span>
-        <span>Dossier e handoff verificabili</span>
+        <span>Dossier verificabili</span>
       </div>
 
       <div class="bandi-stages">
         <article class="bandi-stage">
           <span class="bandi-stage__index">Fase A · Radar dello studio</span>
           <h3>Trova ciò che merita attenzione.</h3>
-          <p>Costruisce profili agevolativi con riferimenti cliente opachi, propone un piano di fonti ufficiali, registra i controlli realmente eseguiti e confronta opportunità e imprese in entrambe le direzioni.</p>
+          <p>Costruisce profili separati per cliente, propone un piano di fonti ufficiali, registra i controlli realmente eseguiti e confronta opportunità e imprese in entrambe le direzioni.</p>
           <p class="bandi-stage__sources"><strong>Evidenze:</strong> visura e dati societari selezionati, territorio, ATECO, dimensione, investimenti previsti, proprietà, personale, energia, digitalizzazione, export e altri fatti pertinenti, ciascuno con data e provenienza.</p>
           <p class="bandi-stage__output"><strong>Output</strong><span>Opportunità da riesaminare, dati mancanti, contraddizioni, complessità e prossima azione proposta.</span></p>
         </article>
@@ -1899,20 +1857,20 @@
           <h3>Prepara l’istruttoria completa.</h3>
           <p>Importa l’opportunità selezionata nel fascicolo del cliente e ricostruisce requisiti, esclusioni, spese, documenti, moduli, testi narrativi e controlli incrociati.</p>
           <p class="bandi-stage__sources"><strong>Evidenze:</strong> bando e atti modificativi, allegati, FAQ ufficiali, moduli, visure, bilanci, preventivi, dichiarazioni e informazioni di progetto. Le FAQ chiariscono: non sostituiscono silenziosamente un atto formale.</p>
-          <p class="bandi-stage__output"><strong>Output</strong><span>Matrice ready / missing / verify / not applicable, esito separato, simulazione del controllo dell’ente e mappa manuale del portale.</span></p>
+          <p class="bandi-stage__output"><strong>Output</strong><span>Matrice degli elementi pronti, mancanti, da verificare o non applicabili, esito separato, simulazione del controllo dell’ente e mappa manuale del portale.</span></p>
         </article>
       </div>
 
       <div class="bandi-pipeline">
         <div class="bandi-pipeline__head">
           <h3>Un solo filo, sei passaggi controllabili.</h3>
-          <p>Il modello interpreta e propone. Il professionista conferma. Il codice conserva ricevute, riferimenti, calcoli e revisioni.</p>
+          <p>Vera propone, il professionista conferma e il percorso conserva fonti, calcoli e revisioni.</p>
         </div>
         <div class="bandi-steps">
           <article class="bandi-step">
             <span class="bandi-step__number" aria-hidden="true">01</span>
             <h4>Qualifica il profilo</h4>
-            <p>Ogni fatto osservato in un documento deve chiudersi su una ricevuta dello stesso cliente; ciò che manca rimane mancante.</p>
+            <p>Ogni fatto osservato in un documento resta collegato alla fonte dello stesso cliente; ciò che manca rimane mancante.</p>
           </article>
           <article class="bandi-step">
             <span class="bandi-step__number" aria-hidden="true">02</span>
@@ -1938,40 +1896,6 @@
             <span class="bandi-step__number" aria-hidden="true">06</span>
             <h4>Consegna alla revisione</h4>
             <p>Mostra punti pronti, mancanti, da verificare e non applicabili. Firma, dichiarazioni, accesso e invio restano alla persona autorizzata.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="bandi-proof">
-        <div class="bandi-proof__head">
-          <h3>Le evidenze della funzione, senza scorciatoie.</h3>
-          <p>I controlli strutturali dimostrano che il workflow conserva confini e tracciabilità. Non dimostrano da soli la correttezza giuridica o la capacità di trovare ogni misura: questi risultati richiedono casi pilota riesaminati da professionisti.</p>
-        </div>
-        <div class="bandi-proof__ledger">
-          <article class="bandi-proof__row">
-            <h4>Spazio di lavoro privato</h4>
-            <p>Autorizzazione esplicita, percorso vincolato, file owner-only e blocco delle cartelle Git o pubblicate.</p>
-            <span class="bandi-proof__status">Implementato e testato</span>
-          </article>
-          <article class="bandi-proof__row">
-            <h4>Isolamento delle evidenze</h4>
-            <p>Ricevute con hash, chiusura dei riferimenti e rifiuto di evidenze o facet appartenenti a un altro cliente.</p>
-            <span class="bandi-proof__status">Implementato e testato</span>
-          </article>
-          <article class="bandi-proof__row">
-            <h4>Revisioni e modifiche</h4>
-            <p>Eventi append-only per profili e opportunità, invalidazione degli abbinamenti dipendenti e review non più valide dopo un cambiamento.</p>
-            <span class="bandi-proof__status">Implementato e testato</span>
-          </article>
-          <article class="bandi-proof__row">
-            <h4>Passaggio al fascicolo cliente</h4>
-            <p>Handoff limitato al cliente selezionato, schema rigoroso, hash ricalcolabili e rifiuto delle manomissioni all’importazione.</p>
-            <span class="bandi-proof__status">Implementato e testato</span>
-          </article>
-          <article class="bandi-proof__row">
-            <h4>Qualità sul lavoro reale</h4>
-            <p>Precisione delle opportunità, misure mancate, falsi abbinamenti, tempestività, override e calibrazione economica devono essere misurati su casi professionali rappresentativi.</p>
-            <span class="bandi-proof__status bandi-proof__status--pilot">Da provare nel pilot</span>
           </article>
         </div>
       </div>
@@ -2011,7 +1935,7 @@
         <article class="assurance-step">
           <span class="assurance-step__number" aria-hidden="true">03</span>
           <h3 data-i18n="assurance.code.title">Il codice esegue</h3>
-          <p data-i18n="assurance.code.copy">Su input qualificati applica calcoli esatti, campionamento, relazioni, controlli, ricevute e replay. Un layout non qualificato non produce dati plausibili.</p>
+          <p data-i18n="assurance.code.copy">Su materiali confermati applica calcoli, campionamenti e controlli riproducibili. Dati ambigui o incompleti non vengono trasformati in risultati plausibili.</p>
         </article>
       </div>
 
@@ -2101,10 +2025,10 @@
           <span class="section-index" data-i18n="privacy.index">Dati · confini reali</span>
           <h2 data-i18n="privacy.title">Vera lavora sui dati reali del cliente.</h2>
         </div>
-        <p data-i18n="privacy.copy">Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.</p>
+        <p data-i18n="privacy.copy">Clara, Vera e Lucia non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.</p>
       </div>
 
-      <p class="data-position__statement" data-i18n="privacy.statement">I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. I workflow ordinari non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.</p>
+      <p class="data-position__statement" data-i18n="privacy.statement">I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. Le funzioni ordinarie non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.</p>
 
       <div class="data-position__facts">
         <article class="data-position__fact">
@@ -2130,17 +2054,17 @@
         <div class="data-routes__grid">
           <article class="data-route">
             <h4 data-i18n="privacy.routes.local.title">Normali funzioni dentro Codex</h4>
-            <p data-i18n="privacy.routes.local.copy">Ogni workflow viene mappato quando viene aggiunto o quando cambia: che cosa resta normalmente locale e che cosa può leggere Codex. Non si crea una registrazione per ogni prompt.</p>
+            <p data-i18n="privacy.routes.local.copy">Per ogni funzione, la pagina indica che cosa resta normalmente sul computer e che cosa può leggere l’ambiente AI scelto.</p>
           </article>
           <article class="data-route">
             <h4 data-i18n="privacy.routes.hosted.title">Servizi hosted da Mparanza</h4>
-            <p data-i18n="privacy.routes.hosted.copy">Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.</p>
+            <p data-i18n="privacy.routes.hosted.copy">I servizi ospitati da Mparanza hanno un confine separato. La pagina sulla gestione dei dati spiega quali contenuti arrivano a Mparanza e come vengono gestiti. Ricerche, connettori, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno.</p>
           </article>
         </div>
       </div>
 
       <div class="data-position__closing">
-        <p data-i18n="privacy.closing">La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.</p>
+        <p data-i18n="privacy.closing">La stessa regola vale per Clara, Vera e Lucia: per ogni funzione restano visibili il confine di trattamento e i servizi coinvolti.</p>
         <a class="text-link" href="/data-handling?lang=it#data-handling-video" data-compliance-video-link>
           <span data-i18n="privacy.dataLink">Guarda il video sulla gestione dei dati</span>
           <span aria-hidden="true">→</span>
@@ -2166,7 +2090,7 @@
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Vera prepara controlli, riconciliazioni, analisi degli scostamenti, analisi finanziarie, bandi, comunicazioni professionali e fascicoli cliente con fonti qualificate, calcoli esatti e decisioni rivedibili.",
+        "meta.description": "Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
@@ -2179,10 +2103,10 @@
         "language.label": "Lingua",
         "hero.eyebrow": "Assistente AI per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Prepara Plan, controlli, riconciliazioni, analisi degli scostamenti, bandi, comunicazioni professionali, siti di studio, analisi finanziarie, fascicoli cliente e report in cui fonti, calcoli e decisioni restano rivedibili.",
+        "hero.lead": "Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.",
         "core.index": "Cosa può fare Vera",
         "core.title": "Scegli il lavoro da fare.",
-        "core.copy": "Ogni workflow parte dal materiale disponibile e prepara un risultato rivedibile.",
+        "core.copy": "Ogni funzione parte dal materiale disponibile e prepara un risultato rivedibile.",
         "work.index": "Tutte le funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
@@ -2260,15 +2184,15 @@
         "communication.outcomes.silence.title": "Non pubblicare",
         "communication.outcomes.silence.copy": "La novità è ripetitiva, immateriale o non abbastanza sostenuta.",
         "communication.journey.title": "Dalla fonte alla comunicazione, senza scorciatoie.",
-        "communication.journey.copy": "Il giudizio editoriale resta al modello; registri, versioni, rendering e approvazioni restano verificabili.",
+        "communication.journey.copy": "Vera propone il taglio; fonti, versioni e approvazioni restano visibili lungo tutto il percorso.",
         "communication.steps.sources.title": "Fonti scelte",
         "communication.steps.sources.copy": "Vera conserva il documento esatto e distingue la fonte primaria dal commento.",
-        "communication.steps.claims.title": "Claim assicurati",
+        "communication.steps.claims.title": "Affermazioni verificate",
         "communication.steps.claims.copy": "Ogni affermazione separa supporto della fonte, ragionamento, incertezza e conclusione del commercialista.",
-        "communication.steps.editor.title": "Giudizio anti-slop",
-        "communication.steps.editor.copy": "Un assessore distinto cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.",
+        "communication.steps.editor.title": "Controllo editoriale indipendente",
+        "communication.steps.editor.copy": "Una seconda revisione cerca banalità, ripetizioni e valore insufficiente prima che la bozza arrivi allo Studio.",
         "communication.steps.review.title": "Revisione professionale",
-        "communication.steps.review.copy": "Il professionista rivede contenuto, grafica e pacchetto finale legati alle versioni esatte.",
+        "communication.steps.review.copy": "Il professionista rivede contenuto e grafica, poi approva la versione finale.",
         "communication.outputs.index": "Una base · più canali",
         "communication.outputs.title": "Forme davvero diverse. Stessi fatti.",
         "communication.outputs.copy": "Email, articolo, post e visuale condividono gli stessi claim approvati; cambiano struttura, profondità e uso per il lettore.",
@@ -2293,20 +2217,20 @@
         "communication.profile.proposed.basis": "Proposto",
         "communication.profile.proposed.title": "Da Vera",
         "communication.profile.proposed.copy": "Una proposta diventa il nuovo standard soltanto dopo l’approvazione professionale.",
-        "communication.assurance.title": "Quattro modi per non produrre slop.",
-        "communication.assurance.claims.title": "Ogni claim deve reggere",
-        "communication.assurance.claims.copy": "Una fonte registrata non basta: devono reggere identità, supporto semantico e ragionamento.",
-        "communication.assurance.editor.title": "Un altro modello fa l’editor",
-        "communication.assurance.editor.copy": "Non difende la bozza: la confronta con una pubblicazione firmata da un professionista esigente.",
+        "communication.assurance.title": "Quattro controlli prima di pubblicare.",
+        "communication.assurance.claims.title": "Ogni affermazione deve reggere",
+        "communication.assurance.claims.copy": "Una fonte non basta: devono essere solidi il collegamento alla fonte, il ragionamento e il limite della conclusione.",
+        "communication.assurance.editor.title": "Una revisione indipendente",
+        "communication.assurance.editor.copy": "La bozza viene riletta con lo standard di una pubblicazione firmata da un professionista esigente.",
         "communication.assurance.visual.title": "La grafica si guadagna il posto",
         "communication.assurance.visual.copy": "Ogni slide deve aggiungere informazione o struttura; dividere il post in pagine non è valore.",
-        "communication.assurance.package.title": "Si approvano i byte finali",
-        "communication.assurance.package.copy": "Testo, immagini, PDF e HTML vengono rivisti nelle versioni esatte prima di qualsiasi invio o pubblicazione.",
+        "communication.assurance.package.title": "Si approva la versione finale",
+        "communication.assurance.package.copy": "Il professionista rivede la versione che sarà effettivamente inviata o pubblicata.",
         "communication.creative.kicker": "Direzione visiva opzionale",
-        "communication.creative.title": "Creative Production può alzare il livello estetico. Non può cambiare i fatti.",
-        "communication.creative.copy": "Dopo l’accettazione del contenuto, propone quattro-sei direzioni. Il professionista ne sceglie una; Vera la traduce nel sistema dello Studio e ricostruisce testo, fonti e logo in modo esatto.",
+        "communication.creative.title": "La direzione visiva resta subordinata ai fatti.",
+        "communication.creative.copy": "Dopo l’approvazione del contenuto, il professionista sceglie la direzione visiva e Vera la applica senza alterare testo, fonti o identità dello Studio.",
         "communication.boundary.vera.title": "Vera prepara",
-        "communication.boundary.vera.copy": "Legge le fonti, propone il taglio, assicura i claim, adatta i canali e costruisce il pacchetto rivedibile.",
+        "communication.boundary.vera.copy": "Legge le fonti, propone il taglio, verifica le affermazioni e adatta il materiale ai canali scelti.",
         "communication.boundary.professional.title": "Il commercialista decide",
         "communication.boundary.professional.copy": "Conferma la posizione professionale, corregge il contenuto, sceglie destinatari e tempi e autorizza l’eventuale pubblicazione.",
         "communication.action": "Lavora su una comunicazione con Vera",
@@ -2323,7 +2247,7 @@
         "website.outcomes.scope.title": "Progetto separato",
         "website.outcomes.scope.copy": "Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura richiedono un altro perimetro.",
         "website.journey.title": "Dai materiali al sito, con gli stessi controlli.",
-        "website.journey.copy": "Il giudizio su contenuti e design resta al modello; evidenze, file, validazioni, rendering e approvazioni restano verificabili.",
+        "website.journey.copy": "Vera propone contenuti e design; fonti, versioni, controlli e approvazioni restano visibili lungo tutto il percorso.",
         "website.steps.evidence.title": "Materiali selezionati",
         "website.steps.evidence.copy": "Vera conserva le fonti esatte e distingue ciò che ha osservato da ciò che lo Studio ha fornito.",
         "website.steps.brief.title": "Brief esplicito",
@@ -2331,7 +2255,7 @@
         "website.steps.build.title": "Sito funzionante",
         "website.steps.build.copy": "Costruisce pagine semantiche, accessibili nella struttura e semplici da pubblicare, non un’immagine del sito.",
         "website.steps.review.title": "Desktop e telefono",
-        "website.steps.review.copy": "Controlla la pagina resa davvero, le interazioni, l’overflow, le immagini e gli errori della console a entrambe le larghezze.",
+        "website.steps.review.copy": "Controlla il sito funzionante su desktop e telefono: pagine, interazioni, immagini e testi devono essere completi e leggibili.",
         "website.profile.title": "L’identità resta dello Studio.",
         "website.profile.copy": "Ogni scelta di voce o immagine conserva la propria origine. Una proposta di Vera non diventa storia dello Studio.",
         "website.profile.observed.basis": "Osservato",
@@ -2347,14 +2271,14 @@
         "website.assurance.claims.title": "Nessun fatto inventato",
         "website.assurance.claims.copy": "Servizi, qualifiche, persone, risultati, sedi e recapiti devono restare collegati ai materiali selezionati.",
         "website.assurance.working.title": "Non basta un mock-up",
-        "website.assurance.working.copy": "Link, asset, titoli, testi alternativi, identificatori e metadati vengono controllati nel sito funzionante.",
-        "website.assurance.responsive.title": "Due viewport reali",
-        "website.assurance.responsive.copy": "La qualità viene giudicata sul rendering desktop e telefono; un solo screenshot non dimostra che il sito sia pronto.",
-        "website.assurance.package.title": "Si approvano i file esatti",
-        "website.assurance.package.copy": "Preview e release restano legate alle versioni validate; una modifica rende superata la revisione precedente.",
+        "website.assurance.working.copy": "Link, immagini, titoli, testi alternativi e metadati vengono controllati nel sito funzionante.",
+        "website.assurance.responsive.title": "Desktop e telefono",
+        "website.assurance.responsive.copy": "La qualità viene controllata su desktop e telefono; una sola immagine non dimostra che il sito sia pronto.",
+        "website.assurance.package.title": "Si approva la versione da pubblicare",
+        "website.assurance.package.copy": "La revisione vale per la versione controllata; ogni modifica richiede un nuovo controllo.",
         "website.tools.kicker": "Competenze coordinate",
-        "website.tools.title": "Le skill di design curano l’esecuzione. Sites può costruire e ospitare la versione approvata.",
-        "website.tools.copy": "Vera mantiene il filo tra fonti, brief, qualità e decisioni. Sites entra soltanto quando è la destinazione scelta; il passaggio conserva la versione esatta e la prova della pubblicazione.",
+        "website.tools.title": "Design, costruzione e pubblicazione restano nello stesso percorso controllato.",
+        "website.tools.copy": "Vera mantiene il filo tra fonti, brief, qualità e decisioni fino alla destinazione scelta e alla conferma della pubblicazione.",
         "website.boundary.vera.title": "Vera prepara",
         "website.boundary.vera.copy": "Analizza i materiali, propone struttura e sistema visivo, costruisce il sito responsive, lo valida e prepara preview o release.",
         "website.boundary.professional.title": "Il commercialista decide",
@@ -2369,12 +2293,12 @@
         "assurance.professional.title": "Il professionista conferma",
         "assurance.professional.copy": "Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.",
         "assurance.code.title": "Il codice esegue",
-        "assurance.code.copy": "Su input qualificati applica calcoli esatti, campionamento, relazioni, controlli, ricevute e replay. Un layout non qualificato non produce dati plausibili.",
+        "assurance.code.copy": "Su materiali confermati applica calcoli, campionamenti e controlli riproducibili. Dati ambigui o incompleti non vengono trasformati in risultati plausibili.",
         "assurance.closing": "Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.",
         "privacy.index": "Dati · confini reali",
         "privacy.title": "Vera lavora sui dati reali del cliente.",
-        "privacy.copy": "Vera e Clara non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.",
-        "privacy.statement": "I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. I workflow ordinari non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.",
+        "privacy.copy": "Clara, Vera e Lucia non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.",
+        "privacy.statement": "I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. Le funzioni ordinarie non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.",
         "privacy.clientData.title": "Dati del cliente",
         "privacy.clientData.copy": "Se identità, titolarità, fatti fiscali, contabili o previdenziali servono alla revisione, possono entrare nel contesto di Codex.",
         "privacy.local.title": "Elaborazione locale",
@@ -2385,10 +2309,10 @@
         "privacy.secrets.copy": "Password, chiavi API, cookie, token e dati di sessione non devono entrare nei prompt o nei file leggibili da Codex.",
         "privacy.routes.title": "Due categorie di trattamento.",
         "privacy.routes.local.title": "Normali funzioni dentro Codex",
-        "privacy.routes.local.copy": "Ogni workflow viene mappato quando viene aggiunto o quando cambia: che cosa resta normalmente locale e che cosa può leggere Codex. Non si crea una registrazione per ogni prompt.",
+        "privacy.routes.local.copy": "Per ogni funzione, la pagina indica che cosa resta normalmente sul computer e che cosa può leggere l’ambiente AI scelto.",
         "privacy.routes.hosted.title": "Servizi hosted da Mparanza",
-        "privacy.routes.hosted.copy": "Un servizio hosted è un confine separato e viene documentato una volta a livello di servizio. Ricerche, connector, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno; non sono una terza categoria Mparanza.",
-        "privacy.closing": "La stessa regola vale per Vera e Clara: una mappa per workflow, una descrizione per servizio hosted e nessuna documentazione prompt per prompt.",
+        "privacy.routes.hosted.copy": "I servizi ospitati da Mparanza hanno un confine separato. La pagina sulla gestione dei dati spiega quali contenuti arrivano a Mparanza e come vengono gestiti. Ricerche, connettori, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno.",
+        "privacy.closing": "La stessa regola vale per Clara, Vera e Lucia: per ogni funzione restano visibili il confine di trattamento e i servizi coinvolti.",
         "privacy.dataLink": "Guarda il video sulla gestione dei dati",
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
@@ -2400,7 +2324,7 @@
         "install.chatgptHelp": "Apre la pagina di installazione di Vera per ChatGPT Work e Codex.",
         "install.coworkButton": "Scarica per Claude Cowork",
         "install.coworkHelp": "Poi carica il file ZIP da Personalizza → Plugin in Claude Cowork.",
-        "install.video.title": "Da ChatGPT sul telefono a Vera o Clara in Codex",
+        "install.video.title": "Collega ChatGPT al computer con Codex",
         "footer.product": "Vera · Codex per commercialisti",
         "footer.linksLabel": "Informazioni",
         "footer.source": "Codice sorgente",
@@ -2408,7 +2332,7 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "Vera prepares checks, reconciliations, variance analysis, financial analysis, professional communications, client files and reports with qualified sources, exact calculations and reviewable decisions.",
+        "meta.description": "A specialist plugin for client files, accounting checks, reconciliations and reporting.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
@@ -2421,10 +2345,10 @@
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
-        "hero.lead": "Prepare Plans, checks, reconciliations, variance analysis, professional communications, firm websites, financial analysis, client files and reports whose sources, calculations and decisions remain reviewable.",
+        "hero.lead": "A specialist plugin for client files, accounting checks, reconciliations and reporting.",
         "core.index": "What Vera can do",
         "core.title": "Choose the work in front of you.",
-        "core.copy": "Each workflow starts from the available material and prepares a result you can review.",
+        "core.copy": "Each function starts from the available material and prepares a result you can review.",
         "work.index": "All capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
@@ -2502,15 +2426,15 @@
         "communication.outcomes.silence.title": "Do not publish",
         "communication.outcomes.silence.copy": "The development is repetitive, immaterial or insufficiently supported.",
         "communication.journey.title": "From source to communication, without shortcuts.",
-        "communication.journey.copy": "Editorial judgment remains model-led; records, versions, rendering and approvals remain verifiable.",
+        "communication.journey.copy": "Vera proposes the angle; sources, versions and approvals remain visible throughout the process.",
         "communication.steps.sources.title": "Selected sources",
         "communication.steps.sources.copy": "Vera preserves the exact document and distinguishes primary sources from commentary.",
-        "communication.steps.claims.title": "Assured claims",
+        "communication.steps.claims.title": "Verified statements",
         "communication.steps.claims.copy": "Each claim separates source support, reasoning, uncertainty and professional judgment.",
-        "communication.steps.editor.title": "Anti-slop judgment",
-        "communication.steps.editor.copy": "A separate assessor looks for banality, repetition and insufficient value before the draft reaches the firm.",
+        "communication.steps.editor.title": "Independent editorial review",
+        "communication.steps.editor.copy": "A second review looks for banality, repetition and insufficient value before the draft reaches the firm.",
         "communication.steps.review.title": "Professional review",
-        "communication.steps.review.copy": "The professional reviews content, graphics and the final package tied to the exact versions.",
+        "communication.steps.review.copy": "The professional reviews the content and graphics, then approves the final version.",
         "communication.outputs.index": "One basis · multiple channels",
         "communication.outputs.title": "Genuinely different forms. The same facts.",
         "communication.outputs.copy": "Email, article, post and visual share the same approved claims; their structure, depth and use for the reader change.",
@@ -2535,20 +2459,20 @@
         "communication.profile.proposed.basis": "Proposed",
         "communication.profile.proposed.title": "By Vera",
         "communication.profile.proposed.copy": "A proposal becomes the new standard only after professional approval.",
-        "communication.assurance.title": "Four ways not to produce slop.",
-        "communication.assurance.claims.title": "Every claim must hold up",
-        "communication.assurance.claims.copy": "A registered source is not enough: identity, semantic support and reasoning must all hold up.",
-        "communication.assurance.editor.title": "Another model acts as editor",
-        "communication.assurance.editor.copy": "It does not defend the draft; it compares it with a publication signed by a demanding professional.",
+        "communication.assurance.title": "Four checks before publication.",
+        "communication.assurance.claims.title": "Every statement must hold up",
+        "communication.assurance.claims.copy": "A source alone is not enough: the link to the source, the reasoning and the limits of the conclusion must all be sound.",
+        "communication.assurance.editor.title": "An independent review",
+        "communication.assurance.editor.copy": "The draft is reread to the standard of a publication signed by a demanding professional.",
         "communication.assurance.visual.title": "The graphic earns its place",
         "communication.assurance.visual.copy": "Every slide must add information or structure; splitting a post into pages is not value.",
-        "communication.assurance.package.title": "The final bytes are approved",
-        "communication.assurance.package.copy": "Text, images, PDF and HTML are reviewed in their exact versions before any send or publication.",
+        "communication.assurance.package.title": "The final version is approved",
+        "communication.assurance.package.copy": "The professional reviews the version that will actually be sent or published.",
         "communication.creative.kicker": "Optional visual direction",
-        "communication.creative.title": "Creative Production can raise the visual standard. It cannot change the facts.",
-        "communication.creative.copy": "After the content is accepted, it proposes four to six directions. The professional selects one; Vera translates it into the firm’s system and rebuilds text, sources and logo exactly.",
+        "communication.creative.title": "Visual direction remains subordinate to the facts.",
+        "communication.creative.copy": "Once the content is approved, the professional selects the visual direction and Vera applies it without altering the text, sources or the firm’s identity.",
         "communication.boundary.vera.title": "Vera prepares",
-        "communication.boundary.vera.copy": "She reads the sources, proposes the angle, assures the claims, adapts the channels and builds the reviewable package.",
+        "communication.boundary.vera.copy": "She reads the sources, proposes the angle, verifies statements and adapts the material to the selected channels.",
         "communication.boundary.professional.title": "The accountant decides",
         "communication.boundary.professional.copy": "They confirm the professional position, correct the content, choose audience and timing, and authorize any publication.",
         "communication.action": "Prepare a communication with Vera",
@@ -2565,7 +2489,7 @@
         "website.outcomes.scope.title": "Separate project",
         "website.outcomes.scope.copy": "Client portals, e-commerce, bookings, payments and bespoke applications require a different scope.",
         "website.journey.title": "From materials to website, with the same controls.",
-        "website.journey.copy": "Content and design judgment remain model-led; evidence, files, validation, rendering and approvals remain verifiable.",
+        "website.journey.copy": "Vera proposes content and design; sources, versions, checks and approvals remain visible throughout the process.",
         "website.steps.evidence.title": "Selected materials",
         "website.steps.evidence.copy": "Vera preserves the exact sources and separates what it observed from what the studio supplied.",
         "website.steps.brief.title": "Explicit brief",
@@ -2573,7 +2497,7 @@
         "website.steps.build.title": "Working website",
         "website.steps.build.copy": "Builds semantic pages with accessible structure and straightforward publishing, not an image of a website.",
         "website.steps.review.title": "Desktop and phone",
-        "website.steps.review.copy": "Checks the actual rendered page, interactions, overflow, images and console errors at both widths.",
+        "website.steps.review.copy": "Checks the working website on desktop and phone: pages, interactions, images and text must be complete and readable.",
         "website.profile.title": "The identity remains the studio’s.",
         "website.profile.copy": "Every voice and visual choice retains its provenance. A Vera proposal does not become part of the studio’s history.",
         "website.profile.observed.basis": "Observed",
@@ -2589,14 +2513,14 @@
         "website.assurance.claims.title": "No invented facts",
         "website.assurance.claims.copy": "Services, qualifications, people, results, locations and contact details must remain tied to selected materials.",
         "website.assurance.working.title": "A mock-up is not enough",
-        "website.assurance.working.copy": "Links, assets, headings, alternative text, identifiers and metadata are checked in the working website.",
-        "website.assurance.responsive.title": "Two real viewports",
-        "website.assurance.responsive.copy": "Quality is judged on desktop and phone rendering; one screenshot does not prove the website is ready.",
-        "website.assurance.package.title": "Approve the exact files",
-        "website.assurance.package.copy": "Previews and releases remain bound to validated versions; a change makes the previous review stale.",
+        "website.assurance.working.copy": "Links, images, headings, alternative text and metadata are checked in the working website.",
+        "website.assurance.responsive.title": "Desktop and phone",
+        "website.assurance.responsive.copy": "Quality is checked on desktop and phone; one image does not prove the website is ready.",
+        "website.assurance.package.title": "Approve the version to be published",
+        "website.assurance.package.copy": "The review applies to the checked version; every change requires a new check.",
         "website.tools.kicker": "Coordinated capabilities",
-        "website.tools.title": "Design skills refine the execution. Sites can build and host the approved version.",
-        "website.tools.copy": "Vera keeps the thread between sources, brief, quality and decisions. Sites enters only when it is the selected destination; the handoff preserves the exact version and publication evidence.",
+        "website.tools.title": "Design, construction and publication remain in the same controlled process.",
+        "website.tools.copy": "Vera keeps the thread between sources, brief, quality and decisions through to the selected destination and confirmation of publication.",
         "website.boundary.vera.title": "Vera prepares",
         "website.boundary.vera.copy": "Analyses the materials, proposes structure and visual system, builds the responsive website, validates it and prepares a preview or release.",
         "website.boundary.professional.title": "The accountant decides",
@@ -2611,12 +2535,12 @@
         "assurance.professional.title": "The professional confirms",
         "assurance.professional.copy": "They confirm scope, meaning, mappings, materiality, evidence sufficiency and professional conclusions.",
         "assurance.code.title": "Code executes",
-        "assurance.code.copy": "On qualified inputs it applies exact calculations, sampling, relationships, controls, receipts and replay. An unqualified layout produces no plausible data.",
+        "assurance.code.copy": "On confirmed materials it applies reproducible calculations, sampling and checks. Ambiguous or incomplete data are not turned into plausible results.",
         "assurance.closing": "Source, preparation, reconciliation, review and publication remain separate states. Accepting a review cannot turn a failed control into a positive result.",
         "privacy.index": "Data · real boundaries",
         "privacy.title": "Vera works on real client data.",
-        "privacy.copy": "Vera and Clara do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.",
-        "privacy.statement": "Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary workflows do not send client files, prompts, or model-context content to Mparanza.",
+        "privacy.copy": "Clara, Vera and Lucia do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.",
+        "privacy.statement": "Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary functions do not send client files, prompts, or model-context content to Mparanza.",
         "privacy.clientData.title": "Client data",
         "privacy.clientData.copy": "If identity, ownership, tax, accounting, or social-security facts are needed for review, they may enter the Codex context.",
         "privacy.local.title": "Local processing",
@@ -2627,10 +2551,10 @@
         "privacy.secrets.copy": "Passwords, API keys, cookies, tokens, and session data must not enter prompts or files Codex can read.",
         "privacy.routes.title": "Two processing categories.",
         "privacy.routes.local.title": "Ordinary functions inside Codex",
-        "privacy.routes.local.copy": "Each workflow is mapped when it is added or changed: what normally stays local and what Codex may read. No record is created for each prompt.",
+        "privacy.routes.local.copy": "For each function, the page makes clear what normally stays on your computer and what the selected AI environment may read.",
         "privacy.routes.hosted.title": "Mparanza-hosted services",
-        "privacy.routes.hosted.copy": "A hosted service is a separate boundary and is documented once at service level. Searches, connectors, portals, or sends chosen by the user instead follow the external service’s terms; they are not a third Mparanza category.",
-        "privacy.closing": "The same rule applies to Vera and Clara: one map per workflow, one description per hosted service, and no prompt-by-prompt documentation.",
+        "privacy.routes.hosted.copy": "Mparanza-hosted services have a separate boundary. The data-handling page explains what content reaches Mparanza and how it is handled. Searches, connectors, portals or sends selected by the user instead follow the external service’s terms.",
+        "privacy.closing": "The same rule applies to Clara, Vera and Lucia: the processing boundary and services involved remain visible for each function.",
         "privacy.dataLink": "Watch the data-handling video",
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to a reviewable result",
@@ -2642,7 +2566,7 @@
         "install.chatgptHelp": "Opens Vera’s installation page for ChatGPT Work and Codex.",
         "install.coworkButton": "Download for Claude Cowork",
         "install.coworkHelp": "Then upload the ZIP from Customize → Plugins in Claude Cowork.",
-        "install.video.title": "From ChatGPT on your phone to Vera or Clara in Codex",
+        "install.video.title": "Connect ChatGPT to your computer with Codex",
         "footer.product": "Vera · Codex for accountants",
         "footer.linksLabel": "Information",
         "footer.source": "Source code",
@@ -2650,7 +2574,7 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Vera prépare contrôles, rapprochements, analyses des écarts, analyses financières, communications professionnelles, dossiers clients et rapports avec des sources qualifiées et des décisions révisables.",
+        "meta.description": "Un plugin spécialisé pour les dossiers clients, les contrôles comptables, les rapprochements et les rapports.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
@@ -2663,10 +2587,10 @@
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Préparez Plans, contrôles, rapprochements, analyses des écarts, communications professionnelles, sites de cabinet, analyses financières, dossiers clients et rapports dont les sources, calculs et décisions restent révisables.",
+        "hero.lead": "Un plugin spécialisé pour les dossiers clients, les contrôles comptables, les rapprochements et les rapports.",
         "core.index": "Ce que Vera peut faire",
         "core.title": "Choisissez le travail à accomplir.",
-        "core.copy": "Chaque workflow part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
+        "core.copy": "Chaque fonction part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
         "work.index": "Toutes les fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
@@ -2744,15 +2668,15 @@
         "communication.outcomes.silence.title": "Ne pas publier",
         "communication.outcomes.silence.copy": "L’évolution est répétitive, peu significative ou insuffisamment étayée.",
         "communication.journey.title": "De la source à la communication, sans raccourci.",
-        "communication.journey.copy": "Le jugement éditorial reste confié au modèle ; registres, versions, rendus et validations restent vérifiables.",
+        "communication.journey.copy": "Vera propose l’angle ; les sources, les versions et les validations restent visibles tout au long du parcours.",
         "communication.steps.sources.title": "Sources sélectionnées",
         "communication.steps.sources.copy": "Vera conserve le document exact et distingue les sources primaires des commentaires.",
-        "communication.steps.claims.title": "Affirmations assurées",
+        "communication.steps.claims.title": "Affirmations vérifiées",
         "communication.steps.claims.copy": "Chaque affirmation distingue l’appui de la source, le raisonnement, l’incertitude et le jugement professionnel.",
-        "communication.steps.editor.title": "Jugement anti-contenu creux",
-        "communication.steps.editor.copy": "Un évaluateur distinct recherche banalités, répétitions et valeur insuffisante avant que le projet n’arrive au cabinet.",
+        "communication.steps.editor.title": "Relecture éditoriale indépendante",
+        "communication.steps.editor.copy": "Une seconde relecture recherche banalités, répétitions et valeur insuffisante avant que le projet n’arrive au cabinet.",
         "communication.steps.review.title": "Révision professionnelle",
-        "communication.steps.review.copy": "Le professionnel révise contenu, graphisme et dossier final liés aux versions exactes.",
+        "communication.steps.review.copy": "Le professionnel relit le contenu et le graphisme, puis valide la version finale.",
         "communication.outputs.index": "Une base · plusieurs canaux",
         "communication.outputs.title": "Des formes réellement différentes. Les mêmes faits.",
         "communication.outputs.copy": "E-mail, article, publication et visuel partagent les mêmes affirmations approuvées ; leur structure, profondeur et utilité changent.",
@@ -2777,20 +2701,20 @@
         "communication.profile.proposed.basis": "Proposé",
         "communication.profile.proposed.title": "Par Vera",
         "communication.profile.proposed.copy": "Une proposition ne devient la nouvelle norme qu’après validation professionnelle.",
-        "communication.assurance.title": "Quatre moyens de ne pas produire de contenu médiocre.",
+        "communication.assurance.title": "Quatre contrôles avant publication.",
         "communication.assurance.claims.title": "Chaque affirmation doit tenir",
-        "communication.assurance.claims.copy": "Une source enregistrée ne suffit pas : identité, appui sémantique et raisonnement doivent tenir.",
-        "communication.assurance.editor.title": "Un autre modèle fait l’éditeur",
-        "communication.assurance.editor.copy": "Il ne défend pas le projet ; il le compare à une publication signée par un professionnel exigeant.",
+        "communication.assurance.claims.copy": "Une source ne suffit pas : le lien avec la source, le raisonnement et les limites de la conclusion doivent être solides.",
+        "communication.assurance.editor.title": "Une relecture indépendante",
+        "communication.assurance.editor.copy": "Le projet est relu selon le niveau attendu d’une publication signée par un professionnel exigeant.",
         "communication.assurance.visual.title": "Le graphisme mérite sa place",
         "communication.assurance.visual.copy": "Chaque page doit ajouter information ou structure ; découper une publication en pages n’apporte aucune valeur.",
-        "communication.assurance.package.title": "Les fichiers finaux sont validés",
-        "communication.assurance.package.copy": "Textes, images, PDF et HTML sont révisés dans leurs versions exactes avant tout envoi ou publication.",
+        "communication.assurance.package.title": "La version finale est validée",
+        "communication.assurance.package.copy": "Le professionnel relit la version qui sera effectivement envoyée ou publiée.",
         "communication.creative.kicker": "Direction visuelle facultative",
-        "communication.creative.title": "Creative Production peut élever le niveau visuel. Il ne peut pas changer les faits.",
-        "communication.creative.copy": "Après acceptation du contenu, quatre à six directions sont proposées. Le professionnel en choisit une ; Vera la traduit dans le système du cabinet et reconstruit exactement textes, sources et logo.",
+        "communication.creative.title": "La direction visuelle reste subordonnée aux faits.",
+        "communication.creative.copy": "Après validation du contenu, le professionnel choisit la direction visuelle et Vera l’applique sans modifier le texte, les sources ni l’identité du cabinet.",
         "communication.boundary.vera.title": "Vera prépare",
-        "communication.boundary.vera.copy": "Elle lit les sources, propose l’angle, assure les affirmations, adapte les canaux et construit le dossier révisable.",
+        "communication.boundary.vera.copy": "Elle lit les sources, propose l’angle, vérifie les affirmations et adapte le contenu aux canaux choisis.",
         "communication.boundary.professional.title": "L’expert-comptable décide",
         "communication.boundary.professional.copy": "Il confirme la position professionnelle, corrige le contenu, choisit public et calendrier, puis autorise toute publication.",
         "communication.action": "Préparer une communication avec Vera",
@@ -2807,7 +2731,7 @@
         "website.outcomes.scope.title": "Projet distinct",
         "website.outcomes.scope.copy": "Portails clients, e-commerce, réservations, paiements et applications sur mesure nécessitent un autre périmètre.",
         "website.journey.title": "Des éléments au site, avec les mêmes contrôles.",
-        "website.journey.copy": "Le jugement sur le contenu et le design reste guidé par le modèle ; preuves, fichiers, validations, rendus et approbations restent vérifiables.",
+        "website.journey.copy": "Vera propose les contenus et le design ; les sources, versions, contrôles et validations restent visibles tout au long du parcours.",
         "website.steps.evidence.title": "Éléments sélectionnés",
         "website.steps.evidence.copy": "Vera conserve les sources exactes et distingue ce qu’elle a observé de ce que le cabinet a fourni.",
         "website.steps.brief.title": "Brief explicite",
@@ -2815,7 +2739,7 @@
         "website.steps.build.title": "Site fonctionnel",
         "website.steps.build.copy": "Construit des pages sémantiques, accessibles dans leur structure et simples à publier, pas une image de site.",
         "website.steps.review.title": "Ordinateur et téléphone",
-        "website.steps.review.copy": "Contrôle la page réellement rendue, les interactions, débordements, images et erreurs de console aux deux largeurs.",
+        "website.steps.review.copy": "Contrôle le site fonctionnel sur ordinateur et téléphone : pages, interactions, images et textes doivent être complets et lisibles.",
         "website.profile.title": "L’identité reste celle du cabinet.",
         "website.profile.copy": "Chaque choix de voix ou d’image conserve sa provenance. Une proposition de Vera ne devient pas l’histoire du cabinet.",
         "website.profile.observed.basis": "Observé",
@@ -2831,14 +2755,14 @@
         "website.assurance.claims.title": "Aucun fait inventé",
         "website.assurance.claims.copy": "Services, qualifications, personnes, résultats, lieux et coordonnées doivent rester liés aux éléments sélectionnés.",
         "website.assurance.working.title": "Une maquette ne suffit pas",
-        "website.assurance.working.copy": "Liens, ressources, titres, textes alternatifs, identifiants et métadonnées sont contrôlés dans le site fonctionnel.",
-        "website.assurance.responsive.title": "Deux vues réelles",
-        "website.assurance.responsive.copy": "La qualité est jugée sur les rendus ordinateur et téléphone ; une capture unique ne prouve pas que le site est prêt.",
-        "website.assurance.package.title": "Valider les fichiers exacts",
-        "website.assurance.package.copy": "Aperçus et versions restent liés aux versions validées ; toute modification rend la revue précédente obsolète.",
+        "website.assurance.working.copy": "Liens, images, titres, textes alternatifs et métadonnées sont contrôlés dans le site fonctionnel.",
+        "website.assurance.responsive.title": "Ordinateur et téléphone",
+        "website.assurance.responsive.copy": "La qualité est contrôlée sur ordinateur et téléphone ; une seule image ne prouve pas que le site est prêt.",
+        "website.assurance.package.title": "Valider la version à publier",
+        "website.assurance.package.copy": "La relecture vaut pour la version contrôlée ; chaque modification nécessite un nouveau contrôle.",
         "website.tools.kicker": "Compétences coordonnées",
-        "website.tools.title": "Les skills de design soignent l’exécution. Sites peut construire et héberger la version approuvée.",
-        "website.tools.copy": "Vera maintient le fil entre sources, brief, qualité et décisions. Sites intervient uniquement lorsqu’il est la destination choisie ; le transfert conserve la version exacte et la preuve de publication.",
+        "website.tools.title": "Design, construction et publication restent dans le même parcours contrôlé.",
+        "website.tools.copy": "Vera maintient le fil entre sources, brief, qualité et décisions jusqu’à la destination choisie et à la confirmation de la publication.",
         "website.boundary.vera.title": "Vera prépare",
         "website.boundary.vera.copy": "Analyse les éléments, propose structure et système visuel, construit le site responsive, le valide et prépare aperçu ou version finale.",
         "website.boundary.professional.title": "L’expert-comptable décide",
@@ -2853,12 +2777,12 @@
         "assurance.professional.title": "Le professionnel confirme",
         "assurance.professional.copy": "Il confirme périmètre, sens, mappings, matérialité, suffisance des preuves et conclusions professionnelles.",
         "assurance.code.title": "Le code exécute",
-        "assurance.code.copy": "Sur des entrées qualifiées, il applique calculs exacts, échantillonnage, relations, contrôles, reçus et replay. Une structure non qualifiée ne produit aucune donnée plausible.",
+        "assurance.code.copy": "Sur des éléments confirmés, il applique des calculs, des échantillonnages et des contrôles reproductibles. Les données ambiguës ou incomplètes ne sont pas transformées en résultats plausibles.",
         "assurance.closing": "Sources, préparation, rapprochement, revue et publication restent des états distincts. Accepter une revue ne transforme pas un contrôle échoué en résultat positif.",
         "privacy.index": "Données · périmètres réels",
         "privacy.title": "Vera travaille sur les données réelles du client.",
-        "privacy.copy": "Vera et Clara n’anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile.",
-        "privacy.statement": "Les données fournies au modèle sont traitées dans le cadre de l’offre ChatGPT existante de l’utilisateur. Les workflows ordinaires n’envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle.",
+        "privacy.copy": "Clara, Vera et Lucia n’anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile.",
+        "privacy.statement": "Les données fournies au modèle sont traitées dans le cadre de l’offre ChatGPT existante de l’utilisateur. Les fonctions ordinaires n’envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle.",
         "privacy.clientData.title": "Données clients",
         "privacy.clientData.copy": "Si l’identité, la détention ou des faits fiscaux, comptables ou sociaux sont nécessaires à la revue, ils peuvent entrer dans le contexte Codex.",
         "privacy.local.title": "Traitement local",
@@ -2869,10 +2793,10 @@
         "privacy.secrets.copy": "Mots de passe, clés API, cookies, jetons et données de session ne doivent pas entrer dans les prompts ou fichiers lisibles par Codex.",
         "privacy.routes.title": "Deux catégories de traitement.",
         "privacy.routes.local.title": "Fonctions ordinaires dans Codex",
-        "privacy.routes.local.copy": "Chaque workflow est cartographié lorsqu’il est ajouté ou modifié : ce qui reste normalement local et ce que Codex peut lire. Aucun enregistrement n’est créé pour chaque prompt.",
+        "privacy.routes.local.copy": "Pour chaque fonction, la page indique ce qui reste normalement sur l’ordinateur et ce que l’environnement d’IA choisi peut lire.",
         "privacy.routes.hosted.title": "Services hébergés par Mparanza",
-        "privacy.routes.hosted.copy": "Un service hébergé a un périmètre distinct et est documenté une fois au niveau du service. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe ; ils ne constituent pas une troisième catégorie Mparanza.",
-        "privacy.closing": "La même règle s’applique à Vera et Clara : une cartographie par workflow, une description par service hébergé et aucune documentation prompt par prompt.",
+        "privacy.routes.hosted.copy": "Les services hébergés par Mparanza ont un périmètre distinct. La page sur le traitement des données explique quels contenus atteignent Mparanza et comment ils sont traités. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe.",
+        "privacy.closing": "La même règle s’applique à Clara, Vera et Lucia : le périmètre de traitement et les services concernés restent visibles pour chaque fonction.",
         "privacy.dataLink": "Voir la vidéo sur le traitement des données",
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à un résultat révisable",
@@ -2884,7 +2808,7 @@
         "install.chatgptHelp": "Ouvre la page d’installation de Vera pour ChatGPT Work et Codex.",
         "install.coworkButton": "Télécharger pour Claude Cowork",
         "install.coworkHelp": "Importez ensuite le fichier ZIP depuis Personnaliser → Plugins dans Claude Cowork.",
-        "install.video.title": "De ChatGPT sur votre téléphone à Vera ou Clara dans Codex",
+        "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
         "footer.product": "Vera · Codex pour les experts-comptables",
         "footer.linksLabel": "Informations",
         "footer.source": "Code source",
@@ -2892,7 +2816,7 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Vera bereitet Prüfungen, Abstimmungen, Abweichungsanalysen, Finanzanalysen, professionelle Kommunikation, Mandantenakten und Berichte mit qualifizierten Quellen und prüfbaren Entscheidungen vor.",
+        "meta.description": "Ein spezialisiertes Plugin für Mandantendateien, Buchungsprüfungen, Abstimmungen und Berichte.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
@@ -2905,10 +2829,10 @@
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Bereiten Sie Pläne, Prüfungen, Abstimmungen, Abweichungsanalysen, professionelle Kommunikation, Kanzlei-Websites, Finanzanalysen, Mandantenakten und Berichte vor, deren Quellen, Berechnungen und Entscheidungen prüfbar bleiben.",
+        "hero.lead": "Ein spezialisiertes Plugin für Mandantendateien, Buchungsprüfungen, Abstimmungen und Berichte.",
         "core.index": "Was Vera kann",
         "core.title": "Wählen Sie die anstehende Aufgabe.",
-        "core.copy": "Jeder Workflow beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
+        "core.copy": "Jede Funktion beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
         "work.index": "Alle Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
@@ -2986,15 +2910,15 @@
         "communication.outcomes.silence.title": "Nicht veröffentlichen",
         "communication.outcomes.silence.copy": "Die Entwicklung ist wiederholend, unwesentlich oder unzureichend belegt.",
         "communication.journey.title": "Von der Quelle zur Kommunikation – ohne Abkürzungen.",
-        "communication.journey.copy": "Das redaktionelle Urteil bleibt modellgeführt; Register, Versionen, Renderings und Freigaben bleiben prüfbar.",
+        "communication.journey.copy": "Vera schlägt die Perspektive vor; Quellen, Versionen und Freigaben bleiben während des gesamten Ablaufs sichtbar.",
         "communication.steps.sources.title": "Ausgewählte Quellen",
         "communication.steps.sources.copy": "Vera bewahrt das exakte Dokument und trennt Primärquellen von Kommentaren.",
-        "communication.steps.claims.title": "Abgesicherte Aussagen",
+        "communication.steps.claims.title": "Geprüfte Aussagen",
         "communication.steps.claims.copy": "Jede Aussage trennt Quellenbeleg, Begründung, Unsicherheit und professionelles Urteil.",
-        "communication.steps.editor.title": "Urteil gegen KI-Beliebigkeit",
-        "communication.steps.editor.copy": "Ein separates Modell sucht nach Banalität, Wiederholung und zu geringem Nutzen, bevor der Entwurf die Kanzlei erreicht.",
+        "communication.steps.editor.title": "Unabhängige redaktionelle Prüfung",
+        "communication.steps.editor.copy": "Eine zweite Prüfung sucht nach Banalität, Wiederholung und zu geringem Nutzen, bevor der Entwurf die Kanzlei erreicht.",
         "communication.steps.review.title": "Professionelle Prüfung",
-        "communication.steps.review.copy": "Die Fachperson prüft Inhalt, Grafik und Endpaket anhand der exakten Versionen.",
+        "communication.steps.review.copy": "Die Fachperson prüft Inhalt und Gestaltung und gibt anschließend die endgültige Version frei.",
         "communication.outputs.index": "Eine Grundlage · mehrere Kanäle",
         "communication.outputs.title": "Wirklich unterschiedliche Formen. Dieselben Fakten.",
         "communication.outputs.copy": "E-Mail, Artikel, Beitrag und Visualisierung teilen dieselben freigegebenen Aussagen; Struktur, Tiefe und Nutzen ändern sich.",
@@ -3019,20 +2943,20 @@
         "communication.profile.proposed.basis": "Vorgeschlagen",
         "communication.profile.proposed.title": "Von Vera",
         "communication.profile.proposed.copy": "Ein Vorschlag wird erst nach professioneller Freigabe zum neuen Standard.",
-        "communication.assurance.title": "Vier Schutzmechanismen gegen beliebige KI-Inhalte.",
+        "communication.assurance.title": "Vier Prüfungen vor der Veröffentlichung.",
         "communication.assurance.claims.title": "Jede Aussage muss standhalten",
-        "communication.assurance.claims.copy": "Eine registrierte Quelle genügt nicht: Identität, semantische Stützung und Begründung müssen tragen.",
-        "communication.assurance.editor.title": "Ein anderes Modell redigiert",
-        "communication.assurance.editor.copy": "Es verteidigt den Entwurf nicht, sondern vergleicht ihn mit einer Veröffentlichung einer anspruchsvollen Fachperson.",
+        "communication.assurance.claims.copy": "Eine Quelle allein genügt nicht: Die Verbindung zur Quelle, die Begründung und die Grenzen der Schlussfolgerung müssen tragfähig sein.",
+        "communication.assurance.editor.title": "Eine unabhängige Prüfung",
+        "communication.assurance.editor.copy": "Der Entwurf wird nach dem Maßstab einer Veröffentlichung einer anspruchsvollen Fachperson erneut gelesen.",
         "communication.assurance.visual.title": "Die Grafik verdient ihren Platz",
         "communication.assurance.visual.copy": "Jede Seite muss Information oder Struktur ergänzen; einen Beitrag nur aufzuteilen schafft keinen Wert.",
-        "communication.assurance.package.title": "Die finalen Dateien werden freigegeben",
-        "communication.assurance.package.copy": "Text, Bilder, PDF und HTML werden in ihren exakten Versionen vor Versand oder Veröffentlichung geprüft.",
+        "communication.assurance.package.title": "Die endgültige Version wird freigegeben",
+        "communication.assurance.package.copy": "Die Fachperson prüft die Version, die tatsächlich versendet oder veröffentlicht wird.",
         "communication.creative.kicker": "Optionale visuelle Richtung",
-        "communication.creative.title": "Creative Production kann das visuelle Niveau heben. Die Fakten kann es nicht verändern.",
-        "communication.creative.copy": "Nach Annahme des Inhalts werden vier bis sechs Richtungen vorgeschlagen. Die Fachperson wählt eine; Vera überträgt sie in das Kanzleisystem und baut Text, Quellen und Logo exakt neu auf.",
+        "communication.creative.title": "Die visuelle Richtung bleibt den Fakten untergeordnet.",
+        "communication.creative.copy": "Nach Freigabe des Inhalts wählt die Fachperson die visuelle Richtung; Vera setzt sie um, ohne Text, Quellen oder die Identität der Kanzlei zu verändern.",
         "communication.boundary.vera.title": "Vera bereitet vor",
-        "communication.boundary.vera.copy": "Sie liest Quellen, schlägt die Perspektive vor, sichert Aussagen ab, passt Kanäle an und baut das prüfbare Paket.",
+        "communication.boundary.vera.copy": "Sie liest Quellen, schlägt die Perspektive vor, prüft Aussagen und passt das Material an die gewählten Kanäle an.",
         "communication.boundary.professional.title": "Die Steuerberatung entscheidet",
         "communication.boundary.professional.copy": "Sie bestätigt die fachliche Position, korrigiert Inhalte, wählt Zielgruppe und Zeitpunkt und genehmigt jede Veröffentlichung.",
         "communication.action": "Mit Vera eine Kommunikation vorbereiten",
@@ -3049,7 +2973,7 @@
         "website.outcomes.scope.title": "Separates Projekt",
         "website.outcomes.scope.copy": "Mandantenportale, E-Commerce, Buchungen, Zahlungen und maßgeschneiderte Anwendungen benötigen einen anderen Umfang.",
         "website.journey.title": "Von den Materialien zur Website – mit denselben Kontrollen.",
-        "website.journey.copy": "Das Urteil über Inhalt und Design bleibt modellgeführt; Nachweise, Dateien, Validierungen, Renderings und Freigaben bleiben prüfbar.",
+        "website.journey.copy": "Vera schlägt Inhalte und Design vor; Quellen, Versionen, Prüfungen und Freigaben bleiben während des gesamten Ablaufs sichtbar.",
         "website.steps.evidence.title": "Ausgewählte Materialien",
         "website.steps.evidence.copy": "Vera bewahrt die exakten Quellen und trennt Beobachtetes von den Angaben der Kanzlei.",
         "website.steps.brief.title": "Explizites Briefing",
@@ -3057,7 +2981,7 @@
         "website.steps.build.title": "Funktionsfähige Website",
         "website.steps.build.copy": "Erstellt semantische Seiten mit zugänglicher Struktur und einfacher Veröffentlichung, kein Bild einer Website.",
         "website.steps.review.title": "Desktop und Smartphone",
-        "website.steps.review.copy": "Prüft die tatsächlich gerenderte Seite, Interaktionen, Überläufe, Bilder und Konsolenfehler in beiden Breiten.",
+        "website.steps.review.copy": "Prüft die funktionsfähige Website auf Desktop und Smartphone: Seiten, Interaktionen, Bilder und Texte müssen vollständig und lesbar sein.",
         "website.profile.title": "Die Identität bleibt bei der Kanzlei.",
         "website.profile.copy": "Jede sprachliche und visuelle Entscheidung behält ihre Herkunft. Ein Vorschlag von Vera wird nicht zur Geschichte der Kanzlei.",
         "website.profile.observed.basis": "Beobachtet",
@@ -3073,14 +2997,14 @@
         "website.assurance.claims.title": "Keine erfundenen Fakten",
         "website.assurance.claims.copy": "Leistungen, Qualifikationen, Personen, Ergebnisse, Standorte und Kontaktdaten müssen mit den ausgewählten Materialien verbunden bleiben.",
         "website.assurance.working.title": "Ein Mock-up genügt nicht",
-        "website.assurance.working.copy": "Links, Assets, Überschriften, Alternativtexte, Kennungen und Metadaten werden in der funktionsfähigen Website geprüft.",
-        "website.assurance.responsive.title": "Zwei reale Viewports",
-        "website.assurance.responsive.copy": "Die Qualität wird auf Desktop- und Smartphone-Rendering beurteilt; ein Screenshot beweist keine Freigabereife.",
-        "website.assurance.package.title": "Die exakten Dateien freigeben",
-        "website.assurance.package.copy": "Vorschau und Release bleiben an validierte Versionen gebunden; eine Änderung macht die vorherige Prüfung ungültig.",
+        "website.assurance.working.copy": "Links, Bilder, Überschriften, Alternativtexte und Metadaten werden in der funktionsfähigen Website geprüft.",
+        "website.assurance.responsive.title": "Desktop und Smartphone",
+        "website.assurance.responsive.copy": "Die Qualität wird auf Desktop und Smartphone geprüft; ein einzelnes Bild beweist nicht, dass die Website bereit ist.",
+        "website.assurance.package.title": "Die zu veröffentlichende Version freigeben",
+        "website.assurance.package.copy": "Die Prüfung gilt für die kontrollierte Version; jede Änderung erfordert eine neue Prüfung.",
         "website.tools.kicker": "Koordinierte Kompetenzen",
-        "website.tools.title": "Design-Skills verfeinern die Ausführung. Sites kann die freigegebene Version bauen und hosten.",
-        "website.tools.copy": "Vera hält die Verbindung zwischen Quellen, Briefing, Qualität und Entscheidungen. Sites kommt nur als gewähltes Ziel hinzu; die Übergabe bewahrt die exakte Version und den Publikationsnachweis.",
+        "website.tools.title": "Design, Aufbau und Veröffentlichung bleiben in demselben kontrollierten Ablauf.",
+        "website.tools.copy": "Vera hält die Verbindung zwischen Quellen, Briefing, Qualität und Entscheidungen bis zum gewählten Ziel und zur Bestätigung der Veröffentlichung.",
         "website.boundary.vera.title": "Vera bereitet vor",
         "website.boundary.vera.copy": "Analysiert Materialien, schlägt Struktur und visuelles System vor, baut die responsive Website, validiert sie und bereitet Vorschau oder Release vor.",
         "website.boundary.professional.title": "Die Steuerberatung entscheidet",
@@ -3095,12 +3019,12 @@
         "assurance.professional.title": "Der Berufsträger bestätigt",
         "assurance.professional.copy": "Er bestätigt Umfang, Bedeutung, Mappings, Wesentlichkeit, Nachweisstärke und fachliche Schlussfolgerungen.",
         "assurance.code.title": "Der Code führt aus",
-        "assurance.code.copy": "Auf qualifizierten Eingaben führt er exakte Berechnungen, Stichproben, Beziehungen, Kontrollen, Belege und Replay aus. Ein nicht qualifiziertes Format erzeugt keine plausiblen Daten.",
+        "assurance.code.copy": "Auf bestätigten Unterlagen führt er reproduzierbare Berechnungen, Stichproben und Kontrollen aus. Mehrdeutige oder unvollständige Daten werden nicht in plausible Ergebnisse verwandelt.",
         "assurance.closing": "Quelle, Aufbereitung, Abstimmung, Review und Veröffentlichung bleiben getrennte Zustände. Eine angenommene Review kann aus einer fehlgeschlagenen Kontrolle kein positives Ergebnis machen.",
         "privacy.index": "Daten · tatsächliche Grenzen",
         "privacy.title": "Vera arbeitet mit echten Mandantendaten.",
-        "privacy.copy": "Vera und Clara anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist.",
-        "privacy.statement": "Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet. Normale Workflows senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza.",
+        "privacy.copy": "Clara, Vera und Lucia anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist.",
+        "privacy.statement": "Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet. Normale Funktionen senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza.",
         "privacy.clientData.title": "Mandantendaten",
         "privacy.clientData.copy": "Sind Identität, Beteiligung oder steuerliche, buchhalterische oder sozialversicherungsrechtliche Fakten für die Prüfung erforderlich, können sie in den Codex-Kontext gelangen.",
         "privacy.local.title": "Lokale Verarbeitung",
@@ -3111,10 +3035,10 @@
         "privacy.secrets.copy": "Passwörter, API-Schlüssel, Cookies, Token und Sitzungsdaten dürfen nicht in Prompts oder von Codex lesbare Dateien gelangen.",
         "privacy.routes.title": "Zwei Verarbeitungskategorien.",
         "privacy.routes.local.title": "Normale Funktionen in Codex",
-        "privacy.routes.local.copy": "Jeder Workflow wird beim Hinzufügen oder Ändern zugeordnet: was normalerweise lokal bleibt und was Codex lesen kann. Für einzelne Prompts wird kein Nachweis erstellt.",
+        "privacy.routes.local.copy": "Für jede Funktion zeigt die Seite, was normalerweise auf Ihrem Computer bleibt und was die gewählte KI-Umgebung lesen kann.",
         "privacy.routes.hosted.title": "Mparanza-gehostete Dienste",
-        "privacy.routes.hosted.copy": "Ein gehosteter Dienst hat eine separate Grenze und wird einmal auf Dienstebene dokumentiert. Vom Nutzer gewählte Suchen, Connectoren, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes; sie sind keine dritte Mparanza-Kategorie.",
-        "privacy.closing": "Für Vera und Clara gilt dieselbe Regel: eine Zuordnung pro Workflow, eine Beschreibung pro gehostetem Dienst und keine Dokumentation für jeden Prompt.",
+        "privacy.routes.hosted.copy": "Von Mparanza gehostete Dienste haben eine separate Grenze. Die Seite zur Datenverarbeitung erklärt, welche Inhalte Mparanza erreichen und wie sie behandelt werden. Vom Nutzer gewählte Suchen, Verbindungen, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes.",
+        "privacy.closing": "Für Clara, Vera und Lucia gilt dieselbe Regel: Die Verarbeitungsgrenze und die beteiligten Dienste bleiben für jede Funktion sichtbar.",
         "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
@@ -3126,7 +3050,7 @@
         "install.chatgptHelp": "Öffnet Veras Installationsseite für ChatGPT Work und Codex.",
         "install.coworkButton": "Für Claude Cowork herunterladen",
         "install.coworkHelp": "Laden Sie die ZIP-Datei anschließend in Claude Cowork unter Anpassen → Plugins hoch.",
-        "install.video.title": "Von ChatGPT auf dem Smartphone zu Vera oder Clara in Codex",
+        "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
         "footer.product": "Vera · Codex für Steuerberaterinnen und Steuerberater",
         "footer.linksLabel": "Informationen",
         "footer.source": "Quellcode",
@@ -3134,7 +3058,7 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Vera prepara controles, conciliaciones, análisis de desviaciones, análisis financieros, comunicaciones profesionales, expedientes e informes con fuentes cualificadas y decisiones revisables.",
+        "meta.description": "Un plugin especializado para expedientes de clientes, controles contables, conciliaciones e informes.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
@@ -3147,10 +3071,10 @@
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Prepara planes, controles, conciliaciones, análisis de desviaciones, comunicaciones profesionales, sitios web del despacho, análisis financieros, expedientes e informes cuyas fuentes, cálculos y decisiones siguen siendo revisables.",
+        "hero.lead": "Un plugin especializado para expedientes de clientes, controles contables, conciliaciones e informes.",
         "core.index": "Qué puede hacer Vera",
         "core.title": "Elige el trabajo que tienes delante.",
-        "core.copy": "Cada flujo parte del material disponible y prepara un resultado que puedes revisar.",
+        "core.copy": "Cada función parte del material disponible y prepara un resultado que puedes revisar.",
         "work.index": "Todas las funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
@@ -3228,15 +3152,15 @@
         "communication.outcomes.silence.title": "No publicar",
         "communication.outcomes.silence.copy": "La novedad es repetitiva, irrelevante o no está suficientemente respaldada.",
         "communication.journey.title": "De la fuente a la comunicación, sin atajos.",
-        "communication.journey.copy": "El juicio editorial sigue guiado por el modelo; registros, versiones, renderizados y aprobaciones siguen siendo verificables.",
+        "communication.journey.copy": "Vera propone el enfoque; las fuentes, las versiones y las aprobaciones permanecen visibles durante todo el proceso.",
         "communication.steps.sources.title": "Fuentes seleccionadas",
         "communication.steps.sources.copy": "Vera conserva el documento exacto y distingue las fuentes primarias de los comentarios.",
-        "communication.steps.claims.title": "Afirmaciones aseguradas",
+        "communication.steps.claims.title": "Afirmaciones verificadas",
         "communication.steps.claims.copy": "Cada afirmación separa el respaldo de la fuente, el razonamiento, la incertidumbre y el juicio profesional.",
-        "communication.steps.editor.title": "Juicio contra el contenido vacío",
-        "communication.steps.editor.copy": "Un evaluador distinto busca banalidad, repetición y valor insuficiente antes de que el borrador llegue al despacho.",
+        "communication.steps.editor.title": "Revisión editorial independiente",
+        "communication.steps.editor.copy": "Una segunda revisión busca banalidad, repetición y valor insuficiente antes de que el borrador llegue al despacho.",
         "communication.steps.review.title": "Revisión profesional",
-        "communication.steps.review.copy": "El profesional revisa contenido, gráfica y paquete final vinculados a las versiones exactas.",
+        "communication.steps.review.copy": "El profesional revisa el contenido y el diseño y después aprueba la versión final.",
         "communication.outputs.index": "Una base · varios canales",
         "communication.outputs.title": "Formatos realmente distintos. Los mismos hechos.",
         "communication.outputs.copy": "Correo, artículo, publicación y visual comparten las mismas afirmaciones aprobadas; cambian su estructura, profundidad y utilidad.",
@@ -3261,20 +3185,20 @@
         "communication.profile.proposed.basis": "Propuesto",
         "communication.profile.proposed.title": "Por Vera",
         "communication.profile.proposed.copy": "Una propuesta solo se convierte en nuevo estándar tras la aprobación profesional.",
-        "communication.assurance.title": "Cuatro formas de no producir contenido vacío.",
+        "communication.assurance.title": "Cuatro controles antes de publicar.",
         "communication.assurance.claims.title": "Cada afirmación debe sostenerse",
-        "communication.assurance.claims.copy": "Una fuente registrada no basta: identidad, respaldo semántico y razonamiento deben sostenerse.",
-        "communication.assurance.editor.title": "Otro modelo hace de editor",
-        "communication.assurance.editor.copy": "No defiende el borrador; lo compara con una publicación firmada por un profesional exigente.",
+        "communication.assurance.claims.copy": "Una fuente no basta: la relación con la fuente, el razonamiento y los límites de la conclusión deben ser sólidos.",
+        "communication.assurance.editor.title": "Una revisión independiente",
+        "communication.assurance.editor.copy": "El borrador se relee con el nivel exigido a una publicación firmada por un profesional.",
         "communication.assurance.visual.title": "La gráfica se gana su lugar",
         "communication.assurance.visual.copy": "Cada página debe añadir información o estructura; dividir una publicación en páginas no aporta valor.",
-        "communication.assurance.package.title": "Se aprueban los archivos finales",
-        "communication.assurance.package.copy": "Texto, imágenes, PDF y HTML se revisan en sus versiones exactas antes de cualquier envío o publicación.",
+        "communication.assurance.package.title": "Se aprueba la versión final",
+        "communication.assurance.package.copy": "El profesional revisa la versión que realmente se enviará o publicará.",
         "communication.creative.kicker": "Dirección visual opcional",
-        "communication.creative.title": "Creative Production puede elevar el nivel visual. No puede cambiar los hechos.",
-        "communication.creative.copy": "Tras aceptar el contenido, propone entre cuatro y seis direcciones. El profesional elige una; Vera la traduce al sistema del despacho y reconstruye con exactitud texto, fuentes y logo.",
+        "communication.creative.title": "La dirección visual permanece subordinada a los hechos.",
+        "communication.creative.copy": "Una vez aprobado el contenido, el profesional elige la dirección visual y Vera la aplica sin alterar el texto, las fuentes ni la identidad del despacho.",
         "communication.boundary.vera.title": "Vera prepara",
-        "communication.boundary.vera.copy": "Lee las fuentes, propone el enfoque, asegura las afirmaciones, adapta los canales y construye el paquete revisable.",
+        "communication.boundary.vera.copy": "Lee las fuentes, propone el enfoque, verifica las afirmaciones y adapta el material a los canales elegidos.",
         "communication.boundary.professional.title": "El asesor decide",
         "communication.boundary.professional.copy": "Confirma la posición profesional, corrige el contenido, elige público y calendario y autoriza cualquier publicación.",
         "communication.action": "Preparar una comunicación con Vera",
@@ -3291,7 +3215,7 @@
         "website.outcomes.scope.title": "Proyecto separado",
         "website.outcomes.scope.copy": "Portales de clientes, comercio electrónico, reservas, pagos y aplicaciones a medida requieren otro ámbito.",
         "website.journey.title": "De los materiales al sitio, con los mismos controles.",
-        "website.journey.copy": "El juicio sobre contenido y diseño sigue guiado por el modelo; evidencias, archivos, validaciones, renderizados y aprobaciones siguen siendo verificables.",
+        "website.journey.copy": "Vera propone el contenido y el diseño; las fuentes, versiones, controles y aprobaciones permanecen visibles durante todo el proceso.",
         "website.steps.evidence.title": "Materiales seleccionados",
         "website.steps.evidence.copy": "Vera conserva las fuentes exactas y distingue lo observado de lo aportado por el despacho.",
         "website.steps.brief.title": "Brief explícito",
@@ -3299,7 +3223,7 @@
         "website.steps.build.title": "Sitio funcional",
         "website.steps.build.copy": "Construye páginas semánticas, accesibles en su estructura y fáciles de publicar, no una imagen del sitio.",
         "website.steps.review.title": "Ordenador y teléfono",
-        "website.steps.review.copy": "Comprueba la página realmente renderizada, interacciones, desbordamientos, imágenes y errores de consola en ambos anchos.",
+        "website.steps.review.copy": "Comprueba el sitio funcional en ordenador y teléfono: páginas, interacciones, imágenes y textos deben estar completos y ser legibles.",
         "website.profile.title": "La identidad sigue siendo del despacho.",
         "website.profile.copy": "Cada elección de voz o imagen conserva su procedencia. Una propuesta de Vera no se convierte en historia del despacho.",
         "website.profile.observed.basis": "Observado",
@@ -3315,14 +3239,14 @@
         "website.assurance.claims.title": "Ningún hecho inventado",
         "website.assurance.claims.copy": "Servicios, cualificaciones, personas, resultados, sedes y contactos deben seguir vinculados a los materiales seleccionados.",
         "website.assurance.working.title": "Una maqueta no basta",
-        "website.assurance.working.copy": "Enlaces, recursos, títulos, textos alternativos, identificadores y metadatos se comprueban en el sitio funcional.",
-        "website.assurance.responsive.title": "Dos viewports reales",
-        "website.assurance.responsive.copy": "La calidad se juzga en el renderizado de ordenador y teléfono; una sola captura no demuestra que el sitio esté listo.",
-        "website.assurance.package.title": "Aprobar los archivos exactos",
-        "website.assurance.package.copy": "Las vistas previas y versiones quedan ligadas a archivos validados; un cambio invalida la revisión anterior.",
+        "website.assurance.working.copy": "Enlaces, imágenes, títulos, textos alternativos y metadatos se comprueban en el sitio funcional.",
+        "website.assurance.responsive.title": "Ordenador y teléfono",
+        "website.assurance.responsive.copy": "La calidad se comprueba en ordenador y teléfono; una sola imagen no demuestra que el sitio esté listo.",
+        "website.assurance.package.title": "Aprobar la versión que se publicará",
+        "website.assurance.package.copy": "La revisión se aplica a la versión comprobada; cada cambio requiere un nuevo control.",
         "website.tools.kicker": "Capacidades coordinadas",
-        "website.tools.title": "Las skills de diseño cuidan la ejecución. Sites puede construir y alojar la versión aprobada.",
-        "website.tools.copy": "Vera mantiene el hilo entre fuentes, brief, calidad y decisiones. Sites interviene solo cuando es el destino elegido; el traspaso conserva la versión exacta y la prueba de publicación.",
+        "website.tools.title": "Diseño, construcción y publicación permanecen en el mismo proceso controlado.",
+        "website.tools.copy": "Vera mantiene el hilo entre fuentes, brief, calidad y decisiones hasta el destino elegido y la confirmación de la publicación.",
         "website.boundary.vera.title": "Vera prepara",
         "website.boundary.vera.copy": "Analiza los materiales, propone estructura y sistema visual, construye el sitio responsive, lo valida y prepara vista previa o versión final.",
         "website.boundary.professional.title": "El asesor decide",
@@ -3337,12 +3261,12 @@
         "assurance.professional.title": "El profesional confirma",
         "assurance.professional.copy": "Confirma alcance, significado, mapeos, materialidad, suficiencia de la evidencia y conclusiones profesionales.",
         "assurance.code.title": "El código ejecuta",
-        "assurance.code.copy": "Sobre entradas cualificadas aplica cálculos exactos, muestreo, relaciones, controles, recibos y replay. Un formato no cualificado no produce datos plausibles.",
+        "assurance.code.copy": "Sobre materiales confirmados aplica cálculos, muestreos y controles reproducibles. Los datos ambiguos o incompletos no se convierten en resultados plausibles.",
         "assurance.closing": "Fuentes, preparación, conciliación, revisión y publicación siguen siendo estados separados. Aceptar una revisión no convierte un control fallido en un resultado positivo.",
         "privacy.index": "Datos · límites reales",
         "privacy.title": "Vera trabaja con datos reales del cliente.",
-        "privacy.copy": "Vera y Clara no anonimizan automáticamente los datos. Pueden usar Python en local para filtrar o agregar información cuando resulte útil.",
-        "privacy.statement": "Los datos proporcionados al modelo se procesan mediante el plan de ChatGPT que ya utiliza el usuario. Los flujos de trabajo ordinarios no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo.",
+        "privacy.copy": "Clara, Vera y Lucia no anonimizan automáticamente los datos. Pueden usar Python en local para filtrar o agregar información cuando resulte útil.",
+        "privacy.statement": "Los datos proporcionados al modelo se procesan mediante el plan de ChatGPT que ya utiliza el usuario. Las funciones ordinarias no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo.",
         "privacy.clientData.title": "Datos del cliente",
         "privacy.clientData.copy": "Si la identidad, la titularidad o los hechos fiscales, contables o de seguridad social son necesarios para la revisión, pueden entrar en el contexto de Codex.",
         "privacy.local.title": "Procesamiento local",
@@ -3353,10 +3277,10 @@
         "privacy.secrets.copy": "Las contraseñas, claves de API, cookies, tokens y datos de sesión no deben entrar en prompts ni en archivos que Codex pueda leer.",
         "privacy.routes.title": "Dos categorías de tratamiento.",
         "privacy.routes.local.title": "Funciones ordinarias dentro de Codex",
-        "privacy.routes.local.copy": "Cada flujo de trabajo se mapea cuando se añade o cambia: qué suele permanecer en local y qué puede leer Codex. No se crea un registro para cada prompt.",
+        "privacy.routes.local.copy": "Para cada función, la página indica qué permanece normalmente en el ordenador y qué puede leer el entorno de IA elegido.",
         "privacy.routes.hosted.title": "Servicios alojados por Mparanza",
-        "privacy.routes.hosted.copy": "Un servicio alojado constituye un límite separado y se documenta una sola vez a nivel de servicio. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo; no forman una tercera categoría de Mparanza.",
-        "privacy.closing": "La misma regla se aplica a Vera y Clara: un mapa por flujo de trabajo, una descripción por servicio alojado y ninguna documentación prompt por prompt.",
+        "privacy.routes.hosted.copy": "Los servicios alojados por Mparanza tienen un límite separado. La página sobre el tratamiento de datos explica qué contenido llega a Mparanza y cómo se gestiona. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo.",
+        "privacy.closing": "La misma regla se aplica a Clara, Vera y Lucia: el límite de tratamiento y los servicios implicados permanecen visibles para cada función.",
         "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
@@ -3368,7 +3292,7 @@
         "install.chatgptHelp": "Abre la página de instalación de Vera para ChatGPT Work y Codex.",
         "install.coworkButton": "Descargar para Claude Cowork",
         "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
-        "install.video.title": "De ChatGPT en el teléfono a Vera o Clara en Codex",
+        "install.video.title": "Conecta ChatGPT al ordenador con Codex",
         "footer.product": "Vera · Codex para asesores fiscales y contables",
         "footer.linksLabel": "Información",
         "footer.source": "Código fuente",
