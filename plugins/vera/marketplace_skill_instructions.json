@@ -147,9 +147,9 @@
     },
     "studio-archive": {
       "display_name": "Archivio studio",
-      "short_description": "Cerca e organizza le evidenze di un solo cliente",
-      "default_prompt": "Usa $studio-archive per cercare nella fonte indicata le evidenze relative a questo cliente e restituire risultati tracciabili.",
-      "instructions": "Indica un solo cliente e la fonte da consultare: file o cartella locale dello studio, cartella Google Drive o Shared Drive autorizzata, Gmail connesso oppure una chat WhatsApp Desktop verificata. Vera lega Google Workspace all'ID stabile della cartella cliente, ricontrolla versione, parent e checksum disponibili prima di aprire una fonte e mantiene separato il perimetro del cliente. Restituisce evidenze e risultati tracciabili senza modificare o inviare contenuti nelle fonti consultate."
+      "short_description": "Cerca evidenze e registra il flusso Agenzia",
+      "default_prompt": "Usa $studio-archive per cercare evidenze di un cliente oppure mostrarti come scarico le fatture dall’Agenzia delle Entrate.",
+      "instructions": "Indica un solo cliente e la fonte da consultare: file o cartella locale dello studio, cartella Google Drive o Shared Drive autorizzata, Gmail connesso oppure una chat WhatsApp Desktop verificata. Se invece un operatore autorizzato chiede di mostrare o insegnare a Vera come scaricare fatture attive o passive e il relativo ZIP dall’Agenzia delle Entrate, Vera seleziona il registratore privacy-bounded di Codex Desktop, lascia all’operatore autenticazione e selezione del profilo e conserva soltanto una mappa tecnica sanificata, mai credenziali, cookie, fatture o ZIP. Vera lega Google Workspace all'ID stabile della cartella cliente, ricontrolla versione, parent e checksum disponibili prima di aprire una fonte e mantiene separato il perimetro del cliente. Restituisce evidenze e risultati tracciabili senza modificare o inviare contenuti nelle fonti consultate."
     },
     "presenza-digitale-studio": {
       "display_name": "Presenza digitale dello studio",

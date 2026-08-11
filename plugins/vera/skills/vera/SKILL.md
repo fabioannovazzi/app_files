@@ -205,7 +205,10 @@ them without changing the capability catalog:
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound
-  Google Drive client folder, including an authorized Shared Drive.
+  Google Drive client folder, including an authorized Shared Drive. It also
+  owns the separate Codex Desktop route for an authorized operator to show or
+  teach Vera the Agenzia delle Entrate active/passive invoice-download and ZIP-
+  retrieval flow through a privacy-bounded post-authentication recording.
   Gmail uses a callable read-only connector, task-scoped confirmed addresses,
   bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
   is capability-gated and excluded from Cowork v1; on another supported local
