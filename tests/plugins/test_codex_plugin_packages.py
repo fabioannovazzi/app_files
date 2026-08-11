@@ -523,7 +523,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.115"
+    assert manifest["version"] == "0.1.116"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -2208,6 +2208,19 @@ def test_dependency_checkers_are_packaged_in_download_zips() -> None:
             assert requirements in names
 
 
+def test_clara_and_vera_package_managed_python_launchers() -> None:
+    builder = load_builder()
+
+    for package in builder.load_packages():
+        if package.plugin not in {"clara", "vera"}:
+            continue
+        prefix = f"{package.package_root}/plugins/{package.plugin}/scripts/"
+        with ZipFile(package.output_zip) as archive:
+            names = set(archive.namelist())
+        assert prefix + "managed_python_runtime.py" in names
+        assert prefix + "_managed_python_runtime.py" in names
+
+
 def test_standard_accounting_bundle_marketplace_contains_public_plugins() -> None:
     with ZipFile(ACCOUNTING_BUNDLE_ZIP) as archive:
         names = set(archive.namelist())
@@ -3179,7 +3192,9 @@ def test_prompt_optimizer_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
-def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_preparation() -> None:
+def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_preparation() -> (
+    None
+):
     page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -3191,7 +3206,10 @@ def test_new_client_pages_keep_native_jurisdictions_and_localize_spanish_file_pr
     assert 'new URLSearchParams(window.location.search).get("lang")' in page
     assert 'const isItaly = lang === "it";' in page
     assert 'document.querySelectorAll("[data-italy-only]")' in page
-    assert 'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"' in page
+    assert (
+        'data-video-modules="dati-fiscali-strutturati,avviso-intake,email-cliente"'
+        in page
+    )
     assert 'data-lang="' not in page
     assert 'id="market-' not in page
     assert "const language = page.defaultLanguage;" in jurisdiction_source
@@ -4681,7 +4699,7 @@ def test_companion_overview_video_follows_the_intended_product_story(
         assurance = page.split(
             '<section class="section-block" id="assurance">', maxsplit=1
         )[1].split("</section>", maxsplit=1)[0]
-        assert 'data-featured-video' in assurance
+        assert "data-featured-video" in assurance
         assert 'id="video"' not in page
         assert page.count('class="overview-video"') == 1
         assert "install-panel__video" not in page

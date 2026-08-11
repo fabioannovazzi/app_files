@@ -802,7 +802,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.137"
+    assert manifest["version"] == "0.1.138"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -3479,7 +3479,7 @@ def test_dependency_checker_missing_ocr_uses_managed_setup_prompt(
     )
     monkeypatch.setattr(checker, "check_dependencies", lambda _files: ["paddleocr"])
 
-    return_code = checker.main(["--input", str(source)])
+    return_code = checker.main(["--managed-verify", "--input", str(source)])
 
     assert return_code == 1
     assert "OCR_SETUP_REQUIRED" in caplog.text

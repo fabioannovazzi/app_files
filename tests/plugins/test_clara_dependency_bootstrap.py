@@ -44,6 +44,14 @@ def completed(
     return subprocess.CompletedProcess(command, returncode, "", "")
 
 
+def create_fake_virtualenv(command: list[str]) -> None:
+    if command[1:3] != ["-m", "venv"]:
+        return
+    python = Path(command[-1]) / "bin" / "python"
+    python.parent.mkdir(parents=True)
+    python.write_text("", encoding="utf-8")
+
+
 def test_requirements_fingerprint_includes_recursive_requirement_files(
     tmp_path: Path,
 ) -> None:
@@ -72,6 +80,7 @@ def test_bootstrap_installs_validates_and_exposes_dependencies(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
         commands.append(command)
+        create_fake_virtualenv(command)
         return completed(command)
 
     ready, detail = bootstrap.bootstrap_dependencies(
@@ -83,16 +92,20 @@ def test_bootstrap_installs_validates_and_exposes_dependencies(
 
     target = bootstrap.dependency_target(plugin_root, data_dir)
     assert ready is True
-    assert detail == f"Clara dependencies installed at {target}"
+    assert detail == f"Python runtime installed at {target}"
     assert target.is_dir()
-    assert commands[0][:4] == [sys.executable, "-m", "pip", "install"]
-    assert commands[1] == [
-        sys.executable,
+    runtime_python = str(target / "bin" / "python")
+    assert commands[0][:3] == [sys.executable, "-m", "venv"]
+    assert commands[1][:4] == [runtime_python, "-m", "pip", "install"]
+    assert commands[2] == [
+        runtime_python,
         str(plugin_root / "scripts" / "check_dependencies.py"),
+        "--managed-verify",
     ]
     assert env_file.read_text(encoding="utf-8") == (
         "# Clara Python dependencies\n"
-        f"export PYTHONPATH={target}${{PYTHONPATH:+:${{PYTHONPATH}}}}\n"
+        f"export VIRTUAL_ENV={target}\n"
+        f"export PATH={target / 'bin'}${{PATH:+:${{PATH}}}}\n"
     )
 
 
@@ -105,14 +118,22 @@ def test_bootstrap_reuses_valid_fingerprinted_dependencies(
     env_file = tmp_path / "claude-env"
     write_requirements(plugin_root)
     target = bootstrap.dependency_target(plugin_root, data_dir)
-    target.mkdir(parents=True)
     commands: list[list[str]] = []
 
     def fake_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
         commands.append(command)
+        create_fake_virtualenv(command)
         return completed(command)
+
+    first_ready, _ = bootstrap.bootstrap_dependencies(
+        plugin_root,
+        data_dir,
+        env_file,
+        runner=fake_runner,
+    )
+    commands.clear()
 
     ready, detail = bootstrap.bootstrap_dependencies(
         plugin_root,
@@ -121,12 +142,14 @@ def test_bootstrap_reuses_valid_fingerprinted_dependencies(
         runner=fake_runner,
     )
 
+    assert first_ready is True
     assert ready is True
-    assert detail == f"Clara dependencies ready at {target}"
+    assert detail == f"Python runtime ready at {target}"
     assert commands == [
         [
-            sys.executable,
+            str(target / "bin" / "python"),
             str(plugin_root / "scripts" / "check_dependencies.py"),
+            "--managed-verify",
         ]
     ]
     assert (
@@ -144,7 +167,13 @@ def test_bootstrap_fails_open_when_pip_fails(tmp_path: Path) -> None:
     def fake_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
-        return subprocess.CompletedProcess(command, 1, "", "network unavailable")
+        create_fake_virtualenv(command)
+        return subprocess.CompletedProcess(
+            command,
+            1 if command[1:3] == ["-m", "pip"] else 0,
+            "",
+            "network unavailable",
+        )
 
     ready, detail = bootstrap.bootstrap_dependencies(
         plugin_root,
@@ -156,6 +185,4 @@ def test_bootstrap_fails_open_when_pip_fails(tmp_path: Path) -> None:
     assert ready is False
     assert detail == "network unavailable"
     assert not env_file.exists()
-    dependency_root = data_dir / bootstrap.DEPENDENCY_DIR_NAME
-    assert dependency_root.is_dir()
-    assert list(dependency_root.iterdir()) == []
+    assert not bootstrap.dependency_target(plugin_root, data_dir).exists()

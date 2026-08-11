@@ -624,10 +624,11 @@ enhancement. It does not call Gmail. Never attempt this CLI or require these
 tools in a Gmail connector run.
 
 If the core dependency check fails, report the missing requirement and tell the
-user that the declared requirements can be installed with:
+user that Vera could not prepare its managed Python runtime. From the Vera
+plugin root, retry the managed module check rather than running pip directly:
 
 ```bash
-python -m pip install -r requirements.txt
+python scripts/check_dependencies.py --module studio-archive
 ```
 
 For scanned sources, check the optional local OCR requirements separately:
@@ -636,9 +637,10 @@ For scanned sources, check the optional local OCR requirements separately:
 python scripts/check_dependencies.py --requirements requirements-ocr.txt
 ```
 
-Do not install packages at runtime. OCR must keep model downloads disabled; if
-local weights are unavailable, continue with readable files and report the
-limitation.
+Core packages are installed only through Vera's fingerprinted, user-scoped
+managed virtual environment. OCR remains a separate, explicit setup and must keep model
+downloads disabled; if local weights are unavailable, continue with readable
+files and report the limitation.
 
 ## Codex-Native Run UX
 

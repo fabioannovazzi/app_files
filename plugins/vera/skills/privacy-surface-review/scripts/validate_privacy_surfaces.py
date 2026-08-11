@@ -397,6 +397,7 @@ def _boundary_errors(
             activation = boundary.get("activation")
             automatic = {
                 "automatic_session_start",
+                "automatic_on_first_use",
                 "automatic_after_prior_submission",
                 "automatic_after_prior_connection",
             }

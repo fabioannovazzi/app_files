@@ -95,7 +95,7 @@ call.
 | Add type hints and short docstrings | Improves IDE help & static checks |
 | Start new modules with `from __future__ import annotations` and define `__all__` to enumerate exported names | Enables forward references and clarifies the public API |
 | Preserve existing behaviour—run tests before committing | Prevents accidental regressions |
-| **Never** install packages at runtime | Declare them in `requirements.txt` |
+| Never install arbitrary packages at runtime | Declare core packages in `requirements.txt`; Clara and Vera may install only those published declarations into their fingerprinted, user-scoped managed virtual environments. Optional OCR remains a separate, explicitly approved setup. |
 | Use `get_schema_and_column_names(df)` to retrieve column names and schema | Avoid inconsistent access via `df.columns` or `df.schema` |
 | Use `get_row_count(df)` for row counts and `df.width` for column counts; avoid `len(df)`, `df.shape[0]`, and `len(df.columns)` | Ensures consistent Polars usage and avoids Pandas-style APIs |
 | Avoid bare `except` clauses or broad `Exception` catches | Silent failures hinder maintenance; only suppress expected errors |

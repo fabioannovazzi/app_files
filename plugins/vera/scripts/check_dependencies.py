@@ -9,6 +9,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from managed_python_runtime import ensure_runtime, runtime_environment, runtime_python
+
 __all__ = ["main"]
 
 LOGGER = logging.getLogger(__name__)
@@ -70,9 +72,14 @@ def main(argv: list[str] | None = None) -> int:
     delegated_args = list(remaining)
     if args.requirements is not None:
         delegated_args = ["--requirements", str(args.requirements), *delegated_args]
+    ready, target, detail = ensure_runtime(PLUGIN_ROOT, args.module)
+    if not ready:
+        LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
+        return 1
     completed = subprocess.run(
-        [sys.executable, str(checker), *delegated_args],
+        [str(runtime_python(target)), str(checker), *delegated_args],
         cwd=component_root,
+        env=runtime_environment(target),
         check=False,
     )
     return completed.returncode

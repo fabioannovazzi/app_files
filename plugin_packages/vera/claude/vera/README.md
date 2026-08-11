@@ -70,6 +70,12 @@ implementation of each specialist workflow remains in its existing
 `plugins/<module>` directory. Package builders embed those modules under
 `modules/` so each distributable is self-contained.
 
+Before a module helper runs, Vera prepares only that module's published core
+requirements in a fingerprinted, user-scoped managed virtual environment and reuses it
+across restarts. Helpers run through `scripts/managed_python_runtime.py`; module
+environments are isolated from one another, and the optional shared OCR runtime
+remains a separate explicitly approved setup.
+
 The shared specialist workflows cover:
 
 - new-client file preparation, evidence gaps, identity, engagement, privacy,

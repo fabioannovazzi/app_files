@@ -1,0 +1,62 @@
+{
+  "schema_version": 2,
+  "service_id": "managed-python-runtime",
+  "display_name": "Managed Python runtime",
+  "governed_paths": [
+    "components.json",
+    "scripts/check_dependencies.py",
+    "scripts/_managed_python_runtime.py",
+    "scripts/managed_python_runtime.py",
+    "skills/vera/SKILL.md"
+  ],
+  "runtime_profiles": [
+    "openai-codex"
+  ],
+  "external_boundaries": [
+    {
+      "id": "declared-core-dependency-retrieval",
+      "kind": "hosted_service",
+      "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
+      "purpose": "Prepare the selected Vera module's published core Python requirements in an isolated virtual environment on first use or after its requirement fingerprint or Python platform changes",
+      "content": "Package names and version constraints from the selected published module requirements files, plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by the managed runtime.",
+      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. Package-index request-log retention is controlled by the configured index and is outside Vera's control.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "The manager installs only the selected module's published requirements graph and never derives package names from prompts, client files, or generated content.",
+        "The target is keyed by the recursive requirements fingerprint, Python ABI, and operating-system platform and is validated before use.",
+        "Each Vera module has a separate virtual environment, preventing incompatible requirement graphs or base-interpreter packages from being combined; the optional shared OCR runtime remains separate and requires its existing explicit approval."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "published-requirements-only",
+      "control": "Core runtime setup accepts only the selected packaged module requirements file and its local recursive includes.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py",
+        "scripts/_managed_python_runtime.py"
+      ],
+      "on_violation": "An unknown module, missing requirements file, invalid target, or failed dependency validation stops the helper instead of executing it in a partial environment."
+    },
+    {
+      "id": "user-scoped-runtime-isolation",
+      "control": "Managed packages are written outside plugin source and client workspaces to one fingerprinted virtual environment for the selected module and current Python platform.",
+      "implemented_by": [
+        "scripts/managed_python_runtime.py",
+        "scripts/_managed_python_runtime.py"
+      ],
+      "on_violation": "A target creation or validation failure returns a bounded setup error and the requested helper is not run."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-11",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "6520dd8fc73e3ce6094e780efe62b38f92e4ecca6b263a9d42596c0af3f32ae3"
+  }
+}
