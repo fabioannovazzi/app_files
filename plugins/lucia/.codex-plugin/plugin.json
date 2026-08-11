@@ -1,7 +1,7 @@
 {
   "name": "lucia",
-  "version": "0.1.6",
-  "description": "Lucia affianca avvocati indipendenti e studi legali nella ricerca verificabile, nella comunicazione professionale e nella presenza digitale dello studio.",
+  "version": "0.1.7",
+  "description": "Lucia affianca avvocati indipendenti e studi legali nell'impostare quesiti professionali e verificare risposte, memorie, pareri e lettere rispetto a fonti, ragionamento e giudizio professionale.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
@@ -40,7 +40,7 @@
   "interface": {
     "displayName": "Lucia",
     "shortDescription": "Assistente AI per avvocati",
-    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali nella ricerca verificabile, nella comunicazione professionale e nella presenza digitale dello studio.\n\nImposta quesiti e incarichi, verifica affermazioni, fonti e ragionamento, decide se una novità merita di essere comunicata e prepara email, articoli, post e siti informativi da materiali verificati. I workflow sono adattati al contesto, alla giurisdizione e al risultato atteso.\n\nLucia mantiene visibili fonti, ambiguità, riservatezza, informazioni mancanti e passaggi di approvazione. Firma, strategia, invio, deposito, pubblicazione e giudizio professionale restano all’avvocato.",
+    "longDescription": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali. Imposta quesiti e incarichi, analizza materiali e fonti, verifica affermazioni e ragionamento e prepara ricerche, documenti e risultati rivedibili.\n\nSupporta il lavoro legale attraverso workflow specialistici adattati al contesto, alla giurisdizione e al risultato atteso. Aiuta a strutturare attività, controllare documenti e fonti e mantenere collegati materiali, passaggi e decisioni.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [

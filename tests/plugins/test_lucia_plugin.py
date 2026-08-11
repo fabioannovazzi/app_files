@@ -78,7 +78,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.6"
+    assert manifest["version"] == "0.1.7"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -86,9 +86,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert len(interface["defaultPrompt"]) == 3
     assert all(len(prompt) <= 128 for prompt in interface["defaultPrompt"])
     assert "avvocati indipendenti" in interface["longDescription"]
-    assert "Lucia mantiene visibili fonti" in interface["longDescription"]
-    assert "comunicazione professionale" in interface["longDescription"]
-    assert "presenza digitale" in interface["longDescription"]
+    assert "Lucia mostra fonti" in interface["longDescription"]
     assert "esattamente due" not in interface["longDescription"]
     assert "prima versione" not in interface["longDescription"]
 
@@ -331,7 +329,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.5"
+        assert manifest["version"] == "0.1.6"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -520,6 +518,21 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
         .strip()
     )
 
-    assert manifest["interface"]["longDescription"] == approved
+    stable_description = (
+        "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e "
+        "studi legali. Imposta quesiti e incarichi, analizza materiali e fonti, "
+        "verifica affermazioni e ragionamento e prepara ricerche, documenti e "
+        "risultati rivedibili.\n\n"
+        "Supporta il lavoro legale attraverso workflow specialistici adattati "
+        "al contesto, alla giurisdizione e al risultato atteso. Aiuta a "
+        "strutturare attività, controllare documenti e fonti e mantenere "
+        "collegati materiali, passaggi e decisioni.\n\n"
+        "Lucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima "
+        "di consegnare il risultato. Firma, approvazione, deposito, invio, "
+        "pubblicazione e giudizio professionale restano all’avvocato."
+    )
+
+    assert approved == stable_description
+    assert manifest["interface"]["longDescription"] == stable_description
     assert len(approved.split("\n\n")) == 3
     assert len(approved.split()) <= 120
