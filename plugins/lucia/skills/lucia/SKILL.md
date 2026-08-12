@@ -66,6 +66,7 @@ funzione Lucia:
 | Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../deep-research-validator/SKILL.md` e seguilo. |
 | Novità giuridica o professionale da valutare e trasformare in email, circolare, articolo, post, FAQ, alert o visuale | Leggi integralmente `../comunicazione-professionale/SKILL.md` e seguilo. Non duplicare i passaggi di answer contract e claim assurance già incorporati nel workflow. |
 | Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
+| Nuova pratica per un nuovo cliente o per un cliente esistente da raccogliere e preparare all'apertura | Leggi integralmente `../apertura-pratica/SKILL.md` e seguilo. Usa il suo validatore specifico e il contratto di revisione dell'avvocato. |
 | Percorso completo dal quesito alla consegna | Esegui prima `../prompt-optimizer/SKILL.md`, prepara la risposta con ragionamento model-led e fonti qualificate, poi esegui `../deep-research-validator/SKILL.md` prima della consegna. |
 | Nessun workflow registrato copre la richiesta | Fermati. Dì soltanto che Lucia non dispone di un workflow adatto; non rispondere al merito e non offrire un percorso generico. |
 
@@ -96,6 +97,11 @@ componente completo e aggiungono il profilo obbligatorio per avvocati su
 riservatezza, identità professionale, affermazioni pubbliche, applicabilità e
 pubblicazione. Il profilo Lucia può cambiare quei contratti professionali, ma
 non può indebolire evidenze, review, rendering, hash, preview o packaging.
+
+Apertura pratica è nativa di Lucia. Riusa Studio Archive soltanto per il ciclo
+privato di cliente, incarico, evidenze e run; schema legale, confini
+professionali, validatore e ricevute di revisione restano specifici di Lucia e
+non sono sostituiti dal Deep Research Validator.
 
 Studio Archive è solo l'infrastruttura privata necessaria al contratto di
 input, output e tracciabilità. Non presentarlo come capacità Lucia e non usarlo

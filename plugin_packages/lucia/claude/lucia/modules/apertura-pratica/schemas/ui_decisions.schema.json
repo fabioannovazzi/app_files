@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/apertura-pratica/ui-decisions-1.0.json",
+  "title": "Apertura pratica review decisions",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow",
+    "run_id",
+    "intake_sha256",
+    "review_payload_sha256",
+    "reviewer",
+    "decision_source",
+    "confirmed_by_user",
+    "saved_at",
+    "decisions"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "workflow": {"const": "apertura-pratica"},
+    "run_id": {"type": "string", "minLength": 3},
+    "intake_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "review_payload_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reviewer": {"type": "string", "minLength": 1, "maxLength": 160},
+    "decision_source": {"enum": ["local_workbench", "chat_confirmed"]},
+    "confirmed_by_user": {"const": true},
+    "saved_at": {"type": "string", "format": "date-time"},
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["item_id", "action", "note"],
+        "properties": {
+          "item_id": {"type": "string", "minLength": 1},
+          "action": {"enum": ["accept", "return", "reject"]},
+          "note": {"type": "string", "maxLength": 5000}
+        }
+      }
+    }
+  }
+}

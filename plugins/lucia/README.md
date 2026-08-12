@@ -27,6 +27,10 @@ attualmente pubbliche sono:
 - **Presenza digitale dello studio** — Crea o rinnova il sito informativo dello
   studio legale da materiali verificati, con review desktop e telefono, preview
   e pubblicazione subordinata all’approvazione.
+- **Apertura pratica** — Prepara l’apertura di una nuova pratica per un nuovo
+  cliente o per un cliente esistente: evidenze, soggetti, controllo conflitti,
+  incarico, possibili scadenze, antiriciclaggio condizionale e piano del
+  fascicolo restano espliciti e soggetti alla revisione dell’avvocato.
 
 Prompt Optimizer e Deep Research Validator sono le stesse implementazioni
 canoniche incorporate in Vera. Lucia non ne mantiene copie divergenti: il
@@ -38,6 +42,10 @@ canonica di Vera per evidenze, review, rendering, preview, hash e packaging, ma
 passano da wrapper Lucia con un profilo distinto per avvocati. Il profilo
 disciplina riservatezza, identità professionale, affermazioni pubbliche,
 applicabilità e approvazione della pubblicazione.
+
+Apertura pratica è un workflow nativo di Lucia. Riusa Studio Archive soltanto
+per il ciclo privato di cliente, incarico, input e run; applica uno schema, un
+validatore e ricevute di revisione specifici per l’apertura della pratica.
 
 ## Come lavora
 

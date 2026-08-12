@@ -27,6 +27,7 @@ const ALLOWED_TOOLS = new Set([
 const LUCIA_WORKFLOWS = new Set([
   "prompt-optimizer",
   "deep-research-validator",
+  "apertura-pratica",
 ]);
 
 const pluginRoot = path.resolve(__dirname, "..");
@@ -88,7 +89,7 @@ childLines.on("line", (line) => {
   } else if (message.result?.serverInfo?.name === "vera-studio-archive") {
     message.result.serverInfo.name = "lucia-assurance-runtime";
     message.result.instructions =
-      "Private lifecycle for Lucia's Prompt Optimizer and Deep Research Validator only. Do not use it for archive search, email, messaging, or unrelated workflows.";
+      "Private lifecycle for Lucia's registered assurance and matter-opening workflows. Do not use it for archive search, email, messaging, or unrelated workflows.";
   }
   send(message);
 });

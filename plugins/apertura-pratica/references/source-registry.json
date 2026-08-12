@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "professional_country": "IT",
+  "checked_at": "2026-08-12",
+  "sources": [
+    {
+      "id": "cnf-cdf-art-24",
+      "authority": "Consiglio Nazionale Forense",
+      "title": "Codice Deontologico Forense, art. 24 · Conflitto di interessi",
+      "url": "https://codicedeontologico-cnf.it/voci/art-24-cdf-conflitto-di-interessi/",
+      "use": "Professional review of possible conflicts and circumstances that may require abstention."
+    },
+    {
+      "id": "cnf-cdf-art-28",
+      "authority": "Consiglio Nazionale Forense",
+      "title": "Codice Deontologico Forense, art. 28 · Riserbo e segreto professionale",
+      "url": "https://codicedeontologico-cnf.it/voci/art-28-cdf-riserbo-e-segreto-professionale/",
+      "use": "Professional review of secrecy, confidentiality, collaborators and disclosure boundaries."
+    },
+    {
+      "id": "legge-247-2012",
+      "authority": "Normattiva",
+      "title": "Legge 31 dicembre 2012, n. 247 · Ordinamento della professione forense",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:2012-12-31;247",
+      "use": "Current primary-law basis for engagement and professional-information review."
+    },
+    {
+      "id": "garante-regole-difesa-2018",
+      "authority": "Garante per la protezione dei dati personali",
+      "title": "Regole deontologiche per investigazioni difensive e tutela di un diritto",
+      "url": "https://www.garanteprivacy.it/home/docweb/-/docweb-display/docweb/9069653",
+      "use": "Professional review of matter-file data handling, disclosure and retention posture."
+    },
+    {
+      "id": "d-lgs-231-2007",
+      "authority": "Normattiva",
+      "title": "Decreto legislativo 21 novembre 2007, n. 231",
+      "url": "https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:decreto.legislativo:2007-11-21;231",
+      "use": "Current primary-law basis for deciding whether AML duties apply to the specific legal service."
+    }
+  ],
+  "runtime_note": "The registry is a research starting point, not a frozen rule table. Verify current text, applicability, local Bar requirements and matter facts before professional acceptance."
+}

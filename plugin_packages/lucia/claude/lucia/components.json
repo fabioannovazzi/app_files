@@ -4,7 +4,8 @@
     "prompt-optimizer",
     "deep-research-validator",
     "comunicazione-professionale",
-    "presenza-digitale-studio"
+    "presenza-digitale-studio",
+    "apertura-pratica"
   ],
   "workflow_roles": {
     "prompt-optimizer": {
@@ -20,6 +21,10 @@
     "presenza-digitale-studio": {
       "kind": "public_workflow",
       "profile": "lucia-lawyer"
+    },
+    "apertura-pratica": {
+      "kind": "public_workflow",
+      "profile": "lucia-legal-matter-opening"
     }
   }
 }

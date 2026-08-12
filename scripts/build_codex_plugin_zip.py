@@ -171,6 +171,7 @@ LUCIA_CHATGPT_ROUTER_TARGETS = {
     ),
     "comunicazione-professionale": "skills/comunicazione-professionale/SKILL.md",
     "presenza-digitale-studio": "skills/presenza-digitale-studio/SKILL.md",
+    "apertura-pratica": "skills/apertura-pratica/SKILL.md",
 }
 REQUIRED_CHATGPT_HEADING = "## ChatGPT and Codex Runtime"
 REQUIRED_CHATGPT_CONTINUATION = (

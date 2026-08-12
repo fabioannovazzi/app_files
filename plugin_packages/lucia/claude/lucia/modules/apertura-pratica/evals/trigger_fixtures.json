@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "plugin": "apertura-pratica",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "new-client-new-matter",
+      "prompt": "Apri una nuova pratica per questo cliente e dimmi che cosa manca prima di accettare l’incarico.",
+      "required_signals": ["nuova pratica", "documenti mancanti", "decisione dell’avvocato"]
+    },
+    {
+      "id": "existing-client-new-matter",
+      "prompt": "Il cliente è già censito: prepara il fascicolo per un nuovo contenzioso e il controllo conflitti.",
+      "required_signals": ["cliente esistente", "soggetti", "controllo conflitti"]
+    },
+    {
+      "id": "multilingual-matter-intake",
+      "prompt": "Organize these intake documents, parties, possible deadlines and engagement scope for lawyer review.",
+      "required_signals": ["evidence", "possible deadlines", "lawyer review"]
+    }
+  ],
+  "should_not_trigger": [
+    {"id": "validate-opinion", "prompt": "Verifica questo parere rispetto alle fonti citate."},
+    {"id": "professional-post", "prompt": "Prepara un post LinkedIn su questa sentenza."},
+    {"id": "archive-reorganization", "prompt": "Riordina definitivamente tutte le cartelle dello studio."}
+  ]
+}

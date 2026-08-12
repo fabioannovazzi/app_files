@@ -5,12 +5,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
 
 from archive_core import (
+    CLIENT_WORKFLOW_IDS,
     VERA_CLIENT_WORKFLOW_IDS,
     ArchiveError,
     authorize_studio_google_drive,
@@ -112,7 +114,11 @@ def _parser() -> argparse.ArgumentParser:
     prepare_workflow.add_argument("--engagement-id", required=True)
     prepare_workflow.add_argument(
         "--workflow-id",
-        choices=list(VERA_CLIENT_WORKFLOW_IDS),
+        choices=list(
+            CLIENT_WORKFLOW_IDS
+            if os.environ.get("LUCIA_ASSURANCE_HOST") == "1"
+            else VERA_CLIENT_WORKFLOW_IDS
+        ),
         required=True,
     )
 

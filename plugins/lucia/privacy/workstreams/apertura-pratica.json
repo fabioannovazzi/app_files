@@ -1,0 +1,86 @@
+{
+  "schema_version": 3,
+  "workstream": "apertura-pratica",
+  "display_name": "Apertura pratica",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "references",
+    "assets",
+    "evals"
+  ],
+  "governed_repository_paths": [
+    "plugins/studio-archive/scripts/archive_core.py",
+    "plugins/studio-archive/scripts/studio_archive.py",
+    "plugins/studio-archive/scripts/client_ledger.py",
+    "plugins/studio-archive/mcp/server.cjs"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "legal-matter-opening-material",
+        "purpose": "Prepare a new client matter or a new matter for an existing client for lawyer review",
+        "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "optional-current-official-source-research",
+      "kind": "public_research",
+      "destination": "Current official legal, regulatory, bar and public-authority sources selected for the matter-opening question",
+      "purpose": "Verify current professional boundaries or a generic legal source needed to frame an intake issue",
+      "content": "Generic law, authority, provision, date, jurisdiction and topic queries plus public source URLs; no client identity, party identity, private facts, conflict-register content, documents, credentials, cookies or session material",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Use generic topic-level queries and keep client, party and matter identifiers out of public research.",
+        "Record the exact source URL, authority and retrieval date before using it as a source reference.",
+        "Keep credentials, cookies, tokens, one-time codes and private register content out of research requests."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "private-path-and-immutable-evidence",
+      "control": "Initialization rejects repository paths, uses owner-only permissions and atomic writes; evidence intake accepts only regular non-linked files, snapshots bytes without moving or renaming originals, and records size and SHA-256."
+    },
+    {
+      "id": "dedicated-legal-opening-validator",
+      "control": "The validator checks exhaustive schema structure, reference closure, immutable evidence hashes, professional-gate completeness and receipt freshness while explicitly leaving conflict, deadline, applicability and engagement judgments to the lawyer."
+    },
+    {
+      "id": "digest-bound-explicit-review",
+      "control": "Review decisions bind the exact intake and substantive review payload digests, require a named reviewer and explicit user confirmation, and become stale when the intake changes."
+    },
+    {
+      "id": "no-automatic-file-operation-or-acceptance",
+      "control": "The workflow proposes a folder plan but never moves, renames or deletes source files and never claims that a client, engagement, conflict result or deadline was accepted automatically."
+    },
+    {
+      "id": "conditional-aml-boundary",
+      "control": "AML applicability is represented as a separate professional assessment with applicable, not-applicable or uncertain status; the workflow does not infer applicability merely because a client or matter is new."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-12",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "40bb0c1c02be613771a23079b73480f114be2e71b740fe2ecef4f5e913fd1ddc"
+  }
+}

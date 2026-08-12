@@ -16,6 +16,7 @@ SOURCE_ROOT = "https://github.com/fabioannovazzi/app_files/blob/main"
 
 _ITALIAN_WORKFLOW_NAMES = {
     "archive-organization": "Organizzazione dell’archivio",
+    "apertura-pratica": "Apertura pratica",
     "attribute-reporting": "Analisi degli attributi retail",
     "audit-reconciliation": "Riconciliazione di revisione",
     "bandi-agevolazioni": "Bandi e agevolazioni",
@@ -410,7 +411,7 @@ def _lucia_public_text(value: str) -> str:
 
 
 def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
-    """Reuse canonical workstream boundaries for Lucia's registered workflows."""
+    """Load Lucia-native boundaries, falling back to shared Vera mechanics."""
 
     lucia_root = root / "plugins" / "lucia"
     components = _read_json(lucia_root / "components.json")
@@ -421,8 +422,13 @@ def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
         if isinstance(roles.get(identifier), dict)
         and roles[identifier].get("kind") == "public_workflow"
     }
-    manifest_dir = root / "plugins" / "vera" / "privacy" / "workstreams"
-    manifest_paths = {path.stem: path for path in manifest_dir.glob("*.json")}
+    vera_manifest_dir = root / "plugins" / "vera" / "privacy" / "workstreams"
+    lucia_manifest_dir = lucia_root / "privacy" / "workstreams"
+    manifest_paths = {path.stem: path for path in vera_manifest_dir.glob("*.json")}
+    native_ids = {path.stem for path in lucia_manifest_dir.glob("*.json")}
+    manifest_paths.update(
+        {path.stem: path for path in lucia_manifest_dir.glob("*.json")}
+    )
     missing = sorted(public_ids - manifest_paths.keys())
     if missing:
         raise ValueError(
@@ -433,6 +439,7 @@ def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
     for identifier in sorted(public_ids):
         path = manifest_paths[identifier]
         manifest = _read_json(path)
+        project_identity = identifier not in native_ids
         workflows.append(
             {
                 "id": identifier,
@@ -444,8 +451,16 @@ def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
                 "model_intro_key": "model_intro_lucia",
                 "model_classes": [
                     {
-                        "purpose": _lucia_public_text(str(item["purpose"])),
-                        "content": _lucia_public_text(str(item["content"])),
+                        "purpose": (
+                            _lucia_public_text(str(item["purpose"]))
+                            if project_identity
+                            else str(item["purpose"])
+                        ),
+                        "content": (
+                            _lucia_public_text(str(item["content"]))
+                            if project_identity
+                            else str(item["content"])
+                        ),
                     }
                     for item in manifest["model_context"]["classes"]
                 ],
@@ -453,9 +468,21 @@ def _lucia_workflows(root: Path, lang: str) -> tuple[dict[str, Any], ...]:
                 "other_boundaries": [
                     {
                         **_public_boundary(item),
-                        "destination": _lucia_public_text(str(item["destination"])),
-                        "purpose": _lucia_public_text(str(item["purpose"])),
-                        "content": _lucia_public_text(str(item["content"])),
+                        "destination": (
+                            _lucia_public_text(str(item["destination"]))
+                            if project_identity
+                            else str(item["destination"])
+                        ),
+                        "purpose": (
+                            _lucia_public_text(str(item["purpose"]))
+                            if project_identity
+                            else str(item["purpose"])
+                        ),
+                        "content": (
+                            _lucia_public_text(str(item["content"]))
+                            if project_identity
+                            else str(item["content"])
+                        ),
                     }
                     for item in manifest["external_boundaries"]
                 ],

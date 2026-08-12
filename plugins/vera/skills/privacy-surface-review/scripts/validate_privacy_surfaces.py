@@ -572,6 +572,11 @@ def _manifest_errors(
         isinstance(item, str) and item for item in shared_governed
     ):
         errors.append(f"{workstream}: governed_shared_paths must be strings")
+    repository_governed = payload.get("governed_repository_paths", [])
+    if not isinstance(repository_governed, list) or not all(
+        isinstance(item, str) and item for item in repository_governed
+    ):
+        errors.append(f"{workstream}: governed_repository_paths must be strings")
     errors.extend(
         _runtime_profile_reference_errors(
             payload["runtime_profiles"],
@@ -767,6 +772,7 @@ def validate_privacy_surfaces(vera_root: Path | None = None) -> list[str]:
                 wrapper=wrapper,
                 vera_root=root,
                 shared_paths=payload.get("governed_shared_paths", []),
+                repository_paths=payload.get("governed_repository_paths", []),
             )
         except (OSError, ValueError) as exc:
             errors.append(f"{workstream}: cannot fingerprint governed source: {exc}")
@@ -836,6 +842,7 @@ def _refresh(workstream: str, vera_root: Path) -> None:
             wrapper=wrapper,
             vera_root=vera_root,
             shared_paths=payload.get("governed_shared_paths", []),
+            repository_paths=payload.get("governed_repository_paths", []),
         )
         manifest_path.write_text(
             json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"

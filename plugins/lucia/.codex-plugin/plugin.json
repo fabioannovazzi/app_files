@@ -1,6 +1,6 @@
 {
   "name": "lucia",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Lucia affianca avvocati indipendenti e studi legali nell'impostare quesiti professionali e verificare risposte, memorie, pareri e lettere rispetto a fonti, ragionamento e giudizio professionale.",
   "author": {
     "name": "Fabio Annovazzi · Mparanza",
@@ -29,6 +29,8 @@
     "pareri-legali",
     "memorie-legali",
     "lettere-legali",
+    "apertura-pratica",
+    "client-intake",
     "comunicazione-professionale",
     "sito-studio-legale",
     "legal-research",

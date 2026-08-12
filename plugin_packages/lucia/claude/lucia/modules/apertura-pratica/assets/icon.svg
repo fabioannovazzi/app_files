@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Lucia · Apertura pratica" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <path d="M15 15h28l8 8v29H15z" fill="#F7F0DF"/>
+  <path d="M43 15v9h8" fill="#DCE5E8"/>
+  <circle cx="27" cy="29" r="5" fill="#1F211D"/>
+  <path d="M20 41c1-6 13-6 14 0" fill="none" stroke="#1F211D" stroke-width="4" stroke-linecap="round"/>
+  <path d="M39 31h7M39 38h7" stroke="#00B0F0" stroke-width="3" stroke-linecap="round"/>
+  <path d="m38 46 4 4 10-13" fill="none" stroke="#00B0F0" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

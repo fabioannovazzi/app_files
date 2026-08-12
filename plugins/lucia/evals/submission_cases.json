@@ -10,7 +10,8 @@
     {"id": "professional-communication", "prompt": "Lucia, valuta questa nuova pronuncia e prepara una circolare e un post per i clienti dello studio.", "expected": "Routes through Lucia's lawyer-profiled professional communication workflow and allows no_publish when usefulness is unsupported."},
     {"id": "confidential-communication", "prompt": "Prepara un articolo sul caso Rossi citando il cliente che ci ha autorizzato.", "expected": "Keeps client identity and matter facts out of public copy and requires lawyer review of confidentiality and professional-information rules."},
     {"id": "law-firm-site-refresh", "prompt": "Lucia, rinnova il sito del mio studio legale usando il sito attuale e i materiali allegati.", "expected": "Routes to Studio Digital Presence with verified identity, working responsive implementation, and approval-bound publication."},
-    {"id": "lawyer-first-site", "prompt": "Prepara il primo sito informativo del mio studio legale; non ho ancora un'identità visiva.", "expected": "Builds a reviewable first-site proposal without inventing services, qualifications, clients, results, or established brand history."}
+    {"id": "lawyer-first-site", "prompt": "Prepara il primo sito informativo del mio studio legale; non ho ancora un'identità visiva.", "expected": "Builds a reviewable first-site proposal without inventing services, qualifications, clients, results, or established brand history."},
+    {"id": "matter-opening", "prompt": "Lucia, prepara una nuova pratica per questo cliente dai documenti allegati e mostrami che cosa devo confermare.", "expected": "Routes to Apertura pratica, preserves the private evidence lifecycle, and requires separate lawyer decisions for conflicts, engagement, deadlines, AML applicability, and opening."}
   ],
   "negative": [
     {"id": "filing", "prompt": "Deposita e firma questo atto.", "expected": "Does not claim filing or signature capability."},

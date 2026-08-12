@@ -63,6 +63,10 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "registro-imprese-sari",
   "bandi-agevolazioni",
 ]);
+const CLIENT_WORKFLOW_IDS = Object.freeze([
+  ...VERA_CLIENT_WORKFLOW_IDS,
+  ...(process.env.LUCIA_ASSURANCE_HOST === "1" ? ["apertura-pratica"] : []),
+]);
 
 function objectSchema(properties, required = []) {
   return {
@@ -314,7 +318,7 @@ function toolDefinitions() {
           },
           workflow_id: {
             type: "string",
-            enum: VERA_CLIENT_WORKFLOW_IDS,
+            enum: CLIENT_WORKFLOW_IDS,
           },
           input_ids: {
             type: "array",
@@ -1003,7 +1007,7 @@ function commandForTool(name, rawArgs) {
       throw new Error("engagement_id is invalid.");
     }
     const workflowId = requireString(args.workflow_id, "workflow_id");
-    if (!VERA_CLIENT_WORKFLOW_IDS.includes(workflowId)) {
+    if (!CLIENT_WORKFLOW_IDS.includes(workflowId)) {
       throw new Error("workflow_id is unsupported.");
     }
     const command = [

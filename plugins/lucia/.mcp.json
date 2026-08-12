@@ -18,7 +18,7 @@
     },
     "luciaAssuranceRuntime": {
       "title": "Lucia · Spazio di lavoro",
-      "description": "Infrastruttura privata per legare input e risultati dei due percorsi Lucia a un incarico revisionabile.",
+      "description": "Infrastruttura privata per legare input e risultati dei percorsi Lucia a un incarico revisionabile.",
       "icons": [{"src": "./assets/icon.svg", "mimeType": "image/svg+xml", "sizes": ["24x24"]}],
       "cwd": ".",
       "command": "node",
