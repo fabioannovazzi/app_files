@@ -528,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.124"
+    assert manifest["version"] == "0.1.125"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3637,6 +3637,10 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
         'data-model-data-status="relevant"'
     ) in section
     assert section.count('class="comms-creative comms-model-data"') == 1
+    assert section.rstrip().endswith("</aside>")
+    assert section.index('data-i18n="communication.modelData.kicker"') > section.index(
+        'data-i18n="communication.action"'
+    )
     for localized_heading in (
         "What data reaches the model",
         "Quelles données parviennent au modèle",
@@ -4082,6 +4086,11 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         'id="model-data" data-model-data-workflow="journal-bank-reconciliation" '
         'data-model-data-status="relevant"'
     ) in page
+    main = page[page.index("<main>") : page.index("</main>")]
+    assert main.rstrip().endswith("</section>")
+    assert main.rindex('<section class="section-block"') == main.index(
+        '<section class="section-block" id="model-data"'
+    )
     for snippet in (
         "Prima un piccolo campione. Poi, solo in Codex, il residuo utile.",
         "First a small sample. Then, in Codex only, the useful residual.",

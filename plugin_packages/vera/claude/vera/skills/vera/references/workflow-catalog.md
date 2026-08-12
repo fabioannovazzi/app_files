@@ -127,7 +127,9 @@ stored in a single client's Studio Archive engagement.
 Every public page or named product-page section that explains one registered
 professional workflow includes a localized **“Quali dati arrivano al modello”**
 / **“What data reaches the model”** block. Follow
-`public-process-page-contract.md`.
+`public-process-page-contract.md`. The entire block is always the final block in
+the process explanation, after all other process content and calls to action.
+Nothing in the process explanation follows it.
 
 Use model-led judgment from the inspected workflow evidence to choose whether
 the model-data distinction is `relevant` or `not-relevant`. When relevant,
