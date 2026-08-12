@@ -3643,9 +3643,8 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
     ) in section
     assert section.count('class="comms-creative comms-model-data"') == 1
     assert section.rstrip().endswith("</aside>")
-    assert section.index('data-i18n="communication.modelData.kicker"') > section.index(
-        'data-i18n="communication.action"'
-    )
+    assert 'href="#installa"' not in section
+    assert 'data-i18n="communication.action"' not in section
     for localized_heading in (
         "What data reaches the model",
         "Quelles données parviennent au modèle",
@@ -3689,9 +3688,10 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
         'data-model-data-workflow="presenza-digitale-studio" '
         'data-model-data-status="not-relevant"'
     ) in section
-    assert section.index("data-model-data-workflow=") > section.index(
-        'class="comms-actions"'
-    )
+    assert 'class="comms-actions"' not in section
+    assert 'href="#installa"' not in section
+    assert 'data-i18n="website.action"' not in section
+    assert 'data-i18n="website.example"' not in section
     assert section.rstrip().endswith("</aside>")
     assert ".comms-model-data {" in page
     assert ".comms-steps--three {" in page

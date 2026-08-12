@@ -916,27 +916,28 @@ def test_vera_hub_language_buttons_and_copy_keys_stay_in_sync() -> None:
         assert f'hreflang="{language}"' in page
 
 
-def test_vera_hub_opens_language_specific_variance_pdf_examples() -> None:
+def test_vera_hub_keeps_calls_to_action_in_the_installation_block() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    install_start = page.index('id="installa"')
+    install_end = page.index("</section>", install_start)
+    install_section = page[install_start:install_end]
 
-    assert page.count('"variance.report.action":') == 5
-    assert "data-variance-report-link" in page
-    assert "const varianceReports = {" in page
-    assert set(
-        re.findall(
-            r'href: "(/static/shared/vera/downloads/variance-analysis/'
-            r'variance-analysis-example-[a-z]{2}\.pdf)"',
-            page,
-        )
-    ) == {
-        "/static/shared/vera/downloads/variance-analysis/"
-        f"variance-analysis-example-{locale}.pdf"
-        for locale in ("it", "en", "fr", "de", "es")
-    }
-    assert "varianceReportLink.hidden = !varianceReport;" in page
-    assert 'varianceReportLink.setAttribute("target", "_blank");' in page
-    assert 'varianceReportLink.setAttribute("rel", "noopener noreferrer");' in page
-    assert 'varianceReportLink.setAttribute("download",' not in page
+    assert "data-vera-install-link" in install_section
+    assert "data-vera-cowork-download-link" in install_section
+    assert 'href="#installa"' not in page
+    assert 'class="text-link' not in page
+    assert "data-variance-report-link" not in page
+    assert "const varianceReports = {" not in page
+    assert "data-compliance-video-link" not in page
+    for removed_key in (
+        "variance.report.action",
+        "communication.action",
+        "website.example",
+        "website.action",
+        "privacy.dataLink",
+    ):
+        assert f'data-i18n="{removed_key}"' not in page
+        assert f'"{removed_key}":' not in page
 
 
 @pytest.mark.parametrize(
@@ -967,7 +968,7 @@ def test_vera_variance_pdf_example_matches_language_and_has_four_pages(
     assert heading in (reader.pages[0].extract_text() or "")
 
 
-def test_vera_website_section_links_the_unlisted_monica_preview() -> None:
+def test_unlisted_monica_preview_remains_available_without_a_hub_cta() -> None:
     preview_path = (
         SHARED_ROOT
         / "463b7449445ad5b75aec5107a5d74ed80f205790e3661780adca1f74dfd14407"
@@ -977,8 +978,7 @@ def test_vera_website_section_links_the_unlisted_monica_preview() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     preview = preview_path.read_text(encoding="utf-8")
 
-    assert f'href="{preview_href}"' in page
-    assert 'rel="noopener noreferrer nofollow"' in page
+    assert f'href="{preview_href}"' not in page
     assert '<meta name="robots" content="noindex, nofollow, noarchive">' in preview
 
 
@@ -1113,9 +1113,9 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     assert "privacy.governance" not in page
     assert section.count('class="data-position__fact"') == 4
     assert section.count('class="data-route"') == 2
-    assert 'href="/data-handling?lang=it#data-handling-video"' in section
-    assert "data-compliance-video-link" in section
-    assert "`/data-handling?lang=${lang}#data-handling-video`" in page
+    assert 'href="/data-handling?lang=it#data-handling-video"' not in section
+    assert "data-compliance-video-link" not in section
+    assert "`/data-handling?lang=${lang}#data-handling-video`" not in page
     for label in (
         "Guarda il video sulla gestione dei dati",
         "Watch the data-handling video",
@@ -1123,7 +1123,7 @@ def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
         "Video zur Datenverarbeitung ansehen",
         "Ver el vídeo sobre el tratamiento de datos",
     ):
-        assert label in page
+        assert label not in page
 
 
 @pytest.mark.parametrize(
