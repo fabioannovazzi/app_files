@@ -4726,6 +4726,21 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     )
 
 
+@pytest.mark.parametrize(
+    "page_name", ("vera", "clara", "lucia", "studio-archive")
+)
+def test_product_page_footer_omits_repeated_product_label(page_name: str) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    footer = page.split("<footer", maxsplit=1)[1].split("</footer>", maxsplit=1)[0]
+
+    assert 'data-i18n="footer.product"' not in footer
+    assert 'data-i18n="hero.eyebrow"' not in footer
+    assert '"footer.product"' not in page
+
+
 def test_clara_public_page_uses_vera_visual_system() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
