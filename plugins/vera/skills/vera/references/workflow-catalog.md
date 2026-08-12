@@ -36,7 +36,10 @@ skill to imitate a missing operational workflow.
   evidence consistency, and open issues.
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
-  learn only from selected prior studio communications; and prepare a
+  learn only from exact prior studio communications selected by the
+  professional, with local mechanical stripping of explicit identifiers, then
+  one isolated model-led pass that creates complete pseudonymized derivatives
+  before any downstream generation or review; and prepare a
   source-backed, studio-formatted client email, circular, LinkedIn post,
   newsletter, website article, FAQ, client alert, or graphical explainer for
   professional review and optional publication. `no_publish` is a successful
@@ -108,3 +111,19 @@ stored in a single client's Studio Archive engagement.
 - `privacy-surface-review`: review and register model-context and external-data
   boundaries when a Vera workflow or shared service changes. This is not a
   customer-case workflow.
+
+## Public process explanations
+
+Every public page or named product-page section that explains one registered
+professional workflow includes a localized **“Quali dati arrivano al modello”**
+/ **“What data reaches the model”** block. Follow
+`public-process-page-contract.md`.
+
+Use model-led judgment from the inspected workflow evidence to choose whether
+the model-data distinction is `relevant` or `not-relevant`. When relevant,
+explain the actual local/full-population work, every model-visible phase,
+bounds and Codex-versus-Cowork differences. When not relevant, say so and give
+the concrete reason. A deterministic test enforces only presence, registered
+identity, allowed status, order and localization; it never chooses the status
+or validates the professional reason. Keep `/data-handling` global rather than
+recreating a central function register.
