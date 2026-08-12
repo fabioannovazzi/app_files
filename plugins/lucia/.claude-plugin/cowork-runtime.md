@@ -39,6 +39,7 @@ whole request semantically and select the narrowest registered workflow:
 | An existing answer, opinion, memorandum, letter, or report to check | Read `../deep-research-validator/SKILL.md` completely and follow it. |
 | A legal or professional development to assess and turn into an email, circular, article, post, FAQ, alert, or visual | Read `../comunicazione-professionale/SKILL.md` completely and follow it. Do not duplicate its embedded answer-contract and claim-assurance stages. |
 | An informational law-firm website to create, refresh, review, preview, or publish after approval | Read `../presenza-digitale-studio/SKILL.md` completely and follow it. |
+| A new client matter or a new matter for an existing client to intake and prepare for opening | Read `../apertura-pratica/SKILL.md` completely and follow it. Use its dedicated matter-opening validator and lawyer review contract. |
 | A complete route from question to delivery | Run Prompt Optimizer first, prepare the answer with model-led reasoning and qualified sources, then run Deep Research Validator before delivery. |
 | No registered workflow covers the request | Stop and say only that Lucia does not yet have a suitable workflow; do not answer the substance through a generic route. |
 
@@ -63,6 +64,11 @@ mandatory lawyer profile for confidentiality, professional identity, public
 claims, audience applicability, and publication. That profile can change the
 professional contract but cannot weaken evidence, review, rendering, preview,
 hashing, or packaging gates.
+
+Matter Opening is Lucia-native. It uses the shared private Studio Archive only
+for client, engagement, immutable input, and run lifecycle; its legal intake
+schema, conflict and deadline boundaries, validator, and review receipts remain
+specific to Lucia.
 
 The assessment of the question, sources, relevance, semantic support, reasoning,
 and professional judgment remains model-led. Use deterministic checks only for

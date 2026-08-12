@@ -384,7 +384,7 @@ Use host-neutral artifact names such as `clara-review/` and `run_review.md`.
 Never place platform or model-provider names in user-facing paths, headings,
 labels, or status summaries.
 """
-LUCIA_COWORK_COMPONENTS = frozenset(
+LUCIA_SHARED_COWORK_COMPONENTS = frozenset(
     {
         "prompt-optimizer",
         "deep-research-validator",
@@ -392,18 +392,28 @@ LUCIA_COWORK_COMPONENTS = frozenset(
         "presenza-digitale-studio",
     }
 )
+LUCIA_NATIVE_COWORK_COMPONENTS = frozenset({"apertura-pratica"})
+LUCIA_COWORK_COMPONENTS = (
+    LUCIA_SHARED_COWORK_COMPONENTS | LUCIA_NATIVE_COWORK_COMPONENTS
+)
 LUCIA_COWORK_README = """# Lucia for Claude Cowork
 
-Lucia helps lawyers frame and validate legal work, prepare reviewable
-professional communications, and create or refresh an informational law-firm
-website from verified material. Use the `lucia` skill to route the work, or
-invoke one registered workflow directly.
+Lucia helps lawyers frame and validate legal work, prepare a new client matter
+or a new matter for an existing client, create reviewable professional
+communications, and create or refresh an informational law-firm website from
+verified material. Use the `lucia` skill to route the work, or invoke one
+registered workflow directly.
 
 The two assurance workflows are projected from the same canonical components
 used by Vera. Communication and digital-presence workflows reuse Vera's
 mechanical components through a lawyer-specific Lucia profile. Lucia works in
 Italian by default, keeps jurisdiction separate from language, and leaves
 strategy, conclusions, approval, sending, and publication with the lawyer.
+
+Matter Opening is Lucia-native and has its own legal intake schema, validator,
+and lawyer-review receipts. It reuses private lifecycle mechanics without
+claiming automatic conflict clearance, deadline confirmation, or engagement
+acceptance.
 
 Work from files in the connected folder. Packaged scripts may be used only when
 their declared dependencies are already available; missing optional tooling
@@ -2387,7 +2397,7 @@ def _lucia_package_entries(
     vera_entries = claude_package_entries(vera_package)
 
     entries: dict[str, bytes] = {}
-    for component in sorted(LUCIA_COWORK_COMPONENTS):
+    for component in sorted(LUCIA_SHARED_COWORK_COMPONENTS):
         prefix = f"modules/{component}/"
         shared_entries = {
             name: content
@@ -2397,6 +2407,34 @@ def _lucia_package_entries(
         if not shared_entries:
             raise ValueError(f"lucia: Vera Cowork component is missing: {component}")
         entries.update(shared_entries)
+
+    for component in sorted(LUCIA_NATIVE_COWORK_COMPONENTS):
+        prefix = f"modules/{component}/"
+        native_entries = {
+            name: content
+            for name, content in source_entries.items()
+            if name.startswith(prefix) and not _omit_inert_module_host_metadata(name)
+        }
+        if not native_entries:
+            raise ValueError(f"lucia: native Cowork component is missing: {component}")
+        for name, content in native_entries.items():
+            if name.endswith("/SKILL.md"):
+                content = _remove_optional_section(
+                    content.decode("utf-8"),
+                    "## Plugin Improvement Feedback",
+                ).encode("utf-8")
+                content = _project_cowork_instruction_markdown(
+                    content,
+                    relative_path=name,
+                )
+            elif "/references/" in name and name.endswith(".md"):
+                content = _project_cowork_reference(content, relative_path=name)
+            elif Path(name).suffix.lower() in RUNTIME_TEXT_SUFFIXES:
+                content = _project_cowork_runtime_text(
+                    content,
+                    relative_path=name,
+                )
+            entries[name] = content
 
     main_skill = source_entries.get("skills/lucia/SKILL.md")
     if main_skill is None:
@@ -2462,7 +2500,7 @@ def _lucia_package_entries(
         parts = set(Path(name).parts)
         if parts & forbidden_parts or name.startswith("modules/studio-archive/"):
             raise ValueError(f"Lucia Cowork retains forbidden path: {name}")
-    for component in LUCIA_COWORK_COMPONENTS:
+    for component in LUCIA_SHARED_COWORK_COMPONENTS:
         prefix = f"modules/{component}/"
         vera_component = {
             name: content

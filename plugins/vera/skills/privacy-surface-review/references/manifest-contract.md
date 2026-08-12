@@ -49,6 +49,9 @@ only the applicable profile IDs on that boundary.
 - `security_controls`: concrete controls enforced by the workstream. The array
   may be empty; local processing, absence of an API call, draft status, and a
   policy statement are not security controls by themselves.
+- `governed_repository_paths`: optional repository-root-relative runtime files
+  outside the plugin tree that implement the workstream. These files are
+  included in the source fingerprint.
 - `review`: review date, basis, reviewer, and deterministic source fingerprint.
 
 ## Shared-service fields

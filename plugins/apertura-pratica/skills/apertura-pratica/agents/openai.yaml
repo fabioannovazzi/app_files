@@ -1,0 +1,4 @@
+interface:
+  display_name: "Apertura pratica"
+  short_description: "Apri clienti e pratiche con controlli verificabili"
+  default_prompt: "Usa $apertura-pratica per aprire questa pratica, organizzare i documenti e preparare i controlli da revisionare."

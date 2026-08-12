@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import importlib.util
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -24,8 +26,11 @@ LAWYER_PROFILED_WORKFLOWS = {
     "comunicazione-professionale",
     "presenza-digitale-studio",
 }
-PUBLIC_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS
-PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS
+LUCIA_NATIVE_WORKFLOWS = {"apertura-pratica"}
+PUBLIC_WORKFLOWS = (
+    SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
+)
+PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
 
 def _json(path: Path) -> dict[str, object]:
@@ -78,7 +83,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.7"
+    assert manifest["version"] == "0.1.8"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -113,7 +118,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     assert "questa richiesta legale" in router["default_prompt"]
 
 
-def test_lucia_current_catalog_has_four_public_workflows_and_one_hidden_runtime() -> (
+def test_lucia_current_catalog_has_registered_public_workflows_and_one_hidden_runtime() -> (
     None
 ):
     components = _json(LUCIA_ROOT / "components.json")
@@ -131,11 +136,53 @@ def test_lucia_current_catalog_has_four_public_workflows_and_one_hidden_runtime(
         assert roles[workflow]["profile"] == "lucia-lawyer"
     assert roles["studio-archive"] == {
         "kind": "internal_runtime",
-        "supports": ["prompt-optimizer", "deep-research-validator"],
+        "supports": ["prompt-optimizer", "deep-research-validator", "apertura-pratica"],
     }
     assert skill_names == PUBLIC_WORKFLOWS | {"lucia"}
     assert set(cards) == PUBLIC_WORKFLOWS | {"lucia"}
     assert "studio-archive" not in cards
+
+
+def test_lucia_native_matter_opening_uses_its_own_validator_contract() -> None:
+    wrapper = (LUCIA_ROOT / "skills" / "apertura-pratica" / "SKILL.md").read_text(
+        encoding="utf-8"
+    )
+    component = ROOT / "plugins" / "apertura-pratica"
+
+    assert "Lucia's native legal-matter-opening contract" in wrapper
+    assert "does not use\nDeep Research Validator" in wrapper
+    assert (component / "schemas" / "matter_intake.schema.json").is_file()
+    assert (component / "scripts" / "apertura_pratica_core.py").is_file()
+    assert (component / "assets" / "apertura-pratica-review.html").is_file()
+
+
+def test_lucia_native_matter_opening_privacy_boundary_is_current() -> None:
+    validator_path = (
+        ROOT
+        / "plugins"
+        / "vera"
+        / "skills"
+        / "privacy-surface-review"
+        / "scripts"
+        / "validate_privacy_surfaces.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "lucia_privacy_validator", validator_path
+    )
+    assert spec is not None and spec.loader is not None
+    validator = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = validator
+    spec.loader.exec_module(validator)
+    manifest = _json(LUCIA_ROOT / "privacy" / "workstreams" / "apertura-pratica.json")
+    actual = validator._fingerprint(
+        ROOT / "plugins" / "apertura-pratica",
+        manifest["governed_paths"],
+        wrapper=LUCIA_ROOT / "skills" / "apertura-pratica" / "SKILL.md",
+        vera_root=LUCIA_ROOT,
+        repository_paths=manifest["governed_repository_paths"],
+    )
+
+    assert manifest["review"]["source_fingerprint"] == actual
 
 
 @pytest.mark.parametrize("workflow", sorted(SHARED_ASSURANCE_WORKFLOWS))
@@ -263,6 +310,39 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
     )
 
 
+@pytest.mark.parametrize(
+    ("lucia_host", "apertura_is_available"),
+    ((False, False), (True, True)),
+)
+def test_studio_archive_cli_limits_matter_opening_to_lucia_host(
+    lucia_host: bool,
+    apertura_is_available: bool,
+) -> None:
+    environment = os.environ.copy()
+    if lucia_host:
+        environment["LUCIA_ASSURANCE_HOST"] = "1"
+    else:
+        environment.pop("LUCIA_ASSURANCE_HOST", None)
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins" / "studio-archive" / "scripts" / "studio_archive.py"),
+            "prepare-workflow",
+            "--help",
+        ],
+        cwd=ROOT,
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert ("apertura-pratica" in completed.stdout) is apertura_is_available
+
+
 def test_lucia_submission_fixture_covers_all_current_public_workflows() -> None:
     submission = _json(LUCIA_ROOT / "evals" / "submission_cases.json")
     triggers = _json(LUCIA_ROOT / "evals" / "trigger_fixtures.json")
@@ -275,10 +355,12 @@ def test_lucia_submission_fixture_covers_all_current_public_workflows() -> None:
         "answer-validation",
         "professional-communication",
         "law-firm-site-refresh",
+        "matter-opening",
     } <= positive_ids
     assert {
         "lucia-professional-communication",
         "lucia-law-firm-site-refresh",
+        "lucia-matter-opening",
     } <= trigger_ids
     assert len(submission["negative"]) >= 4
     assert len(triggers["should_not_trigger"]) >= 4
@@ -314,6 +396,7 @@ def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
         name.startswith("modules/comunicazione-professionale/") for name in names
     )
     assert any(name.startswith("modules/presenza-digitale-studio/") for name in names)
+    assert any(name.startswith("modules/apertura-pratica/") for name in names)
 
 
 def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None:
@@ -329,7 +412,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.6"
+        assert manifest["version"] == "0.1.7"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -366,6 +449,9 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
                 f"skills/{workflow}/references/lucia-lawyer-profile.md" in lucia_names
             )
 
+        assert any(name.startswith("modules/apertura-pratica/") for name in lucia_names)
+        assert "skills/apertura-pratica/SKILL.md" in lucia_names
+
     assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
 
 
@@ -395,6 +481,7 @@ def test_lucia_public_page_uses_shared_reviewable_assurance_copy() -> None:
     assert "implementazioni canoniche" not in page
     assert 'id="comunicazione-professionale"' in page
     assert 'id="presenza-digitale-studio"' in page
+    assert 'id="apertura-pratica"' in page
     assert "Comunicazione professionale" in page
     assert "Presenza digitale dello studio" in page
     assert "Ottimizza prompt" in page
@@ -508,6 +595,25 @@ def test_lucia_public_page_localizes_new_lawyer_profiled_workflows() -> None:
     assert "cabinet" in page
     assert "Kanzlei" in page
     assert "despacho" in page
+
+
+def test_lucia_public_page_localizes_matter_opening_without_changing_hero() -> None:
+    page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for key in (
+        "module.matter.title",
+        "module.matter",
+        "matter.title",
+        "matter.gates.copy",
+        "matter.review.copy",
+    ):
+        assert len(_javascript_string_values(page, key)) == 5
+    assert (
+        '"hero.lead": "Un plugin specialistico per impostare la ricerca legale e verificare fonti, affermazioni e ragionamento."'
+        in page
+    )
 
 
 def test_lucia_marketplace_long_description_matches_manifest() -> None:

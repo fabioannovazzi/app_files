@@ -5,6 +5,7 @@
     "deep-research-validator",
     "comunicazione-professionale",
     "presenza-digitale-studio",
+    "apertura-pratica",
     "studio-archive"
   ],
   "workflow_roles": {
@@ -22,11 +23,16 @@
       "kind": "public_workflow",
       "profile": "lucia-lawyer"
     },
+    "apertura-pratica": {
+      "kind": "public_workflow",
+      "profile": "lucia-legal-matter-opening"
+    },
     "studio-archive": {
       "kind": "internal_runtime",
       "supports": [
         "prompt-optimizer",
-        "deep-research-validator"
+        "deep-research-validator",
+        "apertura-pratica"
       ]
     }
   }

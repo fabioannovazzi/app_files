@@ -18,6 +18,7 @@ COMPONENTS = (
     "deep-research-validator",
     "comunicazione-professionale",
     "presenza-digitale-studio",
+    "apertura-pratica",
     "studio-archive",
 )
 

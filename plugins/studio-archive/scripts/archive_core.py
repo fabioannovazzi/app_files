@@ -54,6 +54,8 @@ from vera_assurance import (  # noqa: E402
     build_studio_client_folder_binding,
 )
 
+CLIENT_WORKFLOW_IDS = (*VERA_CLIENT_WORKFLOW_IDS, "apertura-pratica")
+
 __all__ = [
     "ArchiveError",
     "ArchiveNotConfiguredError",
@@ -1873,7 +1875,7 @@ def prepare_studio_client_workflow(
 ) -> dict[str, Any]:
     """Prepare an exact, recoverable, idempotent customer-folder run."""
 
-    if workflow_id not in VERA_CLIENT_WORKFLOW_IDS:
+    if workflow_id not in CLIENT_WORKFLOW_IDS:
         raise ArchiveError("Workflow is not supported by the client engagement gate.")
     private_state = _state_dir(state_dir)
     config = _load_config(private_state, validate_scope_roots=False)

@@ -1,0 +1,593 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/apertura-pratica/matter-intake-1.0.json",
+  "title": "Lucia Apertura pratica intake",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "language",
+    "professional_country",
+    "opening_mode",
+    "client",
+    "matter",
+    "confirmed_facts",
+    "parties",
+    "evidence_register",
+    "conflict_check",
+    "engagement",
+    "deadline_review",
+    "confidentiality",
+    "aml",
+    "privacy_retention",
+    "missing_items",
+    "folder_plan",
+    "model_assessment"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "run_id": {"$ref": "#/$defs/reference"},
+    "language": {"enum": ["it", "en", "fr", "de", "es"]},
+    "professional_country": {"const": "IT"},
+    "opening_mode": {
+      "enum": [
+        "new_client_new_matter",
+        "existing_client_new_matter"
+      ]
+    },
+    "client": {"$ref": "#/$defs/client"},
+    "matter": {"$ref": "#/$defs/matter"},
+    "confirmed_facts": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/confirmed_fact"}
+    },
+    "parties": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/party"}
+    },
+    "evidence_register": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidence"}
+    },
+    "conflict_check": {"$ref": "#/$defs/conflict_check"},
+    "engagement": {"$ref": "#/$defs/engagement"},
+    "deadline_review": {"$ref": "#/$defs/deadline_review"},
+    "confidentiality": {"$ref": "#/$defs/confidentiality"},
+    "aml": {"$ref": "#/$defs/aml"},
+    "privacy_retention": {"$ref": "#/$defs/privacy_retention"},
+    "missing_items": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/missing_item"}
+    },
+    "folder_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/folder_plan_item"}
+    },
+    "model_assessment": {"$ref": "#/$defs/model_assessment"}
+  },
+  "$defs": {
+    "reference": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{2,95}$"
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "evidence_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "source_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/reference"}
+    },
+    "review_confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer", "reviewed_at", "basis"],
+      "properties": {
+        "status": {"enum": ["pending", "confirmed", "rejected"]},
+        "reviewer": {"type": ["string", "null"], "maxLength": 160},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "basis": {"type": "string", "maxLength": 4000}
+      }
+    },
+    "client": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "display_name",
+        "relationship_status",
+        "identity_status",
+        "evidence_ids"
+      ],
+      "properties": {
+        "reference": {"$ref": "#/$defs/reference"},
+        "display_name": {"type": ["string", "null"], "maxLength": 500},
+        "relationship_status": {
+          "enum": ["prospective", "existing", "declined", "unknown"]
+        },
+        "identity_status": {
+          "enum": ["unknown", "reported", "verified"]
+        },
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"}
+      }
+    },
+    "matter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reference",
+        "title",
+        "objective",
+        "requested_work",
+        "summary",
+        "jurisdiction",
+        "procedural_posture",
+        "urgency"
+      ],
+      "properties": {
+        "reference": {"$ref": "#/$defs/reference"},
+        "title": {"type": ["string", "null"], "maxLength": 500},
+        "objective": {"type": ["string", "null"], "maxLength": 5000},
+        "requested_work": {"type": ["string", "null"], "maxLength": 5000},
+        "summary": {"type": ["string", "null"], "maxLength": 12000},
+        "jurisdiction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "primary", "additional", "basis"],
+          "properties": {
+            "status": {"enum": ["unknown", "proposed", "confirmed"]},
+            "primary": {
+              "type": ["string", "null"],
+              "pattern": "^[A-Z]{2}$"
+            },
+            "additional": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^[A-Z]{2}$"}
+            },
+            "basis": {"type": "string", "maxLength": 4000}
+          }
+        },
+        "procedural_posture": {"type": ["string", "null"], "maxLength": 4000},
+        "urgency": {
+          "enum": ["unknown", "ordinary", "urgent", "immediate_review"]
+        }
+      }
+    },
+    "confirmed_fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["fact_id", "statement", "confirmed_by", "confirmed_at"],
+      "properties": {
+        "fact_id": {"$ref": "#/$defs/reference"},
+        "statement": {"type": "string", "minLength": 1, "maxLength": 8000},
+        "confirmed_by": {"type": "string", "minLength": 1, "maxLength": 160},
+        "confirmed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "party_id",
+        "display_name",
+        "party_type",
+        "roles",
+        "aliases",
+        "identity_keys",
+        "identity_status",
+        "evidence_ids",
+        "assessment_basis"
+      ],
+      "properties": {
+        "party_id": {"$ref": "#/$defs/reference"},
+        "display_name": {"type": "string", "minLength": 1, "maxLength": 500},
+        "party_type": {
+          "enum": [
+            "individual",
+            "organization",
+            "public_body",
+            "court_or_authority",
+            "unknown"
+          ]
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "client",
+              "assisted_party",
+              "counterparty",
+              "adverse_party",
+              "related_party",
+              "witness",
+              "counsel",
+              "court_or_authority",
+              "payer",
+              "other"
+            ]
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 500}
+        },
+        "identity_keys": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["kind", "value", "verification_status"],
+            "properties": {
+              "kind": {
+                "enum": [
+                  "tax_id",
+                  "company_id",
+                  "bar_registration",
+                  "date_of_birth",
+                  "other"
+                ]
+              },
+              "value": {"type": "string", "minLength": 1, "maxLength": 500},
+              "verification_status": {
+                "enum": ["reported", "verified"]
+              }
+            }
+          }
+        },
+        "identity_status": {"enum": ["unknown", "reported", "verified"]},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+        "assessment_basis": {"type": "string", "maxLength": 4000}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "stored_path",
+        "original_name",
+        "sha256",
+        "bytes",
+        "media_type",
+        "role",
+        "review_status",
+        "captured_at"
+      ],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/reference"},
+        "stored_path": {
+          "type": "string",
+          "pattern": "^evidence/[A-Za-z0-9_.:-]+/[^/]+$"
+        },
+        "original_name": {"type": "string", "minLength": 1, "maxLength": 500},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1, "maxLength": 200},
+        "role": {
+          "enum": [
+            "client_supplied",
+            "firm_record",
+            "authority",
+            "correspondence",
+            "other"
+          ]
+        },
+        "review_status": {"enum": ["unreviewed", "reviewed", "excluded"]},
+        "captured_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "conflict_resolution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewer", "reviewed_at", "basis"],
+      "properties": {
+        "status": {
+          "enum": ["pending", "no_conflict", "conflict", "insufficient_data"]
+        },
+        "reviewer": {"type": ["string", "null"], "maxLength": 160},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "basis": {"type": "string", "maxLength": 5000}
+      }
+    },
+    "conflict_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "subject_party_ids",
+        "matched_reference",
+        "match_basis",
+        "evidence_ids",
+        "resolution"
+      ],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/reference"},
+        "subject_party_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reference"}
+        },
+        "matched_reference": {"type": "string", "minLength": 1, "maxLength": 500},
+        "match_basis": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+        "resolution": {"$ref": "#/$defs/conflict_resolution"}
+      }
+    },
+    "conflict_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "register_scope",
+        "register_snapshot_reference",
+        "searched_at",
+        "searched_party_ids",
+        "search_method",
+        "candidates",
+        "professional_decision"
+      ],
+      "properties": {
+        "register_scope": {"enum": ["unavailable", "partial", "complete"]},
+        "register_snapshot_reference": {
+          "type": ["string", "null"],
+          "maxLength": 500
+        },
+        "searched_at": {"type": ["string", "null"], "format": "date-time"},
+        "searched_party_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/reference"}
+        },
+        "search_method": {"type": "string", "maxLength": 5000},
+        "candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/conflict_candidate"}
+        },
+        "professional_decision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status", "reviewer", "reviewed_at", "basis"],
+          "properties": {
+            "status": {
+              "enum": ["pending", "cleared", "conflict_found", "declined"]
+            },
+            "reviewer": {"type": ["string", "null"], "maxLength": 160},
+            "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+            "basis": {"type": "string", "maxLength": 5000}
+          }
+        }
+      }
+    },
+    "scope_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope_id", "description", "status", "evidence_ids"],
+      "properties": {
+        "scope_id": {"$ref": "#/$defs/reference"},
+        "description": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "status": {"enum": ["proposed", "confirmed", "excluded"]},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"}
+      }
+    },
+    "engagement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scope_items",
+        "exclusions",
+        "authority_status",
+        "fee_terms_status",
+        "engagement_document_status",
+        "professional_owner",
+        "review"
+      ],
+      "properties": {
+        "scope_items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/scope_item"}
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 5000}
+        },
+        "authority_status": {
+          "enum": ["unknown", "reported", "verified", "not_applicable"]
+        },
+        "fee_terms_status": {
+          "enum": ["missing", "draft", "approved", "accepted", "not_applicable"]
+        },
+        "engagement_document_status": {
+          "enum": ["missing", "draft", "approved", "sent", "accepted", "not_required"]
+        },
+        "professional_owner": {"type": ["string", "null"], "maxLength": 160},
+        "review": {"$ref": "#/$defs/review_confirmation"}
+      }
+    },
+    "deadline_candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deadline_id",
+        "description",
+        "due_at",
+        "trigger_fact",
+        "authority_references",
+        "calculation_notes",
+        "status",
+        "reviewer",
+        "reviewed_at",
+        "evidence_ids"
+      ],
+      "properties": {
+        "deadline_id": {"$ref": "#/$defs/reference"},
+        "description": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "due_at": {"type": ["string", "null"], "format": "date-time"},
+        "trigger_fact": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "authority_references": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "calculation_notes": {"type": "string", "maxLength": 5000},
+        "status": {"enum": ["candidate", "confirmed", "rejected"]},
+        "reviewer": {"type": ["string", "null"], "maxLength": 160},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"}
+      }
+    },
+    "deadline_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "candidates", "basis", "reviewer", "reviewed_at"],
+      "properties": {
+        "status": {"enum": ["pending", "confirmed", "confirmed_none"]},
+        "candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/deadline_candidate"}
+        },
+        "basis": {"type": "string", "maxLength": 5000},
+        "reviewer": {"type": ["string", "null"], "maxLength": 160},
+        "reviewed_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "confidentiality": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "external_disclosure_status",
+        "restricted_material",
+        "handling_notes",
+        "review"
+      ],
+      "properties": {
+        "classification": {
+          "enum": ["confidential_legal_matter", "heightened_restriction"]
+        },
+        "external_disclosure_status": {
+          "enum": ["prohibited", "not_requested", "approval_required", "approved"]
+        },
+        "restricted_material": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+        },
+        "handling_notes": {"type": "string", "maxLength": 5000},
+        "review": {"$ref": "#/$defs/review_confirmation"}
+      }
+    },
+    "aml": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "applicability",
+        "basis",
+        "source_ids",
+        "review",
+        "separate_assessment_status"
+      ],
+      "properties": {
+        "applicability": {"enum": ["uncertain", "applicable", "not_applicable"]},
+        "basis": {"type": "string", "maxLength": 5000},
+        "source_ids": {"$ref": "#/$defs/source_ids"},
+        "review": {"$ref": "#/$defs/review_confirmation"},
+        "separate_assessment_status": {
+          "enum": ["not_started", "in_progress", "completed", "not_required"]
+        }
+      }
+    },
+    "privacy_retention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notice_status",
+        "retention_policy_reference",
+        "handling_notes",
+        "review"
+      ],
+      "properties": {
+        "notice_status": {
+          "enum": ["unknown", "existing_approved_template", "matter_specific_review_required"]
+        },
+        "retention_policy_reference": {
+          "type": ["string", "null"],
+          "maxLength": 500
+        },
+        "handling_notes": {"type": "string", "maxLength": 5000},
+        "review": {"$ref": "#/$defs/review_confirmation"}
+      }
+    },
+    "missing_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "kind",
+        "description",
+        "blocking",
+        "status",
+        "evidence_ids"
+      ],
+      "properties": {
+        "item_id": {"$ref": "#/$defs/reference"},
+        "kind": {
+          "enum": ["fact", "document", "identity", "decision", "register", "other"]
+        },
+        "description": {"type": "string", "minLength": 1, "maxLength": 5000},
+        "blocking": {"type": "boolean"},
+        "status": {"enum": ["open", "resolved", "waived_by_lawyer"]},
+        "evidence_ids": {"$ref": "#/$defs/evidence_ids"}
+      }
+    },
+    "folder_plan_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "purpose", "source_evidence_ids", "status"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9À-ÖØ-öø-ÿ _.-]+(?:/[A-Za-z0-9À-ÖØ-öø-ÿ _.-]+)*$"
+        },
+        "purpose": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "source_evidence_ids": {"$ref": "#/$defs/evidence_ids"},
+        "status": {"enum": ["proposed", "accepted", "rejected"]}
+      }
+    },
+    "model_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "model",
+        "recorded_at",
+        "assumptions",
+        "unresolved_questions"
+      ],
+      "properties": {
+        "provider": {"type": ["string", "null"], "maxLength": 200},
+        "model": {"type": ["string", "null"], "maxLength": 200},
+        "recorded_at": {"type": ["string", "null"], "format": "date-time"},
+        "assumptions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 5000}
+        },
+        "unresolved_questions": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1, "maxLength": 5000}
+        }
+      }
+    }
+  }
+}

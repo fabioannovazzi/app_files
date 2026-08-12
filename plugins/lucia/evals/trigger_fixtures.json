@@ -46,6 +46,11 @@
       "id": "lucia-first-law-firm-site",
       "prompt": "Lucia, crea il primo sito informativo dello studio: usa solo servizi, titoli, iscrizione all'Ordine e contatti che posso confermare.",
       "required_signals": ["sito informativo", "identità verificata", "proposta Lucia", "approvazione"]
+    },
+    {
+      "id": "lucia-matter-opening",
+      "prompt": "@lucia apri una nuova pratica per questo cliente, organizza i materiali e prepara i controlli che devo rivedere.",
+      "required_signals": ["apertura-pratica", "soggetti", "conflitti", "scadenze", "revisione dell’avvocato"]
     }
   ],
   "should_not_trigger": [

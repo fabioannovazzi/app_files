@@ -28,6 +28,13 @@ class IconSpec:
 
 SPECS = (
     IconSpec(
+        "apertura-pratica",
+        "Lucia · Apertura pratica",
+        "#002060",
+        "#00B0F0",
+        "matter",
+    ),
+    IconSpec(
         "archive-organization",
         "Vera · Riordino archivio",
         "#002060",
@@ -326,6 +333,13 @@ def _body(spec: IconSpec) -> str:
   <circle cx="27" cy="29" r="5" fill="{color}"/>
   <path d="M20 42c1-6 13-6 14 0" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
   <path d="m37 39 4 4 9-12" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "matter": f"""
+  <path d="M15 15h28l8 8v29H15z" fill="{paper}"/>
+  <path d="M43 15v9h8" fill="#DCE5E8"/>
+  <circle cx="27" cy="29" r="5" fill="{color}"/>
+  <path d="M20 41c1-6 13-6 14 0" fill="none" stroke="{color}" stroke-width="4" stroke-linecap="round"/>
+  <path d="M39 31h7M39 38h7" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>
+  <path d="m38 46 4 4 10-13" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
         "sample": f"""
   <rect x="15" y="13" width="30" height="38" rx="5" fill="{paper}"/>
   <path d="M21 23h18M21 31h15M21 39h10" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
