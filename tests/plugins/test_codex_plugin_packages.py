@@ -3644,6 +3644,8 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert section.count('class="comms-profile__item"') == 3
     assert section.count('class="comms-assurance__row"') == 4
     assert section.count('class="comms-creative comms-model-data"') == 1
+    assert ".comms-model-data {" in page
+    assert "grid-template-columns: minmax(0, 1fr);" in page
     assert 'href="index.html#presenza-digitale-studio"' in page
     assert 'href="#presenza-digitale-studio"' in page
     for localized_model_data_copy in (

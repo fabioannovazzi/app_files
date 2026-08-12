@@ -806,6 +806,14 @@
     .comms-creative__kicker { color: var(--blue); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.09em; text-transform: uppercase; }
     .comms-creative h3 { max-width: 760px; font-size: clamp(1.8rem, 3.5vw, 3.1rem); }
     .comms-creative p { max-width: 65ch; margin-top: 20px; color: var(--blue); }
+    .comms-model-data {
+      grid-template-columns: minmax(0, 1fr);
+      gap: clamp(20px, 3vw, 32px);
+      align-items: start;
+    }
+    .comms-model-data .comms-creative__kicker { margin: 0; }
+    .comms-model-data h3 { max-width: 20ch; }
+    .comms-model-data h3 + p { margin-top: 14px; }
 
     .comms-boundary {
       margin-top: clamp(56px, 8vw, 88px);
