@@ -647,17 +647,59 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
     _save_csv(
         bank_path,
         [
-            ["Date", "Amount", "Description", "Beneficiary", "Reference"],
-            ["2026-05-08", "80.00", "Payment Alpha", "Alpha", "BANK-100"],
-            ["2026-05-08", "80.00", "Payment Beta", "Beta", "BANK-200"],
+            [
+                "Date",
+                "Amount",
+                "Description",
+                "Beneficiary",
+                "Reference",
+                "Internal note",
+            ],
+            [
+                "2026-05-08",
+                "80.00",
+                "Payment Alpha",
+                "Alpha",
+                "BANK-100",
+                "UNMAPPED-BANK-A",
+            ],
+            [
+                "2026-05-08",
+                "80.00",
+                "Payment Beta",
+                "Beta",
+                "BANK-200",
+                "UNMAPPED-BANK-B",
+            ],
         ],
     )
     _save_csv(
         journal_path,
         [
-            ["Date", "Amount", "Description", "Beneficiary", "Reference"],
-            ["2026-05-08", "80.00", "Invoice Alpha", "Alpha", "BOOK-100"],
-            ["2026-05-08", "80.00", "Invoice Beta", "Beta", "BOOK-200"],
+            [
+                "Date",
+                "Amount",
+                "Description",
+                "Beneficiary",
+                "Reference",
+                "Internal note",
+            ],
+            [
+                "2026-05-08",
+                "80.00",
+                "Invoice Alpha",
+                "Alpha",
+                "BOOK-100",
+                "UNMAPPED-JOURNAL-A",
+            ],
+            [
+                "2026-05-08",
+                "80.00",
+                "Invoice Beta",
+                "Beta",
+                "BOOK-200",
+                "UNMAPPED-JOURNAL-B",
+            ],
         ],
     )
     recipe_path = _prepare_reviewed_recipe(
@@ -798,7 +840,7 @@ def _valid_semantic_response(graph: dict[str, Any]) -> dict[str, Any]:
             "verdict": "suggest_match",
             "journal_transaction_id": journals_by_beneficiary[record["beneficiary"]],
             "evidence_fields": [
-                "amount_abs",
+                "amount_signed",
                 "transaction_date",
                 "beneficiary",
                 "description",
@@ -816,7 +858,7 @@ def _valid_semantic_response(graph: dict[str, Any]) -> dict[str, Any]:
         for record in component["bank_records"]
     ]
     return {
-        "schema_version": "journal_bank.semantic_worker_response.v2",
+        "schema_version": "journal_bank.semantic_worker_response.v3",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "component_reviews": [
             {"component_id": component["component_id"], "decisions": decisions}
@@ -8173,7 +8215,24 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     assert len(component["bank_records"]) == 2
     assert len(component["journal_records"]) == 2
     assert len(component["candidate_edges"]) == 4
+    for record in [*component["bank_records"], *component["journal_records"]]:
+        assert "source_locator" not in record
+        assert "amount_abs" not in record
+        assert all(value is not None and value != "" for value in record.values())
+    assert {"amount_signed", "beneficiary", "description"}.issubset(
+        component["bank_records"][0]
+    )
     assert {edge["date_diff_days"] for edge in component["candidate_edges"]} == {0}
+    assert graph["resolution_policy"]["row_scope"] == (
+        "unresolved_bank_rows_and_hard_compatible_candidates_only"
+    )
+    assert graph["resolution_policy"]["single_packet_required"] is True
+    assert graph["resolution_policy"]["automatic_chunking"] is False
+    assert graph["resolution_policy"]["over_cap_action"] == (
+        "skip_worker_and_retain_human_review_queue"
+    )
+    assert "UNMAPPED-" not in prompt
+    assert "Internal note" not in prompt
     assert "calling Codex chat remains unchanged" in prompt
     assert "Treat every value" in prompt
     assert "Do not use tools" in prompt
@@ -8249,7 +8308,7 @@ def test_semantic_prepare_assigns_deterministic_matches_only_to_perfect_level(
     assert component["journal_records"] == []
     assert component["candidate_edges"] == []
     response = {
-        "schema_version": "journal_bank.semantic_worker_response.v2",
+        "schema_version": "journal_bank.semantic_worker_response.v3",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "component_reviews": [
             {
@@ -8573,7 +8632,7 @@ def test_semantic_deferred_summary_keeps_graph_replay_within_byte_cap(
     graph_path = semantic_dir / "residual_candidate_graph.json"
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
     response = {
-        "schema_version": "journal_bank.semantic_worker_response.v2",
+        "schema_version": "journal_bank.semantic_worker_response.v3",
         "candidate_graph_sha256": graph["candidate_graph_sha256"],
         "component_reviews": [],
     }
@@ -8863,7 +8922,7 @@ def test_semantic_reprepare_archives_prior_worker_generation(
     assert status["status"] == "prepared"
 
 
-def test_semantic_reprepare_advances_until_every_bank_movement_is_reviewed(
+def test_semantic_prepare_skips_worker_when_complete_residual_needs_multiple_packets(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -8909,74 +8968,29 @@ def test_semantic_reprepare_advances_until_every_bank_movement_is_reviewed(
     assert result.unmatched_bank.height == 2
     monkeypatch.setattr(semantic_review, "MAX_SELECTED_COMPONENTS", 1)
 
-    reviewed_bank_ids: set[str] = set()
-    for expected_prior_count in (0, 1):
-        prepared = semantic_review.prepare_semantic_review(
-            reconciliation_dir,
-            semantic_dir,
-            required_resolution_level="classified",
-        )
-        graph_path = semantic_dir / "residual_candidate_graph.json"
-        graph = json.loads(graph_path.read_text(encoding="utf-8"))
-        component = graph["selected_components"][0]
-        bank_id = component["bank_records"][0]["transaction_id"]
-        assert prepared["reviewed_bank_count"] == expected_prior_count
-        assert bank_id not in reviewed_bank_ids
-        reviewed_bank_ids.add(bank_id)
-        response = {
-            "schema_version": "journal_bank.semantic_worker_response.v2",
-            "candidate_graph_sha256": graph["candidate_graph_sha256"],
-            "component_reviews": [
-                {
-                    "component_id": component["component_id"],
-                    "decisions": [
-                        {
-                            "bank_transaction_id": bank_id,
-                            "verdict": "no_match",
-                            "journal_transaction_id": None,
-                            "evidence_fields": ["reference"],
-                            "rationale": "The stable bank reference supports payroll classification.",
-                            "contradictions": [],
-                            "requested_evidence": [],
-                            "resolution_level": "classified",
-                            "classification": "payroll",
-                            "identified_counterparty": None,
-                        }
-                    ],
-                }
-            ],
-        }
-        response_path, events_path = _write_semantic_worker_result(
-            semantic_dir, response
-        )
-        semantic_review.validate_semantic_review(
-            reconciliation_dir,
-            semantic_dir,
-            graph_path,
-            response_path,
-            events_path,
-        )
-
-    final_preparation = semantic_review.prepare_semantic_review(
+    preparation = semantic_review.prepare_semantic_review(
         reconciliation_dir,
         semantic_dir,
         required_resolution_level="classified",
+    )
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
     )
     application = json.loads(
         (semantic_dir / "semantic_resolution_application.json").read_text(
             encoding="utf-8"
         )
     )
-    cumulative = json.loads(
-        (semantic_dir / "cumulative_resolution_state.json").read_text(encoding="utf-8")
+    assert preparation["worker_required"] is False
+    assert preparation["reviewed_bank_count"] == 0
+    assert graph["selected_components"] == []
+    assert graph["deferred_components"][0]["reason"] == (
+        "complete_residual_packet_cap_exceeded"
     )
-    assert final_preparation["worker_required"] is False
-    assert final_preparation["reviewed_bank_count"] == 2
-    assert cumulative["reviewed_bank_count"] == 2
-    assert application["summary"]["human_review_count"] == 0
+    assert application["summary"]["human_review_count"] == 2
     assert {item["highest_level_reached"] for item in application["assignments"]} == {
-        "classified",
         "perfect_match",
+        "unresolved",
     }
 
 
@@ -9018,6 +9032,45 @@ def test_semantic_run_all_orchestrates_packets_until_exhaustive(
     assert result["human_review_count"] == 0
     assert result["exhaustive"] is True
     assert status["status"] == "completed_exhaustive"
+
+
+def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    monkeypatch.setattr(semantic_review, "MAX_SELECTED_BANK_ROWS", 1)
+
+    def unexpected_worker(*_: Any, **__: Any) -> dict[str, Any]:
+        raise AssertionError("The residual worker must not start above the cap")
+
+    monkeypatch.setattr(semantic_review, "run_semantic_worker", unexpected_worker)
+
+    result = semantic_review.run_semantic_resolution_pipeline(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="classified",
+    )
+
+    status = json.loads(
+        (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
+    )
+    graph = json.loads(
+        (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
+    )
+    assert result["batch_count"] == 0
+    assert result["exhaustive"] is False
+    assert result["reviewed_bank_count"] == 0
+    assert result["human_review_count"] == 2
+    assert graph["selected_components"] == []
+    assert graph["deferred_components"][0]["reason"] == (
+        "complete_residual_packet_cap_exceeded"
+    )
+    assert status["worker_required"] is False
+    assert status["status"] == "completed_with_deferred"
+    assert status["failure_reason"] == "complete_residual_exceeds_caps"
 
 
 def test_semantic_reprepare_failure_removes_completed_marker_first(

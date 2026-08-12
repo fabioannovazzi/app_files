@@ -21,9 +21,9 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "bank-and-ledger-review",
-        "purpose": "Resolve mappings and review matched, unmatched, or ambiguous transactions",
-        "content": "User instructions; bank statements; journals or ledgers; normalized rows; controls; matches; exceptions; supporting evidence and review decisions",
+        "id": "bounded-column-mapping-and-run-review",
+        "purpose": "Map source columns before deterministic reconciliation and review run-level controls and limitations",
+        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -32,7 +32,7 @@
       {
         "id": "bounded-luna-residual-resolution",
         "purpose": "Classify, identify, or suggest eligible relationships for unresolved bank movements under the user's selected certainty threshold",
-        "content": "A bounded packet of unmatched bank rows, hard-compatible journal candidates, normalized dates and amounts, descriptions, beneficiary or counterparty details, references, movement numbers, account and perimeter fields, plus the reviewed matching policy",
+        "content": "One bounded packet containing the complete admitted set of unresolved bank rows and hard-compatible journal candidates; populated canonical signed amount, date, description, beneficiary or counterparty, reference, movement number, account and perimeter fields selected after source-column mapping; and the reviewed matching policy. Unmapped raw columns, empty canonical fields, physical source locators and the redundant absolute amount are omitted",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -55,7 +55,7 @@
     },
     {
       "id": "bounded-validated-luna-resolution-funnel",
-      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before preparing successive size-capped candidate packets for pinned deny-default Luna workers. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling cumulative certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
+      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a pinned deny-default Luna worker. It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -86,6 +86,6 @@
     "reviewed_at": "2026-08-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "34b97e96a0e9de1044ca5b2f724a36a576fc155e8d27d20daa1d854ab7c1847f"
+    "source_fingerprint": "32d765d675e27dab15fb1118777a732c80f61e0986c5bf6fae156be9368458cc"
   }
 }

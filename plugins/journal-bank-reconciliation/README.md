@@ -121,8 +121,12 @@ Users should invoke the plugin from Codex rather than running the scripts direct
 
 The Codex-only residual resolution pass keeps the main reconciliation chat on
 its existing model. After deterministic qualification and matching, Codex may
-use `semantic_review.py run-all` to advance through successive bounded
-unresolved candidate packets in separate Luna Max processes. The
+use `semantic_review.py run-all` only when the complete unresolved review set
+fits one bounded packet. The workflow does not split a large residual into
+successive automatic model calls; over-cap residuals remain in the human-review
+queue without launching Luna. The packet contains populated canonical fields
+selected after source-column mapping, not the raw source columns, empty fields,
+physical source locators, or the redundant absolute amount. The
 launcher is qualified only on its pinned macOS/Codex/Seatbelt environment,
 fails closed when those pins or its filesystem canaries do not match, and
 records a content-bound launch receipt. The bounded packet is transmitted to

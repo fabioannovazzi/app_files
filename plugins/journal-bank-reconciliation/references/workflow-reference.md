@@ -200,13 +200,21 @@ inside the reviewed date window. Description and beneficiary similarity cannot
 create an edge.
 
 The graph groups eligible rows into deterministic connected components. The
-preparer selects only components inside fixed bank-row, journal-row, edge,
-component-count, and prompt-byte limits, records why other components were
-deferred, and binds the selected packet to its source receipts, relationship
-policy, tolerance, and canonical graph digest. A one-bank/one-journal component
-that should already have been resolved by deterministic singleton matching is
-deferred rather than passed to a model. When no component is selected, the
-preparer reports `worker_required: false` and Codex does not launch a worker.
+preparer admits the complete residual only when every component fits one packet
+inside the fixed bank-row, journal-row, edge, component-count, graph-byte, and
+prompt-byte limits. It does not select a partial packet or automatically chunk
+the remainder. A one-bank/one-journal component that should already have been
+resolved by deterministic singleton matching, any over-cap component, or an
+over-cap complete residual defers the entire model step. The preparer reports
+`worker_required: false`, records the reason, and preserves every bank movement
+in the human-review queue.
+
+Packet projection happens after source-column mapping. The worker receives
+only populated canonical fields for unresolved bank rows and their
+hard-compatible candidates. Unmapped raw columns, empty canonical fields,
+physical source locators, and the mechanically derived absolute amount remain
+outside model context. The opaque transaction ID preserves local linkage and
+the signed amount remains available as evidence.
 
 Only the main Codex chat may orchestrate the optional model pass. It keeps its
 existing model and invokes `semantic_review.py run-worker`, which requests one
@@ -245,9 +253,8 @@ reasoning effort, so worker metadata records both as requested rather than
 observed and validation requires the launch receipt.
 
 Validated results live outside the canonical reconciliation directory in its
-real sibling named `semantic-review`. `run-all` advances through successive
-bounded packets until eligible coverage is exhaustive, carrying the
-source-bound cumulative state forward. Raw Luna output remains advisory until
+real sibling named `semantic-review`. `run-all` launches at most one worker for
+the complete admitted residual. Raw Luna output remains advisory until
 validation. The validator then applies accepted decisions to
 `semantic_resolution_application.json`, `resolution_funnel.json`, and
 `human_review_queue.json`, and writes `operational_review_payload.json` as the
