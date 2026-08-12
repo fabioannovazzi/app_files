@@ -504,6 +504,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     prompts = manifest["interface"]["defaultPrompt"]
 
     assert ".codex-plugin/plugin.json" in entries
+    assert "skills/vera/references/public-process-page-contract.md" in entries
     assert "modules/previdenza-inps/.codex-plugin/plugin.json" in entries
     assert "modules/registro-imprese-sari/.codex-plugin/plugin.json" in entries
     projected_manifests = {
@@ -527,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.123"
+    assert manifest["version"] == "0.1.124"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3644,6 +3645,8 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert section.count('class="comms-profile__item"') == 3
     assert section.count('class="comms-assurance__row"') == 4
     assert section.count('class="comms-creative comms-model-data"') == 1
+    assert 'data-model-data-workflow="presenza-digitale-studio"' in section
+    assert 'data-model-data-status="not-relevant"' in section
     assert ".comms-model-data {" in page
     assert "grid-template-columns: minmax(0, 1fr);" in page
     assert 'href="index.html#presenza-digitale-studio"' in page
@@ -4041,6 +4044,8 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
     ).read_text(encoding="utf-8")
 
     assert 'id="model-data"' in page
+    assert 'data-model-data-workflow="journal-bank-reconciliation"' in page
+    assert 'data-model-data-status="relevant"' in page
     for snippet in (
         "Prima un piccolo campione. Poi, solo in Codex, il residuo utile.",
         "First a small sample. Then, in Codex only, the useful residual.",

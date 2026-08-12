@@ -32,6 +32,9 @@ ACCOUNT_BOUNDARY = {
     ],
     "per_case_record_required": False,
 }
+PUBLIC_PROCESS_PAGE_CONTRACT = (
+    VERA_ROOT / "skills" / "vera" / "references" / "public-process-page-contract.md"
+)
 
 
 def _validator_module():
@@ -217,6 +220,35 @@ def test_vera_model_processing_has_no_extra_recipient_or_fake_local_guarantee() 
             processing["local_filtering_or_aggregation"]
             == "only_when_useful_for_the_work"
         )
+
+
+def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> None:
+    """Keep the public rule explicit without mechanizing semantic relevance."""
+
+    contract = PUBLIC_PROCESS_PAGE_CONTRACT.read_text(encoding="utf-8")
+    review_skill = (
+        VERA_ROOT / "skills" / "privacy-surface-review" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    catalog = (
+        VERA_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
+    ).read_text(encoding="utf-8")
+    normalized_contract = " ".join(contract.split())
+
+    for required_rule in (
+        "Every public process explanation must contain one visible block",
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        'data-model-data-status="relevant|not-relevant"',
+        "full population",
+        "Codex and Cowork",
+        "Not relevant to this process",
+        "never a fallback for an incomplete review",
+        "It is not a central per-process register",
+        "must not infer a status from keywords",
+    ):
+        assert required_rule in normalized_contract
+    assert "../vera/references/public-process-page-contract.md" in review_skill
+    assert "`public-process-page-contract.md`" in catalog
 
 
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
