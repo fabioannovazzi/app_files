@@ -109,10 +109,15 @@ exact-decimal normalization, optional sample filtering, explicit-reference,
 reference-group, and amount/date matching, content-addressed receipts, physical
 source lineage, non-reusing relationship ledgers, independent assurance gates,
 and exports.
-Claude may inspect files, propose recipes, explain assumptions, and review
-unresolved items, but the plugin scripts must not make direct OpenAI API calls.
-Descriptions and beneficiary names are review context, not automatic match
-identifiers.
+Claude may inspect source metadata and the bounded inspection preview, propose
+recipes, explain assumptions, and review the bounded residual packet. It must
+not open the complete raw tables or load complete normalized, matched, or
+unmatched row tables into model context. The inspection preview contains at
+most the first 20 normalized rows per qualified source; the helper scripts read
+and reconcile the complete population locally. Descriptions and beneficiary
+names are review context, not automatic match identifiers. The reconciliation
+helpers must not make direct OpenAI API calls; only the qualified
+residual-worker launcher may transmit the admitted packet.
 
 The user should not interact directly with CLI scripts. Treat scripts as internal tools Claude runs on behalf of the user.
 
@@ -204,10 +209,14 @@ python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input
 
 Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.
 
-8. Review `reconciliation_audit.json`, `relationship_ledger.json`,
+8. Review the counts, stages, controls, and limitations in
+   `reconciliation_audit.json`, `assurance_gates.json`, and `review_notes.md`
+   before final delivery. Validate `relationship_ledger.json`,
    `relationship_residuals.csv`, `material_value_ledger.json`,
-   `assurance_gates.json`, `reconciliation_matches.csv`, `unmatched_bank.csv`,
-   `unmatched_journal.csv`, and `review_notes.md` before final delivery. Run
+   `reconciliation_matches.csv`, `unmatched_bank.csv`, and
+   `unmatched_journal.csv` through the deterministic validators and expose
+   their paths in the local workbench; do not load their complete row contents
+   into model context. Run
    `journal_bank_core.validate_material_value_ledger` against the output
    directory before relying on native values. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage

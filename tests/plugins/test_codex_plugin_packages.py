@@ -527,7 +527,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.121"
+    assert manifest["version"] == "0.1.122"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3994,6 +3994,34 @@ def test_journal_bank_reconciliation_page_matches_plugin_site_pattern() -> None:
         "Reviewable reconciliation, guided in Codex",
     ):
         assert stale_snippet not in page
+
+
+def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
+    page = (
+        ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    assert 'id="model-data"' in page
+    for snippet in (
+        "Prima un piccolo campione. Poi soltanto il residuo utile.",
+        "First a small sample. Then only the useful residual.",
+        "D'abord un petit échantillon. Puis seulement le résiduel utile.",
+        "Zuerst eine kleine Stichprobe. Danach nur der nützliche Restbestand.",
+        "Primero una pequeña muestra. Después, solo el residuo útil.",
+        "Le colonne originali non mappate, i campi vuoti",
+        "does not split it automatically, does not start the model",
+    ):
+        assert snippet in page
+    for key in (
+        "model.title",
+        "model.map.copy",
+        "model.local.copy",
+        "model.residual.copy",
+        "model.cap.copy",
+        "model.note",
+    ):
+        assert f'data-journey="{key}"' in page
+        assert page.count(f'"{key}":') == 5
 
 
 def test_homepage_routes_journal_bank_reconciliation_through_vera() -> None:

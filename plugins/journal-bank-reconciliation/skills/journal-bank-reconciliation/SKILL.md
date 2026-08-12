@@ -69,10 +69,15 @@ exact-decimal normalization, optional sample filtering, explicit-reference,
 reference-group, and amount/date matching, content-addressed receipts, physical
 source lineage, non-reusing relationship ledgers, independent assurance gates,
 and exports.
-Codex may inspect files, propose recipes, explain assumptions, and review
-unresolved items, but the plugin scripts must not make direct OpenAI API calls.
-Descriptions and beneficiary names are review context, not automatic match
-identifiers.
+Codex may inspect source metadata and the bounded inspection preview, propose
+recipes, explain assumptions, and review the bounded residual packet. It must
+not open the complete raw tables or load complete normalized, matched, or
+unmatched row tables into model context. The inspection preview contains at
+most the first 20 normalized rows per qualified source; the helper scripts read
+and reconcile the complete population locally. Descriptions and beneficiary
+names are review context, not automatic match identifiers. The reconciliation
+helpers must not make direct OpenAI API calls; only the qualified
+residual-worker launcher may transmit the admitted packet.
 
 The user should not interact directly with CLI scripts. Treat scripts as internal tools Codex runs on behalf of the user.
 
@@ -164,10 +169,14 @@ python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input
 
 Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.
 
-8. Review `reconciliation_audit.json`, `relationship_ledger.json`,
+8. Review the counts, stages, controls, and limitations in
+   `reconciliation_audit.json`, `assurance_gates.json`, and `review_notes.md`
+   before final delivery. Validate `relationship_ledger.json`,
    `relationship_residuals.csv`, `material_value_ledger.json`,
-   `assurance_gates.json`, `reconciliation_matches.csv`, `unmatched_bank.csv`,
-   `unmatched_journal.csv`, and `review_notes.md` before final delivery. Run
+   `reconciliation_matches.csv`, `unmatched_bank.csv`, and
+   `unmatched_journal.csv` through the deterministic validators and expose
+   their paths in the local workbench; do not load their complete row contents
+   into model context. Run
    `journal_bank_core.validate_material_value_ledger` against the output
    directory before relying on native values. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage
@@ -201,11 +210,11 @@ send one worker call per candidate. Launch one separate ephemeral Luna Max
 worker for the bounded packet produced for that run.
 
 1. Prefer `semantic_review.py run-all` against the completed `reconciliation`
-   directory and a sibling `semantic-review` directory. It repeatedly prepares,
-   runs, and validates bounded packets until every eligible bank movement has a
-   decision. The helper carries prior validated decisions forward without
-   reusing journal evidence; packet limits bound each worker turn rather than
-   silently limiting the complete run.
+   directory and a sibling `semantic-review` directory. It runs a worker only
+   when the complete eligible residual fits one bounded packet. It never splits
+   a large residual into successive automatic model calls. If row, component,
+   graph, or prompt-size limits are exceeded, it launches no worker, preserves
+   every movement in the human-review queue, and records the deferral reason.
 
 ```bash
 python scripts/semantic_review.py run-all <output-dir>/reconciliation \
@@ -226,6 +235,15 @@ bank movements remain in the queue pending validated Luna output.
 Use `prepare`, `run-worker`, and `validate` separately only for diagnosis. If a
 preparation reports `worker_required: false`, do not launch Luna; retain and
 report any deferred-component reasons.
+
+The worker packet is projected only after source-column mapping. It contains
+unresolved bank rows, their hard-compatible journal candidates, and populated
+canonical fields that can support reconciliation. It omits unmapped raw source
+columns, empty canonical fields, physical source locators, and the mechanically
+derived absolute amount. The opaque transaction ID keeps local linkage; the
+signed amount remains available as evidence. Do not remove names, references,
+descriptions, or other mapped fields merely because they may contain real case
+data when they are useful to the reconciliation.
 
 2. From the main Codex chat, invoke only the qualified launcher below. Do not
    copy or reconstruct its underlying `codex exec` command. The launcher keeps
