@@ -3655,29 +3655,37 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     section = page[section_start:section_end]
 
     for required_copy in (
-        "Un sito decente, attuale e credibile.",
-        "Il sito deve fare bene il suo lavoro, non sembrare un progetto tecnologico.",
+        "Un sito decente.",
+        "Il sito deve rispondere subito a cinque domande.",
+        "Chi è lo Studio? Chi aiuta? Che cosa fa? Perché è credibile? Come lo si contatta?",
+        "Sito da rinnovare",
         "Primo sito",
+        "Fuori perimetro",
         "Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura",
-        "Desktop e telefono",
-        "L’identità resta dello Studio.",
-        "Non basta un mock-up",
+        "Tre passaggi, dal materiale alla pubblicazione.",
+        "1. Scegliere i contenuti",
+        "2. Costruire il sito",
+        "3. Rivedere e pubblicare",
         "Quali dati arrivano al modello",
         "Non rilevante per questo processo.",
         "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
-        "Design, costruzione e pubblicazione restano nello stesso percorso controllato.",
-        "Il commercialista decide",
     ):
         assert required_copy in section
-    assert section.count('class="comms-step"') == 4
-    assert section.count('class="comms-profile__item"') == 3
-    assert section.count('class="comms-assurance__row"') == 4
+    assert section.count('class="comms-step"') == 3
+    assert 'class="comms-profile"' not in section
+    assert 'class="comms-assurance"' not in section
+    assert 'class="comms-boundary"' not in section
     assert section.count('class="comms-creative comms-model-data"') == 1
     assert (
         'data-model-data-workflow="presenza-digitale-studio" '
         'data-model-data-status="not-relevant"'
     ) in section
+    assert section.index("data-model-data-workflow=") > section.index(
+        'class="comms-actions"'
+    )
+    assert section.rstrip().endswith("</aside>")
     assert ".comms-model-data {" in page
+    assert ".comms-steps--three {" in page
     assert "grid-template-columns: minmax(0, 1fr);" in page
     assert 'href="index.html#presenza-digitale-studio"' in page
     assert 'href="#presenza-digitale-studio"' in page
