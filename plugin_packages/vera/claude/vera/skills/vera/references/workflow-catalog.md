@@ -118,3 +118,19 @@ stored in a single client's Studio Archive engagement.
 - `privacy-surface-review`: review and register model-context and external-data
   boundaries when a Vera workflow or shared service changes. This is not a
   customer-case workflow.
+
+## Public process explanations
+
+Every public page or named product-page section that explains one registered
+professional workflow includes a localized **“Quali dati arrivano al modello”**
+/ **“What data reaches the model”** block. Follow
+`public-process-page-contract.md`.
+
+Use model-led judgment from the inspected workflow evidence to choose whether
+the model-data distinction is `relevant` or `not-relevant`. When relevant,
+explain the actual local/full-population work, every model-visible phase,
+bounds and Claude-versus-Cowork differences. When not relevant, say so and give
+the concrete reason. A deterministic test enforces only presence, registered
+identity, allowed status, order and localization; it never chooses the status
+or validates the professional reason. Keep `/data-handling` global rather than
+recreating a central function register.

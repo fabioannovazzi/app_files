@@ -84,8 +84,9 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.121"
+    assert manifest["version"] == "0.1.122"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
+    assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
         "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
         "name": template["name"],

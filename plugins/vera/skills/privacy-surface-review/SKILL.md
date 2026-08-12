@@ -49,7 +49,14 @@ merely because the selected model runtime reads professional case data.
    recipient, nothing is automatically anonymized, processing is not local
    only, and local filtering or aggregation is used only when it helps the
    work.
-9. Update `privacy/workstreams/<workstream>.json` or
+9. If the workstream has a public process page or named product-page section,
+   read `../vera/references/public-process-page-contract.md` and apply it. Every public
+   process explanation has one localized “Quali dati arrivano al modello” /
+   “What data reaches the model” block. Choose `relevant` or `not-relevant`
+   from the inspected workflow evidence. Do not use `not-relevant` as a
+   fallback for an incomplete review. Keep `/data-handling` as the global
+   boundary explanation rather than recreating a central per-process register.
+10. Update `privacy/workstreams/<workstream>.json` or
    `privacy/services/<service>.json` using `references/manifest-contract.md`,
    then refresh its source fingerprint:
 
@@ -61,7 +68,7 @@ python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py \
   --refresh-service <service>
 ```
 
-10. Validate the complete register, run the Vera package tests, and rebuild the
+11. Validate the complete register, run the Vera package tests, and rebuild the
    plugin ZIP:
 
 ```bash
@@ -71,8 +78,11 @@ python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
 ## Judgment boundary
 
 Use deterministic code only for JSON shape, registered-workstream coverage,
-allowed boundary kinds, confirmation consistency, exact file hashing, and
-stale-review detection.
+allowed boundary kinds, confirmation consistency, exact file hashing,
+stale-review detection, and mechanically verifiable public-block presence,
+status values, order and localization coverage. Whether the public block is
+`relevant` or `not-relevant`, and whether its reason is professionally sound,
+remain model-led judgments based on inspected evidence.
 
 GDPR data minimisation remains a legal principle. Do not implement it here as
 deterministic deletion, automatic anonymisation, personal-data detection, or a
