@@ -3633,9 +3633,9 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
         "Desktop e telefono",
         "L’identità resta dello Studio.",
         "Non basta un mock-up",
-        "materiali che lo Studio ha scelto per preparare il sito",
-        "riapre una fonte completa solo per una verifica precisa",
-        "chi ha il link può aprirla",
+        "Quali dati arrivano al modello",
+        "Non rilevante per questo processo.",
+        "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
         "Design, costruzione e pubblicazione restano nello stesso percorso controllato.",
         "Il commercialista decide",
     ):
@@ -3643,22 +3643,16 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert section.count('class="comms-step"') == 4
     assert section.count('class="comms-profile__item"') == 3
     assert section.count('class="comms-assurance__row"') == 4
+    assert section.count('class="comms-creative comms-model-data"') == 1
     assert 'href="index.html#presenza-digitale-studio"' in page
     assert 'href="#presenza-digitale-studio"' in page
-    for localized_public_purpose in (
-        "material the studio selected to prepare its website",
-        "les éléments que le cabinet a sélectionnés pour préparer son site",
-        "Materialien, die die Kanzlei für die Erstellung ihrer Website ausgewählt hat",
-        "materiales que el despacho ha seleccionado para preparar su sitio web",
+    for localized_model_data_copy in (
+        "Not relevant to this process.",
+        "Ce point n’est pas pertinent pour ce processus.",
+        "Für diesen Prozess nicht relevant.",
+        "No es relevante para este proceso.",
     ):
-        assert localized_public_purpose in page
-    for localized_preview_boundary in (
-        "anyone with the link can open it",
-        "toute personne disposant du lien peut l’ouvrir",
-        "von jeder Person mit dem Link geöffnet werden",
-        "cualquiera que tenga el enlace puede abrirla",
-    ):
-        assert localized_preview_boundary in page
+        assert localized_model_data_copy in page
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
