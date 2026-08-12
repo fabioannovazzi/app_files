@@ -54,8 +54,11 @@ merely because the selected model runtime reads professional case data.
    process explanation has one localized “Quali dati arrivano al modello” /
    “What data reaches the model” block. Choose `relevant` or `not-relevant`
    from the inspected workflow evidence. Do not use `not-relevant` as a
-   fallback for an incomplete review. Keep `/data-handling` as the global
-   boundary explanation rather than recreating a central per-process register.
+   fallback for an incomplete review. Place the entire block last in the public
+   process explanation, after every description, step, output, review boundary
+   and call to action; no process content may follow it. Keep `/data-handling`
+   as the global boundary explanation rather than recreating a central
+   per-process register.
 10. Update `privacy/workstreams/<workstream>.json` or
    `privacy/services/<service>.json` using `references/manifest-contract.md`,
    then refresh its source fingerprint:

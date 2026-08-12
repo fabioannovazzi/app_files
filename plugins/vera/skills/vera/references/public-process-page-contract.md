@@ -7,7 +7,10 @@ section that explains a registered user-facing process.
 
 Every public process explanation must contain one visible block headed, in the
 active language, **“Quali dati arrivano al modello”** / **“What data reaches the
-model”**. The heading sits directly above the process-specific conclusion.
+model”**. This entire block must be the final block in the public process
+explanation, after every description, step, output, review boundary and call to
+action. No process content may follow it. The heading sits directly above the
+process-specific conclusion.
 
 Mark the block with the registered workflow ID and one explicit status:
 
@@ -61,7 +64,7 @@ runtime profiles, external boundaries and security controls.
 ## Mechanical enforcement
 
 Tests may enforce registered workflow IDs, allowed status values, one block per
-public process explanation, heading-before-conclusion order and complete locale
-keys. Those checks are mechanically verifiable. They must not infer a status
-from keywords, decide professional relevance or certify that the copy is
-substantively correct.
+public process explanation, final-block placement, heading-before-conclusion
+order and complete locale keys. Those checks are mechanically verifiable. They
+must not infer a status from keywords, decide professional relevance or certify
+that the copy is substantively correct.

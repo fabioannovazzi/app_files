@@ -236,6 +236,7 @@ def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> No
 
     for required_rule in (
         "Every public process explanation must contain one visible block",
+        "This entire block must be the final block",
         "Quali dati arrivano al modello",
         "What data reaches the model",
         'data-model-data-status="relevant|not-relevant"',
