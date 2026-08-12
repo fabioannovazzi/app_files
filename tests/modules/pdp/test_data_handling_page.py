@@ -364,6 +364,8 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
         sections["security"]["paragraphs"][0]
     )
     assert "session material" in sections["security"]["paragraphs"][1]
+    assert "not runtime network enforcement" in (sections["security"]["paragraphs"][2])
+    assert "does not inspect customer files" in (sections["security"]["paragraphs"][2])
     assert sections["hosted-features"]["title"] == (
         "Mparanza-hosted services are a separate boundary."
     )
@@ -376,6 +378,7 @@ def test_data_handling_page_explains_the_two_processing_categories() -> None:
     assert "not a third Mparanza processing category" in (
         sections["hosted-features"]["paragraphs"][2]
     )
+    assert "package index" in sections["hosted-features"]["paragraphs"][2]
     assert "check for updates" in sections["hosted-features"]["paragraphs"][3]
     assert "no client or work content" in sections["hosted-features"]["paragraphs"][3]
     assert (
