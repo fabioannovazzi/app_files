@@ -42,10 +42,15 @@ def _intake(
     publication_provider: str = "other",
 ) -> dict[str, object]:
     selected_files = [
-        {"id": "studio-facts", "role": "studio_material", "path": str(source_path)}
+        {
+            "id": "studio-facts",
+            "role": "studio_material",
+            "path": str(source_path),
+            "approved_for_website_use": True,
+        }
     ]
     return {
-        "schema_version": 2,
+        "schema_version": 3,
         "mode": "first_site",
         "studio": {
             "name": "Studio Esempio",
@@ -201,7 +206,7 @@ def _quality_assessment(
 
 def _valid_brief(*, source_id: str = "studio-facts") -> dict[str, object]:
     return {
-        "schema_version": 1,
+        "schema_version": 2,
         "mode": "first_site",
         "evidence_summary": "One supplied studio fact.",
         "observed_facts": [
@@ -209,6 +214,15 @@ def _valid_brief(*, source_id: str = "studio-facts") -> dict[str, object]:
                 "id": "fact-1",
                 "statement": "Qualified professional",
                 "source_ids": [source_id],
+            }
+        ],
+        "source_use_plan": [
+            {
+                "source_id": source_id,
+                "professional_purpose": "Support the verified studio profile.",
+                "post_brief_access": "mapped_brief_only",
+                "target_material": [],
+                "reason": "The mapped qualification is sufficient after briefing.",
             }
         ],
         "open_questions": [],
@@ -549,6 +563,198 @@ def test_prepare_run_requires_selected_evidence(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="selected_files"):
         workflow.prepare_run(workspace, _write_json(tmp_path / "intake.json", intake))
+
+
+def test_prepare_run_rejects_source_without_website_use_approval(
+    tmp_path: Path,
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Studio fact", encoding="utf-8")
+    intake = _intake(source_path=source_path)
+    intake["selected_files"][0].pop("approved_for_website_use")
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+
+    with pytest.raises(ValueError, match="approved_for_website_use"):
+        workflow.prepare_run(
+            workspace,
+            _write_json(tmp_path / "unapproved-intake.json", intake),
+        )
+
+
+def test_record_site_brief_requires_source_use_plan_for_every_source(
+    tmp_path: Path,
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Studio fact", encoding="utf-8")
+    intake = _intake(source_path=source_path)
+    intake["confirmed_facts"] = [
+        {
+            "id": "confirmed-location",
+            "statement": "La sede è a Milano.",
+            "confirmed_by": "Studio Esempio",
+            "confirmed_by_user": True,
+            "approved_for_website_use": True,
+        }
+    ]
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+    run_dir = workflow.prepare_run(
+        workspace,
+        _write_json(tmp_path / "intake.json", intake),
+    )
+
+    with pytest.raises(ValueError, match="missing source IDs: confirmed-location"):
+        workflow.record_site_brief(
+            run_dir,
+            _write_json(tmp_path / "brief.json", _valid_brief()),
+            provider="test-provider",
+            model="test-model",
+            recorded_by="test-operator",
+        )
+
+
+def test_record_site_brief_rejects_duplicate_source_use_plan_id(
+    tmp_path: Path,
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Studio fact", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+    run_dir = workflow.prepare_run(
+        workspace,
+        _write_json(tmp_path / "intake.json", _intake(source_path=source_path)),
+    )
+    brief = _valid_brief()
+    duplicate = dict(brief["source_use_plan"][0])
+    duplicate["reason"] = "A distinct reason must not duplicate the same source ID."
+    brief["source_use_plan"].append(duplicate)
+
+    with pytest.raises(ValueError, match="duplicate source IDs"):
+        workflow.record_site_brief(
+            run_dir,
+            _write_json(tmp_path / "brief.json", brief),
+            provider="test-provider",
+            model="test-model",
+            recorded_by="test-operator",
+        )
+
+
+@pytest.mark.parametrize(
+    ("post_brief_access", "target_material"),
+    [
+        ("mapped_brief_only", []),
+        (
+            "targeted_material",
+            [{"kind": "section", "locator": "Professional qualifications"}],
+        ),
+        (
+            "full_source_required",
+            [{"kind": "entire_source", "locator": "Complete selected source"}],
+        ),
+    ],
+)
+def test_record_site_brief_accepts_model_led_source_use_modes(
+    tmp_path: Path,
+    post_brief_access: str,
+    target_material: list[dict[str, str]],
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Studio fact", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+    run_dir = workflow.prepare_run(
+        workspace,
+        _write_json(tmp_path / "intake.json", _intake(source_path=source_path)),
+    )
+    brief = _valid_brief()
+    brief["source_use_plan"][0]["post_brief_access"] = post_brief_access
+    brief["source_use_plan"][0]["target_material"] = target_material
+
+    record_path = workflow.record_site_brief(
+        run_dir,
+        _write_json(tmp_path / "brief.json", brief),
+        provider="test-provider",
+        model="test-model",
+        recorded_by="test-operator",
+    )
+
+    assert record_path.is_file()
+
+
+@pytest.mark.parametrize(
+    ("post_brief_access", "target_material"),
+    [
+        (
+            "mapped_brief_only",
+            [{"kind": "section", "locator": "Professional qualifications"}],
+        ),
+        ("targeted_material", []),
+        (
+            "targeted_material",
+            [{"kind": "entire_source", "locator": "Complete selected source"}],
+        ),
+        (
+            "full_source_required",
+            [{"kind": "section", "locator": "Professional qualifications"}],
+        ),
+    ],
+)
+def test_record_site_brief_rejects_source_use_mode_target_mismatch(
+    tmp_path: Path,
+    post_brief_access: str,
+    target_material: list[dict[str, str]],
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Studio fact", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+    run_dir = workflow.prepare_run(
+        workspace,
+        _write_json(tmp_path / "intake.json", _intake(source_path=source_path)),
+    )
+    brief = _valid_brief()
+    brief["source_use_plan"][0]["post_brief_access"] = post_brief_access
+    brief["source_use_plan"][0]["target_material"] = target_material
+
+    with pytest.raises(ValueError, match="Invalid site_brief.schema.json"):
+        workflow.record_site_brief(
+            run_dir,
+            _write_json(tmp_path / "brief.json", brief),
+            provider="test-provider",
+            model="test-model",
+            recorded_by="test-operator",
+        )
 
 
 @pytest.mark.parametrize(
@@ -916,6 +1122,7 @@ def test_first_site_can_prepare_from_confirmed_chat_fact(tmp_path: Path) -> None
             "statement": "Sono iscritto all'Ordine dei Dottori Commercialisti.",
             "confirmed_by": "Studio Esempio",
             "confirmed_by_user": True,
+            "approved_for_website_use": True,
         }
     ]
 
@@ -929,6 +1136,7 @@ def test_first_site_can_prepare_from_confirmed_chat_fact(tmp_path: Path) -> None
     )
     assert register["sources"][0]["origin"] == "confirmed_chat"
     assert register["sources"][0]["role"] == "confirmed_chat_fact"
+    assert register["sources"][0]["approved_for_website_use"] is True
 
 
 def test_refresh_accepts_unknown_platform_with_public_url(tmp_path: Path) -> None:
@@ -1103,6 +1311,7 @@ def test_prepare_run_rejects_duplicate_file_and_chat_fact_id(tmp_path: Path) -> 
             "statement": "Confirmed fact",
             "confirmed_by": "Studio Esempio",
             "confirmed_by_user": True,
+            "approved_for_website_use": True,
         }
     ]
     workspace = tmp_path / "workspace"
@@ -1224,13 +1433,18 @@ def test_record_site_brief_rejects_malformed_source_register(tmp_path: Path) -> 
     [
         ("role", "studio_material", "Confirmed fact role changed"),
         ("origin", "selected_file", "Confirmed fact origin changed"),
+        (
+            "approved_for_website_use",
+            False,
+            "Confirmed fact website-use approval changed",
+        ),
         ("original_path", "/tmp/unexpected", "unexpected source path"),
     ],
 )
 def test_record_site_brief_rejects_changed_confirmed_fact_provenance(
     tmp_path: Path,
     field: str,
-    value: str,
+    value: object,
     expected: str,
 ) -> None:
     workflow = _load_workflow_core()
@@ -1251,6 +1465,7 @@ def test_record_site_brief_rejects_changed_confirmed_fact_provenance(
             "statement": "Sono iscritto all'Ordine dei Dottori Commercialisti.",
             "confirmed_by": "Studio Esempio",
             "confirmed_by_user": True,
+            "approved_for_website_use": True,
         }
     ]
     run_dir = workflow.prepare_run(

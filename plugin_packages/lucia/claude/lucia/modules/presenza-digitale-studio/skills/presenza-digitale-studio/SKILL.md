@@ -111,6 +111,15 @@ working directory.
   workspace by default. Deterministic scripts own snapshots, hashes,
   mechanically verifiable HTML checks, review freshness and package binding;
   model-led skills own semantic and visual judgment.
+- Select a file or confirmed fact only when the professional has approved it
+  for website work. This confirms the purpose of the source; it does
+  not accept every statement in the source as final website copy.
+- During evidence mapping, the selected runtime may read the complete approved
+  source when the brief requires it. After the brief is recorded, follow its
+  `source_use_plan`: default to mapped facts, use only named excerpts or assets
+  for targeted access, and reopen a complete source only when the model records
+  a concrete professional reason. Do not use deterministic code to decide
+  relevance or to classify personal data.
 
 ## Cowork-native Run UX
 
@@ -172,14 +181,24 @@ website run.
    ```
 
    Preparation requires at least one selected evidence file or one exact fact
-   explicitly confirmed by the professional. Put chat-confirmed first-site facts
-   in `confirmed_facts`; preparation snapshots each fact as immutable evidence
+   explicitly confirmed by the professional. Every `selected_files` and
+   `confirmed_facts` entry must record `approved_for_website_use: true`; do not
+   prepare the run until the professional has selected that material for the
+   website purpose. Put chat-confirmed first-site facts in
+   `confirmed_facts`; preparation snapshots each fact as immutable evidence
    without asking the professional to manufacture a document. It snapshots every
    selected local file, records SHA-256 and creates `work/site/` plus the
    optional `work/sites-project/`. A URL is not a source snapshot. When public inspection was
    selected, capture the exact HTML, screenshots or extracted evidence used and
    add those local files to a new prepared run.
-6. Inspect evidence and write `site_brief.json` against its schema. In
+6. Inspect evidence and write `site_brief.json` against its schema. Include one
+   `source_use_plan` entry for every selected evidence ID. The model assigns the
+   professional purpose and chooses `mapped_brief_only`, `targeted_material`, or
+   `full_source_required`; exact locators identify every targeted excerpt, page,
+   section, asset or code path. Use `full_source_required` only with a concrete
+   reason specific to the website work. Deterministic validation checks schema
+   shape and exact source-ID coverage only; it does not decide which mode is
+   professionally appropriate. In
    `refresh`, distinguish observations from proposed changes. In `first_site`,
    distinguish supplied facts from proposed information architecture, voice
    and visual defaults. Run:
@@ -190,7 +209,12 @@ website run.
      --provider <provider> --model <model> --recorded-by <operator>
    ```
 
-7. Use the host-skill sequence in `references/skill-orchestration.md`. When a
+7. Use the host-skill sequence in `references/skill-orchestration.md`. After the
+   brief is recorded, give downstream design, copy and implementation work the
+   current brief plus only the material permitted by `source_use_plan`. Do not
+   reopen `mapped_brief_only` sources. For `targeted_material`, use only the
+   named material. Reopen a `full_source_required` source only for its recorded
+   reason, then return to the mapped brief. When a
    named skill is callable, read and follow it rather than imitating it. Use
    the internal quality standard only for unavailable skills. Build the actual
    site in `work/site/`; keep primary content and navigation usable without
@@ -260,7 +284,8 @@ website run.
 
 ## Completion
 
-End with an Artifact Card containing mode, evidence coverage, brief version,
+End with an Artifact Card containing mode, evidence coverage, post-brief source
+use modes, brief version,
 skill routes used and unavailable, mechanical validation status, browser
 viewports inspected, current site digest, reviews, preview URL, release
 package, final URL, unresolved issues and the next authorized action.

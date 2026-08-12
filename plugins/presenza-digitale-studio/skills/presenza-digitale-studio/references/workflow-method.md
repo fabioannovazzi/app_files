@@ -8,9 +8,27 @@ the studio facts, selected prior communications, logo, photography and contact
 details supplied for public use. When the professional supplies a fact directly
 in chat, record the exact confirmed statement as immutable intake evidence; do
 not require them to create a document. A public URL is not a durable source
-snapshot.
+snapshot. Include a source only after the professional approves it for the
+website purpose; that approval does not make every statement in the
+source accepted website copy.
 
-## 2. Establish the reader's decision
+## 2. Map post-brief source use
+
+The model records one `source_use_plan` entry for every selected evidence ID.
+State the professional purpose and choose the narrowest purpose-preserving mode:
+
+- `mapped_brief_only`: the mapped facts and decisions are sufficient;
+- `targeted_material`: later work needs only named excerpts, pages, sections,
+  assets or code paths;
+- `full_source_required`: the complete source remains necessary for one stated
+  professional reason.
+
+After the brief is recorded, design, copy, implementation and quality work use
+the brief plus only the material allowed by this plan. Reopen a complete source
+only for its recorded reason. Source-ID coverage and schema shape are
+mechanical checks; professional purpose and relevance remain model-led.
+
+## 3. Establish the reader's decision
 
 Identify the smallest set of questions the website must answer:
 
@@ -23,7 +41,7 @@ Identify the smallest set of questions the website must answer:
 Do not turn the site into a list of every possible service or a biography with
 the useful information buried below it.
 
-## 3. Propose a studio profile
+## 4. Propose a studio profile
 
 Record each identity field with one basis:
 
@@ -34,7 +52,7 @@ Record each identity field with one basis:
 Default proposals may cover typography, spacing, restrained colors, page
 geometry and voice. They may not create facts, reputation or history.
 
-## 4. Build the working site
+## 5. Build the working site
 
 Prefer a small semantic HTML/CSS implementation with minimal JavaScript. Use a
 framework only when the host platform or requested behavior justifies it.
@@ -43,7 +61,7 @@ the license and platform permit it. Forms, embedded third-party applications and
 remote executable scripts require a separate integration scope and must not pass
 as ordinary informational-site content.
 
-## 5. Review exact bytes
+## 6. Review exact bytes
 
 Run mechanical validation, then inspect the rendered site at desktop and phone
 widths. Preserve a full-page PNG whose pixel width matches each claimed viewport
@@ -52,10 +70,10 @@ responsive behavior and destination separately. Bind every decision to the
 current evidence, brief, site, validation and quality-assessment digests; any
 changed dependency invalidates stale acceptance.
 
-## 6. Publish deliberately
+## 7. Publish deliberately
 
-An unlisted preview is still an external disclosure. Use a hard-to-guess path,
-add `noindex, nofollow, noarchive`, avoid public navigation and publish only
+An unlisted preview is a published website that anyone with the link can open.
+Use a hard-to-guess path, add `noindex, nofollow, noarchive`, avoid public navigation and publish only
 after that route was selected. Remove preview robots directives before release,
 then revalidate and review the changed bytes. Final publication requires
 explicit approval of the exact package and destination.
