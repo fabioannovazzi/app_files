@@ -168,7 +168,6 @@
 
                 <div class="privacy-entry__body">
                   <section class="privacy-entry__lane">
-                    <p class="privacy-entry__lane-index">01</p>
                     <div>
                       <h4>{{ register_copy.local_heading }}</h4>
                       <p>{{ register_copy.local_note }}</p>
@@ -176,7 +175,6 @@
                   </section>
 
                   <section class="privacy-entry__lane">
-                    <p class="privacy-entry__lane-index">02</p>
                     <div>
                       <h4>{{ register_copy.model_heading }}</h4>
                       <p>{{ register_copy[workflow.model_intro_key] }}</p>
@@ -193,7 +191,6 @@
                   </section>
 
                   <section class="privacy-entry__lane">
-                    <p class="privacy-entry__lane-index">03</p>
                     <div>
                       <h4>{{ register_copy.mparanza_heading }}</h4>
                       {% if workflow.service_ids %}
@@ -210,7 +207,6 @@
                   </section>
 
                   <section class="privacy-entry__lane">
-                    <p class="privacy-entry__lane-index">04</p>
                     <div>
                       <h4>{{ register_copy.other_heading }}</h4>
                       {% if workflow.other_boundaries %}
@@ -283,14 +279,12 @@
               <p class="privacy-entry__service-note">{{ register_copy.shared_service_note }}</p>
             {% endif %}
             <section class="privacy-entry__lane">
-              <p class="privacy-entry__lane-index">01</p>
               <div>
                 <h4>{{ register_copy.provider }}</h4>
                 <p>{{ service.providers | join(" · ") }}</p>
               </div>
             </section>
             <section class="privacy-entry__lane">
-              <p class="privacy-entry__lane-index">02</p>
               <div>
                 <h4>{{ register_copy.sent }}</h4>
                 <div class="privacy-entry__classes">
@@ -315,7 +309,6 @@
               </div>
             </section>
             <section class="privacy-entry__lane">
-              <p class="privacy-entry__lane-index">03</p>
               <div>
                 <h4>{{ register_copy.retention }}</h4>
                 <p>{{ service.retention }}</p>

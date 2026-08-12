@@ -3900,28 +3900,46 @@ def test_check_entries_page_matches_plugin_site_pattern() -> None:
 
 def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
     page_paths = (
+        "463b7449445ad5b75aec5107a5d74ed80f205790e3661780adca1f74dfd14407",
+        "4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9",
+        "attribute-reporting/cashmere",
         "check-entries",
         "concordato-plan-review",
         "deep-research-validator",
+        "financial-analysis",
         "journal-bank-reconciliation",
         "journal-sampling",
+        "lucia",
         "previdenza-inps",
+        "progetto-vera-ai",
         "prompt-optimizer",
         "registro-imprese-sari",
         "report-builder",
         "riconciliazione-partite",
+        "sales-plan",
         "studio-archive",
         "clara",
+        "vera",
     )
     rejected_numbered_component_tokens = (
+        "assurance-step__number",
+        "bandi-step__number",
+        "bilancio-step__number",
         "source-step__number",
         "workflow-step__number",
         "journey-step__number",
         "journey-stage__number",
         "due-diligence-step__number",
+        "privacy-entry__lane-index",
+        "section-number",
+        "layer-num",
+        "trap-num",
         'class="journey-number"',
         'class="step-number"',
         'class="card-number"',
+        "counter-reset: comms-step",
+        "counter-reset: compliance-principle",
+        "content: attr(data-step)",
         "counter-reset: workflow",
         "counter-increment: workflow",
     )
@@ -3936,12 +3954,20 @@ def test_live_product_pages_do_not_use_numbered_step_labels() -> None:
             assert rejected_token not in page
 
     for stylesheet_path in (
+        ROOT / "static" / "css" / "app.css",
         ROOT / "static" / "shared" / "clara" / "clara-page.css",
+        ROOT / "static" / "shared" / "lucia" / "lucia-page.css",
         ROOT / "static" / "shared" / "vera-journey.css",
     ):
         stylesheet = stylesheet_path.read_text(encoding="utf-8")
         for rejected_token in rejected_numbered_component_tokens:
             assert rejected_token not in stylesheet
+
+    data_handling = (ROOT / "templates" / "data_handling.html").read_text(
+        encoding="utf-8"
+    )
+    assert re.search(r"<span(?: [^>]*)?>0?[1-9]</span>", data_handling) is None
+    assert "privacy-entry__lane-index" not in data_handling
 
 
 def test_homepage_routes_check_entries_through_vera() -> None:

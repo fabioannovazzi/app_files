@@ -233,13 +233,12 @@ main, .footer-shell {
   border-block: 2px solid var(--navy);
 }
 .assurance-step {
-  min-height: 250px;
+  min-height: 190px;
   padding: 30px 30px 34px 0;
   border-right: 1px solid var(--cyan);
 }
 .assurance-step + .assurance-step { padding-left: 30px; }
 .assurance-step:last-child { padding-right: 0; border-right: 0; }
-.assurance-step__number { display: block; margin-bottom: 56px; color: var(--cyan); font-size: 0.8rem; font-weight: 650; }
 .assurance-step p { margin-top: 16px; color: var(--blue); }
 .assurance-closing {
   max-width: 900px;
@@ -297,7 +296,6 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
     border-bottom: 1px solid var(--cyan);
   }
   .assurance-step:last-child { border-bottom: 0; }
-  .assurance-step__number { margin-bottom: 24px; }
 }
 
 @media (max-width: 720px) {
