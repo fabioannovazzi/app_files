@@ -3599,17 +3599,21 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     section = page[section_start:section_end]
 
     for required_copy in (
-        "La risposta giusta può essere non pubblicare.",
-        "Più informazione del post, oppure niente carosello.",
-        "Fonte pubblica: autorità · atto · data",
-        "Il formato appartiene allo Studio.",
-        "La direzione visiva resta subordinata ai fatti.",
-        "Il commercialista decide",
+        "Il commercialista sceglie le fonti. Vera prepara la comunicazione.",
+        "1. Il commercialista sceglie",
+        "2. Vera prepara",
+        "3. Il commercialista decide",
+        "Altrimenti propone di non pubblicare.",
+        "Lo Studio sceglie come comunicare.",
+        "Nessuna proposta diventa uno standard senza l’approvazione dello Studio.",
     ):
         assert required_copy in section
-    assert section.count('class="comms-step"') == 4
-    assert section.count('class="comms-profile__item"') == 3
-    assert section.count('class="comms-assurance__row"') == 4
+    assert section.count('class="comms-step"') == 3
+    assert 'class="comms-outcomes"' not in section
+    assert 'class="comms-output"' not in section
+    assert 'class="comms-profile"' not in section
+    assert 'class="comms-assurance"' not in section
+    assert 'class="comms-boundary"' not in section
     assert ".comms-channel-list li::after" not in page
     assert "Fonte: fonte ufficiale" not in section
 
@@ -3624,12 +3628,13 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
 
     for required_copy in (
         "Quali dati arrivano al modello",
-        "Il commercialista sceglie quali comunicazioni precedenti usare.",
+        "Le fonti scelte arrivano al modello.",
+        "Il modello legge le fonti scelte",
         "Vera rimuove prima sul computer email, telefoni, codici fiscali",
-        "un unico passaggio isolato del modello vede le copie ripulite",
-        "La corrispondenza con i dati originali resta nello Studio",
-        "soltanto i documenti pseudonimizzati",
-        "In Codex e Cowork il confine è lo stesso.",
+        "Un primo passaggio del modello può ancora vedere nomi e dettagli di contesto",
+        "Solo i passaggi successivi ricevono quelle comunicazioni in forma pseudonimizzata",
+        "la corrispondenza con gli originali resta nello Studio",
+        "Lo stesso vale in Codex e Cowork.",
     ):
         assert required_copy in section
     assert (
