@@ -527,7 +527,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.122"
+    assert manifest["version"] == "0.1.123"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3633,6 +3633,9 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
         "Desktop e telefono",
         "L’identità resta dello Studio.",
         "Non basta un mock-up",
+        "materiali che lo Studio ha scelto per preparare il sito",
+        "riapre una fonte completa solo per una verifica precisa",
+        "chi ha il link può aprirla",
         "Design, costruzione e pubblicazione restano nello stesso percorso controllato.",
         "Il commercialista decide",
     ):
@@ -3642,6 +3645,20 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert section.count('class="comms-assurance__row"') == 4
     assert 'href="index.html#presenza-digitale-studio"' in page
     assert 'href="#presenza-digitale-studio"' in page
+    for localized_public_purpose in (
+        "material the studio selected to prepare its website",
+        "les éléments que le cabinet a sélectionnés pour préparer son site",
+        "Materialien, die die Kanzlei für die Erstellung ihrer Website ausgewählt hat",
+        "materiales que el despacho ha seleccionado para preparar su sitio web",
+    ):
+        assert localized_public_purpose in page
+    for localized_preview_boundary in (
+        "anyone with the link can open it",
+        "toute personne disposant du lien peut l’ouvrir",
+        "von jeder Person mit dem Link geöffnet werden",
+        "cualquiera que tenga el enlace puede abrirla",
+    ):
+        assert localized_preview_boundary in page
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:

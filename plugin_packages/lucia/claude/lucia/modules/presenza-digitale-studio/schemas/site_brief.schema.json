@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/site-brief-v1.json",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/site-brief-v2.json",
   "title": "Model-led website brief",
   "type": "object",
   "additionalProperties": false,
@@ -9,6 +9,7 @@
     "mode",
     "evidence_summary",
     "observed_facts",
+    "source_use_plan",
     "open_questions",
     "target_audiences",
     "sitemap",
@@ -20,7 +21,7 @@
     "exclusions"
   ],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"const": 2},
     "mode": {"enum": ["refresh", "first_site"]},
     "evidence_summary": {"type": "string", "minLength": 1},
     "observed_facts": {
@@ -39,6 +40,98 @@
             "items": {"type": "string", "minLength": 1}
           }
         }
+      }
+    },
+    "source_use_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "professional_purpose",
+          "post_brief_access",
+          "target_material",
+          "reason"
+        ],
+        "properties": {
+          "source_id": {"type": "string", "minLength": 1},
+          "professional_purpose": {"type": "string", "minLength": 1},
+          "post_brief_access": {
+            "enum": [
+              "mapped_brief_only",
+              "targeted_material",
+              "full_source_required"
+            ]
+          },
+          "target_material": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "locator"],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "page",
+                    "section",
+                    "excerpt",
+                    "asset",
+                    "code_path",
+                    "entire_source"
+                  ]
+                },
+                "locator": {"type": "string", "minLength": 1}
+              }
+            }
+          },
+          "reason": {"type": "string", "minLength": 1}
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {"post_brief_access": {"const": "mapped_brief_only"}}
+            },
+            "then": {"properties": {"target_material": {"maxItems": 0}}}
+          },
+          {
+            "if": {
+              "properties": {"post_brief_access": {"const": "targeted_material"}}
+            },
+            "then": {
+              "properties": {
+                "target_material": {
+                  "minItems": 1,
+                  "items": {
+                    "properties": {
+                      "kind": {"not": {"const": "entire_source"}}
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "post_brief_access": {"const": "full_source_required"}
+              }
+            },
+            "then": {
+              "properties": {
+                "target_material": {
+                  "minItems": 1,
+                  "maxItems": 1,
+                  "items": {
+                    "properties": {"kind": {"const": "entire_source"}}
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "open_questions": {

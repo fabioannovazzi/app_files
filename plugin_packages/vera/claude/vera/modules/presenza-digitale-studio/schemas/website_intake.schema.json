@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/website-intake-v2.json",
+  "$id": "https://mparanza.com/schemas/presenza-digitale-studio/website-intake-v3.json",
   "title": "Website intake",
   "type": "object",
   "additionalProperties": false,
@@ -19,7 +19,7 @@
     "external_routes"
   ],
   "properties": {
-    "schema_version": {"const": 2},
+    "schema_version": {"const": 3},
     "mode": {"enum": ["refresh", "first_site"]},
     "studio": {
       "type": "object",
@@ -60,7 +60,7 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "role", "path"],
+        "required": ["id", "role", "path", "approved_for_website_use"],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
           "role": {
@@ -75,7 +75,8 @@
               "other"
             ]
           },
-          "path": {"type": "string", "minLength": 1}
+          "path": {"type": "string", "minLength": 1},
+          "approved_for_website_use": {"const": true}
         }
       }
     },
@@ -84,12 +85,19 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "statement", "confirmed_by", "confirmed_by_user"],
+        "required": [
+          "id",
+          "statement",
+          "confirmed_by",
+          "confirmed_by_user",
+          "approved_for_website_use"
+        ],
         "properties": {
           "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]*$"},
           "statement": {"type": "string", "minLength": 1},
           "confirmed_by": {"type": "string", "minLength": 1},
-          "confirmed_by_user": {"const": true}
+          "confirmed_by_user": {"const": true},
+          "approved_for_website_use": {"const": true}
         }
       }
     },

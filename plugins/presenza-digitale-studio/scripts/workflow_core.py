@@ -270,6 +270,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "id": item["id"],
                     "role": item["role"],
                     "origin": "selected_file",
+                    "approved_for_website_use": item["approved_for_website_use"],
                     "original_path": str(source_path),
                     "snapshot_path": str(target.relative_to(staging)),
                     "bytes": target.stat().st_size,
@@ -284,6 +285,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 "statement": fact["statement"],
                 "confirmed_by": fact["confirmed_by"],
                 "confirmed_by_user": True,
+                "approved_for_website_use": fact["approved_for_website_use"],
             }
             _write_json(target, snapshot)
             target.chmod(0o400)
@@ -292,6 +294,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "id": fact["id"],
                     "role": "confirmed_chat_fact",
                     "origin": "confirmed_chat",
+                    "approved_for_website_use": fact["approved_for_website_use"],
                     "original_path": None,
                     "snapshot_path": str(target.relative_to(staging)),
                     "bytes": target.stat().st_size,
@@ -386,6 +389,8 @@ def _verified_intake_and_sources(
                 raise ValueError(f"Source role changed for {source_id}")
             if item.get("origin") != "selected_file":
                 raise ValueError(f"Source origin changed for {source_id}")
+            if item.get("approved_for_website_use") is not True:
+                raise ValueError(f"Source website-use approval changed for {source_id}")
             original = str(Path(selected["path"]).expanduser().resolve())
             if item.get("original_path") != original:
                 raise ValueError(f"Original source path changed for {source_id}")
@@ -394,6 +399,10 @@ def _verified_intake_and_sources(
                 raise ValueError(f"Confirmed fact role changed for {source_id}")
             if item.get("origin") != "confirmed_chat":
                 raise ValueError(f"Confirmed fact origin changed for {source_id}")
+            if item.get("approved_for_website_use") is not True:
+                raise ValueError(
+                    f"Confirmed fact website-use approval changed for {source_id}"
+                )
             if item.get("original_path") is not None:
                 raise ValueError(
                     f"Confirmed fact has an unexpected source path: {source_id}"
@@ -417,6 +426,7 @@ def _verified_intake_and_sources(
                 "statement": selected["statement"],
                 "confirmed_by": selected["confirmed_by"],
                 "confirmed_by_user": True,
+                "approved_for_website_use": True,
             }
             if _load_json(snapshot) != expected_snapshot:
                 raise ValueError(f"Confirmed fact snapshot changed: {source_id}")
@@ -440,6 +450,30 @@ def _brief_source_ids(brief: dict[str, Any]) -> set[str]:
     return referenced
 
 
+def _validate_source_use_plan(
+    brief: dict[str, Any],
+    known_sources: set[str],
+) -> None:
+    """Require exact source-ID coverage without deciding semantic relevance.
+
+    Exact ID closure is mechanically verifiable and audit-relevant. The model
+    remains responsible for each source's purpose and post-brief access mode.
+    """
+
+    planned_ids = [str(item["source_id"]) for item in brief["source_use_plan"]]
+    if len(planned_ids) != len(set(planned_ids)):
+        raise ValueError("Source use plan contains duplicate source IDs")
+    planned = set(planned_ids)
+    unknown = sorted(planned - known_sources)
+    if unknown:
+        raise ValueError(
+            "Source use plan references unknown source IDs: " + ", ".join(unknown)
+        )
+    missing = sorted(known_sources - planned)
+    if missing:
+        raise ValueError("Source use plan is missing source IDs: " + ", ".join(missing))
+
+
 def _verified_brief(run_dir: Path) -> dict[str, Any]:
     """Verify that the current brief is intact and bound to current evidence."""
 
@@ -457,6 +491,7 @@ def _verified_brief(run_dir: Path) -> dict[str, Any]:
     if brief["mode"] != intake["mode"]:
         raise ValueError("Brief mode does not match intake mode")
     known_sources = {str(item["id"]) for item in register["sources"]}
+    _validate_source_use_plan(brief, known_sources)
     referenced = _brief_source_ids(brief)
     if not referenced:
         raise ValueError(
@@ -490,6 +525,7 @@ def record_site_brief(
     if brief["mode"] != intake["mode"]:
         raise ValueError("Brief mode does not match intake mode")
     known_sources = {str(item["id"]) for item in register["sources"]}
+    _validate_source_use_plan(brief, known_sources)
     referenced = _brief_source_ids(brief)
     if not referenced:
         raise ValueError(
