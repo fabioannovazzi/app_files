@@ -279,7 +279,6 @@ main, .footer-shell {
 
 footer { padding-block: 38px max(38px, env(safe-area-inset-bottom)); }
 .footer-identity { display: grid; gap: 12px; }
-.footer-identity strong { font-size: 1rem; }
 .footer-links { display: flex; flex-wrap: wrap; gap: 12px 24px; }
 .footer-links a { min-height: 44px; display: inline-flex; align-items: center; color: var(--blue); text-decoration: none; }
 .footer-links a:hover { color: var(--navy); }
