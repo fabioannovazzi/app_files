@@ -94,6 +94,12 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Never put passwords, API keys, authentication cookies, access "
                         "tokens, or session material in prompts or files Codex can read."
                     ),
+                    (
+                        "The register is a developer and release control, not runtime "
+                        "network enforcement. It checks registered coverage and source "
+                        "freshness; it does not inspect customer files, trace every "
+                        "request, or by itself block undeclared network traffic."
+                    ),
                 ],
             },
             {
@@ -141,9 +147,9 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "arrangements. There is no prompt-by-prompt documentation."
                     ),
                     (
-                        "A public search, connector, portal, or send action chosen by the "
-                        "user follows that external service's terms. It is an external "
-                        "destination, not a third Mparanza processing category."
+                        "A package index, public search, connector, portal, or send action "
+                        "chosen by the user follows that external service's terms. It is "
+                        "an external destination, not a third Mparanza processing category."
                     ),
                     (
                         "The plugins also contact Mparanza to check for updates and the "
@@ -278,6 +284,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "token di accesso o dati di sessione nei prompt o nei file che "
                         "Codex può leggere."
                     ),
+                    (
+                        "Il registro è un controllo di sviluppo e rilascio, non un sistema "
+                        "di applicazione della rete durante l'esecuzione. Verifica la "
+                        "copertura dei componenti registrati e l'attualità del codice; non "
+                        "ispeziona i file dei clienti, non traccia ogni richiesta e non "
+                        "blocca da solo traffico di rete non dichiarato."
+                    ),
                 ],
             },
             {
@@ -327,9 +340,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "prompt per prompt."
                     ),
                     (
-                        "Una ricerca pubblica, un connector, un portale o un invio scelto "
-                        "dall'utente segue le condizioni del servizio esterno. È una "
-                        "destinazione esterna, non una terza categoria di trattamento Mparanza."
+                        "Un indice di pacchetti, una ricerca pubblica, un connector, un "
+                        "portale o un invio scelto dall'utente segue le condizioni del "
+                        "servizio esterno. È una destinazione esterna, non una terza "
+                        "categoria di trattamento Mparanza."
                     ),
                     (
                         "I plugin contattano inoltre Mparanza per verificare gli aggiornamenti "
@@ -467,6 +481,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "d'authentification, jetons d'accès ou données de session dans "
                         "des prompts ou fichiers que Codex peut lire."
                     ),
+                    (
+                        "Le registre est un contrôle de développement et de publication, "
+                        "pas un mécanisme réseau appliqué pendant l'exécution. Il vérifie "
+                        "la couverture enregistrée et l'actualité des sources ; il "
+                        "n'inspecte pas les fichiers clients, ne trace pas chaque requête "
+                        "et ne bloque pas à lui seul un trafic réseau non déclaré."
+                    ),
                 ],
             },
             {
@@ -517,10 +538,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "aucune documentation prompt par prompt."
                     ),
                     (
-                        "Une recherche publique, un connecteur, un portail ou un envoi "
-                        "choisi par l'utilisateur relève des conditions du service externe. "
-                        "C'est une destination externe, pas une troisième catégorie de "
-                        "traitement Mparanza."
+                        "Un index de paquets, une recherche publique, un connecteur, un "
+                        "portail ou un envoi choisi par l'utilisateur relève des conditions "
+                        "du service externe. C'est une destination externe, pas une "
+                        "troisième catégorie de traitement Mparanza."
                     ),
                     (
                         "Les plugins contactent également Mparanza pour vérifier les mises à "
@@ -657,6 +678,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "Cookies, Zugriffstoken oder Sitzungsdaten in Prompts oder Dateien "
                         "ein, die Codex lesen kann."
                     ),
+                    (
+                        "Das Register ist eine Entwicklungs- und Freigabekontrolle, keine "
+                        "Netzwerkdurchsetzung zur Laufzeit. Es prüft registrierte Abdeckung "
+                        "und Aktualität des Quellcodes; es untersucht keine Mandantendateien, "
+                        "verfolgt nicht jede Anfrage und blockiert allein keinen nicht "
+                        "deklarierten Netzwerkverkehr."
+                    ),
                 ],
             },
             {
@@ -705,10 +733,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "für jeden einzelnen Prompt."
                     ),
                     (
-                        "Eine vom Nutzer gewählte öffentliche Suche, ein Connector, ein "
-                        "Portal oder ein Versand unterliegt den Bedingungen des externen "
-                        "Dienstes. Das ist ein externes Ziel, keine dritte Mparanza-"
-                        "Verarbeitungskategorie."
+                        "Ein Paketindex, eine vom Nutzer gewählte öffentliche Suche, ein "
+                        "Connector, ein Portal oder ein Versand unterliegt den Bedingungen "
+                        "des externen Dienstes. Das ist ein externes Ziel, keine dritte "
+                        "Mparanza-Verarbeitungskategorie."
                     ),
                     (
                         "Die Plugins kontaktieren Mparanza außerdem, um nach Updates und dem "
@@ -847,6 +875,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "tokens de acceso ni datos de sesión en prompts o archivos que Codex "
                         "pueda leer."
                     ),
+                    (
+                        "El registro es un control de desarrollo y publicación, no un "
+                        "mecanismo de red aplicado durante la ejecución. Comprueba la "
+                        "cobertura registrada y la vigencia del código fuente; no inspecciona "
+                        "archivos de clientes, no rastrea cada solicitud ni bloquea por sí "
+                        "solo tráfico de red no declarado."
+                    ),
                 ],
             },
             {
@@ -895,10 +930,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                         "conservación y eliminación. No hay documentación para cada prompt."
                     ),
                     (
-                        "Las búsquedas públicas, conectores, portales o acciones de envío que "
-                        "elija el usuario se rigen por las condiciones de ese servicio externo. "
-                        "Se trata de un destino externo, no de una tercera categoría de "
-                        "tratamiento de Mparanza."
+                        "Los índices de paquetes, búsquedas públicas, conectores, portales o "
+                        "acciones de envío que elija el usuario se rigen por las condiciones "
+                        "de ese servicio externo. Se trata de un destino externo, no de una "
+                        "tercera categoría de tratamiento de Mparanza."
                     ),
                     (
                         "Los plugins también contactan con Mparanza para comprobar actualizaciones "

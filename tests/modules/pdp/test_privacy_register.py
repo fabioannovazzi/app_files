@@ -120,12 +120,33 @@ def test_italian_register_explains_function_and_mparanza_boundaries() -> None:
     assert retail_data["data_returned"]
 
 
+def test_public_register_exposes_managed_runtime_as_an_external_shared_service() -> (
+    None
+):
+    register = get_public_privacy_register("en")
+
+    runtime = next(
+        service
+        for service in register["services"]
+        if service["id"] == "vera-managed-python-runtime"
+    )
+
+    assert runtime["automatic"] is True
+    assert runtime["workflows"] == []
+    assert runtime["data_sent"]
+    assert any("package index" in provider for provider in runtime["providers"])
+    assert "external services" in register["copy"]["services_title"]
+    assert "not a live traffic monitor" in register["copy"]["register_note"]
+
+
 def test_public_data_handling_template_exposes_searchable_privacy_register() -> None:
     template = (ROOT / "templates" / "data_handling.html").read_text(encoding="utf-8")
 
     assert 'id="function-register"' in template
     assert '{% set register_copy = privacy_register["copy"] %}' in template
     assert 'id="privacy-register-search"' in template
+    assert 'class="privacy-register__assurance"' in template
+    assert "register_copy.limits_body" in template
     assert 'aria-live="polite"' in template
     assert 'id="service-{{ service.id }}"' in template
     assert "/static/js/privacy-register.js" in template

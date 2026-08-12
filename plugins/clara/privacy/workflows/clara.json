@@ -132,18 +132,31 @@
       ]
     },
     {
-      "id": "declared-python-dependency-retrieval",
+      "id": "automatic-core-python-dependency-retrieval",
       "kind": "public_research",
-      "destination": "Python Package Index (PyPI)",
-      "purpose": "Install Clara's exact declared Python dependencies into a user-scoped managed virtual environment when the fingerprinted dependency cache is absent, invalid, or no longer matches the Python platform",
+      "destination": "Python Package Index (PyPI) or the package index selected by the user's Python configuration",
+      "purpose": "Install Clara's exact declared core Python dependencies into a user-scoped managed runtime when the fingerprinted environment is absent, invalid, or superseded by a changed dependency contract",
       "content": "Declared package names and version constraints from Clara requirements files, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The trusted SessionStart hook installs only requirements declared in the published Clara package; no case path, prompt, or source content is used to construct the package request.",
+        "Dependencies are installed into a fingerprinted virtual environment under Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
+        "The manager binds fingerprints to the Python ABI, validates dependencies before activation, reuses a healthy environment across restarts, activates upgrades atomically, and leaves the last working environment active if setup fails."
+      ]
+    },
+    {
+      "id": "selected-module-python-dependency-retrieval",
+      "kind": "public_research",
+      "destination": "Python Package Index (PyPI) or the package index selected by the user's Python configuration",
+      "purpose": "Install the selected Clara module's exact declared Python dependencies into a persistent module-scoped managed runtime",
+      "content": "Package names and version constraints from the selected published module requirements file, plus ordinary package-index request metadata; no user files, prompts, case data, or advisory content are sent",
       "optional": true,
       "requires_confirmation": false,
       "controls": [
-        "Claude Cowork's trusted SessionStart hook and Codex's first dependency check install only requirements declared in the published Clara package.",
-        "Dependencies are installed into Clara's user-scoped plugin data directory rather than the plugin source or connected case folder.",
-        "The manager validates imports after installation and keys reuse by the requirements fingerprint, Python ABI, and operating-system platform.",
-        "Clara helper scripts run with the managed virtual environment's own Python; delegated components use separate environments, while the optional shared OCR runtime remains separate."
+        "The module route runs only after the user selects work whose packaged module declares its own dependency contract.",
+        "The runtime manager accepts requirements only from a packaged Clara module and never constructs package requirements from case or conversation content.",
+        "The manager validates a fingerprinted module environment before activation and leaves the last working environment active if setup fails."
       ]
     },
     {
@@ -172,9 +185,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-01",
+    "reviewed_at": "2026-08-12",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "14b93ee5631d08cef5adaa8d4d29c997aca06376311458785a37d1ad219c0ce7"
+    "source_fingerprint": "9ab6d54637dab76ce6ecb0f0c6f2ae55f44c1ad620ab78afd3609b1533afe999"
   }
 }

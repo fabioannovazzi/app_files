@@ -56,6 +56,17 @@ _COPY = {
             "which additional destinations can be used, and whether a Mparanza-hosted "
             "service is part of the function."
         ),
+        "assurance_title": "What the register verifies",
+        "assurance_body": (
+            "Release checks require one record for every registered workflow and shared "
+            "service, validate its structure, and detect changes to its reviewed source code."
+        ),
+        "limits_title": "What it does not do",
+        "limits_body": (
+            "The register does not inspect customer files at runtime, trace every outbound "
+            "request, or act as a network firewall. It records reviewed design boundaries "
+            "and the concrete controls declared in source."
+        ),
         "jump_label": "Open the function register",
         "search_label": "Find a function or destination",
         "search_placeholder": "For example: journal, INPS, interview…",
@@ -98,11 +109,12 @@ _COPY = {
             "Purposes and information classes below reproduce the reviewed technical "
             "record in English. Interface explanations are localized."
         ),
-        "services_eyebrow": "Mparanza processing boundary",
-        "services_title": "What reaches Mparanza-hosted services.",
+        "services_eyebrow": "Service-level routes",
+        "services_title": "What reaches hosted and external services.",
         "services_intro": (
-            "These records describe service-level processing separately from ordinary "
-            "work inside Codex. Expand a service to see what is sent and retained."
+            "These records describe shared technical and hosted routes separately from "
+            "ordinary model work. Expand a service to see its provider, what is sent, "
+            "and what the reviewed source says about retention."
         ),
         "used_by": "Used by",
         "provider": "Provider or recipients",
@@ -111,14 +123,15 @@ _COPY = {
         "when": "When",
         "retention": "Retention and deletion",
         "access": "Access arrangement",
-        "shared_service": "Shared Vera service",
+        "shared_service": "Shared technical service",
         "shared_service_note": (
-            "Shared Vera services are product-level routes and are not attributed to a "
-            "single professional function."
+            "Shared Vera services are product-level routes rather than one professional "
+            "function. The provider below may be Mparanza or a separate external service."
         ),
         "register_note": (
-            "This register describes reviewed technical boundaries. It is not a DPIA, "
-            "legal advice, or proof of GDPR compliance."
+            "This register is a reviewed engineering record, not a live traffic monitor "
+            "or runtime firewall. It is not a DPIA, legal advice, or proof of GDPR "
+            "compliance."
         ),
     },
     "it": {
@@ -128,6 +141,18 @@ _COPY = {
             "Scegli una funzione di Vera, Clara o Lucia per vedere che cosa può leggere il "
             "modello selezionato, quali destinazioni aggiuntive può usare e se interviene "
             "un servizio hosted da Mparanza."
+        ),
+        "assurance_title": "Che cosa verifica il registro",
+        "assurance_body": (
+            "I controlli di rilascio richiedono un record per ogni workflow e servizio "
+            "condiviso registrato, ne convalidano la struttura e rilevano le modifiche "
+            "al codice sorgente riesaminato."
+        ),
+        "limits_title": "Che cosa non fa",
+        "limits_body": (
+            "Il registro non ispeziona i file dei clienti durante l'esecuzione, non "
+            "traccia ogni richiesta in uscita e non opera come firewall di rete. Registra "
+            "i confini tecnici riesaminati e i controlli concreti dichiarati nel codice."
         ),
         "jump_label": "Apri il registro delle funzioni",
         "search_label": "Cerca una funzione o destinazione",
@@ -173,12 +198,13 @@ _COPY = {
             "inglese il registro tecnico riesaminato. Le spiegazioni dell’interfaccia "
             "sono in italiano."
         ),
-        "services_eyebrow": "Confine di trattamento Mparanza",
-        "services_title": "Che cosa raggiunge i servizi hosted da Mparanza.",
+        "services_eyebrow": "Percorsi a livello di servizio",
+        "services_title": "Che cosa raggiunge servizi hosted ed esterni.",
         "services_intro": (
-            "Questi registri descrivono il trattamento a livello di servizio, separato "
-            "dal normale lavoro dentro Codex. Apri un servizio per vedere che cosa viene "
-            "inviato e conservato."
+            "Questi record descrivono i percorsi tecnici condivisi e hosted separatamente "
+            "dal normale lavoro del modello. Apri un servizio per vedere il fornitore, "
+            "che cosa viene inviato e che cosa stabilisce il codice riesaminato sulla "
+            "conservazione."
         ),
         "used_by": "Usato da",
         "provider": "Fornitore o destinatari",
@@ -187,14 +213,16 @@ _COPY = {
         "when": "Quando",
         "retention": "Conservazione e cancellazione",
         "access": "Modalità di accesso",
-        "shared_service": "Servizio Vera condiviso",
+        "shared_service": "Servizio tecnico condiviso",
         "shared_service_note": (
-            "I servizi condivisi di Vera operano a livello di prodotto e non vengono "
-            "attribuiti a una singola funzione professionale."
+            "I servizi condivisi di Vera operano a livello di prodotto, non di una sola "
+            "funzione professionale. Il fornitore indicato sotto può essere Mparanza o "
+            "un servizio esterno distinto."
         ),
         "register_note": (
-            "Il registro descrive confini tecnici riesaminati. Non è una DPIA, un parere "
-            "legale o una prova di conformità al GDPR."
+            "Il registro è un record tecnico riesaminato, non un monitor del traffico in "
+            "tempo reale né un firewall di runtime. Non è una DPIA, un parere legale o "
+            "una prova di conformità al GDPR."
         ),
     },
 }
