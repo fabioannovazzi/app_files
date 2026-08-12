@@ -114,24 +114,6 @@
 
     .button:hover { border-color: var(--blue); background: var(--blue); transform: translateY(-1px); }
 
-    .text-link {
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--blue);
-      font-weight: 600;
-      text-decoration: none;
-    }
-
-    .text-link span[aria-hidden="true"] { color: var(--cyan); transition: transform 160ms ease-out; }
-    .text-link:hover span[aria-hidden="true"] { transform: translateX(4px); }
-
-    .variance-report-action {
-      width: fit-content;
-      margin-top: 28px;
-    }
-
     .vera-mark {
       margin: 0;
       padding-left: clamp(32px, 5vw, 64px);
@@ -685,15 +667,6 @@
     .comms-model-data h3 { max-width: 20ch; }
     .comms-model-data h3 + p { margin-top: 14px; }
 
-    .comms-actions {
-      margin-top: 34px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 18px 32px;
-      align-items: baseline;
-    }
-    .comms-actions .comms-action { margin-top: 0; }
-
     .assurance-sequence {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -799,7 +772,6 @@
       letter-spacing: -0.02em;
     }
 
-    .data-position__closing .text-link { margin-top: 20px; font-size: 0.94rem; }
 
     .overview-video {
       display: grid;
@@ -997,7 +969,7 @@
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
       *, *::before, *::after { transition-duration: 0.01ms !important; }
-      .button:hover, .module-row:hover, .text-link:hover span[aria-hidden="true"] { transform: none; }
+      .button:hover, .module-row:hover { transform: none; }
       .overview-video:hover img { transform: none; }
     }
   </style>
@@ -1260,14 +1232,6 @@
       </div>
 
       <p class="assurance-closing" data-i18n="variance.boundary">Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.</p>
-      <a
-        class="text-link variance-report-action"
-        data-variance-report-link
-        hidden
-      >
-        <span data-i18n="variance.report.action">Apri il report PDF di esempio</span>
-        <span aria-hidden="true">↗</span>
-      </a>
     </section>
 
     <section class="section-block" id="comunicazione-professionale">
@@ -1307,8 +1271,6 @@
           <p data-i18n="communication.creative.copy">Vera può seguire gli esempi selezionati o proporre un formato nuovo. Nessuna proposta diventa uno standard senza l’approvazione dello Studio.</p>
         </div>
       </aside>
-      <a class="text-link comms-action" href="#installa"><span data-i18n="communication.action">Lavora su una comunicazione con Vera</span><span aria-hidden="true">→</span></a>
-
       <aside class="comms-creative comms-model-data" data-model-data-workflow="comunicazione-professionale" data-model-data-status="relevant">
         <p class="comms-creative__kicker" data-i18n="communication.modelData.kicker">Quali dati arrivano al modello</p>
         <div>
@@ -1367,11 +1329,6 @@
             <p data-i18n="website.steps.review.copy">Lo Studio verifica fatti e identità, prova il sito su desktop e telefono e approva la versione esatta da pubblicare.</p>
           </li>
         </ol>
-      </div>
-
-      <div class="comms-actions">
-        <a class="text-link comms-action" href="/static/shared/463b7449445ad5b75aec5107a5d74ed80f205790e3661780adca1f74dfd14407/index.html" target="_blank" rel="noopener noreferrer nofollow"><span data-i18n="website.example">Guarda un sito preparato con Vera: Monica Manfredini</span><span aria-hidden="true">↗</span></a>
-        <a class="text-link comms-action" href="#installa"><span data-i18n="website.action">Lavora sulla presenza digitale con Vera</span><span aria-hidden="true">→</span></a>
       </div>
 
       <aside class="comms-creative comms-model-data" data-model-data-workflow="presenza-digitale-studio" data-model-data-status="not-relevant">
@@ -1692,10 +1649,6 @@
 
       <div class="data-position__closing">
         <p data-i18n="privacy.closing">La stessa regola vale per Clara, Vera e Lucia: per ogni funzione restano visibili il confine di trattamento e i servizi coinvolti.</p>
-        <a class="text-link" href="/data-handling?lang=it#data-handling-video" data-compliance-video-link>
-          <span data-i18n="privacy.dataLink">Guarda il video sulla gestione dei dati</span>
-          <span aria-hidden="true">→</span>
-        </a>
       </div>
     </section>
   </main>
@@ -1786,7 +1739,6 @@
         "variance.plots.title": "Leggi i grafici",
         "variance.plots.copy": "Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.",
         "variance.boundary": "Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.",
-        "variance.report.action": "Apri il report PDF di esempio",
         "module.report.title": "Genera report",
         "module.report": "Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.",
         "module.prompt.title": "Ottimizza prompt",
@@ -1814,7 +1766,6 @@
         "communication.creative.kicker": "Voce e formato",
         "communication.creative.title": "Lo Studio sceglie come comunicare.",
         "communication.creative.copy": "Vera può seguire gli esempi selezionati o proporre un formato nuovo. Nessuna proposta diventa uno standard senza l’approvazione dello Studio.",
-        "communication.action": "Lavora su una comunicazione con Vera",
         "website.index": "Presenza digitale dello studio",
         "website.title": "Un sito decente.",
         "website.copy": "Vera rinnova il sito esistente o costruisce il primo sito dello Studio partendo da materiali verificati. Prepara un sito funzionante, leggibile su computer e telefono, che lo Studio può rivedere e pubblicare.",
@@ -1838,8 +1789,6 @@
         "website.steps.build.copy": "Vera organizza i contenuti, prepara i testi e costruisce le pagine del sito.",
         "website.steps.review.title": "3. Rivedere e pubblicare",
         "website.steps.review.copy": "Lo Studio verifica fatti e identità, prova il sito su desktop e telefono e approva la versione esatta da pubblicare.",
-        "website.example": "Guarda un sito preparato con Vera: Monica Manfredini",
-        "website.action": "Lavora sulla presenza digitale con Vera",
         "assurance.index": "Metodo di assurance",
         "assurance.title": "Prima il significato. Poi il calcolo.",
         "assurance.copy": "Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.",
@@ -1868,7 +1817,6 @@
         "privacy.routes.hosted.title": "Servizi hosted da Mparanza",
         "privacy.routes.hosted.copy": "I servizi ospitati da Mparanza hanno un confine separato. La pagina sulla gestione dei dati spiega quali contenuti arrivano a Mparanza e come vengono gestiti. Ricerche, connettori, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno.",
         "privacy.closing": "La stessa regola vale per Clara, Vera e Lucia: per ogni funzione restano visibili il confine di trattamento e i servizi coinvolti.",
-        "privacy.dataLink": "Guarda il video sulla gestione dei dati",
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
         "videos.open": "Si apre su YouTube",
@@ -1956,7 +1904,6 @@
         "variance.plots.title": "Read the plots",
         "variance.plots.copy": "Waterfalls, component and dimension bridges, exploded views and drilldowns show calculated drivers and must reconcile to total variance.",
         "variance.boundary": "Vera delivers reviewable tables, variance plots and workpapers. Operating causes, favorable/adverse classification, materiality and management commentary remain separate from calculated facts and require professional confirmation.",
-        "variance.report.action": "Open the sample PDF report",
         "module.report.title": "Build Report",
         "module.report": "Prepares Word and Markdown from confirmed tables and keeps every material number connected to its source and supporting check.",
         "module.prompt.title": "Optimize Prompt",
@@ -1984,7 +1931,6 @@
         "communication.creative.kicker": "Voice and format",
         "communication.creative.title": "The firm chooses how it communicates.",
         "communication.creative.copy": "Vera can follow the selected examples or propose a new format. No proposal becomes a standard without the firm’s approval.",
-        "communication.action": "Prepare a communication with Vera",
         "website.index": "Studio digital presence",
         "website.title": "A decent website.",
         "website.copy": "Vera refreshes an existing website or builds the studio’s first website from verified materials. It prepares a working website that reads well on desktop and phone and that the studio can review and publish.",
@@ -2008,8 +1954,6 @@
         "website.steps.build.copy": "Vera organises the content, drafts the copy and builds the website pages.",
         "website.steps.review.title": "3. Review and publish",
         "website.steps.review.copy": "The studio verifies the facts and identity, tests the website on desktop and phone, and approves the exact version for publication.",
-        "website.example": "See a website prepared with Vera: Monica Manfredini",
-        "website.action": "Work on your digital presence with Vera",
         "assurance.index": "Assurance method",
         "assurance.title": "Meaning first. Calculation second.",
         "assurance.copy": "Vera separates interpretation, professional confirmation and mechanical controls. A reproducible result does not automatically become a correct conclusion.",
@@ -2038,7 +1982,6 @@
         "privacy.routes.hosted.title": "Mparanza-hosted services",
         "privacy.routes.hosted.copy": "Mparanza-hosted services have a separate boundary. The data-handling page explains what content reaches Mparanza and how it is handled. Searches, connectors, portals or sends selected by the user instead follow the external service’s terms.",
         "privacy.closing": "The same rule applies to Clara, Vera and Lucia: the processing boundary and services involved remain visible for each function.",
-        "privacy.dataLink": "Watch the data-handling video",
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to a reviewable result",
         "videos.open": "Opens on YouTube",
@@ -2126,7 +2069,6 @@
         "variance.plots.title": "Lire les graphiques",
         "variance.plots.copy": "Cascades, passerelles par composante et dimension, vues éclatées et analyses détaillées montrent les facteurs calculés et doivent se rapprocher de l’écart total.",
         "variance.boundary": "Vera livre des tableaux, graphiques d’écarts et feuilles de travail révisables. Les causes opérationnelles, la classification favorable/défavorable, la matérialité et le commentaire de gestion restent séparés des faits calculés et exigent une confirmation professionnelle.",
-        "variance.report.action": "Ouvrir l’exemple de rapport PDF",
         "module.report.title": "Générer un rapport",
         "module.report": "Prépare Word et Markdown à partir de tableaux confirmés et relie chaque chiffre significatif à sa source et au contrôle qui l’étaye.",
         "module.prompt.title": "Optimiser le prompt",
@@ -2154,7 +2096,6 @@
         "communication.creative.kicker": "Voix et format",
         "communication.creative.title": "Le cabinet choisit comment communiquer.",
         "communication.creative.copy": "Vera peut suivre les exemples sélectionnés ou proposer un nouveau format. Aucune proposition ne devient une norme sans l’accord du cabinet.",
-        "communication.action": "Préparer une communication avec Vera",
         "website.index": "Présence numérique du cabinet",
         "website.title": "Un site correct.",
         "website.copy": "Vera modernise le site existant ou construit le premier site du cabinet à partir d’éléments vérifiés. Elle prépare un site fonctionnel, lisible sur ordinateur et téléphone, que le cabinet peut relire et publier.",
@@ -2178,8 +2119,6 @@
         "website.steps.build.copy": "Vera organise les contenus, prépare les textes et construit les pages du site.",
         "website.steps.review.title": "3. Relire et publier",
         "website.steps.review.copy": "Le cabinet vérifie les faits et l’identité, teste le site sur ordinateur et téléphone et valide la version exacte à publier.",
-        "website.example": "Voir un site préparé avec Vera : Monica Manfredini",
-        "website.action": "Travailler sur votre présence numérique avec Vera",
         "assurance.index": "Méthode d’assurance",
         "assurance.title": "D’abord le sens. Ensuite le calcul.",
         "assurance.copy": "Vera sépare interprétation, confirmation professionnelle et contrôles mécaniques. Un résultat reproductible ne devient pas automatiquement une conclusion correcte.",
@@ -2208,7 +2147,6 @@
         "privacy.routes.hosted.title": "Services hébergés par Mparanza",
         "privacy.routes.hosted.copy": "Les services hébergés par Mparanza ont un périmètre distinct. La page sur le traitement des données explique quels contenus atteignent Mparanza et comment ils sont traités. Les recherches, connecteurs, portails ou envois choisis par l’utilisateur relèvent des conditions du service externe.",
         "privacy.closing": "La même règle s’applique à Clara, Vera et Lucia : le périmètre de traitement et les services concernés restent visibles pour chaque fonction.",
-        "privacy.dataLink": "Voir la vidéo sur le traitement des données",
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à un résultat révisable",
         "videos.open": "S’ouvre sur YouTube",
@@ -2296,7 +2234,6 @@
         "variance.plots.title": "Grafiken lesen",
         "variance.plots.copy": "Waterfalls, Komponenten- und Dimensionsüberleitungen, aufgegliederte Ansichten und Drilldowns zeigen berechnete Treiber und müssen zur Gesamtabweichung abstimmen.",
         "variance.boundary": "Vera liefert prüfbare Tabellen, Abweichungsgrafiken und Arbeitspapiere. Operative Ursachen, die Einordnung als günstig oder ungünstig, Wesentlichkeit und Managementkommentar bleiben von berechneten Fakten getrennt und erfordern professionelle Bestätigung.",
-        "variance.report.action": "PDF-Beispielbericht öffnen",
         "module.report.title": "Bericht erstellen",
         "module.report": "Erstellt Word und Markdown aus bestätigten Tabellen und verbindet jede wesentliche Zahl mit Quelle und stützendem Kontrollschritt.",
         "module.prompt.title": "Prompt optimieren",
@@ -2324,7 +2261,6 @@
         "communication.creative.kicker": "Stimme und Format",
         "communication.creative.title": "Die Kanzlei entscheidet, wie sie kommuniziert.",
         "communication.creative.copy": "Vera kann den ausgewählten Beispielen folgen oder ein neues Format vorschlagen. Kein Vorschlag wird ohne Zustimmung der Kanzlei zum Standard.",
-        "communication.action": "Mit Vera eine Kommunikation vorbereiten",
         "website.index": "Digitale Präsenz der Kanzlei",
         "website.title": "Eine solide Website.",
         "website.copy": "Vera modernisiert die bestehende Website oder baut die erste Website der Kanzlei aus geprüften Materialien. Sie erstellt eine funktionsfähige Website, die auf Desktop und Smartphone gut lesbar ist und von der Kanzlei geprüft und veröffentlicht werden kann.",
@@ -2348,8 +2284,6 @@
         "website.steps.build.copy": "Vera ordnet die Inhalte, bereitet die Texte vor und baut die Seiten der Website.",
         "website.steps.review.title": "3. Prüfen und veröffentlichen",
         "website.steps.review.copy": "Die Kanzlei prüft Fakten und Identität, testet die Website auf Desktop und Smartphone und genehmigt die genaue Veröffentlichungsversion.",
-        "website.example": "Eine mit Vera erstellte Website ansehen: Monica Manfredini",
-        "website.action": "Mit Vera an Ihrer digitalen Präsenz arbeiten",
         "assurance.index": "Assurance-Methode",
         "assurance.title": "Erst die Bedeutung. Dann die Berechnung.",
         "assurance.copy": "Vera trennt Interpretation, fachliche Bestätigung und mechanische Kontrollen. Ein reproduzierbares Ergebnis ist nicht automatisch eine richtige Schlussfolgerung.",
@@ -2378,7 +2312,6 @@
         "privacy.routes.hosted.title": "Mparanza-gehostete Dienste",
         "privacy.routes.hosted.copy": "Von Mparanza gehostete Dienste haben eine separate Grenze. Die Seite zur Datenverarbeitung erklärt, welche Inhalte Mparanza erreichen und wie sie behandelt werden. Vom Nutzer gewählte Suchen, Verbindungen, Portale oder Versandwege unterliegen den Bedingungen des externen Dienstes.",
         "privacy.closing": "Für Clara, Vera und Lucia gilt dieselbe Regel: Die Verarbeitungsgrenze und die beteiligten Dienste bleiben für jede Funktion sichtbar.",
-        "privacy.dataLink": "Video zur Datenverarbeitung ansehen",
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
         "videos.open": "Öffnet YouTube",
@@ -2466,7 +2399,6 @@
         "variance.plots.title": "Leer los gráficos",
         "variance.plots.copy": "Cascadas, puentes por componente y dimensión, vistas desglosadas y drilldowns muestran los factores calculados y deben conciliar con la desviación total.",
         "variance.boundary": "Vera entrega tablas, gráficos de desviaciones y papeles de trabajo revisables. Las causas operativas, la clasificación favorable/desfavorable, la materialidad y el comentario de gestión permanecen separados de los hechos calculados y requieren confirmación profesional.",
-        "variance.report.action": "Abrir el informe PDF de ejemplo",
         "module.report.title": "Crear informe",
         "module.report": "Prepara Word y Markdown a partir de tablas confirmadas y vincula cada cifra material con su fuente y el control que la respalda.",
         "module.prompt.title": "Optimizar prompt",
@@ -2494,7 +2426,6 @@
         "communication.creative.kicker": "Voz y formato",
         "communication.creative.title": "El despacho decide cómo comunica.",
         "communication.creative.copy": "Vera puede seguir los ejemplos seleccionados o proponer un formato nuevo. Ninguna propuesta se convierte en estándar sin la aprobación del despacho.",
-        "communication.action": "Preparar una comunicación con Vera",
         "website.index": "Presencia digital del despacho",
         "website.title": "Un sitio digno.",
         "website.copy": "Vera renueva el sitio existente o construye el primer sitio del despacho a partir de materiales verificados. Prepara un sitio funcional, legible en ordenador y teléfono, que el despacho puede revisar y publicar.",
@@ -2518,8 +2449,6 @@
         "website.steps.build.copy": "Vera organiza los contenidos, prepara los textos y construye las páginas del sitio.",
         "website.steps.review.title": "3. Revisar y publicar",
         "website.steps.review.copy": "El despacho verifica hechos e identidad, prueba el sitio en ordenador y teléfono y aprueba la versión exacta que se publicará.",
-        "website.example": "Ver un sitio preparado con Vera: Monica Manfredini",
-        "website.action": "Trabajar en tu presencia digital con Vera",
         "assurance.index": "Método de aseguramiento",
         "assurance.title": "Primero el significado. Después el cálculo.",
         "assurance.copy": "Vera separa interpretación, confirmación profesional y controles mecánicos. Un resultado reproducible no se convierte automáticamente en una conclusión correcta.",
@@ -2548,7 +2477,6 @@
         "privacy.routes.hosted.title": "Servicios alojados por Mparanza",
         "privacy.routes.hosted.copy": "Los servicios alojados por Mparanza tienen un límite separado. La página sobre el tratamiento de datos explica qué contenido llega a Mparanza y cómo se gestiona. Las búsquedas, conectores, portales o envíos elegidos por el usuario se rigen por las condiciones del servicio externo.",
         "privacy.closing": "La misma regla se aplica a Clara, Vera y Lucia: el límite de tratamiento y los servicios implicados permanecen visibles para cada función.",
-        "privacy.dataLink": "Ver el vídeo sobre el tratamiento de datos",
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
         "videos.open": "Se abre en YouTube",
@@ -2594,23 +2522,6 @@
       fr: "../new-client/geneva.html#file-preparation",
       de: "../new-client/zurich.html#file-preparation",
       es: "../new-client/index.html#file-preparation"
-    };
-    const varianceReports = {
-      it: {
-        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-it.pdf"
-      },
-      en: {
-        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-en.pdf"
-      },
-      fr: {
-        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-fr.pdf"
-      },
-      de: {
-        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-de.pdf"
-      },
-      es: {
-        href: "/static/shared/vera/downloads/variance-analysis/variance-analysis-example-es.pdf"
-      }
     };
     const installVideos = {
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
@@ -2742,25 +2653,6 @@
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
         link.setAttribute("href", `/data-handling?lang=${lang}`);
       });
-      document.querySelectorAll("[data-compliance-video-link]").forEach((link) => {
-        link.setAttribute("href", `/data-handling?lang=${lang}#data-handling-video`);
-      });
-      const varianceReportLink = document.querySelector("[data-variance-report-link]");
-      const varianceReport = varianceReports[lang];
-      varianceReportLink.hidden = !varianceReport;
-      if (varianceReport) {
-        varianceReportLink.href = varianceReport.href;
-        varianceReportLink.setAttribute("hreflang", lang);
-        varianceReportLink.setAttribute("target", "_blank");
-        varianceReportLink.setAttribute("rel", "noopener noreferrer");
-        varianceReportLink.removeAttribute("download");
-      } else {
-        varianceReportLink.removeAttribute("href");
-        varianceReportLink.removeAttribute("hreflang");
-        varianceReportLink.removeAttribute("target");
-        varianceReportLink.removeAttribute("rel");
-        varianceReportLink.removeAttribute("download");
-      }
       setVideos(lang, strings);
 
       if (updateHistory) {
