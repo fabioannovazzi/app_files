@@ -55,7 +55,6 @@ from modules.pdp.language import (
     resolve_language,
 )
 from modules.pdp.legal_content import get_legal_page
-from modules.pdp.privacy_register import get_public_privacy_register
 from modules.utilities.logging_config import configure_logging
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 from modules.utilities.session_cleanup import cleanup_sessions
@@ -1459,7 +1458,6 @@ def data_handling_page(request: Request) -> Response:
         "data_handling.html",
         _template_context(
             page=get_data_handling_content(lang),
-            privacy_register=get_public_privacy_register(lang),
             copy={},
             lang=lang,
             language_labels=LANDING_LANGUAGE_LABELS,

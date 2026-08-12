@@ -14,6 +14,9 @@ _OPENAI_CODEX_DATA_URL = (
 _OPENAI_CHATGPT_ANALYSIS_URL = (
     "https://help.openai.com/en/articles/8437071-data-analysis-with-chatgpt"
 )
+_ANTHROPIC_DATA_URL = (
+    "https://privacy.claude.com/en/collections/10672411-data-handling-retention"
+)
 _GDPR_URL = "https://eur-lex.europa.eu/eli/reg/2016/679/oj"
 _EDPB_AI_OPINION_URL = (
     "https://www.edpb.europa.eu/documents/opinion-of-the-board-art-64/"
@@ -25,8 +28,8 @@ _SOURCE_URL = "https://github.com/fabioannovazzi/app_files"
 _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     "en": {
         "meta_description": (
-            "The two processing categories for Vera and Clara: work inside "
-            "Codex and separate Mparanza-hosted services."
+            "How Mparanza plugins use your selected AI workspace, local processing, "
+            "hosted services, and external destinations."
         ),
         "skip_label": "Skip to main content",
         "home_label": "Return to Mparanza",
@@ -34,100 +37,80 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Security, privacy and data",
         "title": "How your data is handled.",
         "summary": (
-            "Vera and Clara follow one policy. Plugin functions run inside "
-            "Codex; Mparanza-hosted services form a separate processing boundary."
+            "Vera, Clara, and Lucia work in the AI workspace you choose. "
+            "Mparanza-hosted services and other external destinations are separate."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
             "title": "How Vera and Clara handle data.",
             "description": (
-                "See what can stay on your computer, what may enter a language-model "
-                "call through Codex, and when Mparanza becomes a separate processing "
-                "boundary."
+                "See the difference between local preparation, model processing in "
+                "your selected workspace, and a service hosted by Mparanza."
             ),
             "youtube_id": "HhmQgTEnl78",
             "watch_label": "Watch on YouTube",
         },
         "boundary": {
-            "title": "When Vera and Clara work inside Codex.",
+            "title": "Your selected AI workspace is the main boundary.",
             "intro": (
-                "Vera and Clara do not automatically anonymise data. They may use local "
-                "Python to filter or aggregate information when useful. Data supplied "
-                "to the model is processed through the user's existing ChatGPT plan. "
-                "Workflows inside Codex do not send client files, prompts, or "
-                "model-context content to Mparanza."
+                "Data needed for the work may enter the model context of the OpenAI "
+                "ChatGPT or Codex account, or the Anthropic Claude or Cowork account, "
+                "that you select. Mparanza is not a separate recipient of ordinary "
+                "plugin work."
             ),
             "local_label": "Your computer",
             "local_detail": "Local files · local Python · local outputs",
-            "account_label": "Your existing ChatGPT plan",
-            "account_detail": "Model context · plan terms · data controls",
-            "exclusion": "Workflows inside Codex send no client or work content to Mparanza.",
+            "account_label": "Your selected AI workspace",
+            "account_detail": "OpenAI ChatGPT or Codex · Anthropic Claude or Cowork",
+            "exclusion": "Ordinary plugin work sends no client or work content to Mparanza.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Local processing is used when it helps the work.",
+                "title": "Local preparation is useful, not automatic anonymisation.",
                 "paragraphs": [
                     (
                         "Local Python can sort, calculate, reconcile, filter, aggregate, "
-                        "and create outputs without first moving complete source files to "
-                        "a separate Mparanza system."
+                        "and create outputs. A workflow may use it before a model step when "
+                        "that improves the work."
                     ),
                     (
-                        "This is not automatic anonymisation. When the professional task "
-                        "requires names, documents, original language, or case facts, that "
-                        "material may enter the model context."
+                        "The plugins do not automatically anonymise or pseudonymise data. "
+                        "Names, documents, original language, and case facts remain when "
+                        "they are useful for the professional purpose."
                     ),
                 ],
             },
             {
-                "id": "security",
-                "title": "Mapped once per workflow, not once per prompt.",
+                "id": "workflow-boundaries",
+                "title": "The detailed boundary belongs to the workflow.",
                 "paragraphs": [
                     (
-                        "Each workflow inside Codex is reviewed when it is added or changed. "
-                        "The review records what normally stays local and what Codex may "
-                        "read. It does not create a form, consent step, or record for each "
-                        "prompt."
+                        "Each workflow can use data differently. Its own page explains the "
+                        "operational sequence: what the model sees, what code processes, "
+                        "and when the process stops. This page does not duplicate those "
+                        "workflow-specific statements."
                     ),
                     (
                         "Never put passwords, API keys, authentication cookies, access "
-                        "tokens, or session material in prompts or files Codex can read."
-                    ),
-                    (
-                        "The register is a developer and release control, not runtime "
-                        "network enforcement. It checks registered coverage and source "
-                        "freshness; it does not inspect customer files, trace every "
-                        "request, or by itself block undeclared network traffic."
+                        "tokens, or session material in prompts or files the selected AI "
+                        "workspace can read."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Gmail and WhatsApp Desktop use different boundaries.",
+                "title": "Connectors and sends use their own destination.",
                 "paragraphs": [
                     (
-                        "Vera and Clara work in ChatGPT with material supplied in the "
-                        "conversation and with callable connected apps. After providing "
-                        "useful work, they may recommend Codex Desktop for direct folder "
-                        "access, persistent project files, local tools, and durable "
-                        "deliverables. Installation is optional and the conversation can "
-                        "continue in ChatGPT."
+                        "A connected app, public search, portal, or send action is used only "
+                        "when that route is part of the selected work. The destination's "
+                        "terms and controls apply separately."
                     ),
                     (
-                        "In ChatGPT or Codex, Vera searches Gmail through OpenAI's "
-                        "separately installed and connected Gmail connector. Mail stays "
-                        "in Gmail; Vera does not create a mailbox copy or store "
-                        "credentials or messages."
-                    ),
-                    (
-                        "WhatsApp is inspected only from Codex Desktop with Computer Use "
-                        "in the WhatsApp Desktop app already opened and authenticated by "
-                        "the professional. No Mparanza server receives or stores a copy "
-                        "of those messages. Screen text and images read by Codex may "
-                        "still enter the model context under the user's ChatGPT/Codex "
-                        "account, and the terms of OpenAI, Gmail, and WhatsApp apply "
-                        "separately."
+                        "Using an external destination does not make Mparanza the recipient. "
+                        "The workflow or point-of-use notice identifies a Mparanza-hosted "
+                        "route when one is involved."
                     ),
                 ],
             },
@@ -136,42 +119,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Mparanza-hosted services are a separate boundary.",
                 "paragraphs": [
                     (
-                        "When a Vera or Clara function uses a Mparanza-hosted service, the "
-                        "content needed for that service reaches Mparanza-controlled "
-                        "systems. Hosted interviews, Hosted Voice, and the retail-data "
-                        "bridge are examples, not separate policies."
+                        "When a function uses a Mparanza-hosted service, the content needed "
+                        "for that service reaches Mparanza-controlled systems. Hosted "
+                        "interviews, voice capture, and retail data are examples."
                     ),
                     (
-                        "Each hosted service is documented once at service level: what may "
-                        "be sent, who can access it, and its retention and deletion "
-                        "arrangements. There is no prompt-by-prompt documentation."
-                    ),
-                    (
-                        "A package index, public search, connector, portal, or send action "
-                        "chosen by the user follows that external service's terms. It is "
-                        "an external destination, not a third Mparanza processing category."
-                    ),
-                    (
-                        "The plugins also contact Mparanza to check for updates and the "
-                        "status of previously submitted feedback. Those requests contain "
-                        "no client or work content, although technical connection "
-                        "records may still be logged. Feedback content is sent only through "
-                        "the explicit submission workflow."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "One policy for Vera and Clara.",
-                "paragraphs": [
-                    (
-                        "The distinction is architectural, not professional. A Vera "
-                        "reconciliation and a Clara presentation both fall in the first "
-                        "category when they run inside Codex."
-                    ),
-                    (
-                        "Any Mparanza-hosted service used by either plugin falls in the "
-                        "second category and is covered by its service-level description."
+                        "The notice shown where that service is used states what reaches it "
+                        "and the applicable access, retention, and deletion arrangement."
                     ),
                 ],
             },
@@ -207,14 +161,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "href": _OPENAI_CHATGPT_ANALYSIS_URL,
                     "external": True,
                 },
+                {
+                    "label": "Review Anthropic's data handling and retention guidance",
+                    "href": _ANTHROPIC_DATA_URL,
+                    "external": True,
+                },
             ],
         },
-        "closing": "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
+        "closing": "One global boundary. Process details stay with the process.",
     },
     "it": {
         "meta_description": (
-            "Le due categorie di trattamento per Vera e Clara: il lavoro svolto "
-            "dentro Codex e i servizi hosted di Mparanza, che hanno un confine separato."
+            "Come i plugin Mparanza usano l'ambiente AI scelto, l'elaborazione locale, "
+            "i servizi hosted e le destinazioni esterne."
         ),
         "skip_label": "Vai al contenuto principale",
         "home_label": "Torna a Mparanza",
@@ -222,104 +181,81 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicurezza, privacy e dati",
         "title": "Come vengono gestiti i tuoi dati.",
         "summary": (
-            "Vera e Clara seguono la stessa regola. Le funzioni dei plugin vengono "
-            "eseguite dentro Codex; i servizi hosted di Mparanza hanno un confine "
-            "di trattamento separato."
+            "Vera, Clara e Lucia lavorano nell'ambiente AI scelto dall'utente. "
+            "I servizi hosted di Mparanza e le altre destinazioni esterne sono separati."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
             "title": "Come Vera e Clara gestiscono i dati.",
             "description": (
-                "Scopri che cosa può restare sul tuo computer, che cosa può entrare "
-                "in una chiamata a un modello linguistico tramite Codex e quando "
-                "Mparanza diventa un confine di trattamento separato."
+                "Guarda la differenza tra preparazione locale, trattamento del modello "
+                "nell'ambiente scelto e un servizio hosted da Mparanza."
             ),
             "youtube_id": "q3nS9YBaEP8",
             "watch_label": "Guarda su YouTube",
         },
         "boundary": {
-            "title": "Quando Vera e Clara lavorano dentro Codex.",
+            "title": "Il confine principale è l'ambiente AI scelto.",
             "intro": (
-                "Vera e Clara non anonimizzano automaticamente i dati. Possono usare "
-                "Python in locale per filtrare o aggregare le informazioni quando è "
-                "utile. I dati forniti al modello vengono trattati attraverso il piano "
-                "ChatGPT già utilizzato dall'utente. I workflow dentro Codex non inviano a "
-                "Mparanza file dei clienti, prompt o contenuti del contesto del modello."
+                "I dati necessari al lavoro possono entrare nel contesto del modello "
+                "dell'account OpenAI ChatGPT o Codex, oppure Anthropic Claude o Cowork, "
+                "scelto dall'utente. Mparanza non è un destinatario separato del normale "
+                "lavoro dei plugin."
             ),
             "local_label": "Il tuo computer",
             "local_detail": "File locali · Python locale · risultati locali",
-            "account_label": "Il tuo piano ChatGPT esistente",
-            "account_detail": "Contesto del modello · termini · controlli sui dati",
-            "exclusion": "I workflow dentro Codex non inviano a Mparanza contenuti del cliente o del lavoro.",
+            "account_label": "Il tuo ambiente AI scelto",
+            "account_detail": "OpenAI ChatGPT o Codex · Anthropic Claude o Cowork",
+            "exclusion": "Il normale lavoro dei plugin non invia a Mparanza contenuti del cliente o del lavoro.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "L'elaborazione locale si usa quando aiuta il lavoro.",
+                "title": "La preparazione locale è utile, non è anonimizzazione automatica.",
                 "paragraphs": [
                     (
                         "Python in locale può ordinare, calcolare, riconciliare, filtrare, "
-                        "aggregare e creare risultati senza spostare prima i file sorgente "
-                        "completi su un sistema separato di Mparanza."
+                        "aggregare e creare risultati. Un workflow può usarlo prima di un "
+                        "passaggio del modello quando migliora il lavoro."
                     ),
                     (
-                        "Non è anonimizzazione automatica. Quando il lavoro professionale "
-                        "richiede nomi, documenti, testo originale o fatti del caso, questi "
-                        "contenuti possono entrare nel contesto del modello."
+                        "I plugin non anonimizzano né pseudonimizzano automaticamente i dati. "
+                        "Nomi, documenti, testo originale e fatti del caso restano quando "
+                        "sono utili alla finalità professionale."
                     ),
                 ],
             },
             {
-                "id": "security",
-                "title": "Una mappa per workflow, non una per prompt.",
+                "id": "workflow-boundaries",
+                "title": "Il confine dettagliato appartiene al workflow.",
                 "paragraphs": [
                     (
-                        "Ogni workflow dentro Codex viene riesaminato quando viene aggiunto o "
-                        "modificato. La mappa registra che cosa resta normalmente locale e "
-                        "che cosa può leggere Codex. Non crea un modulo, un consenso o una "
-                        "registrazione per ogni prompt."
+                        "Ogni workflow può usare i dati in modo diverso. La sua pagina spiega "
+                        "la sequenza operativa: che cosa vede il modello, che cosa elabora il "
+                        "codice e quando il processo si ferma. Questa pagina non duplica tali "
+                        "dichiarazioni specifiche."
                     ),
                     (
                         "Non inserire mai password, chiavi API, cookie di autenticazione, "
                         "token di accesso o dati di sessione nei prompt o nei file che "
-                        "Codex può leggere."
-                    ),
-                    (
-                        "Il registro è un controllo di sviluppo e rilascio, non un sistema "
-                        "di applicazione della rete durante l'esecuzione. Verifica la "
-                        "copertura dei componenti registrati e l'attualità del codice; non "
-                        "ispeziona i file dei clienti, non traccia ogni richiesta e non "
-                        "blocca da solo traffico di rete non dichiarato."
+                        "l'ambiente AI scelto può leggere."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Gmail e WhatsApp Desktop hanno confini diversi.",
+                "title": "Connector e invii usano la propria destinazione.",
                 "paragraphs": [
                     (
-                        "Vera e Clara lavorano in ChatGPT sui materiali forniti nella "
-                        "conversazione e con le app collegate disponibili. Dopo avere "
-                        "prodotto un risultato utile, possono consigliare Codex Desktop "
-                        "per accedere direttamente alle cartelle, conservare i file del "
-                        "progetto, usare strumenti locali e creare risultati durevoli. "
-                        "L'installazione è facoltativa e il lavoro può continuare in "
-                        "ChatGPT."
+                        "Un'app collegata, una ricerca pubblica, un portale o un invio viene "
+                        "usato soltanto quando quel percorso fa parte del lavoro scelto. "
+                        "Si applicano separatamente le condizioni e i controlli della "
+                        "destinazione."
                     ),
                     (
-                        "In ChatGPT o Codex, Vera cerca in Gmail attraverso il "
-                        "connector Gmail di OpenAI, installato e collegato separatamente. "
-                        "La posta resta in Gmail; Vera non crea una copia della casella e "
-                        "non conserva credenziali o messaggi."
-                    ),
-                    (
-                        "WhatsApp viene consultato soltanto da Codex Desktop con Computer "
-                        "Use, nell'app WhatsApp Desktop già aperta e autenticata dal "
-                        "professionista. Nessun server Mparanza riceve o conserva una "
-                        "copia di quei messaggi. Testo e immagini dello schermo letti da "
-                        "Codex possono comunque entrare nel contesto del modello "
-                        "dell'account ChatGPT/Codex dell'utente; si applicano separatamente "
-                        "anche le condizioni di OpenAI, Gmail e WhatsApp."
+                        "Usare una destinazione esterna non rende Mparanza il destinatario. "
+                        "Il workflow o l'informativa mostrata al momento dell'uso identifica "
+                        "un percorso hosted da Mparanza quando è coinvolto."
                     ),
                 ],
             },
@@ -328,45 +264,14 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "I servizi hosted di Mparanza hanno un confine separato.",
                 "paragraphs": [
                     (
-                        "Quando una funzione di Vera o Clara usa un servizio hosted di "
-                        "Mparanza, i contenuti necessari raggiungono sistemi controllati "
-                        "da Mparanza. Interviste hosted, Hosted Voice e il bridge dei dati "
-                        "retail sono esempi, non regole diverse."
+                        "Quando una funzione usa un servizio hosted di Mparanza, i contenuti "
+                        "necessari raggiungono sistemi controllati da Mparanza. Interviste "
+                        "hosted, acquisizione vocale e dati retail sono alcuni esempi."
                     ),
                     (
-                        "Ogni servizio hosted viene documentato una volta a livello di "
-                        "servizio: che cosa può essere inviato, chi può accedervi e come "
-                        "funzionano conservazione e cancellazione. Non esiste documentazione "
-                        "prompt per prompt."
-                    ),
-                    (
-                        "Un indice di pacchetti, una ricerca pubblica, un connector, un "
-                        "portale o un invio scelto dall'utente segue le condizioni del "
-                        "servizio esterno. È una destinazione esterna, non una terza "
-                        "categoria di trattamento Mparanza."
-                    ),
-                    (
-                        "I plugin contattano inoltre Mparanza per verificare gli aggiornamenti "
-                        "e lo stato dei feedback già inviati. Queste richieste non includono "
-                        "contenuti del cliente o del lavoro, anche se possono essere registrati "
-                        "dati tecnici di connessione. Il contenuto di un feedback viene "
-                        "inviato soltanto tramite il flusso esplicito di trasmissione."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Una sola regola per Vera e Clara.",
-                "paragraphs": [
-                    (
-                        "La distinzione è architetturale, non professionale. Una "
-                        "riconciliazione Vera e una presentazione Clara rientrano entrambe "
-                        "nella prima categoria quando operano dentro Codex."
-                    ),
-                    (
-                        "Qualsiasi servizio hosted di Mparanza usato da uno dei due plugin "
-                        "rientra nella seconda categoria ed è coperto dalla propria "
-                        "descrizione a livello di servizio."
+                        "L'informativa mostrata nel punto in cui il servizio viene usato "
+                        "indica che cosa lo raggiunge e le modalità applicabili di accesso, "
+                        "conservazione e cancellazione."
                     ),
                 ],
             },
@@ -402,14 +307,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "href": _OPENAI_CHATGPT_ANALYSIS_URL,
                     "external": True,
                 },
+                {
+                    "label": "Consulta le indicazioni Anthropic su dati e conservazione",
+                    "href": _ANTHROPIC_DATA_URL,
+                    "external": True,
+                },
             ],
         },
-        "closing": "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
+        "closing": "Un confine globale. I dettagli del processo restano con il processo.",
     },
     "fr": {
         "meta_description": (
-            "Les deux catégories de traitement de Vera et Clara : le travail effectué "
-            "dans Codex et les services hébergés par Mparanza, qui ont un périmètre distinct."
+            "Comment les plugins Mparanza utilisent l'environnement d'IA choisi, le "
+            "traitement local, les services hébergés et les destinations externes."
         ),
         "skip_label": "Aller au contenu principal",
         "home_label": "Retourner à Mparanza",
@@ -417,106 +327,82 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sécurité, confidentialité et données",
         "title": "Comment vos données sont traitées.",
         "summary": (
-            "Vera et Clara suivent la même règle. Les fonctions des plugins s'exécutent "
-            "dans Codex ; les services hébergés par Mparanza ont un périmètre "
-            "de traitement distinct."
+            "Vera, Clara et Lucia travaillent dans l'environnement d'IA choisi par "
+            "l'utilisateur. Les services hébergés par Mparanza et les autres destinations "
+            "externes sont distincts."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Vidéo",
             "title": "Comment Vera et Clara traitent les données.",
             "description": (
-                "Découvrez ce qui peut rester sur votre ordinateur, ce qui peut entrer "
-                "dans un appel à un modèle de langage via Codex et quand Mparanza "
-                "devient un périmètre de traitement distinct."
+                "Voyez la différence entre la préparation locale, le traitement du modèle "
+                "dans l'environnement choisi et un service hébergé par Mparanza."
             ),
             "youtube_id": "gIpiAURzyjA",
             "watch_label": "Voir sur YouTube",
         },
         "boundary": {
-            "title": "Quand Vera et Clara travaillent dans Codex.",
+            "title": "L'environnement d'IA choisi est le périmètre principal.",
             "intro": (
-                "Vera et Clara n'anonymisent pas automatiquement les données. Elles "
-                "peuvent utiliser Python localement pour filtrer ou agréger des "
-                "informations lorsque cela est utile. Les données fournies au modèle "
-                "sont traitées dans le cadre de l'offre ChatGPT existante de l'utilisateur. "
-                "Les workflows dans Codex n'envoient à Mparanza ni fichiers clients, "
-                "ni prompts, ni contenu du contexte du modèle."
+                "Les données nécessaires au travail peuvent entrer dans le contexte du "
+                "modèle du compte OpenAI ChatGPT ou Codex, ou Anthropic Claude ou Cowork, "
+                "choisi par l'utilisateur. Mparanza n'est pas un destinataire distinct du "
+                "travail ordinaire des plugins."
             ),
             "local_label": "Votre ordinateur",
             "local_detail": "Fichiers locaux · Python local · livrables locaux",
-            "account_label": "Votre offre ChatGPT existante",
-            "account_detail": "Contexte du modèle · conditions · contrôles des données",
-            "exclusion": "Les workflows dans Codex n'envoient à Mparanza aucun contenu client ou de travail.",
+            "account_label": "Votre environnement d'IA choisi",
+            "account_detail": "OpenAI ChatGPT ou Codex · Anthropic Claude ou Cowork",
+            "exclusion": "Le travail ordinaire des plugins n'envoie à Mparanza aucun contenu client ou professionnel.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Le traitement local est utilisé lorsqu'il aide le travail.",
+                "title": "La préparation locale est utile, mais n'anonymise pas automatiquement.",
                 "paragraphs": [
                     (
                         "Python peut localement trier, calculer, rapprocher, filtrer, "
-                        "agréger et créer des livrables sans déplacer d'abord les fichiers "
-                        "sources complets vers un système Mparanza distinct."
+                        "agréger et créer des livrables. Un workflow peut l'utiliser avant "
+                        "une étape du modèle lorsque cela améliore le travail."
                     ),
                     (
-                        "Il ne s'agit pas d'une anonymisation automatique. Lorsque le "
-                        "travail professionnel exige des noms, des documents, le texte "
-                        "original ou des faits propres au dossier, ces contenus peuvent "
-                        "entrer dans le contexte du modèle."
+                        "Les plugins n'anonymisent ni ne pseudonymisent automatiquement les "
+                        "données. Les noms, documents, textes originaux et faits du dossier "
+                        "restent présents lorsqu'ils servent la finalité professionnelle."
                     ),
                 ],
             },
             {
-                "id": "security",
-                "title": "Une cartographie par workflow, pas une par prompt.",
+                "id": "workflow-boundaries",
+                "title": "Le périmètre détaillé appartient au workflow.",
                 "paragraphs": [
                     (
-                        "Chaque workflow dans Codex est revu lorsqu'il est ajouté ou "
-                        "modifié. La cartographie indique ce qui reste normalement local "
-                        "et ce que Codex peut lire. Elle ne crée ni formulaire, ni étape "
-                        "de consentement, ni enregistrement pour chaque prompt."
+                        "Chaque workflow peut utiliser les données différemment. Sa page "
+                        "explique la séquence opérationnelle : ce que voit le modèle, ce "
+                        "que traite le code et quand le processus s'arrête. Cette page ne "
+                        "duplique pas ces déclarations spécifiques."
                     ),
                     (
                         "Ne placez jamais de mots de passe, clés API, cookies "
                         "d'authentification, jetons d'accès ou données de session dans "
-                        "des prompts ou fichiers que Codex peut lire."
-                    ),
-                    (
-                        "Le registre est un contrôle de développement et de publication, "
-                        "pas un mécanisme réseau appliqué pendant l'exécution. Il vérifie "
-                        "la couverture enregistrée et l'actualité des sources ; il "
-                        "n'inspecte pas les fichiers clients, ne trace pas chaque requête "
-                        "et ne bloque pas à lui seul un trafic réseau non déclaré."
+                        "des prompts ou fichiers que l'environnement d'IA choisi peut lire."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Gmail et WhatsApp Desktop ont des périmètres différents.",
+                "title": "Les connecteurs et les envois utilisent leur propre destination.",
                 "paragraphs": [
                     (
-                        "Vera et Clara travaillent dans ChatGPT à partir des contenus "
-                        "fournis dans la conversation et des applications connectées "
-                        "disponibles. Après avoir produit un résultat utile, elles peuvent "
-                        "recommander Codex Desktop pour accéder directement aux dossiers, "
-                        "conserver les fichiers du projet, utiliser des outils locaux et "
-                        "créer des livrables durables. L'installation reste facultative "
-                        "et le travail peut continuer dans ChatGPT."
+                        "Une application connectée, une recherche publique, un portail ou "
+                        "un envoi n'est utilisé que lorsque cette voie fait partie du travail "
+                        "choisi. Les conditions et contrôles de la destination s'appliquent "
+                        "séparément."
                     ),
                     (
-                        "Dans ChatGPT ou Codex, Vera recherche dans Gmail au moyen du "
-                        "connecteur Gmail d'OpenAI, installé et lié séparément. Les "
-                        "e-mails restent dans Gmail ; Vera ne crée aucune copie de la "
-                        "boîte et ne conserve ni identifiants ni messages."
-                    ),
-                    (
-                        "WhatsApp est consulté uniquement depuis Codex Desktop avec "
-                        "Computer Use, dans l'application WhatsApp Desktop déjà ouverte et "
-                        "authentifiée par le professionnel. Aucun serveur Mparanza ne reçoit "
-                        "ni ne conserve de copie de ces messages. Le texte et les images "
-                        "d'écran lus par Codex peuvent toutefois entrer dans le contexte du "
-                        "modèle du compte ChatGPT/Codex de l'utilisateur ; les conditions "
-                        "d'OpenAI, Gmail et WhatsApp s'appliquent séparément."
+                        "L'utilisation d'une destination externe ne fait pas de Mparanza le "
+                        "destinataire. Le workflow ou l'avis affiché au moment de l'usage "
+                        "identifie une voie hébergée par Mparanza lorsqu'elle intervient."
                     ),
                 ],
             },
@@ -525,47 +411,15 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Les services hébergés par Mparanza ont un périmètre distinct.",
                 "paragraphs": [
                     (
-                        "Lorsqu'une fonction de Vera ou Clara utilise un service hébergé "
-                        "par Mparanza, les contenus nécessaires atteignent des systèmes "
-                        "contrôlés par Mparanza. Les entretiens hébergés, Hosted Voice et "
-                        "la passerelle de données retail sont des exemples, pas des règles "
-                        "différentes."
+                        "Lorsqu'une fonction utilise un service hébergé par Mparanza, les "
+                        "contenus nécessaires atteignent des systèmes contrôlés par "
+                        "Mparanza. Les entretiens, la capture vocale et les données retail "
+                        "hébergés en sont des exemples."
                     ),
                     (
-                        "Chaque service hébergé est documenté une seule fois au niveau du "
-                        "service : ce qui peut être transmis, qui peut y accéder, ainsi "
-                        "que les modalités de conservation et de suppression. Il n'existe "
-                        "aucune documentation prompt par prompt."
-                    ),
-                    (
-                        "Un index de paquets, une recherche publique, un connecteur, un "
-                        "portail ou un envoi choisi par l'utilisateur relève des conditions "
-                        "du service externe. C'est une destination externe, pas une "
-                        "troisième catégorie de traitement Mparanza."
-                    ),
-                    (
-                        "Les plugins contactent également Mparanza pour vérifier les mises à "
-                        "jour et le statut des retours déjà transmis. Ces requêtes ne "
-                        "contiennent aucun contenu client ou de travail, même si des données "
-                        "techniques de connexion peuvent être journalisées. Le "
-                        "contenu d'un retour n'est envoyé que par le workflow de transmission "
-                        "explicite."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Une seule règle pour Vera et Clara.",
-                "paragraphs": [
-                    (
-                        "La distinction est architecturale, pas professionnelle. Un "
-                        "rapprochement Vera et une présentation Clara relèvent tous deux "
-                        "de la première catégorie lorsqu'ils s'exécutent dans Codex."
-                    ),
-                    (
-                        "Tout service hébergé par Mparanza utilisé par l'un ou l'autre "
-                        "plugin relève de la seconde catégorie et de sa description au "
-                        "niveau du service."
+                        "L'avis affiché là où le service est utilisé indique ce qui lui "
+                        "parvient ainsi que les modalités applicables d'accès, de "
+                        "conservation et de suppression."
                     ),
                 ],
             },
@@ -601,14 +455,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "href": _OPENAI_CHATGPT_ANALYSIS_URL,
                     "external": True,
                 },
+                {
+                    "label": "Consulter les règles Anthropic sur les données et la conservation",
+                    "href": _ANTHROPIC_DATA_URL,
+                    "external": True,
+                },
             ],
         },
-        "closing": "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
+        "closing": "Un périmètre global. Les détails du processus restent avec le processus.",
     },
     "de": {
         "meta_description": (
-            "Die zwei Verarbeitungskategorien für Vera und Clara: Arbeit in "
-            "Codex und Mparanza-gehostete Dienste mit eigener Grenze."
+            "Wie Mparanza-Plugins die gewählte KI-Arbeitsumgebung, lokale Verarbeitung, "
+            "gehostete Dienste und externe Ziele nutzen."
         ),
         "skip_label": "Zum Hauptinhalt springen",
         "home_label": "Zurück zu Mparanza",
@@ -616,103 +475,82 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Sicherheit, Datenschutz und Daten",
         "title": "So werden Ihre Daten verarbeitet.",
         "summary": (
-            "Für Vera und Clara gilt dieselbe Regel. Plugin-Funktionen laufen "
-            "in Codex; Mparanza-gehostete Dienste haben eine separate Verarbeitungsgrenze."
+            "Vera, Clara und Lucia arbeiten in der vom Nutzer gewählten "
+            "KI-Arbeitsumgebung. Mparanza-gehostete Dienste und andere externe Ziele "
+            "sind davon getrennt."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
             "title": "Wie Vera und Clara Daten verarbeiten.",
             "description": (
-                "Sehen Sie, was auf Ihrem Computer bleiben kann, was über Codex in "
-                "eine Sprachmodell-Anfrage eingehen kann und wann Mparanza zu einer "
-                "separaten Verarbeitungsgrenze wird."
+                "Sehen Sie den Unterschied zwischen lokaler Vorbereitung, "
+                "Modellverarbeitung in der gewählten Umgebung und einem von Mparanza "
+                "gehosteten Dienst."
             ),
             "youtube_id": "g5XV1cZoTaI",
             "watch_label": "Auf YouTube ansehen",
         },
         "boundary": {
-            "title": "Wenn Vera und Clara in Codex arbeiten.",
+            "title": "Die gewählte KI-Arbeitsumgebung ist die Hauptgrenze.",
             "intro": (
-                "Vera und Clara anonymisieren Daten nicht automatisch. Sie können "
-                "Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, "
-                "wenn dies nützlich ist. Daten, die dem Modell bereitgestellt werden, "
-                "werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet. "
-                "Workflows in Codex senden keine Mandantendateien, Prompts oder Inhalte "
-                "des Modellkontexts an Mparanza."
+                "Für die Arbeit benötigte Daten können in den Modellkontext des gewählten "
+                "OpenAI-ChatGPT- oder Codex-Kontos beziehungsweise Anthropic-Claude- oder "
+                "Cowork-Kontos gelangen. Mparanza ist kein separater Empfänger der "
+                "gewöhnlichen Plugin-Arbeit."
             ),
             "local_label": "Ihr Computer",
             "local_detail": "Lokale Dateien · lokales Python · lokale Ergebnisse",
-            "account_label": "Ihr bestehender ChatGPT-Tarif",
-            "account_detail": "Modellkontext · Bedingungen · Datenkontrollen",
-            "exclusion": "Workflows in Codex senden keine Mandanten- oder Arbeitsinhalte an Mparanza.",
+            "account_label": "Ihre gewählte KI-Arbeitsumgebung",
+            "account_detail": "OpenAI ChatGPT oder Codex · Anthropic Claude oder Cowork",
+            "exclusion": "Gewöhnliche Plugin-Arbeit sendet keine Mandanten- oder Arbeitsinhalte an Mparanza.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "Lokale Verarbeitung wird eingesetzt, wenn sie der Arbeit hilft.",
+                "title": "Lokale Vorbereitung ist nützlich, aber keine automatische Anonymisierung.",
                 "paragraphs": [
                     (
                         "Lokales Python kann sortieren, berechnen, abstimmen, filtern, "
-                        "aggregieren und Ergebnisse erstellen, ohne vollständige "
-                        "Quelldateien zuerst auf ein separates Mparanza-System zu verschieben."
+                        "aggregieren und Ergebnisse erstellen. Ein Workflow kann dies vor "
+                        "einem Modellschritt nutzen, wenn es die Arbeit verbessert."
                     ),
                     (
-                        "Das ist keine automatische Anonymisierung. Wenn die professionelle "
-                        "Aufgabe Namen, Dokumente, Originalformulierungen oder Fallfakten "
-                        "benötigt, können diese Inhalte in den Modellkontext gelangen."
+                        "Die Plugins anonymisieren oder pseudonymisieren Daten nicht "
+                        "automatisch. Namen, Dokumente, Originalformulierungen und Fallfakten "
+                        "bleiben erhalten, wenn sie dem beruflichen Zweck dienen."
                     ),
                 ],
             },
             {
-                "id": "security",
-                "title": "Eine Zuordnung pro Workflow, nicht pro Prompt.",
+                "id": "workflow-boundaries",
+                "title": "Die detaillierte Grenze gehört zum Workflow.",
                 "paragraphs": [
                     (
-                        "Jeder Workflow in Codex wird geprüft, wenn er hinzugefügt oder "
-                        "geändert wird. Die Zuordnung hält fest, was normalerweise lokal "
-                        "bleibt und was Codex lesen kann. Sie erzeugt kein Formular, keine "
-                        "Einwilligungsstufe und keinen Nachweis für jeden Prompt."
+                        "Jeder Workflow kann Daten anders nutzen. Seine eigene Seite erklärt "
+                        "den Ablauf: was das Modell sieht, was der Code verarbeitet und wann "
+                        "der Prozess stoppt. Diese Seite dupliziert diese spezifischen "
+                        "Aussagen nicht."
                     ),
                     (
                         "Geben Sie niemals Passwörter, API-Schlüssel, Authentifizierungs-"
                         "Cookies, Zugriffstoken oder Sitzungsdaten in Prompts oder Dateien "
-                        "ein, die Codex lesen kann."
-                    ),
-                    (
-                        "Das Register ist eine Entwicklungs- und Freigabekontrolle, keine "
-                        "Netzwerkdurchsetzung zur Laufzeit. Es prüft registrierte Abdeckung "
-                        "und Aktualität des Quellcodes; es untersucht keine Mandantendateien, "
-                        "verfolgt nicht jede Anfrage und blockiert allein keinen nicht "
-                        "deklarierten Netzwerkverkehr."
+                        "ein, die die gewählte KI-Arbeitsumgebung lesen kann."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Gmail und WhatsApp Desktop haben unterschiedliche Grenzen.",
+                "title": "Connectoren und Sendefunktionen nutzen ihr eigenes Ziel.",
                 "paragraphs": [
                     (
-                        "Vera und Clara arbeiten in ChatGPT mit den in der Unterhaltung "
-                        "bereitgestellten Materialien und verfügbaren verbundenen Apps. "
-                        "Nach einem nützlichen Ergebnis können sie Codex Desktop für "
-                        "direkten Ordnerzugriff, dauerhafte Projektdateien, lokale "
-                        "Werkzeuge und beständige Ergebnisse empfehlen. Die Installation "
-                        "ist optional und die Arbeit kann in ChatGPT fortgesetzt werden."
+                        "Eine verbundene App, öffentliche Suche, ein Portal oder eine "
+                        "Sendefunktion wird nur genutzt, wenn dieser Weg Teil der gewählten "
+                        "Arbeit ist. Bedingungen und Kontrollen des Ziels gelten separat."
                     ),
                     (
-                        "In ChatGPT oder Codex durchsucht Vera Gmail über den separat "
-                        "installierten und verbundenen Gmail-Connector von OpenAI. "
-                        "E-Mails bleiben in Gmail; Vera erstellt keine Postfachkopie und "
-                        "speichert weder Zugangsdaten noch Nachrichten."
-                    ),
-                    (
-                        "WhatsApp wird nur aus Codex Desktop mit Computer Use in der vom "
-                        "Berufsträger bereits geöffneten und authentifizierten WhatsApp-"
-                        "Desktop-App geprüft. Kein Mparanza-Server empfängt oder speichert "
-                        "eine Kopie dieser Nachrichten. Von Codex gelesene Bildschirmtexte "
-                        "und -bilder können dennoch in den Modellkontext des ChatGPT-/Codex-"
-                        "Kontos gelangen; die Bedingungen von OpenAI, Gmail und WhatsApp "
-                        "gelten jeweils separat."
+                        "Die Nutzung eines externen Ziels macht Mparanza nicht zum Empfänger. "
+                        "Der Workflow oder der Hinweis am Nutzungsort kennzeichnet einen von "
+                        "Mparanza gehosteten Weg, wenn er beteiligt ist."
                     ),
                 ],
             },
@@ -721,45 +559,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Mparanza-gehostete Dienste haben eine separate Grenze.",
                 "paragraphs": [
                     (
-                        "Wenn eine Vera- oder Clara-Funktion einen Mparanza-gehosteten "
-                        "Dienst nutzt, erreichen die erforderlichen Inhalte von Mparanza "
-                        "kontrollierte Systeme. Gehostete Interviews, Hosted Voice und die "
-                        "Retail-Daten-Bridge sind Beispiele, keine abweichenden Regeln."
+                        "Wenn eine Funktion einen Mparanza-gehosteten Dienst nutzt, erreichen "
+                        "die erforderlichen Inhalte von Mparanza kontrollierte Systeme. "
+                        "Gehostete Interviews, Spracherfassung und Retail-Daten sind Beispiele."
                     ),
                     (
-                        "Jeder gehostete Dienst wird einmal auf Dienstebene dokumentiert: "
-                        "was übermittelt werden kann, wer darauf zugreifen kann und welche "
-                        "Aufbewahrungs- und Löschregeln gelten. Es gibt keine Dokumentation "
-                        "für jeden einzelnen Prompt."
-                    ),
-                    (
-                        "Ein Paketindex, eine vom Nutzer gewählte öffentliche Suche, ein "
-                        "Connector, ein Portal oder ein Versand unterliegt den Bedingungen "
-                        "des externen Dienstes. Das ist ein externes Ziel, keine dritte "
-                        "Mparanza-Verarbeitungskategorie."
-                    ),
-                    (
-                        "Die Plugins kontaktieren Mparanza außerdem, um nach Updates und dem "
-                        "Status bereits übermittelten Feedbacks zu sehen. Diese Anfragen "
-                        "enthalten keine Mandanten- oder Arbeitsinhalte; technische "
-                        "Verbindungsdaten können dennoch protokolliert werden. Feedback-Inhalte "
-                        "werden nur über den ausdrücklichen Übermittlungsablauf gesendet."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Eine Regel für Vera und Clara.",
-                "paragraphs": [
-                    (
-                        "Die Unterscheidung ist architektonisch, nicht berufsbezogen. Eine "
-                        "Vera-Abstimmung und eine Clara-Präsentation gehören beide zur "
-                        "ersten Kategorie, wenn sie in Codex laufen."
-                    ),
-                    (
-                        "Jeder von einem der beiden Plugins verwendete Mparanza-gehostete "
-                        "Dienst gehört zur zweiten Kategorie und wird auf Dienstebene "
-                        "beschrieben."
+                        "Der Hinweis dort, wo der Dienst genutzt wird, nennt die übermittelten "
+                        "Inhalte und die geltenden Zugriffs-, Aufbewahrungs- und Löschregeln."
                     ),
                 ],
             },
@@ -795,14 +601,19 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "href": _OPENAI_CHATGPT_ANALYSIS_URL,
                     "external": True,
                 },
+                {
+                    "label": "Anthropic-Hinweise zu Datenverarbeitung und Aufbewahrung prüfen",
+                    "href": _ANTHROPIC_DATA_URL,
+                    "external": True,
+                },
             ],
         },
-        "closing": "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
+        "closing": "Eine globale Grenze. Prozessdetails bleiben beim Prozess.",
     },
     "es": {
         "meta_description": (
-            "Las dos categorías de tratamiento para Vera y Clara: el trabajo "
-            "dentro de Codex y los servicios alojados por Mparanza, con un límite separado."
+            "Cómo usan los plugins de Mparanza el entorno de IA elegido, el tratamiento "
+            "local, los servicios alojados y los destinos externos."
         ),
         "skip_label": "Ir al contenido principal",
         "home_label": "Volver a Mparanza",
@@ -810,107 +621,81 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         "eyebrow": "Seguridad, privacidad y datos",
         "title": "Cómo se tratan tus datos.",
         "summary": (
-            "Vera y Clara siguen una misma política. Las funciones de los plugins se "
-            "ejecutan dentro de Codex; los servicios alojados por Mparanza "
-            "constituyen un límite de tratamiento separado."
+            "Vera, Clara y Lucia trabajan en el entorno de IA que elija el usuario. "
+            "Los servicios alojados por Mparanza y los demás destinos externos están "
+            "separados."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Vídeo",
             "title": "Cómo tratan los datos Vera y Clara.",
             "description": (
-                "Descubre qué puede permanecer en tu ordenador, qué puede entrar en "
-                "una llamada a un modelo de lenguaje a través de Codex y cuándo "
-                "Mparanza se convierte en un límite de tratamiento separado."
+                "Descubre la diferencia entre la preparación local, el tratamiento del "
+                "modelo en el entorno elegido y un servicio alojado por Mparanza."
             ),
             "youtube_id": "LAimCM-F994",
             "watch_label": "Ver en YouTube",
         },
         "boundary": {
-            "title": "Cuando Vera y Clara trabajan dentro de Codex.",
+            "title": "El entorno de IA elegido es el límite principal.",
             "intro": (
-                "Vera y Clara no anonimizan los datos automáticamente. Pueden usar Python "
-                "en local para filtrar o agregar información cuando resulte útil. Los datos "
-                "facilitados al modelo se tratan mediante el plan de ChatGPT que ya usa el "
-                "usuario. Los flujos dentro de Codex no envían a Mparanza archivos de clientes, "
-                "prompts ni contenido del contexto del modelo."
+                "Los datos necesarios para el trabajo pueden entrar en el contexto del "
+                "modelo de la cuenta de OpenAI ChatGPT o Codex, o de Anthropic Claude o "
+                "Cowork, que elija el usuario. Mparanza no es un destinatario separado del "
+                "trabajo ordinario de los plugins."
             ),
             "local_label": "Tu ordenador",
             "local_detail": "Archivos locales · Python local · resultados locales",
-            "account_label": "Tu plan de ChatGPT actual",
-            "account_detail": "Contexto del modelo · condiciones del plan · controles de datos",
-            "exclusion": (
-                "Los flujos dentro de Codex no envían contenido de clientes ni del trabajo "
-                "a Mparanza."
-            ),
+            "account_label": "Tu entorno de IA elegido",
+            "account_detail": "OpenAI ChatGPT o Codex · Anthropic Claude o Cowork",
+            "exclusion": "El trabajo ordinario de los plugins no envía contenido de clientes ni del trabajo a Mparanza.",
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "El tratamiento local se usa cuando ayuda al trabajo.",
+                "title": "La preparación local es útil, pero no anonimiza automáticamente.",
                 "paragraphs": [
                     (
                         "Python en local puede ordenar, calcular, conciliar, filtrar, agregar "
-                        "y crear resultados sin trasladar antes los archivos fuente completos "
-                        "a un sistema separado de Mparanza."
+                        "y crear resultados. Un flujo puede usarlo antes de un paso del "
+                        "modelo cuando mejora el trabajo."
                     ),
                     (
-                        "Esto no es anonimización automática. Cuando la tarea profesional "
-                        "requiere nombres, documentos, el idioma original o hechos del caso, "
-                        "ese material puede entrar en el contexto del modelo."
+                        "Los plugins no anonimizan ni seudonimizan los datos automáticamente. "
+                        "Los nombres, documentos, textos originales y hechos del caso se "
+                        "mantienen cuando sirven para la finalidad profesional."
                     ),
                 ],
             },
             {
-                "id": "security",
-                "title": "Un mapeo por flujo de trabajo, no por prompt.",
+                "id": "workflow-boundaries",
+                "title": "El límite detallado pertenece al flujo de trabajo.",
                 "paragraphs": [
                     (
-                        "Cada flujo dentro de Codex se revisa cuando se añade o modifica. La revisión "
-                        "registra qué permanece normalmente en local y qué puede leer Codex. "
-                        "No crea un formulario, un paso de consentimiento ni un registro para "
-                        "cada prompt."
+                        "Cada flujo puede usar los datos de manera distinta. Su propia página "
+                        "explica la secuencia operativa: qué ve el modelo, qué procesa el "
+                        "código y cuándo se detiene el proceso. Esta página no duplica esas "
+                        "declaraciones específicas."
                     ),
                     (
                         "Nunca incluyas contraseñas, claves de API, cookies de autenticación, "
-                        "tokens de acceso ni datos de sesión en prompts o archivos que Codex "
-                        "pueda leer."
-                    ),
-                    (
-                        "El registro es un control de desarrollo y publicación, no un "
-                        "mecanismo de red aplicado durante la ejecución. Comprueba la "
-                        "cobertura registrada y la vigencia del código fuente; no inspecciona "
-                        "archivos de clientes, no rastrea cada solicitud ni bloquea por sí "
-                        "solo tráfico de red no declarado."
+                        "tokens de acceso ni datos de sesión en prompts o archivos que el "
+                        "entorno de IA elegido pueda leer."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Gmail y WhatsApp Desktop tienen límites distintos.",
+                "title": "Los conectores y envíos usan su propio destino.",
                 "paragraphs": [
                     (
-                        "Vera y Clara trabajan en ChatGPT con los materiales aportados en "
-                        "la conversación y con las aplicaciones conectadas disponibles. "
-                        "Después de producir un resultado útil, pueden recomendar Codex "
-                        "Desktop para acceder directamente a carpetas, conservar archivos "
-                        "del proyecto, usar herramientas locales y crear entregables "
-                        "duraderos. La instalación es opcional y el trabajo puede "
-                        "continuar en ChatGPT."
+                        "Una aplicación conectada, una búsqueda pública, un portal o un envío "
+                        "solo se usa cuando esa vía forma parte del trabajo elegido. Las "
+                        "condiciones y controles del destino se aplican por separado."
                     ),
                     (
-                        "En ChatGPT o Codex, Vera busca en Gmail mediante el "
-                        "conector de Gmail de OpenAI, instalado y vinculado por "
-                        "separado. El correo permanece en Gmail; Vera no crea una copia "
-                        "del buzón ni conserva credenciales o mensajes."
-                    ),
-                    (
-                        "WhatsApp se consulta únicamente desde Codex Desktop con Computer "
-                        "Use, en la aplicación WhatsApp Desktop ya abierta y autenticada por "
-                        "el profesional. Ningún servidor de Mparanza recibe ni conserva una "
-                        "copia de esos mensajes. El texto y las imágenes de pantalla que lee "
-                        "Codex pueden entrar en el contexto del modelo de la cuenta de "
-                        "ChatGPT/Codex del usuario; las condiciones de OpenAI, Gmail y "
-                        "WhatsApp se aplican por separado."
+                        "Usar un destino externo no convierte a Mparanza en destinatario. "
+                        "El flujo o el aviso mostrado en el momento de uso identifica una "
+                        "vía alojada por Mparanza cuando interviene."
                     ),
                 ],
             },
@@ -919,44 +704,13 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 "title": "Los servicios alojados por Mparanza tienen un límite separado.",
                 "paragraphs": [
                     (
-                        "Cuando una función de Vera o Clara usa un servicio alojado por "
-                        "Mparanza, el contenido necesario para ese servicio llega a sistemas "
-                        "controlados por Mparanza. Las entrevistas alojadas, Hosted Voice y "
-                        "el puente de datos de retailers son ejemplos, no políticas separadas."
+                        "Cuando una función usa un servicio alojado por Mparanza, el contenido "
+                        "necesario llega a sistemas controlados por Mparanza. Las entrevistas, "
+                        "la captura de voz y los datos retail alojados son algunos ejemplos."
                     ),
                     (
-                        "Cada servicio alojado se documenta una vez a nivel de servicio: qué "
-                        "se puede enviar, quién puede acceder y cuáles son las condiciones de "
-                        "conservación y eliminación. No hay documentación para cada prompt."
-                    ),
-                    (
-                        "Los índices de paquetes, búsquedas públicas, conectores, portales o "
-                        "acciones de envío que elija el usuario se rigen por las condiciones "
-                        "de ese servicio externo. Se trata de un destino externo, no de una "
-                        "tercera categoría de tratamiento de Mparanza."
-                    ),
-                    (
-                        "Los plugins también contactan con Mparanza para comprobar actualizaciones "
-                        "y el estado de comentarios enviados anteriormente. Esas solicitudes no "
-                        "contienen contenido de clientes ni del trabajo, aunque pueden registrarse "
-                        "los datos técnicos de conexión. El contenido de los comentarios "
-                        "solo se envía mediante el flujo de envío explícito."
-                    ),
-                ],
-            },
-            {
-                "id": "gdpr",
-                "title": "Una política para Vera y Clara.",
-                "paragraphs": [
-                    (
-                        "La distinción es arquitectónica, no profesional. Una conciliación de "
-                        "Vera y una presentación de Clara pertenecen a la primera categoría "
-                        "cuando se ejecutan dentro de Codex."
-                    ),
-                    (
-                        "Cualquier servicio alojado por Mparanza que use cualquiera de los dos "
-                        "plugins pertenece a la segunda categoría y queda cubierto por su "
-                        "descripción a nivel de servicio."
+                        "El aviso mostrado donde se usa el servicio indica qué contenido le "
+                        "llega y las condiciones aplicables de acceso, conservación y eliminación."
                     ),
                 ],
             },
@@ -996,9 +750,14 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "href": _OPENAI_CHATGPT_ANALYSIS_URL,
                     "external": True,
                 },
+                {
+                    "label": "Consultar las indicaciones de Anthropic sobre datos y conservación",
+                    "href": _ANTHROPIC_DATA_URL,
+                    "external": True,
+                },
             ],
         },
-        "closing": "Una política para Vera y Clara. Sin documentación para cada prompt.",
+        "closing": "Un límite global. Los detalles del proceso permanecen con el proceso.",
     },
 }
 
