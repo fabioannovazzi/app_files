@@ -85,6 +85,15 @@ Studio Archive engagement. The professional owns its retention.
   reason to communicate.
 - Learn voice only from material the professional selected for that purpose.
   Do not copy distinctive passages, preserve errors, or infer private beliefs.
+- Never scan the Studio workspace, archive, mailbox, or connected account for
+  prior communications. The professional selects every exact history item;
+  a later profile revision may add only newly selected items in a new run.
+- Local code strips explicit-format emails, phone numbers, tax identifiers,
+  account identifiers and case numbers before any model sees selected history.
+  One isolated model session receives only those stripped documents and
+  creates complete pseudonymized derivatives. Identity mappings remain local;
+  every later model pass receives only the pseudonymized documents. Contextual
+  identities may still reach that first selected Claude or Cowork model pass.
 - Keep client identity and case facts out of public research queries. Use a
   client example only when the professional supplied and approved a lawful,
   appropriate public-use version.
@@ -179,6 +188,12 @@ ZIPs during a professional communication run.
    selected only when the user explicitly chose that route and record its
    visible destination. Prepare a run:
 
+   Direct connector intake is not supported for selected history because the
+   connector response would enter the calling model before local stripping.
+   The professional must select and export each desired message or document to
+   a supported local file first. Set `history_connector.selected` to `false`;
+   preparation fails closed if it is selected.
+
    ```bash
    python scripts/prepare_run.py \
      --workspace <private-workspace> \
@@ -190,7 +205,41 @@ ZIPs during a professional communication run.
    and clearly labelled Vera defaults. No field may use `observed_history`
    unless its cited history was selected and snapshotted in this run.
 
-4. Read the exact bound inputs. When public research was selected, research
+   If history was selected, `prepare_run.py` extracts complete readable text,
+   mechanically replaces explicit-format emails, phone numbers, tax IDs,
+   account IDs and case numbers, writes the reversible mapping to the local-only
+   `history_identity_map.json`, and creates
+   `history_pseudonymization_packet.json` containing only stripped documents.
+   The downstream `model_task_packet.json` remains blocked. Open the exact
+   bundled `prompts/history-pseudonymization-v1.md` in a fresh host session and
+   give it only that packet and its stripped document paths. Write
+   `history_pseudonymization.json` against its schema. Preserve each complete
+   useful document while pseudonymizing contextual names, organizations,
+   addresses, locations, roles and identifying fact combinations. Return the
+   semantic identity mapping separately; the recorder merges it into the local-
+   only mapping rather than exposing it downstream. Record the result:
+
+   ```bash
+   python scripts/record_history_pseudonymization.py \
+     --run-dir <run-dir> \
+     --pseudonymization <history_pseudonymization.json> \
+     --provider <provider> --model <model> \
+     --session-id <fresh-history-session-id> \
+     --recorded-by <operator>
+   ```
+
+   Recording requires every selected item once, a ready model assessment, exact
+   input binding, preservation of locally inserted placeholders and the bundled
+   prompt digest. It writes one complete pseudonymized text derivative per
+   selected document, moves both mapping layers into the owner-only identity
+   map, and replaces the blocked downstream history context with
+   `history_pseudonymization_record.json` plus derivative paths and hashes.
+   Raw snapshots and stripped intermediates remain owner-controlled for audit,
+   but no later model session may open them. If pseudonymization cannot safely
+   preserve the purpose, stop or proceed without history-derived conventions.
+
+4. Read the exact current-source inputs and, when history was selected, only
+   the recorded pseudonymized derivatives. When public research was selected, research
    with generic topic-level queries and record exact official source snapshots
    or user-readable source files in a new prepared run before confirming
    claims. Do not treat a URL string as captured evidence.
@@ -246,7 +295,7 @@ ZIPs during a professional communication run.
    by themselves. A `weak` or `redundant` slide, or a non-identifiable public
    evidence note when exact evidence is available, requires revision or
    omission.
-6. Record the exact generator and editorial-assessor provider/model provenance,
+6. Record the exact history-pseudonymization model when used, generator and editorial-assessor provider/model provenance,
    template versions, template digests, distinct host session IDs, and
    operator. These are operator-attested host records, not
    provider-authenticated API receipts; never describe them otherwise:
@@ -457,6 +506,16 @@ ZIPs during a professional communication run.
 - `run_intake.json` records selected files, requested channels, local data
   posture, and optional external routes.
 - `source_register.json` proves exact immutable input snapshots.
+- `history_pseudonymization_record.json`, when history is selected, binds one
+  isolated model session to the exact locally stripped inputs and one complete
+  pseudonymized derivative per selected item. `history_identity_map.json`
+  remains local and is excluded from every model packet; later model passes
+  receive only the derivative paths and hashes. This is pseudonymization, not
+  anonymization: contextual identities can reach the isolated first pass and
+  re-identification remains possible where the local mapping is retained.
+- Direct connector retrieval of selected history is blocked because it cannot
+  currently guarantee local stripping before model access. The professional
+  exports and selects exact local messages or documents instead.
 - `editorial_assessor_qualification.json` in the workspace proves that the
   exact editorial provider/model/template passed the current blinded anti-slop
   benchmark without a false-ready critical case.

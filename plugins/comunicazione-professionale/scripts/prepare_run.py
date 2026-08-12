@@ -11,10 +11,16 @@ import tempfile
 from pathlib import Path
 from typing import Any
 
+from history_privacy import (
+    MECHANICAL_STRIPPING_VERSION,
+    extract_history_text,
+    strip_mechanical_identifiers,
+)
 from workflow_core import (
     PLUGIN_ROOT,
     PROMPT_TEMPLATES,
     atomic_write_json,
+    atomic_write_text,
     canonical_digest,
     copy_input_snapshot,
     file_digest,
@@ -79,6 +85,66 @@ def _retarget_snapshot(
     return {**snapshot, "snapshot_path": str((final_run_dir / relative).resolve())}
 
 
+def _prepare_stripped_history(
+    history: list[dict[str, Any]],
+    *,
+    staging_dir: Path,
+    final_run_dir: Path,
+) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    """Strip explicit-format identifiers before the selected model sees history."""
+
+    model_inputs: list[dict[str, Any]] = []
+    mapping_entries: list[dict[str, Any]] = []
+    placeholders: dict[tuple[str, str], str] = {}
+    counters: dict[str, int] = {}
+    for row in history:
+        committed_snapshot = Path(row["snapshot_path"])
+        staging_snapshot = staging_dir / committed_snapshot.relative_to(final_run_dir)
+        raw_text = extract_history_text(staging_snapshot)
+        stripped_text, entries, placeholders, counters = strip_mechanical_identifiers(
+            raw_text,
+            existing_placeholders=placeholders,
+            counters=counters,
+        )
+        stripped_path = staging_dir / "history-model-inputs" / f"{row['id']}.txt"
+        atomic_write_text(stripped_path, stripped_text)
+        for entry in entries:
+            mapping_entries.append({"history_id": row["id"], **entry})
+        model_inputs.append(
+            {
+                "id": row["id"],
+                "channel": row["channel"],
+                **(
+                    {"published_at": row["published_at"]}
+                    if row.get("published_at")
+                    else {}
+                ),
+                "path": str(
+                    (
+                        final_run_dir / "history-model-inputs" / stripped_path.name
+                    ).resolve()
+                ),
+                "sha256": file_digest(stripped_path),
+                "size_bytes": stripped_path.stat().st_size,
+                "mechanical_stripping_version": MECHANICAL_STRIPPING_VERSION,
+            }
+        )
+    mapping = {
+        "schema_version": 1,
+        "workflow": "comunicazione-professionale",
+        "run_id": final_run_dir.name,
+        "local_only": True,
+        "never_include_in_model_context": True,
+        "mechanical_stripping_version": MECHANICAL_STRIPPING_VERSION,
+        "entries": mapping_entries,
+    }
+    stable_mapping = {
+        key: value for key, value in mapping.items() if key != "mapping_digest"
+    }
+    mapping["mapping_digest"] = canonical_digest(stable_mapping)
+    return model_inputs, mapping
+
+
 def prepare_run(workspace: Path, intake_path: Path) -> Path:
     """Create one path-bound run and its immutable source register."""
 
@@ -117,6 +183,11 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 intake["history_inputs"],
                 kind="history",
                 run_dir=staging_dir,
+                final_run_dir=run_dir,
+            )
+            history_model_inputs, history_identity_map = _prepare_stripped_history(
+                history,
+                staging_dir=staging_dir,
                 final_run_dir=run_dir,
             )
 
@@ -258,8 +329,18 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 "data_posture": {
                     "selected_source_files_snapshotted_locally": len(sources),
                     "selected_prior_communications_snapshotted_locally": len(history),
-                    "model_context_may_include_selected_material": True,
-                    "automatic_anonymization": False,
+                    "raw_history_sent_to_model": False,
+                    "mechanically_stripped_history_model_context_limited_to_one_pseudonymization_pass": bool(
+                        history
+                    ),
+                    "downstream_history_requires_complete_pseudonymized_documents": bool(
+                        history
+                    ),
+                    "local_identity_map_kept_out_of_model_context": bool(history),
+                    "automatic_anonymization_before_selected_runtime": False,
+                    "mechanical_identifier_stripping_before_selected_runtime": bool(
+                        history
+                    ),
                     "helper_scripts_call_models": False,
                     "helper_scripts_use_connectors": False,
                 },
@@ -274,6 +355,11 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                         "outputs": [
                             "run_intake.json",
                             "source_register.json",
+                            *(
+                                ["history_pseudonymization_packet.json"]
+                                if history
+                                else []
+                            ),
                             "model_task_packet.json",
                         ],
                     }
@@ -286,6 +372,16 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                 }
             )
             intake_payload["input_digest"] = input_digest
+            if history:
+                history_identity_map["input_digest"] = input_digest
+                stable_history_identity_map = {
+                    key: value
+                    for key, value in history_identity_map.items()
+                    if key != "mapping_digest"
+                }
+                history_identity_map["mapping_digest"] = canonical_digest(
+                    stable_history_identity_map
+                )
             task_packet = {
                 "schema_version": 1,
                 "workflow": "comunicazione-professionale",
@@ -316,26 +412,33 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     }
                     for row in sources
                 ],
-                "history_snapshots": [
+                "history_context": (
                     {
-                        key: row[key]
-                        for key in (
-                            "id",
-                            "channel",
-                            "published_at",
-                            "snapshot_path",
-                            "sha256",
-                        )
-                        if key in row
+                        "status": "preparation_required",
+                        "history_ids": [row["id"] for row in history],
+                        "raw_history_paths_included": False,
+                        "identity_mapping_included": False,
+                        "purpose": "studio_voice_and_format_learning_only",
+                        "pseudonymization_packet_path": str(
+                            (run_dir / "history_pseudonymization_packet.json").resolve()
+                        ),
                     }
-                    for row in history
-                ],
+                    if history
+                    else {
+                        "status": "not_applicable",
+                        "history_ids": [],
+                        "raw_history_paths_included": False,
+                        "identity_mapping_included": False,
+                        "purpose": "studio_voice_and_format_learning_only",
+                    }
+                ),
                 "existing_studio_profile": studio_profile,
                 "brand_profile": brand_profile,
                 "artifact_schemas": {
                     name: str((PLUGIN_ROOT / "schemas" / filename).resolve())
                     for name, filename in {
                         "answer_contract": "answer_contract.schema.json",
+                        "history_pseudonymization": "history_pseudonymization.schema.json",
                         "model_contribution": "model_contribution.schema.json",
                         "claim_assurance": "claim_assurance.schema.json",
                         "editorial_assessment": "editorial_assessment.schema.json",
@@ -349,18 +452,68 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                         "sha256": prompt_template_digest(kind, version),
                     }
                     for kind, (version, path) in PROMPT_TEMPLATES.items()
+                    if kind != "history_pseudonymization"
                 },
                 "instructions": [
                     "Use semantic judgment for topic relevance, source authority, meaning, claims, voice, and no_publish.",
                     "Do not treat file registration or source-ID closure as semantic support.",
                     "Use the selected studio examples to propose or follow the studio format without copying passages.",
                     "When no prior Studio communication is selected, distinguish user-supplied format facts from Vera default proposals and never claim observed history.",
+                    "When prior communications are selected, do not generate until history_context is ready; use only its complete recorded pseudonymized documents and never open raw or mechanically stripped history or the local identity map downstream.",
                     "A schedule is not evidence that communication is worthwhile.",
                     "Creative Production is an optional art-direction route, never a source of claims or exact public copy; use it only when explicitly selected and continue with Vera's internal renderer when unavailable.",
                 ],
             }
             atomic_write_json(staging_dir / "run_intake.json", intake_payload)
             atomic_write_json(staging_dir / "source_register.json", source_register)
+            if history:
+                atomic_write_json(
+                    staging_dir / "history_identity_map.json",
+                    history_identity_map,
+                )
+                atomic_write_json(
+                    staging_dir / "history_pseudonymization_packet.json",
+                    {
+                        "schema_version": 1,
+                        "workflow": "comunicazione-professionale",
+                        "run_id": intake["run_id"],
+                        "input_digest": input_digest,
+                        "purpose": "complete_document_pseudonymization_for_studio_voice_and_format_learning",
+                        "history_documents": history_model_inputs,
+                        "raw_history_paths_included": False,
+                        "identity_mapping_included": False,
+                        "local_preprocessing": {
+                            "version": MECHANICAL_STRIPPING_VERSION,
+                            "categories": [
+                                "email",
+                                "phone",
+                                "tax_id",
+                                "bank_account",
+                                "case_number",
+                            ],
+                            "semantic_identifiers_remain_for_model_pseudonymization": True,
+                        },
+                        "artifact_schema": str(
+                            (
+                                PLUGIN_ROOT
+                                / "schemas"
+                                / "history_pseudonymization.schema.json"
+                            ).resolve()
+                        ),
+                        "model_pass_template": {
+                            "version": PROMPT_TEMPLATES["history_pseudonymization"][0],
+                            "path": str(
+                                PROMPT_TEMPLATES["history_pseudonymization"][
+                                    1
+                                ].resolve()
+                            ),
+                            "sha256": prompt_template_digest(
+                                "history_pseudonymization",
+                                PROMPT_TEMPLATES["history_pseudonymization"][0],
+                            ),
+                        },
+                    },
+                )
             atomic_write_json(staging_dir / "model_task_packet.json", task_packet)
             staging_dir.replace(run_dir)
         except (OSError, ValueError):

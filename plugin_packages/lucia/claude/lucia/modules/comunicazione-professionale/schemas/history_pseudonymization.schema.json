@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "run_id",
+    "input_digest",
+    "purpose",
+    "history_items",
+    "identity_mapping",
+    "pseudonymization_assessment",
+    "limitations"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "run_id": {"type": "string", "minLength": 1},
+    "input_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "purpose": {"const": "complete_document_pseudonymization_for_studio_voice_and_format_learning"},
+    "history_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "history_id",
+          "channel",
+          "pseudonymized_document",
+          "transformations_summary",
+          "residual_identification_risk"
+        ],
+        "properties": {
+          "history_id": {"type": "string", "minLength": 1},
+          "channel": {
+            "enum": [
+              "client_email",
+              "client_circular",
+              "linkedin",
+              "newsletter",
+              "website_article",
+              "client_alert",
+              "faq",
+              "other"
+            ]
+          },
+          "pseudonymized_document": {"type": "string", "minLength": 1},
+          "transformations_summary": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "residual_identification_risk": {"type": "string", "minLength": 1, "maxLength": 2000}
+        }
+      }
+    },
+    "identity_mapping": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["category", "original_value", "placeholder", "history_ids"],
+        "properties": {
+          "category": {
+            "enum": ["person", "organization", "address", "location", "identifying_role", "other_identity"]
+          },
+          "original_value": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "placeholder": {"type": "string", "pattern": "^\\[[A-Z][A-Z0-9_]*_[1-9][0-9]*\\]$"},
+          "history_ids": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          }
+        }
+      }
+    },
+    "pseudonymization_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mechanical_placeholders_preserved",
+        "contextual_direct_identifiers_pseudonymized",
+        "indirect_identifiers_generalized",
+        "identifying_case_facts_generalized",
+        "complete_document_structure_preserved",
+        "technical_content_excluded_as_authority",
+        "identity_mapping_separated_from_documents",
+        "ready_for_downstream_use",
+        "residual_risk"
+      ],
+      "properties": {
+        "mechanical_placeholders_preserved": {"type": "boolean"},
+        "contextual_direct_identifiers_pseudonymized": {"type": "boolean"},
+        "indirect_identifiers_generalized": {"type": "boolean"},
+        "identifying_case_facts_generalized": {"type": "boolean"},
+        "complete_document_structure_preserved": {"type": "boolean"},
+        "technical_content_excluded_as_authority": {"type": "boolean"},
+        "identity_mapping_separated_from_documents": {"type": "boolean"},
+        "ready_for_downstream_use": {"type": "boolean"},
+        "residual_risk": {"type": "string", "minLength": 1, "maxLength": 2000}
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {"type": "string", "minLength": 1, "maxLength": 1000}
+    }
+  }
+}

@@ -23,6 +23,33 @@ profile from explicit instructions, supplied brand facts, and Vera defaults;
 make that provenance visible and require professional acceptance before
 promotion. Never fabricate observed history to unlock formatting.
 
+The professional selects each exact prior communication. Do not enumerate or
+scan the Studio archive, mailbox, connected account or workspace. A new profile
+revision may add newly selected examples in a new run; documents are never
+included merely because Vera or another model processed them previously.
+
+When history is selected, local code extracts its complete readable text and
+strips mechanically detectable email addresses, phone numbers, tax identifiers,
+account identifiers and case numbers before any model pass. Fixed rules are
+used only for explicit formats where replacement is auditable; names,
+organizations, addresses, contextual identities and identifying combinations
+remain semantic work. Keep the deterministic identity-to-placeholder mapping
+in the owner-only run and never include it in model context.
+
+Then use one isolated model-led pseudonymization pass before generation. It
+reads only the locally stripped documents, preserves their complete useful
+structure and prose, and pseudonymizes or generalizes the contextual identities
+and case facts. Its contextual identity mapping is split into the same local-
+only map when recorded. The mechanical recorder checks exact history-ID
+coverage, input binding, locally inserted placeholder preservation, prompt
+hash, ready status, derivative hashes and session separation; it does not claim
+to verify semantic pseudonymization quality. Every downstream model pass reads
+only the complete recorded pseudonymized derivatives. Direct connector
+retrieval is unavailable under this contract because its content would enter
+the calling model before local stripping. The professional exports and selects
+exact local files instead; preparation fails closed when the history-connector
+route is selected.
+
 ## Evidence and relevance
 
 Use model-led judgment to choose and rank sources, interpret the development,

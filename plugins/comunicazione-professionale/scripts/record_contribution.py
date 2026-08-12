@@ -23,6 +23,7 @@ from workflow_core import (
     validate_input_integrity,
     validate_schema,
     verify_editorial_assessor_qualification,
+    verify_history_pseudonymization,
     workflow_lock,
 )
 
@@ -277,6 +278,7 @@ def _record_contribution_locked(
     intake = load_json(root / "run_intake.json")
     source_register = load_json(root / "source_register.json")
     validate_input_integrity(root)
+    history_pseudonymization = verify_history_pseudonymization(root)
     contribution = load_json(contribution_path)
     answer_contract = load_json(answer_contract_path)
     claim_assurance = load_json(claim_assurance_path)
@@ -359,9 +361,17 @@ def _record_contribution_locked(
         protocol["assessor_session_id"],
         qualification["assessor_identity"]["assessor_session_id"],
     }
-    if len(session_ids) != 4:
+    if history_pseudonymization is not None:
+        history_session_id = history_pseudonymization["model_provenance"]["session_id"]
+        if history_session_id in session_ids:
+            raise ValueError(
+                "History pseudonymization must use a session separate from every downstream model pass"
+            )
+        session_ids.add(history_session_id)
+    expected_session_count = 5 if history_pseudonymization is not None else 4
+    if len(session_ids) != expected_session_count:
         raise ValueError(
-            "Generation, claim assurance, live editorial assessment, and benchmark qualification must use distinct host sessions"
+            "History pseudonymization when present, generation, claim assurance, live editorial assessment, and benchmark qualification must use distinct host sessions"
         )
     if editorial_assessment["verdict"] != "ready":
         raise ValueError(
@@ -457,6 +467,11 @@ def _record_contribution_locked(
         "recorded_by": recorded_by,
         "recorded_at": recorded_at,
     }
+    if history_pseudonymization is not None:
+        provenance["history_pseudonymization"] = {
+            **history_pseudonymization["model_provenance"],
+            "record_digest": history_pseudonymization["record_digest"],
+        }
     digest = canonical_digest(
         {
             "input_digest": intake["input_digest"],

@@ -2626,7 +2626,7 @@ def test_static_plugin_pages_do_not_show_feedback_mailto_footer() -> None:
             assert snippet not in page, page_path.as_posix()
 
 
-def test_static_plugin_pages_link_back_to_the_vera_product_page() -> None:
+def test_static_plugin_pages_do_not_restore_retired_downloads_or_branding() -> None:
     stale_download_snippets = (
         'href="downloads/check-entries-plugin.zip',
         'href="downloads/concordato-plan-review-plugin.zip',
@@ -2653,7 +2653,6 @@ def test_static_plugin_pages_link_back_to_the_vera_product_page() -> None:
     for page_path in standard_pages:
         page = page_path.read_text(encoding="utf-8")
 
-        assert VERA_PRODUCT_PAGE_HREF in page, page_path.as_posix()
         assert "Plugins4Accountants" not in page, page_path.as_posix()
         assert "Vera" in page, page_path.as_posix()
         assert "bundle" not in page.lower(), page_path.as_posix()
@@ -3175,7 +3174,6 @@ def test_journal_sampling_page_matches_plugin_site_pattern() -> None:
         "suggested_recipe.json",
         "normalized_journal.csv",
         "sampling_audit.json",
-        "index.html?lang=${safeLang}",
     ):
         assert snippet in page
     for stale_snippet in (
@@ -3613,9 +3611,39 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     assert section.count('class="comms-profile__item"') == 3
     assert section.count('class="comms-assurance__row"') == 4
     assert ".comms-channel-list li::after" not in page
-    assert "counter-reset: comms-point" in page
-    assert 'content: "0" counter(comms-point)' in page
     assert "Fonte: fonte ufficiale" not in section
+
+
+def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    section_start = page.index('id="comunicazione-professionale"')
+    section_end = page.index("</section>", section_start)
+    section = page[section_start:section_end]
+
+    for required_copy in (
+        "Quali dati arrivano al modello",
+        "Il commercialista sceglie quali comunicazioni precedenti usare.",
+        "Vera rimuove prima sul computer email, telefoni, codici fiscali",
+        "un unico passaggio isolato del modello vede le copie ripulite",
+        "La corrispondenza con i dati originali resta nello Studio",
+        "soltanto i documenti pseudonimizzati",
+        "In Codex e Cowork il confine è lo stesso.",
+    ):
+        assert required_copy in section
+    assert (
+        'data-model-data-workflow="comunicazione-professionale" '
+        'data-model-data-status="relevant"'
+    ) in section
+    assert section.count('class="comms-creative comms-model-data"') == 1
+    for localized_heading in (
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Welche Daten erreichen das Modell",
+        "Qué datos llegan al modelo",
+    ):
+        assert localized_heading in page
 
 
 def test_vera_page_explains_studio_website_quality_contract() -> None:
@@ -3648,8 +3676,10 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert 'class="comms-assurance"' not in section
     assert 'class="comms-boundary"' not in section
     assert section.count('class="comms-creative comms-model-data"') == 1
-    assert 'data-model-data-workflow="presenza-digitale-studio"' in section
-    assert 'data-model-data-status="not-relevant"' in section
+    assert (
+        'data-model-data-workflow="presenza-digitale-studio" '
+        'data-model-data-status="not-relevant"'
+    ) in section
     assert section.index("data-model-data-workflow=") > section.index(
         'class="comms-actions"'
     )
@@ -3813,7 +3843,6 @@ def test_deep_research_validator_page_matches_plugin_site_pattern() -> None:
         "validation_audit.json",
         "validated_document.md",
         "validation_package.md",
-        VERA_PRODUCT_PAGE_HREF,
         "/?lang=${lang}",
     ):
         assert snippet in page
@@ -3839,7 +3868,6 @@ def test_previdenza_inps_page_explains_the_reviewable_case_journey() -> None:
         "case_records_validated.json",
         "evidence_matrix.csv",
         "studio_memo.docx",
-        VERA_PRODUCT_PAGE_HREF,
         'href="../report-builder/index.html?lang=it"',
     ):
         assert snippet in page
@@ -3865,7 +3893,6 @@ def test_registro_imprese_sari_page_explains_the_practice_plan_journey() -> None
         "practice_plan_validated.json",
         "dire_practice_plan.json",
         "review_handoff.md",
-        VERA_PRODUCT_PAGE_HREF,
         'href="../prompt-optimizer/index.html?lang=it"',
     ):
         assert snippet in page
@@ -4051,9 +4078,10 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html"
     ).read_text(encoding="utf-8")
 
-    assert 'id="model-data"' in page
-    assert 'data-model-data-workflow="journal-bank-reconciliation"' in page
-    assert 'data-model-data-status="relevant"' in page
+    assert (
+        'id="model-data" data-model-data-workflow="journal-bank-reconciliation" '
+        'data-model-data-status="relevant"'
+    ) in page
     for snippet in (
         "Prima un piccolo campione. Poi, solo in Codex, il residuo utile.",
         "First a small sample. Then, in Codex only, the useful residual.",

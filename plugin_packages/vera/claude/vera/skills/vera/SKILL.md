@@ -207,6 +207,16 @@ them without changing the capability catalog:
   receive portal credentials, sign, or submit.
 - `comunicazione-professionale`: event-driven editorial work from exact selected
   sources and prior studio communications in a private studio-wide workspace.
+  The professional selects every prior communication; the workflow never scans
+  the Studio archive or mailbox. Local code first strips mechanically
+  detectable emails, phone numbers, tax IDs, account IDs and case numbers. One
+  isolated model session receives those stripped documents, produces complete
+  pseudonymized derivatives and returns a contextual identity mapping that is
+  kept local. Every downstream model session receives only those derivatives,
+  and contribution recording is blocked until their hashes and separate
+  session are bound. This is pseudonymization rather than anonymization:
+  contextual identities can reach the first Claude or Cowork model pass and the
+  local mapping can permit re-identification.
   It uses model-led judgment for meaning, authority, audience value, voice,
   claims, and `publish` versus `no_publish`; deterministic scripts own only
   input snapshots, review freshness, source-ID closure, rendering, and hashes.

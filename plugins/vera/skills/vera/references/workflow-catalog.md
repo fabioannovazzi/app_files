@@ -36,7 +36,10 @@ skill to imitate a missing operational workflow.
   evidence consistency, and open issues.
 - `comunicazione-professionale`: decide whether a current tax, legal,
   regulatory, accounting, or professional development is worth communicating;
-  learn only from selected prior studio communications; and prepare a
+  learn only from exact prior studio communications selected by the
+  professional, with local mechanical stripping of explicit identifiers, then
+  one isolated model-led pass that creates complete pseudonymized derivatives
+  before any downstream generation or review; and prepare a
   source-backed, studio-formatted client email, circular, LinkedIn post,
   newsletter, website article, FAQ, client alert, or graphical explainer for
   professional review and optional publication. `no_publish` is a successful

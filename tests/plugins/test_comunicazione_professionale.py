@@ -406,6 +406,99 @@ def _prompt_digest(name: str) -> str:
     return hashlib.sha256((PLUGIN / "prompts" / name).read_bytes()).hexdigest()
 
 
+def _history_pseudonymization(run_dir: Path) -> dict[str, object]:
+    intake = json.loads((run_dir / "run_intake.json").read_text(encoding="utf-8"))
+    source_register = json.loads(
+        (run_dir / "source_register.json").read_text(encoding="utf-8")
+    )
+    packet = json.loads(
+        (run_dir / "history_pseudonymization_packet.json").read_text(encoding="utf-8")
+    )
+    semantic_values = {
+        "Mario Rossi": ("person", "[PERSON_1]"),
+        "Alfa S.r.l.": ("organization", "[ORGANIZATION_1]"),
+        "Studio Aurora": ("organization", "[ORGANIZATION_2]"),
+    }
+    documents: list[dict[str, object]] = []
+    mapping_by_value: dict[str, dict[str, object]] = {}
+    packet_by_id = {row["id"]: row for row in packet["history_documents"]}
+    for row in source_register["history"]:
+        text = Path(packet_by_id[row["id"]]["path"]).read_text(encoding="utf-8")
+        for original, (category, placeholder) in semantic_values.items():
+            if original not in text:
+                continue
+            text = text.replace(original, placeholder)
+            mapping = mapping_by_value.setdefault(
+                original,
+                {
+                    "category": category,
+                    "original_value": original,
+                    "placeholder": placeholder,
+                    "history_ids": [],
+                },
+            )
+            mapping["history_ids"].append(row["id"])
+        documents.append(
+            {
+                "history_id": row["id"],
+                "channel": row["channel"],
+                "pseudonymized_document": text,
+                "transformations_summary": "Pseudonimizzati i riferimenti contestuali mantenendo il documento completo.",
+                "residual_identification_risk": "Resta il rischio semantico residuo proprio della pseudonimizzazione.",
+            }
+        )
+    return {
+        "schema_version": 1,
+        "run_id": intake["run_id"],
+        "input_digest": intake["input_digest"],
+        "purpose": "complete_document_pseudonymization_for_studio_voice_and_format_learning",
+        "history_items": documents,
+        "identity_mapping": list(mapping_by_value.values()),
+        "pseudonymization_assessment": {
+            "mechanical_placeholders_preserved": True,
+            "contextual_direct_identifiers_pseudonymized": True,
+            "indirect_identifiers_generalized": True,
+            "identifying_case_facts_generalized": True,
+            "complete_document_structure_preserved": True,
+            "technical_content_excluded_as_authority": True,
+            "identity_mapping_separated_from_documents": True,
+            "ready_for_downstream_use": True,
+            "residual_risk": "I documenti restano pseudonimizzati, non anonimi.",
+        },
+        "limitations": [
+            "Il record descrive lo stile osservato e non dimostra correttezza tecnica o successo editoriale."
+        ],
+    }
+
+
+def _record_history_pseudonymization(run_dir: Path, tmp_path: Path) -> Path | None:
+    source_register = json.loads(
+        (run_dir / "source_register.json").read_text(encoding="utf-8")
+    )
+    if not source_register["history"]:
+        return None
+    pseudonymization = _write_json(
+        tmp_path / f"{run_dir.name}-history-pseudonymization.json",
+        _history_pseudonymization(run_dir),
+    )
+    _run(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(pseudonymization),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-001",
+        "--recorded-by",
+        "test-operator",
+    )
+    return run_dir / "history_pseudonymization_record.json"
+
+
 def _answer_contract(
     contribution: dict[str, object],
     *,
@@ -821,6 +914,7 @@ def _recorded_publish_run(
     _qualify_editorial_assessor(workspace, tmp_path)
     _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
     run_dir = workspace / "runs" / str(prepared_contribution["run_id"])
+    _record_history_pseudonymization(run_dir, tmp_path)
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1059,9 +1153,64 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
         "answer_contract",
         "claim_assurance",
         "editorial_assessment",
+        "history_pseudonymization",
         "model_contribution",
         "visual_assessment",
     }
+    assert task_packet["history_context"]["status"] == "preparation_required"
+    assert task_packet["history_context"]["raw_history_paths_included"] is False
+    assert "history_snapshots" not in task_packet
+    blocked = _run_result(
+        "record_contribution.py",
+        "--run-dir",
+        str(run_dir),
+        "--contribution",
+        str(contribution),
+        "--answer-contract",
+        str(answer_path),
+        "--claim-assurance",
+        str(assurance_path),
+        "--editorial-assessment",
+        str(assessment),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-model",
+        "--template-version",
+        "professional-communication-v3",
+        "--generation-session-id",
+        "test-generation-session-001",
+        "--recorded-by",
+        "test-operator",
+        "--assessment-provider",
+        "test-provider",
+        "--assessment-model",
+        "test-editor-model",
+        "--claim-assessment-provider",
+        "test-provider",
+        "--claim-assessment-model",
+        "test-claim-model",
+    )
+    assert blocked.returncode == 1
+    assert "requires recorded pseudonymization" in blocked.stderr
+    preparation_path = _record_history_pseudonymization(run_dir, tmp_path)
+    assert preparation_path is not None
+    assert preparation_path.exists()
+    task_packet = json.loads(
+        (run_dir / "model_task_packet.json").read_text(encoding="utf-8")
+    )
+    assert task_packet["history_context"]["status"] == "ready"
+    assert task_packet["history_context"]["raw_history_paths_included"] is False
+    assert task_packet["history_context"]["identity_mapping_included"] is False
+    assert task_packet["history_context"]["record_digest"]
+    pseudonymized_path = Path(
+        task_packet["history_context"]["pseudonymized_documents"][0]["path"]
+    )
+    assert pseudonymized_path.is_file()
+    assert "[ORGANIZATION_2]" in pseudonymized_path.read_text(encoding="utf-8")
+    assert "history_identity_map.json" not in json.dumps(
+        task_packet["history_context"]["pseudonymized_documents"]
+    )
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1240,6 +1389,7 @@ def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
     _qualify_editorial_assessor(workspace, tmp_path)
     _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
     run_dir = workspace / "runs" / "no-slop-2026-001"
+    _record_history_pseudonymization(run_dir, tmp_path)
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1279,6 +1429,221 @@ def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
     assert final["status"] == "no_publication_recommended"
     assert (run_dir / "no-publication-recommendation.md").is_file()
     assert not (run_dir / "drafts").exists()
+
+
+def test_history_pseudonymization_rejects_incomplete_or_not_ready_documents(
+    tmp_path: Path,
+) -> None:
+    workspace = tmp_path / "studio-workspace"
+    source = tmp_path / "source.txt"
+    first_history = tmp_path / "first-history.txt"
+    second_history = tmp_path / "second-history.txt"
+    unselected_history = tmp_path / "unselected-history.txt"
+    source.write_text("Fonte ufficiale selezionata.", encoding="utf-8")
+    first_history.write_text(
+        "Gentile Mario Rossi, email mario.rossi@example.com, tel. +39 347 123 4567, "
+        "codice fiscale RSSMRA80A01H501U, IBAN IT60X0542811101000000123456, "
+        "pratica PR-2026/123. Scadenza 30 settembre 2026; importo 12.500,00 euro.",
+        encoding="utf-8",
+    )
+    second_history.write_text("Gentile Alfa S.r.l., caso riservato.", encoding="utf-8")
+    unselected_history.write_text(
+        "Questo documento non è stato scelto e non deve entrare nel run.",
+        encoding="utf-8",
+    )
+    intake = _write_json(
+        tmp_path / "intake.json",
+        {
+            "schema_version": 1,
+            "run_id": "history-privacy-2026-001",
+            "reference_date": "2026-08-08",
+            "language": "it",
+            "jurisdiction": "Italia",
+            "objective": "Preparare una comunicazione usando soltanto esempi scelti.",
+            "audience": "Clienti impresa",
+            "channels": ["client_email"],
+            "visual_requested": False,
+            "source_inputs": [
+                {
+                    "id": "SRC-001",
+                    "path": str(source),
+                    "title": "Fonte ufficiale",
+                    "authority_role": "primary",
+                }
+            ],
+            "history_inputs": [
+                {
+                    "id": "HIST-001",
+                    "path": str(first_history),
+                    "channel": "client_email",
+                },
+                {
+                    "id": "HIST-002",
+                    "path": str(second_history),
+                    "channel": "client_email",
+                },
+            ],
+            "brand_profile": _brand(),
+            "external_routes": _routes(),
+        },
+    )
+    _run(
+        "initialize_workspace.py",
+        "--workspace",
+        str(workspace),
+        "--workspace-id",
+        "studio-aurora",
+        "--owner",
+        "Studio Aurora",
+        "--retention-owner",
+        "Studio Aurora",
+        "--confirmed-by-user",
+    )
+    _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
+    run_dir = workspace / "runs" / "history-privacy-2026-001"
+    source_register_text = (run_dir / "source_register.json").read_text(
+        encoding="utf-8"
+    )
+    assert unselected_history.name not in source_register_text
+    assert str(unselected_history) not in source_register_text
+    packet = json.loads(
+        (run_dir / "history_pseudonymization_packet.json").read_text(encoding="utf-8")
+    )
+    first_model_input = Path(packet["history_documents"][0]["path"]).read_text(
+        encoding="utf-8"
+    )
+    assert "mario.rossi@example.com" not in first_model_input
+    assert "+39 347 123 4567" not in first_model_input
+    assert "RSSMRA80A01H501U" not in first_model_input
+    assert "IT60X0542811101000000123456" not in first_model_input
+    assert "PR-2026/123" not in first_model_input
+    for placeholder in (
+        "[EMAIL_1]",
+        "[PHONE_1]",
+        "[TAX_ID_1]",
+        "[ACCOUNT_1]",
+        "[CASE_1]",
+    ):
+        assert placeholder in first_model_input
+    assert "30 settembre 2026" in first_model_input
+    assert "12.500,00 euro" in first_model_input
+    initial_identity_map = (run_dir / "history_identity_map.json").read_text(
+        encoding="utf-8"
+    )
+    assert "mario.rossi@example.com" in initial_identity_map
+    assert "RSSMRA80A01H501U" in initial_identity_map
+    assert 'identity_mapping_included": false' in (
+        run_dir / "history_pseudonymization_packet.json"
+    ).read_text(encoding="utf-8")
+    preparation = _history_pseudonymization(run_dir)
+    preparation["history_items"] = preparation["history_items"][:1]
+    incomplete_path = _write_json(tmp_path / "incomplete-history.json", preparation)
+
+    incomplete = _run_result(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(incomplete_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-001",
+        "--recorded-by",
+        "test-operator",
+    )
+
+    assert incomplete.returncode == 1
+    assert "cover every selected history item" in incomplete.stderr
+    not_ready = _history_pseudonymization(run_dir)
+    not_ready["pseudonymization_assessment"]["indirect_identifiers_generalized"] = False
+    not_ready_path = _write_json(tmp_path / "not-ready-history.json", not_ready)
+    rejected = _run_result(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(not_ready_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-002",
+        "--recorded-by",
+        "test-operator",
+    )
+    assert rejected.returncode == 1
+    assert "not ready for downstream" in rejected.stderr
+    assert not (run_dir / "history_pseudonymization_record.json").exists()
+
+
+def test_prepare_run_blocks_history_connector_before_model_access(
+    tmp_path: Path,
+) -> None:
+    workspace = tmp_path / "studio-workspace"
+    source = tmp_path / "source.txt"
+    history = tmp_path / "history.txt"
+    source.write_text("Fonte ufficiale selezionata.", encoding="utf-8")
+    history.write_text("Gentile Mario Rossi.", encoding="utf-8")
+    routes = _routes()
+    routes["history_connector"] = {
+        "selected": True,
+        "destination": "Mailbox selected by the professional",
+        "approved_by": "Studio Aurora",
+        "approved_at": "2026-08-08T10:00:00+00:00",
+    }
+    intake = _write_json(
+        tmp_path / "intake-history-connector.json",
+        {
+            "schema_version": 1,
+            "run_id": "history-connector-blocked-001",
+            "reference_date": "2026-08-08",
+            "language": "it",
+            "jurisdiction": "Italia",
+            "objective": "Preparare una comunicazione usando un esempio scelto.",
+            "audience": "Clienti impresa",
+            "channels": ["client_email"],
+            "visual_requested": False,
+            "source_inputs": [
+                {
+                    "id": "SRC-001",
+                    "path": str(source),
+                    "title": "Fonte ufficiale",
+                    "authority_role": "primary",
+                }
+            ],
+            "history_inputs": [
+                {"id": "HIST-001", "path": str(history), "channel": "client_email"}
+            ],
+            "brand_profile": _brand(),
+            "external_routes": routes,
+        },
+    )
+    _run(
+        "initialize_workspace.py",
+        "--workspace",
+        str(workspace),
+        "--workspace-id",
+        "studio-aurora",
+        "--owner",
+        "Studio Aurora",
+        "--retention-owner",
+        "Studio Aurora",
+        "--confirmed-by-user",
+    )
+
+    blocked = _run_result(
+        "prepare_run.py", "--workspace", str(workspace), "--intake", str(intake)
+    )
+
+    assert blocked.returncode == 1
+    assert (
+        "history_connector" in blocked.stderr or "history-connector" in blocked.stderr
+    )
+    assert not (workspace / "runs" / "history-connector-blocked-001").exists()
 
 
 def test_requested_visual_can_be_omitted_when_editor_finds_no_incremental_value(
