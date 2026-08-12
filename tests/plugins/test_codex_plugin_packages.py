@@ -504,6 +504,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     prompts = manifest["interface"]["defaultPrompt"]
 
     assert ".codex-plugin/plugin.json" in entries
+    assert "skills/vera/references/public-process-page-contract.md" in entries
     assert "modules/previdenza-inps/.codex-plugin/plugin.json" in entries
     assert "modules/registro-imprese-sari/.codex-plugin/plugin.json" in entries
     projected_manifests = {
