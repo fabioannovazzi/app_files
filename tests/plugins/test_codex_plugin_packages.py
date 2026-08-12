@@ -3604,8 +3604,6 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
         "2. Vera prepara",
         "3. Il commercialista decide",
         "Altrimenti propone di non pubblicare.",
-        "Lo Studio sceglie come comunicare.",
-        "Nessuna proposta diventa uno standard senza l’approvazione dello Studio.",
     ):
         assert required_copy in section
     assert section.count('class="comms-step"') == 3
@@ -3614,6 +3612,7 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     assert 'class="comms-profile"' not in section
     assert 'class="comms-assurance"' not in section
     assert 'class="comms-boundary"' not in section
+    assert "communication.creative." not in page
     assert ".comms-channel-list li::after" not in page
     assert "Fonte: fonte ufficiale" not in section
 
