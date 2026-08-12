@@ -26,19 +26,6 @@
   <style>
     :root { --paper: #ffffff; }
 
-    .pack-name {
-      display: flex;
-      align-items: baseline;
-      gap: 14px;
-    }
-
-    .pack-name span {
-      color: var(--vj-blue);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-    }
-
     .control-boundary {
       border-top: 2px solid var(--vj-ink);
     }
@@ -54,13 +41,6 @@
       margin-top: 28px;
     }
 
-    @media (max-width: 620px) {
-      .pack-name {
-        align-items: flex-start;
-        flex-direction: column;
-        gap: 6px;
-      }
-    }
   </style>
 </head>
 <body data-vera-module="financial-analysis">
@@ -121,15 +101,15 @@
       </div>
       <div class="document-lines">
         <article class="document-line">
-          <div class="pack-name"><span>01</span><h3 data-i18n="pack.pnl.title">Conto economico mensile</h3></div>
+          <h3 data-i18n="pack.pnl.title">Conto economico mensile</h3>
           <p data-i18n="pack.pnl.copy">Organizza ricavi e costi per mese da bilancio di verifica o libro giornale qualificato, con classificazioni contabili confermate e totali riconciliati.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>02</span><h3 data-i18n="pack.workingCapital.title">Capitale circolante</h3></div>
+          <h3 data-i18n="pack.workingCapital.title">Capitale circolante</h3>
           <p data-i18n="pack.workingCapital.copy">Prepara crediti, debiti e altre componenti del capitale circolante da dataset e relazioni rivisti, mantenendo visibili periodo, valuta e regole di aggregazione.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>03</span><h3 data-i18n="pack.customers.title">Concentrazione clienti</h3></div>
+          <h3 data-i18n="pack.customers.title">Concentrazione clienti</h3>
           <p data-i18n="pack.customers.copy">Misura la concentrazione su ricavi o crediti dopo che identità cliente e gruppo, esclusioni e perimetro sono stati confermati in un crosswalk rivedibile.</p>
         </article>
       </div>
@@ -145,31 +125,31 @@
       </div>
       <div class="document-lines">
         <article class="document-line">
-          <div class="pack-name"><span>01</span><h3 data-i18n="fdd.qoe.title">Quality of Earnings e adjusted EBITDA</h3></div>
+          <h3 data-i18n="fdd.qoe.title">Quality of Earnings e adjusted EBITDA</h3>
           <p data-i18n="fdd.qoe.copy">Parte dall’EBITDA reported e applica solo adjustment inclusi e riveduti, mantenendo visibili motivazione, evidenza ed effetto di ciascuno.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>02</span><h3 data-i18n="fdd.netDebt.title">PFN e componenti debt-like</h3></div>
+          <h3 data-i18n="fdd.netDebt.title">PFN e componenti debt-like</h3>
           <p data-i18n="fdd.netDebt.copy">Calcola debito lordo, liquidità e PFN a una data esplicita usando classificazioni rivedute di debito, debt-like, cassa, cash-like ed esclusioni.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>03</span><h3 data-i18n="fdd.nwc.title">Capitale circolante normalizzato e target</h3></div>
+          <h3 data-i18n="fdd.nwc.title">Capitale circolante normalizzato e target</h3>
           <p data-i18n="fdd.nwc.copy">Usa saldi mensili, rettifiche di normalizzazione, periodo di closing e target selezionato, tutti confermati e riconciliati.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>04</span><h3 data-i18n="fdd.capex.title">Capex</h3></div>
+          <h3 data-i18n="fdd.capex.title">Capex</h3>
           <p data-i18n="fdd.capex.copy">Separa le voci per base di misurazione e classificazione rivedute, senza confondere pagamenti, incrementi e altre letture.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>05</span><h3 data-i18n="fdd.bridges.title">Bridge EBITDA-to-cash ed Enterprise-to-Equity</h3></div>
+          <h3 data-i18n="fdd.bridges.title">Bridge EBITDA-to-cash ed Enterprise-to-Equity</h3>
           <p data-i18n="fdd.bridges.copy">Collega metriche upstream sigillate e voci bridge rivedute, controllando riferimenti, segni e duplicazioni degli effetti economici.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>R1</span><h3 data-i18n="fdd.liabilities.title">Registro passività potenziali</h3></div>
+          <h3 data-i18n="fdd.liabilities.title">Registro passività potenziali</h3>
           <p data-i18n="fdd.liabilities.copy">Collega ogni voce riveduta a caso, evidenze, decisioni e stato di revisione; non presume che la popolazione sia completa.</p>
         </article>
         <article class="document-line">
-          <div class="pack-name"><span>R2</span><h3 data-i18n="fdd.issues.title">Registro issue finanziarie</h3></div>
+          <h3 data-i18n="fdd.issues.title">Registro issue finanziarie</h3>
           <p data-i18n="fdd.issues.copy">Collega le issue a evidenze, metriche, responsabili, domande aperte e implicazioni sul deal, senza trasformarle automaticamente in una decisione.</p>
         </article>
       </div>
@@ -211,10 +191,10 @@
         <p data-i18n="controls.copy">Vera controlla ciò che il codice può verificare. Il professionista decide il significato contabile, il perimetro, i mapping, le tolleranze e le conclusioni.</p>
       </div>
       <div class="journey">
-        <article class="journey-step"><span>01</span><h3 data-i18n="controls.1.title">Qualifica le fonti</h3><p data-i18n="controls.1.copy">Identifica file, fogli, campi, granularità, chiavi, periodi, valute e unità. Se la struttura non regge, si ferma.</p></article>
-        <article class="journey-step"><span>02</span><h3 data-i18n="controls.2.title">Conferma i giudizi</h3><p data-i18n="controls.2.copy">Adjustment EBITDA, classificazioni di PFN e Capex, target del capitale circolante, identità cliente-gruppo e politiche di relazione entrano in decisioni o mapping riveduti, non in inferenze nascoste.</p></article>
-        <article class="journey-step"><span>03</span><h3 data-i18n="controls.3.title">Esegue e riconcilia</h3><p data-i18n="controls.3.copy">Il pack verifica righe, duplicati, copertura delle relazioni, fan-out, totali conservati e tolleranze dichiarate.</p></article>
-        <article class="journey-step"><span>04</span><h3 data-i18n="controls.4.title">Consegna per la revisione</h3><p data-i18n="controls.4.copy">Il risultato resta evidenza preparata. Non diventa automaticamente una conclusione professionale o un report approvato.</p></article>
+        <article class="journey-step"><h3 data-i18n="controls.1.title">Qualifica le fonti</h3><p data-i18n="controls.1.copy">Identifica file, fogli, campi, granularità, chiavi, periodi, valute e unità. Se la struttura non regge, si ferma.</p></article>
+        <article class="journey-step"><h3 data-i18n="controls.2.title">Conferma i giudizi</h3><p data-i18n="controls.2.copy">Adjustment EBITDA, classificazioni di PFN e Capex, target del capitale circolante, identità cliente-gruppo e politiche di relazione entrano in decisioni o mapping riveduti, non in inferenze nascoste.</p></article>
+        <article class="journey-step"><h3 data-i18n="controls.3.title">Esegue e riconcilia</h3><p data-i18n="controls.3.copy">Il pack verifica righe, duplicati, copertura delle relazioni, fan-out, totali conservati e tolleranze dichiarate.</p></article>
+        <article class="journey-step"><h3 data-i18n="controls.4.title">Consegna per la revisione</h3><p data-i18n="controls.4.copy">Il risultato resta evidenza preparata. Non diventa automaticamente una conclusione professionale o un report approvato.</p></article>
       </div>
 
       <details>

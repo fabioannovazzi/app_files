@@ -406,14 +406,10 @@ p {
 
 .journey-step {
   display: grid;
-  grid-template-columns: 64px minmax(210px, 0.42fr) minmax(0, 0.58fr);
+  grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);
   gap: 24px;
   padding: 25px 0;
   border-bottom: 1px solid var(--vj-line);
-}
-
-body[data-vera-module="new-client"] .journey-step {
-  grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);
 }
 
 .journey-step p {
@@ -813,19 +809,11 @@ footer {
   }
 
   .journey-step {
-    grid-template-columns: 42px 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
   .journey-step p {
-    grid-column: 2;
-  }
-
-  body[data-vera-module="new-client"] .journey-step {
-    grid-template-columns: 1fr;
-  }
-
-  body[data-vera-module="new-client"] .journey-step p {
     grid-column: 1;
   }
 

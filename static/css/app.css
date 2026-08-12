@@ -3275,25 +3275,14 @@ body.landing-body.landing-home {
   padding: 0;
   border-top: 1px solid var(--landing-rule);
   list-style: none;
-  counter-reset: compliance-principle;
 }
 
 .landing-home .landing-compliance__principles li {
   display: grid;
-  grid-template-columns: 2rem minmax(150px, 0.8fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(150px, 0.8fr) minmax(0, 1.2fr);
   gap: 18px;
   padding: 22px 0 24px;
   border-bottom: 1px solid var(--landing-rule);
-  counter-increment: compliance-principle;
-}
-
-.landing-home .landing-compliance__principles li::before {
-  content: "0" counter(compliance-principle);
-  color: var(--landing-product-blue);
-  font-size: 0.75rem;
-  font-weight: 600;
-  line-height: 1.5;
-  letter-spacing: 0.06em;
 }
 
 .landing-home .landing-compliance__principles h3,
@@ -4359,20 +4348,8 @@ body.data-handling-body .landing-lang__link.is-active {
 }
 
 .privacy-entry__lane {
-  display: grid;
-  grid-template-columns: minmax(48px, 1fr) minmax(0, 11fr);
-  gap: clamp(24px, 4vw, 64px);
   padding: clamp(36px, 4vw, 56px) 0;
   border-top: 1px solid var(--data-rule);
-}
-
-.privacy-entry__lane-index {
-  margin: 3px 0 0;
-  color: oklch(48% 0.085 252);
-  font-size: 0.75rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.08em;
 }
 
 .privacy-entry__lane h4 {

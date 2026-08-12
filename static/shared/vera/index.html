@@ -362,7 +362,7 @@
     }
 
     .bilancio-step {
-      min-height: 220px;
+      min-height: 180px;
       padding: 26px 28px 30px 0;
       border-bottom: 1px solid var(--cyan);
     }
@@ -370,15 +370,6 @@
     .bilancio-step:not(:nth-child(3n + 1)) {
       padding-left: 28px;
       border-left: 1px solid var(--cyan);
-    }
-
-    .bilancio-step__number {
-      display: block;
-      margin-bottom: 42px;
-      color: var(--cyan);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
     }
 
     .bilancio-step h4 {
@@ -529,19 +520,11 @@
       border-top: 2px solid var(--navy);
     }
     .bandi-step {
-      min-height: 225px;
+      min-height: 185px;
       padding: 26px 28px 30px 0;
       border-bottom: 1px solid var(--cyan);
     }
     .bandi-step:not(:nth-child(3n + 1)) { padding-left: 28px; border-left: 1px solid var(--cyan); }
-    .bandi-step__number {
-      display: block;
-      margin-bottom: 40px;
-      color: var(--cyan);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-    }
     .bandi-step h4 { margin: 0 0 10px; font-size: 1.08rem; line-height: 1.2; }
     .bandi-step p { max-width: 38ch; color: var(--blue); font-size: 0.94rem; }
 
@@ -664,29 +647,17 @@
       grid-template-columns: repeat(4, minmax(0, 1fr));
       border-top: 2px solid var(--navy);
       list-style: none;
-      counter-reset: comms-step;
     }
 
     .comms-step {
-      min-height: 260px;
+      min-height: 190px;
       padding: 28px 28px 34px 0;
       border-bottom: 1px solid var(--cyan);
-      counter-increment: comms-step;
     }
 
     .comms-step + .comms-step {
       padding-left: 28px;
       border-left: 1px solid var(--cyan);
-    }
-
-    .comms-step::before {
-      display: block;
-      margin-bottom: clamp(42px, 7vw, 76px);
-      color: var(--cyan);
-      content: "0" counter(comms-step);
-      font-size: 0.76rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
     }
 
     .comms-step h4 { margin: 0 0 12px; font-size: 1.08rem; line-height: 1.2; }
@@ -776,18 +747,14 @@
       letter-spacing: -0.045em;
     }
 
-    .comms-specimen__points { margin: 0; padding: 0; list-style: none; counter-reset: comms-point; }
+    .comms-specimen__points { margin: 0; padding: 0; list-style: none; }
     .comms-specimen__points li {
       min-height: 58px;
       padding: 16px 0;
-      display: grid;
-      grid-template-columns: 32px minmax(0, 1fr);
-      gap: 16px;
       align-items: baseline;
       border-top: 1px solid var(--navy);
       color: var(--blue);
     }
-    .comms-specimen__points li::before { color: var(--cyan); content: "0" counter(comms-point); counter-increment: comms-point; font-size: 0.76rem; font-weight: 700; }
     .comms-specimen__source {
       margin-top: auto;
       padding-top: 22px;
@@ -866,22 +833,13 @@
     }
 
     .assurance-step {
-      min-height: 250px;
+      min-height: 190px;
       padding: 30px 30px 34px 0;
       border-right: 1px solid var(--cyan);
     }
 
     .assurance-step + .assurance-step { padding-left: 30px; }
     .assurance-step:last-child { border-right: 0; }
-
-    .assurance-step__number {
-      display: block;
-      margin-bottom: clamp(40px, 6vw, 72px);
-      color: var(--cyan);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-    }
 
     .assurance-step h3 {
       margin-bottom: 14px;
@@ -1095,7 +1053,6 @@
         border-bottom: 1px solid var(--cyan);
       }
       .assurance-step:last-child { border-bottom: 0; }
-      .assurance-step__number { margin-bottom: 24px; }
       .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
       #data-boundary .section-head { grid-template-columns: 1fr; gap: 20px; }
       .data-routes__grid { grid-template-columns: 1fr; }
@@ -1121,7 +1078,6 @@
         padding: 26px 0 30px;
         border-left: 0;
       }
-      .bilancio-step__number { margin-bottom: 28px; }
       .bilancio-boundary { grid-template-columns: 1fr; }
       .bilancio-boundary article,
       .bilancio-boundary article + article { padding: 28px 0 32px; border-left: 0; }
@@ -1139,7 +1095,6 @@
       .bandi-steps { grid-template-columns: 1fr; }
       .bandi-step,
       .bandi-step:nth-child(even) { min-height: 0; padding: 26px 0 30px; border-left: 0; }
-      .bandi-step__number { margin-bottom: 28px; }
       .bandi-boundary { grid-template-columns: 1fr; }
       .bandi-boundary article,
       .bandi-boundary article + article { padding: 28px 0 32px; border-left: 0; }
@@ -1437,17 +1392,14 @@
 
       <div class="assurance-sequence">
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">01</span>
           <h3 data-i18n="variance.scope.title">Definisci il confronto</h3>
           <p data-i18n="variance.scope.copy">Entità e perimetro, periodi, valuta, convenzione dei segni e dimensioni restano espliciti prima del calcolo.</p>
         </article>
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">02</span>
           <h3 data-i18n="variance.calculate.title">Riconcilia e scomponi</h3>
           <p data-i18n="variance.calculate.copy">Vera lega base e confronto a P&amp;L, bilancio di verifica o management accounts. Senza unità affidabili usa l’analisi a soli valori; il prezzo-volume-mix richiede unità riviste.</p>
         </article>
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">03</span>
           <h3 data-i18n="variance.plots.title">Leggi i grafici</h3>
           <p data-i18n="variance.plots.copy">Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.</p>
         </article>
@@ -1774,32 +1726,26 @@
         </div>
         <div class="bilancio-steps">
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">01</span>
             <h4>Legge le evidenze</h4>
             <p>Legge CSV, Excel e PDF leggibili o scansionati. Per i PDF mostra intestazioni, righe e celle incerte: il professionista corregge o esclude prima che i dati entrino nel bilancio.</p>
           </article>
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">02</span>
             <h4>Comprende i conti</h4>
             <p>Propone mappature spiegate, conserva quelle già approvate e rende esplicite le alternative.</p>
           </article>
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">03</span>
             <h4>Chiede ciò che serve</h4>
             <p>Porta all’attenzione conti ambigui, saldi non riconciliati, informazioni mancanti e domande OIC pertinenti.</p>
           </article>
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">04</span>
             <h4>Prepara il bilancio</h4>
             <p>Costruisce prospetti, tabelle, informative e bozze narrative usando anche la conoscenza confermata dell’anno precedente.</p>
           </article>
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">05</span>
             <h4>Controlla il risultato</h4>
             <p>Calcoli, quadrature, riconciliazioni, regole di forma e validazione XBRL sono eseguiti in modo riproducibile.</p>
           </article>
           <article class="bilancio-step">
-            <span class="bilancio-step__number" aria-hidden="true">06</span>
             <h4>Consegna per la revisione</h4>
             <p>Mappature, questioni, prospetti, nota, anteprima e XBRL arrivano insieme, con blocchi e decisioni ancora aperte.</p>
           </article>
@@ -1867,32 +1813,26 @@
         </div>
         <div class="bandi-steps">
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">01</span>
             <h4>Qualifica il profilo</h4>
             <p>Ogni fatto osservato in un documento resta collegato alla fonte dello stesso cliente; ciò che manca rimane mancante.</p>
           </article>
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">02</span>
             <h4>Pianifica e controlla le fonti</h4>
             <p>Il piano è specifico per impresa e territorio. Una fonte prevista non conta come controllata finché il controllo non è registrato e riesaminato.</p>
           </article>
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">03</span>
             <h4>Segue il ciclo della misura</h4>
             <p>Annuncio, apertura, sospensione, chiusura e rifinanziamento restano osservazioni datate. Modifiche e nuove FAQ non cancellano la storia.</p>
           </article>
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">04</span>
             <h4>Confronta opportunità e clienti</h4>
             <p>Compatibilità, beneficio, costi, complessità e prossima azione sono proposte motivate, non punteggi automatici di eleggibilità.</p>
           </article>
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">05</span>
             <h4>Costruisce il dossier</h4>
             <p>Collega ogni requisito, controllo, spesa, documento, campo e testo alla fonte e all’evidenza del cliente che lo sostengono.</p>
           </article>
           <article class="bandi-step">
-            <span class="bandi-step__number" aria-hidden="true">06</span>
             <h4>Consegna alla revisione</h4>
             <p>Mostra punti pronti, mancanti, da verificare e non applicabili. Firma, dichiarazioni, accesso e invio restano alla persona autorizzata.</p>
           </article>
@@ -1922,17 +1862,14 @@
 
       <div class="assurance-sequence">
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">01</span>
           <h3 data-i18n="assurance.codex.title">Codex propone</h3>
           <p data-i18n="assurance.codex.copy">Interpreta il lavoro e propone ruoli delle fonti, campi, relazioni e questioni da chiarire. Le ambiguità restano visibili.</p>
         </article>
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">02</span>
           <h3 data-i18n="assurance.professional.title">Il professionista conferma</h3>
           <p data-i18n="assurance.professional.copy">Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.</p>
         </article>
         <article class="assurance-step">
-          <span class="assurance-step__number" aria-hidden="true">03</span>
           <h3 data-i18n="assurance.code.title">Il codice esegue</h3>
           <p data-i18n="assurance.code.copy">Su materiali confermati applica calcoli, campionamenti e controlli riproducibili. Dati ambigui o incompleti non vengono trasformati in risultati plausibili.</p>
         </article>

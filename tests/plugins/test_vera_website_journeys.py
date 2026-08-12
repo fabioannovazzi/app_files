@@ -877,7 +877,7 @@ def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> 
     assert '"documents.privacy.title": "Protection des données"' in new_client
 
     journey_css = (SHARED_ROOT / "vera-journey.css").read_text(encoding="utf-8")
-    assert 'body[data-vera-module="new-client"] .journey-step' in journey_css
+    assert 'body[data-vera-module="new-client"] .journey-step' not in journey_css
     assert "flex-wrap: nowrap;" in journey_css
     assert "grid-template-columns: minmax(210px, 0.42fr) minmax(0, 0.58fr);" in (
         journey_css

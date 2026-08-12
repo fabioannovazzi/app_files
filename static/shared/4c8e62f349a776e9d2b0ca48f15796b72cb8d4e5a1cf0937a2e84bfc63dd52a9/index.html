@@ -1141,10 +1141,7 @@
     .slide.is-active .source-chip { transform: translate(-50%,-50%) scale(1); }
 
     .truth-principles { display: grid; gap: .8rem; }
-    .truth-principle { display: grid; grid-template-columns: 2.2rem 1fr; gap: .9rem; align-items: start; padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
-    .truth-principle span { display: grid; width: 2.1rem; aspect-ratio: 1; place-items: center; color: #fff; border-radius: 50%; background: var(--oxblood); font: .65rem/1 var(--mono); }
-    .truth-principle:nth-child(2) span { background: var(--gold); }
-    .truth-principle:nth-child(3) span { background: var(--teal); }
+    .truth-principle { padding: 1rem 1.1rem; border-bottom: 1px solid var(--line); }
     .truth-principle p { font-size: .96rem; line-height: 1.48; }
 
     .layer-stack {
@@ -1155,7 +1152,7 @@
 
     .layer {
       display: grid;
-      grid-template-columns: 3.2rem 12rem 1fr;
+      grid-template-columns: 12rem 1fr;
       gap: 1rem;
       align-items: center;
       min-height: 5.2rem;
@@ -1165,19 +1162,6 @@
       background: rgba(255,255,255,.52);
     }
 
-    .layer-num {
-      display: grid;
-      width: 2.2rem;
-      aspect-ratio: 1;
-      place-items: center;
-      color: #fff;
-      border-radius: 50%;
-      background: var(--dark);
-      font: .68rem/1 var(--mono);
-    }
-
-    .layer:nth-child(2) .layer-num { background: var(--oxblood); }
-    .layer:nth-child(3) .layer-num { background: var(--teal); }
     .layer strong { font-family: var(--serif); font-size: 1.25rem; font-weight: 500; }
 
     .error-flow {
@@ -1715,7 +1699,6 @@
 
     .trap-grid { margin-top: 1.6rem; }
     .trap-card { min-height: 12.5rem; }
-    .trap-num { display: block; margin-bottom: 1.4rem; color: var(--oxblood); font: 700 .7rem/1 var(--mono); }
     .red-lines { display: grid; gap: .55rem; margin-top: 1rem; }
     .red-line { display: flex; gap: .8rem; align-items: center; padding: .75rem 1rem; color: #fff; border-left: 4px solid var(--coral); background: rgba(255,255,255,.06); }
 
@@ -1745,11 +1728,8 @@
     .literacy-anchor .metric { color: var(--mint); }
     .literacy-anchor p { margin-top: 1rem; color: rgba(255,255,255,.72); font-size: .98rem; }
     .literacy-factors { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .75rem; }
-    .factor { display: grid; grid-template-columns: 2rem 1fr; gap: .75rem; align-items: center; padding: .9rem; border: 1px solid var(--line); border-radius: .75rem; background: rgba(255,255,255,.52); }
+    .factor { padding: .9rem; border: 1px solid var(--line); border-radius: .75rem; background: rgba(255,255,255,.52); }
     .factor:last-child { grid-column: 1 / -1; }
-    .factor span { display: grid; width: 2rem; aspect-ratio: 1; place-items: center; color: #fff; border-radius: 50%; background: var(--oxblood); font: .62rem/1 var(--mono); }
-    .factor:nth-child(2) span, .factor:nth-child(4) span { background: var(--gold); }
-    .factor:nth-child(3) span, .factor:nth-child(5) span { background: var(--teal); }
     .factor strong { font-size: .92rem; }
 
     .legal-duo { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1.1rem; margin-top: 1.2rem; }
@@ -1776,7 +1756,6 @@
     .decision-quote { max-width: 22ch; font-size: clamp(2.9rem, 5.4vw, 6rem); }
     .decision-ribbon { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .85rem; margin-top: 2rem; }
     .decision-step { position: relative; min-height: 8rem; padding: 1.1rem; border-top: 1px solid rgba(255,255,255,.23); }
-    .decision-step::before { content: attr(data-step); display: block; margin-bottom: .85rem; color: var(--coral); font: 700 .65rem/1 var(--mono); }
     .decision-step strong { color: #fff; font-family: var(--serif); font-size: 1.45rem; font-weight: 500; }
     .decision-step p { margin-top: .55rem; font-size: .9rem; }
 
@@ -1844,8 +1823,7 @@
 
     .qa-method { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .7rem; margin-top: 2rem; }
     .qa-step { min-height: 8.8rem; padding: 1rem; border: 1px solid rgba(255,255,255,.14); border-radius: .7rem; background: rgba(255,255,255,.055); }
-    .qa-step span { color: var(--coral); font: 700 .65rem/1 var(--mono); }
-    .qa-step strong { display: block; margin-top: 1rem; font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
+    .qa-step strong { display: block; font-family: var(--serif); font-size: 1.15rem; font-weight: 500; }
 
     .contact-layout { display: grid; grid-template-columns: minmax(18rem,.82fr) minmax(0,1.18fr); gap: clamp(2rem,4vw,4.5rem); align-items: center; }
     .contact-identity { position: relative; padding: 1.4rem; border: 1px solid rgba(255,255,255,.14); border-radius: 1.2rem; background: rgba(255,255,255,.95); box-shadow: 0 2rem 6rem rgba(0,0,0,.26); }
@@ -2068,8 +2046,7 @@
       .slide::after { right: 1.2rem; }
       .grid-3, .grid-4, .metric-compare, .law-timeline, .roadmap, .waterfall, .qa-method, .guardrail-grid, .scenario-explain, .decision-ribbon, .definition-strip, .literacy-factors, .boundary-alerts, .contact-list, .cycle-glossary, .concept-io { grid-template-columns: 1fr; }
       .cadence { grid-template-columns: 1fr; }
-      .layer { grid-template-columns: 2.5rem 1fr; }
-      .layer p { grid-column: 2; }
+      .layer { grid-template-columns: 1fr; }
       .stacked-profile { grid-template-columns: repeat(2,1fr); }
       .decision-markers { grid-template-columns: 1fr; }
       .verb-row { grid-template-columns: 1fr; }
@@ -2284,9 +2261,9 @@
             <div class="truth-core"><strong>Base<br>comune</strong><span>riconciliata</span></div>
           </div>
           <div class="truth-principles reveal" style="--i:3">
-            <div class="truth-principle" data-fragment="1"><span>01</span><div><h3>Definizioni comuni</h3><p>Cliente, scadenza, saldo e scenario significano la stessa cosa in ogni fonte.</p></div></div>
-            <div class="truth-principle" data-fragment="2"><span>02</span><div><h3>Saldi riconciliati</h3><p>Ogni differenza è spiegata prima che entri nel forecast o nel modello.</p></div></div>
-            <div class="truth-principle" data-fragment="3"><span>03</span><div><h3>Chiavi e tracciabilità</h3><p>Ogni numero risale alla riga originaria, alla versione e al responsabile.</p></div></div>
+            <div class="truth-principle" data-fragment="1"><div><h3>Definizioni comuni</h3><p>Cliente, scadenza, saldo e scenario significano la stessa cosa in ogni fonte.</p></div></div>
+            <div class="truth-principle" data-fragment="2"><div><h3>Saldi riconciliati</h3><p>Ogni differenza è spiegata prima che entri nel forecast o nel modello.</p></div></div>
+            <div class="truth-principle" data-fragment="3"><div><h3>Chiavi e tracciabilità</h3><p>Ogni numero risale alla riga originaria, alla versione e al responsabile.</p></div></div>
           </div>
         </div>
         <p class="source-note">“Single source of truth” non significa per forza un solo software: significa una base informativa coerente, riconciliata e risalibile.</p>
@@ -2299,9 +2276,9 @@
         <div class="eyebrow reveal" style="--i:0">Architettura della previsione</div>
         <h2 class="reveal" style="--i:1">Prima del modello viene la <span class="accent">qualità del dato.</span></h2>
         <div class="layer-stack reveal" style="--i:2">
-          <div class="layer" data-fragment="1"><span class="layer-num">01</span><strong>Deterministico</strong><p>Saldi, stipendi, imposte, rate e scadenze contrattuali. Qui servono completezza e regole corrette.</p></div>
-          <div class="layer" data-fragment="2"><span class="layer-num">02</span><strong>Predittivo</strong><p>Comportamenti incerti: quando arriverà davvero un incasso, con quale distribuzione e quale errore.</p></div>
-          <div class="layer" data-fragment="3"><span class="layer-num">03</span><strong>Management overlay</strong><p>Informazioni qualitative documentate: contestazioni, trattative e investimenti non ancora registrati.</p></div>
+          <div class="layer" data-fragment="1"><strong>Deterministico</strong><p>Saldi, stipendi, imposte, rate e scadenze contrattuali. Qui servono completezza e regole corrette.</p></div>
+          <div class="layer" data-fragment="2"><strong>Predittivo</strong><p>Comportamenti incerti: quando arriverà davvero un incasso, con quale distribuzione e quale errore.</p></div>
+          <div class="layer" data-fragment="3"><strong>Management overlay</strong><p>Informazioni qualitative documentate: contestazioni, trattative e investimenti non ancora registrati.</p></div>
         </div>
       </div>
       <aside class="notes">Le fonti sono distribuite tra contabilità, ERP, banche, CRM, scadenzari, paghe, fiscalità e fogli individuali. Il primo lavoro è riconciliare il linguaggio e rendere ogni numero risalibile alla fonte.</aside>
@@ -2571,11 +2548,11 @@
         <div class="eyebrow reveal" style="--i:0">Dal dato alla decisione</div>
         <h2 class="reveal" style="--i:1">Il modello è solo un passaggio dentro <span class="accent">un processo verificabile.</span></h2>
         <div class="pipeline reveal" style="--i:2">
-          <div class="pipe-node"><span class="pipe-icon" style="--i:0">01</span><div><h3>Raccogliere</h3><p>Ricostruire casi passati e contesto disponibile.</p></div></div>
-          <div class="pipe-node"><span class="pipe-icon" style="--i:1">02</span><div><h3>Preparare</h3><p>Cut-off, dati mancanti, duplicati e outlier.</p></div></div>
-          <div class="pipe-node"><span class="pipe-icon" style="--i:2">03</span><div><h3>Apprendere</h3><p>Cercare relazioni ricorrenti nei comportamenti.</p></div></div>
-          <div class="pipe-node"><span class="pipe-icon" style="--i:3">04</span><div><h3>Validare</h3><p>Testare su periodi successivi e contro una baseline.</p></div></div>
-          <div class="pipe-node"><span class="pipe-icon" style="--i:4">05</span><div><h3>Monitorare</h3><p>Misurare l'errore, aggiornare o sospendere.</p></div></div>
+          <div class="pipe-node"><span class="pipe-icon" style="--i:0" aria-hidden="true"></span><div><h3>Raccogliere</h3><p>Ricostruire casi passati e contesto disponibile.</p></div></div>
+          <div class="pipe-node"><span class="pipe-icon" style="--i:1" aria-hidden="true"></span><div><h3>Preparare</h3><p>Cut-off, dati mancanti, duplicati e outlier.</p></div></div>
+          <div class="pipe-node"><span class="pipe-icon" style="--i:2" aria-hidden="true"></span><div><h3>Apprendere</h3><p>Cercare relazioni ricorrenti nei comportamenti.</p></div></div>
+          <div class="pipe-node"><span class="pipe-icon" style="--i:3" aria-hidden="true"></span><div><h3>Validare</h3><p>Testare su periodi successivi e contro una baseline.</p></div></div>
+          <div class="pipe-node"><span class="pipe-icon" style="--i:4" aria-hidden="true"></span><div><h3>Monitorare</h3><p>Misurare l'errore, aggiornare o sospendere.</p></div></div>
         </div>
         <div class="dark-band reveal" style="--i:3;margin-top:2rem">Il modello non conosce il futuro: trasforma l'esperienza passata in una stima verificabile.</div>
       </div>
@@ -2625,9 +2602,9 @@
         <div class="eyebrow reveal" style="--i:0">Codex · agente OpenAI per lo sviluppo software</div>
         <h2 class="reveal" style="--i:1">Dall'obiettivo al lavoro sul progetto, fino alle <span class="teal">modifiche da verificare.</span></h2>
         <div class="codex-route reveal" style="--i:2">
-          <article class="codex-step" data-fragment="1"><span class="route-index" style="--i:0">01</span><h3>Descrivi l'obiettivo</h3><p>Una regola, un controllo, una correzione o un'attività software espressa in linguaggio naturale.</p></article>
-          <article class="codex-step" data-fragment="2"><span class="route-index" style="--i:1">02</span><h3>Lavora sul contesto</h3><p>Codex usa i file e le istruzioni del progetto per aiutare a scrivere, rivedere e correggere il codice.</p></article>
-          <article class="codex-step" data-fragment="3"><span class="route-index" style="--i:2">03</span><h3>Verifica le modifiche</h3><p>Le differenze, i test e gli esiti restano visibili: il team controlla prima di adottare il risultato.</p></article>
+          <article class="codex-step" data-fragment="1"><span class="route-index" style="--i:0" aria-hidden="true"></span><h3>Descrivi l'obiettivo</h3><p>Una regola, un controllo, una correzione o un'attività software espressa in linguaggio naturale.</p></article>
+          <article class="codex-step" data-fragment="2"><span class="route-index" style="--i:1" aria-hidden="true"></span><h3>Lavora sul contesto</h3><p>Codex usa i file e le istruzioni del progetto per aiutare a scrivere, rivedere e correggere il codice.</p></article>
+          <article class="codex-step" data-fragment="3"><span class="route-index" style="--i:2" aria-hidden="true"></span><h3>Verifica le modifiche</h3><p>Le differenze, i test e gli esiti restano visibili: il team controlla prima di adottare il risultato.</p></article>
         </div>
         <div class="codex-surfaces reveal" style="--i:3" aria-label="Dove si può usare Codex"><span class="pill">app</span><span class="pill">editor</span><span class="pill">terminale</span><span class="pill">flussi automatizzati</span></div>
         <div class="codex-guardrail reveal" style="--i:4">Codex aiuta a realizzare il software. Non garantisce che il codice sia corretto e non sostituisce revisione, test e responsabilità.</div>
@@ -2662,9 +2639,9 @@
         <div class="eyebrow reveal" style="--i:0">Governare prima di automatizzare</div>
         <h2 class="reveal" style="--i:1">Se il dato è sbagliato, l'AI può sbagliare <span class="accent">più velocemente e con una frase più elegante.</span></h2>
         <div class="grid-3 trap-grid reveal" style="--i:2">
-          <article class="card trap-card"><span class="trap-num">01</span><h3>Dato sbagliato</h3><p>Duplicati, righe mancanti e classificazioni incoerenti vengono amplificati.</p></article>
-          <article class="card trap-card"><span class="trap-num">02</span><h3>Data leakage</h3><p>Il modello viene testato con informazioni che nel momento reale non esistevano.</p></article>
-          <article class="card trap-card"><span class="trap-num">03</span><h3>Giudizio automatico</h3><p>Un numero viene trattato come decisione senza contesto, concentrazioni e conseguenze.</p></article>
+          <article class="card trap-card"><h3>Dato sbagliato</h3><p>Duplicati, righe mancanti e classificazioni incoerenti vengono amplificati.</p></article>
+          <article class="card trap-card"><h3>Data leakage</h3><p>Il modello viene testato con informazioni che nel momento reale non esistevano.</p></article>
+          <article class="card trap-card"><h3>Giudizio automatico</h3><p>Un numero viene trattato come decisione senza contesto, concentrazioni e conseguenze.</p></article>
         </div>
         <div class="red-lines reveal" style="--i:3">
           <div class="red-line">Non inserire dati riservati in strumenti non approvati.</div>
@@ -2699,11 +2676,11 @@
         <div class="literacy-layout">
           <article class="literacy-anchor reveal" style="--i:2"><span class="card-label">Applicabile dal</span><span class="metric">02.02.2025</span><p>Fornitori e deployer adottano misure di alfabetizzazione proporzionate al contesto concreto.</p></article>
           <div class="literacy-factors reveal" style="--i:3">
-            <div class="factor" data-fragment="1"><span>01</span><strong>Conoscenze tecniche</strong></div>
-            <div class="factor" data-fragment="2"><span>02</span><strong>Esperienza ed educazione</strong></div>
-            <div class="factor" data-fragment="3"><span>03</span><strong>Formazione ricevuta</strong></div>
-            <div class="factor" data-fragment="4"><span>04</span><strong>Contesto e finalità d'uso</strong></div>
-            <div class="factor" data-fragment="5"><span>05</span><strong>Persone o gruppi coinvolti</strong></div>
+            <div class="factor" data-fragment="1"><strong>Conoscenze tecniche</strong></div>
+            <div class="factor" data-fragment="2"><strong>Esperienza ed educazione</strong></div>
+            <div class="factor" data-fragment="3"><strong>Formazione ricevuta</strong></div>
+            <div class="factor" data-fragment="4"><strong>Contesto e finalità d'uso</strong></div>
+            <div class="factor" data-fragment="5"><strong>Persone o gruppi coinvolti</strong></div>
           </div>
         </div>
         <p class="source-note">Fonte: Reg. (UE) 2024/1689, artt. 4 e 113. Al 13.07.2026 il Digital Omnibus è adottato ma non ancora pubblicato in GUUE.</p>
@@ -2762,10 +2739,10 @@
         <div class="eyebrow reveal" style="--i:0">Dalla previsione alla decisione</div>
         <blockquote class="quote decision-quote reveal" style="--i:1">L'intelligenza artificiale non elimina l'incertezza: <strong>aiuta a rappresentarla, misurarla e gestirla con maggiore anticipo.</strong></blockquote>
         <div class="decision-ribbon reveal" style="--i:2">
-          <article class="decision-step" data-step="01" data-fragment="1"><strong>Scadenza</strong><p>La data contrattuale è il punto di partenza certo.</p></article>
-          <article class="decision-step" data-step="02" data-fragment="2"><strong>Comportamento</strong><p>Il pagamento effettivo diventa una previsione probabilistica.</p></article>
-          <article class="decision-step" data-step="03" data-fragment="3"><strong>Scenari</strong><p>Percorso centrale e avverso misurano l'impatto sulla cassa.</p></article>
-          <article class="decision-step" data-step="04" data-fragment="4"><strong>Soglia → azione</strong><p>Una regola predefinita attiva la risposta di liquidità.</p></article>
+          <article class="decision-step" data-fragment="1"><strong>Scadenza</strong><p>La data contrattuale è il punto di partenza certo.</p></article>
+          <article class="decision-step" data-fragment="2"><strong>Comportamento</strong><p>Il pagamento effettivo diventa una previsione probabilistica.</p></article>
+          <article class="decision-step" data-fragment="3"><strong>Scenari</strong><p>Percorso centrale e avverso misurano l'impatto sulla cassa.</p></article>
+          <article class="decision-step" data-fragment="4"><strong>Soglia → azione</strong><p>Una regola predefinita attiva la risposta di liquidità.</p></article>
         </div>
       </div>
       <aside class="notes">Questa è la sintesi del passaggio dalla previsione alla decisione: dalla scadenza contrattuale si passa al comportamento probabilistico, quindi agli scenari centrale e avverso e infine a una soglia collegata a un'azione di liquidità predefinita. L'incertezza non scompare, ma diventa esplicita, misurabile e collegata a scelte tempestive. La responsabilità resta del management e del professionista.</aside>
@@ -2826,11 +2803,11 @@
         <div class="eyebrow reveal" style="--i:0">Question time</div>
         <h1 class="reveal" style="--i:1">Portiamo un caso <span class="accent">sulla bussola.</span></h1>
         <div class="qa-method reveal" style="--i:2">
-          <div class="qa-step"><span>01</span><strong>Quale fatto genera il flusso?</strong></div>
-          <div class="qa-step"><span>02</span><strong>Quali dati sono certi?</strong></div>
-          <div class="qa-step"><span>03</span><strong>Quale ipotesi è stimata?</strong></div>
-          <div class="qa-step"><span>04</span><strong>Quale azione scatta?</strong></div>
-          <div class="qa-step"><span>05</span><strong>Chi risponde della decisione?</strong></div>
+          <div class="qa-step"><strong>Quale fatto genera il flusso?</strong></div>
+          <div class="qa-step"><strong>Quali dati sono certi?</strong></div>
+          <div class="qa-step"><strong>Quale ipotesi è stimata?</strong></div>
+          <div class="qa-step"><strong>Quale azione scatta?</strong></div>
+          <div class="qa-step"><strong>Chi risponde della decisione?</strong></div>
         </div>
         <div class="speaker-line reveal" style="--i:3">Dott.ssa Monica Manfredini · monicamanfredinicommercialista.it</div>
       </div>
