@@ -4029,13 +4029,19 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
 
     assert 'id="model-data"' in page
     for snippet in (
-        "Prima un piccolo campione. Poi soltanto il residuo utile.",
-        "First a small sample. Then only the useful residual.",
-        "D'abord un petit échantillon. Puis seulement le résiduel utile.",
-        "Zuerst eine kleine Stichprobe. Danach nur der nützliche Restbestand.",
-        "Primero una pequeña muestra. Después, solo el residuo útil.",
+        "Prima un piccolo campione. Poi, solo in Codex, il residuo utile.",
+        "First a small sample. Then, in Codex only, the useful residual.",
+        "D'abord un petit échantillon. Puis, dans Codex uniquement, le résiduel utile.",
+        "Zuerst eine kleine Stichprobe. Danach, nur in Codex, der nützliche Restbestand.",
+        "Primero una pequeña muestra. Después, solo en Codex, el residuo útil.",
+        "Codex o Cowork vedono un campione limitato",
+        "Codex o Cowork propongono campi e ruoli",
+        "Solo in Codex: riduce righe e colonne",
+        "Codex or Cowork sees a bounded sample",
+        "Codex or Cowork proposes fields and roles",
+        "Codex only: reduce rows and columns",
         "Le colonne originali non mappate, i campi vuoti",
-        "does not split it automatically, does not start the model",
+        "does not split it automatically, does not start that model step",
     ):
         assert snippet in page
     for key in (

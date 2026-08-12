@@ -9,7 +9,6 @@
 {% endblock %}
 
 {% block body %}
-{% set register_copy = privacy_register["copy"] %}
 <a class="data-handling-skip-link" href="#main-content">
   {{ page.skip_label }}
 </a>
@@ -42,13 +41,7 @@
   <section class="data-handling-hero" aria-labelledby="data-handling-title">
     <p class="data-handling-eyebrow">{{ page.eyebrow }}</p>
     <h1 id="data-handling-title">{{ page.title }}</h1>
-    <div class="data-handling-hero__summary">
-      <p class="data-handling-summary">{{ page.summary }}</p>
-      <a class="privacy-register-jump" href="#function-register">
-        <span>{{ register_copy.jump_label }}</span>
-        <span aria-hidden="true">↓</span>
-      </a>
-    </div>
+    <p class="data-handling-summary">{{ page.summary }}</p>
   </section>
 
   <section id="data-handling-video"
@@ -98,237 +91,6 @@
     </div>
   </section>
 
-  <section id="function-register"
-           class="privacy-register"
-           data-result-singular="{{ register_copy.result_singular }}"
-           data-result-plural="{{ register_copy.result_plural }}"
-           aria-labelledby="function-register-title">
-    <div class="privacy-register__heading">
-      <div>
-        <p class="privacy-register__eyebrow">{{ register_copy.eyebrow }}</p>
-        <h2 id="function-register-title">{{ register_copy.title }}</h2>
-      </div>
-      <p>{{ register_copy.intro }}</p>
-    </div>
-
-    <div class="privacy-register__assurance" aria-label="{{ register_copy.assurance_title }}">
-      <article>
-        <h3>{{ register_copy.assurance_title }}</h3>
-        <p>{{ register_copy.assurance_body }}</p>
-      </article>
-      <article>
-        <h3>{{ register_copy.limits_title }}</h3>
-        <p>{{ register_copy.limits_body }}</p>
-      </article>
-    </div>
-
-    <div class="privacy-register__tools">
-      <label for="privacy-register-search">{{ register_copy.search_label }}</label>
-      <input id="privacy-register-search"
-             type="search"
-             placeholder="{{ register_copy.search_placeholder }}"
-             autocomplete="off"
-             data-privacy-register-search />
-      <p class="privacy-register__count" aria-live="polite">
-        <span data-privacy-register-count>{{ privacy_register.entry_count }}</span>
-        <span data-privacy-register-count-label>{{ register_copy.result_plural }}</span>
-      </p>
-    </div>
-
-    <p class="privacy-register__language-note">{{ register_copy.canonical_note }}</p>
-
-    <div class="privacy-register__products">
-      {% for product in privacy_register.products %}
-        <section class="privacy-register__product" data-privacy-register-group>
-          <div class="privacy-register__product-heading">
-            <h3>{{ product.name }}</h3>
-            <span>{{ product.workflows | length }}</span>
-          </div>
-          <div class="privacy-register__entries">
-            {% for workflow in product.workflows %}
-              <details class="privacy-entry"
-                       id="privacy-{{ workflow.product | lower }}-{{ workflow.id }}"
-                       data-privacy-register-entry
-                       data-search="{{ workflow.product }} {{ workflow.name }} {{ workflow.technical_name }} {% for boundary in workflow.other_boundaries %}{{ boundary.destination }} {% endfor %}{% for service_name in workflow.service_names %}{{ service_name }} {% endfor %}">
-                <summary>
-                  <span class="privacy-entry__identity">
-                    <span class="privacy-entry__name">{{ workflow.name }}</span>
-                    {% if workflow.name != workflow.technical_name %}
-                      <span class="privacy-entry__technical-name">{{ workflow.technical_name }}</span>
-                    {% endif %}
-                  </span>
-                  <span class="privacy-entry__signals">
-                    <span>{{ register_copy.model_heading }}</span>
-                    <span class="privacy-entry__server-signal{% if workflow.service_ids %} is-used{% endif %}">
-                      {{ workflow.service_names | join(", ") if workflow.service_ids else register_copy.mparanza_none }}
-                    </span>
-                  </span>
-                  <span class="privacy-entry__toggle" aria-hidden="true">+</span>
-                </summary>
-
-                <div class="privacy-entry__body">
-                  <section class="privacy-entry__lane">
-                    <div>
-                      <h4>{{ register_copy.local_heading }}</h4>
-                      <p>{{ register_copy.local_note }}</p>
-                    </div>
-                  </section>
-
-                  <section class="privacy-entry__lane">
-                    <div>
-                      <h4>{{ register_copy.model_heading }}</h4>
-                      <p>{{ register_copy[workflow.model_intro_key] }}</p>
-                      <h5>{{ register_copy.data_classes }}</h5>
-                      <div class="privacy-entry__classes">
-                        {% for item in workflow.model_classes %}
-                          <div>
-                            <p><strong>{{ register_copy.purpose }}.</strong> {{ item.purpose }}</p>
-                            <p><strong>{{ register_copy.content }}.</strong> {{ item.content }}</p>
-                          </div>
-                        {% endfor %}
-                      </div>
-                    </div>
-                  </section>
-
-                  <section class="privacy-entry__lane">
-                    <div>
-                      <h4>{{ register_copy.mparanza_heading }}</h4>
-                      {% if workflow.service_ids %}
-                        <p>{{ register_copy.mparanza_used }}</p>
-                        <div class="privacy-entry__service-links">
-                          {% for service_id in workflow.service_ids %}
-                            <a href="#service-{{ service_id }}">{{ workflow.service_names[loop.index0] }} <span aria-hidden="true">↓</span></a>
-                          {% endfor %}
-                        </div>
-                      {% else %}
-                        <p>{{ register_copy.mparanza_none }}</p>
-                      {% endif %}
-                    </div>
-                  </section>
-
-                  <section class="privacy-entry__lane">
-                    <div>
-                      <h4>{{ register_copy.other_heading }}</h4>
-                      {% if workflow.other_boundaries %}
-                        <div class="privacy-entry__boundaries">
-                          {% for boundary in workflow.other_boundaries %}
-                            <article>
-                              <p class="privacy-entry__route-mode">{{ register_copy[boundary.route_mode] }}</p>
-                              <h5>{{ boundary.destination }}</h5>
-                              <p><strong>{{ register_copy.purpose }}.</strong> {{ boundary.purpose }}</p>
-                              <p><strong>{{ register_copy.content }}.</strong> {{ boundary.content }}</p>
-                            </article>
-                          {% endfor %}
-                        </div>
-                      {% else %}
-                        <p>{{ register_copy.other_none }}</p>
-                      {% endif %}
-                    </div>
-                  </section>
-
-                  <footer class="privacy-entry__footer">
-                    <span>{{ register_copy.reviewed }} · {{ workflow.reviewed_at }}</span>
-                    <a href="{{ workflow.source_url }}">{{ register_copy.source }} <span aria-hidden="true">↗</span></a>
-                  </footer>
-                </div>
-              </details>
-            {% endfor %}
-          </div>
-        </section>
-      {% endfor %}
-    </div>
-
-    <p class="privacy-register__no-results" data-privacy-register-empty hidden>{{ register_copy.no_results }}</p>
-  </section>
-
-  <section id="hosted-service-register"
-           class="hosted-service-register"
-           aria-labelledby="hosted-service-register-title">
-    <div class="hosted-service-register__heading">
-      <div>
-        <p class="privacy-register__eyebrow">{{ register_copy.services_eyebrow }}</p>
-        <h2 id="hosted-service-register-title">{{ register_copy.services_title }}</h2>
-      </div>
-      <p>{{ register_copy.services_intro }}</p>
-    </div>
-
-    <div class="hosted-service-register__entries" data-privacy-register-group>
-      {% for service in privacy_register.services %}
-        <details class="privacy-entry privacy-entry--service"
-                 id="service-{{ service.id }}"
-                 data-privacy-register-entry
-                 data-search="{{ service.product }} {{ service.name }} {{ service.providers | join(' ') }} {{ service.workflows | join(' ') }}">
-          <summary>
-            <span class="privacy-entry__identity">
-              <span class="privacy-entry__product">{{ service.product }}</span>
-              <span class="privacy-entry__name">{{ service.name }}</span>
-            </span>
-            <span class="privacy-entry__signals">
-              <span>{{ register_copy.automatic if service.automatic else register_copy.chosen }}</span>
-              {% if service.workflows %}
-                <span>{{ register_copy.used_by }} · {{ service.workflows | join(", ") }}</span>
-              {% else %}
-                <span>{{ register_copy.shared_service }}</span>
-              {% endif %}
-            </span>
-            <span class="privacy-entry__toggle" aria-hidden="true">+</span>
-          </summary>
-
-          <div class="privacy-entry__body">
-            {% if not service.workflows %}
-              <p class="privacy-entry__service-note">{{ register_copy.shared_service_note }}</p>
-            {% endif %}
-            <section class="privacy-entry__lane">
-              <div>
-                <h4>{{ register_copy.provider }}</h4>
-                <p>{{ service.providers | join(" · ") }}</p>
-              </div>
-            </section>
-            <section class="privacy-entry__lane">
-              <div>
-                <h4>{{ register_copy.sent }}</h4>
-                <div class="privacy-entry__classes">
-                  {% for item in service.data_sent %}
-                    <div>
-                      <p><strong>{{ register_copy.when }}.</strong> {{ item.when }}</p>
-                      <p><strong>{{ register_copy.content }}.</strong> {{ item.content }}</p>
-                    </div>
-                  {% endfor %}
-                </div>
-                {% if service.data_returned %}
-                  <h5>{{ register_copy.returned }}</h5>
-                  <div class="privacy-entry__classes">
-                    {% for item in service.data_returned %}
-                      <div>
-                        <p><strong>{{ register_copy.when }}.</strong> {{ item.when }}</p>
-                        <p><strong>{{ register_copy.content }}.</strong> {{ item.content }}</p>
-                      </div>
-                    {% endfor %}
-                  </div>
-                {% endif %}
-              </div>
-            </section>
-            <section class="privacy-entry__lane">
-              <div>
-                <h4>{{ register_copy.retention }}</h4>
-                <p>{{ service.retention }}</p>
-                {% if service.access %}
-                  <h5>{{ register_copy.access }}</h5>
-                  <p>{{ service.access }}</p>
-                {% endif %}
-              </div>
-            </section>
-            <footer class="privacy-entry__footer">
-              <span>{{ register_copy.reviewed }} · {{ service.reviewed_at }}</span>
-              <a href="{{ service.source_url }}">{{ register_copy.source }} <span aria-hidden="true">↗</span></a>
-            </footer>
-          </div>
-        </details>
-      {% endfor %}
-    </div>
-    <p class="hosted-service-register__note">{{ register_copy.register_note }}</p>
-  </section>
-
   <div class="data-handling-sections">
     {% for section in page.sections %}
       <section id="{{ section.id }}"
@@ -361,5 +123,4 @@
 
   <p class="data-handling-closing">{{ page.closing }}</p>
 </main>
-<script src="/static/js/privacy-register.js" defer></script>
 {% endblock %}

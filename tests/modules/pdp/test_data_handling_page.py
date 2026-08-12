@@ -64,36 +64,36 @@ def _copy_shape(value: Any) -> Any:
             "en",
             "How your data is handled.",
             "How Vera and Clara handle data.",
-            "When Vera and Clara work inside Codex.",
-            "One policy for Vera and Clara. No prompt-by-prompt paperwork.",
+            "Your selected AI workspace is the main boundary.",
+            "One global boundary. Process details stay with the process.",
         ),
         (
             "it",
             "Come vengono gestiti i tuoi dati.",
             "Come Vera e Clara gestiscono i dati.",
-            "Quando Vera e Clara lavorano dentro Codex.",
-            "Una regola per Vera e Clara. Nessuna burocrazia prompt per prompt.",
+            "Il confine principale è l'ambiente AI scelto.",
+            "Un confine globale. I dettagli del processo restano con il processo.",
         ),
         (
             "fr",
             "Comment vos données sont traitées.",
             "Comment Vera et Clara traitent les données.",
-            "Quand Vera et Clara travaillent dans Codex.",
-            "Une règle pour Vera et Clara. Aucune paperasse prompt par prompt.",
+            "L'environnement d'IA choisi est le périmètre principal.",
+            "Un périmètre global. Les détails du processus restent avec le processus.",
         ),
         (
             "de",
             "So werden Ihre Daten verarbeitet.",
             "Wie Vera und Clara Daten verarbeiten.",
-            "Wenn Vera und Clara in Codex arbeiten.",
-            "Eine Regel für Vera und Clara. Kein Papierkram für jeden Prompt.",
+            "Die gewählte KI-Arbeitsumgebung ist die Hauptgrenze.",
+            "Eine globale Grenze. Prozessdetails bleiben beim Prozess.",
         ),
         (
             "es",
             "Cómo se tratan tus datos.",
             "Cómo tratan los datos Vera y Clara.",
-            "Cuando Vera y Clara trabajan dentro de Codex.",
-            "Una política para Vera y Clara. Sin documentación para cada prompt.",
+            "El entorno de IA elegido es el límite principal.",
+            "Un límite global. Los detalles del proceso permanecen con el proceso.",
         ),
     ),
 )
@@ -124,9 +124,7 @@ def test_data_handling_page_is_public_and_localized(
     assert page["video"]["title"] == video_title
     assert page["boundary"]["title"] == boundary_title
     assert page["closing"] == closing
-    privacy_register = context["privacy_register"]
-    assert isinstance(privacy_register, dict)
-    assert privacy_register["entry_count"] > 0
+    assert "privacy_register" not in context
 
 
 def test_data_handling_template_links_localized_accessible_youtube_video() -> None:
@@ -339,260 +337,38 @@ def test_homepage_places_free_and_security_after_open_by_design() -> None:
     assert 'href="{{ security.cta_href }}?lang={{ lang }}"' in template
 
 
-def test_data_handling_page_explains_the_two_processing_categories() -> None:
+def test_data_handling_page_explains_only_stable_global_boundaries() -> None:
     page = get_data_handling_content("en")
     sections = {section["id"]: section for section in page["sections"]}
 
-    assert page["boundary"]["title"] == "When Vera and Clara work inside Codex."
-    assert "do not automatically anonymise data" in page["boundary"]["intro"]
-    assert "local Python to filter or aggregate" in page["boundary"]["intro"]
-    assert "user's existing ChatGPT plan" in page["boundary"]["intro"]
-    assert (
-        "do not send client files, prompts, or model-context content"
-        in page["boundary"]["intro"]
-    )
-    assert sections["local-execution"]["title"] == (
-        "Local processing is used when it helps the work."
-    )
-    assert "names, documents, original language, or case facts" in (
+    assert "OpenAI ChatGPT or Codex" in page["boundary"]["intro"]
+    assert "Anthropic Claude or Cowork" in page["boundary"]["intro"]
+    assert "Mparanza is not a separate recipient" in page["boundary"]["intro"]
+    assert set(sections) == {
+        "local-execution",
+        "workflow-boundaries",
+        "connected-sources",
+        "hosted-features",
+    }
+    assert "do not automatically anonymise or pseudonymise" in (
         sections["local-execution"]["paragraphs"][1]
     )
-    assert sections["security"]["title"] == (
-        "Mapped once per workflow, not once per prompt."
+    assert "does not duplicate" in sections["workflow-boundaries"]["paragraphs"][0]
+    assert "destination's terms and controls apply separately" in (
+        sections["connected-sources"]["paragraphs"][0]
     )
-    assert "does not create a form, consent step, or record for each prompt" in (
-        sections["security"]["paragraphs"][0]
-    )
-    assert "session material" in sections["security"]["paragraphs"][1]
-    assert "not runtime network enforcement" in (sections["security"]["paragraphs"][2])
-    assert "does not inspect customer files" in (sections["security"]["paragraphs"][2])
-    assert sections["hosted-features"]["title"] == (
-        "Mparanza-hosted services are a separate boundary."
-    )
-    assert "content needed for that service reaches Mparanza-controlled systems" in (
+    assert "reaches Mparanza-controlled systems" in (
         sections["hosted-features"]["paragraphs"][0]
     )
-    assert "documented once at service level" in (
-        sections["hosted-features"]["paragraphs"][1]
-    )
-    assert "not a third Mparanza processing category" in (
-        sections["hosted-features"]["paragraphs"][2]
-    )
-    assert "package index" in sections["hosted-features"]["paragraphs"][2]
-    assert "check for updates" in sections["hosted-features"]["paragraphs"][3]
-    assert "no client or work content" in sections["hosted-features"]["paragraphs"][3]
-    assert (
-        "explicit submission workflow" in sections["hosted-features"]["paragraphs"][3]
-    )
-    assert sections["gdpr"]["title"] == "One policy for Vera and Clara."
-    assert "first category when they run inside Codex" in (
-        sections["gdpr"]["paragraphs"][0]
-    )
-    assert "falls in the second category" in sections["gdpr"]["paragraphs"][1]
 
 
-@pytest.mark.parametrize(
-    (
-        "lang",
-        "directory_phrase",
-        "desktop_stop_phrase",
-        "gmail_phrase",
-        "whatsapp_phrase",
-        "mparanza_phrase",
-        "codex_phrase",
-    ),
-    (
-        (
-            "en",
-            "work in ChatGPT with material supplied",
-            "Installation is optional and the conversation can continue in ChatGPT",
-            "In ChatGPT or Codex, Vera searches Gmail through OpenAI's separately "
-            "installed and connected Gmail connector",
-            "Codex Desktop with Computer Use",
-            "No Mparanza server receives or stores a copy",
-            "may still enter the model context",
-        ),
-        (
-            "it",
-            "lavorano in ChatGPT sui materiali forniti",
-            "L'installazione è facoltativa e il lavoro può continuare in ChatGPT",
-            "In ChatGPT o Codex, Vera cerca in Gmail attraverso il connector Gmail "
-            "di OpenAI",
-            "Codex Desktop con Computer Use",
-            "Nessun server Mparanza riceve o conserva una copia",
-            "possono comunque entrare nel contesto del modello",
-        ),
-        (
-            "fr",
-            "travaillent dans ChatGPT à partir des contenus fournis",
-            "L'installation reste facultative et le travail peut continuer dans ChatGPT",
-            "Dans ChatGPT ou Codex, Vera recherche dans Gmail au moyen du connecteur Gmail "
-            "d'OpenAI",
-            "Codex Desktop avec Computer Use",
-            "Aucun serveur Mparanza ne reçoit ni ne conserve de copie",
-            "peuvent toutefois entrer dans le contexte du modèle",
-        ),
-        (
-            "de",
-            "arbeiten in ChatGPT mit den in der Unterhaltung bereitgestellten Materialien",
-            "Die Installation ist optional und die Arbeit kann in ChatGPT fortgesetzt werden",
-            "In ChatGPT oder Codex durchsucht Vera Gmail über den separat installierten und "
-            "verbundenen Gmail-Connector von OpenAI",
-            "Codex Desktop mit Computer Use",
-            "Kein Mparanza-Server empfängt oder speichert eine Kopie",
-            "können dennoch in den Modellkontext",
-        ),
-        (
-            "es",
-            "trabajan en ChatGPT con los materiales aportados",
-            "La instalación es opcional y el trabajo puede continuar en ChatGPT",
-            "En ChatGPT o Codex, Vera busca en Gmail mediante el conector de Gmail "
-            "de OpenAI",
-            "Codex Desktop con Computer Use",
-            "Ningún servidor de Mparanza recibe ni conserva una copia",
-            "pueden entrar en el contexto del modelo",
-        ),
-    ),
-)
-def test_data_handling_page_distinguishes_gmail_and_whatsapp_desktop(
-    lang: str,
-    directory_phrase: str,
-    desktop_stop_phrase: str,
-    gmail_phrase: str,
-    whatsapp_phrase: str,
-    mparanza_phrase: str,
-    codex_phrase: str,
-) -> None:
-    page = get_data_handling_content(lang)
-    sections = {section["id"]: section for section in page["sections"]}
-    connected = " ".join(sections["connected-sources"]["paragraphs"])
+def test_data_handling_template_does_not_render_a_function_register() -> None:
+    template = (ROOT / "templates" / "data_handling.html").read_text(encoding="utf-8")
 
-    assert directory_phrase in connected
-    assert desktop_stop_phrase in connected
-    assert gmail_phrase in connected
-    assert whatsapp_phrase in connected
-    assert mparanza_phrase in connected
-    assert codex_phrase in connected
-    assert "90 days" not in connected
-
-
-@pytest.mark.parametrize(
-    (
-        "lang",
-        "automatic_anonymisation",
-        "local_python",
-        "chatgpt_plan",
-        "hosted_boundary",
-        "no_prompt_documentation",
-    ),
-    (
-        (
-            "en",
-            "do not automatically anonymise data",
-            "Local Python can sort, calculate, reconcile, filter, aggregate",
-            "user's existing ChatGPT plan",
-            "Mparanza-hosted services are a separate boundary.",
-            "There is no prompt-by-prompt documentation.",
-        ),
-        (
-            "it",
-            "non anonimizzano automaticamente i dati",
-            "Python in locale può ordinare, calcolare, riconciliare, filtrare, aggregare",
-            "piano ChatGPT già utilizzato dall'utente",
-            "I servizi hosted di Mparanza hanno un confine separato.",
-            "Non esiste documentazione prompt per prompt.",
-        ),
-        (
-            "fr",
-            "n'anonymisent pas automatiquement les données",
-            "Python peut localement trier, calculer, rapprocher, filtrer, agréger",
-            "offre ChatGPT existante de l'utilisateur",
-            "Les services hébergés par Mparanza ont un périmètre distinct.",
-            "Il n'existe aucune documentation prompt par prompt.",
-        ),
-        (
-            "de",
-            "anonymisieren Daten nicht automatisch",
-            "Lokales Python kann sortieren, berechnen, abstimmen, filtern, aggregieren",
-            "bestehenden ChatGPT-Tarifs des Nutzers",
-            "Mparanza-gehostete Dienste haben eine separate Grenze.",
-            "Es gibt keine Dokumentation für jeden einzelnen Prompt.",
-        ),
-        (
-            "es",
-            "no anonimizan los datos automáticamente",
-            "Python en local puede ordenar, calcular, conciliar, filtrar, agregar",
-            "plan de ChatGPT que ya usa el usuario",
-            "Los servicios alojados por Mparanza tienen un límite separado.",
-            "No hay documentación para cada prompt.",
-        ),
-    ),
-)
-def test_data_handling_page_localizes_the_two_category_policy(
-    lang: str,
-    automatic_anonymisation: str,
-    local_python: str,
-    chatgpt_plan: str,
-    hosted_boundary: str,
-    no_prompt_documentation: str,
-) -> None:
-    page = get_data_handling_content(lang)
-    sections = {section["id"]: section for section in page["sections"]}
-
-    assert automatic_anonymisation in page["boundary"]["intro"]
-    assert local_python in sections["local-execution"]["paragraphs"][0]
-    assert chatgpt_plan in page["boundary"]["intro"]
-    assert sections["hosted-features"]["title"] == hosted_boundary
-    assert no_prompt_documentation in sections["hosted-features"]["paragraphs"][1]
-
-
-@pytest.mark.parametrize(
-    ("lang", "model_input", "workflow_mapping", "external_destination"),
-    (
-        (
-            "en",
-            "names, documents, original language, or case facts",
-            "what normally stays local and what Codex may read",
-            "external destination, not a third Mparanza processing category",
-        ),
-        (
-            "it",
-            "nomi, documenti, testo originale o fatti del caso",
-            "che cosa resta normalmente locale e che cosa può leggere Codex",
-            "destinazione esterna, non una terza categoria di trattamento Mparanza",
-        ),
-        (
-            "fr",
-            "noms, des documents, le texte original ou des faits propres au dossier",
-            "ce qui reste normalement local et ce que Codex peut lire",
-            "destination externe, pas une troisième catégorie de traitement Mparanza",
-        ),
-        (
-            "de",
-            "Namen, Dokumente, Originalformulierungen oder Fallfakten",
-            "was normalerweise lokal bleibt und was Codex lesen kann",
-            "externes Ziel, keine dritte Mparanza-Verarbeitungskategorie",
-        ),
-        (
-            "es",
-            "nombres, documentos, el idioma original o hechos del caso",
-            "qué permanece normalmente en local y qué puede leer Codex",
-            "destino externo, no de una tercera categoría de tratamiento de Mparanza",
-        ),
-    ),
-)
-def test_data_handling_page_names_model_data_and_workflow_level_mapping(
-    lang: str,
-    model_input: str,
-    workflow_mapping: str,
-    external_destination: str,
-) -> None:
-    page = get_data_handling_content(lang)
-    sections = {section["id"]: section for section in page["sections"]}
-
-    assert model_input in sections["local-execution"]["paragraphs"][1]
-    assert workflow_mapping in sections["security"]["paragraphs"][0]
-    assert external_destination in sections["hosted-features"]["paragraphs"][2]
+    assert "function-register" not in template
+    assert "privacy_register" not in template
+    assert "privacy-register.js" not in template
+    assert "data-privacy-register" not in template
 
 
 def test_data_handling_template_has_one_heading_and_a_main_target() -> None:
