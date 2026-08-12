@@ -2,6 +2,12 @@
 
 Write UTF-8 JSON matching `schemas/model_contribution.schema.json`.
 
+When selected history exists, read only `history_pseudonymization_record.json`
+and the complete pseudonymized documents it binds. Never open raw snapshots,
+mechanically stripped intermediates, or either local identity map, and never
+treat prior technical or case content as claim support. The derivatives exist
+only to support Studio voice, format, and repetition observations.
+
 Use `recommendation: "publish"` only when the inspected evidence supports a
 useful communication for the selected audience. Otherwise use
 `recommendation: "no_publish"`, explain the reason, and leave `claims`,

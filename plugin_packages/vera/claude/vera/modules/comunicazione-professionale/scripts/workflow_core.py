@@ -51,6 +51,8 @@ __all__ = [
     "validate_claim_assurance",
     "validate_finalized_package",
     "validate_input_integrity",
+    "validate_history_pseudonymization_payload",
+    "verify_history_pseudonymization",
     "validate_schema",
     "verify_visual_manifest",
     "verify_visual_preview_manifest",
@@ -65,6 +67,10 @@ PLUGIN_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_ROOT = PLUGIN_ROOT / "schemas"
 PROMPT_ROOT = PLUGIN_ROOT / "prompts"
 PROMPT_TEMPLATES = {
+    "history_pseudonymization": (
+        "professional-communication-history-pseudonymization-v1",
+        PROMPT_ROOT / "history-pseudonymization-v1.md",
+    ),
     "generation": (
         "professional-communication-v3",
         PROMPT_ROOT / "generation-v3.md",
@@ -500,11 +506,205 @@ def validate_input_integrity(run_dir: Path) -> str:
     return current
 
 
+def validate_history_pseudonymization_payload(
+    pseudonymization: dict[str, Any],
+    *,
+    run_dir: Path,
+    source_register: dict[str, Any],
+) -> None:
+    """Enforce exact document coverage and binding, not semantic privacy quality."""
+
+    validate_schema(pseudonymization, "history_pseudonymization.schema.json")
+    _reject_secret_fields(pseudonymization)
+    intake = load_json(run_dir.resolve() / "run_intake.json")
+    if pseudonymization["run_id"] != intake["run_id"]:
+        raise ValueError("History pseudonymization run_id does not match run intake")
+    if pseudonymization["input_digest"] != intake["input_digest"]:
+        raise ValueError("History pseudonymization is stale for the prepared inputs")
+    registered = [(row["id"], row["channel"]) for row in source_register["history"]]
+    pseudonymized = [
+        (row["history_id"], row["channel"]) for row in pseudonymization["history_items"]
+    ]
+    if pseudonymized != registered:
+        raise ValueError(
+            "History pseudonymization must cover every selected history item once and in order"
+        )
+    registered_ids = {row[0] for row in registered}
+    for mapping in pseudonymization["identity_mapping"]:
+        if not set(mapping["history_ids"]).issubset(registered_ids):
+            raise ValueError("Semantic identity mapping references unselected history")
+        placeholder = mapping["placeholder"]
+        for history_id in mapping["history_ids"]:
+            document = next(
+                row["pseudonymized_document"]
+                for row in pseudonymization["history_items"]
+                if row["history_id"] == history_id
+            )
+            if placeholder not in document:
+                raise ValueError(
+                    "Semantic identity mapping placeholder is absent from its document"
+                )
+
+    packet = load_json(run_dir.resolve() / "history_pseudonymization_packet.json")
+    input_placeholders: dict[str, int] = {}
+    model_input_text: dict[str, str] = {}
+    for document in packet["history_documents"]:
+        path = Path(document["path"]).resolve(strict=True)
+        if not path.is_relative_to(run_dir.resolve()):
+            raise ValueError("Mechanically stripped history path escapes the run")
+        if file_digest(path) != document["sha256"]:
+            raise ValueError("Mechanically stripped history digest mismatch")
+        text = path.read_text(encoding="utf-8")
+        model_input_text[document["id"]] = text
+        for placeholder in re.findall(
+            r"\[(?:EMAIL|PHONE|TAX_ID|ACCOUNT|CASE)_[1-9][0-9]*\]",
+            text,
+        ):
+            input_placeholders[placeholder] = input_placeholders.get(placeholder, 0) + 1
+    output_text = "\n".join(
+        row["pseudonymized_document"] for row in pseudonymization["history_items"]
+    )
+    for placeholder, count in input_placeholders.items():
+        if output_text.count(placeholder) != count:
+            raise ValueError(
+                "History pseudonymization must preserve every local placeholder exactly"
+            )
+    semantic_placeholders: set[str] = set()
+    for mapping in pseudonymization["identity_mapping"]:
+        placeholder = mapping["placeholder"]
+        if placeholder in semantic_placeholders:
+            raise ValueError("Semantic identity mapping repeats a placeholder")
+        semantic_placeholders.add(placeholder)
+        for history_id in mapping["history_ids"]:
+            original = mapping["original_value"]
+            if original not in model_input_text[history_id]:
+                raise ValueError(
+                    "Semantic identity mapping original is absent from its model input"
+                )
+            document = next(
+                row["pseudonymized_document"]
+                for row in pseudonymization["history_items"]
+                if row["history_id"] == history_id
+            )
+            if original in document:
+                raise ValueError(
+                    "Semantic identity mapping original remains in a pseudonymized document"
+                )
+    produced_contextual_placeholders = set(
+        re.findall(r"\[[A-Z][A-Z0-9_]*_[1-9][0-9]*\]", output_text)
+    ) - set(input_placeholders)
+    if produced_contextual_placeholders != semantic_placeholders:
+        raise ValueError(
+            "Every contextual placeholder must have exactly one local identity mapping"
+        )
+
+    assertions = pseudonymization["pseudonymization_assessment"]
+    required_assertions = (
+        "mechanical_placeholders_preserved",
+        "contextual_direct_identifiers_pseudonymized",
+        "indirect_identifiers_generalized",
+        "identifying_case_facts_generalized",
+        "complete_document_structure_preserved",
+        "technical_content_excluded_as_authority",
+        "identity_mapping_separated_from_documents",
+        "ready_for_downstream_use",
+    )
+    if not all(assertions[key] is True for key in required_assertions):
+        raise ValueError("History pseudonymization is not ready for downstream use")
+
+
+def verify_history_pseudonymization(run_dir: Path) -> dict[str, Any] | None:
+    """Verify complete pseudonymized history and the excluded local identity map."""
+
+    root = run_dir.resolve()
+    input_digest = validate_input_integrity(root)
+    source_register = load_json(root / "source_register.json")
+    if not source_register["history"]:
+        if (root / "history_pseudonymization_record.json").exists():
+            raise ValueError("History pseudonymization exists without selected history")
+        return None
+    path = root / "history_pseudonymization_record.json"
+    if not path.is_file():
+        raise ValueError(
+            "Selected history requires recorded pseudonymization before downstream generation"
+        )
+    record = load_json(path)
+    expected = str(record.get("record_digest") or "")
+    stable = {key: value for key, value in record.items() if key != "record_digest"}
+    if expected != canonical_digest(stable):
+        raise ValueError("History pseudonymization record digest mismatch")
+    if record.get("workflow") != "comunicazione-professionale":
+        raise ValueError("History pseudonymization workflow mismatch")
+    if record.get("input_digest") != input_digest:
+        raise ValueError("History pseudonymization record is stale for prepared inputs")
+    expected_items = [(row["id"], row["channel"]) for row in source_register["history"]]
+    recorded_items = [
+        (row.get("history_id"), row.get("channel"))
+        for row in record.get("history_items", [])
+    ]
+    if recorded_items != expected_items:
+        raise ValueError("History pseudonymization record coverage mismatch")
+    for row in record["history_items"]:
+        document_path = Path(row["path"]).resolve(strict=True)
+        if not document_path.is_relative_to(root):
+            raise ValueError("Pseudonymized history document escapes the run")
+        if document_path.stat().st_size != row["size_bytes"]:
+            raise ValueError("Pseudonymized history document size mismatch")
+        if file_digest(document_path) != row["sha256"]:
+            raise ValueError("Pseudonymized history document digest mismatch")
+    identity_map_path = Path(record["identity_mapping_path"]).resolve(strict=True)
+    if not identity_map_path.is_relative_to(root):
+        raise ValueError("History identity map escapes the run")
+    identity_map = load_json(identity_map_path)
+    mapping_digest = str(identity_map.get("mapping_digest") or "")
+    stable_mapping = {
+        key: value for key, value in identity_map.items() if key != "mapping_digest"
+    }
+    if mapping_digest != canonical_digest(stable_mapping):
+        raise ValueError("History identity mapping digest mismatch")
+    if identity_map.get("never_include_in_downstream_model_context") is not True:
+        raise ValueError("History identity map is not marked local-only")
+    if identity_map.get("input_digest") != input_digest:
+        raise ValueError("History identity mapping is stale for prepared inputs")
+    if record.get("identity_mapping_digest") != mapping_digest:
+        raise ValueError(
+            "History pseudonymization record identity-map binding mismatch"
+        )
+    provenance = record.get("model_provenance")
+    if not isinstance(provenance, dict):
+        raise ValueError("History pseudonymization model provenance is missing")
+    if provenance.get("template_sha256") != prompt_template_digest(
+        "history_pseudonymization",
+        str(provenance.get("template_version") or ""),
+    ):
+        raise ValueError("History pseudonymization template digest mismatch")
+    task_packet = load_json(root / "model_task_packet.json")
+    history_context = task_packet.get("history_context")
+    if not isinstance(history_context, dict):
+        raise ValueError("Downstream history context is missing")
+    expected_history_context = {
+        "status": "ready",
+        "record_path": str(path.resolve()),
+        "record_digest": record["record_digest"],
+        "history_ids": [item["history_id"] for item in record["history_items"]],
+        "pseudonymized_documents": record["history_items"],
+        "raw_history_paths_included": False,
+        "identity_mapping_included": False,
+        "purpose": "studio_voice_and_format_learning_only",
+    }
+    if history_context != expected_history_context:
+        raise ValueError(
+            "Downstream history context does not match pseudonymized documents"
+        )
+    return record
+
+
 def recompute_contribution_digest(run_dir: Path) -> str:
     """Recompute the reviewed contribution digest from current exact content."""
 
     root = run_dir.resolve()
     input_digest = validate_input_integrity(root)
+    history_pseudonymization = verify_history_pseudonymization(root)
     workbench = load_json(root / "content_workbench.json")
     version = workbench.get("version")
     if not isinstance(version, int) or version < 1:
@@ -519,6 +719,19 @@ def recompute_contribution_digest(run_dir: Path) -> str:
         )
     if workbench.get("input_digest") != input_digest:
         raise ValueError("Contribution is bound to stale prepared inputs")
+    recorded_history_provenance = workbench.get("model_provenance", {}).get(
+        "history_pseudonymization"
+    )
+    if history_pseudonymization is None:
+        if recorded_history_provenance is not None:
+            raise ValueError(
+                "Contribution records history pseudonymization without history"
+            )
+    elif not isinstance(recorded_history_provenance, dict) or (
+        recorded_history_provenance.get("record_digest")
+        != history_pseudonymization["record_digest"]
+    ):
+        raise ValueError("Contribution history pseudonymization binding mismatch")
     current = canonical_digest(
         {
             "input_digest": input_digest,

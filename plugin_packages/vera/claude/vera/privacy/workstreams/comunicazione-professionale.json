@@ -21,7 +21,7 @@
       {
         "id": "professional-communication-material",
         "purpose": "Assess whether a professional development warrants communication and prepare source-backed studio-formatted drafts and visual stories for review",
-        "content": "Explicitly selected current source documents and official-source snapshots; selected prior studio emails, circulars, website articles, newsletters, FAQs, alerts and social posts; studio name, logo, colors, contact lines, optional format brief and approved or proposed format profile with field-level evidence basis; intended audience and client-segment descriptions; answer contract, source-authority assessments, exact public source notes and registered public URLs, claim-assurance review, editorial-value judgment, atomic claims, temporal qualifications, uncertainty, professional judgment, master brief, channel drafts, visual story, versioned model-pass prompts and SHA-256 digests, operator-attested host session identifiers, editorial-assessor benchmark cases and result, optional creative-direction handoff and selected board-reference metadata, review decisions and packaged artifacts. Real professional names and contact details may enter the selected runtime model context when present in selected material. The workflow does not promise automatic anonymization, provider-authenticated model-call receipts or local-only processing.",
+        "content": "In one isolated history-pseudonymization model session only: complete text derivatives of the exact prior studio emails, circulars, website articles, newsletters, FAQs, alerts and social posts individually selected by the professional, after local code has replaced mechanically detectable email addresses, phone numbers, tax identifiers, bank-account identifiers and case numbers with stable placeholders. Names, organizations, addresses, locations, roles and identifying combinations of case facts may still be visible to that first model pass because they require semantic judgment. The model produces one complete pseudonymized derivative per selected document and a contextual identity mapping; the mapping is moved to local owner-only storage and is never placed in downstream model context. The workflow never scans the Studio archive, mailbox or workspace broadly. In all downstream generation and review sessions: explicitly selected current source documents and official-source snapshots; only the complete recorded pseudonymized history documents, never raw history, mechanically stripped intermediates or either identity map; studio name, logo, colors, contact lines, optional format brief and approved or proposed format profile with field-level evidence basis; intended audience and client-segment descriptions; answer contract, source-authority assessments, exact public source notes and registered public URLs, claim-assurance review, editorial-value judgment, atomic claims, temporal qualifications, uncertainty, professional judgment, master brief, channel drafts, visual story, versioned model-pass prompts and SHA-256 digests, operator-attested host session identifiers, editorial-assessor benchmark cases and result, optional creative-direction handoff and selected board-reference metadata, review decisions and packaged artifacts. This is purpose-preserving pseudonymization, not anonymization or local-only model processing, and the workflow does not promise provider-authenticated model-call receipts.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -51,9 +51,9 @@
     {
       "id": "selected-studio-history-connector",
       "kind": "external_connector",
-      "destination": "A callable connected account or already authenticated supported browser surface explicitly selected to read prior studio communications",
-      "purpose": "Retrieve only user-selected prior studio communications for a proposed voice and format profile",
-      "content": "Selected prior post, article, email, newsletter, FAQ, alert or circular content and its channel and date metadata; no credential, cookie, session token, one-time code or unrelated account history",
+      "destination": "No active destination: direct connector history intake is blocked until a route can write exact user-selected items locally without returning their content to the calling model",
+      "purpose": "Reserved future route for exact professional-selected history retrieval without bypassing local identifier stripping",
+      "content": "No content is currently transmitted by this route; the professional exports each selected post, article, email, newsletter, FAQ, alert or circular to a supported local file",
       "optional": true,
       "requires_confirmation": true,
       "runtime_profiles": [
@@ -61,8 +61,8 @@
         "anthropic-cowork"
       ],
       "controls": [
-        "The intake records explicit connector route selection, destination and asserted approval metadata before a run is prepared.",
-        "Read only the exact history items selected for learning; stop at account ambiguity, security checkpoints or unavailable callable access.",
+        "Preparation fails closed when the history-connector route is selected because current connector responses cannot guarantee local stripping before model access.",
+        "The professional selects and exports exact communications to supported local files; the workflow never searches or inspects account history.",
         "Store selected history as immutable local snapshots and use it only to propose a reviewable profile; do not copy distinctive passages or infer private beliefs."
       ]
     },
@@ -112,6 +112,10 @@
       "control": "Preparation accepts only regular non-symlink selected files, copies them into owner-only run storage, records byte size and SHA-256, rejects duplicate identities, and binds the complete intake plus source register to one digest. Review, render, package, validation and delivery gates recompute that digest and fail when a source, history item, profile snapshot, logo, register field or intake field is missing or changed."
     },
     {
+      "id": "local-stripping-and-isolated-history-pseudonymization",
+      "control": "The professional must enumerate every exact prior communication in the intake; the workflow does not scan Studio storage or account history. Local preparation extracts complete readable text and replaces mechanically recognizable email addresses, phone numbers, Italian tax codes and labelled tax IDs, valid IBANs and labelled account IDs, and labelled case numbers using fixed auditable patterns before model use. The reversible mapping stays in owner-only local storage and is excluded from the isolated model packet. One isolated model pass receives only those stripped documents and must produce one complete pseudonymized derivative per selected item plus a separate contextual identity mapping. Recording requires exact input binding, every selected history ID once and in order, preservation of every locally inserted placeholder, the bundled prompt hash, affirmative model-assessed semantic dimensions, derivative hashes, owner-only mapping storage and a distinct host session. It routes only the digest-bound pseudonymized documents to generation. Contribution recording fails when selected history lacks that record, when any derivative or map changes, or when the session is reused downstream. These checks enforce mechanically detectable replacement and workflow routing but do not certify semantic pseudonymization quality, anonymity, or a provider-level file-access sandbox; contextual identities may be visible to the selected runtime in the isolated first pass."
+    },
+    {
       "id": "exhaustive-artifact-and-secret-field-validation",
       "control": "Exhaustive JSON Schemas reject unknown intake and contribution fields; a recursive normalized-key guard rejects password, passcode, PIN, OTP, cookie, session-cookie, token, API-key, client-secret, private-key, secret-key and credential fields from model contributions."
     },
@@ -140,6 +144,6 @@
     "reviewed_at": "2026-08-08",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7ca2d6eed8378e0895134eb9c7d520cf6cae46e313db864b0480945dbe864149"
+    "source_fingerprint": "93e42c39d1172d0086a683c645f44beb9286213738f4aba9eca6954b3e3732a3"
   }
 }

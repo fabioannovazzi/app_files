@@ -120,7 +120,14 @@
       ],
       "properties": {
         "public_research": {"$ref": "#/$defs/route"},
-        "history_connector": {"$ref": "#/$defs/route"},
+        "history_connector": {
+          "allOf": [
+            {"$ref": "#/$defs/route"},
+            {
+              "properties": {"selected": {"const": false}}
+            }
+          ]
+        },
         "creative_production": {"$ref": "#/$defs/route"},
         "send_or_publish": {"$ref": "#/$defs/route"}
       }
