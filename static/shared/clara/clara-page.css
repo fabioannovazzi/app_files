@@ -381,6 +381,7 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .function-group {
   padding: 30px 34px 40px 0;
   border-bottom: 1px solid var(--cyan);
+  scroll-margin-top: 88px;
 }
 
 .function-group:nth-child(even) {
@@ -391,7 +392,8 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .function-group h3 {
   margin: 0 0 16px;
   color: var(--navy);
-  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+  font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+  letter-spacing: -0.035em;
 }
 
 .function-link {
@@ -402,6 +404,7 @@ section[id], .card[id] { scroll-margin-top: 92px; }
   gap: 20px;
   border-top: 1px solid var(--cyan);
   color: var(--blue);
+  font-size: clamp(1.05rem, 1.8vw, 1.2rem);
   font-weight: 650;
   text-decoration: none;
 }

@@ -201,7 +201,7 @@ main, .footer-shell {
 .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
 
 .workstreams { display: grid; gap: clamp(64px, 9vw, 104px); }
-.workstream { display: grid; gap: 28px; }
+.workstream { display: grid; gap: 28px; scroll-margin-top: 88px; }
 .workstream-head {
   display: grid;
   grid-template-columns: minmax(230px, 0.8fr) minmax(0, 1.2fr);
@@ -209,6 +209,10 @@ main, .footer-shell {
   align-items: baseline;
 }
 .stream-number { grid-column: 1 / -1; }
+.workstream-head h3 {
+  font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+  letter-spacing: -0.04em;
+}
 .workstream-head p { max-width: 650px; color: var(--blue); }
 .module-directory { border-top: 2px solid var(--navy); }
 .module-row {
@@ -223,6 +227,11 @@ main, .footer-shell {
   transition: color 160ms ease-out, transform 160ms ease-out;
 }
 .module-row p { max-width: 690px; color: var(--blue); }
+.module-row h4 {
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
 .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
 .module-row:hover { color: var(--blue); transform: translateX(4px); }
 .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }

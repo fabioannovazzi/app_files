@@ -54,7 +54,7 @@
     button, input, optgroup, select, textarea { font-family: inherit; }
     a { color: inherit; }
     p { margin: 0; }
-    h1, h2, h3 { margin: 0; color: var(--navy); line-height: 1.08; }
+    h1, h2, h3, h4 { margin: 0; color: var(--navy); line-height: 1.08; }
     h1 { font-size: clamp(4rem, 10vw, 7.75rem); font-weight: 650; letter-spacing: -0.065em; }
     h2 { font-size: clamp(2.25rem, 5vw, 4.75rem); font-weight: 650; letter-spacing: -0.05em; }
     h3 { font-size: clamp(1.35rem, 2.2vw, 1.8rem); font-weight: 650; letter-spacing: -0.025em; }
@@ -192,7 +192,7 @@
     .section-head > p { max-width: 660px; color: var(--blue); font-size: 1.075rem; }
 
     .workstreams { display: grid; gap: clamp(64px, 9vw, 104px); }
-    .workstream { display: grid; gap: 28px; }
+    .workstream { display: grid; gap: 28px; scroll-margin-top: 88px; }
 
     .workstream-head {
       display: grid;
@@ -202,6 +202,10 @@
     }
 
     .stream-number { grid-column: 1 / -1; }
+    .workstream-head h3 {
+      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      letter-spacing: -0.04em;
+    }
     .workstream-head p { max-width: 650px; color: var(--blue); }
     .module-directory { border-top: 2px solid var(--navy); }
 
@@ -218,12 +222,17 @@
     }
 
     .module-row p { max-width: 690px; color: var(--blue); }
+    .module-row h4 {
+      font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
     .module-row__arrow { color: var(--cyan); font-size: 1.25rem; text-align: right; transition: transform 160ms ease-out; }
     .module-row:hover { color: var(--blue); transform: translateX(4px); }
     .module-row:hover .module-row__arrow { transform: translate(2px, -2px); }
 
     .module-row[data-vera-workflow="new-client"] { align-items: start; }
-    .module-row[data-vera-workflow="new-client"] h3 { grid-column: 1; grid-row: 1 / span 2; }
+    .module-row[data-vera-workflow="new-client"] h4 { grid-column: 1; grid-row: 1 / span 2; }
     .module-row[data-vera-workflow="new-client"] > p { grid-column: 2; grid-row: 1; }
     .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 3; grid-row: 1 / span 2; }
     .module-row__included {
@@ -946,7 +955,7 @@
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
-      .module-row[data-vera-workflow="new-client"] h3 { grid-column: 1; grid-row: 1; }
+      .module-row[data-vera-workflow="new-client"] h4 { grid-column: 1; grid-row: 1; }
       .module-row[data-vera-workflow="new-client"] > p { grid-column: 1; grid-row: 2; }
       .module-row[data-vera-workflow="new-client"] .module-row__included { grid-column: 1; grid-row: 3; }
       .module-row[data-vera-workflow="new-client"] .module-row__arrow { grid-column: 2; grid-row: 1 / span 3; }
@@ -991,8 +1000,10 @@
           <span class="product-nav__menu-icon" aria-hidden="true"></span>
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
-          <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
-          <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Mercato</a>
+          <a href="#area-clients" data-i18n="nav.clients">Clienti e fascicoli</a>
+          <a href="#area-accounting" data-i18n="nav.accounting">Controlli e analisi</a>
+          <a href="#area-outputs" data-i18n="nav.outputs">Report, comunicazione e ricerca</a>
+          <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Formati e procedure italiane</a>
         </nav>
       </div>
       <details class="product-nav__language" data-product-nav-disclosure>
@@ -1056,124 +1067,124 @@
       </div>
 
       <div class="workstreams">
-        <article class="workstream">
+        <article class="workstream" id="area-clients">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.clients.index">Area 1</span>
             <h3 data-i18n="stream.clients.title">Clienti e fascicoli</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
-              <h3 data-i18n="module.newClient.title">Nuovo cliente</h3>
+              <h4 data-i18n="module.newClient.title">Nuovo cliente</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
-              <h3 data-i18n="module.newClient.includes.data">Dati fiscali strutturati</h3>
+              <h4 data-i18n="module.newClient.includes.data">Dati fiscali strutturati</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../email-cliente/index.html" data-module-link data-vera-subordinate-workflow="email-cliente">
-              <h3 data-i18n="module.newClient.includes.email">Email al cliente</h3>
+              <h4 data-i18n="module.newClient.includes.email">Email al cliente</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
-              <h3 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h3>
+              <h4 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="notice-intake" href="../avviso-intake/index.html" data-module-link data-vera-workflow="avviso-intake">
-              <h3 data-i18n="module.notice.title">Istruttoria avviso</h3>
+              <h4 data-i18n="module.notice.title">Istruttoria avviso</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
-              <h3>Previdenza INPS</h3>
+              <h4>Previdenza INPS</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
-              <h3>Registro Imprese e SARI</h3>
+              <h4>Registro Imprese e SARI</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
-              <h3 data-i18n="module.archiveOrganization.title">Riordino dell’archivio</h3>
+              <h4 data-i18n="module.archiveOrganization.title">Riordino dell’archivio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
-              <h3 data-i18n="module.archive.title">Archivio dello studio</h3>
+              <h4 data-i18n="module.archive.title">Archivio dello studio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
         </article>
 
-        <article class="workstream">
+        <article class="workstream" id="area-accounting">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.accounting.index">Area 2</span>
             <h3 data-i18n="stream.accounting.title">Controlli e analisi</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
-              <h3 data-i18n="module.sampling.title">Campionamento del giornale</h3>
+              <h4 data-i18n="module.sampling.title">Campionamento del giornale</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../check-entries/index.html#journey" data-module-link data-vera-workflow="check-entries">
-              <h3 data-i18n="module.entries.title">Controllo scritture</h3>
+              <h4 data-i18n="module.entries.title">Controllo scritture</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
-              <h3 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h3>
+              <h4 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link data-vera-workflow="audit-reconciliation">
-              <h3 data-i18n="module.reconciliation.title">Riconciliazione partite</h3>
+              <h4 data-i18n="module.reconciliation.title">Riconciliazione partite</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
-              <h3 data-i18n="module.plan.title">Plan</h3>
+              <h4 data-i18n="module.plan.title">Plan</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="variance-analysis" href="../variance-analysis/index.html" data-module-link data-vera-workflow="variance-analysis">
-              <h3 data-i18n="module.variance.title">Analisi degli scostamenti</h3>
+              <h4 data-i18n="module.variance.title">Analisi degli scostamenti</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
-              <h3>Bilancio intelligente</h3>
+              <h4>Bilancio intelligente</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
-              <h3 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h3>
+              <h4 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
         </article>
 
-        <article class="workstream">
+        <article class="workstream" id="area-outputs">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.outputs.index">Area 3</span>
             <h3 data-i18n="stream.outputs.title">Report, comunicazione e ricerca</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
-              <h3>Bandi e agevolazioni</h3>
+              <h4>Bandi e agevolazioni</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
-              <h3>Concordato Preventivo</h3>
+              <h4>Concordato Preventivo</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
-              <h3 data-i18n="module.communication.title">Comunicazione professionale</h3>
+              <h4 data-i18n="module.communication.title">Comunicazione professionale</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="studio-website" href="../presenza-digitale-studio/index.html" data-module-link data-vera-workflow="presenza-digitale-studio">
-              <h3 data-i18n="module.website.title">Presenza digitale dello studio</h3>
+              <h4 data-i18n="module.website.title">Presenza digitale dello studio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
-              <h3 data-i18n="module.report.title">Genera report</h3>
+              <h4 data-i18n="module.report.title">Genera report</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../prompt-optimizer/index.html" data-module-link data-vera-assurance-workflow="prompt-optimizer">
-              <h3 data-i18n="module.prompt.title">Ottimizza prompt</h3>
+              <h4 data-i18n="module.prompt.title">Ottimizza prompt</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../deep-research-validator/index.html" data-module-link data-vera-assurance-workflow="deep-research-validator">
-              <h3 data-i18n="module.research.title">Valida Deep Research</h3>
+              <h4 data-i18n="module.research.title">Valida Deep Research</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1184,50 +1195,50 @@
     <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
       <div class="country-pack-head">
         <div class="country-pack-head__title">
-          <span class="section-index" data-i18n="jurisdiction.index">Italia</span>
+          <span class="section-index" data-i18n="jurisdiction.index">Area 4</span>
           <h2 data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h2>
         </div>
         <p data-i18n="jurisdiction.copy">La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.</p>
       </div>
       <div class="module-directory">
         <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Bilancio intelligente</h3>
+          <h4>Bilancio intelligente</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Bandi e agevolazioni</h3>
+          <h4>Bandi e agevolazioni</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-jurisdiction-item="it" hidden>
-          <h3>Controllo scritture · FatturaPA</h3>
+          <h4>Controllo scritture · FatturaPA</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
-          <h3>Report enti locali</h3>
+          <h4>Report enti locali</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Concordato Preventivo</h3>
+          <h4>Concordato Preventivo</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Previdenza INPS</h3>
+          <h4>Previdenza INPS</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
-          <h3>Registro Imprese e SARI</h3>
+          <h4>Registro Imprese e SARI</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/uk.html" data-module-link data-native-language="en" data-jurisdiction-item="en" hidden>
-          <h3>New Client file preparation · United Kingdom</h3>
+          <h4>New Client file preparation · United Kingdom</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/geneva.html" data-module-link data-native-language="fr" data-jurisdiction-item="fr" hidden>
-          <h3>Préparation du dossier nouveau client · Genève</h3>
+          <h4>Préparation du dossier nouveau client · Genève</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/zurich.html" data-module-link data-native-language="de" data-jurisdiction-item="de" hidden>
-          <h3>Mandantenakte vorbereiten · Zürich</h3>
+          <h4>Mandantenakte vorbereiten · Zürich</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
       </div>
@@ -1255,10 +1266,13 @@
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
         "nav.capabilities": "Cosa fa",
+        "nav.clients": "Clienti e fascicoli",
+        "nav.accounting": "Controlli e analisi",
+        "nav.outputs": "Report, comunicazione e ricerca",
         "nav.communication": "Comunicazione",
         "nav.website": "Sito",
         "nav.assurance": "Metodo",
-        "nav.jurisdiction": "Italia",
+        "nav.jurisdiction": "Formati e procedure italiane",
         "nav.data": "Dati",
         "language.label": "Lingua",
         "hero.eyebrow": "Assistente AI per commercialisti",
@@ -1297,7 +1311,7 @@
         "module.sampling": "Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.",
         "module.entries.title": "Controllo scritture",
         "module.entries": "Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.",
-        "jurisdiction.index": "Italia",
+        "jurisdiction.index": "Area 4",
         "jurisdiction.title": "Formati, enti e procedure italiane",
         "jurisdiction.copy": "La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.",
         "module.bank.title": "Riconciliazione banca-contabilità",
@@ -1404,10 +1418,13 @@
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
         "nav.capabilities": "What it does",
+        "nav.clients": "Clients and files",
+        "nav.accounting": "Checks and analysis",
+        "nav.outputs": "Reports, communication, and research",
         "nav.communication": "Communication",
         "nav.website": "Website",
         "nav.assurance": "Method",
-        "nav.jurisdiction": "United Kingdom",
+        "nav.jurisdiction": "UK formats and procedures",
         "nav.data": "Data",
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
@@ -1446,7 +1463,7 @@
         "module.sampling": "Qualifies the journal layout, then normalizes the population and builds a reproducible sample. Unreliable fields stop the run.",
         "module.entries.title": "Check Entries",
         "module.entries": "Connects entries and support only when the relationship is verifiable; weak candidates remain exceptions.",
-        "jurisdiction.index": "Work available for the United Kingdom",
+        "jurisdiction.index": "Area 4",
         "jurisdiction.title": "Functions available for the United Kingdom",
         "jurisdiction.copy": "Vera organizes the incoming tax folder, missing material, firm memo and client request.",
         "module.bank.title": "Journal-Bank Reconciliation",
@@ -1553,10 +1570,13 @@
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
         "nav.capabilities": "Ce qu’elle fait",
+        "nav.clients": "Clients et dossiers",
+        "nav.accounting": "Contrôles et analyses",
+        "nav.outputs": "Rapports, communication et recherche",
         "nav.communication": "Communication",
         "nav.website": "Site web",
         "nav.assurance": "Méthode",
-        "nav.jurisdiction": "Genève",
+        "nav.jurisdiction": "Formats et procédures genevoises",
         "nav.data": "Données",
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
@@ -1595,7 +1615,7 @@
         "module.sampling": "Qualifie la structure du journal, puis normalise la population et construit un échantillon reproductible. Des champs non fiables arrêtent le traitement.",
         "module.entries.title": "Contrôle des écritures",
         "module.entries": "Relie écritures et justificatifs uniquement lorsque la relation est vérifiable ; les candidats faibles restent des exceptions.",
-        "jurisdiction.index": "Travail disponible pour Genève",
+        "jurisdiction.index": "Domaine 4",
         "jurisdiction.title": "Fonctions disponibles pour Genève",
         "jurisdiction.copy": "Vera organise les documents reçus, les pièces manquantes, le mémo du cabinet et la demande au client.",
         "module.bank.title": "Rapprochement banque-comptabilité",
@@ -1702,10 +1722,13 @@
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
         "nav.capabilities": "Was sie kann",
+        "nav.clients": "Mandanten und Akten",
+        "nav.accounting": "Kontrollen und Analysen",
+        "nav.outputs": "Berichte, Kommunikation und Recherche",
         "nav.communication": "Kommunikation",
         "nav.website": "Website",
         "nav.assurance": "Methode",
-        "nav.jurisdiction": "Zürich",
+        "nav.jurisdiction": "Zürcher Formate und Verfahren",
         "nav.data": "Daten",
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
@@ -1744,7 +1767,7 @@
         "module.sampling": "Qualifiziert das Journalformat, normalisiert danach die Grundgesamtheit und erstellt eine reproduzierbare Stichprobe. Unzuverlässige Felder stoppen den Lauf.",
         "module.entries.title": "Buchungen prüfen",
         "module.entries": "Verknüpft Buchungen und Belege nur bei nachweisbarer Beziehung; schwache Kandidaten bleiben Ausnahmen.",
-        "jurisdiction.index": "Arbeit für Zürich",
+        "jurisdiction.index": "Bereich 4",
         "jurisdiction.title": "Verfügbare Funktionen für Zürich",
         "jurisdiction.copy": "Vera ordnet eingegangene Unterlagen, fehlende Nachweise, Kanzleivermerk und Mandantenanfrage.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
@@ -1851,10 +1874,13 @@
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
         "nav.capabilities": "Qué hace",
+        "nav.clients": "Clientes y expedientes",
+        "nav.accounting": "Controles y análisis",
+        "nav.outputs": "Informes, comunicación e investigación",
         "nav.communication": "Comunicación",
         "nav.website": "Sitio web",
         "nav.assurance": "Método",
-        "nav.jurisdiction": "Mercado",
+        "nav.jurisdiction": "Formatos y procedimientos locales",
         "nav.data": "Datos",
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
@@ -1893,7 +1919,7 @@
         "module.sampling": "Cualifica el formato del diario, normaliza después la población y construye una muestra reproducible. Los campos no fiables detienen la ejecución.",
         "module.entries.title": "Comprobar asientos",
         "module.entries": "Relaciona asientos y justificantes solo cuando el vínculo es verificable; los candidatos débiles siguen siendo excepciones.",
-        "jurisdiction.index": "Trabajo específico",
+        "jurisdiction.index": "Área 4",
         "jurisdiction.title": "Funciones disponibles para el mercado seleccionado",
         "jurisdiction.copy": "Esta sección aparece cuando hay un flujo específico disponible para el mercado de esta página.",
         "module.bank.title": "Conciliación entre diario y banco",

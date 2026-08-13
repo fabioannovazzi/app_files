@@ -59,21 +59,30 @@
     section.className = "function-model-data";
     section.dataset.modelDataWorkflow = workflow;
     section.dataset.modelDataStatus = "placeholder";
-    section.setAttribute("aria-labelledby", "function-model-data-title");
+    const titleId = `${workflow}-model-data-title`;
+    section.setAttribute("aria-labelledby", titleId);
+
+    const head = document.createElement("div");
+    head.className = "function-model-data__head";
+
+    const heading = document.createElement("div");
+    heading.className = "function-model-data__heading";
 
     const label = document.createElement("p");
     label.className = "function-model-data__label";
     label.textContent = text.label;
 
     const title = document.createElement("h2");
-    title.id = "function-model-data-title";
+    title.id = titleId;
     title.textContent = text.title;
 
     const paragraph = document.createElement("p");
     paragraph.className = "function-model-data__copy";
     paragraph.textContent = text.placeholder;
 
-    section.append(label, title, paragraph);
+    heading.append(label, title);
+    head.append(heading, paragraph);
+    section.append(head);
     main.append(section);
   };
 

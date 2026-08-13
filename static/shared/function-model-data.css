@@ -1,13 +1,30 @@
 .function-model-data {
-  width: min(1120px, calc(100% - 40px));
+  --model-data-ink: #002060;
+  --model-data-text: #52698d;
+  --model-data-blue: #0070c0;
+  --model-data-line: #b7dded;
+  position: relative;
+  left: 50%;
+  width: min(1120px, calc(100vw - 48px));
   margin: clamp(72px, 10vw, 120px) auto 0;
-  padding: clamp(32px, 5vw, 56px) 0;
-  border-top: 2px solid #002060;
+  padding: clamp(64px, 9vw, 104px) 0;
+  border-top: 2px solid var(--model-data-ink);
+  color: var(--model-data-text);
+  font-family: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  line-height: 1.58;
+  transform: translateX(-50%);
+}
+
+.function-model-data__head {
+  display: grid;
+  grid-template-columns: minmax(240px, 0.75fr) minmax(0, 1.25fr);
+  gap: clamp(36px, 8vw, 100px);
+  align-items: start;
 }
 
 .function-model-data__label {
   margin: 0 0 12px;
-  color: #0070c0;
+  color: var(--model-data-blue);
   font: 700 0.76rem/1.3 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -16,20 +33,27 @@
 .function-model-data h2 {
   max-width: 18ch;
   margin: 0;
-  color: #002060;
-  font: 650 clamp(2rem, 4vw, 3.5rem)/1.05 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  color: var(--model-data-ink);
+  font: 650 clamp(2.1rem, 4.7vw, 4rem)/1.08 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
   letter-spacing: -0.045em;
+  text-wrap: balance;
 }
 
 .function-model-data__copy {
   max-width: 62ch;
-  margin: 24px 0 0;
-  color: #52698d;
-  font: 400 1rem/1.6 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  margin: 0;
+  color: var(--model-data-text);
+  font: 400 1.06rem/1.58 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 760px) {
   .function-model-data {
-    width: min(100% - 28px, 1120px);
+    width: min(100vw - 28px, 1120px);
+    padding: 56px 0 72px;
+  }
+
+  .function-model-data__head {
+    grid-template-columns: 1fr;
+    gap: 28px;
   }
 }

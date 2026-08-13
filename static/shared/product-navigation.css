@@ -247,7 +247,7 @@
   scroll-margin-top: 88px;
 }
 
-@media (max-width: 840px) {
+@media (max-width: 1080px) {
   .product-nav__inner {
     display: flex;
     gap: 10px;
