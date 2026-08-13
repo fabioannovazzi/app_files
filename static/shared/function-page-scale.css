@@ -1,0 +1,78 @@
+:root {
+  --function-content-width: 1120px;
+  --function-title-size: 2.875rem;
+  --function-section-title-size: 2.125rem;
+  --function-subsection-title-size: 1.125rem;
+  --function-lead-size: 1.1875rem;
+  --function-heading-line-height: 1.12;
+  --function-lead-line-height: 1.48;
+  --function-title-measure: 15ch;
+  --function-label-size: 0.76rem;
+  --function-label-letter-spacing: 0.08em;
+}
+
+body {
+  font-family: "Instrument Sans", "Aptos", "Segoe UI", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-kerning: normal;
+  line-height: 1.58;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: 0 !important;
+  line-height: var(--function-heading-line-height) !important;
+}
+
+h1 {
+  max-width: var(--function-title-measure) !important;
+  font-size: var(--function-title-size) !important;
+  font-weight: 620 !important;
+}
+
+h2 {
+  font-size: var(--function-section-title-size) !important;
+  font-weight: 620 !important;
+}
+
+h3 {
+  font-size: var(--function-subsection-title-size) !important;
+  font-weight: 620 !important;
+}
+
+.lead,
+.hero-copy,
+.subtitle,
+.pf-summary {
+  font-size: var(--function-lead-size) !important;
+  line-height: var(--function-lead-line-height) !important;
+  letter-spacing: 0 !important;
+}
+
+.eyebrow,
+.kicker,
+.label,
+.section-kicker,
+.section-index,
+.flow-label,
+.proof-kicker,
+.market-label,
+.pf-label,
+.pf-section__label,
+.function-model-data__label {
+  font-size: var(--function-label-size) !important;
+  font-weight: 700 !important;
+  letter-spacing: var(--function-label-letter-spacing) !important;
+  line-height: 1.3 !important;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --function-title-size: 1.95rem;
+    --function-section-title-size: 1.55rem;
+    --function-subsection-title-size: 1.08rem;
+    --function-lead-size: 1.08rem;
+  }
+}

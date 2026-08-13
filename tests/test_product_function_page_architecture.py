@@ -360,3 +360,44 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
                 or "product-function-page.js" in explanation
                 or 'class="function-model-data"' in explanation
             ), f"{destination}: does not use the shared model-data component"
+
+
+def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> None:
+    scale = (SHARED / "function-page-scale.css").read_text(encoding="utf-8")
+    renderer_css = (SHARED / "product-function-page.css").read_text(encoding="utf-8")
+    shell_css = (SHARED / "plugin-page-shell.css").read_text(encoding="utf-8")
+    model_data_css = (SHARED / "function-model-data.css").read_text(encoding="utf-8")
+    studio_archive = (SHARED / "studio-archive" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    for token in (
+        "--function-title-size: 2.875rem",
+        "--function-section-title-size: 2.125rem",
+        "--function-subsection-title-size: 1.125rem",
+        "--function-lead-size: 1.1875rem",
+        "--function-heading-line-height: 1.12",
+    ):
+        assert token in scale
+
+    assert '@import url("./function-page-scale.css")' in renderer_css
+    assert '@import url("./function-page-scale.css")' in shell_css
+    assert "var(--function-title-size)" in renderer_css
+    assert "var(--function-section-title-size, 2.125rem)" in model_data_css
+    assert 'href="../function-page-scale.css?v=20260813-function-pages"' in studio_archive
+    assert "clamp(3rem, 7vw, 6rem)" not in renderer_css
+    assert "clamp(3.25rem, 7.4vw, 6.8rem)" not in studio_archive
+
+    for page_path in PRODUCT_PAGES.values():
+        page = page_path.read_text(encoding="utf-8")
+        for href in _directory_links(page):
+            destination = _resolved_page(page_path, href)
+            explanation = destination.read_text(encoding="utf-8")
+            assert any(
+                stylesheet in explanation
+                for stylesheet in (
+                    "product-function-page.css?v=20260813-function-pages",
+                    "plugin-page-shell.css?v=20260813-function-pages",
+                    "function-page-scale.css?v=20260813-function-pages",
+                )
+            ), f"{destination}: does not consume the shared function-page scale"

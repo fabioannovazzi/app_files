@@ -2792,7 +2792,7 @@ def test_vera_downstream_pages_show_mparanza_logo(relative_path: Path) -> None:
     header_match = re.search(r"<header(?:\s[^>]*)?>.*?</header>", page, re.DOTALL)
 
     assert (
-        'href="../plugin-page-shell.css?v=20260720-logo"' in page
+        'href="../plugin-page-shell.css?v=20260813-function-pages"' in page
     ), relative_path.as_posix()
     assert header_match is not None, relative_path.as_posix()
     if relative_path.name in {"geneva.html", "uk.html", "zurich.html"}:
