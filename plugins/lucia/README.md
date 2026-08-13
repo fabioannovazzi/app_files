@@ -17,14 +17,14 @@ responsabilità restano al professionista.
 Il catalogo cresce attraverso workflow specialistici registrati. Le funzioni
 attualmente pubbliche sono:
 
-- **Ottimizza prompt** — Trasforma un quesito legale, fiscale o di conformità
+- **Ottimizzazione prompt** — Trasforma un quesito legale, fiscale o di conformità
   in una ricerca con perimetro, fonti e verifiche definite.
-- **Valida Deep Research** — Controlla le affermazioni rispetto alle fonti
+- **Validazione ricerca** — Controlla le affermazioni rispetto alle fonti
   citate e prepara il materiale consolidato.
 - **Comunicazione professionale** — Decide se una novità merita di essere
   comunicata e prepara email, circolari, articoli, post, FAQ, alert e visuali
   verificabili per la revisione dell’avvocato.
-- **Presenza digitale dello studio** — Crea o rinnova il sito informativo dello
+- **Sito dello studio** — Crea o rinnova il sito informativo dello
   studio legale da materiali verificati, con review desktop e telefono, preview
   e pubblicazione subordinata all’approvazione.
 - **Apertura pratica** — Prepara l’apertura di una nuova pratica per un nuovo

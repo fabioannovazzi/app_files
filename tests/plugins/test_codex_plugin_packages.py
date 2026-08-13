@@ -528,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.125"
+    assert manifest["version"] == "0.1.126"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3582,6 +3582,7 @@ def test_vera_page_explains_fiscal_document_extraction() -> None:
     )
 
     assert "Estrazione dei dati fiscali dai documenti | Vera" in function_page
+    assert "Estrazione dati fiscali" in page
     for localized_title in (
         "Estrazione dei dati fiscali dai documenti",
         "Extract tax data from documents",
@@ -3589,9 +3590,15 @@ def test_vera_page_explains_fiscal_document_extraction() -> None:
         "Steuerdaten aus Dokumenten extrahieren",
         "Extraer datos fiscales de documentos",
     ):
-        assert localized_title in page
         assert localized_title in function_copy
         assert localized_title in video_copy
+    for localized_title in (
+        "Extract tax data from documents",
+        "Extraire les données fiscales des documents",
+        "Steuerdaten aus Dokumenten extrahieren",
+        "Extraer datos fiscales de documentos",
+    ):
+        assert localized_title in page
     for required_copy in (
         "F24, CU, 730, Redditi PF",
         "I campi da estrarre sono definiti per ciascun tipo di documento supportato.",
