@@ -858,6 +858,79 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert 'id="video"' not in page
 
 
+def test_vera_italian_directory_names_the_professional_task_and_object() -> None:
+    page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
+    core = _section_markup(page, "core")
+    rows = re.findall(r'<a class="module-row".*?</a>', core, flags=re.DOTALL)
+    italian_rows = (
+        row
+        for row in rows
+        if not any(
+            f'data-jurisdiction-item="{language}"' in row
+            for language in ("en", "fr", "de")
+        )
+    )
+    labels = [
+        match.group(1)
+        for row in italian_rows
+        if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
+    ]
+    expected_labels = [
+        "Preparazione del fascicolo del nuovo cliente",
+        "Estrazione dei dati fiscali dai documenti",
+        "Richiesta di documenti e chiarimenti al cliente",
+        "Controllo FatturaPA XML",
+        "Esame iniziale di avvisi e cartelle fiscali",
+        "Revisione di una pratica previdenziale INPS",
+        "Preparazione di pratiche Registro Imprese, REA e DIRE",
+        "Riordino della cartella cliente",
+        "Ricerca nei documenti, nelle email e in WhatsApp",
+        "Campionamento del giornale contabile",
+        "Verifica delle scritture con i documenti di supporto",
+        "Riconciliazione banca-contabilità",
+        "Riconciliazione delle partite aperte",
+        "Preparazione del piano delle vendite",
+        "Analisi degli scostamenti",
+        "Preparazione del bilancio OIC e XBRL",
+        "Analisi finanziaria e due diligence",
+        "Ricerca di agevolazioni e preparazione della pratica",
+        "Revisione del concordato preventivo",
+        "Valutazione e preparazione delle comunicazioni dello studio",
+        "Creazione o aggiornamento del sito dello studio",
+        "Creazione di report Word da Excel, CSV e PDF",
+        "Preparazione del quesito di ricerca legale e fiscale",
+        "Verifica delle fonti e delle conclusioni della ricerca",
+        "Preparazione del bilancio OIC e XBRL",
+        "Ricerca di agevolazioni e preparazione della pratica",
+        "Controllo FatturaPA XML",
+        "Preparazione del report finanziario per enti locali",
+        "Revisione del concordato preventivo",
+        "Revisione di una pratica previdenziale INPS",
+        "Preparazione di pratiche Registro Imprese, REA e DIRE",
+    ]
+    expected_runtime_labels = {
+        "module.newClient.title": "Preparazione del fascicolo del nuovo cliente",
+        "module.newClient.includes.email": "Richiesta di documenti e chiarimenti al cliente",
+        "module.notice.title": "Esame iniziale di avvisi e cartelle fiscali",
+        "module.archiveOrganization.title": "Riordino della cartella cliente",
+        "module.archive.title": "Ricerca nei documenti, nelle email e in WhatsApp",
+        "module.sampling.title": "Campionamento del giornale contabile",
+        "module.entries.title": "Verifica delle scritture con i documenti di supporto",
+        "module.reconciliation.title": "Riconciliazione delle partite aperte",
+        "module.plan.title": "Preparazione del piano delle vendite",
+        "module.communication.title": "Valutazione e preparazione delle comunicazioni dello studio",
+        "module.website.title": "Creazione o aggiornamento del sito dello studio",
+        "module.report.title": "Creazione di report Word da Excel, CSV e PDF",
+        "module.prompt.title": "Preparazione del quesito di ricerca legale e fiscale",
+        "module.research.title": "Verifica delle fonti e delle conclusioni della ricerca",
+    }
+
+    assert labels == expected_labels
+    assert len(labels) == 31
+    for key, value in expected_runtime_labels.items():
+        assert f'"{key}": "{value}"' in page
+
+
 def test_vera_publishes_one_new_client_path_without_retired_identity_names() -> None:
     hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     new_client = (SHARED_ROOT / "new-client" / "index.html").read_text(encoding="utf-8")
