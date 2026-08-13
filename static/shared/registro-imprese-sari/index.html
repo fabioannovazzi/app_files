@@ -242,7 +242,6 @@
 
     <section class="hero" aria-labelledby="hero-title">
       <div>
-        <p class="eyebrow" data-i18n="hero.eyebrow">Pacchetto Italia · Registro Imprese e SARI</p>
         <h1 id="hero-title" data-i18n="hero.title">Porta una richiesta camerale a un piano di pratica chiaro e citato.</h1>
         <p class="lead" data-i18n="hero.lead">Nel perimetro camerale italiano, Vera collega fatti, Camera competente e fonti SARI/CCIAA in un percorso Registro Imprese/DIRE con passaggi, campi, allegati e decisioni ordinati per il professionista.</p>
       </div>
@@ -460,7 +459,8 @@
     };
 
     function getLang() {
-      return "it";
+      const requestedLang = new URLSearchParams(window.location.search).get("lang");
+      return translations[requestedLang] ? requestedLang : "it";
     }
 
     const accessibilityLabels = {
@@ -471,8 +471,8 @@
       es: { sections: "Secciones de la página", language: "Idioma", breadcrumb: "Ruta de la página" }
     };
 
-    function applyLanguage() {
-      const safeLang = "it";
+    function applyLanguage(requestedLang) {
+      const safeLang = translations[requestedLang] ? requestedLang : "it";
       const data = translations[safeLang];
       document.documentElement.lang = safeLang;
       document.title = data.meta.title;

@@ -71,6 +71,42 @@ def test_every_directory_link_resolves_to_a_separate_explanation_page() -> None:
             ), f"{destination}: missing final model-data section"
 
 
+def test_function_pages_do_not_repeat_the_breadcrumb_as_a_hero_eyebrow() -> None:
+    destinations = {
+        _resolved_page(page_path, href)
+        for page_path in PRODUCT_PAGES.values()
+        for href in _directory_links(page_path.read_text(encoding="utf-8"))
+    }
+
+    for destination in destinations:
+        page = destination.read_text(encoding="utf-8")
+        breadcrumb_match = re.search(
+            r'<(?:strong|span)[^>]+(?:data-i18n="breadcrumb\.current"|'
+            r'data-copy="breadcrumb\.product")[^>]*>([^<]+)</(?:strong|span)>',
+            page,
+        )
+        eyebrow_match = re.search(
+            r'<p class="eyebrow"[^>]+(?:data-i18n|data-copy)="hero\.eyebrow"'
+            r"[^>]*>([^<]+)</p>",
+            page,
+        )
+        if breadcrumb_match and eyebrow_match:
+            assert (
+                breadcrumb_match.group(1).casefold()
+                != eyebrow_match.group(1).casefold()
+            ), f"{destination}: hero eyebrow repeats the breadcrumb"
+
+
+def test_italy_function_pages_honor_the_requested_language() -> None:
+    for page_name in ("previdenza-inps", "registro-imprese-sari"):
+        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
+
+        assert 'new URLSearchParams(window.location.search).get("lang")' in page
+        assert "function applyLanguage(requestedLang)" in page
+        assert 'translations[requestedLang] ? requestedLang : "it"' in page
+        assert 'const safeLang = "it";' not in page
+
+
 def test_lucia_and_vera_share_the_research_function_pages() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
     lucia = PRODUCT_PAGES["lucia"].read_text(encoding="utf-8")
