@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A specialist plugin for presentations and ongoing project work." data-i18n-content="meta.description">
+  <meta name="description" content="Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex." data-i18n-content="meta.description">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/clara/index.html">
   <meta id="og-title" property="og:title" content="Clara">
-  <meta id="og-description" property="og:description" content="A specialist plugin for presentations and ongoing project work.">
+  <meta id="og-description" property="og:description" content="Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.">
   <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="en_US">
   <link rel="canonical" href="https://mparanza.com/static/shared/clara/index.html">
@@ -25,7 +25,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="clara-page.css?v=2026072401">
   <link rel="stylesheet" href="../product-navigation.css?v=2026072301">
-  <link rel="stylesheet" href="../video-library.css?v=2026072401">
   <script defer src="../product-navigation.js?v=2026072301"></script>
 </head>
 <body>
@@ -45,10 +44,8 @@
           <span class="product-nav__menu-icon" aria-hidden="true"></span>
         </button>
         <nav class="product-nav__links" id="clara-product-navigation" aria-label="Page navigation" data-i18n-aria-label="aria.page_navigation">
-          <a href="#presentations" data-i18n="nav.capabilities">What it does</a>
+          <a href="#functions" data-i18n="nav.capabilities">Functions</a>
           <a href="#workflow" data-i18n="nav.workflow">How it works</a>
-          <a href="#data-handling" data-i18n="nav.data">Data</a>
-          <a href="#videos" data-i18n="nav.videos">Videos</a>
         </nav>
       </div>
       <details class="product-nav__language" data-product-nav-disclosure>
@@ -72,10 +69,10 @@
       <div class="hero-copy">
         <p class="eyebrow" data-i18n="hero.eyebrow">AI companion for consultants</p>
         <h1 data-i18n="hero.title">Clara</h1>
-        <p class="lead" data-i18n="hero.lead">A specialist plugin for presentations and ongoing project work.</p>
+        <p class="lead" data-i18n="hero.lead">Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.</p>
         <div class="hero-install" id="download">
           <div class="hero-install__copy">
-            <h2 data-i18n="install.title">Choose where to work with Clara.</h2>
+            <h2 data-i18n="install.title">Installation</h2>
             <p data-i18n="install.copy">Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.</p>
           </div>
           <div class="hero-install__actions" role="group" aria-label="Clara installation options" data-i18n-aria-label="install.actions.label">
@@ -102,221 +99,73 @@
       </figure>
     </section>
 
-    <div class="promise-strip" aria-label="What you can do with Clara" data-i18n-aria-label="aria.promise_strip">
-      <a class="promise" href="#presentations">
-        <p data-i18n="hero.summary1">Create or correct high-impact HTML decks and PowerPoint presentations.</p>
-      </a>
-      <a class="promise" href="#interviews-and-transcription">
-        <p data-i18n="hero.summary2">Run interviews and turn recordings into reviewed transcripts.</p>
-      </a>
-      <a class="promise" href="#retail-intelligence">
-        <p data-i18n="hero.summary3">Map retail attributes and compare new products and best sellers with the rest of the assortment.</p>
-      </a>
-      <a class="promise" href="#business-data">
-        <p data-i18n="hero.summary4">Analyze Excel, CSV, and Parquet files with checked calculations and charts chosen to fit the question.</p>
-      </a>
-    </div>
-
-    <section id="presentations">
+    <section id="functions">
       <div class="section-head">
-        <h2 data-i18n="presentations.title">Create or correct a presentation in your corporate style</h2>
-        <p data-i18n="presentations.copy">Describe the result you want. You can start from the project materials or an existing presentation.</p>
+        <h2 data-i18n="functions.title">Available functions</h2>
+        <p data-i18n="functions.copy">Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.</p>
       </div>
-      <a class="video-story" id="presentation-video-link" href="https://youtu.be/3zvFm3fGdQ8" target="_blank" rel="noopener noreferrer">
-        <span class="video-story__thumb" aria-hidden="true">
-          <img id="presentation-video-thumbnail" src="https://i.ytimg.com/vi/3zvFm3fGdQ8/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy">
-          <span class="video-story__play">▶</span>
-          <span class="video-story__duration" id="presentation-video-duration">0:37</span>
-        </span>
-        <span class="video-story__body">
-          <span class="video-story__kicker" data-i18n="presentations.video.kicker">36-second overview</span>
-          <strong data-i18n="presentations.video.title">Watch: from project materials to a decision-ready presentation</strong>
-          <span class="video-story__meta" data-i18n="presentations.video.meta">English narration · Opens on YouTube</span>
-        </span>
-      </a>
-      <div class="grid">
-        <article class="card">
-          <p class="kicker" data-i18n="presentations.create.kicker">New presentation</p>
-          <h3 data-i18n="presentations.create.title">Start from the project materials</h3>
-          <p data-i18n="presentations.create.copy">Add Word, PDF, and PowerPoint documents, images, spreadsheets, notes, or recordings. State the audience, objective, and duration: Clara proposes the structure and prepares the presentation.</p>
-          <span class="quote" data-i18n="presentations.create.prompt">"Create a 20-minute presentation for this audience from the materials in this folder."</span>
+      <div class="function-directory">
+        <article class="function-group">
+          <h3 data-i18n="functions.deliverables">Presentations and documents</h3>
+          <a class="function-link" href="../clara-presentations/index.html?lang=en" data-function-link data-base-href="../clara-presentations/index.html">
+            <span data-i18n="functions.presentations">Presentations</span><span aria-hidden="true">↗</span>
+          </a>
+          <a class="function-link" href="../clara-documents/index.html?lang=en" data-function-link data-base-href="../clara-documents/index.html">
+            <span data-i18n="functions.documents">Documents</span><span aria-hidden="true">↗</span>
+          </a>
         </article>
-        <article class="card">
-          <p class="kicker" data-i18n="presentations.correct.kicker">Existing presentation</p>
-          <h3 data-i18n="presentations.correct.title">Correct what needs changing</h3>
-          <p data-i18n="presentations.correct.copy">Write the corrections or record them aloud. Clara updates a copy and checks that everything else remains unchanged.</p>
-          <span class="quote" data-i18n="presentations.correct.prompt">"Record my feedback, apply it to a copy, and leave everything else unchanged."</span>
+        <article class="function-group">
+          <h3 data-i18n="functions.research">Interviews and recordings</h3>
+          <a class="function-link" href="../clara-interview/index.html?lang=en" data-function-link data-base-href="../clara-interview/index.html">
+            <span data-i18n="functions.interviews">Interviews</span><span aria-hidden="true">↗</span>
+          </a>
+          <a class="function-link" href="../clara-transcribe/index.html?lang=en" data-function-link data-base-href="../clara-transcribe/index.html">
+            <span data-i18n="functions.transcription">Transcription</span><span aria-hidden="true">↗</span>
+          </a>
         </article>
-        <article class="card">
-          <p class="kicker" data-i18n="presentations.style.kicker">Visual references</p>
-          <h3 data-i18n="presentations.style.title">Match your visual style</h3>
-          <p data-i18n="presentations.style.copy">Add a PowerPoint template, reference presentation, logo, or brand guidelines. Clara uses them for layout and style.</p>
-          <span class="quote" data-i18n="presentations.style.prompt">"Use this PowerPoint as the visual reference for the new presentation."</span>
+        <article class="function-group">
+          <h3 data-i18n="functions.retail">Retail analysis</h3>
+          <a class="function-link" href="../clara-retailer-signals/index.html?lang=en" data-function-link data-base-href="../clara-retailer-signals/index.html">
+            <span>Retailer Signals</span><span aria-hidden="true">↗</span>
+          </a>
+          <a class="function-link" href="../clara-brand-fit/index.html?lang=en" data-function-link data-base-href="../clara-brand-fit/index.html">
+            <span>Brand Fit</span><span aria-hidden="true">↗</span>
+          </a>
         </article>
-      </div>
-    </section>
-
-    <section id="formats">
-      <div class="section-head">
-        <h2 data-i18n="formats.title">Choose the deck format</h2>
-        <p data-i18n="formats.copy">Both formats are editable. Choose PowerPoint when the file must be opened and reworked in PowerPoint; choose an HTML deck for interactivity, navigation, and animations.</p>
-      </div>
-      <div class="grid two-col">
-        <article class="card">
-          <h3 data-i18n="formats.pptx.title">An editable PowerPoint</h3>
-          <p data-i18n="formats.pptx.copy">A .pptx file that can be opened and edited in PowerPoint. Choose it when you must follow an existing template or hand the file to someone else to edit.</p>
-          <span class="quote" data-i18n="formats.pptx.prompt">"Deliver an editable PowerPoint and check every slide."</span>
-        </article>
-        <article class="card">
-          <h3><span data-i18n="formats.html.title.before">An </span><a href="/static/shared/4c8e62f349a776e9d2b0ca48f15796b72cb8d4e5a1cf0937a2e84bfc63dd52a9/index.html#cover" target="_blank" rel="noopener noreferrer" data-i18n="formats.html.title.link">interactive</a><span data-i18n="formats.html.title.after"> HTML deck</span></h3>
-          <p data-i18n="formats.html.copy">A self-contained 16:9 HTML deck with speaker notes, fullscreen mode, keyboard or touch navigation, and animations. It does not require PowerPoint.</p>
-          <span class="quote" data-i18n="formats.html.prompt">"Deliver an interactive HTML deck with speaker notes."</span>
+        <article class="function-group">
+          <h3 data-i18n="functions.analysis">Business analysis</h3>
+          <a class="function-link" href="../clara-data-analysis/index.html?lang=en" data-function-link data-base-href="../clara-data-analysis/index.html">
+            <span data-i18n="functions.dataAnalysis">Data analysis</span><span aria-hidden="true">↗</span>
+          </a>
         </article>
       </div>
     </section>
 
     <section id="workflow">
       <div class="section-head">
-        <h2 data-i18n="workflow.title">Open the project folder and describe what you need</h2>
-        <p data-i18n="workflow.copy">Write in your own words: you do not need to learn commands. No separate API key is required; model work uses your existing ChatGPT plan.</p>
+        <h2 data-i18n="workflow.title">How to use Clara</h2>
+        <p data-i18n="workflow.copy">Open the project folder in Codex, select a function, and describe the required result.</p>
       </div>
       <div class="method">
         <div class="plain-list">
           <div class="plain-row">
-            <strong data-i18n="workflow.open.title">Gather the project materials</strong>
-            <span><span data-i18n="workflow.open.copy">Put documents, presentations, data, images, notes, or recordings in the folder, then open it in Codex.</span><span class="quote" data-i18n="workflow.open.quote">"Use Clara in this folder."</span></span>
+            <strong data-i18n="workflow.open.title">Add the project materials</strong>
+            <span data-i18n="workflow.open.copy">Put the selected documents, presentations, data, images, notes, or recordings in the project folder.</span>
           </div>
           <div class="plain-row">
-            <strong data-i18n="workflow.materials.title">Describe what you want to achieve</strong>
-            <span><span data-i18n="workflow.materials.copy">Explain what you need, who it is for, and in which format. For a presentation, also state the duration.</span><span class="quote" data-i18n="workflow.materials.quote">"Create a 20-minute editable PowerPoint for this audience."</span></span>
+            <strong data-i18n="workflow.materials.title">Describe the result</strong>
+            <span data-i18n="workflow.materials.copy">State the audience, question, requested format, and any deadline or duration.</span>
           </div>
           <div class="plain-row">
-            <strong data-i18n="workflow.notes.title">Identify the content and style to follow</strong>
-            <span><span data-i18n="workflow.notes.copy">Identify which documents to use for the content and which template or presentation to use for the style.</span><span class="quote" data-i18n="workflow.notes.quote">"Use this Word file for the content and this PowerPoint for the style."</span></span>
+            <strong data-i18n="workflow.notes.title">Identify references</strong>
+            <span data-i18n="workflow.notes.copy">Name the sources, templates, or previous files that Clara should follow.</span>
           </div>
           <div class="plain-row">
-            <strong data-i18n="workflow.review.title">Review and correct</strong>
-            <span><span data-i18n="workflow.review.copy">Open the result and describe the changes in your own words. Clara works on a copy and checks the updated version.</span><span class="quote" data-i18n="workflow.review.quote">"Shorten slide 4 and add my contact details to the last slide."</span></span>
+            <strong data-i18n="workflow.review.title">Review the output</strong>
+            <span data-i18n="workflow.review.copy">Open the generated files, request corrections, and approve the version you intend to use.</span>
           </div>
         </div>
       </div>
-    </section>
-
-    <section id="data-handling">
-      <div class="section-head">
-        <h2 data-i18n="data.title">Where Clara processes data</h2>
-        <p data-i18n="data.copy">Clara, Vera and Lucia follow the same two-category data policy. The distinction depends on the processing boundary, not on the profession.</p>
-      </div>
-      <div class="grid two-col">
-        <article class="card">
-          <p class="kicker" data-i18n="data.local.kicker">Work inside Codex</p>
-          <h3 data-i18n="data.local.title">Ordinary plugin functions</h3>
-          <p data-i18n="data.local.copy">Clara, Vera and Lucia do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.</p>
-          <p data-i18n="data.local.model">Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary functions do not send client files, prompts, or model-context content to Mparanza.</p>
-          <p data-i18n="data.local.detail">For each function, the page makes clear what normally stays on your computer and what the selected AI environment may read.</p>
-        </article>
-        <article class="card">
-          <p class="kicker" data-i18n="data.hosted.kicker">Mparanza-hosted service</p>
-          <h3 data-i18n="data.hosted.title">A separate processing boundary</h3>
-          <p data-i18n="data.hosted.copy">Remote Interview, Transcription/Voice Capture, and the retail-data service are hosted by Mparanza. The content needed for those functions reaches Mparanza systems and, where required, OpenAI services.</p>
-          <p data-i18n="data.hosted.detail">The data-handling page explains access, retention and deletion for each hosted service.</p>
-          <a class="button secondary" href="/data-handling?lang=en#data-handling-video" data-compliance-video-link data-i18n="data.link">Watch the data-handling video</a>
-        </article>
-      </div>
-    </section>
-
-    <section>
-      <div class="section-head">
-        <h2 data-i18n="handles.title">The project is not just a presentation</h2>
-        <p data-i18n="handles.copy">Clara organizes sources, distinguishes facts, inferences, and professional judgment, and surfaces gaps and contradictions. You decide what goes into the client materials.</p>
-      </div>
-      <div class="grid">
-        <article class="card">
-          <h3 data-i18n="card.materials.title">Sources and conclusions stay connected</h3>
-          <p data-i18n="card.materials.copy">Clara makes it clear what comes from the documents and what comes from interpretation or professional judgment.</p>
-        </article>
-        <article class="card">
-          <h3 data-i18n="card.notes.title">What is missing stays visible</h3>
-          <p data-i18n="card.notes.copy">Clara keeps missing information, contradictions, and pending decisions visible.</p>
-        </article>
-        <article class="card">
-          <h3 data-i18n="card.judgement.title">Pick up where you left off</h3>
-          <p data-i18n="card.judgement.copy">Reopen the same folder in a new Codex session and continue from the materials, notes, and drafts already there.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="retail-intelligence">
-      <div class="section-head">
-        <h2 data-i18n="retail.title">From product data to a checked retail report</h2>
-        <p data-i18n="retail.copy">Retailer Signals compares new products and best sellers with the rest of the assortment. Brand Fit relates those signals to the brand's presence and catalogue. Retail data and reviewed mappings use a Mparanza-hosted service; product images and generated reports are saved in your project folder.</p>
-      </div>
-      <div class="promise-strip retail-flow">
-        <article class="promise">
-          <p data-i18n="retail.flow.collect">Use the data already available in the Mparanza-hosted retail service. Clara starts with the records for the selected retailer and category. The installed version does not yet collect new data from retailer pages.</p>
-        </article>
-        <article class="promise">
-          <p data-i18n="retail.flow.map">Standardize and verify the attributes. Clara maps the values to a common taxonomy; a second review checks the mappings.</p>
-        </article>
-        <article class="promise">
-          <p data-i18n="retail.flow.analyze">Compare the groups. New products are those the retailer presents as new. Clara compares new products and best sellers with the rest of the assortment using checked calculations.</p>
-        </article>
-        <article class="promise">
-          <p data-i18n="retail.flow.report">Create the report. Clara saves an HTML report on your computer and checks its calculations, readability, and appearance.</p>
-        </article>
-      </div>
-      <div class="grid two-col retail-paths">
-        <article class="card">
-          <h3 data-i18n="retail.retailer_signals.title">Retailer Signals</h3>
-          <p><span data-i18n="retail.retailer_signals.copy.before">For one retailer and category, compare new products and best sellers with the rest of the assortment and generate a verified </span><a href="/static/shared/attribute-reporting/cashmere/index.html" target="_blank" rel="noopener noreferrer" data-i18n="retail.retailer_signals.copy.link">report</a><span data-i18n="retail.retailer_signals.copy.after">.</span></p>
-        </article>
-        <article class="card">
-          <h3 data-i18n="retail.brand_fit.title">Brand Fit</h3>
-          <p><span data-i18n="retail.brand_fit.copy.before">It starts with a verified Retailer Signals analysis and compares the assortment findings with the brand's presence at the retailer and its catalogue. It uses stored data, not a live shelf check. The comparison is presented in a </span><a href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html" target="_blank" rel="noopener noreferrer" data-i18n="retail.brand_fit.copy.link">report</a><span data-i18n="retail.brand_fit.copy.after">.</span></p>
-        </article>
-      </div>
-    </section>
-
-    <section id="capabilities">
-      <div class="section-head">
-        <h2 data-i18n="capabilities.title">Interviews, documents, and data analysis</h2>
-        <p data-i18n="capabilities.copy">Clara conducts interviews, transcribes recordings, prepares working documents, and analyzes business data.</p>
-      </div>
-      <div class="grid two-col">
-        <article class="card" id="interviews-and-transcription">
-          <p class="kicker" data-i18n="capabilities.interview.kicker">Remote interview</p>
-          <h3 data-i18n="capabilities.interview.title">Conduct an interview with a dedicated link</h3>
-          <p data-i18n="capabilities.interview.copy">The participant opens a Mparanza-hosted link without signing up. Mparanza and OpenAI process the audio and answers to conduct and transcribe the adaptive interview. The interview record remains hosted until manual or administrative deletion; link expiry is not deletion.</p>
-          <span class="quote" data-i18n="capabilities.interview.prompt">"Prepare a 15-minute interview in Italian for this participant."</span>
-        </article>
-        <article class="card">
-          <p class="kicker" data-i18n="capabilities.transcribe.kicker">Transcription</p>
-          <h3 data-i18n="capabilities.transcribe.title">Transcribe a meeting or recording</h3>
-          <p data-i18n="capabilities.transcribe.copy">Record the conversation or upload an existing audio file through Mparanza-hosted Voice Capture. The audio reaches Mparanza and OpenAI for transcription. Hosted working files are deleted before the completed files are returned; Codex may then read the local transcript for speaker attribution and review.</p>
-          <span class="quote" data-i18n="capabilities.transcribe.prompt">"Transcribe this recording and identify the speakers."</span>
-        </article>
-        <article class="card">
-          <p class="kicker" data-i18n="capabilities.attributes.kicker">Advisory work</p>
-          <h3 data-i18n="capabilities.attributes.title">From sources to a document for review</h3>
-          <p data-i18n="capabilities.attributes.copy">Using the documents, notes, and conversations in the project folder, Clara prepares a first draft as a Word document or presentation and flags what is missing before review.</p>
-          <p data-i18n="capabilities.attributes.local">Sources, open questions, and versions are stored in the project folder. Content Codex interprets may enter the model context through your ChatGPT plan.</p>
-          <span class="quote" data-i18n="capabilities.attributes.prompt">"Organize the sources, identify what is missing, and prepare a Word document for review."</span>
-        </article>
-        <article class="card" id="business-data">
-          <p class="kicker" data-i18n="capabilities.charts.kicker">Business data</p>
-          <h3 data-i18n="capabilities.charts.title">From data to a clear answer</h3>
-          <p><span data-i18n="capabilities.charts.copy.before">Start with an Excel, CSV, or Parquet file and describe the business question. Clara chooses the analysis, runs checked calculations, creates the most useful chart, and explains the </span><a href="/static/shared/806077c83f691b8f710760fae85cd808d82b5620f84e54ebb126b91e04374987/index.html#opening-tension" target="_blank" rel="noopener noreferrer" data-i18n="capabilities.charts.copy.link">result</a><span data-i18n="capabilities.charts.copy.after">.</span></p>
-          <span class="quote" data-i18n="capabilities.charts.prompt">"Analyze this spreadsheet, choose the most useful chart, and explain the result."</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="videos">
-      <div class="section-head">
-        <h2 data-i18n="videos.title">See Clara at work</h2>
-        <p data-i18n="videos.copy">Short guides to Clara's main capabilities, narrated in the language of this page.</p>
-      </div>
-      <div class="video-library" data-video-library="clara"></div>
     </section>
 
   </main>
@@ -325,25 +174,35 @@
     <a href="https://github.com/fabioannovazzi/app_files/tree/main/plugins/clara" target="_blank" rel="noopener noreferrer">GitHub</a>
   </footer>
 
-  <script src="../video-library.js?v=2026072401"></script>
   <script>
     const copy = {
       en: {
         title: "Clara",
-        "meta.description": "A specialist plugin for presentations and ongoing project work.",
+        "meta.description": "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
         "skip": "Skip to content",
         "aria.page_navigation": "Page navigation",
         "aria.language": "Language",
         "aria.promise_strip": "What you can do with Clara",
         "nav.menu": "Menu",
-        "nav.capabilities": "What it does",
+        "nav.capabilities": "Functions",
         "nav.workflow": "How it works",
         "nav.data": "Data",
         "nav.videos": "Videos",
         "hero.eyebrow": "AI companion for consultants",
         "hero.title": "Clara",
-        "hero.lead": "A specialist plugin for presentations and ongoing project work.",
-        "hero.summary1": "Create or correct high-impact HTML decks and PowerPoint presentations.",
+        "hero.lead": "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+        "functions.title": "Available functions",
+        "functions.copy": "Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.",
+        "functions.deliverables": "Presentations and documents",
+        "functions.presentations": "Presentations",
+        "functions.documents": "Documents",
+        "functions.research": "Interviews and recordings",
+        "functions.interviews": "Interviews",
+        "functions.transcription": "Transcription",
+        "functions.retail": "Retail analysis",
+        "functions.analysis": "Business analysis",
+        "functions.dataAnalysis": "Data analysis",
+        "hero.summary1": "Create or correct HTML and PowerPoint presentations.",
         "hero.summary2": "Run interviews and turn recordings into reviewed transcripts.",
         "hero.summary3": "Map retail attributes and compare new products and best sellers with the rest of the assortment.",
         "hero.summary4": "Analyze Excel, CSV, and Parquet files with checked calculations and charts chosen to fit the question.",
@@ -377,19 +236,19 @@
         "formats.html.title.after": " HTML deck",
         "formats.html.copy": "A self-contained 16:9 HTML deck with speaker notes, fullscreen mode, keyboard or touch navigation, and animations. It does not require PowerPoint.",
         "formats.html.prompt": "\"Deliver an interactive HTML deck with speaker notes.\"",
-        "workflow.title": "Open the project folder and describe what you need",
-        "workflow.copy": "Write in your own words: you do not need to learn commands. No separate API key is required; model work uses your existing ChatGPT plan.",
-        "workflow.open.title": "Gather the project materials",
-        "workflow.open.copy": "Put documents, presentations, data, images, notes, or recordings in the folder, then open it in Codex.",
+        "workflow.title": "How to use Clara",
+        "workflow.copy": "Open the project folder in Codex, select a function, and describe the required result.",
+        "workflow.open.title": "Add the project materials",
+        "workflow.open.copy": "Put the selected documents, presentations, data, images, notes, or recordings in the project folder.",
         "workflow.open.quote": "\"Use Clara in this folder.\"",
-        "workflow.materials.title": "Describe what you want to achieve",
-        "workflow.materials.copy": "Explain what you need, who it is for, and in which format. For a presentation, also state the duration.",
+        "workflow.materials.title": "Describe the result",
+        "workflow.materials.copy": "State the audience, question, requested format, and any deadline or duration.",
         "workflow.materials.quote": "\"Create a 20-minute editable PowerPoint for this audience.\"",
-        "workflow.notes.title": "Identify the content and style to follow",
-        "workflow.notes.copy": "Identify which documents to use for the content and which template or presentation to use for the style.",
+        "workflow.notes.title": "Identify references",
+        "workflow.notes.copy": "Name the sources, templates, or previous files that Clara should follow.",
         "workflow.notes.quote": "\"Use this Word file for the content and this PowerPoint for the style.\"",
-        "workflow.review.title": "Review and correct",
-        "workflow.review.copy": "Open the result and describe the changes in your own words. Clara works on a copy and checks the updated version.",
+        "workflow.review.title": "Review the output",
+        "workflow.review.copy": "Open the generated files, request corrections, and approve the version you intend to use.",
         "workflow.review.quote": "\"Shorten slide 4 and add my contact details to the last slide.\"",
         "data.title": "Where Clara processes data",
         "data.copy": "Clara, Vera and Lucia follow the same two-category data policy. The distinction depends on the processing boundary, not on the profession.",
@@ -446,7 +305,7 @@
         "capabilities.charts.copy.link": "result",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyze this spreadsheet, choose the most useful chart, and explain the result.\"",
-        "install.title": "Choose where to work with Clara.",
+        "install.title": "Installation",
         "install.copy": "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Clara installation options",
         "install.video.title": "Connect ChatGPT to your computer with Codex",
@@ -457,20 +316,31 @@
       },
       it: {
         title: "Clara",
-        "meta.description": "Un plugin specialistico per creare presentazioni e dare continuità al lavoro sui progetti.",
+        "meta.description": "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
         "skip": "Vai al contenuto",
         "aria.page_navigation": "Navigazione della pagina",
         "aria.language": "Lingua",
         "aria.promise_strip": "Cosa puoi fare con Clara",
         "nav.menu": "Menu",
-        "nav.capabilities": "Cosa fa",
+        "nav.capabilities": "Funzioni",
         "nav.workflow": "Come funziona",
         "nav.data": "Dati",
         "nav.videos": "Video",
         "hero.eyebrow": "Assistente AI per consulenti",
         "hero.title": "Clara",
-        "hero.lead": "Un plugin specialistico per creare presentazioni e dare continuità al lavoro sui progetti.",
-        "hero.summary1": "Crea e correggi deck HTML di impatto e presentazioni PowerPoint.",
+        "hero.lead": "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+        "functions.title": "Funzioni disponibili",
+        "functions.copy": "Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.",
+        "functions.deliverables": "Presentazioni e documenti",
+        "functions.presentations": "Presentazioni",
+        "functions.documents": "Documenti",
+        "functions.research": "Interviste e registrazioni",
+        "functions.interviews": "Interviste",
+        "functions.transcription": "Trascrizione",
+        "functions.retail": "Analisi retail",
+        "functions.analysis": "Analisi aziendale",
+        "functions.dataAnalysis": "Analisi dei dati",
+        "hero.summary1": "Crea o correggi presentazioni HTML e PowerPoint.",
         "hero.summary2": "Conduci interviste e trasforma registrazioni in trascrizioni riviste.",
         "hero.summary3": "Mappa gli attributi retail e confronta novità e best seller con il resto dell'assortimento.",
         "hero.summary4": "Analizza file Excel, CSV e Parquet con calcoli controllati e grafici scelti in base alla domanda.",
@@ -504,19 +374,19 @@
         "formats.html.title.after": "",
         "formats.html.copy": "Un deck 16:9 con note per chi presenta, modalità schermo intero, navigazione da tastiera o touch e animazioni. Non richiede PowerPoint.",
         "formats.html.prompt": "\"Consegna un deck HTML interattivo con le note per chi presenta.\"",
-        "workflow.title": "Apri la cartella del progetto e descrivi ciò che ti serve",
-        "workflow.copy": "Scrivi con parole tue: non devi imparare comandi. Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "workflow.open.title": "Raccogli i materiali del progetto",
-        "workflow.open.copy": "Metti nella cartella documenti, presentazioni, dati, immagini, appunti o registrazioni, poi aprila in Codex.",
+        "workflow.title": "Come usare Clara",
+        "workflow.copy": "Apri la cartella del progetto in Codex, seleziona una funzione e descrivi il risultato richiesto.",
+        "workflow.open.title": "Aggiungi i materiali del progetto",
+        "workflow.open.copy": "Metti nella cartella del progetto i documenti, le presentazioni, i dati, le immagini, gli appunti o le registrazioni pertinenti.",
         "workflow.open.quote": "\"Usa Clara in questa cartella.\"",
-        "workflow.materials.title": "Descrivi cosa vuoi ottenere",
-        "workflow.materials.copy": "Spiega cosa ti serve, per chi e in quale formato. Per una presentazione, indica anche la durata.",
+        "workflow.materials.title": "Descrivi il risultato",
+        "workflow.materials.copy": "Indica il pubblico, la domanda, il formato richiesto e l'eventuale scadenza o durata.",
         "workflow.materials.quote": "\"Crea un PowerPoint modificabile di 20 minuti per questo pubblico.\"",
-        "workflow.notes.title": "Indica contenuti e stile da seguire",
-        "workflow.notes.copy": "Indica quali documenti usare per i contenuti e quale modello o presentazione usare per lo stile.",
+        "workflow.notes.title": "Indica i riferimenti",
+        "workflow.notes.copy": "Specifica le fonti, i modelli o i file precedenti che Clara deve seguire.",
         "workflow.notes.quote": "\"Usa questo file Word per i contenuti e questo PowerPoint per lo stile.\"",
-        "workflow.review.title": "Rivedi e correggi",
-        "workflow.review.copy": "Apri il risultato e descrivi le modifiche con parole tue. Clara lavora su una copia e verifica la versione aggiornata.",
+        "workflow.review.title": "Rivedi il risultato",
+        "workflow.review.copy": "Apri i file generati, chiedi le correzioni e approva la versione che intendi usare.",
         "workflow.review.quote": "\"Accorcia la slide 4 e aggiungi i miei contatti nell'ultima slide.\"",
         "data.title": "Dove Clara tratta i dati",
         "data.copy": "Clara, Vera e Lucia seguono la stessa regola con due categorie. La distinzione dipende dal confine di trattamento, non dalla professione.",
@@ -573,7 +443,7 @@
         "capabilities.charts.copy.link": "risultato",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analizza questo file, scegli il grafico più utile e spiegami il risultato.\"",
-        "install.title": "Scegli dove lavorare con Clara.",
+        "install.title": "Installazione",
         "install.copy": "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Clara",
         "install.video.title": "Collega ChatGPT al computer con Codex",
@@ -584,20 +454,31 @@
       },
       fr: {
         title: "Clara",
-        "meta.description": "Un plugin spécialisé pour créer des présentations et poursuivre le travail sur les projets dans la durée.",
+        "meta.description": "Clara ajoute à Codex les présentations, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
         "skip": "Aller au contenu",
         "aria.page_navigation": "Navigation de la page",
         "aria.language": "Langue",
         "aria.promise_strip": "Ce que vous pouvez faire avec Clara",
         "nav.menu": "Menu",
-        "nav.capabilities": "Ce qu’elle fait",
+        "nav.capabilities": "Fonctions",
         "nav.workflow": "Fonctionnement",
         "nav.data": "Données",
         "nav.videos": "Vidéos",
         "hero.eyebrow": "AI companion pour les consultants",
         "hero.title": "Clara",
-        "hero.lead": "Un plugin spécialisé pour créer des présentations et poursuivre le travail sur les projets dans la durée.",
-        "hero.summary1": "Créez ou corrigez des decks HTML percutants et des présentations PowerPoint.",
+        "hero.lead": "Clara ajoute à Codex les présentations, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
+        "functions.title": "Fonctions disponibles",
+        "functions.copy": "Sélectionnez une fonction pour ouvrir sa page avec les entrées, la méthode, les sorties, les responsabilités et les informations sur les données transmises au modèle.",
+        "functions.deliverables": "Présentations et documents",
+        "functions.presentations": "Présentations",
+        "functions.documents": "Documents",
+        "functions.research": "Entretiens et enregistrements",
+        "functions.interviews": "Entretiens",
+        "functions.transcription": "Transcription",
+        "functions.retail": "Analyse retail",
+        "functions.analysis": "Analyse d'entreprise",
+        "functions.dataAnalysis": "Analyse de données",
+        "hero.summary1": "Créez ou corrigez des présentations HTML et PowerPoint.",
         "hero.summary2": "Menez des entretiens et transformez les enregistrements en transcriptions relues.",
         "hero.summary3": "Mappez les attributs retail et comparez les nouveautés et les meilleures ventes au reste de l'assortiment.",
         "hero.summary4": "Analysez des fichiers Excel, CSV et Parquet avec des calculs vérifiés et des graphiques choisis en fonction de la question.",
@@ -631,19 +512,19 @@
         "formats.html.title.after": "",
         "formats.html.copy": "Un deck HTML autonome au format 16:9, avec notes, mode plein écran, navigation au clavier ou tactile et animations. PowerPoint n'est pas nécessaire.",
         "formats.html.prompt": "\"Livre un deck HTML interactif avec des notes pour la personne qui le présentera.\"",
-        "workflow.title": "Ouvrez le dossier du projet et décrivez ce dont vous avez besoin",
-        "workflow.copy": "Écrivez avec vos propres mots : vous n'avez pas à apprendre de commandes. Aucune clé API distincte n'est requise ; le travail du modèle utilise votre offre ChatGPT existante.",
-        "workflow.open.title": "Rassemblez les éléments du projet",
-        "workflow.open.copy": "Placez dans le dossier des documents, présentations, données, images, notes ou enregistrements, puis ouvrez-le dans Codex.",
+        "workflow.title": "Comment utiliser Clara",
+        "workflow.copy": "Ouvrez le dossier du projet dans Codex, sélectionnez une fonction et décrivez le résultat demandé.",
+        "workflow.open.title": "Ajoutez les éléments du projet",
+        "workflow.open.copy": "Placez dans le dossier du projet les documents, présentations, données, images, notes ou enregistrements utiles.",
         "workflow.open.quote": "\"Utilise Clara dans ce dossier.\"",
-        "workflow.materials.title": "Décrivez ce que vous voulez obtenir",
-        "workflow.materials.copy": "Expliquez ce dont vous avez besoin, pour qui et dans quel format. Pour une présentation, indiquez aussi la durée.",
+        "workflow.materials.title": "Décrivez le résultat",
+        "workflow.materials.copy": "Indiquez le public, la question, le format demandé et toute échéance ou durée.",
         "workflow.materials.quote": "\"Crée un PowerPoint modifiable de 20 minutes pour ce public.\"",
-        "workflow.notes.title": "Indiquez le contenu et le style à suivre",
-        "workflow.notes.copy": "Indiquez quels documents utiliser pour le contenu et quel modèle ou quelle présentation utiliser pour le style.",
+        "workflow.notes.title": "Indiquez les références",
+        "workflow.notes.copy": "Nommez les sources, modèles ou fichiers précédents que Clara doit suivre.",
         "workflow.notes.quote": "\"Utilise ce fichier Word pour le contenu et ce PowerPoint pour le style.\"",
-        "workflow.review.title": "Relisez et corrigez",
-        "workflow.review.copy": "Ouvrez le résultat et décrivez les modifications avec vos propres mots. Clara travaille sur une copie et vérifie la version mise à jour.",
+        "workflow.review.title": "Examinez le résultat",
+        "workflow.review.copy": "Ouvrez les fichiers générés, demandez les corrections et approuvez la version que vous comptez utiliser.",
         "workflow.review.quote": "\"Raccourcis la diapositive 4 et ajoute mes coordonnées à la dernière diapositive.\"",
         "data.title": "Où Clara traite les données",
         "data.copy": "Clara, Vera et Lucia suivent la même règle en deux catégories. La distinction dépend du périmètre de traitement, pas de la profession.",
@@ -700,7 +581,7 @@
         "capabilities.charts.copy.link": "résultat",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analyse ce fichier, choisis le graphique le plus utile et explique le résultat.\"",
-        "install.title": "Choisissez où travailler avec Clara.",
+        "install.title": "Installation",
         "install.copy": "Installez Clara pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Clara",
         "install.video.title": "Connectez ChatGPT à votre ordinateur avec Codex",
@@ -711,20 +592,31 @@
       },
       de: {
         title: "Clara",
-        "meta.description": "Ein spezialisiertes Plugin für Präsentationen und die fortlaufende Arbeit an Projekten.",
+        "meta.description": "Clara ergänzt Codex um Präsentationen, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
         "skip": "Zum Inhalt",
         "aria.page_navigation": "Seitennavigation",
         "aria.language": "Sprache",
         "aria.promise_strip": "Was Sie mit Clara tun können",
         "nav.menu": "Menü",
-        "nav.capabilities": "Was sie kann",
+        "nav.capabilities": "Funktionen",
         "nav.workflow": "So funktioniert es",
         "nav.data": "Daten",
         "nav.videos": "Videos",
         "hero.eyebrow": "AI companion für Beraterinnen und Berater",
         "hero.title": "Clara",
-        "hero.lead": "Ein spezialisiertes Plugin für Präsentationen und die fortlaufende Arbeit an Projekten.",
-        "hero.summary1": "Erstellen oder korrigieren Sie wirkungsvolle HTML-Decks und PowerPoint-Präsentationen.",
+        "hero.lead": "Clara ergänzt Codex um Präsentationen, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
+        "functions.title": "Verfügbare Funktionen",
+        "functions.copy": "Wählen Sie eine Funktion, um ihre Seite mit Eingaben, Methode, Ergebnissen, Verantwortlichkeiten und Informationen zu den Modelldaten zu öffnen.",
+        "functions.deliverables": "Präsentationen und Dokumente",
+        "functions.presentations": "Präsentationen",
+        "functions.documents": "Dokumente",
+        "functions.research": "Interviews und Aufnahmen",
+        "functions.interviews": "Interviews",
+        "functions.transcription": "Transkription",
+        "functions.retail": "Retail-Analyse",
+        "functions.analysis": "Unternehmensanalyse",
+        "functions.dataAnalysis": "Datenanalyse",
+        "hero.summary1": "Erstellen oder korrigieren Sie HTML- und PowerPoint-Präsentationen.",
         "hero.summary2": "Führen Sie Interviews und machen Sie aus Aufnahmen geprüfte Transkripte.",
         "hero.summary3": "Ordnen Sie Retail-Attribute zu und vergleichen Sie Neuheiten und Bestseller mit dem übrigen Sortiment.",
         "hero.summary4": "Analysieren Sie Excel-, CSV- und Parquet-Dateien mit geprüften Berechnungen und Diagrammen, die zur Fragestellung passen.",
@@ -758,19 +650,19 @@
         "formats.html.title.after": " HTML-Deck",
         "formats.html.copy": "Ein eigenständiges HTML-Deck im Format 16:9 mit Sprechernotizen, Vollbildmodus, Tastatur- oder Touch-Navigation und Animationen. PowerPoint ist nicht erforderlich.",
         "formats.html.prompt": "\"Liefere ein interaktives HTML-Deck mit Sprechernotizen.\"",
-        "workflow.title": "Öffnen Sie den Projektordner und beschreiben Sie, was Sie benötigen",
-        "workflow.copy": "Formulieren Sie Ihre Anfrage in eigenen Worten: Sie müssen keine Befehle lernen. Kein separater API-Schlüssel ist erforderlich; die Modellarbeit nutzt Ihren bestehenden ChatGPT-Tarif.",
-        "workflow.open.title": "Stellen Sie die Projektmaterialien zusammen",
-        "workflow.open.copy": "Legen Sie Dokumente, Präsentationen, Daten, Bilder, Notizen oder Aufnahmen im Ordner ab und öffnen Sie ihn anschließend in Codex.",
+        "workflow.title": "So verwenden Sie Clara",
+        "workflow.copy": "Öffnen Sie den Projektordner in Codex, wählen Sie eine Funktion und beschreiben Sie das gewünschte Ergebnis.",
+        "workflow.open.title": "Fügen Sie die Projektmaterialien hinzu",
+        "workflow.open.copy": "Legen Sie die relevanten Dokumente, Präsentationen, Daten, Bilder, Notizen oder Aufnahmen im Projektordner ab.",
         "workflow.open.quote": "\"Nutze Clara in diesem Ordner.\"",
-        "workflow.materials.title": "Beschreiben Sie, was Sie erreichen möchten",
-        "workflow.materials.copy": "Erklären Sie, was Sie benötigen, für wen und in welchem Format. Geben Sie bei einer Präsentation auch die Dauer an.",
+        "workflow.materials.title": "Beschreiben Sie das Ergebnis",
+        "workflow.materials.copy": "Nennen Sie Zielgruppe, Fragestellung, gewünschtes Format und gegebenenfalls Frist oder Dauer.",
         "workflow.materials.quote": "\"Erstelle eine editierbare 20-minütige PowerPoint-Präsentation für diese Zielgruppe.\"",
-        "workflow.notes.title": "Geben Sie Inhalte und Stil vor",
-        "workflow.notes.copy": "Geben Sie an, welche Dokumente für die Inhalte und welche Vorlage oder Präsentation für den Stil verwendet werden soll.",
+        "workflow.notes.title": "Nennen Sie die Referenzen",
+        "workflow.notes.copy": "Nennen Sie die Quellen, Vorlagen oder früheren Dateien, denen Clara folgen soll.",
         "workflow.notes.quote": "\"Nutze diese Word-Datei für den Inhalt und diese PowerPoint-Datei für den Stil.\"",
-        "workflow.review.title": "Prüfen und korrigieren",
-        "workflow.review.copy": "Öffnen Sie das Ergebnis und beschreiben Sie die Änderungen in Ihren eigenen Worten. Clara arbeitet an einer Kopie und prüft die aktualisierte Version.",
+        "workflow.review.title": "Prüfen Sie das Ergebnis",
+        "workflow.review.copy": "Öffnen Sie die erstellten Dateien, fordern Sie Korrekturen an und geben Sie die Version frei, die Sie verwenden möchten.",
         "workflow.review.quote": "\"Kürze Folie 4 und füge meine Kontaktdaten auf der letzten Folie hinzu.\"",
         "data.title": "Wo Clara Daten verarbeitet",
         "data.copy": "Für Clara, Vera und Lucia gilt dieselbe Regel mit zwei Kategorien. Entscheidend ist die Verarbeitungsgrenze, nicht der Beruf.",
@@ -827,7 +719,7 @@
         "capabilities.charts.copy.link": "Ergebnis",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analysiere diese Datei, wähle den nützlichsten Chart und erkläre das Ergebnis.\"",
-        "install.title": "Wählen Sie, wo Sie mit Clara arbeiten.",
+        "install.title": "Installation",
         "install.copy": "Installieren Sie Clara für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Clara",
         "install.video.title": "ChatGPT mit Codex mit Ihrem Computer verbinden",
@@ -838,20 +730,31 @@
       },
       es: {
         title: "Clara",
-        "meta.description": "Un plugin especializado para presentaciones y trabajo continuo en proyectos.",
+        "meta.description": "Clara añade a Codex presentaciones, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
         "skip": "Ir al contenido",
         "aria.page_navigation": "Navegación de la página",
         "aria.language": "Idioma",
         "aria.promise_strip": "Qué puedes hacer con Clara",
         "nav.menu": "Menú",
-        "nav.capabilities": "Qué hace",
+        "nav.capabilities": "Funciones",
         "nav.workflow": "Cómo funciona",
         "nav.data": "Datos",
         "nav.videos": "Vídeos",
         "hero.eyebrow": "AI companion para consultores",
         "hero.title": "Clara",
-        "hero.lead": "Un plugin especializado para presentaciones y trabajo continuo en proyectos.",
-        "hero.summary1": "Crea o corrige presentaciones PowerPoint y decks HTML de alto impacto.",
+        "hero.lead": "Clara añade a Codex presentaciones, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
+        "functions.title": "Funciones disponibles",
+        "functions.copy": "Selecciona una función para abrir su página con entradas, método, resultados, responsabilidades e información sobre los datos que llegan al modelo.",
+        "functions.deliverables": "Presentaciones y documentos",
+        "functions.presentations": "Presentaciones",
+        "functions.documents": "Documentos",
+        "functions.research": "Entrevistas y grabaciones",
+        "functions.interviews": "Entrevistas",
+        "functions.transcription": "Transcripción",
+        "functions.retail": "Análisis retail",
+        "functions.analysis": "Análisis empresarial",
+        "functions.dataAnalysis": "Análisis de datos",
+        "hero.summary1": "Crea o corrige presentaciones HTML y PowerPoint.",
         "hero.summary2": "Realiza entrevistas y convierte grabaciones en transcripciones revisadas.",
         "hero.summary3": "Mapea atributos retail y compara novedades y productos superventas con el resto del surtido.",
         "hero.summary4": "Analiza archivos Excel, CSV y Parquet con cálculos comprobados y gráficos elegidos para responder a la pregunta.",
@@ -885,19 +788,19 @@
         "formats.html.title.after": "",
         "formats.html.copy": "Un deck HTML autónomo en formato 16:9 con notas del presentador, modo de pantalla completa, navegación mediante teclado o gestos táctiles y animaciones. No requiere PowerPoint.",
         "formats.html.prompt": "\"Entrega un deck HTML interactivo con notas del presentador.\"",
-        "workflow.title": "Abre la carpeta del proyecto y describe lo que necesitas",
-        "workflow.copy": "Escríbelo con tus propias palabras: no necesitas aprender comandos. No hace falta una clave de API independiente; el trabajo del modelo utiliza tu plan de ChatGPT actual.",
-        "workflow.open.title": "Reúne los materiales del proyecto",
-        "workflow.open.copy": "Coloca documentos, presentaciones, datos, imágenes, notas o grabaciones en la carpeta y ábrela en Codex.",
+        "workflow.title": "Cómo usar Clara",
+        "workflow.copy": "Abre la carpeta del proyecto en Codex, selecciona una función y describe el resultado solicitado.",
+        "workflow.open.title": "Añade los materiales del proyecto",
+        "workflow.open.copy": "Coloca en la carpeta del proyecto los documentos, presentaciones, datos, imágenes, notas o grabaciones pertinentes.",
         "workflow.open.quote": "\"Usa Clara en esta carpeta.\"",
-        "workflow.materials.title": "Describe lo que quieres conseguir",
-        "workflow.materials.copy": "Explica qué necesitas, para quién es y en qué formato. Si se trata de una presentación, indica también la duración.",
+        "workflow.materials.title": "Describe el resultado",
+        "workflow.materials.copy": "Indica la audiencia, la pregunta, el formato solicitado y cualquier plazo o duración.",
         "workflow.materials.quote": "\"Crea un PowerPoint editable de 20 minutos para esta audiencia.\"",
-        "workflow.notes.title": "Indica el contenido y el estilo que debe seguir",
-        "workflow.notes.copy": "Señala qué documentos deben utilizarse para el contenido y qué plantilla o presentación debe utilizarse para el estilo.",
+        "workflow.notes.title": "Indica las referencias",
+        "workflow.notes.copy": "Nombra las fuentes, plantillas o archivos anteriores que Clara debe seguir.",
         "workflow.notes.quote": "\"Usa este archivo Word para el contenido y este PowerPoint para el estilo.\"",
-        "workflow.review.title": "Revisa y corrige",
-        "workflow.review.copy": "Abre el resultado y describe los cambios con tus propias palabras. Clara trabaja sobre una copia y comprueba la versión actualizada.",
+        "workflow.review.title": "Revisa el resultado",
+        "workflow.review.copy": "Abre los archivos generados, solicita las correcciones y aprueba la versión que vayas a utilizar.",
         "workflow.review.quote": "\"Acorta la diapositiva 4 y añade mis datos de contacto a la última diapositiva.\"",
         "data.title": "Dónde procesa Clara los datos",
         "data.copy": "Clara, Vera y Lucia siguen la misma política de dos categorías. La distinción depende del límite de tratamiento, no de la profesión.",
@@ -954,7 +857,7 @@
         "capabilities.charts.copy.link": "resultado",
         "capabilities.charts.copy.after": ".",
         "capabilities.charts.prompt": "\"Analiza esta hoja de cálculo, elige el gráfico más útil y explica el resultado.\"",
-        "install.title": "Elige dónde trabajar con Clara.",
+        "install.title": "Instalación",
         "install.copy": "Instala Clara para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Clara",
         "install.video.title": "Conecta ChatGPT al ordenador con Codex",
@@ -977,13 +880,6 @@
     const lang = supportedLanguages.has(requestedLanguage) ? requestedLanguage : "en";
     const safeLang = lang || "en";
     const activeCopy = { ...copy.en, ...(copy[safeLang] || {}) };
-    const presentationVideos = {
-      en: { id: "3zvFm3fGdQ8", duration: "0:37", catalogLanguage: "en" },
-      it: { id: "mU-QhOp7EOk", duration: "0:48", catalogLanguage: "it" },
-      fr: { id: "Qe8rbIh8fhg", duration: "0:50", catalogLanguage: "fr" },
-      de: { id: "BPp_fcfYRS8", duration: "0:46", catalogLanguage: "de" },
-      es: { id: "8aCsIsrwWfU", duration: "0:53", catalogLanguage: "es" },
-    };
     const installVideos = {
       en: { id: "vU4eow_MMDA", duration: "1:16" },
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
@@ -991,19 +887,7 @@
       de: { id: "1LJCCTxGL_8", duration: "1:20" },
       es: { id: "RKcy1G79RAs", duration: "1:20" },
     };
-    const activePresentationVideo = presentationVideos[safeLang];
     const activeInstallVideo = installVideos[safeLang];
-    const presentationVideoLink = document.getElementById("presentation-video-link");
-    const hasPresentationVideo = Boolean(activePresentationVideo.id);
-    presentationVideoLink.hidden = !hasPresentationVideo;
-    if (hasPresentationVideo) {
-      presentationVideoLink.href = `https://youtu.be/${activePresentationVideo.id}`;
-      document.getElementById("presentation-video-thumbnail").src = `https://i.ytimg.com/vi/${activePresentationVideo.id}/maxresdefault.jpg`;
-      document.getElementById("presentation-video-duration").textContent = activePresentationVideo.duration;
-    } else {
-      presentationVideoLink.removeAttribute("href");
-      document.getElementById("presentation-video-thumbnail").removeAttribute("src");
-    }
     document.getElementById("clara-install-video-link").href = `https://youtu.be/${activeInstallVideo.id}`;
     document.getElementById("clara-install-video-thumbnail").src = `https://i.ytimg.com/vi/${activeInstallVideo.id}/maxresdefault.jpg`;
     document.getElementById("clara-install-video-duration").textContent = activeInstallVideo.duration;
@@ -1011,7 +895,7 @@
     document.title = activeCopy.title || copy.en.title;
     document.getElementById("og-title").setAttribute("content", activeCopy.title || copy.en.title);
     document.getElementById("og-description").setAttribute("content", activeCopy["meta.description"] || copy.en["meta.description"]);
-    document.getElementById("og-image").setAttribute("content", `https://i.ytimg.com/vi/${(hasPresentationVideo ? activePresentationVideo : activeInstallVideo).id}/maxresdefault.jpg`);
+    document.getElementById("og-image").setAttribute("content", `https://i.ytimg.com/vi/${activeInstallVideo.id}/maxresdefault.jpg`);
     const ogLocales = { en: "en_US", it: "it_IT", fr: "fr_FR", de: "de_DE", es: "es_ES" };
     document.getElementById("og-locale").setAttribute("content", ogLocales[safeLang]);
     document.querySelectorAll("[data-i18n]").forEach((node) => {
@@ -1046,6 +930,11 @@
     document.querySelectorAll('a[href="/"]').forEach((link) => {
       link.href = `/?lang=${safeLang}`;
     });
+    document.querySelectorAll("[data-function-link]").forEach((link) => {
+      const url = new URL(link.dataset.baseHref, window.location.href);
+      url.searchParams.set("lang", safeLang);
+      link.href = `${url.pathname}${url.search}${url.hash}`;
+    });
     document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
       link.href = `/data-handling?lang=${safeLang}`;
     });
@@ -1058,7 +947,6 @@
         hashTarget?.scrollIntoView({ behavior: "instant", block: "start" });
       });
     }
-    window.MparanzaVideos?.mount({ product: "clara", lang: safeLang, openLabel: activeCopy["videos.open"] });
   </script>
 </body>
 </html>

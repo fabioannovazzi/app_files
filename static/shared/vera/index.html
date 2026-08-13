@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="description" content="Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.">
+  <meta name="description" content="Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.">
   <meta name="theme-color" content="#FFFFFF">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
   <meta property="og:url" content="https://mparanza.com/static/shared/vera/index.html">
   <meta property="og:title" content="Vera · Codex per commercialisti">
-  <meta property="og:description" content="Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.">
+  <meta property="og:description" content="Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.">
   <meta property="og:image" content="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
   <link rel="canonical" href="https://mparanza.com/static/shared/vera/index.html">
@@ -992,13 +992,7 @@
         </button>
         <nav class="product-nav__links" id="vera-product-navigation" aria-label="Navigazione della pagina" data-i18n-aria-label="nav.label">
           <a href="#core" data-i18n="nav.capabilities">Cosa fa</a>
-          <a href="#comunicazione-professionale" data-i18n="nav.communication">Comunicazione</a>
-          <a href="#presenza-digitale-studio" data-i18n="nav.website">Sito</a>
-          <a href="#bilancio-intelligente" data-bilancio-nav hidden>Bilancio intelligente</a>
-          <a href="#bandi-agevolazioni" data-bandi-nav hidden>Bandi e agevolazioni</a>
-          <a href="#assurance" data-i18n="nav.assurance">Metodo</a>
           <a href="#jurisdiction" data-jurisdiction-nav hidden data-i18n="nav.jurisdiction">Per il tuo mercato</a>
-          <a href="#data-boundary" data-i18n="nav.data">Dati</a>
         </nav>
       </div>
       <details class="product-nav__language" data-product-nav-disclosure>
@@ -1022,10 +1016,10 @@
       <div class="hero__content">
         <p class="eyebrow" data-i18n="hero.eyebrow">Assistente AI per commercialisti</p>
         <h1 data-i18n="hero.title">Vera</h1>
-        <p class="lead" data-i18n="hero.lead">Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.</p>
+        <p class="lead" data-i18n="hero.lead">Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.</p>
         <div class="hero-install" id="installa">
           <div class="hero-install__copy">
-            <h2 data-i18n="install.title">Scegli dove lavorare con Vera.</h2>
+            <h2 data-i18n="install.title">Installazione</h2>
             <p data-i18n="install.copy">Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.</p>
           </div>
           <div class="hero-install__actions" role="group" aria-label="Opzioni di installazione di Vera" data-i18n-aria-label="install.actions.label">
@@ -1056,55 +1050,52 @@
       <div class="section-head">
         <div class="section-head__title">
           <span class="section-index" data-i18n="core.index">Cosa può fare Vera</span>
-          <h2 data-i18n="core.title">Scegli il lavoro da fare.</h2>
+          <h2 data-i18n="core.title">Funzioni disponibili</h2>
         </div>
-        <p data-i18n="core.copy">Ogni funzione parte dal materiale disponibile e prepara un risultato rivedibile.</p>
+        <p data-i18n="core.copy">Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.</p>
       </div>
 
       <div class="workstreams">
         <article class="workstream">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.clients.index">Area di lavoro 1 di 3</span>
-            <h3 data-i18n="stream.clients.title">Avvia e organizza il lavoro cliente</h3>
-            <p data-i18n="stream.clients.copy">Dalla corrispondenza e dai documenti ricevuti a un fascicolo operativo riutilizzabile.</p>
+            <h3 data-i18n="stream.clients.title">Clienti e fascicoli</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
               <h3 data-i18n="module.newClient.title">Nuovo cliente</h3>
-              <p data-i18n="module.newClient">Dalla cartella ricevuta al fascicolo operativo: documenti, anagrafica, incarico, privacy, AML e monitoraggio in un solo percorso.</p>
-              <div class="module-row__included">
-                <span class="module-row__included-label" data-i18n="module.newClient.includesLabel">Funzioni incluse</span>
-                <ul>
-                  <li data-vera-subordinate-workflow="dati-fiscali-strutturati" data-i18n="module.newClient.includes.data">Dati fiscali strutturati</li>
-                  <li data-vera-subordinate-workflow="email-cliente" data-i18n="module.newClient.includes.email">Email al cliente</li>
-                  <li data-vera-subordinate-workflow="fatture-xml-check" data-i18n="module.newClient.includes.xml" data-jurisdiction-item="it" hidden>Controllo FatturaPA XML</li>
-                </ul>
-              </div>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="notice-intake" href="../new-client/index.html#file-preparation" data-module-link data-vera-workflow="avviso-intake">
+            <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
+              <h3 data-i18n="module.newClient.includes.data">Dati fiscali strutturati</h3>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../email-cliente/index.html" data-module-link data-vera-subordinate-workflow="email-cliente">
+              <h3 data-i18n="module.newClient.includes.email">Email al cliente</h3>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-subordinate-workflow="fatture-xml-check" hidden>
+              <h3 data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h3>
+              <span class="module-row__arrow" aria-hidden="true">↗</span>
+            </a>
+            <a class="module-row" id="notice-intake" href="../avviso-intake/index.html" data-module-link data-vera-workflow="avviso-intake">
               <h3 data-i18n="module.notice.title">Istruttoria avviso</h3>
-              <p data-i18n="module.notice">Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="previdenza-inps" hidden>
               <h3>Previdenza INPS</h3>
-              <p>Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="registro-imprese-sari" hidden>
               <h3>Registro Imprese e SARI</h3>
-              <p>Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
               <h3 data-i18n="module.archiveOrganization.title">Riordino dell’archivio</h3>
-              <p data-i18n="module.archiveOrganization">Analizza una cartella cliente locale o su Google Workspace e propone categorie, nomi, spostamenti, duplicati e anomalie. Il collaboratore approva prima di ogni modifica; Vera registra ciò che applica e può ripristinarlo.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
               <h3 data-i18n="module.archive.title">Archivio dello studio</h3>
-              <p data-i18n="module.archive">Trova la corrispondenza e le evidenze di un cliente. Gmail collegato può funzionare in ChatGPT o Codex; WhatsApp Desktop e le cartelle locali o Google Workspace richiedono Codex.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1113,48 +1104,39 @@
         <article class="workstream">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.accounting.index">Area di lavoro 2 di 3</span>
-            <h3 data-i18n="stream.accounting.title">Controlla numeri, movimenti e supporti</h3>
-            <p data-i18n="stream.accounting.copy">Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.</p>
+            <h3 data-i18n="stream.accounting.title">Controlli e analisi</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../journal-sampling/index.html" data-module-link data-vera-workflow="journal-sampling">
               <h3 data-i18n="module.sampling.title">Campionamento del giornale</h3>
-              <p data-i18n="module.sampling">Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../check-entries/index.html#journey" data-module-link data-vera-workflow="check-entries">
               <h3 data-i18n="module.entries.title">Controllo scritture</h3>
-              <p data-i18n="module.entries">Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../journal-bank-reconciliation/index.html" data-module-link data-vera-workflow="journal-bank-reconciliation">
               <h3 data-i18n="module.bank.title">Riconciliazione banca-contabilità</h3>
-              <p data-i18n="module.bank">Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../riconciliazione-partite/index.html" data-module-link data-vera-workflow="audit-reconciliation">
               <h3 data-i18n="module.reconciliation.title">Riconciliazione partite</h3>
-              <p data-i18n="module.reconciliation">Riunisce partite, mastrini, banche e supporti con relazioni, residui ed evidenze visibili in Excel e Word.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="sales-plan" href="../sales-plan/index.html" data-module-link data-vera-workflow="sales-plan">
               <h3 data-i18n="module.plan.title">Plan</h3>
-              <p data-i18n="module.plan">Trasforma vendite Actual revisionate in un Plan applicando soltanto assunzioni commerciali e valutarie confermate, con scope, periodi, priorità e riconciliazione visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="variance-analysis" href="index.html#analisi-scostamenti" data-module-link data-vera-workflow="variance-analysis">
+            <a class="module-row" id="variance-analysis" href="../variance-analysis/index.html" data-module-link data-vera-workflow="variance-analysis">
               <h3 data-i18n="module.variance.title">Analisi degli scostamenti</h3>
-              <p data-i18n="module.variance">Confronta consuntivo (Actual), Budget, Forecast o periodi precedenti; riconcilia i totali alle fonti, calcola gli scostamenti a valore e, con unità affidabili, per prezzo, volume e mix, poi prepara tabelle e grafici rivedibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
+            <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-vera-workflow="bilancio-xbrl-it" data-jurisdiction-item="it" data-primary-workflow-link="bilancio-intelligente" hidden>
               <h3>Bilancio intelligente</h3>
-              <p>Da CSV, Excel o PDF riveduti a prospetti, nota integrativa e XBRL, con mappature, domande e decisioni professionali visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" id="financial-analysis" href="../financial-analysis/index.html" data-module-link data-vera-workflow="financial-analysis">
               <h3 data-i18n="module.financialAnalysis.title">Analisi finanziaria e due diligence</h3>
-              <p data-i18n="module.financialAnalysis">Prepara analisi contabili e financial due diligence: conto economico mensile, capitale circolante, concentrazione clienti, adjusted EBITDA, PFN, Capex e bridge di transazione, con evidenze riconciliate e riproducibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1163,43 +1145,35 @@
         <article class="workstream">
           <header class="workstream-head">
             <span class="stream-number" data-i18n="stream.outputs.index">Area di lavoro 3 di 3</span>
-            <h3 data-i18n="stream.outputs.title">Costruisci risultati e ricerca</h3>
-            <p data-i18n="stream.outputs.copy">Dalle fonti al report, dal quesito alla validazione.</p>
+            <h3 data-i18n="stream.outputs.title">Report, comunicazione e ricerca</h3>
           </header>
           <div class="module-directory">
-            <a class="module-row" href="index.html#bandi-agevolazioni" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
+            <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-vera-workflow="bandi-agevolazioni" data-jurisdiction-item="it" data-primary-workflow-link="bandi-agevolazioni" hidden>
               <h3>Bandi e agevolazioni</h3>
-              <p>Dal radar privato delle opportunità al dossier del cliente, con fonti ufficiali, evidenze, revisioni e limiti visibili.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" data-vera-workflow="concordato-plan-review" hidden>
               <h3>Concordato Preventivo</h3>
-              <p>Riesamina procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte. Il tie-out numerico resta un’appendice opzionale.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="professional-communication" href="index.html#comunicazione-professionale" data-module-link data-vera-workflow="comunicazione-professionale">
+            <a class="module-row" id="professional-communication" href="../comunicazione-professionale/index.html" data-module-link data-vera-workflow="comunicazione-professionale">
               <h3 data-i18n="module.communication.title">Comunicazione professionale</h3>
-              <p data-i18n="module.communication">Decide se una novità merita davvero di essere comunicata e prepara email, articoli, post e visuali nel formato approvato dello Studio.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="studio-website" href="index.html#presenza-digitale-studio" data-module-link data-vera-workflow="presenza-digitale-studio">
+            <a class="module-row" id="studio-website" href="../presenza-digitale-studio/index.html" data-module-link data-vera-workflow="presenza-digitale-studio">
               <h3 data-i18n="module.website.title">Presenza digitale dello studio</h3>
-              <p data-i18n="module.website">Rinnova il sito esistente o ne prepara uno iniziale dai materiali verificati, con preview responsive e pubblicazione subordinata all’approvazione.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../report-builder/index.html" data-module-link data-vera-workflow="report-builder">
               <h3 data-i18n="module.report.title">Genera report</h3>
-              <p data-i18n="module.report">Prepara Word e Markdown da tabelle confermate e mantiene ogni numero materiale collegato alla fonte e al controllo che lo sostiene.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../prompt-optimizer/index.html" data-module-link data-vera-assurance-workflow="prompt-optimizer">
               <h3 data-i18n="module.prompt.title">Ottimizza prompt</h3>
-              <p data-i18n="module.prompt">Trasforma un quesito legale, fiscale o di conformità in una ricerca con perimetro, fonti e verifiche definite.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../deep-research-validator/index.html" data-module-link data-vera-assurance-workflow="deep-research-validator">
               <h3 data-i18n="module.research.title">Valida Deep Research</h3>
-              <p data-i18n="module.research">Controlla le affermazioni rispetto alle fonti citate e prepara il materiale consolidato.</p>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1207,443 +1181,58 @@
       </div>
     </section>
 
-    <section class="section-block" id="analisi-scostamenti">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="variance.index">Analisi degli scostamenti</span>
-          <h2 data-i18n="variance.title">Capire dove nasce lo scostamento.</h2>
-        </div>
-        <p data-i18n="variance.copy">Confronta consuntivo (Actual), Budget, Forecast o periodo precedente. Vera riconcilia le basi alle fonti e costruisce un bridge che chiude allo scostamento totale; il calcolo non diventa automaticamente una spiegazione.</p>
-      </div>
-
-      <div class="assurance-sequence">
-        <article class="assurance-step">
-          <h3 data-i18n="variance.scope.title">Definisci il confronto</h3>
-          <p data-i18n="variance.scope.copy">Entità e perimetro, periodi, valuta, convenzione dei segni e dimensioni restano espliciti prima del calcolo.</p>
-        </article>
-        <article class="assurance-step">
-          <h3 data-i18n="variance.calculate.title">Riconcilia e scomponi</h3>
-          <p data-i18n="variance.calculate.copy">Vera lega base e confronto a P&amp;L, bilancio di verifica o management accounts. Senza unità affidabili usa l’analisi a soli valori; il prezzo-volume-mix richiede unità riviste.</p>
-        </article>
-        <article class="assurance-step">
-          <h3 data-i18n="variance.plots.title">Leggi i grafici</h3>
-          <p data-i18n="variance.plots.copy">Waterfall, bridge per componente e dimensione, viste esplose e drilldown mostrano i driver calcolati e devono riconciliarsi allo scostamento totale.</p>
-        </article>
-      </div>
-
-      <p class="assurance-closing" data-i18n="variance.boundary">Vera consegna tabelle, grafici degli scostamenti e carte di lavoro rivedibili. Cause operative, classificazione favorevole/sfavorevole, materialità e commento gestionale restano distinti dai fatti calcolati e richiedono conferma professionale.</p>
-    </section>
-
-    <section class="section-block" id="comunicazione-professionale">
-      <div class="section-head comms-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="communication.index">Comunicazione professionale</span>
-          <h2 data-i18n="communication.title">Il commercialista sceglie le fonti. Vera prepara la comunicazione.</h2>
-        </div>
-        <p data-i18n="communication.copy">Email, articolo, post o grafica: il commercialista corregge e approva la versione finale.</p>
-      </div>
-
-      <div class="comms-journey">
-        <div class="comms-subhead">
-          <h3 data-i18n="communication.journey.title">Tre passaggi.</h3>
-          <p data-i18n="communication.journey.copy">Pubblicare è una possibilità, non l’obiettivo.</p>
-        </div>
-        <ol class="comms-steps comms-steps--three">
-          <li class="comms-step">
-            <h4 data-i18n="communication.steps.sources.title">1. Il commercialista sceglie</h4>
-            <p data-i18n="communication.steps.sources.copy">Indica le fonti, il pubblico, i canali e, se vuole, le comunicazioni precedenti da usare come esempio.</p>
-          </li>
-          <li class="comms-step">
-            <h4 data-i18n="communication.steps.claims.title">2. Vera prepara</h4>
-            <p data-i18n="communication.steps.claims.copy">Legge le fonti, valuta se c’è qualcosa di utile da dire e prepara i formati richiesti. Altrimenti propone di non pubblicare.</p>
-          </li>
-          <li class="comms-step">
-            <h4 data-i18n="communication.steps.editor.title">3. Il commercialista decide</h4>
-            <p data-i18n="communication.steps.editor.copy">Corregge contenuto e formato, sceglie destinatari e tempi e approva la versione esatta da inviare o pubblicare.</p>
-          </li>
-        </ol>
-      </div>
-
-      <aside class="comms-creative comms-model-data" data-model-data-workflow="comunicazione-professionale" data-model-data-status="relevant">
-        <p class="comms-creative__kicker" data-i18n="communication.modelData.kicker">Quali dati arrivano al modello</p>
-        <div>
-          <h3 data-i18n="communication.modelData.title">Le fonti scelte arrivano al modello.</h3>
-          <p data-i18n="communication.modelData.copy">Il modello legge le fonti scelte e le informazioni dello Studio necessarie al lavoro. Se il commercialista usa comunicazioni precedenti come esempi, Vera rimuove prima sul computer email, telefoni, codici fiscali, numeri di conto e di pratica riconoscibili. Un primo passaggio del modello può ancora vedere nomi e dettagli di contesto per pseudonimizzarli. Solo i passaggi successivi ricevono quelle comunicazioni in forma pseudonimizzata; la corrispondenza con gli originali resta nello Studio. Lo stesso vale in Codex e Cowork.</p>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section-block" id="presenza-digitale-studio">
-      <div class="section-head comms-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="website.index">Presenza digitale dello studio</span>
-          <h2 data-i18n="website.title">Un sito decente.</h2>
-        </div>
-        <p data-i18n="website.copy">Vera rinnova il sito esistente o costruisce il primo sito dello Studio partendo da materiali verificati. Prepara un sito funzionante, leggibile su computer e telefono, che lo Studio può rivedere e pubblicare.</p>
-      </div>
-
-      <div class="comms-decision">
-        <div class="comms-decision__thesis">
-          <p class="comms-decision__statement" data-i18n="website.thesis">Il sito deve rispondere subito a cinque domande.</p>
-          <p data-i18n="website.thesisCopy">Chi è lo Studio? Chi aiuta? Che cosa fa? Perché è credibile? Come lo si contatta?</p>
-        </div>
-        <ul class="comms-outcomes" aria-label="Perimetri della presenza digitale" data-i18n-aria-label="website.outcomes.label">
-          <li class="comms-outcome">
-            <strong data-i18n="website.outcomes.refresh.title">Sito da rinnovare</strong>
-            <p data-i18n="website.outcomes.refresh.copy">Conserva i contenuti utili e migliora struttura, testi, aspetto e uso su telefono.</p>
-          </li>
-          <li class="comms-outcome comms-outcome--revise">
-            <strong data-i18n="website.outcomes.first.title">Primo sito</strong>
-            <p data-i18n="website.outcomes.first.copy">Parte da fatti e materiali verificati. Vera propone struttura, testi e aspetto senza inventare servizi o reputazione.</p>
-          </li>
-          <li class="comms-outcome comms-outcome--silence">
-            <strong data-i18n="website.outcomes.scope.title">Fuori perimetro</strong>
-            <p data-i18n="website.outcomes.scope.copy">Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura sono progetti separati.</p>
-          </li>
-        </ul>
-      </div>
-
-      <div class="comms-journey">
-        <div class="comms-subhead">
-          <h3 data-i18n="website.journey.title">Tre passaggi, dal materiale alla pubblicazione.</h3>
-          <p data-i18n="website.journey.copy">Niente presentazioni o mock-up: si lavora direttamente sul sito funzionante.</p>
-        </div>
-        <ol class="comms-steps comms-steps--three">
-          <li class="comms-step">
-            <h4 data-i18n="website.steps.evidence.title">1. Scegliere i contenuti</h4>
-            <p data-i18n="website.steps.evidence.copy">Lo Studio indica il sito esistente e i materiali da usare. Vera identifica fatti, pubblico, pagine e contatti.</p>
-          </li>
-          <li class="comms-step">
-            <h4 data-i18n="website.steps.build.title">2. Costruire il sito</h4>
-            <p data-i18n="website.steps.build.copy">Vera organizza i contenuti, prepara i testi e costruisce le pagine del sito.</p>
-          </li>
-          <li class="comms-step">
-            <h4 data-i18n="website.steps.review.title">3. Rivedere e pubblicare</h4>
-            <p data-i18n="website.steps.review.copy">Lo Studio verifica fatti e identità, prova il sito su desktop e telefono e approva la versione esatta da pubblicare.</p>
-          </li>
-        </ol>
-      </div>
-
-      <aside class="comms-creative comms-model-data" data-model-data-workflow="presenza-digitale-studio" data-model-data-status="not-relevant">
-        <p class="comms-creative__kicker" data-i18n="website.modelData.kicker">Quali dati arrivano al modello</p>
-        <div>
-          <h3 data-i18n="website.modelData.title">Non rilevante per questo processo.</h3>
-          <p data-i18n="website.modelData.copy">Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.</p>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section-block" id="bilancio-intelligente" data-bilancio-section hidden>
-      <div class="section-head bilancio-head">
-        <div class="section-head__title">
-          <span class="section-index">Bilancio · Italia</span>
-          <h2>Il processo esiste già. Vera lo rende intelligente.</h2>
-        </div>
-        <p>Dal bilancio di verifica — anche in PDF leggibile o scansionato — a un bilancio OIC rivedibile: Vera comprende i conti, riusa le decisioni confermate, individua ciò che manca e prepara prospetti, nota integrativa e file XBRL.</p>
-      </div>
-
-      <div class="bilancio-feature">
-        <div class="bilancio-feature__copy">
-          <p class="bilancio-thesis">L’XBRL è il formato di output. Il lavoro è preparare il bilancio.</p>
-          <p>Vera partecipa alla preparazione lungo tutto il percorso. Calcoli, riconciliazioni, regole civilistiche e generazione XML restano esatti e verificabili; le scelte contabili restano al professionista.</p>
-        </div>
-        <figure class="bilancio-video">
-          <video controls playsinline preload="metadata" data-bilancio-video data-poster-src="media/bilancio-intelligente-poster.jpg" aria-label="Bilancio intelligente: dai dati contabili all’XBRL rivedibile">
-            <source data-video-src="media/bilancio-intelligente.mp4" type="video/mp4">
-            <track kind="captions" srclang="it" label="Italiano" data-caption-src="media/bilancio-intelligente.vtt" default>
-            Il browser non supporta il video HTML5.
-          </video>
-          <figcaption>
-            <span>Bilancio intelligente · guida breve</span>
-            <span>Voce italiana · sottotitoli disponibili</span>
-          </figcaption>
-        </figure>
-      </div>
-
-      <div class="bilancio-pipeline">
-        <div class="bilancio-pipeline__head">
-          <h3>Un unico percorso, con i punti aperti visibili.</h3>
-          <p>Vera non compila moduli alla cieca e non trasforma una proposta in una decisione.</p>
-        </div>
-        <div class="bilancio-steps">
-          <article class="bilancio-step">
-            <h4>Legge le evidenze</h4>
-            <p>Legge CSV, Excel e PDF leggibili o scansionati. Per i PDF mostra intestazioni, righe e celle incerte: il professionista corregge o esclude prima che i dati entrino nel bilancio.</p>
-          </article>
-          <article class="bilancio-step">
-            <h4>Comprende i conti</h4>
-            <p>Propone mappature spiegate, conserva quelle già approvate e rende esplicite le alternative.</p>
-          </article>
-          <article class="bilancio-step">
-            <h4>Chiede ciò che serve</h4>
-            <p>Porta all’attenzione conti ambigui, saldi non riconciliati, informazioni mancanti e domande OIC pertinenti.</p>
-          </article>
-          <article class="bilancio-step">
-            <h4>Prepara il bilancio</h4>
-            <p>Costruisce prospetti, tabelle, informative e bozze narrative usando anche la conoscenza confermata dell’anno precedente.</p>
-          </article>
-          <article class="bilancio-step">
-            <h4>Controlla il risultato</h4>
-            <p>Calcoli, quadrature, riconciliazioni, regole di forma e validazione XBRL sono eseguiti in modo riproducibile.</p>
-          </article>
-          <article class="bilancio-step">
-            <h4>Consegna per la revisione</h4>
-            <p>Mappature, questioni, prospetti, nota, anteprima e XBRL arrivano insieme, con blocchi e decisioni ancora aperte.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="bilancio-boundary">
-        <article>
-          <h3>Vera partecipa</h3>
-          <p>Interpreta il materiale, propone il passo successivo, riusa conoscenza approvata, prepara le bozze e spiega anomalie o incoerenze.</p>
-        </article>
-        <article>
-          <h3>Revisione e approvazione</h3>
-          <p>Il commercialista conferma forma, mappature, trattamenti contabili, informative e testi, quindi approva il bilancio prima dell’eventuale deposito.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="bandi-agevolazioni" data-bandi-section hidden>
-      <div class="section-head bandi-head">
-        <div class="section-head__title">
-          <span class="section-index">Bandi e agevolazioni · Italia</span>
-          <h2>Dall’opportunità al dossier, senza perdere la fonte.</h2>
-        </div>
-        <p>Vera collega il monitoraggio delle misure al lavoro istruttorio del singolo cliente. Ogni proposta resta distinta dall’evidenza che la sostiene e dalla decisione del professionista.</p>
-      </div>
-
-      <div class="bandi-position">
-        <p class="bandi-position__statement">Non un elenco di bandi. Un percorso rivedibile dal profilo dell’impresa alla domanda.</p>
-        <div class="bandi-position__coverage">
-          <strong>Che cosa significa “copertura”</strong>
-          <p>Fonti confermate e controllate diviso fonti applicabili confermate. Misura l’esecuzione del piano di ricerca; non è la probabilità di aver trovato tutte le agevolazioni disponibili.</p>
-        </div>
-      </div>
-
-      <div class="bandi-evidence-chain" aria-label="Catena delle evidenze del workflow bandi">
-        <span>Profilo impresa con riferimenti opachi</span>
-        <span>Fonti ufficiali e relativi atti</span>
-        <span>Controlli registrati e datati</span>
-        <span>Decisioni professionali tracciate</span>
-        <span>Dossier verificabili</span>
-      </div>
-
-      <div class="bandi-stages">
-        <article class="bandi-stage">
-          <span class="bandi-stage__index">Fase A · Radar dello studio</span>
-          <h3>Trova ciò che merita attenzione.</h3>
-          <p>Costruisce profili separati per cliente, propone un piano di fonti ufficiali, registra i controlli realmente eseguiti e confronta opportunità e imprese in entrambe le direzioni.</p>
-          <p class="bandi-stage__sources"><strong>Evidenze:</strong> visura e dati societari selezionati, territorio, ATECO, dimensione, investimenti previsti, proprietà, personale, energia, digitalizzazione, export e altri fatti pertinenti, ciascuno con data e provenienza.</p>
-          <p class="bandi-stage__output"><strong>Output</strong><span>Opportunità da riesaminare, dati mancanti, contraddizioni, complessità e prossima azione proposta.</span></p>
-        </article>
-        <article class="bandi-stage">
-          <span class="bandi-stage__index">Fase B · Dossier del cliente</span>
-          <h3>Prepara l’istruttoria completa.</h3>
-          <p>Importa l’opportunità selezionata nel fascicolo del cliente e ricostruisce requisiti, esclusioni, spese, documenti, moduli, testi narrativi e controlli incrociati.</p>
-          <p class="bandi-stage__sources"><strong>Evidenze:</strong> bando e atti modificativi, allegati, FAQ ufficiali, moduli, visure, bilanci, preventivi, dichiarazioni e informazioni di progetto. Le FAQ chiariscono: non sostituiscono silenziosamente un atto formale.</p>
-          <p class="bandi-stage__output"><strong>Output</strong><span>Matrice degli elementi pronti, mancanti, da verificare o non applicabili, esito separato, simulazione del controllo dell’ente e mappa manuale del portale.</span></p>
-        </article>
-      </div>
-
-      <div class="bandi-pipeline">
-        <div class="bandi-pipeline__head">
-          <h3>Un solo filo, sei passaggi controllabili.</h3>
-          <p>Vera propone, il professionista conferma e il percorso conserva fonti, calcoli e revisioni.</p>
-        </div>
-        <div class="bandi-steps">
-          <article class="bandi-step">
-            <h4>Qualifica il profilo</h4>
-            <p>Ogni fatto osservato in un documento resta collegato alla fonte dello stesso cliente; ciò che manca rimane mancante.</p>
-          </article>
-          <article class="bandi-step">
-            <h4>Pianifica e controlla le fonti</h4>
-            <p>Il piano è specifico per impresa e territorio. Una fonte prevista non conta come controllata finché il controllo non è registrato e riesaminato.</p>
-          </article>
-          <article class="bandi-step">
-            <h4>Segue il ciclo della misura</h4>
-            <p>Annuncio, apertura, sospensione, chiusura e rifinanziamento restano osservazioni datate. Modifiche e nuove FAQ non cancellano la storia.</p>
-          </article>
-          <article class="bandi-step">
-            <h4>Confronta opportunità e clienti</h4>
-            <p>Compatibilità, beneficio, costi, complessità e prossima azione sono proposte motivate, non punteggi automatici di eleggibilità.</p>
-          </article>
-          <article class="bandi-step">
-            <h4>Costruisce il dossier</h4>
-            <p>Collega ogni requisito, controllo, spesa, documento, campo e testo alla fonte e all’evidenza del cliente che lo sostengono.</p>
-          </article>
-          <article class="bandi-step">
-            <h4>Consegna alla revisione</h4>
-            <p>Mostra punti pronti, mancanti, da verificare e non applicabili. Firma, dichiarazioni, accesso e invio restano alla persona autorizzata.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="bandi-boundary">
-        <article>
-          <h3>Vera partecipa</h3>
-          <p>Legge fonti ed evidenze, propone il piano di ricerca, ricostruisce il caso, segnala lacune e conflitti, prepara moduli e narrative e simula la revisione dell’ente.</p>
-        </article>
-        <article>
-          <h3>Revisione, firma e invio</h3>
-          <p>Conferma fonti, significato, applicabilità, eleggibilità, costi e dichiarazioni. Vera non garantisce completezza, non contatta il cliente, non riceve credenziali, non accede al portale, non firma e non invia.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="assurance">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="assurance.index">Metodo di assurance</span>
-          <h2 data-i18n="assurance.title">Prima il significato. Poi il calcolo.</h2>
-        </div>
-        <p data-i18n="assurance.copy">Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.</p>
-      </div>
-
-      <div class="assurance-sequence">
-        <article class="assurance-step">
-          <h3 data-i18n="assurance.codex.title">Codex propone</h3>
-          <p data-i18n="assurance.codex.copy">Interpreta il lavoro e propone ruoli delle fonti, campi, relazioni e questioni da chiarire. Le ambiguità restano visibili.</p>
-        </article>
-        <article class="assurance-step">
-          <h3 data-i18n="assurance.professional.title">Il professionista conferma</h3>
-          <p data-i18n="assurance.professional.copy">Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.</p>
-        </article>
-        <article class="assurance-step">
-          <h3 data-i18n="assurance.code.title">Il codice esegue</h3>
-          <p data-i18n="assurance.code.copy">Su materiali confermati applica calcoli, campionamenti e controlli riproducibili. Dati ambigui o incompleti non vengono trasformati in risultati plausibili.</p>
-        </article>
-      </div>
-
-      <p class="assurance-closing" data-i18n="assurance.closing">Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.</p>
-
-      <div class="assurance-overview">
-        <a class="overview-video" href="https://youtu.be/2rJ0T5bZp2k" target="_blank" rel="noopener noreferrer" data-featured-video>
-          <span class="overview-video__thumb" aria-hidden="true">
-            <img src="https://i.ytimg.com/vi/2rJ0T5bZp2k/maxresdefault.jpg" alt="" width="1280" height="720" loading="lazy" data-featured-video-thumb>
-            <span class="video-play">▶</span>
-            <span class="video-duration" data-featured-video-duration>1:07</span>
-          </span>
-          <span class="overview-video__body">
-            <span class="video-kicker" data-i18n="videos.overview.kicker">Panoramica</span>
-            <strong data-i18n="videos.overview.title">Dal lavoro dello studio a un risultato rivedibile</strong>
-            <span class="video-meta" data-i18n="videos.open">Si apre su YouTube</span>
-          </span>
-        </a>
-      </div>
-    </section>
-
     <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
       <div class="country-pack-head">
         <div class="country-pack-head__title">
           <span class="section-index" data-i18n="jurisdiction.index">Lavoro specifico per l’Italia</span>
-          <h2 data-i18n="jurisdiction.title">Workflow costruiti sulle fonti e procedure italiane.</h2>
+          <h2 data-i18n="jurisdiction.title">Funzioni disponibili per l’Italia</h2>
         </div>
         <p data-i18n="jurisdiction.copy">Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.</p>
       </div>
       <div class="module-directory">
-        <a class="module-row" href="index.html#bilancio-intelligente" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+        <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Bilancio intelligente</h3>
-          <p>Da CSV, Excel o PDF riveduti a prospetti, nota integrativa e XBRL, con mappature, domande e decisioni professionali visibili.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" href="index.html#bandi-agevolazioni" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
+        <a class="module-row" href="../bandi-agevolazioni/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Bandi e agevolazioni</h3>
-          <p>Dal radar privato delle opportunità al dossier del cliente, con fonti ufficiali, evidenze, revisioni e limiti visibili.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" href="../check-entries/index.html#italy-adapter" data-module-link data-jurisdiction-item="it" hidden>
+        <a class="module-row" href="../fatture-xml-check/index.html" data-module-link data-jurisdiction-item="it" hidden>
           <h3>Controllo scritture · FatturaPA</h3>
-          <p>Collega le scritture allo ZIP XML o agli export FatturaPA e concentra la revisione sulle eccezioni.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
-        <a class="module-row" href="../report-builder/index.html#italy-preset" data-module-link data-jurisdiction-item="it" hidden>
+        <a class="module-row" href="../report-enti-locali/index.html" data-module-link data-jurisdiction-item="it" hidden>
           <h3>Report enti locali</h3>
-          <p>Prepara report con la struttura e il lessico di FPV, FCDE e PNRR.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../concordato-plan-review/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Concordato Preventivo</h3>
-          <p>Riesamina procedura, documenti autorevoli, creditori e trattamento, alternativa liquidatoria, fonti e impieghi, liquidità e questioni aperte. Il tie-out numerico resta un’appendice opzionale.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" id="previdenza-inps" href="../previdenza-inps/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Previdenza INPS</h3>
-          <p>Organizza documenti ed esportazioni INPS in un fascicolo previdenziale con fonti e bozza di lavoro.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" id="registro-imprese-sari" href="../registro-imprese-sari/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h3>Registro Imprese e SARI</h3>
-          <p>Prepara la pratica Registro Imprese/DIRE da fonti SARI e CCIAA.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/uk.html" data-module-link data-native-language="en" data-jurisdiction-item="en" hidden>
           <h3>New Client file preparation · United Kingdom</h3>
-          <p>Organizes an incoming UK tax folder, identifies missing material, and prepares a firm memo and client request.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/geneva.html" data-module-link data-native-language="fr" data-jurisdiction-item="fr" hidden>
           <h3>Préparation du dossier nouveau client · Genève</h3>
-          <p>Organise un dossier fiscal genevois, relève les pièces manquantes et prépare le mémo du cabinet et la demande au client.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
         <a class="module-row" href="../new-client/zurich.html" data-module-link data-native-language="de" data-jurisdiction-item="de" hidden>
           <h3>Mandantenakte vorbereiten · Zürich</h3>
-          <p>Ordnet eine Zürcher Steuerakte, erkennt fehlende Unterlagen und erstellt Kanzleivermerk und Mandantenanfrage.</p>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
       </div>
     </section>
 
-    <section class="section-block" id="data-boundary">
-      <div class="section-head">
-        <div class="section-head__title">
-          <span class="section-index" data-i18n="privacy.index">Dati · confini reali</span>
-          <h2 data-i18n="privacy.title">Vera lavora sui dati reali del cliente.</h2>
-        </div>
-        <p data-i18n="privacy.copy">Clara, Vera e Lucia non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.</p>
-      </div>
-
-      <p class="data-position__statement" data-i18n="privacy.statement">I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. Le funzioni ordinarie non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.</p>
-
-      <div class="data-position__facts">
-        <article class="data-position__fact">
-          <h3 data-i18n="privacy.clientData.title">Dati del cliente</h3>
-          <p data-i18n="privacy.clientData.copy">Se identità, titolarità, fatti fiscali, contabili o previdenziali servono alla revisione, possono entrare nel contesto di Codex.</p>
-        </article>
-        <article class="data-position__fact">
-          <h3 data-i18n="privacy.local.title">Elaborazione locale</h3>
-          <p data-i18n="privacy.local.copy">Python in locale può filtrare, aggregare, calcolare e organizzare quando aiuta il lavoro. Non viene usato per cancellare identificativi a prescindere.</p>
-        </article>
-        <article class="data-position__fact">
-          <h3 data-i18n="privacy.account.title">Scelta dell’account</h3>
-          <p data-i18n="privacy.account.copy">Per le normali funzioni dentro Codex, lo studio usa il piano ChatGPT esistente e configura i controlli disponibili per quel piano.</p>
-        </article>
-        <article class="data-position__fact">
-          <h3 data-i18n="privacy.secrets.title">Credenziali e sessioni</h3>
-          <p data-i18n="privacy.secrets.copy">Password, chiavi API, cookie, token e dati di sessione non devono entrare nei prompt o nei file leggibili da Codex.</p>
-        </article>
-      </div>
-
-      <div class="data-routes">
-        <h3 data-i18n="privacy.routes.title">Due categorie di trattamento.</h3>
-        <div class="data-routes__grid">
-          <article class="data-route">
-            <h4 data-i18n="privacy.routes.local.title">Normali funzioni dentro Codex</h4>
-            <p data-i18n="privacy.routes.local.copy">Per ogni funzione, la pagina indica che cosa resta normalmente sul computer e che cosa può leggere l’ambiente AI scelto.</p>
-          </article>
-          <article class="data-route">
-            <h4 data-i18n="privacy.routes.hosted.title">Servizi hosted da Mparanza</h4>
-            <p data-i18n="privacy.routes.hosted.copy">I servizi ospitati da Mparanza hanno un confine separato. La pagina sulla gestione dei dati spiega quali contenuti arrivano a Mparanza e come vengono gestiti. Ricerche, connettori, portali o invii scelti dall’utente seguono invece le condizioni del servizio esterno.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="data-position__closing">
-        <p data-i18n="privacy.closing">La stessa regola vale per Clara, Vera e Lucia: per ogni funzione restano visibili il confine di trattamento e i servizi coinvolti.</p>
-      </div>
-    </section>
   </main>
 
   <footer>
@@ -1657,12 +1246,11 @@
     </div>
   </footer>
 
-  <script src="../video-library.js?v=20260726-assurance"></script>
   <script>
     const copy = {
       it: {
         "meta.title": "Vera · Codex per commercialisti",
-        "meta.description": "Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.",
+        "meta.description": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
         "skip": "Vai al contenuto",
         "nav.label": "Navigazione della pagina",
         "nav.menu": "Menu",
@@ -1675,21 +1263,21 @@
         "language.label": "Lingua",
         "hero.eyebrow": "Assistente AI per commercialisti",
         "hero.title": "Vera",
-        "hero.lead": "Un plugin specialistico per lavorare su fascicoli, controlli contabili, riconciliazioni e report.",
+        "hero.lead": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
         "core.index": "Cosa può fare Vera",
-        "core.title": "Scegli il lavoro da fare.",
-        "core.copy": "Ogni funzione parte dal materiale disponibile e prepara un risultato rivedibile.",
+        "core.title": "Funzioni disponibili",
+        "core.copy": "Seleziona una funzione per aprire la pagina con input, metodo, output, responsabilità e informazioni sui dati che arrivano al modello.",
         "work.index": "Tutte le funzioni",
         "work.title": "Scegli il lavoro da fare.",
         "work.copy": "Le funzioni di Vera sono organizzate intorno ai momenti reali del lavoro di studio.",
         "stream.clients.index": "Area di lavoro 1 di 3",
-        "stream.clients.title": "Avvia e organizza il lavoro cliente",
+        "stream.clients.title": "Clienti e fascicoli",
         "stream.clients.copy": "Dalla corrispondenza e dai documenti ricevuti a un primo fascicolo riutilizzabile.",
         "stream.accounting.index": "Area di lavoro 2 di 3",
-        "stream.accounting.title": "Controlla numeri, movimenti e supporti",
+        "stream.accounting.title": "Controlli e analisi",
         "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.",
         "stream.outputs.index": "Area di lavoro 3 di 3",
-        "stream.outputs.title": "Costruisci risultati e ricerca",
+        "stream.outputs.title": "Report, comunicazione e ricerca",
         "stream.outputs.copy": "Dalle fonti al report, dal quesito alla validazione.",
         "stream.research.title": "Formula e verifica la ricerca",
         "stream.research.copy": "Dal quesito iniziale a una base di ricerca controllabile.",
@@ -1710,7 +1298,7 @@
         "module.entries.title": "Controllo scritture",
         "module.entries": "Collega scritture e supporti solo quando la relazione è verificabile; i candidati deboli restano eccezioni.",
         "jurisdiction.index": "Lavoro specifico per l’Italia",
-        "jurisdiction.title": "Workflow costruiti sulle fonti e procedure italiane.",
+        "jurisdiction.title": "Funzioni disponibili per l’Italia",
         "jurisdiction.copy": "Quando il lavoro lo richiede, Vera usa formati, enti e riferimenti propri dell’Italia.",
         "module.bank.title": "Riconciliazione banca-contabilità",
         "module.bank": "Confronta banca e contabilità dopo un mapping confermato e chiude soltanto relazioni che soddisfano il contratto di riconciliazione.",
@@ -1745,7 +1333,6 @@
         "communication.index": "Comunicazione professionale",
         "communication.title": "Il commercialista sceglie le fonti. Vera prepara la comunicazione.",
         "communication.copy": "Email, articolo, post o grafica: il commercialista corregge e approva la versione finale.",
-        "communication.journey.title": "Tre passaggi.",
         "communication.journey.copy": "Pubblicare è una possibilità, non l’obiettivo.",
         "communication.steps.sources.title": "1. Il commercialista sceglie",
         "communication.steps.sources.copy": "Indica le fonti, il pubblico, i canali e, se vuole, le comunicazioni precedenti da usare come esempio.",
@@ -1771,7 +1358,6 @@
         "website.outcomes.first.copy": "Parte da fatti e materiali verificati. Vera propone struttura, testi e aspetto senza inventare servizi o reputazione.",
         "website.outcomes.scope.title": "Fuori perimetro",
         "website.outcomes.scope.copy": "Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura sono progetti separati.",
-        "website.journey.title": "Tre passaggi, dal materiale alla pubblicazione.",
         "website.journey.copy": "Niente presentazioni o mock-up: si lavora direttamente sul sito funzionante.",
         "website.steps.evidence.title": "1. Scegliere i contenuti",
         "website.steps.evidence.copy": "Lo Studio indica il sito esistente e i materiali da usare. Vera identifica fatti, pubblico, pagine e contatti.",
@@ -1779,18 +1365,7 @@
         "website.steps.build.copy": "Vera organizza i contenuti, prepara i testi e costruisce le pagine del sito.",
         "website.steps.review.title": "3. Rivedere e pubblicare",
         "website.steps.review.copy": "Lo Studio verifica fatti e identità, prova il sito su desktop e telefono e approva la versione esatta da pubblicare.",
-        "assurance.index": "Metodo di assurance",
-        "assurance.title": "Prima il significato. Poi il calcolo.",
-        "assurance.copy": "Vera separa interpretazione, conferma professionale e controlli meccanici. Un risultato riproducibile non diventa automaticamente una conclusione corretta.",
-        "assurance.codex.title": "Codex propone",
-        "assurance.codex.copy": "Interpreta il lavoro e propone ruoli delle fonti, campi, relazioni e questioni da chiarire. Le ambiguità restano visibili.",
-        "assurance.professional.title": "Il professionista conferma",
-        "assurance.professional.copy": "Conferma perimetro, significato, mapping, materialità, sufficienza delle evidenze e conclusioni professionali.",
-        "assurance.code.title": "Il codice esegue",
-        "assurance.code.copy": "Su materiali confermati applica calcoli, campionamenti e controlli riproducibili. Dati ambigui o incompleti non vengono trasformati in risultati plausibili.",
-        "assurance.closing": "Fonti, preparazione, riconciliazione, revisione e pubblicazione restano stati distinti. Accettare una review non può trasformare un controllo fallito in un esito positivo.",
         "privacy.index": "Dati · confini reali",
-        "privacy.title": "Vera lavora sui dati reali del cliente.",
         "privacy.copy": "Clara, Vera e Lucia non anonimizzano automaticamente i dati. Possono usare Python in locale per filtrare o aggregare le informazioni quando è utile.",
         "privacy.statement": "I dati forniti al modello vengono trattati attraverso il piano ChatGPT già utilizzato dall’utente. Le funzioni ordinarie non inviano a Mparanza file dei clienti, prompt o contenuti del contesto del modello.",
         "privacy.clientData.title": "Dati del cliente",
@@ -1810,7 +1385,7 @@
         "videos.overview.kicker": "Panoramica",
         "videos.overview.title": "Dal lavoro dello studio a un risultato rivedibile",
         "videos.open": "Si apre su YouTube",
-        "install.title": "Scegli dove lavorare con Vera.",
+        "install.title": "Installazione",
         "install.copy": "Installa Vera per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "install.actions.label": "Opzioni di installazione di Vera",
         "install.button": "Installa per ChatGPT Work e Codex",
@@ -1824,7 +1399,7 @@
       },
       en: {
         "meta.title": "Vera · Codex for accountants",
-        "meta.description": "A specialist plugin for client files, accounting checks, reconciliations and reporting.",
+        "meta.description": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
         "skip": "Skip to content",
         "nav.label": "Page navigation",
         "nav.menu": "Menu",
@@ -1837,21 +1412,21 @@
         "language.label": "Language",
         "hero.eyebrow": "AI companion for accountants",
         "hero.title": "Vera",
-        "hero.lead": "A specialist plugin for client files, accounting checks, reconciliations and reporting.",
+        "hero.lead": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
         "core.index": "What Vera can do",
-        "core.title": "Choose the work in front of you.",
-        "core.copy": "Each function starts from the available material and prepares a result you can review.",
+        "core.title": "Available functions",
+        "core.copy": "Select a function to open its page with inputs, method, outputs, responsibilities, and model-data information.",
         "work.index": "All capabilities",
         "work.title": "Choose the work in front of you.",
         "work.copy": "Vera’s capabilities are organized around the real moments of firm work.",
         "stream.clients.index": "Work area 1 of 3",
-        "stream.clients.title": "Start and organize client work",
+        "stream.clients.title": "Clients and files",
         "stream.clients.copy": "From live correspondence and incoming documents to a reusable work file.",
         "stream.accounting.index": "Work area 2 of 3",
-        "stream.accounting.title": "Check figures, movements and support",
+        "stream.accounting.title": "Checks and analysis",
         "stream.accounting.copy": "From the journal to entries, banks, open items, the Plan, variance analysis and financial analysis.",
         "stream.outputs.index": "Work area 3 of 3",
-        "stream.outputs.title": "Build outputs and research",
+        "stream.outputs.title": "Reports, communication, and research",
         "stream.outputs.copy": "From sources to a report, from the question to validation.",
         "stream.research.title": "Frame and verify research",
         "stream.research.copy": "From the initial question to a controllable research base.",
@@ -1872,7 +1447,7 @@
         "module.entries.title": "Check Entries",
         "module.entries": "Connects entries and support only when the relationship is verifiable; weak candidates remain exceptions.",
         "jurisdiction.index": "Work available for the United Kingdom",
-        "jurisdiction.title": "Prepare the first review of a UK client file.",
+        "jurisdiction.title": "Functions available for the United Kingdom",
         "jurisdiction.copy": "Vera organizes the incoming tax folder, missing material, firm memo and client request.",
         "module.bank.title": "Journal-Bank Reconciliation",
         "module.bank": "Compares bank and accounting data after a confirmed mapping and closes only relationships that satisfy the reconciliation contract.",
@@ -1907,7 +1482,6 @@
         "communication.index": "Professional communication",
         "communication.title": "The professional selects the sources. Vera prepares the communication.",
         "communication.copy": "Email, article, post or graphic: the professional corrects and approves the final version.",
-        "communication.journey.title": "Three steps.",
         "communication.journey.copy": "Publishing is an option, not the objective.",
         "communication.steps.sources.title": "1. The professional selects",
         "communication.steps.sources.copy": "They choose the sources, audience, channels and, if useful, previous communications to use as examples.",
@@ -1933,7 +1507,6 @@
         "website.outcomes.first.copy": "Starts from verified facts and materials. Vera proposes the structure, copy and appearance without inventing services or reputation.",
         "website.outcomes.scope.title": "Out of scope",
         "website.outcomes.scope.copy": "Client portals, e-commerce, bookings, payments and bespoke applications are separate projects.",
-        "website.journey.title": "Three steps, from materials to publication.",
         "website.journey.copy": "No presentation or mock-up: the work happens directly in the functioning website.",
         "website.steps.evidence.title": "1. Select the content",
         "website.steps.evidence.copy": "The studio identifies the existing website and materials to use. Vera maps the facts, audience, pages and contact details.",
@@ -1941,18 +1514,7 @@
         "website.steps.build.copy": "Vera organises the content, drafts the copy and builds the website pages.",
         "website.steps.review.title": "3. Review and publish",
         "website.steps.review.copy": "The studio verifies the facts and identity, tests the website on desktop and phone, and approves the exact version for publication.",
-        "assurance.index": "Assurance method",
-        "assurance.title": "Meaning first. Calculation second.",
-        "assurance.copy": "Vera separates interpretation, professional confirmation and mechanical controls. A reproducible result does not automatically become a correct conclusion.",
-        "assurance.codex.title": "Codex proposes",
-        "assurance.codex.copy": "It interprets the work and proposes source roles, fields, relationships and questions to resolve. Ambiguities remain visible.",
-        "assurance.professional.title": "The professional confirms",
-        "assurance.professional.copy": "They confirm scope, meaning, mappings, materiality, evidence sufficiency and professional conclusions.",
-        "assurance.code.title": "Code executes",
-        "assurance.code.copy": "On confirmed materials it applies reproducible calculations, sampling and checks. Ambiguous or incomplete data are not turned into plausible results.",
-        "assurance.closing": "Source, preparation, reconciliation, review and publication remain separate states. Accepting a review cannot turn a failed control into a positive result.",
         "privacy.index": "Data · real boundaries",
-        "privacy.title": "Vera works on real client data.",
         "privacy.copy": "Clara, Vera and Lucia do not automatically anonymise data. They may use local Python to filter or aggregate information when useful.",
         "privacy.statement": "Data supplied to the model is processed through the user’s existing ChatGPT plan. Ordinary functions do not send client files, prompts, or model-context content to Mparanza.",
         "privacy.clientData.title": "Client data",
@@ -1972,7 +1534,7 @@
         "videos.overview.kicker": "Overview",
         "videos.overview.title": "From the firm’s work to a reviewable result",
         "videos.open": "Opens on YouTube",
-        "install.title": "Choose where to work with Vera.",
+        "install.title": "Installation",
         "install.copy": "Install Vera for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "install.actions.label": "Vera installation options",
         "install.button": "Install for ChatGPT Work and Codex",
@@ -1986,7 +1548,7 @@
       },
       fr: {
         "meta.title": "Vera · Codex pour les experts-comptables",
-        "meta.description": "Un plugin spécialisé pour les dossiers clients, les contrôles comptables, les rapprochements et les rapports.",
+        "meta.description": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
         "skip": "Aller au contenu",
         "nav.label": "Navigation de la page",
         "nav.menu": "Menu",
@@ -1999,21 +1561,21 @@
         "language.label": "Langue",
         "hero.eyebrow": "AI companion pour les experts-comptables",
         "hero.title": "Vera",
-        "hero.lead": "Un plugin spécialisé pour les dossiers clients, les contrôles comptables, les rapprochements et les rapports.",
+        "hero.lead": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
         "core.index": "Ce que Vera peut faire",
-        "core.title": "Choisissez le travail à accomplir.",
-        "core.copy": "Chaque fonction part des éléments disponibles et prépare un résultat que vous pouvez réviser.",
+        "core.title": "Fonctions disponibles",
+        "core.copy": "Sélectionnez une fonction pour ouvrir sa page avec les entrées, la méthode, les sorties, les responsabilités et les informations sur les données transmises au modèle.",
         "work.index": "Toutes les fonctions",
         "work.title": "Choisissez le travail à accomplir.",
         "work.copy": "Les fonctions de Vera suivent les moments réels du travail en cabinet.",
         "stream.clients.index": "Domaine de travail 1 sur 3",
-        "stream.clients.title": "Démarrer et organiser le travail client",
+        "stream.clients.title": "Clients et dossiers",
         "stream.clients.copy": "Des échanges et documents reçus à un dossier de travail réutilisable.",
         "stream.accounting.index": "Domaine de travail 2 sur 3",
-        "stream.accounting.title": "Contrôler chiffres, mouvements et justificatifs",
+        "stream.accounting.title": "Contrôles et analyses",
         "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts, au Plan, à l’analyse des écarts et à l’analyse financière.",
         "stream.outputs.index": "Domaine de travail 3 sur 3",
-        "stream.outputs.title": "Construire les résultats et la recherche",
+        "stream.outputs.title": "Rapports, communication et recherche",
         "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
         "stream.research.title": "Cadrer et vérifier la recherche",
         "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
@@ -2034,7 +1596,7 @@
         "module.entries.title": "Contrôle des écritures",
         "module.entries": "Relie écritures et justificatifs uniquement lorsque la relation est vérifiable ; les candidats faibles restent des exceptions.",
         "jurisdiction.index": "Travail disponible pour Genève",
-        "jurisdiction.title": "Préparez la première revue d’un dossier fiscal genevois.",
+        "jurisdiction.title": "Fonctions disponibles pour Genève",
         "jurisdiction.copy": "Vera organise les documents reçus, les pièces manquantes, le mémo du cabinet et la demande au client.",
         "module.bank.title": "Rapprochement banque-comptabilité",
         "module.bank": "Compare banque et comptabilité après confirmation du mapping et ne clôt que les relations conformes au contrat de rapprochement.",
@@ -2069,7 +1631,6 @@
         "communication.index": "Communication professionnelle",
         "communication.title": "Le professionnel choisit les sources. Vera prépare la communication.",
         "communication.copy": "E-mail, article, publication ou visuel : le professionnel corrige et valide la version finale.",
-        "communication.journey.title": "Trois étapes.",
         "communication.journey.copy": "Publier est une possibilité, pas l’objectif.",
         "communication.steps.sources.title": "1. Le professionnel choisit",
         "communication.steps.sources.copy": "Il choisit les sources, le public, les canaux et, si nécessaire, les communications antérieures à utiliser comme exemples.",
@@ -2095,7 +1656,6 @@
         "website.outcomes.first.copy": "Part de faits et d’éléments vérifiés. Vera propose la structure, les textes et l’aspect sans inventer services ou réputation.",
         "website.outcomes.scope.title": "Hors périmètre",
         "website.outcomes.scope.copy": "Portails clients, e-commerce, réservations, paiements et applications sur mesure sont des projets distincts.",
-        "website.journey.title": "Trois étapes, des éléments à la publication.",
         "website.journey.copy": "Pas de présentation ni de maquette : le travail se fait directement dans le site fonctionnel.",
         "website.steps.evidence.title": "1. Choisir les contenus",
         "website.steps.evidence.copy": "Le cabinet indique le site existant et les éléments à utiliser. Vera identifie les faits, le public, les pages et les coordonnées.",
@@ -2103,18 +1663,7 @@
         "website.steps.build.copy": "Vera organise les contenus, prépare les textes et construit les pages du site.",
         "website.steps.review.title": "3. Relire et publier",
         "website.steps.review.copy": "Le cabinet vérifie les faits et l’identité, teste le site sur ordinateur et téléphone et valide la version exacte à publier.",
-        "assurance.index": "Méthode d’assurance",
-        "assurance.title": "D’abord le sens. Ensuite le calcul.",
-        "assurance.copy": "Vera sépare interprétation, confirmation professionnelle et contrôles mécaniques. Un résultat reproductible ne devient pas automatiquement une conclusion correcte.",
-        "assurance.codex.title": "Codex propose",
-        "assurance.codex.copy": "Il interprète le travail et propose rôles des sources, champs, relations et questions à résoudre. Les ambiguïtés restent visibles.",
-        "assurance.professional.title": "Le professionnel confirme",
-        "assurance.professional.copy": "Il confirme périmètre, sens, mappings, matérialité, suffisance des preuves et conclusions professionnelles.",
-        "assurance.code.title": "Le code exécute",
-        "assurance.code.copy": "Sur des éléments confirmés, il applique des calculs, des échantillonnages et des contrôles reproductibles. Les données ambiguës ou incomplètes ne sont pas transformées en résultats plausibles.",
-        "assurance.closing": "Sources, préparation, rapprochement, revue et publication restent des états distincts. Accepter une revue ne transforme pas un contrôle échoué en résultat positif.",
         "privacy.index": "Données · périmètres réels",
-        "privacy.title": "Vera travaille sur les données réelles du client.",
         "privacy.copy": "Clara, Vera et Lucia n’anonymisent pas automatiquement les données. Elles peuvent utiliser Python localement pour filtrer ou agréger des informations lorsque cela est utile.",
         "privacy.statement": "Les données fournies au modèle sont traitées dans le cadre de l’offre ChatGPT existante de l’utilisateur. Les fonctions ordinaires n’envoient à Mparanza ni fichiers clients, ni prompts, ni contenu du contexte du modèle.",
         "privacy.clientData.title": "Données clients",
@@ -2134,7 +1683,7 @@
         "videos.overview.kicker": "Vue d’ensemble",
         "videos.overview.title": "Du travail du cabinet à un résultat révisable",
         "videos.open": "S’ouvre sur YouTube",
-        "install.title": "Choisissez où travailler avec Vera.",
+        "install.title": "Installation",
         "install.copy": "Installez Vera pour ChatGPT Work et Codex ou téléchargez le paquet pour Claude Cowork.",
         "install.actions.label": "Options d’installation de Vera",
         "install.button": "Installer pour ChatGPT Work et Codex",
@@ -2148,7 +1697,7 @@
       },
       de: {
         "meta.title": "Vera · Codex für Steuerberaterinnen und Steuerberater",
-        "meta.description": "Ein spezialisiertes Plugin für Mandantendateien, Buchungsprüfungen, Abstimmungen und Berichte.",
+        "meta.description": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
         "skip": "Zum Inhalt",
         "nav.label": "Seitennavigation",
         "nav.menu": "Menü",
@@ -2161,21 +1710,21 @@
         "language.label": "Sprache",
         "hero.eyebrow": "AI companion für Steuerberaterinnen und Steuerberater",
         "hero.title": "Vera",
-        "hero.lead": "Ein spezialisiertes Plugin für Mandantendateien, Buchungsprüfungen, Abstimmungen und Berichte.",
+        "hero.lead": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
         "core.index": "Was Vera kann",
-        "core.title": "Wählen Sie die anstehende Aufgabe.",
-        "core.copy": "Jede Funktion beginnt mit dem verfügbaren Material und bereitet ein prüfbares Ergebnis vor.",
+        "core.title": "Verfügbare Funktionen",
+        "core.copy": "Wählen Sie eine Funktion, um ihre Seite mit Eingaben, Methode, Ergebnissen, Verantwortlichkeiten und Informationen zu den Modelldaten zu öffnen.",
         "work.index": "Alle Funktionen",
         "work.title": "Wählen Sie die anstehende Aufgabe.",
         "work.copy": "Veras Funktionen orientieren sich an den tatsächlichen Momenten der Kanzleiarbeit.",
         "stream.clients.index": "Arbeitsbereich 1 von 3",
-        "stream.clients.title": "Mandantenarbeit beginnen und organisieren",
+        "stream.clients.title": "Mandanten und Akten",
         "stream.clients.copy": "Von Korrespondenz und eingegangenen Dokumenten zur wiederverwendbaren Arbeitsakte.",
         "stream.accounting.index": "Arbeitsbereich 2 von 3",
-        "stream.accounting.title": "Zahlen, Bewegungen und Belege prüfen",
+        "stream.accounting.title": "Kontrollen und Analysen",
         "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten, zum Plan, zur Abweichungsanalyse und zur Finanzanalyse.",
         "stream.outputs.index": "Arbeitsbereich 3 von 3",
-        "stream.outputs.title": "Ergebnisse und Recherche aufbauen",
+        "stream.outputs.title": "Berichte, Kommunikation und Recherche",
         "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
         "stream.research.title": "Recherche eingrenzen und prüfen",
         "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
@@ -2196,7 +1745,7 @@
         "module.entries.title": "Buchungen prüfen",
         "module.entries": "Verknüpft Buchungen und Belege nur bei nachweisbarer Beziehung; schwache Kandidaten bleiben Ausnahmen.",
         "jurisdiction.index": "Arbeit für Zürich",
-        "jurisdiction.title": "Bereiten Sie die erste Prüfung einer Zürcher Steuerakte vor.",
+        "jurisdiction.title": "Verfügbare Funktionen für Zürich",
         "jurisdiction.copy": "Vera ordnet eingegangene Unterlagen, fehlende Nachweise, Kanzleivermerk und Mandantenanfrage.",
         "module.bank.title": "Bank und Buchhaltung abstimmen",
         "module.bank": "Vergleicht Bank und Buchhaltung nach bestätigtem Mapping und schließt nur Beziehungen, die den Abstimmungsvertrag erfüllen.",
@@ -2231,7 +1780,6 @@
         "communication.index": "Professionelle Kommunikation",
         "communication.title": "Die Fachperson wählt die Quellen. Vera bereitet die Kommunikation vor.",
         "communication.copy": "E-Mail, Artikel, Beitrag oder Grafik: Die Fachperson korrigiert und genehmigt die endgültige Fassung.",
-        "communication.journey.title": "Drei Schritte.",
         "communication.journey.copy": "Veröffentlichen ist eine Möglichkeit, nicht das Ziel.",
         "communication.steps.sources.title": "1. Die Fachperson wählt",
         "communication.steps.sources.copy": "Sie wählt Quellen, Zielgruppe, Kanäle und auf Wunsch frühere Mitteilungen als Beispiele aus.",
@@ -2257,7 +1805,6 @@
         "website.outcomes.first.copy": "Beginnt mit geprüften Fakten und Materialien. Vera schlägt Struktur, Texte und Erscheinungsbild vor, ohne Leistungen oder Ruf zu erfinden.",
         "website.outcomes.scope.title": "Nicht enthalten",
         "website.outcomes.scope.copy": "Mandantenportale, E-Commerce, Buchungen, Zahlungen und maßgeschneiderte Anwendungen sind separate Projekte.",
-        "website.journey.title": "Drei Schritte vom Material zur Veröffentlichung.",
         "website.journey.copy": "Keine Präsentation und kein Mock-up: Die Arbeit erfolgt direkt an der funktionsfähigen Website.",
         "website.steps.evidence.title": "1. Inhalte auswählen",
         "website.steps.evidence.copy": "Die Kanzlei nennt die bestehende Website und die zu verwendenden Materialien. Vera erfasst Fakten, Zielgruppe, Seiten und Kontaktdaten.",
@@ -2265,18 +1812,7 @@
         "website.steps.build.copy": "Vera ordnet die Inhalte, bereitet die Texte vor und baut die Seiten der Website.",
         "website.steps.review.title": "3. Prüfen und veröffentlichen",
         "website.steps.review.copy": "Die Kanzlei prüft Fakten und Identität, testet die Website auf Desktop und Smartphone und genehmigt die genaue Veröffentlichungsversion.",
-        "assurance.index": "Assurance-Methode",
-        "assurance.title": "Erst die Bedeutung. Dann die Berechnung.",
-        "assurance.copy": "Vera trennt Interpretation, fachliche Bestätigung und mechanische Kontrollen. Ein reproduzierbares Ergebnis ist nicht automatisch eine richtige Schlussfolgerung.",
-        "assurance.codex.title": "Codex schlägt vor",
-        "assurance.codex.copy": "Codex interpretiert die Arbeit und schlägt Quellenrollen, Felder, Beziehungen und offene Fragen vor. Mehrdeutigkeiten bleiben sichtbar.",
-        "assurance.professional.title": "Der Berufsträger bestätigt",
-        "assurance.professional.copy": "Er bestätigt Umfang, Bedeutung, Mappings, Wesentlichkeit, Nachweisstärke und fachliche Schlussfolgerungen.",
-        "assurance.code.title": "Der Code führt aus",
-        "assurance.code.copy": "Auf bestätigten Unterlagen führt er reproduzierbare Berechnungen, Stichproben und Kontrollen aus. Mehrdeutige oder unvollständige Daten werden nicht in plausible Ergebnisse verwandelt.",
-        "assurance.closing": "Quelle, Aufbereitung, Abstimmung, Review und Veröffentlichung bleiben getrennte Zustände. Eine angenommene Review kann aus einer fehlgeschlagenen Kontrolle kein positives Ergebnis machen.",
         "privacy.index": "Daten · tatsächliche Grenzen",
-        "privacy.title": "Vera arbeitet mit echten Mandantendaten.",
         "privacy.copy": "Clara, Vera und Lucia anonymisieren Daten nicht automatisch. Sie können Python lokal einsetzen, um Informationen zu filtern oder zu aggregieren, wenn dies nützlich ist.",
         "privacy.statement": "Daten, die dem Modell bereitgestellt werden, werden im Rahmen des bestehenden ChatGPT-Tarifs des Nutzers verarbeitet. Normale Funktionen senden keine Mandantendateien, Prompts oder Inhalte des Modellkontexts an Mparanza.",
         "privacy.clientData.title": "Mandantendaten",
@@ -2296,7 +1832,7 @@
         "videos.overview.kicker": "Überblick",
         "videos.overview.title": "Von der Kanzleiarbeit zu einem prüfbaren Ergebnis",
         "videos.open": "Öffnet YouTube",
-        "install.title": "Wählen Sie, wo Sie mit Vera arbeiten.",
+        "install.title": "Installation",
         "install.copy": "Installieren Sie Vera für ChatGPT Work und Codex oder laden Sie das Paket für Claude Cowork herunter.",
         "install.actions.label": "Installationsoptionen für Vera",
         "install.button": "Für ChatGPT Work und Codex installieren",
@@ -2310,7 +1846,7 @@
       },
       es: {
         "meta.title": "Vera · Codex para asesores fiscales y contables",
-        "meta.description": "Un plugin especializado para expedientes de clientes, controles contables, conciliaciones e informes.",
+        "meta.description": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
         "skip": "Ir al contenido",
         "nav.label": "Navegación de la página",
         "nav.menu": "Menú",
@@ -2323,21 +1859,21 @@
         "language.label": "Idioma",
         "hero.eyebrow": "AI companion para asesores fiscales y contables",
         "hero.title": "Vera",
-        "hero.lead": "Un plugin especializado para expedientes de clientes, controles contables, conciliaciones e informes.",
+        "hero.lead": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
         "core.index": "Qué puede hacer Vera",
-        "core.title": "Elige el trabajo que tienes delante.",
-        "core.copy": "Cada función parte del material disponible y prepara un resultado que puedes revisar.",
+        "core.title": "Funciones disponibles",
+        "core.copy": "Selecciona una función para abrir su página con entradas, método, resultados, responsabilidades e información sobre los datos que llegan al modelo.",
         "work.index": "Todas las funciones",
         "work.title": "Elige el trabajo que tienes delante.",
         "work.copy": "Las funciones de Vera se organizan en torno a los momentos reales del trabajo del despacho.",
         "stream.clients.index": "Área de trabajo 1 de 3",
-        "stream.clients.title": "Iniciar y organizar el trabajo del cliente",
+        "stream.clients.title": "Clientes y expedientes",
         "stream.clients.copy": "De la correspondencia y los documentos recibidos a un expediente de trabajo reutilizable.",
         "stream.accounting.index": "Área de trabajo 2 de 3",
-        "stream.accounting.title": "Comprobar cifras, movimientos y justificantes",
+        "stream.accounting.title": "Controles y análisis",
         "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas, el Plan, el análisis de desviaciones y el análisis financiero.",
         "stream.outputs.index": "Área de trabajo 3 de 3",
-        "stream.outputs.title": "Preparar resultados e investigación",
+        "stream.outputs.title": "Informes, comunicación e investigación",
         "stream.outputs.copy": "De las fuentes al informe, de la pregunta a la validación.",
         "stream.research.title": "Delimitar y verificar la investigación",
         "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
@@ -2358,7 +1894,7 @@
         "module.entries.title": "Comprobar asientos",
         "module.entries": "Relaciona asientos y justificantes solo cuando el vínculo es verificable; los candidatos débiles siguen siendo excepciones.",
         "jurisdiction.index": "Trabajo específico",
-        "jurisdiction.title": "Capacidades adaptadas a una jurisdicción concreta.",
+        "jurisdiction.title": "Funciones disponibles para el mercado seleccionado",
         "jurisdiction.copy": "Esta sección aparece cuando hay un flujo específico disponible para el mercado de esta página.",
         "module.bank.title": "Conciliación entre diario y banco",
         "module.bank": "Compara banco y contabilidad tras confirmar el mapeo y solo cierra relaciones que cumplen el contrato de conciliación.",
@@ -2393,7 +1929,6 @@
         "communication.index": "Comunicación profesional",
         "communication.title": "El profesional elige las fuentes. Vera prepara la comunicación.",
         "communication.copy": "Correo, artículo, publicación o gráfico: el profesional corrige y aprueba la versión final.",
-        "communication.journey.title": "Tres pasos.",
         "communication.journey.copy": "Publicar es una posibilidad, no el objetivo.",
         "communication.steps.sources.title": "1. El profesional elige",
         "communication.steps.sources.copy": "Elige las fuentes, el público, los canales y, si quiere, comunicaciones anteriores como ejemplos.",
@@ -2419,7 +1954,6 @@
         "website.outcomes.first.copy": "Parte de hechos y materiales verificados. Vera propone la estructura, los textos y el aspecto sin inventar servicios ni reputación.",
         "website.outcomes.scope.title": "Fuera de alcance",
         "website.outcomes.scope.copy": "Portales de clientes, comercio electrónico, reservas, pagos y aplicaciones a medida son proyectos separados.",
-        "website.journey.title": "Tres pasos, de los materiales a la publicación.",
         "website.journey.copy": "Sin presentación ni maqueta: se trabaja directamente en el sitio funcional.",
         "website.steps.evidence.title": "1. Elegir los contenidos",
         "website.steps.evidence.copy": "El despacho indica el sitio existente y los materiales que se usarán. Vera identifica hechos, público, páginas y contactos.",
@@ -2427,18 +1961,7 @@
         "website.steps.build.copy": "Vera organiza los contenidos, prepara los textos y construye las páginas del sitio.",
         "website.steps.review.title": "3. Revisar y publicar",
         "website.steps.review.copy": "El despacho verifica hechos e identidad, prueba el sitio en ordenador y teléfono y aprueba la versión exacta que se publicará.",
-        "assurance.index": "Método de aseguramiento",
-        "assurance.title": "Primero el significado. Después el cálculo.",
-        "assurance.copy": "Vera separa interpretación, confirmación profesional y controles mecánicos. Un resultado reproducible no se convierte automáticamente en una conclusión correcta.",
-        "assurance.codex.title": "Codex propone",
-        "assurance.codex.copy": "Interpreta el trabajo y propone funciones de las fuentes, campos, relaciones y cuestiones por resolver. Las ambigüedades siguen visibles.",
-        "assurance.professional.title": "El profesional confirma",
-        "assurance.professional.copy": "Confirma alcance, significado, mapeos, materialidad, suficiencia de la evidencia y conclusiones profesionales.",
-        "assurance.code.title": "El código ejecuta",
-        "assurance.code.copy": "Sobre materiales confirmados aplica cálculos, muestreos y controles reproducibles. Los datos ambiguos o incompletos no se convierten en resultados plausibles.",
-        "assurance.closing": "Fuentes, preparación, conciliación, revisión y publicación siguen siendo estados separados. Aceptar una revisión no convierte un control fallido en un resultado positivo.",
         "privacy.index": "Datos · límites reales",
-        "privacy.title": "Vera trabaja con datos reales del cliente.",
         "privacy.copy": "Clara, Vera y Lucia no anonimizan automáticamente los datos. Pueden usar Python en local para filtrar o agregar información cuando resulte útil.",
         "privacy.statement": "Los datos proporcionados al modelo se procesan mediante el plan de ChatGPT que ya utiliza el usuario. Las funciones ordinarias no envían a Mparanza archivos de clientes, prompts ni contenido del contexto del modelo.",
         "privacy.clientData.title": "Datos del cliente",
@@ -2458,7 +1981,7 @@
         "videos.overview.kicker": "Visión general",
         "videos.overview.title": "Del trabajo del despacho a un resultado revisable",
         "videos.open": "Se abre en YouTube",
-        "install.title": "Elige dónde trabajar con Vera.",
+        "install.title": "Instalación",
         "install.copy": "Instala Vera para ChatGPT Work y Codex o descarga el paquete para Claude Cowork.",
         "install.actions.label": "Opciones de instalación de Vera",
         "install.button": "Instalar para ChatGPT Work y Codex",
@@ -2495,11 +2018,11 @@
       es: "../new-client/index.html#file-preparation"
     };
     const filePreparationPages = {
-      it: "../new-client/index.html#file-preparation",
-      en: "../new-client/uk.html#file-preparation",
-      fr: "../new-client/geneva.html#file-preparation",
-      de: "../new-client/zurich.html#file-preparation",
-      es: "../new-client/index.html#file-preparation"
+      it: "../avviso-intake/index.html",
+      en: "../avviso-intake/index.html",
+      fr: "../avviso-intake/index.html",
+      de: "../avviso-intake/index.html",
+      es: "../avviso-intake/index.html"
     };
     const installVideos = {
       it: { id: "yAnkIabnQ1M", duration: "1:16" },
@@ -2519,22 +2042,7 @@
       return `https://i.ytimg.com/vi/${id}/maxresdefault.jpg`;
     }
 
-    function setVideos(lang, strings) {
-      const selection = window.MparanzaVideos.getCatalog("vera", lang);
-      const featuredLink = document.querySelector("[data-featured-video]");
-      const featuredImage = document.querySelector("[data-featured-video-thumb]");
-      const featuredDuration = document.querySelector("[data-featured-video-duration]");
-      featuredLink.hidden = !selection.featured;
-      if (selection.featured) {
-        featuredLink.href = `https://youtu.be/${selection.featured.id}`;
-        featuredLink.setAttribute("aria-label", strings["videos.overview.title"]);
-        featuredImage.src = thumbnailUrl(selection.featured.id);
-        featuredDuration.textContent = selection.featured.duration;
-      } else {
-        featuredLink.removeAttribute("href");
-        featuredImage.removeAttribute("src");
-      }
-
+    function setVideos(lang) {
       const installVideo = installVideos[lang];
       document.getElementById("vera-install-video-link").href = `https://youtu.be/${installVideo.id}`;
       document.getElementById("vera-install-video-thumbnail").src = thumbnailUrl(installVideo.id);
@@ -2572,26 +2080,6 @@
         button.setAttribute("aria-pressed", String(isActive));
       });
       const jurisdiction = jurisdictionsByPage[lang];
-      const showBilancio = lang === "it";
-      const showBandi = lang === "it";
-      document.querySelector("[data-bilancio-section]").hidden = !showBilancio;
-      document.querySelector("[data-bilancio-nav]").hidden = !showBilancio;
-      document.querySelector("[data-bandi-section]").hidden = !showBandi;
-      document.querySelector("[data-bandi-nav]").hidden = !showBandi;
-      const bilancioVideo = document.querySelector("[data-bilancio-video]");
-      const bilancioSource = bilancioVideo.querySelector("[data-video-src]");
-      const bilancioCaptions = bilancioVideo.querySelector("[data-caption-src]");
-      if (showBilancio) {
-        bilancioVideo.poster = bilancioVideo.dataset.posterSrc;
-        bilancioSource.src = bilancioSource.dataset.videoSrc;
-        bilancioCaptions.src = bilancioCaptions.dataset.captionSrc;
-      } else {
-        bilancioVideo.pause();
-        bilancioVideo.removeAttribute("poster");
-        bilancioSource.removeAttribute("src");
-        bilancioCaptions.removeAttribute("src");
-      }
-      bilancioVideo.load();
       document.querySelector("[data-jurisdiction-section]").hidden = !jurisdiction;
       document.querySelector("[data-jurisdiction-nav]").hidden = !jurisdiction;
       document.querySelectorAll("[data-jurisdiction-item]").forEach((item) => {
@@ -2631,7 +2119,7 @@
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
         link.setAttribute("href", `/data-handling?lang=${lang}`);
       });
-      setVideos(lang, strings);
+      setVideos(lang);
 
       if (updateHistory) {
         const next = new URL(window.location.href);

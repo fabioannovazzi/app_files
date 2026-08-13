@@ -355,3 +355,24 @@ unnecessary decoration.
    or decorative emphasis.
 6. Make every word and visual signal earn its place; interfaces should feel
    stable, intentional, and professionally trustworthy.
+7. Use zero slogans on the top-level Vera, Lucia, and Clara pages. Every
+   sentence there must state a concrete function, input, output, limitation,
+   responsibility, or next action. Delete copy whose main purpose is to sound
+   intelligent, memorable, reassuring, or marketable. This rule does not apply
+   to the Mparanza homepage, which has a separate editorial role. Zero slogans
+   does not mean zero explanation: the product pages must explain the product
+   directly, and each process page must explain its own process concretely.
+8. Give every Vera, Lucia, and Clara function its own explanation page. Each
+   top-level product page may explain the product and may name, group, and link
+   its functions, but it must not reproduce the function explanations inline.
+   Inputs, outputs, method, limitations, professional responsibilities, and
+   data handling belong on the relevant function page.
+9. End every Vera, Lucia, and Clara function explanation page with a section
+   titled “Quali dati arrivano al modello” in Italian and its direct equivalent
+   in each supported language. The section must describe that function's
+   actual model-context data path and boundaries; do not reuse generic privacy
+   boilerplate across functions.
+10. Show that final model-data section even when the function-specific review
+    is incomplete. In that case, use a plainly labelled localized placeholder
+    stating that the information for that function is in preparation. Do not
+    infer, generalize, or copy another function's data behavior to fill the gap.

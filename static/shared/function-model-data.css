@@ -1,0 +1,35 @@
+.function-model-data {
+  width: min(1120px, calc(100% - 40px));
+  margin: clamp(72px, 10vw, 120px) auto 0;
+  padding: clamp(32px, 5vw, 56px) 0;
+  border-top: 2px solid #002060;
+}
+
+.function-model-data__label {
+  margin: 0 0 12px;
+  color: #0070c0;
+  font: 700 0.76rem/1.3 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.function-model-data h2 {
+  max-width: 18ch;
+  margin: 0;
+  color: #002060;
+  font: 650 clamp(2rem, 4vw, 3.5rem)/1.05 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  letter-spacing: -0.045em;
+}
+
+.function-model-data__copy {
+  max-width: 62ch;
+  margin: 24px 0 0;
+  color: #52698d;
+  font: 400 1rem/1.6 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+}
+
+@media (max-width: 640px) {
+  .function-model-data {
+    width: min(100% - 28px, 1120px);
+  }
+}
