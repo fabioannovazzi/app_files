@@ -52,15 +52,18 @@ python scripts/record_agenzia_invoice_flow.py \
 1. Facoltativamente, inserisci nomi di clienti o altre diciture riservate da
    oscurare. I termini non sono mostrati nel terminale, rimangono soltanto in
    memoria e non vengono salvati.
-2. Accedi personalmente nella finestra Chrome dedicata.
-3. Seleziona il contribuente o la delega corretta.
-4. Raggiungi la pagina autenticata **Fatture e Corrispettivi**.
-5. Quando le schermate di autenticazione non sono più visibili, di' a voce
+2. Verifica che sia comparsa una finestra Chrome dedicata. In Windows il
+   registratore interrompe il flusso prima dell'accesso se rileva soltanto
+   processi Chrome in background senza una finestra desktop visibile.
+3. Accedi personalmente nella finestra Chrome dedicata.
+4. Seleziona il contribuente o la delega corretta.
+5. Raggiungi la pagina autenticata **Fatture e Corrispettivi**.
+6. Quando le schermate di autenticazione non sono più visibili, di' a voce
    oppure scrivi `pronto` a Vera. Va bene anche `ready`.
-6. Esegui un percorso rappresentativo di download. Se disponibili nella stessa
+7. Esegui un percorso rappresentativo di download. Se disponibili nella stessa
    sessione, mostra la scelta tra fatture attive e passive e il recupero di uno
    ZIP completato.
-7. Quando hai finito, di' a voce oppure scrivi `fatto` a Vera. Va bene anche
+8. Quando hai finito, di' a voce oppure scrivi `fatto` a Vera. Va bene anche
    `done`.
 
 Vera conferma i due messaggi nel terminale. Il profilo Chrome temporaneo e gli

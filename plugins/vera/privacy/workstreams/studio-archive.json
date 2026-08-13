@@ -93,6 +93,7 @@
       "controls": [
         "Use this route only after the operator explicitly asks to show or teach Vera the Agenzia invoice-download flow; that choice confirms the optional route but not any separate sharing of the resulting recording.",
         "Require the human to authenticate personally and select the correct taxpayer or delegated profile in visible Chrome. Vera never requests, enters, reads or stores credentials, PINs, SPID/CIE/CNS material, QR codes, one-time codes, cookies, tokens or session URLs.",
+        "Create an explicit headed Playwright page before showing authentication instructions. On Windows, normalize its Chrome DevTools window bounds and require a newly created visible non-empty top-level Chrome window on the current desktop; background-only Chrome processes stop the recorder before authentication.",
         "Start recording only after the operator says authentication is complete and no credential screen is visible; automatically stop the recording if an observed page or control event leaves the exact Agenzia delle Entrate HTTPS host boundary.",
         "Record only fixed value-free control metadata, query-free and fragment-free sanitized page paths, bounded control inventories, and hashed suggested download names. Suppress text inside tables and grids and never persist HTML, screenshots, traces, HAR, browser state, typed or selected values, network headers or bodies, download paths or invoice bytes.",
         "Use a fresh temporary Chrome profile and Playwright-managed downloads, close the browser under recorder control, and delete the temporary profile and download bytes when the session ends.",
@@ -192,7 +193,7 @@
   "security_controls": [
     {
       "id": "privacy-bounded-agenzia-flow-recording",
-      "control": "The local recorder accepts only exact Agenzia HTTPS origins after authentication, strips URL queries and fragments and identifier-shaped path segments, captures a fixed allowlist of value-free control metadata, suppresses tabular text, hashes suggested download names, never requests download paths or bytes, uses a disposable Chrome profile, rejects forbidden output keys and writes one owner-only review-required JSON file without overwriting an earlier recording."
+      "control": "The local recorder creates an explicit headed page and, on Windows, proves a new visible Chrome top-level desktop window before authentication. It accepts only exact Agenzia HTTPS origins after authentication, strips URL queries and fragments and identifier-shaped path segments, captures a fixed allowlist of value-free control metadata, suppresses tabular text, hashes suggested download names, never requests download paths or bytes, uses a disposable Chrome profile, rejects forbidden output keys and writes one owner-only review-required JSON file without overwriting an earlier recording."
     },
     {
       "id": "private-per-user-index",
@@ -255,6 +256,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0b4f6b01aa4b5edbac6676353abf44fe7f9aedaca2970c797dc08b880a7c835f"
+    "source_fingerprint": "9d543e498e08f5cfa9f093a6c6844181f2c43cf0f623647b3dfe4d9e79ee367d"
   }
 }
