@@ -1,0 +1,52 @@
+.function-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  width: min(var(--function-content-width, 1120px), calc(100% - 48px));
+  margin: 0 auto;
+  padding-top: 24px;
+  color: var(--muted, #52698d);
+  font-family: "Instrument Sans", "Aptos", "Segoe UI", -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  font-size: 0.88rem;
+}
+
+.page > .function-breadcrumb {
+  width: 100%;
+}
+
+.function-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--blue, var(--accent, #0070c0));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.function-breadcrumb a:hover,
+.function-breadcrumb a:focus-visible {
+  color: var(--ink, #002060);
+}
+
+.function-breadcrumb a:focus-visible {
+  outline: 2px solid var(--blue, var(--accent, #0070c0));
+  outline-offset: 3px;
+}
+
+.function-breadcrumb strong {
+  color: var(--ink, #002060);
+  font-weight: 620;
+}
+
+.function-breadcrumb span {
+  color: var(--line-strong, #9bcfe4);
+}
+
+@media (max-width: 760px) {
+  .function-breadcrumb {
+    width: calc(100% - 24px);
+    overflow-wrap: anywhere;
+  }
+}

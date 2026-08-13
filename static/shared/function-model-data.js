@@ -86,9 +86,22 @@
     main.append(section);
   };
 
+  const loadNavigation = () => {
+    if (window.MPARANZA_FUNCTION_NAVIGATION) {
+      window.MPARANZA_FUNCTION_NAVIGATION.render();
+      return;
+    }
+    if (document.querySelector("script[data-function-page-navigation]")) return;
+    const script = document.createElement("script");
+    script.src = new URL("function-page-navigation.js", currentScript.src).href;
+    script.dataset.functionPageNavigation = "";
+    document.head.append(script);
+  };
+
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", appendPlaceholder, { once: true });
   } else {
     appendPlaceholder();
   }
+  loadNavigation();
 })();

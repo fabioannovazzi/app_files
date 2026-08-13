@@ -1,6 +1,7 @@
 (() => {
   "use strict";
 
+  const currentScript = document.currentScript;
   const root = document.getElementById("function-page-root");
   const pages = window.MPARANZA_FUNCTION_PAGES;
   const pageKey = document.body.dataset.functionPage;
@@ -17,6 +18,7 @@
       responsibilitiesLabel: "Responsabilità",
       responsibilitiesTitle: "Chi fa che cosa",
       productRole: (product) => `${product} prepara`,
+      sharedRole: "La funzione prepara",
       professionalRole: "Il professionista decide",
       promptLabel: "Per iniziare",
       promptTitle: "Prompt iniziale",
@@ -35,6 +37,7 @@
       responsibilitiesLabel: "Responsibilities",
       responsibilitiesTitle: "Who does what",
       productRole: (product) => `${product} prepares`,
+      sharedRole: "The function prepares",
       professionalRole: "The professional decides",
       promptLabel: "To begin",
       promptTitle: "Starting prompt",
@@ -53,6 +56,7 @@
       responsibilitiesLabel: "Responsabilités",
       responsibilitiesTitle: "Qui fait quoi",
       productRole: (product) => `${product} prépare`,
+      sharedRole: "La fonction prépare",
       professionalRole: "Le professionnel décide",
       promptLabel: "Pour commencer",
       promptTitle: "Prompt initial",
@@ -71,6 +75,7 @@
       responsibilitiesLabel: "Verantwortung",
       responsibilitiesTitle: "Wer was übernimmt",
       productRole: (product) => `${product} bereitet vor`,
+      sharedRole: "Die Funktion bereitet vor",
       professionalRole: "Der Berufsträger entscheidet",
       promptLabel: "Zum Start",
       promptTitle: "Startprompt",
@@ -89,6 +94,7 @@
       responsibilitiesLabel: "Responsabilidades",
       responsibilitiesTitle: "Quién hace qué",
       productRole: (product) => `${product} prepara`,
+      sharedRole: "La función prepara",
       professionalRole: "El profesional decide",
       promptLabel: "Para empezar",
       promptTitle: "Prompt inicial",
@@ -105,12 +111,11 @@
   const language = Object.hasOwn(labels, requestedLanguage) ? requestedLanguage : page.defaultLanguage;
   const text = page.copy[language] || page.copy[page.defaultLanguage];
   const ui = labels[language];
-  const productSlug = page.product.toLowerCase();
-  const productUrl = `../${productSlug}/index.html?lang=${language}`;
+  const isShared = page.shared === true;
   const homeUrl = `/?lang=${language}`;
 
   document.documentElement.lang = language;
-  document.title = `${text.name} | ${page.product}`;
+  document.title = `${text.name} | ${isShared ? "Mparanza" : page.product}`;
   const description = document.querySelector('meta[name="description"]');
   if (description) description.setAttribute("content", text.summary);
   const canonical = document.querySelector('link[rel="canonical"]');
@@ -131,13 +136,11 @@
           <a class="pf-brand" href="${homeUrl}" aria-label="Mparanza">
             <img src="https://mparanza.com/images/MPARANZA-HORIZONTAL.png" alt="Mparanza">
           </a>
-          <a class="pf-product" href="${productUrl}">${page.product}</a>
         </div>
         <div class="pf-languages" role="group" aria-label="${ui.language}">${languageButtons}</div>
       </div>
     </header>
-    <main class="pf-main" id="main-content">
-      <p class="pf-breadcrumb"><a href="${productUrl}">${page.product}</a><span aria-hidden="true">/</span>${text.name}</p>
+    <main class="pf-main" id="main-content" data-function-name="${text.name}">
       <section class="pf-hero">
         <div>
           <p class="pf-label">${ui.function}</p>
@@ -157,7 +160,7 @@
           <p class="pf-section__copy">${text.responsibilityIntro}</p>
         </div>
         <div class="pf-responsibilities">
-          <article class="pf-responsibility"><h3>${ui.productRole(page.product)}</h3><p>${text.productRole}</p></article>
+          <article class="pf-responsibility"><h3>${isShared ? ui.sharedRole : ui.productRole(page.product)}</h3><p>${text.productRole}</p></article>
           <article class="pf-responsibility"><h3>${ui.professionalRole}</h3><p>${text.professionalRole}</p></article>
         </div>
       </section>
@@ -176,11 +179,25 @@
     </main>
     <footer class="pf-footer">
       <div class="pf-footer__inner">
-        <span>${page.product} · ${text.name}</span>
+        <span>${isShared ? text.name : `${page.product} · ${text.name}`}</span>
         <div><a href="https://github.com/fabioannovazzi/app_files">${ui.source}</a> · <a href="/data-handling?lang=${language}">${ui.dataPolicy}</a></div>
       </div>
     </footer>
   `;
+
+  const loadNavigation = () => {
+    if (window.MPARANZA_FUNCTION_NAVIGATION) {
+      window.MPARANZA_FUNCTION_NAVIGATION.render();
+      return;
+    }
+    if (!currentScript || document.querySelector("script[data-function-page-navigation]")) return;
+    const script = document.createElement("script");
+    script.src = new URL("function-page-navigation.js", currentScript.src).href;
+    script.dataset.functionPageNavigation = "";
+    document.head.append(script);
+  };
+
+  loadNavigation();
 
   root.querySelectorAll("[data-language]").forEach((button) => {
     button.addEventListener("click", () => {

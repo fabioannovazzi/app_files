@@ -210,6 +210,11 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 
 .section-head p { max-width: 660px; margin: 0; color: var(--blue); font-size: 17px; }
 
+#functions > .section-head h2 {
+  font-size: clamp(2.25rem, 5vw, 4.75rem);
+  letter-spacing: -0.05em;
+}
+
 .video-story {
   max-width: 920px;
   margin: 0 0 36px;
@@ -392,8 +397,18 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 .function-group h3 {
   margin: 0 0 16px;
   color: var(--navy);
-  font-size: clamp(1.5rem, 2.8vw, 2.1rem);
+  font-size: clamp(2rem, 4vw, 2.8rem);
   letter-spacing: -0.035em;
+}
+
+.function-index {
+  display: block;
+  margin-bottom: 10px;
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 650;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
 }
 
 .function-link {
@@ -411,6 +426,11 @@ section[id], .card[id] { scroll-margin-top: 92px; }
 
 .function-link:hover {
   color: var(--navy);
+}
+
+.function-link h4 {
+  margin: 0;
+  font: inherit;
 }
 
 footer {

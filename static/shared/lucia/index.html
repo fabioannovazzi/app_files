@@ -111,44 +111,44 @@
       <div class="workstreams">
         <article class="workstream" id="area-research">
           <header class="workstream-head">
-            <span class="stream-number" data-i18n="stream.research.index">Area di lavoro</span>
+            <span class="stream-number" data-i18n="stream.research.index">Area 1</span>
             <h3 data-i18n="stream.research.title">Ricerca legale</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../prompt-optimizer/index.html?lang=it" data-module-link data-base-href="../prompt-optimizer/index.html">
-              <h4 data-i18n="module.prompt.title">Ottimizzazione prompt</h4>
+              <h4 data-i18n="module.prompt.title">Preparazione della richiesta per una ricerca legale e fiscale</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../deep-research-validator/index.html?lang=it" data-module-link data-base-href="../deep-research-validator/index.html">
-              <h4 data-i18n="module.research.title">Validazione ricerca</h4>
+              <h4 data-i18n="module.research.title">Verifica delle fonti e delle conclusioni della ricerca</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
         </article>
         <article class="workstream" id="area-matters">
           <header class="workstream-head">
-            <span class="stream-number" data-i18n="stream.matter.index">Apertura del fascicolo</span>
+            <span class="stream-number" data-i18n="stream.matter.index">Area 2</span>
             <h3 data-i18n="stream.matter.title">Fascicoli</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../apertura-pratica/index.html?lang=it" data-module-link data-base-href="../apertura-pratica/index.html">
-              <h4 data-i18n="module.matter.title">Apertura pratica</h4>
+              <h4 data-i18n="module.matter.title">Preparazione del fascicolo di una nuova pratica</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
         </article>
         <article class="workstream" id="area-studio">
           <header class="workstream-head">
-            <span class="stream-number" data-i18n="stream.studio.index">Area dello studio</span>
+            <span class="stream-number" data-i18n="stream.studio.index">Area 3</span>
             <h3 data-i18n="stream.studio.title">Comunicazione e sito</h3>
           </header>
           <div class="module-directory">
             <a class="module-row" href="../comunicazione-professionale/index.html?lang=it" data-module-link data-base-href="../comunicazione-professionale/index.html">
-              <h4 data-i18n="module.communication.title">Comunicazione professionale</h4>
+              <h4 data-i18n="module.communication.title">Valutazione e preparazione delle comunicazioni dello studio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
             <a class="module-row" href="../presenza-digitale-studio/index.html?lang=it" data-module-link data-base-href="../presenza-digitale-studio/index.html">
-              <h4 data-i18n="module.website.title">Sito dello studio</h4>
+              <h4 data-i18n="module.website.title">Creazione o aggiornamento del sito dello studio</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -260,6 +260,60 @@
       }
     };
 
+    const directoryNames = {
+      it: {
+        "stream.research.index": "Area 1",
+        "stream.matter.index": "Area 2",
+        "stream.studio.index": "Area 3",
+        "module.prompt.title": "Preparazione della richiesta per una ricerca legale e fiscale",
+        "module.research.title": "Verifica delle fonti e delle conclusioni della ricerca",
+        "module.matter.title": "Preparazione del fascicolo di una nuova pratica",
+        "module.communication.title": "Valutazione e preparazione delle comunicazioni dello studio",
+        "module.website.title": "Creazione o aggiornamento del sito dello studio"
+      },
+      en: {
+        "stream.research.index": "Area 1",
+        "stream.matter.index": "Area 2",
+        "stream.studio.index": "Area 3",
+        "module.prompt.title": "Prepare a legal or tax research question",
+        "module.research.title": "Verify research sources and conclusions",
+        "module.matter.title": "Prepare the file for a new matter",
+        "module.communication.title": "Assess and prepare firm communications",
+        "module.website.title": "Create or update the firm website"
+      },
+      fr: {
+        "stream.research.index": "Domaine 1",
+        "stream.matter.index": "Domaine 2",
+        "stream.studio.index": "Domaine 3",
+        "module.prompt.title": "Préparer une question de recherche juridique ou fiscale",
+        "module.research.title": "Vérifier les sources et les conclusions de la recherche",
+        "module.matter.title": "Préparer le dossier d'une nouvelle affaire",
+        "module.communication.title": "Évaluer et préparer les communications du cabinet",
+        "module.website.title": "Créer ou mettre à jour le site du cabinet"
+      },
+      de: {
+        "stream.research.index": "Bereich 1",
+        "stream.matter.index": "Bereich 2",
+        "stream.studio.index": "Bereich 3",
+        "module.prompt.title": "Juristische oder steuerliche Recherchefrage vorbereiten",
+        "module.research.title": "Quellen und Schlussfolgerungen der Recherche prüfen",
+        "module.matter.title": "Akte für ein neues Mandat vorbereiten",
+        "module.communication.title": "Kanzleimitteilungen bewerten und vorbereiten",
+        "module.website.title": "Kanzleiwebsite erstellen oder aktualisieren"
+      },
+      es: {
+        "stream.research.index": "Área 1",
+        "stream.matter.index": "Área 2",
+        "stream.studio.index": "Área 3",
+        "module.prompt.title": "Preparar una consulta de investigación jurídica o fiscal",
+        "module.research.title": "Verificar las fuentes y conclusiones de la investigación",
+        "module.matter.title": "Preparar el expediente de un nuevo asunto",
+        "module.communication.title": "Evaluar y preparar comunicaciones del despacho",
+        "module.website.title": "Crear o actualizar el sitio web del despacho"
+      }
+    };
+    Object.entries(directoryNames).forEach(([language, names]) => Object.assign(copy[language], names));
+
     const supported = new Set(Object.keys(copy));
     const languageNames = { it: "Italiano", en: "English", fr: "Français", de: "Deutsch", es: "Español" };
     const openGraphLocales = { it: "it_IT", en: "en_GB", fr: "fr_FR", de: "de_DE", es: "es_ES" };
@@ -279,6 +333,13 @@
     function withLanguage(rawHref, lang) {
       const url = new URL(rawHref, window.location.href);
       url.searchParams.set("lang", lang);
+      return `${url.pathname}${url.search}${url.hash}`;
+    }
+
+    function withFunctionContext(rawHref, area) {
+      const url = new URL(rawHref, window.location.href);
+      url.searchParams.set("from", "lucia");
+      if (area) url.searchParams.set("area", area);
       return `${url.pathname}${url.search}${url.hash}`;
     }
 
@@ -315,7 +376,8 @@
         button.setAttribute("aria-pressed", String(active));
       });
       document.querySelectorAll("[data-module-link]").forEach((link) => {
-        link.setAttribute("href", withLanguage(link.dataset.baseHref, lang));
+        const href = withLanguage(link.dataset.baseHref, lang);
+        link.setAttribute("href", withFunctionContext(href, link.closest(".workstream")?.id));
       });
       document.querySelector("[data-home-link]").setAttribute("href", `/?lang=${lang}`);
       document.querySelectorAll("[data-data-handling-link]").forEach((link) => {
