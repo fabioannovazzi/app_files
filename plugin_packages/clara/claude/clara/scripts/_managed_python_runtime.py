@@ -8,10 +8,12 @@ import hashlib
 import json
 import logging
 import os
+import re
 import shutil
 import subprocess
 import sys
 import sysconfig
+import tempfile
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -19,6 +21,7 @@ from typing import Callable
 
 __all__ = [
     "READY_FILENAME",
+    "NETWORK_PERMISSION_REQUIRED",
     "RuntimeSelection",
     "activate_runtime",
     "dependency_target",
@@ -34,8 +37,21 @@ __all__ = [
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
 READY_FILENAME = ".mparanza-python-runtime.json"
+NETWORK_PERMISSION_REQUIRED = "MPARANZA_NETWORK_PERMISSION_REQUIRED"
 DEPENDENCY_DIR_NAME = "python-dependencies"
 LOGGER = logging.getLogger(__name__)
+
+_NETWORK_FAILURE_MARKERS = (
+    "failed to resolve",
+    "name or service not known",
+    "nodename nor servname provided",
+    "temporary failure in name resolution",
+    "network is unreachable",
+    "connection refused",
+    "newconnectionerror",
+    "proxyerror",
+)
+_PLUGIN_NAME_PATTERN = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 
 
 @dataclass(frozen=True)
@@ -57,12 +73,17 @@ class RuntimeSelection:
 def _included_requirement_files(
     path: Path,
     *,
+    requirement_root: Path | None = None,
     seen: set[Path] | None = None,
 ) -> list[Path]:
     """Return a requirement file and its recursive local includes."""
 
     visited = seen if seen is not None else set()
     resolved = path.resolve()
+    if requirement_root is not None and not resolved.is_relative_to(
+        requirement_root.resolve()
+    ):
+        raise ValueError(f"Included requirements file is outside component: {path}")
     if resolved in visited:
         return []
     visited.add(resolved)
@@ -76,7 +97,11 @@ def _included_requirement_files(
             include = line[len("--requirement ") :].strip()
         if include:
             files.extend(
-                _included_requirement_files(resolved.parent / include, seen=visited)
+                _included_requirement_files(
+                    resolved.parent / include,
+                    requirement_root=requirement_root,
+                    seen=visited,
+                )
             )
     return files
 
@@ -138,11 +163,12 @@ def requirements_fingerprint(selection: RuntimeSelection) -> str:
     digest = hashlib.sha256()
     seen: set[Path] = set()
     for requirements_file in selection.requirements_files:
-        for path in _included_requirement_files(requirements_file, seen=seen):
-            try:
-                relative = path.relative_to(selection.plugin_root)
-            except ValueError:
-                relative = path.relative_to(selection.requirement_root)
+        for path in _included_requirement_files(
+            requirements_file,
+            requirement_root=selection.requirement_root,
+            seen=seen,
+        ):
+            relative = path.relative_to(selection.requirement_root)
             digest.update(relative.as_posix().encode("utf-8"))
             digest.update(b"\0")
             digest.update(path.read_bytes())
@@ -158,13 +184,94 @@ def runtime_key() -> str:
     return f"{implementation}-{platform}"
 
 
+def _plugin_name(plugin_root: Path) -> str:
+    """Return a path-safe stable name instead of a marketplace version folder."""
+
+    manifest = plugin_root.resolve() / ".codex-plugin" / "plugin.json"
+    try:
+        name = json.loads(manifest.read_text(encoding="utf-8"))["name"]
+    except (OSError, KeyError, TypeError, json.JSONDecodeError):
+        name = plugin_root.resolve().name
+    if not isinstance(name, str) or _PLUGIN_NAME_PATTERN.fullmatch(name) is None:
+        raise ValueError("Plugin manifest name is not path-safe")
+    return name
+
+
+def _codex_data_dir(plugin_root: Path) -> Path:
+    """Return a stable user-private path that Claude permits runtime writes to."""
+
+    if hasattr(os, "getuid"):
+        user_key = f"uid-{os.getuid()}"
+    else:
+        home_fingerprint = hashlib.sha256(
+            str(Path.home().resolve()).casefold().encode("utf-8")
+        ).hexdigest()[:12]
+        user_key = f"user-{home_fingerprint}"
+    return (
+        Path(tempfile.gettempdir())
+        / "mparanza-managed-python"
+        / user_key
+        / _plugin_name(plugin_root)
+    ).resolve()
+
+
+def _directory_is_writable(path: Path, *, private: bool) -> bool:
+    """Probe actual write access because sandbox permissions are not inferable."""
+
+    probe_path: Path | None = None
+    try:
+        path.mkdir(mode=0o700, parents=True, exist_ok=True)
+        if private:
+            path.chmod(0o700)
+        with tempfile.NamedTemporaryFile(
+            dir=path,
+            prefix=".mparanza-write-probe-",
+            delete=False,
+        ) as probe:
+            probe_path = Path(probe.name)
+        probe_path.unlink()
+    except OSError:
+        if probe_path is not None:
+            try:
+                probe_path.unlink()
+            except OSError:
+                pass
+        return False
+    return True
+
+
 def plugin_data_dir(plugin_root: Path) -> Path:
-    """Return the persistent user-scoped data directory for one plugin."""
+    """Return a writable, user-scoped data directory for one plugin."""
 
     configured = os.environ.get("CLAUDE_PLUGIN_DATA") or os.environ.get("PLUGIN_DATA")
+    candidates: list[tuple[Path, bool]] = []
     if configured:
-        return Path(configured).expanduser().resolve()
-    return (Path.home() / ".cache" / "mparanza" / plugin_root.resolve().name).resolve()
+        candidates.append((Path(configured).expanduser().resolve(), False))
+    if os.environ.get("CODEX_SANDBOX"):
+        candidates.append((_codex_data_dir(plugin_root), True))
+    candidates.append(
+        (
+            (Path.home() / ".cache" / "mparanza" / _plugin_name(plugin_root)).resolve(),
+            True,
+        )
+    )
+    for candidate, private in candidates:
+        if _directory_is_writable(candidate, private=private):
+            return candidate
+    return candidates[0][0]
+
+
+def _network_permission_detail(detail: str) -> str:
+    """Tag mechanically identifiable network denial for a Claude approval retry."""
+
+    normalized = detail.casefold()
+    if not any(marker in normalized for marker in _NETWORK_FAILURE_MARKERS):
+        return detail
+    return (
+        f"{NETWORK_PERMISSION_REQUIRED}: the declared package index could not be "
+        "reached. In Claude, retry this exact managed-runtime command with host "
+        f"network access approval.\n{detail}"
+    )
 
 
 def dependency_target(
@@ -221,7 +328,7 @@ def runtime_python(target: Path) -> Path:
 def _receipt_payload(selection: RuntimeSelection) -> dict[str, object]:
     return {
         "schema_version": 1,
-        "plugin": selection.plugin_root.name,
+        "plugin": _plugin_name(selection.plugin_root),
         "scope": selection.scope,
         "requirements_fingerprint": requirements_fingerprint(selection),
         "runtime_key": runtime_key(),
@@ -340,7 +447,15 @@ def ensure_runtime(
         if installed.returncode != 0:
             detail = (installed.stderr or installed.stdout).strip()
             shutil.rmtree(target, ignore_errors=True)
-            return False, target, detail or "pip install returned a non-zero status"
+            return (
+                False,
+                target,
+                (
+                    _network_permission_detail(detail)
+                    if detail
+                    else "pip install returned a non-zero status"
+                ),
+            )
         if not _dependencies_ready(
             selection,
             target,

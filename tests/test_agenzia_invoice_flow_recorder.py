@@ -194,6 +194,9 @@ def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime(
     assert "--module studio-archive --requirements" in wrapper
     assert "requirements-portal-recorder.txt run" in wrapper
     assert "a missing-Playwright result is not a completed preflight" in wrapper
+    assert "MPARANZA_NETWORK_PERMISSION_REQUIRED" in wrapper
+    assert "Codex host network approval" in wrapper
+    assert "Do not stop with a missing-Playwright diagnosis" in wrapper
 
 
 def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
