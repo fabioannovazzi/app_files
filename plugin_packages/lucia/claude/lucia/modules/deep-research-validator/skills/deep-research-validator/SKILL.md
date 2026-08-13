@@ -174,13 +174,13 @@ Use `--no-fetch` if the environment cannot fetch URLs; then rely on listed refer
    Record whether the review covers all material claims, selected material
    claims, or is limited. Also review whether the answer conforms to the
    contracted question, document type, audience, and evidence display.
-7. Write `claims_review_draft.json` using schema version `2.0`. Each material
+7. Write `claims_review_draft.json` using schema version `2.1`. Each material
    claim must keep source identity, semantic support, reasoning, professional
    judgment, issue treatment, disposition, and reviewer action separate:
 
 ```json
 {
-  "schema_version": "2.0",
+  "schema_version": "2.1",
   "language": "en",
   "validation_objective": "question_to_validated_answer",
   "coverage_review": {
@@ -206,7 +206,7 @@ Use `--no-fetch` if the environment cannot fetch URLs; then rely on listed refer
       "claim_text": "Material claim text.",
       "claim_location": "Section 2, paragraph 1",
       "materiality": "material",
-      "source_checks": [{"source_ref": "source-001", "identity_status": "matches_cited_source", "identity_analysis": "Why this is the authority actually cited.", "cited_passage": "Exact passage when available."}],
+      "source_checks": [{"source_ref": "source-001", "identity_status": "matches_cited_source", "identity_analysis": "Why this is the authority actually cited.", "authority_relation": "official_full_text", "official_text_access": "obtained", "text_fidelity": "verified_against_official_text", "access_analysis": "How the official text or historical archive was accessed and what the public search does or does not establish.", "limitations": [], "cited_passage": "Exact passage when available."}],
       "support": {"status": "supported", "analysis": "Why the source semantically supports the claim."},
       "reasoning": {"status": "sound", "analysis": "Why the conclusion follows.", "supported_premises": ["Supported premise"], "missing_premises": []},
       "professional_judgment": {"status": "not_judgment_dependent", "analysis": "Why no additional professional choice is needed.", "factors": [], "alternative_interpretations": []},
@@ -229,6 +229,30 @@ Valid reasoning statuses are `sound`, `partially_sound`, `unsound`,
 
 Valid judgment statuses are `not_judgment_dependent`,
 `professional_judgment_required`, `contested`, and `uncertain`.
+
+For every source check, record the authority relation separately from source
+identity. Valid `authority_relation` values are `official_full_text`,
+`official_summary_or_headnote`, `non_institutional_reproduction`,
+`secondary_commentary`, `uncertain`, and `not_assessed`. Valid
+`official_text_access` values are `obtained`, `public_archive_outside_window`,
+`restricted_or_gated_archive`, `not_found_in_complete_official_archive`,
+`unavailable`, `not_applicable`, and `not_assessed`. Valid `text_fidelity`
+values are `verified_against_official_text`,
+`corroborated_not_text_verified`, `not_verified`, `not_applicable`, and
+`not_assessed`. Explain the access finding in `access_analysis` and preserve
+every residual limit in `limitations`.
+
+Treat official archive coverage as a model-led, source-backed assessment. A
+failed lookup, the oldest year shown in a facet, or the absence of a result
+from a rolling or access-restricted public portal does not establish that a
+decision or authority is nonexistent. Distinguish: existence and identity of
+the decision; access to its official full text; provenance of the copy actually
+reviewed; semantic support for the claim; and fidelity of that copy to the
+official text. A non-institutional reproduction may support a claim when its
+identity and substance are corroborated, but if the official full text was not
+obtained, state that text fidelity remains unverified. Do not automatically
+downgrade otherwise sound reasoning solely because the official historical
+archive is gated or outside the public portal's documented window.
 
 Issue types are `none`, `source_unavailable`, `source_not_identified`,
 `wrong_source`, `wrong_source_version`, `wrong_jurisdiction_or_period`,
@@ -277,6 +301,12 @@ Add `--docx` whenever DOCX tooling is available. Do not ask whether to export DO
 The review must:
 
 - separate source availability issues from substantive support issues;
+- distinguish an official archive's documented public-access window from the
+  completeness of the authority's underlying historical collection;
+- never translate a no-result in a rolling, partial, or gated official portal
+  into a finding that the cited decision does not exist;
+- distinguish the provenance and text fidelity of a reproduction from whether
+  the reproduced authority substantively supports the claim;
 - separate mechanical observations, semantic support, reasoning assessment,
   and professional judgment;
 - distinguish supported, partially supported, unsupported, contradicted, and uncertain claims;

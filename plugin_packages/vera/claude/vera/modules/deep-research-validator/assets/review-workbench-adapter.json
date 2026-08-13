@@ -140,6 +140,11 @@
               "source_ref": "source-001",
               "identity_status": "matches_cited_source",
               "identity_analysis": "The cited commentary and captured source are the same instrument.",
+              "authority_relation": "secondary_commentary",
+              "official_text_access": "not_applicable",
+              "text_fidelity": "not_applicable",
+              "access_analysis": "The claim relies on commentary rather than a reproduced primary text.",
+              "limitations": [],
               "cited_passage": "centre of vital interests"
             }
           ],
