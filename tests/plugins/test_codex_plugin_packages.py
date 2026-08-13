@@ -3125,14 +3125,22 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         assert page.count(f'"{key}":') == 5
 
 
+SHARED_PRODUCT_PAGE_PATHS = {
+    Path("static/shared/deep-research-validator/index.html"),
+    Path("static/shared/prompt-optimizer/index.html"),
+}
+
+
 @pytest.mark.parametrize("relative_path", VERA_PUBLIC_PAGE_PATHS)
-def test_vera_public_page_browser_title_uses_vera_brand(
-    relative_path: Path,
-) -> None:
+def test_public_page_browser_title_uses_appropriate_brand(relative_path: Path) -> None:
     page = (ROOT / relative_path).read_text(encoding="utf-8")
 
-    assert "| Vera</title>" in page
-    assert "| Mparanza" not in page
+    if relative_path in SHARED_PRODUCT_PAGE_PATHS:
+        assert "| Mparanza</title>" in page
+        assert "| Vera</title>" not in page
+    else:
+        assert "| Vera</title>" in page
+        assert "| Mparanza" not in page
 
 
 def test_new_client_jurisdiction_pages_define_local_scope() -> None:

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta id="meta-description" name="description" content="Vera rivede un output Deep Research per affermazioni materiali, controlla fonti e ragionamento e consegna un documento corretto con una traccia verificabile.">
+  <meta id="meta-description" name="description" content="Rivede un output Deep Research per affermazioni materiali, controlla fonti e ragionamento e consegna un documento corretto con una traccia verificabile.">
   <link rel="canonical" href="https://mparanza.com/static/shared/deep-research-validator/index.html">
   <link rel="alternate" hreflang="it" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=it">
   <link rel="alternate" hreflang="en" href="https://mparanza.com/static/shared/deep-research-validator/index.html?lang=en">
@@ -13,12 +13,12 @@
   <link rel="alternate" hreflang="x-default" href="https://mparanza.com/static/shared/deep-research-validator/index.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Mparanza">
-  <meta id="og-title" property="og:title" content="Conclusioni sostenute dalle fonti | Vera">
+  <meta id="og-title" property="og:title" content="Validazione ricerca | Mparanza">
   <meta id="og-description" property="og:description" content="Dall'output Deep Research a una revisione per affermazioni, con supporto delle fonti, correzioni e incertezza residua separati.">
   <meta property="og:url" content="https://mparanza.com/static/shared/deep-research-validator/index.html">
   <meta id="og-image" property="og:image" content="https://i.ytimg.com/vi/vA2JO3cG7Cw/hqdefault.jpg">
   <meta id="og-locale" property="og:locale" content="it_IT">
-  <title>Conclusioni sostenute dalle fonti | Vera</title>
+  <title>Validazione ricerca | Mparanza</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
@@ -299,6 +299,16 @@
         </details>
       </section>
 
+      <section class="function-model-data" id="model-data" data-model-data-workflow="deep-research-validator" data-model-data-status="relevant" aria-labelledby="deep-research-validator-model-data-title">
+        <div class="function-model-data__head">
+          <div class="function-model-data__heading">
+            <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
+            <h2 id="deep-research-validator-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
+          </div>
+          <p class="function-model-data__copy" data-i18n="model.copy">Il codice legge l'intero documento e crea inventari di navigazione limitati: fino a 40 titoli, 80 possibili affermazioni, 200 URL grezzi e 200 citazioni. Questi limiti non restringono la review professionale. Il modello selezionato legge il documento completo, il contratto di risposta, le affermazioni materiali con il loro contesto, le citazioni e il testo acquisito dalle pagine pubbliche o dai file locali necessari alla verifica. I materiali possono contenere nomi, dati personali e informazioni legali, fiscali o finanziarie. In Codex il trattamento avviene tramite i modelli OpenAI; in Cowork tramite i modelli Anthropic. Non viene applicata un'anonimizzazione automatica. Per preparare le correzioni, il modello può ricevere nuovamente le affermazioni rivedute e il documento completo.</p>
+        </div>
+      </section>
+
     </main>
 
     <footer data-i18n="footer">Vera · Dalla ricerca alla revisione tracciabile.</footer>
@@ -379,6 +389,9 @@
         "details.outputs.title": "File prodotti",
         "details.scope.title": "Verdetti e decisioni di review",
         "details.scope.copy": "Supported, partially_supported, not_supported, contradicted e uncertain separano il supporto delle fonti; il pacchetto registra poi le decisioni applicate nella review.",
+        "model.label": "Trattamento dei dati",
+        "model.title": "Quali dati arrivano al modello",
+        "model.copy": "Il codice legge l'intero documento e crea inventari di navigazione limitati: fino a 40 titoli, 80 possibili affermazioni, 200 URL grezzi e 200 citazioni. Questi limiti non restringono la review professionale. Il modello selezionato legge il documento completo, il contratto di risposta, le affermazioni materiali con il loro contesto, le citazioni e il testo acquisito dalle pagine pubbliche o dai file locali necessari alla verifica. I materiali possono contenere nomi, dati personali e informazioni legali, fiscali o finanziarie. In Codex il trattamento avviene tramite i modelli OpenAI; in Cowork tramite i modelli Anthropic. Non viene applicata un'anonimizzazione automatica. Per preparare le correzioni, il modello può ricevere nuovamente le affermazioni rivedute e il documento completo.",
         footer: "Vera · Dalla ricerca alla revisione tracciabile.",
         prompt: "Usa Valida Deep Research su questo output. Lingua: it. Ispeziona documento e fonti, seleziona le affermazioni materiali, valuta separatamente supporto e ragionamento, segnala limiti o correzioni e prepara il pacchetto di validazione per la mia review."
       },
@@ -447,6 +460,9 @@
         "details.outputs.title": "Files produced",
         "details.scope.title": "Verdicts and review decisions",
         "details.scope.copy": "Supported, partially_supported, not_supported, contradicted and uncertain separate source support; the package then records the decisions applied during review.",
+        "model.label": "Data handling",
+        "model.title": "What data reaches the model",
+        "model.copy": "Deterministic code reads the complete document and creates bounded navigation inventories: up to 40 headings, 80 candidate claims, 200 raw URLs, and 200 citations. Those bounds do not limit the professional review. The selected model reads the complete document, answer contract, material claims with their surrounding text, citations, and the text captured from public pages or local files needed for validation. The material may contain names, personal details, and legal, tax, or financial information. In Codex, processing is performed by OpenAI models; in Cowork, by Anthropic models. No automatic anonymization is applied. To prepare corrections, the model may receive the reviewed claims and complete document again.",
         footer: "Vera · From research to a traceable review.",
         prompt: "Use Validate Deep Research on this output. Language: en. Inspect the document and sources, select material claims, evaluate source support and reasoning separately, flag limits or corrections, and prepare the validation package for my review."
       },
@@ -515,6 +531,9 @@
         "details.outputs.title": "Fichiers produits",
         "details.scope.title": "Verdicts et décisions de revue",
         "details.scope.copy": "Supported, partially_supported, not_supported, contradicted et uncertain distinguent le support des sources; le paquet consigne ensuite les décisions appliquées pendant la revue.",
+        "model.label": "Traitement des données",
+        "model.title": "Quelles données parviennent au modèle",
+        "model.copy": "Le code lit l'intégralité du document et crée des inventaires de navigation limités : jusqu'à 40 titres, 80 affirmations candidates, 200 URL brutes et 200 citations. Ces limites ne restreignent pas la revue professionnelle. Le modèle sélectionné lit le document complet, le contrat de réponse, les affirmations matérielles avec leur contexte, les citations et le texte recueilli depuis les pages publiques ou les fichiers locaux nécessaires à la validation. Ces éléments peuvent contenir des noms, des données personnelles et des informations juridiques, fiscales ou financières. Dans Codex, le traitement est effectué par les modèles OpenAI ; dans Cowork, par les modèles Anthropic. Aucune anonymisation automatique n'est appliquée. Pour préparer les corrections, le modèle peut recevoir à nouveau les affirmations revues et le document complet.",
         footer: "Vera · De la recherche à une revue traçable.",
         prompt: "Utilise Valider Deep Research sur cette sortie. Langue : fr. Inspecte le document et les sources, choisis les affirmations matérielles, évalue séparément le support des sources et le raisonnement, signale limites ou corrections et prépare le paquet de validation pour ma revue."
       },
@@ -583,6 +602,9 @@
         "details.outputs.title": "Archivos generados",
         "details.scope.title": "Veredictos y decisiones de revisión",
         "details.scope.copy": "Supported, partially_supported, not_supported, contradicted y uncertain separan el respaldo de las fuentes; el paquete registra después las decisiones aplicadas durante la revisión.",
+        "model.label": "Tratamiento de datos",
+        "model.title": "Qué datos recibe el modelo",
+        "model.copy": "El código lee el documento completo y crea inventarios de navegación limitados: hasta 40 títulos, 80 afirmaciones candidatas, 200 URL sin procesar y 200 citas. Estos límites no restringen la revisión profesional. El modelo seleccionado lee el documento completo, el contrato de respuesta, las afirmaciones materiales con su contexto, las citas y el texto obtenido de las páginas públicas o los archivos locales necesarios para la validación. Los materiales pueden contener nombres, datos personales e información jurídica, fiscal o financiera. En Codex, el tratamiento lo realizan modelos de OpenAI; en Cowork, modelos de Anthropic. No se aplica anonimización automática. Para preparar las correcciones, el modelo puede recibir de nuevo las afirmaciones revisadas y el documento completo.",
         footer: "Vera · De la investigación a una revisión trazable.",
         prompt: "Usa Validar Deep Research con este resultado. Idioma: es. Examina el documento y las fuentes, selecciona las afirmaciones materiales, evalúa por separado el respaldo de las fuentes y el razonamiento, señala límites o correcciones y prepara el paquete de validación para mi revisión."
       },
@@ -651,6 +673,9 @@
         "details.outputs.title": "Dateien",
         "details.scope.title": "Einstufungen und Review-Entscheidungen",
         "details.scope.copy": "Supported, partially_supported, not_supported, contradicted und uncertain trennen die Quellenstützung; das Paket hält anschließend die im Review angewendeten Entscheidungen fest.",
+        "model.label": "Datenverarbeitung",
+        "model.title": "Welche Daten das Modell erhält",
+        "model.copy": "Der Code liest das vollständige Dokument und erstellt begrenzte Navigationsinventare: bis zu 40 Überschriften, 80 mögliche Aussagen, 200 rohe URLs und 200 Zitate. Diese Grenzen schränken die fachliche Prüfung nicht ein. Das ausgewählte Modell liest das vollständige Dokument, den Antwortvertrag, wesentliche Aussagen mit ihrem Kontext, Zitate sowie den für die Validierung benötigten Text aus öffentlichen Seiten oder lokalen Dateien. Die Unterlagen können Namen, personenbezogene Daten sowie rechtliche, steuerliche oder finanzielle Informationen enthalten. In Codex erfolgt die Verarbeitung durch OpenAI-Modelle, in Cowork durch Anthropic-Modelle. Es erfolgt keine automatische Anonymisierung. Zur Vorbereitung von Korrekturen kann das Modell die geprüften Aussagen und das vollständige Dokument erneut erhalten.",
         footer: "Vera · Von der Recherche zur nachvollziehbaren Prüfung.",
         prompt: "Verwende Deep Research validieren für diesen Output. Sprache: de. Prüfe Dokument und Quellen, wähle wesentliche Aussagen, bewerte Quellenstützung und Begründung getrennt, markiere Grenzen oder Korrekturen und erstelle das Validierungspaket für meine Prüfung."
       }

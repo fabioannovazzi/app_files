@@ -203,7 +203,7 @@
       product: "Vera",
       defaultLanguage: "it",
       copy: {
-        it: pending("it", {
+        it: {
           name: "Bandi e agevolazioni",
           summary: "Ricerca misure da fonti ufficiali, le confronta con il profilo dell'impresa e prepara il dossier per l'opportunità selezionata.",
           useWhen: "Usala per monitorare opportunità o preparare l'istruttoria di una misura scelta dal professionista.",
@@ -214,8 +214,10 @@
           productRole: "Propone le fonti da controllare, registra le evidenze e prepara il dossier e i punti aperti.",
           professionalRole: "Conferma applicabilità, eleggibilità, costi e dichiarazioni e gestisce firma, accesso al portale e invio.",
           prompt: "Usa Bandi e agevolazioni per questa impresa. Prepara il piano delle fonti ufficiali, confronta i requisiti con i fatti disponibili e mostra opportunità, dati mancanti e prossima azione.",
-        }),
-        en: pending("en", {
+          modelDataStatus: "relevant",
+          modelData: "Al modello arrivano i dati privati pertinenti al lavoro: fatti societari e organizzativi usati nel profilo dell’impresa; informazioni su investimenti e progetto; importi richiesti, dati finanziari, preventivi, dichiarazioni ed estratti delle evidenze selezionate per il dossier. Il pacchetto strutturato non copia automaticamente dal modulo iniziale ragione sociale, codice fiscale, partita IVA o percorsi locali dei file; questi identificativi possono però comparire nelle evidenze quando servono all’istruttoria. Non viene applicata anonimizzazione automatica.",
+        },
+        en: {
           name: "Grants and incentives",
           summary: "Researches measures from official sources, compares them with the company profile, and prepares the file for a selected opportunity.",
           useWhen: "Use it to monitor opportunities or prepare the review file for a measure selected by the professional.",
@@ -226,8 +228,10 @@
           productRole: "Proposes sources to check, records evidence, and prepares the file and open points.",
           professionalRole: "Confirms applicability, eligibility, costs, and declarations and handles signature, portal access, and submission.",
           prompt: "Use Grants and incentives for this company. Prepare the official-source plan, compare requirements with available facts, and show opportunities, missing data, and the next action.",
-        }),
-        fr: pending("fr", {
+          modelDataStatus: "relevant",
+          modelData: "The model receives private data relevant to the work: corporate and organisational facts used in the company profile; investment and project information; requested amounts, financial data, quotations, declarations, and evidence excerpts selected for the application file. The structured packet does not automatically copy the legal name, tax code, VAT number, or local file paths from intake; those identifiers may still appear in evidence when needed for the review. No automatic anonymization is applied.",
+        },
+        fr: {
           name: "Aides et subventions",
           summary: "Recherche les mesures dans les sources officielles, les compare au profil de l'entreprise et prépare le dossier de l'opportunité retenue.",
           useWhen: "Utilisez-la pour suivre les opportunités ou préparer l'instruction d'une mesure choisie par le professionnel.",
@@ -238,8 +242,10 @@
           productRole: "Propose les sources à contrôler, enregistre les preuves et prépare le dossier et les points ouverts.",
           professionalRole: "Confirme applicabilité, éligibilité, coûts et déclarations et gère signature, accès au portail et dépôt.",
           prompt: "Utilise Aides et subventions pour cette entreprise. Prépare le plan des sources officielles, compare les exigences aux faits disponibles et présente opportunités, données manquantes et prochaine action.",
-        }),
-        de: pending("de", {
+          modelDataStatus: "relevant",
+          modelData: "Le modèle reçoit les données privées pertinentes pour le travail : faits juridiques et organisationnels utilisés dans le profil de l’entreprise ; informations sur l’investissement et le projet ; montant demandé, données financières, devis, déclarations et extraits des pièces sélectionnées pour le dossier. Le paquet structuré ne reprend pas automatiquement la raison sociale, le code fiscal, le numéro de TVA ni les chemins locaux des fichiers depuis le formulaire initial ; ces identifiants peuvent néanmoins figurer dans les pièces lorsqu’ils sont nécessaires à l’instruction. Aucune anonymisation automatique n’est appliquée.",
+        },
+        de: {
           name: "Förderprogramme und Zuschüsse",
           summary: "Recherchiert Maßnahmen in amtlichen Quellen, gleicht sie mit dem Unternehmensprofil ab und bereitet die Unterlagen für eine ausgewählte Gelegenheit vor.",
           useWhen: "Nutzen Sie die Funktion zur Beobachtung von Fördermöglichkeiten oder zur Vorbereitung einer vom Berufsträger ausgewählten Maßnahme.",
@@ -250,8 +256,10 @@
           productRole: "Schlägt zu prüfende Quellen vor, dokumentiert Nachweise und bereitet Unterlagen und offene Punkte vor.",
           professionalRole: "Bestätigt Anwendbarkeit, Förderfähigkeit, Kosten und Erklärungen und übernimmt Unterschrift, Portalzugang und Einreichung.",
           prompt: "Verwende Förderprogramme und Zuschüsse für dieses Unternehmen. Erstelle den amtlichen Quellenplan, vergleiche Anforderungen mit den vorhandenen Fakten und zeige Möglichkeiten, fehlende Daten und den nächsten Schritt.",
-        }),
-        es: pending("es", {
+          modelDataStatus: "relevant",
+          modelData: "Das Modell erhält die für die Arbeit relevanten privaten Daten: gesellschaftsrechtliche und organisatorische Angaben im Unternehmensprofil, Investitions- und Projektinformationen, beantragte Beträge, Finanzdaten, Angebote, Erklärungen und ausgewählte Nachweisauszüge für den Antrag. Das strukturierte Paket übernimmt Firmenname, Steuernummer, Umsatzsteuer-Identifikationsnummer und lokale Dateipfade nicht automatisch aus der Erfassung; diese Identifikatoren können jedoch in den Nachweisen erscheinen, wenn sie für die Prüfung erforderlich sind. Es erfolgt keine automatische Anonymisierung.",
+        },
+        es: {
           name: "Ayudas y subvenciones",
           summary: "Busca medidas en fuentes oficiales, las compara con el perfil de la empresa y prepara el expediente de la oportunidad seleccionada.",
           useWhen: "Úsala para seguir oportunidades o preparar la instrucción de una medida elegida por el profesional.",
@@ -262,7 +270,9 @@
           productRole: "Propone fuentes para revisar, registra evidencias y prepara el expediente y los puntos abiertos.",
           professionalRole: "Confirma aplicabilidad, elegibilidad, costes y declaraciones y gestiona firma, acceso al portal y presentación.",
           prompt: "Usa Ayudas y subvenciones para esta empresa. Prepara el plan de fuentes oficiales, compara los requisitos con los hechos disponibles y muestra oportunidades, datos faltantes y próxima acción.",
-        }),
+          modelDataStatus: "relevant",
+          modelData: "El modelo recibe los datos privados pertinentes para el trabajo: hechos societarios y organizativos usados en el perfil de la empresa; información sobre la inversión y el proyecto; importes solicitados, datos financieros, presupuestos, declaraciones y extractos de las pruebas seleccionadas para el expediente. El paquete estructurado no copia automáticamente la razón social, el código fiscal, el número de IVA ni las rutas locales de los archivos desde el formulario inicial; esos identificadores pueden aparecer en las pruebas cuando sean necesarios para la revisión. No se aplica anonimización automática.",
+        },
       },
     },
     "comunicazione-professionale": {
@@ -348,7 +358,7 @@
       defaultLanguage: "it",
       copy: {
         it: {
-          name: "Presenza digitale dello studio",
+          name: "Sito dello studio",
           summary: "Rinnova un sito informativo esistente o ne costruisce uno iniziale da materiali e fatti approvati dallo studio.",
           useWhen: "Usala per un sito informativo. Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni richiedono un progetto diverso.",
           input: "Sito pubblico esistente, materiali selezionati, logo, fotografie, contatti, persone, servizi, qualifiche e testi legali forniti dallo studio.",
@@ -357,7 +367,7 @@
           responsibilityIntro: "La lettura dei materiali non autorizza automaticamente la pubblicazione.",
           productRole: "Organizza i contenuti, propone testi e aspetto, costruisce il sito e prepara la versione da rivedere.",
           professionalRole: "Conferma identità, fatti, servizi, qualifiche, testi legali, destinazione e versione esatta da pubblicare.",
-          prompt: "Usa Presenza digitale dello studio su questo sito e sui materiali selezionati. Prepara struttura, testi e sito responsive senza inventare fatti e fammi rivedere la versione funzionante.",
+          prompt: "Usa Sito dello studio su questo sito e sui materiali selezionati. Prepara struttura, testi e sito responsive senza inventare fatti e fammi rivedere la versione funzionante.",
           modelDataStatus: "not-relevant",
           modelDataConclusion: "Non rilevante per questo processo.",
           modelData: "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
@@ -429,7 +439,7 @@
       defaultLanguage: "it",
       copy: {
         it: pending("it", {
-          name: "Apertura pratica",
+          name: "Fascicolo nuova pratica",
           summary: "Organizza i materiali iniziali, identifica dati mancanti e prepara il fascicolo per la decisione dell'avvocato.",
           useWhen: "Usala prima di aprire una nuova pratica o accettare un incarico.",
           input: "Materiali iniziali, identità e ruoli dei soggetti, obiettivo dell'incarico e informazioni disponibili su scadenze e conflitti.",
@@ -438,7 +448,7 @@
           responsibilityIntro: "La preparazione non apre automaticamente la pratica e non accetta l'incarico.",
           productRole: "Organizza le evidenze, prepara i candidati e registra i punti ancora da verificare.",
           professionalRole: "Conferma cliente, incarico, conflitti, scadenze, antiriciclaggio e decisione di apertura.",
-          prompt: "Usa Apertura pratica sui materiali in questa cartella. Prepara soggetti, incarico, documenti mancanti, possibili conflitti e scadenze per la mia revisione, senza aprire automaticamente la pratica.",
+          prompt: "Usa Fascicolo nuova pratica sui materiali in questa cartella. Prepara soggetti, incarico, documenti mancanti, possibili conflitti e scadenze per la mia revisione, senza aprire automaticamente la pratica.",
         }),
         en: pending("en", {
           name: "Matter opening",
@@ -980,13 +990,13 @@
       it: "Ricerca di agevolazioni e preparazione della pratica", en: "Search for grants and prepare the application", fr: "Rechercher des aides et préparer le dossier", de: "Fördermittel suchen und Antrag vorbereiten", es: "Buscar ayudas y preparar la solicitud",
     },
     "comunicazione-professionale": {
-      it: "Valutazione e preparazione delle comunicazioni dello studio", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
+      it: "Comunicazione professionale", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
     },
     "presenza-digitale-studio": {
-      it: "Creazione o aggiornamento del sito dello studio", en: "Create or update the firm website", fr: "Créer ou mettre à jour le site du cabinet", de: "Kanzleiwebsite erstellen oder aktualisieren", es: "Crear o actualizar el sitio web del despacho",
+      it: "Sito dello studio", en: "Create or update the firm website", fr: "Créer ou mettre à jour le site du cabinet", de: "Kanzleiwebsite erstellen oder aktualisieren", es: "Crear o actualizar el sitio web del despacho",
     },
     "apertura-pratica": {
-      it: "Preparazione del fascicolo di una nuova pratica", en: "Prepare the file for a new matter", fr: "Préparer le dossier d'une nouvelle affaire", de: "Akte für ein neues Mandat vorbereiten", es: "Preparar el expediente de un nuevo asunto",
+      it: "Fascicolo nuova pratica", en: "Prepare the file for a new matter", fr: "Préparer le dossier d'une nouvelle affaire", de: "Akte für ein neues Mandat vorbereiten", es: "Preparar el expediente de un nuevo asunto",
     },
     "clara-presentations": {
       it: "Creazione e revisione di presentazioni", en: "Create and revise presentations", fr: "Créer et réviser des présentations", de: "Präsentationen erstellen und überarbeiten", es: "Crear y revisar presentaciones",

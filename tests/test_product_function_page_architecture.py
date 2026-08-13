@@ -470,7 +470,7 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
         encoding="utf-8"
     )
 
-    assert function_copy.count('modelDataStatus: "relevant"') == 5
+    assert function_copy.count('modelDataStatus: "relevant"') == 10
     assert function_copy.count('modelDataStatus: "not-relevant"') == 5
     assert '"comunicazione-professionale"' in function_copy
     assert '"presenza-digitale-studio"' in function_copy
