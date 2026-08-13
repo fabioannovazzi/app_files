@@ -82,7 +82,12 @@ python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-direct
    ask the operator to put private redaction terms in chat. If they want custom
    redaction, they must type it directly into the local terminal without
    exposing it to Codex.
-5. The script opens a dedicated temporary Chrome profile. The operator
+5. The script opens a dedicated ephemeral Chrome context and must create an
+   explicit page before the authentication checkpoint. On Windows it also
+   restores and positions that new Chrome top-level window and verifies that
+   Windows exposes a visible non-empty desktop window. A background Chrome
+   process is not a completed launch: stop before authentication if this gate
+   fails. The operator
    authenticates and selects the correct taxpayer or delegated profile. Tell
    them: “Quando hai completato l'accesso, di' a voce oppure scrivi `pronto`;
    va bene anche `ready`.” Accept either a spoken/transcribed or typed message.
@@ -94,8 +99,8 @@ python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-direct
    `fatto`; va bene anche `done`.” Accept either a spoken/transcribed or typed
    message, then send one newline to stop. If submission and later retrieval
    cannot occur in one session, make two separate recordings.
-7. The recorder deletes its temporary browser profile and Playwright-managed
-   download bytes. It writes only
+7. The recorder closes its Playwright-managed temporary browser profile and
+   deletes Playwright-managed download bytes. It writes only
    `agenzia_invoice_flow_recording.json`, with owner-only permissions. Never
    save or request a Playwright trace, HAR, storage state, cookies, screenshots,
    HTML, or invoice ZIP for this teaching route.

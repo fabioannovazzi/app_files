@@ -1,10 +1,13 @@
 from __future__ import annotations
 
+import asyncio
 import importlib.util
 import json
 import stat
 from pathlib import Path
 from types import ModuleType
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 STUDIO_ARCHIVE_ROOT = ROOT / "plugins" / "studio-archive"
@@ -166,6 +169,165 @@ def test_write_recording_does_not_overwrite_prior_recording(tmp_path: Path) -> N
         raise AssertionError("existing recording was overwritten")
 
 
+def test_visible_chrome_session_explicitly_creates_headed_page_and_closes_state(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    calls: list[tuple[str, object]] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            calls.append(("bring_to_front", None))
+
+    class Context:
+        pages: list[Page] = []
+
+        async def new_page(self) -> Page:
+            calls.append(("new_page", None))
+            page = Page()
+            self.pages.append(page)
+            return page
+
+        async def close(self) -> None:
+            calls.append(("context_close", None))
+
+    class Browser:
+        context = Context()
+
+        async def new_context(self, **kwargs: object) -> Context:
+            calls.append(("new_context", kwargs))
+            return self.context
+
+        async def close(self) -> None:
+            calls.append(("browser_close", None))
+
+    class Chromium:
+        browser = Browser()
+
+        async def launch(self, **kwargs: object) -> Browser:
+            calls.append(("launch", kwargs))
+            return self.browser
+
+    class Playwright:
+        chromium = Chromium()
+
+    monkeypatch.setattr(recorder.sys, "platform", "darwin")
+
+    async def exercise() -> None:
+        async with recorder._visible_chrome_session(Playwright(), "chrome"):
+            calls.append(("yielded", None))
+
+    asyncio.run(exercise())
+
+    assert calls[0] == (
+        "launch",
+        {
+            "channel": "chrome",
+            "headless": False,
+            "args": [
+                "--no-first-run",
+                "--no-default-browser-check",
+                "--disable-background-mode",
+            ],
+        },
+    )
+    assert calls[1] == (
+        "new_context",
+        {"accept_downloads": True, "no_viewport": True},
+    )
+    assert [name for name, _detail in calls] == [
+        "launch",
+        "new_context",
+        "new_page",
+        "bring_to_front",
+        "yielded",
+        "context_close",
+        "browser_close",
+    ]
+
+
+def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    commands: list[tuple[str, object | None]] = []
+    restored: list[int] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            commands.append(("bring_to_front", None))
+
+    class Session:
+        async def send(
+            self, command: str, arguments: object | None = None
+        ) -> dict[str, int]:
+            commands.append((command, arguments))
+            return {"windowId": 41}
+
+        async def detach(self) -> None:
+            commands.append(("detach", None))
+
+    class Context:
+        async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(
+        recorder,
+        "_windows_top_level_chrome_windows",
+        lambda: {7, 11},
+    )
+
+    def restore(handle: int) -> bool:
+        restored.append(handle)
+        return True
+
+    monkeypatch.setattr(recorder, "_restore_windows_chrome_window", restore)
+
+    asyncio.run(recorder.present_browser_window(Context(), Page(), {7}))
+
+    assert commands == [
+        ("bring_to_front", None),
+        ("Browser.getWindowForTarget", None),
+        (
+            "Browser.setWindowBounds",
+            {
+                "windowId": 41,
+                "bounds": {
+                    "windowState": "normal",
+                    "left": 40,
+                    "top": 40,
+                    "width": 1200,
+                    "height": 800,
+                },
+            },
+        ),
+        ("detach", None),
+    ]
+    assert restored == [11]
+
+
+def test_windows_background_process_without_window_fails_before_authentication(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(
+        recorder,
+        "_windows_top_level_chrome_windows",
+        lambda: {7},
+    )
+
+    with pytest.raises(RuntimeError, match="prima dell'accesso"):
+        asyncio.run(
+            recorder._require_windows_desktop_window(
+                {7},
+                attempts=1,
+                interval_seconds=0,
+            )
+        )
+
+
 def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
     skill = (STUDIO_ARCHIVE_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
         encoding="utf-8"
@@ -206,7 +368,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.18"
+    assert manifest["version"] == "0.1.19"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(

@@ -15,6 +15,7 @@ __all__ = [
     "PORTAL_URL",
     "build_download_record",
     "is_allowed_url",
+    "present_browser_window",
     "redact_text",
     "sanitize_element",
     "sanitize_url",
@@ -30,8 +31,9 @@ import logging
 import os
 import re
 import stat
-import tempfile
-from collections.abc import Iterable, Mapping, Sequence
+import sys
+from collections.abc import AsyncIterator, Iterable, Mapping, Sequence
+from contextlib import asynccontextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -55,6 +57,11 @@ _IBAN_RE = re.compile(r"(?i)\bIT\d{2}[A-Z]\d{10}[A-Z0-9]{12}\b")
 _LONG_NUMBER_RE = re.compile(r"(?<!\w)\d{4,}(?!\w)")
 _OPAQUE_PATH_SEGMENT_RE = re.compile(r"^[A-Za-z0-9._~-]{24,}$")
 _WHITESPACE_RE = re.compile(r"\s+")
+
+_WINDOW_LEFT = 40
+_WINDOW_TOP = 40
+_WINDOW_WIDTH = 1200
+_WINDOW_HEIGHT = 800
 
 _ELEMENT_KEYS = {
     "event_type",
@@ -543,6 +550,187 @@ def _private_redactions() -> tuple[str, ...]:
     return tuple(term.strip() for term in entered.split("|") if term.strip())
 
 
+def _windows_top_level_chrome_windows() -> set[int]:
+    """Return Chrome top-level window handles on the interactive Windows desktop."""
+
+    if sys.platform != "win32":
+        return set()
+
+    import ctypes
+    from ctypes import wintypes
+
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    enum_callback = ctypes.WINFUNCTYPE(
+        wintypes.BOOL,
+        wintypes.HWND,
+        wintypes.LPARAM,
+    )
+    user32.EnumWindows.argtypes = [enum_callback, wintypes.LPARAM]
+    user32.EnumWindows.restype = wintypes.BOOL
+    user32.GetClassNameW.argtypes = [
+        wintypes.HWND,
+        wintypes.LPWSTR,
+        ctypes.c_int,
+    ]
+    user32.GetClassNameW.restype = ctypes.c_int
+    handles: set[int] = set()
+
+    @enum_callback
+    def collect(handle: int, _parameter: int) -> bool:
+        class_name = ctypes.create_unicode_buffer(256)
+        if user32.GetClassNameW(handle, class_name, len(class_name)) > 0:
+            if class_name.value.startswith("Chrome_WidgetWin_"):
+                handles.add(int(handle))
+        return True
+
+    if not user32.EnumWindows(collect, 0):
+        error_code = ctypes.get_last_error()
+        raise OSError(error_code, "Impossibile enumerare le finestre di Windows")
+    return handles
+
+
+def _restore_windows_chrome_window(handle: int) -> bool:
+    """Restore one Chrome HWND and verify a visible non-empty desktop rectangle."""
+
+    if sys.platform != "win32":
+        return True
+
+    import ctypes
+    from ctypes import wintypes
+
+    user32 = ctypes.WinDLL("user32", use_last_error=True)
+    user32.ShowWindow.argtypes = [wintypes.HWND, ctypes.c_int]
+    user32.ShowWindow.restype = wintypes.BOOL
+    user32.SetWindowPos.argtypes = [
+        wintypes.HWND,
+        wintypes.HWND,
+        ctypes.c_int,
+        ctypes.c_int,
+        ctypes.c_int,
+        ctypes.c_int,
+        wintypes.UINT,
+    ]
+    user32.SetWindowPos.restype = wintypes.BOOL
+    user32.IsWindowVisible.argtypes = [wintypes.HWND]
+    user32.IsWindowVisible.restype = wintypes.BOOL
+    user32.GetWindowRect.argtypes = [wintypes.HWND, ctypes.POINTER(wintypes.RECT)]
+    user32.GetWindowRect.restype = wintypes.BOOL
+    user32.SetForegroundWindow.argtypes = [wintypes.HWND]
+    user32.SetForegroundWindow.restype = wintypes.BOOL
+
+    window = wintypes.HWND(handle)
+    user32.ShowWindow(window, 9)  # SW_RESTORE
+    positioned = user32.SetWindowPos(
+        window,
+        wintypes.HWND(0),
+        _WINDOW_LEFT,
+        _WINDOW_TOP,
+        _WINDOW_WIDTH,
+        _WINDOW_HEIGHT,
+        0x0040,  # SWP_SHOWWINDOW
+    )
+    user32.SetForegroundWindow(window)
+    rectangle = wintypes.RECT()
+    measured = user32.GetWindowRect(window, ctypes.byref(rectangle))
+    return bool(
+        positioned
+        and measured
+        and user32.IsWindowVisible(window)
+        and rectangle.right > rectangle.left
+        and rectangle.bottom > rectangle.top
+    )
+
+
+async def _require_windows_desktop_window(
+    preexisting_windows: set[int],
+    *,
+    attempts: int = 30,
+    interval_seconds: float = 0.1,
+) -> None:
+    """Fail before authentication unless a new visible Chrome HWND is proven."""
+
+    if sys.platform != "win32":
+        return
+    for _attempt in range(attempts):
+        new_windows = _windows_top_level_chrome_windows() - preexisting_windows
+        if any(_restore_windows_chrome_window(handle) for handle in new_windows):
+            return
+        await asyncio.sleep(interval_seconds)
+    raise RuntimeError(
+        "Chrome è stato avviato, ma Windows non ha esposto una finestra visibile "
+        "sul desktop corrente. La registrazione si è fermata prima dell'accesso."
+    )
+
+
+async def present_browser_window(
+    context: Any,
+    page: Any,
+    preexisting_windows: set[int],
+) -> None:
+    """Create a mechanically verified, operator-visible browser presentation."""
+
+    await page.bring_to_front()
+    if sys.platform != "win32":
+        return
+    session = await context.new_cdp_session(page)
+    try:
+        result = await session.send("Browser.getWindowForTarget")
+        window_id = result.get("windowId") if isinstance(result, Mapping) else None
+        if not isinstance(window_id, int):
+            raise RuntimeError(
+                "Chrome non ha restituito una finestra controllabile; la "
+                "registrazione si è fermata prima dell'accesso."
+            )
+        await session.send(
+            "Browser.setWindowBounds",
+            {
+                "windowId": window_id,
+                "bounds": {
+                    "windowState": "normal",
+                    "left": _WINDOW_LEFT,
+                    "top": _WINDOW_TOP,
+                    "width": _WINDOW_WIDTH,
+                    "height": _WINDOW_HEIGHT,
+                },
+            },
+        )
+    finally:
+        await session.detach()
+    await _require_windows_desktop_window(preexisting_windows)
+
+
+@asynccontextmanager
+async def _visible_chrome_session(
+    playwright: Any,
+    browser_channel: str,
+) -> AsyncIterator[tuple[Any, Any]]:
+    """Open an ephemeral headed Chrome context and close all local browser state."""
+
+    preexisting_windows = _windows_top_level_chrome_windows()
+    browser = await playwright.chromium.launch(
+        channel=browser_channel,
+        headless=False,
+        args=[
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--disable-background-mode",
+        ],
+    )
+    context = None
+    try:
+        context = await browser.new_context(
+            accept_downloads=True,
+            no_viewport=True,
+        )
+        page = await context.new_page()
+        await present_browser_window(context, page, preexisting_windows)
+        yield context, page
+    finally:
+        if context is not None:
+            await context.close()
+        await browser.close()
+
+
 async def _run(args: argparse.Namespace) -> Path:
     try:
         from playwright.async_api import Error as PlaywrightError
@@ -556,63 +744,55 @@ async def _run(args: argparse.Namespace) -> Path:
     started_at = ""
     recording: dict[str, Any] | None = None
 
-    with tempfile.TemporaryDirectory(prefix="mparanza-agenzia-recorder-") as profile:
-        async with async_playwright() as playwright:
-            try:
-                context = await playwright.chromium.launch_persistent_context(
-                    profile,
-                    channel=args.browser_channel,
-                    headless=False,
-                    accept_downloads=True,
-                    no_viewport=True,
-                    args=["--no-first-run", "--no-default-browser-check"],
+    async with async_playwright() as playwright:
+        try:
+            async with _visible_chrome_session(
+                playwright,
+                args.browser_channel,
+            ) as (context, page):
+                await page.goto(PORTAL_URL, wait_until="domcontentloaded")
+                LOGGER.info(
+                    "Accedi personalmente, seleziona il contribuente o la delega "
+                    "corretta e raggiungi Fatture e Corrispettivi. Non proseguire "
+                    "se sono ancora visibili password, PIN, codice QR, codice "
+                    "monouso o un'altra schermata di autenticazione. Quando hai "
+                    "finito, di' a voce oppure scrivi 'pronto' a Vera; va bene "
+                    "anche 'ready'."
                 )
-            except PlaywrightError as exc:
-                raise RuntimeError(
-                    f"Impossibile avviare il browser visibile "
-                    f"{args.browser_channel!r}. Installa Google Chrome oppure "
-                    "scegli un altro canale browser Playwright già installato."
-                ) from exc
-
-            page = context.pages[0] if context.pages else await context.new_page()
-            await page.goto(PORTAL_URL, wait_until="domcontentloaded")
-            LOGGER.info(
-                "Accedi personalmente, seleziona il contribuente o la delega "
-                "corretta e raggiungi Fatture e Corrispettivi. Non proseguire se "
-                "sono ancora visibili password, PIN, codice QR, codice monouso o "
-                "un'altra schermata di autenticazione. Quando hai finito, di' a "
-                "voce oppure scrivi 'pronto' a Vera; va bene anche 'ready'."
-            )
-            await asyncio.to_thread(
-                input,
-                "Vera è in attesa di 'pronto' o 'ready' (poi premerà Invio): ",
-            )
-
-            eligible_pages = [
-                item for item in context.pages if is_allowed_url(item.url)
-            ]
-            if not eligible_pages:
-                await context.close()
-                raise RuntimeError(
-                    "Non è aperta alcuna pagina autenticata dell'Agenzia delle "
-                    "Entrate; non è stato registrato nulla."
+                await asyncio.to_thread(
+                    input,
+                    "Vera è in attesa di 'pronto' o 'ready' (poi premerà Invio): ",
                 )
-            recorder = AgenziaFlowRecorder(context, redactions)
-            await recorder.begin()
-            started_at = _utc_now()
-            LOGGER.info(
-                "Registrazione attiva. Esegui una volta il flusso di ricerca e "
-                "download delle fatture. I valori digitati e i file delle fatture "
-                "non saranno conservati. Alla fine, di' a voce oppure scrivi "
-                "'fatto' a Vera; va bene anche 'done'."
-            )
-            await asyncio.to_thread(
-                input,
-                "Vera è in attesa di 'fatto' o 'done' (poi premerà Invio): ",
-            )
-            await recorder.stop()
-            recording = recorder.build_recording(started_at)
-            await context.close()
+
+                eligible_pages = [
+                    item for item in context.pages if is_allowed_url(item.url)
+                ]
+                if not eligible_pages:
+                    raise RuntimeError(
+                        "Non è aperta alcuna pagina autenticata dell'Agenzia delle "
+                        "Entrate; non è stato registrato nulla."
+                    )
+                recorder = AgenziaFlowRecorder(context, redactions)
+                await recorder.begin()
+                started_at = _utc_now()
+                LOGGER.info(
+                    "Registrazione attiva. Esegui una volta il flusso di ricerca e "
+                    "download delle fatture. I valori digitati e i file delle "
+                    "fatture non saranno conservati. Alla fine, di' a voce oppure "
+                    "scrivi 'fatto' a Vera; va bene anche 'done'."
+                )
+                await asyncio.to_thread(
+                    input,
+                    "Vera è in attesa di 'fatto' o 'done' (poi premerà Invio): ",
+                )
+                await recorder.stop()
+                recording = recorder.build_recording(started_at)
+        except PlaywrightError as exc:
+            raise RuntimeError(
+                f"Impossibile avviare e controllare il browser visibile "
+                f"{args.browser_channel!r}. Installa Google Chrome oppure scegli "
+                "un altro canale browser Playwright già installato."
+            ) from exc
 
     if recording is None:
         raise RuntimeError("La registrazione non è stata completata.")
