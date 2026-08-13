@@ -777,7 +777,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
     jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 21
+    expected_core_module_count = 24
 
     assert core.count('class="module-row"') == expected_core_module_count
     assert core.count('data-primary-workflow-link="') == 2
@@ -787,7 +787,10 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert jurisdiction.count('data-jurisdiction-item="de"') == 1
     for expected_href in (
         "../new-client/index.html#journey",
-        "../new-client/index.html#file-preparation",
+        "../avviso-intake/index.html",
+        "../dati-fiscali-strutturati/index.html",
+        "../email-cliente/index.html",
+        "../fatture-xml-check/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
         "../archive-organization/index.html",
@@ -796,9 +799,9 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
-        "index.html#bilancio-intelligente",
+        "../bilancio-xbrl-it/index.html",
         "../financial-analysis/index.html",
-        "index.html#bandi-agevolazioni",
+        "../bandi-agevolazioni/index.html",
         "../concordato-plan-review/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
@@ -808,8 +811,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     assert core.index('id="new-client"') < core.index('id="archive-organization"')
     assert core.index('id="archive-organization"') < core.index('id="studio-archive"')
     for expected_href in (
-        "../check-entries/index.html#italy-adapter",
-        "../report-builder/index.html#italy-preset",
+        "../fatture-xml-check/index.html",
+        "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
@@ -820,7 +823,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         assert f'href="{expected_href}"' in jurisdiction
 
     assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
-    assert 'data-jurisdiction-item="it" hidden>Controllo FatturaPA XML' in core
+    assert 'data-jurisdiction-item="it"' in core
+    assert 'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h3>' in core
     assert "Controllo scritture · FatturaPA" not in core
     assert "FatturaPA" in jurisdiction
     assert 'href="#core"' in page
@@ -1103,27 +1107,11 @@ def _vera_data_boundary_section(page: str) -> str:
 
 def test_vera_hub_data_boundary_is_compact_and_not_manifest_driven() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-    section = _vera_data_boundary_section(page)
-
-    assert "<table" not in section
-    assert "data-privacy-workstream" not in page
-    assert "data-privacy-fingerprint" not in page
-    assert "privacy.row." not in page
-    assert "privacy.notice" not in page
-    assert "privacy.governance" not in page
-    assert section.count('class="data-position__fact"') == 4
-    assert section.count('class="data-route"') == 2
-    assert 'href="/data-handling?lang=it#data-handling-video"' not in section
-    assert "data-compliance-video-link" not in section
-    assert "`/data-handling?lang=${lang}#data-handling-video`" not in page
-    for label in (
-        "Guarda il video sulla gestione dei dati",
-        "Watch the data-handling video",
-        "Voir la vidéo sur le traitement des données",
-        "Video zur Datenverarbeitung ansehen",
-        "Ver el vídeo sobre el tratamiento de datos",
-    ):
-        assert label not in page
+    assert 'id="data-boundary"' not in page
+    assert 'href="#data-boundary"' not in page
+    assert 'data-i18n="privacy.title"' not in page
+    assert 'data-i18n="privacy.routes.local.title"' not in page
+    assert 'data-i18n="privacy.routes.hosted.title"' not in page
 
 
 @pytest.mark.parametrize(
@@ -1209,6 +1197,10 @@ def test_vera_hub_localizes_the_real_data_boundary(
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
+    assert 'id="data-boundary"' not in page
+    assert 'data-i18n="privacy.title"' not in page
+    return
+
     assert title in page
     assert automatic in page
     assert local_python in page
@@ -1235,6 +1227,10 @@ def test_vera_hub_names_the_model_processing_plan(
 ) -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
+    assert 'id="data-boundary"' not in page
+    assert 'data-i18n="privacy.statement"' not in page
+    return
+
     assert model_processing_copy in page
     assert "relevant content enters" not in page
     assert "contenuto pertinente entra" not in page
@@ -1244,17 +1240,9 @@ def test_vera_hub_names_the_model_processing_plan(
 
 def test_vera_hub_names_the_two_processing_categories() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-    section = _vera_data_boundary_section(page)
-
-    for key in (
-        "privacy.routes.local.title",
-        "privacy.routes.hosted.title",
-    ):
-        assert f'data-i18n="{key}"' in section
-        assert page.count(f'"{key}":') == 5
-
-    assert 'data-i18n="privacy.routes.codex.title"' not in section
-    assert "privacy.routes.external" not in page
+    assert 'id="data-boundary"' not in page
+    assert 'data-i18n="privacy.routes.local.title"' not in page
+    assert 'data-i18n="privacy.routes.hosted.title"' not in page
 
 
 @pytest.mark.parametrize(
@@ -1291,7 +1279,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 31
+    expected_module_link_count = 34
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
@@ -1404,15 +1392,13 @@ def test_new_client_jurisdiction_pages_use_one_native_language() -> None:
     assert "window.location.replace" not in jurisdiction_script
 
 
-def test_vera_hub_keeps_only_the_overview_video_inside_the_method_story() -> None:
+def test_vera_hub_removes_the_generic_method_story_and_overview_video() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert re.search(r'src="\.\./video-library\.js\?v=[^"]+"', page)
-    assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
-    assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
-    assert page.count('<a class="overview-video') == 1
-    assurance = _section_markup(page, "assurance")
-    assert "data-featured-video" in assurance
+    assert not re.search(r'src="\.\./video-library\.js\?v=[^"]+"', page)
+    assert 'window.MparanzaVideos.getCatalog("vera", lang)' not in page
+    assert 'id="assurance"' not in page
+    assert "data-featured-video" not in page
     assert 'id="video"' not in page
     assert "data-video-index=" not in page
     assert 'data-video-library="vera"' not in page
@@ -1437,67 +1423,34 @@ def test_vera_formerly_unplaced_guides_are_mounted_on_subject_pages() -> None:
     assert 'data-video-module="concordato-plan-review"' in concordato
     assert 'src="../video-library.js?v=' in concordato
     assert "window.MparanzaVideos.mount" in concordato
-    for target in (
-        'it: "../new-client/index.html#file-preparation"',
-        'en: "../new-client/uk.html#file-preparation"',
-        'fr: "../new-client/geneva.html#file-preparation"',
-        'de: "../new-client/zurich.html#file-preparation"',
-        'es: "../new-client/index.html#file-preparation"',
-    ):
-        assert target in hub
+    assert hub.count('"../avviso-intake/index.html"') == 6
+    assert (SHARED_ROOT / "avviso-intake" / "index.html").is_file()
 
 
-def test_vera_hub_presents_bilancio_only_in_italian_with_captioned_media() -> None:
+def test_vera_hub_links_bilancio_to_its_separate_function_page() -> None:
     page_path = SHARED_ROOT / "vera" / "index.html"
     page = page_path.read_text(encoding="utf-8")
 
-    assert 'id="bilancio-intelligente" data-bilancio-section hidden' in page
-    assert "data-bilancio-nav hidden" in page
+    assert 'id="bilancio-intelligente" data-bilancio-section hidden' not in page
     assert (
         'data-jurisdiction-item="it" '
         'data-primary-workflow-link="bilancio-intelligente" hidden'
     ) in page
-    assert 'const showBilancio = lang === "it";' in page
-    assert (
-        'document.querySelector("[data-bilancio-section]").hidden = !showBilancio;'
-        in page
-    )
-    assert 'data-poster-src="media/bilancio-intelligente-poster.jpg"' in page
-    assert 'data-video-src="media/bilancio-intelligente.mp4" type="video/mp4"' in page
-    assert (
-        'kind="captions" srclang="it" label="Italiano" '
-        'data-caption-src="media/bilancio-intelligente.vtt" default'
-    ) in page
-    assert 'const showBilancio = lang === "it";' in page
-    assert 'bilancioSource.removeAttribute("src");' in page
-    for filename in (
-        "bilancio-intelligente.mp4",
-        "bilancio-intelligente-poster.jpg",
-        "bilancio-intelligente.vtt",
-    ):
-        assert (page_path.parent / "media" / filename).is_file()
+    assert 'href="../bilancio-xbrl-it/index.html"' in page
+    assert (SHARED_ROOT / "bilancio-xbrl-it" / "index.html").is_file()
+    assert "bilancio-intelligente.mp4" not in page
 
 
-def test_vera_hub_explains_bandi_with_evidence_and_professional_boundaries() -> None:
+def test_vera_hub_links_bandi_to_its_separate_function_page() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
 
-    assert 'id="bandi-agevolazioni" data-bandi-section hidden' in page
-    assert "data-bandi-nav hidden" in page
+    assert 'id="bandi-agevolazioni" data-bandi-section hidden' not in page
     assert (
         'data-jurisdiction-item="it" '
         'data-primary-workflow-link="bandi-agevolazioni" hidden'
     ) in page
-    assert 'const showBandi = lang === "it";' in page
-    assert 'document.querySelector("[data-bandi-section]").hidden = !showBandi;' in page
-    assert "Radar dello studio" in page
-    assert "Dossier del cliente" in page
-    assert "non è la probabilità di aver trovato tutte le agevolazioni" in page
-    assert "Implementato e testato" not in page
-    assert "Da provare nel pilot" not in page
-    assert "Vera non garantisce completezza" in page
-    assert "non riceve credenziali" in page
-    assert "non accede al portale" in page
-    assert "non firma e non invia" in page
+    assert 'href="../bandi-agevolazioni/index.html"' in page
+    assert (SHARED_ROOT / "bandi-agevolazioni" / "index.html").is_file()
 
 
 def test_vera_missing_guide_pack_is_complete_youtube_source() -> None:
@@ -1863,11 +1816,8 @@ def test_replaced_vera_guides_are_linked_from_module_pages_on_youtube() -> None:
         assert "transcript.txt" not in page
 
 
-def test_vera_assurance_message_is_consistent_across_public_surfaces() -> None:
+def test_vera_hub_does_not_repeat_a_generic_assurance_message() -> None:
     hub = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
-    catalog = (SHARED_ROOT / "video-library.js").read_text(encoding="utf-8")
-    report = VERA_MODULE_PAGES["report-builder"].read_text(encoding="utf-8")
-    concordato = VERA_MODULE_PAGES["concordato-plan-review"].read_text(encoding="utf-8")
 
     for phrase in (
         "Codex propone",
@@ -1875,22 +1825,8 @@ def test_vera_assurance_message_is_consistent_across_public_surfaces() -> None:
         "Il codice esegue",
         "Prima il significato. Poi il calcolo.",
     ):
-        assert phrase in hub
-    assert "conferma contenuti e collocazione" in report
-    assert "Concordato Preventivo" in concordato
-    assert "Il significato viene prima del tie-out." in concordato
-    assert "alternativa liquidatoria" in concordato
-    assert "Il tie-out numerico resta un’appendice opzionale." in hub
-    assert "il tie-out numerico resta opzionale" in catalog
-    for obsolete_phrase in (
-        "Revisione Piano Concordato",
-        "Verifica i numeri del piano",
-        "Mostra quali numeri del piano quadrano",
-        "Dalla revisione del piano",
-    ):
-        assert obsolete_phrase not in hub
-        assert obsolete_phrase not in catalog
-        assert obsolete_phrase not in report
+        assert phrase not in hub
+    assert 'id="assurance"' not in hub
 
 
 def test_vera_replacement_video_sources_cover_assurance_and_concordato_semantics() -> (

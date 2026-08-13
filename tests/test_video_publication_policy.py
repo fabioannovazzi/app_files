@@ -218,9 +218,7 @@ def test_clara_hero_consolidates_installation_and_localized_setup_video() -> Non
     assert 'data-i18n="download.step1"' not in clara_page
     assert 'data-i18n="download.help.title"' not in clara_page
     assert 'data-i18n="install.signed_out"' not in clara_page
-    assert clara_page.index('id="download"') < clara_page.index(
-        '<section id="presentations">'
-    )
+    assert clara_page.index('id="download"') < clara_page.index('<section id="functions">')
     assert (
         'document.getElementById("clara-install-video-link").href = '
         "`https://youtu.be/${activeInstallVideo.id}`;"

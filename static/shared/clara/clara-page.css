@@ -371,6 +371,45 @@ section[id], .card[id] { scroll-margin-top: 92px; }
   box-shadow: inset 8px 0 0 var(--cyan);
 }
 
+.function-directory {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: clamp(44px, 7vw, 72px);
+  border-top: 2px solid var(--navy);
+}
+
+.function-group {
+  padding: 30px 34px 40px 0;
+  border-bottom: 1px solid var(--cyan);
+}
+
+.function-group:nth-child(even) {
+  padding-left: 34px;
+  border-left: 1px solid var(--cyan);
+}
+
+.function-group h3 {
+  margin: 0 0 16px;
+  color: var(--navy);
+  font-size: clamp(1.25rem, 2.4vw, 1.75rem);
+}
+
+.function-link {
+  min-height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-top: 1px solid var(--cyan);
+  color: var(--blue);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.function-link:hover {
+  color: var(--navy);
+}
+
 footer {
   width: min(var(--content), calc(100% - 40px));
   margin: 0 auto;
@@ -426,6 +465,9 @@ a:focus-visible, button:focus-visible { outline: 3px solid var(--cyan); outline-
     align-items: start;
   }
   .hero-install__actions { grid-template-columns: 1fr; }
+  .function-directory { grid-template-columns: 1fr; }
+  .function-group,
+  .function-group:nth-child(even) { padding: 28px 0 34px; border-left: 0; }
 }
 
 @media (max-width: 480px) {

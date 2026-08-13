@@ -455,14 +455,13 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
     assert LUCIA_PUBLIC_COWORK_ZIP.read_bytes() == LUCIA_CLAUDE_ZIP.read_bytes()
 
 
-def test_lucia_public_page_uses_shared_reviewable_assurance_copy() -> None:
+def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
     stylesheet = (ROOT / "static" / "shared" / "lucia" / "lucia-page.css").read_text(
         encoding="utf-8"
     )
-
     assert '<html lang="it">' in page
     assert 'href="../product-navigation.css?v=' in page
     assert 'src="../product-navigation.js?v=' in page
@@ -471,30 +470,24 @@ def test_lucia_public_page_uses_shared_reviewable_assurance_copy() -> None:
     assert 'class="workstreams"' in page
     assert 'class="module-directory"' in page
     assert page.count('class="module-row"') == len(PUBLIC_WORKFLOWS)
-    assert 'class="assurance-sequence"' in page
-    assert 'class="data-position__facts"' in page
+    assert 'id="assurance"' not in page
+    assert 'id="data-boundary"' not in page
     assert "data-language-summary" in page
     for lang in ("it", "en", "fr", "de", "es"):
         assert f'hreflang="{lang}"' in page
         assert f'data-lang="{lang}"' in page
-    assert "Le funzioni di ricerca condividono lo stesso metodo" in page
-    assert "implementazioni canoniche" not in page
-    assert 'id="comunicazione-professionale"' in page
-    assert 'id="presenza-digitale-studio"' in page
-    assert 'id="apertura-pratica"' in page
+    assert "Le funzioni di ricerca condividono lo stesso metodo" not in page
+    assert 'href="../comunicazione-professionale/index.html?lang=it"' in page
+    assert 'href="../presenza-digitale-studio/index.html?lang=it"' in page
+    assert 'href="../apertura-pratica/index.html?lang=it"' in page
     assert "Comunicazione professionale" in page
     assert "Presenza digitale dello studio" in page
     assert "Ottimizza prompt" in page
     assert "Assistente Ai per avvocati indipendenti" in page
-    assert (
-        "Trasforma un quesito legale, fiscale o di conformità in una ricerca con "
-        "perimetro, fonti e verifiche definite."
-    ) in page
     assert "Valida Deep Research" in page
-    assert (
-        "Controlla le affermazioni rispetto alle fonti citate e prepara il "
-        "materiale consolidato."
-    ) in page
+    assert page.count('class="module-row"') == 5
+    for module in re.findall(r'<a class="module-row".*?</a>', page, flags=re.DOTALL):
+        assert "<p" not in module
     assert "Solo due" not in page
     assert "I due percorsi" not in page
     assert "github.com/fabioannovazzi/app_files/tree/main/plugins/lucia" in page
@@ -597,7 +590,7 @@ def test_lucia_public_page_localizes_new_lawyer_profiled_workflows() -> None:
     assert "despacho" in page
 
 
-def test_lucia_public_page_localizes_matter_opening_without_changing_hero() -> None:
+def test_lucia_public_page_localizes_matter_opening_and_direct_hero() -> None:
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -611,7 +604,7 @@ def test_lucia_public_page_localizes_matter_opening_without_changing_hero() -> N
     ):
         assert len(_javascript_string_values(page, key)) == 5
     assert (
-        '"hero.lead": "Un plugin specialistico per impostare la ricerca legale e verificare fonti, affermazioni e ragionamento."'
+        '"hero.lead": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio."'
         in page
     )
 

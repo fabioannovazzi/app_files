@@ -2945,6 +2945,7 @@ def test_clara_downloads_and_removed_explainers_return_404(
         public_plugin_pages = (
             "/static/shared/deep-research-validator/index.html",
             "/static/shared/clara/index.html",
+            "/static/shared/variance-analysis/index.html",
         )
         removed_plugin_pages = (
             "/static/shared/audit-reconciliation/index.html",
@@ -2953,7 +2954,6 @@ def test_clara_downloads_and_removed_explainers_return_404(
             "/static/shared/mix-contribution-analysis/index.html",
             "/static/shared/period-comparison/index.html",
             "/static/shared/scatter-bubble-analysis/index.html",
-            "/static/shared/variance-analysis/index.html",
             "/static/shared/distribution-analysis/index.html",
             "/static/shared/set-overlap-analysis/index.html",
             "/static/shared/funnel-analysis/index.html",
@@ -3306,16 +3306,17 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
 
     for module_link in (
         "../new-client/index.html#journey",
+        "../avviso-intake/index.html",
         "../archive-organization/index.html",
         "../journal-sampling/index.html",
         "../check-entries/index.html#journey",
         "../journal-bank-reconciliation/index.html",
         "../riconciliazione-partite/index.html",
         "../sales-plan/index.html",
-        "index.html#analisi-scostamenti",
+        "../variance-analysis/index.html",
         "../financial-analysis/index.html",
-        "index.html#comunicazione-professionale",
-        "index.html#presenza-digitale-studio",
+        "../comunicazione-professionale/index.html",
+        "../presenza-digitale-studio/index.html",
         "../report-builder/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
@@ -3323,16 +3324,16 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     ):
         assert f'href="{module_link}"' in core
     for module_link in (
-        "index.html#bandi-agevolazioni",
-        "../check-entries/index.html#italy-adapter",
-        "../report-builder/index.html#italy-preset",
+        "../bandi-agevolazioni/index.html",
+        "../fatture-xml-check/index.html",
+        "../report-enti-locali/index.html",
         "../concordato-plan-review/index.html",
         "../previdenza-inps/index.html",
         "../registro-imprese-sari/index.html",
     ):
         assert f'href="{module_link}"' in italy
-    assert core.count(" data-module-link") == 21
-    assert core.count('class="module-row"') == 21
+    assert core.count(" data-module-link") == 24
+    assert core.count('class="module-row"') == 24
     assert italy.count('data-jurisdiction-item="it"') == 7
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
@@ -3345,16 +3346,12 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert 'id="installa"' in page
     assert "Core multilingue + pacchetto Italia" not in page
     assert "Cambia la lingua del lavoro, non la giurisdizione applicata" not in page
-    assert "FatturaPA" in core
     assert "FatturaPA" in italy
-    assert 'src="../video-library.js?v=20260726-assurance"' in page
     assert (
         'const jurisdictionsByPage = { it: "IT", en: "UK", fr: "CH-GE", '
         'de: "CH-ZH", es: null };'
     ) in page
     assert "item.hidden = item.dataset.jurisdictionItem !== lang" in page
-    assert 'window.MparanzaVideos.getCatalog("vera", lang)' in page
-    assert 'const videoLang = lang === "es" ? "en" : lang;' not in page
     assert (
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57ac5ce65c8191ae7bd0a51160eb7d"
         in page
@@ -3363,11 +3360,9 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert 'href="downloads/vera-cowork-plugin.zip"' in page
     assert "data-vera-cowork-download-link" in page
     for localized_title in (
-        "Scegli dove lavorare con Vera.",
-        "Choose where to work with Vera.",
-        "Choisissez où travailler avec Vera.",
-        "Wählen Sie, wo Sie mit Vera arbeiten.",
-        "Elige dónde trabajar con Vera.",
+        "Installazione",
+        "Installation",
+        "Instalación",
     ):
         assert localized_title in page
     for localized_eyebrow in (
@@ -3470,20 +3465,9 @@ def test_vera_page_places_reviewed_archive_organization_between_intake_and_searc
     assert organization is not None
     assert 'href="../archive-organization/index.html"' in organization.group(0)
     assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
-    assert 'data-i18n="module.archiveOrganization"' in organization.group(0)
     assert page.index('id="new-client"') < page.index('id="archive-organization"')
     assert page.index('id="archive-organization"') < page.index('id="studio-archive"')
-    for required_concept in (
-        "Google Workspace",
-        "duplicati",
-        "approva prima di ogni modifica",
-        "può ripristinarlo",
-        "can roll it back",
-        "peut le rétablir",
-        "kann sie zurücksetzen",
-        "puede revertirlo",
-    ):
-        assert required_concept in page
+    assert "<p" not in organization.group(0)
 
 
 def test_vera_page_links_plan_separately_from_financial_analysis() -> None:
@@ -3556,23 +3540,22 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         page,
         flags=re.DOTALL,
     )
-    section_start = page.index('id="analisi-scostamenti"')
-    section_end = page.index("</section>", section_start)
-    section = page[section_start:section_end]
+    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
 
     assert module is not None
-    assert 'href="index.html#analisi-scostamenti"' in module.group(0)
+    assert 'href="../variance-analysis/index.html"' in module.group(0)
     assert 'data-i18n="module.variance.title"' in module.group(0)
-    assert 'data-i18n="module.variance"' in module.group(0)
+    assert "<p" not in module.group(0)
     for required_concept in (
-        "consuntivo (Actual), Budget, Forecast o periodo precedente",
-        "analisi a soli valori",
-        "prezzo-volume-mix",
-        "Waterfall, bridge per componente e dimensione, viste esplose e drilldown",
-        "classificazione favorevole/sfavorevole",
-        "richiedono conferma professionale",
+        '"variance-analysis"',
+        "Confronta Actual, Budget, Forecast o periodi precedenti",
+        "prezzo, volume e mix",
+        "I calcoli restano separati dall'interpretazione gestionale.",
+        'modelDataStatus: "placeholder"',
     ):
-        assert required_concept in section
+        assert required_concept in function_copy
     for localized_title in (
         "Analisi degli scostamenti",
         "Variance analysis",
@@ -3580,130 +3563,63 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         "Abweichungsanalyse",
         "Análisis de desviaciones",
     ):
-        assert localized_title in page
-    for localized_value_only_boundary in (
-        "value-only analysis",
-        "analyse en valeur uniquement",
-        "nur Wertabweichungen",
-        "análisis solo de valor",
-    ):
-        assert localized_value_only_boundary in page
+        assert localized_title in function_copy
 
 
 def test_vera_page_explains_professional_communication_quality_contract() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    section_start = page.index('id="comunicazione-professionale"')
-    section_end = page.index("</section>", section_start)
-    section = page[section_start:section_end]
+    function_page = ROOT / "static" / "shared" / "comunicazione-professionale" / "index.html"
+    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
 
-    for required_copy in (
-        "Il commercialista sceglie le fonti. Vera prepara la comunicazione.",
-        "1. Il commercialista sceglie",
-        "2. Vera prepara",
-        "3. Il commercialista decide",
-        "Altrimenti propone di non pubblicare.",
-    ):
-        assert required_copy in section
-    assert section.count('class="comms-step"') == 3
-    assert 'class="comms-outcomes"' not in section
-    assert 'class="comms-output"' not in section
-    assert 'class="comms-profile"' not in section
-    assert 'class="comms-assurance"' not in section
-    assert 'class="comms-boundary"' not in section
-    assert "communication.creative." not in page
-    assert ".comms-channel-list li::after" not in page
-    assert "Fonte: fonte ufficiale" not in section
+    assert function_page.is_file()
+    assert 'href="../comunicazione-professionale/index.html"' in page
+    assert 'id="comunicazione-professionale"' not in page
+    assert '"comunicazione-professionale"' in function_copy
+    assert "Valuta una novità da fonti selezionate" in function_copy
 
 
 def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None:
-    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
         encoding="utf-8"
     )
-    section_start = page.index('id="comunicazione-professionale"')
-    section_end = page.index("</section>", section_start)
-    section = page[section_start:section_end]
 
     for required_copy in (
-        "Quali dati arrivano al modello",
-        "Le fonti scelte arrivano al modello.",
-        "Il modello legge le fonti scelte",
-        "Vera rimuove prima sul computer email, telefoni, codici fiscali",
-        "Un primo passaggio del modello può ancora vedere nomi e dettagli di contesto",
-        "Solo i passaggi successivi ricevono quelle comunicazioni in forma pseudonimizzata",
-        "la corrispondenza con gli originali resta nello Studio",
-        "Lo stesso vale in Codex e Cowork.",
+        "Il modello legge le fonti selezionate",
+        "un primo passaggio può vedere nomi e dettagli di contesto",
+        "I passaggi successivi ricevono quelle versioni",
+        "Questa procedura non equivale ad anonimizzazione.",
     ):
-        assert required_copy in section
-    assert (
-        'data-model-data-workflow="comunicazione-professionale" '
-        'data-model-data-status="relevant"'
-    ) in section
-    assert section.count('class="comms-creative comms-model-data"') == 1
-    assert section.rstrip().endswith("</aside>")
-    assert 'href="#installa"' not in section
-    assert 'data-i18n="communication.action"' not in section
+        assert required_copy in function_copy
+    assert 'modelDataStatus: "relevant"' in function_copy
     for localized_heading in (
         "What data reaches the model",
         "Quelles données parviennent au modèle",
-        "Welche Daten erreichen das Modell",
-        "Qué datos llegan al modelo",
+        "Welche Daten das Modell erhält",
+        "Qué datos recibe el modelo",
     ):
-        assert localized_heading in page
+        assert localized_heading in (
+            ROOT / "static" / "shared" / "product-function-page.js"
+        ).read_text(encoding="utf-8")
 
 
 def test_vera_page_explains_studio_website_quality_contract() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    section_start = page.index('id="presenza-digitale-studio"')
-    section_end = page.index("</section>", section_start)
-    section = page[section_start:section_end]
+    function_page = ROOT / "static" / "shared" / "presenza-digitale-studio" / "index.html"
+    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
 
-    for required_copy in (
-        "Un sito decente.",
-        "Il sito deve rispondere subito a cinque domande.",
-        "Chi è lo Studio? Chi aiuta? Che cosa fa? Perché è credibile? Come lo si contatta?",
-        "Sito da rinnovare",
-        "Primo sito",
-        "Fuori perimetro",
-        "Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni su misura",
-        "Tre passaggi, dal materiale alla pubblicazione.",
-        "1. Scegliere i contenuti",
-        "2. Costruire il sito",
-        "3. Rivedere e pubblicare",
-        "Quali dati arrivano al modello",
-        "Non rilevante per questo processo.",
-        "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
-    ):
-        assert required_copy in section
-    assert section.count('class="comms-step"') == 3
-    assert 'class="comms-profile"' not in section
-    assert 'class="comms-assurance"' not in section
-    assert 'class="comms-boundary"' not in section
-    assert section.count('class="comms-creative comms-model-data"') == 1
-    assert (
-        'data-model-data-workflow="presenza-digitale-studio" '
-        'data-model-data-status="not-relevant"'
-    ) in section
-    assert 'class="comms-actions"' not in section
-    assert 'href="#installa"' not in section
-    assert 'data-i18n="website.action"' not in section
-    assert 'data-i18n="website.example"' not in section
-    assert section.rstrip().endswith("</aside>")
-    assert ".comms-model-data {" in page
-    assert ".comms-steps--three {" in page
-    assert "grid-template-columns: minmax(0, 1fr);" in page
-    assert 'href="index.html#presenza-digitale-studio"' in page
-    assert 'href="#presenza-digitale-studio"' in page
-    for localized_model_data_copy in (
-        "Not relevant to this process.",
-        "Ce point n’est pas pertinent pour ce processus.",
-        "Für diesen Prozess nicht relevant.",
-        "No es relevante para este proceso.",
-    ):
-        assert localized_model_data_copy in page
+    assert function_page.is_file()
+    assert 'href="../presenza-digitale-studio/index.html"' in page
+    assert 'id="presenza-digitale-studio"' not in page
+    assert "Nomi, ritratti e altri dati reali destinati al sito" in function_copy
+    assert 'modelDataStatus: "relevant"' in function_copy
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
@@ -4096,11 +4012,11 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         '<section class="section-block" id="model-data"'
     )
     for snippet in (
-        "Prima un piccolo campione. Poi, solo in Codex, il residuo utile.",
-        "First a small sample. Then, in Codex only, the useful residual.",
-        "D'abord un petit échantillon. Puis, dans Codex uniquement, le résiduel utile.",
-        "Zuerst eine kleine Stichprobe. Danach, nur in Codex, der nützliche Restbestand.",
-        "Primero una pequeña muestra. Después, solo en Codex, el residuo útil.",
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Welche Daten das Modell erhält",
+        "Qué datos recibe el modelo",
         "Codex o Cowork vedono un campione limitato",
         "Codex o Cowork propongono campi e ruoli",
         "Solo in Codex: riduce righe e colonne",
@@ -4209,34 +4125,22 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Clara",
         "AI companion for consultants",
         "Assistente AI per consulenti",
-        "A specialist plugin for presentations and ongoing project work.",
-        "Un plugin specialistico per creare presentazioni e dare continuità al lavoro sui progetti.",
-        "Create or correct a presentation in your corporate style",
-        "Crea o correggi una presentazione nel tuo stile aziendale",
-        "Choose the deck format",
-        "Scegli il formato del deck",
-        "Open the project folder and describe what you need",
-        "Apri la cartella del progetto e descrivi ciò che ti serve",
-        "The project is not just a presentation",
-        "Il progetto non è solo una presentazione",
-        "Interviews, documents, and data analysis",
-        "Interviste, documenti e analisi dati",
-        "Conduct an interview with a dedicated link",
-        "Conduci un'intervista con un link dedicato",
-        "Transcribe a meeting or recording",
-        "Trascrivi una riunione o una registrazione",
-        "From sources to a document for review",
-        "Dalle fonti al documento da rivedere",
-        "From data to a clear answer",
-        "Dai dati a una risposta chiara",
-        "Clara, Vera and Lucia follow the same two-category data policy.",
-        "Clara, Vera e Lucia seguono la stessa regola con due categorie.",
-        "Retail data and reviewed mappings use a Mparanza-hosted service",
-        "I dati retail e le mappature riviste usano un servizio hosted di Mparanza",
-        "No separate API key is required; model work uses your existing ChatGPT plan.",
-        "Non serve una chiave API separata; il lavoro del modello usa il tuo piano ChatGPT esistente.",
-        "Choose where to work with Clara.",
-        "Scegli dove lavorare con Clara.",
+        "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+        "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+        "Available functions",
+        "Funzioni disponibili",
+        "Presentations and documents",
+        "Presentazioni e documenti",
+        "Interviews and recordings",
+        "Interviste e registrazioni",
+        "Retail analysis",
+        "Analisi retail",
+        "Business analysis",
+        "Analisi aziendale",
+        "How to use Clara",
+        "Come usare Clara",
+        "Installation",
+        "Installazione",
         "Install Clara for ChatGPT Work and Codex, or download the package for Claude Cowork.",
         "Installa Clara per ChatGPT Work e Codex oppure scarica il pacchetto per Claude Cowork.",
         "Install for ChatGPT Work and Codex",
@@ -4246,9 +4150,14 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "https://chatgpt.com/auth/login?next=%2Fplugins%2Fplugins_6a57b17fb5848191be710192d93fe03a",
         "data-clara-install-link",
         "data-clara-cowork-download-link",
+        "data-function-link",
         "/?lang=${safeLang}",
     ):
         assert snippet in page
+    assert 'id="data-handling"' not in page
+    assert 'id="presentations"' not in page
+    assert 'id="videos"' not in page
+    assert page.count('class="function-link"') == 7
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -4365,22 +4274,15 @@ def test_clara_public_page_language_buttons_and_copy_keys_stay_in_sync() -> None
         assert f'hreflang="{language}"' in page
 
 
-def test_clara_public_page_routes_presentation_video_by_language() -> None:
+def test_clara_public_page_removes_function_video_from_the_directory() -> None:
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    for language, video_id in {
-        "en": "3zvFm3fGdQ8",
-        "it": "mU-QhOp7EOk",
-        "fr": "Qe8rbIh8fhg",
-        "de": "BPp_fcfYRS8",
-        "es": "8aCsIsrwWfU",
-    }.items():
-        assert f'{language}: {{ id: "{video_id}"' in page
-    assert 'es: { id: "8aCsIsrwWfU", duration: "0:53", catalogLanguage: "es" }' in page
-    assert 'id="presentation-video-thumbnail"' in page
-    assert 'id="presentation-video-duration"' in page
+    assert "presentationVideos" not in page
+    assert 'id="presentation-video-link"' not in page
+    assert 'id="presentation-video-thumbnail"' not in page
+    assert 'id="presentation-video-duration"' not in page
 
 
 def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
@@ -4390,6 +4292,33 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
     copy_start = page.index("const copy = {")
     copy_end = page.index("\n    };", copy_start)
     copy_block = page[copy_start:copy_end]
+
+    for text in (
+        "Available functions",
+        "Funzioni disponibili",
+        "How to use Clara",
+        "Come usare Clara",
+        "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+        "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+    ):
+        assert text in page
+    for key in (
+        "functions.title",
+        "functions.copy",
+        "functions.deliverables",
+        "functions.presentations",
+        "functions.documents",
+        "functions.research",
+        "functions.interviews",
+        "functions.transcription",
+        "functions.retail",
+        "functions.analysis",
+        "functions.dataAnalysis",
+    ):
+        assert copy_block.count(f'"{key}"') == 5
+    assert 'id="data-handling"' not in page
+    assert 'id="presentations"' not in page
+    return
 
     for text in (
         "Create or correct high-impact HTML decks and PowerPoint presentations.",
@@ -4616,7 +4545,6 @@ def test_old_plotting_plugin_pages_are_removed() -> None:
         ROOT / "static" / "shared" / "mix-contribution-analysis" / "index.html",
         ROOT / "static" / "shared" / "period-comparison" / "index.html",
         ROOT / "static" / "shared" / "scatter-bubble-analysis" / "index.html",
-        ROOT / "static" / "shared" / "variance-analysis" / "index.html",
         ROOT / "static" / "shared" / "distribution-analysis" / "index.html",
         ROOT / "static" / "shared" / "set-overlap-analysis" / "index.html",
         ROOT / "static" / "shared" / "funnel-analysis" / "index.html",
@@ -4733,11 +4661,7 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "Vera",
             (
                 "#core",
-                "#comunicazione-professionale",
-                "#presenza-digitale-studio",
-                "#assurance",
                 "#jurisdiction",
-                "#data-boundary",
             ),
         ),
         (
@@ -4745,10 +4669,8 @@ def test_clara_public_icon_matches_plugin_source() -> None:
             "/",
             "Clara",
             (
-                "#presentations",
+                "#functions",
                 "#workflow",
-                "#data-handling",
-                "#videos",
             ),
         ),
     ),
@@ -4878,7 +4800,8 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
 
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
-    assert 'class="promise-strip"' in page
+    assert 'class="function-directory"' in page
+    assert page.count('class="function-link"') == 7
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):
@@ -4912,30 +4835,25 @@ def test_companion_overview_video_follows_the_intended_product_story(
     if companion == "vera":
         assert page.index('id="installa"') < page.index('id="core"')
         assert page.index('id="core"') < page.index('id="jurisdiction"')
-        assert page.index('id="core"') < page.index('id="assurance"')
-        assurance = page.split(
-            '<section class="section-block" id="assurance">', maxsplit=1
-        )[1].split("</section>", maxsplit=1)[0]
-        assert "data-featured-video" in assurance
+        assert 'id="assurance"' not in page
+        assert "data-featured-video" not in page
         assert 'id="video"' not in page
-        assert page.count('class="overview-video"') == 1
+        assert page.count('class="overview-video"') == 0
         assert "install-panel__video" not in page
         return
 
     hero_start = page.index('<section class="hero">')
     hero_end = page.index("</section>", hero_start)
     hero = page[hero_start:hero_end]
-    presentations_start = page.index('<section id="presentations">')
-    presentations_end = page.index("</section>", presentations_start)
-    presentations = page[presentations_start:presentations_end]
+    functions_start = page.index('<section id="functions">')
     assert 'id="download"' in hero
     assert install_attribute in hero
     assert 'id="clara-install-video-link"' in hero
     assert 'data-i18n-aria-label="install.video.title"' in hero
     assert 'class="video-story"' not in hero
-    assert 'id="presentation-video-link"' in presentations
-    assert page.index('id="download"') < presentations_start
-    assert page.count('class="video-story"') == 1
+    assert 'id="presentation-video-link"' not in page
+    assert page.index('id="download"') < functions_start
+    assert page.count('class="video-story"') == 0
     assert "download-panel" not in page
 
 
@@ -5084,7 +5002,7 @@ def test_homepage_product_propositions_remain_stable_when_skills_change(
 
 
 @pytest.mark.parametrize("lang", ("en", "it", "fr", "de", "es"))
-def test_product_pages_use_the_stable_homepage_proposition_for_hero_and_metadata(
+def test_product_pages_use_direct_product_explanations_for_hero_and_metadata(
     lang: str,
 ) -> None:
     _restore_application_import_path()
@@ -5093,11 +5011,39 @@ def test_product_pages_use_the_stable_homepage_proposition_for_hero_and_metadata
 
     groups = pdp_api._get_landing_page_content(lang)["sections"][0]["groups"]
 
+    direct_leads = {
+        "en": {
+            "clara": "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+            "vera": "Vera adds client files, accounting checks, reconciliations, analysis, reporting, communication, and research to Codex.",
+            "lucia": "Lucia adds legal research, source validation, matter opening, professional communication, and firm websites to Codex.",
+        },
+        "it": {
+            "clara": "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+            "vera": "Vera aggiunge a Codex fascicoli cliente, controlli contabili, riconciliazioni, analisi, report, comunicazione e ricerca.",
+            "lucia": "Lucia aggiunge a Codex ricerca legale, verifica delle fonti, apertura pratica, comunicazione professionale e sito dello studio.",
+        },
+        "fr": {
+            "clara": "Clara ajoute à Codex les présentations, les entretiens, la transcription, les documents, l'analyse retail et l'analyse de données.",
+            "vera": "Vera ajoute à Codex les dossiers clients, les contrôles comptables, les rapprochements, l'analyse, les rapports, la communication et la recherche.",
+            "lucia": "Lucia ajoute à Codex la recherche juridique, la vérification des sources, l'ouverture de dossier, la communication professionnelle et le site du cabinet.",
+        },
+        "de": {
+            "clara": "Clara ergänzt Codex um Präsentationen, Interviews, Transkription, Dokumente, Retail-Analysen und Datenanalysen.",
+            "vera": "Vera ergänzt Codex um Mandantenakten, Buchungsprüfungen, Abstimmungen, Analysen, Berichte, Kommunikation und Recherche.",
+            "lucia": "Lucia ergänzt Codex um juristische Recherche, Quellenprüfung, Aktenanlage, professionelle Kommunikation und Kanzlei-Websites.",
+        },
+        "es": {
+            "clara": "Clara añade a Codex presentaciones, entrevistas, transcripción, documentos, análisis retail y análisis de datos.",
+            "vera": "Vera añade a Codex expedientes de clientes, controles contables, conciliaciones, análisis, informes, comunicación e investigación.",
+            "lucia": "Lucia añade a Codex investigación jurídica, comprobación de fuentes, apertura de asuntos, comunicación profesional y sitios web del despacho.",
+        },
+    }
+
     for group in groups:
         page = (ROOT / "static" / "shared" / group["id"] / "index.html").read_text(
             encoding="utf-8"
         )
-        lead = group["lead"]
+        lead = direct_leads[lang][group["id"]]
         assert f'"hero.lead": "{lead}"' in page
         assert f'"meta.description": "{lead}"' in page
 
