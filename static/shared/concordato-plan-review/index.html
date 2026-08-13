@@ -792,6 +792,39 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
       </div>
       <a class="button" href="../vera/index.html?lang=it" data-vera-link data-copy="cta.button">Vera</a>
     </section>
+
+    <section class="function-model-data" id="model-data" data-model-data-workflow="concordato-plan-review" data-model-data-status="relevant" aria-labelledby="concordato-plan-review-model-data-title">
+      <div class="function-model-data__head">
+        <div class="function-model-data__heading">
+          <p class="function-model-data__label" data-copy="model.label">Trattamento dei dati</p>
+          <h2 id="concordato-plan-review-model-data-title" data-copy="model.title">Quali dati arrivano al modello</h2>
+        </div>
+        <div>
+          <p class="function-model-data__conclusion" data-copy="model.conclusion">Rilevante per questo processo.</p>
+          <p class="function-model-data__copy" data-copy="model.intro">Per ricostruire procedura, creditori, trattamento e fattibilità, il modello può dover leggere dati identificativi e finanziari reali del fascicolo.</p>
+        </div>
+      </div>
+      <div class="sequence">
+        <article>
+          <h3 data-copy="model.localTitle">Il codice cattura il fascicolo</h3>
+          <p data-copy="model.localText">Inventaria ricorsivamente ogni file e cattura tutti i PDF, i workbook Excel e i CSV supportati. Estrae tutte le pagine dei PDF. Per l’appendice numerica esamina tutte le colonne solo quando ogni foglio resta entro 5.000 righe; se un foglio supera il limite, quel workbook non produce candidati numerici.</p>
+        </article>
+        <article>
+          <h3 data-copy="model.semanticTitle">Il modello ricostruisce il caso</h3>
+          <p data-copy="model.semanticText">Il modello Codex o Cowork può leggere le fonti pertinenti e il testo estratto: istruzioni; debitore, tribunale e riferimenti della procedura; proposta, piano, attestazione e atti; nomi e identificativi dei creditori, crediti, prelazioni, classi, voto, trattamento, recuperi e scadenze; dati contabili, fiscali e previdenziali; fonti e impieghi, liquidità, assunzioni, estratti di evidenza, questioni e note del revisore.</p>
+        </article>
+        <article>
+          <h3 data-copy="model.populationTitle">Il codice calcola l’intera popolazione confermata</h3>
+          <p data-copy="model.populationText">Dopo la conferma professionale, elabora ogni creditore del modello, ogni voce di fonti e impieghi e ogni periodo di liquidità. I calcoli non usano un campione; l’appendice numerica considera tutti i candidati espressamente autorizzati.</p>
+        </article>
+        <article>
+          <h3 data-copy="model.reviewTitle">Il modello rivede gli output</h3>
+          <p data-copy="model.reviewText">Per la revisione, il modello può leggere il modello completo del caso e i file prodotti. Il widget mostra al massimo 300 fonti, 100 domande, 200 questioni, 200 classi, 400 importi di piano e 100 errori di estrazione, entro 2.500 elementi e 2 MB; il dettaglio completo per creditore resta nei file del caso.</p>
+        </article>
+      </div>
+      <p class="appendix"><strong data-copy="model.runtimeTitle">Codex, Cowork e identità.</strong>
+        <span data-copy="model.runtimeText">Le classi di dati sono le stesse; cambia la destinazione: l’account Codex/OpenAI oppure Cowork/Anthropic scelto dallo studio. Il workflow non usa altri connettori esterni e non anonimizza né pseudonimizza automaticamente: nomi e identificativi restano quando sono necessari per verificare procedura, crediti, prelazioni, voto, trattamento ed evidenze.</span></p>
+    </section>
   </main>
   <script src="../video-library.js?v=20260811-distributed"></script>
   <script>
@@ -882,6 +915,22 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
           limit3: "Non trasforma evidenza mancante in una conclusione positiva.",
           limit4: "I test sintetici provano il contratto; non provano generalità su casi reali.",
           limit5: "La validazione sul campo richiede un caso mai visto e una review indipendente qualificata."
+        },
+        model: {
+          label: "Trattamento dei dati",
+          title: "Quali dati arrivano al modello",
+          conclusion: "Rilevante per questo processo.",
+          intro: "Per ricostruire procedura, creditori, trattamento e fattibilità, il modello può dover leggere dati identificativi e finanziari reali del fascicolo.",
+          localTitle: "Il codice cattura il fascicolo",
+          localText: "Inventaria ricorsivamente ogni file e cattura tutti i PDF, i workbook Excel e i CSV supportati. Estrae tutte le pagine dei PDF. Per l’appendice numerica esamina tutte le colonne solo quando ogni foglio resta entro 5.000 righe; se un foglio supera il limite, quel workbook non produce candidati numerici.",
+          semanticTitle: "Il modello ricostruisce il caso",
+          semanticText: "Il modello Codex o Cowork può leggere le fonti pertinenti e il testo estratto: istruzioni; debitore, tribunale e riferimenti della procedura; proposta, piano, attestazione e atti; nomi e identificativi dei creditori, crediti, prelazioni, classi, voto, trattamento, recuperi e scadenze; dati contabili, fiscali e previdenziali; fonti e impieghi, liquidità, assunzioni, estratti di evidenza, questioni e note del revisore.",
+          populationTitle: "Il codice calcola l’intera popolazione confermata",
+          populationText: "Dopo la conferma professionale, elabora ogni creditore del modello, ogni voce di fonti e impieghi e ogni periodo di liquidità. I calcoli non usano un campione; l’appendice numerica considera tutti i candidati espressamente autorizzati.",
+          reviewTitle: "Il modello rivede gli output",
+          reviewText: "Per la revisione, il modello può leggere il modello completo del caso e i file prodotti. Il widget mostra al massimo 300 fonti, 100 domande, 200 questioni, 200 classi, 400 importi di piano e 100 errori di estrazione, entro 2.500 elementi e 2 MB; il dettaglio completo per creditore resta nei file del caso.",
+          runtimeTitle: "Codex, Cowork e identità.",
+          runtimeText: "Le classi di dati sono le stesse; cambia la destinazione: l’account Codex/OpenAI oppure Cowork/Anthropic scelto dallo studio. Il workflow non usa altri connettori esterni e non anonimizza né pseudonimizza automaticamente: nomi e identificativi restano quando sono necessari per verificare procedura, crediti, prelazioni, voto, trattamento ed evidenze."
         },
         cta: {
           label: "Vera",
@@ -977,6 +1026,22 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
           limit4: "Synthetic tests prove the contract, not generality on real cases.",
           limit5: "Field validation requires a previously unseen case and qualified independent review."
         },
+        model: {
+          label: "Data handling",
+          title: "What data reaches the model",
+          conclusion: "Relevant to this process.",
+          intro: "To reconstruct the procedure, creditors, treatment, and feasibility, the model may need to read real identifying and financial information from the case file.",
+          localTitle: "Code captures the case file",
+          localText: "It recursively inventories every supplied file and captures every supported PDF, Excel workbook, and CSV file. It extracts every PDF page. For the optional numerical appendix, it scans every column only when each sheet stays within 5,000 rows; if one sheet exceeds the limit, that workbook emits no numerical candidates.",
+          semanticTitle: "The model reconstructs the case",
+          semanticText: "The Codex or Cowork model may read relevant sources and extracted text: instructions; debtor, court, and procedure references; proposal, plan, attestation, and case documents; creditor names and identifiers, claims, priority, classes, voting, treatment, recoveries, and timing; accounting, tax, and social-security data; sources and uses, liquidity, assumptions, evidence excerpts, issues, and reviewer notes.",
+          populationTitle: "Code calculates the complete confirmed population",
+          populationText: "After professional confirmation, it processes every creditor in the model, every sources-and-uses item, and every liquidity period. Calculations do not use a sample; the numerical appendix considers every expressly authorized candidate.",
+          reviewTitle: "The model reviews the outputs",
+          reviewText: "For review, the model may read the complete case model and generated files. The widget shows at most 300 sources, 100 questions, 200 issues, 200 classes, 400 plan amounts, and 100 extraction errors, within 2,500 items and 2 MB; complete creditor-level detail remains in the case files.",
+          runtimeTitle: "Codex, Cowork, and identity.",
+          runtimeText: "The data classes are the same; the destination changes: the firm’s selected Codex/OpenAI account or Cowork/Anthropic account. The workflow uses no other external connector and does not automatically anonymize or pseudonymize: names and identifiers remain when needed to verify the procedure, claims, priority, voting, treatment, and evidence."
+        },
         cta: {
           label: "Back to Vera",
           title: "Concordato Preventivo is part of the work, not an isolated case.",
@@ -1071,6 +1136,22 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
           limit4: "Les tests synthétiques prouvent le contrat, pas sa généralité sur des cas réels.",
           limit5: "La validation terrain exige un dossier inédit et une revue indépendante qualifiée."
         },
+        model: {
+          label: "Traitement des données",
+          title: "Quelles données parviennent au modèle",
+          conclusion: "Pertinent pour ce processus.",
+          intro: "Pour reconstituer la procédure, les créanciers, leur traitement et la faisabilité, le modèle peut devoir lire des données réelles d’identification et financières du dossier.",
+          localTitle: "Le code capture le dossier",
+          localText: "Il inventorie récursivement chaque fichier fourni et capture tous les PDF, classeurs Excel et fichiers CSV pris en charge. Il extrait toutes les pages des PDF. Pour l’annexe numérique, il examine toutes les colonnes uniquement si chaque feuille compte au maximum 5 000 lignes ; si une feuille dépasse la limite, le classeur ne produit aucun montant candidat.",
+          semanticTitle: "Le modèle reconstitue le dossier",
+          semanticText: "Le modèle Codex ou Cowork peut lire les sources pertinentes et le texte extrait : instructions ; débiteur, tribunal et références de la procédure ; proposition, plan, attestation et actes ; noms et identifiants des créanciers, créances, rangs, classes, vote, traitement, recouvrements et échéances ; données comptables, fiscales et sociales ; sources et emplois, liquidité, hypothèses, extraits de preuve, points ouverts et notes du réviseur.",
+          populationTitle: "Le code calcule toute la population confirmée",
+          populationText: "Après confirmation professionnelle, il traite chaque créancier du modèle, chaque poste de sources et emplois et chaque période de liquidité. Les calculs ne reposent pas sur un échantillon ; l’annexe numérique prend en compte tous les candidats expressément autorisés.",
+          reviewTitle: "Le modèle examine les livrables",
+          reviewText: "Pour la revue, le modèle peut lire le modèle complet du dossier et les fichiers produits. Le widget affiche au maximum 300 sources, 100 questions, 200 points ouverts, 200 classes, 400 montants du plan et 100 erreurs d’extraction, dans la limite de 2 500 éléments et 2 Mo ; le détail complet par créancier reste dans les fichiers du dossier.",
+          runtimeTitle: "Codex, Cowork et identité.",
+          runtimeText: "Les catégories de données sont les mêmes ; seule la destination change : le compte Codex/OpenAI ou Cowork/Anthropic choisi par le cabinet. Le workflow n’utilise aucun autre connecteur externe et n’anonymise ni ne pseudonymise automatiquement : les noms et identifiants restent présents lorsqu’ils sont nécessaires pour vérifier la procédure, les créances, les rangs, le vote, le traitement et les preuves."
+        },
         cta: {
           label: "Retour à Vera",
           title: "Le concordato preventivo fait partie du travail, ce n’est pas un cas isolé.",
@@ -1164,6 +1245,22 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
           limit3: "Es macht aus fehlenden Nachweisen keine positive Schlussfolgerung.",
           limit4: "Synthetische Tests belegen den Vertrag, nicht die Allgemeingültigkeit für reale Fälle.",
           limit5: "Die Feldvalidierung erfordert einen bisher ungesehenen Fall und eine qualifizierte unabhängige Prüfung."
+        },
+        model: {
+          label: "Datenverarbeitung",
+          title: "Welche Daten das Modell erhält",
+          conclusion: "Für diesen Prozess relevant.",
+          intro: "Um Verfahren, Gläubiger, Behandlung und Durchführbarkeit zu rekonstruieren, muss das Modell möglicherweise echte Identifikations- und Finanzdaten aus der Fallakte lesen.",
+          localTitle: "Der Code erfasst die Fallakte",
+          localText: "Er inventarisiert rekursiv jede bereitgestellte Datei und erfasst alle unterstützten PDF-, Excel- und CSV-Dateien. Er extrahiert jede PDF-Seite. Für den optionalen Zahlenanhang prüft er alle Spalten nur, wenn jedes Tabellenblatt höchstens 5.000 Zeilen hat; überschreitet eines das Limit, liefert die Arbeitsmappe keine Zahlenkandidaten.",
+          semanticTitle: "Das Modell rekonstruiert den Fall",
+          semanticText: "Das Codex- oder Cowork-Modell kann relevante Quellen und extrahierten Text lesen: Anweisungen; Schuldner, Gericht und Verfahrenskennzeichen; Vorschlag, Plan, Bestätigungsbericht und Verfahrensunterlagen; Namen und Kennungen der Gläubiger, Forderungen, Rang, Klassen, Abstimmung, Behandlung, Rückflüsse und Zeitplan; Buchhaltungs-, Steuer- und Sozialversicherungsdaten; Mittelherkunft und -verwendung, Liquidität, Annahmen, Nachweisauszüge, offene Punkte und Prüfernotizen.",
+          populationTitle: "Der Code berechnet den gesamten bestätigten Bestand",
+          populationText: "Nach fachlicher Bestätigung verarbeitet er jeden Gläubiger im Modell, jede Position der Mittelherkunft und -verwendung und jede Liquiditätsperiode. Die Berechnungen verwenden keine Stichprobe; der Zahlenanhang berücksichtigt alle ausdrücklich freigegebenen Kandidaten.",
+          reviewTitle: "Das Modell prüft die Ergebnisse",
+          reviewText: "Für die Prüfung kann das Modell das vollständige Fallmodell und die erzeugten Dateien lesen. Das Widget zeigt höchstens 300 Quellen, 100 Fragen, 200 offene Punkte, 200 Klassen, 400 Planbeträge und 100 Extraktionsfehler innerhalb von 2.500 Elementen und 2 MB; die vollständigen Details je Gläubiger bleiben in den Falldateien.",
+          runtimeTitle: "Codex, Cowork und Identität.",
+          runtimeText: "Die Datenkategorien sind gleich; nur das Ziel ändert sich: das von der Kanzlei gewählte Codex/OpenAI- oder Cowork/Anthropic-Konto. Der Workflow nutzt keinen weiteren externen Connector und anonymisiert oder pseudonymisiert nicht automatisch: Namen und Kennungen bleiben erhalten, wenn sie zur Prüfung von Verfahren, Forderungen, Rang, Abstimmung, Behandlung und Nachweisen erforderlich sind."
         },
         cta: {
           label: "Zurück zu Vera",
@@ -1260,6 +1357,22 @@ Tieni il tie-out numerico come appendice quando è utile.</code></div>
         limit3: "Una evidencia ausente permanece como cuestión abierta.",
         limit4: "Las pruebas sintéticas demuestran el contrato, no la generalidad en casos reales.",
         limit5: "La validación de campo requiere un caso no visto y una revisión independiente cualificada."
+      },
+      model: {
+        label: "Tratamiento de datos",
+        title: "Qué datos recibe el modelo",
+        conclusion: "Relevante para este proceso.",
+        intro: "Para reconstruir el procedimiento, los acreedores, su tratamiento y la viabilidad, el modelo puede necesitar leer datos reales de identificación y financieros del expediente.",
+        localTitle: "El código captura el expediente",
+        localText: "Inventaría de forma recursiva cada archivo proporcionado y captura todos los PDF, libros Excel y archivos CSV compatibles. Extrae todas las páginas de los PDF. Para el apéndice numérico, examina todas las columnas solo si cada hoja se mantiene dentro de 5.000 filas; si una hoja supera el límite, ese libro no genera candidatos numéricos.",
+        semanticTitle: "El modelo reconstruye el caso",
+        semanticText: "El modelo de Codex o Cowork puede leer las fuentes pertinentes y el texto extraído: instrucciones; deudor, tribunal y referencias del procedimiento; propuesta, plan, informe de experto y actuaciones; nombres e identificadores de los acreedores, créditos, prelación, clases, voto, tratamiento, recuperaciones y plazos; datos contables, fiscales y de seguridad social; fuentes y usos, liquidez, hipótesis, extractos de evidencia, cuestiones y notas del revisor.",
+        populationTitle: "El código calcula toda la población confirmada",
+        populationText: "Tras la confirmación profesional, procesa cada acreedor del modelo, cada partida de fuentes y usos y cada periodo de liquidez. Los cálculos no utilizan una muestra; el apéndice numérico considera todos los candidatos expresamente autorizados.",
+        reviewTitle: "El modelo revisa los resultados",
+        reviewText: "Para la revisión, el modelo puede leer el modelo completo del caso y los archivos generados. El widget muestra como máximo 300 fuentes, 100 preguntas, 200 cuestiones, 200 clases, 400 importes del plan y 100 errores de extracción, dentro de 2.500 elementos y 2 MB; el detalle completo por acreedor permanece en los archivos del expediente.",
+        runtimeTitle: "Codex, Cowork e identidad.",
+        runtimeText: "Las categorías de datos son las mismas; cambia el destino: la cuenta Codex/OpenAI o Cowork/Anthropic elegida por el despacho. El flujo no utiliza ningún otro conector externo y no anonimiza ni seudonimiza automáticamente: los nombres y los identificadores permanecen cuando son necesarios para verificar el procedimiento, los créditos, la prelación, el voto, el tratamiento y las evidencias."
       },
       cta: {
         label: "Volver a Vera",
