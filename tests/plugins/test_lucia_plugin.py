@@ -83,7 +83,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.12"
+    assert manifest["version"] == "0.1.13"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -412,7 +412,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.11"
+        assert manifest["version"] == "0.1.12"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -556,19 +556,43 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         "prompt-optimizer": "Ottimizzazione prompt",
         "deep-research-validator": "Validazione ricerca",
         "comunicazione-professionale": "Comunicazione professionale",
-        "apertura-pratica": "Apertura pratica",
+        "apertura-pratica": "Fascicolo nuova pratica",
         "presenza-digitale-studio": "Sito dello studio",
     }
     cards = _json(LUCIA_ROOT / "marketplace_skill_instructions.json")["skills"]
+    vera_cards = _json(
+        ROOT / "plugins" / "vera" / "marketplace_skill_instructions.json"
+    )["skills"]
     page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
         encoding="utf-8"
     )
+    directory_labels = re.findall(
+        r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
+    )
+    website_keys = {
+        "prompt-optimizer": "module.prompt.title",
+        "deep-research-validator": "module.research.title",
+        "comunicazione-professionale": "module.communication.title",
+        "apertura-pratica": "module.matter.title",
+        "presenza-digitale-studio": "module.website.title",
+    }
 
     assert {
         workflow: cards[workflow]["display_name"] for workflow in canonical_labels
     } == canonical_labels
-    for label in canonical_labels.values():
-        assert label in page
+    for workflow in SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS:
+        assert cards[workflow]["display_name"] == vera_cards[workflow]["display_name"]
+    assert directory_labels == [
+        canonical_labels["prompt-optimizer"],
+        canonical_labels["deep-research-validator"],
+        canonical_labels["apertura-pratica"],
+        canonical_labels["comunicazione-professionale"],
+        canonical_labels["presenza-digitale-studio"],
+    ]
+    for workflow, key in website_keys.items():
+        values = _javascript_string_values(page, key)
+        assert len(values) == 5
+        assert values[0] == canonical_labels[workflow]
 
 
 def test_lucia_public_page_matches_vera_function_copy_in_every_language() -> None:
@@ -584,6 +608,8 @@ def test_lucia_public_page_matches_vera_function_copy_in_every_language() -> Non
         "module.prompt",
         "module.research.title",
         "module.research",
+        "module.communication.title",
+        "module.website.title",
     ):
         lucia_values = _javascript_string_values(lucia_page, key)
         vera_values = _javascript_string_values(vera_page, key)

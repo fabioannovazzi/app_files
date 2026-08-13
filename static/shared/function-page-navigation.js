@@ -161,7 +161,7 @@
       es: "Revisar un concordato preventivo italiano",
     },
     "deep-research-validator": {
-      it: "Verifica delle fonti e delle conclusioni della ricerca",
+      it: "Validazione ricerca",
       en: "Verify research sources and conclusions",
       fr: "Vérifier les sources et les conclusions de la recherche",
       de: "Quellen und Schlussfolgerungen der Recherche prüfen",
@@ -212,7 +212,7 @@
       es: "Revisar un expediente de previsión social INPS italiano",
     },
     "prompt-optimizer": {
-      it: "Preparazione della richiesta per una ricerca legale e fiscale",
+      it: "Ottimizzazione prompt",
       en: "Prepare a legal or tax research question",
       fr: "Préparer une question de recherche juridique ou fiscale",
       de: "Juristische oder steuerliche Recherchefrage vorbereiten",

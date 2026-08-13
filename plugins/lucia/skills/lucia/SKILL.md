@@ -98,7 +98,7 @@ riservatezza, identità professionale, affermazioni pubbliche, applicabilità e
 pubblicazione. Il profilo Lucia può cambiare quei contratti professionali, ma
 non può indebolire evidenze, review, rendering, hash, preview o packaging.
 
-Apertura pratica è nativa di Lucia. Riusa Studio Archive soltanto per il ciclo
+Fascicolo nuova pratica è nativa di Lucia. Riusa Studio Archive soltanto per il ciclo
 privato di cliente, incarico, evidenze e run; schema legale, confini
 professionali, validatore e ricevute di revisione restano specifici di Lucia e
 non sono sostituiti dal Deep Research Validator.
