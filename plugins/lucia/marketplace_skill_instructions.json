@@ -9,9 +9,9 @@
     },
     "prompt-optimizer": {
       "display_name": "Ottimizzazione prompt",
-      "short_description": "Trasforma un quesito professionale in un piano verificabile",
-      "default_prompt": "Usa $prompt-optimizer per trasformare questo quesito professionale in un piano di risposta con fonti e controlli espliciti.",
-      "instructions": "Fornisci il quesito legale, fiscale o di compliance e il risultato atteso. Lucia definisce il contratto della risposta, individua le fonti necessarie, sceglie il percorso di generazione e restituisce un piano verificabile con i controlli da superare prima della consegna."
+      "short_description": "Trasforma una richiesta professionale in un piano verificabile",
+      "default_prompt": "Usa $prompt-optimizer per ottimizzare questa richiesta professionale in un piano di risposta con fonti e controlli espliciti.",
+      "instructions": "Fornisci la richiesta legale, fiscale o di compliance e il risultato atteso. Lucia definisce il contratto della risposta, individua le fonti necessarie, sceglie il percorso di generazione e restituisce un piano verificabile con i controlli da superare prima della consegna."
     },
     "deep-research-validator": {
       "display_name": "Validazione ricerca",
