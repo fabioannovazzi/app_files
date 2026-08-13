@@ -3567,6 +3567,53 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         assert localized_title in function_copy
 
 
+def test_vera_page_explains_fiscal_document_extraction() -> None:
+    page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    function_page = (
+        ROOT / "static" / "shared" / "dati-fiscali-strutturati" / "index.html"
+    ).read_text(encoding="utf-8")
+    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
+    video_copy = (ROOT / "static" / "shared" / "video-library.js").read_text(
+        encoding="utf-8"
+    )
+
+    assert "Estrazione dei dati fiscali dai documenti | Vera" in function_page
+    for localized_title in (
+        "Estrazione dei dati fiscali dai documenti",
+        "Extract tax data from documents",
+        "Extraire les données fiscales des documents",
+        "Steuerdaten aus Dokumenten extrahieren",
+        "Extraer datos fiscales de documentos",
+    ):
+        assert localized_title in page
+        assert localized_title in function_copy
+        assert localized_title in video_copy
+    for required_copy in (
+        "F24, CU, 730, Redditi PF",
+        "I campi da estrarre sono definiti per ciascun tipo di documento supportato.",
+        "l'affidabilità dell'estrazione",
+        "Una tabella con una riga per ogni dato estratto",
+        "I valori mancanti non vengono ricostruiti.",
+        "dipendono dall'impaginazione originale",
+    ):
+        assert required_copy in function_copy
+    assert "indicazioni sui campi richiesti" not in function_copy
+    for old_title in (
+        "Dati fiscali strutturati",
+        "Structured fiscal data",
+        "Données fiscales structurées",
+        "Strukturierte Steuerdaten",
+        "Datos fiscales estructurados",
+    ):
+        assert old_title not in page
+        assert old_title not in function_copy
+        assert old_title not in video_copy
+
+
 def test_vera_page_explains_professional_communication_quality_contract() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
