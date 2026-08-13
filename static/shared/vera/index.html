@@ -709,16 +709,6 @@
       letter-spacing: -0.02em;
     }
 
-    .country-pack-head {
-      display: grid;
-      grid-template-columns: minmax(0, 0.72fr) minmax(320px, 1.28fr);
-      gap: clamp(32px, 8vw, 112px);
-      align-items: end;
-      margin-bottom: clamp(44px, 7vw, 72px);
-    }
-
-    .country-pack-head__title { display: grid; gap: 14px; }
-    .country-pack-head > p { max-width: 680px; color: var(--blue); font-size: 1.075rem; }
     #data-boundary .section-head {
       grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
     }
@@ -899,7 +889,6 @@
         border-bottom: 1px solid var(--cyan);
       }
       .assurance-step:last-child { border-bottom: 0; }
-      .country-pack-head { grid-template-columns: 1fr; gap: 20px; }
       #data-boundary .section-head { grid-template-columns: 1fr; gap: 20px; }
       .data-routes__grid { grid-template-columns: 1fr; }
       .data-route { padding: 24px 0; }
@@ -1189,18 +1178,13 @@
             </a>
           </div>
         </article>
-      </div>
-    </section>
-
-    <section class="section-block" id="jurisdiction" data-jurisdiction-section hidden>
-      <div class="country-pack-head">
-        <div class="country-pack-head__title">
-          <span class="section-index" data-i18n="jurisdiction.index">Area 4</span>
-          <h2 data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h2>
-        </div>
-        <p data-i18n="jurisdiction.copy">La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.</p>
-      </div>
-      <div class="module-directory">
+        <article class="workstream" id="jurisdiction" data-jurisdiction-section hidden>
+          <header class="workstream-head">
+            <span class="stream-number" data-i18n="jurisdiction.index">Area 4</span>
+            <h3 data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h3>
+            <p data-i18n="jurisdiction.copy">La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.</p>
+          </header>
+          <div class="module-directory">
         <a class="module-row" href="../bilancio-xbrl-it/index.html" data-module-link data-native-language="it" data-jurisdiction-item="it" hidden>
           <h4>Bilancio intelligente</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1241,6 +1225,8 @@
           <h4>Mandantenakte vorbereiten · Zürich</h4>
           <span class="module-row__arrow" aria-hidden="true">↗</span>
         </a>
+          </div>
+        </article>
       </div>
     </section>
 
