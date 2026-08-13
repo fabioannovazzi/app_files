@@ -355,6 +355,7 @@
     }
   </style>
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260813-function-pages">
+  <link rel="stylesheet" href="../function-model-data.css?v=20260813-model-data">
   <style>
     .journey-breadcrumb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:26px 0 0;color:var(--muted);font-size:14px}.journey-breadcrumb a{color:var(--accent);text-decoration:none}.journey-breadcrumb strong{color:var(--ink);font-weight:600}.journey-hero-action{margin-top:24px}.journey-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:28px;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}.journey-flow article{padding:22px 24px 24px 0;border-right:1px solid var(--line)}.journey-flow article+article{padding-left:24px}.journey-flow article:last-child{border-right:0}.journey-flow h3,.journey-step h3{margin:0 0 7px}.journey-flow p,.journey-step p{margin:0}.journey-steps{margin-top:28px;border-top:2px solid var(--ink)}.journey-step{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(0,1.3fr);gap:22px;padding:22px 0;border-bottom:1px solid var(--line)}.journey-step h3{margin:0}.journey-proof{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(28px,5vw,72px);align-items:center;border-top:2px solid var(--ink);padding-top:30px}.journey-video{display:grid;grid-template-columns:minmax(180px,.9fr) minmax(0,1.1fr);color:var(--ink);border:1px solid var(--line);text-decoration:none}.journey-video__thumb{position:relative;aspect-ratio:16/9;background:var(--soft);overflow:hidden}.journey-video__thumb img{width:100%;height:100%;display:block;object-fit:cover}.journey-video__play{position:absolute;inset:auto auto 16px 16px;display:grid;place-items:center;width:44px;height:44px;color:#fff;background:var(--accent);border-radius:50%}.journey-video__body{display:flex;flex-direction:column;justify-content:center;padding:24px}.journey-video__body span{color:var(--accent);font-size:12px;font-weight:650;letter-spacing:.08em;text-transform:uppercase}.journey-video__body strong{margin-top:9px;font-size:1.25rem;line-height:1.25}.journey-related{padding:30px 0;border-top:2px solid var(--ink);border-bottom:1px solid var(--line)}.journey-related__links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:22px}.journey-related a{color:var(--ink);font-size:clamp(1.05rem,2vw,1.4rem);font-weight:620;line-height:1.18;text-decoration:none}.journey-related a:hover{color:var(--accent)}details.journey-spec{margin:64px 0;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}details.journey-spec>summary{padding:20px 0;color:var(--ink);cursor:pointer;font-weight:620}details.journey-spec>.journey-spec__body{padding-bottom:24px}.journey-cta{display:flex;justify-content:space-between;gap:28px;align-items:center;padding:clamp(28px,5vw,52px);background:var(--soft);border:1px solid var(--line)}.journey-cta h2{margin:0 0 8px}.journey-cta p{margin:0}@media(max-width:760px){.journey-flow,.journey-proof,.journey-video,.journey-related__links{grid-template-columns:1fr}.journey-flow article{border-right:0;border-bottom:1px solid var(--line);padding:20px 0}.journey-flow article+article{padding-left:0}.journey-flow article:last-child{border-bottom:0}.journey-step{grid-template-columns:1fr;gap:8px}.journey-cta{align-items:flex-start;flex-direction:column}}
   </style>
@@ -466,6 +467,19 @@
       </ul>
     </section>
 
+    <section class="function-model-data" id="model-data" data-model-data-workflow="report-builder" data-model-data-status="relevant" aria-labelledby="report-builder-model-data-title">
+      <div class="function-model-data__head">
+        <div class="function-model-data__heading">
+          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
+          <h2 id="report-builder-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
+        </div>
+        <div class="function-model-data__body">
+          <h3 class="function-model-data__conclusion" data-i18n="model.conclusion">Il modello può vedere dati reali dell'intera popolazione sorgente.</h3>
+          <p class="function-model-data__copy" data-i18n="model.copy">Il codice locale legge tutti i file supportati e tutte le righe e celle non vuote per creare inventari, controlli e calcoli. Per proporre struttura e narrativa, Codex o Cowork può ricevere istruzioni, nomi di file, testo estratto dai PDF e l'inventario completo delle celle, con valori, coordinate, formati e formule, oltre a ricetta, diagnostica, bozze e decisioni di revisione. Ciò può includere nomi del cliente o dell'entità, descrizioni, identificativi, importi e altri dati presenti nelle celle. Le anteprime successive oscurano i numeri non ancora confermati e il pannello limita colonne, candidati e righe, ma l'ispezione iniziale resta completa. In Codex le fonti provengono dal fascicolo Studio Archive; in Cowork possono provenire direttamente dai file collegati. Non viene applicata un'anonimizzazione automatica.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <script>
@@ -502,6 +516,10 @@
         "prompts.item3.title": "Annual financial statement",
         "prompts.item3.copy": "Use Build Report on this ZIP of annual accounts. Report type: annual_financial_statement. Keep uncertain tables unassigned, fill only supported comments, and produce report_analysis.json and report.docx.",
         "preset.kicker": "Italy preset", "preset.title": "Local-government reports with FPV, FCDE and PNRR.", "preset.copy": "The engine remains general. This profile adds the structure and terminology used for Italian local-government reporting.",
+        "model.label": "Data handling",
+        "model.title": "What data reaches the model",
+        "model.conclusion": "The model can see real data from the full source population.",
+        "model.copy": "Local code reads every supported file and every non-empty row and cell to build inventories, checks, and calculations. To propose structure and narrative, Codex or Cowork may receive instructions, file names, extracted PDF text, and the complete cell inventory, including values, coordinates, formats, and formulas, together with the recipe, diagnostics, drafts, and review decisions. This may include client or entity names, descriptions, identifiers, amounts, and other data present in the cells. Later previews hide unconfirmed numbers and the review panel limits columns, candidates, and rows, but the initial inspection remains complete. In Codex, sources come from the Studio Archive case file; in Cowork, they may come directly from connected files. No automatic anonymization is applied.",
         "download.button": "Back to Vera",
       },
       es: {
@@ -536,6 +554,10 @@
         "prompts.item3.title": "Estados financieros anuales",
         "prompts.item3.copy": "Usa Generar informe en este ZIP de cuentas anuales. Tipo de informe: annual_financial_statement. Mantén sin asignar las tablas inciertas, completa únicamente comentarios respaldados y genera report_analysis.json y report.docx.",
         "preset.kicker": "Preajuste Italia", "preset.title": "Informes de administraciones locales con FPV, FCDE y PNRR.", "preset.copy": "El motor sigue siendo general. Este perfil añade la estructura y la terminología de los informes de las administraciones locales italianas.",
+        "model.label": "Tratamiento de datos",
+        "model.title": "Qué datos recibe el modelo",
+        "model.conclusion": "El modelo puede ver datos reales de toda la población fuente.",
+        "model.copy": "El código local lee todos los archivos admitidos y todas las filas y celdas no vacías para crear inventarios, controles y cálculos. Para proponer la estructura y la narrativa, Codex o Cowork puede recibir instrucciones, nombres de archivos, texto extraído de PDF y el inventario completo de celdas, incluidos valores, coordenadas, formatos y fórmulas, junto con la receta, los diagnósticos, los borradores y las decisiones de revisión. Esto puede incluir nombres del cliente o de la entidad, descripciones, identificadores, importes y otros datos presentes en las celdas. Las vistas previas posteriores ocultan los números no confirmados y el panel de revisión limita columnas, candidatos y filas, pero la inspección inicial sigue siendo completa. En Codex, las fuentes proceden del expediente Studio Archive; en Cowork, pueden proceder directamente de los archivos conectados. No se aplica anonimización automática.",
         "download.button": "Volver a Vera",
       },
       it: {
@@ -570,6 +592,10 @@
         "prompts.item3.title": "Bilancio annuale",
         "prompts.item3.copy": "Usa Genera report su questo ZIP di bilancio. Tipo report: annual_financial_statement. Lascia non assegnate le tabelle incerte, compila solo commenti supportati e produci report_analysis.json e report.docx.",
         "preset.kicker": "Preset Italia", "preset.title": "Report enti locali con FPV, FCDE e PNRR.", "preset.copy": "Il motore resta generale. Questo profilo aggiunge la struttura e il lessico del reporting per enti locali italiani.",
+        "model.label": "Trattamento dei dati",
+        "model.title": "Quali dati arrivano al modello",
+        "model.conclusion": "Il modello può vedere dati reali dell'intera popolazione sorgente.",
+        "model.copy": "Il codice locale legge tutti i file supportati e tutte le righe e celle non vuote per creare inventari, controlli e calcoli. Per proporre struttura e narrativa, Codex o Cowork può ricevere istruzioni, nomi di file, testo estratto dai PDF e l'inventario completo delle celle, con valori, coordinate, formati e formule, oltre a ricetta, diagnostica, bozze e decisioni di revisione. Ciò può includere nomi del cliente o dell'entità, descrizioni, identificativi, importi e altri dati presenti nelle celle. Le anteprime successive oscurano i numeri non ancora confermati e il pannello limita colonne, candidati e righe, ma l'ispezione iniziale resta completa. In Codex le fonti provengono dal fascicolo Studio Archive; in Cowork possono provenire direttamente dai file collegati. Non viene applicata un'anonimizzazione automatica.",
         "download.button": "Vera",
       },
       fr: {
@@ -604,6 +630,10 @@
         "prompts.item3.title": "États financiers annuels",
         "prompts.item3.copy": "Utilise Build Report sur ce ZIP de comptes annuels. Type de rapport: annual_financial_statement. Laisse les tableaux incertains non assignés, remplis seulement les commentaires supportés et produis report_analysis.json et report.docx.",
         "preset.kicker": "Preset Italie", "preset.title": "Rapports des collectivités avec FPV, FCDE et PNRR.", "preset.copy": "Le moteur reste général. Ce profil ajoute la structure et le vocabulaire du reporting des collectivités locales italiennes.",
+        "model.label": "Traitement des données",
+        "model.title": "Quelles données parviennent au modèle",
+        "model.conclusion": "Le modèle peut voir des données réelles issues de l'ensemble de la population source.",
+        "model.copy": "Le code local lit tous les fichiers pris en charge ainsi que chaque ligne et cellule non vide pour établir les inventaires, contrôles et calculs. Pour proposer la structure et la narration, Codex ou Cowork peut recevoir les instructions, les noms de fichiers, le texte extrait des PDF et l'inventaire complet des cellules, avec valeurs, coordonnées, formats et formules, ainsi que la recette, les diagnostics, les projets et les décisions de revue. Cela peut inclure les noms du client ou de l'entité, des descriptions, des identifiants, des montants et d'autres données présentes dans les cellules. Les aperçus ultérieurs masquent les nombres non confirmés et le panneau de revue limite les colonnes, candidats et lignes, mais l'inspection initiale reste complète. Dans Codex, les sources proviennent du dossier Studio Archive ; dans Cowork, elles peuvent provenir directement des fichiers connectés. Aucune anonymisation automatique n'est appliquée.",
         "download.button": "Retour à Vera",
       },
       de: {
@@ -638,6 +668,10 @@
         "prompts.item3.title": "Jahresabschluss",
         "prompts.item3.copy": "Verwende Build Report für dieses ZIP mit Jahresabschlussdaten. Berichtstyp: annual_financial_statement. Unsichere Tabellen bleiben unzugeordnet, nur belegte Kommentare werden gefüllt, report_analysis.json und report.docx werden erzeugt.",
         "preset.kicker": "Italien-Preset", "preset.title": "Kommunalberichte mit FPV, FCDE und PNRR.", "preset.copy": "Die Engine bleibt allgemein. Dieses Profil ergänzt Struktur und Terminologie des Reportings für italienische Kommunen.",
+        "model.label": "Datenverarbeitung",
+        "model.title": "Welche Daten das Modell erhält",
+        "model.conclusion": "Das Modell kann Echtdaten aus der gesamten Quellpopulation sehen.",
+        "model.copy": "Der lokale Code liest alle unterstützten Dateien sowie jede nicht leere Zeile und Zelle, um Bestände, Prüfungen und Berechnungen zu erstellen. Für Vorschläge zu Struktur und Text kann Codex oder Cowork Anweisungen, Dateinamen, aus PDFs extrahierten Text und den vollständigen Zellbestand mit Werten, Koordinaten, Formaten und Formeln sowie Rezept, Diagnosen, Entwürfe und Prüfentscheidungen erhalten. Dazu können Mandanten- oder Unternehmensnamen, Beschreibungen, Kennungen, Beträge und weitere Zellinhalte gehören. Spätere Vorschauen verbergen noch nicht bestätigte Zahlen und die Prüfoberfläche begrenzt Spalten, Kandidaten und Zeilen; die erste Inspektion bleibt jedoch vollständig. In Codex stammen die Quellen aus der Studio-Archive-Akte; in Cowork können sie direkt aus verbundenen Dateien stammen. Es erfolgt keine automatische Anonymisierung.",
         "download.button": "Zurück zu Vera",
       }
     };
