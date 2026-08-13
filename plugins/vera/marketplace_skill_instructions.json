@@ -8,13 +8,13 @@
       "instructions": "Quando l'utente seleziona @Vera o invoca $vera, Vera opera esclusivamente come router e non risponde mai direttamente alla richiesta sostanziale. Prima di qualsiasi lavoro interpreta semanticamente la richiesta, senza classificatori a parole chiave, e considera l'intero catalogo commerciale con il percorso interno esatto: `archive-organization` → `../../modules/archive-organization/skills/archive-organization/SKILL.md`; `bandi-agevolazioni` → `../../modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md`; `audit-reconciliation` → `../../modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md`; `avviso-intake` → `../../modules/client-file-preparation/skills/avviso-intake/SKILL.md`; `bilancio-xbrl-it` → `../../modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md`; `check-entries` → `../../modules/check-entries/skills/check-entries/SKILL.md`; `concordato-plan-review` → `../../modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md`; `comunicazione-professionale` → `../../modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md`; `presenza-digitale-studio` → `../../modules/presenza-digitale-studio/skills/presenza-digitale-studio/SKILL.md`; `dati-fiscali-strutturati` → `../../modules/client-file-preparation/skills/dati-fiscali-strutturati/SKILL.md`; `deep-research-validator` → `../../modules/deep-research-validator/skills/deep-research-validator/SKILL.md`; `email-cliente` → `../../modules/client-file-preparation/skills/email-cliente/SKILL.md`; `fatture-xml-check` → `../../modules/client-file-preparation/skills/fatture-xml-check/SKILL.md`; `financial-analysis` → `../../modules/financial-analysis/skills/financial-analysis/SKILL.md`; `journal-bank-reconciliation` → `../../modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md`; `journal-sampling` → `../../modules/journal-sampling/skills/journal-sampling/SKILL.md`; `new-client` → `../../modules/new-client/skills/new-client/SKILL.md`; `previdenza-inps` → `../../modules/previdenza-inps/skills/previdenza-inps/SKILL.md`; `prompt-optimizer` → `../../modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md`; `registro-imprese-sari` → `../../modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md`; `report-builder` → `../../modules/report-builder/skills/report-builder/SKILL.md`; `sales-plan` → `../../modules/sales-plan/skills/sales-plan/SKILL.md`; `variance-analysis` → `../../modules/variance-analysis/skills/variance-analysis/SKILL.md`; `studio-archive` → `../../modules/studio-archive/skills/studio-archive/SKILL.md`. Seleziona il workflow più stretto pertinente, apre e legge integralmente il percorso associato e segue tutti i riferimenti richiesti da quel file prima di svolgere il lavoro. Per ogni domanda legale, fiscale o di compliance accettata applica anche `../../modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md` prima della generazione e `../../modules/deep-research-validator/skills/deep-research-validator/SKILL.md` prima della consegna; `comunicazione-professionale` soddisfa lo stesso percorso con il proprio answer contract e la propria claim assurance nello spazio editoriale di Studio, quindi non deve creare run client-bound duplicati. Queste skill di assurance non sostituiscono un workflow operativo mancante. Se nessun workflow elencato copre la richiesta, Vera si ferma, comunica soltanto che non dispone di un workflow specialistico adatto e non risponde alla richiesta né offre percorsi alternativi. L'utente deve soltanto selezionare @Vera e formulare normalmente la richiesta; non deve conoscere né scegliere le skill interne."
     },
     "archive-organization": {
-      "display_name": "Riordino archivio",
+      "display_name": "Riordino cartella cliente",
       "short_description": "Rivede e organizza una cartella cliente in sicurezza",
       "default_prompt": "Usa $archive-organization per analizzare questa cartella cliente, propormi il riordino e farmelo approvare prima di qualsiasi modifica.",
       "instructions": "Fornisci a Vera una sola cartella cliente registrata, locale oppure su Google Workspace, o in ChatGPT un piano già preparato. Vera distingue classificazione semantica e controlli meccanici, mostra percorsi proposti, duplicati e anomalie per la revisione del collaboratore e non considera le decisioni di review come autorizzazione a spostare file; l'esecuzione richiede Codex Desktop, una seconda approvazione esplicita, controlli di hash oppure file ID e versione Drive, collisioni, journal e rollback."
     },
     "audit-reconciliation": {
-      "display_name": "Riconciliazione contabile",
+      "display_name": "Riconciliazione partite aperte",
       "short_description": "Abbina evidenze contabili e segnala residui ed eccezioni",
       "default_prompt": "Usa $audit-reconciliation per riconciliare questi mastrini, estratti conto e pagamenti e preparare una carta di lavoro revisionabile.",
       "instructions": "Allega mastrini, partite aperte, estratti conto, ordini di pagamento e gli eventuali documenti su factoring, anticipi o compensazioni. Vera abbina le evidenze con criteri verificabili e restituisce corrispondenze, residui, eccezioni e una carta di lavoro pronta per la revisione."
@@ -26,13 +26,13 @@
       "instructions": "Per la discovery, descrivi con riferimenti opachi territorio, attività, dimensione e investimenti previsti: Vera propone un piano di fonti ufficiali, registra la copertura effettivamente controllata, monitora lo stato delle opportunità e prepara abbinamenti ed economie da revisionare. Dopo la selezione, allega bando, allegati, FAQ ufficiali e documenti del beneficiario: Vera ricostruisce requisiti e fonti, prepara checklist, valutazioni, campi e narrative revisionabili e segnala mancanze e red flag. Il professionista approva profili, fonti, abbinamenti e conclusioni; Vera non contatta clienti e la persona autorizzata conserva credenziali, firma e trasmissione."
     },
     "avviso-intake": {
-      "display_name": "Prima istruttoria avviso",
+      "display_name": "Esame avvisi e cartelle",
       "short_description": "Rileva scadenze, importi e documenti mancanti",
       "default_prompt": "Usa $avviso-intake per esaminare questo avviso fiscale e preparare una prima nota istruttoria con scadenze e documenti da recuperare.",
       "instructions": "Allega l'avviso, la cartella o la lettera fiscale e indica il cliente e la giurisdizione se non sono evidenti. Vera rileva autorità, riferimenti, date, importi, scadenze e documenti da recuperare e restituisce una prima nota istruttoria con ogni elemento incerto marcato da verificare."
     },
     "bilancio-xbrl-it": {
-      "display_name": "Bilancio intelligente",
+      "display_name": "Bilancio OIC e XBRL",
       "short_description": "Prepara bilanci OIC revisionabili con esportazione XBRL",
       "default_prompt": "Usa $bilancio-xbrl-it per preparare questo bilancio OIC, anche da PDF, farmi rivedere i dati estratti e generare l’XBRL finale.",
       "instructions": "Allega il bilancio di verifica in CSV, Excel o PDF leggibile/scansionato, l'eventuale XBRL precedente e i documenti di supporto disponibili. Vera deve risolvere `../../modules/bilancio-xbrl-it` da questa skill, leggere integralmente la skill `skills/bilancio-xbrl-it/SKILL.md` del modulo e tutti i riferimenti che richiede, trattare il modulo risolto come directory di lavoro ed eseguire `python scripts/check_dependencies.py` prima degli script di supporto. Il workflow completo rende rivedibili estrazione, mappature, prospetti, nota integrativa e controlli prima dell'esportazione XBRL deterministica; Vera non approva né deposita il bilancio."
@@ -44,7 +44,7 @@
       "instructions": "Fornisci il campione qualificato prodotto da Journal Sampling e allega le FatturePA XML o i PDF di supporto. Vera confronta le sole scritture campionate con le evidenze e restituisce esiti per riga, anomalie e richieste puntuali per i documenti mancanti."
     },
     "concordato-plan-review": {
-      "display_name": "Revisione concordato",
+      "display_name": "Revisione concordato preventivo",
       "short_description": "Controlla piano, trattamento e sostenibilità finanziaria",
       "default_prompt": "Usa $concordato-plan-review per esaminare questo piano di concordato e preparare rilievi, prospetti e questioni aperte.",
       "instructions": "Allega proposta, piano, attestazione, elenco creditori e documenti economico-finanziari rilevanti. Vera confronta procedura, trattamento, alternativa liquidatoria, fonti e impieghi e liquidità, quindi restituisce rilievi, prospetti e questioni aperte per il professionista."
@@ -56,7 +56,7 @@
       "instructions": "Allega le fonti della novità e scegli alcuni esempi precedenti approvati dello studio. Vera definisce prima il contratto della risposta, verifica separatamente supporto e ragionamento di ogni claim materiale e usa un assessore editoriale qualificato su casi anti-slop. Propone una voce e un formato specifici dello studio indicando per ogni campo se è osservato, fornito dallo Studio o una proposta Vera. Prepara solo i canali richiesti: email, circolare, LinkedIn, newsletter, articolo web, FAQ, avviso o grafica. Un carosello esiste solo se aggiunge informazione o struttura; Creative Production influenza il render soltanto dopo una direzione selezionata e registrata. Una scadenza editoriale non è un motivo per pubblicare; `no_publish` è un risultato valido. Vera non inventa applicabilità, non mescola profili tra studi e non invia o pubblica senza approvazione esplicita del pacchetto esatto."
     },
     "dati-fiscali-strutturati": {
-      "display_name": "Dati fiscali strutturati",
+      "display_name": "Estrazione dati fiscali",
       "short_description": "Estrae dati fiscali con fonte e livello di confidenza",
       "default_prompt": "Usa $dati-fiscali-strutturati per estrarre e controllare i dati di questi documenti fiscali in una tabella revisionabile.",
       "instructions": "Allega i documenti fiscali da strutturare o controllare e indica la giurisdizione se non è evidente. Vera estrae i campi con file fonte, evidenza e livello di confidenza, segnala incoerenze o valori da verificare e restituisce dati tabellari revisionabili senza colmare i vuoti."
@@ -68,19 +68,19 @@
       "instructions": "Fornisci la risposta legale, fiscale o di compliance e le fonti disponibili. Vera verifica identità e accessibilità delle fonti, supporto delle affermazioni e ragionamento, quindi restituisce una validazione puntuale con correzioni proposte e limiti riservati al giudizio professionale."
     },
     "email-cliente": {
-      "display_name": "Email al cliente",
+      "display_name": "Richiesta documenti e chiarimenti",
       "short_description": "Trasforma i rilievi in richieste chiare al cliente",
       "default_prompt": "Usa $email-cliente per trasformare questa nota istruttoria e i documenti mancanti in una email chiara da rivedere prima dell'invio.",
       "instructions": "Fornisci la nota istruttoria già rivista e l'elenco dei documenti o chiarimenti mancanti. Vera elimina le richieste non sostenute dai rilievi, organizza quelle residue in modo operativo e restituisce una bozza email concisa, pronta per la revisione e l'invio da parte dello studio."
     },
     "fatture-xml-check": {
-      "display_name": "Controllo Fatture XML",
+      "display_name": "Controllo FatturaPA XML",
       "short_description": "Controlla FatturePA, IVA, periodi e duplicati",
       "default_prompt": "Usa $fatture-xml-check per controllare queste FatturePA XML e preparare il prospetto delle fatture e delle anomalie.",
       "instructions": "Allega i file FatturaPA XML e indica l'esercizio se non è ricavabile. Vera estrae metadati e riepiloghi IVA, individua file malformati, campi mancanti, date fuori periodo e possibili duplicati e restituisce un prospetto delle fatture e un memo delle anomalie."
     },
     "financial-analysis": {
-      "display_name": "Analisi finanziaria",
+      "display_name": "Analisi finanziaria e due diligence",
       "short_description": "Controlla prospetti, riconciliazioni e indicatori finanziari",
       "default_prompt": "Usa $financial-analysis per analizzare questi prospetti finanziari, controllare i calcoli e preparare risultati legati alle fonti.",
       "instructions": "Allega la contabilità storica o i prospetti finanziari e indica il perimetro dell'analisi. Vera controlla mapping, riconciliazioni e calcoli e restituisce prospetti legati alle fonti, con eccezioni, assunzioni e giudizi professionali chiaramente separati."
@@ -92,19 +92,19 @@
       "instructions": "Allega gli estratti conto e l'esportazione del giornale contabile o del mastro. Vera rivede la mappatura dei campi, abbina importi, date e riferimenti e restituisce corrispondenze, movimenti non abbinati, residui ed eccezioni senza attribuire automaticamente i casi ambigui."
     },
     "journal-sampling": {
-      "display_name": "Campionamento scritture",
+      "display_name": "Campionamento scritture contabili",
       "short_description": "Prepara un campione contabile riproducibile e tracciabile",
       "default_prompt": "Usa $journal-sampling per qualificare questo giornale contabile e produrre un campione riproducibile con tracciabilità.",
       "instructions": "Allega il file del giornale contabile e indica popolazione, periodo e criterio di campionamento se non sono già definiti. Vera rivede la mappatura dei campi, normalizza le righe monetarie e restituisce popolazione, diagnostica e campione riproducibile con tracciabilità."
     },
     "new-client": {
-      "display_name": "Nuovo cliente",
+      "display_name": "Fascicolo nuovo cliente",
       "short_description": "Prepara il fascicolo iniziale di un cliente italiano",
       "default_prompt": "Usa $new-client per organizzare i documenti iniziali di questo cliente e preparare il fascicolo di avvio con le evidenze mancanti.",
       "instructions": "Indica il nuovo cliente italiano e allega i documenti iniziali disponibili. Vera inventaria i file, identifica le evidenze mancanti e restituisce un fascicolo di avvio tracciabile per identità, incarico, privacy, antiriciclaggio e monitoraggio, lasciando approvazioni e decisioni al professionista."
     },
     "previdenza-inps": {
-      "display_name": "Pratica INPS",
+      "display_name": "Revisione pratica INPS",
       "short_description": "Organizza provvedimenti, calcoli e punti aperti INPS",
       "default_prompt": "Usa $previdenza-inps per esaminare questi documenti INPS e preparare una bozza istruttoria con calcoli e punti aperti.",
       "instructions": "Allega provvedimenti, comunicazioni, prospetti ed esportazioni ufficiali del caso INPS. Vera inventaria le fonti, verifica riferimenti e calcoli ammessi e restituisce una bozza istruttoria con evidenze per pagina, limiti della lettura automatica e punti aperti per il professionista."
@@ -116,43 +116,43 @@
       "instructions": "Indica il flusso Vera o il servizio condiviso che stai aggiungendo o modificando e fornisci i file interessati. Vera registra dati leggibili dal modello, confini esterni, account, conservazione e controlli effettivi e restituisce il registro aggiornato e gli esiti di validazione."
     },
     "prompt-optimizer": {
-      "display_name": "Impostazione quesito",
+      "display_name": "Ottimizzazione prompt",
       "short_description": "Trasforma un quesito professionale in un piano verificabile",
       "default_prompt": "Usa $prompt-optimizer per trasformare questo quesito professionale in un piano di risposta con fonti e controlli espliciti.",
       "instructions": "Fornisci il quesito legale, fiscale o di compliance e il risultato atteso. Vera definisce il contratto della risposta, individua le fonti necessarie, sceglie il percorso di generazione e restituisce un piano verificabile con i controlli da superare prima della consegna."
     },
     "registro-imprese-sari": {
-      "display_name": "Registro Imprese e SARI",
+      "display_name": "Pratiche Registro Imprese",
       "short_description": "Prepara dati, verifiche e passaggi di una pratica societaria",
       "default_prompt": "Usa $registro-imprese-sari per impostare questa pratica societaria e indicare dati mancanti, verifiche e decisioni ancora aperte.",
       "instructions": "Indica il tipo di pratica, l'evento societario e allega i dati e i documenti disponibili. Vera separa passaggi e autorità, controlla le fonti ufficiali e restituisce lo schema della pratica, i dati mancanti, le verifiche e le decisioni professionali ancora aperte; non invia la pratica."
     },
     "report-builder": {
-      "display_name": "Report finanziario",
+      "display_name": "Preparazione report finanziario",
       "short_description": "Trasforma dati finanziari in un report controllato",
       "default_prompt": "Usa $report-builder per analizzare questo Excel e preparare un report finanziario controllato per il destinatario indicato.",
       "instructions": "Allega il file con i dati e indica destinatario, periodo e tipo di report se non sono evidenti. Vera inventaria le tabelle, propone la mappatura alle sezioni, controlla i valori e sviluppa la narrativa, quindi restituisce una bozza e diagnostica revisionabili."
     },
     "sales-plan": {
-      "display_name": "Piano vendite",
+      "display_name": "Preparazione piano vendite",
       "short_description": "Trasforma Actual e assunzioni in un piano vendite",
       "default_prompt": "Usa $sales-plan per costruire un piano vendite da questi Actual mensili e da queste assunzioni commerciali.",
       "instructions": "Allega gli Actual mensili già rivisti e indica le assunzioni commerciali e valutarie da applicare. Vera traduce ogni ipotesi in driver, perimetro, periodo e priorità da confermare, quindi restituisce il Piano vendite, il registro delle assunzioni e la riconciliazione dei totali."
     },
     "variance-analysis": {
-      "display_name": "Analisi degli scostamenti",
+      "display_name": "Analisi scostamenti",
       "short_description": "Confronta Actual, Budget, Forecast o periodi con grafici",
       "default_prompt": "Usa $variance-analysis per riconciliare questi dati contabili e preparare un’analisi degli scostamenti con tabelle e grafici di varianza.",
       "instructions": "Allega il P&L, bilancio di verifica, management accounts o dataset commerciale e indica entità, confronto, valuta e convenzione dei segni se non sono evidenti. Vera riconcilia i totali di base e confronto alle fonti, calcola gli scostamenti con il motore condiviso, produce il set applicabile di waterfall, bridge e drilldown e separa i fatti calcolati dalle cause, classificazioni e soglie di materialità che richiedono revisione professionale. Usa l'analisi a soli valori quando mancano unità attendibili e il price-volume-mix soltanto con una base unità rivista."
     },
     "studio-archive": {
-      "display_name": "Archivio studio",
+      "display_name": "Archivio clienti",
       "short_description": "Cerca evidenze e registra il flusso Agenzia",
       "default_prompt": "Usa $studio-archive per cercare evidenze di un cliente oppure mostrarti come scarico le fatture dall’Agenzia delle Entrate.",
       "instructions": "Indica un solo cliente e la fonte da consultare: file o cartella locale dello studio, cartella Google Drive o Shared Drive autorizzata, Gmail connesso oppure una chat WhatsApp Desktop verificata. Se invece un operatore autorizzato chiede di mostrare o insegnare a Vera come scaricare fatture attive o passive e il relativo ZIP dall’Agenzia delle Entrate, Vera seleziona il registratore privacy-bounded di Codex Desktop, lascia all’operatore autenticazione e selezione del profilo e conserva soltanto una mappa tecnica sanificata, mai credenziali, cookie, fatture o ZIP. Vera lega Google Workspace all'ID stabile della cartella cliente, ricontrolla versione, parent e checksum disponibili prima di aprire una fonte e mantiene separato il perimetro del cliente. Restituisce evidenze e risultati tracciabili senza modificare o inviare contenuti nelle fonti consultate."
     },
     "presenza-digitale-studio": {
-      "display_name": "Presenza digitale dello studio",
+      "display_name": "Sito dello studio",
       "short_description": "Rinnova o crea il sito informativo dello studio",
       "default_prompt": "Usa $presenza-digitale-studio per rinnovare il sito dello studio o crearne uno iniziale dai materiali verificati, con preview responsive da approvare.",
       "instructions": "Indica se esiste già un sito e fornisci URL, testi, logo, fotografie e informazioni dello studio autorizzate per l'uso pubblico. Vera sceglie automaticamente tra refresh e primo sito, distingue fatti osservati, informazioni fornite e proposte iniziali, quindi usa le skill di design disponibili per preparare una struttura chiara, testi verificabili e un sito responsive funzionante. Controlla file, link e metadati, ispeziona il render desktop e mobile e produce una preview revisionabile. Non inventa servizi, qualifiche, testimonianze, risultati, storia o testi legali e non pubblica la preview o il sito finale senza la scelta esplicita della relativa destinazione e l'approvazione del pacchetto esatto."

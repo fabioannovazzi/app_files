@@ -83,7 +83,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.10"
+    assert manifest["version"] == "0.1.11"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -481,10 +481,10 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'href="../presenza-digitale-studio/index.html?lang=it"' in page
     assert 'href="../apertura-pratica/index.html?lang=it"' in page
     assert "Comunicazione professionale" in page
-    assert "Presenza digitale dello studio" in page
-    assert "Ottimizza prompt" in page
+    assert "Sito dello studio" in page
+    assert "Ottimizzazione prompt" in page
     assert "Assistente Ai per avvocati indipendenti" in page
-    assert "Valida Deep Research" in page
+    assert "Validazione ricerca" in page
     assert page.count('class="module-row"') == 5
     for module in re.findall(r'<a class="module-row".*?</a>', page, flags=re.DOTALL):
         assert "<p" not in module
@@ -547,6 +547,28 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
         assert color in stylesheet
     assert "gradient" not in stylesheet
     assert "box-shadow" not in stylesheet
+
+
+def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
+    """Exact labels should match mechanically across the two public surfaces."""
+
+    canonical_labels = {
+        "prompt-optimizer": "Ottimizzazione prompt",
+        "deep-research-validator": "Validazione ricerca",
+        "comunicazione-professionale": "Comunicazione professionale",
+        "apertura-pratica": "Apertura pratica",
+        "presenza-digitale-studio": "Sito dello studio",
+    }
+    cards = _json(LUCIA_ROOT / "marketplace_skill_instructions.json")["skills"]
+    page = (ROOT / "static" / "shared" / "lucia" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert {
+        workflow: cards[workflow]["display_name"] for workflow in canonical_labels
+    } == canonical_labels
+    for label in canonical_labels.values():
+        assert label in page
 
 
 def test_lucia_public_page_matches_vera_function_copy_in_every_language() -> None:
