@@ -1,7 +1,7 @@
 {
   "schema_version": 3,
   "workstream": "apertura-pratica",
-  "display_name": "Apertura pratica",
+  "display_name": "Fascicolo nuova pratica",
   "role": "workflow",
   "governed_paths": [
     "skills",
@@ -78,9 +78,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-12",
+    "reviewed_at": "2026-08-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "40bb0c1c02be613771a23079b73480f114be2e71b740fe2ecef4f5e913fd1ddc"
+    "source_fingerprint": "3e9dcca2648a5b6b3817433fc9c90958ae05fcf72b5440e8991b532edcfd97f3"
   }
 }

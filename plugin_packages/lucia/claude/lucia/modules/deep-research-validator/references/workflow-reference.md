@@ -62,6 +62,38 @@ For each reviewed claim, separate:
 - professional judgment: explicit factors and alternative interpretations;
 - issue treatment and final claim disposition.
 
+## Official Archive Coverage And Reproductions
+
+Treat these as separate questions:
+
+1. Does the decision or authority exist, and is its identifier corroborated?
+2. Was the official full text obtained?
+3. Is the public official portal exhaustive, rolling, partial, or access-gated?
+4. Is the reviewed item an official text, official summary, non-institutional
+   reproduction, or commentary?
+5. Does the available text substantively support the claim?
+6. Was the reproduction's text verified against the official full text?
+
+Do not infer that a decision is absent or nonexistent merely because an
+official public search returns no result. First establish the portal's coverage
+from official documentation or other reliable evidence. A visible year facet
+describes the current result set; by itself it does not prove why older records
+are absent or whether a separate historical archive exists.
+
+When the official historical archive is outside a documented rolling public
+window or is authentication-gated, record that access condition without
+treating it as a defect in the decision. A non-institutional reproduction can
+still support a claim when the authority's identity and substance are
+corroborated. Unless the official text was obtained or an exact comparison was
+possible, record `text_fidelity: corroborated_not_text_verified`, explain the
+corroboration, and disclose a residual text-fidelity limitation. This source
+limit does not automatically make otherwise supported reasoning unsound.
+
+Use `not_found_in_complete_official_archive` only when reliable evidence shows
+that the searched official archive is complete for the relevant authority,
+document type, jurisdiction, and period. A search failure, a rolling public
+window, or a gated archive is insufficient.
+
 Exact or fuzzy text matching is not semantic support. For example, "this is a
 terrier" can support "this is a dog" without literal overlap, while "this is
 not a dog", "this will be a dog", and "this was a dog" have different
@@ -74,7 +106,8 @@ Keep four dimensions explicit:
 - mechanically observed: document or source access, identifiers, exact quote
   presence in the available text, and JSON/schema shape;
 - model-led source identity and semantic support: authority identity, claim
-  meaning, entailment, contradiction, scope, qualification, time, and modality;
+  relation, archive-coverage significance, text fidelity, claim meaning,
+  entailment, contradiction, scope, qualification, time, and modality;
 - model-led reasoning: whether the conclusion follows from supported premises
   and whether intermediate premises are missing;
 - judgment-dependent: legal applicability, materiality, competing

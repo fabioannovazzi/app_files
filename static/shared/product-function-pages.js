@@ -348,7 +348,7 @@
       defaultLanguage: "it",
       copy: {
         it: {
-          name: "Presenza digitale dello studio",
+          name: "Sito dello studio",
           summary: "Rinnova un sito informativo esistente o ne costruisce uno iniziale da materiali e fatti approvati dallo studio.",
           useWhen: "Usala per un sito informativo. Portali clienti, e-commerce, prenotazioni, pagamenti e applicazioni richiedono un progetto diverso.",
           input: "Sito pubblico esistente, materiali selezionati, logo, fotografie, contatti, persone, servizi, qualifiche e testi legali forniti dallo studio.",
@@ -357,7 +357,7 @@
           responsibilityIntro: "La lettura dei materiali non autorizza automaticamente la pubblicazione.",
           productRole: "Organizza i contenuti, propone testi e aspetto, costruisce il sito e prepara la versione da rivedere.",
           professionalRole: "Conferma identità, fatti, servizi, qualifiche, testi legali, destinazione e versione esatta da pubblicare.",
-          prompt: "Usa Presenza digitale dello studio su questo sito e sui materiali selezionati. Prepara struttura, testi e sito responsive senza inventare fatti e fammi rivedere la versione funzionante.",
+          prompt: "Usa Sito dello studio su questo sito e sui materiali selezionati. Prepara struttura, testi e sito responsive senza inventare fatti e fammi rivedere la versione funzionante.",
           modelDataStatus: "not-relevant",
           modelDataConclusion: "Non rilevante per questo processo.",
           modelData: "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
@@ -429,7 +429,7 @@
       defaultLanguage: "it",
       copy: {
         it: pending("it", {
-          name: "Apertura pratica",
+          name: "Fascicolo nuova pratica",
           summary: "Organizza i materiali iniziali, identifica dati mancanti e prepara il fascicolo per la decisione dell'avvocato.",
           useWhen: "Usala prima di aprire una nuova pratica o accettare un incarico.",
           input: "Materiali iniziali, identità e ruoli dei soggetti, obiettivo dell'incarico e informazioni disponibili su scadenze e conflitti.",
@@ -438,7 +438,7 @@
           responsibilityIntro: "La preparazione non apre automaticamente la pratica e non accetta l'incarico.",
           productRole: "Organizza le evidenze, prepara i candidati e registra i punti ancora da verificare.",
           professionalRole: "Conferma cliente, incarico, conflitti, scadenze, antiriciclaggio e decisione di apertura.",
-          prompt: "Usa Apertura pratica sui materiali in questa cartella. Prepara soggetti, incarico, documenti mancanti, possibili conflitti e scadenze per la mia revisione, senza aprire automaticamente la pratica.",
+          prompt: "Usa Fascicolo nuova pratica sui materiali in questa cartella. Prepara soggetti, incarico, documenti mancanti, possibili conflitti e scadenze per la mia revisione, senza aprire automaticamente la pratica.",
         }),
         en: pending("en", {
           name: "Matter opening",
@@ -980,13 +980,13 @@
       it: "Ricerca di agevolazioni e preparazione della pratica", en: "Search for grants and prepare the application", fr: "Rechercher des aides et préparer le dossier", de: "Fördermittel suchen und Antrag vorbereiten", es: "Buscar ayudas y preparar la solicitud",
     },
     "comunicazione-professionale": {
-      it: "Valutazione e preparazione delle comunicazioni dello studio", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
+      it: "Comunicazione professionale", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
     },
     "presenza-digitale-studio": {
-      it: "Creazione o aggiornamento del sito dello studio", en: "Create or update the firm website", fr: "Créer ou mettre à jour le site du cabinet", de: "Kanzleiwebsite erstellen oder aktualisieren", es: "Crear o actualizar el sitio web del despacho",
+      it: "Sito dello studio", en: "Create or update the firm website", fr: "Créer ou mettre à jour le site du cabinet", de: "Kanzleiwebsite erstellen oder aktualisieren", es: "Crear o actualizar el sitio web del despacho",
     },
     "apertura-pratica": {
-      it: "Preparazione del fascicolo di una nuova pratica", en: "Prepare the file for a new matter", fr: "Préparer le dossier d'une nouvelle affaire", de: "Akte für ein neues Mandat vorbereiten", es: "Preparar el expediente de un nuevo asunto",
+      it: "Fascicolo nuova pratica", en: "Prepare the file for a new matter", fr: "Préparer le dossier d'une nouvelle affaire", de: "Akte für ein neues Mandat vorbereiten", es: "Preparar el expediente de un nuevo asunto",
     },
     "clara-presentations": {
       it: "Creazione e revisione di presentazioni", en: "Create and revise presentations", fr: "Créer et réviser des présentations", de: "Präsentationen erstellen und überarbeiten", es: "Crear y revisar presentaciones",

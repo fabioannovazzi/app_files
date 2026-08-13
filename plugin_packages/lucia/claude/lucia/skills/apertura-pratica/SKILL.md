@@ -3,7 +3,7 @@ name: apertura-pratica
 description: Use when Lucia must open a new client matter or a new matter for an existing client, organize intake evidence, map parties, prepare conflict-search candidates, define engagement scope, surface possible deadlines, assess conditional AML posture, propose a folder plan, and create a lawyer-reviewable opening package.
 ---
 
-# Apertura pratica
+# Fascicolo nuova pratica
 
 Resolve `../../modules/apertura-pratica` from this skill directory when it
 exists; otherwise resolve `../../../apertura-pratica` in the repository. Read

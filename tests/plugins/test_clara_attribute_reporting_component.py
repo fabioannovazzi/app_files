@@ -43,7 +43,10 @@ def test_clara_attribute_reporting_wrapper_delegates_to_single_source() -> None:
     assert "skills/attribute-reporting/SKILL.md" in wrapper
     assert "check_dependencies.py --module attribute-reporting" in wrapper
     assert "route to Clara's distinct `brand-fit` skill" in wrapper
-    assert 'display_name: "Attribute Reporting"' in metadata
+    assert (
+        'display_name: "Compare assortment, new-product, and best-seller attributes"'
+        in metadata
+    )
     assert "Use $attribute-reporting" in metadata
     assert (ATTRIBUTE_ROOT / "skills" / "attribute-reporting" / "SKILL.md").is_file()
 

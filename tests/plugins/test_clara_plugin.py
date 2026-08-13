@@ -44,10 +44,18 @@ CLARA_DISCOVERY_TERMS = (
 @pytest.mark.parametrize(
     ("skill_name", "display_name", "old_skill_name"),
     [
-        ("claim-basis-map", "Claim Basis Map", "clara-claim-basis-map"),
-        ("interview", "Interview", "clara-interview"),
-        ("transcribe", "Transcribe", "clara-transcribe"),
-        ("deck-correction", "Deck Correction", "clara-deck-correction"),
+        ("claim-basis-map", "Verify presentation claims", "clara-claim-basis-map"),
+        ("interview", "Prepare and conduct interviews", "clara-interview"),
+        (
+            "transcribe",
+            "Transcribe recordings and voice notes",
+            "clara-transcribe",
+        ),
+        (
+            "deck-correction",
+            "Revise presentations from feedback",
+            "clara-deck-correction",
+        ),
     ],
 )
 def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
@@ -61,6 +69,63 @@ def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
     assert f'display_name: "{display_name}"' in agent_metadata
     assert f"Use ${skill_name}" in agent_metadata
     assert not (PLUGIN_ROOT / "skills" / old_skill_name).exists()
+
+
+def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None:
+    expected = {
+        "attribute-reporting": (
+            "Compare assortment, new-product, and best-seller attributes"
+        ),
+        "brand-fit": "Compare the retailer assortment with the brand catalogue",
+        "claim-basis-map": "Verify presentation claims",
+        "deck-correction": "Revise presentations from feedback",
+        "html-deck": "Create HTML presentations",
+        "interview": "Prepare and conduct interviews",
+        "privacy-surface-review": "Review workflow data handling",
+        "reporting-engine": "Analyze business data",
+        "transcribe": "Transcribe recordings and voice notes",
+    }
+    cards = json.loads(
+        (PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
+            encoding="utf-8"
+        )
+    )["skills"]
+
+    assert {name: cards[name]["display_name"] for name in expected} == expected
+    for skill_name, display_name in expected.items():
+        metadata = (
+            PLUGIN_ROOT / "skills" / skill_name / "agents" / "openai.yaml"
+        ).read_text(encoding="utf-8")
+        assert f'display_name: "{display_name}"' in metadata
+
+    public_function_source = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
+    for skill_name in (
+        "attribute-reporting",
+        "brand-fit",
+        "interview",
+        "reporting-engine",
+        "transcribe",
+    ):
+        assert f'en: "{expected[skill_name]}"' in public_function_source
+
+    public_page = (
+        ROOT / "static" / "shared" / "clara" / "index.html"
+    ).read_text(encoding="utf-8")
+    public_directory = {
+        "functions.presentations": "Create and revise presentations",
+        "functions.documents": "Create and revise documents",
+        "functions.interviews": expected["interview"],
+        "functions.transcription": expected["transcribe"],
+        "functions.retailerSignals": expected["attribute-reporting"],
+        "functions.brandFit": expected["brand-fit"],
+        "functions.dataAnalysis": expected["reporting-engine"],
+    }
+    assert "const directoryNames =" not in public_page
+    for key, display_name in public_directory.items():
+        assert f'data-i18n="{key}">{display_name}</h4>' in public_page
+        assert public_page.count(f'"{key}":') == 5
 
 
 def test_clara_public_page_exposes_complete_spanish_locale_contract() -> None:
@@ -802,7 +867,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.140"
+    assert manifest["version"] == "0.1.142"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]

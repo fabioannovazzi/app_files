@@ -1,4 +1,4 @@
 interface:
-  display_name: "Interview"
+  display_name: "Prepare and conduct interviews"
   short_description: "Prepare and review hosted interviews"
   default_prompt: "Use $interview to prepare an expiring hosted participant interview from an exact campaign or scoped one-off brief, then retrieve its bundle and quality review when complete."

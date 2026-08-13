@@ -50,7 +50,10 @@ def test_clara_brand_fit_wrapper_is_visible_and_delegates_to_attribute_component
     assert "live shelf" in wrapper
     assert "user's existing ChatGPT plan" in wrapper
     assert "no separate API" in wrapper
-    assert 'display_name: "Brand Fit"' in metadata
+    assert (
+        'display_name: "Compare the retailer assortment with the brand catalogue"'
+        in metadata
+    )
     assert "Use $brand-fit" in metadata
 
 
