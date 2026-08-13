@@ -3552,19 +3552,26 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
     function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
         encoding="utf-8"
     )
+    variance_copy = function_copy.split('"variance-analysis":', 1)[1].split(
+        '"bilancio-xbrl-it":', 1
+    )[0]
 
     assert module is not None
     assert 'href="../variance-analysis/index.html"' in module.group(0)
     assert 'data-i18n="module.variance.title"' in module.group(0)
     assert "<p" not in module.group(0)
+    assert '"variance-analysis"' in function_copy
     for required_concept in (
-        '"variance-analysis"',
         "Confronta Actual, Budget, Forecast o periodi precedenti",
         "prezzo, volume e mix",
         "I calcoli restano separati dall'interpretazione gestionale.",
-        'modelDataStatus: "placeholder"',
+        "le prime 10 righe con tutte le colonne originali",
+        "pacchetto di revisione limitato ai 50 driver principali",
+        "Vera non anonimizza né pseudonimizza automaticamente",
     ):
-        assert required_concept in function_copy
+        assert required_concept in variance_copy
+    assert variance_copy.count('modelDataStatus: "relevant"') == 5
+    assert 'modelDataStatus: "placeholder"' not in variance_copy
     for localized_title in (
         "Analisi degli scostamenti",
         "Variance analysis",
@@ -3748,6 +3755,12 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "pack_execution_receipt.json",
         "contingent_liability_register.json",
         "financial_issue_register.json",
+        'data-model-data-workflow="financial-analysis"',
+        'data-model-data-status="relevant"',
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Non c’è un limite di campionamento",
+        "Vera non anonimizza né pseudonimizza automaticamente",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
     ):
@@ -3765,6 +3778,28 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Tres análisis financieros",
     ):
         assert stale_snippet not in page
+
+
+@pytest.mark.parametrize(
+    ("page_name", "workflow_id"),
+    (
+        ("financial-analysis", "financial-analysis"),
+        ("sales-plan", "sales-plan"),
+    ),
+)
+def test_accounting_process_page_ends_with_model_data_block(
+    page_name: str, workflow_id: str
+) -> None:
+    page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
+        encoding="utf-8"
+    )
+    main = page[page.index('<main class="page-shell"') : page.index("</main>")]
+
+    assert main.count('class="function-model-data"') == 1
+    assert f'data-model-data-workflow="{workflow_id}"' in main
+    assert 'data-model-data-status="relevant"' in main
+    assert main.rstrip().endswith("</section>")
+    assert main.rindex('class="function-model-data"') > main.rindex('id="prompt"')
 
 
 def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
@@ -3789,6 +3824,12 @@ def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
         "reconciliation.json",
         "prepared_evidence_manifest.json",
         "plan_execution_receipt.json",
+        'data-model-data-workflow="sales-plan"',
+        'data-model-data-status="relevant"',
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "tutte le righe Actual osservate nel perimetro",
+        "Vera non anonimizza né pseudonimizza automaticamente",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
     ):

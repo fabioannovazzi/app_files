@@ -23,6 +23,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260813-function-pages">
   <link rel="stylesheet" href="../vera-journey.css?v=20260728-financial-analysis">
+  <link rel="stylesheet" href="../function-model-data.css?v=20260813-model-data">
   <style>
     :root { --paper: #ffffff; }
 
@@ -256,6 +257,18 @@
       </div>
     </section>
 
+    <section class="function-model-data" data-model-data-workflow="financial-analysis" data-model-data-status="relevant" aria-labelledby="financial-analysis-model-data-title">
+      <div class="function-model-data__head">
+        <div class="function-model-data__heading">
+          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
+          <h2 id="financial-analysis-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
+        </div>
+        <div class="function-model-data__body">
+          <p class="function-model-data__copy" data-i18n="model.copy">Il modello selezionato può leggere le istruzioni e i file contabili o di due diligence pertinenti: entità, conti, clienti e gruppi; righe di transazioni e saldi; periodi, valute, importi, unità, rettifiche e classificazioni; dati su cassa, debito, leasing, factoring, immobilizzazioni, Capex e capitale circolante; contratti, crosswalk, riferimenti alle evidenze, decisioni di revisione e risultati calcolati. Il motore deterministico elabora poi tutte le righe rivedute nel perimetro, controlla hash e riconciliazioni e applica il calcolo fisso. Non c’è un limite di campionamento per ciò che il modello può leggere e Vera non anonimizza né pseudonimizza automaticamente: nomi e identificativi restano quando servono a stabilire significato contabile, relazioni o evidenze. Le stesse classi di dati possono arrivare a Codex o Cowork nell’account scelto dallo studio; questo processo non ha altre destinazioni esterne.</p>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <footer>
@@ -321,6 +334,8 @@
         "related.kicker": "Nel percorso Vera", "related.title": "Collega l’analisi ai controlli e al documento finale.",
         "related.copy": "Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.",
         "related.bank": "Riconcilia banca e contabilità", "related.report": "Genera il report",
+        "model.label": "Trattamento dei dati", "model.title": "Quali dati arrivano al modello",
+        "model.copy": "Il modello selezionato può leggere le istruzioni e i file contabili o di due diligence pertinenti: entità, conti, clienti e gruppi; righe di transazioni e saldi; periodi, valute, importi, unità, rettifiche e classificazioni; dati su cassa, debito, leasing, factoring, immobilizzazioni, Capex e capitale circolante; contratti, crosswalk, riferimenti alle evidenze, decisioni di revisione e risultati calcolati. Il motore deterministico elabora poi tutte le righe rivedute nel perimetro, controlla hash e riconciliazioni e applica il calcolo fisso. Non c’è un limite di campionamento per ciò che il modello può leggere e Vera non anonimizza né pseudonimizza automaticamente: nomi e identificativi restano quando servono a stabilire significato contabile, relazioni o evidenze. Le stesse classi di dati possono arrivare a Codex o Cowork nell’account scelto dallo studio; questo processo non ha altre destinazioni esterne.",
         "footer.scope": "Analisi finanziaria e due diligence", "footer.vera": "Tutte le funzioni", "footer.data": "Trattamento dati"
       },
       en: {
@@ -374,6 +389,8 @@
         "related.kicker": "In the Vera workflow", "related.title": "Connect the analysis to controls and the final document.",
         "related.copy": "Use an accounting reconciliation when relationships between sources must be closed first. Then carry confirmed tables into the report.",
         "related.bank": "Reconcile bank and ledger", "related.report": "Build the report",
+        "model.label": "Data handling", "model.title": "What data reaches the model",
+        "model.copy": "The selected model may read the instructions and relevant accounting or due-diligence files: entities, accounts, customers and groups; transaction and balance rows; periods, currencies, amounts, units, adjustments and classifications; cash, debt, lease, factoring, fixed-asset, Capex and working-capital records; contracts, crosswalks, evidence references, review decisions and calculated outputs. The deterministic engine then processes every reviewed in-scope row, checks hashes and reconciliations, and applies the fixed calculation. There is no sampling limit on what the model may read, and Vera does not automatically anonymize or pseudonymize the data: names and identifiers remain when needed to establish accounting meaning, relationships or evidence. The same data classes may reach Codex or Cowork under the account selected by the firm; this process has no additional external destination.",
         "footer.scope": "Financial analysis and due diligence", "footer.vera": "All capabilities", "footer.data": "Data handling"
       },
       fr: {
@@ -427,6 +444,8 @@
         "related.kicker": "Dans le parcours Vera", "related.title": "Reliez l’analyse aux contrôles et au document final.",
         "related.copy": "Utilisez un rapprochement comptable si les relations entre sources doivent d’abord être closes. Portez ensuite les tableaux confirmés dans le rapport.",
         "related.bank": "Rapprocher banque et comptabilité", "related.report": "Générer le rapport",
+        "model.label": "Traitement des données", "model.title": "Quelles données parviennent au modèle",
+        "model.copy": "Le modèle sélectionné peut lire les instructions et les fichiers comptables ou de due diligence pertinents : entités, comptes, clients et groupes ; lignes de transactions et de soldes ; périodes, devises, montants, unités, ajustements et classifications ; données de trésorerie, dette, crédit-bail, affacturage, immobilisations, Capex et fonds de roulement ; contrats, tables de correspondance, références aux éléments probants, décisions de revue et résultats calculés. Le moteur déterministe traite ensuite toutes les lignes révisées du périmètre, contrôle les empreintes et les rapprochements et applique le calcul fixe. Aucune limite d’échantillonnage ne restreint ce que le modèle peut lire et Vera n’anonymise ni ne pseudonymise automatiquement les données : les noms et identifiants restent présents lorsqu’ils sont nécessaires au sens comptable, aux relations ou aux preuves. Les mêmes catégories de données peuvent parvenir à Codex ou Cowork dans le compte choisi par le cabinet ; ce processus n’a pas d’autre destination externe.",
         "footer.scope": "Analyse financière et due diligence", "footer.vera": "Toutes les fonctions", "footer.data": "Traitement des données"
       },
       de: {
@@ -480,6 +499,8 @@
         "related.kicker": "Im Vera-Ablauf", "related.title": "Analyse mit Kontrollen und Abschlussdokument verbinden.",
         "related.copy": "Nutzen Sie eine Buchhaltungsabstimmung, wenn Beziehungen zwischen Quellen zuerst geschlossen werden müssen. Übernehmen Sie dann bestätigte Tabellen in den Bericht.",
         "related.bank": "Bank und Buchhaltung abstimmen", "related.report": "Bericht erstellen",
+        "model.label": "Datenverarbeitung", "model.title": "Welche Daten das Modell erhält",
+        "model.copy": "Das ausgewählte Modell kann die Anweisungen und die relevanten Buchhaltungs- oder Due-Diligence-Dateien lesen: Einheiten, Konten, Kunden und Gruppen; Transaktions- und Saldenzeilen; Zeiträume, Währungen, Beträge, Einheiten, Anpassungen und Klassifikationen; Daten zu Zahlungsmitteln, Schulden, Leasing, Factoring, Anlagevermögen, Capex und Working Capital; Verträge, Zuordnungstabellen, Nachweisreferenzen, Prüfentscheidungen und berechnete Ergebnisse. Die deterministische Engine verarbeitet danach alle geprüften Zeilen im festgelegten Umfang, kontrolliert Hashes und Abstimmungen und wendet die feste Berechnung an. Für die Modelllektüre gilt keine Stichprobengrenze, und Vera anonymisiert oder pseudonymisiert die Daten nicht automatisch: Namen und Kennungen bleiben erhalten, wenn sie für buchhalterische Bedeutung, Beziehungen oder Nachweise erforderlich sind. Dieselben Datenkategorien können Codex oder Cowork im von der Kanzlei gewählten Konto erreichen; dieser Prozess hat kein weiteres externes Ziel.",
         "footer.scope": "Finanzanalyse und Due Diligence", "footer.vera": "Alle Funktionen", "footer.data": "Datenverarbeitung"
       },
       es: {
@@ -533,6 +554,8 @@
         "related.kicker": "En el recorrido de Vera", "related.title": "Conecte el análisis con los controles y el documento final.",
         "related.copy": "Utilice una conciliación contable cuando primero deban cerrarse las relaciones entre fuentes. Lleve después las tablas confirmadas al informe.",
         "related.bank": "Conciliar banco y contabilidad", "related.report": "Generar el informe",
+        "model.label": "Tratamiento de datos", "model.title": "Qué datos llegan al modelo",
+        "model.copy": "El modelo seleccionado puede leer las instrucciones y los archivos contables o de due diligence pertinentes: entidades, cuentas, clientes y grupos; filas de transacciones y saldos; periodos, monedas, importes, unidades, ajustes y clasificaciones; datos de caja, deuda, arrendamientos, factoring, inmovilizado, Capex y capital circulante; contratos, tablas de correspondencia, referencias a evidencias, decisiones de revisión y resultados calculados. Después, el motor determinista procesa todas las filas revisadas dentro del alcance, comprueba hashes y conciliaciones y aplica el cálculo fijo. No hay un límite de muestreo para lo que el modelo puede leer y Vera no anonimiza ni seudonimiza los datos automáticamente: los nombres e identificadores permanecen cuando son necesarios para establecer el significado contable, las relaciones o la evidencia. Las mismas categorías de datos pueden llegar a Codex o Cowork en la cuenta elegida por el despacho; este proceso no tiene ningún otro destino externo.",
         "footer.scope": "Análisis financiero y due diligence", "footer.vera": "Todas las funciones", "footer.data": "Tratamiento de datos"
       }
     };

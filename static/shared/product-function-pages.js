@@ -71,7 +71,7 @@
       product: "Vera",
       defaultLanguage: "it",
       copy: {
-        it: pending("it", {
+        it: {
           name: "Analisi degli scostamenti",
           summary: "Confronta Actual, Budget, Forecast o periodi precedenti e prepara tabelle, grafici e carte di lavoro con totali riconciliati.",
           useWhen: "Usala quando devi spiegare differenze tra periodi o scenari partendo da dati contabili o gestionali.",
@@ -82,8 +82,10 @@
           productRole: "Propone i mapping, esegue i calcoli, prepara i grafici e segnala i punti non riconciliati.",
           professionalRole: "Conferma mapping, cause operative, materialità, classificazione e commento gestionale.",
           prompt: "Usa Analisi degli scostamenti sui file in questa cartella. Confronta Actual e Budget, riconcilia i totali e prepara tabelle, grafici e punti aperti per la mia revisione.",
-        }),
-        en: pending("en", {
+          modelDataStatus: "relevant",
+          modelData: "Il modello selezionato può leggere le istruzioni e i file pertinenti di Actual, Budget, Forecast o periodi precedenti: entità e conti; centri di costo, reparti, prodotti, clienti, canali e altre dimensioni; periodi e scenari; importi, unità, sconti, COGS, valute, cambi e convenzioni dei segni. L’ispezione locale elabora l’intero file e prepara nomi e tipi delle colonne, periodi, mapping proposti e le prime 10 righe con tutte le colonne originali; questa anteprima non impedisce a Codex o Cowork di leggere il file collegato. Dopo la conferma dei mapping, il codice deterministico elabora tutte le righe selezionate e riconcilia il bridge. Il modello può poi leggere tabelle complete, contesti e audit e un pacchetto di revisione limitato ai 50 driver principali per interpretare cause e commenti. Vera non anonimizza né pseudonimizza automaticamente: nomi e identificativi restano quando servono al perimetro o alla spiegazione. In Codex i dati appartengono alla run Studio Archive vincolata; in Cowork provengono soltanto dai file o dalle cartelle collegati esplicitamente. Il processo non ha altre destinazioni esterne.",
+        },
+        en: {
           name: "Variance analysis",
           summary: "Compares Actual, Budget, Forecast, or prior periods and prepares reconciled tables, charts, and workpapers.",
           useWhen: "Use it to explain differences between periods or scenarios from accounting or management data.",
@@ -94,8 +96,10 @@
           productRole: "Proposes mappings, performs calculations, prepares charts, and identifies unreconciled items.",
           professionalRole: "Confirms mappings, operational causes, materiality, classification, and management commentary.",
           prompt: "Use Variance analysis on the files in this folder. Compare Actual and Budget, reconcile totals, and prepare tables, charts, and open points for my review.",
-        }),
-        fr: pending("fr", {
+          modelDataStatus: "relevant",
+          modelData: "The selected model may read the instructions and relevant Actual, Budget, Forecast, or prior-period files: entities and accounts; cost centres, departments, products, customers, channels and other dimensions; periods and scenarios; amounts, units, discounts, COGS, currencies, FX and sign conventions. Local inspection processes the complete file and prepares column names and types, periods, proposed mappings and the first 10 rows with every original column; this preview does not prevent Codex or Cowork from reading the connected file. After mappings are confirmed, deterministic code processes every selected row and reconciles the bridge. The model may then read the full tables, context and audit files, plus a review payload bounded to the 50 largest drivers, to interpret causes and commentary. Vera does not automatically anonymize or pseudonymize the data: names and identifiers remain when needed for scope or explanation. In Codex the data belongs to the bound Studio Archive run; in Cowork it comes only from explicitly connected files or folders. This process has no additional external destination.",
+        },
+        fr: {
           name: "Analyse des écarts",
           summary: "Compare Réel, Budget, Prévision ou périodes antérieures et prépare des tableaux, graphiques et dossiers de travail rapprochés.",
           useWhen: "Utilisez-la pour expliquer les différences entre périodes ou scénarios à partir de données comptables ou de gestion.",
@@ -106,8 +110,10 @@
           productRole: "Propose les mappings, effectue les calculs, prépare les graphiques et signale les éléments non rapprochés.",
           professionalRole: "Confirme mappings, causes opérationnelles, matérialité, classification et commentaire de gestion.",
           prompt: "Utilise Analyse des écarts sur les fichiers de ce dossier. Compare Réel et Budget, rapproche les totaux et prépare tableaux, graphiques et points ouverts pour ma revue.",
-        }),
-        de: pending("de", {
+          modelDataStatus: "relevant",
+          modelData: "Le modèle sélectionné peut lire les instructions et les fichiers pertinents de Réel, Budget, Prévision ou périodes antérieures : entités et comptes ; centres de coûts, départements, produits, clients, canaux et autres dimensions ; périodes et scénarios ; montants, unités, remises, COGS, devises, change et conventions de signe. L’inspection locale traite le fichier complet et prépare les noms et types de colonnes, les périodes, les mappings proposés et les 10 premières lignes avec toutes les colonnes d’origine ; cet aperçu n’empêche pas Codex ou Cowork de lire le fichier connecté. Après confirmation des mappings, le code déterministe traite toutes les lignes sélectionnées et rapproche la passerelle. Le modèle peut ensuite lire les tableaux complets, les fichiers de contexte et d’audit ainsi qu’un paquet de revue limité aux 50 facteurs principaux pour interpréter les causes et le commentaire. Vera n’anonymise ni ne pseudonymise automatiquement les données : les noms et identifiants restent présents lorsqu’ils sont nécessaires au périmètre ou à l’explication. Dans Codex, les données appartiennent à l’exécution Studio Archive liée ; dans Cowork, elles proviennent uniquement des fichiers ou dossiers explicitement connectés. Ce processus n’a pas d’autre destination externe.",
+        },
+        de: {
           name: "Abweichungsanalyse",
           summary: "Vergleicht Ist, Budget, Forecast oder Vorperioden und erstellt abgestimmte Tabellen, Diagramme und Arbeitspapiere.",
           useWhen: "Nutzen Sie die Funktion, um Unterschiede zwischen Perioden oder Szenarien anhand von Buchhaltungs- oder Steuerungsdaten zu erklären.",
@@ -118,8 +124,10 @@
           productRole: "Schlägt Zuordnungen vor, führt Berechnungen aus, erstellt Diagramme und kennzeichnet nicht abgestimmte Punkte.",
           professionalRole: "Bestätigt Zuordnungen, operative Ursachen, Wesentlichkeit, Klassifizierung und Managementkommentar.",
           prompt: "Verwende die Abweichungsanalyse für die Dateien in diesem Ordner. Vergleiche Ist und Budget, stimme die Summen ab und erstelle Tabellen, Diagramme und offene Punkte für meine Prüfung.",
-        }),
-        es: pending("es", {
+          modelDataStatus: "relevant",
+          modelData: "Das ausgewählte Modell kann die Anweisungen und die relevanten Ist-, Budget-, Forecast- oder Vorperiodendateien lesen: Einheiten und Konten; Kostenstellen, Abteilungen, Produkte, Kunden, Kanäle und andere Dimensionen; Zeiträume und Szenarien; Beträge, Einheiten, Rabatte, COGS, Währungen, Wechselkurse und Vorzeichenkonventionen. Die lokale Prüfung verarbeitet die vollständige Datei und erstellt Spaltennamen und -typen, Zeiträume, vorgeschlagene Zuordnungen und die ersten 10 Zeilen mit allen Originalspalten; diese Vorschau hindert Codex oder Cowork nicht daran, die verbundene Datei zu lesen. Nach Bestätigung der Zuordnungen verarbeitet deterministischer Code alle ausgewählten Zeilen und stimmt die Überleitung ab. Das Modell kann anschließend die vollständigen Tabellen, Kontext- und Auditdateien sowie ein auf die 50 größten Treiber begrenztes Prüfpaket lesen, um Ursachen und Kommentare zu interpretieren. Vera anonymisiert oder pseudonymisiert die Daten nicht automatisch: Namen und Kennungen bleiben erhalten, wenn sie für Umfang oder Erklärung erforderlich sind. In Codex gehören die Daten zum gebundenen Studio-Archive-Lauf; in Cowork stammen sie nur aus ausdrücklich verbundenen Dateien oder Ordnern. Dieser Prozess hat kein weiteres externes Ziel.",
+        },
+        es: {
           name: "Análisis de desviaciones",
           summary: "Compara Real, Presupuesto, Previsión o periodos anteriores y prepara tablas, gráficos y papeles de trabajo conciliados.",
           useWhen: "Úsala para explicar diferencias entre periodos o escenarios a partir de datos contables o de gestión.",
@@ -130,7 +138,9 @@
           productRole: "Propone mapeos, ejecuta cálculos, prepara gráficos y señala partidas no conciliadas.",
           professionalRole: "Confirma mapeos, causas operativas, materialidad, clasificación y comentario de gestión.",
           prompt: "Usa Análisis de desviaciones con los archivos de esta carpeta. Compara Real y Presupuesto, concilia los totales y prepara tablas, gráficos y puntos abiertos para mi revisión.",
-        }),
+          modelDataStatus: "relevant",
+          modelData: "El modelo seleccionado puede leer las instrucciones y los archivos pertinentes de Real, Presupuesto, Previsión o periodos anteriores: entidades y cuentas; centros de coste, departamentos, productos, clientes, canales y otras dimensiones; periodos y escenarios; importes, unidades, descuentos, COGS, monedas, tipos de cambio y convenciones de signo. La inspección local procesa el archivo completo y prepara nombres y tipos de columnas, periodos, mapeos propuestos y las primeras 10 filas con todas las columnas originales; esta vista previa no impide que Codex o Cowork lean el archivo conectado. Tras confirmar los mapeos, el código determinista procesa todas las filas seleccionadas y concilia el puente. Después, el modelo puede leer las tablas completas, los archivos de contexto y auditoría y un paquete de revisión limitado a los 50 principales factores para interpretar causas y comentarios. Vera no anonimiza ni seudonimiza los datos automáticamente: los nombres e identificadores permanecen cuando son necesarios para el alcance o la explicación. En Codex, los datos pertenecen a la ejecución vinculada de Studio Archive; en Cowork proceden únicamente de los archivos o carpetas conectados explícitamente. Este proceso no tiene ningún otro destino externo.",
+        },
       },
     },
     "bilancio-xbrl-it": {

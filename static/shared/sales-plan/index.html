@@ -23,6 +23,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../plugin-page-shell.css?v=20260813-function-pages">
   <link rel="stylesheet" href="../vera-journey.css?v=20260729-plan">
+  <link rel="stylesheet" href="../function-model-data.css?v=20260813-model-data">
   <style>
     :root { --paper: #ffffff; }
 
@@ -266,6 +267,18 @@
         <pre><code id="prompt-example">Prepara un Plan vendite da questo file Actual. In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro. Prima di calcolare, mostrami driver, scope, periodi, direzione del cambio e priorità che hai interpretato. Dopo la mia conferma, consegna scenario Plan, ledger delle assunzioni, riepilogo, riconciliazione e ricevuta riproducibile.</code></pre>
       </div>
     </section>
+
+    <section class="function-model-data" data-model-data-workflow="sales-plan" data-model-data-status="relevant" aria-labelledby="sales-plan-model-data-title">
+      <div class="function-model-data__head">
+        <div class="function-model-data__heading">
+          <p class="function-model-data__label" data-i18n="model.label">Trattamento dei dati</p>
+          <h2 id="sales-plan-model-data-title" data-i18n="model.title">Quali dati arrivano al modello</h2>
+        </div>
+        <div class="function-model-data__body">
+          <p class="function-model-data__copy" data-i18n="model.copy">Il modello selezionato può leggere le istruzioni e le righe mensili Actual pertinenti, comprese le etichette di cliente, prodotto, paese, canale o altro scope, insieme a periodi, unità, prezzi, vendite lorde, sconti, COGS, valute di transazione e di reporting, cambi, identità delle fonti e assunzioni da confermare con priorità, sovrapposizioni, basi e motivazioni. Dopo la conferma, il codice deterministico elabora tutte le righe Actual osservate nel perimetro: conserva le granularità sparse, non inventa mesi-cliente mancanti e produce Plan, ledger di applicazione, riepilogo e riconciliazione, che il modello può leggere per la revisione. Non c’è un limite di campionamento per ciò che il modello può leggere e Vera non anonimizza né pseudonimizza automaticamente. Le stesse classi di dati possono arrivare a Codex o Cowork nell’account scelto dallo studio; questo processo non ha altre destinazioni esterne.</p>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -297,6 +310,8 @@
         "boundary.kicker": "Responsabilità", "boundary.title": "Vera calcola il Plan. Il commercialista approva le ipotesi.", "boundary.copy": "Un’esecuzione esatta dimostra che le regole confermate sono state applicate in modo riproducibile. Non dimostra che le ipotesi siano prudenti, probabili o approvate dalla direzione.",
         "prompt.kicker": "Provalo in Vera", "prompt.title": "Parla come parleresti con un collega.", "prompt.copy": "Vera prepara la tabella di assunzioni e chiede conferma prima del calcolo.",
         "prompt": "Prepara un Plan vendite da questo file Actual. In Cina le unità crescono dell’8%, ma il dollaro perde il 5% contro l’euro. Prima di calcolare, mostrami driver, scope, periodi, direzione del cambio e priorità che hai interpretato. Dopo la mia conferma, consegna scenario Plan, ledger delle assunzioni, riepilogo, riconciliazione e ricevuta riproducibile.",
+        "model.label": "Trattamento dei dati", "model.title": "Quali dati arrivano al modello",
+        "model.copy": "Il modello selezionato può leggere le istruzioni e le righe mensili Actual pertinenti, comprese le etichette di cliente, prodotto, paese, canale o altro scope, insieme a periodi, unità, prezzi, vendite lorde, sconti, COGS, valute di transazione e di reporting, cambi, identità delle fonti e assunzioni da confermare con priorità, sovrapposizioni, basi e motivazioni. Dopo la conferma, il codice deterministico elabora tutte le righe Actual osservate nel perimetro: conserva le granularità sparse, non inventa mesi-cliente mancanti e produce Plan, ledger di applicazione, riepilogo e riconciliazione, che il modello può leggere per la revisione. Non c’è un limite di campionamento per ciò che il modello può leggere e Vera non anonimizza né pseudonimizza automaticamente. Le stesse classi di dati possono arrivare a Codex o Cowork nell’account scelto dallo studio; questo processo non ha altre destinazioni esterne.",
         "footer.vera": "Tutte le funzioni", "footer.data": "Trattamento dati"
       },
       en: {
@@ -316,6 +331,8 @@
         "boundary.kicker": "Responsibility", "boundary.title": "Vera calculates the Plan. The professional approves the assumptions.", "boundary.copy": "Exact execution proves that confirmed rules were applied reproducibly. It does not prove that assumptions are prudent, likely or management-approved.",
         "prompt.kicker": "Try it in Vera", "prompt.title": "Speak as you would to a colleague.", "prompt.copy": "Vera prepares the assumption table and asks for confirmation before calculation.",
         "prompt": "Create a sales Plan from this Actual file. Unit sales in China rise 8%, but the dollar weakens 5% against the euro. Before calculating, show me the driver, scope, periods, FX direction and priority you interpreted. After I confirm, deliver the Plan scenario, assumption ledger, summary, reconciliation and reproducible receipt.",
+        "model.label": "Data handling", "model.title": "What data reaches the model",
+        "model.copy": "The selected model may read the instructions and relevant monthly Actual rows, including customer, product, country, channel or other scope labels, together with periods, units, prices, gross sales, discounts, COGS, transaction and reporting currencies, FX rates, source identities and the assumptions being confirmed with their priorities, overlap rules, bases and rationales. After confirmation, deterministic code processes every observed in-scope Actual row: it preserves sparse grains, does not invent missing customer-months, and produces the Plan, application ledger, summary and reconciliation, which the model may read for review. There is no sampling limit on what the model may read, and Vera does not automatically anonymize or pseudonymize the data. The same data classes may reach Codex or Cowork under the account selected by the firm; this process has no additional external destination.",
         "footer.vera": "All capabilities", "footer.data": "Data handling"
       },
       fr: {
@@ -335,6 +352,8 @@
         "boundary.kicker": "Responsabilité", "boundary.title": "Vera calcule le Plan. Le professionnel approuve les hypothèses.", "boundary.copy": "Une exécution exacte prouve l’application reproductible des règles confirmées, pas la prudence, la probabilité ou l’approbation managériale des hypothèses.",
         "prompt.kicker": "Essayez dans Vera", "prompt.title": "Parlez comme à un collègue.", "prompt.copy": "Vera prépare la table des hypothèses et demande confirmation avant le calcul.",
         "prompt": "Crée un Plan de ventes à partir de ce fichier réel. Les unités augmentent de 8 % en Chine, mais le dollar baisse de 5 % face à l’euro. Avant le calcul, montre le facteur, le périmètre, les périodes, le sens du change et la priorité interprétés. Après confirmation, livre le scénario Plan, le registre des hypothèses, la synthèse, le rapprochement et le reçu reproductible.",
+        "model.label": "Traitement des données", "model.title": "Quelles données parviennent au modèle",
+        "model.copy": "Le modèle sélectionné peut lire les instructions et les lignes mensuelles Réel pertinentes, y compris les libellés de client, produit, pays, canal ou autre périmètre, ainsi que les périodes, unités, prix, ventes brutes, remises, COGS, devises de transaction et de reporting, taux de change, identités des sources et hypothèses à confirmer avec leurs priorités, règles de chevauchement, bases et justifications. Après confirmation, le code déterministe traite toutes les lignes Réel observées dans le périmètre : il conserve les granularités clairsemées, n’invente pas de mois-client manquants et produit le Plan, le registre d’application, la synthèse et le rapprochement, que le modèle peut lire pour la revue. Aucune limite d’échantillonnage ne restreint ce que le modèle peut lire et Vera n’anonymise ni ne pseudonymise automatiquement les données. Les mêmes catégories de données peuvent parvenir à Codex ou Cowork dans le compte choisi par le cabinet ; ce processus n’a pas d’autre destination externe.",
         "footer.vera": "Toutes les fonctions", "footer.data": "Traitement des données"
       },
       de: {
@@ -354,6 +373,8 @@
         "boundary.kicker": "Verantwortung", "boundary.title": "Vera berechnet den Plan. Der Berufsträger genehmigt die Annahmen.", "boundary.copy": "Exakte Ausführung beweist die reproduzierbare Anwendung bestätigter Regeln, nicht Vorsicht, Wahrscheinlichkeit oder Managementfreigabe der Annahmen.",
         "prompt.kicker": "In Vera ausprobieren", "prompt.title": "Sprechen Sie wie mit einem Kollegen.", "prompt.copy": "Vera bereitet die Annahmentabelle vor und bittet vor der Berechnung um Bestätigung.",
         "prompt": "Erstelle aus dieser Ist-Datei einen Vertriebsplan. Die Einheiten in China steigen um 8 %, der Dollar verliert jedoch 5 % gegenüber dem Euro. Zeige vor der Berechnung Treiber, Umfang, Zeiträume, Währungsrichtung und Priorität. Liefere nach meiner Bestätigung Planszenario, Annahmenregister, Zusammenfassung, Abstimmung und reproduzierbaren Beleg.",
+        "model.label": "Datenverarbeitung", "model.title": "Welche Daten das Modell erhält",
+        "model.copy": "Das ausgewählte Modell kann die Anweisungen und die relevanten monatlichen Ist-Zeilen lesen, einschließlich Kunden-, Produkt-, Länder-, Kanal- oder anderer Umfangsbezeichnungen, zusammen mit Zeiträumen, Einheiten, Preisen, Bruttoumsatz, Rabatten, COGS, Transaktions- und Berichtswährungen, Wechselkursen, Quellenidentitäten sowie den zu bestätigenden Annahmen mit Prioritäten, Überlappungsregeln, Grundlagen und Begründungen. Nach der Bestätigung verarbeitet der deterministische Code alle beobachteten Ist-Zeilen im Umfang: Er bewahrt lückenhafte Granularitäten, erfindet keine fehlenden Kundenmonate und erzeugt Plan, Anwendungsregister, Zusammenfassung und Abstimmung, die das Modell zur Prüfung lesen kann. Für die Modelllektüre gilt keine Stichprobengrenze, und Vera anonymisiert oder pseudonymisiert die Daten nicht automatisch. Dieselben Datenkategorien können Codex oder Cowork im von der Kanzlei gewählten Konto erreichen; dieser Prozess hat kein weiteres externes Ziel.",
         "footer.vera": "Alle Funktionen", "footer.data": "Datenverarbeitung"
       },
       es: {
@@ -373,6 +394,8 @@
         "boundary.kicker": "Responsabilidad", "boundary.title": "Vera calcula el Plan. El profesional aprueba los supuestos.", "boundary.copy": "La ejecución exacta prueba que las reglas confirmadas se aplicaron de forma reproducible, no que los supuestos sean prudentes, probables o aprobados por dirección.",
         "prompt.kicker": "Pruébalo en Vera", "prompt.title": "Habla como con un colega.", "prompt.copy": "Vera prepara la tabla de supuestos y solicita confirmación antes del cálculo.",
         "prompt": "Crea un Plan de ventas a partir de este archivo real. Las unidades en China aumentan un 8 %, pero el dólar pierde un 5 % frente al euro. Antes de calcular, muestra el factor, ámbito, periodos, dirección del cambio y prioridad interpretados. Tras mi confirmación, entrega el escenario Plan, registro de supuestos, resumen, conciliación y recibo reproducible.",
+        "model.label": "Tratamiento de datos", "model.title": "Qué datos llegan al modelo",
+        "model.copy": "El modelo seleccionado puede leer las instrucciones y las filas mensuales Real pertinentes, incluidas las etiquetas de cliente, producto, país, canal u otro ámbito, junto con periodos, unidades, precios, ventas brutas, descuentos, COGS, monedas de transacción y de reporte, tipos de cambio, identidades de las fuentes y los supuestos que deben confirmarse con sus prioridades, reglas de solapamiento, bases y justificaciones. Tras la confirmación, el código determinista procesa todas las filas Real observadas dentro del ámbito: conserva las granularidades dispersas, no inventa meses-cliente ausentes y genera el Plan, el registro de aplicación, el resumen y la conciliación, que el modelo puede leer para la revisión. No hay un límite de muestreo para lo que el modelo puede leer y Vera no anonimiza ni seudonimiza los datos automáticamente. Las mismas categorías de datos pueden llegar a Codex o Cowork en la cuenta elegida por el despacho; este proceso no tiene ningún otro destino externo.",
         "footer.vera": "Todas las funciones", "footer.data": "Tratamiento de datos"
       }
     };
