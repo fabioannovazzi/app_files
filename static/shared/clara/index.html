@@ -108,65 +108,42 @@
       </div>
       <div class="function-directory">
         <article class="function-group" id="area-deliverables">
+          <span class="stream-number function-index" data-i18n="functions.deliverables.index">Area 1</span>
           <h3 data-i18n="functions.deliverables">Presentations and documents</h3>
           <a class="function-link" href="../clara-presentations/index.html?lang=en" data-function-link data-base-href="../clara-presentations/index.html">
-            <span data-i18n="functions.presentations">Presentations</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.presentations">Presentations</h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-documents/index.html?lang=en" data-function-link data-base-href="../clara-documents/index.html">
-            <span data-i18n="functions.documents">Documents</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.documents">Documents</h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-recordings">
+          <span class="stream-number function-index" data-i18n="functions.research.index">Area 2</span>
           <h3 data-i18n="functions.research">Interviews and recordings</h3>
           <a class="function-link" href="../clara-interview/index.html?lang=en" data-function-link data-base-href="../clara-interview/index.html">
-            <span data-i18n="functions.interviews">Interviews</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.interviews">Interviews</h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-transcribe/index.html?lang=en" data-function-link data-base-href="../clara-transcribe/index.html">
-            <span data-i18n="functions.transcription">Transcription</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.transcription">Transcription</h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-retail">
+          <span class="stream-number function-index" data-i18n="functions.retail.index">Area 3</span>
           <h3 data-i18n="functions.retail">Retail analysis</h3>
           <a class="function-link" href="../clara-retailer-signals/index.html?lang=en" data-function-link data-base-href="../clara-retailer-signals/index.html">
-            <span>Retailer Signals</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.retailerSignals">Compare assortment, new-product, and best-seller attributes</h4><span aria-hidden="true">↗</span>
           </a>
           <a class="function-link" href="../clara-brand-fit/index.html?lang=en" data-function-link data-base-href="../clara-brand-fit/index.html">
-            <span>Brand Fit</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.brandFit">Compare the retailer assortment with the brand catalogue</h4><span aria-hidden="true">↗</span>
           </a>
         </article>
         <article class="function-group" id="area-analysis">
+          <span class="stream-number function-index" data-i18n="functions.analysis.index">Area 4</span>
           <h3 data-i18n="functions.analysis">Business analysis</h3>
           <a class="function-link" href="../clara-data-analysis/index.html?lang=en" data-function-link data-base-href="../clara-data-analysis/index.html">
-            <span data-i18n="functions.dataAnalysis">Data analysis</span><span aria-hidden="true">↗</span>
+            <h4 data-i18n="functions.dataAnalysis">Data analysis</h4><span aria-hidden="true">↗</span>
           </a>
         </article>
-      </div>
-    </section>
-
-    <section id="workflow">
-      <div class="section-head">
-        <h2 data-i18n="workflow.title">How to use Clara</h2>
-        <p data-i18n="workflow.copy">Open the project folder in Codex, select a function, and describe the required result.</p>
-      </div>
-      <div class="method">
-        <div class="plain-list">
-          <div class="plain-row">
-            <strong data-i18n="workflow.open.title">Add the project materials</strong>
-            <span data-i18n="workflow.open.copy">Put the selected documents, presentations, data, images, notes, or recordings in the project folder.</span>
-          </div>
-          <div class="plain-row">
-            <strong data-i18n="workflow.materials.title">Describe the result</strong>
-            <span data-i18n="workflow.materials.copy">State the audience, question, requested format, and any deadline or duration.</span>
-          </div>
-          <div class="plain-row">
-            <strong data-i18n="workflow.notes.title">Identify references</strong>
-            <span data-i18n="workflow.notes.copy">Name the sources, templates, or previous files that Clara should follow.</span>
-          </div>
-          <div class="plain-row">
-            <strong data-i18n="workflow.review.title">Review the output</strong>
-            <span data-i18n="workflow.review.copy">Open the generated files, request corrections, and approve the version you intend to use.</span>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -869,6 +846,46 @@
         "install.coworkHelp": "Después, sube el archivo ZIP desde Personalizar → Plugins en Claude Cowork.",
       },
     };
+
+    const directoryNames = {
+      it: {
+        "functions.deliverables.index": "Area 1", "functions.research.index": "Area 2", "functions.retail.index": "Area 3", "functions.analysis.index": "Area 4",
+        "functions.presentations": "Creazione e revisione di presentazioni", "functions.documents": "Creazione e revisione di documenti",
+        "functions.interviews": "Preparazione e conduzione di interviste", "functions.transcription": "Trascrizione di registrazioni e note vocali",
+        "functions.retailerSignals": "Confronto degli attributi di assortimento, novità e best seller", "functions.brandFit": "Confronto tra assortimento del retailer e catalogo del brand",
+        "functions.dataAnalysis": "Analisi dei dati aziendali"
+      },
+      en: {
+        "functions.deliverables.index": "Area 1", "functions.research.index": "Area 2", "functions.retail.index": "Area 3", "functions.analysis.index": "Area 4",
+        "functions.presentations": "Create and revise presentations", "functions.documents": "Create and revise documents",
+        "functions.interviews": "Prepare and conduct interviews", "functions.transcription": "Transcribe recordings and voice notes",
+        "functions.retailerSignals": "Compare assortment, new-product, and best-seller attributes", "functions.brandFit": "Compare the retailer assortment with the brand catalogue",
+        "functions.dataAnalysis": "Analyze business data"
+      },
+      fr: {
+        "functions.deliverables.index": "Domaine 1", "functions.research.index": "Domaine 2", "functions.retail.index": "Domaine 3", "functions.analysis.index": "Domaine 4",
+        "functions.presentations": "Créer et réviser des présentations", "functions.documents": "Créer et réviser des documents",
+        "functions.interviews": "Préparer et conduire des entretiens", "functions.transcription": "Transcrire des enregistrements et notes vocales",
+        "functions.retailerSignals": "Comparer les attributs de l'assortiment, des nouveautés et des meilleures ventes", "functions.brandFit": "Comparer l'assortiment du distributeur au catalogue de la marque",
+        "functions.dataAnalysis": "Analyser les données de l'entreprise"
+      },
+      de: {
+        "functions.deliverables.index": "Bereich 1", "functions.research.index": "Bereich 2", "functions.retail.index": "Bereich 3", "functions.analysis.index": "Bereich 4",
+        "functions.presentations": "Präsentationen erstellen und überarbeiten", "functions.documents": "Dokumente erstellen und überarbeiten",
+        "functions.interviews": "Interviews vorbereiten und durchführen", "functions.transcription": "Aufnahmen und Sprachnotizen transkribieren",
+        "functions.retailerSignals": "Merkmale von Sortiment, Neuheiten und Bestsellern vergleichen", "functions.brandFit": "Händlersortiment mit dem Markenkatalog vergleichen",
+        "functions.dataAnalysis": "Unternehmensdaten analysieren"
+      },
+      es: {
+        "functions.deliverables.index": "Área 1", "functions.research.index": "Área 2", "functions.retail.index": "Área 3", "functions.analysis.index": "Área 4",
+        "functions.presentations": "Crear y revisar presentaciones", "functions.documents": "Crear y revisar documentos",
+        "functions.interviews": "Preparar y realizar entrevistas", "functions.transcription": "Transcribir grabaciones y notas de voz",
+        "functions.retailerSignals": "Comparar atributos del surtido, novedades y superventas", "functions.brandFit": "Comparar el surtido del minorista con el catálogo de la marca",
+        "functions.dataAnalysis": "Analizar datos empresariales"
+      }
+    };
+    Object.entries(directoryNames).forEach(([language, names]) => Object.assign(copy[language], names));
+
     const params = new URLSearchParams(window.location.search);
     const supportedLanguages = new Set(["en", "it", "fr", "de", "es"]);
     const languageNames = {
@@ -935,6 +952,9 @@
     document.querySelectorAll("[data-function-link]").forEach((link) => {
       const url = new URL(link.dataset.baseHref, window.location.href);
       url.searchParams.set("lang", safeLang);
+      url.searchParams.set("from", "clara");
+      const area = link.closest('[id^="area-"]')?.id;
+      if (area) url.searchParams.set("area", area);
       link.href = `${url.pathname}${url.search}${url.hash}`;
     });
     document.querySelectorAll("[data-data-handling-link]").forEach((link) => {

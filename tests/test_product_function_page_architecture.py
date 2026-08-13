@@ -119,6 +119,77 @@ def test_lucia_and_vera_share_the_research_function_pages() -> None:
         assert f'href="{href}?lang=it"' in lucia
 
 
+def test_lucia_and_vera_shared_studio_pages_are_product_neutral() -> None:
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
+
+    for page_name in ("comunicazione-professionale", "presenza-digitale-studio"):
+        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
+        configuration = re.search(
+            rf'"{page_name}"\s*:\s*\{{(?P<body>.*?)\n\s*\}},\n\s*"',
+            function_copy,
+            re.DOTALL,
+        )
+
+        assert configuration is not None
+        assert "shared: true" in configuration.group("body")
+        assert "| Mparanza</title>" in page
+        assert "| Vera</title>" not in page
+
+    for expected in (
+        'const isShared = page.shared === true;',
+        'isShared ? "Mparanza" : page.product',
+        'isShared ? ui.sharedRole : ui.productRole(page.product)',
+        'isShared ? text.name : `${page.product} · ${text.name}`',
+    ):
+        assert expected in renderer
+
+
+def test_every_function_page_gets_one_clickable_work_area_breadcrumb() -> None:
+    navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
+    navigation_css = (SHARED / "function-page-navigation.css").read_text(
+        encoding="utf-8"
+    )
+    destinations = {
+        _resolved_page(page_path, href)
+        for page_path in PRODUCT_PAGES.values()
+        for href in _directory_links(page_path.read_text(encoding="utf-8"))
+    }
+
+    for destination in destinations:
+        relative = destination.relative_to(SHARED)
+        key = relative.parent.as_posix()
+        page = destination.read_text(encoding="utf-8")
+
+        assert f'"{key}": [' in navigation, f"{key}: missing area mapping"
+        assert any(
+            loader in page
+            for loader in (
+                "product-function-page.js",
+                "function-model-data.js",
+                "function-page-navigation.js",
+            )
+        ), f"{destination}: missing breadcrumb loader"
+
+    assert 'const areaLink = document.createElement("a");' in navigation
+    assert "areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;" in navigation
+    assert "breadcrumb.append(areaLink, separator, current);" in navigation
+    assert ".function-breadcrumb a" in navigation_css
+
+
+def test_product_directories_pass_the_exact_area_to_function_pages() -> None:
+    expected_context = {
+        "vera": 'url.searchParams.set("from", "vera");',
+        "lucia": 'url.searchParams.set("from", "lucia");',
+        "clara": 'url.searchParams.set("from", "clara");',
+    }
+
+    for product, page_path in PRODUCT_PAGES.items():
+        page = page_path.read_text(encoding="utf-8")
+        assert expected_context[product] in page
+        assert 'url.searchParams.set("area", area);' in page
+
+
 def test_vera_names_the_country_section_as_area_four() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
 
@@ -154,11 +225,12 @@ def test_vera_navigation_links_to_the_four_work_areas() -> None:
         "Clienti e fascicoli",
         "Controlli e analisi",
         "Report, comunicazione e ricerca",
-        "Formati e procedure italiane",
+        "Formati, enti e procedure italiane",
         "Clients and files",
-        "UK formats and procedures",
-        "Formats et procédures genevoises",
-        "Zürcher Formate und Verfahren",
+        "Functions available for the United Kingdom",
+        "Fonctions disponibles pour Genève",
+        "Verfügbare Funktionen für Zürich",
+        "Funciones disponibles para el mercado seleccionado",
     ):
         assert label in vera
 
@@ -331,8 +403,64 @@ def test_all_product_directories_distinguish_area_headings_from_function_links()
         assert ".module-row h4" in stylesheet
         assert "font-size: clamp(1.2rem, 1.8vw, 1.5rem)" in stylesheet
 
-    assert "font-size: clamp(1.5rem, 2.8vw, 2.1rem)" in clara_css
+    assert "font-size: clamp(2rem, 4vw, 2.8rem)" in clara_css
     assert "font-size: clamp(1.05rem, 1.8vw, 1.2rem)" in clara_css
+
+
+def test_product_roots_stop_after_the_function_directory() -> None:
+    for page_path in PRODUCT_PAGES.values():
+        page = page_path.read_text(encoding="utf-8")
+        assert page.count("<section") == 2
+        assert '<section id="workflow">' not in page
+        assert "Funzioni disponibili" in page or "Available functions" in page
+
+
+def test_shared_navigation_enforces_literal_titles_and_section_labels() -> None:
+    navigation = (SHARED / "function-page-navigation.js").read_text(
+        encoding="utf-8"
+    )
+
+    for task_name in (
+        "Request documents and clarifications from the client",
+        "Prepare a legal or tax research question",
+        "Verify research sources and conclusions",
+        "Create Word reports from Excel, CSV, and PDF",
+        "Create and revise presentations",
+    ):
+        assert task_name in (
+            navigation
+            + PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
+            + PRODUCT_PAGES["lucia"].read_text(encoding="utf-8")
+            + PRODUCT_PAGES["clara"].read_text(encoding="utf-8")
+            + (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+        )
+
+    for literal_label in (
+        "Inputs and result",
+        "Steps",
+        "Video",
+        "Starting prompt",
+        "Related function",
+        "Technical details",
+    ):
+        assert literal_label in navigation
+
+    for vague_label in ("Guarda", "Da dove parte"):
+        assert vague_label not in navigation
+
+
+def test_shared_research_pages_are_product_neutral_at_render_time() -> None:
+    navigation = (SHARED / "function-page-navigation.js").read_text(
+        encoding="utf-8"
+    )
+
+    for expected in (
+        'key !== "prompt-optimizer" && key !== "deep-research-validator"',
+        "sharedFunctionNouns",
+        'document.title = `${title} | Mparanza`;',
+        'node.textContent.replace(/\\bVera\\b/g, replacement)',
+    ):
+        assert expected in navigation
 
 
 def test_function_pages_use_specific_data_copy_for_three_functions_and_placeholders_elsewhere() -> None:

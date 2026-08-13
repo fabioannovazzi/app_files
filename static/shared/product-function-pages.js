@@ -267,6 +267,7 @@
     },
     "comunicazione-professionale": {
       product: "Vera",
+      shared: true,
       defaultLanguage: "it",
       copy: {
         it: {
@@ -343,6 +344,7 @@
     },
     "presenza-digitale-studio": {
       product: "Vera",
+      shared: true,
       defaultLanguage: "it",
       copy: {
         it: {
@@ -946,4 +948,67 @@
       },
     },
   };
+
+  const clearNames = {
+    "dati-fiscali-strutturati": {
+      it: "Estrazione dei dati fiscali dai documenti", en: "Extract tax data from documents", fr: "Extraire les données fiscales des documents", de: "Steuerdaten aus Dokumenten extrahieren", es: "Extraer datos fiscales de documentos",
+    },
+    "email-cliente": {
+      it: "Richiesta di documenti e chiarimenti al cliente", en: "Request documents and clarifications from the client", fr: "Demander des documents et des précisions au client", de: "Unterlagen und Rückfragen beim Mandanten anfordern", es: "Solicitar documentos y aclaraciones al cliente",
+    },
+    "avviso-intake": {
+      it: "Esame iniziale di avvisi e cartelle fiscali", en: "Initial review of tax and collection notices", fr: "Examen initial des avis fiscaux et actes de recouvrement", de: "Erste Prüfung von Steuerbescheiden und Zahlungsaufforderungen", es: "Examen inicial de notificaciones y requerimientos fiscales",
+    },
+    "fatture-xml-check": {
+      it: "Controllo FatturaPA XML", en: "FatturaPA XML check", fr: "Contrôle XML FatturaPA", de: "FatturaPA-XML-Prüfung", es: "Control XML FatturaPA",
+    },
+    "report-enti-locali": {
+      it: "Preparazione del report finanziario per enti locali", en: "Prepare a financial report for Italian local authorities", fr: "Préparer un rapport financier pour les collectivités locales italiennes", de: "Finanzbericht für italienische Kommunen erstellen", es: "Preparar un informe financiero para entidades locales italianas",
+    },
+    "variance-analysis": {
+      it: "Analisi degli scostamenti", en: "Variance analysis", fr: "Analyse des écarts", de: "Abweichungsanalyse", es: "Análisis de desviaciones",
+    },
+    "bilancio-xbrl-it": {
+      it: "Preparazione del bilancio OIC e XBRL", en: "Prepare OIC financial statements and XBRL filing", fr: "Préparer les comptes annuels OIC et le dépôt XBRL", de: "OIC-Jahresabschluss und XBRL-Einreichung erstellen", es: "Preparar estados financieros OIC y la presentación XBRL",
+    },
+    "bandi-agevolazioni": {
+      it: "Ricerca di agevolazioni e preparazione della pratica", en: "Search for grants and prepare the application", fr: "Rechercher des aides et préparer le dossier", de: "Fördermittel suchen und Antrag vorbereiten", es: "Buscar ayudas y preparar la solicitud",
+    },
+    "comunicazione-professionale": {
+      it: "Valutazione e preparazione delle comunicazioni dello studio", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
+    },
+    "presenza-digitale-studio": {
+      it: "Creazione o aggiornamento del sito dello studio", en: "Create or update the firm website", fr: "Créer ou mettre à jour le site du cabinet", de: "Kanzleiwebsite erstellen oder aktualisieren", es: "Crear o actualizar el sitio web del despacho",
+    },
+    "apertura-pratica": {
+      it: "Preparazione del fascicolo di una nuova pratica", en: "Prepare the file for a new matter", fr: "Préparer le dossier d'une nouvelle affaire", de: "Akte für ein neues Mandat vorbereiten", es: "Preparar el expediente de un nuevo asunto",
+    },
+    "clara-presentations": {
+      it: "Creazione e revisione di presentazioni", en: "Create and revise presentations", fr: "Créer et réviser des présentations", de: "Präsentationen erstellen und überarbeiten", es: "Crear y revisar presentaciones",
+    },
+    "clara-retailer-signals": {
+      it: "Confronto degli attributi di assortimento, novità e best seller", en: "Compare assortment, new-product, and best-seller attributes", fr: "Comparer les attributs de l'assortiment, des nouveautés et des meilleures ventes", de: "Merkmale von Sortiment, Neuheiten und Bestsellern vergleichen", es: "Comparar atributos del surtido, novedades y superventas",
+    },
+    "clara-brand-fit": {
+      it: "Confronto tra assortimento del retailer e catalogo del brand", en: "Compare the retailer assortment with the brand catalogue", fr: "Comparer l'assortiment du distributeur au catalogue de la marque", de: "Händlersortiment mit dem Markenkatalog vergleichen", es: "Comparar el surtido del minorista con el catálogo de la marca",
+    },
+    "clara-interview": {
+      it: "Preparazione e conduzione di interviste", en: "Prepare and conduct interviews", fr: "Préparer et conduire des entretiens", de: "Interviews vorbereiten und durchführen", es: "Preparar y realizar entrevistas",
+    },
+    "clara-transcribe": {
+      it: "Trascrizione di registrazioni e note vocali", en: "Transcribe recordings and voice notes", fr: "Transcrire des enregistrements et notes vocales", de: "Aufnahmen und Sprachnotizen transkribieren", es: "Transcribir grabaciones y notas de voz",
+    },
+    "clara-documents": {
+      it: "Creazione e revisione di documenti", en: "Create and revise documents", fr: "Créer et réviser des documents", de: "Dokumente erstellen und überarbeiten", es: "Crear y revisar documentos",
+    },
+    "clara-data-analysis": {
+      it: "Analisi dei dati aziendali", en: "Analyze business data", fr: "Analyser les données de l'entreprise", de: "Unternehmensdaten analysieren", es: "Analizar datos empresariales",
+    },
+  };
+
+  Object.entries(clearNames).forEach(([page, names]) => {
+    Object.entries(names).forEach(([language, name]) => {
+      window.MPARANZA_FUNCTION_PAGES[page].copy[language].name = name;
+    });
+  });
 })();
