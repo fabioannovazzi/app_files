@@ -173,7 +173,10 @@
       <section class="function-model-data" data-model-data-workflow="${pageKey}" data-model-data-status="${text.modelDataStatus}" aria-labelledby="${pageKey}-model-data-title">
         <div class="function-model-data__head">
           <div class="function-model-data__heading"><p class="function-model-data__label">${ui.modelDataLabel}</p><h2 id="${pageKey}-model-data-title">${ui.modelDataTitle}</h2></div>
-          <p class="function-model-data__copy">${text.modelData}</p>
+          <div class="function-model-data__body">
+            ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
+            <p class="function-model-data__copy">${text.modelData}</p>
+          </div>
         </div>
       </section>
     </main>

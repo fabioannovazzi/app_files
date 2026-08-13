@@ -49,6 +49,13 @@
   font: 400 1.06rem/1.58 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
 }
 
+.function-model-data__conclusion {
+  max-width: 28ch;
+  margin: 0 0 14px;
+  color: var(--model-data-ink);
+  font: 620 var(--function-subsection-title-size, 1.125rem) / 1.25 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+}
+
 @media (max-width: 760px) {
   .function-model-data {
     width: min(100vw - 28px, var(--function-content-width, 1120px));
