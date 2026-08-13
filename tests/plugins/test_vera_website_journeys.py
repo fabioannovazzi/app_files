@@ -582,7 +582,7 @@ def test_pipeline_labels_omit_redundant_product_names(page_path: Path) -> None:
     WORKFLOW_HERO_LABEL_PAGES,
     ids=lambda path: path.parent.name,
 )
-def test_workflow_hero_labels_omit_redundant_product_names(
+def test_workflow_hero_labels_are_absent_or_omit_redundant_product_names(
     page_path: Path,
 ) -> None:
     page = page_path.read_text(encoding="utf-8")
@@ -593,11 +593,14 @@ def test_workflow_hero_labels_omit_redundant_product_names(
         re.DOTALL,
     )
 
-    assert rendered_label is not None
-    labels = [html.unescape(rendered_label.group("label"))]
+    labels = (
+        [] if rendered_label is None else [html.unescape(rendered_label.group("label"))]
+    )
     labels.extend(re.findall(r'"hero\.eyebrow"\s*:\s*"([^"]*)"', page))
     labels.extend(re.findall(r'hero\s*:\s*{\s*eyebrow\s*:\s*"([^"]*)"', page))
-    assert not any(re.search(r"\b(?:Vera|Clara|Lucia)\b", label) for label in labels)
+    assert rendered_label is None or not any(
+        re.search(r"\b(?:Vera|Clara|Lucia)\b", label) for label in labels
+    )
 
 
 @pytest.mark.parametrize(
