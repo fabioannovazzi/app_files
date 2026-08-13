@@ -92,6 +92,15 @@ def test_vera_names_the_italian_section_without_for_italy_copy() -> None:
     assert "Funzioni disponibili per l’Italia" not in vera
 
 
+def test_vera_country_navigation_uses_direct_place_names() -> None:
+    vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
+
+    for label in ("Italia", "United Kingdom", "Genève", "Zürich", "Mercado"):
+        assert f'"nav.jurisdiction": "{label}"' in vera
+    for obsolete in ("Per l’Italia", "For the UK", "Pour Genève", "Für Zürich"):
+        assert obsolete not in vera
+
+
 def test_function_pages_use_specific_data_copy_for_three_functions_and_placeholders_elsewhere() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     placeholder_script = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
