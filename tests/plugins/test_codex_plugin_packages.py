@@ -3338,7 +3338,8 @@ def test_vera_page_shows_only_relevant_jurisdiction_specializations() -> None:
     assert italy.count('data-jurisdiction-item="en"') == 1
     assert italy.count('data-jurisdiction-item="fr"') == 1
     assert italy.count('data-jurisdiction-item="de"') == 1
-    assert core.count('<article class="workstream">') == 3
+    for area_id in ("area-clients", "area-accounting", "area-outputs"):
+        assert f'<article class="workstream" id="{area_id}">' in core
     assert 'id="modello"' not in page
     assert 'id="core"' in page
     assert 'id="jurisdiction"' in page
@@ -4008,8 +4009,8 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
     ) in page
     main = page[page.index("<main>") : page.index("</main>")]
     assert main.rstrip().endswith("</section>")
-    assert main.rindex('<section class="section-block"') == main.index(
-        '<section class="section-block" id="model-data"'
+    assert main.rindex('<section class="function-model-data"') == main.index(
+        '<section class="function-model-data" id="model-data"'
     )
     for snippet in (
         "Quali dati arrivano al modello",

@@ -167,10 +167,10 @@
           <code class="pf-prompt">${text.prompt}</code>
         </div>
       </section>
-      <section class="pf-section pf-model-data" data-model-data-workflow="${pageKey}" data-model-data-status="${text.modelDataStatus}">
-        <div class="pf-section__head">
-          <div><p class="pf-section__label">${ui.modelDataLabel}</p><h2>${ui.modelDataTitle}</h2></div>
-          <p class="pf-section__copy">${text.modelData}</p>
+      <section class="function-model-data" data-model-data-workflow="${pageKey}" data-model-data-status="${text.modelDataStatus}" aria-labelledby="${pageKey}-model-data-title">
+        <div class="function-model-data__head">
+          <div class="function-model-data__heading"><p class="function-model-data__label">${ui.modelDataLabel}</p><h2 id="${pageKey}-model-data-title">${ui.modelDataTitle}</h2></div>
+          <p class="function-model-data__copy">${text.modelData}</p>
         </div>
       </section>
     </main>

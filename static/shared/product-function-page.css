@@ -1,3 +1,5 @@
+@import url("./function-model-data.css");
+
 :root {
   --pf-paper: #ffffff;
   --pf-ink: #002060;
@@ -288,14 +290,6 @@ a {
   color: var(--pf-ink);
   font: 500 0.94rem/1.6 ui-monospace, "SFMono-Regular", Consolas, monospace;
   white-space: pre-wrap;
-}
-
-.pf-model-data {
-  border-bottom: 0;
-}
-
-.pf-model-data[data-model-data-status="placeholder"] .pf-section__copy {
-  font-style: normal;
 }
 
 .pf-footer {
