@@ -80,6 +80,18 @@ def test_lucia_and_vera_share_the_research_function_pages() -> None:
         assert f'href="{href}?lang=it"' in lucia
 
 
+def test_vera_names_the_italian_section_without_for_italy_copy() -> None:
+    vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
+
+    for text in (
+        'data-i18n="jurisdiction.index">Italia</span>',
+        'data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h2>',
+        "La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.",
+    ):
+        assert text in vera
+    assert "Funzioni disponibili per l’Italia" not in vera
+
+
 def test_function_pages_use_specific_data_copy_for_three_functions_and_placeholders_elsewhere() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     placeholder_script = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
