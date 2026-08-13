@@ -19,7 +19,7 @@
       "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
       "purpose": "Prepare the selected Vera module's published core or explicitly selected optional Python requirements in an isolated virtual environment on first use or after its requirement fingerprint or Python platform changes",
       "content": "Package names and version constraints from the selected published module requirements files, plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by the managed runtime.",
-      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. Package-index request-log retention is controlled by the configured index and is outside Vera's control.",
+      "retention": "Downloaded packages are stored in a fingerprinted user-scoped local Vera data directory until that local cache is removed. In a sandboxed Codex session the manager uses a stable private directory beneath the operating system's per-user temporary location so setup and subsequent execution resolve the same writable target. Package-index request-log retention is controlled by the configured index and is outside Vera's control.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -28,6 +28,7 @@
       ],
       "controls": [
         "The manager installs only the selected module's published default requirements or explicit package-relative optional requirements graph and never derives package names from prompts, client files, or generated content.",
+        "When Codex blocks package-index access, the manager emits a bounded permission-required signal so the same declared-requirements command can be retried through Codex host network approval; it does not attempt an undeclared package or alternate installer.",
         "The target is keyed by the recursive requirements fingerprint, Python ABI, and operating-system platform and is validated before use.",
         "Each Vera module has a separate virtual environment, preventing incompatible requirement graphs or base-interpreter packages from being combined; the optional shared OCR runtime remains separate and requires its existing explicit approval."
       ]
@@ -45,7 +46,7 @@
     },
     {
       "id": "user-scoped-runtime-isolation",
-      "control": "Managed packages are written outside plugin source and client workspaces to one fingerprinted virtual environment for the selected module and current Python platform.",
+      "control": "Managed packages are written outside plugin source and client workspaces to one fingerprinted virtual environment for the selected module and current Python platform. The location is write-probed before use and remains user-private when Codex requires the operating system's per-user temporary directory.",
       "implemented_by": [
         "scripts/managed_python_runtime.py",
         "scripts/_managed_python_runtime.py"
@@ -57,6 +58,6 @@
     "reviewed_at": "2026-08-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "3a9aa58b291f5fc125b5ebfd3427f82488ae0a290a93ac2f6bb994af39939922"
+    "source_fingerprint": "1b86eb96edbbc5cca31cfb76a78bec24515f71d014ccda80bc61c01dde163643"
   }
 }

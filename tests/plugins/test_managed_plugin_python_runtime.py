@@ -3,6 +3,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import os
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -38,6 +39,12 @@ def test_clara_and_vera_share_the_same_runtime_implementation() -> None:
 def make_packaged_component(root: Path) -> Path:
     scripts = root / "scripts"
     scripts.mkdir(parents=True)
+    manifest_dir = root / ".codex-plugin"
+    manifest_dir.mkdir(parents=True)
+    (manifest_dir / "plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.129"}) + "\n",
+        encoding="utf-8",
+    )
     (scripts / "managed_python_runtime.py").write_bytes(VERA_MANAGER.read_bytes())
     (scripts / "_managed_python_runtime.py").write_bytes(RUNTIME_SOURCE.read_bytes())
     (root / "components.json").write_text(
@@ -161,6 +168,42 @@ def test_optional_requirements_cannot_escape_component_root(tmp_path: Path) -> N
     )
 
 
+def test_included_requirements_cannot_escape_component_root(tmp_path: Path) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    component = make_packaged_component(plugin_root)
+    outside_requirements = component.parent / "outside.txt"
+    outside_requirements.write_text("outside-dependency==1.0\n", encoding="utf-8")
+    (component / "requirements.txt").write_text(
+        "-r ../outside.txt\n",
+        encoding="utf-8",
+    )
+    selection = runtime.select_runtime(plugin_root, "studio-archive")
+
+    with pytest.raises(ValueError) as raised:
+        runtime.requirements_fingerprint(selection)
+
+    assert "Included requirements file is outside component" in str(raised.value)
+
+
+def test_requirement_fingerprint_is_stable_between_source_and_package_layouts(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    source_vera = tmp_path / "source" / "vera"
+    source_component = make_packaged_component(source_vera)
+    sibling_component = source_vera.parent / "studio-archive"
+    source_component.rename(sibling_component)
+    packaged_vera = tmp_path / "package" / "vera"
+    make_packaged_component(packaged_vera)
+    source_selection = runtime.select_runtime(source_vera, "studio-archive")
+    packaged_selection = runtime.select_runtime(packaged_vera, "studio-archive")
+
+    source_fingerprint = runtime.requirements_fingerprint(source_selection)
+
+    assert source_fingerprint == runtime.requirements_fingerprint(packaged_selection)
+
+
 def test_first_setup_prevents_nested_google_probe_from_crashing(
     tmp_path: Path,
 ) -> None:
@@ -227,6 +270,107 @@ def test_runtime_target_is_partitioned_by_windows_platform(
     target = runtime.dependency_target(selection, tmp_path / "plugin-data")
 
     assert f"{sys.implementation.cache_tag}-win-amd64" in target.parts
+
+
+def test_codex_runtime_uses_stable_private_temp_data_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    plugin_root.mkdir()
+    codex_temp = tmp_path / "codex-temp"
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(codex_temp))
+
+    result = runtime.plugin_data_dir(plugin_root)
+
+    assert result == (
+        codex_temp / "mparanza-managed-python" / f"uid-{os.getuid()}" / "vera"
+    )
+    assert stat.S_IMODE(result.stat().st_mode) == 0o700
+    assert list(result.glob(".mparanza-write-probe-*")) == []
+
+
+def test_marketplace_version_folder_uses_stable_manifest_plugin_name(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "marketplace" / "vera" / "0.1.129"
+    make_packaged_component(plugin_root)
+    codex_temp = tmp_path / "codex-temp"
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(codex_temp))
+
+    result = runtime.plugin_data_dir(plugin_root)
+
+    assert result.name == "vera"
+    assert "0.1.129" not in result.parts
+
+
+def test_network_resolution_failure_requests_codex_host_approval(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+
+    def network_blocked_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+            return subprocess.CompletedProcess(command, 0, "", "")
+        return subprocess.CompletedProcess(
+            command,
+            1,
+            "",
+            "NameResolutionError: Failed to resolve 'pypi.org'",
+        )
+
+    ready, _, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "plugin-data",
+        runner=network_blocked_runner,
+    )
+
+    assert ready is False
+    assert detail.startswith(f"{runtime.NETWORK_PERMISSION_REQUIRED}:")
+    assert "host network access approval" in detail
+
+
+def test_invalid_distribution_is_not_mislabeled_as_network_denial(
+    tmp_path: Path,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    make_packaged_component(plugin_root)
+    package_error = "ERROR: No matching distribution found for unavailable-demo"
+
+    def invalid_distribution_runner(
+        command: list[str], **_: object
+    ) -> subprocess.CompletedProcess[str]:
+        if command[1:3] == ["-m", "venv"]:
+            create_fake_virtualenv(Path(command[-1]))
+            return subprocess.CompletedProcess(command, 0, "", "")
+        return subprocess.CompletedProcess(command, 1, "", package_error)
+
+    ready, _, detail = runtime.ensure_runtime(
+        plugin_root,
+        "studio-archive",
+        data_dir=tmp_path / "plugin-data",
+        runner=invalid_distribution_runner,
+    )
+
+    assert ready is False
+    assert detail == package_error
+    assert runtime.NETWORK_PERMISSION_REQUIRED not in detail
 
 
 def test_ready_target_is_reused_without_reinstalling(tmp_path: Path) -> None:

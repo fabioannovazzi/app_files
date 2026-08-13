@@ -39,7 +39,14 @@ Choose the route before resolving any module:
    --module studio-archive --requirements
    requirements-portal-recorder.txt`. This command must install the selected
    optional requirements into CR-19's managed runtime before it validates
-   them; a missing-Playwright result is not a completed preflight. Start the
+   them; a missing-Playwright result is not a completed preflight. If setup
+   reports `MPARANZA_NETWORK_PERMISSION_REQUIRED`, immediately rerun that exact
+   command with Codex host network approval (escalated sandbox permission).
+   This approval may retrieve only the published requirement file selected by
+   the command. Do not stop with a missing-Playwright diagnosis, ask the
+   operator to install it manually, or start the recorder until this approved
+   retry succeeds. If the operator denies the approval, report that denial as
+   the blocker. Start the
    PTY with `python <vera-root>/scripts/managed_python_runtime.py --module
    studio-archive --requirements requirements-portal-recorder.txt run
    scripts/record_agenzia_invoice_flow.py --output-dir
