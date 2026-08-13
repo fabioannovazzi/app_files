@@ -74,7 +74,7 @@ def _prompt_contract_review() -> dict[str, Any]:
 
 def _claims_review(document_type: str) -> dict[str, Any]:
     return {
-        "schema_version": "2.0",
+        "schema_version": "2.1",
         "language": "en",
         "validation_objective": "question_to_validated_answer",
         "coverage_review": {
@@ -125,6 +125,11 @@ def _claims_review(document_type: str) -> dict[str, Any]:
                         "source_ref": "source-001",
                         "identity_status": "matches_cited_source",
                         "identity_analysis": "This is the authority cited in the answer.",
+                        "authority_relation": "official_full_text",
+                        "official_text_access": "obtained",
+                        "text_fidelity": "verified_against_official_text",
+                        "access_analysis": "The official full text was obtained directly.",
+                        "limitations": [],
                         "cited_passage": "The response must be filed within 30 days.",
                     }
                 ],

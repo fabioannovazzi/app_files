@@ -175,6 +175,11 @@ def _claim_review(
                 "source_ref": source_ref,
                 "identity_status": "matches_cited_source",
                 "identity_analysis": "The source reference identifies the cited authority.",
+                "authority_relation": "official_full_text",
+                "official_text_access": "obtained",
+                "text_fidelity": "verified_against_official_text",
+                "access_analysis": "The official full text was obtained directly.",
+                "limitations": [],
                 "cited_passage": cited_passage,
             }
         ],
@@ -220,6 +225,7 @@ def _claims_review(
     coverage_scope: str = "all_material_claims",
     document_revision_status: str = "not_required",
     overall_outcome: str | None = None,
+    residual_uncertainties: list[str] | None = None,
 ) -> dict[str, object]:
     resolved_outcome = (
         overall_outcome
@@ -232,7 +238,7 @@ def _claims_review(
         }[document_revision_status]
     )
     return {
-        "schema_version": "2.0",
+        "schema_version": "2.1",
         "language": language,
         "validation_objective": "question_to_validated_answer",
         "coverage_review": {
@@ -274,7 +280,7 @@ def _claims_review(
         "overall_assessment": {
             "outcome": resolved_outcome,
             "analysis": f"The recorded overall outcome is {resolved_outcome}.",
-            "residual_uncertainties": [],
+            "residual_uncertainties": list(residual_uncertainties or []),
             "professional_review_items": [],
         },
         "document_revision": {
@@ -1292,6 +1298,143 @@ def test_exact_passage_is_not_searched_in_a_different_source() -> None:
     assert audit["source_identity_attention_claim_indices"] == [1]
 
 
+def test_historical_reproduction_keeps_support_and_discloses_fidelity_limit() -> None:
+    package_mod = load_script(
+        "deep_research_validator_historical_reproduction",
+        "package_validation.py",
+    )
+    claim = _claim_review(
+        "The historical decision states the cited legal principle.",
+        cited_passage="The cited legal principle applies.",
+    )
+    source_checks = claim["source_checks"]
+    assert isinstance(source_checks, list)
+    source_checks[0].update(
+        {
+            "authority_relation": "non_institutional_reproduction",
+            "official_text_access": "restricted_or_gated_archive",
+            "text_fidelity": "corroborated_not_text_verified",
+            "access_analysis": (
+                "The decision identifier and substance were corroborated, but the "
+                "official historical archive required authentication."
+            ),
+            "limitations": ["Fidelity to the official full text was not verified."],
+        }
+    )
+    review = _claims_review(
+        [claim],
+        residual_uncertainties=[
+            "Fidelity of the consulted reproduction to the official full text was not verified."
+        ],
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "The cited legal principle applies.",
+                }
+            ]
+        },
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_complete"
+    assert audit["delivery_readiness"] == "reviewed_answer_ready"
+    assert audit["source_fidelity_limited_claim_indices"] == [1]
+    assert audit["evidence_limited_claim_indices"] == []
+    assert review["claims"][0]["support"]["status"] == "supported"
+    assert review["claims"][0]["reasoning"]["status"] == "sound"
+
+
+@pytest.mark.parametrize(
+    ("include_source_limitation", "include_overall_uncertainty", "expected_error"),
+    [
+        (
+            False,
+            True,
+            "unverified_text_fidelity_requires_disclosed_limitation",
+        ),
+        (
+            True,
+            False,
+            "source_fidelity_limit_requires_residual_uncertainty",
+        ),
+    ],
+)
+def test_historical_reproduction_requires_explicit_fidelity_disclosure(
+    include_source_limitation: bool,
+    include_overall_uncertainty: bool,
+    expected_error: str,
+) -> None:
+    package_mod = load_script(
+        f"deep_research_validator_fidelity_disclosure_{expected_error}",
+        "package_validation.py",
+    )
+    claim = _claim_review("The historical decision states the rule.")
+    source_checks = claim["source_checks"]
+    assert isinstance(source_checks, list)
+    source_checks[0].update(
+        {
+            "authority_relation": "non_institutional_reproduction",
+            "official_text_access": "public_archive_outside_window",
+            "text_fidelity": "corroborated_not_text_verified",
+            "access_analysis": "The free official portal has a documented rolling window.",
+            "limitations": (
+                ["Fidelity to the official full text was not verified."]
+                if include_source_limitation
+                else []
+            ),
+        }
+    )
+    review = _claims_review(
+        [claim],
+        residual_uncertainties=(
+            ["Official-text fidelity remains unverified."]
+            if include_overall_uncertainty
+            else []
+        ),
+    )
+
+    audit = package_mod.build_audit(
+        {"character_count": 40, "urls": []},
+        {
+            "sources": [
+                {
+                    "source_id": "source-001",
+                    "status": "available",
+                    "excerpt": "The historical decision states the rule.",
+                }
+            ]
+        },
+        review,
+        _answer_contract(generation_route="codex_direct"),
+    )
+
+    assert audit["record_integrity_status"] == "record_incomplete"
+    assert expected_error in {error["error"] for error in audit["consistency_errors"]}
+
+
+def test_semantic_eval_corpus_covers_rolling_archive_false_inference() -> None:
+    corpus = json.loads(
+        (PLUGIN_ROOT / "evals" / "semantic_validation_cases.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    cases = {case["id"]: case for case in corpus["cases"]}
+
+    historical = cases["historical-decision-outside-rolling-public-window"]
+    assert historical["expected_support"] == "supported"
+    assert historical["expected_text_fidelity"] == ("corroborated_not_text_verified")
+    assert cases["no-result-does-not-prove-nonexistence"]["expected_support"] == (
+        "not_supported"
+    )
+
+
 def test_exact_overlap_does_not_override_semantic_contradiction() -> None:
     package_mod = load_script(
         "deep_research_validator_negation_boundary",
@@ -1808,6 +1951,9 @@ def test_static_page_and_skill_match_plugin_contract() -> None:
         assert snippet in page
 
     assert "must not make direct OpenAI API calls" in skill
+    assert "rolling or access-restricted public portal" in skill
+    assert "nonexistent" in skill
+    assert "corroborated_not_text_verified" in skill
     assert "Keep the improvement note local to chat or run artifacts." in skill
     assert "validate_deep_research_review" in skill
     assert "render_deep_research_review" in skill
