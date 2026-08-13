@@ -3088,6 +3088,43 @@ def test_new_client_page_describes_one_connected_client_journey() -> None:
         assert stale_snippet not in page
 
 
+def test_new_client_page_explains_which_private_data_reaches_the_model() -> None:
+    page = (ROOT / "static" / "shared" / "new-client" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+        'id="model-data" data-model-data-workflow="new-client" '
+        'data-model-data-status="relevant"'
+    ) in page
+    main = page[page.index('<main class="page-shell"') : page.index("</main>")]
+    assert main.rstrip().endswith("</section>")
+    for snippet in (
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Welche Daten das Modell erhält",
+        "Qué datos recibe el modelo",
+        "codice fiscale e partita IVA",
+        "dati dei documenti di identità",
+        "rappresentanti e titolari effettivi",
+        "Non sono anonimizzati automaticamente",
+        "Cowork può leggere direttamente i file collegati",
+    ):
+        assert snippet in page
+    for key in (
+        "model.title",
+        "model.local.copy",
+        "model.files.copy",
+        "model.relationship.copy",
+        "model.runtime.copy",
+        "model.identifiers.title",
+        "model.note",
+    ):
+        assert f'data-i18n="{key}"' in page
+        assert page.count(f'"{key}":') == 5
+
+
 SHARED_PRODUCT_PAGE_PATHS = {
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/prompt-optimizer/index.html"),
