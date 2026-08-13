@@ -739,6 +739,14 @@ def _section_markup(page: str, section_id: str) -> str:
     return page[section_start:section_end]
 
 
+def _article_markup(page: str, article_id: str) -> str:
+    marker = f'id="{article_id}"'
+    marker_index = page.index(marker)
+    article_start = page.rfind("<article", 0, marker_index)
+    article_end = page.index("</article>", marker_index) + len("</article>")
+    return page[article_start:article_end]
+
+
 def _catalog_workflow_names(catalog: str, heading: str, next_heading: str) -> set[str]:
     section_start = catalog.index(f"## {heading}")
     section_end = catalog.index(f"## {next_heading}", section_start)
@@ -776,10 +784,18 @@ def test_vera_hub_directory_covers_the_registered_customer_workflows() -> None:
 def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     page = (SHARED_ROOT / "vera" / "index.html").read_text(encoding="utf-8")
     core = _section_markup(page, "core")
-    jurisdiction = _section_markup(page, "jurisdiction")
-    expected_core_module_count = 24
+    jurisdiction = _article_markup(page, "jurisdiction")
+    common_workstreams = core.replace(jurisdiction, "")
+    expected_common_module_count = 24
+    expected_jurisdiction_module_count = 10
 
-    assert core.count('class="module-row"') == expected_core_module_count
+    assert core.count('class="module-row"') == (
+        expected_common_module_count + expected_jurisdiction_module_count
+    )
+    assert (
+        jurisdiction.count('class="module-row"')
+        == expected_jurisdiction_module_count
+    )
     assert core.count('data-primary-workflow-link="') == 2
     assert jurisdiction.count('data-jurisdiction-item="it"') == 7
     assert jurisdiction.count('data-jurisdiction-item="en"') == 1
@@ -822,13 +838,21 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     ):
         assert f'href="{expected_href}"' in jurisdiction
 
-    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in core
-    assert 'data-jurisdiction-item="it"' in core
-    assert 'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h3>' in core
-    assert "Controllo scritture · FatturaPA" not in core
+    assert 'data-vera-subordinate-workflow="fatture-xml-check"' in common_workstreams
+    assert 'data-jurisdiction-item="it"' in common_workstreams
+    assert (
+        'data-i18n="module.newClient.includes.xml">Controllo FatturaPA XML</h4>'
+        in common_workstreams
+    )
+    assert "Controllo scritture · FatturaPA" not in common_workstreams
     assert "FatturaPA" in jurisdiction
-    assert 'href="#core"' in page
-    assert 'href="#jurisdiction"' in page
+    for area_href in (
+        "#area-clients",
+        "#area-accounting",
+        "#area-outputs",
+        "#jurisdiction",
+    ):
+        assert f'href="{area_href}"' in page
     assert page.index('id="core"') < page.index('id="jurisdiction"')
     assert 'href="#video"' not in page
     assert 'id="video"' not in page

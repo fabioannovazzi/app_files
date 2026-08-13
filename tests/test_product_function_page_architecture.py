@@ -87,8 +87,9 @@ def test_vera_names_the_country_section_as_area_four() -> None:
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
 
     for text in (
+        '<article class="workstream" id="jurisdiction" data-jurisdiction-section hidden>',
         'data-i18n="jurisdiction.index">Area 4</span>',
-        'data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h2>',
+        'data-i18n="jurisdiction.title">Formati, enti e procedure italiane</h3>',
         "La sezione raccoglie le funzioni che dipendono da formati, enti o norme italiane.",
         '"jurisdiction.index": "Area 4"',
         '"jurisdiction.index": "Domaine 4"',
@@ -96,6 +97,7 @@ def test_vera_names_the_country_section_as_area_four() -> None:
         '"jurisdiction.index": "Área 4"',
     ):
         assert text in vera
+    assert "country-pack-head" not in vera
     assert "Funzioni disponibili per l’Italia" not in vera
 
 
