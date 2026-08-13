@@ -131,6 +131,129 @@ def test_vera_navigation_links_to_the_four_work_areas() -> None:
     assert "@media (max-width: 1080px)" in navigation_css
 
 
+def test_function_page_menus_use_literal_section_and_destination_labels() -> None:
+    common_journey_pages = (
+        "check-entries",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "report-builder",
+        "riconciliazione-partite",
+    )
+    common_labels = {
+        "nav.overview": (
+            "Sintesi",
+            "Summary",
+            "Synthèse",
+            "Zusammenfassung",
+            "Resumen",
+        ),
+        "nav.workflow": ("Passaggi", "Steps", "Étapes", "Schritte", "Pasos"),
+        "nav.proof": ("Video", "Video", "Vidéo", "Video", "Vídeo"),
+    }
+    specific_labels = {
+        ("archive-organization", "nav.journey"): (
+            "Passaggi",
+            "Steps",
+            "Étapes",
+            "Schritte",
+            "Pasos",
+        ),
+        ("new-client", "nav.journey"): (
+            "Passaggi",
+            "Steps",
+            "Étapes",
+            "Schritte",
+            "Pasos",
+        ),
+        ("previdenza-inps", "nav.workflow"): (
+            "Passaggi",
+            "Steps",
+            "Étapes",
+            "Schritte",
+            "Pasos",
+        ),
+        ("registro-imprese-sari", "nav.workflow"): (
+            "Passaggi",
+            "Steps",
+            "Étapes",
+            "Schritte",
+            "Pasos",
+        ),
+        ("check-entries", "nav.next"): (
+            "Campionamento",
+            "Journal sampling",
+            "Échantillonnage du journal",
+            "Journalstichprobe",
+            "Muestreo del diario",
+        ),
+        ("journal-sampling", "nav.next"): (
+            "Controllo scritture",
+            "Check entries",
+            "Contrôle des écritures",
+            "Buchungen prüfen",
+            "Comprobar asientos",
+        ),
+        ("journal-bank-reconciliation", "nav.next"): (
+            "Partite aperte",
+            "Open items",
+            "Postes ouverts",
+            "Offene Posten",
+            "Partidas abiertas",
+        ),
+        ("riconciliazione-partite", "nav.next"): (
+            "Banca e contabilità",
+            "Bank and accounting",
+            "Banque et comptabilité",
+            "Bank und Buchhaltung",
+            "Banco y contabilidad",
+        ),
+        ("report-builder", "nav.next"): (
+            "Funzioni collegate",
+            "Related functions",
+            "Fonctions associées",
+            "Verknüpfte Funktionen",
+            "Funciones relacionadas",
+        ),
+    }
+
+    for page_name in common_journey_pages:
+        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
+        for key, labels in common_labels.items():
+            for label in labels:
+                assert re.search(
+                    rf'"{re.escape(key)}"\s*:\s*"{re.escape(label)}"', page
+                )
+            assert re.search(
+                rf'data-journey="{re.escape(key)}"[^>]*>{re.escape(labels[0])}</a>',
+                page,
+            )
+
+    for (page_name, key), labels in specific_labels.items():
+        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
+        for label in labels:
+            assert re.search(
+                rf'"{re.escape(key)}"\s*:\s*"{re.escape(label)}"', page
+            )
+        assert re.search(
+            rf'data-(?:i18n|journey)="{re.escape(key)}"[^>]*>'
+            rf'{re.escape(labels[0])}</a>',
+            page,
+        )
+
+    concordato = (SHARED / "concordato-plan-review" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    for label in (
+        "File e data",
+        "File and date",
+        "Fichier et date",
+        "Datei und Datum",
+        "Archivo y fecha",
+    ):
+        assert re.search(rf'\bstart\s*:\s*"{re.escape(label)}"', concordato)
+    assert 'data-copy="nav.start">File e data</a>' in concordato
+
+
 def test_lucia_and_clara_navigation_links_to_their_work_areas() -> None:
     lucia = PRODUCT_PAGES["lucia"].read_text(encoding="utf-8")
     clara = PRODUCT_PAGES["clara"].read_text(encoding="utf-8")
