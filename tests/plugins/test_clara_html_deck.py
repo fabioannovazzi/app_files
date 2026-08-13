@@ -134,7 +134,7 @@ def test_skill_identity_uses_plugin_namespace_without_redundant_prefix() -> None
     agent_metadata = (SKILL_ROOT / "agents" / "openai.yaml").read_text(encoding="utf-8")
 
     assert "\nname: html-deck\n" in f"\n{skill_text}"
-    assert 'display_name: "HTML Deck"' in agent_metadata
+    assert 'display_name: "Create HTML presentations"' in agent_metadata
     assert "Use $html-deck" in agent_metadata
     assert not (PLUGIN_ROOT / "skills" / "clara-html-deck").exists()
 
