@@ -4168,6 +4168,40 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
+def test_report_builder_page_explains_full_population_model_data_flow() -> None:
+    page = (ROOT / "static" / "shared" / "report-builder" / "index.html").read_text(
+        encoding="utf-8"
+    )
+
+    assert (
+        'id="model-data" data-model-data-workflow="report-builder" '
+        'data-model-data-status="relevant"'
+    ) in page
+    main = page[page.index("<main>") : page.index("</main>")]
+    assert main.rstrip().endswith("</section>")
+    assert main.rindex('<section class="function-model-data"') == main.index(
+        '<section class="function-model-data" id="model-data"'
+    )
+    for snippet in (
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Welche Daten das Modell erhält",
+        "Qué datos recibe el modelo",
+        "tutte le righe e celle non vuote",
+        "the complete cell inventory",
+        "noms du client ou de l'entité",
+        "Mandanten- oder Unternehmensnamen",
+        "No se aplica anonimización automática",
+        "In Codex le fonti provengono dal fascicolo Studio Archive",
+        "in Cowork, they may come directly from connected files",
+    ):
+        assert snippet in page
+    for key in ("model.label", "model.title", "model.conclusion", "model.copy"):
+        assert f'data-i18n="{key}"' in page
+        assert page.count(f'"{key}":') == 5
+
+
 @pytest.mark.parametrize(
     ("relative_path", "title_assignment"),
     (

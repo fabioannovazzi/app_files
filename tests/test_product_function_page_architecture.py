@@ -470,7 +470,7 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
         encoding="utf-8"
     )
 
-    assert function_copy.count('modelDataStatus: "relevant"') == 10
+    assert function_copy.count('modelDataStatus: "relevant"') == 15
     assert function_copy.count('modelDataStatus: "not-relevant"') == 5
     assert '"comunicazione-professionale"' in function_copy
     assert '"presenza-digitale-studio"' in function_copy
@@ -487,6 +487,26 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
     ):
         assert placeholder in placeholder_script
         assert placeholder in function_copy
+
+
+def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+
+    for snippet in (
+        'window.MPARANZA_FUNCTION_PAGES["bilancio-xbrl-it"]',
+        "Il modello vede dati contabili reali, in pacchetti distinti per attività.",
+        "The model sees real accounting data in separate task-specific packets.",
+        "Le modèle voit des données comptables réelles",
+        "Das Modell sieht reale Buchhaltungsdaten",
+        "El modelo ve datos contables reales",
+        "fino a 50 conti per la mappatura",
+        "up to 20 candidate rows, and 50 issues",
+        "jusqu'à 100 éléments manquants",
+        "keine eigene Schemabegrenzung",
+        "No se aplica anonimización automática",
+        "Cowork uses Anthropic and may read connected files directly",
+    ):
+        assert snippet in function_copy
 
 
 def test_every_function_page_uses_one_shared_model_data_component() -> None:
