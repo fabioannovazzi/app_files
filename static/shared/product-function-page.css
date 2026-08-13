@@ -1,3 +1,4 @@
+@import url("./function-page-scale.css");
 @import url("./function-model-data.css");
 
 :root {
@@ -8,7 +9,7 @@
   --pf-blue: #0070c0;
   --pf-cyan: #00b0f0;
   --pf-line: #b7dded;
-  --pf-content: 1120px;
+  --pf-content: var(--function-content-width);
 }
 
 *,
@@ -108,8 +109,8 @@ a {
 }
 
 .pf-languages button {
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0 8px;
   border: 0;
   border-radius: 5px;
@@ -122,8 +123,8 @@ a {
 }
 
 .pf-languages button[aria-pressed="true"] {
-  background: var(--pf-blue);
-  color: #ffffff;
+  background: #f3fbff;
+  color: var(--pf-blue);
 }
 
 .pf-breadcrumb {
@@ -171,23 +172,24 @@ a {
 .pf-fact h2 {
   margin: 0;
   color: var(--pf-ink);
-  line-height: 1.08;
+  line-height: var(--function-heading-line-height);
   text-wrap: balance;
 }
 
 .pf-hero h1 {
-  max-width: 15ch;
+  max-width: var(--function-title-measure);
   margin-top: 14px;
-  font-size: clamp(3rem, 7vw, 6rem);
-  font-weight: 650;
-  letter-spacing: -0.052em;
+  font-size: var(--function-title-size);
+  font-weight: 620;
+  letter-spacing: 0;
 }
 
 .pf-summary {
   max-width: 62ch;
   margin: 24px 0 0;
   color: var(--pf-text);
-  font-size: clamp(1.08rem, 1.8vw, 1.3rem);
+  font-size: var(--function-lead-size);
+  line-height: var(--function-lead-line-height);
 }
 
 .pf-hero__aside {
@@ -217,7 +219,7 @@ a {
 }
 
 .pf-fact h2 {
-  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-size: var(--function-subsection-title-size) !important;
 }
 
 .pf-fact p {
@@ -241,9 +243,9 @@ a {
 .pf-section h2 {
   max-width: 18ch;
   margin-top: 12px;
-  font-size: clamp(2.1rem, 4.7vw, 4rem);
-  font-weight: 650;
-  letter-spacing: -0.045em;
+  font-size: var(--function-section-title-size);
+  font-weight: 620;
+  letter-spacing: 0;
 }
 
 .pf-section__copy {
@@ -271,7 +273,7 @@ a {
 }
 
 .pf-responsibility h3 {
-  font-size: clamp(1.35rem, 2.5vw, 2rem);
+  font-size: var(--function-subsection-title-size);
 }
 
 .pf-responsibility p {
@@ -328,7 +330,9 @@ a:focus-visible {
 
   .pf-nav__inner {
     min-height: 64px;
+    flex-wrap: wrap;
     gap: 12px;
+    padding-block: 8px;
   }
 
   .pf-brand img {
@@ -342,6 +346,10 @@ a:focus-visible {
   .pf-languages button {
     min-width: 34px;
     padding-inline: 5px;
+  }
+
+  .pf-languages {
+    margin-left: auto;
   }
 
   .pf-hero,

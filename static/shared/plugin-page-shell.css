@@ -1,3 +1,5 @@
+@import url("./function-page-scale.css");
+
 :root {
   --paper: #ffffff;
   --bg: #ffffff;
@@ -18,16 +20,16 @@
   --line: #b7dded;
   --line-strong: #7ec9e7;
   --radius: 8px;
-  --content: 1120px;
+  --content: var(--function-content-width);
   --shadow: none;
   --measure: 68ch;
   --measure-tight: 48ch;
-  --plugin-hero-title-size: 2.875rem;
-  --plugin-section-title-size: 2.125rem;
-  --plugin-card-title-size: 1.125rem;
-  --plugin-lead-size: 1.1875rem;
-  --plugin-heading-line-height: 1.12;
-  --plugin-lead-line-height: 1.48;
+  --plugin-hero-title-size: var(--function-title-size);
+  --plugin-section-title-size: var(--function-section-title-size);
+  --plugin-card-title-size: var(--function-subsection-title-size);
+  --plugin-lead-size: var(--function-lead-size);
+  --plugin-heading-line-height: var(--function-heading-line-height);
+  --plugin-lead-line-height: var(--function-lead-line-height);
 }
 
 *,
@@ -425,15 +427,6 @@ button:focus-visible {
   .workflow-card:hover,
   .plugin-card:hover {
     transform: none;
-  }
-}
-
-@media (max-width: 760px) {
-  :root {
-    --plugin-hero-title-size: 1.95rem;
-    --plugin-section-title-size: 1.55rem;
-    --plugin-card-title-size: 1.08rem;
-    --plugin-lead-size: 1.08rem;
   }
 }
 

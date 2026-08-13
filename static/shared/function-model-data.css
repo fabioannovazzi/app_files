@@ -5,7 +5,7 @@
   --model-data-line: #b7dded;
   position: relative;
   left: 50%;
-  width: min(1120px, calc(100vw - 48px));
+  width: min(var(--function-content-width, 1120px), calc(100vw - 48px));
   margin: clamp(72px, 10vw, 120px) auto 0;
   padding: clamp(64px, 9vw, 104px) 0;
   border-top: 2px solid var(--model-data-ink);
@@ -34,8 +34,11 @@
   max-width: 18ch;
   margin: 0;
   color: var(--model-data-ink);
-  font: 650 clamp(2.1rem, 4.7vw, 4rem)/1.08 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
-  letter-spacing: -0.045em;
+  font-family: "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
+  font-size: var(--function-section-title-size, 2.125rem);
+  font-weight: 620;
+  line-height: var(--function-heading-line-height, 1.12);
+  letter-spacing: 0;
   text-wrap: balance;
 }
 
@@ -48,7 +51,7 @@
 
 @media (max-width: 760px) {
   .function-model-data {
-    width: min(100vw - 28px, 1120px);
+    width: min(100vw - 28px, var(--function-content-width, 1120px));
     padding: 56px 0 72px;
   }
 
