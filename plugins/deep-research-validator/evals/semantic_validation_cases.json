@@ -66,6 +66,30 @@
       "expected_judgment": "professional_judgment_required",
       "boundary": "professional_judgment",
       "rationale": "The legal standard is sourced, but applying it requires fact-sensitive professional judgment."
+    },
+    {
+      "id": "historical-decision-outside-rolling-public-window",
+      "claim": "The historical decision states the cited legal principle.",
+      "source_passage": "A non-institutional reproduction contains the decision and the stated principle; independent references corroborate the decision identifier and substance, while the official historical archive is gated and the free portal has a documented rolling window.",
+      "expected_support": "supported",
+      "expected_reasoning": "sound",
+      "expected_source_identity": "matches_cited_source",
+      "expected_authority_relation": "non_institutional_reproduction",
+      "expected_official_text_access": "restricted_or_gated_archive",
+      "expected_text_fidelity": "corroborated_not_text_verified",
+      "expected_limitation": "Fidelity to the official full text was not verified.",
+      "boundary": "archive_access_vs_substantive_support",
+      "rationale": "A rolling or gated official access surface limits text-fidelity verification; it does not establish nonexistence or automatically defeat corroborated substantive support."
+    },
+    {
+      "id": "no-result-does-not-prove-nonexistence",
+      "claim": "The cited decision does not exist.",
+      "source_passage": "The decision was not returned by a public portal whose completeness for the relevant period was not established.",
+      "expected_support": "not_supported",
+      "expected_reasoning": "unsound",
+      "expected_official_text_access": "not_assessed",
+      "boundary": "archive_coverage_inference",
+      "rationale": "A no-result finding is not proof of nonexistence unless the searched archive is shown to be complete for the relevant decision class and period."
     }
   ]
 }

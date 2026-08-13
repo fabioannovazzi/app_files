@@ -111,7 +111,7 @@ ANSWER_CONTRACT_ENUMS = {
     "correction_policy": {"correct_when_supported", "review_only"},
     "judgment_policy": {"flag_for_professional_review"},
 }
-REVIEW_SCHEMA_VERSION = "2.0"
+REVIEW_SCHEMA_VERSION = "2.1"
 ALLOWED_SUPPORT_STATUSES = {
     "supported",
     "partially_supported",
@@ -136,6 +136,35 @@ ALLOWED_SOURCE_IDENTITY_STATUSES = {
     "matches_cited_source",
     "different_source",
     "uncertain",
+    "not_assessed",
+}
+ALLOWED_AUTHORITY_RELATIONS = {
+    "official_full_text",
+    "official_summary_or_headnote",
+    "non_institutional_reproduction",
+    "secondary_commentary",
+    "uncertain",
+    "not_assessed",
+}
+ALLOWED_OFFICIAL_TEXT_ACCESS_STATUSES = {
+    "obtained",
+    "public_archive_outside_window",
+    "restricted_or_gated_archive",
+    "not_found_in_complete_official_archive",
+    "unavailable",
+    "not_applicable",
+    "not_assessed",
+}
+ALLOWED_TEXT_FIDELITY_STATUSES = {
+    "verified_against_official_text",
+    "corroborated_not_text_verified",
+    "not_verified",
+    "not_applicable",
+    "not_assessed",
+}
+TEXT_FIDELITY_LIMITED_STATUSES = {
+    "corroborated_not_text_verified",
+    "not_verified",
     "not_assessed",
 }
 ALLOWED_ISSUE_TYPES = {
@@ -507,6 +536,33 @@ def _non_none_issues(value: object) -> list[dict[str, Any]]:
     ]
 
 
+def _source_check_consistency_errors(source_check: dict[str, Any]) -> list[str]:
+    """Validate only contradictions among explicit source-provenance codes.
+
+    Authority relation, archive coverage, and text fidelity remain model-led
+    judgments. Fixed checks are justified because they enforce the declared
+    record contract without deciding those semantic classifications.
+    """
+
+    errors: list[str] = []
+    authority_relation = _clean_text(source_check.get("authority_relation"))
+    official_text_access = _clean_text(source_check.get("official_text_access"))
+    text_fidelity = _clean_text(source_check.get("text_fidelity"))
+    limitations = source_check.get("limitations")
+
+    if authority_relation == "official_full_text" and (
+        official_text_access != "obtained"
+        or text_fidelity != "verified_against_official_text"
+    ):
+        errors.append("official_full_text_requires_obtained_verified_text")
+    if text_fidelity in TEXT_FIDELITY_LIMITED_STATUSES and not (
+        isinstance(limitations, list)
+        and any(_clean_text(limitation) for limitation in limitations)
+    ):
+        errors.append("unverified_text_fidelity_requires_disclosed_limitation")
+    return errors
+
+
 def _claim_consistency_errors(claim: dict[str, Any]) -> list[str]:
     """Return mechanically provable contradictions within one review record.
 
@@ -740,6 +796,7 @@ def build_audit(
     pending_treatment_claims: list[int] = []
     blocked_treatment_claims: list[int] = []
     evidence_limited_claims: list[int] = []
+    source_fidelity_limited_claims: list[int] = []
     claim_observations: list[dict[str, Any]] = []
 
     for position, raw_claim in enumerate(claims, start=1):
@@ -766,10 +823,27 @@ def build_audit(
                     and _clean_text(source_check.get("identity_status"))
                     in ALLOWED_SOURCE_IDENTITY_STATUSES
                     and bool(_clean_text(source_check.get("identity_analysis")))
+                    and _clean_text(source_check.get("authority_relation"))
+                    in ALLOWED_AUTHORITY_RELATIONS
+                    and _clean_text(source_check.get("official_text_access"))
+                    in ALLOWED_OFFICIAL_TEXT_ACCESS_STATUSES
+                    and _clean_text(source_check.get("text_fidelity"))
+                    in ALLOWED_TEXT_FIDELITY_STATUSES
+                    and bool(_clean_text(source_check.get("access_analysis")))
+                    and _string_list(source_check.get("limitations"))
                     and isinstance(source_check.get("cited_passage"), str)
                 ):
                     source_checks_valid = False
                     continue
+                for error in _source_check_consistency_errors(source_check):
+                    consistency_errors.append(
+                        {
+                            "scope": "source_check",
+                            "claim_index": claim_index,
+                            "source_ref": _clean_text(source_check.get("source_ref")),
+                            "error": error,
+                        }
+                    )
                 if _clean_text(source_check.get("identity_status")) != (
                     "matches_cited_source"
                 ):
@@ -784,6 +858,25 @@ def build_audit(
                     evidence_limited_claims.append(claim_index)
                 if observation["resolution_status"] != "resolved":
                     evidence_limited_claims.append(claim_index)
+            if source_checks:
+                has_verified_official_text = any(
+                    isinstance(source_check, dict)
+                    and _clean_text(source_check.get("authority_relation"))
+                    == "official_full_text"
+                    and _clean_text(source_check.get("official_text_access"))
+                    == "obtained"
+                    and _clean_text(source_check.get("text_fidelity"))
+                    == "verified_against_official_text"
+                    for source_check in source_checks
+                )
+                has_fidelity_limit = any(
+                    isinstance(source_check, dict)
+                    and _clean_text(source_check.get("text_fidelity"))
+                    in TEXT_FIDELITY_LIMITED_STATUSES
+                    for source_check in source_checks
+                )
+                if has_fidelity_limit and not has_verified_official_text:
+                    source_fidelity_limited_claims.append(claim_index)
         if not source_checks_valid:
             invalid_source_check_indices.append(claim_index)
 
@@ -919,6 +1012,19 @@ def build_audit(
         failed_checks.append("document_revision_complete")
 
     overall_outcome = _clean_text(overall.get("outcome")) if overall_valid else ""
+    if (
+        source_fidelity_limited_claims
+        and overall_valid
+        and not any(
+            _clean_text(item) for item in overall.get("residual_uncertainties", [])
+        )
+    ):
+        consistency_errors.append(
+            {
+                "scope": "overall_assessment",
+                "error": "source_fidelity_limit_requires_residual_uncertainty",
+            }
+        )
     attention_recorded = any(
         (
             support_attention_claims,
@@ -1020,6 +1126,9 @@ def build_audit(
             set(source_identity_attention_claims)
         ),
         "evidence_limited_claim_indices": sorted(set(evidence_limited_claims)),
+        "source_fidelity_limited_claim_indices": sorted(
+            set(source_fidelity_limited_claims)
+        ),
         "pending_treatment_claim_indices": sorted(set(pending_treatment_claims)),
         "blocked_treatment_claim_indices": sorted(set(blocked_treatment_claims)),
         "invalid_claim_indices": sorted(set(invalid_claim_indices)),
@@ -1042,12 +1151,13 @@ def build_audit(
             "mechanically_observed": (
                 "document and captured-source availability, exact identifier "
                 "resolution, exact passage presence in the cited source snapshot, "
-                "review-record shape, and contradictions among explicit review "
-                "status fields"
+                "review-record shape, and contradictions among explicit source "
+                "provenance and review status fields"
             ),
             "semantically_assessed": (
-                "source identity and authority, claim meaning, entailment, "
-                "contradiction, qualification, scope, time, and modality"
+                "source identity and authority relation, the significance of official "
+                "archive coverage or access, text-fidelity status, claim meaning, "
+                "entailment, contradiction, qualification, scope, time, and modality"
             ),
             "reasoning_assessed": (
                 "whether the conclusion follows from supported premises and "
