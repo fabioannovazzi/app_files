@@ -188,6 +188,23 @@
         <pre><code id="prompt-example">Analizza questa cartella cliente e proponi il riordino secondo le regole dello studio. Mostrami categorie, nomi, spostamenti, duplicati e anomalie file per file. Non modificare nulla: fammi prima rivedere e approvare il piano.</code></pre>
       </div>
     </section>
+
+    <section class="content-section" id="model-data" data-model-data-workflow="archive-organization" data-model-data-status="relevant">
+      <div class="section-head">
+        <div class="section-title">
+          <p class="section-kicker" data-i18n="model.eyebrow">Quali dati arrivano al modello</p>
+          <h2 data-i18n="model.title">Il modello vede l’inventario completo della cartella scelta; apre il contenuto solo quando serve a classificare.</h2>
+        </div>
+        <p data-i18n="model.copy">Il codice crea e controlla localmente uno snapshot dell’intera popolazione ammessa, fino a 5.000 file e 2 GB. Esclude la cartella Vera, i collegamenti locali e le scorciatoie Drive; ogni file ammesso deve comparire una volta nella proposta. Se i limiti vengono superati, lo snapshot si ferma e la fase semantica non parte.</p>
+      </div>
+      <div class="document-lines">
+        <article class="document-line"><h3 data-i18n="model.inventory.title">Inventario completo</h3><p data-i18n="model.inventory.copy">Codex riceve l’identità registrata di cliente e incarico e, per tutti i file dello snapshot, percorso e nome oppure ID Drive di radice, file e cartella superiore; inoltre tipo, dimensione, date, versione, capacità e impronte o checksum disponibili. Nomi e struttura delle cartelle possono quindi contenere persone, pratiche, periodi e riferimenti del cliente.</p></article>
+        <article class="document-line"><h3 data-i18n="model.content.title">Contenuto selezionato</h3><p data-i18n="model.content.copy">Per i soli documenti necessari, il modello riceve testo leggibile e riferimenti alla fonte. Produce categoria, tipo, data, soggetto, riferimento, pratica, confidenza, motivo, anomalie e duplicati probabili. I file completi non vengono inviati automaticamente; i duplicati esatti restano una verifica locale tramite SHA-256 o checksum disponibile.</p></article>
+        <article class="document-line"><h3 data-i18n="model.review.title">Revisione ed esecuzione</h3><p data-i18n="model.review.copy">In Codex possono entrare anche policy dello studio, percorsi attuali e proposti, gruppi di duplicati, collisioni e blocchi, alias e decisioni del revisore, note e percorsi modificati, piano approvato, controlli prima dell’esecuzione e ricevute del giornale, del rollback e degli output.</p></article>
+        <article class="document-line"><h3 data-i18n="model.runtime.title">Codex e Cowork</h3><p data-i18n="model.runtime.copy">Codex Desktop è il percorso che scansiona e, dopo due approvazioni, modifica la cartella locale o Drive. Cowork e ChatGPT non scansionano né applicano: possono soltanto rivedere il piano o i materiali che fornisci; in Cowork quei dati entrano nel contesto del modello Anthropic selezionato. Il token Drive resta nello stato locale privato e i file aperti da Drive vengono scaricati solo temporaneamente.</p></article>
+      </div>
+      <div class="result-excerpt"><p><span data-i18n="model.note">Non c’è anonimizzazione o pseudonimizzazione automatica: identità del cliente, nomi e percorsi restano perché sono necessari per proporre una collocazione corretta e verificabile.</span> <a id="model-data-link" href="/data-handling?lang=it" data-i18n="model.link">Account, conservazione e addestramento →</a></p></div>
+    </section>
   </main>
 
   <footer>
@@ -261,6 +278,85 @@
       }
     };
 
+    const modelDataCopy = {
+      it: {
+        "model.eyebrow": "Quali dati arrivano al modello",
+        "model.title": "Il modello vede l’inventario completo della cartella scelta; apre il contenuto solo quando serve a classificare.",
+        "model.copy": "Il codice crea e controlla localmente uno snapshot dell’intera popolazione ammessa, fino a 5.000 file e 2 GB. Esclude la cartella Vera, i collegamenti locali e le scorciatoie Drive; ogni file ammesso deve comparire una volta nella proposta. Se i limiti vengono superati, lo snapshot si ferma e la fase semantica non parte.",
+        "model.inventory.title": "Inventario completo",
+        "model.inventory.copy": "Codex riceve l’identità registrata di cliente e incarico e, per tutti i file dello snapshot, percorso e nome oppure ID Drive di radice, file e cartella superiore; inoltre tipo, dimensione, date, versione, capacità e impronte o checksum disponibili. Nomi e struttura delle cartelle possono quindi contenere persone, pratiche, periodi e riferimenti del cliente.",
+        "model.content.title": "Contenuto selezionato",
+        "model.content.copy": "Per i soli documenti necessari, il modello riceve testo leggibile e riferimenti alla fonte. Produce categoria, tipo, data, soggetto, riferimento, pratica, confidenza, motivo, anomalie e duplicati probabili. I file completi non vengono inviati automaticamente; i duplicati esatti restano una verifica locale tramite SHA-256 o checksum disponibile.",
+        "model.review.title": "Revisione ed esecuzione",
+        "model.review.copy": "In Codex possono entrare anche policy dello studio, percorsi attuali e proposti, gruppi di duplicati, collisioni e blocchi, alias e decisioni del revisore, note e percorsi modificati, piano approvato, controlli prima dell’esecuzione e ricevute del giornale, del rollback e degli output.",
+        "model.runtime.title": "Codex e Cowork",
+        "model.runtime.copy": "Codex Desktop è il percorso che scansiona e, dopo due approvazioni, modifica la cartella locale o Drive. Cowork e ChatGPT non scansionano né applicano: possono soltanto rivedere il piano o i materiali che fornisci; in Cowork quei dati entrano nel contesto del modello Anthropic selezionato. Il token Drive resta nello stato locale privato e i file aperti da Drive vengono scaricati solo temporaneamente.",
+        "model.note": "Non c’è anonimizzazione o pseudonimizzazione automatica: identità del cliente, nomi e percorsi restano perché sono necessari per proporre una collocazione corretta e verificabile.",
+        "model.link": "Account, conservazione e addestramento →"
+      },
+      en: {
+        "model.eyebrow": "What data reaches the model",
+        "model.title": "The model sees the complete inventory of the selected folder; it opens content only when classification requires it.",
+        "model.copy": "Code creates and checks a local snapshot of the whole admitted population, up to 5,000 files and 2 GB. It excludes the Vera folder, local links, and Drive shortcuts; every admitted file must appear once in the proposal. If those limits are exceeded, the snapshot stops and the semantic phase does not start.",
+        "model.inventory.title": "Complete inventory",
+        "model.inventory.copy": "Codex receives the registered client and engagement identity and, for every file in the snapshot, its path and name or the Drive root, file, and parent IDs; it also receives type, size, dates, version, capabilities, and available hashes or checksums. Names and folder structure can therefore contain people, practices, periods, and client references.",
+        "model.content.title": "Selected content",
+        "model.content.copy": "For only the documents needed, the model receives readable text and source locators. It produces category, type, date, subject, reference, practice, confidence, reason, anomalies, and probable duplicates. Complete files are not sent automatically; exact duplicates remain a local check using SHA-256 or an available checksum.",
+        "model.review.title": "Review and execution",
+        "model.review.copy": "Codex context may also include the studio policy, current and proposed paths, duplicate groups, collisions and blocks, reviewer alias and decisions, notes and edited paths, approved plan, pre-apply checks, and journal, rollback, and output receipts.",
+        "model.runtime.title": "Codex and Cowork",
+        "model.runtime.copy": "Codex Desktop is the route that scans and, after two approvals, changes the local or Drive folder. Cowork and ChatGPT do not scan or apply: they can only review the plan or materials you provide; in Cowork, that data enters the selected Anthropic model context. The Drive token stays in private local state, and opened Drive files are downloaded only temporarily.",
+        "model.note": "There is no automatic anonymization or pseudonymization: client identity, names, and paths remain because they are needed to propose a correct, verifiable filing location.",
+        "model.link": "Account, retention, and training →"
+      },
+      fr: {
+        "model.eyebrow": "Quelles données parviennent au modèle",
+        "model.title": "Le modèle voit l’inventaire complet du dossier choisi ; il n’ouvre le contenu que lorsque le classement l’exige.",
+        "model.copy": "Le code crée et contrôle localement un snapshot de toute la population admise, jusqu’à 5 000 fichiers et 2 Go. Il exclut le dossier Vera, les liens locaux et les raccourcis Drive ; chaque fichier admis doit apparaître une fois dans la proposition. Si ces limites sont dépassées, le snapshot s’arrête et la phase sémantique ne démarre pas.",
+        "model.inventory.title": "Inventaire complet",
+        "model.inventory.copy": "Codex reçoit l’identité enregistrée du client et de la mission et, pour chaque fichier du snapshot, son chemin et son nom ou les ID Drive de la racine, du fichier et du dossier parent ; il reçoit aussi le type, la taille, les dates, la version, les capacités et les empreintes ou checksums disponibles. Les noms et l’arborescence peuvent donc contenir des personnes, des dossiers, des périodes et des références client.",
+        "model.content.title": "Contenu sélectionné",
+        "model.content.copy": "Pour les seuls documents nécessaires, le modèle reçoit le texte lisible et les repères de source. Il produit catégorie, type, date, sujet, référence, dossier, confiance, motif, anomalies et doublons probables. Les fichiers complets ne sont pas envoyés automatiquement ; les doublons exacts restent une vérification locale par SHA-256 ou checksum disponible.",
+        "model.review.title": "Revue et exécution",
+        "model.review.copy": "Le contexte Codex peut aussi inclure la politique du cabinet, les chemins actuels et proposés, les groupes de doublons, collisions et blocages, l’alias et les décisions du réviseur, les notes et chemins modifiés, le plan approuvé, les contrôles avant exécution et les reçus du journal, du rollback et des sorties.",
+        "model.runtime.title": "Codex et Cowork",
+        "model.runtime.copy": "Codex Desktop est le parcours qui analyse et, après deux approbations, modifie le dossier local ou Drive. Cowork et ChatGPT n’analysent ni n’appliquent : ils peuvent seulement revoir le plan ou les documents fournis ; dans Cowork, ces données entrent dans le contexte du modèle Anthropic choisi. Le jeton Drive reste dans l’état local privé et les fichiers Drive ouverts ne sont téléchargés que temporairement.",
+        "model.note": "Il n’y a pas d’anonymisation ni de pseudonymisation automatique : l’identité du client, les noms et les chemins sont conservés parce qu’ils sont nécessaires pour proposer un classement correct et vérifiable.",
+        "model.link": "Compte, conservation et entraînement →"
+      },
+      de: {
+        "model.eyebrow": "Welche Daten das Modell erhält",
+        "model.title": "Das Modell sieht das vollständige Inventar des gewählten Ordners; Inhalte öffnet es nur, wenn die Klassifizierung sie benötigt.",
+        "model.copy": "Code erstellt und prüft lokal einen Snapshot des gesamten zugelassenen Bestands bis zu 5.000 Dateien und 2 GB. Der Vera-Ordner, lokale Links und Drive-Verknüpfungen bleiben außen vor; jede zugelassene Datei muss einmal im Vorschlag erscheinen. Werden diese Grenzen überschritten, stoppt der Snapshot und die semantische Phase startet nicht.",
+        "model.inventory.title": "Vollständiges Inventar",
+        "model.inventory.copy": "Codex erhält die registrierte Mandanten- und Mandatsidentität und für jede Datei im Snapshot Pfad und Name oder Drive-IDs von Stammordner, Datei und übergeordnetem Ordner; außerdem Typ, Größe, Daten, Version, Fähigkeiten und verfügbare Hashes oder Prüfsummen. Namen und Ordnerstruktur können daher Personen, Vorgänge, Zeiträume und Mandantenreferenzen enthalten.",
+        "model.content.title": "Ausgewählte Inhalte",
+        "model.content.copy": "Nur für benötigte Dokumente erhält das Modell lesbaren Text und Quellenfundstellen. Es erzeugt Kategorie, Typ, Datum, Betreff, Referenz, Vorgang, Sicherheit, Begründung, Auffälligkeiten und wahrscheinliche Duplikate. Vollständige Dateien werden nicht automatisch gesendet; exakte Duplikate bleiben eine lokale Prüfung über SHA-256 oder eine verfügbare Prüfsumme.",
+        "model.review.title": "Prüfung und Ausführung",
+        "model.review.copy": "Der Codex-Kontext kann außerdem Kanzleirichtlinie, aktuelle und vorgeschlagene Pfade, Duplikatgruppen, Kollisionen und Sperren, Prüferalias und Entscheidungen, Notizen und geänderte Pfade, genehmigten Plan, Vorabprüfungen sowie Belege für Journal, Rollback und Ausgaben enthalten.",
+        "model.runtime.title": "Codex und Cowork",
+        "model.runtime.copy": "Codex Desktop scannt den lokalen oder Drive-Ordner und ändert ihn nach zwei Genehmigungen. Cowork und ChatGPT scannen oder wenden nichts an; sie können nur den bereitgestellten Plan oder die Materialien prüfen. In Cowork gelangen diese Daten in den Kontext des gewählten Anthropic-Modells. Das Drive-Token bleibt im privaten lokalen Zustand, geöffnete Drive-Dateien werden nur vorübergehend heruntergeladen.",
+        "model.note": "Es gibt keine automatische Anonymisierung oder Pseudonymisierung: Mandantenidentität, Namen und Pfade bleiben erhalten, weil sie für einen korrekten und überprüfbaren Ablagevorschlag erforderlich sind.",
+        "model.link": "Konto, Aufbewahrung und Training →"
+      },
+      es: {
+        "model.eyebrow": "Qué datos llegan al modelo",
+        "model.title": "El modelo ve el inventario completo de la carpeta elegida; solo abre contenido cuando es necesario para clasificar.",
+        "model.copy": "El código crea y controla localmente una instantánea de toda la población admitida, hasta 5.000 archivos y 2 GB. Excluye la carpeta Vera, los enlaces locales y los accesos directos de Drive; cada archivo admitido debe aparecer una vez en la propuesta. Si se superan esos límites, la instantánea se detiene y la fase semántica no comienza.",
+        "model.inventory.title": "Inventario completo",
+        "model.inventory.copy": "Codex recibe la identidad registrada del cliente y el encargo y, para cada archivo de la instantánea, su ruta y nombre o los ID de Drive de raíz, archivo y carpeta superior; también recibe tipo, tamaño, fechas, versión, capacidades y huellas o sumas disponibles. Por tanto, los nombres y la estructura de carpetas pueden contener personas, expedientes, periodos y referencias del cliente.",
+        "model.content.title": "Contenido seleccionado",
+        "model.content.copy": "Solo para los documentos necesarios, el modelo recibe texto legible y localizadores de la fuente. Produce categoría, tipo, fecha, sujeto, referencia, expediente, confianza, motivo, anomalías y duplicados probables. Los archivos completos no se envían automáticamente; los duplicados exactos siguen siendo una comprobación local mediante SHA-256 o una suma disponible.",
+        "model.review.title": "Revisión y ejecución",
+        "model.review.copy": "El contexto de Codex también puede incluir la política del despacho, rutas actuales y propuestas, grupos de duplicados, colisiones y bloqueos, alias y decisiones del revisor, notas y rutas editadas, plan aprobado, controles previos y recibos del registro, la reversión y las salidas.",
+        "model.runtime.title": "Codex y Cowork",
+        "model.runtime.copy": "Codex Desktop es la vía que escanea y, tras dos aprobaciones, cambia la carpeta local o de Drive. Cowork y ChatGPT no escanean ni aplican: solo pueden revisar el plan o los materiales que proporcionas; en Cowork, esos datos entran en el contexto del modelo Anthropic elegido. El token de Drive permanece en el estado local privado y los archivos abiertos desde Drive solo se descargan temporalmente.",
+        "model.note": "No hay anonimización ni seudonimización automática: la identidad del cliente, los nombres y las rutas se mantienen porque son necesarios para proponer una ubicación correcta y verificable.",
+        "model.link": "Cuenta, conservación y entrenamiento →"
+      }
+    };
+    Object.entries(modelDataCopy).forEach(([language, strings]) => Object.assign(copy[language], strings));
+
     const locales = { it: "it_IT", en: "en_GB", fr: "fr_FR", de: "de_DE", es: "es_ES" };
     const supported = new Set(Object.keys(copy));
     const params = new URLSearchParams(window.location.search);
@@ -294,6 +390,7 @@
       document.getElementById("footer-vera-link").href = `../vera/index.html?lang=${lang}`;
       document.getElementById("install-link").href = `../vera/index.html?lang=${lang}#installa`;
       document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
+      document.getElementById("model-data-link").href = `/data-handling?lang=${lang}`;
       localStorage.setItem("mparanza-language", lang);
       const url = new URL(window.location.href);
       url.searchParams.set("lang", lang);
