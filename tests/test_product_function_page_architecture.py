@@ -463,18 +463,20 @@ def test_shared_research_pages_are_product_neutral_at_render_time() -> None:
         assert expected in navigation
 
 
-def test_function_pages_use_specific_data_copy_for_three_functions_and_placeholders_elsewhere() -> None:
+def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     placeholder_script = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
     bank_page = (SHARED / "journal-bank-reconciliation" / "index.html").read_text(
         encoding="utf-8"
     )
 
-    assert function_copy.count('modelDataStatus: "relevant"') == 10
+    assert function_copy.count('modelDataStatus: "relevant"') == 5
+    assert function_copy.count('modelDataStatus: "not-relevant"') == 5
     assert '"comunicazione-professionale"' in function_copy
     assert '"presenza-digitale-studio"' in function_copy
     assert 'data-model-data-status="relevant"' in bank_page
     assert "Quali dati arrivano al modello" in bank_page
+    assert "modelDataConclusion" in function_copy
 
     for placeholder in (
         "Informazioni specifiche per questa funzione in preparazione.",
@@ -509,6 +511,8 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
         assert class_name in bank_page
 
     assert '@import url("./function-model-data.css");' in renderer_css
+    assert "function-model-data__conclusion" in renderer
+    assert "function-model-data__conclusion" in component_css
     assert "pf-model-data" not in renderer
     assert "pf-model-data" not in renderer_css
     assert 'href="../function-model-data.css"' in bank_page
