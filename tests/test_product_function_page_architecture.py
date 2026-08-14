@@ -516,6 +516,45 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         assert snippet in function_copy
 
 
+def test_clara_research_video_has_a_localized_public_explanation() -> None:
+    page = (SHARED / "clara-research-video" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    function_copy = (SHARED / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
+    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
+    clara = PRODUCT_PAGES["clara"].read_text(encoding="utf-8")
+    navigation = (SHARED / "function-page-navigation.js").read_text(
+        encoding="utf-8"
+    )
+    research_video = function_copy.split('"clara-research-video":', 1)[1].split(
+        '"clara-retailer-signals":', 1
+    )[0]
+
+    assert 'data-function-page="clara-research-video"' in page
+    assert research_video.count('modelDataStatus: "relevant"') == 5
+    for snippet in (
+        "Approved ordered scenes",
+        "Parallax requires already separated and aligned",
+        "No automatic anonymization is applied",
+        "OpenAI Audio API",
+        "Images, source files, source-basis notes, and local paths are not sent to the speech service",
+    ):
+        assert snippet in research_video
+    for heading in (
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Welche Daten das Modell erhält",
+        "Qué datos recibe el modelo",
+    ):
+        assert heading in renderer
+    assert 'href="../clara-research-video/index.html?lang=en"' in clara
+    assert clara.count('"functions.researchVideo":') == 5
+    assert '"clara-research-video": [["clara", "area-deliverables"]]' in navigation
+
+
 def test_every_function_page_uses_one_shared_model_data_component() -> None:
     component_css = (SHARED / "function-model-data.css").read_text(encoding="utf-8")
     injector = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
