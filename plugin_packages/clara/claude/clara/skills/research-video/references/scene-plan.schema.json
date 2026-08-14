@@ -8,7 +8,7 @@
   "properties": {
     "schema_version": {"const": 1},
     "title": {"type": "string", "minLength": 1, "maxLength": 180},
-    "language": {"const": "en"},
+    "language": {"enum": ["de", "en", "es", "fr", "it"]},
     "scenes": {
       "type": "array",
       "minItems": 2,

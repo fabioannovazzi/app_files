@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "service_id": "research-video-voice",
+  "display_name": "Mparanza Research Video Voice",
+  "provider_or_recipients": [
+    "Mparanza Research Video Voice",
+    "OpenAI speech service configured by Mparanza"
+  ],
+  "workflows": [
+    "clara",
+    "research-video"
+  ],
+  "governed_paths": [
+    "skills/research-video/SKILL.md",
+    "skills/research-video/references/hosted-voice-bundle.schema.json",
+    "skills/research-video/scripts/research_video.py",
+    "repository/modules/hosted_services/api.py",
+    "repository/modules/research_video_voice/api.py",
+    "repository/scripts/video_voice_policy.py",
+    "repository/static/js/research-video-voice.js",
+    "repository/static/shared/product-function-pages.js",
+    "repository/templates/research_video_voice.html"
+  ],
+  "trigger": "After the user explicitly approves the exact scene plan and narration, the user signs in to Mparanza and uploads the generated narration-only request on the Research Video voice page.",
+  "automatic": false,
+  "data_sent": [
+    {
+      "id": "mparanza-authentication",
+      "when": "When the user opens the page or submits the request",
+      "content": "Mparanza HttpOnly signed session cookie. The cookie is checked by Mparanza and is not sent to OpenAI."
+    },
+    {
+      "id": "bound-hosted-request",
+      "when": "After explicit narration and visual-plan approval",
+      "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Images, research sources, source-basis notes, Vera artifacts, and local paths are excluded."
+    },
+    {
+      "id": "openai-speech-request",
+      "when": "When Mparanza generates each approved scene narration",
+      "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, images, sources, Vera artifacts, and local paths are not forwarded."
+    }
+  ],
+  "data_returned": [
+    {
+      "id": "voice-bundle",
+      "when": "After all scene narrations are generated",
+      "content": "In-memory ZIP containing one WAV file per scene and a manifest with provider, model, voice, language, plan/request/approval bindings, retention marker, scene identifiers, audio hashes, sizes, durations, and WAV metadata."
+    }
+  ],
+  "access": {
+    "arrangement": "Google or magic-link authentication is required. The Research Video page and API currently accept every valid Mparanza session and do not consult an email or page allowlist. Mparanza uses a server-held OpenAI credential; the user does not provide a provider API key.",
+    "controls": [
+      "The HTML page redirects unauthenticated users to Mparanza sign-in and the API returns HTTP 401 without a valid signed session cookie.",
+      "The endpoint requires the fixed Research Video action header and a strict, bounded narration-only JSON schema.",
+      "Mparanza calls a fixed HTTPS OpenAI speech endpoint and never returns, logs, or embeds the server credential in the artifact.",
+      "The response is marked no-store and nosniff; the local plugin validates the complete ZIP entry set, hashes, approval and plan binding, provider policy, WAV metadata, and scene order before rendering."
+    ]
+  },
+  "retention": {
+    "status": "partially_documented",
+    "statement": "Mparanza builds the request response and generated ZIP in process memory and does not write narration requests or audio to application storage; the downloaded copy is retained only where the user saves it locally. Provider-side processing and retention at OpenAI follow Mparanza's provider arrangement and are not established by the plugin source."
+  },
+  "security_controls": [
+    {
+      "id": "authenticated-open-access",
+      "control": "The route requires a cryptographically signed Mparanza session but intentionally applies no Research Video email allowlist, so every authenticated account is currently authorized."
+    },
+    {
+      "id": "narration-only-bounded-request",
+      "control": "Strict request validation rejects extra fields, missing approval evidence, duplicate scene identifiers, unsupported languages, more than 20 scenes, more than 2,500 characters per scene, or more than 20,000 narration characters in total."
+    },
+    {
+      "id": "in-memory-hash-bound-response",
+      "control": "Mparanza creates the ZIP in memory and binds every returned WAV to the canonical request, approved plan and approval hashes; the local attachment step rejects unsafe, extra, missing, changed, or policy-mismatched bundle entries."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "hosted_service_boundary_review_of_source",
+    "source_fingerprint": "7efbca49021dfcad14f0c58114d70cc57749baf013144e68f2599e05efc2d719"
+  }
+}

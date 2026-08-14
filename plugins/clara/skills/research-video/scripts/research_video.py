@@ -8,25 +8,24 @@ import hashlib
 import json
 import logging
 import math
-import os
 import re
 import shutil
+import stat
 import subprocess  # nosec B404
 import tempfile
 import textwrap
-import time
-import urllib.error
-import urllib.request
 import wave
+import zipfile
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 __all__ = [
     "approve_run",
+    "attach_hosted_voice",
     "main",
     "prepare_run",
     "render_run",
@@ -35,16 +34,30 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[3]
-OPENAI_SPEECH_ENDPOINT = "https://api.openai.com/v1/audio/speech"
-OPENAI_TTS_MODEL = "gpt-4o-mini-tts"
-OPENAI_TTS_VOICE = "cedar"
-TTS_INSTRUCTIONS = (
-    "Speak in natural contemporary English, like an experienced professional "
-    "explaining carefully reviewed research to a colleague. Keep the delivery "
-    "calm, clear, measured, and conversational. Never sound promotional, "
-    "dramatic, emphatic, or like a radio advertisement. Preserve qualifications "
-    "and pronounce figures deliberately."
-)
+HOSTED_VOICE_SOURCE = "mparanza_hosted_openai_voice"
+HOSTED_VOICE_PROVIDER = "OpenAI"
+HOSTED_VOICE_MODEL = "gpt-4o-mini-tts"
+HOSTED_VOICE_NAMES = {
+    "de": "cedar",
+    "en": "cedar",
+    "es": "cedar",
+    "fr": "cedar",
+    "it": "marin",
+}
+SUPPORTED_LANGUAGES = {
+    "de": "German",
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "it": "Italian",
+}
+VOICE_DISCLOSURES = {
+    "de": "KI-generierte Stimme",
+    "en": "AI-generated voice",
+    "es": "Voz generada por IA",
+    "fr": "Voix générée par IA",
+    "it": "Voce generata dall'IA",
+}
 
 FRAME_WIDTH = 1280
 FRAME_HEIGHT = 720
@@ -57,6 +70,8 @@ TARGET_LOUDNESS_LUFS = -16
 MAX_SCENES = 20
 MAX_IMAGE_BYTES = 50 * 1024 * 1024
 MAX_IMAGE_PIXELS = 100_000_000
+MAX_AUDIO_BYTES = 100 * 1024 * 1024
+MAX_VOICE_BUNDLE_BYTES = 500 * 1024 * 1024
 MAX_NARRATION_CHARACTERS = 2500
 MOTION_VALUES = {
     "zoom_in",
@@ -68,6 +83,7 @@ MOTION_VALUES = {
 }
 FLAT_MOTION_SEQUENCE = ("zoom_in", "pan_right", "zoom_out", "pan_left")
 IMAGE_SUFFIXES = {".jpg", ".jpeg", ".png", ".webp"}
+AUDIO_SUFFIXES = {".aac", ".flac", ".m4a", ".mp3", ".ogg", ".wav"}
 SCENE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]{0,63}$")
 
 
@@ -218,8 +234,10 @@ def _canonicalize_plan(
         raise ValueError("Scene plan has unexpected or missing top-level fields")
     if raw["schema_version"] != 1:
         raise ValueError("scene_plan.schema_version must be 1")
-    if raw["language"] != "en":
-        raise ValueError("The first research-video contract supports English only")
+    language = raw["language"]
+    if language not in SUPPORTED_LANGUAGES:
+        supported = ", ".join(sorted(SUPPORTED_LANGUAGES))
+        raise ValueError(f"scene_plan.language must be one of: {supported}")
     title = _nonempty_text(raw["title"], field="title", maximum=180)
     scenes_value = raw["scenes"]
     if not isinstance(scenes_value, list) or not 2 <= len(scenes_value) <= MAX_SCENES:
@@ -321,7 +339,7 @@ def _canonicalize_plan(
         {
             "schema_version": 1,
             "title": title,
-            "language": "en",
+            "language": language,
             "scenes": canonical_scenes,
         },
         inventory,
@@ -331,7 +349,16 @@ def _canonicalize_plan(
 def _narration_markdown(plan: Mapping[str, Any]) -> str:
     """Return the clean user-facing narration script."""
 
-    lines = [f"# {plan['title']}", "", "## Narration script", ""]
+    language = plan["language"]
+    lines = [
+        f"# {plan['title']}",
+        "",
+        f"- Narration language: {SUPPORTED_LANGUAGES[language]} (`{language}`)",
+        f"- On-screen voice disclosure: {VOICE_DISCLOSURES[language]}",
+        "",
+        "## Narration script",
+        "",
+    ]
     for index, scene in enumerate(plan["scenes"], start=1):
         lines.extend(
             [
@@ -344,6 +371,28 @@ def _narration_markdown(plan: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _hosted_voice_request(
+    plan: Mapping[str, Any],
+    approval: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Return the minimal request accepted by the authenticated Mparanza service."""
+
+    return {
+        "schema_version": 1,
+        "workflow": "clara:research-video",
+        "language": plan["language"],
+        "scene_plan_sha256": _json_sha256(plan),
+        "approval": {
+            "approval_sha256": _json_sha256(approval),
+            "confirmed_by_user": True,
+        },
+        "scenes": [
+            {"id": scene["id"], "narration": scene["narration"]}
+            for scene in plan["scenes"]
+        ],
+    }
+
+
 def _review_markdown(plan: Mapping[str, Any]) -> str:
     """Return a bounded narration and source-basis review packet."""
 
@@ -351,7 +400,22 @@ def _review_markdown(plan: Mapping[str, Any]) -> str:
         f"# Research video review — {plan['title']}",
         "",
         "Review every narration scene against its image and source basis before approval.",
-        "Only narration text is sent to OpenAI speech during rendering.",
+        (
+            "After approval, upload the generated Mparanza voice request to the "
+            "authenticated Research Video page. No user API key is required."
+        ),
+        (
+            "Only the approved narration, language, scene identifiers, and binding "
+            "hashes leave the local workspace. Images and source-basis notes stay local."
+        ),
+        (
+            "Mparanza sends that narration to OpenAI, returns an in-memory ZIP, and "
+            "does not write the request or generated audio to application storage."
+        ),
+        (
+            "The completed video shows this disclosure on every scene: "
+            f"{VOICE_DISCLOSURES[plan['language']]}"
+        ),
         "",
     ]
     for index, scene in enumerate(plan["scenes"], start=1):
@@ -396,19 +460,27 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
         "status": "ready_for_review",
         "created_at": _utc_now(),
         "title": plan["title"],
-        "language": "en",
+        "language": plan["language"],
         "scene_count": len(plan["scenes"]),
         "scene_plan_sha256": plan_hash,
         "visual_inventory": inventory,
         "voice": {
-            "provider": "OpenAI",
-            "model": OPENAI_TTS_MODEL,
-            "name": OPENAI_TTS_VOICE,
+            "provider": "Mparanza",
+            "upstream_provider": HOSTED_VOICE_PROVIDER,
+            "source": HOSTED_VOICE_SOURCE,
+            "model": HOSTED_VOICE_MODEL,
+            "name": HOSTED_VOICE_NAMES[plan["language"]],
+            "disclosure": VOICE_DISCLOSURES[plan["language"]],
+            "disclosure_placement": "visible footer on every scene",
         },
         "data_posture": {
             "local_files_read": [item["path"] for item in inventory],
-            "external_boundary": "OpenAI speech endpoint after exact-plan approval",
-            "external_content": "Approved narration text only",
+            "mparanza_hosted_processing": (
+                "After approval, exact narration and binding metadata are sent to "
+                "the authenticated Mparanza service and OpenAI"
+            ),
+            "boundary_beyond_local_workspace": "Mparanza and OpenAI",
+            "user_api_key_required": False,
             "images_uploaded": False,
             "source_basis_uploaded": False,
         },
@@ -447,8 +519,18 @@ def _verify_visual_inventory(run_dir: Path, intake: Mapping[str, Any]) -> None:
         raise ValueError("scene_plan.json changed after preparation")
 
 
-def approve_run(run_dir: Path, approved_by: str = "requesting_user") -> dict[str, Any]:
-    """Bind approval to the exact plan, narration script, and review packet."""
+def approve_run(
+    run_dir: Path,
+    approved_by: str = "requesting_user",
+    *,
+    confirmed_by_user: bool = False,
+) -> dict[str, Any]:
+    """Bind approval only after explicit user confirmation of the exact review."""
+
+    # Approval is an audit claim, so a fixed flag is justified here: the renderer
+    # must not infer user confirmation from prose or from merely running a command.
+    if not confirmed_by_user:
+        raise ValueError("Approval requires explicit --confirmed-by-user evidence")
 
     root = run_dir.expanduser().resolve()
     intake = _read_json(root / "run_intake.json")
@@ -464,15 +546,24 @@ def approve_run(run_dir: Path, approved_by: str = "requesting_user") -> dict[str
             field="approved_by",
             maximum=120,
         ),
-        "scope": "exact narration, scene order, motion, source basis, and visual bytes",
+        "scope": (
+            "exact narration, hosted voice generation, scene order, motion, "
+            "source basis, and visual bytes"
+        ),
         "scene_plan_sha256": intake["scene_plan_sha256"],
         "narration_script_sha256": _sha256(narration_path),
         "review_packet_sha256": _sha256(review_path),
-        "external_tts_approved": True,
-        "external_content": "approved narration text only",
+        "voice_disclosure_sha256": _json_sha256(intake["voice"]["disclosure"]),
+        "confirmed_by_user": True,
+        "hosted_voice_generation_approved": True,
     }
     _write_json(root / "narration_approval.json", approval)
-    intake["status"] = "approved_for_render"
+    plan = _read_json(root / "scene_plan.json")
+    _write_json(
+        root / "mparanza_voice_request.json",
+        _hosted_voice_request(plan, approval),
+    )
+    intake["status"] = "approved_for_hosted_voice"
     intake["approved_at"] = approval["approved_at"]
     _write_json(root / "run_intake.json", intake)
     LOGGER.info("Narration and scene plan approved for rendering: %s", root)
@@ -483,64 +574,24 @@ def _verify_approval(run_dir: Path, intake: Mapping[str, Any]) -> dict[str, Any]
     """Return the current approval or fail closed on any approved-byte drift."""
 
     approval = _read_json(run_dir / "narration_approval.json")
+    if approval.get("confirmed_by_user") is not True:
+        raise ValueError("Approval lacks explicit user-confirmation evidence")
     expected = {
         "scene_plan_sha256": intake["scene_plan_sha256"],
         "narration_script_sha256": _sha256(run_dir / "narration_script.md"),
         "review_packet_sha256": _sha256(run_dir / "review_packet.md"),
+        "voice_disclosure_sha256": _json_sha256(intake["voice"]["disclosure"]),
     }
     for field, value in expected.items():
         if approval.get(field) != value:
             raise ValueError(f"Approval is stale: {field} no longer matches")
-    if approval.get("external_tts_approved") is not True:
-        raise ValueError("OpenAI speech transmission has not been approved")
+    if approval.get("hosted_voice_generation_approved") is not True:
+        raise ValueError("Hosted voice generation has not been approved")
+    plan = _read_json(run_dir / "scene_plan.json")
+    request = _read_json(run_dir / "mparanza_voice_request.json")
+    if request != _hosted_voice_request(plan, approval):
+        raise ValueError("Mparanza voice request no longer matches the approval")
     return approval
-
-
-def _speech_payload(text: str) -> dict[str, str]:
-    """Return the fixed English narration request body."""
-
-    return {
-        "model": OPENAI_TTS_MODEL,
-        "voice": OPENAI_TTS_VOICE,
-        "input": text,
-        "instructions": TTS_INSTRUCTIONS,
-        "response_format": "wav",
-    }
-
-
-def _synthesize_scene(api_key: str, text: str, output_path: Path) -> None:
-    """Synthesize one approved scene narration without logging its content."""
-
-    if len(api_key.strip()) < 20:
-        raise RuntimeError("OPENAI_API_KEY is missing or invalid")
-    request = urllib.request.Request(
-        OPENAI_SPEECH_ENDPOINT,
-        data=json.dumps(_speech_payload(text)).encode("utf-8"),
-        headers={
-            "Authorization": f"Bearer {api_key.strip()}",
-            "Content-Type": "application/json",
-        },
-        method="POST",
-    )
-    for attempt in range(1, 5):
-        retry_error: BaseException
-        try:
-            with urllib.request.urlopen(request, timeout=240) as response:  # nosec B310
-                output_path.write_bytes(response.read())
-            return
-        except urllib.error.HTTPError as exc:
-            if exc.code != 429 and not 500 <= exc.code < 600:
-                raise RuntimeError(
-                    f"Narration request was rejected with HTTP {exc.code}"
-                ) from exc
-            retry_error = exc
-        except (urllib.error.URLError, TimeoutError) as exc:
-            retry_error = exc
-        if attempt == 4:
-            raise RuntimeError(
-                "Narration request failed after four attempts"
-            ) from retry_error
-        time.sleep(min(2 ** (attempt - 1), 8))
 
 
 def _wav_duration(path: Path) -> float:
@@ -551,7 +602,7 @@ def _wav_duration(path: Path) -> float:
             duration = source.getnframes() / float(source.getframerate())
     except (OSError, EOFError, wave.Error) as exc:
         raise ValueError(
-            f"OpenAI speech did not return a readable WAV: {path}"
+            f"Hosted voice artifact is not a readable WAV: {path}"
         ) from exc
     if not math.isfinite(duration) or duration <= 0:
         raise ValueError(f"Invalid WAV duration: {duration}")
@@ -588,12 +639,363 @@ def _run_media(
     )
 
 
-def _fit_canvas(source: Path, output: Path, *, transparent: bool) -> None:
+def _safe_voice_bundle(bundle_path: Path) -> tuple[zipfile.ZipFile, dict[str, Any]]:
+    """Open one bounded ordinary ZIP and return its validated JSON manifest."""
+
+    candidate = bundle_path.expanduser()
+    if candidate.is_symlink():
+        raise ValueError("Hosted voice bundle must not be a symbolic link")
+    path = candidate.resolve()
+    if not path.is_file() or not 0 < path.stat().st_size <= MAX_VOICE_BUNDLE_BYTES:
+        raise ValueError("Hosted voice bundle has an unsupported size")
+    try:
+        archive = zipfile.ZipFile(path)
+    except (OSError, zipfile.BadZipFile) as exc:
+        raise ValueError("Hosted voice bundle is not a readable ZIP") from exc
+    infos = archive.infolist()
+    names = [info.filename for info in infos]
+    if len(names) != len(set(names)):
+        archive.close()
+        raise ValueError("Hosted voice bundle contains duplicate entries")
+    if len(infos) > MAX_SCENES + 1:
+        archive.close()
+        raise ValueError("Hosted voice bundle contains unexpected entries")
+    if sum(info.file_size for info in infos) > MAX_VOICE_BUNDLE_BYTES:
+        archive.close()
+        raise ValueError("Hosted voice bundle expands beyond the size limit")
+    for info in infos:
+        path_parts = Path(info.filename).parts
+        mode = info.external_attr >> 16
+        if (
+            info.is_dir()
+            or info.flag_bits & 0x1
+            or info.filename.startswith(("/", "\\"))
+            or "\\" in info.filename
+            or ".." in path_parts
+            or stat.S_ISLNK(mode)
+        ):
+            archive.close()
+            raise ValueError("Hosted voice bundle contains an unsafe entry")
+    if "manifest.json" not in names:
+        archive.close()
+        raise ValueError("Hosted voice bundle has no manifest.json")
+    manifest_info = archive.getinfo("manifest.json")
+    if not 0 < manifest_info.file_size <= 1024 * 1024:
+        archive.close()
+        raise ValueError("Hosted voice manifest has an unsupported size")
+    try:
+        manifest = json.loads(archive.read(manifest_info).decode("utf-8"))
+    except (KeyError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        archive.close()
+        raise ValueError("Hosted voice manifest is not valid UTF-8 JSON") from exc
+    if not isinstance(manifest, dict):
+        archive.close()
+        raise ValueError("Hosted voice manifest must be a JSON object")
+    return archive, manifest
+
+
+def attach_hosted_voice(run_dir: Path, voice_bundle_path: Path) -> dict[str, Any]:
+    """Validate and attach one authenticated Mparanza narration bundle."""
+
+    root = _ensure_output_boundary(run_dir)
+    intake = _read_json(root / "run_intake.json")
+    _verify_visual_inventory(root, intake)
+    approval = _verify_approval(root, intake)
+    plan = _read_json(root / "scene_plan.json")
+    request_path = root / "mparanza_voice_request.json"
+    request_payload = _read_json(request_path)
+    bundle_candidate = voice_bundle_path.expanduser()
+    manifest_path = root / "hosted_voice_manifest.json"
+    voice_dir = root / "hosted_voice"
+    archive, source_manifest = _safe_voice_bundle(bundle_candidate)
+    bundle_path = bundle_candidate.resolve()
+    input_hash = _sha256(bundle_path)
+    if manifest_path.exists() or voice_dir.exists():
+        archive.close()
+        if manifest_path.is_file():
+            existing = _read_json(manifest_path)
+            if existing.get("input_bundle_sha256") == input_hash:
+                return existing
+        raise ValueError("Use a fresh run for different hosted voice artifacts")
+
+    expected_manifest_fields = {
+        "schema_version",
+        "workflow",
+        "source",
+        "provider",
+        "model",
+        "voice",
+        "language",
+        "generated_at",
+        "request_sha256",
+        "scene_plan_sha256",
+        "approval_sha256",
+        "mparanza_application_retention",
+        "scenes",
+    }
+    try:
+        if set(source_manifest) != expected_manifest_fields:
+            raise ValueError("Hosted voice manifest has unexpected or missing fields")
+        expected = {
+            "schema_version": 1,
+            "workflow": "clara:research-video",
+            "source": HOSTED_VOICE_SOURCE,
+            "provider": HOSTED_VOICE_PROVIDER,
+            "model": HOSTED_VOICE_MODEL,
+            "voice": HOSTED_VOICE_NAMES[plan["language"]],
+            "language": plan["language"],
+            "request_sha256": _json_sha256(request_payload),
+            "scene_plan_sha256": intake["scene_plan_sha256"],
+            "approval_sha256": _json_sha256(approval),
+            "mparanza_application_retention": "in_memory_response_only",
+        }
+        for field, value in expected.items():
+            if source_manifest.get(field) != value:
+                raise ValueError(f"Hosted voice manifest does not match: {field}")
+        _nonempty_text(
+            source_manifest.get("generated_at"),
+            field="generated_at",
+            maximum=80,
+        )
+        source_scenes = source_manifest.get("scenes")
+        if not isinstance(source_scenes, list) or len(source_scenes) != len(
+            plan["scenes"]
+        ):
+            raise ValueError("Hosted voice manifest has incomplete scene audio")
+        expected_entries = {"manifest.json"}
+        ffmpeg = _resolve_ffmpeg()
+        staged_records: list[dict[str, Any]] = []
+        with tempfile.TemporaryDirectory(prefix="clara-hosted-voice-") as temp_dir:
+            staged_dir = Path(temp_dir) / "hosted_voice"
+            staged_dir.mkdir()
+            for index, (scene, item) in enumerate(
+                zip(plan["scenes"], source_scenes, strict=True),
+                start=1,
+            ):
+                required_scene_fields = {
+                    "id",
+                    "audio",
+                    "sha256",
+                    "size_bytes",
+                    "frame_count",
+                    "frame_rate",
+                    "channels",
+                    "sample_width_bytes",
+                    "duration_seconds",
+                }
+                if not isinstance(item, dict) or set(item) != required_scene_fields:
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} has invalid fields"
+                    )
+                expected_audio = f"audio/{index:02d}-{scene['id']}.wav"
+                if item.get("id") != scene["id"] or item.get("audio") != expected_audio:
+                    raise ValueError(
+                        "Hosted voice scenes do not match the approved order"
+                    )
+                expected_entries.add(expected_audio)
+                try:
+                    info = archive.getinfo(expected_audio)
+                except KeyError as exc:
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} has no declared WAV"
+                    ) from exc
+                if not 0 < info.file_size <= MAX_AUDIO_BYTES:
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} has an invalid size"
+                    )
+                audio = archive.read(info)
+                if len(audio) != item.get("size_bytes") or hashlib.sha256(
+                    audio
+                ).hexdigest() != item.get("sha256"):
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} failed byte validation"
+                    )
+                source_path = staged_dir / f"source-{index:02d}.wav"
+                source_path.write_bytes(audio)
+                try:
+                    with wave.open(str(source_path), "rb") as source:
+                        media = {
+                            "frame_count": source.getnframes(),
+                            "frame_rate": source.getframerate(),
+                            "channels": source.getnchannels(),
+                            "sample_width_bytes": source.getsampwidth(),
+                        }
+                except (OSError, EOFError, wave.Error) as exc:
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} is not WAV"
+                    ) from exc
+                duration = media["frame_count"] / float(media["frame_rate"])
+                for field, value in media.items():
+                    if item.get(field) != value:
+                        raise ValueError(
+                            f"Hosted voice scene {scene['id']} has stale {field}"
+                        )
+                if not isinstance(
+                    item.get("duration_seconds"), (int, float)
+                ) or not math.isclose(
+                    duration,
+                    float(item["duration_seconds"]),
+                    abs_tol=0.001,
+                ):
+                    raise ValueError(
+                        f"Hosted voice scene {scene['id']} has a stale duration"
+                    )
+                filename = f"{index:02d}-{scene['id']}.wav"
+                staged_path = staged_dir / filename
+                _run_media(
+                    [
+                        ffmpeg,
+                        "-y",
+                        "-v",
+                        "error",
+                        "-i",
+                        str(source_path),
+                        "-vn",
+                        "-ar",
+                        "48000",
+                        "-ac",
+                        "1",
+                        "-c:a",
+                        "pcm_s16le",
+                        str(staged_path),
+                    ]
+                )
+                source_path.unlink()
+                staged_records.append(
+                    {
+                        "id": scene["id"],
+                        "source_audio": expected_audio,
+                        "source_sha256": item["sha256"],
+                        "audio": f"hosted_voice/{filename}",
+                        "sha256": _sha256(staged_path),
+                        "duration_seconds": round(_wav_duration(staged_path), 6),
+                    }
+                )
+            if set(archive.namelist()) != expected_entries:
+                raise ValueError("Hosted voice bundle contains undeclared entries")
+            shutil.copytree(staged_dir, voice_dir)
+    finally:
+        archive.close()
+
+    manifest = {
+        "schema_version": 1,
+        "workflow": "clara:research-video",
+        "source": HOSTED_VOICE_SOURCE,
+        "provider": "Mparanza",
+        "upstream_provider": source_manifest["provider"],
+        "model": source_manifest["model"],
+        "voice": source_manifest["voice"],
+        "language": plan["language"],
+        "attached_at": _utc_now(),
+        "generated_at": source_manifest["generated_at"],
+        "scene_plan_sha256": intake["scene_plan_sha256"],
+        "approval_sha256": _json_sha256(approval),
+        "mparanza_voice_request_sha256": _sha256(request_path),
+        "input_bundle_sha256": input_hash,
+        "mparanza_application_retention": "in_memory_response_only",
+        "scenes": staged_records,
+    }
+    _write_json(manifest_path, manifest)
+    intake["status"] = "ready_to_render"
+    intake["execution_trace"].append(
+        {
+            "step_id": "attach-hosted-voice",
+            "kind": "authenticated_hosted_voice_attachment",
+            "status": "completed",
+            "execution_location": "mparanza_host_and_local_workspace",
+            "inputs": [
+                str(request_path),
+                str(root / "narration_approval.json"),
+                str(bundle_path),
+            ],
+            "outputs": [str(manifest_path), str(voice_dir)],
+        }
+    )
+    _write_json(root / "run_intake.json", intake)
+    LOGGER.info("Hosted voice artifacts attached: %s", manifest_path)
+    return manifest
+
+
+def _verify_hosted_voice(
+    run_dir: Path,
+    intake: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    approval: Mapping[str, Any],
+) -> tuple[dict[str, Any], list[Path], list[float]]:
+    """Verify the attached hosted voice manifest and staged audio bytes."""
+
+    manifest_path = run_dir / "hosted_voice_manifest.json"
+    if not manifest_path.is_file() or manifest_path.is_symlink():
+        raise ValueError(
+            "Hosted voice artifacts are missing; attach them before rendering"
+        )
+    manifest = _read_json(manifest_path)
+    if manifest.get("schema_version") != 1:
+        raise ValueError("Hosted voice manifest schema_version is invalid")
+    if manifest.get("workflow") != "clara:research-video":
+        raise ValueError("Hosted voice manifest workflow is invalid")
+    expected = {
+        "source": HOSTED_VOICE_SOURCE,
+        "provider": "Mparanza",
+        "upstream_provider": HOSTED_VOICE_PROVIDER,
+        "model": HOSTED_VOICE_MODEL,
+        "voice": HOSTED_VOICE_NAMES[plan["language"]],
+        "language": plan["language"],
+        "scene_plan_sha256": intake["scene_plan_sha256"],
+        "approval_sha256": _json_sha256(approval),
+        "mparanza_voice_request_sha256": _sha256(
+            run_dir / "mparanza_voice_request.json"
+        ),
+    }
+    for field, value in expected.items():
+        if manifest.get(field) != value:
+            raise ValueError(f"Hosted voice manifest is stale: {field}")
+    records = manifest.get("scenes")
+    if not isinstance(records, list) or len(records) != len(plan["scenes"]):
+        raise ValueError("Hosted voice manifest has incomplete scene audio")
+    paths: list[Path] = []
+    durations: list[float] = []
+    for scene, record in zip(plan["scenes"], records, strict=True):
+        if not isinstance(record, dict) or record.get("id") != scene["id"]:
+            raise ValueError("Hosted voice scene order no longer matches the plan")
+        relative_value = record.get("audio")
+        if not isinstance(relative_value, str):
+            raise ValueError(f"Hosted voice scene {scene['id']} has no audio path")
+        relative = Path(relative_value)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("Hosted voice audio paths must stay inside the run")
+        path = (run_dir / relative).resolve()
+        if not path.is_relative_to(run_dir) or not path.is_file() or path.is_symlink():
+            raise ValueError(f"Hosted voice audio is unavailable: {scene['id']}")
+        if _sha256(path) != record.get("sha256"):
+            raise ValueError(
+                f"Hosted voice audio changed after attachment: {scene['id']}"
+            )
+        duration = _wav_duration(path)
+        recorded_duration = record.get("duration_seconds")
+        if not isinstance(recorded_duration, (int, float)) or not math.isclose(
+            duration,
+            float(recorded_duration),
+            abs_tol=0.001,
+        ):
+            raise ValueError(f"Hosted voice duration changed: {scene['id']}")
+        paths.append(path)
+        durations.append(duration)
+    return manifest, paths, durations
+
+
+def _fit_canvas(
+    source: Path,
+    output: Path,
+    *,
+    transparent: bool,
+    voice_disclosure: str | None = None,
+) -> None:
     """Fit an image on a safe 16:9 canvas without cropping source content."""
 
     with Image.open(source) as opened:
         image = opened.convert("RGBA")
-        margin = 0.90
+        margin = 0.86 if voice_disclosure and not transparent else 0.90
         maximum = (round(FRAME_WIDTH * margin), round(FRAME_HEIGHT * margin))
         image.thumbnail(maximum, Image.Resampling.LANCZOS)
         background = (0, 0, 0, 0) if transparent else (250, 250, 248, 255)
@@ -603,6 +1005,32 @@ def _fit_canvas(source: Path, output: Path, *, transparent: bool) -> None:
             (FRAME_HEIGHT - image.height) // 2,
         )
         canvas.alpha_composite(image, dest=position)
+        if voice_disclosure and not transparent:
+            draw = ImageDraw.Draw(canvas)
+            font_size = max(8, round(FRAME_HEIGHT * 0.019))
+            font = ImageFont.load_default(size=font_size)
+            text_box = draw.textbbox((0, 0), voice_disclosure, font=font)
+            text_width = text_box[2] - text_box[0]
+            text_height = text_box[3] - text_box[1]
+            padding_x = max(3, round(FRAME_WIDTH * 0.004))
+            padding_y = max(1, round(FRAME_HEIGHT * 0.003))
+            right = FRAME_WIDTH - max(4, round(FRAME_WIDTH * 0.012))
+            bottom = FRAME_HEIGHT - max(2, round(FRAME_HEIGHT * 0.008))
+            left = right - text_width - 2 * padding_x
+            top = bottom - text_height - 2 * padding_y
+            draw.rounded_rectangle(
+                (left, top, right, bottom),
+                radius=max(2, padding_y * 2),
+                fill=(250, 250, 248, 235),
+                outline=(0, 32, 96, 120),
+                width=1,
+            )
+            draw.text(
+                (left + padding_x, top + padding_y - text_box[1]),
+                voice_disclosure,
+                font=font,
+                fill=(0, 32, 96, 255),
+            )
         canvas.save(output, format="PNG")
 
 
@@ -912,12 +1340,16 @@ def _validate_media(ffmpeg: str, video: Path) -> dict[str, Any]:
 
 
 def _artifact(
-    path: Path, kind: str, status: str = "ready_for_review"
+    path: Path,
+    kind: str,
+    *,
+    root: Path,
+    status: str = "ready_for_review",
 ) -> dict[str, Any]:
     """Return a stable artifact manifest record."""
 
     return {
-        "path": path.name,
+        "path": str(path.relative_to(root)),
         "kind": kind,
         "status": status,
         "size_bytes": path.stat().st_size,
@@ -943,23 +1375,26 @@ def _verify_existing_render(run_dir: Path, report: dict[str, Any]) -> dict[str, 
     return report
 
 
-def render_run(run_dir: Path, *, api_key: str | None = None) -> dict[str, Any]:
-    """Synthesize, render, validate, and declare one approved research video."""
+def render_run(run_dir: Path) -> dict[str, Any]:
+    """Render, validate, and declare one hosted-voice research video."""
 
     root = run_dir.expanduser().resolve()
     intake = _read_json(root / "run_intake.json")
     _verify_visual_inventory(root, intake)
     approval = _verify_approval(root, intake)
     plan = _read_json(root / "scene_plan.json")
+    voice_manifest, narration_paths, speech_durations = _verify_hosted_voice(
+        root,
+        intake,
+        plan,
+        approval,
+    )
     existing_report = root / "render_report.json"
     if existing_report.is_file():
         report = _read_json(existing_report)
         if report.get("scene_plan_sha256") == intake["scene_plan_sha256"]:
             return _verify_existing_render(root, report)
         raise ValueError("Use a fresh output directory for a different rendered plan")
-    selected_key = (
-        api_key if api_key is not None else os.environ.get("OPENAI_API_KEY", "")
-    )
     ffmpeg = _resolve_ffmpeg()
 
     final_video = root / "research_video.mp4"
@@ -967,18 +1402,16 @@ def render_run(run_dir: Path, *, api_key: str | None = None) -> dict[str, Any]:
     final_captions = root / "captions.vtt"
     with tempfile.TemporaryDirectory(prefix="clara-research-video-") as temp_dir:
         work = Path(temp_dir)
-        narration_paths: list[Path] = []
-        speech_durations: list[float] = []
         canvas_paths: list[Path] = []
         foreground_paths: list[Path | None] = []
         for index, scene in enumerate(plan["scenes"], start=1):
-            narration_path = work / f"narration-{index:02d}.wav"
-            _synthesize_scene(selected_key, scene["narration"], narration_path)
-            narration_paths.append(narration_path)
-            speech_durations.append(_wav_duration(narration_path))
-
             canvas_path = work / f"canvas-{index:02d}.png"
-            _fit_canvas(Path(scene["image"]), canvas_path, transparent=False)
+            _fit_canvas(
+                Path(scene["image"]),
+                canvas_path,
+                transparent=False,
+                voice_disclosure=intake["voice"]["disclosure"],
+            )
             canvas_paths.append(canvas_path)
             foreground_path: Path | None = None
             if "foreground_image" in scene:
@@ -1039,7 +1472,9 @@ def render_run(run_dir: Path, *, api_key: str | None = None) -> dict[str, Any]:
         "rendered_at": _utc_now(),
         "scene_plan_sha256": intake["scene_plan_sha256"],
         "approval_sha256": _json_sha256(approval),
+        "hosted_voice_manifest_sha256": _sha256(root / "hosted_voice_manifest.json"),
         "scene_count": len(plan["scenes"]),
+        "language": plan["language"],
         "target_duration_seconds": round(target_duration, 3),
         "scene_speech_durations_seconds": [
             round(value, 3) for value in speech_durations
@@ -1051,47 +1486,31 @@ def render_run(run_dir: Path, *, api_key: str | None = None) -> dict[str, Any]:
             "placement": "inside inter-scene narration silence",
         },
         "voice": {
-            "provider": "OpenAI",
-            "model": OPENAI_TTS_MODEL,
-            "name": OPENAI_TTS_VOICE,
+            "provider": "Mparanza",
+            "upstream_provider": voice_manifest["upstream_provider"],
+            "source": HOSTED_VOICE_SOURCE,
+            "model": voice_manifest["model"],
+            "name": voice_manifest["voice"],
+            "disclosure": intake["voice"]["disclosure"],
+            "disclosure_placement": "visible footer on every scene",
         },
         "media": media,
         "requires_semantic_review": True,
+        "requires_voice_content_review": True,
         "flat_image_parallax_claimed": False,
     }
     _write_json(root / "render_report.json", report)
-    final_artifacts = {
-        "schema_version": 1,
-        "workflow": "clara:research-video",
-        "status": "ready_for_review",
-        "review_status": "pending_semantic_and_visual_review",
-        "outputs": [
-            _artifact(final_video, "video/mp4"),
-            _artifact(final_poster, "image/jpeg"),
-            _artifact(final_captions, "text/vtt"),
-            _artifact(root / "narration_script.md", "text/markdown"),
-            _artifact(root / "render_report.json", "application/json"),
-        ],
-        "caveats": [
-            "Mechanical validation does not prove scientific or source fidelity.",
-            "Flat images use restrained pan or zoom, not true parallax.",
-        ],
-        "next_actions": [
-            "Watch the complete video and review every scene against its source basis.",
-            "Revise, reapprove, and rerender if narration, legibility, pacing, or motion is materially wrong.",
-        ],
-    }
-    _write_json(root / "final_artifacts.json", final_artifacts)
     intake["status"] = "ready_for_review"
     intake["execution_trace"].append(
         {
             "step_id": "render-research-video",
-            "kind": "external_tts_and_local_media_render",
+            "kind": "hosted_voice_local_media_render",
             "status": "completed",
-            "execution_location": "openai_speech_and_local_codex_workspace",
+            "execution_location": "local_codex_workspace",
             "inputs": [
                 str(root / "scene_plan.json"),
                 str(root / "narration_approval.json"),
+                str(root / "hosted_voice_manifest.json"),
             ],
             "outputs": [
                 str(final_video),
@@ -1103,6 +1522,56 @@ def render_run(run_dir: Path, *, api_key: str | None = None) -> dict[str, Any]:
         }
     )
     _write_json(root / "run_intake.json", intake)
+    final_artifacts = {
+        "schema_version": 1,
+        "workflow": "clara:research-video",
+        "status": "ready_for_review",
+        "review_status": "pending_semantic_and_visual_review",
+        "voice_disclosure": {
+            "text": intake["voice"]["disclosure"],
+            "placement": "visible footer on every scene",
+        },
+        "outputs": [
+            _artifact(final_video, "video/mp4", root=root),
+            _artifact(final_poster, "image/jpeg", root=root),
+            _artifact(final_captions, "text/vtt", root=root),
+            _artifact(root / "narration_script.md", "text/markdown", root=root),
+            _artifact(root / "scene_plan.json", "application/json", root=root),
+            _artifact(
+                root / "mparanza_voice_request.json",
+                "application/json",
+                root=root,
+            ),
+            _artifact(root / "review_packet.md", "text/markdown", root=root),
+            _artifact(
+                root / "narration_approval.json",
+                "application/json",
+                root=root,
+            ),
+            _artifact(
+                root / "hosted_voice_manifest.json",
+                "application/json",
+                root=root,
+            ),
+            *[_artifact(path, "audio/wav", root=root) for path in narration_paths],
+            _artifact(root / "run_intake.json", "application/json", root=root),
+            _artifact(root / "render_report.json", "application/json", root=root),
+        ],
+        "caveats": [
+            "Mechanical validation does not prove scientific or source fidelity.",
+            (
+                "Audio hashes and durations do not prove that the spoken words "
+                "match the approved narration or cryptographically authenticate "
+                "the upstream provider's semantic delivery."
+            ),
+            "Flat images use restrained pan or zoom, not true parallax.",
+        ],
+        "next_actions": [
+            "Watch the complete video and review every scene against its source basis.",
+            "Revise, reapprove, and rerender if narration, legibility, pacing, or motion is materially wrong.",
+        ],
+    }
+    _write_json(root / "final_artifacts.json", final_artifacts)
     LOGGER.info("Research video rendered and ready for review: %s", final_video)
     return report
 
@@ -1118,6 +1587,13 @@ def _build_parser() -> argparse.ArgumentParser:
     approve = subparsers.add_parser("approve", help="Bind approval to prepared bytes")
     approve.add_argument("--run-dir", required=True, type=Path)
     approve.add_argument("--approved-by", default="requesting_user")
+    approve.add_argument("--confirmed-by-user", action="store_true")
+    attach_voice = subparsers.add_parser(
+        "attach-voice",
+        help="Attach an authenticated Mparanza voice bundle to an approved run",
+    )
+    attach_voice.add_argument("--run-dir", required=True, type=Path)
+    attach_voice.add_argument("--voice-bundle", required=True, type=Path)
     render = subparsers.add_parser("render", help="Render an approved scene plan")
     render.add_argument("--run-dir", required=True, type=Path)
     return parser
@@ -1131,7 +1607,13 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "prepare":
         prepare_run(args.scene_plan, args.output_dir)
     elif args.command == "approve":
-        approve_run(args.run_dir, args.approved_by)
+        approve_run(
+            args.run_dir,
+            args.approved_by,
+            confirmed_by_user=args.confirmed_by_user,
+        )
+    elif args.command == "attach-voice":
+        attach_hosted_voice(args.run_dir, args.voice_bundle)
     else:
         render_run(args.run_dir)
     return 0

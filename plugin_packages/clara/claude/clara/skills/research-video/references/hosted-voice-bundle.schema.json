@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara-research-video-hosted-voice-v1.json",
+  "title": "Clara Research Video hosted voice bundle manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "workflow",
+    "source",
+    "provider",
+    "model",
+    "voice",
+    "language",
+    "generated_at",
+    "request_sha256",
+    "scene_plan_sha256",
+    "approval_sha256",
+    "mparanza_application_retention",
+    "scenes"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "workflow": {"const": "clara:research-video"},
+    "source": {"const": "mparanza_hosted_openai_voice"},
+    "provider": {"const": "OpenAI"},
+    "model": {"const": "gpt-4o-mini-tts"},
+    "voice": {"enum": ["cedar", "marin"]},
+    "language": {"enum": ["de", "en", "es", "fr", "it"]},
+    "generated_at": {"type": "string", "minLength": 1, "maxLength": 80},
+    "request_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "scene_plan_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "approval_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "mparanza_application_retention": {"const": "in_memory_response_only"},
+    "scenes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "audio",
+          "sha256",
+          "size_bytes",
+          "frame_count",
+          "frame_rate",
+          "channels",
+          "sample_width_bytes",
+          "duration_seconds"
+        ],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"},
+          "audio": {"type": "string", "pattern": "^audio/[0-9]{2}-[a-z0-9][a-z0-9-]{0,63}\\.wav$"},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "size_bytes": {"type": "integer", "minimum": 1},
+          "frame_count": {"type": "integer", "minimum": 1},
+          "frame_rate": {"type": "integer", "minimum": 1},
+          "channels": {"enum": [1, 2]},
+          "sample_width_bytes": {"enum": [1, 2, 3, 4]},
+          "duration_seconds": {"type": "number", "exclusiveMinimum": 0}
+        }
+      }
+    }
+  }
+}

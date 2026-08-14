@@ -23,6 +23,7 @@ EXPECTED_HOSTED_SERVICES = {
     "hosted-voice",
     "plugin-feedback",
     "plugin-update-check",
+    "research-video-voice",
     "retail-data",
 }
 
@@ -205,6 +206,15 @@ def test_clara_hosted_records_use_source_backed_retention_and_cleanup() -> None:
     assert "no age-based or event-triggered automatic deletion" in retail_retention
     assert "reject new work without deleting retained artifacts" in retail_retention
 
+    research_video_voice = manifests["research-video-voice"]
+    assert research_video_voice["retention"]["status"] == "partially_documented"
+    assert "does not write narration requests or audio" in research_video_voice[
+        "retention"
+    ]["statement"]
+    assert "not established by the plugin source" in research_video_voice[
+        "retention"
+    ]["statement"]
+
 
 def test_clara_register_includes_non_case_automatic_network_boundaries() -> None:
     services = {
@@ -284,8 +294,9 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
             if boundary["requires_confirmation"]:
                 assert boundary["optional"] is True
                 assert boundary["id"] in {
-                    "approved-managed-ocr-runtime",
-                    "consented-plugin-feedback",
+                        "approved-managed-ocr-runtime",
+                        "approved-research-video-voice",
+                        "consented-plugin-feedback",
                     "openai-speech-generation",
                     "send-participant-link",
                 }

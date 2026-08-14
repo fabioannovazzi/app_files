@@ -31,7 +31,11 @@ from starlette.middleware.trustedhost import TrustedHostMiddleware
 from modules.auth.api import router as auth_router
 from modules.auth.api import site_router as auth_site_router
 from modules.auth.config import get_auth_config
-from modules.auth.dependencies import require_site_permission_for_request
+from modules.auth.dependencies import (
+    require_authenticated_user,
+    require_authenticated_user_for_site,
+    require_site_permission_for_request,
+)
 from modules.case_notes_voice.api import router as case_notes_voice_router
 from modules.case_notes_voice.api import site_router as case_notes_voice_site_router
 from modules.case_notes_voice.api import (
@@ -55,6 +59,10 @@ from modules.pdp.language import (
     resolve_language,
 )
 from modules.pdp.legal_content import get_legal_page
+from modules.research_video_voice.api import router as research_video_voice_router
+from modules.research_video_voice.api import (
+    site_router as research_video_voice_site_router,
+)
 from modules.utilities.logging_config import configure_logging
 from modules.utilities.secrets_loader import load_env_from_secrets_file
 from modules.utilities.session_cleanup import cleanup_sessions
@@ -1550,6 +1558,10 @@ def create_app() -> FastAPI:
             case_notes_voice_site_router,
             [Depends(require_site_permission_for_request)],
         ),
+        (
+            research_video_voice_site_router,
+            [Depends(require_authenticated_user_for_site)],
+        ),
     ]
     for protected_router, dependencies in protected_site_routers:
         app.include_router(protected_router, dependencies=list(dependencies))
@@ -1558,6 +1570,10 @@ def create_app() -> FastAPI:
     app.include_router(
         case_notes_voice_router,
         dependencies=[Depends(require_site_permission_for_request)],
+    )
+    app.include_router(
+        research_video_voice_router,
+        dependencies=[Depends(require_authenticated_user)],
     )
 
     @app.on_event("startup")

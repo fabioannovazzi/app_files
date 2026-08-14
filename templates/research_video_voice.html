@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Research Video narration | Mparanza</title>
+  <style>
+    :root { color-scheme: light; --navy: #071d49; --cyan: #00b0f0; --ink: #171816; --muted: #5d6470; --rule: #dce1e8; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--ink); font-family: "Instrument Sans", Arial, sans-serif; }
+    main { width: min(760px, calc(100% - 40px)); margin: 0 auto; padding: 72px 0 96px; }
+    header { border-top: 3px solid var(--cyan); padding-top: 28px; }
+    .eyebrow { color: var(--navy); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { margin: 14px 0 18px; color: var(--navy); font-size: clamp(2rem, 6vw, 3.6rem); line-height: .98; letter-spacing: -.045em; }
+    .lead { max-width: 650px; color: var(--muted); font-size: 1.08rem; line-height: 1.58; }
+    .boundary { margin: 36px 0; padding: 22px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+    .boundary p { margin: 0 0 10px; line-height: 1.55; }
+    .boundary p:last-child { margin-bottom: 0; }
+    label { display: block; margin-bottom: 10px; font-weight: 650; }
+    input[type=file] { width: 100%; padding: 18px; border: 1px solid var(--rule); background: #fff; font: inherit; }
+    .summary { min-height: 48px; margin: 18px 0; color: var(--muted); line-height: 1.5; white-space: pre-line; }
+    button { border: 0; border-radius: 0; padding: 14px 22px; background: var(--navy); color: #fff; font: inherit; font-weight: 700; cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .42; }
+    .status { min-height: 26px; margin-top: 18px; color: var(--navy); font-weight: 600; }
+    footer { margin-top: 50px; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+    a { color: var(--navy); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="eyebrow">Clara · Research Video</div>
+      <h1>Generate the approved narration</h1>
+      <p class="lead">Upload the request created after you approved the exact narration and visual plan. Mparanza generates one audio file per scene and returns a ZIP for Clara to render locally.</p>
+    </header>
+
+    <section class="boundary" aria-label="Data handling">
+      <p><strong>Authentication is required.</strong> The service is currently available to every signed-in Mparanza account; no email allowlist is applied.</p>
+      <p>Only the approved narration, language, scene identifiers and approval hashes are sent to Mparanza and OpenAI. Images, research sources, source-basis notes and Vera files are not uploaded.</p>
+      <p>Mparanza builds the response in memory and does not write the request or generated audio to application storage. OpenAI processing remains governed by Mparanza’s provider arrangement. <a href="/data-handling?lang=en">Data handling details</a>.</p>
+    </section>
+
+    <form id="voiceForm">
+      <label for="requestFile">Approved Mparanza voice request</label>
+      <input id="requestFile" type="file" accept=".json,application/json" required>
+      <div id="requestSummary" class="summary" aria-live="polite">Choose the approved request JSON created by Clara.</div>
+      <button id="generateButton" type="submit" disabled>Generate and download narration</button>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+    </form>
+
+    <footer>The downloaded ZIP remains a review artifact. Clara validates its hashes and media before rendering; the professional reviewer still checks pronunciation, pacing and every spoken claim.</footer>
+  </main>
+  <script src="/static/js/research-video-voice.js"></script>
+</body>
+</html>
