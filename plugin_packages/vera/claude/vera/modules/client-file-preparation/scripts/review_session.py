@@ -524,8 +524,17 @@ def _document_item(
     *,
     language: str,
 ) -> dict[str, Any]:
+    needs_attention = (
+        record.category == CATEGORY_NON_CLASSIFICATI
+        or record.confidence != "alta"
+        or bool(record.notes)
+        or evidence is None
+        or not evidence.readable
+        or bool(evidence.notes)
+        or evidence.extraction_method.startswith("unsupported")
+    )
     evidence_refs: list[dict[str, Any]] = []
-    if evidence and evidence.text_path:
+    if needs_attention and evidence and evidence.text_path:
         text_path = output_dir / "extracted" / evidence.text_path
         evidence_refs.append(
             {
@@ -544,15 +553,6 @@ def _document_item(
                 "notes": [_localized_note(note, language) for note in evidence.notes],
             }
         )
-    needs_attention = (
-        record.category == CATEGORY_NON_CLASSIFICATI
-        or record.confidence != "alta"
-        or bool(record.notes)
-        or evidence is None
-        or not evidence.readable
-        or bool(evidence.notes)
-        or evidence.extraction_method.startswith("unsupported")
-    )
     return _base_item(
         f"document-{index}",
         "document_inventory",
@@ -1415,6 +1415,10 @@ def write_review_session_artifacts(
             "document_text_characters": ITEM_PREVIEW_CHARS,
             "fiscal_evidence_characters": ITEM_PREVIEW_CHARS,
             "draft_text_characters": MAX_PREVIEW_CHARS,
+        },
+        "preview_policy": {
+            "document_inventory": "exceptions_only",
+            "exact_source_available": True,
         },
         "review_type": "client_file_preparation_folder_review",
         "items": items,

@@ -96,12 +96,20 @@
     {
       "id": "reject-secret-and-session-material",
       "control": "Case and review validators reject credential, authentication-token, cookie, signature, and session-material fields before persistence."
+    },
+    {
+      "id": "purpose-scoped-review-and-reference",
+      "control": "The review package omits the wholesale client_identity object after its required values have been mapped into proposed filing fields, while retaining case purpose, proposals, evidence extracts, risks, and missing information; persisted MCP phases reuse a four-hour run- and hash-bound opaque reference instead of retransmitting those private rows."
+    },
+    {
+      "id": "exact-known-identifier-query-guard",
+      "control": "Before the optional public SARI connector transmits a query, it rejects both mechanically recognizable identifier formats and exact values already recorded as the case client reference or client identity; it does not attempt semantic PII classification."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "371284826b783c33422e4047ec31d2c99ac3f968a3cb5fd608d724f733c6d7e8"
+    "source_fingerprint": "a1333b0ccdb83c4fd230f967bda83cfe0f4d2efa3f5903f5d23ea401f27f4598"
   }
 }
