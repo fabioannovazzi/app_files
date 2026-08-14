@@ -30,9 +30,18 @@
         ]
       },
       {
+        "id": "non-identifying-review-index-and-selected-cases",
+        "purpose": "Select and interpret review cases without sending the complete ordinary review payload",
+        "content": "The model first receives aggregate item-type counts and an index of opaque per-run case handles, item type, normalized categorical review status, recommended action and only the names of present mechanical signal classes; signal values and source facts remain out. Accepted non-interpretive artifact items remain available to the human widget but are omitted. The model can then request at most 25 selected cases per call. Selected context contains only populated mapped fields such as side, dates, signed amounts, currency, description, beneficiary or counterparty, account name, entity, party, direction, deterministic match stage and deltas, and missing-evidence reason. Unmapped raw columns, empty fields, physical source locators, technical row IDs, review write targets, duplicate facts and the redundant absolute amount are omitted. Exact references, movement numbers, shared references and account codes are off by default and can be requested only for selected cases. Real names, descriptions and other accounting facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
         "id": "bounded-luna-residual-resolution",
         "purpose": "Classify, identify, or suggest eligible relationships for unresolved bank movements under the user's selected certainty threshold",
-        "content": "One bounded packet containing the complete admitted set of unresolved bank rows and hard-compatible journal candidates; populated canonical signed amount, date, description, beneficiary or counterparty, reference, movement number, account and perimeter fields selected after source-column mapping; and the reviewed matching policy. Unmapped raw columns, empty canonical fields, physical source locators and the redundant absolute amount are omitted",
+        "content": "One bounded packet containing the complete admitted set of unresolved bank rows and hard-compatible journal candidates; populated canonical signed amount, date, description, beneficiary or counterparty, reference, movement number, account and perimeter fields selected after source-column mapping; and the reviewed matching policy. Unmapped raw columns, empty canonical fields, physical source locators and the redundant absolute amount are omitted. This separate Codex-only worker phase is unchanged by the ordinary review-index transport.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -56,6 +65,14 @@
     {
       "id": "bounded-validated-luna-resolution-funnel",
       "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a pinned deny-default Luna worker. It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness."
+    },
+    {
+      "id": "component-private-review-transport",
+      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface."
+    },
+    {
+      "id": "bounded-selected-case-projection",
+      "control": "The read-only case-context tool accepts only opaque handles bound to the current in-memory review reference, rejects unknown or duplicate handles, limits each call to 25 cases and 500000 response bytes, projects explicit post-mapping field allowlists, and keeps exact professional identifiers off unless explicitly requested for those selected cases."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",
@@ -86,6 +103,6 @@
     "reviewed_at": "2026-08-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b60b0bdbb515c91f767bc0e393697258f44ac9750e661042019cd588757d725c"
+    "source_fingerprint": "067f92a6ecfe9690b746f8ea33c6cf39795b0aa46de729d97cbcf50fa80abdf3"
   }
 }

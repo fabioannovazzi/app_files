@@ -1246,15 +1246,21 @@ def test_audit_reconciliation_mcp_server_validates_and_renders_review_payload() 
     assert {
         "validate_audit_reconciliation_review",
         "render_audit_reconciliation_review",
+        "get_audit_reconciliation_case_context",
     } <= tool_names
     validate_result = responses[3]["result"]["structuredContent"]
     assert validate_result["ok"] is True
     assert validate_result["item_count"] == 2
-    assert "scripts/review_server.py" in validate_result["message"]
-    assert "artifact_card.md" in validate_result["message"]
+    assert "review_payload" not in validate_result
+    assert validate_result["model_context_index"]["indexed_case_count"] == 2
+    assert "INV-1" not in json.dumps(validate_result)
     render_result = responses[4]["result"]
     assert render_result["structuredContent"]["widget_type"] == (
         "audit_reconciliation_review"
+    )
+    assert "review_payload" not in render_result["structuredContent"]
+    assert render_result["_meta"]["private_review_payload"]["review_payload"] == (
+        review_payload
     )
     assert (
         render_result["_meta"]["openai/outputTemplate"]
@@ -1271,6 +1277,8 @@ def test_audit_reconciliation_mcp_server_validates_and_renders_review_payload() 
     assert "ui://widget/audit-reconciliation-review.html" in resource_uris
     widget_html = responses[6]["result"]["contents"][0]["text"]
     assert "Audit Reconciliation Review" in widget_html
+    assert "toolResponseMetadata" in widget_html
+    assert "private_review_payload" in widget_html
 
 
 @pytest.mark.parametrize(
@@ -1284,6 +1292,7 @@ def test_audit_reconciliation_mcp_server_validates_and_renders_review_payload() 
         "prompts/list",
         "tool:validate_audit_reconciliation_review",
         "tool:render_audit_reconciliation_review",
+        "tool:get_audit_reconciliation_case_context",
         "tool:save_audit_reconciliation_decisions",
         "tool:apply_audit_reconciliation_decisions",
     ],
@@ -1318,6 +1327,7 @@ def test_audit_mcp_rejects_expanded_tree_before_every_public_surface(
         "prompts/list",
         "tool:validate_audit_reconciliation_review",
         "tool:render_audit_reconciliation_review",
+        "tool:get_audit_reconciliation_case_context",
         "tool:save_audit_reconciliation_decisions",
         "tool:apply_audit_reconciliation_decisions",
     ],
@@ -1582,10 +1592,15 @@ def test_audit_reconciliation_mcp_server_accepts_local_review_paths(
     validate_result = responses[2]["result"]["structuredContent"]
     assert validate_result["ok"] is True
     assert validate_result["item_count"] == 2
-    assert "review_payload_path" in validate_result["message"]
-    render_result = responses[3]["result"]["structuredContent"]
-    assert render_result["review_payload"]["run_id"] == _customer_run_id(output_dir)
-    assert render_result["decision_policy"]["can_persist"] is True
+    assert "opaque reference" in validate_result["message"]
+    assert "review_payload" not in validate_result
+    render_response = responses[3]["result"]
+    assert "review_payload" not in render_response["structuredContent"]
+    private_payload = render_response["_meta"]["private_review_payload"]
+    assert private_payload["review_payload"]["run_id"] == _customer_run_id(
+        output_dir
+    )
+    assert private_payload["decision_policy"]["can_persist"] is True
     save_result = responses[4]["result"]["structuredContent"]
     assert save_result["ok"] is True
     assert save_result["persisted"] is True

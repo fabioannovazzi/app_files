@@ -177,9 +177,99 @@ const MAX_PAYLOAD_BYTES = 2_000_000;
 const TOOL_NAMES = {
   validateReview: "validate_check_entries_review",
   renderReview: "render_check_entries_review",
+  caseContext: "get_check_entries_case_context",
   saveDecisions: "save_check_entries_decisions",
   applyDecisions: "apply_check_entries_decisions",
 };
+const MODEL_CONTEXT_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+const MODEL_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
+const MAX_MODEL_CONTEXTS = 32;
+const MAX_MODEL_CASES_PER_CALL = 25;
+const MAX_MODEL_CONTEXT_BYTES = 500_000;
+const MODEL_CONTEXTS = new Map();
+const MODEL_CONTEXT_SAFE_STATUSES = new Set([
+  "needs_review",
+  "ready_for_review",
+  "pending_review",
+  "reviewed",
+  "accepted",
+  "rejected",
+  "edited",
+  "needs_evidence",
+  "skipped",
+  "open",
+  "closed",
+  "blocked",
+  "ok",
+  "fail",
+  "warning",
+  "matched",
+  "unmatched",
+  "missing_support",
+]);
+const MODEL_CASE_DATA_FIELDS = new Set([
+  "status",
+  "entry_date",
+  "amount_signed",
+  "amount_abs",
+  "account_name",
+  "description",
+  "beneficiary",
+  "counterparty",
+  "currency",
+  "unit",
+  "checks_run",
+  "mismatches",
+  "review_notes",
+  "support_type",
+  "support_match_status",
+  "support_match_signals",
+  "professional_conclusion",
+  "assurance_gate_status",
+  "amount_found",
+  "date_found",
+  "beneficiary_found",
+  "requested_document",
+  "reason",
+  "extractable_text",
+  "text_chars",
+  "error",
+  "missing",
+  "shown_count",
+  "total_count",
+]);
+const MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS = new Set([
+  "movement_number",
+  "account",
+  "invoice_number",
+  "document_number",
+  "document_no",
+  "reference",
+  "supplier_tax_id",
+  "customer_tax_id",
+  "tax_id",
+  "vat_number",
+  "fiscal_code",
+]);
+const MODEL_CONTEXT_EVIDENCE_FIELDS = new Set([
+  "kind",
+  "status",
+  "checks_run",
+  "mismatches",
+  "review_notes",
+  "support_type",
+  "support_match_status",
+  "support_match_signals",
+  "evidence_facts",
+  "professional_conclusion",
+  "assurance_gate_status",
+  "value",
+  "requested_document",
+  "reason",
+  "extractable_text",
+  "text_chars",
+  "error",
+]);
 const ALLOWED_ACTIONS = new Set([
   "accept",
   "reject",
@@ -530,11 +620,34 @@ function toolDefinitions() {
     {
       client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
       run_intake: { type: "object", description: "Optional run_intake.json object." },
+      run_intake_path: { type: "string", description: "Optional local path to run_intake.json in the run output folder." },
       review_payload: reviewPayload,
+      review_payload_path: { type: "string", description: "Preferred model-led input: local path to review_payload.json so private rows are loaded inside the MCP server." },
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
+      ui_decisions_path: { type: "string", description: "Optional local path to ui_decisions.json in the run output folder." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
+      final_artifacts_path: { type: "string", description: "Optional local path to final_artifacts.json in the run output folder." },
+      persistence_token: { type: "string", pattern: "^[A-Za-z0-9_-]{43}$", description: "Opaque review reference returned by validation." },
     },
-    ["review_payload"],
+    [],
+  );
+  const caseContextSchema = objectSchema(
+    {
+      persistence_token: { type: "string", pattern: "^[A-Za-z0-9_-]{43}$" },
+      case_handles: {
+        type: "array",
+        minItems: 1,
+        maxItems: MAX_MODEL_CASES_PER_CALL,
+        items: { type: "string" },
+        description: "Opaque case handles from model_context_index.cases.",
+      },
+      include_exact_identifiers: {
+        type: "boolean",
+        description: "Include exact movement, invoice, account, tax, or reference identifiers only when the selected evidence judgment requires them.",
+      },
+    },
+    ["persistence_token", "case_handles"],
+    false,
   );
   const decisionSchema = objectSchema(
     {
@@ -583,6 +696,19 @@ function toolDefinitions() {
         "Render a Check Entries review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: TOOL_NAMES.caseContext,
+      title: "Get selected Check Entries case context",
+      description:
+        "Return purpose-limited entry and support facts for up to 25 selected cases. Exact identifiers stay out by default and can be requested only when needed for the evidence judgment.",
+      inputSchema: caseContextSchema,
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -662,6 +788,73 @@ function boundedOptionalString(value, fieldPath) {
   return value.trim();
 }
 
+function readPrivateReviewJson(filePath, fieldPath) {
+  let stat;
+  try {
+    stat = fs.lstatSync(filePath);
+  } catch {
+    throw new Error(`${fieldPath} does not exist`);
+  }
+  if (!stat.isFile() || stat.isSymbolicLink() || stat.nlink !== 1) {
+    throw new Error(`${fieldPath} must be an ordinary single-link JSON file`);
+  }
+  let value;
+  try {
+    value = JSON.parse(fs.readFileSync(filePath, "utf8"));
+  } catch {
+    throw new Error(`${fieldPath} must point to readable JSON`);
+  }
+  if (!isPlainObject(value)) throw new Error(`${fieldPath} must contain a JSON object`);
+  return value;
+}
+
+function materializePrivateReviewArgs(inputArgs) {
+  if (!isPlainObject(inputArgs)) throw new Error("tool arguments must be an object");
+  const args = { ...inputArgs };
+  let outputDir = null;
+  const runIntakePath = boundedOptionalString(args.run_intake_path, "run_intake_path");
+  if (runIntakePath) {
+    const resolved = path.resolve(runIntakePath);
+    args.run_intake = readPrivateReviewJson(resolved, "run_intake_path");
+    outputDir = path.dirname(resolved);
+  }
+  const reviewPayloadPath = boundedOptionalString(args.review_payload_path, "review_payload_path");
+  if (reviewPayloadPath) {
+    const resolved = path.resolve(outputDir || process.cwd(), reviewPayloadPath);
+    if (outputDir && path.dirname(resolved) !== outputDir) {
+      throw new Error("review_payload_path must be in the run output folder");
+    }
+    args.review_payload = readPrivateReviewJson(resolved, "review_payload_path");
+    outputDir ||= path.dirname(resolved);
+  }
+  for (const [objectField, pathField, defaultName] of [
+    ["ui_decisions", "ui_decisions_path", "ui_decisions.json"],
+    ["final_artifacts", "final_artifacts_path", "final_artifacts.json"],
+  ]) {
+    const explicit = boundedOptionalString(args[pathField], pathField);
+    if (explicit) {
+      const resolved = path.resolve(outputDir || process.cwd(), explicit);
+      if (outputDir && path.dirname(resolved) !== outputDir) {
+        throw new Error(`${pathField} must be in the run output folder`);
+      }
+      args[objectField] = readPrivateReviewJson(resolved, pathField);
+      outputDir ||= path.dirname(resolved);
+    } else if (!isPlainObject(args[objectField]) && outputDir) {
+      const sibling = path.join(outputDir, defaultName);
+      if (fs.existsSync(sibling)) args[objectField] = readPrivateReviewJson(sibling, pathField);
+    }
+  }
+  if (!isPlainObject(args.run_intake) && outputDir) {
+    const sibling = path.join(outputDir, "run_intake.json");
+    if (fs.existsSync(sibling)) args.run_intake = readPrivateReviewJson(sibling, "run_intake_path");
+  }
+  delete args.run_intake_path;
+  delete args.review_payload_path;
+  delete args.ui_decisions_path;
+  delete args.final_artifacts_path;
+  return args;
+}
+
 function validateItem(item, index) {
   if (!isPlainObject(item)) throw new Error(`review_payload.items[${index}] must be an object`);
   requireString(item.id, `review_payload.items[${index}].id`);
@@ -684,6 +877,7 @@ function validateItem(item, index) {
 }
 
 function validateReviewPayload(inputArgs) {
+  inputArgs = materializePrivateReviewArgs(inputArgs);
   if (!isPlainObject(inputArgs)) throw new Error("tool arguments must be an object");
   const reviewPayload = inputArgs.review_payload;
   if (!isPlainObject(reviewPayload)) throw new Error("review_payload must be an object");
@@ -747,6 +941,310 @@ function validateReviewPayload(inputArgs) {
     throw new Error(`Check Entries widget payload exceeds ${MAX_PAYLOAD_BYTES} bytes`);
   }
   return payload;
+}
+
+function modelContextHasValue(value) {
+  if (value == null || value === "") return false;
+  if (Array.isArray(value)) return value.length > 0;
+  if (isPlainObject(value)) return Object.keys(value).length > 0;
+  return true;
+}
+
+function modelContextCleanValue(value, depth = 0) {
+  if (depth > 5 || !modelContextHasValue(value)) return undefined;
+  if (typeof value === "string") return value.slice(0, 10_000);
+  if (["number", "boolean"].includes(typeof value)) return value;
+  if (Array.isArray(value)) {
+    const cleaned = value.slice(0, 100)
+      .map((entry) => modelContextCleanValue(entry, depth + 1))
+      .filter((entry) => entry !== undefined);
+    return cleaned.length ? cleaned : undefined;
+  }
+  if (isPlainObject(value)) {
+    const cleaned = {};
+    for (const [key, entry] of Object.entries(value)) {
+      const projected = modelContextCleanValue(entry, depth + 1);
+      if (projected !== undefined) cleaned[key] = projected;
+    }
+    return Object.keys(cleaned).length ? cleaned : undefined;
+  }
+  return undefined;
+}
+
+function modelContextProjectObject(value, allowedFields) {
+  if (!isPlainObject(value)) return {};
+  const projected = {};
+  for (const key of allowedFields) {
+    const cleaned = modelContextCleanValue(value[key]);
+    if (cleaned !== undefined) projected[key] = cleaned;
+  }
+  return projected;
+}
+
+function modelContextProjectEvidenceFacts(value, includeExactIdentifiers, depth = 0) {
+  if (depth > 5 || !modelContextHasValue(value)) return undefined;
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed) || isPlainObject(parsed)) {
+        return modelContextProjectEvidenceFacts(
+          parsed,
+          includeExactIdentifiers,
+          depth + 1,
+        );
+      }
+    } catch {
+      // Non-JSON evidence text is retained because it may be the professional fact.
+    }
+  }
+  if (Array.isArray(value)) {
+    const result = value.slice(0, 100)
+      .map((entry) => modelContextProjectEvidenceFacts(entry, includeExactIdentifiers, depth + 1))
+      .filter((entry) => entry !== undefined);
+    return result.length ? result : undefined;
+  }
+  if (!isPlainObject(value)) return modelContextCleanValue(value, depth);
+  const technicalFields = new Set([
+    "prepared_entry_id",
+    "support_artifact_id",
+    "source_file",
+    "source_path",
+    "source_row",
+    "source_page",
+    "source_locator",
+    "path",
+    "filename",
+  ]);
+  const result = {};
+  for (const [key, entry] of Object.entries(value)) {
+    const normalizedKey = key.toLowerCase();
+    if (
+      technicalFields.has(normalizedKey)
+      || normalizedKey === "id"
+      || normalizedKey.endsWith("_id")
+      || normalizedKey.endsWith("_path")
+      || normalizedKey.endsWith("_file")
+      || normalizedKey.endsWith("_filename")
+      || normalizedKey.endsWith("_locator")
+      || normalizedKey.startsWith("target_")
+      || normalizedKey.startsWith("output_")
+    ) {
+      continue;
+    }
+    if (MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS.has(key) && !includeExactIdentifiers) {
+      if (modelContextHasValue(entry)) result[`${key}_present`] = true;
+      continue;
+    }
+    const projected = modelContextProjectEvidenceFacts(
+      entry,
+      includeExactIdentifiers,
+      depth + 1,
+    );
+    if (projected !== undefined) result[key] = projected;
+  }
+  return Object.keys(result).length ? result : undefined;
+}
+
+function modelContextProjectEvidence(evidence, semanticFields, includeExactIdentifiers) {
+  if (!Array.isArray(evidence)) return [];
+  const allowed = new Set(MODEL_CONTEXT_EVIDENCE_FIELDS);
+  if (includeExactIdentifiers) {
+    for (const field of MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS) allowed.add(field);
+  }
+  return evidence.slice(0, 50).map((entry) => {
+    const projected = modelContextProjectObject(entry, allowed);
+    if (Object.prototype.hasOwnProperty.call(projected, "evidence_facts")) {
+      const facts = modelContextProjectEvidenceFacts(
+        entry.evidence_facts,
+        includeExactIdentifiers,
+      );
+      if (facts === undefined) delete projected.evidence_facts;
+      else projected.evidence_facts = facts;
+    }
+    for (const [key, value] of Object.entries(projected)) {
+      if (Object.prototype.hasOwnProperty.call(semanticFields, key)
+          && JSON.stringify(semanticFields[key]) === JSON.stringify(value)) {
+        delete projected[key];
+      }
+    }
+    return projected;
+  }).filter((entry) => Object.keys(entry).length > 0);
+}
+
+function modelContextSafeStatus(value) {
+  const normalized = typeof value === "string" ? value.trim().toLowerCase() : "";
+  return MODEL_CONTEXT_SAFE_STATUSES.has(normalized) ? normalized : "other";
+}
+
+function modelContextIndexSignalKeys(evidence, allowedFields) {
+  if (!Array.isArray(evidence)) return [];
+  const present = new Set();
+  for (const entry of evidence) {
+    if (!isPlainObject(entry)) continue;
+    for (const field of allowedFields) {
+      if (modelContextHasValue(entry[field])) present.add(field);
+    }
+  }
+  return [...present].sort();
+}
+
+function modelContextCaseIsRelevant(item) {
+  if (item.item_type === "review_artifact" && item.recommended_action === "accept") return false;
+  if (item.item_type === "pdf_inventory" && item.recommended_action === "accept") return false;
+  return true;
+}
+
+function pruneModelContexts() {
+  const now = Date.now();
+  for (const [token, context] of MODEL_CONTEXTS) {
+    if (context.expiresAt <= now) MODEL_CONTEXTS.delete(token);
+  }
+  while (MODEL_CONTEXTS.size >= MAX_MODEL_CONTEXTS) {
+    const oldest = MODEL_CONTEXTS.keys().next().value;
+    if (oldest == null) break;
+    MODEL_CONTEXTS.delete(oldest);
+  }
+}
+
+function issueModelContext(privatePayload) {
+  // This deterministic projection enforces a transport boundary only. It does
+  // not decide evidential relevance or replace the model's professional review.
+  pruneModelContexts();
+  const token = crypto.randomBytes(32).toString("base64url");
+  const handles = new Map();
+  for (const item of privatePayload.review_payload.items) {
+    const digest = crypto.createHmac("sha256", token)
+      .update(String(item.id), "utf8").digest("base64url").slice(0, 18);
+    handles.set(`case-${digest}`, item);
+  }
+  MODEL_CONTEXTS.set(token, {
+    privatePayload,
+    handles,
+    runId: privatePayload.review_payload.run_id,
+    expiresAt: Date.now() + MODEL_CONTEXT_TTL_MS,
+  });
+  return { token, context: MODEL_CONTEXTS.get(token) };
+}
+
+function modelContextForToken(token) {
+  if (typeof token !== "string" || !MODEL_CONTEXT_TOKEN_RE.test(token)) {
+    throw new Error("persistence_token has an invalid format");
+  }
+  pruneModelContexts();
+  const context = MODEL_CONTEXTS.get(token);
+  if (!context || context.expiresAt <= Date.now()) {
+    throw new Error("persistence_token is unknown or expired; validate the review again");
+  }
+  return context;
+}
+
+function modelContextIndex(token, context) {
+  const counts = {};
+  const cases = [];
+  let omittedNonInterpretive = 0;
+  const signalFields = new Set([
+    "kind",
+    "status",
+    "checks_run",
+    "mismatches",
+    "support_type",
+    "support_match_status",
+    "professional_conclusion",
+    "assurance_gate_status",
+    "extractable_text",
+    "error",
+  ]);
+  for (const [handle, item] of context.handles) {
+    counts[item.item_type] = (counts[item.item_type] || 0) + 1;
+    if (!modelContextCaseIsRelevant(item)) {
+      omittedNonInterpretive += 1;
+      continue;
+    }
+    const signalKeys = modelContextIndexSignalKeys(item.evidence, signalFields);
+    cases.push({
+      case_handle: handle,
+      item_type: item.item_type,
+      status: modelContextSafeStatus(item.status),
+      recommended_action: item.recommended_action || null,
+      ...(signalKeys.length ? { control_signal_types: signalKeys } : {}),
+    });
+  }
+  return {
+    ok: true,
+    widget_type: "check_entries_review",
+    item_count: context.privatePayload.review_payload.item_count,
+    status: modelContextSafeStatus(context.privatePayload.review_payload.status),
+    review_reference: {
+      persistence_token: token,
+      expires_in_seconds: Math.floor(MODEL_CONTEXT_TTL_MS / 1000),
+    },
+    model_context_index: {
+      schema_version: "1.0",
+      purpose: "Select sampled-entry or support cases that require interpretation before requesting semantic context.",
+      item_type_counts: counts,
+      indexed_case_count: cases.length,
+      omitted_noninterpretive_item_count: omittedNonInterpretive,
+      cases,
+    },
+    message: "The complete review payload remains in component-only metadata. Use opaque handles to request selected cases.",
+  };
+}
+
+function modelContextCases(args) {
+  const context = modelContextForToken(args.persistence_token);
+  if (!Array.isArray(args.case_handles) || args.case_handles.length === 0) {
+    throw new Error("case_handles must be a non-empty array");
+  }
+  if (args.case_handles.length > MAX_MODEL_CASES_PER_CALL) {
+    throw new Error(`case_handles exceeds ${MAX_MODEL_CASES_PER_CALL} items`);
+  }
+  if (new Set(args.case_handles).size !== args.case_handles.length) {
+    throw new Error("case_handles must not contain duplicates");
+  }
+  const includeExactIdentifiers = args.include_exact_identifiers === true;
+  const allowedDataFields = new Set(MODEL_CASE_DATA_FIELDS);
+  if (includeExactIdentifiers) {
+    for (const field of MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS) allowedDataFields.add(field);
+  }
+  const cases = args.case_handles.map((handle, index) => {
+    if (typeof handle !== "string" || !context.handles.has(handle)) {
+      throw new Error(`case_handles[${index}] is unknown for this review`);
+    }
+    const item = context.handles.get(handle);
+    const semanticFields = modelContextProjectObject(item.data, allowedDataFields);
+    const evidence = modelContextProjectEvidence(item.evidence, semanticFields, includeExactIdentifiers);
+    return {
+      case_handle: handle,
+      item_type: item.item_type,
+      status: modelContextSafeStatus(item.status),
+      recommended_action: item.recommended_action || null,
+      allowed_actions: Array.isArray(item.allowed_actions) ? item.allowed_actions : [],
+      ...(Object.keys(semanticFields).length ? { semantic_fields: semanticFields } : {}),
+      ...(evidence.length ? { evidence } : {}),
+    };
+  });
+  const result = {
+    ok: true,
+    case_count: cases.length,
+    include_exact_identifiers: includeExactIdentifiers,
+    cases,
+    minimization: {
+      omitted: ["physical source paths and filenames", "prepared entry and support artifact IDs", "review write targets", "empty fields", "unmapped columns", "duplicate facts"],
+      anonymization: false,
+      pseudonymization: false,
+    },
+  };
+  if (payloadBytes(result) > MAX_MODEL_CONTEXT_BYTES) {
+    throw new Error(`selected case context exceeds ${MAX_MODEL_CONTEXT_BYTES} bytes; request fewer cases`);
+  }
+  return result;
+}
+
+function privatePayloadForRender(args) {
+  if (args.persistence_token != null) {
+    return { token: args.persistence_token, context: modelContextForToken(args.persistence_token) };
+  }
+  return issueModelContext(validateReviewPayload(args));
 }
 
 function resolveDecisionOutputPath(inputArgs) {
@@ -4192,21 +4690,28 @@ function hasWorkflowNativeRegenerationTarget(appliedDecisions) {
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
     const trustedArgs = readOnlyAssuredReviewArgs(args);
-    const payload = validateReviewPayload(trustedArgs);
-    return {
-      ok: true,
-      validation_type: "check_entries_review",
-      run_id: payload.review_payload.run_id,
-      item_count: payload.review_payload.item_count,
-      review_type: payload.review_payload.review_type || null,
-      message: isSpanish(languageFromArgs(args))
-        ? "Los datos de revisión de Comprobación de asientos son válidos. Puede ejecutar render_check_entries_review una vez."
-        : "Check Entries review payload is valid. It is safe to call render_check_entries_review once.",
-      review_payload: payload.review_payload,
-    };
+    const issued = issueModelContext(validateReviewPayload(trustedArgs));
+    const result = modelContextIndex(issued.token, issued.context);
+    delete result.widget_type;
+    result.validation_type = "check_entries_review";
+    result.review_type = issued.context.privatePayload.review_payload.review_type || null;
+    result.message = isSpanish(languageFromArgs(issued.context.privatePayload))
+      ? "Los datos de revisión son válidos. El payload completo permanece fuera del contexto del modelo; use la referencia opaca para abrir el widget y solicite solo los casos que necesite interpretar."
+      : "Check Entries review payload is valid. The complete payload stays out of model context; use the opaque reference to render the widget and request only cases that need interpretation.";
+    return result;
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(readOnlyAssuredReviewArgs(args));
+    const trustedArgs = args.persistence_token != null
+      ? args
+      : readOnlyAssuredReviewArgs(args);
+    const resolved = privatePayloadForRender(trustedArgs);
+    return {
+      ...modelContextIndex(resolved.token, resolved.context),
+      _private_review_payload: resolved.context.privatePayload,
+    };
+  }
+  if (name === TOOL_NAMES.caseContext) {
+    return modelContextCases(args);
   }
   if (name === TOOL_NAMES.saveDecisions) {
     return saveDecisionPayload(args);
@@ -4222,12 +4727,29 @@ function callTool(name, args = {}) {
 }
 
 function toolResult(payload, toolName) {
+  const privateReviewPayload = payload?._private_review_payload || null;
+  const publicPayload = { ...payload };
+  delete publicPayload._private_review_payload;
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
-    structuredContent: payload,
+    content: [{
+      type: "text",
+      text: JSON.stringify({
+        ok: publicPayload.ok !== false,
+        run_id: publicPayload.run_id || null,
+        item_count: publicPayload.item_count ?? publicPayload.case_count ?? null,
+        status: publicPayload.status || publicPayload.application_status || null,
+        message: publicPayload.message || null,
+      }),
+    }],
+    structuredContent: publicPayload,
     isError: false,
   };
-  if (toolName === TOOL_NAMES.renderReview) result._meta = toolUiMeta(WIDGET_URI, toolName);
+  if (toolName === TOOL_NAMES.renderReview) {
+    result._meta = {
+      ...toolUiMeta(WIDGET_URI, toolName),
+      ...(privateReviewPayload ? { private_review_payload: privateReviewPayload } : {}),
+    };
+  }
   return result;
 }
 
@@ -4265,8 +4787,8 @@ function handleRpc(message) {
         },
         instructions:
           isSpanish(language)
-            ? "Use validate_check_entries_review antes de render_check_entries_review. Dé prioridad al widget MCP para la entrega de la revisión de Comprobación de asientos; use save_check_entries_decisions para guardar las acciones de revisión en ui_decisions.json y apply_check_entries_decisions para escribir applied_decisions.json y actualizar el estado de final_artifacts.json cuando se recopilen decisiones; recurra a la revisión Markdown o estática solo si MCP no está disponible."
-            : "Use validate_check_entries_review before render_check_entries_review. Prefer the MCP widget for Check Entries review handoff; use save_check_entries_decisions to persist reviewer actions to ui_decisions.json and apply_check_entries_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+            ? "Use review_payload_path con validate_check_entries_review para que el payload privado se cargue dentro del servidor. Renderice con la referencia opaca y use get_check_entries_case_context solo para los casos seleccionados; solicite identificadores exactos únicamente cuando sean necesarios. El widget recibe el payload completo mediante metadatos privados. Use save_check_entries_decisions y apply_check_entries_decisions para las decisiones."
+            : "Pass review_payload_path to validate_check_entries_review so the private payload is loaded inside the server. Render with the opaque reference and use get_check_entries_case_context only for selected cases; request exact identifiers only when needed. The widget receives the complete payload through component-only metadata. Use save_check_entries_decisions and apply_check_entries_decisions for decisions.",
       });
     }
     if (method === "notifications/initialized") return null;

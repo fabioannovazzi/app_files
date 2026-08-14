@@ -342,9 +342,22 @@ manual-review rows, PDF extraction diagnostics, mapping issues, and generated
 artifacts.
 
 When the `checkEntriesWidgets` MCP server is available, call
-`validate_check_entries_review` with the complete `review_payload.json` object.
-If validation passes, call `render_check_entries_review` with the same payload
-and optional `run_intake`, `ui_decisions`, and `final_artifacts` objects. When
+`validate_check_entries_review` with `review_payload_path` and the sibling path
+fields, not an inline copy of the private JSON. Validation returns a
+non-identifying case index and an opaque four-hour review reference. If
+validation passes, call `render_check_entries_review` with only that reference;
+the server sends the complete payload to the widget through component-only
+metadata, not model-visible structured content. Start from the index and call
+`get_check_entries_case_context` for no more than 25 specifically selected
+cases at a time. The deterministic post-mapping projection removes empty and
+unmapped fields, paths and filenames, prepared-entry and support-artifact IDs,
+write targets, and duplicate facts. Exact movement, invoice, account, tax, and
+reference identifiers remain off by default; selected evidence facts may only
+record that an exact identifier is present. Request the exact value only when the selected
+evidence judgment requires identity comparison. This is purpose-limited
+routing, not anonymization or pseudonymization of the professional case data:
+selected case context can still contain real names, descriptions, dates,
+amounts, and support facts. When
 the reviewer records actions in the widget or Codex collects decisions through
 fallback review, call `save_check_entries_decisions` with `run_intake`,
 `review_payload`, current `ui_decisions`, and the decision list so
@@ -401,9 +414,11 @@ self-resealed normalized population, but it cannot authenticate a fully
 regenerated internally consistent package or reviewer authority. Keep
 publication withheld.
 
-If MCP rendering is unavailable, continue by reading `review_payload.json` and
-reviewing through Markdown/chat. Keep `ui_decisions.json` pending unless a
-review step records decisions.
+If MCP rendering is unavailable, continue with a locally prepared
+Markdown/chat projection of only the specifically selected cases using the
+same exclusions and exact-identifier rule. Do not read the complete
+`review_payload.json` into model context. Keep `ui_decisions.json` pending
+unless a review step records decisions.
 
 The UI handoff follows the OpenAI-style local MCP/widget pattern:
 

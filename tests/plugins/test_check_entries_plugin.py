@@ -5614,7 +5614,10 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
             "method": "tools/call",
             "params": {
                 "name": "validate_check_entries_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {
+                    "run_intake_path": str(output_dir / "run_intake.json"),
+                    "review_payload_path": str(output_dir / "review_payload.json"),
+                },
             },
         },
         {
@@ -5624,8 +5627,8 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
             "params": {
                 "name": "render_check_entries_review",
                 "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
+                    "run_intake_path": str(output_dir / "run_intake.json"),
+                    "review_payload_path": str(output_dir / "review_payload.json"),
                     "ui_decisions": ui_decisions,
                 },
             },
@@ -5715,15 +5718,21 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     assert {
         "validate_check_entries_review",
         "render_check_entries_review",
+        "get_check_entries_case_context",
         "save_check_entries_decisions",
         "apply_check_entries_decisions",
     } <= tool_names
     validate_result = responses[2]["result"]["structuredContent"]
     assert validate_result["ok"] is True
     assert validate_result["item_count"] == 2
+    assert "review_payload" not in validate_result
+    assert "model_context_index" in validate_result
     render_result = responses[3]["result"]
     assert render_result["structuredContent"]["widget_type"] == "check_entries_review"
-    assert render_result["structuredContent"]["decision_policy"]["can_persist"] is True
+    assert "review_payload" not in render_result["structuredContent"]
+    private_payload = render_result["_meta"]["private_review_payload"]
+    assert private_payload["review_payload"] == review_payload
+    assert private_payload["decision_policy"]["can_persist"] is True
     assert (
         render_result["_meta"]["openai/outputTemplate"]
         == "ui://widget/check-entries-review.html"
@@ -5739,6 +5748,8 @@ def test_check_entries_mcp_server_validates_renders_and_saves_review_payload(
     assert "Applica decisioni" in widget_html
     assert "Preview sample review" in widget_html
     assert "Final outputs" in widget_html
+    assert "toolResponseMetadata" in widget_html
+    assert "private_review_payload" in widget_html
     save_result = responses[6]["result"]["structuredContent"]
     assert save_result["ok"] is True
     assert save_result["persisted"] is True
@@ -8982,7 +8993,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
     handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
 
     assert (
-        "Use validate_check_entries_review antes"
+        "Use review_payload_path con validate_check_entries_review"
         in responses[1]["result"]["instructions"]
     )
     assert validation["message"].startswith("Los datos de revisión")

@@ -21,9 +21,27 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "accounting-evidence-and-review",
-        "purpose": "Map sources, review reconciliations, and explain exceptions",
-        "content": "User instructions; the selected Studio Archive customer-folder run context, including stable opaque client, engagement, workflow and run identifiers; exact imported-input or upstream-artifact receipts and run-local execution copies; accounting files or extracted records; mappings; reconciliation results; exception evidence; workpapers, artifact purposes and audiences, lifecycle state, and review decisions",
+        "id": "bounded-source-structure-and-mapping",
+        "purpose": "Understand source structure and confirm the accounting meaning of columns before deterministic reconciliation",
+        "content": "User instructions; selected source names and column labels; a limited set of source rows opened for mapping; proposed and reviewed source roles, field mappings, period, currency, entity, party and evidence assumptions. A professional may still direct the selected runtime to open more source evidence when mapping cannot be resolved from the limited rows; the workflow does not call a model API itself and does not claim that source files are anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "non-identifying-review-index",
+        "purpose": "Let the model select review cases without receiving the complete review payload",
+        "content": "One model-visible index containing aggregate item-type counts and, for each model-relevant review item, an opaque per-run case handle, item type, normalized categorical review status, recommended action and the names of present mechanical signal classes. It excludes signal values, item titles, names, descriptions, dates, amounts, source references and identifiers, source paths, workflow record IDs, review write targets and complete row objects. Non-interpretive artifact items accepted by the deterministic workflow remain available to the human widget but are omitted from the index.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "selected-case-context",
+        "purpose": "Interpret or verify only the reconciliation cases selected from the index",
+        "content": "At most 25 requested cases per call: populated allowlisted accounting fields such as dates, signed amounts, currency, account name, description, beneficiary or counterparty, deterministic status and rule, evidence level, match type, review flags and instructions, relationship or allocation status, exceptions and requested evidence. Physical source locators, technical record IDs, write targets, empty fields, unmapped columns and duplicate facts are omitted. Exact document, invoice, movement and reference values are excluded by default and can be requested only for selected cases when exact identity is required. Real names, descriptions, amounts and other case facts can therefore enter model context; the opaque handle is a routing control, not anonymization or pseudonymization of the professional case data.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -46,6 +64,14 @@
       "control": "The review server binds to loopback and constrains review writes to the selected run folder."
     },
     {
+      "id": "component-private-review-transport",
+      "control": "MCP validation loads review_payload.json inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and preserves the complete human review surface."
+    },
+    {
+      "id": "bounded-selected-case-projection",
+      "control": "The read-only case-context tool accepts only opaque handles bound to the current in-memory review reference, rejects unknown or duplicate handles, limits each call to 25 cases and 500000 response bytes, projects explicit post-mapping field allowlists, and keeps exact professional identifiers off unless explicitly requested for those selected cases."
+    },
+    {
       "id": "qualified-source-and-relationship-controls",
       "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close."
     },
@@ -66,6 +92,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3c8f17b85b8daea512c391aed5f62101c4f28778f850a1345638efaa1844a851"
+    "source_fingerprint": "acd9d82e3b82322bfdb087b7202a9dd6092c18bafbb14b5515a98b15c33c9b69"
   }
 }
