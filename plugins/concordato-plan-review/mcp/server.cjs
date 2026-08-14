@@ -2546,11 +2546,14 @@ function validateConcordatoChildResult(parsed, phase) {
 
 function runConcordatoChild(args, phase) {
   const messages = concordatoChildMessages(phase);
+  const python = concordatoChildPython();
+  if (!python) throw new Error(messages.start);
   let completed;
   try {
-    completed = spawnSync(pythonExecutable(), ["-I", "-B", ...args], {
+    completed = spawnSync(python.executable, ["-I", "-B", ...args], {
       cwd: PLUGIN_ROOT,
       encoding: "utf8",
+      env: python.environment,
       maxBuffer: CONCORDATO_CHILD_OUTPUT_MAX_BYTES,
     });
   } catch {
@@ -4465,6 +4468,143 @@ function pythonExecutable() {
     return candidate;
   }
   return "python3";
+}
+
+const CONCORDATO_MANAGED_PYTHON_RESOLVER = String.raw`
+import importlib.util
+import json
+import sys
+from pathlib import Path
+
+launcher = Path(sys.argv[1]).resolve()
+plugin_root = launcher.parents[1]
+spec = importlib.util.spec_from_file_location(
+    "vera_concordato_managed_python_runtime",
+    launcher,
+)
+if spec is None or spec.loader is None:
+    raise RuntimeError("Could not load Vera managed Python runtime.")
+runtime = importlib.util.module_from_spec(spec)
+sys.modules[spec.name] = runtime
+spec.loader.exec_module(runtime)
+ready, target, detail = runtime.ensure_runtime(
+    plugin_root,
+    "concordato-plan-review",
+)
+if not ready:
+    raise RuntimeError(detail)
+print(json.dumps({
+    "python": str(runtime.runtime_python(target)),
+    "virtual_env": str(target),
+}, separators=(",", ":")))
+`;
+
+let concordatoManagedPython;
+
+function concordatoManagedPythonLauncher() {
+  if (process.env.VERA_COMPONENT_HOST !== "1") return null;
+  const candidates = [
+    path.resolve(
+      PLUGIN_ROOT,
+      "..",
+      "vera",
+      "scripts",
+      "managed_python_runtime.py",
+    ),
+    path.resolve(
+      PLUGIN_ROOT,
+      "..",
+      "..",
+      "scripts",
+      "managed_python_runtime.py",
+    ),
+  ];
+  return candidates.find((candidate) => fs.existsSync(candidate)) || null;
+}
+
+function concordatoChildPython() {
+  const virtualEnvironmentPython = process.env.VIRTUAL_ENV
+    ? path.join(
+        process.env.VIRTUAL_ENV,
+        process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+      )
+    : "";
+  const repositoryPython = path.resolve(
+    PLUGIN_ROOT,
+    "..",
+    "..",
+    ".venv",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python",
+  );
+  const configuredCandidates = [
+    process.env.PYTHON,
+    virtualEnvironmentPython,
+    repositoryPython,
+  ].filter(Boolean);
+  for (const candidate of configuredCandidates) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    return { executable: candidate, environment: process.env };
+  }
+
+  if (concordatoManagedPython !== undefined) {
+    return concordatoManagedPython;
+  }
+  const launcher = concordatoManagedPythonLauncher();
+  if (!launcher) {
+    return { executable: pythonExecutable(), environment: process.env };
+  }
+  const completed = spawnSync(
+    pythonExecutable(),
+    [
+      "-I",
+      "-B",
+      "-c",
+      CONCORDATO_MANAGED_PYTHON_RESOLVER,
+      launcher,
+    ],
+    {
+      cwd: PLUGIN_ROOT,
+      encoding: "utf8",
+      maxBuffer: 64 * 1024,
+    },
+  );
+  if (completed.error || completed.status !== 0) {
+    concordatoManagedPython = null;
+    return concordatoManagedPython;
+  }
+  let resolved;
+  try {
+    resolved = JSON.parse(completed.stdout.trim());
+  } catch {
+    concordatoManagedPython = null;
+    return concordatoManagedPython;
+  }
+  if (
+    !isPlainObject(resolved) ||
+    typeof resolved.python !== "string" ||
+    !path.isAbsolute(resolved.python) ||
+    !fs.existsSync(resolved.python) ||
+    typeof resolved.virtual_env !== "string" ||
+    !path.isAbsolute(resolved.virtual_env)
+  ) {
+    concordatoManagedPython = null;
+    return concordatoManagedPython;
+  }
+  const existingPath = process.env.PATH;
+  const environment = {
+    ...process.env,
+    PATH: existingPath
+      ? `${path.dirname(resolved.python)}${path.delimiter}${existingPath}`
+      : path.dirname(resolved.python),
+    VIRTUAL_ENV: resolved.virtual_env,
+    MPARANZA_MANAGED_RUNTIME_VERIFY: "1",
+  };
+  delete environment.PYTHONHOME;
+  concordatoManagedPython = {
+    executable: resolved.python,
+    environment,
+  };
+  return concordatoManagedPython;
 }
 
 const CLIENT_WORKFLOW_PREFLIGHT = String.raw`

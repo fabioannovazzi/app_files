@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.132"
+    assert manifest["version"] == "0.1.133"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
@@ -577,7 +577,10 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "non-identifying case index" in normalized_check_entries
     assert "no more than 25 specifically selected cases" in normalized_check_entries
     assert "do not read the complete `review_payload.json`" in normalized_check_entries
-    assert "routing controls, not anonymization or pseudonymization" in normalized_check_entries
+    assert (
+        "routing controls, not anonymization or pseudonymization"
+        in normalized_check_entries
+    )
     assert "only for a specific unresolved review question" in normalized_journal
     assert "one exact immutable journal binding" in journal
     for artifact_id in (
@@ -647,6 +650,27 @@ def test_cowork_projects_every_host_review_gate_to_pending_review(
         normalized = " ".join(content.split())
         assert "Its absence never blocks delivery" in normalized, name
         assert "Never claim `applied` or `final_ready`" in normalized, name
+
+
+def test_cowork_concordato_prefers_bounded_review_without_blocking_file_fallback(
+    cowork_instruction_docs,
+) -> None:
+    skill = cowork_instruction_docs[
+        "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md"
+    ]
+    normalized = " ".join(skill.split())
+
+    assert "`concordatoPlanReviewWidgets`" in skill
+    assert "`review_reference`" in skill
+    assert "`read_concordato_plan_review_items`" in skill
+    assert "no more than 25 purpose-selected review items" in normalized
+    assert "The complete review payload stays in component-only metadata" in normalized
+    assert "Exact source files may still be opened" in normalized
+    assert "The 25-item tool limit does not apply" in normalized
+    assert (
+        "This is transport minimization, not anonymization or pseudonymization"
+        in normalized
+    )
 
 
 def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:

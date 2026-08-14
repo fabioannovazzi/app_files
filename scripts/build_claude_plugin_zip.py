@@ -288,6 +288,39 @@ missing evidence, unresolved decisions, and applicable blockers visible in the
 artifact card and final response."""
 
 COWORK_MINIMIZED_REVIEW_HANDOFF_BODIES = {
+    "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md": """The normal Cowork completion point is delivery
+of the reviewable draft, artifact card, and source/review files in the connected
+folder. When `concordatoPlanReviewWidgets` and a compatible local Vera customer-
+run context are callable, prefer the reference-bound review route: read
+`review_reference` from `final_artifacts.json`, validate and render with only
+that reference and the customer-run context, then request no more than 25
+purpose-selected review items at a time through
+`read_concordato_plan_review_items`. The complete review payload stays in
+component-only metadata; paths, hashes, sizes, and technical references are
+removed from selected model items and source filenames are replaced by stable
+aliases. Exact source files may still be opened for a specific evidence
+question; do not reopen the entire case by default.
+
+If the optional interface or compatible context is unavailable, continue with
+the file-based handoff. Begin with the delivered semantic review and open only
+the exact review or source files needed for the unresolved professional
+question. The 25-item tool limit does not apply to that connected-folder
+fallback, so do not describe it as tool-bounded. Report the package as
+`ready_for_professional_review` where that status exists, otherwise as
+`pending_review`.
+
+The optional interface may persist or apply reviewer actions. Its absence never
+blocks delivery. Never claim `applied` or `final_ready` unless corresponding
+persisted artifacts prove it. A file or chat review without those artifacts
+remains pending professional review.
+
+This is transport minimization, not anonymization or pseudonymization. Debtor,
+creditor, claim, priority, class, vote, treatment, amount, and evidence details
+remain when the professional question requires them.
+
+Review actions cannot waive a failed deterministic check. Keep failed checks,
+missing evidence, unresolved decisions, and applicable blockers visible in the
+artifact card and final response.""",
     "modules/journal-sampling/skills/journal-sampling/SKILL.md": """The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
 folder. For model-led sample review, begin with
