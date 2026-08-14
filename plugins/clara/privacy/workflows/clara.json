@@ -43,8 +43,8 @@
       },
       {
         "id": "human-visible-outputs",
-        "purpose": "Draft and review workpapers, briefs, decks, memos, and decision packs",
-        "content": "Narrative, charts, claims, citations, speaker notes, review findings, approved content, and final deliverables"
+        "purpose": "Draft and review workpapers, briefs, decks, memos, decision packs, and narrated videos",
+        "content": "Narrative, charts, claims, citations, speaker notes, narration scripts, hash-bound Mparanza voice requests and returned OpenAI audio artifacts, localized AI-voice disclosures, accepted Vera handoff references, review findings, approved content, and final deliverables"
       }
     ]
   },
@@ -70,7 +70,8 @@
   "hosted_service_ids": [
     "hosted-voice",
     "plugin-feedback",
-    "plugin-update-check"
+    "plugin-update-check",
+    "research-video-voice"
   ],
   "boundaries_beyond_codex": [
     {
@@ -132,6 +133,21 @@
       ]
     },
     {
+      "id": "approved-research-video-voice",
+      "kind": "hosted_service",
+      "hosted_service_id": "research-video-voice",
+      "destination": "Authenticated Mparanza Research Video Voice and OpenAI speech service configured by Mparanza",
+      "purpose": "Generate scene-level narration audio from an explicitly approved Research Video script without a user API key",
+      "content": "Mparanza receives exact approved narration, language, scene identifiers, plan and approval hashes, and explicit confirmation. OpenAI receives each scene's narration plus fixed speech policy. Images, sources, Vera artifacts, source-basis notes, and local paths remain local.",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "The workflow creates the narration-only request only after exact script and plan approval.",
+        "Mparanza requires a valid session but currently applies no Research Video email allowlist.",
+        "The hosted application builds the ZIP in memory and does not write the request or audio to application storage; OpenAI retention is not established by plugin source."
+      ]
+    },
+    {
       "id": "automatic-core-python-dependency-retrieval",
       "kind": "public_research",
       "destination": "Python Package Index (PyPI) or the package index selected by the user's Python configuration",
@@ -188,6 +204,6 @@
     "reviewed_at": "2026-08-13",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d283b414d94fafa34e04682b4e1b40097e87084c52fc11d9d19f0750a3d3fc47"
+    "source_fingerprint": "d4649dbf65c881b4beb1fd82d9a9a51c2f7c9dd66ae3f26b10f5b2679618a51a"
   }
 }

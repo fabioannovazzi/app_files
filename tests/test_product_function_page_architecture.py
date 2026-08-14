@@ -536,10 +536,15 @@ def test_clara_research_video_has_a_localized_public_explanation() -> None:
     assert research_video.count('modelDataStatus: "relevant"') == 5
     for snippet in (
         "Approved ordered scenes",
+        "English, Italian, French, German, or Spanish narration",
+        "localized AI-voice disclosure",
+        "accepted Vera visuals and their review artifacts",
         "Parallax requires already separated and aligned",
         "No automatic anonymization is applied",
-        "OpenAI Audio API",
-        "Images, source files, source-basis notes, and local paths are not sent to the speech service",
+        "authenticated Mparanza page sends only the approved text to OpenAI",
+        "No user API key is required",
+        "does not save the request or audio to application storage",
+        "does not state an OpenAI retention period",
     ):
         assert snippet in research_video
     for heading in (

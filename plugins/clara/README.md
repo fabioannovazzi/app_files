@@ -42,8 +42,10 @@ Clara keeps its specialist workflows separate:
 - `html-deck` builds or preservation-revises a source-faithful standalone
   animated HTML presentation with provenance and browser QA.
 - `research-video` turns approved ordered research scenes into a source-faithful
-  16:9 MP4 with synchronized English voice-over, captions, narration review,
-  restrained motion, and mechanical media validation.
+  16:9 MP4 with synchronized English, Italian, French, German, or Spanish
+  narration generated through authenticated Mparanza access, captions, a visible localized AI-voice disclosure,
+  narration review, restrained motion, and mechanical media validation, without
+  requiring a user API key.
 - `attribute-reporting` maps retailer products to the central category
   taxonomy, preserves the established new-versus-rest and
   best-seller-versus-other comparisons, creates a private local HTML report,
@@ -383,11 +385,22 @@ or run `playwright install chromium` before browser QA.
 
 The `research-video` skill prepares, approves, and renders an ordered set of
 user-approved research images as a 16:9 H.264/AAC MP4. Clara writes and reviews
-English narration against an explicit source basis for every scene. The local
-renderer fingerprints the visual inputs and exact plan, binds approval to those
-bytes, sends only approved narration text to the OpenAI speech endpoint through
-the user's local API key, and assembles the voice-over, captions, poster,
-restrained motion, cross-fades, render report, and final artifact manifest.
+narration in English, Italian, French, German, or Spanish against an explicit
+source basis for every scene. The local renderer fingerprints the visual inputs
+and exact plan and requires explicit user-confirmation evidence. The
+authenticated Mparanza Research Video page sends only the approved narration
+and binding metadata to OpenAI using a server-held credential and returns one
+downloadable audio artifact per scene. The local renderer validates and hashes
+those files and assembles the voice-over,
+localized on-screen AI-voice disclosure, captions, poster, restrained motion,
+cross-fades, render report, and final artifact manifest. No user API key is
+used. Images and sources stay local; Mparanza builds the response in memory and
+does not write the request or audio to application storage.
+
+Accepted Vera graphical explainers, financial-analysis visuals, and report
+figures may be handed to Clara for media production. Vera retains source
+authority, claim assurance, professional acceptance, and publication decisions;
+Research Video's source-basis field does not replace those reviews.
 
 Flat images receive pan or zoom motion and are never represented as true
 parallax. Layered parallax is available only when the user supplies an aligned

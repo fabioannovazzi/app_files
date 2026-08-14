@@ -5,6 +5,7 @@
   "governed_paths": [
     "skills/research-video/SKILL.md",
     "skills/research-video/agents/openai.yaml",
+    "skills/research-video/references/hosted-voice-bundle.schema.json",
     "skills/research-video/references/scene-plan.schema.json",
     "skills/research-video/scripts/research_video.py"
   ],
@@ -14,12 +15,12 @@
       {
         "id": "research-scenes-and-sources",
         "purpose": "Select and order approved scenes and write source-faithful narration",
-        "content": "Research scene images; supplied reports, figures, maps, statistics, labels and qualifications; source-basis references; audience, story objective and scene order"
+        "content": "Research scene images; supplied reports, figures, maps, statistics, labels and qualifications; accepted Vera visuals and review artifacts when handed off; source-basis references; audience, story objective, narration language and scene order"
       },
       {
         "id": "video-plan-and-review",
         "purpose": "Prepare, review and validate the narrated research video",
-        "content": "Scene plan, narration, visual fingerprints, motion choices, approval record, captions, timing, render report, media QA, caveats and final review findings"
+        "content": "Scene plan, narration, language, hash-bound Mparanza voice request and returned OpenAI audio artifacts, hosted bundle manifest, localized AI-voice disclosure, visual fingerprints, motion choices, approval record, captions, timing, render report, media QA, caveats and final review findings"
       }
     ]
   },
@@ -42,38 +43,48 @@
     ],
     "per_case_record_required": false
   },
-  "hosted_service_ids": [],
+  "hosted_service_ids": [
+    "research-video-voice"
+  ],
   "boundaries_beyond_codex": [
     {
-      "id": "openai-speech-generation",
-      "kind": "external_connector",
-      "destination": "OpenAI Audio API through the user's local OPENAI_API_KEY",
-      "purpose": "Synthesize the approved English narration as scene-level voice-over audio",
-      "content": "Only the exact approved narration text and fixed voice instructions; scene images, source-basis notes, source files and local paths are not transmitted by the renderer",
-      "optional": true,
-      "requires_confirmation": true,
+      "id": "approved-hosted-narration",
+      "kind": "hosted_service",
+      "hosted_service_id": "research-video-voice",
+      "destination": "Authenticated Mparanza Research Video Voice and OpenAI speech service configured by Mparanza",
+      "purpose": "Generate one reviewable narration WAV per approved video scene without requiring a user API key",
+      "content": "Mparanza receives exact approved narration, language, stable scene identifiers, plan and approval hashes, and explicit confirmation. OpenAI receives each scene's exact narration plus fixed model, selected voice, and delivery instructions. Images, research sources, source-basis notes, Vera artifacts, and local paths remain local.",
+      "optional": false,
+      "requires_confirmation": false,
       "controls": [
-        "Preparation performs no network call and writes the exact narration and source-basis review packet first.",
-        "Rendering fails unless approval is bound to the current scene plan, narration script, review packet and visual file hashes.",
-        "The API key is read only from the local environment and is never written to commands, logs or artifacts.",
-        "The fixed renderer request sends narration text only and never opens or uploads scene images or source-basis records."
+        "The hosted request is created only after explicit approval and is bound to the approved plan and approval hashes.",
+        "A valid Mparanza session is required; every authenticated account is currently authorized because no Research Video email allowlist is applied.",
+        "Mparanza builds the response in memory and does not write requests or audio to application storage; provider-side retention at OpenAI is not established by plugin source."
       ]
     }
   ],
   "security_controls": [
     {
       "id": "hash-bound-render-approval",
-      "control": "The renderer verifies the approved plan, narration script, review packet and every visual SHA-256 before any speech request."
+      "control": "The request, attachment and rendering steps verify explicit user-confirmation evidence for the approved plan, narration script, localized AI-voice disclosure, review packet and every visual SHA-256. The hosted request is created only after approval and includes the approval and plan hashes."
     },
     {
-      "id": "local-visual-rendering",
-      "control": "Scene images and optional foreground layers are opened only by the local renderer and are not included in the OpenAI speech request."
+      "id": "hosted-voice-artifact-binding",
+      "control": "The local attachment step requires the Mparanza hosted source, fixed provider policy, exact request, approval, language and scene order; rejects unsafe or undeclared ZIP entries; converts returned WAV files to normalized PCM; and binds their SHA-256, metadata and duration to the run."
+    },
+    {
+      "id": "local-media-rendering",
+      "control": "After Mparanza returns the voice artifacts, scene images, optional foreground layers, audio normalization, captions and MP4 assembly are handled by the local renderer without a user API key."
+    },
+    {
+      "id": "visible-ai-voice-disclosure",
+      "control": "The local renderer places the localized AI-generated-voice disclosure on every scene and records its text and placement in the run artifacts."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8518e4b4aa31d84d688a1316c712e48381518e87fd0991aabcb91ea386dea96c"
+    "source_fingerprint": "81d00c32b50762eeb4d8c0076f71e44dde3a344f1645a0ba1a9ffa829fb148fe"
   }
 }
