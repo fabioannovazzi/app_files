@@ -33,7 +33,10 @@ decision. A packet contains task-allowlisted, reference-closed reviewed context
 for one semantic job, reports included and omitted class counts and bytes, and
 labels source material as untrusted content. It never truncates the first
 arbitrary records: an over-limit closure fails so the model can request an
-explicit, fresh-session expansion. It does not claim
+explicit, fresh-session expansion. Exact professional-selected IDs scope only
+their over-limit collection while the other required collections remain
+complete, so the expansion is runnable without positional sampling or a
+semantic relevance classifier. It does not claim
 automatic anonymization or legal data minimization; the professional must judge
 which case facts and excerpts are relevant. A strict response
 can propose guidance or changes, cites only packet evidence, records provider,

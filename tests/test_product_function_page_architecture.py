@@ -504,13 +504,18 @@ def test_bandi_page_explains_task_specific_private_model_context() -> None:
 
     assert bandi_copy.count('modelDataStatus: "relevant"') == 5
     for snippet in (
-        "una sessione del modello può leggere soltanto le evidenze cliente selezionate",
-        "fonti pubbliche e il confronto di portafoglio usano una sessione separata",
-        "riferimenti cliente opachi e profili strutturati, non i documenti grezzi",
-        "Nella successiva istruttoria, ogni contributo richiede un nuovo riferimento di sessione",
-        "si ferma e richiede un ampliamento esplicito invece di inviare i primi record",
-        "Non viene applicata anonimizzazione automatica",
-        "non autenticati dal fornitore del modello",
+        "una sessione del modello può leggere le sole evidenze cliente selezionate",
+        "Le query pubbliche contengono solo territorio, categoria, tema d’investimento",
+        "Il modulo iniziale del richiedente e i percorsi locali restano fuori",
+        "500 elementi per collezione, 200 estratti e 2.000.000 byte",
+        "gli ID esatti scelti dal professionista per la collezione eccedente",
+        "In Codex questi controlli operano nel run Studio Archive vincolato",
+        "in Cowork operano solo se gli script sono eseguibili con un run Vera valido",
+        "Non c’è anonimizzazione o pseudonimizzazione automatica",
+        "500 items per collection, 200 excerpts, and 2,000,000 bytes",
+        "Dans Codex, ces contrôles s’exécutent dans le run Studio Archive lié",
+        "In Codex gelten diese Kontrollen im gebundenen Studio-Archive-Run",
+        "En Codex estos controles operan en el run vinculado de Studio Archive",
     ):
         assert snippet in bandi_copy
 

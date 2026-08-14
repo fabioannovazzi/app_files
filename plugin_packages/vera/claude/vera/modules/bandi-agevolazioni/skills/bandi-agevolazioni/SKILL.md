@@ -355,9 +355,12 @@ python scripts/link_sources.py \
    exact subject and artifact references, reports included and omitted counts
    and bytes, and fails closed when the complete closure exceeds its limits.
    The model must then return `INSUFFICIENT` with a concrete context request;
-   the operator or professional chooses the exact additional subjects and
-   reruns them in another fresh session. Do not silently infer from omitted
-   material or split a holistic consistency/authority review automatically.
+   the operator or professional chooses exact IDs from each over-limit
+   collection and reruns them, together with the task subjects they need, in
+   another fresh session. An exact ID scopes only its own global-root
+   collection; every other global-root collection stays complete. Do not
+   silently infer from omitted material or split a holistic
+   consistency/authority review automatically.
 
    The intake applicant object and local paths are not copied by default, but
    professionally relevant facts and excerpts may still identify the applicant;

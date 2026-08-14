@@ -49,7 +49,9 @@ Later host-specific instructions in this reference cannot override this rule.
 - Eleven bounded semantic task contracts and mechanical next-task orchestration.
 - Task-specific, reference-closed packets with complete class/byte inventories,
   explicit omitted counts, no positional truncation, and fail-closed item,
-  excerpt and byte limits with a fresh-session context-expansion route.
+  excerpt and byte limits with a runnable fresh-session context-expansion route:
+  exact professional-selected IDs scope only the over-limit collection, while
+  every other required global-root collection remains complete.
 - Packets that do not copy the intake applicant object or local source paths by
   default, omit project context from source-only tasks, label evidence as
   untrusted, prohibit embedded instructions, and disclose that relevant facts

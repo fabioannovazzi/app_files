@@ -663,6 +663,34 @@ def test_reference_closed_packet_fails_instead_of_truncating() -> None:
         )
 
 
+def test_exact_subjects_make_over_limit_global_collection_drilldown_runnable() -> None:
+    scripts = _scripts()
+    intake, sources, workbench = _orchestration_state("assessment")
+    workbench["facts"] = [
+        {"fact_id": f"FACT-{index:04d}"}
+        for index in range(
+            scripts["intelligence_contract"].MAX_CONTEXT_ITEMS_PER_COLLECTION + 1
+        )
+    ]
+
+    packet = scripts["intelligence_contract"].build_intelligence_packet(
+        intake,
+        sources,
+        workbench,
+        "EVIDENCE_MAPPING",
+        ["FACT-0001"],
+        model_session_ref="SESSION-DRILLDOWN-001",
+    )
+
+    assert packet["context_inventory"]["available_counts"]["facts"] == 501
+    assert packet["context_inventory"]["included_counts"]["facts"] == 1
+    assert packet["context_inventory"]["omitted_counts"]["facts"] == 500
+    assert packet["context_inventory"]["global_root_scopes"]["facts"] == (
+        "explicit_subject_ids"
+    )
+    assert packet["reviewed_context"]["facts"] == [{"fact_id": "FACT-0001"}]
+
+
 def test_model_can_stop_and_request_fresh_context_expansion(tmp_path: Path) -> None:
     scripts, workspace = _initialized_case(tmp_path)
     packet = scripts["intelligence"].create_intelligence_packet(

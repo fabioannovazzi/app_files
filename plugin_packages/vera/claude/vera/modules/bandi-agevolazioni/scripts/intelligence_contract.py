@@ -250,7 +250,8 @@ def _task_projection(
         item for item in sources.get("sources", []) if isinstance(item, Mapping)
     ]
     source_ids = {str(item.get("source_id")) for item in source_items}
-    seed_ids = set(subject_ids)
+    explicit_subject_ids = set(subject_ids)
+    seed_ids = explicit_subject_ids.copy()
     if not seed_ids and task in {
         IntelligenceTask.SOURCE_INTERPRETATION,
         IntelligenceTask.REQUIREMENT_DRAFTING,
@@ -260,12 +261,24 @@ def _task_projection(
     records: dict[str, list[Mapping[str, Any]]] = {
         collection: _collection_items(workbench, collection) for collection in allowed
     }
+    global_root_scopes: dict[str, str] = {}
     for collection in TASK_GLOBAL_ROOT_COLLECTIONS[task]:
-        seed_ids.update(
+        collection_ids = {
             identifier
             for item in records.get(collection, [])
             if (identifier := _item_id(collection, item))
-        )
+        }
+        # Global roots keep the ordinary packet complete. When a professional
+        # names exact IDs from an over-limit root collection, those explicit
+        # IDs scope only that collection so the documented drilldown can run
+        # without a semantic classifier or positional sampling.
+        explicit_collection_ids = collection_ids & explicit_subject_ids
+        if explicit_collection_ids:
+            seed_ids.update(explicit_collection_ids)
+            global_root_scopes[collection] = "explicit_subject_ids"
+        else:
+            seed_ids.update(collection_ids)
+            global_root_scopes[collection] = "complete_collection"
 
     included_ids: set[str] = set()
     included: dict[str, list[Mapping[str, Any]]] = {
@@ -367,6 +380,7 @@ def _task_projection(
     inventory = {
         "selection_method": "task_allowlist_and_reference_closure",
         "silent_truncation_applied": False,
+        "global_root_scopes": global_root_scopes,
         "available_counts": available_counts,
         "included_counts": included_counts,
         "omitted_counts": {
@@ -473,7 +487,7 @@ def build_intelligence_packet(
         "context_inventory": inventory,
         "context_expansion": {
             "available": True,
-            "method": "stop_and_rerun_with_exact_subject_ids_in_a_fresh_model_session",
+            "method": "stop_and_rerun_with_exact_subject_ids_for_over_limit_collections_in_a_fresh_model_session",
             "never_infer_from_omitted_content": True,
         },
         "output_contract": {

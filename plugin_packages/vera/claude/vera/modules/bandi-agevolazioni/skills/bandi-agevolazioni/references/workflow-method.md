@@ -67,8 +67,11 @@ Create those structured facts in a client-evidence mapping session limited to
 the selected evidence. End that session after recording the contribution. Every
 later assessment contribution uses a new operator-attested session reference
 and receives only its task-specific reference closure. If the packet is
-insufficient, stop and request the exact additional subjects or evidence; do not
-reuse the mapping session or infer from omitted content.
+insufficient, stop and request the exact additional subjects or evidence. For
+an over-limit structured collection, the professional supplies exact IDs from
+that collection; those IDs scope only that collection while other required
+collections stay complete. Do not reuse the mapping session or infer from
+omitted content.
 
 Only two deterministic rule families are allowed: exact comparison of confirmed
 finite decimal strings and exact comparison of confirmed ISO dates. The
