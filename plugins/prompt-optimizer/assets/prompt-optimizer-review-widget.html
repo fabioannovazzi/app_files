@@ -1956,20 +1956,30 @@
       return { schema_version: payload.schema_version || "1.0", plugin: payload.plugin || CONFIG.plugin, workflow: payload.workflow || CONFIG.plugin, run_id: payload.run_id || "preview", decided_at: decisions.length ? now : null, decision_source: "mcp_widget_export", review_payload_path: state.payload.ui_decisions?.review_payload_path || "review_payload.json", decisions, decision_count: decisions.length, item_count: items().length, status: decisions.length === 0 ? "pending_review" : decisions.length === items().length ? "reviewed" : "partial_review" };
     }
     function saveToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+            }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };
     }
     function applyToolArgs() {
+      const persistenceToken = state.payload.persistence_token || state.payload.review_reference?.persistence_token;
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        final_artifacts: state.payload.final_artifacts || null,
+        ...(persistenceToken
+          ? { persistence_token: persistenceToken }
+          : {
+              run_intake: state.payload.run_intake || null,
+              review_payload: reviewPayload(),
+              ui_decisions: state.payload.ui_decisions || null,
+              final_artifacts: state.payload.final_artifacts || null,
+            }),
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };

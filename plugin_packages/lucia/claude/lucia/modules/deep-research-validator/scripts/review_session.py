@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
@@ -32,8 +33,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "final_artifacts": "Final artifacts",
         "review_in_codex": "Professional Review",
         "steps": (
-            "Validate the payload with `{tool}`.",
-            "Render the review workbench with `{tool}`.",
+            "Validate the hash-bound local review reference with `{tool}`.",
+            "Render the review workbench with the returned token using `{tool}`.",
             "Save reviewer actions with `{tool}`.",
             "Apply reviewer actions with `{tool}`.",
         ),
@@ -103,8 +104,8 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
         "final_artifacts": "Artefactos finales",
         "review_in_codex": "Revisión profesional",
         "steps": (
-            "Valide los datos con `{tool}`.",
-            "Abra el área de revisión con `{tool}`.",
+            "Valide la referencia local vinculada por hash con `{tool}`.",
+            "Abra el área de revisión con el token devuelto usando `{tool}`.",
             "Guarde las acciones del revisor con `{tool}`.",
             "Aplique las acciones del revisor con `{tool}`.",
         ),
@@ -500,18 +501,14 @@ def _claim_items(
                 or "mark_unclear",
                 evidence=[
                     {
-                        "kind": "answer_validation_assessment",
-                        "claim_text": claim.get("claim_text"),
-                        "source_checks": claim.get("source_checks"),
-                        "support": support,
-                        "reasoning": claim.get("reasoning"),
-                        "professional_judgment": claim.get("professional_judgment"),
-                        "issues": claim.get("issues"),
-                        "disposition": claim.get("disposition"),
-                        "mechanical_source_observations": observations.get(
-                            str(claim_index), {}
-                        ),
-                        "proposed_fix": claim.get("proposed_fix"),
+                        "kind": "mechanical_source_observations",
+                        "claim_ref": {
+                            "artifact": "claims_review.json",
+                            "records_key": "claims",
+                            "id_field": "claim_index",
+                            "record_id": str(claim_index),
+                        },
+                        "observations": observations.get(str(claim_index), {}),
                     }
                 ],
                 data=claim_data,
@@ -558,7 +555,15 @@ def _scope_items(claims_review: dict[str, Any], language: str) -> list[dict[str,
                 ),
                 recommended_action=_clean_text(assessment.get("reviewer_action"))
                 or "mark_unclear",
-                evidence=[{"kind": item_type, "assessment": assessment}],
+                evidence=[
+                    {
+                        "kind": item_type,
+                        "assessment_ref": {
+                            "artifact": "claims_review.json",
+                            "field": field,
+                        },
+                    }
+                ],
                 data={field: assessment},
             )
         )
@@ -589,7 +594,7 @@ def _audit_items(audit: dict[str, Any]) -> list[dict[str, Any]]:
                     "missing_review_indices": audit.get("missing_review_indices"),
                 }
             ],
-            data={"check": check, "audit": audit},
+            data={"check": check, "audit_ref": "validation_audit.json"},
         )
         for index, check in enumerate(failed, start=1)
     ]
@@ -848,6 +853,7 @@ def write_review_session_artifacts(
         review_payload,
     )
 
+    review_payload_sha256 = hashlib.sha256(review_payload_path.read_bytes()).hexdigest()
     ui_decisions_path = _write_json(
         output_dir / "ui_decisions.json",
         {
@@ -858,6 +864,7 @@ def write_review_session_artifacts(
             "decided_at": None,
             "decision_source": "not_collected",
             "review_payload_path": review_payload_path.name,
+            "review_payload_sha256": review_payload_sha256,
             "decisions": [],
             "decision_count": 0,
             "status": "pending_review",
@@ -891,6 +898,7 @@ def write_review_session_artifacts(
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
             "completed_at": _utc_now(),
+            "review_payload_sha256": review_payload_sha256,
             "outputs": outputs,
             "caveats": copy["caveats"],
             "next_actions": copy["next_actions"],

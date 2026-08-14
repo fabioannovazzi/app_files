@@ -304,17 +304,29 @@ def _persist_source_captures(
         else None
     )
     out: list[dict[str, Any]] = []
+    canonical_captures: dict[str, tuple[str, str]] = {}
     for index, raw_record in enumerate(records, start=1):
         record = dict(raw_record)
         source_id = f"source-{index:03d}"
         record["source_id"] = source_id
         captured_text = str(record.pop("_captured_text", "") or "")
         if capture_dir is not None and base_dir is not None and captured_text:
-            capture_path = capture_dir / f"{source_id}.txt"
-            capture_path.write_text(captured_text, encoding="utf-8")
-            record["captured_text_path"] = (
-                capture_path.resolve().relative_to(base_dir).as_posix()
-            )
+            content_hash = str(record.get("content_hash") or "")
+            canonical = canonical_captures.get(content_hash) if content_hash else None
+            if canonical is None:
+                capture_path = capture_dir / f"{source_id}.txt"
+                capture_path.write_text(captured_text, encoding="utf-8")
+                captured_text_path = (
+                    capture_path.resolve().relative_to(base_dir).as_posix()
+                )
+                record["captured_text_path"] = captured_text_path
+                if content_hash:
+                    canonical_captures[content_hash] = (source_id, captured_text_path)
+            else:
+                canonical_source_id, captured_text_path = canonical
+                record["captured_text_path"] = captured_text_path
+                record["duplicate_content_of_source_id"] = canonical_source_id
+                record["capture_reused"] = True
         out.append(record)
     return out
 

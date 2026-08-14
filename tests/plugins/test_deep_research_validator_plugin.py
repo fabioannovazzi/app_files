@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import shutil
 import subprocess
@@ -653,19 +654,25 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
         if item["item_type"] == "supported_claim"
     )
     claim_evidence = claim_item["evidence"][0]
-    assert claim_evidence["kind"] == "answer_validation_assessment"
-    assert claim_evidence["claim_text"] == (
+    assert claim_evidence["kind"] == "mechanical_source_observations"
+    assert claim_evidence["claim_ref"] == {
+        "artifact": "claims_review.json",
+        "records_key": "claims",
+        "id_field": "claim_index",
+        "record_id": "1",
+    }
+    assert claim_item["data"]["claim_text"] == (
         "The Italian VAT rule applies to the transaction."
     )
-    assert claim_evidence["source_checks"][0]["cited_passage"] == (
+    assert claim_item["data"]["source_checks"][0]["cited_passage"] == (
         "The Italian VAT rule applies"
     )
-    assert claim_evidence["support"]["status"] == "supported"
-    assert claim_evidence["reasoning"]["status"] == "sound"
-    assert claim_evidence["professional_judgment"]["status"] == (
+    assert claim_item["data"]["support"]["status"] == "supported"
+    assert claim_item["data"]["reasoning"]["status"] == "sound"
+    assert claim_item["data"]["professional_judgment"]["status"] == (
         "not_judgment_dependent"
     )
-    assert claim_evidence["issues"][0]["type"] == "none"
+    assert claim_item["data"]["issues"][0]["type"] == "none"
     assert claim_item["data"]["target_artifact"] == "claims_review.json"
     assert claim_item["data"]["target_records_key"] == "claims"
     assert claim_item["data"]["target_id_field"] == "claim_index"
@@ -674,6 +681,11 @@ def test_package_validation_writes_audit_and_package(tmp_path: Path) -> None:
     assert review_payload["summary"]["record_integrity_status"] == ("record_complete")
     assert ui_decisions["status"] == "pending_review"
     assert final_artifacts["status"] == "written_pending_review"
+    expected_review_hash = hashlib.sha256(
+        (tmp_path / "out" / "review_payload.json").read_bytes()
+    ).hexdigest()
+    assert ui_decisions["review_payload_sha256"] == expected_review_hash
+    assert final_artifacts["review_payload_sha256"] == expected_review_hash
     output_records = {output["path"]: output for output in final_artifacts["outputs"]}
     assert (
         output_records["validation_audit.json"]["size_bytes"]
@@ -1243,6 +1255,46 @@ def test_source_capture_preserves_passage_beyond_preview(tmp_path: Path) -> None
     observation = audit["claim_observations"][0]["source_observations"][0]
     assert observation["exact_passage_presence"] == "present"
     assert observation["observation_scope"] == "complete_local_text"
+
+
+def test_identical_source_captures_reuse_one_file_and_preserve_aliases(
+    tmp_path: Path,
+) -> None:
+    inspect_mod = load_script(
+        "deep_research_validator_deduplicated_source_capture",
+        "inspect_sources.py",
+    )
+    document_inventory_path = tmp_path / "document_inventory.json"
+    document_inventory_path.write_text(
+        json.dumps({"urls": [], "footnotes": [], "markdown_links": []}),
+        encoding="utf-8",
+    )
+    first_source = tmp_path / "authority-a.txt"
+    second_source = tmp_path / "authority-b.txt"
+    source_text = "The same official rule appears in both supplied files."
+    first_source.write_text(source_text, encoding="utf-8")
+    second_source.write_text(source_text, encoding="utf-8")
+    output_dir = tmp_path / "out"
+
+    paths = inspect_mod.write_source_inventory(
+        document_inventory_path,
+        output_dir,
+        source_files=[first_source, second_source],
+        fetch_urls=False,
+    )
+    inventory = json.loads(paths["source_inventory"].read_text(encoding="utf-8"))
+
+    first, second = inventory["sources"]
+    assert first["source_id"] == "source-001"
+    assert second["source_id"] == "source-002"
+    assert first["path"] != second["path"]
+    assert first["content_hash"] == second["content_hash"]
+    assert first["captured_text_path"] == second["captured_text_path"]
+    assert second["duplicate_content_of_source_id"] == "source-001"
+    assert second["capture_reused"] is True
+    assert [path.name for path in (output_dir / "sources").iterdir()] == [
+        "source-001.txt"
+    ]
 
 
 def test_exact_passage_is_not_searched_in_a_different_source() -> None:
@@ -2237,6 +2289,10 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
         json.dumps(review_payload, indent=2) + "\n",
         encoding="utf-8",
     )
+    review_payload_sha256 = hashlib.sha256(
+        (output_dir / "review_payload.json").read_bytes()
+    ).hexdigest()
+    final_artifacts["review_payload_sha256"] = review_payload_sha256
     (output_dir / "final_artifacts.json").write_text(
         json.dumps(final_artifacts, indent=2) + "\n",
         encoding="utf-8",
@@ -2253,6 +2309,11 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     output_dir = renamed_client_root / output_relative
     claims_review_path = output_dir / "claims_review.json"
     assert not old_client_root.exists()
+    review_reference = {
+        "path": "review_payload.json",
+        "run_id": client_run_id,
+        "review_payload_sha256": review_payload_sha256,
+    }
     messages: list[dict[str, object]] = [
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
         {
@@ -2261,7 +2322,11 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
             "method": "tools/call",
             "params": {
                 "name": "validate_deep_research_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {
+                    "run_intake": run_intake,
+                    "client_engagement": context_path.as_posix(),
+                    "review_reference": review_reference,
+                },
             },
         },
         {
@@ -2273,9 +2338,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "arguments": {
                     "run_intake": run_intake,
                     "client_engagement": context_path.as_posix(),
-                    "review_payload": review_payload,
-                    "ui_decisions": ui_decisions,
-                    "final_artifacts": final_artifacts,
+                    "review_reference": review_reference,
                 },
             },
         },
@@ -2295,8 +2358,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "arguments": {
                     "run_intake": run_intake,
                     "client_engagement": context_path.as_posix(),
-                    "review_payload": review_payload,
-                    "ui_decisions": ui_decisions,
+                    "review_reference": review_reference,
                     "decisions": [
                         {
                             "item_id": "claim-1",
@@ -2322,9 +2384,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
                 "arguments": {
                     "run_intake": run_intake,
                     "client_engagement": context_path.as_posix(),
-                    "review_payload": review_payload,
-                    "ui_decisions": ui_decisions,
-                    "final_artifacts": final_artifacts,
+                    "review_reference": review_reference,
                     "decisions": [
                         {
                             "item_id": "claim-1",
@@ -2355,8 +2415,15 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     validate_result = responses[2]["result"]["structuredContent"]
     assert validate_result["ok"] is True
     assert validate_result["item_count"] == 2
+    assert "review_payload" not in validate_result
+    assert validate_result["review_reference"]["review_payload_sha256"] == (
+        review_payload_sha256
+    )
+    assert len(validate_result["review_reference"]["persistence_token"]) == 43
+    assert "VAT rule applies" not in responses[2]["result"]["content"][0]["text"]
     render_result = responses[3]["result"]
     assert render_result["structuredContent"]["widget_type"] == "deep_research_review"
+    assert len(render_result["structuredContent"]["persistence_token"]) == 43
     assert (
         render_result["_meta"]["openai/outputTemplate"]
         == "ui://widget/deep-research-review.html"
@@ -2367,6 +2434,7 @@ def test_deep_research_mcp_server_validates_renders_and_applies_review_payload(
     assert "ui://widget/deep-research-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
     assert "Answer Validation Review" in widget_html
+    assert "persistence_token" in widget_html
     save_result = responses[6]["result"]["structuredContent"]
     assert save_result["ok"] is True
     assert save_result["persisted"] is True
@@ -2598,7 +2666,7 @@ def test_deep_research_mcp_localizes_spanish_runtime_and_handoff(
     applied = responses[6]["result"]["structuredContent"]
 
     assert "Ejecute validate_deep_research_review" in initialized["instructions"]
-    assert "son válidos" in validated["message"]
+    assert "es válida" in validated["message"]
     assert "debe coincidir" in invalid["error"]
     assert "no se ha escrito ningún archivo" in saved_without_output["message"]
     assert "no se ha escrito ningún archivo" in applied_without_output["message"]

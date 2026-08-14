@@ -23,7 +23,7 @@
       {
         "id": "report-and-source-review",
         "purpose": "Assess answer-contract conformance, claim coverage, source identity, semantic support, reasoning quality, professional-judgment boundaries, and proposed corrections",
-        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions",
+        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -60,12 +60,20 @@
     {
       "id": "public-url-boundary",
       "control": "Initial and redirected HTTP/S URLs are restricted to standard ports and publicly routable destinations; localhost, credentials, and non-public network addresses are rejected before retrieval."
+    },
+    {
+      "id": "hash-bound-canonical-review",
+      "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex, MCP validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Cowork consumes the same canonical local review records without the Codex MCP handoff; unmanaged or legacy runs may still use an inline payload."
+    },
+    {
+      "id": "content-addressed-source-captures",
+      "control": "Normalized source captures with identical SHA-256 content reuse one canonical local text file. Every source record, URL, retrieval result, and duplicate-content alias remains in source_inventory.json so provenance and professional source review are preserved."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fdda5c454fce8f94fbafc32319b22864425105e15ad4a1155a95faa65e1ecbd0"
+    "source_fingerprint": "39b5bafff11dd8cb09cda181e9847cbdff5b298ce3b1e4c959b9b39f3de84628"
   }
 }

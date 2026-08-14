@@ -300,15 +300,21 @@ The review must:
 
 When the local MCP server is available, prefer the OpenAI-style review handoff:
 
-1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the validation output folder. Pass the current
+1. Read `run_intake.json` and `final_artifacts.json` from the validation output
+   folder. Build `review_reference` from `path: review_payload.json`, the run
+   ID, and `final_artifacts.review_payload_sha256`; do not read and resend the
+   full review payload when that hash binding is available. Pass the current
    absolute `client_engagement_path` as `client_engagement` with every MCP call
    that includes `run_intake`. If the customer folder moved, use the
    `context.json` path under its current location; never reuse a previously
    recorded absolute path.
-2. Call `validate_deep_research_review` with `review_payload` before rendering.
-3. If validation succeeds, call `render_deep_research_review` with the same
-   payload objects so Codex can show the local HTML widget
+2. Call `validate_deep_research_review` with `run_intake`,
+   `client_engagement`, and `review_reference` before rendering. The server
+   reloads the canonical local record, verifies its SHA-256 binding, and returns
+   a short-lived in-memory persistence token. Use an inline `review_payload`
+   only for a legacy or unmanaged package that has no bound reference.
+3. If validation succeeds, call `render_deep_research_review` with the returned
+   `persistence_token` so Codex can show the local HTML widget
    `ui://widget/deep-research-review.html`.
 4. Use the widget to inspect answer-contract conformance, claim-selection
    coverage, source identity/access, semantic support, reasoning, issue
@@ -320,6 +326,8 @@ When the local MCP server is available, prefer the OpenAI-style review handoff:
    call `apply_deep_research_decisions` so `applied_decisions.json` and
    `final_artifacts.json` reflect accepted, edited, unclear, skipped, or
    document-requested items before treating the validation package as reviewed.
+   Reuse the widget's persistence token for save/apply instead of resending the
+   full review payload.
 
 If MCP rendering is unavailable, fall back to a markdown review summary from
 `review_payload.json`, `claims_review.json`, `validation_audit.json`,
