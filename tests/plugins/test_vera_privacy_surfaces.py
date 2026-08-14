@@ -312,8 +312,14 @@ def test_three_reconciliation_pages_share_the_same_concrete_model_data_flow() ->
         )[0]
         for snippet in required:
             assert snippet in model_block
-        assert "Codex" not in model_block
-        assert "Cowork" not in model_block
+        if path.parent.name == "journal-bank-reconciliation":
+            assert "Solo nel runtime Codex" in model_block
+            assert "Cowork non esegue questo passaggio" in model_block
+            assert "l’intero insieme rientra in un unico pacchetto limitato" in model_block
+            assert "non può modificare gli abbinamenti deterministici" in model_block
+        else:
+            assert "Codex" not in model_block
+            assert "Cowork" not in model_block
 
 
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
