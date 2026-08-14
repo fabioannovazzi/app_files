@@ -125,16 +125,36 @@ def _header_row(value: str) -> int | None:
     return row
 
 
+def _resolve_inspection_control(path: Path) -> Path:
+    """Resolve the legacy inspection.json argument to its private sibling."""
+
+    if path.name == "inspection.json":
+        candidate = path.with_name("inspection_control.json")
+        if candidate.is_file():
+            return candidate
+    return path
+
+
 def main() -> int:
     """Record one reviewed numeric-measure mapping in a report recipe."""
 
     parser = argparse.ArgumentParser(
         description=(
             "Bind explicitly reviewed measure columns to the source receipt "
-            "recorded by Report Builder inspection."
+            "recorded by Report Builder private inspection control."
         )
     )
-    parser.add_argument("--inspection", type=Path, required=True)
+    parser.add_argument(
+        "--inspection-control",
+        "--inspection",
+        dest="inspection_control",
+        type=Path,
+        required=True,
+        help=(
+            "Private inspection_control.json. The --inspection alias remains "
+            "for compatible scripted callers."
+        ),
+    )
     parser.add_argument("--recipe", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     parser.add_argument("--client-engagement", type=Path, required=True)
@@ -200,11 +220,12 @@ def main() -> int:
         help="Explicit sign treatment for included source cells.",
     )
     args = parser.parse_args()
+    inspection_control = _resolve_inspection_control(args.inspection_control)
     try:
         load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="report-builder",
-            input_paths=[args.inspection, args.recipe],
+            input_paths=[inspection_control, args.recipe],
             output_dir=args.output,
         )
     except AssuranceContractError as exc:
@@ -220,7 +241,7 @@ def main() -> int:
         else [item.strip() for item in args.exclude_columns.split(",") if item.strip()]
     )
     updated = review_numeric_measure_columns(
-        _json_object(args.inspection),
+        _json_object(inspection_control),
         _json_object(args.recipe),
         section_key=args.section,
         header_row=args.header_row,

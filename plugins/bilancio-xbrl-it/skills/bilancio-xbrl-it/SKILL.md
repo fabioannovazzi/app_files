@@ -46,6 +46,12 @@ promise local-only processing or automatic anonymization. The user's selected
 runtime account controls apply. TEBENI upload is optional, external, and
 user-controlled; obtain explicit route choice before transmitting a file.
 
+Codex and Cowork must use the same `intelligence_contract.py` packet builders
+and bounds. Never replace an unavailable packet helper with a raw read of
+`case.json`, a source workbook/PDF, or the full connected folder. Use the
+callable packet service/CLI, or stop and explain that the bounded-context
+capability is unavailable in that runtime.
+
 The service-facing intake must use the host-configured malware scanner and may
 not treat safe parsing as a clean malware verdict. Return exported bytes only
 through the checksum-bound short-lived artifact grant when that delivery
@@ -223,6 +229,31 @@ support workflow guidance, account mapping, question prioritization, narrative
 drafting, prior-year comparison, or issue explanation. Do not send the whole
 case or an out-of-band case routing identifier merely because it is available;
 include either only when the semantic task actually needs it.
+
+Enforce the packet contract rather than manually assembling model input:
+
+- account mapping accepts one to fifty exact account IDs;
+- disclosure activation includes at most the first twenty accounts by stable
+  case order, a value-free account/fact/schedule catalogue, and up to fifty
+  exact `account:`, `fact:`, or `schedule:` selectors when more evidence is
+  professionally relevant;
+- question prioritization includes no more than fifty active questions and
+  only their matching prior-answer suggestions;
+- narrative drafting includes one section, the accepted answers and complete
+  schedules linked to that section by the versioned disclosure rule pack, and
+  only explicitly selected additional `fact:`, `answer:`, `schedule:`, or
+  `prior:` context (up to fifty selectors);
+- prior-year comparison includes at most twenty prior and twenty current items
+  by default, with exact `prior:` and `block:` selectors for targeted batches;
+- workflow guidance includes at most twenty detailed rows from each issue,
+  question, schedule, presentation, or PDF collection and reports the complete
+  counts; use exact issue/question packets or paginated review views for more;
+- issue explanation accepts one to twenty exact issue IDs.
+
+Every packet contains `context_receipt` with the exact content hash, task,
+selectors, bounds, and disclosed/available counts. `record-intelligence`
+persists that receipt with the model run. Catalogue entries are discovery aids,
+not citeable evidence; request the exact expansion before relying on one.
 
 Run the semantic task in the selected Vera runtime, then pass the strict JSON
 result through `record-intelligence`. The validator rejects references outside

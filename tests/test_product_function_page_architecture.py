@@ -520,17 +520,17 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
 
     for snippet in (
         'window.MPARANZA_FUNCTION_PAGES["bilancio-xbrl-it"]',
-        "Il modello vede dati contabili reali, in pacchetti distinti per attività.",
-        "The model sees real accounting data in separate task-specific packets.",
-        "Le modèle voit des données comptables réelles",
-        "Das Modell sieht reale Buchhaltungsdaten",
-        "El modelo ve datos contables reales",
-        "fino a 50 conti per la mappatura",
-        "up to 20 candidate rows, and 50 issues",
-        "jusqu'à 100 éléments manquants",
-        "keine eigene Schemabegrenzung",
-        "No se aplica anonimización automática",
-        "If Cowork tools are unavailable, Cowork may read connected files directly",
+        "Il codice elabora l'intero bilancio",
+        "Code processes the full accounts",
+        "Le code traite l'intégralité des comptes",
+        "Der Code verarbeitet den vollständigen Abschluss",
+        "El código procesa todas las cuentas",
+        "da 1 a 50 conti selezionati per la mappatura",
+        "at most 20 rows, columns, geometry summaries",
+        "jusqu'à 50 questions actives",
+        "keine automatische Anonymisierung oder Pseudonymisierung",
+        "no recibe case.json ni archivos completos como alternativa",
+        "Codex and Cowork use the same limits",
     ):
         assert snippet in function_copy
 

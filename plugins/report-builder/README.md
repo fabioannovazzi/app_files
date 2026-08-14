@@ -4,10 +4,19 @@
 
 Build Report is a Codex-guided reporting workflow for variable finance and audit inputs. It replaces the old web report-builder flow with deterministic local scripts plus Codex review.
 
+Codex and Cowork use the same bounded inspection/expansion rules. A runtime
+without the required helper must not substitute a raw workbook, PDF, private
+inspection control, or whole connected folder as model context.
+
 ## What It Does
 
 - Inspects `.xlsx`, `.xlsm`, `.csv`, readable `.pdf`, and ZIP inputs.
-- Produces `inspection.json` and `suggested_recipe.json`.
+- Processes the full input population locally, writes a bounded model-visible
+  `inspection.json`, keeps the complete cell inventory in private
+  `inspection_control.json`, and receipts both in `model_context_receipt.json`.
+- Supports repeatable, purpose-labelled expansion packets limited to one table,
+  sixteen exact columns, and one hundred source rows per packet, so additional
+  evidence remains available without disclosing the complete inventory by default.
 - Lets Codex map tables, ask only essential questions, and write narrative fields in the recipe.
 - Captures stable source bytes, disambiguates duplicate source names, and keeps
   absolute source roots in the private run-local `source_index.json`.
@@ -32,7 +41,7 @@ Build Report is a Codex-guided reporting workflow for variable finance and audit
   review round requires that exact SHA-256 value from a separately retained
   channel, archives the full predecessor integrity envelope and review state,
   and rejects missing, replaced, or non-immediate predecessor history.
-- Validates the exact 31-file executable plugin and shared-assurance tree before
+- Validates the exact 32-file executable plugin and shared-assurance tree before
   importing workflow code, and runs MCP-launched Python with isolated imports
   and bytecode disabled. Unowned files, directories, caches, links, and other
   non-regular execution paths fail closed.

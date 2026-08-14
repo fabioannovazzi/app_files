@@ -24,7 +24,7 @@
       {
         "id": "financial-report-evidence",
         "purpose": "Map source tables, write the report narrative, and review the generated report",
-        "content": "User instructions; spreadsheets, CSV files or extracted PDF text; table inventories and rows; mappings; calculations; diagnostics; draft narrative; report artifacts and review decisions",
+        "content": "User instructions; a bounded inspection packet with source file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, extraction diagnostics, and at most eight preview rows per table with numeric values redacted; when the preview is insufficient, one purpose-labelled expansion containing one exact table, at most 16 selected columns and at most 100 selected source rows with cell text, number formats, formula/cache status and source coordinates; selected mappings; the editable narrative recipe; generated report diagnostics, drafts, artifacts and review decisions. The complete cell inventory is not model-visible by default and remains in private deterministic control state.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -71,6 +71,10 @@
       "control": "Public table inventories and preview rows withhold raw numeric candidate cells; only source-bound reviewed ledger values may appear as totals, and generated spreadsheet strings are written as literal text rather than formulas."
     },
     {
+      "id": "bounded-model-context-with-lossless-expansion",
+      "control": "Deterministic inspection still processes the full source population, but inspection.json omits both full cell inventories and redacts numeric preview values. The complete inventory stays in private inspection_control.json. Codex and Cowork may obtain additional evidence only through a purpose-labelled packet selecting one exact table, at most 16 exact columns and at most 100 source rows; repeated packets preserve access to the full population. Each default and expanded packet records exact bounds and a SHA-256 context receipt. The workflow instructions prohibit raw-source or private-control fallback when the bounded helper is unavailable."
+    },
+    {
       "id": "sanitized-helper-failures",
       "control": "MCP helper-process failures expose one terminal exception only; Python tracebacks and absolute local paths are removed before the message reaches the review surface."
     },
@@ -83,6 +87,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6451fa2293b1c7180811660fb33c7237f8d9ceb5f5207912fe8a9ea53d463fb5"
+    "source_fingerprint": "ad8b79117bf766a88ef8cfa876151c12e42077a066dfd321553ab3f875feed3f"
   }
 }

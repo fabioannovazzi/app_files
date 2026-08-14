@@ -5445,6 +5445,7 @@ def record_intelligence_suggestion(
         "subject_ids": list(subject_ids),
         "status": EvidenceStatus.MODEL_SUGGESTED,
         "input_packet_hash": intelligence_packet_hash(packet),
+        "input_context_receipt": dict(packet["context_receipt"]),
         "input_revision_id": expected_revision,
         "model_metadata": dict(model_metadata),
         "output": normalized,
