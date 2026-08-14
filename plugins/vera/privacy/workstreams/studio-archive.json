@@ -44,9 +44,17 @@
         ]
       },
       {
+        "id": "studio-client-selection-directory",
+        "purpose": "Select one registered client without copying the studio-wide private identity registry into model context",
+        "content": "All current registered and unregistered client directory rows with opaque client and scope IDs, display labels, registration or profile status, and counts of stored emails, legal names and tax identifiers. Stored identity values remain local. When the user supplies one email address, exact legal name or tax identifier in the current chat, local exact matching returns only matching safe directory rows and does not echo the supplied or stored value",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
         "id": "studio-client-engagement-intake",
         "purpose": "Create or resume any registered client-bound Vera workflow across separate Codex chats",
-        "content": "The selected customer-folder manifest and current local or Google Drive folder binding; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames, bounded client-relative snapshot paths, Drive file and parent IDs, MIME types, versions, capabilities and available checksums, excluded links, shortcuts or special entries, byte counts, SHA-256 receipts and timestamps; transiently opened Drive text and citations; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat",
+        "content": "The selected customer-folder manifest and current local or Google Drive folder binding; explicit engagement, workflow and run IDs; source, journal, support, local-folder snapshot, Google Drive snapshot, or upstream-artifact roles; canonical input-receipt and run execution-copy paths; original filenames; run labels, purposes and lifecycle state; portable run contexts and input and artifact manifests; exact workflow output paths; artifact purposes, audiences and media types; and recovery or retention inventories. Archive Organization receives the full bounded snapshot population through opaque inventory and item references with projected relative paths, names, MIME types, sizes, timestamps, opening availability, exclusions and opaque exact-duplicate relationships; raw snapshot hashes, Drive file and parent IDs, versions, capabilities, checksums and absolute source paths remain in the local receipt and are resolved only by deterministic code. Selected opened content, locators, citations and limitations may enter model context after local identity revalidation. Email addresses, legal-name aliases, tax identifiers and OAuth token contents remain in private local state except when the user supplies non-token identity facts in the current chat",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -217,7 +225,7 @@
     },
     {
       "id": "private-client-identity-registry",
-      "control": "The Gmail route keeps confirmed identities only in the current conversation and has no plugin-managed cross-conversation registry. Optional local Codex use may store confirmed full email or PEC addresses, legal names, and tax identifiers in an owner-only local registry outside the shared archive; its schema has no fields for Gmail credentials, tokens, cookies, message identifiers, bodies, or attachments."
+      "control": "The Gmail route keeps confirmed identities only in the current conversation and has no plugin-managed cross-conversation registry. Optional local Codex use may store confirmed full email or PEC addresses, legal names, and tax identifiers in an owner-only local registry outside the shared archive; its schema has no fields for Gmail credentials, tokens, cookies, message identifiers, bodies, or attachments. The model-facing client directory returns only display labels, stable IDs, status and identity-value counts. An exact local resolver accepts one user-supplied identity and returns only matching safe rows without echoing either supplied or stored identity values."
     },
     {
       "id": "exact-client-folder-binding",
@@ -229,7 +237,7 @@
     },
     {
       "id": "bounded-client-folder-organization-snapshot",
-      "control": "For archive-organization only, Studio Archive may either hash at most 5,000 ordinary local files and 2 GB inside one exact registered client folder, excluding its Vera ledger and all links, or list at most 5,000 files and 2 GB of known binary sizes inside one exact bound My Drive or Shared Drive folder, recording stable IDs, parent, version, MIME type, capabilities, available checksums and skipped shortcuts. It imports only the resulting sealed JSON receipt. A selected Drive file may be revalidated and transiently downloaded or exported for bounded local extraction, after which the temporary bytes are deleted. Neither intake moves a client document or authorizes later organization changes."
+      "control": "For archive-organization only, Studio Archive may either hash at most 5,000 ordinary local files and 2 GB inside one exact registered client folder, excluding its Vera ledger and all links, or list at most 5,000 files and 2 GB of known binary sizes inside one exact bound My Drive or Shared Drive folder, recording stable IDs, parent, version, MIME type, capabilities, available checksums and skipped shortcuts. It imports only the resulting sealed JSON receipt. A full-population projection returns one opaque item reference per file plus purpose-relevant path, name, type, size, time, evidence availability and opaque exact-duplicate relationships, but no raw hashes, Drive IDs, capabilities, versions, checksums or absolute paths. A selected item reference is resolved and revalidated locally before bounded extraction, and transient Drive bytes are deleted. Neither intake moves a client document or authorizes later organization changes."
     },
     {
       "id": "durable-workflow-resumption",
@@ -256,6 +264,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9d543e498e08f5cfa9f093a6c6844181f2c43cf0f623647b3dfe4d9e79ee367d"
+    "source_fingerprint": "6525cf46fa9308438d2534d003f4c03e6a22dad724488101d1e010133722f759"
   }
 }

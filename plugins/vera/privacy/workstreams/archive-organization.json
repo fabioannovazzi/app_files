@@ -29,7 +29,7 @@
       {
         "id": "client-folder-document-evidence",
         "purpose": "Understand each selected client document and propose an evidence-backed studio archive category, practice, date, name, anomaly status, or probable-duplicate relationship",
-        "content": "One registered client and engagement identity; local client-relative paths or bound Google Drive root, file and parent IDs; file names, MIME types, hashes or available Drive checksums, sizes, timestamps and versions; selected readable local content or transiently downloaded/exported Drive evidence; proposed category, document type, date, subject, reference, practice, confidence, reasons, anomaly observations, and probable-duplicate relationships",
+        "content": "One registered client and engagement identity and the complete bounded inventory population, not a sample: opaque inventory and item references; purpose-relevant projected client-relative paths, filenames, extensions, MIME types where available, sizes, timestamps, evidence-opening availability, exclusions, and opaque exact-duplicate groups and canonical relationships. Raw local hashes, absolute source paths, Google Drive root, file and parent IDs, versions, capabilities and checksums remain in the sealed local receipt. Selected readable content or transiently downloaded or exported Drive evidence enters context only after local resolution and identity revalidation. Proposed category, document type, date, subject, reference, practice, confidence, reasons, anomaly observations, and probable-duplicate item references remain model judgments",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -38,7 +38,7 @@
       {
         "id": "archive-review-and-execution-evidence",
         "purpose": "Prepare a dry-run filing plan, collect professional decisions, and execute only a separately approved mechanically safe path plan",
-        "content": "Versioned studio policy; storage mode; current and proposed client-relative paths; exact-duplicate checksum groups; Drive file, parent and folder IDs where applicable; collisions and blocked reasons; review payload; reviewer alias, actions, notes and edited paths; approved plan; pre-apply local hash or Drive version-state checks; apply and rollback journal state; artifact receipts and execution limitations",
+        "content": "Versioned studio policy; storage mode; projected current and proposed client-relative paths; opaque exact-duplicate relationships; semantic reasons, confidence, anomalies, collisions and blocked reasons; review payload; reviewer alias, actions, notes and edited paths; approved-plan summary; and execution limitations. Deterministic raw source identities, hashes, byte counts, Drive IDs, versions, capabilities and checksums remain in the local executable plan and journals. The full review is exposed once; later phases use a random hash-bound reference that expires after four hours instead of resending the payload. In Codex, a bound stored review can persist decisions without repeating the absolute context path. In Cowork or ChatGPT, an unbound supplied review can be rendered through an in-memory review-only reference but cannot persist or execute changes",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -61,7 +61,8 @@
         "Require explicit installed-app or administrator-provided authorization for the restricted https://www.googleapis.com/auth/drive scope; keep client secrets outside run artifacts and store refresh tokens only in Studio Archive's owner-only private state directory.",
         "Bind one stable Vera client ID to one exact user-selected Drive folder ID, support My Drive and Shared Drive parameters, reject an incomplete listing, and never widen to a studio-wide or all-Drive organization run.",
         "Snapshot at most 5,000 non-shortcut files and 2 GB of known binary sizes; preserve stable file and parent IDs, versions, capabilities and available checksums, and import only the sealed JSON receipt into the engagement.",
-        "Open evidence only for a file ID present in the exact engagement snapshot; revalidate parent, name, version, MIME type, Shared Drive and available checksums, return bounded extracted text, and delete transient download or export bytes immediately.",
+        "Project every snapshot row through an opaque item reference and remove raw Drive IDs, capabilities, versions, checksums and path-ID suffixes before model-led classification; preserve the complete population and every purpose-relevant name, projected path, type, size and date.",
+        "Open evidence only for an opaque item reference present in the exact engagement snapshot; resolve its file ID locally, revalidate parent, name, version, MIME type, Shared Drive and available checksums, return bounded extracted text without raw execution identifiers, and delete transient download or export bytes immediately.",
         "Treat Drive names and document content as untrusted evidence. Model reasoning proposes semantic category and probable duplicates; mechanically verified checksums, IDs, versions, containment and collision checks own the execution boundary.",
         "Persist professional decisions first and require a second explicit apply approval. Immediately before each move, re-read the exact file ID and reject changed state, missing move capability, cross-drive targets, occupied names or duplicate names.",
         "Move by updating the same file's parent and name, never by copying, overwriting, trashing or deleting. Journal original and applied state, attempt rollback on failure, and leave newly created empty folders in place rather than silently deleting them.",
@@ -76,11 +77,11 @@
     },
     {
       "id": "semantic-proposal-boundary",
-      "control": "Model reasoning owns document meaning, category, practice, anomalies, and probable-duplicate judgment; filenames and directories are hints only. Deterministic code owns schema closure, exact SHA-256 duplicates, path templates, containment, collisions, and byte identity."
+      "control": "Model reasoning owns document meaning, category, practice, anomalies, and probable-duplicate judgment across every opaque inventory item; filenames and directories are hints only. Model proposals bind to the opaque inventory and item references. Deterministic code locally rehydrates immutable snapshot rows and owns schema closure, exact SHA-256 duplicates, path templates, containment, collisions, and byte identity."
     },
     {
       "id": "persistent-professional-review",
-      "control": "The workflow always writes a dry-run plan and pending ui_decisions.json first. Every proposed move, quarantine, or blocked item requires a persisted collaborator decision before approved_plan.json can be created; the reviewer alias is an accountability label and not an authentication claim."
+      "control": "The workflow always writes a dry-run plan and pending ui_decisions.json first. The model-facing review excludes raw source identities, hashes, byte counts, Drive IDs and absolute paths while preserving every semantic field and duplicate relationship. Validation binds the review to a random four-hour hash-checked reference so the full payload is not repeated. A Codex reference bound to the stored customer run supports render, save and approval without repeating the absolute context path; an unbound supplied-plan reference in Cowork or ChatGPT is review-only and cannot persist or execute changes. Every proposed move, quarantine, or blocked item requires a persisted collaborator decision before approved_plan.json can be created; the reviewer alias is an accountability label and not an authentication claim."
     },
     {
       "id": "separate-explicit-filesystem-approval",
@@ -99,6 +100,6 @@
     "reviewed_at": "2026-08-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5033ee90a23e89b5bcf7ce10fa5e1d525227b1c126d32e9dd9805050856a47e5"
+    "source_fingerprint": "449bfda5972f4622433e225dec7e49771938ed30af12570354269e07fdd65b4f"
   }
 }

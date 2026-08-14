@@ -26,17 +26,19 @@ from archive_core import (
     fail_studio_client_workflow,
     finalize_studio_client_workflow,
     get_studio_client_folder,
+    get_studio_archive_organization_inventory,
     import_studio_client_document,
     list_studio_client_engagements,
-    list_studio_client_identities,
+    list_studio_clients,
     match_studio_email_client,
     open_archive_source,
-    open_studio_google_drive_source,
+    open_studio_archive_organization_item,
     plan_gmail_client_search,
     prepare_studio_client_workflow,
     recover_studio_client_ledger,
     refresh_archive,
     report_studio_client_retention,
+    resolve_studio_client_identity,
     search_archive,
     set_studio_client_identity,
     snapshot_studio_client_folder,
@@ -63,6 +65,14 @@ def _parser() -> argparse.ArgumentParser:
 
     subparsers.add_parser("status")
     subparsers.add_parser("clients")
+
+    resolve_client = subparsers.add_parser("resolve-client")
+    resolve_client.add_argument(
+        "--identity-kind",
+        choices=["email_address", "legal_name", "tax_identifier"],
+        required=True,
+    )
+    resolve_client.add_argument("--identity-value", required=True)
 
     client_folder = subparsers.add_parser("client-folder")
     client_folder.add_argument("--client-id", required=True)
@@ -104,11 +114,16 @@ def _parser() -> argparse.ArgumentParser:
     snapshot_drive.add_argument("--client-id", required=True)
     snapshot_drive.add_argument("--engagement-id", required=True)
 
-    open_drive = subparsers.add_parser("open-google-drive")
-    open_drive.add_argument("--client-id", required=True)
-    open_drive.add_argument("--engagement-id", required=True)
-    open_drive.add_argument("--snapshot-input-id", required=True)
-    open_drive.add_argument("--file-id", required=True)
+    inventory = subparsers.add_parser("archive-organization-inventory")
+    inventory.add_argument("--client-id", required=True)
+    inventory.add_argument("--engagement-id", required=True)
+    inventory.add_argument("--snapshot-input-id", required=True)
+
+    open_item = subparsers.add_parser("open-archive-organization-item")
+    open_item.add_argument("--client-id", required=True)
+    open_item.add_argument("--engagement-id", required=True)
+    open_item.add_argument("--snapshot-input-id", required=True)
+    open_item.add_argument("--item-ref", required=True)
 
     prepare_workflow = subparsers.add_parser("prepare-workflow")
     prepare_workflow.add_argument("--engagement-id", required=True)
@@ -223,7 +238,12 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "status":
             result = studio_archive_status()
         elif args.command == "clients":
-            result = list_studio_client_identities()
+            result = list_studio_clients()
+        elif args.command == "resolve-client":
+            result = resolve_studio_client_identity(
+                args.identity_kind,
+                args.identity_value,
+            )
         elif args.command == "client-folder":
             result = get_studio_client_folder(args.client_id)
         elif args.command == "create-client":
@@ -265,12 +285,18 @@ def main(argv: list[str] | None = None) -> int:
                 args.client_id,
                 args.engagement_id,
             )
-        elif args.command == "open-google-drive":
-            result = open_studio_google_drive_source(
+        elif args.command == "archive-organization-inventory":
+            result = get_studio_archive_organization_inventory(
                 args.client_id,
                 args.engagement_id,
                 args.snapshot_input_id,
-                args.file_id,
+            )
+        elif args.command == "open-archive-organization-item":
+            result = open_studio_archive_organization_item(
+                args.client_id,
+                args.engagement_id,
+                args.snapshot_input_id,
+                args.item_ref,
             )
         elif args.command == "prepare-workflow":
             upstream_artifacts = []

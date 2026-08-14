@@ -252,6 +252,35 @@ def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> No
     assert "`public-process-page-contract.md`" in catalog
 
 
+def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None:
+    studio_page = (
+        ROOT / "static" / "shared" / "studio-archive" / "index.html"
+    ).read_text(encoding="utf-8")
+    organization_page = (
+        ROOT / "static" / "shared" / "archive-organization" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    assert studio_page.count('"model.engagement.copy":') == 5
+    assert organization_page.count('"model.inventory.copy":') == 5
+    assert organization_page.count('"model.review.copy":') == 5
+    for snippet in (
+        "stored emails, legal names, and tax identifiers stay local",
+        "code performs an exact match and returns only matching safe rows",
+        "every snapshot file within 5,000 files and 2 GB",
+        "raw hashes, Drive IDs, versions, capabilities, and absolute source paths stay local",
+        "Organization technical references are pseudonymized",
+    ):
+        assert snippet in studio_page
+    for snippet in (
+        "every snapshot file, not a sample",
+        "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
+        "random hash-bound reference valid for four hours",
+        "for a plan supplied in Cowork or ChatGPT, the reference is review-only",
+        "Technical references are pseudonymized; document content is not automatically anonymized",
+    ):
+        assert snippet in organization_page
+
+
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
     for manifest in _manifests():
         assert isinstance(manifest["external_boundaries"], list)

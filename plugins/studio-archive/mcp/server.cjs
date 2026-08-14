@@ -17,6 +17,7 @@ const MAX_OUTPUT_BYTES = 8_000_000;
 const TOOL_NAMES = {
   status: "studio_archive_status",
   clients: "list_studio_archive_clients",
+  resolveClient: "resolve_studio_archive_client",
   clientFolder: "get_studio_client_folder",
   createClient: "create_studio_archive_client",
   createEngagement: "create_studio_client_engagement",
@@ -25,7 +26,8 @@ const TOOL_NAMES = {
   googleDriveStatus: "studio_archive_google_drive_status",
   bindGoogleDrive: "bind_studio_client_google_drive",
   snapshotGoogleDrive: "snapshot_studio_client_google_drive",
-  openGoogleDrive: "open_studio_google_drive_source",
+  archiveInventory: "get_studio_archive_organization_inventory",
+  openArchiveItem: "open_studio_archive_organization_item",
   engagements: "list_studio_client_engagements",
   prepareWorkflow: "prepare_studio_client_workflow",
   startCheckEntriesFromSample: "start_check_entries_from_sample",
@@ -54,6 +56,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "check-entries",
   "journal-bank-reconciliation",
   "sales-plan",
+  "variance-analysis",
   "financial-analysis",
   "report-builder",
   "concordato-plan-review",
@@ -114,10 +117,27 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.clients,
-      title: "List Studio Archive client identities",
+      title: "List Studio Archive clients",
       description:
-        "Read the private client identity profiles for current scopes and report orphaned profiles after folder changes. Call this before an explicit profile rebind.",
+        "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local.",
       inputSchema: objectSchema({}),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.resolveClient,
+      title: "Resolve one exact Studio Archive client identity",
+      description:
+        "Compare one user-supplied email address, legal name, or tax identifier against the private local registry and return only matching safe client directory rows. The supplied value and stored identity values are not echoed.",
+      inputSchema: objectSchema(
+        {
+          identity_kind: {
+            type: "string",
+            enum: ["email_address", "legal_name", "tax_identifier"],
+          },
+          identity_value: { type: "string", minLength: 1, maxLength: 254 },
+        },
+        ["identity_kind", "identity_value"],
+      ),
       annotations: annotations(true),
     },
     {
@@ -202,7 +222,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.snapshotFolder,
       title: "Snapshot one Studio Archive client folder",
       description:
-        "After selecting one registered client and open engagement, hash a bounded client-folder view and import only its JSON receipt. Client documents are not copied or moved.",
+        "After selecting one registered client and open engagement, hash a bounded client-folder view locally and return its complete projected Archive Organization inventory. Raw hashes and absolute paths stay local; client documents are not copied or moved.",
       inputSchema: objectSchema(
         {
           client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
@@ -242,7 +262,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.snapshotGoogleDrive,
       title: "Snapshot one bound Google Drive client folder",
       description:
-        "Recursively read one exact bound My Drive or Shared Drive folder, record stable IDs, versions, parents, capabilities, and available checksums, and import only the JSON receipt into the selected engagement.",
+        "Recursively read one exact bound My Drive or Shared Drive folder and return its complete projected Archive Organization inventory. Stable IDs, versions, parents, capabilities, and checksums stay in the local receipt.",
       inputSchema: objectSchema(
         {
           client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
@@ -253,18 +273,33 @@ function toolDefinitions() {
       annotations: annotations(false, false, true),
     },
     {
-      name: TOOL_NAMES.openGoogleDrive,
-      title: "Open one snapshotted Google Drive source",
+      name: TOOL_NAMES.archiveInventory,
+      title: "Resume one Archive Organization inventory",
       description:
-        "Revalidate one exact Drive file ID against an immutable engagement snapshot, download or export it transiently, extract bounded citable text, and delete the temporary bytes. This never changes Drive.",
+        "Return the complete model-facing inventory for one immutable client snapshot. Opaque item references preserve local mapping while raw hashes, storage IDs, capabilities, and absolute paths stay local.",
       inputSchema: objectSchema(
         {
           client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
           engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
           snapshot_input_id: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
-          file_id: { type: "string", pattern: "^[A-Za-z0-9_-]{3,256}$" },
         },
-        ["client_id", "engagement_id", "snapshot_input_id", "file_id"],
+        ["client_id", "engagement_id", "snapshot_input_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.openArchiveItem,
+      title: "Open one snapshotted Archive Organization item",
+      description:
+        "Resolve one opaque inventory item locally, revalidate its immutable snapshot identity, and return bounded citable content. Raw local paths, Drive IDs, hashes, versions, and capabilities are not returned.",
+      inputSchema: objectSchema(
+        {
+          client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
+          engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
+          snapshot_input_id: { type: "string", pattern: "^input_[0-9a-f]{24}$" },
+          item_ref: { type: "string", pattern: "^archive_item_[0-9a-f]{24}$" },
+        },
+        ["client_id", "engagement_id", "snapshot_input_id", "item_ref"],
       ),
       annotations: annotations(true, true, true),
     },
@@ -811,6 +846,20 @@ function commandForTool(name, rawArgs) {
     assertOnlyKeys(args, new Set());
     return ["clients"];
   }
+  if (name === TOOL_NAMES.resolveClient) {
+    assertOnlyKeys(args, new Set(["identity_kind", "identity_value"]));
+    const identityKind = requireString(args.identity_kind, "identity_kind");
+    if (!/^(?:email_address|legal_name|tax_identifier)$/.test(identityKind)) {
+      throw new Error("identity_kind is invalid.");
+    }
+    return [
+      "resolve-client",
+      "--identity-kind",
+      identityKind,
+      "--identity-value",
+      requireString(args.identity_value, "identity_value"),
+    ];
+  }
   if (name === TOOL_NAMES.clientFolder) {
     assertOnlyKeys(args, new Set(["client_id"]));
     const clientId = requireString(args.client_id, "client_id");
@@ -947,15 +996,14 @@ function commandForTool(name, rawArgs) {
       engagementId,
     ];
   }
-  if (name === TOOL_NAMES.openGoogleDrive) {
+  if (name === TOOL_NAMES.archiveInventory) {
     assertOnlyKeys(
       args,
-      new Set(["client_id", "engagement_id", "snapshot_input_id", "file_id"]),
+      new Set(["client_id", "engagement_id", "snapshot_input_id"]),
     );
     const clientId = requireString(args.client_id, "client_id");
     const engagementId = requireString(args.engagement_id, "engagement_id");
     const inputId = requireString(args.snapshot_input_id, "snapshot_input_id");
-    const fileId = requireString(args.file_id, "file_id");
     if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
       throw new Error("client_id must be an exact registered client.");
     }
@@ -965,19 +1013,47 @@ function commandForTool(name, rawArgs) {
     if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
       throw new Error("snapshot_input_id is invalid.");
     }
-    if (!/^[A-Za-z0-9_-]{3,256}$/.test(fileId)) {
-      throw new Error("file_id is invalid.");
-    }
     return [
-      "open-google-drive",
+      "archive-organization-inventory",
       "--client-id",
       clientId,
       "--engagement-id",
       engagementId,
       "--snapshot-input-id",
       inputId,
-      "--file-id",
-      fileId,
+    ];
+  }
+  if (name === TOOL_NAMES.openArchiveItem) {
+    assertOnlyKeys(
+      args,
+      new Set(["client_id", "engagement_id", "snapshot_input_id", "item_ref"]),
+    );
+    const clientId = requireString(args.client_id, "client_id");
+    const engagementId = requireString(args.engagement_id, "engagement_id");
+    const inputId = requireString(args.snapshot_input_id, "snapshot_input_id");
+    const itemRef = requireString(args.item_ref, "item_ref");
+    if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
+      throw new Error("client_id must be an exact registered client.");
+    }
+    if (!/^eng_[0-9a-f]{24}$/.test(engagementId)) {
+      throw new Error("engagement_id is invalid.");
+    }
+    if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
+      throw new Error("snapshot_input_id is invalid.");
+    }
+    if (!/^archive_item_[0-9a-f]{24}$/.test(itemRef)) {
+      throw new Error("item_ref is invalid.");
+    }
+    return [
+      "open-archive-organization-item",
+      "--client-id",
+      clientId,
+      "--engagement-id",
+      engagementId,
+      "--snapshot-input-id",
+      inputId,
+      "--item-ref",
+      itemRef,
     ];
   }
   if (name === TOOL_NAMES.engagements) {
@@ -1411,7 +1487,12 @@ function callTool(name, args) {
 
 function toolResult(payload) {
   return {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
+    content: [
+      {
+        type: "text",
+        text: "Studio Archive returned the structured result attached to this tool response.",
+      },
+    ],
     structuredContent: payload,
     isError: false,
   };
@@ -1453,7 +1534,7 @@ function handleRpc(message) {
       serverInfo: { name: SERVER_NAME, version: SERVER_VERSION },
       capabilities: { tools: {} },
       instructions:
-        "For client work, list registered clients first and ask the user to choose Existing or New when no exact client is established. Never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing.",
+        "For client work, list the safe registered-client directory first and ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing.",
     });
   }
   if (message.method === "notifications/initialized") return null;

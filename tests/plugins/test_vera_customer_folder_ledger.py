@@ -215,6 +215,45 @@ def test_explicit_engagement_and_import_are_persisted_in_customer_folder(
     assert "01234567890" not in serialized
 
 
+def test_local_archive_organization_projection_keeps_full_population_and_relationships(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    first = client_case.client_root / "incoming" / "notice.txt"
+    second = client_case.client_root / "archive" / "notice-copy.txt"
+    first.parent.mkdir()
+    second.parent.mkdir()
+    first.write_text("Professional notice evidence", encoding="utf-8")
+    second.write_bytes(first.read_bytes())
+
+    snapshotted = archive_core.snapshot_studio_client_folder(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+    inventory = snapshotted["model_inventory"]
+    duplicate_rows = [
+        item for item in inventory["files"] if item["exact_duplicate_group"]
+    ]
+    opened = archive_core.open_studio_archive_organization_item(
+        client_case.client_id,
+        client_case.engagement_id,
+        snapshotted["input_id"],
+        inventory["files"][0]["item_ref"],
+        state_dir=client_case.state_dir,
+    )
+
+    serialized = json.dumps({"snapshot": snapshotted, "opened": opened})
+    assert inventory["file_count"] == 2
+    assert len(inventory["files"]) == 2
+    assert len(duplicate_rows) == 2
+    assert len({item["exact_duplicate_group"] for item in duplicate_rows}) == 1
+    assert sum(item["exact_duplicate_of"] is not None for item in duplicate_rows) == 1
+    assert opened["text"] == "Professional notice evidence"
+    assert '"sha256"' not in serialized
+    assert str(client_case.client_root) not in serialized
+
+
 def test_import_requires_an_explicit_engagement(
     client_case: SimpleNamespace,
     archive_core: ModuleType,
@@ -249,21 +288,29 @@ def test_google_drive_binding_snapshot_and_transient_open(
         state_dir=client_case.state_dir,
         gateway=gateway,
     )
-    opened = archive_core.open_studio_google_drive_source(
+    model_inventory = snapshotted["model_inventory"]
+    item_ref = model_inventory["files"][0]["item_ref"]
+    opened = archive_core.open_studio_archive_organization_item(
         client_case.client_id,
         client_case.engagement_id,
         snapshotted["input_id"],
-        "google_doc_1",
+        item_ref,
         state_dir=client_case.state_dir,
         gateway=gateway,
     )
 
     assert bound["binding"]["folder_id"] == "root_workspace"
-    assert snapshotted["snapshot_summary"]["file_count"] == 1
+    assert model_inventory["file_count"] == 1
     assert snapshotted["documents_copied"] is False
-    assert opened["citation"].startswith("gdrive:google_doc_1@v7")
+    serialized_inventory = json.dumps(model_inventory)
+    assert "google_doc_1" not in serialized_inventory
+    assert "root_workspace" not in serialized_inventory
+    assert '"file_id"' not in serialized_inventory
+    assert '"sha256_checksum"' not in serialized_inventory
+    assert opened["citation"].startswith(f"archive-item:{item_ref}")
     assert opened["text"] == "Verbale assemblea approved by the client."
     assert opened["temporary_content_deleted"] is True
+    assert "google_doc_1" not in json.dumps(opened)
 
 
 def test_google_drive_binding_rejects_folder_already_bound_to_another_client(
@@ -317,11 +364,11 @@ def test_google_drive_open_rejects_change_during_export(
         archive_core.SourceChangedError,
         match="changed while the evidence was being read",
     ):
-        archive_core.open_studio_google_drive_source(
+        archive_core.open_studio_archive_organization_item(
             client_case.client_id,
             client_case.engagement_id,
             snapshotted["input_id"],
-            "google_doc_1",
+            snapshotted["model_inventory"]["files"][0]["item_ref"],
             state_dir=client_case.state_dir,
             gateway=gateway,
         )

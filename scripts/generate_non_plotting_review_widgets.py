@@ -5205,6 +5205,26 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
       };
     }""",
         }
+    if target["plugin"] == "archive-organization":
+        return {
+            **legacy,
+            "tool_args_js": """    function saveToolArgs() {
+      return {
+        review_reference: state.payload.review_reference,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
+      };
+    }
+    function applyToolArgs() {
+      return {
+        review_reference: state.payload.review_reference,
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
+      };
+    }""",
+        }
     if target["plugin"] == "audit-reconciliation":
         return {
             **legacy,

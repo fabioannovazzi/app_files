@@ -288,6 +288,57 @@ def _proposals(
     return path
 
 
+def _model_proposals(
+    tmp_path: Path,
+    snapshot: dict[str, object],
+    *,
+    category: str = "ade",
+) -> Path:
+    snapshot_sha256 = str(snapshot["content_sha256"])
+    rows = []
+    for item in snapshot["files"]:
+        relative = str(item["relative_path"])
+        item_ref = (
+            "archive_item_"
+            + hashlib.sha256(
+                (
+                    "archive-organization-item-v1\0" f"{snapshot_sha256}\0{relative}"
+                ).encode("utf-8")
+            ).hexdigest()[:24]
+        )
+        rows.append(
+            {
+                "item_ref": item_ref,
+                "category_id": category,
+                "document_type": "documento",
+                "document_date": "2024",
+                "entity": "Example-Srl",
+                "reference": None,
+                "practice": "archive-review",
+                "confidence": "high",
+                "reason": "Opened evidence supports this professional category.",
+                "probable_duplicate_of": None,
+                "anomalies": [],
+            }
+        )
+    inventory_ref = (
+        "archive_inventory_"
+        + hashlib.sha256(
+            f"archive-organization-inventory-v1\0{snapshot_sha256}".encode("utf-8")
+        ).hexdigest()[:24]
+    )
+    path = tmp_path / "model-proposals.json"
+    _write_json(
+        path,
+        {
+            "schema_version": "vera.archive_organization_model_proposals.v1",
+            "inventory_ref": inventory_ref,
+            "proposals": rows,
+        },
+    )
+    return path
+
+
 def _prepared_drive_run(
     tmp_path: Path,
 ) -> tuple[Path, dict[str, object], FakeDriveGateway]:
@@ -350,6 +401,39 @@ def _review_and_approve(
     return organizer.compile_approved_plan(
         context_path,
         Path(saved["ui_decisions_path"]),
+    )
+
+
+def test_model_proposals_rehydrate_locally_without_exposing_raw_snapshot_identity(
+    tmp_path: Path,
+) -> None:
+    context_path, snapshot, _ = _prepared_drive_run(tmp_path)
+
+    review = organizer.build_review_package(
+        context_path,
+        _model_proposals(tmp_path, snapshot),
+    )
+    review_payload = json.loads(Path(review["review_payload_path"]).read_text())
+    serialized = json.dumps(review_payload)
+
+    assert review_payload["item_count"] == snapshot["file_count"]
+    assert all(item["source_path"] for item in review_payload["items"])
+    assert "file_pdf_1" not in serialized
+    assert "file_doc_1" not in serialized
+    assert "root_123" not in serialized
+    assert str(snapshot["content_sha256"]) not in serialized
+    assert "source_identity" not in serialized
+    assert "source_sha256" not in serialized
+    assert "byte_count" not in serialized
+    assert "deterministic_identity" not in serialized
+    assert all(
+        item["evidence"][1]
+        == {
+            "kind": "local_integrity_control",
+            "status": "verified_before_review",
+            "raw_identity_returned": False,
+        }
+        for item in review_payload["items"]
     )
 
 
