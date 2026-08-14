@@ -3731,18 +3731,26 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert website_copy.count('modelDataStatus: "relevant"') == 5
     assert 'modelDataStatus: "not-relevant"' not in website_copy
     for expected_copy in (
-        "Tra i dati non pubblici",
         "Non accede all'archivio generale dello Studio, alle pratiche dei clienti, alla posta",
-        "For non-public data",
         "It does not access the firm's general archive, client matters, mailbox",
-        "Parmi les données non publiques",
         "Il n'accède pas aux archives générales du cabinet, aux dossiers clients",
-        "Von den nicht öffentlichen Daten",
         "Es greift nicht auf das allgemeine Kanzleiarchiv, Mandantenakten, das Postfach",
-        "Entre los datos no públicos",
         "No accede al archivo general del despacho, a expedientes de clientes, al correo",
     ):
         assert expected_copy in website_copy
+    for removed_copy in (
+        "Tra i dati non pubblici",
+        "Codex usa il modello OpenAI",
+        "For non-public data",
+        "Codex uses the OpenAI model",
+        "Parmi les données non publiques",
+        "Codex utilise le modèle d'OpenAI",
+        "Von den nicht öffentlichen Daten",
+        "Codex verwendet das OpenAI-Modell",
+        "Entre los datos no públicos",
+        "Codex utiliza el modelo de OpenAI",
+    ):
+        assert removed_copy not in website_copy
     assert "Non rilevante per questo processo." not in website_copy
 
 
