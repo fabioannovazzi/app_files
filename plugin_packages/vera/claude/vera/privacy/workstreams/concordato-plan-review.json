@@ -50,7 +50,7 @@
       {
         "id": "professional-review-decisions",
         "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material",
-        "content": "Semantic case-model decisions; judgment bases; open and resolved issues; severity and ownership; requested documents; reviewer notes and actions; generated workpapers, summaries, and review memos",
+        "content": "During substantive analysis: semantic case-model decisions, judgment bases, open and resolved issues, severity and ownership, requested documents, reviewer notes and actions, generated workpapers, summaries, and review memos. After semantic confirmation, validate and render expose only run status, total and per-type counts, a small persisted review reference, and the bounded on-demand tool contract to the model; complete review rows, run intake, current decisions, final-artifact state, technical paths, source filenames, sizes, hashes, and artifact references are hydrated locally for the component. A purpose-selected on-demand call may expose at most 25 requested review items with substantive procedure, creditor, treatment, amount, issue, evidence-locator, and reviewer context preserved, while technical metadata is removed and source filenames are replaced with stable aliases.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -85,6 +85,10 @@
       "control": "The MCP parent binds caller run, review, current decisions, final state, source-role decisions, and output paths to the persisted trusted snapshot, replays every source, implementation, gate, ledger, review, final, and assurance-envelope receipt, and treats child output only as a bounded acknowledgement before commit."
     },
     {
+      "id": "reference-bound-component-only-review-transport",
+      "control": "After semantic confirmation, MCP validate, render, save, and apply accept only the customer-run context, an exact persisted review reference, and reviewer decisions where applicable. Complete review and artifact state is rehydrated from the assured local run and placed only in component-visible tool-result metadata; model-visible results contain counts and status. The only detailed model path is an explicit purpose-selected read of at most 25 items, with technical paths, hashes, sizes, and artifact references removed and source filenames replaced by stable aliases. Codex/ChatGPT and Cowork/MCP Apps use the same result-envelope boundary."
+    },
+    {
       "id": "immutable-semantic-and-mutable-presentation-separation",
       "control": "The assurance envelope remains bound to immutable semantic evidence and cannot be overwritten by an item edit. Authorized edits to envelope-bound artifacts create separate revision files, while the regenerable Concordato summary DOCX is treated as a mutable presentation artifact whose current bytes are closed by the final-artifact index and predecessor-linked whole-output successor."
     },
@@ -94,9 +98,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5eea5eacd4b2849cf0242f72b26f9378c5e387fbfb31f5373b3badf7687aeedc"
+    "source_fingerprint": "5c5014f4087f74f472de1e249dc2fc2bfbbd38173c5804c09c9cb9ca525fea91"
   }
 }

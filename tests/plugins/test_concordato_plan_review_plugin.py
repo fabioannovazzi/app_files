@@ -2572,6 +2572,13 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "../vera/index.html",
         "Concordato preventivo",
         "Vera",
+        "La revisione evita una seconda copia completa",
+        "Review avoids a second complete copy",
+        "La revue évite une deuxième copie complète",
+        "Die Prüfung vermeidet eine zweite vollständige Kopie",
+        "La revisión evita una segunda copia completa",
+        "al massimo 25 elementi per volta",
+        "Codex e Cowork applicano lo stesso confine",
     ):
         assert snippet in page
 
@@ -2660,9 +2667,10 @@ def test_concordato_mcp_server_keeps_complete_review_out_of_model_result(
         render_result["structuredContent"]["detailed_review_transport"]
         == "component_only"
     )
-    assert json.loads(render_result["content"][0]["text"]) == render_result[
-        "structuredContent"
-    ]
+    assert (
+        json.loads(render_result["content"][0]["text"])
+        == render_result["structuredContent"]
+    )
     assert "review_payload" not in render_result["structuredContent"]
     assert "source_paths" not in json.dumps(render_result["structuredContent"])
     private_payload = render_result["_meta"]["widget_payload"]
