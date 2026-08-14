@@ -64,6 +64,28 @@ PROHIBITED_SECRET_KEYS = {
     "session_cookie",
 }
 
+# These patterns intentionally cover only unmistakable credential or live-session
+# material. They are a security gate, not a personal-data detector: names, tax
+# identifiers, account facts, and other professionally relevant evidence are not
+# classified or removed here.
+PROHIBITED_SECRET_VALUE_PATTERNS = (
+    re.compile(r"-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----"),
+    re.compile(r"(?i)\bbearer[ \t]+[A-Za-z0-9._~+/=-]{20,}\b"),
+    re.compile(r"\beyJ[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\.[A-Za-z0-9_-]{8,}\b"),
+    re.compile(
+        r"(?i)\b(?:session[_-]?id|session[_-]?token|auth[_-]?token)="
+        r"[A-Za-z0-9._~+/=-]{16,}\b"
+    ),
+    re.compile(
+        r"(?i)\b(?:api[_ -]?key|client[_ -]?secret|access[_ -]?token)"
+        r"\s*[:=]\s*['\"]?[A-Za-z0-9._~+/=-]{16,}\b"
+    ),
+    re.compile(
+        r"(?i)\b(?:password|passcode|otp|one[-_ ]time[-_ ]code)"
+        r"\s*[:=]\s*['\"]?[^\s,;]{6,}"
+    ),
+)
+
 for _vendor_root in (
     PLUGIN_ROOT / "vendor" / "modules",
     PLUGIN_ROOT.parent.parent / "vendor" / "modules",
@@ -160,6 +182,31 @@ def prohibited_secret_paths(value: object, *, path: str = "") -> list[str]:
     elif isinstance(value, list):
         for index, child in enumerate(value):
             matches.extend(prohibited_secret_paths(child, path=f"{path}[{index}]"))
+    return matches
+
+
+def prohibited_secret_value_paths(value: object, *, path: str = "") -> list[str]:
+    """Return value-free paths containing unmistakable credential material.
+
+    Fixed patterns are justified here because credentials and live-session
+    material are never legitimate grant-analysis evidence, while a broader PII
+    detector could suppress facts required for professional work.
+    """
+
+    matches: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_path = f"{path}.{key}" if path else str(key)
+            matches.extend(prohibited_secret_value_paths(child, path=child_path))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            matches.extend(
+                prohibited_secret_value_paths(child, path=f"{path}[{index}]")
+            )
+    elif isinstance(value, str) and any(
+        pattern.search(value) for pattern in PROHIBITED_SECRET_VALUE_PATTERNS
+    ):
+        matches.append(path or "$")
     return matches
 
 

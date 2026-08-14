@@ -17,6 +17,7 @@ from case_core import (
     iso_now,
     load_json_object,
     prohibited_secret_paths,
+    prohibited_secret_value_paths,
     safe_identifier,
     validate_iso_date,
     write_private_json,
@@ -119,7 +120,22 @@ def _contribution(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
-) -> dict[str, str]:
+    model_session_ref: str | None = None,
+) -> dict[str, str | None]:
+    normalized_session_ref: str | None = None
+    if model_session_ref is not None:
+        normalized_session_ref = safe_identifier(
+            model_session_ref, field="model_session_ref"
+        )
+        if len(normalized_session_ref) < 8:
+            raise ValueError("model_session_ref must contain at least 8 characters")
+    if (
+        origin in {"model_suggested", "document_observation"}
+        and not normalized_session_ref
+    ):
+        raise ValueError(
+            "model_session_ref is required for model or document-observation contributions"
+        )
     return {
         "origin": origin,
         "provider": str(provider).strip(),
@@ -127,7 +143,83 @@ def _contribution(
         "prompt_template_version": str(prompt_template_version).strip(),
         "recorded_by": safe_identifier(recorded_by, field="recorded_by"),
         "recorded_at": iso_now(),
+        "model_session_ref": normalized_session_ref,
+        "session_assurance": (
+            "operator_asserted_not_provider_authenticated"
+            if normalized_session_ref
+            else "not_applicable"
+        ),
     }
+
+
+def _reject_unmistakable_secret_values(value: object, *, label: str) -> None:
+    paths = prohibited_secret_value_paths(value, path=label)
+    if paths:
+        raise ValueError(
+            f"{label} contains unmistakable credential/session material at: "
+            + ", ".join(paths)
+        )
+
+
+def _assert_client_mapping_session_isolated(
+    radar: Mapping[str, Any], *, client_ref: str, model_session_ref: str | None
+) -> None:
+    if model_session_ref is None:
+        return
+    for collection in ("profile_evidence", "profiles"):
+        for item in radar.get(collection, []):
+            contribution = item.get("contribution", {})
+            if (
+                contribution.get("model_session_ref") == model_session_ref
+                and item.get("client_ref") != client_ref
+            ):
+                raise ValueError(
+                    "one client-evidence mapping session cannot be reused for another client"
+                )
+    if any(
+        contribution.get("model_session_ref") == model_session_ref
+        for contribution in _non_mapping_contributions(radar)
+    ):
+        raise ValueError(
+            "client-evidence mapping requires a session separate from public "
+            "discovery and portfolio matching"
+        )
+
+
+def _non_mapping_contributions(
+    radar: Mapping[str, Any],
+) -> list[Mapping[str, Any]]:
+    contributions: list[Mapping[str, Any]] = []
+    for item in radar.get("source_plan", {}).get("entries", []):
+        contribution = item.get("contribution", {})
+        if isinstance(contribution, Mapping):
+            contributions.append(contribution)
+    for collection in ("opportunities", "matches"):
+        for item in radar.get(collection, []):
+            contribution = item.get("contribution", {})
+            if isinstance(contribution, Mapping):
+                contributions.append(contribution)
+    for scan in radar.get("monitoring", {}).get("scan_history", []):
+        contribution = scan.get("source_selection", {}).get("contribution", {})
+        if isinstance(contribution, Mapping):
+            contributions.append(contribution)
+    return contributions
+
+
+def _assert_non_mapping_session_isolated(
+    radar: Mapping[str, Any], *, model_session_ref: str | None
+) -> None:
+    if model_session_ref is None:
+        return
+    if any(
+        item.get("contribution", {}).get("model_session_ref") == model_session_ref
+        for collection in ("profile_evidence", "profiles")
+        for item in radar.get(collection, [])
+    ):
+        raise ValueError(
+            "public discovery and portfolio matching require a session separate "
+            "from client-evidence mapping"
+        )
 
 
 def _find(items: list[dict[str, Any]], field: str, value: str) -> dict[str, Any]:
@@ -1251,6 +1343,7 @@ def record_profile_evidence(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Record one opaque, receipted profile-evidence reference."""
 
@@ -1271,9 +1364,16 @@ def record_profile_evidence(
         model=model,
         prompt_template_version=prompt_template_version,
         recorded_by=recorded_by,
+        model_session_ref=model_session_ref,
     )
+    _reject_unmistakable_secret_values(payload, label="profile_evidence")
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
+        _assert_client_mapping_session_isolated(
+            radar,
+            client_ref=payload["client_ref"],
+            model_session_ref=payload["contribution"]["model_session_ref"],
+        )
         for item in radar["profile_evidence"]:
             if item["evidence_id"] == payload["evidence_id"]:
                 raise ValueError("evidence_id already exists; preserve its receipt")
@@ -1324,6 +1424,7 @@ def record_profile(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Record one opaque company opportunity profile as a reviewable proposal."""
 
@@ -1343,9 +1444,16 @@ def record_profile(
         model=model,
         prompt_template_version=prompt_template_version,
         recorded_by=recorded_by,
+        model_session_ref=model_session_ref,
     )
+    _reject_unmistakable_secret_values(payload, label="profile")
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
+        _assert_client_mapping_session_isolated(
+            radar,
+            client_ref=payload["client_ref"],
+            model_session_ref=payload["contribution"]["model_session_ref"],
+        )
         profiles = radar["profiles"]
         for index, existing in enumerate(profiles):
             if existing["client_ref"] == payload["client_ref"]:
@@ -1408,6 +1516,7 @@ def record_source(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Record a model- or professional-selected official source plan entry."""
 
@@ -1433,11 +1542,17 @@ def record_source(
                 model=model,
                 prompt_template_version=prompt_template_version,
                 recorded_by=recorded_by,
+                model_session_ref=model_session_ref,
             ),
         }
     )
+    _reject_unmistakable_secret_values(payload, label="source")
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
+        _assert_non_mapping_session_isolated(
+            radar,
+            model_session_ref=payload["contribution"]["model_session_ref"],
+        )
         entries = radar["source_plan"]["entries"]
         for existing in entries:
             if existing["source_id"] == payload["source_id"]:
@@ -1562,6 +1677,7 @@ def record_opportunity(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Record one source-backed opportunity and its time-aware status history."""
 
@@ -1584,9 +1700,15 @@ def record_opportunity(
         model=model,
         prompt_template_version=prompt_template_version,
         recorded_by=recorded_by,
+        model_session_ref=model_session_ref,
     )
+    _reject_unmistakable_secret_values(payload, label="opportunity")
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
+        _assert_non_mapping_session_isolated(
+            radar,
+            model_session_ref=payload["contribution"]["model_session_ref"],
+        )
         opportunities = radar["opportunities"]
         for index, existing in enumerate(opportunities):
             if existing["opportunity_id"] == payload["opportunity_id"]:
@@ -1694,6 +1816,7 @@ def record_match(
     model: str,
     prompt_template_version: str,
     recorded_by: str,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Record a bidirectional client/opportunity match as a semantic proposal."""
 
@@ -1708,9 +1831,15 @@ def record_match(
         model=model,
         prompt_template_version=prompt_template_version,
         recorded_by=recorded_by,
+        model_session_ref=model_session_ref,
     )
+    _reject_unmistakable_secret_values(payload, label="match")
 
     def apply(radar: dict[str, Any]) -> dict[str, Any]:
+        _assert_non_mapping_session_isolated(
+            radar,
+            model_session_ref=payload["contribution"]["model_session_ref"],
+        )
         matches = radar["matches"]
         for index, existing in enumerate(matches):
             if existing["match_id"] == payload["match_id"]:
@@ -1744,6 +1873,7 @@ def record_scan(
     model: str | None = None,
     prompt_template_version: str | None = None,
     recorded_by: str | None = None,
+    model_session_ref: str | None = None,
 ) -> dict[str, Any]:
     """Start or seal one resumable, source-first temporal discovery scan."""
 
@@ -1810,6 +1940,11 @@ def record_scan(
                 model=str(model),
                 prompt_template_version=str(prompt_template_version),
                 recorded_by=str(recorded_by),
+                model_session_ref=model_session_ref,
+            )
+            _assert_non_mapping_session_isolated(
+                radar,
+                model_session_ref=selection["contribution"]["model_session_ref"],
             )
             _validate_scan_source_selection(
                 selection=selection,
@@ -2546,6 +2681,7 @@ def _add_contribution_arguments(
     parser.add_argument("--model", required=required)
     parser.add_argument("--prompt-template-version", required=required)
     parser.add_argument("--recorded-by", required=required)
+    parser.add_argument("--model-session-ref")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -2651,6 +2787,7 @@ def main(argv: list[str] | None = None) -> int:
             model=args.model,
             prompt_template_version=args.prompt_template_version,
             recorded_by=args.recorded_by,
+            model_session_ref=args.model_session_ref,
         )
         path = _radar_path(args.workspace)
         LOGGER.info("Recorded %s", result)
@@ -2682,6 +2819,7 @@ def main(argv: list[str] | None = None) -> int:
             model=args.model,
             prompt_template_version=args.prompt_template_version,
             recorded_by=args.recorded_by,
+            model_session_ref=args.model_session_ref,
         )
         path = _radar_path(args.workspace)
     elif args.command == "worklist":

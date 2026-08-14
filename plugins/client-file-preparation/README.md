@@ -56,6 +56,8 @@ Gli script producono:
 - `run_intake.json` con input, assunzioni e postura dati;
 - `review_payload.json` con inventario, eccezioni e bozze;
 - `ui_decisions.json` con le decisioni raccolte;
+- `model_handoff.json` e `model_handoff_pages/` con il contesto predefinito
+  comune a Codex e Cowork, paginato senza campionamento;
 - `applied_decisions.json`, creato solo quando la review viene applicata;
 - `final_artifacts.json` con stato e artefatti finali.
 
@@ -115,6 +117,8 @@ pronto.
 run_intake.json
 review_payload.json
 ui_decisions.json
+model_handoff.json
+model_handoff_pages/
 review_handoff.md
 final_artifacts.json
 applied_decisions.json        # dopo l'applicazione della review
@@ -152,13 +156,15 @@ runtime fuori dal plugin e riprova automaticamente il documento. L'utente non
 deve eseguire comandi tecnici.
 
 `--jurisdiction` accetta `italy`, `geneva`, `zurich`, `uk` o `mixed`;
-`--language` accetta `it`, `en`, `fr`, `de` o `es`. Il payload di review include per
-impostazione predefinita estratti limitati di ogni documento leggibile,
-evidenze dei campi fiscali e anteprime della scheda per lo studio, del memo e
-dell'e-mail al cliente. Possono contenere dati reali del cliente necessari alla
-review. I limiti servono a mantenere gestibile l'interfaccia, non sono una forma
-di anonimizzazione e non descrivono tutto ciò che Codex può aver letto. Restano
-esclusi credenziali, materiale di sessione e percorsi locali assoluti.
+`--language` accetta `it`, `en`, `fr`, `de` o `es`. Il payload di review conserva
+lo stato locale completo della revisione. Il contesto predefinito del modello è
+invece `model_handoff.json`: una riga di metadati per ogni file, estratti fino a
+600 caratteri solo per le eccezioni, tutti i campi fiscali mappati con citazione
+limitata, richieste email solo dopo la decisione del revisore e riferimenti XML
+senza campi anagrafici delle parti. Ogni pagina rispetta i limiti di 2.500
+elementi e 1.500.000 byte; l'intera popolazione viene paginata, non campionata.
+Questa riduzione per finalità non è anonimizzazione. Restano esclusi
+credenziali, materiale di sessione e percorsi locali assoluti.
 
 Il motore non segue link simbolici presenti nella cartella cliente. Estrazione
 PDF/testo, OCR e lettura dei formati Office/archivio supportati applicano limiti

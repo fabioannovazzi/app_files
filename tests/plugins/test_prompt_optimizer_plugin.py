@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.util
+import hashlib
 import json
 import shutil
 import subprocess
@@ -526,9 +527,15 @@ Flag residual uncertainty.
     assert "review_artifact" in item_types
     assert review_payload["summary"]["audit_status"] == "pass"
     assert review_payload["summary"]["source_domain_count"] == 3
+    assert "question_preview" not in review_payload["summary"]
     assert ui_decisions["status"] == "pending_review"
     assert ui_decisions["decision_count"] == 0
     assert final_artifacts["status"] == "written_pending_review"
+    expected_review_hash = hashlib.sha256(
+        (tmp_path / "review_payload.json").read_bytes()
+    ).hexdigest()
+    assert ui_decisions["review_payload_sha256"] == expected_review_hash
+    assert final_artifacts["review_payload_sha256"] == expected_review_hash
     output_records = {output["path"]: output for output in final_artifacts["outputs"]}
     assert "draft_prompt.md" not in output_records
     assert "draft_source_domains.txt" not in output_records
@@ -1335,7 +1342,7 @@ def test_mcp_review_server_validates_and_renders_prompt_payload() -> None:
             },
         },
     )
-    rendered = json.loads(render_result["content"][0]["text"])
+    rendered = render_result["structuredContent"]
     assert rendered["widget_type"] == "prompt_optimizer_review"
     assert (
         render_result["_meta"]["openai/outputTemplate"]
@@ -1455,7 +1462,7 @@ def test_mcp_prompt_optimizer_localizes_spanish_runtime_and_handoff(
     )["structuredContent"]
 
     assert "Ejecute validate_prompt_optimizer_review" in initialized["instructions"]
-    assert "son válidos" in validated["message"]
+    assert "es válida" in validated["message"]
     assert "debe coincidir" in invalid["error"]
     assert "no se ha escrito ningún archivo" in saved_without_output["message"]
     assert "no se ha escrito ningún archivo" in applied_without_output["message"]
@@ -1534,6 +1541,11 @@ Flag residual uncertainty.
     final_artifacts = json.loads(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
+    review_reference = {
+        "path": "review_payload.json",
+        "run_id": client_run_id,
+        "review_payload_sha256": final_artifacts["review_payload_sha256"],
+    }
     audit_before_move = json.loads(
         (output_dir / "prompt_audit.json").read_text(encoding="utf-8")
     )
@@ -1557,6 +1569,41 @@ Flag residual uncertainty.
     context_path = renamed_client_root / context_relative
     output_dir = renamed_client_root / output_relative
     assert not old_client_root.exists()
+    validate_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "validate_prompt_optimizer_review",
+            "arguments": {
+                "run_intake": run_intake,
+                "client_engagement": context_path.as_posix(),
+                "review_reference": review_reference,
+            },
+        },
+    )
+    validated = validate_result["structuredContent"]
+    assert "review_payload" not in validated
+    assert validated["review_reference"]["review_payload_sha256"] == (
+        review_reference["review_payload_sha256"]
+    )
+    assert len(validated["review_reference"]["persistence_token"]) == 43
+    assert original_prompt.strip() not in validate_result["content"][0]["text"]
+    render_result = _call_mcp_server(
+        "tools/call",
+        {
+            "name": "render_prompt_optimizer_review",
+            "arguments": {
+                "run_intake": run_intake,
+                "client_engagement": context_path.as_posix(),
+                "review_reference": review_reference,
+            },
+        },
+    )
+    assert render_result["structuredContent"]["review_payload"] == review_payload
+    assert len(render_result["structuredContent"]["persistence_token"]) == 43
+    widget = _call_mcp_server(
+        "resources/read", {"uri": "ui://widget/prompt-optimizer-review.html"}
+    )
+    assert "persistence_token" in widget["contents"][0]["text"]
     prompt_item = next(
         item
         for item in review_payload["items"]
@@ -1580,8 +1627,7 @@ Flag residual uncertainty.
             "arguments": {
                 "run_intake": run_intake,
                 "client_engagement": context_path.as_posix(),
-                "review_payload": review_payload,
-                "ui_decisions": ui_decisions,
+                "review_reference": review_reference,
                 "decisions": decisions,
             },
         },
@@ -1597,15 +1643,13 @@ Flag residual uncertainty.
             "arguments": {
                 "run_intake": run_intake,
                 "client_engagement": context_path.as_posix(),
-                "review_payload": review_payload,
-                "ui_decisions": ui_decisions,
-                "final_artifacts": final_artifacts,
+                "review_reference": review_reference,
                 "decisions": decisions,
             },
         },
     )
     applied_result = apply_result["structuredContent"]
-    assert applied_result["ok"] is True
+    assert applied_result["ok"] is True, applied_result
     assert applied_result["target_update_count"] == 1
     assert applied_result["application_status"] == "partial_review_applied"
     assert applied_result["run_intake_path"] == str(output_dir / "run_intake.json")

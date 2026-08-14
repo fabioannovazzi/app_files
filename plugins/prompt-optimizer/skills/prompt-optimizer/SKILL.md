@@ -421,16 +421,21 @@ choices.
 
 When the local MCP server is available after validation:
 
-1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the output folder. Pass the current absolute
+1. Read `run_intake.json` and `final_artifacts.json` from the output folder.
+   Build `review_reference` from `path: review_payload.json`, the run ID, and
+   `final_artifacts.review_payload_sha256`; do not read and resend the full
+   review payload when that hash binding is available. Pass the current absolute
    `client_engagement_path` as `client_engagement` with every MCP call that
    includes `run_intake`. If the customer folder moved, use the `context.json`
    path under its current location; never reuse a previously recorded absolute
    path.
-2. Call `validate_prompt_optimizer_review` with `review_payload` before
-   rendering.
-3. If validation succeeds, call `render_prompt_optimizer_review` with the same
-   payload objects so Codex can show the local HTML widget
+2. Call `validate_prompt_optimizer_review` with `run_intake`,
+   `client_engagement`, and `review_reference` before rendering. The server
+   reloads the canonical local record, verifies its SHA-256 binding, and returns
+   a short-lived in-memory persistence token. Use an inline `review_payload`
+   only for a legacy or unmanaged package that has no bound reference.
+3. If validation succeeds, call `render_prompt_optimizer_review` with the
+   returned `persistence_token` so Codex can show the local HTML widget
    `ui://widget/prompt-optimizer-review.html`.
 4. Use the widget to inspect failed prompt-audit checks, `optimized_prompt.md`,
    `prompt_contract_review.json`, source-domain sidecars, `prompt_package.md`,
@@ -441,6 +446,8 @@ When the local MCP server is available after validation:
    call `apply_prompt_optimizer_decisions` so `applied_decisions.json` and
    `final_artifacts.json` reflect accepted, edited, unclear, skipped, or
    document-requested items before treating the prompt package as reviewed.
+   Reuse the widget's persistence token for save/apply instead of resending the
+   full review payload.
    An edit to `optimized_prompt.md` invalidates the prior semantic conformance
    review. Rerun that model-led review and validation before final handoff.
 

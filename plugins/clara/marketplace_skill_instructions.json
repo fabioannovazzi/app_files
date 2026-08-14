@@ -58,8 +58,8 @@
     "research-video": {
       "display_name": "Create narrated research videos",
       "short_description": "Turn approved research scenes into a narrated video",
-      "default_prompt": "Use $research-video to turn these approved research scenes into a source-grounded 16:9 video with English voice-over and captions.",
-      "instructions": "Provide the research sources and approved scene images, then state the audience and intended duration. Clara prepares a source-bound narration and visual plan for review, binds approval to the exact inputs, and renders a validated MP4 with voice-over, captions, poster, and a review report when the local media runtime and speech API are available."
+      "default_prompt": "Use $research-video to turn these approved research scenes into a source-grounded 16:9 video with narration in English, Italian, French, German, or Spanish and captions.",
+      "instructions": "Provide the research sources and approved scene images, then state the audience, intended duration, and narration language. Clara prepares a source-bound narration and visual plan for review and binds explicit user confirmation to the exact inputs and localized AI-voice disclosure. The authenticated Mparanza Research Video page sends only the approved narration and binding metadata to OpenAI using a server-held credential, returns one audio artifact per scene, and Clara renders a validated MP4 locally without a user API key. Images and sources remain local. Accepted Vera outputs may be handed off to Clara, but Vera retains the professional source, claim, and publication review."
     },
     "transcribe": {
       "display_name": "Transcribe recordings and voice notes",

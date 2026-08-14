@@ -11,6 +11,7 @@ from typing import Any, Sequence
 
 from detect_duplicates import DuplicateCandidate
 from extract_documents import DocumentEvidence
+from model_handoff import write_model_handoff
 from parse_fatturapa_xml import InvoiceXmlRecord, localize_formal_anomaly
 from parse_fiscal_forms import (
     SUMMARY_COPY,
@@ -239,6 +240,7 @@ class ReviewSessionResult:
     run_intake_path: Path
     review_payload_path: Path
     ui_decisions_path: Path
+    model_handoff_path: Path
     final_artifacts_path: Path
     review_item_count: int
 
@@ -293,6 +295,7 @@ def _write_review_handoff_card(
             "pending": "Decisioni in attesa",
             "applied": "Decisioni applicate",
             "artifacts": "Artefatti finali",
+            "model": "Contesto predefinito del modello",
             "heading": "Revisione professionale",
             "validate": "Validare il payload con",
             "render": "Aprire l’area di revisione con",
@@ -309,6 +312,7 @@ def _write_review_handoff_card(
             "pending": "Pending decisions",
             "applied": "Applied decisions",
             "artifacts": "Final artifacts",
+            "model": "Default model context",
             "heading": "Professional Review",
             "validate": "Validate the payload with",
             "render": "Open the review workbench with",
@@ -325,6 +329,7 @@ def _write_review_handoff_card(
             "pending": "Décisions en attente",
             "applied": "Décisions appliquées",
             "artifacts": "Livrables finaux",
+            "model": "Contexte par défaut du modèle",
             "heading": "Revue professionnelle",
             "validate": "Valider les données avec",
             "render": "Ouvrir l’espace de revue avec",
@@ -341,6 +346,7 @@ def _write_review_handoff_card(
             "pending": "Ausstehende Entscheidungen",
             "applied": "Angewandte Entscheidungen",
             "artifacts": "Endartefakte",
+            "model": "Standardkontext des Modells",
             "heading": "Professionelle Prüfung",
             "validate": "Prüfdaten validieren mit",
             "render": "Prüfansicht öffnen mit",
@@ -357,6 +363,7 @@ def _write_review_handoff_card(
             "pending": "Decisiones pendientes",
             "applied": "Decisiones aplicadas",
             "artifacts": "Artefactos finales",
+            "model": "Contexto predeterminado del modelo",
             "heading": "Revisión profesional",
             "validate": "Validar los datos con",
             "render": "Abrir el área de revisión con",
@@ -375,6 +382,7 @@ def _write_review_handoff_card(
         f"- {copy['pending']}: `ui_decisions.json`",
         f"- {copy['applied']}: `applied_decisions.json`",
         f"- {copy['artifacts']}: `final_artifacts.json`",
+        f"- {copy['model']}: `model_handoff.json`",
         "",
         f"## {copy['heading']}",
         f"1. {copy['validate']} `{validate_tool}`.",
@@ -399,6 +407,7 @@ def _review_handoff_output_record(path: Path) -> dict[str, Any]:
             "ui_decisions.json",
             "applied_decisions.json",
             "final_artifacts.json",
+            "model_handoff.json",
         ],
         "qa_checks": ["nonempty_text", "required_text"],
     }
@@ -409,6 +418,7 @@ def _local_output_refs(final_artifacts_path: Path) -> list[str]:
         "run_intake.json",
         "review_payload.json",
         "ui_decisions.json",
+        "model_handoff.json",
         "final_artifacts.json",
     ]
     payload = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
@@ -1044,6 +1054,7 @@ def _required_text_by_path(
             "ui_decisions.json",
             "applied_decisions.json",
             "final_artifacts.json",
+            "model_handoff.json",
         ],
     }
 
@@ -1490,6 +1501,8 @@ def write_review_session_artifacts(
         },
     )
 
+    model_handoff = write_model_handoff(output_dir)
+
     review_handoff_path = _write_review_handoff_card(
         output_dir,
         run_id=run_id,
@@ -1584,6 +1597,7 @@ def write_review_session_artifacts(
         run_intake_path=run_intake_path,
         review_payload_path=review_payload_path,
         ui_decisions_path=ui_decisions_path,
+        model_handoff_path=model_handoff.root_path,
         final_artifacts_path=final_artifacts_path,
         review_item_count=len(items),
     )

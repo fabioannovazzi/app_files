@@ -13,6 +13,14 @@ write drafts only inside its `output_dir`. Do not invent a sibling output folder
 
 Use this workflow after `client-file-preparation` has produced missing or uncertain items.
 
+When `model_handoff.json` exists, Codex and Cowork draft only from
+`email_request` items in all declared pages. Those items are created only from
+reviewed missing-request decisions and use `CLIENT-001`; do not turn
+`missing_request_candidate` items, the inferred folder name, or the existing
+local draft preview into email content before Apply. If no `email_request` item
+exists, keep the draft pending review. Exact identifiers may remain in the
+local professional artifact when the reviewed request itself requires them.
+
 ## Codex-Native Run UX
 
 Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.
@@ -42,10 +50,13 @@ generated outputs; never edit plugin source or generated ZIPs during a run.
 
 ## Source File
 
-Use:
+Use, in order:
 
-- `02_documenti_mancanti_o_incerti.md`
+- `model_handoff.json` and its `email_request` page items after Apply
 - `templates/email_documenti_mancanti.md`
+
+Use `02_documenti_mancanti_o_incerti.md` only as local reviewer evidence, not
+as the default drafting input.
 
 The full workflow writes the draft to:
 

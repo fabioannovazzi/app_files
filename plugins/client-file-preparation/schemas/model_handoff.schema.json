@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/client-file-preparation/model_handoff.schema.json",
+  "title": "Client File Preparation model handoff",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact",
+    "run_id",
+    "runtime_profiles",
+    "default_model_context",
+    "client_reference",
+    "source_population",
+    "content_policy",
+    "phase_access",
+    "pagination",
+    "item_counts_by_kind"
+  ],
+  "properties": {
+    "schema_version": { "const": "1.0" },
+    "artifact": { "const": "client_file_preparation_model_handoff" },
+    "run_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": ["string", "null"] },
+    "language": { "type": ["string", "null"] },
+    "jurisdiction": { "type": ["string", "null"] },
+    "runtime_profiles": {
+      "const": ["openai-codex", "anthropic-cowork"]
+    },
+    "default_model_context": { "const": true },
+    "client_reference": { "const": "CLIENT-001" },
+    "review_status": { "type": "string" },
+    "source_population": {
+      "type": "object",
+      "required": [
+        "review_item_count",
+        "file_count",
+        "mapped_fiscal_field_count",
+        "reviewed_email_request_count"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "review_item_count": { "type": "integer", "minimum": 0 },
+        "file_count": { "type": "integer", "minimum": 0 },
+        "mapped_fiscal_field_count": { "type": "integer", "minimum": 0 },
+        "reviewed_email_request_count": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "content_policy": { "type": "object" },
+    "phase_access": { "type": "object" },
+    "pagination": {
+      "type": "object",
+      "required": [
+        "ordering",
+        "sampling",
+        "max_items_per_page",
+        "max_bytes_per_page",
+        "item_count",
+        "page_count",
+        "pages"
+      ],
+      "properties": {
+        "ordering": { "const": "kind_priority_then_utf8_id" },
+        "sampling": { "const": false },
+        "max_items_per_page": { "const": 2500 },
+        "max_bytes_per_page": { "const": 1500000 },
+        "item_count": { "type": "integer", "minimum": 0 },
+        "page_count": { "type": "integer", "minimum": 1 },
+        "pages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": [
+              "page_number",
+              "path",
+              "item_offset",
+              "item_count",
+              "size_bytes",
+              "sha256",
+              "kinds"
+            ]
+          }
+        }
+      }
+    },
+    "item_counts_by_kind": {
+      "type": "object",
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    }
+  }
+}

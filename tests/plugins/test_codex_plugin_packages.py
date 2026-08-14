@@ -528,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.132"
+    assert manifest["version"] == "0.1.134"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3109,7 +3109,10 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         "dati dei documenti di identità",
         "rappresentanti e titolari effettivi",
         "Non sono anonimizzati automaticamente",
-        "Cowork può leggere direttamente i file collegati",
+        "model_handoff.json",
+        "2.500 elementi e 1.500.000 byte",
+        "CLIENT-001",
+        "senza nomi delle parti, codici fiscali del cliente",
     ):
         assert snippet in page
     for key in (

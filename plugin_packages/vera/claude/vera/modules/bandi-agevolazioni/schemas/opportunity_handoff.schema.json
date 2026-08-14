@@ -37,7 +37,13 @@
         "model": {"type": "string", "minLength": 1},
         "prompt_template_version": {"type": "string", "minLength": 1},
         "recorded_by": {"$ref": "#/$defs/id"},
-        "recorded_at": {"type": "string", "format": "date-time"}
+        "recorded_at": {"type": "string", "format": "date-time"},
+        "model_session_ref": {
+          "oneOf": [{"$ref": "#/$defs/id"}, {"type": "null"}]
+        },
+        "session_assurance": {
+          "enum": ["operator_asserted_not_provider_authenticated", "not_applicable"]
+        }
       }
     },
     "revisionEvent": {

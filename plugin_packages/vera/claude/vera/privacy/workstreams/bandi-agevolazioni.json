@@ -21,7 +21,7 @@
       {
         "id": "application-case-and-evidence",
         "purpose": "Discover and match source-backed opportunities, then prepare a reviewable grant-application dossier after selection",
-        "content": "Opaque client references, receipted profile-evidence references and dated revisionable opportunity-profile facets; professionally reviewed priority-source registry metadata for territory, category, official surface and act families; model-led query-scoped source selections with exact provider provenance, one professionally reviewed covered-or-gap claim for every requested territory and category, selected source IDs and rationales; scan windows, immutable source-check snapshots, explicit coverage gaps and optional last-seen publication cursors; opportunity lifecycle and amendment history; client/opportunity matches, gaps, contradictions, economic assumptions and reviewed recommendations; selected-client self-verifiable opportunity handoffs; call, formal amendments, annexes, official FAQs, forms and instructions; applicant identity and corporate, financial, quotation, declaration and project evidence when professionally relevant; bounded intelligence packets; extracted requirements, exact stored excerpts and facts; eligibility, exclusion and cost assessments; document checklist; form and narrative drafts; issues, recorded model suggestions and professional-review decisions",
+        "content": "Client-specific evidence-mapping sessions may read the selected client evidence needed to create receipted, dated profile facets, while later portfolio matching sessions receive opaque client references, those structured facets and public opportunity material rather than the clients' raw documents. Application instruction may expose selected client evidence during its dedicated evidence-mapping contribution; each later contribution uses a fresh operator-attested session reference and receives only the task-allowlisted, reference-closed structured context required for that task. That context can include application metadata; project title, summary and requested amount outside source-only tasks; extracted requirements and exact excerpts; company, financial, quotation, declaration and project facts; assessments; checklist items; expenses; form values; narratives; consistency checks; issues; and, for holistic reviews, the complete structured dossier and authority simulation. The packet reports available, included and omitted counts and bytes, never truncates the first arbitrary records, and stops for a fresh explicit expansion when its complete closure exceeds the limit. The intake applicant object and local paths are omitted by default, but professionally relevant facts, excerpts, form values or consistency checks may still contain exact applicant identity. There is no automatic anonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -59,7 +59,7 @@
     },
     {
       "id": "reject-secret-and-session-material",
-      "control": "Exhaustive JSON Schema validation rejects unknown artifact fields, and a recursive normalized-key guard rejects the bounded credential/session classes password, passcode, PIN, OTP or one-time code, cookie or session cookie, token, API key, client secret, private or secret key, signature material, SPID, CIE, CNS, and credential fields before a dossier can pass."
+      "control": "Exhaustive JSON Schema validation rejects unknown artifact fields; a recursive normalized-key guard rejects credential/session field classes; and narrow value patterns block unmistakable passwords, bearer or session tokens, API secrets and private-key material before a structured model packet, radar proposal or dossier can pass. The value guard is not a generic personal-data detector and does not remove names, tax identifiers or other professionally relevant facts."
     },
     {
       "id": "no-portal-transaction",
@@ -79,11 +79,11 @@
     },
     {
       "id": "sealed-model-contribution-boundary",
-      "control": "Each bounded model contribution is reference-closed and sealed with exact input and packet hashes, model and prompt-template identity, starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
+      "control": "Each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating when the complete closure exceeds its item, excerpt or byte limits. It is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests a new exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
     },
     {
       "id": "opaque-portfolio-radar-boundary",
-      "control": "The private portfolio radar accepts only opaque client references, closes document-observed facets to same-client receipted evidence, prevents one match from citing another client's evidence or profile facet, records exact provider and model provenance, requires fresh explicit professional review, and never sends client references or profile content in public discovery queries or contacts a client."
+      "control": "The private portfolio radar accepts only opaque client references, closes document-observed facets to same-client receipted evidence, prevents one match from citing another client's evidence or profile facet, and rejects reuse of one client-evidence mapping session reference for another client. Public-source planning, discovery and portfolio matching must use session references separate from every client-evidence mapping session in either direction, so those phases operate on opaque structured profiles and public opportunity material rather than inherited raw client documents. The references are operator-attested, not provider-authenticated. The radar records exact provider and model provenance, requires fresh explicit professional review, and never sends client references or profile content in public discovery queries or contacts a client."
     },
     {
       "id": "sealed-radar-handoff",
@@ -98,6 +98,6 @@
     "reviewed_at": "2026-08-07",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "b5543fb672168829fdd4262c398ba4ef7fab53af6c09aa9c85a3df4f8edbbfd4"
+    "source_fingerprint": "fb7fb6f7d2310f25d6e9d00133e0f11fe757b121712567263eb1581d50654255"
   }
 }

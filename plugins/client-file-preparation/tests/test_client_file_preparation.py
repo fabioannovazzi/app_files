@@ -30,6 +30,12 @@ build_module = importlib.import_module("build_file_preparation_outputs")
 check_environment_module = importlib.import_module("check_environment")
 scan_module = importlib.import_module("scan_folder")
 from build_file_preparation_outputs import build_file_preparation_outputs
+from model_handoff import (
+    CLIENT_REFERENCE,
+    MAX_HANDOFF_ITEMS,
+    MAX_HANDOFF_PAGE_BYTES,
+    write_model_handoff,
+)
 from parse_fatturapa_xml import parse_fatturapa_file
 from parse_fiscal_forms import FiscalField, write_fiscal_fields_summary
 from scan_folder import (
@@ -92,6 +98,27 @@ UK_P60_TEXT = (
 UK_SELF_ASSESSMENT_TEXT = (
     "HMRC Self Assessment 2025. UTR 1234567890. Amount due £1,250.00."
 )
+
+
+def _load_model_handoff(
+    output_dir: Path,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    handoff = json.loads(
+        (output_dir / "model_handoff.json").read_text(encoding="utf-8")
+    )
+    items: list[dict[str, Any]] = []
+    for page in handoff["pagination"]["pages"]:
+        page_path = output_dir / page["path"]
+        page_bytes = page_path.read_bytes()
+        assert len(page_bytes) == page["size_bytes"]
+        assert len(page_bytes) <= MAX_HANDOFF_PAGE_BYTES
+        assert hashlib.sha256(page_bytes).hexdigest() == page["sha256"]
+        page_payload = json.loads(page_bytes)
+        assert len(page_payload["items"]) == page["item_count"]
+        assert len(page_payload["items"]) <= MAX_HANDOFF_ITEMS
+        items.extend(page_payload["items"])
+    assert len(items) == handoff["pagination"]["item_count"]
+    return handoff, items
 
 
 def _write_invoice_xml(path: Path, date: str = "2025-06-15") -> None:
@@ -478,6 +505,7 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     assert (result.output_dir / "run_intake.json").exists()
     assert (result.output_dir / "review_payload.json").exists()
     assert (result.output_dir / "ui_decisions.json").exists()
+    assert (result.output_dir / "model_handoff.json").exists()
     assert (result.output_dir / "final_artifacts.json").exists()
     assert (result.output_dir / "extracted" / "structured_fiscal_fields.csv").exists()
     assert (result.output_dir / "extracted" / "structured_fiscal_fields.jsonl").exists()
@@ -605,6 +633,52 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     assert ui_decisions["status"] == "pending_review"
     assert ui_decisions["decisions"] == []
 
+    model_handoff, model_items = _load_model_handoff(result.output_dir)
+    assert model_handoff["runtime_profiles"] == [
+        "openai-codex",
+        "anthropic-cowork",
+    ]
+    assert model_handoff["client_reference"] == CLIENT_REFERENCE
+    assert model_handoff["pagination"]["sampling"] is False
+    assert model_handoff["source_population"]["file_count"] == result.file_count
+    assert model_handoff["source_population"]["mapped_fiscal_field_count"] == (
+        result.structured_field_count
+    )
+    assert model_handoff["source_population"]["reviewed_email_request_count"] == 0
+    model_items_by_kind: dict[str, list[dict[str, Any]]] = {}
+    for item in model_items:
+        model_items_by_kind.setdefault(item["kind"], []).append(item)
+    assert len(model_items_by_kind["file_metadata"]) == result.file_count
+    assert len(model_items_by_kind["fiscal_field"]) == result.structured_field_count
+    assert "email_request" not in model_items_by_kind
+    high_confidence_document_refs = {
+        item["id"]
+        for item in review_payload["items"]
+        if item["item_type"] == "document_inventory"
+        and item["data"]["confidence"] == "alta"
+    }
+    assert high_confidence_document_refs.isdisjoint(
+        {
+            item["document_ref"]
+            for item in model_items_by_kind.get("evidence_excerpt", [])
+        }
+    )
+    assert all(
+        len(item["citation"]["text"]) <= 600
+        for item in model_items_by_kind["fiscal_field"]
+    )
+    xml_model_items = [
+        item
+        for kind in ("xml_anomaly", "xml_duplicate_group")
+        for item in model_items_by_kind.get(kind, [])
+    ]
+    xml_model_text = json.dumps(xml_model_items, ensure_ascii=False)
+    assert "supplier_name" not in xml_model_text
+    assert "customer_name" not in xml_model_text
+    assert "customer_tax_id" not in xml_model_text
+    assert "Fornitore Test SRL" not in xml_model_text
+    assert "TSTUSR80A01H501U" not in xml_model_text
+
     final_artifacts = json.loads(
         (result.output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
@@ -622,6 +696,8 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
     )
     output_paths = {item["path"] for item in final_artifacts["outputs"]}
     assert "review_handoff.md" in output_paths
+    assert "model_handoff.json" in output_paths
+    assert "model_handoff_pages/page-0001.json" in output_paths
     assert "04_bozza_email_cliente.md" in output_paths
     assert "06_memo_istruttoria.md" in output_paths
     handoff_output = next(
@@ -637,6 +713,7 @@ def test_build_file_preparation_outputs_writes_expected_files(tmp_path: Path) ->
         "ui_decisions.json",
         "applied_decisions.json",
         "final_artifacts.json",
+        "model_handoff.json",
     ]
     assert "render_client_file_preparation_review" in handoff_text
     assert "apply_client_file_preparation_decisions" in handoff_text
@@ -787,6 +864,153 @@ def test_build_rejects_missing_or_empty_folder_without_creating_output(
         build_file_preparation_outputs(empty)
 
     assert not (empty / "out").exists()
+
+
+def test_model_handoff_paginates_full_population_by_byte_limit(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    file_count = 1_400
+    long_name = f"{'document-evidence-' * 55}.pdf"
+    items = [
+        {
+            "id": f"document-{index:04d}",
+            "item_type": "document_inventory",
+            "source_path": f"folder-{index:04d}/{long_name}",
+            "evidence": [{"kind": "extraction_result", "readable": True}],
+            "data": {
+                "relative_path": f"folder-{index:04d}/{long_name}",
+                "file_name": long_name,
+                "extension": ".pdf",
+                "size_bytes": index,
+                "modified_iso": "2026-08-14T00:00:00",
+                "sha256": f"{index:064x}",
+                "category": "CU",
+                "confidence": "alta",
+                "years": [2025],
+                "notes": "",
+                "readable": True,
+                "extraction_method": "pdfplumber",
+                "text_path": f"extracted/{index:04d}.txt",
+                "structured_field_count": 0,
+            },
+        }
+        for index in range(1, file_count + 1)
+    ]
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "plugin": "client-file-preparation",
+                "workflow": "client-file-preparation",
+                "run_id": "pagination-test",
+                "created_at": "2026-08-14T00:00:00+00:00",
+                "language": "it",
+                "jurisdiction": "italy",
+                "items": items,
+                "item_count": len(items),
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output_dir / "ui_decisions.json").write_text(
+        json.dumps(
+            {
+                "run_id": "pagination-test",
+                "status": "pending_review",
+                "decisions": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    first = write_model_handoff(output_dir)
+    first_page_hashes = [
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in first.page_paths
+    ]
+    handoff, model_items = _load_model_handoff(output_dir)
+    second = write_model_handoff(output_dir)
+
+    assert len(first.page_paths) > 1
+    assert len(first.page_paths) == handoff["pagination"]["page_count"]
+    assert handoff["pagination"]["sampling"] is False
+    assert handoff["source_population"]["file_count"] == file_count
+    assert len(model_items) == file_count
+    assert {item["document_ref"] for item in model_items} == {
+        f"document-{index:04d}" for index in range(1, file_count + 1)
+    }
+    assert first_page_hashes == [
+        hashlib.sha256(path.read_bytes()).hexdigest() for path in second.page_paths
+    ]
+
+
+def test_model_handoff_xml_synthesis_omits_invoice_party_fields(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "output"
+    output_dir.mkdir()
+    review_items = [
+        {
+            "id": "document-1",
+            "item_type": "document_inventory",
+            "source_path": "invoice.xml",
+            "evidence": [],
+            "data": {
+                "relative_path": "invoice.xml",
+                "file_name": "invoice.xml",
+                "extension": ".xml",
+                "category": "fatture elettroniche XML",
+                "confidence": "media",
+            },
+        },
+        {
+            "id": "xml-anomaly-1",
+            "item_type": "formal_xml_anomaly",
+            "source_path": "invoice.xml",
+            "data": {
+                "supplier_vat": "01234567890",
+                "supplier_name": "Supplier Private SRL",
+                "customer_tax_id": "TSTUSR80A01H501U",
+                "customer_name": "Private Customer",
+                "duplicate_key": "01234567890|1|2025-06-15|122.00",
+                "malformed": False,
+                "anomalies": ["sezione DatiRiepilogo non individuata"],
+            },
+        },
+    ]
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(
+            {
+                "run_id": "xml-minimization-test",
+                "items": review_items,
+                "item_count": len(review_items),
+            }
+        ),
+        encoding="utf-8",
+    )
+    (output_dir / "ui_decisions.json").write_text(
+        json.dumps(
+            {
+                "run_id": "xml-minimization-test",
+                "status": "pending_review",
+                "decisions": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    write_model_handoff(output_dir)
+    _, model_items = _load_model_handoff(output_dir)
+    xml_item = next(item for item in model_items if item["kind"] == "xml_anomaly")
+
+    assert xml_item == {
+        "id": "xml-anomaly:xml-anomaly-1",
+        "kind": "xml_anomaly",
+        "source_document_ref": "document-1",
+        "malformed": False,
+        "anomalies": ["sezione DatiRiepilogo non individuata"],
+    }
 
 
 def test_build_rejects_nonempty_output_without_mutating_prior_run(
@@ -2208,6 +2432,34 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
             output.get("required_text")
             for output in persisted_final_artifacts["outputs"]
         )
+        handoff, handoff_items = _load_model_handoff(result.output_dir)
+        email_requests = [
+            item for item in handoff_items if item["kind"] == "email_request"
+        ]
+        expected_reviewed_requests = sum(
+            item["item_type"] == "missing_document_request"
+            for item in review_payload["items"]
+        )
+        assert len(email_requests) == expected_reviewed_requests
+        assert handoff["source_population"]["reviewed_email_request_count"] == (
+            expected_reviewed_requests
+        )
+        assert all(
+            item["client_reference"] == CLIENT_REFERENCE for item in email_requests
+        )
+        assert "Hosted Path Private Client" not in json.dumps(
+            email_requests,
+            ensure_ascii=False,
+        )
+        persisted_output_paths = {
+            output["path"] for output in persisted_final_artifacts["outputs"]
+        }
+        assert "model_handoff.json" in persisted_output_paths
+        assert set(handoff["pagination"]["pages"][0].keys()) >= {
+            "path",
+            "size_bytes",
+            "sha256",
+        }
     finally:
         if process.stdin is not None:
             process.stdin.close()
