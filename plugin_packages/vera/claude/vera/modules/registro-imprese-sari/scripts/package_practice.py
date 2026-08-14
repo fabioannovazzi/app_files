@@ -490,7 +490,6 @@ def _case_context(intake: dict[str, Any], plan: dict[str, Any]) -> dict[str, Any
 
     return {
         "client_reference": intake["client_reference"],
-        "client_identity": intake.get("client_identity") or {},
         "competent_chamber": intake["competent_chamber"],
         "subject": intake["subject"],
         "activity": intake["activity"],

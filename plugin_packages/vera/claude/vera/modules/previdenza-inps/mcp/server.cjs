@@ -137,6 +137,8 @@ const SAFE_TRACE_OUTPUT_NAMES = new Set([
   "validation_audit.json",
 ]);
 const PERSISTENCE_ROOTS = new Map();
+const MAX_PERSISTENCE_ROOTS = 128;
+const PERSISTENCE_ROOT_TTL_MS = 4 * 60 * 60 * 1000;
 const TOOL_NAMES = {
   validate: "validate_previdenza_inps_review",
   render: "render_previdenza_inps_review",
@@ -771,8 +773,9 @@ function resolvePersistence(input, review) {
 
   const token = typeof runIntake.persistence_token === "string" ? runIntake.persistence_token.trim() : "";
   if (token) {
+    prunePersistenceRoots();
     const registered = PERSISTENCE_ROOTS.get(token);
-    if (!registered) throw new Error("run_intake.persistence_token is unknown or expired");
+    if (!registered || registered.expiresAt <= Date.now()) throw new Error("run_intake.persistence_token is unknown or expired");
     if (
       registered.run_id !== review.run_id ||
       registered.workflow !== review.workflow ||
@@ -803,6 +806,7 @@ function resolvePersistence(input, review) {
   const storedRunIntake = validateStoredRunIntake(outputDir, review);
   const storedReview = validateStoredReview(outputDir, review, storedRunIntake);
   const registeredToken = crypto.randomUUID();
+  prunePersistenceRoots();
   PERSISTENCE_ROOTS.set(registeredToken, {
     outputDir,
     outputReference: storedRunIntake.output_dir,
@@ -811,12 +815,57 @@ function resolvePersistence(input, review) {
     workflow: review.workflow,
     plugin: "previdenza-inps",
     reviewSha256: storedReview.reviewSha256,
+    expiresAt: Date.now() + PERSISTENCE_ROOT_TTL_MS,
   });
   return {
     token: registeredToken,
     outputDir,
     storedRunIntake,
     reviewSha256: storedReview.reviewSha256,
+  };
+}
+
+function prunePersistenceRoots(now = Date.now()) {
+  for (const [token, context] of PERSISTENCE_ROOTS.entries()) {
+    if (context.expiresAt <= now) PERSISTENCE_ROOTS.delete(token);
+  }
+  while (PERSISTENCE_ROOTS.size >= MAX_PERSISTENCE_ROOTS) {
+    const oldest = PERSISTENCE_ROOTS.keys().next().value;
+    if (oldest == null) break;
+    PERSISTENCE_ROOTS.delete(oldest);
+  }
+}
+
+function inputWithReviewReference(input) {
+  if (isObject(input?.review_payload)) return input;
+  const token = typeof input?.persistence_token === "string"
+    ? input.persistence_token.trim()
+    : typeof input?.run_intake?.persistence_token === "string"
+      ? input.run_intake.persistence_token.trim()
+      : "";
+  prunePersistenceRoots();
+  const context = PERSISTENCE_ROOTS.get(token);
+  if (!token || !context || context.expiresAt <= Date.now()) {
+    throw new Error("review_payload or a valid persistence_token is required");
+  }
+  const reviewPath = path.join(context.outputDir, "review_payload.json");
+  const reviewBytes = fs.readFileSync(reviewPath);
+  const review = JSON.parse(reviewBytes.toString("utf8"));
+  if (review.run_id !== context.run_id
+      || crypto.createHash("sha256").update(reviewBytes).digest("hex") !== context.reviewSha256) {
+    throw new Error("persistence_token review binding no longer matches the stored package");
+  }
+  return {
+    ...input,
+    review_payload: review,
+    ui_decisions: readJsonIfPresent(path.join(context.outputDir, "ui_decisions.json")),
+    final_artifacts: readJsonIfPresent(path.join(context.outputDir, "final_artifacts.json")),
+    run_intake: {
+      persistence_token: token,
+      run_id: context.run_id,
+      workflow: context.workflow,
+      plugin: context.plugin,
+    },
   };
 }
 
@@ -947,7 +996,7 @@ function toolDefinitions() {
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
     },
-    ["review_payload"],
+    [],
   );
   const decision = objectSchema(
     {
@@ -966,6 +1015,7 @@ function toolDefinitions() {
         type: "object",
         description: "Optional run_intake.json object; output_dir is the only persistence root.",
       },
+      persistence_token: { type: "string" },
       review_payload: reviewSchema(),
       ui_decisions: { type: "object" },
       final_artifacts: { type: "object" },
@@ -973,7 +1023,7 @@ function toolDefinitions() {
       decision_source: { type: "string" },
       reviewer: { type: "string" },
     },
-    ["review_payload", "decisions"],
+    ["decisions"],
   );
   return [
     {
@@ -1317,6 +1367,7 @@ function writeJson(outputDir, fileName, value) {
 }
 
 function saveDecisions(input) {
+  input = inputWithReviewReference(input);
   const { payload, uiDecisions, outputDir } = buildDecisions(input);
   preflightClientWorkflowRun(outputDir, payload.review_payload.run_id);
   const outputPath = writeJson(outputDir, "ui_decisions.json", uiDecisions);
@@ -1366,6 +1417,7 @@ function decisionBlocker(effect) {
 }
 
 function applyDecisions(input) {
+  input = inputWithReviewReference(input);
   const { payload, uiDecisions, outputDir } = buildDecisions(input);
   const spanish = payload.review_payload.language === "es";
   const appliedAt = new Date().toISOString();
@@ -1635,18 +1687,30 @@ function callTool(name, args) {
       message: payload.review_payload.language === "es"
         ? `Los datos de revisión de Previdenza INPS son válidos. Puede llamar a ${TOOL_NAMES.render}.`
         : `Previdenza INPS review payload is valid. It is safe to call ${TOOL_NAMES.render}.`,
-      review_payload: payload.review_payload,
+      review_reference: payload.run_intake?.persistence_token ? {
+        persistence_token: payload.run_intake.persistence_token,
+        run_id: payload.review_payload.run_id,
+        review_payload_sha256: PERSISTENCE_ROOTS.get(payload.run_intake.persistence_token)?.reviewSha256 || null,
+        expires_in_seconds: Math.floor(PERSISTENCE_ROOT_TTL_MS / 1000),
+      } : null,
     };
   }
-  if (name === TOOL_NAMES.render) return validateReview(args).payload;
+  if (name === TOOL_NAMES.render) return validateReview(inputWithReviewReference(args)).payload;
   if (name === TOOL_NAMES.save) return saveDecisions(args);
   if (name === TOOL_NAMES.apply) return applyDecisions(args);
   throw new Error("unknown previdenza INPS tool");
 }
 
 function toolResult(payload, name) {
+  const summary = {
+    ok: payload?.ok !== false,
+    run_id: payload?.run_id || payload?.review_payload?.run_id || null,
+    item_count: payload?.item_count ?? payload?.review_payload?.item_count ?? null,
+    status: payload?.status || payload?.application_status || payload?.review_payload?.status || null,
+    message: payload?.message || null,
+  };
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
+    content: [{ type: "text", text: JSON.stringify(summary) }],
     structuredContent: payload,
     isError: false,
   };

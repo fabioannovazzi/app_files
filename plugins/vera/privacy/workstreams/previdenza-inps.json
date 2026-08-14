@@ -98,12 +98,16 @@
     {
       "id": "hash-bound-acquisition",
       "control": "Portal exports and conditional captures are hash-bound and revalidated before review decisions are saved or applied."
+    },
+    {
+      "id": "review-reference-lifecycle",
+      "control": "Persisted Validate, Render, Save, and Apply calls reuse an opaque, four-hour, server-held reference bound to the exact run and stored review hash; at most 128 live references are retained and private review rows are not echoed in validation results or text fallbacks."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5d157ae40165eebe92b3bd7c5a8170d042dfb655e429f04319b9be3e780b5e89"
+    "source_fingerprint": "2a21b764577bcb519cc894a0264884fbb1a82cf1726351c8b64de5faf49bede2"
   }
 }

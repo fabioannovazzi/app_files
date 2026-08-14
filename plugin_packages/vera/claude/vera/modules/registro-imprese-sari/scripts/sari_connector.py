@@ -504,13 +504,23 @@ def run_search(
     """Run one authorized metadata-only SARI search."""
 
     run_id = safe_identifier(run_id, field="run_id")
-    clean_query = assert_generic_public_query(query)
-    if not 1 <= limit <= MAX_RESULTS:
-        raise SariConnectorError(f"limit must be between 1 and {MAX_RESULTS}")
     written_use_authorization_id = _authorization(
         written_use_authorization_id, field="written_use_authorization_id"
     )
     safe_output = ensure_safe_output_dir(output_dir, plugin_root=PLUGIN_ROOT)
+    intake_path = safe_output / "case_intake_validated.json"
+    direct_identifiers: list[object] = []
+    if intake_path.exists():
+        intake = load_json_object(intake_path)
+        direct_identifiers.append(intake.get("client_reference"))
+        identity = intake.get("client_identity")
+        if isinstance(identity, dict):
+            direct_identifiers.extend(identity.values())
+    clean_query = assert_generic_public_query(
+        query, direct_identifiers=direct_identifiers
+    )
+    if not 1 <= limit <= MAX_RESULTS:
+        raise SariConnectorError(f"limit must be between 1 and {MAX_RESULTS}")
     active_client = client or SariClient()
     tenant_page = active_client.initialize_tenant(
         tenant, expected_chamber=expected_chamber

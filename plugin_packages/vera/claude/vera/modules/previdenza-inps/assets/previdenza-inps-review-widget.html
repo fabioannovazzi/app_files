@@ -888,14 +888,18 @@
     }
 
     function toolArgs(includeArtifacts = false) {
+      const token = state.payload.run_intake?.persistence_token || null;
       const args = {
-        run_intake: state.payload.run_intake || null,
-        review_payload: state.payload.review_payload,
-        ui_decisions: state.payload.ui_decisions || null,
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload.run_intake || null,
+          review_payload: state.payload.review_payload,
+          ui_decisions: state.payload.ui_decisions || null,
+        }),
         decisions: decisionInputs(),
         decision_source: "mcp_widget",
       };
-      if (includeArtifacts) args.final_artifacts = state.payload.final_artifacts || null;
+      if (includeArtifacts && !token) args.final_artifacts = state.payload.final_artifacts || null;
       return args;
     }
 

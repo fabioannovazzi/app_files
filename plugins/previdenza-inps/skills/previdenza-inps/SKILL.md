@@ -217,10 +217,15 @@ The strongest machine status is `ready_for_professional_review`. The memo must r
 
 When the local review server is available:
 
-1. Validate `review_payload.json` with `validate_previdenza_inps_review`.
-2. Render it with `render_previdenza_inps_review` at `ui://widget/previdenza-inps-review.html`.
-3. Persist reviewer actions with `save_previdenza_inps_decisions`.
-4. Apply them with `apply_previdenza_inps_decisions` so `applied_decisions.json` and `final_artifacts.json` reflect the review.
+1. Validate `review_payload.json` once with `validate_previdenza_inps_review`.
+2. For a persisted run, pass only the returned opaque review reference to `render_previdenza_inps_review` at `ui://widget/previdenza-inps-review.html`.
+3. Persist reviewer actions with the same opaque reference and `save_previdenza_inps_decisions`; do not resend the private review rows merely to carry state.
+4. Apply them with the same reference and `apply_previdenza_inps_decisions` so `applied_decisions.json` and `final_artifacts.json` reflect the review.
+
+The server retains at most 128 review references for four hours. Each reference
+is bound to the exact run and stored review hash; expiry, cross-run use, or file
+drift requires validation again. This affects transport copies only and never
+deletes professional evidence.
 
 For persisted runs, a review marked ready requires a regular, identity-matching `final_artifacts.json` that is itself ready and binds the exact stored review. Every render, save, and apply call must also revalidate the acquisition binding against the current acquisition posture, exact `file_inventory.json` bytes, and canonical portal receipts. Any mismatch stops before review artifacts are written; do not replace or recompute the expected binding merely to clear the error.
 

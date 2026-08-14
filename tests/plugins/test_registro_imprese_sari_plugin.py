@@ -570,6 +570,16 @@ def test_public_sari_query_normalizes_generic_terms() -> None:
     )
 
 
+def test_public_sari_query_rejects_exact_known_case_identifier() -> None:
+    case_core = _load_script("case_core")
+
+    with pytest.raises(case_core.PrivacyError, match="known_case_identifier"):
+        case_core.assert_generic_public_query(
+            "apertura posizione Zecca Consulting",
+            direct_identifiers=["Zecca Consulting"],
+        )
+
+
 def test_inventory_counts_shared_paddleocr_ok_result(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -979,7 +989,7 @@ def test_synthetic_case_validates_and_packages_only_for_professional_review(
     assert PRIVATE_ACTIVITY_DESCRIPTION in checklist_text
     assert PRIVATE_CASE_SUMMARY in checklist_text
     assert PRIVATE_SARI_QUESTION in sari_question_text
-    assert review_payload["case_context"]["client_identity"] == PRIVATE_CLIENT_IDENTITY
+    assert "client_identity" not in review_payload["case_context"]
     assert review_payload["case_context"]["case_summary"] == PRIVATE_CASE_SUMMARY
     assert review_payload["case_context"]["sari_question_draft"] == (
         PRIVATE_SARI_QUESTION
@@ -1275,11 +1285,12 @@ def test_mcp_exposes_exact_four_tools_and_accepts_professional_case_fields() -> 
 
     assert accepted["isError"] is False
     serialized = json.dumps(accepted["structuredContent"], ensure_ascii=False)
-    assert PRIVATE_CASE_SUMMARY in serialized
-    assert PRIVATE_CLIENT_IDENTITY["tax_code"] in serialized
-    assert PRIVATE_DOCUMENT_QUOTE in serialized
-    assert PRIVATE_PROPOSED_VALUE in serialized
-    assert PRIVATE_SARI_QUESTION in serialized
+    assert "review_payload" not in accepted["structuredContent"]
+    assert PRIVATE_CASE_SUMMARY not in serialized
+    assert PRIVATE_CLIENT_IDENTITY["tax_code"] not in serialized
+    assert PRIVATE_DOCUMENT_QUOTE not in serialized
+    assert PRIVATE_PROPOSED_VALUE not in serialized
+    assert PRIVATE_SARI_QUESTION not in serialized
 
 
 @pytest.mark.parametrize("secret_field", ["credentials", "cookie", "token", "session"])
@@ -1515,13 +1526,24 @@ def test_widget_render_round_trip_persists_with_opaque_context(
         return response["result"]
 
     try:
-        rendered = call_tool(
+        validated = call_tool(
             1,
-            "render_registro_imprese_sari_review",
+            "validate_registro_imprese_sari_review",
             {
                 "client_engagement": str(context_path),
                 "run_intake": private_run_intake,
                 "review_payload": review,
+            },
+        )
+        validation_payload = validated["structuredContent"]
+        persistence_token = validation_payload["review_reference"]["persistence_token"]
+        assert "review_payload" not in validation_payload
+        assert PRIVATE_CASE_SUMMARY not in json.dumps(validated, ensure_ascii=False)
+        rendered = call_tool(
+            2,
+            "render_registro_imprese_sari_review",
+            {
+                "persistence_token": persistence_token,
             },
         )
         rendered_payload = rendered["structuredContent"]
@@ -1536,10 +1558,7 @@ def test_widget_render_round_trip_persists_with_opaque_context(
             {"item_id": item["id"], "action": "accept"} for item in review["items"]
         ]
         widget_arguments = {
-            "client_engagement": str(context_path),
-            "run_intake": public_run_intake,
             "persistence_token": persistence_token,
-            "review_payload": rendered_payload["review_payload"],
             "decisions": decisions,
             "decision_source": "mcp_widget",
         }

@@ -215,7 +215,9 @@ def validate_official_source_url(value: object) -> str:
     return urllib.parse.urlunsplit(parsed)
 
 
-def assert_generic_public_query(query: object) -> str:
+def assert_generic_public_query(
+    query: object, *, direct_identifiers: Sequence[object] = ()
+) -> str:
     """Reject direct identifiers before a query is transmitted to public SARI.
 
     This gate is intentionally narrow: it detects mechanically recognizable email,
@@ -235,6 +237,13 @@ def assert_generic_public_query(query: object) -> str:
         findings.append("eleven_digit_identifier")
     if PHONE_RE.search(text):
         findings.append("phone_number")
+    folded_text = text.casefold()
+    if any(
+        len(identifier) >= 3 and identifier.casefold() in folded_text
+        for value in direct_identifiers
+        if (identifier := " ".join(str(value or "").split()))
+    ):
+        findings.append("known_case_identifier")
     if findings:
         raise PrivacyError(
             "SARI query must be generic and must not contain direct identifiers: "

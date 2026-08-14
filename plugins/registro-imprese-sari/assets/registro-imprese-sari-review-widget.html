@@ -503,10 +503,13 @@
       });
     }
     function toolArguments() {
+      const token = state.payload?.persistence_token || undefined;
       return {
-        run_intake: state.payload?.run_intake || undefined,
-        persistence_token: state.payload?.persistence_token || undefined,
-        review_payload: review(),
+        persistence_token: token,
+        ...(token ? {} : {
+          run_intake: state.payload?.run_intake || undefined,
+          review_payload: review(),
+        }),
         decisions: serializedDecisions(),
         decision_source: "mcp_widget",
       };

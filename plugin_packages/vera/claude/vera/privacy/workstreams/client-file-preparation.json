@@ -58,7 +58,11 @@
     },
     {
       "id": "review-persistence-binding",
-      "control": "Save and Apply use an opaque, bounded-lifetime server-held binding tied to the run and review hashes; unknown, expired, or mismatched tokens are rejected."
+      "control": "Validate, Render, Save, and Apply can reuse an opaque, four-hour server-held binding tied to the exact run and review hashes, so the private review payload is not retransmitted merely to carry state; unknown, expired, cross-run, or mismatched tokens are rejected."
+    },
+    {
+      "id": "purpose-scoped-review-preview",
+      "control": "After deterministic classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them."
     },
     {
       "id": "draft-only-email",
@@ -73,6 +77,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "07b197e42bf2ce767324bf3d7afa4803a7ec71b4f583cf514667daee00ab196d"
+    "source_fingerprint": "ff4fbe5785d679bdf09431cdd4c8757c30bf891153c1346f285397f1fbed6a27"
   }
 }
