@@ -508,6 +508,7 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         "El código procesa todas las cuentas",
         "da 1 a 50 conti selezionati per la mappatura",
         "at most 20 rows, columns, geometry summaries",
+        "at most 50 exact selectors in total for accounts, facts, or schedules",
         "jusqu'à 50 questions actives",
         "keine automatische Anonymisierung oder Pseudonymisierung",
         "no recibe case.json ni archivos completos como alternativa",

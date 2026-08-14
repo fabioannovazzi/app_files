@@ -3161,6 +3161,9 @@ def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
     assert "OpenAI" not in bilancio_copy
     assert "Anthropic" not in bilancio_copy
     assert "Codex e Cowork applicano gli stessi limiti" in bilancio_copy
+    assert "al massimo 50 selettori esatti complessivi per conti, fatti o prospetti" in (
+        bilancio_copy
+    )
     assert "il modello non riceve il case.json o i file completi come ripiego" in (
         bilancio_copy
     )
