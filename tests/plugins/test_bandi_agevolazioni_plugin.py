@@ -566,6 +566,7 @@ def test_next_intelligence_packet_is_minimized_and_state_aware(
     packet = scripts["intelligence"].create_intelligence_packet(
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
+        model_session_ref="SESSION-PACKET-001",
     )
 
     assert packet["task"] == "SOURCE_INTERPRETATION"
@@ -581,10 +582,171 @@ def test_next_intelligence_packet_is_minimized_and_state_aware(
     next_packet = scripts["intelligence"].create_intelligence_packet(
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
+        model_session_ref="SESSION-PACKET-002",
     )
 
     assert next_packet["task"] == "REQUIREMENT_DRAFTING"
     assert next_packet["orchestration"]["selected_automatically"] is True
+
+
+def test_task_packet_uses_reference_closed_input_projection(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="COST_CLASSIFICATION",
+        subject_ids=["REQ-001"],
+        model_session_ref="SESSION-COST-001",
+    )
+
+    assert set(packet["reviewed_context"]) == {
+        "assessments",
+        "expenses",
+        "facts",
+        "issues",
+        "requirements",
+    }
+    assert packet["reviewed_context"]["requirements"][0]["requirement_id"] == (
+        "REQ-001"
+    )
+    assert packet["reviewed_context"]["expenses"][0]["expense_id"] == "EXP-001"
+    assert (
+        packet["untrusted_evidence"]["stored_source_excerpts"][0]["source_id"]
+        == "SRC-CALL-001"
+    )
+    assert packet["context_inventory"]["silent_truncation_applied"] is False
+    assert packet["context_inventory"]["omitted_counts"]["form_fields"] == 2
+    assert "form_fields" in packet["context_inventory"]["excluded_collections"]
+
+
+def test_source_tasks_omit_private_project_context_after_selection(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    _reviewable_workbench(workspace["output_dir"])
+
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="REQUIREMENT_DRAFTING",
+        subject_ids=["SRC-CALL-001"],
+        model_session_ref="SESSION-SOURCE-001",
+    )
+
+    assert "project" not in packet["case_context"]
+    assert "professional_question" not in packet["case_context"]
+    assert packet["session_boundary"]["raw_evidence_access"] == (
+        "selected_official_sources_only"
+    )
+
+
+def test_reference_closed_packet_fails_instead_of_truncating() -> None:
+    scripts = _scripts()
+    intake, sources, workbench = _orchestration_state("assessment")
+    workbench["facts"] = [
+        {"fact_id": f"FACT-{index:04d}"}
+        for index in range(
+            scripts["intelligence_contract"].MAX_CONTEXT_ITEMS_PER_COLLECTION + 1
+        )
+    ]
+
+    with pytest.raises(ValueError, match="rerun with narrower exact subject_ids"):
+        scripts["intelligence_contract"].build_intelligence_packet(
+            intake,
+            sources,
+            workbench,
+            "EVIDENCE_MAPPING",
+            ["REQ-001"],
+            model_session_ref="SESSION-LIMIT-001",
+        )
+
+
+def test_model_can_stop_and_request_fresh_context_expansion(tmp_path: Path) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    packet = scripts["intelligence"].create_intelligence_packet(
+        output_dir=workspace["output_dir"],
+        client_engagement=workspace["context_path"],
+        task="SOURCE_INTERPRETATION",
+        subject_ids=["SRC-CALL-001"],
+        model_session_ref="SESSION-EXPAND-001",
+    )
+
+    result = scripts["intelligence_contract"].validate_intelligence_output(
+        packet,
+        {
+            "summary_it": "Serve il documento richiamato per completare l'analisi.",
+            "context_status": "INSUFFICIENT",
+            "context_request": ["Riaprire l'allegato tecnico citato dalla fonte."],
+            "recommendations": [],
+        },
+    )
+
+    assert result["context_status"] == "INSUFFICIENT"
+    assert result["recommendations"] == []
+
+
+def test_model_session_reference_cannot_be_reused_across_contributions(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    output = _model_output(_recommendation(evidence_refs=["SRC-CALL-001"]))
+    common = {
+        "output_dir": workspace["output_dir"],
+        "client_engagement": workspace["context_path"],
+        "model_output": output,
+        "provider": "openai",
+        "model": "gpt-test-pinned",
+        "prompt_template_version": "bandi-v2",
+        "recorded_by": "codex-local",
+        "model_session_ref": "SESSION-REUSE-001",
+        "task": "WORKFLOW_GUIDANCE",
+        "subject_ids": ["SRC-CALL-001"],
+    }
+    scripts["intelligence"].record_intelligence(
+        **common, idempotency_key="session-request-001"
+    )
+
+    with pytest.raises(ValueError, match="start a fresh model session"):
+        scripts["intelligence"].record_intelligence(
+            **common, idempotency_key="session-request-002"
+        )
+
+
+def test_packet_blocks_credentials_but_not_professional_identifiers(
+    tmp_path: Path,
+) -> None:
+    scripts, workspace = _initialized_case(tmp_path)
+    assert (
+        scripts["core"].prohibited_secret_value_paths(
+            {"value": "Codice fiscale 01234567890; IBAN IT60X0542811101000000123456"}
+        )
+        == []
+    )
+    workbench_path = workspace["output_dir"] / "application_workbench.json"
+    workbench = _read(workbench_path)
+    workbench["facts"] = [
+        {
+            "fact_id": "FACT-CREDENTIAL",
+            "field_code": "note",
+            "value": "Authorization: Bearer abcdefghijklmnopqrstuvwxyz123456",
+            "as_of": "2026-08-07",
+            "source_ids": ["SRC-CALL-001"],
+            "kind": "document_observation",
+            "review_status": "confirmed",
+        }
+    ]
+    _write(workbench_path, workbench)
+
+    with pytest.raises(ValueError, match="unmistakable credential/session"):
+        scripts["intelligence"].create_intelligence_packet(
+            output_dir=workspace["output_dir"],
+            client_engagement=workspace["context_path"],
+            task="EVIDENCE_MAPPING",
+            subject_ids=[],
+            model_session_ref="SESSION-SECRET-001",
+        )
 
 
 @pytest.mark.parametrize(
@@ -618,11 +780,30 @@ def test_intelligence_orchestration_uses_only_mechanical_case_state(
     assert packet["orchestration"]["selected_automatically"] is True
 
 
+def test_next_task_does_not_select_only_the_first_fifty_subjects() -> None:
+    scripts = _scripts()
+    intake, sources, workbench = _orchestration_state("source")
+    sources["sources"] = [
+        {"source_id": f"SRC-{index:03d}", "review_status": "new"} for index in range(75)
+    ]
+
+    packet = scripts["intelligence_contract"].build_next_intelligence_packet(
+        intake,
+        sources,
+        workbench,
+        model_session_ref="SESSION-ALL-SOURCES",
+    )
+
+    assert len(packet["subject_ids"]) == 75
+    assert len(packet["untrusted_evidence"]["sources"]) == 75
+
+
 def test_intelligence_output_rejects_evidence_outside_packet(tmp_path: Path) -> None:
     scripts, workspace = _initialized_case(tmp_path)
     packet = scripts["intelligence"].create_intelligence_packet(
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
+        model_session_ref="SESSION-PACKET-001",
         task="SOURCE_INTERPRETATION",
         subject_ids=["SRC-CALL-001"],
     )
@@ -653,6 +834,7 @@ def test_intelligence_output_requires_real_array_fields(tmp_path: Path) -> None:
     packet = scripts["intelligence"].create_intelligence_packet(
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
+        model_session_ref="SESSION-PACKET-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
     )
@@ -678,6 +860,7 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -690,6 +873,7 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -711,6 +895,7 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
             model="gpt-test-pinned",
             prompt_template_version="bandi-v1",
             recorded_by="codex-local",
+            model_session_ref="SESSION-INTEL-001",
             idempotency_key="request-001",
             task="WORKFLOW_GUIDANCE",
             subject_ids=["SRC-CALL-001"],
@@ -720,6 +905,8 @@ def test_recorded_intelligence_is_nonauthoritative_and_exactly_attributed(
         "provider": "openai",
         "model": "gpt-test-pinned",
         "prompt_template_version": "bandi-v1",
+        "model_session_ref": "SESSION-INTEL-001",
+        "session_assurance": "operator_asserted_not_provider_authenticated",
     }
     assert (
         _read(workspace["output_dir"] / "application_workbench.json")
@@ -743,6 +930,7 @@ def test_intelligence_refuses_secret_or_session_fields_before_recording(
             model="gpt-test-pinned",
             prompt_template_version="bandi-v1",
             recorded_by="codex-local",
+            model_session_ref="SESSION-INTEL-001",
             idempotency_key="request-001",
             task="WORKFLOW_GUIDANCE",
             subject_ids=["SRC-CALL-001"],
@@ -790,6 +978,7 @@ def test_professional_accept_applies_only_as_proposed(tmp_path: Path) -> None:
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="REQUIREMENT_DRAFTING",
         subject_ids=["SRC-CALL-001"],
@@ -826,6 +1015,7 @@ def test_reject_does_not_mutate_workbench_and_repeated_decision_is_idempotent(
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -859,6 +1049,7 @@ def test_changed_case_marks_pending_intelligence_stale(tmp_path: Path) -> None:
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -895,6 +1086,7 @@ def test_validation_fails_closed_during_interrupted_intelligence_apply(
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -957,6 +1149,7 @@ def test_interrupted_acceptance_resumes_without_duplicate_application(
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="request-001",
         task="SOURCE_INTERPRETATION",
         subject_ids=["SRC-CALL-001"],
@@ -1006,6 +1199,7 @@ def test_model_cannot_prefill_protected_portal_control(tmp_path: Path) -> None:
     packet = scripts["intelligence"].create_intelligence_packet(
         output_dir=workspace["output_dir"],
         client_engagement=workspace["context_path"],
+        model_session_ref="SESSION-PACKET-001",
         task="FORM_PORTAL_GUIDANCE",
         subject_ids=[],
     )
@@ -1059,6 +1253,8 @@ def test_intelligence_packet_cli_uses_bound_case(tmp_path: Path) -> None:
             "--client-engagement",
             str(workspace["context_path"]),
             "packet",
+            "--model-session-ref",
+            "SESSION-CLI-PACKET",
         ]
     )
 
@@ -1092,6 +1288,8 @@ def test_intelligence_record_cli_seals_response(tmp_path: Path) -> None:
             "codex-local",
             "--idempotency-key",
             "cli-request-001",
+            "--model-session-ref",
+            "SESSION-CLI-RECORD",
             "--task",
             "WORKFLOW_GUIDANCE",
             "--subject-id",
@@ -1118,6 +1316,7 @@ def test_intelligence_decide_cli_records_return(tmp_path: Path) -> None:
         model="gpt-test-pinned",
         prompt_template_version="bandi-v1",
         recorded_by="codex-local",
+        model_session_ref="SESSION-INTEL-001",
         idempotency_key="cli-decision-001",
         task="WORKFLOW_GUIDANCE",
         subject_ids=["SRC-CALL-001"],
@@ -1251,13 +1450,13 @@ def test_verified_opportunity_handoff_registers_as_mechanical_source(
         radar_workspace,
         evidence=_evidence(),
         idempotency_key="evidence-1",
-        **_contribution_args(),
+        **_contribution_args("SESSION-CLIENT-MAP-001"),
     )
     radar.record_profile(
         radar_workspace,
         profile=_profile(),
         idempotency_key="profile-1",
-        **_contribution_args(),
+        **_contribution_args("SESSION-CLIENT-MAP-001"),
     )
     radar.record_source(
         radar_workspace,
@@ -1317,7 +1516,7 @@ def test_verified_opportunity_handoff_registers_as_mechanical_source(
         radar_workspace,
         match=_match(),
         idempotency_key="match-1",
-        **_contribution_args(),
+        **_contribution_args("SESSION-MATCH-001"),
     )
     for scope, target in (
         ("evidence", "EVIDENCE-CLIENT-001"),

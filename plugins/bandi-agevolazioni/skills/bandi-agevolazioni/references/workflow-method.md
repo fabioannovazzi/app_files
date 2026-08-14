@@ -53,6 +53,13 @@ assertions stay visibly distinct from document observations. A ready applicable
 assessment needs confirmed facts and one reviewed source-backed requirement.
 Keep documentary readiness separate from outcome.
 
+Create those structured facts in a client-evidence mapping session limited to
+the selected evidence. End that session after recording the contribution. Every
+later assessment contribution uses a new operator-attested session reference
+and receives only its task-specific reference closure. If the packet is
+insufficient, stop and request the exact additional subjects or evidence; do not
+reuse the mapping session or infer from omitted content.
+
 Only two deterministic rule families are allowed: exact comparison of confirmed
 finite decimal strings and exact comparison of confirmed ISO dates. The
 professional supplies the result-to-outcome mapping; the validator recomputes

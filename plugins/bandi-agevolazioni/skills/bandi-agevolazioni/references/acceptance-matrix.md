@@ -26,6 +26,11 @@
 | Handoff is strict, selected-client-only and independently verifiable on import | Malformed-object, hash-tamper, cross-client and registration tests | Required |
 | Radar never contacts clients or claims eligibility | Report, skill and handoff limitation assertions | Required |
 | Packet is bounded and state-aware | Tests across intake, sources, requirements, evidence, assessments, costs, forms, narratives, consistency, issues, and authority simulation | Required |
+| Task packets include only permitted collections and exact reference closure, with no first-N truncation | Per-task projection, reverse/forward reference, inventory and over-limit failure tests | Required |
+| Insufficient task context stops without substantive recommendations and requests a fresh explicit expansion | Strict output-contract positive and negative tests | Required |
+| Stage B model-session references cannot be reused across contributions | Packet, record, retry and duplicate-session tests | Required |
+| Radar evidence mapping is client-isolated and public discovery plus portfolio matching use separate session references | Cross-client and bidirectional mapping-to-public-session reuse negative tests | Required |
+| Unmistakable credentials are blocked without treating names or tax identifiers as secrets | Credential-pattern true-positive and professional-identifier false-positive tests | Required |
 | Intake applicant object and local paths are not copied by default, while possible identity in relevant facts/excerpts and absence of automatic anonymization are disclosed | Packet inspection tests and privacy review | Required |
 | Evidence cannot escape its packet | Unknown-reference negative tests | Required |
 | Model output has no authority on record | Workbench byte-equivalence before decision | Required |
