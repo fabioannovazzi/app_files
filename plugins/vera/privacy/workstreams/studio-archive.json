@@ -36,6 +36,14 @@
         ]
       },
       {
+        "id": "studio-archive-access-diagnostic",
+        "purpose": "Explain why a selected local or network archive root cannot be opened before client registration begins",
+        "content": "The user-selected archive path is already present in the active Codex request. The diagnostic returns only path kind, failed access stage, a mechanically classified host-sandbox, SMB-session, network-reachability, filesystem-permission, missing-path or unclassified status, numeric errno or Windows error code when available, host-approved retry state, and one bounded next action. It does not echo the private path, request or return SMB credentials, persist Studio Archive configuration, or create client and engagement records",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
         "id": "studio-client-folder-binding",
         "purpose": "Bind Vera workflows to one stable registered client and current Studio Archive folder without copying the private identity registry",
         "content": "The stable opaque client ID; current opaque folder scope ID; absolute archive and client-folder paths; archive-relative scope path and display name; and a deterministic content digest. The binding contains no email address, legal name, tax identifier, document content, Gmail content, or authentication material",
@@ -208,6 +216,10 @@
       "control": "Each professional keeps only archive configuration, the optional client identity mapping, and the derived SQLite search cache in an owner-only local state directory outside the archive. Engagements, input receipts, run contexts, lifecycle, and artifact records do not depend on that cache as their operational source of truth."
     },
     {
+      "id": "path-safe-archive-access-diagnostics",
+      "control": "Before first local-archive configuration, a read-only diagnostic can distinguish native-path support, Codex host-access approval, mechanically reported SMB session or credential errors, share reachability and share/filesystem access denial. Error responses expose only path kind, access stage, fixed category, numeric OS codes and the approved-retry state; they never echo the selected private path or request credentials. An ambiguous OS error remains unclassified, and client or engagement creation does not begin until diagnosis and configuration succeed."
+    },
+    {
       "id": "scope-and-path-containment",
       "control": "Search requires an exact configured top-level scope, symbolic links are skipped or rejected, relative paths are normalized, source and state roots cannot contain one another, and bounded discovery rejects unsafe scale."
     },
@@ -261,9 +273,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6525cf46fa9308438d2534d003f4c03e6a22dad724488101d1e010133722f759"
+    "source_fingerprint": "ad7f23e4fcee6ba8b1dcfa42773720cf9e59922c266f4030a28643e69e725387"
   }
 }

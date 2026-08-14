@@ -154,6 +154,49 @@ renames, deletes, or overwrites an existing file. Refresh detects top-level
 scope-folder changes and reads the stable identity from `Vera/client.json`.
 The index never follows symbolic links.
 
+### Archive-root access preflight
+
+Before first configuration, call `diagnose_studio_archive_access` with the
+exact selected root. It checks path resolution and root listing without
+persisting configuration, creating a client, or returning the private path in
+its result. Use its mechanical error category instead of interpreting a generic
+`Access denied` message:
+
+- `archive_host_access_permission_required` / the marker
+  `MPARANZA_ARCHIVE_HOST_PERMISSION_REQUIRED`: immediately retry the exact
+  diagnostic with Codex host folder-access approval. From Vera's root, use the
+  managed launcher and add `--host-folder-access-approved` only on that approved
+  retry:
+
+  ```bash
+  python scripts/managed_python_runtime.py --module studio-archive run \
+    scripts/studio_archive.py diagnose-access --archive-root <same-path> \
+    --host-folder-access-approved
+  ```
+
+  When it succeeds, run the matching `configure` command with the same host
+  approval and flag. Codex performs these commands; do not ask the user to run
+  Python or Terminal.
+- `archive_smb_credentials_required`: the operating system reported an SMB
+  session or credential error. Ask the user only to connect or remount the
+  share in their signed-in desktop session, then retry. Never request or accept
+  an SMB username or password in chat.
+- `archive_filesystem_access_denied`: a host-approved retry still received an
+  access-denied code. State that the signed-in user needs both share and
+  filesystem/NTFS read and list permissions, plus write permission before Vera
+  creates `Vera/client.json` or engagement records.
+- `archive_network_share_unreachable`: verify that the desktop can reach the
+  server and share, then retry the same path.
+- `archive_unc_requires_local_mount`: the current runtime does not treat UNC
+  syntax as a native absolute path. Ask for the share to be mounted as a local
+  drive or folder and use that mounted absolute path.
+
+Do not create `Vera/client.json`, an engagement, or any document changes until
+the diagnostic and configuration succeed. An unknown OS error remains
+`archive_root_unavailable` with numeric codes; do not guess its cause. The
+diagnostic does not probe client-ledger write access, so the first authorized
+registration still fails closed if write permission is absent.
+
 A third bounded intake action supports `archive-organization`:
 `snapshot_studio_client_folder` hashes at most 5,000 ordinary client files and
 2 GB, excludes `Vera/`, follows no symlinks, and imports its JSON snapshot
@@ -617,6 +660,7 @@ If MCP is unavailable, work from the component root and use:
 
 ```bash
 python scripts/check_dependencies.py
+python scripts/studio_archive.py diagnose-access --archive-root /absolute/archive/path
 python scripts/studio_archive.py configure --archive-root /absolute/archive/path
 python scripts/studio_archive.py refresh
 python scripts/studio_archive.py status
@@ -694,6 +738,16 @@ ZIPs during an archive run.
 
 ## Failure rules
 
+- First archive configuration: run the access diagnostic before configuring.
+- Host sandbox denial: rerun the exact diagnostic and configuration with host
+  folder-access approval and the approved-retry flag; do not classify it as an
+  SMB or NTFS failure before that retry.
+- SMB session/credential error: ask the user to connect the share in the
+  desktop session; never request credentials in chat.
+- Host-approved share/filesystem denial: report the share and NTFS/filesystem
+  permission requirement; do not continue to client or engagement creation.
+- UNC syntax unsupported by the runtime: use a mounted local path; do not retry
+  the same non-native UNC syntax indefinitely.
 - Not configured or no index: configure and refresh.
 - Unknown or ambiguous scope: stop before search and resolve it.
 - Changed file at open: refresh, rerun the search, and use the new source ID.
