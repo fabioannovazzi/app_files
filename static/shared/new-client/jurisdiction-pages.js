@@ -508,6 +508,149 @@
     },
   };
 
+  const modelCopy = {
+    it: {
+      label: "Trattamento dei dati",
+      title: "Quali dati arrivano al modello",
+      intro:
+        "In questa prima fase il modello può leggere dati reali del cliente. Non sono anonimizzati automaticamente.",
+      rows: [
+        {
+          title: "Elaborazione locale dell’intera cartella",
+          copy:
+            "Il codice inventaria tutti i file entro i limiti del processo, estrae testo e campi leggibili, calcola hash, segnala duplicati e controlla formalmente le fatture XML. L’eventuale installazione OCR scarica solo software e modelli, non i file del cliente.",
+        },
+        {
+          title: "Contesto predefinito completo e paginato",
+          copy:
+            "Codex e Cowork usano lo stesso model_handoff.json e tutte le pagine elencate: una riga di metadati per ogni file, anteprime fino a 600 caratteri solo per i file segnalati e ogni campo fiscale mappato con valore e citazione fino a 600 caratteri. Non c’è campionamento; ogni pagina contiene al massimo 2.500 elementi e 1.500.000 byte.",
+        },
+        {
+          title: "Dati limitati per la fase successiva",
+          copy:
+            "La bozza email riceve solo richieste approvate o integrate nella revisione e il riferimento CLIENT-001. La sintesi XML riceve anomalie e gruppi duplicati opachi, senza nomi delle parti, codici fiscali del cliente o chiavi duplicate originali.",
+        },
+        {
+          title: "Approfondimento quando serve",
+          copy:
+            "Bozze complete e anteprime dei file ordinari restano fuori dal contesto predefinito. Valori fiscali, eventuali identificativi mappati e nomi file possono già comparire nell’handoff; un estratto o il file locale esatto può essere aperto quando serve al giudizio professionale. Gli artefatti locali conservano gli identificativi esatti: questa è minimizzazione per finalità, non anonimizzazione. Codex e Cowork applicano lo stesso percorso; cambiano l’account o workspace e il relativo trattamento del fornitore. Non viene usato un server Mparanza separato.",
+        },
+      ],
+    },
+    en: {
+      label: "Data handling",
+      title: "What data reaches the model",
+      intro:
+        "In this first phase, the model may read real client data. It is not automatically anonymized.",
+      rows: [
+        {
+          title: "Local processing of the complete folder",
+          copy:
+            "Code inventories every file within the process limits, extracts readable text and fields, calculates hashes, flags duplicates, and formally checks invoice XML. Optional OCR setup downloads only software and model files, not client files.",
+        },
+        {
+          title: "Complete, paginated default context",
+          copy:
+            "Codex and Cowork use the same model_handoff.json and every listed page: one metadata row for every file, previews up to 600 characters only for flagged files, and every mapped fiscal field with its value and a citation up to 600 characters. Nothing is sampled; each page contains at most 2,500 items and 1,500,000 bytes.",
+        },
+        {
+          title: "Data limited for the next phase",
+          copy:
+            "Email drafting receives only requests accepted or supplemented during review and the CLIENT-001 reference. XML synthesis receives anomalies and opaque duplicate groups without party names, customer tax identifiers, or raw duplicate keys.",
+        },
+        {
+          title: "Drill-down when needed",
+          copy:
+            "Complete drafts and routine-file previews stay out of the default context. Fiscal values, mapped identifiers, and file names may already appear in the handoff; a selected excerpt or exact local file can be opened when professional judgment requires it. Local artifacts retain exact identifiers: this is purpose-specific minimization, not anonymization. Codex and Cowork follow the same workflow; the selected account or workspace and its provider processing differ. No separate Mparanza server is used.",
+        },
+      ],
+    },
+    fr: {
+      label: "Traitement des données",
+      title: "Quelles données parviennent au modèle",
+      intro:
+        "Dans cette première phase, le modèle peut lire des données réelles du client. Elles ne sont pas automatiquement anonymisées.",
+      rows: [
+        {
+          title: "Traitement local de l’ensemble du dossier",
+          copy:
+            "Le code inventorie tous les fichiers dans les limites du processus, extrait le texte et les champs lisibles, calcule les empreintes, signale les doublons et contrôle formellement les factures XML. L’installation facultative de l’OCR télécharge uniquement le logiciel et les modèles, jamais les fichiers du client.",
+        },
+        {
+          title: "Contexte par défaut complet et paginé",
+          copy:
+            "Codex et Cowork utilisent le même model_handoff.json et toutes les pages répertoriées : une ligne de métadonnées pour chaque fichier, des extraits de 600 caractères au maximum uniquement pour les fichiers signalés et chaque champ fiscal mappé avec sa valeur et une citation de 600 caractères au maximum. Aucun échantillonnage n’est effectué ; chaque page contient au plus 2 500 éléments et 1 500 000 octets.",
+        },
+        {
+          title: "Données limitées pour l’étape suivante",
+          copy:
+            "La rédaction de l’e-mail reçoit uniquement les demandes acceptées ou complétées lors de la revue et la référence CLIENT-001. La synthèse XML reçoit les anomalies et des groupes de doublons opaques, sans noms des parties, identifiants fiscaux du client ni clés de doublon brutes.",
+        },
+        {
+          title: "Approfondissement lorsque nécessaire",
+          copy:
+            "Les projets complets et les aperçus des fichiers ordinaires restent hors du contexte par défaut. Les valeurs fiscales, les identifiants mappés et les noms de fichiers peuvent déjà figurer dans le handoff ; un extrait sélectionné ou le fichier local exact peut être ouvert lorsque le jugement professionnel l’exige. Les artefacts locaux conservent les identifiants exacts : il s’agit d’une minimisation par finalité, pas d’une anonymisation. Codex et Cowork suivent le même parcours ; le compte ou espace de travail choisi et le traitement de son fournisseur diffèrent. Aucun serveur Mparanza distinct n’est utilisé.",
+        },
+      ],
+    },
+    es: {
+      label: "Tratamiento de datos",
+      title: "Qué datos recibe el modelo",
+      intro:
+        "En esta primera fase, el modelo puede leer datos reales del cliente. No se anonimizan automáticamente.",
+      rows: [
+        {
+          title: "Tratamiento local de toda la carpeta",
+          copy:
+            "El código inventaría todos los archivos dentro de los límites del proceso, extrae texto y campos legibles, calcula hashes, señala duplicados y comprueba formalmente las facturas XML. La instalación opcional de OCR descarga solo software y modelos, nunca los archivos del cliente.",
+        },
+        {
+          title: "Contexto predeterminado completo y paginado",
+          copy:
+            "Codex y Cowork usan el mismo model_handoff.json y todas las páginas enumeradas: una fila de metadatos por cada archivo, extractos de hasta 600 caracteres solo para los archivos señalados y cada campo fiscal mapeado con su valor y una cita de hasta 600 caracteres. No se realiza muestreo; cada página contiene como máximo 2.500 elementos y 1.500.000 bytes.",
+        },
+        {
+          title: "Datos limitados para la fase siguiente",
+          copy:
+            "La redacción del correo recibe solo las solicitudes aceptadas o ampliadas durante la revisión y la referencia CLIENT-001. La síntesis XML recibe anomalías y grupos de duplicados opacos, sin nombres de las partes, identificadores fiscales del cliente ni claves de duplicado originales.",
+        },
+        {
+          title: "Consulta detallada cuando sea necesaria",
+          copy:
+            "Los borradores completos y las vistas previas de los archivos rutinarios quedan fuera del contexto predeterminado. Los valores fiscales, los identificadores mapeados y los nombres de archivo pueden aparecer ya en el handoff; puede abrirse un extracto seleccionado o el archivo local exacto cuando lo exija el criterio profesional. Los artefactos locales conservan los identificadores exactos: es minimización por finalidad, no anonimización. Codex y Cowork siguen el mismo recorrido; cambian la cuenta o espacio de trabajo elegidos y el tratamiento de su proveedor. No se utiliza un servidor Mparanza separado.",
+        },
+      ],
+    },
+    de: {
+      label: "Datenverarbeitung",
+      title: "Welche Daten das Modell erhält",
+      intro:
+        "In dieser ersten Phase kann das Modell echte Mandantendaten lesen. Sie werden nicht automatisch anonymisiert.",
+      rows: [
+        {
+          title: "Lokale Verarbeitung des vollständigen Ordners",
+          copy:
+            "Der Code inventarisiert alle Dateien innerhalb der Prozessgrenzen, extrahiert lesbaren Text und Felder, berechnet Hashes, kennzeichnet Duplikate und prüft Rechnungs-XML formal. Die optionale OCR-Einrichtung lädt nur Software und Modelle herunter, niemals Mandantendateien.",
+        },
+        {
+          title: "Vollständiger, paginierter Standardkontext",
+          copy:
+            "Codex und Cowork verwenden dasselbe model_handoff.json und alle aufgeführten Seiten: eine Metadatenzeile für jede Datei, Auszüge mit höchstens 600 Zeichen nur für gekennzeichnete Dateien und jedes zugeordnete Steuerfeld mit Wert und einem Zitat von höchstens 600 Zeichen. Es gibt keine Stichprobe; jede Seite enthält höchstens 2.500 Elemente und 1.500.000 Byte.",
+        },
+        {
+          title: "Begrenzte Daten für die nächste Phase",
+          copy:
+            "Die E-Mail-Erstellung erhält nur in der Prüfung angenommene oder ergänzte Anfragen sowie die Referenz CLIENT-001. Die XML-Zusammenfassung erhält Auffälligkeiten und opake Duplikatgruppen ohne Namen der Parteien, Steueridentifikatoren des Mandanten oder ursprüngliche Duplikatschlüssel.",
+        },
+        {
+          title: "Vertiefung bei Bedarf",
+          copy:
+            "Vollständige Entwürfe und Vorschauen routinemäßiger Dateien bleiben außerhalb des Standardkontexts. Steuerwerte, zugeordnete Identifikatoren und Dateinamen können bereits im Handoff erscheinen; ein ausgewählter Auszug oder die genaue lokale Datei kann geöffnet werden, wenn das fachliche Urteil dies erfordert. Lokale Artefakte bewahren exakte Identifikatoren: Dies ist zweckbezogene Minimierung, keine Anonymisierung. Codex und Cowork folgen demselben Ablauf; das gewählte Konto oder der Workspace und die Verarbeitung seines Anbieters unterscheiden sich. Ein separater Mparanza-Server wird nicht verwendet.",
+        },
+      ],
+    },
+  };
+
   const jurisdictions = {
     geneva: {
       slug: "geneva.html",
@@ -1406,6 +1549,7 @@
   function renderPage(page, language) {
     const ui = interfaceCopy[language];
     const copy = page.copy[language];
+    const model = modelCopy[language];
     const header = document.querySelector(".topbar");
     const main = document.getElementById("page-content");
     header.innerHTML = `<div class="nav-shell">
@@ -1530,6 +1674,24 @@
           <a class="button" href="${VERA_PAGE_URL}?lang=${language}">${escapeHtml(
             ui.download.button,
           )}</a>
+        </div>
+      </section>
+
+      <section class="function-model-data" id="model-data" data-model-data-workflow="new-client" data-model-data-status="relevant" aria-labelledby="new-client-model-data-title">
+        <div class="function-model-data__head">
+          <div class="function-model-data__heading">
+            <p class="function-model-data__label">${escapeHtml(model.label)}</p>
+            <h2 id="new-client-model-data-title">${escapeHtml(model.title)}</h2>
+          </div>
+          <p class="function-model-data__copy">${escapeHtml(model.intro)}</p>
+        </div>
+        <div class="document-lines">
+          ${model.rows
+            .map(
+              (row) =>
+                `<article class="document-line"><h3>${escapeHtml(row.title)}</h3><p>${escapeHtml(row.copy)}</p></article>`,
+            )
+            .join("")}
         </div>
       </section>`;
   }

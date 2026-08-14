@@ -3131,6 +3131,43 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         assert page.count(f'"{key}":') == 5
 
 
+def test_new_client_jurisdiction_pages_render_current_model_data_last() -> None:
+    source = (
+        ROOT / "static" / "shared" / "new-client" / "jurisdiction-pages.js"
+    ).read_text(encoding="utf-8")
+    model_copy = source.split("const modelCopy = {", 1)[1].split(
+        "const jurisdictions = {", 1
+    )[0]
+
+    for heading in (
+        "Quali dati arrivano al modello",
+        "What data reaches the model",
+        "Quelles données parviennent au modèle",
+        "Qué datos recibe el modelo",
+        "Welche Daten das Modell erhält",
+    ):
+        assert heading in model_copy
+    for shared_detail in (
+        "model_handoff.json",
+        "CLIENT-001",
+        "Mparanza",
+    ):
+        assert model_copy.count(shared_detail) == 5
+    assert model_copy.count("Codex") == model_copy.count("Cowork") >= 5
+
+    rendered = source.split("main.innerHTML = `", 1)[1].split(
+        "const page = jurisdictions", 1
+    )[0]
+    assert rendered.count('data-model-data-workflow="new-client"') == 1
+    assert rendered.count('data-model-data-status="relevant"') == 1
+    assert rendered.rindex('data-model-data-workflow="new-client"') > rendered.rindex(
+        'id="download"'
+    )
+    assert rendered.rindex("</section>") > rendered.rindex(
+        'data-model-data-workflow="new-client"'
+    )
+
+
 @pytest.mark.parametrize(
     "relative_path",
     (
