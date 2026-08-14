@@ -1,5 +1,6 @@
 "use strict";
 
+const crypto = require("node:crypto");
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
@@ -15,6 +16,11 @@ const WIDGET_URI = "ui://widget/deep-research-review.html";
 const WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
 const MAX_ITEMS = 2500;
 const MAX_PAYLOAD_BYTES = 2_000_000;
+const MAX_PERSISTENCE_CONTEXTS = 128;
+const PERSISTENCE_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
+const PERSISTENCE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
+const LOWERCASE_SHA256_RE = /^[a-f0-9]{64}$/;
+const PERSISTENCE_CONTEXTS = new Map();
 const TOOL_NAMES = {
   validateReview: "validate_deep_research_review",
   renderReview: "render_deep_research_review",
@@ -62,7 +68,7 @@ const RUNTIME_COPY = {
     finalArtifacts: "Final artifacts",
     reviewInCodex: "Professional Review",
     validationMessage:
-      "Answer-validation review payload is valid. It is safe to call render_deep_research_review once.",
+      "Answer-validation review is valid. Call render_deep_research_review with the returned short-lived reference.",
     saved: (count) => `Saved ${count} answer-validation decisions.`,
     saveNotWritten:
       "Validated decisions. No run_intake.output_dir was provided, so nothing was written.",
@@ -74,7 +80,7 @@ const RUNTIME_COPY = {
     ready: "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
     partial: "Complete remaining review decisions before final handoff.",
     instructions:
-      "Use validate_deep_research_review before render_deep_research_review. Prefer the MCP widget for answer-validation review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
+      "Use validate_deep_research_review with the hash-bound local review reference before render_deep_research_review, then reuse the returned short-lived token. Prefer the MCP widget for answer-validation review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable.",
   },
   es: {
     handoffTitle: "Entrega para revisión",
@@ -85,7 +91,7 @@ const RUNTIME_COPY = {
     finalArtifacts: "Artefactos finales",
     reviewInCodex: "Revisión profesional",
     validationMessage:
-      "Los datos de revisión de la validación de respuestas son válidos. Ya puede ejecutar render_deep_research_review.",
+      "La revisión de validación de respuestas es válida. Ejecute render_deep_research_review con la referencia temporal devuelta.",
     saved: (count) =>
       `Se ${count === 1 ? "ha" : "han"} guardado ${count} ${count === 1 ? "decisión" : "decisiones"} de validación de respuestas.`,
     saveNotWritten:
@@ -99,7 +105,7 @@ const RUNTIME_COPY = {
     ready: "Utilice final_artifacts.json como galería revisada de artefactos para la entrega.",
     partial: "Complete las decisiones de revisión pendientes antes de la entrega final.",
     instructions:
-      "Ejecute validate_deep_research_review antes de render_deep_research_review. Utilice preferentemente el widget MCP para la entrega de la validación de respuestas; guarde las decisiones con save_deep_research_decisions y aplíquelas con apply_deep_research_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Utilice la revisión Markdown o estática solo cuando MCP no esté disponible.",
+      "Ejecute validate_deep_research_review con la referencia local vinculada por hash antes de render_deep_research_review y reutilice después el token temporal devuelto. Utilice preferentemente el widget MCP para la entrega de la validación de respuestas; guarde las decisiones con save_deep_research_decisions y aplíquelas con apply_deep_research_decisions para generar applied_decisions.json y actualizar el estado de final_artifacts.json. Utilice la revisión Markdown o estática solo cuando MCP no esté disponible.",
   },
 };
 
@@ -212,6 +218,15 @@ function toolDefinitions() {
     },
     ["schema_version", "plugin", "workflow", "run_id", "items", "item_count"],
   );
+  const reviewReference = objectSchema(
+    {
+      path: { type: "string", enum: ["review_payload.json"] },
+      run_id: { type: "string" },
+      review_payload_sha256: { type: "string", pattern: "^[a-f0-9]{64}$" },
+    },
+    ["path", "run_id", "review_payload_sha256"],
+    false,
+  );
   const inputSchema = objectSchema(
     {
       run_intake: { type: "object", description: "Optional run_intake.json object." },
@@ -220,10 +235,15 @@ function toolDefinitions() {
         description: "Current absolute path to the managed run context.json.",
       },
       review_payload: reviewPayload,
+      review_reference: reviewReference,
+      persistence_token: {
+        type: "string",
+        description: "Opaque short-lived token returned by validation or rendering.",
+      },
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
     },
-    ["review_payload"],
+    [],
   );
   const decisionSchema = objectSchema(
     {
@@ -247,19 +267,24 @@ function toolDefinitions() {
         description: "Current absolute path to the managed run context.json.",
       },
       review_payload: reviewPayload,
+      review_reference: reviewReference,
+      persistence_token: {
+        type: "string",
+        description: "Opaque short-lived token returned by validation or rendering.",
+      },
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["decisions"],
   );
   return [
     {
       name: TOOL_NAMES.validateReview,
       title: "Validate answer-review payload",
       description:
-        "Validate the answer-validation review-session payload before rendering. Call this first, then render_deep_research_review.",
+        "Validate a hash-bound local answer-review reference (or a legacy inline payload) before rendering. Call this first, then render_deep_research_review with the returned short-lived token.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -272,7 +297,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.renderReview,
       title: "Render answer-validation review",
       description:
-        "Render an answer-validation review-session payload as an MCP HTML widget for source support, reasoning, professional judgment, source limits, audit checks, and artifacts.",
+        "Render a validated answer review through its short-lived token as an MCP HTML widget for source support, reasoning, professional judgment, source limits, audit checks, and artifacts.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
@@ -426,6 +451,185 @@ function validateReviewPayload(inputArgs) {
   return payload;
 }
 
+function canonicalValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (!isPlainObject(value)) return value;
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map((key) => [key, canonicalValue(value[key])]),
+  );
+}
+
+function canonicalJson(value) {
+  return JSON.stringify(canonicalValue(value));
+}
+
+function sha256Bytes(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function readRegularJson(filePath, label) {
+  const stat = fs.lstatSync(filePath);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(`${label} must be a regular file`);
+  }
+  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+}
+
+function prunePersistenceContexts(now = Date.now()) {
+  for (const [token, context] of PERSISTENCE_CONTEXTS.entries()) {
+    if (context.expires_at <= now) PERSISTENCE_CONTEXTS.delete(token);
+  }
+  while (PERSISTENCE_CONTEXTS.size >= MAX_PERSISTENCE_CONTEXTS) {
+    const oldest = PERSISTENCE_CONTEXTS.keys().next().value;
+    if (oldest == null) break;
+    PERSISTENCE_CONTEXTS.delete(oldest);
+  }
+}
+
+function storedReviewContext(inputArgs, expectedReview = null) {
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) return null;
+  const reference = isPlainObject(inputArgs.review_reference)
+    ? inputArgs.review_reference
+    : null;
+  if (reference?.path != null && reference.path !== "review_payload.json") {
+    throw new Error("review_reference.path must be review_payload.json");
+  }
+  const expectedRunId =
+    (typeof reference?.run_id === "string" && reference.run_id.trim()) ||
+    (typeof expectedReview?.run_id === "string" && expectedReview.run_id.trim()) ||
+    (typeof inputArgs.run_intake?.run_id === "string" && inputArgs.run_intake.run_id.trim());
+  if (!expectedRunId) throw new Error("review reference requires a run_id");
+  preflightClientRun(outputDir, expectedRunId);
+  const reviewPath = path.join(outputDir, "review_payload.json");
+  const review = readRegularJson(reviewPath, "review_payload.json");
+  const reviewBytes = fs.readFileSync(reviewPath);
+  const reviewHash = sha256Bytes(reviewBytes);
+  if (review.run_id !== expectedRunId) {
+    throw new Error("stored review_payload.json does not match the referenced run");
+  }
+  if (expectedReview && canonicalJson(expectedReview) !== canonicalJson(review)) {
+    throw new Error("tool review_payload does not match stored review_payload.json");
+  }
+  const referenceHash =
+    typeof reference?.review_payload_sha256 === "string"
+      ? reference.review_payload_sha256.trim()
+      : "";
+  if (referenceHash && (!LOWERCASE_SHA256_RE.test(referenceHash) || referenceHash !== reviewHash)) {
+    throw new Error("review_reference hash does not match stored review_payload.json");
+  }
+  const finalPath = path.join(outputDir, "final_artifacts.json");
+  const finalArtifacts = readRegularJson(finalPath, "final_artifacts.json");
+  if (
+    finalArtifacts.plugin !== "deep-research-validator" ||
+    finalArtifacts.workflow !== "deep-research-validator" ||
+    finalArtifacts.run_id !== expectedRunId ||
+    finalArtifacts.review_payload_sha256 !== reviewHash
+  ) {
+    throw new Error("final_artifacts.json does not bind the stored review payload");
+  }
+  return {
+    outputDir,
+    review,
+    reviewHash,
+    runIntake: readRegularJson(path.join(outputDir, "run_intake.json"), "run_intake.json"),
+    uiDecisions: fs.existsSync(path.join(outputDir, "ui_decisions.json"))
+      ? readRegularJson(path.join(outputDir, "ui_decisions.json"), "ui_decisions.json")
+      : null,
+    finalArtifacts,
+  };
+}
+
+function issuePersistenceToken(inputArgs, review) {
+  const context = storedReviewContext(inputArgs, review);
+  if (!context) return null;
+  prunePersistenceContexts();
+  const token = crypto.randomBytes(32).toString("base64url");
+  PERSISTENCE_CONTEXTS.set(token, {
+    ...context,
+    client_engagement: inputArgs.client_engagement,
+    expires_at: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
+  });
+  return token;
+}
+
+function issuePersistenceTokenWhenBound(inputArgs, review) {
+  try {
+    return issuePersistenceToken(inputArgs, review);
+  } catch (error) {
+    if (isPlainObject(inputArgs?.review_reference)) throw error;
+    return null;
+  }
+}
+
+function inputWithReviewReference(inputArgs) {
+  if (isPlainObject(inputArgs?.review_payload)) return inputArgs;
+  const token = typeof inputArgs?.persistence_token === "string"
+    ? inputArgs.persistence_token.trim()
+    : "";
+  if (token) {
+    if (!PERSISTENCE_TOKEN_RE.test(token)) {
+      throw new Error("persistence_token has an invalid format");
+    }
+    prunePersistenceContexts();
+    const context = PERSISTENCE_CONTEXTS.get(token);
+    if (!context || context.expires_at <= Date.now()) {
+      throw new Error("persistence_token is unknown or expired; validate the review again");
+    }
+    const reviewPath = path.join(context.outputDir, "review_payload.json");
+    readRegularJson(reviewPath, "review_payload.json");
+    const currentHash = sha256Bytes(fs.readFileSync(reviewPath));
+    if (currentHash !== context.reviewHash) {
+      throw new Error("persistence_token review binding no longer matches the stored package");
+    }
+    return {
+      ...inputArgs,
+      client_engagement: context.client_engagement,
+      review_payload: context.review,
+      review_reference: {
+        path: "review_payload.json",
+        run_id: context.review.run_id,
+        review_payload_sha256: context.reviewHash,
+      },
+      run_intake: context.runIntake,
+      ui_decisions: context.uiDecisions,
+      final_artifacts: context.finalArtifacts,
+    };
+  }
+  if (isPlainObject(inputArgs?.review_reference)) {
+    const context = storedReviewContext(inputArgs);
+    return {
+      ...inputArgs,
+      review_payload: context.review,
+      review_reference: {
+        path: "review_payload.json",
+        run_id: context.review.run_id,
+        review_payload_sha256: context.reviewHash,
+      },
+      run_intake: context.runIntake,
+      ui_decisions: context.uiDecisions,
+      final_artifacts: context.finalArtifacts,
+    };
+  }
+  throw new Error("review_payload, review_reference, or persistence_token is required");
+}
+
+function publicReviewReference(token) {
+  if (!token) return null;
+  const context = PERSISTENCE_CONTEXTS.get(token);
+  return context
+    ? {
+        persistence_token: token,
+        path: "review_payload.json",
+        run_id: context.review.run_id,
+        review_payload_sha256: context.reviewHash,
+        expires_in_seconds: Math.floor(PERSISTENCE_CONTEXT_TTL_MS / 1000),
+      }
+    : null;
+}
+
 function resolveDecisionOutputPath(inputArgs) {
   const outputDir = resolveRunOutputDir(inputArgs);
   if (!outputDir) return null;
@@ -542,6 +746,18 @@ function buildUiDecisions(inputArgs) {
     item_count: reviewPayload.items.length,
     status,
   };
+  const reviewPayloadSha256 =
+    (isPlainObject(inputArgs.review_reference)
+      ? boundedOptionalString(
+          inputArgs.review_reference.review_payload_sha256,
+          "review_reference.review_payload_sha256",
+        )
+      : "") ||
+    boundedOptionalString(
+      currentUiDecisions?.review_payload_sha256,
+      "ui_decisions.review_payload_sha256",
+    );
+  if (reviewPayloadSha256) uiDecisions.review_payload_sha256 = reviewPayloadSha256;
   if (reviewer) uiDecisions.reviewer = reviewer;
   return {
     uiDecisions,
@@ -1732,7 +1948,12 @@ function hasDeepResearchClaimFixTarget(appliedDecisions) {
 
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
-    const payload = validateReviewPayload(args);
+    const resolvedArgs = inputWithReviewReference(args);
+    const payload = validateReviewPayload(resolvedArgs);
+    const persistenceToken = issuePersistenceTokenWhenBound(
+      resolvedArgs,
+      payload.review_payload,
+    );
     return {
       ok: true,
       validation_type: "deep_research_review",
@@ -1740,24 +1961,46 @@ function callTool(name, args = {}) {
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
       message: runtimeCopy(args).validationMessage,
-      review_payload: payload.review_payload,
+      review_reference: publicReviewReference(persistenceToken),
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(args);
+    const resolvedArgs = inputWithReviewReference(args);
+    const payload = validateReviewPayload(resolvedArgs);
+    const persistenceToken = issuePersistenceTokenWhenBound(
+      resolvedArgs,
+      payload.review_payload,
+    );
+    return {
+      ...payload,
+      persistence_token: persistenceToken,
+      review_reference: publicReviewReference(persistenceToken),
+    };
   }
   if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
+    return saveDecisionPayload(inputWithReviewReference(args));
   }
   if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+    return applyDecisionPayload(inputWithReviewReference(args));
   }
   throw new Error(`unknown answer-validation widget tool: ${name}`);
 }
 
 function toolResult(payload, toolName) {
+  const summary = {
+    ok: payload?.ok !== false,
+    run_id: payload?.run_id || payload?.review_payload?.run_id || null,
+    item_count: payload?.item_count ?? payload?.review_payload?.item_count ?? null,
+    status:
+      payload?.status ||
+      payload?.application_status ||
+      payload?.review_payload?.status ||
+      null,
+    message: payload?.message || null,
+    review_reference: payload?.review_reference || null,
+  };
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
+    content: [{ type: "text", text: JSON.stringify(summary) }],
     structuredContent: payload,
     isError: false,
   };

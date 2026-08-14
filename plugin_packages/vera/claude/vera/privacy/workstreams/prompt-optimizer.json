@@ -23,7 +23,7 @@
       {
         "id": "question-and-prompt",
         "purpose": "Understand the professional question, define the answer and validation contract, write route-specific generation instructions, and review their semantic conformance",
-        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions",
+        "content": "The question and facts typed or attached by the user, including names or other personal facts when material; inferred legal, tax, or compliance framing; answer contract including document type, validation scope, correction policy, and professional-judgment policy; generation route and instructions; model-led prompt-to-question and prompt-to-contract conformance assessments; source-domain sidecars; diagnostics and review decisions. The canonical review record references the full prompt audit instead of duplicating that audit in each failed check, and it does not include a question-text preview.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -54,12 +54,16 @@
     {
       "id": "client-engagement-path-isolation",
       "control": "Question inspection and prompt validation require a digest-valid Studio Archive prompt-optimizer context, accept the question and working artifacts only from that engagement, and write only to the context's run output root or a descendant."
+    },
+    {
+      "id": "hash-bound-canonical-review",
+      "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex, MCP validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Cowork consumes the same canonical local review records without the Codex MCP handoff; unmanaged or legacy runs may still use an inline payload."
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8d80abf2cdc39736c6a7a35e9d430e00f6ce835e73d99c4d621b07a83e7d42f7"
+    "source_fingerprint": "6b5a0fa847314669bd91dfb0855e028ccf1ca3766973a1b3fa2d769a7a02527f"
   }
 }
