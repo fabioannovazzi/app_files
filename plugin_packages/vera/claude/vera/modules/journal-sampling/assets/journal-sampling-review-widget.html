@@ -1957,19 +1957,24 @@
     }
     function saveToolArgs() {
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
+        client_engagement: state.payload.client_engagement || null,
+        model_review_context: {
+          ...(state.payload.model_review_binding || {}),
+          review: reviewPayload(),
+          intake: state.payload.run_intake || {},
+        },
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };
     }
     function applyToolArgs() {
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        final_artifacts: state.payload.final_artifacts || null,
+        client_engagement: state.payload.client_engagement || null,
+        model_review_context: {
+          ...(state.payload.model_review_binding || {}),
+          review: reviewPayload(),
+          intake: state.payload.run_intake || {},
+        },
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
       };

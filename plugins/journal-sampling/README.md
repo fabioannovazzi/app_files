@@ -145,8 +145,9 @@ They do not decide sample sufficiency or an audit conclusion.
 
 ## Local MCP Review UI
 
-Sample runs emit `run_intake.json`, `review_payload.json`, `ui_decisions.json`,
-`final_artifacts.json`, `sample_assurance_gates.json`,
+Sample runs emit `run_intake.json`, `review_payload.json`,
+`model_review_context.json`, `ui_decisions.json`, `final_artifacts.json`,
+`sample_assurance_gates.json`,
 `sample_assurance_envelope.json`, `sample_material_value_ledger.json`,
 `sample_reproducibility.json`, and `sample_output_receipts.json` in the sample
 output folder.
@@ -169,9 +170,14 @@ complete accepted decision set is
 remains `not_assessed`, reporting remains `blocked`, publication remains
 `withheld`, and `report_ready` remains false.
 
-If MCP rendering is unavailable, Codex should use the JSON payloads plus
-`sampling_audit.json`, `journal_sample.csv`, and `journal_sample.xlsx` as the
-fallback review surface.
+The model-facing MCP tools use the digest-bound `model_review_context.json`:
+semantic sampling evidence and review actions are preserved, while the complete
+client/run control envelope stays local and exact known file references use
+stable opaque aliases. The current Studio Archive context path is still supplied
+when persisted review is requested so the local MCP server can load and verify
+the full records. If MCP rendering is unavailable, Codex should begin from the
+minimized context and open `sampling_audit.json`, `journal_sample.csv`, or
+`journal_sample.xlsx` only for a specific unresolved review question.
 
 ## Supported Languages
 

@@ -84,7 +84,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.129"
+    assert manifest["version"] == "0.1.130"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
@@ -570,6 +570,15 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "sealed client-bound run remains pending" in journal
     assert "Cowork cannot issue a Studio Archive Check Entries context" in check_entries
     assert "sealed client-bound check remains pending" in check_entries
+    assert "`sample/model_review_context.json`" in journal
+    normalized_journal = " ".join(journal.split())
+    normalized_check_entries = " ".join(check_entries.split())
+    assert "Do not load `run_intake.json`, `review_payload.json`" in normalized_journal
+    assert "non-identifying case index" in normalized_check_entries
+    assert "no more than 25 specifically selected cases" in normalized_check_entries
+    assert "do not read the complete `review_payload.json`" in normalized_check_entries
+    assert "routing controls, not anonymization or pseudonymization" in normalized_check_entries
+    assert "only for a specific unresolved review question" in normalized_journal
     assert "one exact immutable journal binding" in journal
     for artifact_id in (
         "prepared.normalized_journal",

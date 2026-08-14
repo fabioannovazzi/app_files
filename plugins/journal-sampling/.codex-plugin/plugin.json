@@ -1,6 +1,6 @@
 {
   "name": "journal-sampling",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Deterministic journal extraction and audit sample selection guided by Codex.",
   "author": {
     "name": "Mparanza",

@@ -21,9 +21,18 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "journal-and-sample-review",
-        "purpose": "Resolve journal mappings and explain the sampling design and selected sample",
-        "content": "User instructions; the stable Studio Archive client, engagement and run identifiers; the exact journal input receipt and run-local execution copy; the customer-folder output root and lifecycle state; journal data or normalized rows; mappings; population statistics; sampling parameters; selected rows; diagnostics, artifact purposes and audiences, and review decisions",
+        "id": "journal-qualification-and-sampling",
+        "purpose": "Resolve source mappings and produce and explain the sampling design",
+        "content": "User instructions; the current Studio Archive client, engagement and run context needed to locate the managed source; the exact journal input selected by that context; source headers and a bounded preview during mapping; reviewed mappings; normalized journal rows when the professional task requires their interpretation; complete-population statistics computed locally; sampling parameters; diagnostics; and selected sample rows",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "minimized-sample-review",
+        "purpose": "Review the sampling basis and at most 750 selected entries without transporting the complete local assurance envelope",
+        "content": "model_review_context.json: mapping decisions, diagnostics, population statistics, sampling parameters, selected semantic rows and allowed review actions. Names, descriptions, dates, amounts, identifiers and other row content remain when they are part of the professional review. Exact known file and directory references are replaced by stable opaque ref-* aliases; the full run_intake.json, review_payload.json, ui_decisions.json, final_artifacts.json, source-path list, filesystem paths, timestamps and client-engagement object remain local. In Codex, a current Studio Archive context path is still supplied to the MCP tool when persisted review is requested, so the local server can resolve and verify those complete records. Cowork begins from the same minimized file, treats MCP as optional, opens complete artifacts only for a specific unresolved question, and cannot issue or finalize the Studio Archive run itself.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -54,6 +63,10 @@
       "control": "The MCP parent binds caller run, review, decision, and final objects to the persisted trusted snapshot, reconstructs authorized staged arguments, independently validates the persisted result and readiness, and treats helper-returned paths, effects, and status only as non-authoritative acknowledgements."
     },
     {
+      "id": "digest-bound-model-review-projection",
+      "control": "The deterministic review builder creates model_review_context.json from an allowlisted semantic projection, replaces exact known technical references with stable opaque aliases, removes the client-engagement object, source-path list, timestamps and filesystem paths, and binds the projection to the complete local review digest. MCP tools accept that projection and the current managed-context locator, load full control artifacts locally, reject any projection or caller-state mismatch, and return path-minimized review results. This is technical pseudonymization of references, not anonymization of professional journal data."
+    },
+    {
       "id": "exact-sample-output-and-successor-chain",
       "control": "The sample stage and each review successor seal the exact regular single-link file, directory and mode set, archive every trusted predecessor under its canonical stage identity, bind the successor to the predecessor manifest, and freshly rederive decisions, effects, counts and non-final gates before accepting save or apply."
     }
@@ -62,6 +75,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d80dcc26d43b8619daa7941ddaaeb1eaa6150c72c383d3bc2eb20880a6603eb7"
+    "source_fingerprint": "25ca339b5e734be2821cd49257bedf0a745c9a1f4be7edf4d372c7d533885540"
   }
 }

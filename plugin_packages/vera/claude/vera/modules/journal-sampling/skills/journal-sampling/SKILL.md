@@ -305,6 +305,7 @@ Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sa
   successor;
 - `sample/run_intake.json`;
 - `sample/review_payload.json`;
+- `sample/model_review_context.json`;
 - `sample/ui_decisions.json`;
 - `sample/applied_decisions.json` after reviewer decisions are applied;
 - `sample/final_artifacts.json`.
@@ -313,15 +314,23 @@ Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sa
 
 The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
-folder. Review those artifacts directly. Report the package as
-`ready_for_professional_review` where that status exists, otherwise as
-`pending_review`.
+folder. For model-led sample review, begin with
+`sample/model_review_context.json`. It preserves the semantic sample,
+parameters, diagnostics, counts, and review actions while replacing exact known
+technical file references with stable opaque aliases. Do not load
+`run_intake.json`, `review_payload.json`, `ui_decisions.json`, or
+`final_artifacts.json` into model context. Open `sampling_audit.json`,
+`journal_sample.csv`, or `journal_sample.xlsx` only for a specific unresolved
+review question. Report the package as `ready_for_professional_review` where
+that status exists, otherwise as `pending_review`.
 
-When a validated MCP tool, browser interface, or local workbench is callable, it
-may optionally persist or apply reviewer actions. Its absence never blocks
-delivery. Never claim `applied` or `final_ready` unless corresponding persisted
-artifacts prove it. A file or chat review without those artifacts remains
-pending professional review.
+When a validated MCP tool, browser interface, or local workbench is callable,
+it may optionally persist or apply reviewer actions using the minimized context;
+a compatible local Vera context path may still be required so the local tool
+can resolve complete control records. Its absence never blocks delivery. Never
+claim `applied` or `final_ready` unless corresponding persisted artifacts prove
+it. A file or chat review without those artifacts remains pending professional
+review.
 
 Review actions cannot waive a failed deterministic check. Keep failed checks,
 missing evidence, unresolved decisions, and applicable blockers visible in the

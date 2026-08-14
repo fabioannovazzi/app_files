@@ -287,6 +287,59 @@ Review actions cannot waive a failed deterministic check. Keep failed checks,
 missing evidence, unresolved decisions, and applicable blockers visible in the
 artifact card and final response."""
 
+COWORK_MINIMIZED_REVIEW_HANDOFF_BODIES = {
+    "modules/journal-sampling/skills/journal-sampling/SKILL.md": """The normal Cowork completion point is delivery
+of the reviewable draft, artifact card, and source/review files in the connected
+folder. For model-led sample review, begin with
+`sample/model_review_context.json`. It preserves the semantic sample,
+parameters, diagnostics, counts, and review actions while replacing exact known
+technical file references with stable opaque aliases. Do not load
+`run_intake.json`, `review_payload.json`, `ui_decisions.json`, or
+`final_artifacts.json` into model context. Open `sampling_audit.json`,
+`journal_sample.csv`, or `journal_sample.xlsx` only for a specific unresolved
+review question. Report the package as `ready_for_professional_review` where
+that status exists, otherwise as `pending_review`.
+
+When a validated MCP tool, browser interface, or local workbench is callable,
+it may optionally persist or apply reviewer actions using the minimized context;
+a compatible local Vera context path may still be required so the local tool
+can resolve complete control records. Its absence never blocks delivery. Never
+claim `applied` or `final_ready` unless corresponding persisted artifacts prove
+it. A file or chat review without those artifacts remains pending professional
+review.
+
+Review actions cannot waive a failed deterministic check. Keep failed checks,
+missing evidence, unresolved decisions, and applicable blockers visible in the
+artifact card and final response.""",
+    "modules/check-entries/skills/check-entries/SKILL.md": """The normal Cowork completion point is delivery
+of the reviewable draft, artifact card, and source/review files in the connected
+folder. When the Check Entries review MCP is callable, pass the local
+`review_payload.json` path to validation so the server loads the private file
+without placing it in model context. Begin from the returned non-identifying
+case index and opaque review reference, then request no more than 25
+specifically selected cases at a time. Physical paths, filenames, write targets,
+technical row and artifact IDs, empty fields, and duplicate facts stay out.
+Exact invoice, movement, account, tax, and reference identifiers stay off by
+default and are requested only when a selected evidence judgment requires exact
+identity comparison. If the MCP is unavailable, prepare the same bounded
+projection only for specifically selected cases; do not read the complete
+`review_payload.json` into model context. Report the package as
+`ready_for_professional_review` where that status exists, otherwise as
+`pending_review`.
+
+When a validated MCP tool, browser interface, or local workbench is callable,
+it may optionally persist or apply reviewer actions from its private review
+reference. Its absence never blocks delivery. Never claim `applied` or
+`final_ready` unless corresponding persisted artifacts prove it. A file or
+chat review without those artifacts remains pending professional review.
+Opaque case handles are routing controls, not anonymization or
+pseudonymization of selected professional facts.
+
+Review actions cannot waive a failed deterministic check. Keep failed checks,
+missing evidence, unresolved decisions, and applicable blockers visible in the
+artifact card and final response.""",
+}
+
 CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
         "attribute-reporting",
@@ -1753,10 +1806,14 @@ def project_cowork_skill(
     review_section = COWORK_REVIEW_SECTIONS.get(relative_path)
     if review_section is not None:
         source_heading, projected_heading = review_section
+        review_body = COWORK_MINIMIZED_REVIEW_HANDOFF_BODIES.get(
+            relative_path,
+            COWORK_REVIEW_HANDOFF_BODY,
+        )
         text = _replace_section(
             text,
             source_heading,
-            f"{projected_heading}\n\n{COWORK_REVIEW_HANDOFF_BODY}",
+            f"{projected_heading}\n\n{review_body}",
         )
     text = _project_optional_review_language(text)
     text = text.replace(SPECIALIST_FEEDBACK_HANDOFF, "")

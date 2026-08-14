@@ -663,10 +663,10 @@
         </div>
       </div>
       <div class="journey-steps">
-        <article class="journey-step"><h3 data-journey="model.source.title">Il modello può leggere il giornale</h3><p data-journey="model.source.copy">Per qualificare la mappatura, il modello può ricevere gli identificativi del cliente, dell'incarico e del run, la ricevuta e il percorso del file, le intestazioni e il giornale fornito o la popolazione normalizzata quando servono a risolvere ambiguità.</p></article>
+        <article class="journey-step"><h3 data-journey="model.source.title">Il modello può leggere il giornale durante la mappatura</h3><p data-journey="model.source.copy">Per qualificare la fonte, il modello può ricevere il contesto corrente di cliente, incarico e run, la ricevuta e il percorso del file, le intestazioni e il giornale fornito o le righe normalizzate quando servono a risolvere ambiguità.</p></article>
         <article class="journey-step"><h3 data-journey="model.preview.title">L'ispezione mostra un estratto preciso</h3><p data-journey="model.preview.copy">Per ogni file l'ispezione prepara al massimo le prime 20 righe canoniche: data, numeri di movimento e riga, conto e descrizioni, dare, avere, importi, valuta, unità e posizione nel file.</p></article>
-        <article class="journey-step"><h3 data-journey="model.local.title">Il codice elabora tutta la popolazione</h3><p data-journey="model.local.copy">Normalizzazione, filtri e campionamento sono eseguiti dal codice sull'intera popolazione. Per la revisione, il modello può ricevere mappatura, diagnostiche, conteggi, metodo, seed, filtri e fino a 750 righe selezionate; i file completi restano disponibili nel fascicolo e possono essere aperti durante il lavoro.</p></article>
-        <article class="journey-step"><h3 data-journey="model.runtime.title">Nessuna anonimizzazione automatica</h3><p data-journey="model.runtime.copy">Vera non applica anonimizzazione o pseudonimizzazione automatica e non garantisce un'elaborazione solo locale.</p></article>
+        <article class="journey-step"><h3 data-journey="model.local.title">Il codice elabora tutta la popolazione; la revisione riceve una proiezione ridotta</h3><p data-journey="model.local.copy">Normalizzazione, filtri e campionamento sono eseguiti dal codice sull'intera popolazione. Per la revisione standard, model_review_context.json contiene mappatura, diagnostiche, conteggi, metodo, seed, filtri e fino a 750 righe selezionate; elimina l'oggetto cliente-incarico, l'elenco dei percorsi, timestamp e percorsi tecnici e sostituisce i riferimenti noti ai file con alias ref-*. Per salvare la revisione, il modello passa ancora il percorso del contesto Studio Archive corrente al server locale.</p></article>
+        <article class="journey-step"><h3 data-journey="model.runtime.title">Riferimenti tecnici pseudonimizzati, dati professionali non anonimizzati</h3><p data-journey="model.runtime.copy">Gli alias ref-* riducono l'esposizione tecnica senza togliere significato al campione. Nomi, conti, descrizioni, identificativi, date e importi restano quando servono alla revisione. Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale; i file completi restano locali salvo apertura per una domanda specifica rimasta irrisolta.</p></article>
       </div>
     </section>
 
@@ -1308,62 +1308,62 @@
       it: {
         "model.eyebrow": "Trattamento dei dati",
         "model.title": "Quali dati arrivano al modello",
-        "model.source.title": "Il modello può leggere il giornale",
-        "model.source.copy": "Per qualificare la mappatura, il modello può ricevere gli identificativi del cliente, dell'incarico e del run, la ricevuta e il percorso del file, le intestazioni e il giornale fornito o la popolazione normalizzata quando servono a risolvere ambiguità.",
+        "model.source.title": "Il modello può leggere il giornale durante la mappatura",
+        "model.source.copy": "Per qualificare la fonte, il modello può ricevere il contesto corrente di cliente, incarico e run, la ricevuta e il percorso del file, le intestazioni e il giornale fornito o le righe normalizzate quando servono a risolvere ambiguità.",
         "model.preview.title": "L'ispezione mostra un estratto preciso",
         "model.preview.copy": "Per ogni file l'ispezione prepara al massimo le prime 20 righe canoniche: data, numeri di movimento e riga, conto e descrizioni, dare, avere, importi, valuta, unità e posizione nel file.",
-        "model.local.title": "Il codice elabora tutta la popolazione",
-        "model.local.copy": "Normalizzazione, filtri e campionamento sono eseguiti dal codice sull'intera popolazione. Per la revisione, il modello può ricevere mappatura, diagnostiche, conteggi, metodo, seed, filtri e fino a 750 righe selezionate; i file completi restano disponibili nel fascicolo e possono essere aperti durante il lavoro.",
-        "model.runtime.title": "Nessuna anonimizzazione automatica",
-        "model.runtime.copy": "Vera non applica anonimizzazione o pseudonimizzazione automatica e non garantisce un'elaborazione solo locale."
+        "model.local.title": "Il codice elabora tutta la popolazione; la revisione riceve una proiezione ridotta",
+        "model.local.copy": "Normalizzazione, filtri e campionamento sono eseguiti dal codice sull'intera popolazione. Per la revisione standard, model_review_context.json contiene mappatura, diagnostiche, conteggi, metodo, seed, filtri e fino a 750 righe selezionate; elimina l'oggetto cliente-incarico, l'elenco dei percorsi, timestamp e percorsi tecnici e sostituisce i riferimenti noti ai file con alias ref-*. Per salvare la revisione, il modello passa ancora il percorso del contesto Studio Archive corrente al server locale.",
+        "model.runtime.title": "Riferimenti tecnici pseudonimizzati, dati professionali non anonimizzati",
+        "model.runtime.copy": "Gli alias ref-* riducono l'esposizione tecnica senza togliere significato al campione. Nomi, conti, descrizioni, identificativi, date e importi restano quando servono alla revisione. Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale; i file completi restano locali salvo apertura per una domanda specifica rimasta irrisolta."
       },
       en: {
         "model.eyebrow": "Data handling",
         "model.title": "What data reaches the model",
-        "model.source.title": "The model can read the journal",
-        "model.source.copy": "To qualify the mapping, the model may receive the client, engagement, and run identifiers; the file receipt and path; the headers; and the supplied journal or normalized population when they are needed to resolve ambiguity.",
+        "model.source.title": "The model can read the journal during mapping",
+        "model.source.copy": "To qualify the source, the model may receive the current client, engagement, and run context; the file receipt and path; the headers; and the supplied journal or normalized rows when they are needed to resolve ambiguity.",
         "model.preview.title": "Inspection shows a precise extract",
         "model.preview.copy": "For each file, inspection prepares at most the first 20 canonical rows: date, movement and line numbers, account and descriptions, debit, credit, amounts, currency, unit, and source location.",
-        "model.local.title": "Code processes the full population",
-        "model.local.copy": "Code normalizes, filters, and samples the complete population. For review, the model may receive the mapping, diagnostics, counts, method, seed, filters, and up to 750 selected rows; the complete files remain available in the case and can be opened during the work.",
-        "model.runtime.title": "No automatic anonymization",
-        "model.runtime.copy": "Vera applies no automatic anonymization or pseudonymization and does not guarantee local-only processing."
+        "model.local.title": "Code processes the full population; review receives a reduced projection",
+        "model.local.copy": "Code normalizes, filters, and samples the complete population. For standard review, model_review_context.json contains the mapping, diagnostics, counts, method, seed, filters, and up to 750 selected rows; it removes the client-engagement object, path list, timestamps, and technical paths and replaces known file references with ref-* aliases. To persist the review, the model still passes the current Studio Archive context path to the local server.",
+        "model.runtime.title": "Technical references are pseudonymized; professional data is not anonymized",
+        "model.runtime.copy": "The ref-* aliases reduce technical exposure without removing the sample's meaning. Names, accounts, descriptions, identifiers, dates, and amounts remain when review needs them. There is no automatic anonymization or local-only guarantee; complete files remain local unless opened for a specific unresolved question."
       },
       fr: {
         "model.eyebrow": "Traitement des données",
         "model.title": "Quelles données parviennent au modèle",
-        "model.source.title": "Le modèle peut lire le journal",
-        "model.source.copy": "Pour qualifier le mapping, le modèle peut recevoir les identifiants du client, de la mission et de l'exécution, le reçu et le chemin du fichier, les en-têtes ainsi que le journal fourni ou la population normalisée lorsqu'ils sont nécessaires pour lever une ambiguïté.",
+        "model.source.title": "Le modèle peut lire le journal pendant le mapping",
+        "model.source.copy": "Pour qualifier la source, le modèle peut recevoir le contexte actuel du client, de la mission et de l'exécution, le reçu et le chemin du fichier, les en-têtes ainsi que le journal fourni ou les lignes normalisées lorsqu'ils sont nécessaires pour lever une ambiguïté.",
         "model.preview.title": "L'inspection montre un extrait précis",
         "model.preview.copy": "Pour chaque fichier, l'inspection prépare au maximum les 20 premières lignes canoniques : date, numéros de mouvement et de ligne, compte et libellés, débit, crédit, montants, devise, unité et emplacement dans la source.",
-        "model.local.title": "Le code traite toute la population",
-        "model.local.copy": "Le code normalise, filtre et échantillonne l'ensemble de la population. Pour la revue, le modèle peut recevoir le mapping, les diagnostics, les décomptes, la méthode, la graine, les filtres et jusqu'à 750 lignes sélectionnées ; les fichiers complets restent disponibles dans le dossier et peuvent être ouverts pendant le travail.",
-        "model.runtime.title": "Pas d’anonymisation automatique",
-        "model.runtime.copy": "Vera n'applique aucune anonymisation ou pseudonymisation automatique et ne garantit pas un traitement uniquement local."
+        "model.local.title": "Le code traite toute la population ; la revue reçoit une projection réduite",
+        "model.local.copy": "Le code normalise, filtre et échantillonne l'ensemble de la population. Pour la revue standard, model_review_context.json contient le mapping, les diagnostics, les décomptes, la méthode, la graine, les filtres et jusqu'à 750 lignes sélectionnées ; il retire l'objet client-mission, la liste des chemins, les horodatages et les chemins techniques, et remplace les références de fichiers connues par des alias ref-*. Pour enregistrer la revue, le modèle transmet encore au serveur local le chemin du contexte Studio Archive actuel.",
+        "model.runtime.title": "Références techniques pseudonymisées ; données professionnelles non anonymisées",
+        "model.runtime.copy": "Les alias ref-* réduisent l'exposition technique sans enlever le sens de l'échantillon. Noms, comptes, libellés, identifiants, dates et montants restent présents lorsqu'ils sont nécessaires à la revue. Il n'y a ni anonymisation automatique ni garantie de traitement uniquement local ; les fichiers complets restent locaux sauf ouverture pour une question précise non résolue."
       },
       de: {
         "model.eyebrow": "Datenverarbeitung",
         "model.title": "Welche Daten das Modell erhält",
-        "model.source.title": "Das Modell kann das Journal lesen",
-        "model.source.copy": "Zur Qualifizierung der Zuordnung kann das Modell Mandanten-, Auftrags- und Laufkennungen, Dateibeleg und Dateipfad, Überschriften sowie bei Bedarf das bereitgestellte Journal oder den normalisierten Bestand erhalten, wenn Unklarheiten aufzulösen sind.",
+        "model.source.title": "Das Modell kann das Journal bei der Zuordnung lesen",
+        "model.source.copy": "Zur Qualifizierung der Quelle kann das Modell den aktuellen Mandanten-, Auftrags- und Laufkontext, Dateibeleg und Dateipfad, Überschriften sowie bei Bedarf das bereitgestellte Journal oder normalisierte Zeilen erhalten, wenn Unklarheiten aufzulösen sind.",
         "model.preview.title": "Die Prüfung zeigt einen genau begrenzten Auszug",
         "model.preview.copy": "Für jede Datei bereitet die Prüfung höchstens die ersten 20 kanonischen Zeilen auf: Datum, Bewegungs- und Zeilennummern, Konto und Beschreibungen, Soll, Haben, Beträge, Währung, Einheit und Quellposition.",
-        "model.local.title": "Der Code verarbeitet den vollständigen Bestand",
-        "model.local.copy": "Der Code normalisiert, filtert und beprobt den vollständigen Bestand. Zur Prüfung kann das Modell Zuordnung, Diagnosen, Anzahlen, Verfahren, Seed, Filter und bis zu 750 ausgewählte Zeilen erhalten; die vollständigen Dateien bleiben im Vorgang verfügbar und können während der Arbeit geöffnet werden.",
-        "model.runtime.title": "Keine automatische Anonymisierung",
-        "model.runtime.copy": "Vera führt keine automatische Anonymisierung oder Pseudonymisierung durch und garantiert keine ausschließlich lokale Verarbeitung."
+        "model.local.title": "Der Code verarbeitet den vollständigen Bestand; die Prüfung erhält eine reduzierte Projektion",
+        "model.local.copy": "Der Code normalisiert, filtert und beprobt den vollständigen Bestand. Für die Standardprüfung enthält model_review_context.json Zuordnung, Diagnosen, Anzahlen, Verfahren, Seed, Filter und bis zu 750 ausgewählte Zeilen; Mandanten-Auftragsobjekt, Pfadliste, Zeitstempel und technische Pfade werden entfernt und bekannte Dateiverweise durch ref-*-Aliase ersetzt. Zum Speichern übermittelt das Modell weiterhin den Pfad des aktuellen Studio-Archive-Kontexts an den lokalen Server.",
+        "model.runtime.title": "Technische Verweise sind pseudonymisiert; Fachdaten nicht anonymisiert",
+        "model.runtime.copy": "Die ref-*-Aliase reduzieren technische Offenlegung, ohne die Aussage der Stichprobe zu entfernen. Namen, Konten, Beschreibungen, Kennungen, Daten und Beträge bleiben erhalten, wenn die Prüfung sie benötigt. Es gibt keine automatische Anonymisierung oder Nur-lokal-Garantie; vollständige Dateien bleiben lokal, sofern sie nicht für eine konkrete offene Frage geöffnet werden."
       },
       es: {
         "model.eyebrow": "Tratamiento de datos",
         "model.title": "Qué datos llegan al modelo",
-        "model.source.title": "El modelo puede leer el diario",
-        "model.source.copy": "Para calificar la asignación, el modelo puede recibir los identificadores del cliente, del encargo y de la ejecución, el recibo y la ruta del archivo, los encabezados y el diario aportado o la población normalizada cuando sean necesarios para resolver ambigüedades.",
+        "model.source.title": "El modelo puede leer el diario durante la asignación",
+        "model.source.copy": "Para calificar la fuente, el modelo puede recibir el contexto actual del cliente, del encargo y de la ejecución, el recibo y la ruta del archivo, los encabezados y el diario aportado o las filas normalizadas cuando sean necesarios para resolver ambigüedades.",
         "model.preview.title": "La inspección muestra un extracto preciso",
         "model.preview.copy": "Para cada archivo, la inspección prepara como máximo las primeras 20 filas canónicas: fecha, números de movimiento y línea, cuenta y descripciones, debe, haber, importes, moneda, unidad y ubicación en la fuente.",
-        "model.local.title": "El código procesa toda la población",
-        "model.local.copy": "El código normaliza, filtra y muestrea toda la población. Para la revisión, el modelo puede recibir la asignación, los diagnósticos, los recuentos, el método, la semilla, los filtros y hasta 750 filas seleccionadas; los archivos completos siguen disponibles en el expediente y pueden abrirse durante el trabajo.",
-        "model.runtime.title": "Sin anonimización automática",
-        "model.runtime.copy": "Vera no aplica anonimización ni seudonimización automáticas y no garantiza un procesamiento exclusivamente local."
+        "model.local.title": "El código procesa toda la población; la revisión recibe una proyección reducida",
+        "model.local.copy": "El código normaliza, filtra y muestrea toda la población. Para la revisión estándar, model_review_context.json contiene la asignación, los diagnósticos, los recuentos, el método, la semilla, los filtros y hasta 750 filas seleccionadas; elimina el objeto cliente-encargo, la lista de rutas, las marcas de tiempo y las rutas técnicas, y sustituye las referencias conocidas a archivos por alias ref-*. Para guardar la revisión, el modelo todavía transmite al servidor local la ruta del contexto Studio Archive actual.",
+        "model.runtime.title": "Referencias técnicas seudonimizadas; datos profesionales no anonimizados",
+        "model.runtime.copy": "Los alias ref-* reducen la exposición técnica sin quitar significado a la muestra. Nombres, cuentas, descripciones, identificadores, fechas e importes permanecen cuando son necesarios para la revisión. No hay anonimización automática ni garantía de procesamiento solo local; los archivos completos permanecen locales salvo que se abran para una cuestión concreta no resuelta."
       }
     };
     Object.entries(modelDataCopy).forEach(([lang, values]) => Object.assign(journeyCopy[lang].text, values));

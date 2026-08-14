@@ -66,6 +66,7 @@ from vera_assurance import write_json as write_assurance_json  # noqa: E402
 
 try:
     from .review_session import (
+        build_model_review_context,
         workbook_sheet_name,
         write_review_session_artifacts,
         write_run_intake,
@@ -83,6 +84,7 @@ except ImportError:  # pragma: no cover - supports direct script imports
     _review_session = importlib.util.module_from_spec(_review_session_spec)
     sys.modules[_review_session_spec.name] = _review_session
     _review_session_spec.loader.exec_module(_review_session)
+    build_model_review_context = _review_session.build_model_review_context
     workbook_sheet_name = _review_session.workbook_sheet_name
     write_review_session_artifacts = _review_session.write_review_session_artifacts
     write_run_intake = _review_session.write_run_intake
@@ -160,6 +162,7 @@ SAMPLE_OUTPUT_PAYLOAD_PATHS = (
     "sampling_audit.json",
     "run_intake.json",
     "review_payload.json",
+    "model_review_context.json",
     "ui_decisions.json",
     "review_handoff.md",
     "final_artifacts.json",
