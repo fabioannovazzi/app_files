@@ -3125,6 +3125,41 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         assert page.count(f'"{key}":') == 5
 
 
+@pytest.mark.parametrize(
+    "relative_path",
+    (
+        Path("static/shared/archive-organization/index.html"),
+        Path("static/shared/check-entries/index.html"),
+        Path("static/shared/concordato-plan-review/index.html"),
+        Path("static/shared/deep-research-validator/index.html"),
+        Path("static/shared/journal-sampling/index.html"),
+        Path("static/shared/new-client/index.html"),
+        Path("static/shared/prompt-optimizer/index.html"),
+    ),
+)
+def test_vera_process_model_data_copy_omits_provider_mapping(
+    relative_path: Path,
+) -> None:
+    page = (ROOT / relative_path).read_text(encoding="utf-8")
+    model_data = page[page.index("data-model-data-workflow=") :]
+
+    assert "OpenAI" not in model_data
+    assert "Anthropic" not in model_data
+
+
+def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
+    function_copy = (ROOT / "static/shared/product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
+    bilancio_copy = function_copy.split("const bilancioModelData =", 1)[1].split(
+        "Object.entries(bilancioModelData)", 1
+    )[0]
+
+    assert "OpenAI" not in bilancio_copy
+    assert "Anthropic" not in bilancio_copy
+    assert "Se gli strumenti di Cowork non sono disponibili" in bilancio_copy
+
+
 SHARED_PRODUCT_PAGE_PATHS = {
     Path("static/shared/deep-research-validator/index.html"),
     Path("static/shared/prompt-optimizer/index.html"),

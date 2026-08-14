@@ -511,7 +511,7 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         "jusqu'à 100 éléments manquants",
         "keine eigene Schemabegrenzung",
         "No se aplica anonimización automática",
-        "Cowork uses Anthropic and may read connected files directly",
+        "If Cowork tools are unavailable, Cowork may read connected files directly",
     ):
         assert snippet in function_copy
 
