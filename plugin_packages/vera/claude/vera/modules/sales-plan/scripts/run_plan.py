@@ -31,6 +31,7 @@ from plan_contract_kernel import (  # noqa: E402
     file_snapshot_beneath,
     pinned_directory,
 )
+from model_use import build_manifest, write_manifest  # noqa: E402
 from prepare_sales_plan_case import (  # noqa: E402
     ENGINE_VERSION,
     RECIPE_ID,
@@ -52,6 +53,7 @@ IMPLEMENTATION_FILES = (
     SCRIPTS_DIR / "prepare_sales_plan_case.py",
     SCRIPTS_DIR / "run_plan.py",
     SCRIPTS_DIR / "plan_contract_kernel.py",
+    SCRIPTS_DIR / "model_use.py",
 )
 
 
@@ -136,6 +138,27 @@ def run_plan(*, case_path: Path, output_dir: Path) -> dict[str, Any]:
         status = str(result.get("status", "failed"))
         if status not in {"failed", "passed"}:
             raise PlanRunError(f"Plan returned unsupported status: {status}")
+        prepared_outputs = []
+        for name in output_boundary.names():
+            byte_count, sha256 = output_boundary.snapshot_file(name, track=False)
+            prepared_outputs.append(
+                {
+                    "artifact_ref": Path(name).stem,
+                    "path": name,
+                    "byte_count": byte_count,
+                    "sha256": sha256,
+                }
+            )
+        model_use_manifest = build_manifest(
+            case_path=case_path,
+            case_sha256=case_sha256,
+            source_byte_count=source_byte_count,
+            source_sha256=source_sha256,
+            output_artifacts=prepared_outputs,
+            result=result,
+            status=status,
+        )
+        write_manifest(output_boundary, model_use_manifest)
         outputs = _output_receipts(output_boundary)
         _require_unchanged_file(
             case_path,

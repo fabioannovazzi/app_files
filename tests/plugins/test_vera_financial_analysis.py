@@ -109,7 +109,7 @@ def test_financial_analysis_mcp_describes_all_registered_packs() -> None:
     )
 
     responses = [json.loads(line) for line in result.stdout.splitlines()]
-    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.4"
+    assert responses[0]["result"]["serverInfo"]["version"] == "0.2.7"
     assert responses[1]["result"]["structuredContent"]["registered_packs"] == [
         "monthly_pnl",
         "working_capital",
@@ -771,6 +771,69 @@ def test_registered_pack_engines_run_under_vera_and_are_byte_deterministic(
     )
     assert manifest["schema_version"] == manifest_schema
     assert manifest["report_ready"] is False
+    model_manifest = json.loads(
+        (first_output / "model_use_manifest.json").read_text(encoding="utf-8")
+    )
+    assert model_manifest["workflow_id"] == "financial-analysis"
+    assert model_manifest["source_population"]["processing_scope"] == (
+        "complete_reviewed_in_scope_population"
+    )
+    assert model_manifest["default_model_use"]["raw_source_files_included"] is False
+    assert all(
+        "path" not in item
+        for item in model_manifest["source_population"]["source_artifacts"]
+    )
+    assert "synthetic_monthly_trial_balance.csv" not in json.dumps(model_manifest)
+
+
+def test_financial_model_use_authorizes_only_one_hash_bound_source(
+    tmp_path: Path,
+) -> None:
+    module = _load_pack_module()
+    case_path = _vera_case(
+        ROOT
+        / "plugins/clara/evals/preparation/wd40_fy2025/case.json",
+        tmp_path / "case",
+        pack_id="monthly_pnl",
+    )
+    output_dir = tmp_path / "prepared"
+    module.run_pack(
+        pack_id="monthly_pnl",
+        case_path=case_path,
+        output_dir=output_dir,
+    )
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(FINANCIAL_SCRIPTS / "model_use.py"),
+            "--manifest",
+            str(output_dir / "model_use_manifest.json"),
+            "--case",
+            str(case_path),
+            "--pack",
+            "monthly_pnl",
+            "--source-artifact-id",
+            "synthetic_monthly_trial_balance",
+            "--reason",
+            "Resolve one named trial-balance classification question.",
+            "--selector",
+            "account=synthetic",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+
+    result = json.loads(completed.stdout)
+    receipt = json.loads(Path(result["receipt_path"]).read_text(encoding="utf-8"))
+    assert receipt["source_artifact_id"] == "synthetic_monthly_trial_balance"
+    assert receipt["authorization"] == (
+        "open_only_this_named_source_for_the_recorded_question"
+    )
+    assert result["authorized_source_path"].endswith(
+        "synthetic_monthly_trial_balance.csv"
+    )
 
 
 def test_customer_concentration_uses_case_declared_fiscal_years(

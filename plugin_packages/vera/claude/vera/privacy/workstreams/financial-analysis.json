@@ -20,9 +20,18 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "financial-analysis-evidence",
-        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, reconciliation posture, and review status needed to prepare financial-analysis and financial due-diligence evidence",
-        "content": "User instructions; trial balances, general ledgers, P&L tables, receivables, payables, inventory, revenue and customer files; management adjustments; cash, debt, lease, factoring, fixed-asset and Capex records; working-capital targets; contingent-liability evidence; transaction definitions; EBITDA-to-cash and Enterprise-to-Equity bridge inputs; financial issues and deal-decision references; source identities and hashes; dataset and relationship contracts; reviewed crosswalks and decisions; calculation parameters; metric receipts; reconciliation results; prepared tables; replay evidence; limitations and review status",
+        "id": "financial-analysis-semantic-intake",
+        "purpose": "Establish the accounting meaning, perimeter, mappings, relationships, and reviewed decisions needed for one named calculation pack",
+        "content": "User instructions and the relevant reviewed accounting or due-diligence evidence: trial balances, ledgers, P&L tables, customer and group identities, balances and transactions, periods, currencies, amounts, units, adjustments, classifications, cash, debt, lease, factoring, fixed-asset, Capex and working-capital records, transaction definitions, contracts, crosswalks, evidence references, decisions and calculation parameters. The relevant source may be complete rather than sampled when its detail is required to establish accounting meaning or evidence.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "financial-analysis-post-mapping-review",
+        "purpose": "Review and interpret the complete deterministic pack after accounting meaning and source relationships are sealed",
+        "content": "By default, the model-use manifest exposes prepared tables, metric receipts, reconciliation, prepared-evidence lineage, replay evidence, limitations and review status, not the raw source files or their original filenames. A specific sealed source can be reopened only through a named, reason-recorded, hash-checked evidence request when a professional question remains unresolved. Vera performs no automatic anonymization or pseudonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -67,12 +76,16 @@
     {
       "id": "execution-receipt-freshness",
       "control": "The FDD runner snapshots the case and declared FDD recipe source set immediately before recipe invocation, verifies them and every source artifact again before completion, binds those snapshots in the execution receipt, and removes only inode-verified partial outputs after a failed run."
+    },
+    {
+      "id": "sealed-post-mapping-model-use",
+      "control": "Every pack writes a hash-bound model_use_manifest.json. It identifies sealed sources by stable artifact ID and hash without repeating original filenames. Prepared outputs are the default post-mapping model context; reopening source evidence requires one named artifact, a specific reason and an idempotent request receipt, and the current bytes must still match the sealed source hash. This is a workflow phase boundary and does not claim operating-system denial of an otherwise authorized file."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8f7c7e5716a1b4b7406eb02e918448a6162a1da300c7391e8c740b1decfd2dfb"
+    "source_fingerprint": "b1dc29f545064c2504391c5f23be7373c59d7d4356168c542233e38b13b89654"
   }
 }

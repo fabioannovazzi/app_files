@@ -8,7 +8,11 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path, PurePosixPath
 from typing import Any
 
-__all__ = ["ManagedCaseInputError", "declared_case_input_paths"]
+__all__ = [
+    "ManagedCaseInputError",
+    "declared_case_input_bindings",
+    "declared_case_input_paths",
+]
 
 _FILE_KEYS: Mapping[str, tuple[str, ...]] = {
     "monthly_pnl": (
@@ -88,49 +92,81 @@ def _declared_path(root: Path, value: object, *, label: str) -> Path:
     return root.joinpath(*relative.parts)
 
 
-def _file_input_paths(
+def _file_input_bindings(
     case: Mapping[str, Any],
     *,
     case_root: Path,
     pack_id: str,
-) -> tuple[Path, ...]:
+) -> tuple[tuple[str, Path], ...]:
     files = _mapping(case.get("files"), label="case.files")
     required = _FILE_KEYS[pack_id]
     if set(files) != set(required):
         raise ManagedCaseInputError(
             f"case.files must contain exactly {sorted(required)} for {pack_id}"
         )
-    paths: list[Path] = []
-    for file_id in required:
-        receipt = _mapping(files[file_id], label=f"case.files.{file_id}")
-        paths.append(
+    return tuple(
+        (
+            file_id,
             _declared_path(
                 case_root,
-                receipt.get("path"),
+                _mapping(files[file_id], label=f"case.files.{file_id}").get("path"),
                 label=f"case.files.{file_id}.path",
-            )
+            ),
         )
-    return tuple(paths)
+        for file_id in required
+    )
 
 
-def _fdd_source_paths(
+def _fdd_source_bindings(
     bundle: Mapping[str, Any], *, case_root: Path
-) -> tuple[Path, ...]:
+) -> tuple[tuple[str, Path], ...]:
     package = _mapping(bundle.get("package"), label="case.package")
     sources = _sequence(package.get("sources"), label="case.package.sources")
     if not sources:
         raise ManagedCaseInputError("case.package.sources must not be empty")
-    paths: list[Path] = []
+    bindings: list[tuple[str, Path]] = []
+    seen_ids: set[str] = set()
     for index, raw_source in enumerate(sources):
         source = _mapping(raw_source, label=f"case.package.sources[{index}]")
-        paths.append(
-            _declared_path(
-                case_root,
-                source.get("locator"),
-                label=f"case.package.sources[{index}].locator",
+        artifact_id = source.get("artifact_ref")
+        if not isinstance(artifact_id, str) or not artifact_id.strip():
+            artifact_id = source.get("source_id")
+        if not isinstance(artifact_id, str) or not artifact_id.strip():
+            artifact_id = f"source-{index + 1}"
+        artifact_id = artifact_id.strip()
+        if artifact_id in seen_ids:
+            raise ManagedCaseInputError(
+                f"case.package.sources contains duplicate source id: {artifact_id}"
+            )
+        seen_ids.add(artifact_id)
+        bindings.append(
+            (
+                artifact_id,
+                _declared_path(
+                    case_root,
+                    source.get("locator"),
+                    label=f"case.package.sources[{index}].locator",
+                ),
             )
         )
-    return tuple(paths)
+    return tuple(bindings)
+
+
+def declared_case_input_bindings(
+    case_path: Path, pack_id: str
+) -> tuple[tuple[str, Path], ...]:
+    """Return stable source IDs paired with their case-declared local paths."""
+
+    resolved_case, case = _load_case(case_path)
+    if pack_id in _FILE_KEYS:
+        return _file_input_bindings(
+            case,
+            case_root=resolved_case.parent,
+            pack_id=pack_id,
+        )
+    if pack_id in _FDD_PACK_IDS:
+        return _fdd_source_bindings(case, case_root=resolved_case.parent)
+    raise ManagedCaseInputError(f"unsupported financial-analysis pack: {pack_id}")
 
 
 def declared_case_input_paths(case_path: Path, pack_id: str) -> tuple[Path, ...]:
@@ -140,13 +176,7 @@ def declared_case_input_paths(case_path: Path, pack_id: str) -> tuple[Path, ...]
     ``validate_client_workflow_run`` before any engine opens or hashes them.
     """
 
-    resolved_case, case = _load_case(case_path)
-    if pack_id in _FILE_KEYS:
-        return _file_input_paths(
-            case,
-            case_root=resolved_case.parent,
-            pack_id=pack_id,
-        )
-    if pack_id in _FDD_PACK_IDS:
-        return _fdd_source_paths(case, case_root=resolved_case.parent)
-    raise ManagedCaseInputError(f"unsupported financial-analysis pack: {pack_id}")
+    return tuple(
+        path
+        for _artifact_id, path in declared_case_input_bindings(case_path, pack_id)
+    )

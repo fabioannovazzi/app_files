@@ -528,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.136"
+    assert manifest["version"] == "0.1.138"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3646,8 +3646,11 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         "Confronta Actual, Budget, Forecast o periodi precedenti",
         "prezzo, volume e mix",
         "I calcoli restano separati dall'interpretazione gestionale.",
-        "le prime 10 righe con tutte le colonne originali",
-        "pacchetto di revisione limitato ai 50 driver principali",
+        "le prime 10 righe delle sole colonne candidate",
+        "al massimo 10 righe di non più di 12 colonne nominate",
+        "tutte le corrispondenze esatte, senza campionamento",
+        "il nome originale del file o i nomi delle colonne non mappate",
+        "Il pacchetto MCP contiene al massimo i 50 driver principali",
         "Vera non anonimizza né pseudonimizza automaticamente",
     ):
         assert required_concept in variance_copy
@@ -3857,13 +3860,16 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "fdd_result.json",
         "fdd_metrics.json",
         "pack_execution_receipt.json",
+        "model_use_manifest.json",
         "contingent_liability_register.json",
         "financial_issue_register.json",
         'data-model-data-workflow="financial-analysis"',
         'data-model-data-status="relevant"',
         "Quali dati arrivano al modello",
         "What data reaches the model",
-        "Non c’è un limite di campionamento",
+        "Il codice deterministico elabora l’intera popolazione riveduta nel perimetro",
+        "senza ripetere i nomi originali dei file",
+        "una fonte originale viene riaperta solo per una domanda professionale specifica",
         "Vera non anonimizza né pseudonimizza automaticamente",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
@@ -3933,6 +3939,7 @@ def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
         "Quali dati arrivano al modello",
         "What data reaches the model",
         "tutte le righe Actual osservate nel perimetro",
+        "senza che il manifest ripeta il nome originale del file",
         "Vera non anonimizza né pseudonimizza automaticamente",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',

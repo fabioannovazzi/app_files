@@ -25,7 +25,12 @@ for _vendor_root in (
             sys.path.insert(0, str(_vendor_root))
         break
 
-from managed_case_inputs import declared_case_input_paths
+from managed_case_inputs import (
+    declared_case_input_bindings,
+    declared_case_input_paths,
+)
+from model_use import MANIFEST_NAME as MODEL_USE_MANIFEST_NAME
+from model_use import build_manifest, write_manifest
 from preparation_contract_kernel import (
     PinnedDirectory,
     canonical_json_sha256,
@@ -120,6 +125,7 @@ def _vendor_assurance_path(name: str) -> Path:
 FDD_IMPLEMENTATION_FILES = (
     _script_path("prepare_fdd_case.py"),
     _script_path("managed_case_inputs.py"),
+    _script_path("model_use.py"),
     _script_path("run_pack.py"),
     _script_path("preparation_contract_kernel.py"),
     _script_path("validate_case_contracts.py"),
@@ -144,6 +150,7 @@ PACKS: Mapping[str, PackSpec] = {
         (
             _script_path("prepare_monthly_pnl_case.py"),
             _script_path("managed_case_inputs.py"),
+            _script_path("model_use.py"),
         ),
     ),
     "working_capital": PackSpec(
@@ -153,6 +160,7 @@ PACKS: Mapping[str, PackSpec] = {
         (
             _script_path("prepare_working_capital_case.py"),
             _script_path("managed_case_inputs.py"),
+            _script_path("model_use.py"),
         ),
     ),
     "customer_concentration": PackSpec(
@@ -162,6 +170,7 @@ PACKS: Mapping[str, PackSpec] = {
         (
             _script_path("prepare_customer_concentration_case.py"),
             _script_path("managed_case_inputs.py"),
+            _script_path("model_use.py"),
         ),
     ),
     "quality_of_earnings": PackSpec(
@@ -293,6 +302,7 @@ def run_pack(
             case_path,
             root=case_path.parent,
         )
+        source_bindings = declared_case_input_bindings(case_path, pack_id)
         implementation_files = _implementation_snapshots(spec.implementation_files)
         try:
             if is_fdd_pack:
@@ -312,6 +322,19 @@ def run_pack(
                 raise PackRunError(f"pack returned unsupported status: {status}")
             if is_fdd_pack and output_boundary.names() != sorted(FDD_OUTPUT_NAMES):
                 raise PackRunError("FDD output directory contains an unsupported entry")
+            prepared_outputs = _output_receipts(
+                output_boundary,
+                track=False,
+            )
+            model_use_manifest = build_manifest(
+                pack_id=pack_id,
+                case_path=case_path,
+                case_sha256=case_sha256,
+                source_bindings=source_bindings,
+                output_artifacts=prepared_outputs,
+                status=status,
+            )
+            write_manifest(output_boundary, model_use_manifest)
             outputs = _output_receipts(
                 output_boundary,
                 track=is_fdd_pack,
@@ -357,7 +380,7 @@ def run_pack(
             ):
                 raise PackRunError("implementation files changed during pack execution")
             if is_fdd_pack and output_boundary.names() != sorted(
-                (*FDD_OUTPUT_NAMES, RECEIPT_NAME)
+                (*FDD_OUTPUT_NAMES, MODEL_USE_MANIFEST_NAME, RECEIPT_NAME)
             ):
                 raise PackRunError("FDD output directory contains an unsupported entry")
             output_boundary.verify_tracked()

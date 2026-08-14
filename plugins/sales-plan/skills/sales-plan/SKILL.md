@@ -155,7 +155,26 @@ python scripts/run_plan.py \
 5. Stop on failed reconciliation or any unmatched scope, unsupported driver,
    stale or changed source, ambiguous priority collision, incompatible driver
    combination, or missing metric.
-6. Deliver the Plan scenario and review artifacts. A passed run proves exact
+6. Read `model_use_manifest.json` after the run. For ordinary model-led review,
+   use the assumption ledger, summary, reconciliation, and prepared-evidence
+   lineage listed there. Do not load the complete row-level scenario by
+   default. When a professional question requires row detail, request exact
+   matches and only the needed prepared-scenario columns:
+
+```bash
+python scripts/model_use.py \
+  --manifest <client-run-output>/plan/model_use_manifest.json \
+  --reason <specific-professional-question> \
+  --source-row-id <exact-source-row-id> \
+  --where <column=exact-value> \
+  --column <needed-output-column> \
+  --client-engagement <client_engagement_path>
+```
+
+   Supply at least one exact row ID or filter and at least one output column.
+   The helper scans the complete sealed scenario locally and returns every
+   exact match without sampling. It never reopens the raw Actual file.
+7. Deliver the Plan scenario and review artifacts. A passed run proves exact
    execution and reproducibility; it does not approve the assumptions or the
    resulting Plan.
 
@@ -166,6 +185,8 @@ python scripts/run_plan.py \
 - `scenario_summary.csv`;
 - `reconciliation.json`;
 - `prepared_evidence_manifest.json`;
+- `model_use_manifest.json` and any explicitly requested
+  `model_drilldowns/scenario_rows_*.json` artifacts;
 - `plan_execution_receipt.json`.
 
 Every result remains `report_ready=false` until professional review.

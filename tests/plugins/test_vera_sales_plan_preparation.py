@@ -741,6 +741,7 @@ def test_run_plan_writes_a_standalone_execution_receipt(tmp_path: Path) -> None:
     )
     assert {artifact["path"] for artifact in receipt["output_artifacts"]} == {
         "assumption_application_ledger.csv",
+        "model_use_manifest.json",
         "prepared_evidence_manifest.json",
         "reconciliation.json",
         "sales_plan_scenario.csv",
@@ -750,6 +751,50 @@ def test_run_plan_writes_a_standalone_execution_receipt(tmp_path: Path) -> None:
         (output_dir / "plan_execution_receipt.json").read_text(encoding="utf-8")
     )
     assert written_receipt == receipt
+
+    model_manifest = json.loads(
+        (output_dir / "model_use_manifest.json").read_text(encoding="utf-8")
+    )
+    assert model_manifest["source_population"]["source_rows"] == 4
+    assert "path" not in model_manifest["source_population"]["actual_sales"]
+    assert "actual_sales.csv" not in json.dumps(model_manifest)
+    assert model_manifest["default_model_use"]["row_level_scenario_included"] is False
+    assert model_manifest["default_model_use"]["raw_actual_sales_included"] is False
+    assert "sales_plan_scenario.csv" not in {
+        artifact["path"]
+        for artifact in model_manifest["default_model_use"]["artifacts"]
+    }
+
+    scenario_rows = _read_csv(output_dir / "sales_plan_scenario.csv")
+    source_row_id = scenario_rows[0]["source_row_id"]
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(PLAN_SCRIPTS / "model_use.py"),
+            "--manifest",
+            str(output_dir / "model_use_manifest.json"),
+            "--reason",
+            "Check the exact gross-sales movement for one reviewed source row.",
+            "--source-row-id",
+            source_row_id,
+            "--column",
+            "gross_sales_reporting",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    drilldown_result = json.loads(completed.stdout)
+    drilldown = json.loads(
+        Path(drilldown_result["artifact_path"]).read_text(encoding="utf-8")
+    )
+    assert drilldown["full_population_rows_scanned_locally"] == len(scenario_rows)
+    assert drilldown["matched_row_count"] == 2
+    assert set(drilldown["rows"][0]) == {
+        "source_row_id",
+        "scenario",
+        "gross_sales_reporting",
+    }
 
 
 def test_run_plan_canonicalizes_standard_macos_tempfile_paths() -> None:
@@ -797,7 +842,7 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
     responses = [json.loads(line) for line in result.stdout.splitlines()]
     assert responses[0]["result"]["serverInfo"] == {
         "name": "vera-sales-plan",
-        "version": "0.1.3",
+        "version": "0.1.6",
     }
     payload = responses[1]["result"]["structuredContent"]
     assert payload["workflow"] == "vera.sales_plan"
@@ -807,9 +852,10 @@ def test_sales_plan_mcp_describes_only_the_plan_workflow() -> None:
         "sales_plan_scenario.csv",
         "assumption_application_ledger.csv",
         "scenario_summary.csv",
-        "reconciliation.json",
-        "prepared_evidence_manifest.json",
-        "plan_execution_receipt.json",
+            "reconciliation.json",
+            "prepared_evidence_manifest.json",
+            "model_use_manifest.json",
+            "plan_execution_receipt.json",
     ]
 
 

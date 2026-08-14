@@ -18,6 +18,7 @@ const ARTIFACTS = [
   "scenario_summary.csv",
   "reconciliation.json",
   "prepared_evidence_manifest.json",
+  "model_use_manifest.json",
   "plan_execution_receipt.json",
 ];
 
