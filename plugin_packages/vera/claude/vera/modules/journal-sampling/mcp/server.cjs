@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("node:fs");
+const crypto = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline");
 const childProcess = require("node:child_process");
@@ -281,8 +282,19 @@ function normalizeRuntimeLanguage(value) {
 function runtimeLanguage(inputArgs = {}) {
   if (typeof inputArgs === "string") return normalizeRuntimeLanguage(inputArgs) || "en";
   const args = isPlainObject(inputArgs) ? inputArgs : {};
-  const reviewPayload = isPlainObject(args.review_payload) ? args.review_payload : {};
-  const runIntake = isPlainObject(args.run_intake) ? args.run_intake : {};
+  const modelContext = isPlainObject(args.model_review_context)
+    ? args.model_review_context
+    : {};
+  const reviewPayload = isPlainObject(args.review_payload)
+    ? args.review_payload
+    : isPlainObject(modelContext.review)
+      ? modelContext.review
+      : {};
+  const runIntake = isPlainObject(args.run_intake)
+    ? args.run_intake
+    : isPlainObject(modelContext.intake)
+      ? modelContext.intake
+      : {};
   const assumptions = isPlainObject(runIntake.assumptions) ? runIntake.assumptions : {};
   const meta = isPlainObject(args.meta)
     ? args.meta
@@ -385,15 +397,34 @@ function toolDefinitions() {
     },
     ["schema_version", "plugin", "workflow", "run_id", "items", "item_count"],
   );
+  const modelReviewContext = objectSchema(
+    {
+      schema_version: { type: "string" },
+      plugin: { type: "string" },
+      workflow: { type: "string" },
+      review_ref: { type: "string" },
+      review_payload_content_sha256: { type: "string" },
+      review: reviewPayload,
+      intake: { type: "object" },
+      minimization: { type: "object" },
+      content_sha256: { type: "string" },
+    },
+    [
+      "schema_version",
+      "plugin",
+      "workflow",
+      "review_ref",
+      "review_payload_content_sha256",
+      "review",
+      "content_sha256",
+    ],
+  );
   const inputSchema = objectSchema(
     {
       client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
-      run_intake: { type: "object", description: "Optional run_intake.json object." },
-      review_payload: reviewPayload,
-      ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
-      final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
+      model_review_context: modelReviewContext,
     },
-    ["review_payload"],
+    ["model_review_context"],
   );
   const decisionSchema = objectSchema(
     {
@@ -412,21 +443,19 @@ function toolDefinitions() {
   const decisionInputSchema = objectSchema(
     {
       client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
-      run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
-      review_payload: reviewPayload,
-      ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
+      model_review_context: modelReviewContext,
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["client_engagement", "review_payload", "decisions"],
+    ["client_engagement", "model_review_context", "decisions"],
   );
   return [
     {
       name: TOOL_NAMES.validateReview,
       title: "Validate Journal Sampling review payload",
       description:
-        "Validate the Journal Sampling review-session payload before rendering. Call this first, then render_journal_sampling_review.",
+        "Validate the minimized Journal Sampling model-review context before rendering. The complete assured payload remains local.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -439,7 +468,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.renderReview,
       title: "Render Journal Sampling review",
       description:
-        "Render a Journal Sampling review-session payload as an MCP HTML widget for sampling controls, sampled entries, diagnostics, and artifacts.",
+        "Render the minimized Journal Sampling review context as an MCP HTML widget while complete control metadata remains local.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
@@ -453,7 +482,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.saveDecisions,
       title: "Save Journal Sampling review decisions",
       description:
-        "Validate Journal Sampling review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+        "Validate Journal Sampling decisions against the locally persisted assured review and save them without receiving the complete control payload.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -466,7 +495,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.applyDecisions,
       title: "Apply Journal Sampling review decisions",
       description:
-        "Validate Journal Sampling review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+        "Apply Journal Sampling decisions against the locally persisted assured review without receiving the complete control payload.",
       inputSchema: decisionInputSchema,
       annotations: {
         readOnlyHint: false,
@@ -520,6 +549,245 @@ function boundedOptionalString(value, fieldPath) {
     throw new Error(`${fieldPath} exceeds ${MAX_DECISION_TEXT_LENGTH} characters`);
   }
   return value.trim();
+}
+
+function journalSha256(value) {
+  return crypto
+    .createHash("sha256")
+    .update(journalReviewStableJson(value), "utf8")
+    .digest("hex");
+}
+
+function validateModelReviewContext(inputArgs) {
+  if (!isPlainObject(inputArgs)) throw new Error("tool arguments must be an object");
+  const context = inputArgs.model_review_context;
+  if (!isPlainObject(context)) {
+    throw new Error("model_review_context must be an object");
+  }
+  if (
+    context.schema_version !== "vera.model_review_context.v1" ||
+    context.plugin !== "journal-sampling" ||
+    context.workflow !== "journal-sampling"
+  ) {
+    throw new Error("model_review_context identity is invalid");
+  }
+  requireString(context.review_ref, "model_review_context.review_ref");
+  requireString(
+    context.review_payload_content_sha256,
+    "model_review_context.review_payload_content_sha256",
+  );
+  requireString(context.content_sha256, "model_review_context.content_sha256");
+  const content = cloneJournalReviewTransactionValue(context);
+  delete content.content_sha256;
+  if (
+    !/^[0-9a-f]{64}$/.test(context.content_sha256) ||
+    context.content_sha256 !== journalSha256(content)
+  ) {
+    throw new Error("model_review_context content digest is stale");
+  }
+  if (!isPlainObject(context.review) || !isPlainObject(context.intake)) {
+    throw new Error("model_review_context review and intake are required");
+  }
+  const projected = validateReviewPayload({ review_payload: context.review });
+  if (projected.review_payload.run_id !== context.review_ref) {
+    throw new Error("model_review_context review reference does not close");
+  }
+  return context;
+}
+
+function modelContextBoundArgs(inputArgs) {
+  const context = validateModelReviewContext(inputArgs);
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) {
+    return {
+      ...inputArgs,
+      run_intake: cloneJournalReviewTransactionValue(context.intake),
+      review_payload: cloneJournalReviewTransactionValue(context.review),
+    };
+  }
+  const persistedContext = readJsonFileIfPresent(
+    path.join(outputDir, "model_review_context.json"),
+  );
+  const runIntake = readJsonFileIfPresent(path.join(outputDir, "run_intake.json"));
+  const reviewPayload = readJsonFileIfPresent(
+    path.join(outputDir, "review_payload.json"),
+  );
+  const uiDecisions = readJsonFileIfPresent(
+    path.join(outputDir, "ui_decisions.json"),
+  );
+  const finalArtifacts = readJsonFileIfPresent(
+    path.join(outputDir, "final_artifacts.json"),
+  );
+  if (
+    !isPlainObject(persistedContext) ||
+    !isPlainObject(runIntake) ||
+    !isPlainObject(reviewPayload) ||
+    journalReviewStableJson(context) !== journalReviewStableJson(persistedContext) ||
+    context.review_payload_content_sha256 !== journalSha256(reviewPayload)
+  ) {
+    throw new Error(
+      "model_review_context does not match the persisted Journal Sampling review",
+    );
+  }
+  for (const [field, persisted] of [
+    ["run_intake", runIntake],
+    ["review_payload", reviewPayload],
+    ["ui_decisions", uiDecisions],
+    ["final_artifacts", finalArtifacts],
+  ]) {
+    if (
+      inputArgs[field] != null &&
+      journalReviewStableJson(inputArgs[field]) !== journalReviewStableJson(persisted)
+    ) {
+      const messages = {
+        run_intake:
+          "Caller run intake does not match the persisted Journal Sampling run intake.",
+        review_payload:
+          "Caller review payload does not match the persisted Journal Sampling review payload.",
+        ui_decisions:
+          "Caller UI decisions do not match the persisted Journal Sampling UI decisions.",
+        final_artifacts:
+          "Caller final artifacts do not match the persisted Journal Sampling final artifacts.",
+      };
+      throw new Error(messages[field]);
+    }
+  }
+  return {
+    ...inputArgs,
+    run_intake: cloneJournalReviewTransactionValue(runIntake),
+    review_payload: cloneJournalReviewTransactionValue(reviewPayload),
+    ...(isPlainObject(uiDecisions)
+      ? { ui_decisions: cloneJournalReviewTransactionValue(uiDecisions) }
+      : {}),
+    ...(isPlainObject(finalArtifacts)
+      ? { final_artifacts: cloneJournalReviewTransactionValue(finalArtifacts) }
+      : {}),
+  };
+}
+
+function modelDecisionProjection(value, reviewRef) {
+  if (!isPlainObject(value)) return null;
+  const decisions = Array.isArray(value.decisions)
+    ? value.decisions.filter(isPlainObject).map((decision) => {
+        const projected = {};
+        for (const field of [
+          "item_id",
+          "item_type",
+          "action",
+          "status",
+          "decided_at",
+          "reviewer_note",
+          "edit_value",
+          "requested_documents",
+        ]) {
+          if (decision[field] != null) projected[field] = decision[field];
+        }
+        return projected;
+      })
+    : [];
+  return {
+    schema_version: value.schema_version,
+    plugin: value.plugin,
+    workflow: value.workflow,
+    run_id: reviewRef,
+    decided_at: value.decided_at || null,
+    decision_source: value.decision_source || "not_collected",
+    decisions,
+    decision_count: decisions.length,
+    item_count: value.item_count || 0,
+    status: value.status || "pending_review",
+  };
+}
+
+function modelFinalArtifactsProjection(value, reviewRef) {
+  if (!isPlainObject(value)) return null;
+  const outputs = Array.isArray(value.outputs)
+    ? value.outputs.filter(isPlainObject).map((output) => ({
+        ...(typeof output.path === "string"
+          ? {
+              path: `ref-${crypto
+                .createHash("sha256")
+                .update(`journal-sampling:model-reference:v1:${output.path}`, "utf8")
+                .digest("hex")
+                .slice(0, 16)}`,
+            }
+          : {}),
+        ...(output.kind != null ? { kind: output.kind } : {}),
+        ...(output.status != null ? { status: output.status } : {}),
+        ...(output.row_count != null ? { row_count: output.row_count } : {}),
+      }))
+    : [];
+  return {
+    schema_version: value.schema_version,
+    plugin: value.plugin,
+    workflow: value.workflow,
+    run_id: reviewRef,
+    outputs,
+    caveats: Array.isArray(value.caveats) ? value.caveats : [],
+    next_actions: Array.isArray(value.next_actions) ? value.next_actions : [],
+    status: value.status || null,
+  };
+}
+
+function modelWidgetPayload(trustedArgs, context) {
+  const validated = validateReviewPayload(trustedArgs);
+  return {
+    widget_type: "journal_sampling_review",
+    client_engagement:
+      typeof trustedArgs.client_engagement === "string"
+        ? trustedArgs.client_engagement
+        : null,
+    model_review_binding: {
+      schema_version: context.schema_version,
+      plugin: context.plugin,
+      workflow: context.workflow,
+      review_ref: context.review_ref,
+      review_payload_content_sha256: context.review_payload_content_sha256,
+      minimization: context.minimization,
+      content_sha256: context.content_sha256,
+    },
+    run_intake: cloneJournalReviewTransactionValue(context.intake),
+    review_payload: cloneJournalReviewTransactionValue(context.review),
+    ui_decisions: modelDecisionProjection(
+      validated.ui_decisions,
+      context.review_ref,
+    ),
+    final_artifacts: modelFinalArtifactsProjection(
+      validated.final_artifacts,
+      context.review_ref,
+    ),
+    decision_policy: {
+      save_tool: TOOL_NAMES.saveDecisions,
+      apply_tool: TOOL_NAMES.applyDecisions,
+      can_persist: Boolean(resolveDecisionOutputPath(trustedArgs)),
+      fallback: "copy_json",
+    },
+  };
+}
+
+function modelMutationResult(result, context) {
+  return {
+    ok: result.ok,
+    validation_type: result.validation_type,
+    review_ref: context.review_ref,
+    decision_count: result.decision_count,
+    item_count: result.item_count,
+    blocker_count: result.blocker_count,
+    revision_count: result.revision_count,
+    target_update_count: result.target_update_count,
+    structured_update_count: result.structured_update_count,
+    native_regeneration_count: result.native_regeneration_count,
+    native_regenerated_count: result.native_regenerated_count,
+    application_status: result.application_status,
+    status: result.status,
+    persisted: result.persisted,
+    message: result.message,
+    ui_decisions: modelDecisionProjection(result.ui_decisions, context.review_ref),
+    final_artifacts: modelFinalArtifactsProjection(
+      result.final_artifacts,
+      context.review_ref,
+    ),
+  };
 }
 
 function validateItem(item, index) {
@@ -2398,14 +2666,14 @@ function saveDecisionPayloadWrites(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
-  if (!outputReference) return null;
+  let outputReference = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
   const contextValue =
     typeof inputArgs.client_engagement === "string"
       ? inputArgs.client_engagement.trim()
       : typeof runIntake?.client_engagement?.context_path === "string"
         ? runIntake.client_engagement.context_path.trim()
         : "";
+  if (!outputReference && !contextValue) return null;
   if (!contextValue && path.isAbsolute(outputReference)) {
     return path.resolve(outputReference);
   }
@@ -2425,7 +2693,23 @@ function resolveRunOutputDir(inputArgs) {
   ) {
     throw new Error("Journal Sampling client_engagement context is unavailable.");
   }
-  if (!path.isAbsolute(outputReference) && runIntake?.path_reference !== "run_root_relative") {
+  if (!outputReference) {
+    const context = readJsonFileIfPresent(contextPath);
+    if (
+      !isPlainObject(context) ||
+      context.schema_version !== "vera.client_workflow_context.v2" ||
+      context.workflow_id !== "journal-sampling" ||
+      context.output_relative_path !== "outputs"
+    ) {
+      throw new Error("Journal Sampling client_engagement context is invalid.");
+    }
+    outputReference = context.output_relative_path;
+  }
+  if (
+    !path.isAbsolute(outputReference) &&
+    runIntake?.path_reference !== "run_root_relative" &&
+    outputReference !== "outputs"
+  ) {
     throw new Error("Journal Sampling output reference is not run-root-relative.");
   }
   const runRoot = path.dirname(contextPath);
@@ -3667,30 +3951,32 @@ function applyWorkflowSpecificReviewApplication(
 }
 
 function callTool(name, args = {}) {
+  const context = validateModelReviewContext(args);
+  const trustedArgs = modelContextBoundArgs(args);
   if (name === TOOL_NAMES.validateReview) {
-    validateJournalAssuredReadState(args);
-    const payload = validateReviewPayload(args);
+    validateJournalAssuredReadState(trustedArgs);
+    const payload = validateReviewPayload(trustedArgs);
     return {
       ok: true,
       validation_type: "journal_sampling_review",
-      run_id: payload.review_payload.run_id,
+      review_ref: context.review_ref,
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
-      message: isSpanishRuntime(args)
+      message: isSpanishRuntime(trustedArgs)
         ? "El payload de revisión de Journal Sampling es válido. Ya puede llamar una vez a render_journal_sampling_review."
         : "Journal Sampling review payload is valid. It is safe to call render_journal_sampling_review once.",
-      review_payload: payload.review_payload,
+      model_review_context: context,
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    validateJournalAssuredReadState(args);
-    return validateReviewPayload(args);
+    validateJournalAssuredReadState(trustedArgs);
+    return modelWidgetPayload(trustedArgs, context);
   }
   if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
+    return modelMutationResult(saveDecisionPayload(trustedArgs), context);
   }
   if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+    return modelMutationResult(applyDecisionPayload(trustedArgs), context);
   }
   throw new Error(`unknown Journal Sampling widget tool: ${name}`);
 }

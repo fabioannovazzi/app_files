@@ -286,6 +286,7 @@ Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sa
   successor;
 - `sample/run_intake.json`;
 - `sample/review_payload.json`;
+- `sample/model_review_context.json`;
 - `sample/ui_decisions.json`;
 - `sample/applied_decisions.json` after reviewer decisions are applied;
 - `sample/final_artifacts.json`.
@@ -294,20 +295,25 @@ Available methods are `random`, `systematic`, `stratified`, and `mus`. Random sa
 
 When the local MCP server is available, prefer the OpenAI-style review handoff:
 
-1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the sample output folder.
-2. Call `validate_journal_sampling_review` with `review_payload` before
-   rendering.
+1. Read only `model_review_context.json` for model-led review. It preserves the
+   complete semantic sample, parameters, diagnostics and actions while replacing
+   exact file references with stable opaque aliases. Do not read or pass
+   `run_intake.json`, `review_payload.json`, `ui_decisions.json`, or
+   `final_artifacts.json` into model context; they remain local assurance and
+   persistence records.
+2. Call `validate_journal_sampling_review` with `model_review_context` and the
+   current `client_engagement` context path before rendering. The MCP server
+   resolves and verifies the complete persisted review locally.
 3. If validation succeeds, call `render_journal_sampling_review` with the same
-   payload objects so Codex can show the local HTML widget
+   minimized context so Codex can show the local HTML widget
    `ui://widget/journal-sampling-review.html`.
 4. Use the widget to inspect sampling parameters, filters, population counts,
    sampled entries, and generated CSV/XLSX/JSON artifacts.
 5. When the reviewer records actions in the widget or Codex collects decisions
    through fallback review, call `save_journal_sampling_decisions` so
    `ui_decisions.json` is validated and persisted in a replayed `save`
-   successor. Reload the current `run_intake.json`, `ui_decisions.json`, and
-   `final_artifacts.json` before the next action. When the reviewer is done,
+   successor. Reload `model_review_context.json` before the next model-led
+   action; the MCP server reloads the complete local records itself. When the reviewer is done,
    call `apply_journal_sampling_decisions` so `applied_decisions.json`,
    `sampling_audit.json`, `run_intake.json`, assurance gates/envelope,
    `final_artifacts.json`, and the output-set manifest are freshly closed in an
@@ -315,8 +321,8 @@ When the local MCP server is available, prefer the OpenAI-style review handoff:
    document-requested items remain within the explicit assurance limits.
 
 If MCP rendering is unavailable, fall back to a markdown review summary from
-`review_payload.json`, `sampling_audit.json`, `journal_sample.csv`, and
-`journal_sample.xlsx` when available. Do not change sampled rows by judgment
+`model_review_context.json`. Open `sampling_audit.json`, `journal_sample.csv`,
+or `journal_sample.xlsx` only for a specific unresolved review question. Do not change sampled rows by judgment
 alone; change method, size, filters, mappings, or parser logic and rerun when
 the sample basis is wrong. Keep review decisions pending unless they are
 recorded in `ui_decisions.json` and consumed into `applied_decisions.json`.

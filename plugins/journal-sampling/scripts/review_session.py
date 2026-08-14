@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -8,6 +9,7 @@ from pathlib import Path
 from typing import Any, Sequence
 
 __all__ = [
+    "build_model_review_context",
     "ReviewSessionResult",
     "RunIntakeResult",
     "workbook_sheet_name",
@@ -176,6 +178,7 @@ class ReviewSessionResult:
     run_id: str
     run_intake_path: Path
     review_payload_path: Path
+    model_review_context_path: Path
     ui_decisions_path: Path
     final_artifacts_path: Path
     review_item_count: int
@@ -222,6 +225,7 @@ def _write_review_handoff_card(
         "",
         f"- {copy['run_id']}: `{run_id}`",
         f"- {copy['review_payload']}: `review_payload.json`",
+        "- Model review context: `model_review_context.json`",
         f"- {copy['run_intake']}: `run_intake.json`",
         f"- {copy['pending_decisions']}: `ui_decisions.json`",
         f"- {copy['applied_decisions']}: `applied_decisions.json`",
@@ -254,6 +258,7 @@ def _review_handoff_output_record(path: Path, language: str) -> dict[str, Any]:
             "Review Handoff",
             *localized_required_text,
             "review_payload.json",
+            "model_review_context.json",
             "ui_decisions.json",
             "applied_decisions.json",
             "final_artifacts.json",
@@ -266,6 +271,7 @@ def _local_output_refs(final_artifacts_path: Path) -> list[str]:
     refs = [
         "run_intake.json",
         "review_payload.json",
+        "model_review_context.json",
         "ui_decisions.json",
         "final_artifacts.json",
     ]
@@ -354,6 +360,160 @@ def _portable_client_engagement(
         "content_sha256",
     )
     return {field: client_engagement[field] for field in portable_fields}
+
+
+_MODEL_REFERENCE_FIELDS = {
+    "filename",
+    "matched_pdf",
+    "matched_support",
+    "output_path",
+    "path",
+    "source_file",
+    "source_path",
+    "target_artifact",
+}
+
+
+def _canonical_json_sha256(payload: dict[str, Any]) -> str:
+    encoded = json.dumps(
+        payload,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        allow_nan=False,
+    ).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def _model_reference(value: str) -> str:
+    digest = hashlib.sha256(
+        f"{WORKFLOW_NAME}:model-reference:v1:{value}".encode("utf-8")
+    ).hexdigest()
+    return f"ref-{digest[:16]}"
+
+
+def _collect_model_references(value: Any) -> dict[str, str]:
+    references: set[str] = set()
+
+    def collect(current: Any, field: str | None = None) -> None:
+        if isinstance(current, dict):
+            for key, nested in current.items():
+                if key in _MODEL_REFERENCE_FIELDS and isinstance(nested, str):
+                    if nested.strip():
+                        references.add(nested)
+                elif key == "source_artifacts" and isinstance(nested, dict):
+                    for artifact_path in nested.values():
+                        if isinstance(artifact_path, str) and artifact_path.strip():
+                            references.add(artifact_path)
+                elif key == "source_paths" and isinstance(nested, list):
+                    for source_path in nested:
+                        if isinstance(source_path, str) and source_path.strip():
+                            references.add(source_path)
+                else:
+                    collect(nested, key)
+            return
+        if isinstance(current, list):
+            for nested in current:
+                collect(nested, field)
+
+    collect(value)
+    return {reference: _model_reference(reference) for reference in sorted(references)}
+
+
+def _project_model_value(
+    value: Any,
+    references: dict[str, str],
+    *,
+    field: str | None = None,
+) -> Any:
+    """Alias explicit technical references without judging semantic relevance."""
+
+    if isinstance(value, dict):
+        return {
+            key: _project_model_value(nested, references, field=key)
+            for key, nested in value.items()
+        }
+    if isinstance(value, list):
+        return [
+            _project_model_value(nested, references, field=field) for nested in value
+        ]
+    if not isinstance(value, str):
+        return value
+    if field in _MODEL_REFERENCE_FIELDS and value in references:
+        return references[value]
+    projected = value
+    for reference in sorted(references, key=len, reverse=True):
+        if len(reference) >= 3 and reference in projected:
+            projected = projected.replace(reference, references[reference])
+    return projected
+
+
+def build_model_review_context(
+    review_payload: dict[str, Any],
+    run_intake: dict[str, Any],
+) -> dict[str, Any]:
+    """Build the purpose-preserving review projection sent to the model.
+
+    The allowlist is deterministic because transport-field membership and exact
+    reference replacement are mechanical privacy and audit properties. It does
+    not decide whether any accounting fact is professionally relevant.
+    """
+
+    references = _collect_model_references(review_payload)
+    run_id = str(review_payload["run_id"])
+    review_ref = f"review-{hashlib.sha256(f'{WORKFLOW_NAME}:model-review:v1:{run_id}'.encode('utf-8')).hexdigest()[:24]}"
+    review = {
+        "schema_version": review_payload["schema_version"],
+        "plugin": review_payload["plugin"],
+        "workflow": review_payload["workflow"],
+        "run_id": review_ref,
+        "language": review_payload.get("language"),
+        "review_type": review_payload.get("review_type"),
+        "items": _project_model_value(review_payload.get("items", []), references),
+        "item_count": review_payload.get("item_count", 0),
+        "columns": _project_model_value(review_payload.get("columns", []), references),
+        "source_artifacts": _project_model_value(
+            review_payload.get("source_artifacts", {}), references
+        ),
+        "allowed_actions": list(review_payload.get("allowed_actions", [])),
+        "status": review_payload.get("status"),
+        "summary": _project_model_value(review_payload.get("summary", {}), references),
+    }
+    review["content_sha256"] = _canonical_json_sha256(review)
+    assumptions = run_intake.get("assumptions")
+    model_intake = {
+        "schema_version": run_intake.get("schema_version"),
+        "plugin": run_intake.get("plugin"),
+        "workflow": run_intake.get("workflow"),
+        "run_id": review_ref,
+        "language": run_intake.get("language"),
+        "assumptions": _project_model_value(
+            assumptions if isinstance(assumptions, dict) else {}, references
+        ),
+        "status": run_intake.get("status"),
+    }
+    context = {
+        "schema_version": "vera.model_review_context.v1",
+        "plugin": PLUGIN_NAME,
+        "workflow": WORKFLOW_NAME,
+        "review_ref": review_ref,
+        "review_payload_content_sha256": _canonical_json_sha256(review_payload),
+        "review": review,
+        "intake": model_intake,
+        "minimization": {
+            "excluded_control_fields": [
+                "client_engagement",
+                "created_at",
+                "input_manifest",
+                "source_paths",
+                "filesystem_paths",
+            ],
+            "reference_policy": "stable_opaque_aliases",
+            "semantic_evidence_preserved": True,
+        },
+    }
+    context["content_sha256"] = _canonical_json_sha256(context)
+    return context
 
 
 def _rows(frame: Any) -> list[dict[str, Any]]:
@@ -850,6 +1010,11 @@ def write_review_session_artifacts(
         output_dir / "review_payload.json",
         review_payload,
     )
+    run_intake = json.loads(run_intake_path.read_text(encoding="utf-8"))
+    model_review_context_path = _write_json(
+        output_dir / "model_review_context.json",
+        build_model_review_context(review_payload, run_intake),
+    )
 
     ui_decisions_path = _write_json(
         output_dir / "ui_decisions.json",
@@ -911,6 +1076,7 @@ def write_review_session_artifacts(
         run_id=run_id,
         run_intake_path=run_intake_path,
         review_payload_path=review_payload_path,
+        model_review_context_path=model_review_context_path,
         ui_decisions_path=ui_decisions_path,
         final_artifacts_path=final_artifacts_path,
         review_item_count=len(items),

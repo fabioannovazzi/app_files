@@ -315,6 +315,9 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     sampling_audit = json.loads((sample_dir / "sampling_audit.json").read_text())
     run_intake = json.loads((sample_dir / "run_intake.json").read_text())
     review_payload = json.loads((sample_dir / "review_payload.json").read_text())
+    model_review_context = json.loads(
+        (sample_dir / "model_review_context.json").read_text()
+    )
     ui_decisions = json.loads((sample_dir / "ui_decisions.json").read_text())
     final_artifacts = json.loads((sample_dir / "final_artifacts.json").read_text())
 
@@ -327,6 +330,7 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     assert (sample_dir / "sampling_audit.json").exists()
     assert (sample_dir / "run_intake.json").exists()
     assert (sample_dir / "review_payload.json").exists()
+    assert (sample_dir / "model_review_context.json").exists()
     assert (sample_dir / "ui_decisions.json").exists()
     assert (sample_dir / "final_artifacts.json").exists()
     assert (sample_dir / "sample_reproducibility.json").exists()
@@ -354,6 +358,14 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     item_types = {item["item_type"] for item in review_payload["items"]}
     assert {"sampling_control", "sampled_entry", "sample_artifact"} <= item_types
     assert review_payload["summary"]["sample_size"] == 2
+    assert model_review_context["schema_version"] == ("vera.model_review_context.v1")
+    assert model_review_context["review"]["item_count"] == (
+        review_payload["item_count"]
+    )
+    assert "client_engagement" not in model_review_context
+    assert "source_paths" not in model_review_context["review"]
+    assert journal_path.name not in json.dumps(model_review_context)
+    assert first_sample_row["amount_abs"] in json.dumps(model_review_context)
     assert ui_decisions["status"] == "pending_review"
     assert final_artifacts["status"] == "written_pending_review"
     handoff_output = next(
@@ -365,6 +377,7 @@ def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
     assert handoff_output["required_text"] == [
         "Review Handoff",
         "review_payload.json",
+        "model_review_context.json",
         "ui_decisions.json",
         "applied_decisions.json",
         "final_artifacts.json",
@@ -2016,6 +2029,7 @@ def test_static_page_exposes_four_language_switch() -> None:
 
 
 def test_journal_sampling_mcp_server_validates_and_renders_review_payload() -> None:
+    core = load_core()
     review_payload = {
         "schema_version": "1.0",
         "plugin": "journal-sampling",
@@ -2066,6 +2080,19 @@ def test_journal_sampling_mcp_server_validates_and_renders_review_payload() -> N
             "sample_size": 2,
         },
     }
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "journal-sampling",
+        "workflow": "journal-sampling",
+        "run_id": review_payload["run_id"],
+        "language": "en",
+        "assumptions": {},
+        "status": "ready_for_sampling_run",
+    }
+    model_review_context = core.build_model_review_context(
+        review_payload,
+        run_intake,
+    )
     messages: list[dict[str, object]] = [
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
         {
@@ -2074,7 +2101,7 @@ def test_journal_sampling_mcp_server_validates_and_renders_review_payload() -> N
             "method": "tools/call",
             "params": {
                 "name": "validate_journal_sampling_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {"model_review_context": model_review_context},
             },
         },
         {
@@ -2083,7 +2110,7 @@ def test_journal_sampling_mcp_server_validates_and_renders_review_payload() -> N
             "method": "tools/call",
             "params": {
                 "name": "render_journal_sampling_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {"model_review_context": model_review_context},
             },
         },
         {"jsonrpc": "2.0", "id": 4, "method": "resources/list"},
@@ -2160,10 +2187,16 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
         "outputs": [],
         "next_actions": [],
     }
+    core = load_core()
+    model_review_context = core.build_model_review_context(
+        review_payload,
+        run_intake,
+    )
     output_dir.mkdir(exist_ok=True)
     for name, payload in [
         ("run_intake.json", run_intake),
         ("review_payload.json", review_payload),
+        ("model_review_context.json", model_review_context),
         ("final_artifacts.json", final_artifacts),
     ]:
         (output_dir / name).write_text(
@@ -2171,6 +2204,7 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             encoding="utf-8",
         )
     invalid_payload = {**review_payload, "item_count": 2}
+    invalid_context = core.build_model_review_context(invalid_payload, run_intake)
     messages: list[dict[str, object]] = [
         {
             "jsonrpc": "2.0",
@@ -2187,7 +2221,7 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             "method": "tools/call",
             "params": {
                 "name": "validate_journal_sampling_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {"model_review_context": model_review_context},
             },
         },
         {
@@ -2197,7 +2231,7 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             "params": {
                 "name": "save_journal_sampling_decisions",
                 "arguments": {
-                    "review_payload": review_payload,
+                    "model_review_context": model_review_context,
                     "decisions": decisions,
                 },
             },
@@ -2209,9 +2243,8 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             "params": {
                 "name": "apply_journal_sampling_decisions",
                 "arguments": {
-                    "review_payload": review_payload,
+                    "model_review_context": model_review_context,
                     "decisions": decisions,
-                    "final_artifacts": final_artifacts,
                 },
             },
         },
@@ -2222,10 +2255,9 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             "params": {
                 "name": "apply_journal_sampling_decisions",
                 "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
+                    "client_engagement": _customer_context_path(output_dir).as_posix(),
+                    "model_review_context": model_review_context,
                     "decisions": decisions,
-                    "final_artifacts": final_artifacts,
                 },
             },
         },
@@ -2235,7 +2267,7 @@ def test_journal_sampling_mcp_server_localizes_spanish_runtime_feedback(
             "method": "tools/call",
             "params": {
                 "name": "validate_journal_sampling_review",
-                "arguments": {"review_payload": invalid_payload},
+                "arguments": {"model_review_context": invalid_context},
             },
         },
     ]
@@ -2319,9 +2351,14 @@ def _journal_transaction_case(
         "outputs": [],
         "next_actions": [],
     }
+    model_review_context = load_core().build_model_review_context(
+        review_payload,
+        run_intake,
+    )
     for name, payload in [
         ("run_intake.json", run_intake),
         ("review_payload.json", review_payload),
+        ("model_review_context.json", model_review_context),
         ("final_artifacts.json", final_artifacts),
     ]:
         (output_dir / name).write_text(
@@ -2331,6 +2368,7 @@ def _journal_transaction_case(
     return {
         "run_intake": run_intake,
         "review_payload": review_payload,
+        "model_review_context": model_review_context,
         "final_artifacts": final_artifacts,
         "decisions": [{"item_id": "sampling-control", "action": "accept"}],
     }
@@ -2550,6 +2588,7 @@ def _real_journal_review_case(
     review_payload = read_json("review_payload.json")
     return output_dir, {
         "client_engagement": context_path.as_posix(),
+        "model_review_context": read_json("model_review_context.json"),
         "run_intake": read_json("run_intake.json"),
         "review_payload": review_payload,
         "ui_decisions": read_json("ui_decisions.json"),
@@ -2570,6 +2609,7 @@ def _current_real_journal_review_arguments(
 
     return {
         "client_engagement": _customer_context_path(output_dir).as_posix(),
+        "model_review_context": read_json("model_review_context.json"),
         "run_intake": read_json("run_intake.json"),
         "review_payload": read_json("review_payload.json"),
         "ui_decisions": read_json("ui_decisions.json"),
@@ -2663,6 +2703,9 @@ def _mutate_implementation_bytes(path: Path) -> None:
 def _implementation_attack_arguments(output_dir: Path) -> dict[str, Any]:
     return {
         "client_engagement": _customer_context_path(output_dir).as_posix(),
+        "model_review_context": json.loads(
+            (output_dir / "model_review_context.json").read_text(encoding="utf-8")
+        ),
         "run_intake": json.loads(
             (output_dir / "run_intake.json").read_text(encoding="utf-8")
         ),
@@ -2985,7 +3028,7 @@ def test_real_journal_review_save_mints_replayable_limited_successor(
     assert gates["gates"]["reporting"]["status"] == "blocked"
     assert gates["gates"]["publication"]["status"] == "withheld"
     assert gates["report_ready"] is False
-    assert len(replay["output_set"]["physical_paths"]) == 26
+    assert len(replay["output_set"]["physical_paths"]) == 28
     assert not list(output_dir.parent.glob(".generated-review-transaction-*"))
 
 
@@ -3027,7 +3070,7 @@ def test_real_journal_review_apply_after_save_preserves_exact_history_chain(
         _journal_tree_image(output_dir / "assurance_history" / "000_initial")
         == initial_history
     )
-    assert len(replay["output_set"]["physical_paths"]) == 40
+    assert len(replay["output_set"]["physical_paths"]) == 43
     assert gates["gates"]["semantic_review"]["status"] == "not_assessed"
     assert gates["gates"]["reporting"]["status"] == "blocked"
     assert gates["gates"]["publication"]["status"] == "withheld"
