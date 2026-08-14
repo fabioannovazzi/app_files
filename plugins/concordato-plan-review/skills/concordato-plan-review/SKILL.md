@@ -271,10 +271,13 @@ Read:
 - `concordato_review_workpaper.xlsx`;
 - `concordato_semantic_review.md`;
 - `concordato_preventivo_review_summary.docx`;
-- `review_payload.json`;
 - `assurance_envelope.json`;
 - `workflow_output_closure.json`;
 - `final_artifacts.json`.
+
+Keep `review_payload.json` as the complete local review/UI authority. Do not
+reopen or resend it merely to render, save, or apply review state after the
+semantic model has been confirmed.
 
 Treat `concordato_tie_out_workpaper.xlsx` and
 `concordato_review_summary.docx` as numerical appendices.
@@ -283,11 +286,36 @@ Treat `concordato_tie_out_workpaper.xlsx` and
 
 When `concordatoPlanReviewWidgets` is available:
 
-1. call `validate_concordato_plan_review` with the complete persisted payload;
-2. call `render_concordato_plan_review`;
-3. collect decisions;
-4. call `save_concordato_plan_decisions`;
-5. call `apply_concordato_plan_decisions` after reviewer completion.
+1. read `review_reference` from `final_artifacts.json`;
+2. call `validate_concordato_plan_review` with only `client_engagement` and that reference;
+3. call `render_concordato_plan_review` with the same two fields;
+4. collect decisions in the component;
+5. call `save_concordato_plan_decisions` with the same reference and the decisions;
+6. call `apply_concordato_plan_decisions` with the same reference after reviewer completion.
+
+The model-visible validate/render result contains only run status, total and
+per-type counts, the small review reference, and the name and bound of the
+on-demand read tool. The complete `review_payload.json`, run intake, current
+decisions, final-artifact index, source labels, paths, hashes, and review rows
+are hydrated from the persisted run and delivered to the review component in
+tool-result metadata rather than model-visible `content` or
+`structuredContent`. The same component-only payload contract applies in
+Codex/ChatGPT and Cowork/MCP Apps.
+
+If a specific professional question still needs model analysis after semantic
+confirmation, call `read_concordato_plan_review_items` by exact item id or item
+type. Each call returns at most 25 selected items, removes technical paths,
+hashes, sizes, and artifact references, and replaces source filenames with
+stable source aliases while preserving the substantive procedure, creditor,
+treatment, amount, evidence locator, issue, and reviewer context. Use multiple
+bounded calls only when the professional question requires them. Exact source
+files remain available for a specific evidence question; do not reopen the
+entire case by default.
+
+This is transport minimization, not anonymization of the professional case.
+Debtor and creditor identities remain when needed to establish procedure,
+claim, priority, class, voting, treatment, or evidence. The workflow does not
+automatically anonymize or pseudonymize those substantive identities.
 
 Before any write, the MCP path replays the trusted payload, assurance envelope,
 and whole-output closure. If MCP is unavailable, review the same payload in

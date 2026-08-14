@@ -2161,33 +2161,44 @@ def test_workflow_output_closure_rejects_late_artifact_mutation(
 
 
 def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None:
-    review_payload = _seal_review_payload(
-        {
-            "schema_version": "1.0",
-            "plugin": "concordato-plan-review",
-            "workflow": "concordato-plan-review",
-            "run_id": "concordato-es-runtime",
-            "language": "es",
-            "review_type": "concordato_preventivo_review",
-            "items": [
-                {
-                    "id": "source-es-1",
-                    "item_type": "source_inventory",
-                    "title": "plan.xlsx",
-                    "allowed_actions": ["accept", "skip"],
-                    "recommended_action": "accept",
-                }
-            ],
-            "item_count": 1,
-            "assurance": {"final_ready": False},
-            "status": "ready_for_review",
-        }
+    core = load_core()
+    received_dir = tmp_path / "received"
+    received_dir.mkdir()
+    _save_workbook(
+        received_dir / "plan.xlsx", [["Concepto", "Importe"], ["Deuda", 100]]
     )
-    run_intake = {
-        "run_id": review_payload["run_id"],
-        "language": "spa",
+    input_dir, output_dir, run_id, context_path = _start_managed_concordato_run(
+        tmp_path, received_dir
+    )
+    inspection = core.run_concordato_review(
+        input_dir, tmp_path / "inspection", language="es", tolerance="0"
+    )
+    recipe = _reviewed_source_recipe(
+        core,
+        inspection,
+        {
+            str(item["relative_path"]): "concordato_plan"
+            for item in inspection.inventory
+            if item.get("supported")
+        },
+    )
+    core.run_concordato_review(
+        input_dir,
+        output_dir,
+        language="es",
+        tolerance="0",
+        recipe=recipe,
+        run_id=run_id,
+        input_path_ref="inputs",
+        output_path_ref="outputs",
+    )
+    review_payload = json.loads((output_dir / "review_payload.json").read_text())
+    item = review_payload["items"][0]
+    decision = {
+        "item_id": item["id"],
+        "action": "skip" if "skip" in item["allowed_actions"] else "accept",
     }
-    decision = {"item_id": "source-es-1", "action": "accept"}
+    reference_args = _concordato_reference_args(output_dir, context_path)
     messages = [
         {
             "jsonrpc": "2.0",
@@ -2201,7 +2212,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
             "method": "tools/call",
             "params": {
                 "name": "validate_concordato_plan_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": reference_args,
             },
         },
         {
@@ -2211,7 +2222,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
             "params": {
                 "name": "save_concordato_plan_decisions",
                 "arguments": {
-                    "review_payload": review_payload,
+                    **reference_args,
                     "decisions": [decision],
                 },
             },
@@ -2223,39 +2234,26 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
             "params": {
                 "name": "apply_concordato_plan_decisions",
                 "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
+                    **reference_args,
                     "decisions": [decision],
                 },
-            },
-        },
-        {
-            "jsonrpc": "2.0",
-            "id": 5,
-            "method": "tools/call",
-            "params": {
-                "name": "validate_concordato_plan_review",
-                "arguments": {"review_payload": {**review_payload, "items": "invalid"}},
             },
         },
     ]
 
     responses = {response["id"]: response for response in _call_mcp_server(messages)}
     validation = responses[2]["result"]["structuredContent"]
-    saved = responses[3]["result"]["structuredContent"]
-    applied = responses[4]["result"]["structuredContent"]
-    invalid = responses[5]["result"]["structuredContent"]
+    saved = _private_tool_payload(responses[3])
+    applied = _private_tool_payload(responses[4])
 
     assert (
         "Use validate_concordato_plan_review antes"
         in responses[1]["result"]["instructions"]
     )
-    assert validation["message"].startswith("Los datos de revisión")
-    assert saved["message"].startswith("Las decisiones son válidas")
-    assert applied["message"].startswith("Las decisiones aplicadas son válidas")
-    assert applied["persisted"] is False
-    assert applied["application_status"] == "review_applied_assurance_withheld"
-    assert invalid["error"] == "review_payload.items debe ser una matriz"
+    assert validation["message"].startswith("La revisión persistida")
+    assert saved["message"].startswith("Se guardaron")
+    assert applied["message"].startswith("Se aplicaron")
+    assert applied["persisted"] is True
 
 
 def test_spanish_run_localizes_review_packet_workbook_and_contract(
@@ -2476,9 +2474,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
         input_path_ref="inputs",
         output_path_ref="outputs",
     )
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
-    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
     unmatched_item = next(
         item
         for item in review_payload["items"]
@@ -2493,10 +2489,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
             "params": {
                 "name": "apply_concordato_plan_decisions",
                 "arguments": {
-                    "client_engagement": context_path.as_posix(),
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
-                    "final_artifacts": final_artifacts,
+                    **_concordato_reference_args(output_dir, context_path),
                     "decisions": [
                         {
                             "item_id": unmatched_item["id"],
@@ -2512,7 +2505,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
     ]
 
     responses = {response["id"]: response for response in _call_mcp_server(messages)}
-    payload = responses[1]["result"]["structuredContent"]
+    payload = _private_tool_payload(responses[1])
     applied = json.loads(
         (output_dir / "applied_decisions.json").read_text(encoding="utf-8")
     )
@@ -2521,7 +2514,7 @@ def test_concordato_request_more_documents_prefills_blocker_context(
     )
     expected_document = unmatched_item["data"]["requested_document"]
 
-    assert payload["ok"] is True
+    assert payload["ok"] is True, payload
     assert payload["application_status"] == "blocked"
     assert applied["effects"][0]["requested_documents"] == [expected_document]
     assert applied["effects"][0]["followup_context"]["source_file"] == (
@@ -2579,72 +2572,45 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "../vera/index.html",
         "Concordato preventivo",
         "Vera",
+        "La revisione evita una seconda copia completa",
+        "Review avoids a second complete copy",
+        "La revue évite une deuxième copie complète",
+        "Die Prüfung vermeidet eine zweite vollständige Kopie",
+        "La revisión evita una segunda copia completa",
+        "al massimo 25 elementi per volta",
+        "Codex e Cowork applicano lo stesso confine",
     ):
         assert snippet in page
 
 
-def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
-    review_payload = _seal_review_payload(
-        {
-            "schema_version": "1.0",
-            "plugin": "concordato-plan-review",
-            "workflow": "concordato-plan-review",
-            "run_id": "concordato-test-run",
-            "review_type": "concordato_preventivo_review",
-            "items": [
-                {
-                    "id": "source-1",
-                    "item_type": "source_inventory",
-                    "title": "piano.xlsx",
-                    "source_path": "/tmp/piano.xlsx",
-                    "output_path": None,
-                    "allowed_actions": ["accept", "edit", "mark_unclear", "skip"],
-                    "recommended_action": "accept",
-                    "evidence": [],
-                    "data": {"suggested_role": "concordato_plan"},
-                    "status": "needs_review",
-                },
-                {
-                    "id": "unmatched-plan-amount-1",
-                    "item_type": "unmatched_plan_amount",
-                    "title": "piano.xlsx Dati!B3 999,999.99",
-                    "source_path": "piano.xlsx",
-                    "output_path": "amount_candidates.csv",
-                    "allowed_actions": [
-                        "accept",
-                        "edit",
-                        "mark_unclear",
-                        "request_more_documents",
-                        "skip",
-                    ],
-                    "recommended_action": "request_more_documents",
-                    "evidence": [{"kind": "plan_context", "text": "Assunzione"}],
-                    "data": {
-                        "amount": 999999.99,
-                        "match_status": "no_candidate_amount_match",
-                    },
-                    "status": "needs_review",
-                },
-            ],
-            "item_count": 2,
-            "columns": [],
-            "evidence": {},
-            "allowed_actions": [
-                "accept",
-                "edit",
-                "mark_unclear",
-                "request_more_documents",
-                "skip",
-            ],
-            "status": "ready_for_review",
-            "assurance": {"final_ready": False},
-            "summary": {
-                "file_count": 1,
-                "plan_amount_candidate_count": 1,
-                "unmatched_plan_amount_count": 1,
-            },
-        }
+def _concordato_reference_args(
+    output_dir: Path,
+    context_path: Path | None = None,
+) -> dict[str, object]:
+    final_artifacts = json.loads(
+        (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
+    return {
+        "client_engagement": (
+            context_path or output_dir.parent / "context.json"
+        ).as_posix(),
+        "review_reference": final_artifacts["review_reference"],
+    }
+
+
+def _private_tool_payload(response: dict[str, Any]) -> dict[str, Any]:
+    result = response["result"]
+    return result.get("_meta", {}).get("widget_payload", result["structuredContent"])
+
+
+def test_concordato_mcp_server_keeps_complete_review_out_of_model_result(
+    tmp_path: Path,
+) -> None:
+    _, _, output_dir = _build_qualified_concordato_run(tmp_path)
+    review_payload = json.loads(
+        (output_dir / "review_payload.json").read_text(encoding="utf-8")
+    )
+    reference_args = _concordato_reference_args(output_dir)
     messages: list[dict[str, object]] = [
         {"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
         {
@@ -2653,7 +2619,7 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
             "method": "tools/call",
             "params": {
                 "name": "validate_concordato_plan_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": reference_args,
             },
         },
         {
@@ -2662,7 +2628,7 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
             "method": "tools/call",
             "params": {
                 "name": "render_concordato_plan_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": reference_args,
             },
         },
         {"jsonrpc": "2.0", "id": 4, "method": "resources/list"},
@@ -2680,12 +2646,36 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
     assert {
         "validate_concordato_plan_review",
         "render_concordato_plan_review",
+        "read_concordato_plan_review_items",
     } <= tool_names
+    render_schema = next(
+        tool["inputSchema"]
+        for tool in responses[1]["result"]["tools"]
+        if tool["name"] == "render_concordato_plan_review"
+    )
+    assert set(render_schema["required"]) == {
+        "client_engagement",
+        "review_reference",
+    }
+    assert "review_payload" not in render_schema["properties"]
     validate_result = responses[2]["result"]["structuredContent"]
     assert validate_result["ok"] is True
-    assert validate_result["item_count"] == 2
+    assert validate_result["item_count"] == review_payload["item_count"]
+    assert "review_payload" not in validate_result
     render_result = responses[3]["result"]
-    assert render_result["structuredContent"]["widget_type"] == "concordato_plan_review"
+    assert (
+        render_result["structuredContent"]["detailed_review_transport"]
+        == "component_only"
+    )
+    assert (
+        json.loads(render_result["content"][0]["text"])
+        == render_result["structuredContent"]
+    )
+    assert "review_payload" not in render_result["structuredContent"]
+    assert "source_paths" not in json.dumps(render_result["structuredContent"])
+    private_payload = render_result["_meta"]["widget_payload"]
+    assert private_payload["widget_type"] == "concordato_plan_review"
+    assert private_payload["review_payload"] == review_payload
     assert (
         render_result["_meta"]["openai/outputTemplate"]
         == "ui://widget/concordato-plan-review.html"
@@ -2696,6 +2686,41 @@ def test_concordato_mcp_server_validates_and_renders_review_payload() -> None:
     assert "ui://widget/concordato-plan-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
     assert "Concordato Preventivo Review" in widget_html
+    assert "toolResponseMetadata" in widget_html
+    assert "ui/notifications/tool-result" in widget_html
+    assert "...reviewReferenceArgs()" in widget_html
+
+
+def test_concordato_mcp_projects_only_requested_items_without_technical_source_labels(
+    tmp_path: Path,
+) -> None:
+    _, _, output_dir = _build_qualified_concordato_run(tmp_path)
+    response = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "read_concordato_plan_review_items",
+                    "arguments": {
+                        **_concordato_reference_args(output_dir),
+                        "item_types": ["source_inventory"],
+                        "limit": 1,
+                    },
+                },
+            }
+        ]
+    )[0]["result"]["structuredContent"]
+
+    assert response["ok"] is True
+    assert response["returned_item_count"] == 1
+    assert response["technical_metadata_removed"] is True
+    projected_json = json.dumps(response["items"], ensure_ascii=False)
+    assert "piano.xlsx" not in projected_json
+    assert "source_path" not in projected_json
+    assert "content_sha256" not in projected_json
+    assert "[source-" in projected_json
 
 
 def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
@@ -2734,9 +2759,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
         input_path_ref="inputs",
         output_path_ref="outputs",
     )
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
-    final_artifacts = json.loads((output_dir / "final_artifacts.json").read_text())
     memo_item = next(
         item
         for item in review_payload["items"]
@@ -2755,10 +2778,7 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
             "params": {
                 "name": "apply_concordato_plan_decisions",
                 "arguments": {
-                    "client_engagement": context_path.as_posix(),
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
-                    "final_artifacts": final_artifacts,
+                    **_concordato_reference_args(output_dir, context_path),
                     "decisions": [
                         {
                             "item_id": memo_item["id"],
@@ -2774,8 +2794,8 @@ def test_concordato_mcp_apply_creates_codex_review_memo_from_edit(
 
     responses = {response["id"]: response for response in _call_mcp_server(messages)}
 
-    payload = responses[1]["result"]["structuredContent"]
-    assert payload["ok"] is True
+    payload = _private_tool_payload(responses[1])
+    assert payload["ok"] is True, payload
     assert payload["application_status"] == "partial_review_applied"
     assert payload["target_update_count"] == 1
     assert payload["native_regeneration_count"] == 0
@@ -2869,13 +2889,16 @@ def test_concordato_mcp_rejects_forged_review_payload_before_write(
     tmp_path: Path,
 ) -> None:
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     persisted = json.loads((output_dir / "review_payload.json").read_text())
     forged = json.loads(json.dumps(persisted))
     forged_item = next(
         item for item in forged["items"] if item["item_type"] == "codex_review_memo"
     )
     forged_item["output_path"] = "review_packet.md"
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(forged, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     original_packet = (output_dir / "review_packet.md").read_text()
 
     response = _call_mcp_server(
@@ -2887,8 +2910,7 @@ def test_concordato_mcp_rejects_forged_review_payload_before_write(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
-                        "run_intake": run_intake,
-                        "review_payload": forged,
+                        **_concordato_reference_args(output_dir),
                         "decisions": [
                             {
                                 "item_id": forged_item["id"],
@@ -2922,6 +2944,10 @@ def test_concordato_mcp_read_only_tools_reject_stale_review_digest(
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     review_payload["items"][0]["title"] = "FORGED REVIEW TITLE"
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(review_payload, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     response = _call_mcp_server(
         [
@@ -2931,7 +2957,7 @@ def test_concordato_mcp_read_only_tools_reject_stale_review_digest(
                 "method": "tools/call",
                 "params": {
                     "name": tool_name,
-                    "arguments": {"review_payload": review_payload},
+                    "arguments": _concordato_reference_args(output_dir),
                 },
             }
         ]
@@ -2953,13 +2979,16 @@ def test_concordato_mcp_read_only_tools_replay_persisted_review_context(
     tool_name: str,
 ) -> None:
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     persisted = json.loads((output_dir / "review_payload.json").read_text())
     forged_content = dict(persisted)
     forged_content.pop("content_sha256")
     forged_content["items"] = json.loads(json.dumps(persisted["items"]))
     forged_content["items"][0]["title"] = "RESEALED FORGED REVIEW TITLE"
     forged = _seal_review_payload(forged_content)
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(forged, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
 
     response = _call_mcp_server(
         [
@@ -2969,27 +2998,20 @@ def test_concordato_mcp_read_only_tools_replay_persisted_review_context(
                 "method": "tools/call",
                 "params": {
                     "name": tool_name,
-                    "arguments": {
-                        "client_engagement": (
-                            output_dir.parent / "context.json"
-                        ).as_posix(),
-                        "run_intake": run_intake,
-                        "review_payload": forged,
-                    },
+                    "arguments": _concordato_reference_args(output_dir),
                 },
             }
         ]
     )[0]["result"]["structuredContent"]
 
     assert response["ok"] is False
-    assert "persisted review payload" in response["error"].lower()
+    assert "review_reference" in response["error"].lower()
 
 
 def test_concordato_mcp_rejects_forged_final_artifacts_before_write(
     tmp_path: Path,
 ) -> None:
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     persisted_final = json.loads((output_dir / "final_artifacts.json").read_text())
     forged_final = json.loads(json.dumps(persisted_final))
@@ -2997,6 +3019,10 @@ def test_concordato_mcp_rejects_forged_final_artifacts_before_write(
     forged_final["assurance"]["gate_register"]["report_ready"] = True
     forged_final["caveats"] = []
     forged_final["next_actions"] = ["Publish"]
+    (output_dir / "final_artifacts.json").write_text(
+        json.dumps(forged_final, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
     item = review_payload["items"][0]
     action = "skip" if "skip" in item["allowed_actions"] else "accept"
 
@@ -3009,12 +3035,7 @@ def test_concordato_mcp_rejects_forged_final_artifacts_before_write(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
-                        "client_engagement": (
-                            output_dir.parent / "context.json"
-                        ).as_posix(),
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
-                        "final_artifacts": forged_final,
+                        **_concordato_reference_args(output_dir),
                         "decisions": [{"item_id": item["id"], "action": action}],
                     },
                 },
@@ -3023,18 +3044,15 @@ def test_concordato_mcp_rejects_forged_final_artifacts_before_write(
     )[0]["result"]["structuredContent"]
 
     assert response["ok"] is False
-    assert "persisted final artifacts" in response["error"].lower()
+    assert "assurance" in response["error"].lower()
     assert not (output_dir / "applied_decisions.json").exists()
-    assert json.loads((output_dir / "final_artifacts.json").read_text()) == (
-        persisted_final
-    )
+    assert json.loads((output_dir / "final_artifacts.json").read_text()) == forged_final
 
 
 def test_concordato_mcp_rejects_tampered_numeric_output_before_write(
     tmp_path: Path,
 ) -> None:
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     matches_path = output_dir / "exact_amount_matches.csv"
     matches_path.write_text(
@@ -3053,11 +3071,7 @@ def test_concordato_mcp_rejects_tampered_numeric_output_before_write(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
-                        "client_engagement": (
-                            output_dir.parent / "context.json"
-                        ).as_posix(),
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
+                        **_concordato_reference_args(output_dir),
                         "decisions": [{"item_id": item["id"], "action": action}],
                     },
                 },
@@ -3074,7 +3088,6 @@ def test_complete_concordato_review_remains_assurance_withheld(
     tmp_path: Path,
 ) -> None:
     _, _, output_dir = _build_qualified_concordato_run(tmp_path)
-    run_intake = json.loads((output_dir / "run_intake.json").read_text())
     review_payload = json.loads((output_dir / "review_payload.json").read_text())
     decisions = [
         {
@@ -3084,7 +3097,7 @@ def test_complete_concordato_review_remains_assurance_withheld(
         for item in review_payload["items"]
     ]
 
-    response = _call_mcp_server(
+    raw_response = _call_mcp_server(
         [
             {
                 "jsonrpc": "2.0",
@@ -3093,17 +3106,15 @@ def test_complete_concordato_review_remains_assurance_withheld(
                 "params": {
                     "name": "apply_concordato_plan_decisions",
                     "arguments": {
-                        "client_engagement": (
-                            output_dir.parent / "context.json"
-                        ).as_posix(),
-                        "run_intake": run_intake,
-                        "review_payload": review_payload,
+                        **_concordato_reference_args(output_dir),
                         "decisions": decisions,
                     },
                 },
             }
         ]
-    )[0]["result"]["structuredContent"]
+    )[0]
+
+    response = _private_tool_payload(raw_response)
 
     assert response["ok"] is True
     assert response["application_status"] == "review_applied_assurance_withheld"
@@ -3206,6 +3217,7 @@ def _concordato_transaction_case(
     ]
     return output_dir, {
         "client_engagement": str(running["context_path"]),
+        "review_reference": final_artifacts["review_reference"],
         "run_intake": run_intake,
         "review_payload": review_payload,
         "final_artifacts": final_artifacts,
@@ -3370,7 +3382,7 @@ def _concordato_transaction_call(
         server_path=server_path,
         env=env,
     )[0]
-    return response["result"]["structuredContent"]
+    return _private_tool_payload(response)
 
 
 def _concordato_phase_child(

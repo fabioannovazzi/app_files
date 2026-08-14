@@ -311,10 +311,13 @@ Read:
 - `concordato_review_workpaper.xlsx`;
 - `concordato_semantic_review.md`;
 - `concordato_preventivo_review_summary.docx`;
-- `review_payload.json`;
 - `assurance_envelope.json`;
 - `workflow_output_closure.json`;
 - `final_artifacts.json`.
+
+Keep `review_payload.json` as the complete local review/UI authority. Do not
+reopen or resend it merely to render, save, or apply review state after the
+semantic model has been confirmed.
 
 Treat `concordato_tie_out_workpaper.xlsx` and
 `concordato_review_summary.docx` as numerical appendices.

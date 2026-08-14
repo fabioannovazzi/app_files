@@ -177,8 +177,8 @@ def _write_review_handoff_card(
             "- Artefactos finales: `final_artifacts.json`",
             "",
             "## Revisión profesional",
-            f"1. Valide los datos con `{validate_tool}`.",
-            f"2. Muestre el espacio de revisión con `{render_tool}`.",
+            f"1. Valide la referencia de revisión de `final_artifacts.json` con `{validate_tool}`.",
+            f"2. Muestre el espacio de revisión con la misma referencia mediante `{render_tool}`.",
             f"3. Guarde las acciones de revisión con `{save_tool}`.",
             f"4. Aplique las acciones de revisión con `{apply_tool}`.",
             "",
@@ -199,8 +199,8 @@ def _write_review_handoff_card(
             "- Final artifacts: `final_artifacts.json`",
             "",
             "## Professional Review",
-            f"1. Validate the payload with `{validate_tool}`.",
-            f"2. Render the review workbench with `{render_tool}`.",
+            f"1. Validate the review reference from `final_artifacts.json` with `{validate_tool}`.",
+            f"2. Render the review workbench with the same reference through `{render_tool}`.",
             f"3. Save reviewer actions with `{save_tool}`.",
             f"4. Apply reviewer actions with `{apply_tool}`.",
             "",
@@ -1634,6 +1634,15 @@ def write_review_session_artifacts(
 
     spanish = _is_spanish(language)
 
+    run_intake_payload = json.loads(run_intake_path.read_text(encoding="utf-8"))
+    review_reference = {
+        "schema_version": "concordato.review_reference.v1",
+        "workflow": WORKFLOW_NAME,
+        "run_id": run_id,
+        "output_dir": run_intake_payload["output_dir"],
+        "review_payload_content_sha256": review_payload["content_sha256"],
+    }
+
     final_artifacts_path = _write_json(
         output_dir / "final_artifacts.json",
         {
@@ -1646,6 +1655,7 @@ def write_review_session_artifacts(
                 "path": review_payload_path.name,
                 "content_sha256": review_payload["content_sha256"],
             },
+            "review_reference": review_reference,
             "assurance": review_payload["assurance"],
             "outputs": outputs,
             "caveats": [

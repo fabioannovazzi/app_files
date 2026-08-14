@@ -884,6 +884,8 @@ def _validate_applied_final_artifacts(
         "plugin",
         "workflow",
         "run_id",
+        "review_payload",
+        "review_reference",
         "outputs",
         "caveats",
         "blockers",
@@ -899,6 +901,21 @@ def _validate_applied_final_artifacts(
     for field in ("schema_version", "plugin", "workflow", "run_id"):
         if final_artifacts.get(field) != review_payload.get(field):
             raise ValueError(f"final_artifacts.{field} is stale")
+    expected_review_payload = {
+        "path": "review_payload.json",
+        "content_sha256": review_payload.get("content_sha256"),
+    }
+    if final_artifacts.get("review_payload") != expected_review_payload:
+        raise ValueError("final_artifacts.review_payload is stale")
+    review_reference = final_artifacts.get("review_reference")
+    if not isinstance(review_reference, Mapping) or review_reference != {
+        "schema_version": "concordato.review_reference.v1",
+        "workflow": review_payload.get("workflow"),
+        "run_id": review_payload.get("run_id"),
+        "output_dir": baseline.get("review_reference", {}).get("output_dir"),
+        "review_payload_content_sha256": review_payload.get("content_sha256"),
+    }:
+        raise ValueError("final_artifacts.review_reference is stale")
     status = applied.get("application_status")
     if (
         final_artifacts.get("status") != status
@@ -1149,6 +1166,7 @@ def _validate_independent_outputs(
                 "completed_at",
                 "content_sha256",
                 "envelope_content_sha256",
+                "review_payload_content_sha256",
                 "run_id",
                 "sha256",
                 "size_bytes",
