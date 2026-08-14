@@ -22,7 +22,7 @@
       {
         "id": "annual-accounts-evidence",
         "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
-        "content": "User instructions; entity profile and tax identifier; CSV/XLSX and readable/scanned PDF trial balances and account descriptions; bounded PDF extraction candidates, page/table/cell geometry, OCR text and confidence, proposed headers, professional corrections and exclusions; prior accounts and XBRL, including explicit and typed dimensional contexts and context-fact groups; fixed-asset, inventory ledger, count, costing, net-realisable-value, obsolescence and pledged-stock, receivable, payable, loan, equity, tax, payroll, provision, related-party, guarantee, post-closing-event, and going-concern evidence; source anchors and checksums; mapping candidates and accepted decisions; reviewed schedule-cell taxonomy dispositions and derived facts; the selected OIC professional-review checklist and structured disclosure answers; narrative drafts; validation issues; approval and export metadata",
+        "content": "User instructions; for account mapping, 1 to 50 exact trial-balance rows with account codes, descriptions, current/prior movements and balances, and source references; for pending PDF guidance, at most 20 sample rows, columns, page/table geometry summaries, OCR confidence and extraction issues; for disclosure activation, at most the first 20 accounts by stable case order plus at most 50 exact optional account, canonical-fact or schedule selectors, with value-free catalogues for discovery; direct entity name, tax identifier, registered office, tenant identifier and out-of-band case identifier are excluded from these packets.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -31,7 +31,7 @@
       {
         "id": "minimum-context-intelligent-participation",
         "purpose": "Provide workflow guidance, mapping proposals, question prioritization, narrative drafts, prior-year comparisons, and issue explanations inside the existing bilancio process",
-        "content": "Task-specific context packets containing only the selected account rows, accepted facts and answers, active questions, prior text suggestions, bounded pending-PDF headers, sample rows, geometry, OCR confidence and extraction issues, bounded statutory-presentation gaps and arithmetic issues, or validation issues needed for the requested semantic task; direct entity identity and the out-of-band case routing identifier are excluded where the task does not require them; model output remains non-authoritative and evidence-linked and cannot accept, correct, exclude, or promote PDF extraction rows",
+        "content": "Task-specific packets: no more than 50 active questions with only matching prior-answer suggestions; one note section with accepted answers and complete schedule facts linked by the versioned disclosure rule pack plus at most 50 exact optional fact, answer, schedule or prior-text selectors; at most 20 prior and 20 current narrative items per comparison packet; at most 20 detailed items from each workflow-guidance collection; or 1 to 20 exact validation issues. Value-free catalogues and paginated review views allow targeted follow-up without making the complete case unreachable. Every packet contains the exact task, selectors, bounds, disclosed/available counts and a SHA-256 context receipt, which is persisted with a recorded model run. Model output remains non-authoritative and evidence-linked and cannot accept, correct, exclude, promote, approve or export case data.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -168,7 +168,7 @@
     },
     {
       "id": "minimum-context-model-suggestion-boundary",
-      "control": "Semantic tasks receive task-specific packets that mark document content as untrusted and omit direct entity identity and the out-of-band case routing identifier when unnecessary; strict output schemas and evidence-reference closure prevent out-of-packet claims, and mapping, narrative, and workflow outputs remain MODEL_SUGGESTED until a separate professional decision."
+      "control": "Semantic tasks receive the same bounded packet builders in Codex and Cowork. Mapping is capped at 50 exact accounts; disclosure activation starts with 20 accounts and accepts at most 50 exact optional selectors; questions are capped at 50; narrative uses rule-linked accepted evidence plus at most 50 exact selectors; prior-year collections and workflow-guidance collections are capped at 20; and issue explanation accepts at most 20 exact issues. Packets mark document content as untrusted, omit direct entity identity and out-of-band routing identifiers, carry a SHA-256 context receipt and counts, and provide lossless selector or pagination follow-up. Catalogue-only references are not citeable evidence. Strict output schemas and evidence-reference closure keep mapping, narrative, disclosure and workflow outputs MODEL_SUGGESTED until a separate professional decision. Raw case/source fallback is prohibited when packet tooling is unavailable."
     },
     {
       "id": "statutory-presentation-coverage-boundary",
@@ -195,6 +195,6 @@
     "reviewed_at": "2026-08-10",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "30fb96357d32070e74be349d7492225d4598653afda7b436a07dc6370b5d8a0f"
+    "source_fingerprint": "0e435a9ccb9a400b69febc538a5e35648633f85d2a763e05c30ce3d1eaca78ee"
   }
 }

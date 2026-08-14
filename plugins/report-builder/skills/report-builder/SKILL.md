@@ -72,6 +72,13 @@ Deterministic Python code owns stable source-byte capture, source receipts, Exce
 
 The plugin scripts must not make direct OpenAI API calls. The user should not interact directly with CLI scripts. Treat scripts as internal tools Codex runs on behalf of the user.
 
+Codex and Cowork must use the same bounded inspection and expansion contract.
+Cowork may resolve paths only inside the connected folder, but it must not fall
+back to reading the source workbook/PDF, `inspection_control.json`, or a whole
+folder into model context when the helpers are unavailable. Use the callable
+helpers in the selected runtime, or stop and explain that bounded inspection is
+unavailable there.
+
 ## Inputs
 
 Required:
@@ -99,15 +106,45 @@ python scripts/check_dependencies.py
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it or explain what dependency capability is missing.
 
-3. Run deterministic inspection to produce `inspection.json` and `suggested_recipe.json`:
+3. Run deterministic full-population inspection. It writes bounded
+   `inspection.json`, private `inspection_control.json`,
+   `model_context_receipt.json`, and `suggested_recipe.json`:
 
 ```bash
 python scripts/inspect_inputs.py <managed-input-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
-4. Read `inspection.json` and `suggested_recipe.json`. Summarize discovered tables, suggested section matches, low-confidence or unassigned tables, and extraction limitations.
-5. Ask the smallest needed decision if mapping is ambiguous, such as which table belongs to cash flow, whether a PDF text block should become a section, or whether an unassigned sheet should be excluded.
-6. Edit `suggested_recipe.json` in the work folder, not plugin source. Fill
+4. Read `inspection.json`, `model_context_receipt.json`, and
+   `suggested_recipe.json`. Do not read `inspection_control.json` into model
+   context: it contains the full cell inventory and exists only for local
+   deterministic controls and the bounded expansion helper. Summarize
+   discovered tables, suggested section matches, low-confidence or unassigned
+   tables, and extraction limitations.
+5. If the redacted eight-row previews do not support a professional mapping or
+   narrative judgment, request the smallest exact table slice needed. Select
+   one table, no more than sixteen exact columns, no more than one hundred
+   source rows, and a concrete purpose. Read only the written expansion packet;
+   never open the private control file directly. Repeat with another explicit
+   slice when needed, so no source population is made unreachable:
+
+```bash
+python scripts/expand_model_context.py \
+  --client-engagement <client_engagement_path> \
+  --inspection-control <client-run-output>/inspection_control.json \
+  --output <client-run-output>/model-context/<purpose-id>.json \
+  --table-id <exact-table-id> \
+  --header-row <detected-one-based-row|none> \
+  --columns <exact-column[,exact-column]> \
+  --row-start <one-based-source-row> \
+  --row-limit <1-100> \
+  --purpose <specific-professional-purpose>
+```
+
+   The helper receipts the disclosed columns, range, purpose, and packet hash.
+   Selecting relevance remains Codex/reviewer judgment; the helper only enforces
+   exact bounds.
+6. Ask the smallest needed decision if mapping is ambiguous, such as which table belongs to cash flow, whether a PDF text block should become a section, or whether an unassigned sheet should be excluded.
+7. Edit `suggested_recipe.json` in the work folder, not plugin source. Fill
    `entity`, `period`, `context_items`, `executive_summary`, each section's
    `assigned_table`, and section `codex_comment` values as appropriate. Codex
    can write the narrative directly in the recipe after confirming facts with
@@ -117,7 +154,7 @@ python scripts/inspect_inputs.py <managed-input-or-same-engagement-artifact> --c
    come from reviewed measures. Use a digit-free entity display name. Periods
    may use `YYYY`, `FYYYYY`, `Qn YYYY`, an ISO date,
    `Year|Period|Quarter ended YYYY-MM-DD`, or an ISO-date `to|through` range.
-7. Treat every numeric-looking column as a candidate, not a measure. For each
+8. Treat every numeric-looking column as a candidate, not a measure. For each
    column whose total should appear, confirm its business meaning from the
    source and record the source-bound review with the helper. Do not select
    account codes, invoice numbers, vendor IDs, years, or other identifiers just
@@ -126,7 +163,7 @@ python scripts/inspect_inputs.py <managed-input-or-same-engagement-artifact> --c
 ```bash
 python scripts/review_numeric_measures.py \
   --client-engagement <client_engagement_path> \
-  --inspection <client-run-output>/inspection.json \
+  --inspection-control <client-run-output>/inspection_control.json \
   --recipe <client-run-output>/suggested_recipe.json \
   --output <client-run-output>/reviewed_recipe.json \
   --section <section-key> \
@@ -145,7 +182,9 @@ python scripts/review_numeric_measures.py \
 ```
 
    Choose `--header-row` from `header_review_options.supported_choices` in
-   `inspection.json`; use the detected one-based row only after review, or
+   bounded `inspection.json`; the deterministic helper reads the private
+   control packet without placing it in model context. Use the detected
+   one-based row only after review, or
    `none` when the source is headerless. Repeat against the updated recipe when
    more than one section has reviewed measures. Every numeric candidate column
    under the chosen header interpretation must be included or excluded, and
@@ -157,13 +196,13 @@ python scripts/review_numeric_measures.py \
    currencies, a unit/format conflict, or a report-period change after review.
    Without a valid source-and-period-bound review receipt, the build omits
    numeric totals and the numeric evidence ledger.
-8. Run deterministic build:
+9. Run deterministic build:
 
 ```bash
 python scripts/build_report.py <managed-input-or-same-engagement-artifact> --client-engagement <client_engagement_path> --output-dir <client-run-output>/report --recipe <client-run-output>/reviewed_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es> --report-type <management_report|local_government_review|annual_financial_statement>
 ```
 
-9. Review `report_analysis.json`, `report_audit.json`, `report_draft.md`, and the styled `report.docx` before final delivery. Report assigned sections, missing sections, pending numeric-measure reviews, tables discovered, narrative sections filled by Codex, and output paths.
+10. Review `report_analysis.json`, `report_audit.json`, `report_draft.md`, and the styled `report.docx` before final delivery. Report assigned sections, missing sections, pending numeric-measure reviews, tables discovered, narrative sections filled by Codex, and output paths.
 
 ## Mapping Recipe Rules
 
@@ -193,6 +232,7 @@ Do not ask the user to edit JSON. Ask the user in business terms, then Codex upd
 ## Expected Outputs
 
 - `inspection.json`;
+- `model_context_receipt.json`;
 - `suggested_recipe.json`;
 - `report/report_tables.json`;
 - `report/report_tables.xlsx`;
@@ -211,7 +251,8 @@ Do not ask the user to edit JSON. Ask the user in business terms, then Codex upd
 - `report/final_artifacts.json`.
 
 The run also keeps `report/source_index.json` and
-`report/review_integrity.json` as private control state. Do not present either
+`report/review_integrity.json` as private control state. The inspection run
+also keeps `inspection_control.json` as private control state. Do not present any of these
 as a deliverable. Absolute source roots occur only in the private source index.
 Raw extracted ZIP members and `revisions/` backups also remain outside the
 `final_artifacts.json` gallery.

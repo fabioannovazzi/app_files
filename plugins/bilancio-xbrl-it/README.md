@@ -7,6 +7,15 @@ prior-year reuse, schedule and note preparation, inconsistency resolution, and
 professional review. Exact arithmetic, statutory rules, reconciliations, and
 XBRL rendering remain deterministic and auditable.
 
+Model participation uses the same bounded packet contract in Codex and Cowork.
+Mapping is limited to fifty selected accounts; disclosure activation starts
+with twenty accounts and supports exact selectors; narrative drafting uses the
+section's rule-linked accepted evidence plus optional exact selectors;
+workflow, question, prior-year, and issue packets have fixed page bounds. Every
+packet carries a context hash and disclosed/available counts, while paginated or
+selector-based follow-ups keep the complete case reachable without sending
+`case.json` or the full source population by default.
+
 `bilancio-xbrl-it` is the stable internal technical identifier. XBRL is one
 export adapter for the approved canonical bilancio; it is not the product
 identity or the intelligence layer. See the skill references for the fixed

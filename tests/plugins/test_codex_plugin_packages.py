@@ -528,7 +528,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.133"
+    assert manifest["version"] == "0.1.134"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3160,7 +3160,10 @@ def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
 
     assert "OpenAI" not in bilancio_copy
     assert "Anthropic" not in bilancio_copy
-    assert "Se gli strumenti di Cowork non sono disponibili" in bilancio_copy
+    assert "Codex e Cowork applicano gli stessi limiti" in bilancio_copy
+    assert "il modello non riceve il case.json o i file completi come ripiego" in (
+        bilancio_copy
+    )
 
 
 SHARED_PRODUCT_PAGE_PATHS = {
@@ -4307,7 +4310,7 @@ def test_report_builder_page_matches_plugin_site_pattern() -> None:
         assert snippet in page
 
 
-def test_report_builder_page_explains_full_population_model_data_flow() -> None:
+def test_report_builder_page_explains_bounded_model_data_flow() -> None:
     page = (ROOT / "static" / "shared" / "report-builder" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -4328,12 +4331,13 @@ def test_report_builder_page_explains_full_population_model_data_flow() -> None:
         "Welche Daten das Modell erhält",
         "Qué datos recibe el modelo",
         "tutte le righe e celle non vuote",
-        "the complete cell inventory",
-        "noms du client ou de l'entité",
-        "Mandanten- oder Unternehmensnamen",
-        "No se aplica anonimización automática",
-        "In Codex le fonti provengono dal fascicolo Studio Archive",
-        "in Cowork, they may come directly from connected files",
+        "at most eight preview rows per table",
+        "up to 16 exact columns and 100 source rows",
+        "L'inventaire complet reste dans le contrôle local privé",
+        "keine automatische Anonymisierung oder Pseudonymisierung",
+        "No hay anonimización ni seudonimización automática",
+        "Codex e Cowork applicano gli stessi limiti",
+        "Cowork does not replace the helper with a direct read",
     ):
         assert snippet in page
     for key in ("model.label", "model.title", "model.conclusion", "model.copy"):

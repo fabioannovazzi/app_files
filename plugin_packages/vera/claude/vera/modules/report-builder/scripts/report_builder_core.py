@@ -119,6 +119,9 @@ NUMERIC_MEASURE_ADAPTER_VERSION = "v4"
 NUMERIC_MEASURE_DECISION_TYPE = "numeric_measure_mapping"
 NUMERIC_PARSE_POLICY = "strict_all_nonblank_v1"
 NUMERIC_SIGN_POLICIES = {"as_presented_v1", "invert_v1"}
+MODEL_CONTEXT_PREVIEW_ROWS = 8
+MODEL_CONTEXT_MAX_EXPANSION_ROWS = 100
+MODEL_CONTEXT_MAX_EXPANSION_COLUMNS = 16
 NUMERIC_LOCALE_SEPARATORS: dict[str, tuple[str, str]] = {
     "en": (".", ","),
     "it": (",", "."),
@@ -690,6 +693,7 @@ __all__ = [
     "add_common_args",
     "build_report",
     "configure_logging",
+    "build_model_context_expansion",
     "inspect_inputs",
     "load_indexed_tables",
     "normalize_language",
@@ -2172,7 +2176,9 @@ def inspect_table(table: dict[str, Any]) -> dict[str, Any]:
 
     rows = table.get("rows", [])
     header_idx = header_candidate_index(rows)
-    preview = _redact_numeric_preview_rows(rows_as_dicts(rows, header_idx)[:8])
+    preview = _redact_numeric_preview_rows(
+        rows_as_dicts(rows, header_idx)[:MODEL_CONTEXT_PREVIEW_ROWS]
+    )
     profile = table_numeric_profile(
         rows,
         header_idx,
@@ -2228,12 +2234,210 @@ def inspect_table(table: dict[str, Any]) -> dict[str, Any]:
 
 
 def _public_table_inspection(table: dict[str, Any]) -> dict[str, Any]:
-    """Remove cell-level review material from a rendered table inventory."""
+    """Remove full-population cell values from a model-visible table inventory."""
 
     public = copy.deepcopy(table)
     public.pop("numeric_measure_cells", None)
     public.pop("headerless_numeric_measure_cells", None)
     return public
+
+
+def _model_inspection_packet(inspection: Mapping[str, Any]) -> dict[str, Any]:
+    """Build the bounded default model packet from private deterministic control.
+
+    The selection and omission rules are fixed because packet shape and disclosure
+    bounds are mechanically verifiable privacy controls.  They do not decide which
+    evidence is professionally relevant; that judgment remains with the model and
+    reviewer through explicit targeted expansion.
+    """
+
+    packet = copy.deepcopy(dict(inspection))
+    packet["tables"] = [
+        _public_table_inspection(table)
+        for table in inspection.get("tables", [])
+        if isinstance(table, dict)
+    ]
+    packet["model_context"] = {
+        "packet_role": "bounded_default",
+        "full_population_processed_locally": True,
+        "full_cell_inventory_model_visible": False,
+        "preview_rows_per_table": MODEL_CONTEXT_PREVIEW_ROWS,
+        "numeric_values_in_preview": "redacted",
+        "targeted_expansion": {
+            "command": "scripts/expand_model_context.py",
+            "selection": "one table, exact columns, and one source-row range",
+            "max_rows_per_packet": MODEL_CONTEXT_MAX_EXPANSION_ROWS,
+            "max_columns_per_packet": MODEL_CONTEXT_MAX_EXPANSION_COLUMNS,
+            "repeatable": True,
+        },
+    }
+    return packet
+
+
+def _packet_sha256(value: Mapping[str, Any]) -> str:
+    """Hash canonical JSON packet content without making semantic judgments."""
+
+    return hashlib.sha256(
+        json.dumps(
+            value,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def build_model_context_expansion(
+    inspection_control: Mapping[str, Any],
+    *,
+    table_id: str,
+    header_row: int | None,
+    columns: Sequence[str],
+    row_start: int,
+    row_limit: int,
+    purpose: str,
+) -> dict[str, Any]:
+    """Return one bounded, explicit table slice from private inspection control.
+
+    Bounds, exact selectors, and receipt generation are deterministic security and
+    auditability controls.  The caller supplies the purpose and selected evidence;
+    this helper does not classify relevance or decide professional sufficiency.
+    """
+
+    selected_table_id = clean_text(table_id)
+    selected_purpose = clean_text(purpose)
+    selected_columns = [clean_text(item) for item in columns if clean_text(item)]
+    if not selected_table_id:
+        raise ValueError("Model-context expansion requires a table_id")
+    if not selected_purpose or len(selected_purpose) > 240:
+        raise ValueError(
+            "Model-context expansion purpose must contain 1 to 240 characters"
+        )
+    if isinstance(row_start, bool) or row_start < 1:
+        raise ValueError("Model-context expansion row_start must be positive")
+    if (
+        isinstance(row_limit, bool)
+        or row_limit < 1
+        or row_limit > MODEL_CONTEXT_MAX_EXPANSION_ROWS
+    ):
+        raise ValueError(
+            "Model-context expansion row_limit must be between 1 and "
+            f"{MODEL_CONTEXT_MAX_EXPANSION_ROWS}"
+        )
+    if (
+        not selected_columns
+        or len(selected_columns) > MODEL_CONTEXT_MAX_EXPANSION_COLUMNS
+    ):
+        raise ValueError(
+            "Model-context expansion requires 1 to "
+            f"{MODEL_CONTEXT_MAX_EXPANSION_COLUMNS} exact columns"
+        )
+    if len(selected_columns) != len(set(selected_columns)):
+        raise ValueError("Model-context expansion columns must be unique")
+
+    table = next(
+        (
+            item
+            for item in inspection_control.get("tables", [])
+            if isinstance(item, dict)
+            and clean_text(item.get("table_id")) == selected_table_id
+        ),
+        None,
+    )
+    if table is None:
+        raise ValueError("Model-context expansion references an unknown table_id")
+    detected_header_row = table.get("header_row")
+    if header_row is None:
+        inventory = table.get("headerless_numeric_measure_cells")
+        first_data_row = 1
+    elif header_row == detected_header_row:
+        inventory = table.get("numeric_measure_cells")
+        first_data_row = header_row + 1
+    else:
+        raise ValueError(
+            "Model-context expansion header_row must be the detected row or none"
+        )
+    if not isinstance(inventory, list):
+        raise ValueError("Inspection control lacks the full cell inventory")
+    inventory_by_column = {
+        clean_text(item.get("column")): item
+        for item in inventory
+        if isinstance(item, dict) and clean_text(item.get("column"))
+    }
+    unknown = set(selected_columns) - set(inventory_by_column)
+    if unknown:
+        raise ValueError(
+            f"Model-context expansion references unknown columns: {sorted(unknown)}"
+        )
+    if row_start < first_data_row:
+        raise ValueError(
+            f"Model-context expansion row_start must be at least {first_data_row}"
+        )
+    available_rows = [
+        int(cell["row"])
+        for column in selected_columns
+        for cell in inventory_by_column[column].get("nonblank_cells", [])
+        if isinstance(cell, dict) and isinstance(cell.get("row"), int)
+    ]
+    if not available_rows or row_start > max(available_rows):
+        raise ValueError("Model-context expansion row_start is outside the table")
+    row_end = min(row_start + row_limit - 1, max(available_rows))
+    cells_by_column: dict[str, dict[int, dict[str, Any]]] = {}
+    for column in selected_columns:
+        raw_cells = inventory_by_column[column].get("nonblank_cells", [])
+        if not isinstance(raw_cells, list):
+            raise ValueError("Inspection control contains malformed cell inventory")
+        cells_by_column[column] = {
+            int(cell["row"]): copy.deepcopy(cell)
+            for cell in raw_cells
+            if isinstance(cell, dict)
+            and isinstance(cell.get("row"), int)
+            and row_start <= int(cell["row"]) <= row_end
+        }
+    packet: dict[str, Any] = {
+        "schema_version": "report-builder.model-context.v1",
+        "workflow": "report-builder",
+        "packet_role": "targeted_expansion",
+        "purpose": selected_purpose,
+        "table": {
+            "table_id": selected_table_id,
+            "kind": clean_text(table.get("kind")),
+            "source_file": clean_text(table.get("source_file")),
+            "source_artifact_ref": clean_text(table.get("source_artifact_ref")),
+            "sheet_name": clean_text(table.get("sheet_name")),
+        },
+        "selection": {
+            "header_row": header_row,
+            "columns": selected_columns,
+            "row_start": row_start,
+            "row_end": row_end,
+            "requested_row_limit": row_limit,
+            "disclosed_row_count": row_end - row_start + 1,
+            "max_rows_per_packet": MODEL_CONTEXT_MAX_EXPANSION_ROWS,
+            "max_columns_per_packet": MODEL_CONTEXT_MAX_EXPANSION_COLUMNS,
+        },
+        "rows": [
+            {
+                "source_row": row,
+                "cells": {
+                    column: cells_by_column[column].get(row)
+                    for column in selected_columns
+                },
+            }
+            for row in range(row_start, row_end + 1)
+        ],
+    }
+    packet["context_receipt"] = {
+        "schema_version": "vera.model_context_receipt.v1",
+        "content_sha256": _packet_sha256(packet),
+        "table_id": selected_table_id,
+        "header_row": header_row,
+        "columns": selected_columns,
+        "row_start": row_start,
+        "row_end": row_end,
+        "purpose": selected_purpose,
+    }
+    return packet
 
 
 def section_title(section_key: str, language: str) -> str:
@@ -2474,7 +2678,7 @@ def inspect_inputs(
     document_language: object | None = None,
     report_type: object | None = None,
 ) -> InspectionResult:
-    """Inspect report inputs and write inspection plus suggested recipe files."""
+    """Inspect all report inputs locally and write bounded model/control packets."""
 
     output_dir.mkdir(parents=True, exist_ok=True)
     assumptions = language_assumptions(
@@ -2510,7 +2714,38 @@ def inspect_inputs(
         document_language=assumptions["document_language"],
         report_type=report_key,
     )
-    write_json(output_dir / "inspection.json", inspection)
+    model_inspection = _model_inspection_packet(inspection)
+    control_path = output_dir / "inspection_control.json"
+    model_path = output_dir / "inspection.json"
+    write_json(control_path, inspection)
+    write_json(model_path, model_inspection)
+    write_json(
+        output_dir / "model_context_receipt.json",
+        {
+            "schema_version": "vera.model_context_receipt.v1",
+            "workflow": "report-builder",
+            "full_population_processed_locally": True,
+            "default_model_packet": artifact_receipt(
+                output_dir,
+                model_path,
+                artifact_id="model_context.default_inspection",
+                role="model_context",
+                media_type="application/json",
+            ),
+            "private_control": artifact_receipt(
+                output_dir,
+                control_path,
+                artifact_id="control.full_inspection",
+                role="private_control",
+                media_type="application/json",
+            ),
+            "bounds": {
+                "preview_rows_per_table": MODEL_CONTEXT_PREVIEW_ROWS,
+                "max_expansion_rows": MODEL_CONTEXT_MAX_EXPANSION_ROWS,
+                "max_expansion_columns": MODEL_CONTEXT_MAX_EXPANSION_COLUMNS,
+            },
+        },
+    )
     write_json(output_dir / "suggested_recipe.json", recipe)
     return InspectionResult(inspection=inspection, suggested_recipe=recipe)
 

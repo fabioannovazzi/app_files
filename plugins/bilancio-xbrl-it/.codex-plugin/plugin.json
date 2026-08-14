@@ -1,6 +1,6 @@
 {
   "name": "bilancio-xbrl-it",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "description": "Intelligent, source-traceable preparation of Italian OIC annual accounts from spreadsheets or reviewed PDFs, with deterministic XBRL export.",
   "author": {
     "name": "Mparanza",

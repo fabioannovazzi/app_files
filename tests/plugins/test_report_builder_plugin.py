@@ -1122,7 +1122,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
 
     # Assert
     assert integrity["schema_version"] == "report_builder.review_integrity.v4"
-    assert len(references) == 31
+    assert len(references) == 32
     assert [receipt["artifact_id"] for receipt in receipts] == references
     assert {
         "implementation.report_builder.scripts.report_builder_core.py",
@@ -3403,7 +3403,36 @@ def test_numeric_review_cli_records_explicit_column_cell_and_sign_contract(
     recipe["sections"]["budget"]["assigned_table"] = input_path.name
     recipe_path = inspection_dir / "recipe.json"
     output_path = inspection_dir / "reviewed.json"
+    expansion_path = inspection_dir / "model-context" / "budget-row.json"
     core.write_json(recipe_path, recipe)
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "expand_model_context.py"),
+            "--client-engagement",
+            str(running["context_path"]),
+            "--inspection-control",
+            str(inspection_dir / "inspection_control.json"),
+            "--output",
+            str(expansion_path),
+            "--table-id",
+            str(inspection.inspection["tables"][0]["table_id"]),
+            "--header-row",
+            str(inspection.inspection["tables"][0]["header_row"]),
+            "--columns",
+            "line,amount",
+            "--row-start",
+            "2",
+            "--row-limit",
+            "1",
+            "--purpose",
+            "Review the first budget line.",
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
 
     subprocess.run(
         [
@@ -3452,7 +3481,10 @@ def test_numeric_review_cli_records_explicit_column_cell_and_sign_contract(
     )
     reviewed = json.loads(output_path.read_text(encoding="utf-8"))
     content = reviewed["sections"]["budget"]["numeric_measure_decision"]["content"]
+    expansion = json.loads(expansion_path.read_text(encoding="utf-8"))
 
+    assert expansion["rows"][0]["cells"]["line"]["source_text"] == "A"
+    assert expansion["context_receipt"]["purpose"] == ("Review the first budget line.")
     assert content["numeric_measure_columns"] == ["amount"]
     assert content["excluded_numeric_candidate_columns"] == ["account_id"]
     assert content["numeric_contract"]["sign_policy"] == "as_presented_v1"
@@ -3786,6 +3818,131 @@ def test_plugin_inspects_and_builds_report_without_model_calls(tmp_path: Path) -
         strict_output_content=True,
     )
     assert contract_report.ok, contract_report.as_dict()
+
+
+def test_inspection_writes_bounded_model_packet_and_private_full_control(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "customers.csv"
+    rows = ["customer,amount"] + [
+        f"Customer {index},{index * 10}" for index in range(1, 206)
+    ]
+    input_path.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    output_dir = tmp_path / "inspection"
+
+    result = core.inspect_inputs(
+        input_path,
+        output_dir,
+        report_type="management_report",
+    )
+
+    model_packet = json.loads((output_dir / "inspection.json").read_text())
+    control_packet = json.loads((output_dir / "inspection_control.json").read_text())
+    receipt = json.loads((output_dir / "model_context_receipt.json").read_text())
+    assert "numeric_measure_cells" not in model_packet["tables"][0]
+    assert "headerless_numeric_measure_cells" not in model_packet["tables"][0]
+    assert "numeric_measure_cells" in control_packet["tables"][0]
+    assert result.inspection == control_packet
+    assert "Customer 20" not in (output_dir / "inspection.json").read_text()
+    assert "Customer 20" in (output_dir / "inspection_control.json").read_text()
+    assert model_packet["model_context"]["full_population_processed_locally"] is True
+    assert (
+        receipt["default_model_packet"]["sha256"]
+        == hashlib.sha256((output_dir / "inspection.json").read_bytes()).hexdigest()
+    )
+    assert (
+        receipt["private_control"]["sha256"]
+        == hashlib.sha256(
+            (output_dir / "inspection_control.json").read_bytes()
+        ).hexdigest()
+    )
+    table = result.inspection["tables"][0]
+    expanded_names = []
+    for row_start, row_limit in ((2, 100), (102, 100), (202, 5)):
+        packet = core.build_model_context_expansion(
+            result.inspection,
+            table_id=table["table_id"],
+            header_row=table["header_row"],
+            columns=["customer"],
+            row_start=row_start,
+            row_limit=row_limit,
+            purpose=f"Review source rows starting at {row_start}.",
+        )
+        expanded_names.extend(
+            row["cells"]["customer"]["source_text"] for row in packet["rows"]
+        )
+    assert expanded_names == [f"Customer {index}" for index in range(1, 206)]
+
+
+def test_model_context_expansion_is_exact_bounded_and_receipted(tmp_path: Path) -> None:
+    core = load_core()
+    input_path = tmp_path / "customers.csv"
+    input_path.write_text(
+        "customer,amount,internal_note\n"
+        "Alpha,10,ordinary\n"
+        "Private Counterparty,20,sensitive evidence\n"
+        "Gamma,30,ordinary\n",
+        encoding="utf-8",
+    )
+    inspection = core.inspect_inputs(
+        input_path,
+        tmp_path / "inspection",
+        report_type="management_report",
+    ).inspection
+    table = inspection["tables"][0]
+
+    packet = core.build_model_context_expansion(
+        inspection,
+        table_id=table["table_id"],
+        header_row=table["header_row"],
+        columns=["customer", "amount"],
+        row_start=3,
+        row_limit=1,
+        purpose="Review one exceptional line for the budget narrative.",
+    )
+
+    assert packet["selection"]["columns"] == ["customer", "amount"]
+    assert packet["rows"] == [
+        {
+            "source_row": 3,
+            "cells": {
+                "customer": {
+                    "row": 3,
+                    "coordinate": "A3",
+                    "source_text": "Private Counterparty",
+                    "number_format": "",
+                    "formula": None,
+                    "formula_cached_value": None,
+                    "formula_cache_status": "not_formula",
+                },
+                "amount": {
+                    "row": 3,
+                    "coordinate": "B3",
+                    "source_text": "20",
+                    "number_format": "",
+                    "formula": None,
+                    "formula_cached_value": None,
+                    "formula_cache_status": "not_formula",
+                },
+            },
+        }
+    ]
+    unhashed = {key: value for key, value in packet.items() if key != "context_receipt"}
+    assert packet["context_receipt"]["content_sha256"] == _canonical_json_sha256(
+        unhashed
+    )
+    assert "sensitive evidence" not in json.dumps(packet)
+    with pytest.raises(ValueError, match="row_limit"):
+        core.build_model_context_expansion(
+            inspection,
+            table_id=table["table_id"],
+            header_row=table["header_row"],
+            columns=["customer"],
+            row_start=2,
+            row_limit=101,
+            purpose="Attempt an over-broad disclosure.",
+        )
 
 
 def test_plugin_marks_unassigned_sections_for_codex_review(tmp_path: Path) -> None:

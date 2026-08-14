@@ -122,6 +122,40 @@ def test_auto_orchestration_selects_mapping_from_authoritative_case_state() -> N
     assert packet["orchestration"]["selected_automatically"] is True
 
 
+def test_mapping_batches_keep_every_account_reachable() -> None:
+    case = _mapping_case()
+    template = case["trial_balance"]["entries"][0]
+    case["trial_balance"]["entries"] = [
+        {
+            **template,
+            "account_id": f"acc_{index}",
+            "account_code": str(1000 + index),
+            "account_description": f"Account {index}",
+            "source_refs": [f"src_{index}"],
+        }
+        for index in range(1, 76)
+    ]
+
+    first = intelligence.build_intelligence_packet(
+        case,
+        "ACCOUNT_MAPPING",
+        [f"acc_{index}" for index in range(1, 51)],
+    )
+    second = intelligence.build_intelligence_packet(
+        case,
+        "ACCOUNT_MAPPING",
+        [f"acc_{index}" for index in range(51, 76)],
+    )
+
+    disclosed = {
+        item["account_id"]
+        for packet in (first, second)
+        for item in packet["untrusted_evidence"]["accounts"]
+    }
+    assert disclosed == {f"acc_{index}" for index in range(1, 76)}
+    assert first["context_scope"]["max_accounts_per_packet"] == 50
+
+
 def test_auto_orchestration_requires_form_determination_before_selection() -> None:
     case = _mapping_case()
     case["selected_form"] = None
@@ -262,6 +296,183 @@ def test_disclosure_activation_output_remains_a_reviewable_model_suggestion() ->
 
     assert result["suggestions"][0]["status"] == "MODEL_SUGGESTED"
     assert result["suggestions"][0]["requires_review"] is True
+
+
+def test_disclosure_context_defaults_to_twenty_accounts_and_expands_exactly() -> None:
+    case = _mapping_case()
+    template = case["trial_balance"]["entries"][0]
+    case["trial_balance"]["entries"] = [
+        {
+            **template,
+            "account_id": f"acc_{index}",
+            "account_code": str(1000 + index),
+            "account_description": f"Private account description {index}",
+            "source_refs": [f"src_{index}"],
+        }
+        for index in range(1, 26)
+    ]
+    case["disclosure_rule_pack"] = json.loads(
+        DISCLOSURE_RULE_PACK.read_text(encoding="utf-8")
+    )
+
+    bounded = intelligence.build_intelligence_packet(
+        case, "DISCLOSURE_ACTIVATION", ["EMPLOYEES_OR_BODIES_PRESENT"]
+    )
+    expanded = intelligence.build_intelligence_packet(
+        case,
+        "DISCLOSURE_ACTIVATION",
+        ["EMPLOYEES_OR_BODIES_PRESENT", "account:acc_25"],
+    )
+
+    assert len(bounded["untrusted_evidence"]["accounts"]) == 20
+    assert "Private account description 25" not in json.dumps(bounded)
+    assert len(bounded["untrusted_evidence"]["account_catalog"]) == 25
+    assert "Private account description 25" in json.dumps(expanded)
+    assert expanded["context_scope"]["disclosed"]["accounts"] == 21
+    content = {key: value for key, value in bounded.items() if key != "context_receipt"}
+    assert bounded["context_receipt"]["content_sha256"] == (
+        intelligence.intelligence_packet_hash(content)
+    )
+
+
+def test_disclosure_context_rejects_more_than_fifty_optional_selectors() -> None:
+    case = _mapping_case()
+    template = case["trial_balance"]["entries"][0]
+    case["trial_balance"]["entries"] = [
+        {
+            **template,
+            "account_id": f"acc_{index}",
+            "account_code": str(1000 + index),
+        }
+        for index in range(1, 52)
+    ]
+    case["disclosure_rule_pack"] = json.loads(
+        DISCLOSURE_RULE_PACK.read_text(encoding="utf-8")
+    )
+
+    with pytest.raises(ValueError, match="at most 50 context selectors"):
+        intelligence.build_intelligence_packet(
+            case,
+            "DISCLOSURE_ACTIVATION",
+            [
+                "EMPLOYEES_OR_BODIES_PRESENT",
+                *(f"account:acc_{index}" for index in range(1, 52)),
+            ],
+        )
+
+
+def test_narrative_packet_uses_rule_linked_answers_and_exact_fact_expansion() -> None:
+    case = {
+        "revision_id": "rev_1",
+        "state": "NOTE_DRAFT",
+        "period": {"start": "2025-01-01", "end": "2025-12-31"},
+        "selected_form": "ABBREVIATED",
+        "entity": {"legal_form": "SRL"},
+        "note_outline": [
+            {
+                "section_id": "ASSETS",
+                "title": "Attivo",
+                "triggered_rule_ids": ["RULE.ASSETS"],
+                "status": "EMPTY",
+            }
+        ],
+        "disclosure_coverage": {
+            "coverage": [
+                {
+                    "rule_id": "RULE.ASSETS",
+                    "requirements": [
+                        {"kind": "ANSWER", "key": "asset_policy"},
+                        {"kind": "NARRATIVE_SECTION", "key": "ASSETS"},
+                    ],
+                }
+            ]
+        },
+        "canonical_facts": [
+            {
+                "fact_id": "fact_private",
+                "key": "SP.ATTIVO.CREDITI",
+                "statement_section": "ASSETS",
+                "current_value": "100",
+                "prior_value": "90",
+                "source_refs": ["src_fact"],
+            }
+        ],
+        "disclosure_answers": [
+            {
+                "key": "asset_policy",
+                "value": "Reviewed asset policy",
+                "status": "ACCEPTED",
+                "source_refs": ["src_answer"],
+            },
+            {
+                "key": "unrelated_people_data",
+                "value": "Private unrelated answer",
+                "status": "ACCEPTED",
+                "source_refs": ["src_other"],
+            },
+        ],
+        "schedules": [],
+        "prior_narrative_suggestions": [],
+    }
+
+    bounded = intelligence.build_intelligence_packet(
+        case, "NARRATIVE_DRAFT", ["ASSETS"]
+    )
+    expanded = intelligence.build_intelligence_packet(
+        case, "NARRATIVE_DRAFT", ["ASSETS", "fact:fact_private"]
+    )
+
+    assert [
+        item["key"] for item in bounded["reviewed_context"]["accepted_answers"]
+    ] == ["asset_policy"]
+    assert bounded["reviewed_context"]["accepted_facts"] == []
+    assert "Private unrelated answer" not in json.dumps(bounded)
+    assert expanded["reviewed_context"]["accepted_facts"][0]["fact_id"] == (
+        "fact_private"
+    )
+    assert expanded["context_scope"]["targeted_expansion_available"] is True
+    with pytest.raises(ValueError, match="outside its packet"):
+        intelligence.validate_intelligence_output(
+            bounded,
+            {
+                "blocks": [
+                    {
+                        "block_id": "block_catalog_only",
+                        "section_id": "ASSETS",
+                        "text": "Le attività sono state esaminate.",
+                        "claims": [
+                            {
+                                "sentence": "Le attività sono state esaminate.",
+                                "kind": "FACTUAL",
+                                "source_refs": ["fact_private"],
+                            }
+                        ],
+                    }
+                ]
+            },
+        )
+
+
+def test_workflow_guidance_bounds_issue_details_but_reports_total_count() -> None:
+    case = _mapping_case()
+    case["validation"] = {
+        "status": "INVALID",
+        "issues": [
+            {
+                "issue_id": f"issue_{index}",
+                "rule_id": "TEST.RULE",
+                "message": f"Private issue detail {index}",
+            }
+            for index in range(25)
+        ],
+    }
+
+    packet = intelligence.build_intelligence_packet(case, "WORKFLOW_GUIDANCE", [])
+
+    assert packet["reviewed_context"]["validation"]["issue_count"] == 25
+    assert len(packet["reviewed_context"]["validation"]["issues"]) == 20
+    assert "Private issue detail 24" not in json.dumps(packet)
+    assert packet["context_scope"]["max_items_per_collection"] == 20
 
 
 def test_model_packet_strips_nested_case_routing_and_computation_metadata() -> None:
@@ -458,7 +669,7 @@ def test_narrative_model_output_is_forced_to_draft() -> None:
         "prior_narrative_suggestions": [],
     }
     packet = intelligence.build_intelligence_packet(
-        case, "NARRATIVE_DRAFT", ["INTRODUCTION"]
+        case, "NARRATIVE_DRAFT", ["INTRODUCTION", "fact:fact_1"]
     )
     sentence = "La disponibilità liquida è pari a euro 100."
     output = {
@@ -544,7 +755,7 @@ def test_recorded_model_narrative_emits_generated_audit_event() -> None:
     result = xbrl_case.record_intelligence_suggestion(
         case,
         "NARRATIVE_DRAFT",
-        ["INTRODUCTION"],
+        ["INTRODUCTION", "fact:fact_1"],
         output,
         {
             "provider": "selected-runtime",
@@ -563,6 +774,9 @@ def test_recorded_model_narrative_emits_generated_audit_event() -> None:
     assert generated["details"]["block_count"] == 1
     assert generated["details"]["status"] == "MODEL_SUGGESTED"
     context = result["intelligence_runs"][0]["computation_context"]
+    assert result["intelligence_runs"][0]["input_context_receipt"]["task"] == (
+        "NARRATIVE_DRAFT"
+    )
     assert context["model_version"] == "reviewed-model-v1"
     assert context["template_version"] == "bilancio-intelligence-v1"
     assert context["revision_id"] == result["revision_id"]
