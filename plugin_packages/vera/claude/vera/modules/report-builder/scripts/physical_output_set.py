@@ -44,6 +44,8 @@ BASE_OUTPUT_PATHS = frozenset(
 INSPECTION_OUTPUT_PATHS = frozenset(
     {
         "inspection.json",
+        "inspection_control.json",
+        "model_context_receipt.json",
         "suggested_recipe.json",
     }
 )

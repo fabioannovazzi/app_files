@@ -37,6 +37,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/apply_review_edits.py"),
     ("plugin", "scripts/build_report.py"),
     ("plugin", "scripts/check_dependencies.py"),
+    ("plugin", "scripts/expand_model_context.py"),
     ("plugin", "scripts/implementation_bootstrap.py"),
     ("plugin", "scripts/implementation_contract.py"),
     ("plugin", "scripts/inspect_inputs.py"),

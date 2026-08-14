@@ -75,7 +75,10 @@ def main() -> int:
     """Run deterministic input inspection."""
 
     parser = argparse.ArgumentParser(
-        description="Inspect report input files and write inspection.json plus suggested_recipe.json."
+        description=(
+            "Inspect report inputs locally and write a bounded inspection.json, "
+            "private inspection_control.json, context receipt, and suggested recipe."
+        )
     )
     add_common_args(parser)
     parser.add_argument("--client-engagement", required=True, type=Path)
@@ -100,7 +103,8 @@ def main() -> int:
     print(
         "OK: inspected "
         f"{result.inspection['table_count']} tables; "
-        f"wrote {args.output_dir / 'inspection.json'} and "
+        f"wrote bounded {args.output_dir / 'inspection.json'}, private "
+        f"{args.output_dir / 'inspection_control.json'}, and "
         f"{args.output_dir / 'suggested_recipe.json'}"
     )
     return 0

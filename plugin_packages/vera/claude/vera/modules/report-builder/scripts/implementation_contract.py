@@ -52,6 +52,7 @@ PLUGIN_IMPLEMENTATION_PATHS = (
     "scripts/apply_review_edits.py",
     "scripts/build_report.py",
     "scripts/check_dependencies.py",
+    "scripts/expand_model_context.py",
     "scripts/implementation_bootstrap.py",
     "scripts/implementation_contract.py",
     "scripts/inspect_inputs.py",

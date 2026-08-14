@@ -1,4 +1,4 @@
-"""Inspect financial report inputs for the Build Report Codex plugin."""
+"""Create one bounded Report Builder model-context expansion packet."""
 
 from __future__ import annotations
 
@@ -52,7 +52,6 @@ _BOOTSTRAP_NAMESPACE = {
     "__file__": _BOOTSTRAP_PATH,
     "__name__": "_report_builder_implementation_bootstrap",
 }
-# The exact stable single-link bootstrap source is verified above.
 exec(  # nosec B102
     compile(_BOOTSTRAP_BYTES, _BOOTSTRAP_PATH, "exec"), _BOOTSTRAP_NAMESPACE
 )
@@ -62,50 +61,84 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+import json
 from pathlib import Path
 
-from report_builder_core import add_common_args, configure_logging, inspect_inputs
+from report_builder_core import build_model_context_expansion, write_json
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
 )
 
 
+def _json_object(path: Path) -> dict[str, object]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(payload, dict):
+        raise ValueError(f"Expected a JSON object: {path}")
+    return payload
+
+
+def _header_row(value: str) -> int | None:
+    if value.strip().lower() == "none":
+        return None
+    try:
+        row = int(value)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            "--header-row must be a positive row number or 'none'"
+        ) from exc
+    if row < 1:
+        raise argparse.ArgumentTypeError(
+            "--header-row must be a positive row number or 'none'"
+        )
+    return row
+
+
 def main() -> int:
-    """Run deterministic input inspection."""
+    """Write a purpose-labelled, hash-receipted table slice."""
 
     parser = argparse.ArgumentParser(
         description=(
-            "Inspect report inputs locally and write a bounded inspection.json, "
-            "private inspection_control.json, context receipt, and suggested recipe."
+            "Expand one exact Report Builder table/range from private control "
+            "without exposing the full source inventory."
         )
     )
-    add_common_args(parser)
+    parser.add_argument("--inspection-control", required=True, type=Path)
     parser.add_argument("--client-engagement", required=True, type=Path)
+    parser.add_argument("--output", required=True, type=Path)
+    parser.add_argument("--table-id", required=True)
+    parser.add_argument("--header-row", required=True, type=_header_row)
+    parser.add_argument(
+        "--columns",
+        required=True,
+        help="Comma-separated exact column names (maximum sixteen).",
+    )
+    parser.add_argument("--row-start", required=True, type=int)
+    parser.add_argument("--row-limit", required=True, type=int)
+    parser.add_argument("--purpose", required=True)
     args = parser.parse_args()
-    configure_logging(args.verbose)
     try:
         load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="report-builder",
-            input_paths=[args.input_path],
-            output_dir=args.output_dir,
+            input_paths=[args.inspection_control],
+            output_dir=args.output,
         )
-    except AssuranceContractError as exc:
+        packet = build_model_context_expansion(
+            _json_object(args.inspection_control),
+            table_id=args.table_id,
+            header_row=args.header_row,
+            columns=[item.strip() for item in args.columns.split(",")],
+            row_start=args.row_start,
+            row_limit=args.row_limit,
+            purpose=args.purpose,
+        )
+    except (AssuranceContractError, ValueError) as exc:
         parser.error(str(exc))
-    result = inspect_inputs(
-        args.input_path,
-        args.output_dir,
-        language=args.language,
-        document_language=args.document_language,
-        report_type=args.report_type,
-    )
+    write_json(args.output, packet)
     print(
-        "OK: inspected "
-        f"{result.inspection['table_count']} tables; "
-        f"wrote bounded {args.output_dir / 'inspection.json'}, private "
-        f"{args.output_dir / 'inspection_control.json'}, and "
-        f"{args.output_dir / 'suggested_recipe.json'}"
+        "OK: wrote bounded model-context expansion "
+        f"{args.output} ({len(packet['rows'])} rows)"
     )
     return 0
 

@@ -68,6 +68,9 @@ Use the recipe generated as `<workdir>/suggested_recipe.json`.
 3. Add known context notes under `context_items`.
 4. For each section, set `assigned_table` to a `table_id` from `inspection.json`.
 5. Review candidate numeric columns and use
+   use bounded `inspection.json` plus purpose-specific packets from
+   `scripts/expand_model_context.py` for semantic review. Never read private
+   `inspection_control.json` directly into model context. Use
    `scripts/review_numeric_measures.py` to bind every candidate column and
    nonblank candidate cell to an explicit include/exclude disposition at the
    exact source receipt. Explicitly choose the detected one-based header row or
@@ -92,7 +95,7 @@ Example reviewed-measure command:
 
 ```bash
 python scripts/review_numeric_measures.py \
-  --inspection <workdir>/inspection.json \
+  --inspection-control <workdir>/inspection_control.json \
   --recipe <workdir>/suggested_recipe.json \
   --output <workdir>/reviewed_recipe.json \
   --section <section-key> \
@@ -110,7 +113,7 @@ python scripts/review_numeric_measures.py \
   --sign-policy <as_presented_v1|invert_v1>
 ```
 
-Choose `--header-row` from `header_review_options.supported_choices` in
+Choose `--header-row` from `header_review_options.supported_choices` in bounded
 `inspection.json`. Repeat `--cell-disposition` for every nonblank cell in every
 included column under that reviewed header choice.
 The helper records all included and excluded cells, supports an all-excluded
@@ -152,7 +155,9 @@ incompatible with the reviewed unit.
 
 Before final delivery, inspect:
 
-- `inspection.json`: table count, extraction errors, low-confidence suggestions;
+- `inspection.json`: bounded table metadata, redacted eight-row previews,
+  extraction errors, and low-confidence suggestions;
+- `model_context_receipt.json`: hashes and exact default/expansion bounds;
 - `suggested_recipe.json` or `used_recipe.json`: entity, period, mapped sections, comments;
 - `report_analysis.json`: assigned and missing section counts;
 - `report_analysis.json`: `numeric_measure_status` is `reviewed` or

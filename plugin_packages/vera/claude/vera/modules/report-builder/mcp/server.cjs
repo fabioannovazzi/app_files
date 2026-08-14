@@ -20,6 +20,7 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
   "scripts/apply_review_edits.py",
   "scripts/build_report.py",
   "scripts/check_dependencies.py",
+  "scripts/expand_model_context.py",
   "scripts/implementation_bootstrap.py",
   "scripts/implementation_contract.py",
   "scripts/inspect_inputs.py",
@@ -1799,6 +1800,8 @@ const REPORT_BUILDER_BASE_OUTPUT_PATHS = new Set([
 ]);
 const REPORT_BUILDER_INSPECTION_OUTPUT_PATHS = new Set([
   "inspection.json",
+  "inspection_control.json",
+  "model_context_receipt.json",
   "suggested_recipe.json",
 ]);
 const REPORT_BUILDER_NUMERIC_OUTPUT_PATHS = new Set([
