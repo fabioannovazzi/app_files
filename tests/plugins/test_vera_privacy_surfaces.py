@@ -269,8 +269,20 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "every snapshot file within 5,000 files and 2 GB",
         "raw hashes, Drive IDs, versions, capabilities, and absolute source paths stay local",
         "Organization technical references are pseudonymized",
+        "only after operator review and approval",
+        "sanitized control roles and labels outside tables",
+        "Typed or selected values, credentials and one-time codes",
+        "sanitization does not guarantee anonymization",
     ):
         assert snippet in studio_page
+    for localized_agenzia_gate in (
+        "solo dopo revisione e approvazione dell’operatore",
+        "only after operator review and approval",
+        "seulement après examen et approbation par l’opérateur",
+        "erst nach Prüfung und Freigabe durch den Bediener",
+        "solo después de la revisión y aprobación del operador",
+    ):
+        assert localized_agenzia_gate in studio_page
     for contradictory_exclusion in (
         "hash e ID di esecuzione grezzi",
         "raw hashes and execution IDs",
