@@ -90,4 +90,12 @@ work. Do not add a per-case model-use authority or minimisation declaration
 that Vera cannot verify. Keep credentials, cookies, tokens, session URLs, and
 raw local paths outside the review payload.
 
+For phase one, when `model_handoff.json` exists, both Claude and Cowork use it
+and every declared page as their default context. Use only the item kinds
+listed for the current phase. Keep `review_payload.json` as the local MCP/UI
+contract; do not use its broader draft previews as ordinary synthesis context.
+Exact local identifiers remain available in professional artifacts and may be
+loaded when the work requires them. The generic `CLIENT-001` reference applies
+only to phase-one email drafting; it is not blanket anonymization.
+
 The normal Cowork handoff is the reviewable draft, artifact card, and source/review files in the connected folder. Review them directly. When a validated MCP or local workbench is callable, it may optionally persist save/apply actions. If it is unavailable, deliver the useful file-based package and keep professional review pending. Never claim that decisions were applied or that the package reached `final_ready` unless corresponding persisted artifacts prove it.

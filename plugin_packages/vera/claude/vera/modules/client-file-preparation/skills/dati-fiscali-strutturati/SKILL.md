@@ -63,6 +63,12 @@ lifecycle state, or completed artifact declaration.
 
 Use this workflow after text extraction has produced `extracted/documents.jsonl` and `extracted/pdf_text/`.
 
+When `model_handoff.json` exists, Claude and Cowork must read every declared
+page and use all `fiscal_field` items as the default model input. Each mapped
+field remains present with its exact value and citation of at most 600
+characters. Use its `source_document_ref` to load the exact local source only
+when layout or evidence verification requires it; do not sample fields.
+
 ## Cowork-native Run UX
 
 Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.

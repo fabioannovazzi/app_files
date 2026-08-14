@@ -142,6 +142,28 @@ unsupported generic requests, explain weak evidence, point to unreadable files,
 or propose improvements, but it must not silently invent missing document
 content.
 
+## Default Model Handoff
+
+When `model_handoff.json` exists, both Claude and Cowork must use it and its
+hash-listed pages as the default model context. Read only the item kinds listed
+for the current phase in `phase_access`:
+
+- file-preparation review uses the complete file-metadata population, flagged
+  evidence excerpts, every mapped fiscal field with its bounded citation,
+  review-only missing-request candidates, duplicate groups, and XML checks;
+- client-email drafting uses only `email_request` items produced after a
+  reviewer decision and the generic `CLIENT-001` reference;
+- XML synthesis uses only `xml_anomaly` and `xml_duplicate_group` items, whose
+  party fields and duplicate keys have been replaced by document/group refs.
+
+Do not load `review_payload.json`, generated drafts, extracted text, or source
+documents into ordinary model context merely because they are present. The
+review payload remains the exact local UI/persistence contract. Load a bounded
+excerpt or exact local file only when the handoff flags it, the professional
+selects it, or the current judgment cannot be supported without it. Page order
+is deterministic; process every page, never sample. Each page must remain at or
+below 2,500 items and 1,500,000 bytes.
+
 ## Required Questions
 
 Ask only what is needed. If not obvious, ask for:
@@ -174,8 +196,9 @@ For a beta user's first run, guide the work in this order:
    and automatically retry as specified below.
 5. Run the deterministic intake script.
 6. Read the generated Markdown/CSV/JSONL evidence files before summarizing.
-7. Read `run_intake.json` and `review_payload.json`. Treat the review payload
-   as the shared UI/review contract for the run: document inventory rows,
+7. Read `run_intake.json` and, when present, `model_handoff.json` plus every
+   page declared there. Treat `review_payload.json` as the shared local
+   UI/review contract for the run: document inventory rows,
    uncertain files, missing-document requests, extracted fiscal fields, draft
    memo, and draft client email. If a local UI or fallback review is used,
    call `save_client_file_preparation_decisions` so `ui_decisions.json` is validated and
@@ -254,13 +277,15 @@ document extractions whose text integrity still matches. It rejects changed
 sources, incompatible settings, unrelated directories, and completed runs
 instead of overwriting them.
 
-`review_payload.json` includes bounded excerpts from every readable document in
-the selected folder, fiscal-field evidence snippets, and previews of the
-generated studio brief, memo, and client email by default. These may contain
-real client data needed for professional review. The limits are for interface
-and payload performance; they are not anonymization and do not enumerate
-everything Claude may have read. Credentials, session material, and raw absolute
-local paths remain excluded.
+`review_payload.json` keeps the exact local review state, including exception
+excerpts, fiscal-field evidence snippets, and previews of generated drafts.
+`model_handoff.json` is the narrower model-default artifact: it keeps one
+metadata item for every inventoried file, omits routine high-confidence text
+previews, retains every mapped fiscal field with a citation of at most 600
+characters, and paginates without sampling. These records may still contain
+real client data needed for professional work. Bounded excerpts are not
+anonymization. Credentials, session material, and raw absolute local paths
+remain excluded.
 DOCX, XLSX, and EML bodies are extracted locally;
 EML attachments, MSG, and other unsupported formats remain explicit unread
 evidence and must not receive an automatic accept recommendation.
@@ -277,6 +302,8 @@ rather than being silently trusted.
 run_intake.json
 review_payload.json
 ui_decisions.json
+model_handoff.json
+model_handoff_pages/page-*.json
 review_handoff.md
 final_artifacts.json
 applied_decisions.json (after application)
@@ -289,7 +316,8 @@ validate_client_file_preparation_review
 render_client_file_preparation_review
 ```
 
-Pass the complete `review_payload.json` object, plus `run_intake.json`,
+Use `model_handoff.json` for model reasoning. Pass the complete
+`review_payload.json` object only to the local review tool contract, plus `run_intake.json`,
 `ui_decisions.json`, and `final_artifacts.json` when useful. Do not hand-build a
 new HTML page for this review surface. When decisions are collected, use
 `save_client_file_preparation_decisions` to persist `ui_decisions.json`, then
@@ -316,7 +344,9 @@ The synthesis must contain:
 - `Punti per lo studio`
 - `Limiti della lettura`
 
-8. Review `04_bozza_email_cliente.md` after reading `02_documenti_mancanti_o_incerti.md`.
+8. Review missing-document candidates and Apply the professional decisions.
+   Draft or revise `04_bozza_email_cliente.md` from the resulting
+   `email_request` items in `model_handoff.json`, not from unreviewed candidates.
    The script writes a conservative first draft; Claude should improve it when
    the evidence supports a clearer request. Keep only client-facing requests
    supported by the findings, remove irrelevant generic questions, and keep the

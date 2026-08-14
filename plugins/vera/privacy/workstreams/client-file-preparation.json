@@ -7,6 +7,7 @@
     "skills",
     "scripts",
     "mcp",
+    "schemas",
     "assets/review-workbench-adapter.json",
     "assets/client-file-preparation-review-widget.html"
   ],
@@ -23,7 +24,7 @@
       {
         "id": "client-file-evidence",
         "purpose": "Classify the incoming file, interpret evidence, and prepare the studio intake",
-        "content": "Incoming client documents or extracted text; document names and evidence passages; structured fiscal fields; formal checks; extraction diagnostics; evidence locators; missing items; studio memo, client-email draft, review decisions, and package state",
+        "content": "Default model_handoff pages contain one metadata record for every inventoried file, exception-only document excerpts up to 600 characters, every mapped fiscal field with its exact value and a citation up to 600 characters, missing-request candidates for professional review, reviewed email requests with the generic CLIENT-001 reference, generic duplicate groups, and XML anomaly or opaque duplicate-group references without invoice party fields. Exact local documents, extracted text, drafts, identifiers, review state, and package state may still enter when selected for professional review or required by the task.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -65,6 +66,10 @@
       "control": "After deterministic classification, routine high-confidence document rows retain metadata and exact source references without repeated text previews; previews remain for exceptions, and fiscal evidence plus draft text remain available where professional review needs them."
     },
     {
+      "id": "purpose-shaped-model-handoff",
+      "control": "Codex and Cowork use the same hash-listed, deterministically ordered model_handoff pages when available. Every page is preflighted at no more than 2,500 items and 1,500,000 bytes and the complete population is paginated without sampling. Email drafting receives only reviewed requests plus CLIENT-001; XML synthesis receives anomaly and opaque duplicate-group refs without supplier/customer names, customer tax identifiers, or raw duplicate keys."
+    },
+    {
       "id": "draft-only-email",
       "control": "The workflow writes a reviewable email draft and never sends it automatically."
     },
@@ -77,6 +82,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "42f30ad5e545faf6ba32f10907eccf0fccc13b03582137a0992fb565c2413276"
+    "source_fingerprint": "44abe233ddf723dd9cc560813978562b286e6abd44bd1c55b4ff2b9b0f76cee2"
   }
 }

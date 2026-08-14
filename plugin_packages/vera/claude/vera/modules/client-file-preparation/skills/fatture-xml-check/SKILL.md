@@ -63,6 +63,13 @@ lifecycle state, or completed artifact declaration.
 
 Use this workflow for formal checks on e-fattura XML files.
 
+When `model_handoff.json` exists, Claude and Cowork use only `xml_anomaly` and
+`xml_duplicate_group` items from every declared page for XML synthesis. These
+items contain document refs, anomaly text, and opaque group refs; they omit
+supplier/customer names, customer tax identifiers, and raw duplicate keys.
+Read exact local XML or summaries only when the professional check needs a
+party field or the source evidence itself.
+
 ## Cowork-native Run UX
 
 Before running helper scripts or write-heavy work, identify material choices that would change execution: problem framing, decision angle, risk appetite, scope boundaries, audience, evidence posture, mappings, cut-off, OCR, notification, or review assumptions. Ask only those unresolved choices in chat and wait for the answer. Generate choices from the actual inputs; do not offer named frameworks, regulators, document types, output packages, or issue categories unless the facts cue them or the user must supply a missing custom value. Do not run long or write-heavy execution under unconfirmed assumptions.

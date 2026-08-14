@@ -138,6 +138,15 @@ source excerpts, and rationales when they are professionally useful. Do not add 
 separate per-run model-approval or minimization form merely to permit that work,
 and do not describe data removed after Codex read it as anonymized.
 
+When the promoted file-preparation phase contains `model_handoff.json`, Codex
+and Cowork use that index and all declared pages as the default context for
+phase-one synthesis. Respect its `phase_access` lists: email drafting receives
+only reviewed `email_request` items and `CLIENT-001`; XML synthesis receives
+only anomaly and opaque duplicate-group references. Load exact local evidence
+only when the professional task requires it. This purpose-specific generic
+email reference is not blanket anonymization and does not alter exact local
+professional artifacts.
+
 Keep credentials, authentication codes, cookies, private or tokenized session
 URLs, and screening-provider tokens out of every artifact and review surface.
 Keep raw local paths behind the owner-only persistence boundary. Authorization
