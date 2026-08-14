@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -4163,15 +4164,17 @@ TEMPLATE = """<!doctype html>
 
     function pickPayload(raw) {{
       if (!raw || typeof raw !== \"object\") return null;
-      if (raw.widget_type === CONFIG.widgetType || raw.review_payload) return raw;
-      if (raw.structuredContent) return pickPayload(raw.structuredContent);
-      if (raw.toolOutput) return pickPayload(raw.toolOutput);
+      if (raw.widget_type === CONFIG.widgetType || raw.review_payload || raw.ui_decisions || raw.final_artifacts || raw.applied_decisions) return raw;
+      for (const key of [\"widget_payload\", \"_meta\", \"toolResponseMetadata\", \"mcp_tool_result\", \"call_tool_result\", \"structuredContent\", \"toolOutput\"]) {{
+        const selected = pickPayload(raw[key]);
+        if (selected) return selected;
+      }}
       return null;
     }}
     function toolOutput() {{
       if (new URLSearchParams(window.location.search).has(\"demo\")) return DEMO_PAYLOAD;
       const host = window.openai || {{}};
-      return pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
+      return pickPayload(host.toolResponseMetadata) || pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
     }}
     function esc(value) {{
       return String(value ?? \"\").replace(/[&<>\"']/g, (char) => ({{ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }})[char]);
@@ -4934,6 +4937,8 @@ TEMPLATE = """<!doctype html>
     }}
 {tool_args_js}
     function parseToolResult(result) {{
+      const privatePayload = pickPayload(result);
+      if (privatePayload) return privatePayload;
       if (result?.structuredContent) return result.structuredContent;
       if (result?.ui_decisions || result?.ok != null) return result;
       const text = Array.isArray(result?.content) ? result.content.find((entry) => entry?.text)?.text : null;
@@ -5078,6 +5083,14 @@ TEMPLATE = """<!doctype html>
     document.getElementById(\"apply-decisions\").addEventListener(\"click\", handleApplyDecisions);
     document.getElementById(\"copy-decisions\").addEventListener(\"click\", () => copyDecisionJson().then(() => setSaveStatus(uiText(\"jsonCopied\", \"JSON copied.\"), \"ok\")).catch((error) => setSaveStatus(error.message || String(error), \"error\")));
     document.getElementById(\"download-decisions\").addEventListener(\"click\", downloadDecisionJson);
+    window.addEventListener(\"message\", (event) => {{
+      if (event?.data?.method !== \"ui/notifications/tool-result\") return;
+      const nextPayload = pickPayload(event.data.params);
+      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;
+      state.payload = nextPayload;
+      loadInitialDecisions();
+      render();
+    }});
     state.payload = toolOutput();
     loadInitialDecisions();
     render();
@@ -5166,6 +5179,32 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
         "widget_state_load_js": "          current[itemId] = decision;",
     }
+    if target["plugin"] == "concordato-plan-review":
+        return {
+            **legacy,
+            "tool_args_js": """    function reviewReferenceArgs() {
+      const clientEngagement = String(state.payload.client_engagement || "").trim();
+      const reviewReference = state.payload.review_reference;
+      if (!clientEngagement || !reviewReference || typeof reviewReference !== "object") {
+        throw new Error("The reference-bound customer review context is unavailable; render the review again.");
+      }
+      return { client_engagement: clientEngagement, review_reference: reviewReference };
+    }
+    function saveToolArgs() {
+      return {
+        ...reviewReferenceArgs(),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }
+    function applyToolArgs() {
+      return {
+        ...reviewReferenceArgs(),
+        decisions: collectDecisionInputs(),
+        decision_source: "mcp_widget",
+      };
+    }""",
+        }
     if target["plugin"] == "audit-reconciliation":
         return {
             **legacy,
@@ -5656,7 +5695,19 @@ def adapter_config(target: dict[str, Any]) -> dict[str, Any]:
 
 
 def main() -> None:
-    for target in TARGETS:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--plugin",
+        choices=sorted(target["plugin"] for target in TARGETS),
+        help="Regenerate only one review widget and adapter.",
+    )
+    args = parser.parse_args()
+    selected_targets = [
+        target
+        for target in TARGETS
+        if args.plugin is None or target["plugin"] == args.plugin
+    ]
+    for target in selected_targets:
         asset_dir = ROOT / "plugins" / target["plugin"] / "assets"
         adapter_path = asset_dir / "review-workbench-adapter.json"
         adapter_path.write_text(

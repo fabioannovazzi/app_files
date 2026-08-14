@@ -67,9 +67,12 @@ const WIDGET_URI = "ui://widget/concordato-plan-review.html";
 const WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
 const MAX_ITEMS = 2500;
 const MAX_PAYLOAD_BYTES = 2_000_000;
+const MAX_MODEL_REVIEW_ITEMS = 25;
+const REVIEW_REFERENCE_SCHEMA = "concordato.review_reference.v1";
 const TOOL_NAMES = {
   validateReview: "validate_concordato_plan_review",
   renderReview: "render_concordato_plan_review",
+  readReviewItems: "read_concordato_plan_review_items",
   saveDecisions: "save_concordato_plan_decisions",
   applyDecisions: "apply_concordato_plan_decisions",
 };
@@ -213,8 +216,11 @@ function objectSchema(properties, required = [], additionalProperties = true) {
 }
 
 function toolUiMeta(resourceUri, toolName = null) {
+  const componentOnly =
+    toolName === TOOL_NAMES.saveDecisions ||
+    toolName === TOOL_NAMES.applyDecisions;
   const meta = {
-    ui: { resourceUri, visibility: ["model"] },
+    ui: { resourceUri, visibility: componentOnly ? ["app"] : ["model"] },
     "ui/resourceUri": resourceUri,
     "openai/outputTemplate": resourceUri,
     "openai/widgetAccessible": true,
@@ -238,28 +244,34 @@ function widgetResourceMeta(uri) {
 }
 
 function toolDefinitions() {
-  const reviewPayload = objectSchema(
+  const reviewReference = objectSchema(
     {
       schema_version: { type: "string" },
-      plugin: { type: "string" },
       workflow: { type: "string" },
       run_id: { type: "string" },
-      review_type: { type: "string" },
-      items: { type: "array", items: { type: "object" } },
-      item_count: { type: "number" },
-      status: { type: "string" },
+      output_dir: { type: "string" },
+      review_payload_content_sha256: {
+        type: "string",
+        pattern: "^[0-9a-f]{64}$",
+      },
     },
-    ["schema_version", "plugin", "workflow", "run_id", "items", "item_count"],
+    [
+      "schema_version",
+      "workflow",
+      "run_id",
+      "output_dir",
+      "review_payload_content_sha256",
+    ],
+    false,
   );
   const inputSchema = objectSchema(
     {
       client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
-      run_intake: { type: "object", description: "Optional run_intake.json object." },
-      review_payload: reviewPayload,
-      ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
-      final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
+      review_reference: reviewReference,
+      language: { type: "string", description: "Optional response language hint." },
     },
-    ["review_payload"],
+    ["client_engagement", "review_reference"],
+    false,
   );
   const decisionSchema = objectSchema(
     {
@@ -278,21 +290,45 @@ function toolDefinitions() {
   const decisionInputSchema = objectSchema(
     {
       client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json; required for persistence." },
-      run_intake: { type: "object", description: "Optional run_intake.json object with output_dir for persistence." },
-      review_payload: reviewPayload,
-      ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
+      review_reference: reviewReference,
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["client_engagement", "review_reference", "decisions"],
+    false,
+  );
+  const reviewItemInputSchema = objectSchema(
+    {
+      client_engagement: { type: "string", description: "Absolute path to the current portable customer-run context.json." },
+      review_reference: reviewReference,
+      item_ids: {
+        type: "array",
+        items: { type: "string" },
+        maxItems: MAX_MODEL_REVIEW_ITEMS,
+        description: "Optional exact review item ids to inspect.",
+      },
+      item_types: {
+        type: "array",
+        items: { type: "string", enum: Array.from(ITEM_TYPES) },
+        description: "Optional review item types to inspect.",
+      },
+      offset: { type: "integer", minimum: 0 },
+      limit: {
+        type: "integer",
+        minimum: 1,
+        maximum: MAX_MODEL_REVIEW_ITEMS,
+      },
+    },
+    ["client_engagement", "review_reference"],
+    false,
   );
   return [
     {
       name: TOOL_NAMES.validateReview,
       title: "Validate Concordato Preventivo review payload",
       description:
-        "Validate the Concordato Preventivo review payload before rendering. Call this first, then render_concordato_plan_review.",
+        "Validate a reference-bound persisted Concordato Preventivo review before rendering. The complete review rows remain local.",
       inputSchema,
       annotations: {
         readOnlyHint: true,
@@ -305,9 +341,22 @@ function toolDefinitions() {
       name: TOOL_NAMES.renderReview,
       title: "Render Concordato Preventivo review",
       description:
-        "Render a Concordato Preventivo payload for procedure, creditor treatment, feasibility, issues, evidence, and numerical appendices.",
+        "Render the reference-bound Concordato Preventivo review. The model receives counts and status; the component receives the complete local review payload.",
       inputSchema,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+        idempotentHint: true,
+        openWorldHint: false,
+      },
+    },
+    {
+      name: TOOL_NAMES.readReviewItems,
+      title: "Read selected Concordato Preventivo review items",
+      description:
+        "Read at most 25 purpose-selected review items after semantic confirmation. Technical paths, hashes, and source filenames are omitted or replaced with stable source aliases; substantive professional evidence is preserved.",
+      inputSchema: reviewItemInputSchema,
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -321,6 +370,7 @@ function toolDefinitions() {
       description:
         "Validate Concordato Preventivo review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
+      _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.saveDecisions),
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -334,6 +384,7 @@ function toolDefinitions() {
       description:
         "Validate Concordato Preventivo review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
       inputSchema: decisionInputSchema,
+      _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.applyDecisions),
       annotations: {
         readOnlyHint: false,
         destructiveHint: true,
@@ -385,6 +436,87 @@ function boundedOptionalString(value, fieldPath) {
     throw new Error(`${fieldPath} exceeds ${MAX_DECISION_TEXT_LENGTH} characters`);
   }
   return value.trim();
+}
+
+function validateReviewReference(inputArgs) {
+  if (!isPlainObject(inputArgs)) throw new Error("tool arguments must be an object");
+  requireString(inputArgs.client_engagement, "client_engagement");
+  if (!path.isAbsolute(inputArgs.client_engagement)) {
+    throw new Error("client_engagement must be an absolute path");
+  }
+  const reference = inputArgs.review_reference;
+  if (!isPlainObject(reference)) throw new Error("review_reference must be an object");
+  const expectedKeys = [
+    "output_dir",
+    "review_payload_content_sha256",
+    "run_id",
+    "schema_version",
+    "workflow",
+  ];
+  if (stableJson(Object.keys(reference).sort()) !== stableJson(expectedKeys)) {
+    throw new Error("review_reference contains unsupported fields");
+  }
+  if (reference.schema_version !== REVIEW_REFERENCE_SCHEMA) {
+    throw new Error(`review_reference.schema_version must equal ${REVIEW_REFERENCE_SCHEMA}`);
+  }
+  if (reference.workflow !== "concordato-plan-review") {
+    throw new Error('review_reference.workflow must equal "concordato-plan-review"');
+  }
+  requireString(reference.run_id, "review_reference.run_id");
+  requireString(reference.output_dir, "review_reference.output_dir");
+  if (!/^[0-9a-f]{64}$/.test(reference.review_payload_content_sha256 || "")) {
+    throw new Error("review_reference.review_payload_content_sha256 must be a SHA-256 digest");
+  }
+  return reference;
+}
+
+function hydratePersistedReviewArgs(inputArgs) {
+  const reference = validateReviewReference(inputArgs);
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) throw new Error("review_reference does not resolve to a customer-run output");
+  const runIntake = readJsonFileIfPresent(path.join(outputDir, "run_intake.json"));
+  const reviewPayload = readJsonFileIfPresent(path.join(outputDir, "review_payload.json"));
+  const uiDecisions = readJsonFileIfPresent(path.join(outputDir, "ui_decisions.json"));
+  const finalArtifacts = readJsonFileIfPresent(path.join(outputDir, "final_artifacts.json"));
+  if (
+    !isPlainObject(runIntake) ||
+    !isPlainObject(reviewPayload) ||
+    !isPlainObject(uiDecisions) ||
+    !isPlainObject(finalArtifacts)
+  ) {
+    throw new Error(
+      "Persisted run_intake.json, review_payload.json, ui_decisions.json, and final_artifacts.json are required",
+    );
+  }
+  const persistedReference = finalArtifacts.review_reference;
+  if (!isPlainObject(persistedReference) || stableJson(persistedReference) !== stableJson(reference)) {
+    throw new Error("review_reference does not match the persisted final artifact index");
+  }
+  if (
+    runIntake.run_id !== reference.run_id ||
+    reviewPayload.run_id !== reference.run_id ||
+    finalArtifacts.run_id !== reference.run_id ||
+    runIntake.output_dir !== reference.output_dir ||
+    reviewPayload.content_sha256 !== reference.review_payload_content_sha256 ||
+    finalArtifacts.review_payload?.content_sha256 !==
+      reference.review_payload_content_sha256
+  ) {
+    throw new Error("review_reference does not match the persisted review state");
+  }
+  const discoveredContext = concordatoClientEngagementPath(outputDir);
+  if (
+    !discoveredContext ||
+    path.resolve(discoveredContext) !== path.resolve(inputArgs.client_engagement)
+  ) {
+    throw new Error("client_engagement does not match the persisted customer run");
+  }
+  return {
+    ...inputArgs,
+    run_intake: runIntake,
+    review_payload: reviewPayload,
+    ui_decisions: uiDecisions,
+    final_artifacts: finalArtifacts,
+  };
 }
 
 function validateItem(item, index) {
@@ -441,6 +573,9 @@ function validateReviewPayload(inputArgs) {
       typeof inputArgs.client_engagement === "string"
         ? inputArgs.client_engagement
         : null,
+    review_reference: isPlainObject(inputArgs.review_reference)
+      ? inputArgs.review_reference
+      : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
     review_payload: reviewPayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
@@ -3022,7 +3157,15 @@ function saveDecisionPayloadWrites(inputArgs) {
 
 function resolveRunOutputDir(inputArgs) {
   const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
-  const outputDir = typeof runIntake?.output_dir === "string" ? runIntake.output_dir.trim() : "";
+  const reviewReference = isPlainObject(inputArgs.review_reference)
+    ? inputArgs.review_reference
+    : null;
+  const outputDir =
+    typeof runIntake?.output_dir === "string"
+      ? runIntake.output_dir.trim()
+      : typeof reviewReference?.output_dir === "string"
+        ? reviewReference.output_dir.trim()
+        : "";
   if (!outputDir) return null;
   if (path.isAbsolute(outputDir)) return path.resolve(outputDir);
   const contextValue =
@@ -3914,8 +4057,8 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           "- Artefactos finales: `final_artifacts.json`",
           "",
           "## Revisión en Codex",
-          `1. Valide los datos con \`${TOOL_NAMES.validateReview}\`.`,
-          `2. Muestre el espacio de revisión con \`${TOOL_NAMES.renderReview}\`.`,
+          `1. Valide la referencia de revisión de \`final_artifacts.json\` con \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Muestre el espacio de revisión con la misma referencia mediante \`${TOOL_NAMES.renderReview}\`.`,
           `3. Guarde las acciones de revisión con \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Aplique las acciones de revisión con \`${TOOL_NAMES.applyDecisions}\`.`,
           "",
@@ -3931,8 +4074,8 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
           "- Final artifacts: `final_artifacts.json`",
           "",
           "## Review In Codex",
-          `1. Validate the payload with \`${TOOL_NAMES.validateReview}\`.`,
-          `2. Render the review workbench with \`${TOOL_NAMES.renderReview}\`.`,
+          `1. Validate the review reference from \`final_artifacts.json\` with \`${TOOL_NAMES.validateReview}\`.`,
+          `2. Render the review workbench with the same reference through \`${TOOL_NAMES.renderReview}\`.`,
           `3. Save reviewer actions with \`${TOOL_NAMES.saveDecisions}\`.`,
           `4. Apply reviewer actions with \`${TOOL_NAMES.applyDecisions}\`.`,
         ].join("\n");
@@ -3982,6 +4125,15 @@ function finalArtifactsWithApplication(
     plugin: current.plugin || reviewPayload.plugin,
     workflow: current.workflow || reviewPayload.workflow,
     run_id: current.run_id || reviewPayload.run_id,
+    review_payload: isPlainObject(current.review_payload)
+      ? current.review_payload
+      : {
+          path: "review_payload.json",
+          content_sha256: reviewPayload.content_sha256,
+        },
+    review_reference: isPlainObject(current.review_reference)
+      ? current.review_reference
+      : inputArgs.review_reference,
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
@@ -4980,32 +5132,201 @@ function hasWorkflowNativeRegenerationTarget(appliedDecisions) {
   });
 }
 
-function callTool(name, args = {}) {
-  if (name === TOOL_NAMES.validateReview) {
-    const payload = validateReviewPayload(args);
-    if (resolveRunOutputDir(args)) replayPersistedReviewContext(args);
+const MODEL_PROJECTION_OMIT_KEYS = new Set([
+  "absolute_path",
+  "content_sha256",
+  "envelope_content_sha256",
+  "file_name",
+  "filename",
+  "name",
+  "output_path",
+  "path",
+  "plan_source_artifact_ref",
+  "relative_path",
+  "sha256",
+  "size_bytes",
+  "source_artifact_ref",
+  "source_path",
+  "support_source_artifact_ref",
+]);
+
+function reviewItemTypeCounts(reviewPayload) {
+  const counts = {};
+  for (const item of reviewPayload.items) {
+    counts[item.item_type] = (counts[item.item_type] || 0) + 1;
+  }
+  return counts;
+}
+
+function sourceAliasReplacements(reviewPayload) {
+  const values = [];
+  for (const item of reviewPayload.items) {
+    if (item.item_type !== "source_inventory") continue;
+    const candidates = [
+      item.source_path,
+      item.data?.relative_path,
+      item.data?.path,
+      item.data?.name,
+    ];
+    for (const candidate of candidates) {
+      if (typeof candidate === "string" && candidate.trim()) values.push(candidate.trim());
+    }
+  }
+  const unique = Array.from(new Set(values)).sort((left, right) =>
+    left.localeCompare(right),
+  );
+  return unique
+    .map((value, index) => ({ value, alias: `[source-${String(index + 1).padStart(3, "0")}]` }))
+    .sort((left, right) => right.value.length - left.value.length);
+}
+
+function replaceTechnicalSourceLabels(value, replacements) {
+  let output = value;
+  for (const replacement of replacements) {
+    output = output.split(replacement.value).join(replacement.alias);
+  }
+  return output.replace(
+    /(?:[A-Za-z]:\\|\/(?:Users|home|private|tmp|var)\/)[^\s,;)}\]]+/g,
+    "[local-path]",
+  );
+}
+
+function projectReviewItemForModel(value, replacements) {
+  if (Array.isArray(value)) {
+    return value.map((entry) => projectReviewItemForModel(entry, replacements));
+  }
+  if (isPlainObject(value)) {
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => !MODEL_PROJECTION_OMIT_KEYS.has(key))
+        .map(([key, entry]) => [
+          key,
+          projectReviewItemForModel(entry, replacements),
+        ]),
+    );
+  }
+  if (typeof value === "string") {
+    return replaceTechnicalSourceLabels(value, replacements);
+  }
+  return value;
+}
+
+function readReviewItems(inputArgs) {
+  const hydratedArgs = hydratePersistedReviewArgs(inputArgs);
+  const payload = validateReviewPayload(hydratedArgs);
+  replayPersistedReviewContext(hydratedArgs);
+  const itemIds = Array.isArray(inputArgs.item_ids) ? inputArgs.item_ids : [];
+  const itemTypes = Array.isArray(inputArgs.item_types) ? inputArgs.item_types : [];
+  if (!itemIds.length && !itemTypes.length) {
+    throw new Error("item_ids or item_types is required for purpose-selected review access");
+  }
+  if (itemIds.length > MAX_MODEL_REVIEW_ITEMS) {
+    throw new Error(`item_ids exceeds ${MAX_MODEL_REVIEW_ITEMS} items`);
+  }
+  const requestedIds = new Set(
+    itemIds.map((value, index) => {
+      requireString(value, `item_ids[${index}]`);
+      return value;
+    }),
+  );
+  const requestedTypes = new Set(
+    itemTypes.map((value, index) => {
+      requireString(value, `item_types[${index}]`);
+      if (!ITEM_TYPES.has(value)) throw new Error(`item_types[${index}] is not supported: ${value}`);
+      return value;
+    }),
+  );
+  const offset = Number.isInteger(inputArgs.offset) && inputArgs.offset >= 0
+    ? inputArgs.offset
+    : 0;
+  const limit = Number.isInteger(inputArgs.limit)
+    ? inputArgs.limit
+    : MAX_MODEL_REVIEW_ITEMS;
+  if (limit < 1 || limit > MAX_MODEL_REVIEW_ITEMS) {
+    throw new Error(`limit must be between 1 and ${MAX_MODEL_REVIEW_ITEMS}`);
+  }
+  const matches = payload.review_payload.items.filter(
+    (item) =>
+      (requestedIds.size && requestedIds.has(item.id)) ||
+      (requestedTypes.size && requestedTypes.has(item.item_type)),
+  );
+  const replacements = sourceAliasReplacements(payload.review_payload);
+  const selected = matches
+    .slice(offset, offset + limit)
+    .map((item) => projectReviewItemForModel(item, replacements));
+  const result = {
+    ok: true,
+    validation_type: "concordato_plan_review_items",
+    run_id: payload.review_payload.run_id,
+    projection: "purpose_selected_post_confirmation_v1",
+    technical_metadata_removed: true,
+    source_labels_replaced_with_stable_aliases: true,
+    offset,
+    limit,
+    matched_item_count: matches.length,
+    returned_item_count: selected.length,
+    has_more: offset + selected.length < matches.length,
+    items: selected,
+  };
+  if (payloadBytes(result) > MAX_PAYLOAD_BYTES) {
+    throw new Error(`Selected Concordato Preventivo review items exceed ${MAX_PAYLOAD_BYTES} bytes`);
+  }
+  return result;
+}
+
+function modelVisibleToolPayload(payload, toolName) {
+  if (toolName === TOOL_NAMES.readReviewItems) return payload;
+  if (toolName === TOOL_NAMES.validateReview || toolName === TOOL_NAMES.renderReview) {
+    const reviewPayload = payload.review_payload;
     return {
       ok: true,
-      validation_type: "concordato_plan_review",
-      run_id: payload.review_payload.run_id,
-      item_count: payload.review_payload.item_count,
-      review_type: payload.review_payload.review_type || null,
-      message: isSpanish(languageFromArgs(args))
-        ? "Los datos de revisión del concordato preventivo son válidos. Puede ejecutar render_concordato_plan_review una vez."
-        : "The Concordato Preventivo review payload is valid. It is safe to call render_concordato_plan_review once.",
-      review_payload: payload.review_payload,
+      validation_type: "concordato_plan_review_summary",
+      run_id: reviewPayload.run_id,
+      review_type: reviewPayload.review_type || null,
+      status: reviewPayload.status || null,
+      item_count: reviewPayload.item_count,
+      item_type_counts: reviewItemTypeCounts(reviewPayload),
+      review_reference: payload.review_reference,
+      detailed_review_transport: "component_only",
+      on_demand_review_tool: TOOL_NAMES.readReviewItems,
+      on_demand_item_limit: MAX_MODEL_REVIEW_ITEMS,
+      message: isSpanish(languageFromArgs(payload))
+        ? "La revisión persistida es válida. El detalle permanece en el componente; solicite solo los elementos necesarios mediante read_concordato_plan_review_items."
+        : "The persisted review is valid. Detail remains in the component; request only needed items through read_concordato_plan_review_items.",
     };
   }
-  if (name === TOOL_NAMES.renderReview) {
-    const payload = validateReviewPayload(args);
-    if (resolveRunOutputDir(args)) replayPersistedReviewContext(args);
+  return {
+    ok: payload?.ok === true,
+    validation_type: payload?.validation_type || null,
+    run_id: payload?.run_id || null,
+    status: payload?.status || payload?.application_status || null,
+    decision_count: payload?.decision_count ?? null,
+    item_count: payload?.item_count ?? null,
+    blocker_count: payload?.blocker_count ?? null,
+    persisted: payload?.persisted === true,
+    message: payload?.message || null,
+  };
+}
+
+function callTool(name, args = {}) {
+  if (name === TOOL_NAMES.validateReview) {
+    const hydratedArgs = hydratePersistedReviewArgs(args);
+    const payload = validateReviewPayload(hydratedArgs);
+    replayPersistedReviewContext(hydratedArgs);
     return payload;
   }
+  if (name === TOOL_NAMES.renderReview) {
+    const hydratedArgs = hydratePersistedReviewArgs(args);
+    const payload = validateReviewPayload(hydratedArgs);
+    replayPersistedReviewContext(hydratedArgs);
+    return payload;
+  }
+  if (name === TOOL_NAMES.readReviewItems) return readReviewItems(args);
   if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
+    return saveDecisionPayload(hydratePersistedReviewArgs(args));
   }
   if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+    return applyDecisionPayload(hydratePersistedReviewArgs(args));
   }
   throw new Error(
     isSpanish(languageFromArgs(args))
@@ -5015,12 +5336,22 @@ function callTool(name, args = {}) {
 }
 
 function toolResult(payload, toolName) {
+  const modelPayload = modelVisibleToolPayload(payload, toolName);
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
-    structuredContent: payload,
+    content: [{ type: "text", text: JSON.stringify(modelPayload) }],
+    structuredContent: modelPayload,
     isError: false,
   };
-  if (toolName === TOOL_NAMES.renderReview) result._meta = toolUiMeta(WIDGET_URI, toolName);
+  if (
+    toolName === TOOL_NAMES.renderReview ||
+    toolName === TOOL_NAMES.saveDecisions ||
+    toolName === TOOL_NAMES.applyDecisions
+  ) {
+    result._meta = {
+      ...toolUiMeta(WIDGET_URI, toolName),
+      widget_payload: payload,
+    };
+  }
   return result;
 }
 
