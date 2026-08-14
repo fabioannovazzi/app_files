@@ -268,10 +268,25 @@ def _valid_brief(*, source_id: str = "studio-facts") -> dict[str, object]:
     }
 
 
-def _record_valid_brief(workflow: ModuleType, run_dir: Path, tmp_path: Path) -> None:
+def _record_valid_brief(
+    workflow: ModuleType,
+    run_dir: Path,
+    tmp_path: Path,
+    *,
+    post_brief_access: str = "mapped_brief_only",
+    target_material: list[dict[str, str]] | None = None,
+) -> None:
+    brief = _valid_brief()
+    brief["source_use_plan"][0]["post_brief_access"] = post_brief_access
+    brief["source_use_plan"][0]["target_material"] = target_material or []
+    if post_brief_access == "full_source_required":
+        brief["source_use_plan"][0]["reason"] = (
+            "The complete source remains necessary to preserve the professional "
+            "meaning of interdependent website claims."
+        )
     workflow.record_site_brief(
         run_dir,
-        _write_json(tmp_path / "brief.json", _valid_brief()),
+        _write_json(tmp_path / "brief.json", brief),
         provider="test-provider",
         model="test-model",
         recorded_by="test-operator",
@@ -283,6 +298,8 @@ def _prepare_run(
     *,
     noindex: bool = False,
     publication_provider: str = "other",
+    post_brief_access: str = "mapped_brief_only",
+    target_material: list[dict[str, str]] | None = None,
 ) -> tuple[ModuleType, Path]:
     tmp_path.mkdir(parents=True, exist_ok=True)
     workflow = _load_workflow_core()
@@ -303,7 +320,13 @@ def _prepare_run(
         ),
     )
     run_dir = workflow.prepare_run(workspace, intake_path)
-    _record_valid_brief(workflow, run_dir, tmp_path)
+    _record_valid_brief(
+        workflow,
+        run_dir,
+        tmp_path,
+        post_brief_access=post_brief_access,
+        target_material=target_material,
+    )
     site_dir = run_dir / "work/site"
     (site_dir / "index.html").write_text(
         _valid_site_html(noindex=noindex), encoding="utf-8"
@@ -483,6 +506,41 @@ def test_full_first_site_lifecycle_records_exact_publication(tmp_path: Path) -> 
     assert receipt["destination"] == FINAL_DESTINATION
     assert receipt["confirmed_by_user"] is True
     assert len(receipt["package_digest"]) == 64
+
+
+@pytest.mark.parametrize(
+    ("post_brief_access", "target_material"),
+    [
+        ("mapped_brief_only", []),
+        (
+            "targeted_material",
+            [{"kind": "section", "locator": "Professional qualifications"}],
+        ),
+        (
+            "full_source_required",
+            [{"kind": "entire_source", "locator": "Complete selected source"}],
+        ),
+    ],
+)
+def test_source_use_modes_preserve_complete_release_lifecycle(
+    tmp_path: Path,
+    post_brief_access: str,
+    target_material: list[dict[str, str]],
+) -> None:
+    workflow, run_dir = _prepare_run(
+        tmp_path,
+        post_brief_access=post_brief_access,
+        target_material=target_material,
+    )
+    _accept_release_reviews(workflow, run_dir)
+
+    manifest_path = workflow.package_website(run_dir, kind="release")
+    result = workflow.validate_run(run_dir)
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    assert manifest["site_digest"] == result["site_digest"]
+    assert result["valid"] is True
+    assert result["status"] == "release_ready"
 
 
 def test_validate_site_blocks_missing_alt_and_local_asset(tmp_path: Path) -> None:
