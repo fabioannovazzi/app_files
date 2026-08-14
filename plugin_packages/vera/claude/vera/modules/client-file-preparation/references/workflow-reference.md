@@ -100,6 +100,7 @@ Estrai riferimenti pratici, date, importi e documenti da recuperare.
 - `run_intake.json`;
 - `review_payload.json`;
 - `ui_decisions.json`;
+- `model_handoff.json` and every page under `model_handoff_pages/`;
 - `review_handoff.md`;
 - `final_artifacts.json`;
 - `applied_decisions.json` after decisions have been applied;
@@ -124,6 +125,7 @@ Estrai riferimenti pratici, date, importi e documenti da recuperare.
 - `run_intake.json`;
 - `review_payload.json`;
 - `ui_decisions.json`;
+- `model_handoff.json` and every declared `model_handoff_pages/page-*.json`;
 - `final_artifacts.json`;
 - `duplicate_candidates.csv`;
 - `extracted/documents.jsonl`;
@@ -159,6 +161,12 @@ pending unless corresponding saved and applied artifacts prove otherwise.
   generated drafts by default; these may contain real client data, and their
   size limits support interface performance rather than anonymization or an
   inventory of everything Claude may have read;
+- use `model_handoff.json` and all of its hash-listed pages as the default
+  Claude/Cowork context: one metadata row per inventoried file, exception-only
+  document excerpts, every fiscal field with a citation of at most 600
+  characters, reviewed email requests with `CLIENT-001`, and XML anomaly or
+  opaque duplicate-group refs without invoice-party fields; do not sample
+  pages or exceed 2,500 items / 1,500,000 bytes per page;
 - exclude credentials, session material, and raw absolute local paths from the
   review payload;
 - require `size_bytes` and `sha256` for every `final_artifacts.json` output;

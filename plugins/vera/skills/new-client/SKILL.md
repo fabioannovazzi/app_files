@@ -46,6 +46,14 @@ work. Do not add a per-case model-use authority or minimisation declaration
 that Vera cannot verify. Keep credentials, cookies, tokens, session URLs, and
 raw local paths outside the review payload.
 
+For phase one, when `model_handoff.json` exists, both Codex and Cowork use it
+and every declared page as their default context. Use only the item kinds
+listed for the current phase. Keep `review_payload.json` as the local MCP/UI
+contract; do not use its broader draft previews as ordinary synthesis context.
+Exact local identifiers remain available in professional artifacts and may be
+loaded when the work requires them. The generic `CLIENT-001` reference applies
+only to phase-one email drafting; it is not blanket anonymization.
+
 When host MCP tools are unavailable, use each resolved module's persistent
 loopback workbench instead of treating chat text as saved decisions. From an
 installed/package module root, run:

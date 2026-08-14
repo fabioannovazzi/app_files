@@ -57,6 +57,7 @@ const PROTECTED_RUN_FILES = new Set([
   "run_intake.json",
   "ui_decisions.json",
   "applied_decisions.json",
+  "model_handoff.json",
 ]);
 const ITEM_TYPES = new Set([
   "document_inventory",
@@ -68,6 +69,10 @@ const ITEM_TYPES = new Set([
   "draft_memo_section",
   "draft_client_email",
 ]);
+
+function isProtectedRunFile(targetKey) {
+  return PROTECTED_RUN_FILES.has(targetKey) || targetKey.startsWith("model_handoff_pages/");
+}
 
 function isPlainObject(value) {
   return value != null && typeof value === "object" && !Array.isArray(value);
@@ -174,6 +179,57 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
     throw new Error("Client File Preparation customer-run preflight returned an invalid result");
   }
   return result;
+}
+
+function refreshModelHandoff(outputDir) {
+  if (!outputDir) return [];
+  const scriptPath = path.join(PLUGIN_ROOT, "scripts", "model_handoff.py");
+  const completed = spawnSync(
+    pythonExecutable(),
+    ["-I", "-B", scriptPath, "--output-dir", outputDir],
+    { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 4 * 1024 * 1024 },
+  );
+  if (completed.error || completed.status !== 0) {
+    throw new Error("Client File Preparation could not refresh model_handoff.json");
+  }
+  let result;
+  try {
+    result = JSON.parse(completed.stdout.trim());
+  } catch {
+    throw new Error("Client File Preparation model handoff returned an invalid result");
+  }
+  if (!isPlainObject(result) || result.ok !== true || !Array.isArray(result.outputs)) {
+    throw new Error("Client File Preparation model handoff returned an invalid result");
+  }
+  const seen = new Set();
+  return result.outputs.map((output, index) => {
+    if (!isPlainObject(output)) {
+      throw new Error(`model handoff output ${index} must be an object`);
+    }
+    const outputPath = artifactPathKey(output.path);
+    const isRoot = outputPath === "model_handoff.json";
+    const isPage = /^model_handoff_pages\/page-[0-9]{4}\.json$/.test(outputPath);
+    if ((!isRoot && !isPage) || seen.has(outputPath)) {
+      throw new Error(`model handoff output path is invalid: ${outputPath}`);
+    }
+    seen.add(outputPath);
+    const resolved = resolveSafeRunOutputPath(outputDir, outputPath, { mustExist: true });
+    const stat = fs.lstatSync(resolved.absolutePath);
+    if (!stat.isFile() || stat.isSymbolicLink()) {
+      throw new Error(`model handoff output is missing or unsafe: ${outputPath}`);
+    }
+    const actualHash = sha256File(resolved.absolutePath);
+    if (stat.size !== output.size_bytes || actualHash !== output.sha256) {
+      throw new Error(`model handoff output integrity mismatch: ${outputPath}`);
+    }
+    return {
+      path: outputPath,
+      kind: "json",
+      status: "written_reviewed",
+      size_bytes: stat.size,
+      sha256: actualHash,
+    };
+  });
 }
 
 function assetDataUrl(fileName, mimeType) {
@@ -1366,6 +1422,7 @@ function validatePersistentState(inputArgs, reviewPayload) {
     "review_payload.json",
     "ui_decisions.json",
     "review_handoff.md",
+    "model_handoff.json",
   ]) {
     if (!integrity.output_records.has(requiredPath)) {
       throw new Error(`final_artifacts.outputs is missing required binding: ${requiredPath}`);
@@ -1835,7 +1892,7 @@ function writeDirectTextArtifactUpdates(outputDir, effects, currentFinalArtifact
     if (effect.action !== "edit" || !effect.edit_value) continue;
     if (!canDirectlyUpdateTextArtifact(effect.target_artifact)) continue;
     const targetKey = validateRunRelativePath(effect.target_artifact, `effect ${effect.item_id} target_artifact`);
-    if (PROTECTED_RUN_FILES.has(targetKey)) {
+    if (isProtectedRunFile(targetKey)) {
       throw new Error(`effect ${effect.item_id} may not edit protected run artifact ${targetKey}`);
     }
     if (!declaredPaths.has(targetKey)) {
@@ -1889,7 +1946,7 @@ function writeStructuredArtifactUpdates(outputDir, effects, currentFinalArtifact
     if (!spec) continue;
     if (!canUpdateStructuredArtifact(effect.target_artifact)) continue;
     const targetKey = validateRunRelativePath(effect.target_artifact, `effect ${effect.item_id} target_artifact`);
-    if (PROTECTED_RUN_FILES.has(targetKey)) {
+    if (isProtectedRunFile(targetKey)) {
       throw new Error(`effect ${effect.item_id} may not edit protected run artifact ${targetKey}`);
     }
     if (!declaredPaths.has(targetKey)) {
@@ -2075,6 +2132,7 @@ function reviewHandoffOutputRecord() {
       "ui_decisions.json",
       "applied_decisions.json",
       "final_artifacts.json",
+      "model_handoff.json",
     ],
     qa_checks: ["nonempty_text", "required_text"],
   };
@@ -2098,6 +2156,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
         pending: "Decisioni in attesa",
         applied: "Decisioni applicate",
         artifacts: "Artefatti finali",
+        model: "Contesto predefinito del modello",
         heading: "Revisione professionale",
         validate: "Validare il payload con",
         render: "Aprire l’area di revisione con",
@@ -2112,6 +2171,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
         pending: "Pending decisions",
         applied: "Applied decisions",
         artifacts: "Final artifacts",
+        model: "Default model context",
         heading: "Professional Review",
         validate: "Validate the payload with",
         render: "Open the review workbench with",
@@ -2126,6 +2186,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
         pending: "Décisions en attente",
         applied: "Décisions appliquées",
         artifacts: "Livrables finaux",
+        model: "Contexte par défaut du modèle",
         heading: "Revue professionnelle",
         validate: "Valider les données avec",
         render: "Ouvrir l’espace de revue avec",
@@ -2140,6 +2201,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
         pending: "Ausstehende Entscheidungen",
         applied: "Angewandte Entscheidungen",
         artifacts: "Endartefakte",
+        model: "Standardkontext des Modells",
         heading: "Professionelle Prüfung",
         validate: "Prüfdaten validieren mit",
         render: "Prüfansicht öffnen mit",
@@ -2154,6 +2216,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
         pending: "Decisiones pendientes",
         applied: "Decisiones aplicadas",
         artifacts: "Artefactos finales",
+        model: "Contexto predeterminado del modelo",
         heading: "Revisión profesional",
         validate: "Validar los datos con",
         render: "Abrir el área de revisión con",
@@ -2168,6 +2231,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
       pending: "Pending decisions",
       applied: "Applied decisions",
       artifacts: "Final artifacts",
+      model: "Default model context",
       heading: "Professional Review",
       validate: "Validate the payload with",
       render: "Open the review workbench with",
@@ -2183,6 +2247,7 @@ function ensureReviewHandoffCard(inputArgs, outputDir) {
       `- ${handoffCopy.pending}: \`ui_decisions.json\``,
       `- ${handoffCopy.applied}: \`applied_decisions.json\``,
       `- ${handoffCopy.artifacts}: \`final_artifacts.json\``,
+      `- ${handoffCopy.model}: \`model_handoff.json\``,
       "",
       `## ${handoffCopy.heading}`,
       `1. ${handoffCopy.validate} \`${TOOL_NAMES.validateReview}\`.`,
@@ -2203,11 +2268,19 @@ function finalArtifactsWithApplication(
   targetOutputs = [],
   backupOutputs = [],
   nativeRegenerationOutputs = [],
+  modelHandoffOutputs = [],
 ) {
   const reviewPayload = appliedDecisions.review_payload;
   const current = currentFinalArtifactsForApplication(inputArgs, finalArtifactsPath);
   const outputDir = resolveRunOutputDir(inputArgs);
-  const outputs = Array.isArray(current.outputs) ? [...current.outputs] : [];
+  const outputs = Array.isArray(current.outputs)
+    ? current.outputs.filter((output) => {
+        if (!modelHandoffOutputs.length) return true;
+        const outputPath = artifactPathKey(output?.path);
+        return outputPath !== "model_handoff.json"
+          && !outputPath.startsWith("model_handoff_pages/");
+      })
+    : [];
   function upsertOutput(record) {
     const existingIndex = outputs.findIndex((output) => output?.path === record.path);
     if (existingIndex >= 0) outputs[existingIndex] = { ...outputs[existingIndex], ...record };
@@ -2225,6 +2298,7 @@ function finalArtifactsWithApplication(
   for (const output of targetOutputs) upsertOutput(output);
   for (const output of backupOutputs) upsertOutput(output);
   for (const output of nativeRegenerationOutputs) upsertOutput(output);
+  for (const output of modelHandoffOutputs) upsertOutput(output);
   const blockers = effectsToBlockers(appliedDecisions.effects);
   return {
     schema_version: current.schema_version || reviewPayload.schema_version || "1.0",
@@ -2257,6 +2331,7 @@ function finalArtifactsWithApplication(
       native_regeneration_count: appliedDecisions.native_regeneration_count || 0,
       native_regeneration_paths: appliedDecisions.native_regeneration_paths || [],
       original_backup_paths: backupOutputs.map((output) => output.path),
+      model_handoff_paths: modelHandoffOutputs.map((output) => output.path),
       applied_decisions_path: "applied_decisions.json",
     },
   };
@@ -2423,6 +2498,17 @@ function applyDecisionPayload(inputArgs) {
       application_status: applicationStatus,
     };
     if (reviewer) appliedDecisions.reviewer = reviewer;
+    if (workingDecisionPath) {
+      fs.writeFileSync(
+        workingDecisionPath,
+        `${JSON.stringify(uiDecisions, null, 2)}\n`,
+        "utf8",
+      );
+    }
+    const modelHandoffOutputs = workingDir ? refreshModelHandoff(workingDir) : [];
+    appliedDecisions.model_handoff_paths = modelHandoffOutputs.map(
+      (output) => output.path,
+    );
 
     let responseFinalArtifacts = finalArtifactsWithApplication(
       workingInputArgs,
@@ -2432,6 +2518,7 @@ function applyDecisionPayload(inputArgs) {
       targetOutputs,
       backupOutputs,
       nativeRegenerationOutputs,
+      modelHandoffOutputs,
     );
     validateDeclaredTextQa(workingDir, responseFinalArtifacts);
     responseFinalArtifacts.review_payload_sha256 = persistence?.reviewBytesHash || null;

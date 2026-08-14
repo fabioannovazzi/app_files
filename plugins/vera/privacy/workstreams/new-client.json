@@ -24,7 +24,7 @@
       {
         "id": "relationship-case-evidence",
         "purpose": "Prepare identity, engagement, privacy, AI-applicability, AML, document, and monitoring proposals for professional review",
-        "content": "Byte-verified file-preparation outputs or registered standalone evidence; identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state",
+        "content": "Promoted file-preparation model_handoff pages use one metadata record per file, exception-only excerpts, every mapped fiscal field with bounded citation, reviewed email requests under CLIENT-001, and XML anomaly or opaque duplicate-group refs without invoice party fields; selected exact evidence may still enter when required. Professional setup may also place identity, representative and beneficial-owner facts; engagement terms; privacy and AML records; source, template, chronology, and evidence passages; calculations; temporal-horizon state; gaps; proposals, review decisions, and package state in model context.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -61,6 +61,10 @@
       "control": "Before promotion, the workflow verifies the sealed phase-one source snapshot and every declared output's type, size, byte hash, and package binding; drift is rejected."
     },
     {
+      "id": "phase-one-purpose-shaped-handoff",
+      "control": "When the promoted phase-one run contains model_handoff.json, Codex and Cowork use its complete hash-listed page set as the default phase-one context. Email drafting is limited to reviewed request items under CLIENT-001 and XML synthesis to anomaly or opaque duplicate-group refs; exact local professional artifacts remain available when required."
+    },
+    {
       "id": "temporal-apply-gate",
       "control": "Apply re-derives the earliest inclusive deadline from persisted evidence, identity, source, and template dates and rejects stale approval without writing final outputs."
     },
@@ -81,6 +85,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3182b5ffb0bcbd794063ade1bad7cad0f9551f7f2639a671a33d6e755b2fc0ec"
+    "source_fingerprint": "af5318abae6ef7900d586417bf15e3898d4627c793ed9bdbd37c273ad041b1df"
   }
 }

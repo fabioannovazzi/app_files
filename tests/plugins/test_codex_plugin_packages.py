@@ -3109,7 +3109,10 @@ def test_new_client_page_explains_which_private_data_reaches_the_model() -> None
         "dati dei documenti di identità",
         "rappresentanti e titolari effettivi",
         "Non sono anonimizzati automaticamente",
-        "Cowork può leggere direttamente i file collegati",
+        "model_handoff.json",
+        "2.500 elementi e 1.500.000 byte",
+        "CLIENT-001",
+        "senza nomi delle parti, codici fiscali del cliente",
     ):
         assert snippet in page
     for key in (
