@@ -4171,10 +4171,10 @@ TEMPLATE = """<!doctype html>
       }}
       return null;
     }}
-    function toolOutput() {{
+{private_payload_helper_js}    function toolOutput() {{
       if (new URLSearchParams(window.location.search).has(\"demo\")) return DEMO_PAYLOAD;
       const host = window.openai || {{}};
-      return pickPayload(host.toolResponseMetadata) || pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
+{tool_output_return_js}
     }}
     function esc(value) {{
       return String(value ?? \"\").replace(/[&<>\"']/g, (char) => ({{ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }})[char]);
@@ -5104,6 +5104,12 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     legacy = {
         "reviewer_alias_css": "",
         "reviewer_alias_html": "",
+        "private_payload_helper_js": "",
+        "tool_output_return_js": (
+            "      return pickPayload(host.toolResponseMetadata) || "
+            "pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || "
+            "pickPayload(host) || FALLBACK;"
+        ),
         "demo_command_js": (
             '["python", "plugins/" + CONFIG.plugin + "/scripts/review_session.py"]'
         ),
@@ -5179,6 +5185,32 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
         "saved_decision_load_js": '          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };',
         "widget_state_load_js": "          current[itemId] = decision;",
     }
+    if target["plugin"] in {
+        "audit-reconciliation",
+        "journal-bank-reconciliation",
+        "check-entries",
+    }:
+        legacy = {
+            **legacy,
+            "private_payload_helper_js": """    function privatePayloadFromMetadata(raw, seen = new WeakSet()) {
+      if (!raw || typeof raw !== "object" || seen.has(raw)) return null;
+      seen.add(raw);
+      if (raw.private_review_payload) return pickPayload(raw.private_review_payload);
+      if (raw._meta?.private_review_payload) return pickPayload(raw._meta.private_review_payload);
+      for (const value of Object.values(raw)) {
+        const payload = privatePayloadFromMetadata(value, seen);
+        if (payload) return payload;
+      }
+      return null;
+    }
+""",
+            "tool_output_return_js": """      return privatePayloadFromMetadata(host.toolResponseMetadata)
+        || privatePayloadFromMetadata(host)
+        || pickPayload(host.toolOutput)
+        || pickPayload(host.structuredContent)
+        || pickPayload(host)
+        || FALLBACK;""",
+        }
     if target["plugin"] == "concordato-plan-review":
         return {
             **legacy,

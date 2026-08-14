@@ -468,15 +468,25 @@ Codex may inspect individual rows and explain unresolved items, but should keep 
 
 When the local MCP server is available, prefer the OpenAI-style review handoff:
 
-1. Read `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
-   `final_artifacts.json` from the reconciliation output folder.
-2. Call `validate_journal_bank_review` with `review_payload` before rendering.
-3. If validation succeeds, call `render_journal_bank_review` with the same
-   payload objects so Codex can show the local HTML widget
-   `ui://widget/journal-bank-review.html`.
-4. Use the widget to inspect unmatched bank rows, unmatched journal rows,
+1. Locate `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
+   `final_artifacts.json` in the reconciliation output folder without reading
+   the complete private review payload into model context.
+2. Call `validate_journal_bank_review` with `review_payload_path` and the
+   sibling path fields. Validation returns a non-identifying case index and an
+   opaque four-hour review reference.
+3. Call `render_journal_bank_review` with only that reference. The server sends
+   the complete payload to `ui://widget/journal-bank-review.html` through
+   component-only metadata, not model-visible structured content.
+4. Start from the index and call `get_journal_bank_case_context` for no more
+   than 25 specifically selected cases at a time. The deterministic
+   post-mapping projection removes unmapped and empty fields, source locators,
+   technical row IDs, the redundant absolute amount, write targets, and
+   duplicate facts. Exact references, movement numbers, shared references,
+   and account codes remain off by default; request them only when the selected
+   accounting judgment requires exact identity.
+5. Use the widget to inspect unmatched bank rows, unmatched journal rows,
    matched-pair evidence, diagnostics, and generated workbook/CSV/JSON outputs.
-5. When the reviewer records actions in the widget or Codex collects decisions
+6. When the reviewer records actions in the widget or Codex collects decisions
    through fallback review, call `save_journal_bank_decisions` so
    `ui_decisions.json` is validated and persisted. When the reviewer is done,
    call `apply_journal_bank_decisions` so `applied_decisions.json` and
@@ -485,9 +495,13 @@ When the local MCP server is available, prefer the OpenAI-style review handoff:
    completion is not report readiness. Unmatched rows, exact residuals, failed
    source/preparation gates, or receipt mismatch keep the result blocked.
 
-If MCP rendering is unavailable, fall back to a markdown review summary from
-`review_payload.json`, `reconciliation_audit.json`, `review_notes.md`, and the
-CSV/XLSX outputs. Do not promote ambiguous rows to matched by judgment alone;
+This is purpose-limited routing, not anonymization or pseudonymization of the
+professional case data: selected case context can still contain real names,
+descriptions, dates, amounts, and professional references. If MCP rendering is unavailable, fall
+back to a locally prepared markdown projection of only the specifically
+selected cases, using the same field exclusions and exact-identifier rule; do
+not read the complete `review_payload.json` into model context. The human can
+still use the complete local CSV/XLSX outputs. Do not promote ambiguous rows to matched by judgment alone;
 change deterministic rules and rerun when a systematic correction is needed.
 Keep review decisions pending unless they are recorded in `ui_decisions.json`
 and consumed into `applied_decisions.json`. Small setup choices should stay in

@@ -281,6 +281,33 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         assert snippet in organization_page
 
 
+def test_three_reconciliation_pages_share_the_same_concrete_model_data_flow() -> None:
+    pages = (
+        ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
+        ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
+        ROOT / "static" / "shared" / "check-entries" / "index.html",
+    )
+    required = (
+        "Il modello comprende la struttura",
+        "Il codice elabora localmente l'intero perimetro",
+        "Il modello riceve un indice dei casi da rivedere",
+        "L'indice usa riferimenti opachi ai casi",
+        "Il modello richiede il contesto di un caso quando serve",
+        "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente",
+    )
+
+    for path in pages:
+        page = path.read_text(encoding="utf-8")
+        model_block = page.split('data-model-data-status="relevant"', 1)[1].split(
+            "</section>",
+            1,
+        )[0]
+        for snippet in required:
+            assert snippet in model_block
+        assert "Codex" not in model_block
+        assert "Cowork" not in model_block
+
+
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:
     for manifest in _manifests():
         assert isinstance(manifest["external_boundaries"], list)

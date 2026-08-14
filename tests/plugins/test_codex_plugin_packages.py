@@ -214,12 +214,14 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
     "audit-reconciliation": (
         "validate_audit_reconciliation_review",
         "render_audit_reconciliation_review",
+        "get_audit_reconciliation_case_context",
         "save_audit_reconciliation_decisions",
         "apply_audit_reconciliation_decisions",
     ),
     "check-entries": (
         "validate_check_entries_review",
         "render_check_entries_review",
+        "get_check_entries_case_context",
         "save_check_entries_decisions",
         "apply_check_entries_decisions",
     ),
@@ -250,6 +252,7 @@ NON_PLOTTING_REVIEW_TOOL_CONTRACTS = {
     "journal-bank-reconciliation": (
         "validate_journal_bank_review",
         "render_journal_bank_review",
+        "get_journal_bank_case_context",
         "save_journal_bank_decisions",
         "apply_journal_bank_decisions",
     ),
@@ -528,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.138"
+    assert manifest["version"] == "0.1.139"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -4249,22 +4252,20 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         "Quelles données parviennent au modèle",
         "Welche Daten das Modell erhält",
         "Qué datos recibe el modelo",
-        "Codex o Cowork vedono un campione limitato",
-        "Codex o Cowork propongono campi e ruoli",
-        "Solo in Codex: riduce righe e colonne",
-        "Codex or Cowork sees a bounded sample",
-        "Codex or Cowork proposes fields and roles",
-        "Codex only: reduce rows and columns",
-        "Le colonne originali non mappate, i campi vuoti",
-        "does not split it automatically, does not start that model step",
+        "Il modello comprende la struttura",
+        "Il codice elabora localmente l'intero perimetro",
+        "Il modello riceve un indice dei casi da rivedere",
+        "L'indice usa riferimenti opachi ai casi",
+        "Il modello richiede il contesto di un caso quando serve",
+        "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente",
     ):
         assert snippet in page
     for key in (
         "model.title",
-        "model.map.copy",
+        "model.structure.copy",
         "model.local.copy",
-        "model.residual.copy",
-        "model.cap.copy",
+        "model.index.copy",
+        "model.context.copy",
         "model.note",
     ):
         assert f'data-journey="{key}"' in page

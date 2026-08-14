@@ -934,9 +934,20 @@ def test_non_plotting_review_render_tools_validate_payload_before_rendering(
 
     valid_result = responses[1]["result"]
     valid_payload = valid_result["structuredContent"]
-    assert valid_payload["review_payload"]["plugin"] == plugin
-    assert valid_payload["review_payload"]["item_count"] == 1
-    assert valid_payload["decision_policy"]["apply_tool"] == adapter["applyTool"]
+    if plugin in {
+        "audit-reconciliation",
+        "journal-bank-reconciliation",
+        "check-entries",
+    }:
+        assert "review_payload" not in valid_payload
+        private_payload = valid_result["_meta"]["private_review_payload"]
+        assert private_payload["review_payload"]["plugin"] == plugin
+        assert private_payload["review_payload"]["item_count"] == 1
+        assert private_payload["decision_policy"]["apply_tool"] == adapter["applyTool"]
+    else:
+        assert valid_payload["review_payload"]["plugin"] == plugin
+        assert valid_payload["review_payload"]["item_count"] == 1
+        assert valid_payload["decision_policy"]["apply_tool"] == adapter["applyTool"]
     assert valid_result["_meta"]["openai/outputTemplate"].startswith("ui://widget/")
     assert valid_result["_meta"]["openai/outputTemplate"].endswith(".html")
     assert valid_result["_meta"]["openai/widgetAccessible"] is True

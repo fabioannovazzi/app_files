@@ -10003,7 +10003,10 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
             "method": "tools/call",
             "params": {
                 "name": "validate_journal_bank_review",
-                "arguments": {"review_payload": review_payload},
+                "arguments": {
+                    "run_intake_path": str(output_dir / "run_intake.json"),
+                    "review_payload_path": str(output_dir / "review_payload.json"),
+                },
             },
         },
         {
@@ -10013,8 +10016,8 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
             "params": {
                 "name": "render_journal_bank_review",
                 "arguments": {
-                    "run_intake": run_intake,
-                    "review_payload": review_payload,
+                    "run_intake_path": str(output_dir / "run_intake.json"),
+                    "review_payload_path": str(output_dir / "review_payload.json"),
                     "ui_decisions": ui_decisions,
                 },
             },
@@ -10057,20 +10060,33 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         },
     ]
 
-    responses = {response["id"]: response for response in _call_mcp_server(messages)}
+    responses = {
+        response["id"]: response
+        for response in _call_mcp_server(
+            messages,
+            env={**os.environ, "PYTHON": sys.executable},
+        )
+    }
 
     tool_names = {tool["name"] for tool in responses[1]["result"]["tools"]}
     assert {
         "validate_journal_bank_review",
         "render_journal_bank_review",
+        "get_journal_bank_case_context",
         "save_journal_bank_decisions",
         "apply_journal_bank_decisions",
     } <= tool_names
     validate_result = responses[2]["result"]["structuredContent"]
     assert validate_result["ok"] is True
     assert validate_result["item_count"] == review_payload["item_count"]
+    assert "review_payload" not in validate_result
+    assert "model_context_index" in validate_result
     render_result = responses[3]["result"]
     assert render_result["structuredContent"]["widget_type"] == "journal_bank_review"
+    assert "review_payload" not in render_result["structuredContent"]
+    assert render_result["_meta"]["private_review_payload"]["review_payload"] == (
+        review_payload
+    )
     assert (
         render_result["_meta"]["openai/outputTemplate"]
         == "ui://widget/journal-bank-review.html"
@@ -10081,6 +10097,8 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
     assert "ui://widget/journal-bank-review.html" in resource_uris
     widget_html = responses[5]["result"]["contents"][0]["text"]
     assert "Journal-Bank Review" in widget_html
+    assert "toolResponseMetadata" in widget_html
+    assert "private_review_payload" in widget_html
     save_result = responses[6]["result"]["structuredContent"]
     assert save_result["ok"] is True
     assert save_result["persisted"] is True
@@ -10660,7 +10678,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
     handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
 
     assert (
-        "Use validate_journal_bank_review antes"
+        "Use review_payload_path con validate_journal_bank_review"
         in responses[1]["result"]["instructions"]
     )
     assert validation["message"].startswith("Los datos de revisión")

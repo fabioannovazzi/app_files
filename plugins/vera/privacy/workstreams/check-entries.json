@@ -21,9 +21,27 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "entry-and-support-review",
-        "purpose": "Map selected entries and resolve accounting-support checks",
-        "content": "User instructions; stable Studio Archive client, engagement and run identifiers; exact same-engagement Journal Sampling normalized-population, diagnostics and sample artifact bindings; exact support input receipts and run-local execution copies; lifecycle and output paths; sampled journal entries and signed amounts; FatturaPA XML or connector exports; supporting PDFs; invoice numbers, dates, currencies, supplier or customer names and tax identifiers; source metadata; match results; evidence excerpts; artifact purposes and audiences; and reviewed party, relationship, currency and direction decisions",
+        "id": "bounded-entry-and-support-structure",
+        "purpose": "Understand the prepared sample and selected support batch before deterministic checks",
+        "content": "User instructions; the selected Journal Sampling handoff and support batch; limited rows or document excerpts opened to understand their structure; mapped entry and support fields; reviewed party, relationship, currency and direction assumptions. The normalized population is replayed locally for qualification and one-to-one sample closure, while support matching is performed only for sampled entries. A professional may direct the selected runtime to open additional exact evidence when structure or sufficiency cannot be resolved; the workflow does not claim that source files are anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "non-identifying-review-index",
+        "purpose": "Let the model select sampled-entry and support cases without receiving the complete review payload",
+        "content": "Aggregate item-type counts and, for each model-relevant item, an opaque per-run case handle, item type, normalized categorical review status, recommended action and only the names of present mechanical signal classes. Signal values, item titles, names, descriptions, dates, amounts, invoice and movement numbers, tax identifiers, source paths and filenames, prepared-entry and support-artifact IDs, review write targets and complete row objects are excluded. Accepted PDF inventory and non-interpretive artifact items remain available to the human widget but are omitted.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "selected-entry-and-support-case-context",
+        "purpose": "Interpret or verify only cases selected from the review index",
+        "content": "At most 25 requested cases per call: populated allowlisted fields such as status, entry date, signed amount, account name, description, beneficiary or counterparty, currency, checks, mismatches, review notes, support type and match signals, professional and assurance status, extracted amount, date or beneficiary, missing-document reason and bounded extracted evidence facts. Physical paths and filenames, prepared-entry and support-artifact IDs, write targets, empty and unmapped fields and duplicate facts are omitted. Exact movement, invoice, account, tax and reference identifiers are represented only as presence facts by default and can be requested for selected cases when exact identity comparison is required. Real names and case facts can remain; opaque handles are routing controls, not anonymization or pseudonymization of the professional case data.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -73,6 +91,14 @@
       "control": "Party, support-relationship, currency, and direction exceptions are accepted only as reviewed-decision receipts bound to the exact normalized journal, prepared entry, support artifact and locator; free-text names or amount/date coincidence cannot promote a result."
     },
     {
+      "id": "component-private-review-transport",
+      "control": "MCP validation can load review_payload.json inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete digest-valid payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface."
+    },
+    {
+      "id": "bounded-selected-case-projection",
+      "control": "The read-only case-context tool accepts only opaque handles bound to the current in-memory review reference, rejects unknown or duplicate handles, limits each call to 25 cases and 500000 response bytes, projects explicit post-mapping field allowlists, recursively strips physical and technical identifiers from evidence facts, and keeps exact professional identifiers off unless explicitly requested for those selected cases."
+    },
+    {
       "id": "transactional-review-writes",
       "control": "MCP save and apply capture the bounded canonical output tree and modes in parent-process memory, execute workflow helpers only against a detached working tree, reject linked, aliased, special, oversized, swapped, or unexpected entries, and restore exact trusted bytes and modes if revision, workbook, assurance, manifest, trace, or commit validation fails."
     },
@@ -93,6 +119,6 @@
     "reviewed_at": "2026-08-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ca0a91a8661a7408f2b7c92b94c7f7299606326774631a802a3ad366c34d342f"
+    "source_fingerprint": "bdda21b4470ea76ec4fc3fde744fdd00b3865feaef2069b612b5275672e1b2dc"
   }
 }

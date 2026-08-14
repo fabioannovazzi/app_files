@@ -248,14 +248,26 @@ selection.
 
 The MCP validate/render tools remain useful as an optional integrated Codex
 surface. Load them with `tool_search` when needed, call
-`validate_audit_reconciliation_review`, then
-`render_audit_reconciliation_review`. When decisions are collected, call
+`validate_audit_reconciliation_review` with `review_payload_path`, not an
+inline copy of the private JSON. Validation returns a non-identifying case
+index and an opaque four-hour review reference. Pass only that reference to
+`render_audit_reconciliation_review`; the server sends the complete payload to
+the widget through component-only metadata, not model-visible structured
+content. Use `get_audit_reconciliation_case_context` for no more than 25
+specifically selected cases at a time. Its deterministic post-mapping
+projection removes empty values, unmapped columns, physical source locators,
+workflow IDs, write targets, and duplicate facts. Exact document, invoice,
+movement, and reference values remain off by default; request them only when
+the selected accounting judgment requires exact identity. This is
+purpose-limited routing, not anonymization or pseudonymization of the
+professional case data: selected case context can still contain real names,
+descriptions, dates, amounts, and other professional facts. When decisions are collected, call
 `save_audit_reconciliation_decisions` to persist `ui_decisions.json`, then
 `apply_audit_reconciliation_decisions` to write `applied_decisions.json` and
 update `final_artifacts.json`. MCP render is no longer the primary normal-run
 handoff when the browser review server is available.
 
-For large runs, pass local output paths to MCP instead of inlining large JSON
+For every model-led run, pass local output paths to MCP instead of inlining JSON
 objects: `run_intake_path`, `review_payload_path`, `ui_decisions_path`, and
 `final_artifacts_path`. The MCP server reads those JSON files from the run
 output folder, validates them, and rejects path combinations outside that run
@@ -266,8 +278,12 @@ URLs as equivalent to the browser review server. Use `review_ui.html` only when
 the local server cannot start or the browser cannot be opened; the static file
 can show/copy/download JSON but cannot persist decisions by itself. If both the
 server and static HTML are unavailable, fall back to a markdown review summary
-from `review_payload.json`, the workbook review sheet, and
-`codex_review_packet.json`. Do not build a separate ad hoc HTML page for
+from a locally prepared projection of only the specifically selected cases;
+do not read the complete `review_payload.json` into model context. Apply the
+same field exclusions and exact-identifier rule as
+`get_audit_reconciliation_case_context`. The complete payload remains
+available to the human reviewer in the local browser, workbook review sheet,
+and `codex_review_packet.json`. Do not build a separate ad hoc HTML page for
 one-off setup choices; use chat or, when this conversation is in Plan mode and
 the tool is available, native Plan-mode choices for small intake decisions.
 
