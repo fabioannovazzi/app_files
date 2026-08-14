@@ -1014,8 +1014,10 @@ def _fit_canvas(
             text_height = text_box[3] - text_box[1]
             padding_x = max(3, round(FRAME_WIDTH * 0.004))
             padding_y = max(1, round(FRAME_HEIGHT * 0.003))
-            right = FRAME_WIDTH - max(4, round(FRAME_WIDTH * 0.012))
-            bottom = FRAME_HEIGHT - max(2, round(FRAME_HEIGHT * 0.008))
+            # The disclosure is part of the moving scene canvas. Keep it beyond
+            # the maximum 3.5% pan/zoom crop so it stays wholly visible.
+            right = FRAME_WIDTH - max(8, round(FRAME_WIDTH * 0.05))
+            bottom = FRAME_HEIGHT - max(6, round(FRAME_HEIGHT * 0.05))
             left = right - text_width - 2 * padding_x
             top = bottom - text_height - 2 * padding_y
             draw.rounded_rectangle(

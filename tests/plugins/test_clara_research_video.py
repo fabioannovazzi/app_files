@@ -466,7 +466,21 @@ def test_render_run_builds_decodable_hosted_voice_artifacts_without_network(
             for red, green, blue in bottom_band.getdata()
             if blue > red * 1.35 and blue > green * 1.1
         )
+        bottom_edge = poster.crop(
+            (
+                round(poster.width * 0.5),
+                round(poster.height * 0.96),
+                poster.width,
+                poster.height,
+            )
+        )
+        navy_edge_pixels = sum(
+            1
+            for red, green, blue in bottom_edge.getdata()
+            if blue > red * 1.35 and blue > green * 1.1
+        )
     assert navy_pixels > 10
+    assert navy_edge_pixels < 3
 
     (run_dir / "poster.jpg").unlink()
     with pytest.raises(ValueError, match="missing or changed: poster.jpg"):
