@@ -3766,6 +3766,21 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     assert website_copy.count('modelDataStatus: "relevant"') == 5
     assert 'modelDataStatus: "not-relevant"' not in website_copy
     for expected_copy in (
+        "Per ciascuna fonte, il brief registra lo scopo professionale, se serve ancora",
+        "For every source, the brief records its professional purpose, whether it is still needed",
+        "Pour chaque source, le brief consigne sa finalité professionnelle, si elle reste nécessaire",
+        "Für jede Quelle hält das Briefing den beruflichen Zweck, den weiteren Bedarf",
+        "Para cada fuente, el brief registra su finalidad profesional, si sigue siendo necesaria",
+        "Il codice controlla soltanto che ogni fonte sia coperta",
+        "Code checks only that every source is covered",
+        "Le code vérifie seulement que chaque source est couverte",
+        "Der Code prüft nur, ob jede Quelle abgedeckt ist",
+        "El código solo comprueba que cada fuente esté cubierta",
+        "Una fonte completa viene riaperta solo per un'affermazione rimasta irrisolta",
+        "A full source is reopened only for a specifically recorded unresolved claim",
+        "Une source complète n'est rouverte que pour une affirmation non résolue",
+        "Eine vollständige Quelle wird nur für eine ausdrücklich dokumentierte ungeklärte Aussage",
+        "Una fuente completa se vuelve a abrir solo para una afirmación pendiente",
         "Non accede all'archivio generale dello Studio, alle pratiche dei clienti, alla posta",
         "It does not access the firm's general archive, client matters, mailbox",
         "Il n'accède pas aux archives générales du cabinet, aux dossiers clients",
