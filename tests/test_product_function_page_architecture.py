@@ -496,6 +496,32 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
         assert placeholder in function_copy
 
 
+def test_professional_communication_page_explains_exact_phase_boundaries() -> None:
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+    communication_copy = function_copy.split('"comunicazione-professionale":', 1)[
+        1
+    ].split('"presenza-digitale-studio":', 1)[0]
+
+    for snippet in (
+        "non applica campioni o limiti di righe e colonne",
+        "crea una copia completa pseudonimizzata per ogni file",
+        "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
+        "Il connettore per lo storico è bloccato",
+        "solo Codex può inviare facoltativamente a Creative Production",
+        "non è un sandbox di file autenticato dal provider",
+        "applies no sampling or row/column cap",
+        "new sources are added to a new run",
+        "not a provider-authenticated file sandbox",
+        "aucun échantillon ni plafond de lignes ou colonnes",
+        "keine Stichprobe oder Zeilen-/Spaltenbegrenzung",
+        "no aplica muestras ni límites de filas o columnas",
+    ):
+        assert snippet in communication_copy
+
+    assert communication_copy.count('modelDataStatus: "relevant"') == 5
+    assert communication_copy.count("modelDataConclusion:") == 5
+
+
 def test_bandi_page_explains_task_specific_private_model_context() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     bandi_copy = function_copy.split('"bandi-agevolazioni":', 1)[1].split(

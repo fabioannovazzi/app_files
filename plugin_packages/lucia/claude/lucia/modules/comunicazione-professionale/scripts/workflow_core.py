@@ -18,6 +18,11 @@ from typing import Any, Iterable, Iterator
 
 import jsonschema
 
+from history_privacy import (
+    normalized_identity_visible,
+    residual_mechanical_identifiers,
+)
+
 __all__ = [
     "ALLOWED_CHANNELS",
     "PLUGIN_ROOT",
@@ -30,12 +35,14 @@ __all__ = [
     "canonical_digest",
     "copy_input_snapshot",
     "creative_token_application",
+    "downstream_history_items",
     "file_digest",
     "fresh_package_review_decision",
     "fresh_review_decisions",
     "fresh_render_review_decision",
     "load_json",
     "load_workspace",
+    "model_phase_packet_path",
     "package_digest",
     "prompt_template_digest",
     "recompute_contribution_digest",
@@ -52,7 +59,10 @@ __all__ = [
     "validate_finalized_package",
     "validate_input_integrity",
     "validate_history_pseudonymization_payload",
+    "validate_history_privacy_assessment",
     "verify_history_pseudonymization",
+    "verify_history_privacy_assessment",
+    "verify_model_phase_packet",
     "validate_schema",
     "verify_visual_manifest",
     "verify_visual_preview_manifest",
@@ -70,6 +80,10 @@ PROMPT_TEMPLATES = {
     "history_pseudonymization": (
         "professional-communication-history-pseudonymization-v1",
         PROMPT_ROOT / "history-pseudonymization-v1.md",
+    ),
+    "history_privacy_assessment": (
+        "professional-communication-history-privacy-assessment-v1",
+        PROMPT_ROOT / "history-privacy-assessment-v1.md",
     ),
     "generation": (
         "professional-communication-v3",
@@ -163,6 +177,95 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"JSON object required: {path}")
     return payload
+
+
+def model_phase_packet_path(run_dir: Path, phase: str) -> Path:
+    """Return the fixed local packet path for one downstream model phase."""
+
+    allowed = {"claim_assurance", "editorial_assessment", "visual_assessment"}
+    if phase not in allowed:
+        raise ValueError(f"Unsupported model phase: {phase}")
+    return run_dir.resolve() / "model-phase-packets" / f"{phase}.json"
+
+
+def verify_model_phase_packet(run_dir: Path, phase: str) -> dict[str, Any]:
+    """Verify one minimized downstream packet and every allowed input hash."""
+
+    root = run_dir.resolve()
+    path = model_phase_packet_path(root, phase)
+    if not path.is_file():
+        raise ValueError(f"Missing {phase} model phase packet")
+    packet = load_json(path)
+    if packet.get("workflow") != "comunicazione-professionale":
+        raise ValueError("Model phase packet workflow mismatch")
+    if packet.get("phase") != phase:
+        raise ValueError("Model phase packet phase mismatch")
+    intake = load_json(root / "run_intake.json")
+    if packet.get("run_id") != intake["run_id"]:
+        raise ValueError("Model phase packet run_id mismatch")
+    if packet.get("input_digest") != intake["input_digest"]:
+        raise ValueError("Model phase packet input binding mismatch")
+    if packet.get("history_available_to_phase") is not False:
+        raise ValueError("Downstream model phase packet must exclude selected history")
+    template_version, template_path = PROMPT_TEMPLATES[phase]
+    expected_template = {
+        "version": template_version,
+        "path": str(template_path.resolve()),
+        "sha256": prompt_template_digest(phase, template_version),
+    }
+    if packet.get("model_pass_template") != expected_template:
+        raise ValueError("Model phase packet template binding mismatch")
+    expected = str(packet.get("packet_digest") or "")
+    stable = {key: value for key, value in packet.items() if key != "packet_digest"}
+    if expected != canonical_digest(stable):
+        raise ValueError("Model phase packet digest mismatch")
+    allowed_inputs = packet.get("allowed_inputs")
+    if not isinstance(allowed_inputs, list) or not allowed_inputs:
+        raise ValueError("Model phase packet has no allowed inputs")
+    roles: set[str] = set()
+    for row in allowed_inputs:
+        if not isinstance(row, dict):
+            raise ValueError("Model phase packet input row is invalid")
+        role = str(row.get("role") or "")
+        if not role or role in roles:
+            raise ValueError("Model phase packet contains duplicate or empty roles")
+        roles.add(role)
+        unresolved_path = Path(str(row.get("path") or ""))
+        if unresolved_path.is_symlink():
+            raise ValueError("Model phase packet input must not be a symlink")
+        input_path = unresolved_path.resolve(strict=True)
+        if not input_path.is_file():
+            raise ValueError("Model phase packet input is not a regular file")
+        if input_path.stat().st_size != row.get("size_bytes"):
+            raise ValueError("Model phase packet input size mismatch")
+        if file_digest(input_path) != row.get("sha256"):
+            raise ValueError("Model phase packet input digest mismatch")
+    role_rows = {row["role"]: row for row in allowed_inputs}
+    expected_schema = {
+        "claim_assurance": "claim_assurance.schema.json",
+        "editorial_assessment": "editorial_assessment.schema.json",
+        "visual_assessment": "visual_assessment.schema.json",
+    }[phase]
+    for role, expected_path in (
+        ("phase_prompt", template_path),
+        ("output_schema", SCHEMA_ROOT / expected_schema),
+    ):
+        row = role_rows.get(role)
+        if row is None or Path(row["path"]).resolve() != expected_path.resolve():
+            raise ValueError(f"Model phase packet {role} binding mismatch")
+    forbidden_fragments = {
+        "history_identity_map",
+        "history-model-inputs",
+        "history_pseudonymization_packet",
+        "history_privacy_assessment_packet",
+        "history-pseudonymized",
+        "history_pseudonymization_record",
+        "history_privacy_assessment_record",
+    }
+    serialized = json.dumps(packet, ensure_ascii=False)
+    if any(fragment in serialized for fragment in forbidden_fragments):
+        raise ValueError("Downstream model phase packet exposes selected history")
+    return packet
 
 
 def atomic_write_json(path: Path, payload: dict[str, Any]) -> Path:
@@ -586,7 +689,7 @@ def validate_history_pseudonymization_payload(
                 for row in pseudonymization["history_items"]
                 if row["history_id"] == history_id
             )
-            if original in document:
+            if normalized_identity_visible(original, document):
                 raise ValueError(
                     "Semantic identity mapping original remains in a pseudonymized document"
                 )
@@ -597,6 +700,38 @@ def validate_history_pseudonymization_payload(
         raise ValueError(
             "Every contextual placeholder must have exactly one local identity mapping"
         )
+
+    non_mapping_text = "\n".join(
+        [
+            *(
+                value
+                for row in pseudonymization["history_items"]
+                for value in (
+                    row["pseudonymized_document"],
+                    row["transformations_summary"],
+                    row["residual_identification_risk"],
+                )
+            ),
+            pseudonymization["pseudonymization_assessment"]["residual_risk"],
+            *pseudonymization["limitations"],
+        ]
+    )
+    local_map = load_json(run_dir.resolve() / "history_identity_map.json")
+    for mapping in local_map["entries"]:
+        if normalized_identity_visible(mapping["original_value"], non_mapping_text):
+            raise ValueError(
+                "A locally stripped identifier was reintroduced outside the identity map"
+            )
+    for mapping in pseudonymization["identity_mapping"]:
+        if normalized_identity_visible(mapping["original_value"], non_mapping_text):
+            raise ValueError(
+                "A semantic identity was repeated outside the local-only identity map"
+            )
+    for row in pseudonymization["history_items"]:
+        if residual_mechanical_identifiers(row["pseudonymized_document"]):
+            raise ValueError(
+                "A pseudonymized document still contains a mechanically detectable identifier"
+            )
 
     assertions = pseudonymization["pseudonymization_assessment"]
     required_assertions = (
@@ -611,6 +746,174 @@ def validate_history_pseudonymization_payload(
     )
     if not all(assertions[key] is True for key in required_assertions):
         raise ValueError("History pseudonymization is not ready for downstream use")
+
+
+def downstream_history_items(record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Project only derivative locations and hashes into later model context."""
+
+    return [
+        {
+            key: row[key]
+            for key in ("history_id", "channel", "path", "sha256", "size_bytes")
+        }
+        for row in record["history_items"]
+    ]
+
+
+def validate_history_privacy_assessment(
+    assessment: dict[str, Any],
+    *,
+    run_dir: Path,
+    pseudonymization_record: dict[str, Any],
+    assessment_packet: dict[str, Any],
+) -> None:
+    """Validate an independent derivative-only privacy review."""
+
+    validate_schema(assessment, "history_privacy_assessment.schema.json")
+    _reject_secret_fields(assessment)
+    root = run_dir.resolve()
+    intake = load_json(root / "run_intake.json")
+    if assessment["run_id"] != intake["run_id"]:
+        raise ValueError("History privacy assessment run_id mismatch")
+    if assessment["input_digest"] != intake["input_digest"]:
+        raise ValueError("History privacy assessment is stale for prepared inputs")
+    if (
+        assessment["pseudonymization_record_digest"]
+        != pseudonymization_record["record_digest"]
+    ):
+        raise ValueError("History privacy assessment is stale for pseudonymization")
+    packet_digest = str(assessment_packet.get("packet_digest") or "")
+    stable_packet = {
+        key: value for key, value in assessment_packet.items() if key != "packet_digest"
+    }
+    if packet_digest != canonical_digest(stable_packet):
+        raise ValueError("History privacy assessment packet digest mismatch")
+    if assessment_packet.get("pseudonymization_record_digest") != (
+        pseudonymization_record["record_digest"]
+    ):
+        raise ValueError("History privacy assessment packet is stale")
+    packet_documents = [
+        (row["history_id"], row["sha256"])
+        for row in assessment_packet["history_documents"]
+    ]
+    record_documents = [
+        (row["history_id"], row["sha256"])
+        for row in pseudonymization_record["history_items"]
+    ]
+    assessed_documents = [
+        (row["history_id"], row["sha256"]) for row in assessment["document_assessments"]
+    ]
+    if packet_documents != record_documents or assessed_documents != record_documents:
+        raise ValueError(
+            "History privacy assessment must cover every derivative once and in order"
+        )
+    protocol = assessment["assessment_protocol"]
+    if protocol["template_sha256"] != prompt_template_digest(
+        "history_privacy_assessment", protocol["assessment_template_version"]
+    ):
+        raise ValueError("History privacy assessment template digest mismatch")
+    if (
+        protocol["assessor_session_id"]
+        == pseudonymization_record["model_provenance"]["session_id"]
+    ):
+        raise ValueError(
+            "History privacy assessment must use a session separate from pseudonymization"
+        )
+    if assessment["verdict"] == "ready":
+        if assessment["required_changes"]:
+            raise ValueError("Ready history privacy assessment cannot require changes")
+        if any(
+            row["verdict"] != "ready"
+            or row["findings"]
+            or row["structure_preserved"] is not True
+            for row in assessment["document_assessments"]
+        ):
+            raise ValueError(
+                "Ready history privacy assessment contains unresolved findings"
+            )
+    elif not assessment["required_changes"]:
+        raise ValueError(
+            "Revised history privacy assessment must state required changes"
+        )
+
+
+def verify_history_privacy_assessment(
+    run_dir: Path,
+    pseudonymization_record: dict[str, Any],
+) -> dict[str, Any]:
+    """Verify the accepted independent privacy review bound to derivatives."""
+
+    root = run_dir.resolve()
+    path = root / "history_privacy_assessment_record.json"
+    if not path.is_file():
+        raise ValueError(
+            "Selected history requires independent privacy assessment before downstream generation"
+        )
+    record = load_json(path)
+    expected = str(record.get("record_digest") or "")
+    stable = {key: value for key, value in record.items() if key != "record_digest"}
+    if expected != canonical_digest(stable):
+        raise ValueError("History privacy assessment record digest mismatch")
+    if record.get("workflow") != "comunicazione-professionale":
+        raise ValueError("History privacy assessment workflow mismatch")
+    if record.get("input_digest") != pseudonymization_record["input_digest"]:
+        raise ValueError("History privacy assessment input binding mismatch")
+    if (
+        record.get("pseudonymization_record_digest")
+        != pseudonymization_record["record_digest"]
+    ):
+        raise ValueError("History privacy assessment pseudonymization binding mismatch")
+    assessment = record.get("assessment")
+    if not isinstance(assessment, dict) or assessment.get("verdict") != "ready":
+        raise ValueError("History privacy assessment is not ready")
+    expected_documents = [
+        (row["history_id"], row["sha256"])
+        for row in pseudonymization_record["history_items"]
+    ]
+    assessed_documents = [
+        (row.get("history_id"), row.get("sha256"))
+        for row in assessment.get("document_assessments", [])
+    ]
+    if assessed_documents != expected_documents:
+        raise ValueError("History privacy assessment document binding mismatch")
+    provenance = record.get("model_provenance")
+    if not isinstance(provenance, dict):
+        raise ValueError("History privacy assessment provenance is missing")
+    if provenance.get("template_sha256") != prompt_template_digest(
+        "history_privacy_assessment",
+        str(provenance.get("template_version") or ""),
+    ):
+        raise ValueError("History privacy assessment provenance digest mismatch")
+    if (
+        provenance.get("assessor_session_id")
+        == pseudonymization_record["model_provenance"]["session_id"]
+    ):
+        raise ValueError("History privacy assessment session was reused")
+    cleanup_path = root / "history_cleanup_receipt.json"
+    if not cleanup_path.is_file():
+        raise ValueError("History transient-input cleanup receipt is missing")
+    cleanup = load_json(cleanup_path)
+    cleanup_digest = str(cleanup.get("cleanup_digest") or "")
+    stable_cleanup = {
+        key: value for key, value in cleanup.items() if key != "cleanup_digest"
+    }
+    if cleanup_digest != canonical_digest(stable_cleanup):
+        raise ValueError("History cleanup receipt digest mismatch")
+    if cleanup.get("input_digest") != pseudonymization_record["input_digest"]:
+        raise ValueError("History cleanup receipt input binding mismatch")
+    if cleanup.get("raw_history_snapshots_deleted") is not False:
+        raise ValueError("History cleanup receipt misstates raw snapshot retention")
+    if cleanup.get("identity_mapping_deleted") is not False:
+        raise ValueError("History cleanup receipt misstates identity-map retention")
+    for entry in cleanup.get("deleted_artifacts", []):
+        deleted_path = (root / str(entry.get("path") or "")).resolve()
+        if not deleted_path.is_relative_to(root):
+            raise ValueError("History cleanup receipt path escapes the run")
+        if deleted_path.exists():
+            raise ValueError(
+                "A transient history model input still exists after cleanup"
+            )
+    return record
 
 
 def verify_history_pseudonymization(run_dir: Path) -> dict[str, Any] | None:
@@ -678,16 +981,17 @@ def verify_history_pseudonymization(run_dir: Path) -> dict[str, Any] | None:
         str(provenance.get("template_version") or ""),
     ):
         raise ValueError("History pseudonymization template digest mismatch")
+    privacy_assessment = verify_history_privacy_assessment(root, record)
     task_packet = load_json(root / "model_task_packet.json")
     history_context = task_packet.get("history_context")
     if not isinstance(history_context, dict):
         raise ValueError("Downstream history context is missing")
     expected_history_context = {
         "status": "ready",
-        "record_path": str(path.resolve()),
         "record_digest": record["record_digest"],
+        "privacy_assessment_record_digest": privacy_assessment["record_digest"],
         "history_ids": [item["history_id"] for item in record["history_items"]],
-        "pseudonymized_documents": record["history_items"],
+        "pseudonymized_documents": downstream_history_items(record),
         "raw_history_paths_included": False,
         "identity_mapping_included": False,
         "purpose": "studio_voice_and_format_learning_only",
@@ -722,16 +1026,30 @@ def recompute_contribution_digest(run_dir: Path) -> str:
     recorded_history_provenance = workbench.get("model_provenance", {}).get(
         "history_pseudonymization"
     )
+    recorded_privacy_provenance = workbench.get("model_provenance", {}).get(
+        "history_privacy_assessment"
+    )
     if history_pseudonymization is None:
         if recorded_history_provenance is not None:
             raise ValueError(
                 "Contribution records history pseudonymization without history"
+            )
+        if recorded_privacy_provenance is not None:
+            raise ValueError(
+                "Contribution records history privacy assessment without history"
             )
     elif not isinstance(recorded_history_provenance, dict) or (
         recorded_history_provenance.get("record_digest")
         != history_pseudonymization["record_digest"]
     ):
         raise ValueError("Contribution history pseudonymization binding mismatch")
+    elif not isinstance(recorded_privacy_provenance, dict) or (
+        recorded_privacy_provenance.get("record_digest")
+        != verify_history_privacy_assessment(root, history_pseudonymization)[
+            "record_digest"
+        ]
+    ):
+        raise ValueError("Contribution history privacy assessment binding mismatch")
     current = canonical_digest(
         {
             "input_digest": input_digest,

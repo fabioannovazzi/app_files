@@ -28,21 +28,23 @@ __all__ = ["record_history_pseudonymization", "main"]
 LOGGER = logging.getLogger(__name__)
 
 
-def _ready_model_task_packet(
+def _assessment_required_model_task_packet(
     packet: dict[str, Any], *, record_path: Path, record: dict[str, Any]
 ) -> dict[str, Any]:
-    """Bind complete pseudonymized documents without the local identity map."""
+    """Keep generation blocked until an independent derivative-only review."""
 
     updated = dict(packet)
     updated["history_context"] = {
-        "status": "ready",
-        "record_path": str(record_path.resolve()),
-        "record_digest": record["record_digest"],
+        "status": "privacy_assessment_required",
+        "pending_record_path": str(record_path.resolve()),
+        "pending_record_digest": record["record_digest"],
         "history_ids": [item["history_id"] for item in record["history_items"]],
-        "pseudonymized_documents": record["history_items"],
         "raw_history_paths_included": False,
         "identity_mapping_included": False,
         "purpose": "studio_voice_and_format_learning_only",
+        "privacy_assessment_packet_path": str(
+            (record_path.parent / "history_privacy_assessment_packet.json").resolve()
+        ),
     }
     return updated
 
@@ -66,11 +68,25 @@ def record_history_pseudonymization(
             raise ValueError(
                 "History pseudonymization is not applicable without selected history"
             )
-        record_path = root / "history_pseudonymization_record.json"
-        if record_path.exists():
+        final_record_path = root / "history_pseudonymization_record.json"
+        if final_record_path.exists():
             raise ValueError(
                 "History pseudonymization is already recorded for this run"
             )
+        pending_documents_dir = root / "history-pseudonymized-candidate"
+        pending_map_path = root / "history_identity_map.pending.json"
+        pending_record_path = root / "history_pseudonymization_record.pending.json"
+        assessment_packet_path = root / "history_privacy_assessment_packet.json"
+        for stale_path in (
+            pending_map_path,
+            pending_record_path,
+            assessment_packet_path,
+        ):
+            stale_path.unlink(missing_ok=True)
+        if pending_documents_dir.exists():
+            if pending_documents_dir.is_symlink() or not pending_documents_dir.is_dir():
+                raise ValueError("Unsafe pending history candidate path")
+            shutil.rmtree(pending_documents_dir)
         result = load_json(pseudonymization_path)
         source = pseudonymization_path.expanduser().resolve(strict=True)
         if source.is_relative_to(root):
@@ -94,6 +110,7 @@ def record_history_pseudonymization(
         installed_documents = False
         installed_map = False
         installed_record = False
+        installed_packet = False
         try:
             documents_dir = staging_dir / "documents"
             document_records: list[dict[str, Any]] = []
@@ -171,37 +188,94 @@ def record_history_pseudonymization(
             record["record_digest"] = canonical_digest(record)
             atomic_write_json(staging_dir / "record.json", record)
 
+            assessment_packet = {
+                "schema_version": 1,
+                "workflow": "comunicazione-professionale",
+                "run_id": result["run_id"],
+                "input_digest": result["input_digest"],
+                "pseudonymization_record_digest": record["record_digest"],
+                "purpose": "independent_residual_identification_review_before_downstream_use",
+                "history_documents": [
+                    {
+                        **{
+                            key: row[key]
+                            for key in (
+                                "history_id",
+                                "channel",
+                                "sha256",
+                                "size_bytes",
+                            )
+                        },
+                        "path": str(
+                            (pending_documents_dir / Path(row["path"]).name).resolve()
+                        ),
+                    }
+                    for row in document_records
+                ],
+                "raw_history_paths_included": False,
+                "mechanically_stripped_paths_included": False,
+                "identity_mapping_included": False,
+                "pseudonymization_transcript_included": False,
+                "model_pass_template": {
+                    "version": "professional-communication-history-privacy-assessment-v1",
+                    "path": str(
+                        (
+                            Path(__file__).resolve().parents[1]
+                            / "prompts"
+                            / "history-privacy-assessment-v1.md"
+                        ).resolve()
+                    ),
+                    "sha256": prompt_template_digest(
+                        "history_privacy_assessment",
+                        "professional-communication-history-privacy-assessment-v1",
+                    ),
+                },
+                "artifact_schema": str(
+                    (
+                        Path(__file__).resolve().parents[1]
+                        / "schemas"
+                        / "history_privacy_assessment.schema.json"
+                    ).resolve()
+                ),
+            }
+            assessment_packet["packet_digest"] = canonical_digest(assessment_packet)
+            atomic_write_json(staging_dir / "assessment-packet.json", assessment_packet)
+
             final_documents_dir = root / "history-pseudonymized"
             if final_documents_dir.exists():
                 raise ValueError("Pseudonymized history directory already exists")
-            documents_dir.replace(final_documents_dir)
+            documents_dir.replace(pending_documents_dir)
             installed_documents = True
-            local_map_path.replace(root / "history_identity_map.json")
+            local_map_path.replace(pending_map_path)
             installed_map = True
-            (staging_dir / "record.json").replace(record_path)
+            (staging_dir / "record.json").replace(pending_record_path)
             installed_record = True
+            (staging_dir / "assessment-packet.json").replace(assessment_packet_path)
+            installed_packet = True
             packet_path = root / "model_task_packet.json"
             packet = load_json(packet_path)
             atomic_write_json(
                 packet_path,
-                _ready_model_task_packet(
+                _assessment_required_model_task_packet(
                     packet,
-                    record_path=record_path,
+                    record_path=pending_record_path,
                     record=record,
                 ),
             )
         except (OSError, ValueError):
-            if installed_documents and (root / "history-pseudonymized").exists():
-                shutil.rmtree(root / "history-pseudonymized")
+            if installed_documents and pending_documents_dir.exists():
+                shutil.rmtree(pending_documents_dir)
             if installed_record:
-                record_path.unlink(missing_ok=True)
+                pending_record_path.unlink(missing_ok=True)
             if installed_map:
-                atomic_write_json(root / "history_identity_map.json", current_local_map)
+                pending_map_path.unlink(missing_ok=True)
+            if installed_packet:
+                assessment_packet_path.unlink(missing_ok=True)
             raise
         finally:
             if staging_dir.exists():
                 shutil.rmtree(staging_dir)
-        return record_path
+        return pending_record_path
 
 
 def main(argv: list[str] | None = None) -> int:

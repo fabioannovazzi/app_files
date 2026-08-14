@@ -1,8 +1,10 @@
 # Professional communication editorial assessment v4
 
 Act as a skeptical professional editor in a fresh host session. Review the
-exact contribution and completed claim assurance, not the generator's
-transcript. Compare the work with a strong practitioner-authored publication.
+exact contribution and completed claim assurance allowed by the current
+`editorial_assessment` phase packet, not current source files, prior
+communications, history records, identity maps, or earlier transcripts.
+Compare the work with a strong practitioner-authored publication.
 Test its reader payoff, source-specific value, expertise beyond summary,
 genericity, counterfactual value, weakest element, professional limits, and
 banality risk. Assess every channel and every proposed slide separately.
@@ -14,4 +16,4 @@ version, or public link. A visual that restates the post, or any weak or
 redundant slide, requires revision or omission.
 
 Return JSON matching `editorial_assessment.schema.json`. Do not read the hidden
-benchmark expectations, generation transcript, or generator prompt.
+benchmark expectations or generator prompt.

@@ -6,6 +6,7 @@ from __future__ import annotations
 import hashlib
 import html
 import re
+import unicodedata
 import zipfile
 from email import policy
 from email.parser import BytesParser
@@ -18,13 +19,15 @@ from defusedxml.common import DefusedXmlException
 __all__ = [
     "MECHANICAL_STRIPPING_VERSION",
     "extract_history_text",
+    "normalized_identity_visible",
+    "residual_mechanical_identifiers",
     "strip_mechanical_identifiers",
 ]
 
 MECHANICAL_STRIPPING_VERSION = "mechanical-identifiers-v1"
 
 _EMAIL_RE = re.compile(
-    r"(?<![\w.+-])(?P<value>[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,63})(?![\w.-])",
+    r"(?<![\w.+-])(?P<value>[A-Z0-9._%+-]+@[A-Z0-9](?:[A-Z0-9.-]*[A-Z0-9])?\.[A-Z]{2,63})(?![\w-])",
     re.IGNORECASE,
 )
 _ITALIAN_TAX_CODE_RE = re.compile(
@@ -233,6 +236,28 @@ def _normalizer(category: str, value: str) -> str:
     return re.sub(r"\s+", " ", value).strip().casefold()
 
 
+def _identity_comparison_text(value: str) -> str:
+    """Normalize harmless presentation differences for local leak checks."""
+
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return " ".join(re.findall(r"[^\W_]+", normalized, flags=re.UNICODE))
+
+
+def normalized_identity_visible(original: str, candidate: str) -> bool:
+    """Return whether an identity survives case, spacing, or punctuation changes.
+
+    This deliberately answers only a mechanically verifiable question. It does
+    not decide whether two semantically different names or case descriptions
+    identify the same person.
+    """
+
+    normalized_original = _identity_comparison_text(original)
+    if not normalized_original:
+        return False
+    normalized_candidate = _identity_comparison_text(candidate)
+    return f" {normalized_original} " in f" {normalized_candidate} "
+
+
 def _candidate_matches(
     text: str,
 ) -> Iterable[tuple[int, int, str, str, str]]:
@@ -253,6 +278,23 @@ def _candidate_matches(
             if validator(value):
                 start, end = match.span("value")
                 yield start, end, category, value, pattern.pattern
+
+
+def residual_mechanical_identifiers(text: str) -> list[dict[str, Any]]:
+    """Return auditable direct-identifier findings without retaining values."""
+
+    findings: list[dict[str, Any]] = []
+    for start, end, category, value, rule in _candidate_matches(text):
+        findings.append(
+            {
+                "category": category,
+                "start": start,
+                "end": end,
+                "value_sha256": hashlib.sha256(value.encode("utf-8")).hexdigest(),
+                "rule_sha256": hashlib.sha256(rule.encode("utf-8")).hexdigest(),
+            }
+        )
+    return findings
 
 
 def strip_mechanical_identifiers(

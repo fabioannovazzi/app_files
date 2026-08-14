@@ -49,8 +49,12 @@ The professional selects every exact prior communication used for style
 learning. Vera never scans all Studio documents or account history. Local code
 first strips explicit-format email addresses, phone numbers, tax identifiers,
 account identifiers and case numbers. One dedicated model pass receives only
-those stripped documents and produces complete pseudonymized derivatives. The
-identity mappings stay local, and every later model pass receives only the
-pseudonymized documents. This reduces the first model's exposure but does not
+those stripped documents and produces complete pseudonymized derivatives. A
+second fresh model pass sees only the candidates and checks for residual
+contextual identification. The identity mappings stay local. Generation sees
+the accepted derivatives; claim, editorial, and visual review do not receive
+prior communications at all. Transient stripped inputs are deleted after the
+independent review, while the Studio retains the originals and local mapping.
+This reduces the first model's exposure but does not
 make that pass anonymous: names and contextual identifiers can remain until the
 semantic pseudonymization is performed.

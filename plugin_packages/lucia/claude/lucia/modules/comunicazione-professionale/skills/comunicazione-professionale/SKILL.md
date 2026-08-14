@@ -91,9 +91,13 @@ Studio Archive engagement. The professional owns its retention.
 - Local code strips explicit-format emails, phone numbers, tax identifiers,
   account identifiers and case numbers before any model sees selected history.
   One isolated model session receives only those stripped documents and
-  creates complete pseudonymized derivatives. Identity mappings remain local;
-  every later model pass receives only the pseudonymized documents. Contextual
-  identities may still reach that first selected Claude or Cowork model pass.
+  creates complete pseudonymized derivatives. A second fresh model session
+  sees only those candidate derivatives and must clear residual contextual
+  identification before generation can start. Identity mappings remain local.
+  Generation receives the accepted derivatives; claim, editorial, and visual
+  review receive separate task-specific packets with no prior communications.
+  Contextual identities may still reach the first selected Claude or Cowork
+  model pass.
 - Keep client identity and case facts out of public research queries. Use a
   client example only when the professional supplied and approved a lawful,
   appropriate public-use version.
@@ -230,13 +234,30 @@ ZIPs during a professional communication run.
 
    Recording requires every selected item once, a ready model assessment, exact
    input binding, preservation of locally inserted placeholders and the bundled
-   prompt digest. It writes one complete pseudonymized text derivative per
-   selected document, moves both mapping layers into the owner-only identity
-   map, and replaces the blocked downstream history context with
-   `history_pseudonymization_record.json` plus derivative paths and hashes.
-   Raw snapshots and stripped intermediates remain owner-controlled for audit,
-   but no later model session may open them. If pseudonymization cannot safely
-   preserve the purpose, stop or proceed without history-derived conventions.
+   prompt digest. It stages one complete candidate derivative per selected
+   document and keeps downstream generation blocked. In a second fresh host
+   session, open only `history_privacy_assessment_packet.json`, its candidate
+   derivative paths, and `prompts/history-privacy-assessment-v1.md`. Do not open
+   raw history, stripped intermediates, either identity map, or the first
+   session transcript. Write the result against
+   `schemas/history_privacy_assessment.schema.json`, then finalize it:
+
+   ```bash
+   python scripts/record_history_privacy_assessment.py \
+     --run-dir <run-dir> \
+     --assessment <history_privacy_assessment.json> \
+     --provider <provider> --model <model> \
+     --recorded-by <operator>
+   ```
+
+   A `revise` verdict does not unlock generation: rerun pseudonymization with
+   the required generalizations. A `ready` verdict promotes the derivatives,
+   moves both mapping layers into the owner-only identity map, deletes the
+   transient stripped inputs and both dedicated model packets, writes a
+   digest-bound cleanup receipt, and exposes only derivative paths and hashes
+   to generation. Raw selected snapshots and the local mapping remain for the
+   Studio's audit and possible re-identification. If safe pseudonymization
+   cannot preserve the style-learning purpose, proceed without history.
 
 4. Read the exact current-source inputs and, when history was selected, only
    the recorded pseudonymized derivatives. When public research was selected, research
@@ -268,8 +289,18 @@ ZIPs during a professional communication run.
    date, number, version, or public URL when available. Packaging may escape
    text for HTML but must not replace these notes with a generic Studio phrase.
 
-   Next open `prompts/claim-assurance-v2.md` in a separate fresh host session
-   and write `claim_assurance.json`. Bind it to the exact contribution and answer-contract
+   Before claim assurance, create its exact minimized packet:
+
+   ```bash
+   python scripts/prepare_model_phase.py \
+     --run-dir <run-dir> --phase claim_assurance \
+     --contribution <model_contribution.json> \
+     --answer-contract <answer_contract.json>
+   ```
+
+   Open only that packet's allowed inputs and
+   `prompts/claim-assurance-v2.md` in a separate fresh host session and write
+   `claim_assurance.json`. Bind it to the exact contribution and answer-contract
    digests; cover every material claim once; and keep source identity, semantic
    support, reasoning, and professional judgment separate. Correct or remove an
    unsupported, contradicted, overbroad, temporally distorted, or unsound claim
@@ -277,7 +308,17 @@ ZIPs during a professional communication run.
    deep-research validation record; do not start a separate client-bound
    validator run for the same studio-wide contribution.
 
-   Finally open `prompts/editorial-assessment-v4.md` in a third fresh host
+   Then create the editorial packet:
+
+   ```bash
+   python scripts/prepare_model_phase.py \
+     --run-dir <run-dir> --phase editorial_assessment \
+     --contribution <model_contribution.json> \
+     --claim-assurance <claim_assurance.json>
+   ```
+
+   Open only that packet's contribution and completed assurance with
+   `prompts/editorial-assessment-v4.md` in a third fresh host
    session and write `editorial_assessment.json` according to its schema. Bind it to the exact
    canonical contribution and claim-assurance digests. Use a fresh assessor
    session that has not seen the generation transcript and does not reuse the
@@ -379,8 +420,16 @@ ZIPs during a professional communication run.
    The QA preview writes `visual_preview_manifest.json` and
    `visuals-preview/`. It is deliberately non-packageable and is not evidence
    of professional approval. Never copy or rename it into the release path.
-   Open `prompts/visual-assessment-v2.md` in another fresh host session, then
-   open every exact PNG and every PDF page, compare them with the channel draft,
+   Prepare the exact preview-only packet:
+
+   ```bash
+   python scripts/prepare_model_phase.py \
+     --run-dir <run-dir> --phase visual_assessment --qa-preview
+   ```
+
+   Open only its allowed inputs with `prompts/visual-assessment-v2.md` in
+   another fresh host session, then open every exact PNG and every PDF page,
+   compare them with the channel draft,
    and write a model-led `visual_assessment.json` against
    `schemas/visual_assessment.schema.json`. Record it with:
 
@@ -453,6 +502,8 @@ ZIPs during a professional communication run.
    assessment without `--qa-preview`:
 
    ```bash
+   python scripts/prepare_model_phase.py \
+     --run-dir <run-dir> --phase visual_assessment
    python scripts/record_visual_assessment.py \
      --run-dir <run-dir> --assessment <visual_assessment.json> \
      --provider <provider> --model <model>
@@ -509,8 +560,13 @@ ZIPs during a professional communication run.
 - `history_pseudonymization_record.json`, when history is selected, binds one
   isolated model session to the exact locally stripped inputs and one complete
   pseudonymized derivative per selected item. `history_identity_map.json`
-  remains local and is excluded from every model packet; later model passes
-  receive only the derivative paths and hashes. This is pseudonymization, not
+  remains local and is excluded from every model packet.
+  `history_privacy_assessment_record.json` binds a second independent,
+  derivative-only privacy review. `history_cleanup_receipt.json` proves that
+  the stripped model inputs and dedicated history packets were removed after
+  acceptance, while raw snapshots and the identity mapping were retained.
+  Generation receives derivative paths and hashes; claim, editorial, and
+  visual review packets exclude all selected history. This is pseudonymization, not
   anonymization: contextual identities can reach the isolated first pass and
   re-identification remains possible where the local mapping is retained.
 - Direct connector retrieval of selected history is blocked because it cannot
@@ -520,6 +576,9 @@ ZIPs during a professional communication run.
   exact editorial provider/model/template passed the current blinded anti-slop
   benchmark without a false-ready critical case.
 - `content_workbench.json` preserves the model contribution and provenance.
+- `model-phase-packets/` binds the exact minimum allowed inputs for claim,
+  editorial, and visual model sessions; their recorders fail if a packet is
+  missing, changed, stale, or contains selected-history artifacts.
 - The workbench and package preserve `answer_contract` and `claim_assurance`,
   binding the professional objective to full material-claim support, reasoning,
   and judgment review.

@@ -39,7 +39,11 @@ skill to imitate a missing operational workflow.
   learn only from exact prior studio communications selected by the
   professional, with local mechanical stripping of explicit identifiers, then
   one isolated model-led pass that creates complete pseudonymized derivatives
-  before any downstream generation or review; and prepare a
+  and a second derivative-only privacy review before generation. Only
+  generation receives the accepted derivatives; claim, editorial, and visual
+  review use smaller packets without prior communications. Transient stripped
+  inputs are deleted while originals and the local identity map remain with the
+  Studio. These mechanics are the same in Codex and Cowork. Then prepare a
   source-backed, studio-formatted client email, circular, LinkedIn post,
   newsletter, website article, FAQ, client alert, or graphical explainer for
   professional review and optional publication. `no_publish` is a successful

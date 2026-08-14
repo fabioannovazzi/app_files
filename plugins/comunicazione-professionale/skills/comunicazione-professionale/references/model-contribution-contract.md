@@ -2,8 +2,9 @@
 
 Write UTF-8 JSON matching `schemas/model_contribution.schema.json`.
 
-When selected history exists, read only `history_pseudonymization_record.json`
-and the complete pseudonymized documents it binds. Never open raw snapshots,
+When selected history exists, read only the complete independently cleared
+pseudonymized documents listed in `model_task_packet.json`. Never open history
+records, privacy-assessment records, raw snapshots,
 mechanically stripped intermediates, or either local identity map, and never
 treat prior technical or case content as claim support. The derivatives exist
 only to support Studio voice, format, and repetition observations.
@@ -77,6 +78,13 @@ the full-claim validation profile. After generation, write a separate
 identity, semantic support, reasoning, and professional judgment. Correct all
 support and reasoning defects before editorial assessment.
 
+Use `prepare_model_phase.py` before claim assurance and editorial assessment.
+Claim assurance receives only the answer contract, proposed contribution,
+selected current-source snapshots, its prompt, and its schema. Editorial
+assessment receives only the proposed contribution, completed claim assurance,
+its prompt, and its schema. Neither phase receives prior communications,
+identity maps, history records, or history-session transcripts.
+
 Then write a separate `editorial_assessment.json` matching its schema and bound
 to the exact canonical contribution and claim-assurance digests. Use a fresh
 blinded model-led pass from a currently qualified provider/model/template and
@@ -101,7 +109,8 @@ version, or link needed to retrieve it. This remains a model-led,
 context-sensitive editorial judgment; deterministic validation only prevents
 empty notes and internal traceability IDs from being published.
 
-Generation, claim assurance, editorial assessment, and visual assessment use
+History pseudonymization, independent derivative privacy review, generation,
+claim assurance, editorial assessment, and visual assessment use
 distinct host sessions and exact bundled prompt-template digests. The run
 records this as operator-attested host provenance and explicitly states that it
 is not a provider-authenticated model-call receipt.

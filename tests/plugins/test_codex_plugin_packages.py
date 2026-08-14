@@ -3783,10 +3783,13 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
     ).read_text(encoding="utf-8")
 
     for required_copy in (
-        "Il modello legge le fonti selezionate",
-        "un primo passaggio può vedere nomi e dettagli di contesto",
-        "I passaggi successivi ricevono quelle versioni",
-        "Questa procedura non equivale ad anonimizzazione.",
+        "non esplora l'archivio o la posta",
+        "Un secondo passaggio indipendente vede solo le copie candidate",
+        "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
+        "gli input ripuliti e i pacchetti temporanei vengono eliminati",
+        "È pseudonimizzazione, non anonimizzazione",
+        "Il nucleo è identico in Codex e Cowork",
+        "solo Codex può inviare facoltativamente a Creative Production",
     ):
         assert required_copy in function_copy
     assert 'modelDataStatus: "relevant"' in function_copy

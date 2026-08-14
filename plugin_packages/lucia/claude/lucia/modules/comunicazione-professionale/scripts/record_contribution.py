@@ -13,6 +13,7 @@ from workflow_core import (
     atomic_write_json,
     atomic_write_text,
     canonical_digest,
+    file_digest,
     load_json,
     prompt_template_digest,
     required_review_scopes,
@@ -24,12 +25,36 @@ from workflow_core import (
     validate_schema,
     verify_editorial_assessor_qualification,
     verify_history_pseudonymization,
+    verify_history_privacy_assessment,
+    verify_model_phase_packet,
     workflow_lock,
 )
 
 __all__ = ["record_contribution", "main"]
 
 LOGGER = logging.getLogger(__name__)
+
+
+def _phase_inputs(packet: dict[str, Any]) -> dict[str, dict[str, Any]]:
+    """Index the already verified allowed inputs for exact phase binding."""
+
+    return {row["role"]: row for row in packet["allowed_inputs"]}
+
+
+def _require_phase_file(rows: dict[str, dict[str, Any]], role: str, path: Path) -> None:
+    """Require one exact file to be the input named for a model phase."""
+
+    candidate = path.expanduser()
+    if candidate.is_symlink():
+        raise ValueError(f"{role} phase input must not be a symlink")
+    resolved = candidate.resolve(strict=True)
+    row = rows.get(role)
+    if row is None:
+        raise ValueError(f"Model phase packet is missing required role: {role}")
+    if Path(row["path"]).resolve(strict=True) != resolved:
+        raise ValueError(f"Model phase packet {role} path mismatch")
+    if row["sha256"] != file_digest(resolved):
+        raise ValueError(f"Model phase packet {role} digest mismatch")
 
 
 def _review_items(
@@ -279,6 +304,41 @@ def _record_contribution_locked(
     source_register = load_json(root / "source_register.json")
     validate_input_integrity(root)
     history_pseudonymization = verify_history_pseudonymization(root)
+    history_privacy_assessment = (
+        verify_history_privacy_assessment(root, history_pseudonymization)
+        if history_pseudonymization is not None
+        else None
+    )
+    claim_packet = verify_model_phase_packet(root, "claim_assurance")
+    editorial_packet = verify_model_phase_packet(root, "editorial_assessment")
+    claim_inputs = _phase_inputs(claim_packet)
+    editorial_inputs = _phase_inputs(editorial_packet)
+    _require_phase_file(claim_inputs, "contribution_candidate", contribution_path)
+    _require_phase_file(claim_inputs, "answer_contract", answer_contract_path)
+    expected_claim_roles = {
+        "answer_contract",
+        "contribution_candidate",
+        "phase_prompt",
+        "output_schema",
+        *{f"source:{row['id']}" for row in source_register["sources"]},
+    }
+    if set(claim_inputs) != expected_claim_roles:
+        raise ValueError("Claim-assurance packet contains an unexpected input set")
+    for source in source_register["sources"]:
+        _require_phase_file(
+            claim_inputs,
+            f"source:{source['id']}",
+            Path(source["snapshot_path"]),
+        )
+    _require_phase_file(editorial_inputs, "contribution_candidate", contribution_path)
+    _require_phase_file(editorial_inputs, "claim_assurance", claim_assurance_path)
+    if set(editorial_inputs) != {
+        "contribution_candidate",
+        "claim_assurance",
+        "phase_prompt",
+        "output_schema",
+    }:
+        raise ValueError("Editorial-assessment packet contains an unexpected input set")
     contribution = load_json(contribution_path)
     answer_contract = load_json(answer_contract_path)
     claim_assurance = load_json(claim_assurance_path)
@@ -368,10 +428,18 @@ def _record_contribution_locked(
                 "History pseudonymization must use a session separate from every downstream model pass"
             )
         session_ids.add(history_session_id)
-    expected_session_count = 5 if history_pseudonymization is not None else 4
+        privacy_session_id = history_privacy_assessment["model_provenance"][
+            "assessor_session_id"
+        ]
+        if privacy_session_id in session_ids:
+            raise ValueError(
+                "History privacy assessment must use a session separate from every downstream model pass"
+            )
+        session_ids.add(privacy_session_id)
+    expected_session_count = 6 if history_pseudonymization is not None else 4
     if len(session_ids) != expected_session_count:
         raise ValueError(
-            "History pseudonymization when present, generation, claim assurance, live editorial assessment, and benchmark qualification must use distinct host sessions"
+            "History pseudonymization and privacy assessment when present, generation, claim assurance, live editorial assessment, and benchmark qualification must use distinct host sessions"
         )
     if editorial_assessment["verdict"] != "ready":
         raise ValueError(
@@ -466,11 +534,19 @@ def _record_contribution_locked(
         },
         "recorded_by": recorded_by,
         "recorded_at": recorded_at,
+        "model_phase_packets": {
+            "claim_assurance": claim_packet["packet_digest"],
+            "editorial_assessment": editorial_packet["packet_digest"],
+        },
     }
     if history_pseudonymization is not None:
         provenance["history_pseudonymization"] = {
             **history_pseudonymization["model_provenance"],
             "record_digest": history_pseudonymization["record_digest"],
+        }
+        provenance["history_privacy_assessment"] = {
+            **history_privacy_assessment["model_provenance"],
+            "record_digest": history_privacy_assessment["record_digest"],
         }
     digest = canonical_digest(
         {

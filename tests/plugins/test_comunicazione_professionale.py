@@ -496,7 +496,90 @@ def _record_history_pseudonymization(run_dir: Path, tmp_path: Path) -> Path | No
         "--recorded-by",
         "test-operator",
     )
+    pending = json.loads(
+        (run_dir / "history_pseudonymization_record.pending.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assessment = _write_json(
+        tmp_path / f"{run_dir.name}-history-privacy-assessment.json",
+        {
+            "schema_version": 1,
+            "run_id": pending["run_id"],
+            "input_digest": pending["input_digest"],
+            "pseudonymization_record_digest": pending["record_digest"],
+            "purpose": "independent_residual_identification_review_before_downstream_use",
+            "assessment_protocol": {
+                "method": "isolated_derivative_only_privacy_review",
+                "assessor_session_id": "test-history-privacy-session-001",
+                "assessment_template_version": "professional-communication-history-privacy-assessment-v1",
+                "template_sha256": _prompt_digest("history-privacy-assessment-v1.md"),
+                "raw_history_seen": False,
+                "identity_mapping_seen": False,
+                "pseudonymization_transcript_seen": False,
+                "completed_at": "2026-08-08T11:30:00+00:00",
+            },
+            "document_assessments": [
+                {
+                    "history_id": row["history_id"],
+                    "sha256": row["sha256"],
+                    "verdict": "ready",
+                    "findings": [],
+                    "structure_preserved": True,
+                }
+                for row in pending["history_items"]
+            ],
+            "verdict": "ready",
+            "residual_risk": "I derivati restano pseudonimizzati, non anonimi.",
+            "required_changes": [],
+        },
+    )
+    _run(
+        "record_history_privacy_assessment.py",
+        "--run-dir",
+        str(run_dir),
+        "--assessment",
+        str(assessment),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-privacy-model",
+        "--recorded-by",
+        "test-operator",
+    )
     return run_dir / "history_pseudonymization_record.json"
+
+
+def _prepare_model_phases(
+    run_dir: Path,
+    contribution_path: Path,
+    answer_contract_path: Path,
+    claim_assurance_path: Path,
+) -> None:
+    """Prepare the exact minimized claim and editorial input packets."""
+
+    _run(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "claim_assurance",
+        "--contribution",
+        str(contribution_path),
+        "--answer-contract",
+        str(answer_contract_path),
+    )
+    _run(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "editorial_assessment",
+        "--contribution",
+        str(contribution_path),
+        "--claim-assurance",
+        str(claim_assurance_path),
+    )
 
 
 def _answer_contract(
@@ -915,6 +998,7 @@ def _recorded_publish_run(
     _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
     run_dir = workspace / "runs" / str(prepared_contribution["run_id"])
     _record_history_pseudonymization(run_dir, tmp_path)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1030,6 +1114,13 @@ def _accept_rendered_output(run_dir: Path) -> None:
             ],
             "required_changes": [],
         },
+    )
+    _run(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "visual_assessment",
     )
     _run(
         "record_visual_assessment.py",
@@ -1153,6 +1244,7 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
         "answer_contract",
         "claim_assurance",
         "editorial_assessment",
+        "history_privacy_assessment",
         "history_pseudonymization",
         "model_contribution",
         "visual_assessment",
@@ -1196,6 +1288,19 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     preparation_path = _record_history_pseudonymization(run_dir, tmp_path)
     assert preparation_path is not None
     assert preparation_path.exists()
+    _run(
+        "record_history_privacy_assessment.py",
+        "--run-dir",
+        str(run_dir),
+        "--assessment",
+        str(tmp_path / f"{run_dir.name}-history-privacy-assessment.json"),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-privacy-model",
+        "--recorded-by",
+        "test-operator",
+    )
     task_packet = json.loads(
         (run_dir / "model_task_packet.json").read_text(encoding="utf-8")
     )
@@ -1203,6 +1308,18 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     assert task_packet["history_context"]["raw_history_paths_included"] is False
     assert task_packet["history_context"]["identity_mapping_included"] is False
     assert task_packet["history_context"]["record_digest"]
+    assert "record_path" not in task_packet["history_context"]
+    assert "privacy_assessment_record_path" not in task_packet["history_context"]
+    assert not (run_dir / "history-model-inputs").exists()
+    assert not (run_dir / "history_pseudonymization_packet.json").exists()
+    assert not (run_dir / "history_privacy_assessment_packet.json").exists()
+    assert (run_dir / "history_identity_map.json").is_file()
+    cleanup = json.loads(
+        (run_dir / "history_cleanup_receipt.json").read_text(encoding="utf-8")
+    )
+    assert cleanup["raw_history_snapshots_deleted"] is False
+    assert cleanup["identity_mapping_deleted"] is False
+    assert cleanup["deleted_artifacts"]
     pseudonymized_path = Path(
         task_packet["history_context"]["pseudonymized_documents"][0]["path"]
     )
@@ -1211,6 +1328,16 @@ def test_professional_communication_builds_studio_formatted_multichannel_package
     assert "history_identity_map.json" not in json.dumps(
         task_packet["history_context"]["pseudonymized_documents"]
     )
+    _prepare_model_phases(run_dir, contribution, answer_path, assurance_path)
+    claim_packet = (run_dir / "model-phase-packets" / "claim_assurance.json").read_text(
+        encoding="utf-8"
+    )
+    editorial_packet = (
+        run_dir / "model-phase-packets" / "editorial_assessment.json"
+    ).read_text(encoding="utf-8")
+    for forbidden in ("HIST-001", "history_identity_map", "history-pseudonymized"):
+        assert forbidden not in claim_packet
+        assert forbidden not in editorial_packet
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1390,6 +1517,7 @@ def test_no_publish_is_a_complete_reviewable_outcome(tmp_path: Path) -> None:
     _run("prepare_run.py", "--workspace", str(workspace), "--intake", str(intake))
     run_dir = workspace / "runs" / "no-slop-2026-001"
     _record_history_pseudonymization(run_dir, tmp_path)
+    _prepare_model_phases(run_dir, contribution, answer_path, assurance_path)
     _run(
         "record_contribution.py",
         "--run-dir",
@@ -1579,6 +1707,156 @@ def test_history_pseudonymization_rejects_incomplete_or_not_ready_documents(
     assert "not ready for downstream" in rejected.stderr
     assert not (run_dir / "history_pseudonymization_record.json").exists()
 
+    normalized_leak = _history_pseudonymization(run_dir)
+    normalized_leak["history_items"][0][
+        "pseudonymized_document"
+    ] += "\nRiferimento residuo: mArIo-ROSSI."
+    normalized_leak_path = _write_json(
+        tmp_path / "normalized-history-leak.json", normalized_leak
+    )
+    rejected = _run_result(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(normalized_leak_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-003",
+        "--recorded-by",
+        "test-operator",
+    )
+    assert rejected.returncode == 1
+    assert "semantic identity" in rejected.stderr.lower()
+
+    direct_identifier = _history_pseudonymization(run_dir)
+    direct_identifier["history_items"][0][
+        "pseudonymized_document"
+    ] += "\nContatto nuovo@example.com."
+    direct_identifier_path = _write_json(
+        tmp_path / "direct-identifier-history-leak.json", direct_identifier
+    )
+    rejected = _run_result(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(direct_identifier_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-004",
+        "--recorded-by",
+        "test-operator",
+    )
+    assert rejected.returncode == 1
+    assert "mechanically detectable identifier" in rejected.stderr
+
+    valid_path = _write_json(
+        tmp_path / "valid-history-pseudonymization.json",
+        _history_pseudonymization(run_dir),
+    )
+    _run(
+        "record_history_pseudonymization.py",
+        "--run-dir",
+        str(run_dir),
+        "--pseudonymization",
+        str(valid_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-model",
+        "--session-id",
+        "test-history-session-005",
+        "--recorded-by",
+        "test-operator",
+    )
+    assert (run_dir / "history_pseudonymization_record.pending.json").is_file()
+    assert not (run_dir / "history_pseudonymization_record.json").exists()
+    task_packet = json.loads(
+        (run_dir / "model_task_packet.json").read_text(encoding="utf-8")
+    )
+    assert task_packet["history_context"]["status"] == "privacy_assessment_required"
+    assessment_packet = (run_dir / "history_privacy_assessment_packet.json").read_text(
+        encoding="utf-8"
+    )
+    assert "history_identity_map" not in assessment_packet
+    assert "mario.rossi@example.com" not in assessment_packet
+    pending = json.loads(
+        (run_dir / "history_pseudonymization_record.pending.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assessment_path = _write_json(
+        tmp_path / "two-document-history-privacy-assessment.json",
+        {
+            "schema_version": 1,
+            "run_id": pending["run_id"],
+            "input_digest": pending["input_digest"],
+            "pseudonymization_record_digest": pending["record_digest"],
+            "purpose": "independent_residual_identification_review_before_downstream_use",
+            "assessment_protocol": {
+                "method": "isolated_derivative_only_privacy_review",
+                "assessor_session_id": "two-document-privacy-session-001",
+                "assessment_template_version": "professional-communication-history-privacy-assessment-v1",
+                "template_sha256": _prompt_digest(
+                    "history-privacy-assessment-v1.md"
+                ),
+                "raw_history_seen": False,
+                "identity_mapping_seen": False,
+                "pseudonymization_transcript_seen": False,
+                "completed_at": "2026-08-08T11:30:00+00:00",
+            },
+            "document_assessments": [
+                {
+                    "history_id": row["history_id"],
+                    "sha256": row["sha256"],
+                    "verdict": "ready",
+                    "findings": [],
+                    "structure_preserved": True,
+                }
+                for row in pending["history_items"]
+            ],
+            "verdict": "ready",
+            "residual_risk": "I derivati restano pseudonimizzati, non anonimi.",
+            "required_changes": [],
+        },
+    )
+    _run(
+        "record_history_privacy_assessment.py",
+        "--run-dir",
+        str(run_dir),
+        "--assessment",
+        str(assessment_path),
+        "--provider",
+        "test-provider",
+        "--model",
+        "test-history-privacy-model",
+        "--recorded-by",
+        "test-operator",
+    )
+    ready_packet = json.loads(
+        (run_dir / "model_task_packet.json").read_text(encoding="utf-8")
+    )
+    assert ready_packet["history_context"]["history_ids"] == ["HIST-001", "HIST-002"]
+    derivatives = ready_packet["history_context"]["pseudonymized_documents"]
+    assert len(derivatives) == 2
+    first_derivative = Path(derivatives[0]["path"]).read_text(encoding="utf-8")
+    second_derivative = Path(derivatives[1]["path"]).read_text(encoding="utf-8")
+    assert "30 settembre 2026" in first_derivative
+    assert "12.500,00 euro" in first_derivative
+    assert "caso riservato" in second_derivative
+    assert Path(
+        json.loads((run_dir / "source_register.json").read_text(encoding="utf-8"))[
+            "history"
+        ][0]["snapshot_path"]
+    ).is_file()
+
 
 def test_prepare_run_blocks_history_connector_before_model_access(
     tmp_path: Path,
@@ -1691,6 +1969,7 @@ def test_independent_editorial_revision_blocks_contribution_recording(
         _editorial_assessment(contribution, verdict="revise"),
     )
     answer_path, assurance_path = _assurance_paths(tmp_path, contribution)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     completed = _run_result(
         "record_contribution.py",
@@ -1748,6 +2027,7 @@ def test_public_source_note_cannot_expose_internal_traceability_id(
         _editorial_assessment(contribution),
     )
     answer_path, assurance_path = _assurance_paths(tmp_path, contribution)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     completed = _run_result(
         "record_contribution.py",
@@ -2285,6 +2565,14 @@ def test_qa_preview_is_available_before_review_but_cannot_be_packaged(
         },
     )
     _run(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "visual_assessment",
+        "--qa-preview",
+    )
+    _run(
         "record_visual_assessment.py",
         "--run-dir",
         str(run_dir),
@@ -2591,6 +2879,7 @@ def test_claim_assurance_blocks_unsupported_live_claim(
         tmp_path / "unsupported-claim-assurance.json", claim_assurance
     )
     assessment_path = _write_json(tmp_path / "unsupported-editorial.json", assessment)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     completed = _run_result(
         "record_contribution.py",
@@ -2644,6 +2933,7 @@ def test_studio_profile_requires_field_level_evidence_coverage(
         tmp_path / "incomplete-profile-editorial.json",
         _editorial_assessment(contribution),
     )
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     completed = _run_result(
         "record_contribution.py",
@@ -3211,6 +3501,7 @@ def test_superseded_final_render_can_be_rendered_and_packaged_again(
     answer_path = _write_json(tmp_path / "revised-answer.json", answer)
     assurance_path = _write_json(tmp_path / "revised-assurance.json", assurance)
     editorial_path = _write_json(tmp_path / "revised-editorial.json", editorial)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     _run(
         "record_contribution.py",
@@ -3300,19 +3591,26 @@ def test_model_passes_reject_reused_host_session(
         "assessor_session_id"
     ] = "test-editorial-session-002"
     editorial["claim_assurance_digest"] = _canonical_digest(assurance)
+    contribution_path = _write_json(
+        tmp_path / "same-session-contribution.json", contribution
+    )
+    answer_path = _write_json(tmp_path / "same-session-answer.json", answer)
+    assurance_path = _write_json(tmp_path / "same-session-assurance.json", assurance)
+    editorial_path = _write_json(tmp_path / "same-session-editorial.json", editorial)
+    _prepare_model_phases(run_dir, contribution_path, answer_path, assurance_path)
 
     completed = _run_result(
         "record_contribution.py",
         "--run-dir",
         str(run_dir),
         "--contribution",
-        str(_write_json(tmp_path / "same-session-contribution.json", contribution)),
+        str(contribution_path),
         "--answer-contract",
-        str(_write_json(tmp_path / "same-session-answer.json", answer)),
+        str(answer_path),
         "--claim-assurance",
-        str(_write_json(tmp_path / "same-session-assurance.json", assurance)),
+        str(assurance_path),
         "--editorial-assessment",
-        str(_write_json(tmp_path / "same-session-editorial.json", editorial)),
+        str(editorial_path),
         "--provider",
         "test-provider",
         "--model",
@@ -3550,38 +3848,33 @@ def test_claim_assurance_must_review_every_answer_contract_dimension(
     del assurance["contract_review"]["source_hierarchy"]
     editorial = _editorial_assessment(contribution, answer_contract=answer)
     editorial["claim_assurance_digest"] = _canonical_digest(assurance)
-
-    completed = _run_result(
-        "record_contribution.py",
+    contribution_path = _write_json(
+        tmp_path / "contract-contribution.json", contribution
+    )
+    answer_path = _write_json(tmp_path / "contract-answer.json", answer)
+    assurance_path = _write_json(tmp_path / "contract-assurance.json", assurance)
+    editorial_path = _write_json(tmp_path / "contract-editorial.json", editorial)
+    _run(
+        "prepare_model_phase.py",
         "--run-dir",
         str(run_dir),
+        "--phase",
+        "claim_assurance",
         "--contribution",
-        str(_write_json(tmp_path / "contract-contribution.json", contribution)),
+        str(contribution_path),
         "--answer-contract",
-        str(_write_json(tmp_path / "contract-answer.json", answer)),
+        str(answer_path),
+    )
+    completed = _run_result(
+        "prepare_model_phase.py",
+        "--run-dir",
+        str(run_dir),
+        "--phase",
+        "editorial_assessment",
+        "--contribution",
+        str(contribution_path),
         "--claim-assurance",
-        str(_write_json(tmp_path / "contract-assurance.json", assurance)),
-        "--editorial-assessment",
-        str(_write_json(tmp_path / "contract-editorial.json", editorial)),
-        "--provider",
-        "test-provider",
-        "--model",
-        "test-model",
-        "--template-version",
-        "professional-communication-v3",
-        "--generation-session-id",
-        "test-generation-session-002",
-        "--recorded-by",
-        "test-operator",
-        "--assessment-provider",
-        "test-provider",
-        "--assessment-model",
-        "test-editor-model",
-        "--claim-assessment-provider",
-        "test-provider",
-        "--claim-assessment-model",
-        "test-claim-model",
-        "--supersede",
+        str(assurance_path),
     )
 
     assert completed.returncode == 1
