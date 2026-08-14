@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import io
 import json
@@ -57,6 +58,7 @@ from vera_assurance import (  # noqa: E402
 CLIENT_WORKFLOW_IDS = (*VERA_CLIENT_WORKFLOW_IDS, "apertura-pratica")
 
 __all__ = [
+    "ArchiveAccessError",
     "ArchiveError",
     "ArchiveNotConfiguredError",
     "SourceChangedError",
@@ -66,6 +68,7 @@ __all__ = [
     "configure_archive",
     "create_studio_client_engagement",
     "create_studio_client",
+    "diagnose_archive_access",
     "fail_studio_client_workflow",
     "finalize_studio_client_workflow",
     "get_studio_client_folder",
@@ -177,11 +180,49 @@ IGNORED_NAMES = {
     "desktop.ini",
 }
 
+ARCHIVE_HOST_PERMISSION_REQUIRED = "MPARANZA_ARCHIVE_HOST_PERMISSION_REQUIRED"
+_SMB_CREDENTIAL_WINERRORS = frozenset({86, 1219, 1326, 1909})
+_NETWORK_UNAVAILABLE_WINERRORS = frozenset({53, 64, 67, 121, 1231, 1232})
+_ACCESS_DENIED_WINERRORS = frozenset({5})
+_ACCESS_DENIED_ERRNOS = frozenset({errno.EACCES, errno.EPERM})
+
 
 class ArchiveError(RuntimeError):
     """Base class for bounded archive workflow errors."""
 
     code = "archive_error"
+
+
+class ArchiveAccessError(ArchiveError):
+    """Describe one mechanically observed archive-root access failure safely."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        code: str,
+        stage: str,
+        path_kind: str,
+        recommended_action: str,
+        host_access_approved: bool,
+        error: OSError | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.code = code
+        details: dict[str, Any] = {
+            "category": code,
+            "stage": stage,
+            "path_kind": path_kind,
+            "recommended_action": recommended_action,
+            "host_access_approved": host_access_approved,
+        }
+        if error is not None:
+            if isinstance(error.errno, int):
+                details["errno"] = error.errno
+            winerror = getattr(error, "winerror", None)
+            if isinstance(winerror, int):
+                details["winerror"] = winerror
+        self.details = details
 
 
 class ArchiveNotConfiguredError(ArchiveError):
@@ -454,17 +495,145 @@ def _path_is_within(path: Path, parent: Path) -> bool:
     return True
 
 
-def _validate_archive_root(root: Path, state_dir: Path) -> Path:
+def _archive_path_kind(path: Path) -> str:
+    """Classify only path syntax needed for access diagnostics."""
+
+    raw_path = os.fspath(path)
+    if raw_path.startswith(("\\\\", "//")):
+        return "unc_share"
+    return "local_or_mounted"
+
+
+def _archive_access_error(
+    error: OSError,
+    *,
+    stage: str,
+    path_kind: str,
+    host_access_approved: bool,
+) -> ArchiveAccessError:
+    """Map stable OS error codes to auditable access categories.
+
+    Fixed codes are appropriate here because they are mechanically emitted by
+    the operating system. Unknown combinations remain unclassified instead of
+    inferring a credential, sandbox, or filesystem-permission cause.
+    """
+
+    winerror = getattr(error, "winerror", None)
+    if winerror in _SMB_CREDENTIAL_WINERRORS:
+        return ArchiveAccessError(
+            "The operating system rejected the SMB session or credentials for the "
+            "selected network share. Connect the share in the signed-in desktop "
+            "session and retry; Vera never requests or stores SMB credentials.",
+            code="archive_smb_credentials_required",
+            stage=stage,
+            path_kind=path_kind,
+            recommended_action="connect_smb_session",
+            host_access_approved=host_access_approved,
+            error=error,
+        )
+    if winerror in _NETWORK_UNAVAILABLE_WINERRORS:
+        return ArchiveAccessError(
+            "The selected network share is unreachable from this desktop session. "
+            "Verify the server and share connection, then retry the same path.",
+            code="archive_network_share_unreachable",
+            stage=stage,
+            path_kind=path_kind,
+            recommended_action="verify_share_connection",
+            host_access_approved=host_access_approved,
+            error=error,
+        )
+    access_denied = (
+        error.errno in _ACCESS_DENIED_ERRNOS or winerror in _ACCESS_DENIED_WINERRORS
+    )
+    if access_denied and os.environ.get("CODEX_SANDBOX") and not host_access_approved:
+        return ArchiveAccessError(
+            f"{ARCHIVE_HOST_PERMISSION_REQUIRED}: Codex could not read the selected "
+            "archive root from its current sandbox. Retry the same access diagnostic "
+            "with host folder access approval before creating a client or engagement.",
+            code="archive_host_access_permission_required",
+            stage=stage,
+            path_kind=path_kind,
+            recommended_action="retry_with_host_folder_access",
+            host_access_approved=False,
+            error=error,
+        )
+    if access_denied:
+        return ArchiveAccessError(
+            "The operating system denied filesystem access to the selected archive "
+            "root. Grant the signed-in user share and filesystem read/list permissions "
+            "and write permission before client registration, then retry.",
+            code="archive_filesystem_access_denied",
+            stage=stage,
+            path_kind=path_kind,
+            recommended_action="grant_share_and_filesystem_permissions",
+            host_access_approved=host_access_approved,
+            error=error,
+        )
+    if error.errno == errno.ENOENT:
+        return ArchiveAccessError(
+            "The selected archive root does not exist in this desktop session.",
+            code="archive_root_not_found",
+            stage=stage,
+            path_kind=path_kind,
+            recommended_action="verify_archive_root",
+            host_access_approved=host_access_approved,
+            error=error,
+        )
+    return ArchiveAccessError(
+        "The selected archive root is unavailable for an unclassified operating-system "
+        "reason. The diagnostic has preserved the numeric error code without exposing "
+        "the private path.",
+        code="archive_root_unavailable",
+        stage=stage,
+        path_kind=path_kind,
+        recommended_action="review_os_error_code",
+        host_access_approved=host_access_approved,
+        error=error,
+    )
+
+
+def _validate_archive_root(
+    root: Path,
+    state_dir: Path,
+    *,
+    host_access_approved: bool = False,
+) -> Path:
     candidate = Path(root).expanduser()
+    path_kind = _archive_path_kind(candidate)
     if not candidate.is_absolute():
+        if path_kind == "unc_share":
+            raise ArchiveAccessError(
+                "UNC syntax is not a local absolute path on this runtime. Mount the "
+                "share as a local drive or folder and provide that mounted absolute "
+                "path; Vera never requests SMB credentials.",
+                code="archive_unc_requires_local_mount",
+                stage="path_validation",
+                path_kind=path_kind,
+                recommended_action="mount_share_locally",
+                host_access_approved=host_access_approved,
+            )
         raise ArchiveError("Archive root must be an absolute path.")
     if candidate.is_symlink():
         raise ArchiveError("Archive root cannot be a symbolic link.")
     try:
         resolved = candidate.resolve(strict=True)
     except OSError as exc:
-        raise ArchiveError(f"Archive root is unavailable: {exc}") from exc
-    if not resolved.is_dir():
+        raise _archive_access_error(
+            exc,
+            stage="path_resolution",
+            path_kind=path_kind,
+            host_access_approved=host_access_approved,
+        ) from exc
+    try:
+        resolved_mode = resolved.stat().st_mode
+    except OSError as exc:
+        raise _archive_access_error(
+            exc,
+            stage="root_metadata",
+            path_kind=path_kind,
+            host_access_approved=host_access_approved,
+        ) from exc
+    if not stat.S_ISDIR(resolved_mode):
         raise ArchiveError("Archive root must be a directory.")
     if _path_is_within(state_dir, resolved) or _path_is_within(resolved, state_dir):
         raise ArchiveError(
@@ -486,13 +655,23 @@ def _scope_from_relative(relative_dir: str, root: Path) -> Scope:
     )
 
 
-def _discover_top_level_scopes(root: Path) -> tuple[Scope, ...]:
+def _discover_top_level_scopes(
+    root: Path,
+    *,
+    host_access_approved: bool = False,
+) -> tuple[Scope, ...]:
     directories: list[Path] = []
     root_files = 0
+    path_kind = _archive_path_kind(root)
     try:
         entries = sorted(root.iterdir(), key=lambda path: path.name.casefold())
     except OSError as exc:
-        raise ArchiveError(f"Could not inspect archive root: {exc}") from exc
+        raise _archive_access_error(
+            exc,
+            stage="root_listing",
+            path_kind=path_kind,
+            host_access_approved=host_access_approved,
+        ) from exc
     for path in entries:
         if path.name in IGNORED_NAMES:
             continue
@@ -502,8 +681,11 @@ def _discover_top_level_scopes(root: Path) -> tuple[Scope, ...]:
         try:
             mode = path.lstat().st_mode
         except OSError as exc:
-            raise ArchiveError(
-                f"Could not inspect archive entry {path.name}: {exc}"
+            raise _archive_access_error(
+                exc,
+                stage="root_entry_metadata",
+                path_kind=path_kind,
+                host_access_approved=host_access_approved,
             ) from exc
         if stat.S_ISDIR(mode):
             directories.append(path)
@@ -552,13 +734,21 @@ def configure_archive(
     archive_root: Path,
     *,
     state_dir: Path | None = None,
+    host_access_approved: bool = False,
 ) -> dict[str, Any]:
     """Configure one local archive and mechanically discover its top-level scopes."""
 
     planned_state = _state_dir(state_dir)
-    root = _validate_archive_root(archive_root, planned_state)
+    root = _validate_archive_root(
+        archive_root,
+        planned_state,
+        host_access_approved=host_access_approved,
+    )
     private_state = _state_dir(state_dir, create=True)
-    scopes = _discover_top_level_scopes(root)
+    scopes = _discover_top_level_scopes(
+        root,
+        host_access_approved=host_access_approved,
+    )
     config_path = _config_path(private_state)
     if config_path.is_file() and _config_matches(
         config_path,
@@ -577,6 +767,36 @@ def configure_archive(
     status = studio_archive_status(state_dir=private_state)
     status["index_requires_refresh"] = True
     return status
+
+
+def diagnose_archive_access(
+    archive_root: Path,
+    *,
+    state_dir: Path | None = None,
+    host_access_approved: bool = False,
+) -> dict[str, Any]:
+    """Verify archive-root path resolution and listing without persisting state."""
+
+    planned_state = _state_dir(state_dir)
+    root = _validate_archive_root(
+        archive_root,
+        planned_state,
+        host_access_approved=host_access_approved,
+    )
+    scopes = _discover_top_level_scopes(
+        root,
+        host_access_approved=host_access_approved,
+    )
+    return {
+        "ok": True,
+        "path_kind": _archive_path_kind(root),
+        "path_resolution": "available",
+        "root_listing": "readable",
+        "scope_count": len(scopes),
+        "host_access_approved": host_access_approved,
+        "client_ledger_write_access": "not_tested",
+        "private_path_returned": False,
+    }
 
 
 def _load_config(

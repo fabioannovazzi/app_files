@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import errno
 import hashlib
 import importlib.util
 import json
@@ -618,6 +619,200 @@ def test_configure_rejects_state_inside_source_without_writing_it(
         archive_core.configure_archive(archive_root, state_dir=nested_state)
 
     assert not nested_state.exists()
+
+
+def test_access_diagnostic_reads_root_without_persisting_private_state(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Studio"
+    (archive_root / "Client").mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+
+    # Act
+    result = archive_core.diagnose_archive_access(
+        archive_root,
+        state_dir=state_dir,
+    )
+
+    # Assert
+    assert result == {
+        "ok": True,
+        "path_kind": "local_or_mounted",
+        "path_resolution": "available",
+        "root_listing": "readable",
+        "scope_count": 1,
+        "host_access_approved": False,
+        "client_ledger_write_access": "not_tested",
+        "private_path_returned": False,
+    }
+    assert not state_dir.exists()
+
+
+@pytest.mark.skipif(os.name == "nt", reason="UNC is native absolute syntax on Windows.")
+def test_access_diagnostic_requires_local_mount_for_unc_on_posix(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    archive_root = Path(r"\\server\share\CLIENTI")
+
+    # Act
+    with pytest.raises(archive_core.ArchiveAccessError) as raised:
+        archive_core.diagnose_archive_access(
+            archive_root,
+            state_dir=tmp_path / "private-state",
+        )
+
+    # Assert
+    assert raised.value.code == "archive_unc_requires_local_mount"
+    assert raised.value.details["path_kind"] == "unc_share"
+    assert raised.value.details["recommended_action"] == "mount_share_locally"
+    assert str(archive_root) not in str(raised.value)
+    assert not (tmp_path / "private-state").exists()
+
+
+def test_access_diagnostic_requests_host_retry_for_sandbox_denial(
+    tmp_path: Path,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Network archive"
+    original_resolve = Path.resolve
+    denied = PermissionError(errno.EACCES, "Access is denied", str(archive_root))
+    denied.winerror = 5
+
+    def deny_selected(path: Path, *args: object, **kwargs: object) -> Path:
+        if path == archive_root:
+            raise denied
+        return original_resolve(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", deny_selected)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+
+    # Act
+    with pytest.raises(archive_core.ArchiveAccessError) as raised:
+        archive_core.diagnose_archive_access(
+            archive_root,
+            state_dir=tmp_path / "private-state",
+        )
+
+    # Assert
+    assert raised.value.code == "archive_host_access_permission_required"
+    assert "MPARANZA_ARCHIVE_HOST_PERMISSION_REQUIRED" in str(raised.value)
+    assert raised.value.details["stage"] == "path_resolution"
+    assert raised.value.details["host_access_approved"] is False
+    assert str(archive_root) not in str(raised.value)
+
+
+def test_access_diagnostic_classifies_denial_after_host_approved_retry(
+    tmp_path: Path,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Network archive"
+    original_resolve = Path.resolve
+    denied = PermissionError(errno.EACCES, "Access is denied", str(archive_root))
+    denied.winerror = 5
+
+    def deny_selected(path: Path, *args: object, **kwargs: object) -> Path:
+        if path == archive_root:
+            raise denied
+        return original_resolve(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "resolve", deny_selected)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+
+    # Act
+    with pytest.raises(archive_core.ArchiveAccessError) as raised:
+        archive_core.diagnose_archive_access(
+            archive_root,
+            state_dir=tmp_path / "private-state",
+            host_access_approved=True,
+        )
+
+    # Assert
+    assert raised.value.code == "archive_filesystem_access_denied"
+    assert raised.value.details["recommended_action"] == (
+        "grant_share_and_filesystem_permissions"
+    )
+    assert raised.value.details["host_access_approved"] is True
+    assert raised.value.details["winerror"] == 5
+
+
+def test_access_diagnostic_does_not_misclassify_missing_local_root(
+    tmp_path: Path,
+    archive_core: ModuleType,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "absent-archive"
+
+    # Act
+    with pytest.raises(archive_core.ArchiveAccessError) as raised:
+        archive_core.diagnose_archive_access(
+            archive_root,
+            state_dir=tmp_path / "private-state",
+        )
+
+    # Assert
+    assert raised.value.code == "archive_root_not_found"
+    assert raised.value.details["recommended_action"] == "verify_archive_root"
+    assert raised.value.details["path_kind"] == "local_or_mounted"
+    assert str(archive_root) not in str(raised.value)
+
+
+@pytest.mark.parametrize(
+    ("winerror", "expected_code", "expected_action"),
+    [
+        (1326, "archive_smb_credentials_required", "connect_smb_session"),
+        (53, "archive_network_share_unreachable", "verify_share_connection"),
+    ],
+)
+def test_access_diagnostic_classifies_windows_unc_errors(
+    tmp_path: Path,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    winerror: int,
+    expected_code: str,
+    expected_action: str,
+) -> None:
+    # Arrange
+    archive_root = Path(r"\\server\share\CLIENTI")
+    original_is_absolute = Path.is_absolute
+    original_resolve = Path.resolve
+    denied = OSError(errno.EACCES, "Synthetic Windows network error")
+    denied.winerror = winerror
+
+    def windows_unc_is_absolute(path: Path) -> bool:
+        if path == archive_root:
+            return True
+        return original_is_absolute(path)
+
+    def deny_selected(path: Path, *args: object, **kwargs: object) -> Path:
+        if path == archive_root:
+            raise denied
+        return original_resolve(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "is_absolute", windows_unc_is_absolute)
+    monkeypatch.setattr(Path, "resolve", deny_selected)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+
+    # Act
+    with pytest.raises(archive_core.ArchiveAccessError) as raised:
+        archive_core.diagnose_archive_access(
+            archive_root,
+            state_dir=tmp_path / "private-state",
+        )
+
+    # Assert
+    assert raised.value.code == expected_code
+    assert raised.value.details["recommended_action"] == expected_action
+    assert raised.value.details["path_kind"] == "unc_share"
+    assert raised.value.details["winerror"] == winerror
+    assert str(archive_root) not in str(raised.value)
 
 
 def test_two_professionals_build_separate_indexes_from_same_archive(
@@ -1393,7 +1588,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_thirty_one_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_thirty_two_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1430,6 +1625,7 @@ def test_mcp_lists_thirty_one_strict_local_tools(tmp_path: Path) -> None:
         "close_studio_client_engagement",
         "recover_studio_client_ledger",
         "report_studio_client_retention",
+        "diagnose_studio_archive_access",
         "configure_studio_archive",
         "refresh_studio_archive",
         "search_studio_archive",
@@ -1480,6 +1676,54 @@ def test_mcp_lists_thirty_one_strict_local_tools(tmp_path: Path) -> None:
         tool_by_name["configure_studio_archive_client"]["annotations"]["idempotentHint"]
         is False
     )
+    assert (
+        tool_by_name["diagnose_studio_archive_access"]["annotations"]["readOnlyHint"]
+        is True
+    )
+
+
+def test_mcp_diagnoses_archive_access_without_returning_private_path(
+    tmp_path: Path,
+) -> None:
+    # Arrange
+    archive_root = tmp_path / "Shared Studio"
+    (archive_root / "Rossi").mkdir(parents=True)
+    state_dir = tmp_path / "private-state"
+
+    # Act
+    result = _mcp_tool(
+        "diagnose_studio_archive_access",
+        {"archive_root": str(archive_root)},
+        state_dir=state_dir,
+    )
+
+    # Assert
+    assert result["isError"] is False
+    assert result["structuredContent"]["root_listing"] == "readable"
+    assert result["structuredContent"]["private_path_returned"] is False
+    assert str(archive_root) not in json.dumps(result["structuredContent"])
+    assert not state_dir.exists()
+
+
+@pytest.mark.skipif(os.name == "nt", reason="UNC is native absolute syntax on Windows.")
+def test_mcp_returns_path_safe_unc_mount_diagnostic(tmp_path: Path) -> None:
+    # Arrange
+    private_unc_path = r"\\server\share\CLIENTI"
+
+    # Act
+    result = _mcp_tool(
+        "diagnose_studio_archive_access",
+        {"archive_root": private_unc_path},
+        state_dir=tmp_path / "private-state",
+    )
+
+    # Assert
+    assert result["isError"] is True
+    error = result["structuredContent"]["error"]
+    assert error["code"] == "archive_unc_requires_local_mount"
+    assert error["details"]["path_kind"] == "unc_share"
+    assert error["details"]["recommended_action"] == "mount_share_locally"
+    assert private_unc_path not in json.dumps(result)
 
 
 def test_mcp_rejects_finalize_artifact_without_media_type(tmp_path: Path) -> None:

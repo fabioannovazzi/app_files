@@ -23,10 +23,11 @@ from archive_core import (
     configure_archive,
     create_studio_client,
     create_studio_client_engagement,
+    diagnose_archive_access,
     fail_studio_client_workflow,
     finalize_studio_client_workflow,
-    get_studio_client_folder,
     get_studio_archive_organization_inventory,
+    get_studio_client_folder,
     import_studio_client_document,
     list_studio_client_engagements,
     list_studio_clients,
@@ -62,6 +63,19 @@ def _parser() -> argparse.ArgumentParser:
 
     configure = subparsers.add_parser("configure")
     configure.add_argument("--archive-root", type=Path, required=True)
+    configure.add_argument(
+        "--host-folder-access-approved",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
+
+    diagnose_access = subparsers.add_parser("diagnose-access")
+    diagnose_access.add_argument("--archive-root", type=Path, required=True)
+    diagnose_access.add_argument(
+        "--host-folder-access-approved",
+        action="store_true",
+        help=argparse.SUPPRESS,
+    )
 
     subparsers.add_parser("status")
     subparsers.add_parser("clients")
@@ -234,7 +248,15 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         if args.command == "configure":
-            result = configure_archive(args.archive_root)
+            result = configure_archive(
+                args.archive_root,
+                host_access_approved=args.host_folder_access_approved,
+            )
+        elif args.command == "diagnose-access":
+            result = diagnose_archive_access(
+                args.archive_root,
+                host_access_approved=args.host_folder_access_approved,
+            )
         elif args.command == "status":
             result = studio_archive_status()
         elif args.command == "clients":
@@ -402,14 +424,14 @@ def main(argv: list[str] | None = None) -> int:
                 expected_scope_id=args.expected_scope_id,
             )
     except (ArchiveError, OSError, ValueError, sqlite3.Error) as exc:
-        _emit(
-            {
-                "error": {
-                    "code": getattr(exc, "code", "archive_operation_failed"),
-                    "message": str(exc),
-                }
-            }
-        )
+        error = {
+            "code": getattr(exc, "code", "archive_operation_failed"),
+            "message": str(exc),
+        }
+        details = getattr(exc, "details", None)
+        if isinstance(details, dict):
+            error["details"] = details
+        _emit({"error": error})
         return 1
     _emit(result)
     return 0

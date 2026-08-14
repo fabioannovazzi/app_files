@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.139"
+    assert manifest["version"] == "0.1.140"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3164,8 +3164,9 @@ def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
     assert "OpenAI" not in bilancio_copy
     assert "Anthropic" not in bilancio_copy
     assert "Codex e Cowork applicano gli stessi limiti" in bilancio_copy
-    assert "al massimo 50 selettori esatti complessivi per conti, fatti o prospetti" in (
-        bilancio_copy
+    assert (
+        "al massimo 50 selettori esatti complessivi per conti, fatti o prospetti"
+        in (bilancio_copy)
     )
     assert "il modello non riceve il case.json o i file completi come ripiego" in (
         bilancio_copy
@@ -3633,9 +3634,9 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         page,
         flags=re.DOTALL,
     )
-    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
-        encoding="utf-8"
-    )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
     variance_copy = function_copy.split('"variance-analysis":', 1)[1].split(
         '"bilancio-xbrl-it":', 1
     )[0]
@@ -3676,9 +3677,9 @@ def test_vera_page_explains_fiscal_document_extraction() -> None:
     function_page = (
         ROOT / "static" / "shared" / "dati-fiscali-strutturati" / "index.html"
     ).read_text(encoding="utf-8")
-    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
-        encoding="utf-8"
-    )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
     video_copy = (ROOT / "static" / "shared" / "video-library.js").read_text(
         encoding="utf-8"
     )
@@ -3727,10 +3728,12 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    function_page = ROOT / "static" / "shared" / "comunicazione-professionale" / "index.html"
-    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
-        encoding="utf-8"
+    function_page = (
+        ROOT / "static" / "shared" / "comunicazione-professionale" / "index.html"
     )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
     assert function_page.is_file()
     assert 'href="../comunicazione-professionale/index.html"' in page
@@ -3740,9 +3743,9 @@ def test_vera_page_explains_professional_communication_quality_contract() -> Non
 
 
 def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None:
-    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
-        encoding="utf-8"
-    )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
     for required_copy in (
         "Il modello legge le fonti selezionate",
@@ -3767,10 +3770,12 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
     )
-    function_page = ROOT / "static" / "shared" / "presenza-digitale-studio" / "index.html"
-    function_copy = (ROOT / "static" / "shared" / "product-function-pages.js").read_text(
-        encoding="utf-8"
+    function_page = (
+        ROOT / "static" / "shared" / "presenza-digitale-studio" / "index.html"
     )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
     assert function_page.is_file()
     assert 'href="../presenza-digitale-studio/index.html"' in page
@@ -5044,9 +5049,7 @@ def test_companion_pages_offer_skip_link_and_footer_source(page_name: str) -> No
     )
 
 
-@pytest.mark.parametrize(
-    "page_name", ("vera", "clara", "lucia", "studio-archive")
-)
+@pytest.mark.parametrize("page_name", ("vera", "clara", "lucia", "studio-archive"))
 def test_product_page_footer_omits_repeated_product_label(page_name: str) -> None:
     page = (ROOT / "static" / "shared" / page_name / "index.html").read_text(
         encoding="utf-8"

@@ -39,6 +39,7 @@ const TOOL_NAMES = {
   closeEngagement: "close_studio_client_engagement",
   recoverLedger: "recover_studio_client_ledger",
   retentionReport: "report_studio_client_retention",
+  diagnoseAccess: "diagnose_studio_archive_access",
   configure: "configure_studio_archive",
   refresh: "refresh_studio_archive",
   search: "search_studio_archive",
@@ -513,6 +514,25 @@ function toolDefinitions() {
           older_than_days: { type: "integer", minimum: 0, maximum: 365000 },
         },
         ["client_id"],
+      ),
+      annotations: annotations(true),
+    },
+    {
+      name: TOOL_NAMES.diagnoseAccess,
+      title: "Diagnose Studio Archive access",
+      description:
+        "Check path resolution and root listing without persisting configuration. Returns path-safe categories for host sandbox denial, SMB session or credential errors, share reachability, and share/filesystem permissions.",
+      inputSchema: objectSchema(
+        {
+          archive_root: {
+            type: "string",
+            minLength: 1,
+            maxLength: 4096,
+            description:
+              "Absolute local, mounted, or native Windows UNC path selected for the shared studio archive.",
+          },
+        },
+        ["archive_root"],
       ),
       annotations: annotations(true),
     },
@@ -1280,6 +1300,14 @@ function commandForTool(name, rawArgs) {
       requireString(args.archive_root, "archive_root"),
     ];
   }
+  if (name === TOOL_NAMES.diagnoseAccess) {
+    assertOnlyKeys(args, new Set(["archive_root"]));
+    return [
+      "diagnose-access",
+      "--archive-root",
+      requireString(args.archive_root, "archive_root"),
+    ];
+  }
   if (name === TOOL_NAMES.refresh) {
     assertOnlyKeys(args, new Set(["rebuild", "enable_ocr"]));
     const command = ["refresh"];
@@ -1477,6 +1505,13 @@ function callTool(name, args) {
       "Studio Archive operation failed.";
     const error = new Error(detail);
     error.code = payload?.error?.code || "archive_operation_failed";
+    if (
+      payload?.error?.details &&
+      typeof payload.error.details === "object" &&
+      !Array.isArray(payload.error.details)
+    ) {
+      error.details = payload.error.details;
+    }
     throw error;
   }
   if (payload == null || typeof payload !== "object" || Array.isArray(payload)) {
@@ -1499,6 +1534,13 @@ function toolResult(payload) {
 }
 
 function toolError(error) {
+  const details =
+    error &&
+    error.details &&
+    typeof error.details === "object" &&
+    !Array.isArray(error.details)
+      ? error.details
+      : null;
   const payload = {
     ok: false,
     error: {
@@ -1507,6 +1549,7 @@ function toolError(error) {
           ? error.code
           : "archive_operation_failed",
       message: error instanceof Error ? error.message : String(error),
+      ...(details === null ? {} : { details }),
     },
   };
   return {
