@@ -69,19 +69,23 @@ __all__ = [
     "fail_studio_client_workflow",
     "finalize_studio_client_workflow",
     "get_studio_client_folder",
+    "get_studio_archive_organization_inventory",
     "authorize_studio_google_drive",
     "bind_studio_client_google_drive",
     "import_studio_client_document",
     "list_studio_client_engagements",
     "list_studio_client_identities",
+    "list_studio_clients",
     "match_studio_email_client",
     "open_archive_source",
+    "open_studio_archive_organization_item",
     "open_studio_google_drive_source",
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
     "recover_studio_client_ledger",
     "refresh_archive",
     "report_studio_client_retention",
+    "resolve_studio_client_identity",
     "search_archive",
     "set_studio_client_identity",
     "snapshot_studio_client_folder",
@@ -102,6 +106,10 @@ CLIENT_IDENTITIES_FILENAME = "client-identities.json"
 GOOGLE_DRIVE_BINDINGS_FILENAME = "google-drive-bindings.json"
 GOOGLE_DRIVE_AUTH_FILENAME = "google-drive-token.json"
 GOOGLE_DRIVE_BINDINGS_SCHEMA = "vera.studio_archive_google_drive_bindings.v1"
+ARCHIVE_ORGANIZATION_INVENTORY_SCHEMA = "vera.archive_organization_model_inventory.v1"
+ARCHIVE_ORGANIZATION_INVENTORY_REF_PREFIX = "archive_inventory_"
+ARCHIVE_ORGANIZATION_ITEM_REF_PREFIX = "archive_item_"
+ARCHIVE_ORGANIZATION_DUPLICATE_REF_PREFIX = "exact_group_"
 GOOGLE_DRIVE_EXPORTS = {
     "application/vnd.google-apps.document": ("text/plain", ".txt"),
     "application/vnd.google-apps.spreadsheet": (
@@ -992,6 +1000,173 @@ def list_studio_client_identities(
     }
 
 
+def _client_directory_record(
+    record: ClientIdentity | None,
+    *,
+    scope: Scope | None,
+) -> dict[str, Any]:
+    """Project one private identity record onto its model-safe directory row.
+
+    Exact identity values stay in the owner-only registry.  Counts preserve the
+    operational distinction between an empty and configured profile without
+    disclosing another client's email, legal-name aliases, or tax identifiers.
+    """
+
+    if scope is None:
+        if record is None:
+            raise ArchiveError("An orphaned client directory row requires a profile.")
+        return {
+            "client_id": record.client_id,
+            "scope_id": record.scope_id,
+            "registration_status": "orphaned",
+            "profile_status": "orphaned",
+            "identity_counts": {
+                "email_addresses": len(record.email_addresses),
+                "legal_names": len(record.legal_names),
+                "tax_identifiers": len(record.tax_identifiers),
+            },
+        }
+    if record is None:
+        return {
+            **scope.as_json(),
+            "client_id": None,
+            "registration_status": "unregistered",
+            "profile_status": "alias_only",
+            "identity_counts": {
+                "email_addresses": 0,
+                "legal_names": 0,
+                "tax_identifiers": 0,
+            },
+        }
+    return {
+        **scope.as_json(),
+        "client_id": record.client_id,
+        "registration_status": "registered",
+        "profile_status": (
+            "configured" if record.email_addresses else "candidate_only"
+        ),
+        "identity_counts": {
+            "email_addresses": len(record.email_addresses),
+            "legal_names": len(record.legal_names),
+            "tax_identifiers": len(record.tax_identifiers),
+        },
+    }
+
+
+def list_studio_clients(
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """List client scopes without exposing the private identity registry."""
+
+    private_state = _state_dir(state_dir)
+    stored_config = _load_config(private_state, validate_scope_roots=False)
+    config, scopes_changed = _current_scope_view(stored_config)
+    records = (
+        _load_client_identities(private_state)
+        if scopes_changed
+        else _synchronize_client_identities(private_state, config)
+    )
+    records_by_scope = {record.scope_id: record for record in records}
+    active_scope_ids = {scope.scope_id for scope in config.scopes}
+    clients = [
+        _client_directory_record(records_by_scope.get(scope.scope_id), scope=scope)
+        for scope in config.scopes
+    ]
+    orphaned = [
+        _client_directory_record(record, scope=None)
+        for record in records
+        if record.scope_id not in active_scope_ids
+    ]
+    return {
+        "scope_configuration_changed": scopes_changed,
+        "registered_client_count": sum(
+            client["registration_status"] == "registered" for client in clients
+        ),
+        "unregistered_scope_count": sum(
+            client["registration_status"] == "unregistered" for client in clients
+        ),
+        "configured_profile_count": sum(
+            client["profile_status"] == "configured" for client in clients
+        ),
+        "candidate_only_profile_count": sum(
+            client["profile_status"] == "candidate_only" for client in clients
+        ),
+        "alias_only_profile_count": sum(
+            client["profile_status"] == "alias_only" for client in clients
+        ),
+        "orphaned_profile_count": len(orphaned),
+        "clients": clients,
+        "orphaned_profiles": orphaned,
+        "private_identity_values_returned": False,
+        "gmail_connector_called": False,
+    }
+
+
+def resolve_studio_client_identity(
+    identity_kind: str,
+    identity_value: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Resolve one user-supplied identity by exact local equality.
+
+    Exact normalized equality is deterministic because it is an identity and
+    security boundary.  This function does not rank semantic name similarity
+    and never returns the stored registry values.
+    """
+
+    if identity_kind == "email_address":
+        normalized: str = _normalize_email_address(identity_value)
+        field = "email_addresses"
+    elif identity_kind == "legal_name":
+        normalized = _normalize_legal_names([identity_value])[0].casefold()
+        field = "legal_names"
+    elif identity_kind == "tax_identifier":
+        normalized = _normalize_tax_identifiers([identity_value])[0]
+        field = "tax_identifiers"
+    else:
+        raise ArchiveError(
+            "identity_kind must be email_address, legal_name, or tax_identifier."
+        )
+
+    private_state = _state_dir(state_dir)
+    stored_config = _load_config(private_state, validate_scope_roots=False)
+    config, scopes_changed = _current_scope_view(stored_config)
+    records = (
+        _load_client_identities(private_state)
+        if scopes_changed
+        else _synchronize_client_identities(private_state, config)
+    )
+    scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
+    matches: list[dict[str, Any]] = []
+    for record in records:
+        values = getattr(record, field)
+        comparison_values = (
+            {value.casefold() for value in values}
+            if identity_kind == "legal_name"
+            else set(values)
+        )
+        if normalized not in comparison_values:
+            continue
+        matches.append(
+            _client_directory_record(record, scope=scopes_by_id.get(record.scope_id))
+        )
+    return {
+        "resolution_status": (
+            "exact_match"
+            if len(matches) == 1
+            else "ambiguous_exact_match" if matches else "no_exact_match"
+        ),
+        "identity_kind": identity_kind,
+        "match_count": len(matches),
+        "matches": matches,
+        "private_identity_values_returned": False,
+        "scope_configuration_changed": scopes_changed,
+        "gmail_connector_called": False,
+    }
+
+
 def get_studio_client_folder(
     client_id: str,
     *,
@@ -1128,7 +1303,7 @@ def set_studio_client_identity(
         _write_client_identities(private_state, updated_records)
         return {
             "status": "rebound",
-            "client": _client_record(replacement, scope=scope),
+            "client": _client_directory_record(replacement, scope=scope),
             "replaced_orphaned_scope_id": replace_orphaned_scope_id,
             "gmail_connector_called": False,
             "gmail_credentials_stored": False,
@@ -1173,7 +1348,7 @@ def set_studio_client_identity(
         _write_client_identities(private_state, updated_records)
     return {
         "status": "unchanged" if unchanged else "configured",
-        "client": _client_record(replacement, scope=scope),
+        "client": _client_directory_record(replacement, scope=scope),
         "gmail_connector_called": False,
         "gmail_credentials_stored": False,
     }
@@ -1272,7 +1447,7 @@ def create_studio_client(
     folder = get_studio_client_folder(client_id, state_dir=private_state)
     return {
         "status": "created",
-        "client": _client_record(record, scope=scope),
+        "client": _client_directory_record(record, scope=scope),
         "client_folder": folder["client_folder"],
         "relationship_setup_status": "new_client_workflow_pending",
         "source_archive_mutated": True,
@@ -1317,6 +1492,219 @@ def create_studio_client_engagement(
     }
 
 
+def _archive_organization_inventory_ref(snapshot_sha256: str) -> str:
+    digest = hashlib.sha256(
+        f"archive-organization-inventory-v1\0{snapshot_sha256}".encode("utf-8")
+    ).hexdigest()
+    return ARCHIVE_ORGANIZATION_INVENTORY_REF_PREFIX + digest[:24]
+
+
+def _archive_organization_item_ref(
+    snapshot_sha256: str,
+    relative_path: str,
+) -> str:
+    digest = hashlib.sha256(
+        ("archive-organization-item-v1\0" f"{snapshot_sha256}\0{relative_path}").encode(
+            "utf-8"
+        )
+    ).hexdigest()
+    return ARCHIVE_ORGANIZATION_ITEM_REF_PREFIX + digest[:24]
+
+
+def _project_drive_relative_path(snapshot_sha256: str, relative_path: str) -> str:
+    """Replace Drive-ID suffixes with stable unlinkable display references."""
+
+    projected: list[str] = []
+    for index, component in enumerate(relative_path.split("/")):
+        match = re.fullmatch(
+            r"(?P<label>.*)~(?P<drive_ref>[A-Za-z0-9_-]{12})", component
+        )
+        if match is None:
+            projected.append(component)
+            continue
+        opaque = hashlib.sha256(
+            (
+                "archive-organization-path-component-v1\0"
+                f"{snapshot_sha256}\0{index}\0{component}"
+            ).encode("utf-8")
+        ).hexdigest()[:10]
+        projected.append(f"{match.group('label')}~ref_{opaque}")
+    return "/".join(projected)
+
+
+def _archive_organization_duplicate_key(
+    item: Mapping[str, Any],
+    *,
+    storage_kind: str,
+) -> str | None:
+    if storage_kind == "local_filesystem":
+        return str(item["sha256"])
+    value = item.get("sha256_checksum")
+    return str(value) if value else None
+
+
+def _archive_organization_open_supported(
+    item: Mapping[str, Any],
+    *,
+    storage_kind: str,
+) -> bool:
+    if storage_kind == "local_filesystem":
+        return Path(str(item["relative_path"])).suffix.lower() in SUPPORTED_SUFFIXES
+    capabilities = item.get("capabilities")
+    if (
+        not isinstance(capabilities, Mapping)
+        or capabilities.get("can_download") is not True
+    ):
+        return False
+    mime_type = str(item.get("mime_type") or "")
+    if mime_type in GOOGLE_DRIVE_EXPORTS:
+        return True
+    if mime_type.startswith("application/vnd.google-apps."):
+        return False
+    return Path(
+        str(item.get("name") or "")
+    ).suffix.lower() in SUPPORTED_SUFFIXES or mime_type.startswith("text/")
+
+
+def _project_archive_organization_inventory(
+    snapshot: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Return the full semantic inventory without execution-only identifiers."""
+
+    snapshot_sha256 = str(snapshot["content_sha256"])
+    storage_kind = (
+        "google_drive"
+        if snapshot.get("schema_version") == drive.DRIVE_SNAPSHOT_SCHEMA
+        else "local_filesystem"
+    )
+    files = snapshot.get("files")
+    if not isinstance(files, list):
+        raise ArchiveError("Archive organization snapshot files are invalid.")
+    refs_by_path = {
+        str(item["relative_path"]): _archive_organization_item_ref(
+            snapshot_sha256,
+            str(item["relative_path"]),
+        )
+        for item in files
+    }
+    duplicate_paths: dict[str, list[str]] = {}
+    for item in files:
+        duplicate_key = _archive_organization_duplicate_key(
+            item,
+            storage_kind=storage_kind,
+        )
+        if duplicate_key is None:
+            continue
+        duplicate_paths.setdefault(duplicate_key, []).append(str(item["relative_path"]))
+    canonical_by_path: dict[str, str] = {}
+    duplicate_ref_by_path: dict[str, str] = {}
+    for duplicate_key, paths in duplicate_paths.items():
+        if len(paths) < 2:
+            continue
+        canonical = min(
+            paths,
+            key=lambda value: (
+                len(Path(value).parts),
+                value.casefold(),
+                value,
+            ),
+        )
+        group_ref = (
+            ARCHIVE_ORGANIZATION_DUPLICATE_REF_PREFIX
+            + hashlib.sha256(
+                (
+                    "archive-organization-exact-group-v1\0"
+                    f"{snapshot_sha256}\0{duplicate_key}"
+                ).encode("utf-8")
+            ).hexdigest()[:20]
+        )
+        for relative_path in paths:
+            canonical_by_path[relative_path] = canonical
+            duplicate_ref_by_path[relative_path] = group_ref
+
+    projected_files: list[dict[str, Any]] = []
+    for item in files:
+        relative_path = str(item["relative_path"])
+        display_path = (
+            _project_drive_relative_path(snapshot_sha256, relative_path)
+            if storage_kind == "google_drive"
+            else relative_path
+        )
+        canonical = canonical_by_path.get(relative_path)
+        if storage_kind == "local_filesystem":
+            modified_at = datetime.fromtimestamp(
+                int(item["modified_ns"]) / 1_000_000_000,
+                tz=timezone.utc,
+            ).isoformat()
+            size_bytes = int(item["byte_count"])
+            mime_type = None
+            name = Path(relative_path).name
+        else:
+            modified_at = str(item["modified_time"])
+            size_bytes = item["size_bytes"]
+            mime_type = str(item["mime_type"])
+            name = str(item["name"])
+        projected_files.append(
+            {
+                "item_ref": refs_by_path[relative_path],
+                "relative_path": display_path,
+                "name": name,
+                "file_extension": Path(name).suffix.lower() or None,
+                "mime_type": mime_type,
+                "size_bytes": size_bytes,
+                "modified_at": modified_at,
+                "evidence_access": (
+                    "available"
+                    if _archive_organization_open_supported(
+                        item,
+                        storage_kind=storage_kind,
+                    )
+                    else "unsupported"
+                ),
+                "exact_duplicate_group": duplicate_ref_by_path.get(relative_path),
+                "exact_duplicate_of": (
+                    refs_by_path[canonical]
+                    if canonical is not None and canonical != relative_path
+                    else None
+                ),
+            }
+        )
+    excluded = snapshot.get("excluded")
+    if not isinstance(excluded, list):
+        raise ArchiveError("Archive organization snapshot exclusions are invalid.")
+    projected_excluded = []
+    for item in excluded:
+        relative_path = str(item["relative_path"])
+        projected_excluded.append(
+            {
+                "relative_path": (
+                    _project_drive_relative_path(snapshot_sha256, relative_path)
+                    if storage_kind == "google_drive"
+                    else relative_path
+                ),
+                "reason": str(item["reason"]),
+            }
+        )
+    return {
+        "schema_version": ARCHIVE_ORGANIZATION_INVENTORY_SCHEMA,
+        "inventory_ref": _archive_organization_inventory_ref(snapshot_sha256),
+        "storage_kind": storage_kind,
+        "root_name": snapshot.get("root_name"),
+        "captured_at": str(snapshot["captured_at"]),
+        "file_count": len(projected_files),
+        "known_total_bytes": (
+            int(snapshot["total_bytes"])
+            if storage_kind == "local_filesystem"
+            else int(snapshot["known_total_bytes"])
+        ),
+        "files": projected_files,
+        "excluded": projected_excluded,
+        "raw_hashes_returned": False,
+        "drive_ids_returned": False,
+        "absolute_paths_returned": False,
+    }
+
+
 def snapshot_studio_client_folder(
     client_id: str,
     engagement_id: str,
@@ -1333,17 +1721,8 @@ def snapshot_studio_client_folder(
         raise ArchiveError(f"Client-folder snapshot failed: {exc}") from exc
     return {
         "status": result["status"],
-        "client_id": client_id,
-        "engagement_id": engagement_id,
         "input_id": result["input_id"],
-        "input_receipt": result["receipt"],
-        "snapshot_summary": {
-            "captured_at": result["snapshot"]["captured_at"],
-            "file_count": result["snapshot"]["file_count"],
-            "total_bytes": result["snapshot"]["total_bytes"],
-            "excluded": result["snapshot"]["excluded"],
-            "content_sha256": result["snapshot"]["content_sha256"],
-        },
+        "model_inventory": _project_archive_organization_inventory(result["snapshot"]),
         "documents_copied": False,
         "source_archive_mutated": result["source_archive_mutated"],
     }
@@ -1637,24 +2016,211 @@ def snapshot_studio_client_google_drive(
         temporary.unlink(missing_ok=True)
     return {
         "status": imported["status"],
-        "client_id": client_id,
-        "engagement_id": engagement_id,
         "input_id": imported["receipt"]["input_id"],
-        "input_receipt": imported["receipt"],
-        "snapshot_summary": {
-            "captured_at": snapshot["captured_at"],
-            "file_count": snapshot["file_count"],
-            "folder_count": snapshot["folder_count"],
-            "known_total_bytes": snapshot["known_total_bytes"],
-            "excluded": snapshot["excluded"],
-            "root_folder_id": snapshot["root_folder_id"],
-            "drive_id": snapshot["drive_id"],
-            "content_sha256": snapshot["content_sha256"],
-        },
+        "model_inventory": _project_archive_organization_inventory(snapshot),
         "documents_copied": False,
         "google_drive_api_called": True,
         "remote_archive_mutated": False,
         "studio_ledger_mutated": True,
+    }
+
+
+def _load_archive_organization_snapshot(
+    client_id: str,
+    engagement_id: str,
+    snapshot_input_id: str,
+    *,
+    state_dir: Path,
+) -> tuple[Path, dict[str, Any]]:
+    client_root = _selected_ledger_root(
+        client_id,
+        engagement_id,
+        state_dir=state_dir,
+    )
+    try:
+        receipt = ledger.load_input_receipt(
+            client_root,
+            engagement_id,
+            snapshot_input_id,
+        )
+    except ledger.LedgerError as exc:
+        raise ArchiveError("Archive snapshot input is invalid.") from exc
+    try:
+        snapshot = json.loads(Path(receipt["path"]).read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ArchiveError("Archive snapshot is unreadable.") from exc
+    if (
+        not isinstance(snapshot, dict)
+        or snapshot.get("schema_version")
+        not in {ledger.FOLDER_SNAPSHOT_SCHEMA, drive.DRIVE_SNAPSHOT_SCHEMA}
+        or snapshot.get("client_id") != client_id
+        or snapshot.get("engagement_id") != engagement_id
+    ):
+        raise ArchiveError("Archive snapshot identity is invalid.")
+    content = {key: value for key, value in snapshot.items() if key != "content_sha256"}
+    if snapshot.get("content_sha256") != _drive_bindings_digest(content):
+        raise ArchiveError("Archive snapshot digest is stale.")
+    if snapshot["schema_version"] == drive.DRIVE_SNAPSHOT_SCHEMA:
+        binding = _google_drive_binding(client_id, state_dir)
+        if (
+            snapshot.get("root_folder_id") != binding["folder_id"]
+            or snapshot.get("root_name") != binding["display_name"]
+            or snapshot.get("drive_id") != binding["drive_id"]
+        ):
+            raise ArchiveError("Google Drive snapshot binding is stale.")
+    return client_root, snapshot
+
+
+def get_studio_archive_organization_inventory(
+    client_id: str,
+    engagement_id: str,
+    snapshot_input_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Return the resumable full-population semantic projection for one snapshot."""
+
+    private_state = _state_dir(state_dir)
+    _, snapshot = _load_archive_organization_snapshot(
+        client_id,
+        engagement_id,
+        snapshot_input_id,
+        state_dir=private_state,
+    )
+    return {
+        "status": "ready",
+        "input_id": snapshot_input_id,
+        "model_inventory": _project_archive_organization_inventory(snapshot),
+        "source_archive_mutated": False,
+        "google_drive_api_called": False,
+    }
+
+
+def _bounded_extraction_payload(extraction: ExtractionResult) -> dict[str, Any]:
+    text_parts: list[str] = []
+    locators: list[dict[str, str]] = []
+    consumed = 0
+    for chunk in extraction.chunks:
+        remaining = MAX_OPEN_CHARS - consumed
+        if remaining <= 0:
+            break
+        selected_text = chunk.text[:remaining]
+        text_parts.append(selected_text)
+        consumed += len(selected_text)
+        locators.append(
+            {
+                "kind": chunk.locator_kind,
+                "value": chunk.locator_value,
+            }
+        )
+    limitations = list(extraction.limitations)
+    if len(extraction.chunks) > len(locators):
+        limitations.append("open_text_truncated")
+    return {
+        "status": extraction.status,
+        "text": "\n\n".join(text_parts),
+        "locators": locators,
+        "extraction_method": extraction.extraction_method,
+        "limitations": limitations,
+    }
+
+
+def open_studio_archive_organization_item(
+    client_id: str,
+    engagement_id: str,
+    snapshot_input_id: str,
+    item_ref: str,
+    *,
+    state_dir: Path | None = None,
+    gateway: drive.DriveGateway | None = None,
+) -> dict[str, Any]:
+    """Open one snapshot item through an opaque model-facing reference."""
+
+    if re.fullmatch(r"archive_item_[0-9a-f]{24}", item_ref) is None:
+        raise ArchiveError("Archive organization item reference is invalid.")
+    private_state = _state_dir(state_dir, create=True)
+    client_root, snapshot = _load_archive_organization_snapshot(
+        client_id,
+        engagement_id,
+        snapshot_input_id,
+        state_dir=private_state,
+    )
+    snapshot_sha256 = str(snapshot["content_sha256"])
+    files = snapshot.get("files")
+    if not isinstance(files, list):
+        raise ArchiveError("Archive snapshot files are invalid.")
+    matches = [
+        item
+        for item in files
+        if _archive_organization_item_ref(
+            snapshot_sha256,
+            str(item.get("relative_path") or ""),
+        )
+        == item_ref
+    ]
+    if len(matches) != 1:
+        raise ArchiveError(
+            "Archive organization item is not present exactly once in the snapshot."
+        )
+    expected = matches[0]
+    storage_kind = (
+        "google_drive"
+        if snapshot["schema_version"] == drive.DRIVE_SNAPSHOT_SCHEMA
+        else "local_filesystem"
+    )
+    relative_path = str(expected["relative_path"])
+    display_path = (
+        _project_drive_relative_path(snapshot_sha256, relative_path)
+        if storage_kind == "google_drive"
+        else relative_path
+    )
+    if storage_kind == "google_drive":
+        opened = open_studio_google_drive_source(
+            client_id,
+            engagement_id,
+            snapshot_input_id,
+            str(expected["file_id"]),
+            state_dir=private_state,
+            gateway=gateway,
+        )
+        return {
+            "status": opened["status"],
+            "item_ref": item_ref,
+            "storage_kind": storage_kind,
+            "relative_path": display_path,
+            "name": opened["name"],
+            "mime_type": opened["mime_type"],
+            "citation": f"archive-item:{item_ref} ({display_path})",
+            "text": opened["text"],
+            "locators": opened["locators"],
+            "extraction_method": opened["extraction_method"],
+            "evidence_mode": opened["evidence_mode"],
+            "limitations": opened["limitations"],
+            "source_identity_revalidated": True,
+            "google_drive_api_called": True,
+            "remote_archive_mutated": False,
+            "temporary_content_deleted": True,
+        }
+
+    source = _resolve_source_file(client_root, relative_path)
+    if _sha256_file(source) != str(expected["sha256"]):
+        raise SourceChangedError(
+            "Local archive source changed after the selected snapshot."
+        )
+    extraction = _extract_document(source, enable_ocr=False)
+    bounded = _bounded_extraction_payload(extraction)
+    return {
+        **bounded,
+        "item_ref": item_ref,
+        "storage_kind": storage_kind,
+        "relative_path": display_path,
+        "name": source.name,
+        "mime_type": None,
+        "citation": f"archive-item:{item_ref} ({display_path})",
+        "evidence_mode": "local_read",
+        "source_identity_revalidated": True,
+        "google_drive_api_called": False,
+        "source_archive_mutated": False,
     }
 
 

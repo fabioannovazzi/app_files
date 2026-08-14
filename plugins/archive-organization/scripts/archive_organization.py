@@ -35,6 +35,8 @@ SNAPSHOT_SCHEMA = "vera.archive_folder_snapshot.v1"
 DRIVE_SNAPSHOT_SCHEMA = "vera.google_drive_folder_snapshot.v1"
 POLICY_SCHEMA = "vera.archive_organization_policy.v1"
 PROPOSAL_SCHEMA = "vera.archive_organization_proposals.v1"
+MODEL_INVENTORY_SCHEMA = "vera.archive_organization_model_inventory.v1"
+MODEL_PROPOSAL_SCHEMA = "vera.archive_organization_model_proposals.v1"
 PLAN_SCHEMA = "vera.archive_organization_plan.v1"
 APPROVED_PLAN_SCHEMA = "vera.archive_organization_approved_plan.v1"
 JOURNAL_SCHEMA = "vera.archive_organization_apply_journal.v1"
@@ -68,6 +70,41 @@ def _canonical_bytes(value: object) -> bytes:
 def _content_sha256(value: Mapping[str, Any], *, digest_key: str) -> str:
     content = {key: item for key, item in value.items() if key != digest_key}
     return hashlib.sha256(_canonical_bytes(content)).hexdigest()
+
+
+def _model_inventory_ref(snapshot_sha256: str) -> str:
+    digest = hashlib.sha256(
+        f"archive-organization-inventory-v1\0{snapshot_sha256}".encode("utf-8")
+    ).hexdigest()
+    return "archive_inventory_" + digest[:24]
+
+
+def _model_item_ref(snapshot_sha256: str, relative_path: str) -> str:
+    digest = hashlib.sha256(
+        ("archive-organization-item-v1\0" f"{snapshot_sha256}\0{relative_path}").encode(
+            "utf-8"
+        )
+    ).hexdigest()
+    return "archive_item_" + digest[:24]
+
+
+def _project_drive_relative_path(snapshot_sha256: str, relative_path: str) -> str:
+    projected: list[str] = []
+    for index, component in enumerate(relative_path.split("/")):
+        match = re.fullmatch(
+            r"(?P<label>.*)~(?P<drive_ref>[A-Za-z0-9_-]{12})", component
+        )
+        if match is None:
+            projected.append(component)
+            continue
+        opaque = hashlib.sha256(
+            (
+                "archive-organization-path-component-v1\0"
+                f"{snapshot_sha256}\0{index}\0{component}"
+            ).encode("utf-8")
+        ).hexdigest()[:10]
+        projected.append(f"{match.group('label')}~ref_{opaque}")
+    return "/".join(projected)
 
 
 def _sha256_file(path: Path) -> str:
@@ -477,16 +514,33 @@ def _load_proposals(
     path: Path, snapshot: Mapping[str, Any], policy: Mapping[str, Any]
 ) -> dict[str, Any]:
     proposals = _read_json(path, label="semantic classification proposals")
-    required = {"schema_version", "client_id", "snapshot_sha256", "proposals"}
-    if set(proposals) != required or proposals["schema_version"] != PROPOSAL_SCHEMA:
+    schema_version = proposals.get("schema_version")
+    legacy_shape = {
+        "schema_version",
+        "client_id",
+        "snapshot_sha256",
+        "proposals",
+    }
+    model_shape = {"schema_version", "inventory_ref", "proposals"}
+    if schema_version == PROPOSAL_SCHEMA and set(proposals) == legacy_shape:
+        uses_model_refs = False
+        if (
+            proposals["client_id"] != snapshot["client_id"]
+            or proposals["snapshot_sha256"] != snapshot["content_sha256"]
+        ):
+            raise ArchiveOrganizationError(
+                "Semantic proposals are not bound to this snapshot."
+            )
+    elif schema_version == MODEL_PROPOSAL_SCHEMA and set(proposals) == model_shape:
+        uses_model_refs = True
+        if proposals["inventory_ref"] != _model_inventory_ref(
+            str(snapshot["content_sha256"])
+        ):
+            raise ArchiveOrganizationError(
+                "Semantic proposals are not bound to this projected inventory."
+            )
+    else:
         raise ArchiveOrganizationError("Semantic proposal shape is invalid.")
-    if (
-        proposals["client_id"] != snapshot["client_id"]
-        or proposals["snapshot_sha256"] != snapshot["content_sha256"]
-    ):
-        raise ArchiveOrganizationError(
-            "Semantic proposals are not bound to this snapshot."
-        )
     rows = proposals["proposals"]
     if not isinstance(rows, list) or len(rows) != len(snapshot["files"]):
         raise ArchiveOrganizationError(
@@ -494,12 +548,19 @@ def _load_proposals(
         )
     allowed_categories = {item["id"] for item in policy["categories"]}
     snapshot_paths = {item["relative_path"] for item in snapshot["files"]}
+    refs_to_paths = {
+        _model_item_ref(str(snapshot["content_sha256"]), relative_path): relative_path
+        for relative_path in snapshot_paths
+    }
+    if len(refs_to_paths) != len(snapshot_paths):
+        raise ArchiveOrganizationError("Projected inventory item references collide.")
     proposal_paths: set[str] = set()
     normalized_rows: list[dict[str, Any]] = []
     drive_snapshot = snapshot["schema_version"] == DRIVE_SNAPSHOT_SCHEMA
     for index, row in enumerate(rows):
+        identity_key = "item_ref" if uses_model_refs else "relative_path"
         if not isinstance(row, dict) or set(row) != {
-            "relative_path",
+            identity_key,
             "category_id",
             "document_type",
             "document_date",
@@ -512,11 +573,19 @@ def _load_proposals(
             "anomalies",
         }:
             raise ArchiveOrganizationError(f"Semantic proposal {index} is invalid.")
-        relative = _relative_path(
-            row["relative_path"],
-            label="proposal relative_path",
-            allow_reserved=drive_snapshot,
-        )
+        if uses_model_refs:
+            item_ref = _text(row["item_ref"], label="proposal item_ref", maximum=37)
+            relative = refs_to_paths.get(item_ref, "")
+            if not relative:
+                raise ArchiveOrganizationError(
+                    "Semantic proposal item coverage is invalid."
+                )
+        else:
+            relative = _relative_path(
+                row["relative_path"],
+                label="proposal relative_path",
+                allow_reserved=drive_snapshot,
+            )
         if relative in proposal_paths or relative not in snapshot_paths:
             raise ArchiveOrganizationError(
                 "Semantic proposal path coverage is invalid."
@@ -542,7 +611,19 @@ def _load_proposals(
             )
         duplicate = row["probable_duplicate_of"]
         if duplicate is not None:
-            duplicate = _relative_path(duplicate, label="probable_duplicate_of")
+            if uses_model_refs:
+                duplicate_ref = _text(
+                    duplicate,
+                    label="probable_duplicate_of",
+                    maximum=37,
+                )
+                duplicate = refs_to_paths.get(duplicate_ref, "")
+            else:
+                duplicate = _relative_path(
+                    duplicate,
+                    label="probable_duplicate_of",
+                    allow_reserved=drive_snapshot,
+                )
             if duplicate not in snapshot_paths or duplicate == relative:
                 raise ArchiveOrganizationError("probable_duplicate_of is invalid.")
         anomalies = row["anomalies"]
@@ -569,7 +650,12 @@ def _load_proposals(
                 ],
             }
         )
-    return {**proposals, "proposals": normalized_rows}
+    return {
+        "schema_version": PROPOSAL_SCHEMA,
+        "client_id": snapshot["client_id"],
+        "snapshot_sha256": snapshot["content_sha256"],
+        "proposals": normalized_rows,
+    }
 
 
 def _safe_component(value: str) -> str:
@@ -810,6 +896,13 @@ def build_review_package(
         **plan_content,
         "content_sha256": hashlib.sha256(_canonical_bytes(plan_content)).hexdigest(),
     }
+    snapshot_sha256 = str(snapshot["content_sha256"])
+
+    def review_path(relative_path: str | None) -> str | None:
+        if relative_path is None or storage_kind == "local_filesystem":
+            return relative_path
+        return _project_drive_relative_path(snapshot_sha256, relative_path)
+
     review_items = []
     for item in items:
         allowed_actions = ["accept", "edit", "mark_unclear", "skip"]
@@ -818,24 +911,26 @@ def build_review_package(
         recommended = (
             "mark_unclear" if item["proposed_action"] == "blocked" else "accept"
         )
+        source_display_path = review_path(item["source_relative_path"])
+        target_display_path = review_path(item["target_relative_path"])
         review_items.append(
             {
                 "id": item["item_id"],
                 "item_type": "archive_file_proposal",
-                "title": item["source_relative_path"],
-                "source_path": item["source_relative_path"],
-                "output_path": item["target_relative_path"],
+                "title": source_display_path,
+                "source_path": source_display_path,
+                "output_path": target_display_path,
                 "allowed_actions": allowed_actions,
                 "recommended_action": recommended,
                 "data": {
-                    "source_path": item["source_relative_path"],
+                    "source_path": source_display_path,
                     "storage_kind": item["storage_kind"],
                     "proposed_action": item["proposed_action"],
-                    "target_path": item["target_relative_path"],
+                    "target_path": target_display_path,
                     "category": item["category_id"],
                     "confidence": item["confidence"],
-                    "exact_duplicate_of": item["exact_duplicate_of"],
-                    "probable_duplicate_of": item["probable_duplicate_of"],
+                    "exact_duplicate_of": review_path(item["exact_duplicate_of"]),
+                    "probable_duplicate_of": review_path(item["probable_duplicate_of"]),
                     "anomalies": item["anomalies"],
                     "blocked_reasons": item["blocked_reasons"],
                     "target_artifact": "approved_plan.json",
@@ -851,10 +946,9 @@ def build_review_package(
                         "confidence": item["confidence"],
                     },
                     {
-                        "kind": "deterministic_identity",
-                        "identity": item["source_identity"],
-                        "sha256": item["source_sha256"],
-                        "byte_count": item["byte_count"],
+                        "kind": "local_integrity_control",
+                        "status": "verified_before_review",
+                        "raw_identity_returned": False,
                     },
                 ],
             }
@@ -866,7 +960,7 @@ def build_review_package(
         "run_id": context["run_id"],
         "review_type": "archive_organization_review",
         "storage_kind": storage_kind,
-        "source_paths": [item["source_relative_path"] for item in items],
+        "source_paths": [review_path(item["source_relative_path"]) for item in items],
         "columns": [
             "source_path",
             "proposed_action",

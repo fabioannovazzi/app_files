@@ -6,6 +6,7 @@ const os = require("node:os");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
+const crypto = require("node:crypto");
 
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
 const MANIFEST = JSON.parse(
@@ -18,6 +19,9 @@ const WIDGET_URI = "ui://widget/archive-organization-review.html";
 const WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
 const MAX_ITEMS = 5000;
 const MAX_PAYLOAD_BYTES = 8_000_000;
+const REVIEW_REFERENCE_TTL_MS = 4 * 60 * 60 * 1000;
+const MAX_REVIEW_REFERENCES = 128;
+const REVIEW_REFERENCES = new Map();
 const ALLOWED_ACTIONS = new Set([
   "accept",
   "reject",
@@ -101,33 +105,40 @@ function decisionSchema() {
 }
 
 function toolDefinitions() {
-  const reviewInput = objectSchema(
+  const validateInput = objectSchema(
     {
       client_engagement: {
         type: "string",
-        description: "Absolute path to the current Studio Archive context.json.",
+        description:
+          "Absolute path to the current Studio Archive context.json. Used once to bind a short-lived opaque review reference.",
       },
-      run_intake: { type: "object" },
       review_payload: reviewPayloadSchema(),
-      ui_decisions: { type: "object" },
-      final_artifacts: { type: "object" },
     },
     ["review_payload"],
+    false,
+  );
+  const renderInput = objectSchema(
+    {
+      review_reference: {
+        type: "string",
+        pattern: "^archive_review_[0-9a-f]{32}$",
+      },
+    },
+    ["review_reference"],
+    false,
   );
   const decisionInput = objectSchema(
     {
-      client_engagement: {
+      review_reference: {
         type: "string",
-        description: "Absolute path to the current Studio Archive context.json; required for persistence.",
+        pattern: "^archive_review_[0-9a-f]{32}$",
       },
-      run_intake: { type: "object" },
-      review_payload: reviewPayloadSchema(),
-      ui_decisions: { type: "object" },
       decisions: { type: "array", maxItems: MAX_ITEMS, items: decisionSchema() },
       decision_source: { type: "string" },
       reviewer: { type: "string" },
     },
-    ["client_engagement", "review_payload", "decisions", "reviewer"],
+    ["review_reference", "decisions", "reviewer"],
+    false,
   );
   return [
     {
@@ -135,7 +146,7 @@ function toolDefinitions() {
       title: "Validate archive organization review",
       description:
         "Validate one dry-run archive organization payload before rendering it. This never changes client files.",
-      inputSchema: reviewInput,
+      inputSchema: validateInput,
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -148,7 +159,7 @@ function toolDefinitions() {
       title: "Render archive organization review",
       description:
         "Render searchable file, destination, duplicate, anomaly, and confidence rows for collaborator review.",
-      inputSchema: reviewInput,
+      inputSchema: renderInput,
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
         readOnlyHint: true,
@@ -258,6 +269,140 @@ function validateReviewPayload(value) {
   return { itemIds, itemById: new Map(value.items.map((item) => [item.id, item])) };
 }
 
+function canonicalValue(value) {
+  if (Array.isArray(value)) return value.map(canonicalValue);
+  if (!isPlainObject(value)) return value;
+  return Object.fromEntries(
+    Object.keys(value)
+      .sort()
+      .map((key) => [key, canonicalValue(value[key])]),
+  );
+}
+
+function canonicalJson(value) {
+  return JSON.stringify(canonicalValue(value));
+}
+
+function pruneReviewReferences(now = Date.now()) {
+  for (const [reference, context] of REVIEW_REFERENCES.entries()) {
+    if (context.expiresAt <= now) REVIEW_REFERENCES.delete(reference);
+  }
+  while (REVIEW_REFERENCES.size >= MAX_REVIEW_REFERENCES) {
+    const oldest = REVIEW_REFERENCES.keys().next().value;
+    if (oldest == null) break;
+    REVIEW_REFERENCES.delete(oldest);
+  }
+}
+
+function readRegularJson(filePath, label) {
+  const observed = fs.lstatSync(filePath);
+  if (!observed.isFile() || observed.isSymbolicLink()) {
+    throw new Error(`${label} must be a regular non-symlink file`);
+  }
+  const bytes = fs.readFileSync(filePath);
+  if (bytes.length > MAX_PAYLOAD_BYTES) {
+    throw new Error(`${label} exceeds the bounded payload size`);
+  }
+  let payload;
+  try {
+    payload = JSON.parse(bytes.toString("utf8"));
+  } catch {
+    throw new Error(`${label} must contain valid JSON`);
+  }
+  if (!isPlainObject(payload)) throw new Error(`${label} must contain an object`);
+  return { payload, bytes };
+}
+
+function registerReviewReference(clientEngagement, suppliedReview) {
+  if (clientEngagement == null || clientEngagement === "") {
+    const reference = `archive_review_${crypto.randomBytes(16).toString("hex")}`;
+    const reviewSha256 = crypto
+      .createHash("sha256")
+      .update(canonicalJson(suppliedReview), "utf8")
+      .digest("hex");
+    pruneReviewReferences();
+    REVIEW_REFERENCES.set(reference, {
+      clientEngagement: null,
+      outputDir: null,
+      reviewPath: null,
+      review: suppliedReview,
+      reviewSha256,
+      runId: suppliedReview.run_id,
+      expiresAt: Date.now() + REVIEW_REFERENCE_TTL_MS,
+    });
+    return { reference, reviewSha256, persistenceEnabled: false };
+  }
+  const requestedContext = requireString(clientEngagement, "client_engagement");
+  if (!path.isAbsolute(requestedContext)) {
+    throw new Error("client_engagement must be absolute");
+  }
+  const contextPath = path.resolve(requestedContext);
+  const contextStat = fs.lstatSync(contextPath);
+  if (!contextStat.isFile() || contextStat.isSymbolicLink()) {
+    throw new Error("client_engagement must identify a regular context file");
+  }
+  const preflight = load_client_workflow_context_for_output(
+    contextPath,
+    suppliedReview.run_id,
+  );
+  const outputDir = fs.realpathSync(requireString(preflight.output_dir, "output_dir"));
+  const outputStat = fs.statSync(outputDir);
+  if (!outputStat.isDirectory()) throw new Error("review output is unavailable");
+  const reviewPath = path.join(outputDir, "review_payload.json");
+  const stored = readRegularJson(reviewPath, "stored review payload");
+  validateReviewPayload(stored.payload);
+  if (canonicalJson(stored.payload) !== canonicalJson(suppliedReview)) {
+    throw new Error("review payload does not match the stored review package");
+  }
+  const reference = `archive_review_${crypto.randomBytes(16).toString("hex")}`;
+  const reviewSha256 = crypto.createHash("sha256").update(stored.bytes).digest("hex");
+  pruneReviewReferences();
+  REVIEW_REFERENCES.set(reference, {
+    clientEngagement: contextPath,
+    outputDir,
+    reviewPath,
+    reviewSha256,
+    runId: stored.payload.run_id,
+    expiresAt: Date.now() + REVIEW_REFERENCE_TTL_MS,
+  });
+  return { reference, reviewSha256, persistenceEnabled: true };
+}
+
+function resolveReviewReference(rawReference) {
+  const reference = requireString(rawReference, "review_reference", 47);
+  if (!/^archive_review_[0-9a-f]{32}$/.test(reference)) {
+    throw new Error("review_reference is invalid");
+  }
+  pruneReviewReferences();
+  const context = REVIEW_REFERENCES.get(reference);
+  if (!context || context.expiresAt <= Date.now()) {
+    throw new Error("review_reference is unknown or expired");
+  }
+  const stored = context.reviewPath
+    ? readRegularJson(context.reviewPath, "stored review payload")
+    : { payload: context.review, bytes: null };
+  const currentSha256 = context.reviewPath
+    ? crypto.createHash("sha256").update(stored.bytes).digest("hex")
+    : crypto
+        .createHash("sha256")
+        .update(canonicalJson(stored.payload), "utf8")
+        .digest("hex");
+  if (
+    currentSha256 !== context.reviewSha256 ||
+    stored.payload.run_id !== context.runId
+  ) {
+    throw new Error("review_reference no longer matches the stored review package");
+  }
+  validateReviewPayload(stored.payload);
+  return { reference, context, review: stored.payload };
+}
+
+function readOptionalSidecar(outputDir, name) {
+  const filePath = path.join(outputDir, name);
+  if (!fs.existsSync(filePath)) return null;
+  return readRegularJson(filePath, name).payload;
+}
+
 function validateDecisions(inputArgs) {
   const review = validateReviewPayload(inputArgs.review_payload);
   if (!Array.isArray(inputArgs.decisions) || inputArgs.decisions.length > MAX_ITEMS) {
@@ -340,18 +485,24 @@ function load_client_workflow_context_for_output(clientEngagement, expectedRunId
 }
 
 function persistDecisions(inputArgs, compileApproval) {
-  const clientEngagement = requireString(inputArgs.client_engagement, "client_engagement");
-  if (!path.isAbsolute(clientEngagement)) throw new Error("client_engagement must be absolute");
+  const resolved = resolveReviewReference(inputArgs.review_reference);
+  if (!resolved.context.clientEngagement) {
+    throw new Error(
+      "review_reference is review-only; local persistence requires a bound Studio Archive run",
+    );
+  }
+  const clientEngagement = resolved.context.clientEngagement;
+  const boundArgs = { ...inputArgs, review_payload: resolved.review };
   load_client_workflow_context_for_output(
     clientEngagement,
-    inputArgs.review_payload.run_id,
+    resolved.review.run_id,
   );
-  const decisions = validateDecisions(inputArgs);
+  const decisions = validateDecisions(boundArgs);
   const incoming = {
     schema_version: "1.0",
     plugin: "archive-organization",
     workflow: "archive-organization",
-    run_id: inputArgs.review_payload.run_id,
+    run_id: resolved.review.run_id,
     decision_source: String(inputArgs.decision_source || "mcp_widget").slice(0, 80),
     reviewer: requireString(inputArgs.reviewer, "reviewer", 160),
     decisions,
@@ -371,7 +522,15 @@ function persistDecisions(inputArgs, compileApproval) {
       "--decisions",
       temporaryDecisions,
     ]);
-    if (!compileApproval) return saved;
+    const savedSummary = {
+      status: saved.status,
+      run_id: resolved.review.run_id,
+      decision_count: saved.decision_count,
+      reviewer: saved.reviewer,
+      review_reference: resolved.reference,
+      source_archive_mutated: false,
+    };
+    if (!compileApproval) return savedSummary;
     const approved = callCli([
       "approve",
       "--client-engagement",
@@ -379,7 +538,12 @@ function persistDecisions(inputArgs, compileApproval) {
       "--decisions",
       saved.ui_decisions_path,
     ]);
-    return { ...saved, ...approved };
+    return {
+      ...savedSummary,
+      status: approved.status,
+      approved_change_count: approved.approved_change_count,
+      execution_requires_separate_explicit_approval: true,
+    };
   } finally {
     fs.rmSync(temporaryRoot, { recursive: true, force: true });
   }
@@ -389,22 +553,39 @@ function callTool(name, inputArgs) {
   const args = isPlainObject(inputArgs) ? inputArgs : {};
   if (name === TOOL_NAMES.validateReview) {
     validateReviewPayload(args.review_payload);
+    const registered = registerReviewReference(
+      args.client_engagement,
+      args.review_payload,
+    );
     return {
       valid: true,
       plugin: "archive-organization",
       run_id: args.review_payload.run_id,
       item_count: args.review_payload.items.length,
+      review_reference: {
+        reference: registered.reference,
+        run_id: args.review_payload.run_id,
+        review_payload_sha256: registered.reviewSha256,
+        expires_in_seconds: Math.floor(REVIEW_REFERENCE_TTL_MS / 1000),
+        persistence_enabled: registered.persistenceEnabled,
+      },
       source_archive_mutated: false,
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    validateReviewPayload(args.review_payload);
+    const resolved = resolveReviewReference(args.review_reference);
     return {
       plugin: "archive-organization",
-      run_id: args.review_payload.run_id,
-      review_payload: args.review_payload,
-      ui_decisions: isPlainObject(args.ui_decisions) ? args.ui_decisions : null,
-      final_artifacts: isPlainObject(args.final_artifacts) ? args.final_artifacts : null,
+      run_id: resolved.review.run_id,
+      review_payload: resolved.review,
+      ui_decisions: resolved.context.outputDir
+        ? readOptionalSidecar(resolved.context.outputDir, "ui_decisions.json")
+        : null,
+      final_artifacts: resolved.context.outputDir
+        ? readOptionalSidecar(resolved.context.outputDir, "final_artifacts.json")
+        : null,
+      review_reference: resolved.reference,
+      persistence_enabled: Boolean(resolved.context.clientEngagement),
       execution_requires_separate_explicit_approval: true,
       source_archive_mutated: false,
     };
@@ -415,9 +596,15 @@ function callTool(name, inputArgs) {
 }
 
 function toolResult(payload) {
+  const structured = { ok: true, ...payload };
   return {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
-    structuredContent: payload,
+    content: [
+      {
+        type: "text",
+        text: "Archive Organization returned the structured review result attached to this tool response.",
+      },
+    ],
+    structuredContent: structured,
     isError: false,
   };
 }

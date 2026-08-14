@@ -27,12 +27,14 @@ CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 EXPECTED_CLIENT_WORKFLOW_IDS = (
     "audit-reconciliation",
+    "archive-organization",
     "client-file-preparation",
     "new-client",
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
     "sales-plan",
+    "variance-analysis",
     "financial-analysis",
     "report-builder",
     "concordato-plan-review",
@@ -210,6 +212,39 @@ def test_client_folder_binding_excludes_private_identity_values(
     assert "amministrazione@example.com" not in serialized
     assert "Example Legal Name" not in serialized
     assert "01234567890" not in serialized
+
+
+def test_model_facing_client_directory_and_resolver_keep_identity_values_local(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+) -> None:
+    scope_id = indexed_archive.scopes["Rossi"]
+    registration = archive_core.set_studio_client_identity(
+        scope_id,
+        email_addresses=["privacy@example.com"],
+        legal_names=["Privacy Example SRL"],
+        tax_identifiers=["99887766554"],
+        state_dir=indexed_archive.state,
+    )
+
+    directory = archive_core.list_studio_clients(state_dir=indexed_archive.state)
+    resolved = archive_core.resolve_studio_client_identity(
+        "email_address",
+        "privacy@example.com",
+        state_dir=indexed_archive.state,
+    )
+
+    serialized = json.dumps(
+        {"registration": registration, "directory": directory, "resolved": resolved}
+    )
+    assert resolved["resolution_status"] == "exact_match"
+    assert resolved["match_count"] == 1
+    assert resolved["matches"][0]["client_id"] == registration["client"]["client_id"]
+    assert resolved["matches"][0]["identity_counts"]["email_addresses"] == 1
+    assert directory["private_identity_values_returned"] is False
+    assert "privacy@example.com" not in serialized
+    assert "Privacy Example SRL" not in serialized
+    assert "99887766554" not in serialized
 
 
 def test_existing_client_journal_and_support_share_one_explicit_engagement(
@@ -1358,7 +1393,7 @@ def test_symlinked_source_is_not_indexed(
     ]
 
 
-def test_mcp_lists_twenty_four_strict_local_tools(tmp_path: Path) -> None:
+def test_mcp_lists_thirty_one_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
             "jsonrpc": "2.0",
@@ -1373,10 +1408,17 @@ def test_mcp_lists_twenty_four_strict_local_tools(tmp_path: Path) -> None:
     assert {tool["name"] for tool in tools} == {
         "studio_archive_status",
         "list_studio_archive_clients",
+        "resolve_studio_archive_client",
         "get_studio_client_folder",
         "create_studio_archive_client",
         "create_studio_client_engagement",
         "import_studio_client_document",
+        "snapshot_studio_client_folder",
+        "studio_archive_google_drive_status",
+        "bind_studio_client_google_drive",
+        "snapshot_studio_client_google_drive",
+        "get_studio_archive_organization_inventory",
+        "open_studio_archive_organization_item",
         "list_studio_client_engagements",
         "prepare_studio_client_workflow",
         "start_check_entries_from_sample",
@@ -1397,8 +1439,16 @@ def test_mcp_lists_twenty_four_strict_local_tools(tmp_path: Path) -> None:
         "match_studio_archive_email",
     }
     assert all(tool["inputSchema"]["additionalProperties"] is False for tool in tools)
-    assert all(tool["annotations"]["openWorldHint"] is False for tool in tools)
     tool_by_name = {tool["name"]: tool for tool in tools}
+    external_tools = {
+        "bind_studio_client_google_drive",
+        "snapshot_studio_client_google_drive",
+        "open_studio_archive_organization_item",
+    }
+    assert all(
+        tool["annotations"]["openWorldHint"] is (tool["name"] in external_tools)
+        for tool in tools
+    )
     workflow_enum = tool_by_name["prepare_studio_client_workflow"]["inputSchema"][
         "properties"
     ]["workflow_id"]["enum"]
@@ -1921,7 +1971,9 @@ def test_mcp_recovers_client_profile_after_folder_rename(tmp_path: Path) -> None
     assert (
         recovered["client_id"] == registered["structuredContent"]["client"]["client_id"]
     )
-    assert recovered["email_addresses"] == ["amministrazione@rossi.it"]
+    assert recovered["identity_counts"]["email_addresses"] == 1
+    assert "email_addresses" not in recovered
+    assert "amministrazione@rossi.it" not in json.dumps(profiles["structuredContent"])
     assert plan["structuredContent"]["profile_status"] == "configured"
 
 

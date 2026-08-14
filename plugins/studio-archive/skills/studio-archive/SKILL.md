@@ -156,10 +156,12 @@ The index never follows symbolic links.
 
 A third bounded intake action supports `archive-organization`:
 `snapshot_studio_client_folder` hashes at most 5,000 ordinary client files and
-2 GB, excludes `Vera/`, follows no symlinks, and imports only its JSON snapshot
-receipt into the selected engagement. It never copies or moves the client
-documents. Actual path changes remain owned by the separate reviewed and
-explicitly approved Riordino archivio workflow.
+2 GB, excludes `Vera/`, follows no symlinks, and imports its JSON snapshot
+receipt into the selected engagement. It returns the complete model-facing
+inventory with paths, names, sizes, dates, opaque item references, and opaque
+exact-duplicate relationships. Raw hashes and absolute paths remain local. It
+never copies or moves the client documents. Actual path changes remain owned
+by the separate reviewed and explicitly approved Riordino archivio workflow.
 
 For Google Workspace archives, the equivalent bounded intake is
 `snapshot_studio_client_google_drive`. First inspect
@@ -168,14 +170,18 @@ explicit CLI OAuth setup with a Google Cloud desktop client. Then bind the
 exact user-selected folder with `bind_studio_client_google_drive`. The snapshot
 recursively records at most 5,000 Drive files, stable file and parent IDs,
 versions, MIME types, capabilities, and available checksums; it skips
-shortcuts, supports Shared Drives, and imports only its JSON receipt. The
+shortcuts, supports Shared Drives, and imports its JSON receipt. The returned
+complete inventory replaces those raw technical identifiers and Drive path-ID
+suffixes with opaque item, path-component, and exact-duplicate references while
+preserving names, projected relative paths, MIME types, sizes, and dates. The
 restricted `https://www.googleapis.com/auth/drive` scope and any required
 Google verification/security assessment must be disclosed before deployment.
-For semantic evidence, `open_studio_google_drive_source` accepts only a file ID
-present in that exact immutable snapshot, revalidates its remote identity and
-version, transiently downloads a supported binary or exports a common
-Google-native document, returns bounded citable text, and deletes the temporary
-bytes. It never persists a Drive content cache.
+For semantic evidence, `open_studio_archive_organization_item` accepts only an
+opaque item reference in that exact immutable snapshot. Local code resolves and
+revalidates the underlying path or Drive identity and version, transiently
+downloads a supported binary or exports a common Google-native document,
+returns bounded citable text without raw execution identifiers, and deletes the
+temporary bytes. It never persists a Drive content cache.
 
 ## Client and engagement intake
 
@@ -191,11 +197,16 @@ Never infer the client from a filename or silently create a client.
 
 Use this exact chat workflow whenever a professional starts client work:
 
-1. Call `list_studio_archive_clients`. Compare the user's stated client with
-   registered identities and unregistered top-level scopes semantically; exact
-   IDs and path enforcement remain deterministic. If the intended client is
-   ambiguous, show the plausible choices and ask. Do not decide from filename
-   similarity.
+1. Call `list_studio_archive_clients`. It returns safe client directory rows
+   with stable IDs, display labels, status, and counts of private identity
+   values; it does not return stored emails, legal names, or tax identifiers.
+   Compare the user's stated display name with these labels semantically. If
+   the user supplies an email address, exact legal name, or tax identifier,
+   call `resolve_studio_archive_client`; local code compares that one value and
+   returns only matching safe rows without echoing the supplied or stored
+   identity. Exact IDs and path enforcement remain deterministic. If the
+   intended client is ambiguous, show the plausible choices and ask. Do not
+   decide from filename similarity.
 2. Ask whether the work is for an existing or new client only when the user's
    wording and the listed records do not already establish that choice.
    Before the first file copy, show the selected client and obtain the user's
@@ -248,9 +259,13 @@ For `archive-organization`, select the intake that matches the real archive:
 `snapshot_studio_client_folder` for a local tree, or Drive status, exact binding,
 and `snapshot_studio_client_google_drive` for Google Workspace. Prepare the
 workflow with only the returned snapshot `input_id`; do not import every client
-document. Either snapshot receipt is a read-only observation and does not
-authorize later file moves. Follow the separate `archive-organization` review
-and explicit apply boundary for those changes.
+document. Classify every row in the returned complete projected inventory; use
+`get_studio_archive_organization_inventory` to resume it and
+`open_studio_archive_organization_item` for selected bounded evidence. Raw
+hashes, Drive IDs, capabilities, versions, and absolute paths stay local.
+Either snapshot receipt is a read-only observation and does not authorize later
+file moves. Follow the separate `archive-organization` review and explicit
+apply boundary for those changes.
 
 For the journal-specific flow, prepare Journal Sampling from the exact journal
 `input_id`. Its finalized artifact manifest must identify the normalized
@@ -267,11 +282,12 @@ batch has the same exact byte selection as an earlier run, with a new
 `idempotency_key` for each distinct batch.
 
 Users do not operate the CLI. If Codex must use the internal fallback, the
-corresponding commands are `clients`, `configure-client`, `create-client`,
+corresponding commands are `clients`, `resolve-client`, `configure-client`, `create-client`,
 `create-engagement`, `import-document`, `engagements`, `prepare-workflow`, and
 `start-check-entries-from-sample` in `scripts/studio_archive.py`. Google Drive
 first-time setup additionally uses `authorize-google-drive --client-secrets`,
-then `google-drive-status`, `bind-google-drive`, and `snapshot-google-drive`.
+then `google-drive-status`, `bind-google-drive`, `snapshot-google-drive`,
+`archive-organization-inventory`, and `open-archive-organization-item`.
 Never place OAuth client secrets or token contents in chat or run artifacts.
 
 `get_studio_client_folder --client-id client_...` returns a digest-bound
@@ -503,6 +519,7 @@ may persist confirmed client identities and mechanically plan or validate the
 same Gmail workflow:
 
 - `list_studio_archive_clients`
+- `resolve_studio_archive_client`
 - `configure_studio_archive_client`
 - `plan_studio_archive_gmail_search`
 - `match_studio_archive_email`
@@ -608,6 +625,8 @@ python scripts/studio_archive.py open --source-id src_... --context-chunks 1
 python scripts/studio_archive.py configure-client --scope-id scope_... \
   --email-address amministrazione@example.com --legal-name "Esempio SRL"
 python scripts/studio_archive.py clients
+python scripts/studio_archive.py resolve-client --identity-kind email_address \
+  --identity-value amministrazione@example.com
 python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
 python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 audit"
 python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
@@ -617,6 +636,8 @@ python scripts/studio_archive.py finalize-workflow --client-id client_... --enga
 python scripts/studio_archive.py complete-workflow --client-id client_... --engagement-id eng_... --run-id run_...
 python scripts/studio_archive.py recover-ledger
 python scripts/studio_archive.py retention-report --client-id client_... --older-than-days 365
+python scripts/studio_archive.py archive-organization-inventory --client-id client_... --engagement-id eng_... --snapshot-input-id input_...
+python scripts/studio_archive.py open-archive-organization-item --client-id client_... --engagement-id eng_... --snapshot-input-id input_... --item-ref archive_item_...
 python scripts/studio_archive.py plan-gmail --scope-id scope_... \
   --topic "rateazione INPS"
 python scripts/studio_archive.py match-email --expected-scope-id scope_... \

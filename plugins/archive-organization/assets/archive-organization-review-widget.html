@@ -1155,15 +1155,17 @@
 
     function pickPayload(raw) {
       if (!raw || typeof raw !== "object") return null;
-      if (raw.widget_type === CONFIG.widgetType || raw.review_payload) return raw;
-      if (raw.structuredContent) return pickPayload(raw.structuredContent);
-      if (raw.toolOutput) return pickPayload(raw.toolOutput);
+      if (raw.widget_type === CONFIG.widgetType || raw.review_payload || raw.ui_decisions || raw.final_artifacts || raw.applied_decisions) return raw;
+      for (const key of ["widget_payload", "_meta", "toolResponseMetadata", "mcp_tool_result", "call_tool_result", "structuredContent", "toolOutput"]) {
+        const selected = pickPayload(raw[key]);
+        if (selected) return selected;
+      }
       return null;
     }
     function toolOutput() {
       if (new URLSearchParams(window.location.search).has("demo")) return DEMO_PAYLOAD;
       const host = window.openai || {};
-      return pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
+      return pickPayload(host.toolResponseMetadata) || pickPayload(host.toolOutput) || pickPayload(host.structuredContent) || pickPayload(host) || FALLBACK;
     }
     function esc(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
@@ -1957,24 +1959,23 @@
     }
     function saveToolArgs() {
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
+        review_reference: state.payload.review_reference,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
       };
     }
     function applyToolArgs() {
       return {
-        run_intake: state.payload.run_intake || null,
-        review_payload: reviewPayload(),
-        ui_decisions: state.payload.ui_decisions || null,
-        final_artifacts: state.payload.final_artifacts || null,
+        review_reference: state.payload.review_reference,
         decisions: collectDecisionInputs(),
         decision_source: "mcp_widget",
+        reviewer: reviewerAliasValue() || null,
       };
     }
     function parseToolResult(result) {
+      const privatePayload = pickPayload(result);
+      if (privatePayload) return privatePayload;
       if (result?.structuredContent) return result.structuredContent;
       if (result?.ui_decisions || result?.ok != null) return result;
       const text = Array.isArray(result?.content) ? result.content.find((entry) => entry?.text)?.text : null;
@@ -2122,6 +2123,14 @@
     document.getElementById("apply-decisions").addEventListener("click", handleApplyDecisions);
     document.getElementById("copy-decisions").addEventListener("click", () => copyDecisionJson().then(() => setSaveStatus(uiText("jsonCopied", "JSON copied."), "ok")).catch((error) => setSaveStatus(error.message || String(error), "error")));
     document.getElementById("download-decisions").addEventListener("click", downloadDecisionJson);
+    window.addEventListener("message", (event) => {
+      if (event?.data?.method !== "ui/notifications/tool-result") return;
+      const nextPayload = pickPayload(event.data.params);
+      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;
+      state.payload = nextPayload;
+      loadInitialDecisions();
+      render();
+    });
     state.payload = toolOutput();
     loadInitialDecisions();
     render();
