@@ -5439,6 +5439,15 @@ def test_static_page_exposes_five_language_switch() -> None:
         "Del asiento muestreado al documento que lo explica.",
         "authorized_connector_export",
         "invoice_inventory.json",
+        "up to the first 20 rows of the normalized population",
+        "for every parsed FatturaPA record",
+        "1,500 results and 500 PDFs",
+        "2,500 items or 2,000,000 bytes",
+        "at most 25 per call",
+        "500,000 bytes",
+        "component-only metadata",
+        "Codex persists the run; Cowork uses the same limits",
+        "without reading the complete review_payload.json",
     ):
         assert snippet in page
 
