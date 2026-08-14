@@ -19,11 +19,36 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "application-case-and-evidence",
-        "purpose": "Discover and match source-backed opportunities, then prepare a reviewable grant-application dossier after selection",
-        "content": "Client-specific evidence-mapping sessions may read the selected client evidence needed to create receipted, dated profile facets, while later portfolio matching sessions receive opaque client references, those structured facets and public opportunity material rather than the clients' raw documents. Application instruction may expose selected client evidence during its dedicated evidence-mapping contribution; each later contribution uses a fresh operator-attested session reference and receives only the task-allowlisted, reference-closed structured context required for that task. That context can include application metadata; project title, summary and requested amount outside source-only tasks; extracted requirements and exact excerpts; company, financial, quotation, declaration and project facts; assessments; checklist items; expenses; form values; narratives; consistency checks; issues; and, for holistic reviews, the complete structured dossier and authority simulation. The packet reports available, included and omitted counts and bytes, never truncates the first arbitrary records, and stops for a fresh explicit expansion when its complete closure exceeds the limit. The intake applicant object and local paths are omitted by default, but professionally relevant facts, excerpts, form values or consistency checks may still contain exact applicant identity. There is no automatic anonymization.",
+        "id": "radar-client-evidence-mapping",
+        "purpose": "Create one dated, reviewable opportunity profile for an opaque client reference",
+        "content": "One client-specific model phase may read the exact client evidence selected for profile mapping. It can therefore see identity, territory, ATECO, size, legal form, age, ownership, planned investment, property, workforce, energy, digitization, vehicle, export, training, innovation, financial and project details present in those selected materials. It produces receipted evidence descriptions and dated structured facets with provenance. The later opaque client reference reduces direct identity exposure but is not automatic anonymization or general pseudonymization, and combinations of structured facets may still identify the client.",
         "runtime_profiles": [
           "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "radar-public-source-and-portfolio-reasoning",
+        "purpose": "Plan official-source checks, interpret public opportunities, and match them against the selected portfolio",
+        "content": "A separate model phase receives opaque client references, the structured profile facets, public source-plan metadata, official opportunity material, lifecycle observations, match rationales, missing information, contradictions, complexity and any supplied economic assumptions. It does not receive the clients' raw evidence documents from the mapping phase. Public retrieval queries contain generic territory, category, investment topic, programme, authority, act family, call identifier and date-window terms; they do not contain client references or profile content.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "codex-application-instruction",
+        "purpose": "Prepare a source-bound application dossier in a Studio Archive run",
+        "content": "Source interpretation and requirement drafting may read the exact selected official source files, and evidence mapping may read the exact selected client evidence. Later model contributions receive only a task-allowlisted, reference-closed packet from the bound run: application title, issuing authority, procedure ID, deadline and status; project title, summary, requested amount and currency outside source-only tasks; selected source metadata and exact stored excerpts; and, as the task requires, requirements, company, financial, quotation, declaration and project facts, assessments, document-checklist items, expenses, form fields, narratives, consistency checks, issues and authority-simulation checks. The ordinary packet includes the complete required structured collections. It is limited to 500 items per collection, 200 stored excerpts and 2,000,000 bytes; it fails instead of truncating and can be rerun in a fresh session with exact professional-selected IDs for each over-limit collection. The intake applicant object and local paths are omitted by default, but professionally relevant facts, excerpts, form values or checks may contain exact identity. There is no automatic anonymization or pseudonymization.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      },
+      {
+        "id": "cowork-application-instruction",
+        "purpose": "Prepare a reviewable application dossier from user-connected files",
+        "content": "When the bundled scripts are callable and a digest-valid Vera client-workflow context is available, Cowork uses the same selected-source, task-packet, exact-ID expansion, hash and operator-attested session-reference controls as Codex. Otherwise Cowork works from the exact files connected or supplied by the user and produces a file-based review handoff; those selected files and their client, financial, project, quotation, declaration and application content may be read by the model, and the 500-item, 200-excerpt, 2,000,000-byte packet limits and local non-reuse check for session references are not mechanically enforced. Cowork must not claim a sealed Studio Archive run in that fallback. There is no automatic anonymization or pseudonymization.",
+        "runtime_profiles": [
           "anthropic-cowork"
         ]
       }
@@ -55,7 +80,7 @@
   "security_controls": [
     {
       "id": "private-workspace-and-bound-case-folder",
-      "control": "Pre-client radar initialization requires explicit user confirmation, records asserted operator and retention ownership, binds owner-only files to one exact local path, and rejects Git or published roots. Application initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root."
+      "control": "When the local workflow scripts are used, pre-client radar initialization requires explicit user confirmation, records asserted operator and retention ownership, binds owner-only files to one exact local path, and rejects Git or published roots. Codex application initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root. Cowork without that valid context may produce only a connected-file review handoff and cannot claim this bound-run control."
     },
     {
       "id": "reject-secret-and-session-material",
@@ -79,7 +104,7 @@
     },
     {
       "id": "sealed-model-contribution-boundary",
-      "control": "Each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating when the complete closure exceeds its item, excerpt or byte limits. It is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests a new exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
+      "control": "In Codex, and in Cowork only when the bundled scripts are callable with a digest-valid Vera run, each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating above 500 items per collection, 200 stored excerpts or 2,000,000 packet bytes. Exact professional-selected IDs scope an over-limit global collection while the other required collections remain complete. The contribution is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests an exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write. Cowork's connected-file fallback does not claim these mechanical controls."
     },
     {
       "id": "opaque-portfolio-radar-boundary",
@@ -95,9 +120,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-07",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ef6cd8a313b25e9c43e5c8f6f0bb4d3bf6a5f5cf68d3e33c2de541b122e53978"
+    "source_fingerprint": "12f378833135a9608d32c3ca8b12aae1a0fd946fca32258bbc3d2235585e98f0"
   }
 }
