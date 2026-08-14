@@ -23,7 +23,7 @@
       {
         "id": "bounded-entry-and-support-structure",
         "purpose": "Understand the prepared sample and selected support batch before deterministic checks",
-        "content": "User instructions; the selected Journal Sampling handoff and support batch; limited rows or document excerpts opened to understand their structure; mapped entry and support fields; reviewed party, relationship, currency and direction assumptions. The normalized population is replayed locally for qualification and one-to-one sample closure, while support matching is performed only for sampled entries. A professional may direct the selected runtime to open additional exact evidence when structure or sufficiency cannot be resolved; the workflow does not claim that source files are anonymized.",
+        "content": "User instructions; the selected Journal Sampling handoff and support batch; and inspection.json. The inspection artifact can expose the first 20 prepared rows from the complete normalized population with prepared-entry and qualification IDs, journal fields and source locators; metadata for every selected PDF including filename, path, support and qualification IDs, capture hash, extractability, text length and error; and one structured record for every parsed FatturaPA document including source name, document type and polarity, invoice number and date, total and currency, supplier and customer names and tax IDs. The complete normalized population is replayed locally for qualification and one-to-one sample closure, the selected support batch is parsed locally in full, and matching is performed only for sampled entries. A professional may direct the selected runtime to open additional exact evidence when structure or sufficiency cannot be resolved; the workflow does not claim that source files are anonymized.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -116,7 +116,7 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-03",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
     "source_fingerprint": "bdda21b4470ea76ec4fc3fde744fdd00b3865feaef2069b612b5275672e1b2dc"

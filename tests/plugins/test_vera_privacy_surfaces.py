@@ -301,11 +301,10 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         assert snippet in organization_page
 
 
-def test_three_reconciliation_pages_share_the_same_concrete_model_data_flow() -> None:
-    pages = (
+def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
+    shared_flow_pages = (
         ROOT / "static" / "shared" / "riconciliazione-partite" / "index.html",
         ROOT / "static" / "shared" / "journal-bank-reconciliation" / "index.html",
-        ROOT / "static" / "shared" / "check-entries" / "index.html",
     )
     required = (
         "Il modello comprende la struttura",
@@ -316,7 +315,7 @@ def test_three_reconciliation_pages_share_the_same_concrete_model_data_flow() ->
         "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente",
     )
 
-    for path in pages:
+    for path in shared_flow_pages:
         page = path.read_text(encoding="utf-8")
         model_block = page.split('data-model-data-status="relevant"', 1)[1].split(
             "</section>",
@@ -332,6 +331,29 @@ def test_three_reconciliation_pages_share_the_same_concrete_model_data_flow() ->
         else:
             assert "Codex" not in model_block
             assert "Cowork" not in model_block
+
+    check_entries = (
+        ROOT / "static" / "shared" / "check-entries" / "index.html"
+    ).read_text(encoding="utf-8")
+    model_block = check_entries.split(
+        'data-model-data-status="relevant"', 1
+    )[1].split("</section>", 1)[0]
+    for snippet in (
+        "le prime 20 righe della popolazione normalizzata",
+        "per tutti i PDF",
+        "per ogni FatturaPA parsata",
+        "controlla solo il campione",
+        "1.500 risultati e 500 PDF",
+        "2.500 elementi o 2.000.000 byte",
+        "la referenza casuale dura quattro ore",
+        "al massimo 25 per chiamata",
+        "500.000 byte",
+        "metadati riservati al componente",
+        "Codex persiste il run",
+        "Cowork usa gli stessi limiti",
+        "non vengono anonimizzati né pseudonimizzati automaticamente",
+    ):
+        assert snippet in model_block
 
 
 def test_vera_external_confirmations_are_limited_to_optional_boundaries() -> None:

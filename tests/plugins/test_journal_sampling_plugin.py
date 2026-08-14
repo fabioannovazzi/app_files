@@ -2010,7 +2010,7 @@ def test_skill_tells_codex_user_does_not_run_cli_directly() -> None:
     assert "every requested source is qualified" in skill_text
 
 
-def test_static_page_exposes_four_language_switch() -> None:
+def test_static_page_exposes_five_localized_model_data_flows() -> None:
     page = (ROOT / "static" / "shared" / "journal-sampling" / "index.html").read_text(
         encoding="utf-8"
     )
@@ -2020,10 +2020,17 @@ def test_static_page_exposes_four_language_switch() -> None:
         'data-lang="en"',
         'data-lang="fr"',
         'data-lang="de"',
+        'data-lang="es"',
         "Crea un campione riproducibile da un giornale disordinato.",
         "Create a reproducible sample from a messy journal export.",
         "Créer un échantillon reproductible depuis un journal désordonné.",
         "Eine reproduzierbare Stichprobe aus einem uneinheitlichen Journal erstellen.",
+        "Cree una muestra reproducible a partir de un diario desordenado.",
+        "up to 750 selected rows with all 17 canonical columns",
+        "Codex and Cowork use the same reduced sample with different persistence",
+        "Les alias ref-* pseudonymisent les références techniques, pas les données professionnelles",
+        "keine automatische Anonymisierung oder Nur-lokal-Garantie",
+        "Cowork parte del mismo model_review_context.json",
     ):
         assert snippet in page
 
