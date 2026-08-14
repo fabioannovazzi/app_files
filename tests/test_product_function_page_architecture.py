@@ -470,10 +470,17 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
         encoding="utf-8"
     )
 
-    assert function_copy.count('modelDataStatus: "relevant"') == 15
-    assert function_copy.count('modelDataStatus: "not-relevant"') == 5
     assert '"comunicazione-professionale"' in function_copy
     assert '"presenza-digitale-studio"' in function_copy
+    communication_copy = function_copy.split('"comunicazione-professionale":', 1)[
+        1
+    ].split('"presenza-digitale-studio":', 1)[0]
+    website_copy = function_copy.split('"presenza-digitale-studio":', 1)[1].split(
+        '"apertura-pratica":', 1
+    )[0]
+    for workflow_copy in (communication_copy, website_copy):
+        assert workflow_copy.count('modelDataStatus: "relevant"') == 5
+        assert 'modelDataStatus: "not-relevant"' not in workflow_copy
     assert 'data-model-data-status="relevant"' in bank_page
     assert "Quali dati arrivano al modello" in bank_page
     assert "modelDataConclusion" in function_copy
