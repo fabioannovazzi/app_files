@@ -320,10 +320,18 @@ does not authorize a portal action.
 
 Call the MCP review tools in this order:
 
-1. `validate_registro_imprese_sari_review`
-2. `render_registro_imprese_sari_review`
-3. `save_registro_imprese_sari_decisions`
-4. `apply_registro_imprese_sari_decisions`
+1. Call `validate_registro_imprese_sari_review` once with the stored review.
+2. For a persisted run, call `render_registro_imprese_sari_review` with only the returned opaque review reference.
+3. Call `save_registro_imprese_sari_decisions` with that reference and the decisions; do not resend private review rows merely to carry state.
+4. Call `apply_registro_imprese_sari_decisions` with the same reference.
+
+The four-hour reference is bound to the exact run and stored review hash. The
+review context omits the wholesale client identity after required identity
+values have been mapped into individual proposed fields; it retains the case
+purpose, proposed values, evidence extracts, risks, and missing information.
+Before any optional public SARI connector query, reject exact client-reference
+and client-identity values as well as the mechanically recognized identifier
+formats.
 
 Saved choices go to `ui_decisions.json`; applied choices go to
 `applied_decisions.json` and update `final_artifacts.json`. Reject, edit,

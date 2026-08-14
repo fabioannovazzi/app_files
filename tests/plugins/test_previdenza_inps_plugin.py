@@ -1312,7 +1312,8 @@ def test_package_case_spanish_writes_localized_artifacts_and_review_payload(
         "validate_previdenza_inps_review",
         {"review_payload": review},
     )
-    assert validated["review_payload"]["language"] == "es"
+    assert "review_payload" not in validated
+    assert validated["review_reference"] is None
     assert str(validated["message"]).startswith("Los datos de revisión")
 
 
@@ -2353,16 +2354,31 @@ def test_previdenza_inps_mcp_render_token_can_persist_in_same_session(
     assert process.stdin is not None
     assert process.stdout is not None
 
-    render_request = {
+    validate_request = {
         "jsonrpc": "2.0",
         "id": 1,
         "method": "tools/call",
         "params": {
-            "name": "render_previdenza_inps_review",
+            "name": "validate_previdenza_inps_review",
             "arguments": {
                 "run_intake": run_intake,
                 "review_payload": _review_payload(run_id),
             },
+        },
+    }
+    process.stdin.write(json.dumps(validate_request) + "\n")
+    process.stdin.flush()
+    validated = json.loads(process.stdout.readline())["result"]["structuredContent"]
+    token = validated["review_reference"]["persistence_token"]
+    assert "review_payload" not in validated
+
+    render_request = {
+        "jsonrpc": "2.0",
+        "id": 2,
+        "method": "tools/call",
+        "params": {
+            "name": "render_previdenza_inps_review",
+            "arguments": {"persistence_token": token},
         },
     }
     process.stdin.write(json.dumps(render_request) + "\n")
@@ -2371,13 +2387,12 @@ def test_previdenza_inps_mcp_render_token_can_persist_in_same_session(
 
     save_request = {
         "jsonrpc": "2.0",
-        "id": 2,
+        "id": 3,
         "method": "tools/call",
         "params": {
             "name": "save_previdenza_inps_decisions",
             "arguments": {
-                "run_intake": rendered["run_intake"],
-                "review_payload": rendered["review_payload"],
+                "persistence_token": token,
                 "decisions": [{"item_id": "audit-package", "action": "accept"}],
             },
         },

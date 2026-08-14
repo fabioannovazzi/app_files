@@ -57,3 +57,9 @@ Review:
 
 - `avviso/avviso_intake_memo.md`
 - `avviso/deadlines_and_amounts.csv`
+
+For persisted Model review, validate once and reuse the returned opaque review
+reference for render, save, and apply. Do not resend `review_payload.json`
+merely to carry state. Routine high-confidence inventory rows omit extracted
+text previews after deterministic mapping; exception rows retain a bounded
+preview, and every row keeps its exact local source reference.

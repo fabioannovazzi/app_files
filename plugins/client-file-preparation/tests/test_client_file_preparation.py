@@ -2094,14 +2094,25 @@ def test_client_file_preparation_hosted_mcp_render_save_apply_is_path_private(
         return json.loads(response_line)
 
     try:
-        render_response = call_tool(
+        validate_response = call_tool(
             1,
-            "render_client_file_preparation_review",
+            "validate_client_file_preparation_review",
             {
                 "client_engagement": str(client_engagement),
                 "run_intake": run_intake,
                 "review_payload": review_payload,
                 "final_artifacts": final_artifacts,
+            },
+        )
+        validated = validate_response["result"]["structuredContent"]
+        persistence_token = validated["review_reference"]["persistence_token"]
+        assert "review_payload" not in validated
+        assert private_required_text[0] not in json.dumps(validate_response)
+        render_response = call_tool(
+            2,
+            "render_client_file_preparation_review",
+            {
+                "persistence_token": persistence_token,
             },
         )
         rendered = render_response["result"]["structuredContent"]

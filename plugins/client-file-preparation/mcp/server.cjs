@@ -240,7 +240,7 @@ function toolDefinitions() {
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
     },
-    ["review_payload"],
+    [],
   );
   const decisionSchema = objectSchema(
     {
@@ -277,7 +277,7 @@ function toolDefinitions() {
           "Stable professional or account reference. A real professional name is allowed. Required before a complete review can become final_ready; do not enter credentials, session material, or raw local paths.",
       },
     },
-    ["review_payload", "decisions"],
+    ["decisions"],
   );
   return [
     {
@@ -679,6 +679,7 @@ function buildUiDecisions(inputArgs) {
 }
 
 function saveDecisionPayload(inputArgs) {
+  inputArgs = inputArgsWithReviewReference(inputArgs);
   const { uiDecisions } = buildUiDecisions(inputArgs);
   const reviewPayload = validateReviewPayload(inputArgs).review_payload;
   const persistentInputArgs = inputArgsWithPersistentOutput(inputArgs, reviewPayload);
@@ -1418,6 +1419,8 @@ function issuePersistenceToken(inputArgs, reviewPayload) {
   reservePersistenceContextSlot();
   const token = crypto.randomBytes(32).toString("base64url");
   PERSISTENCE_CONTEXTS.set(token, {
+    outputDir: persistence.outputDir,
+    clientEngagement: inputArgs.client_engagement,
     outputReference: inputArgs.run_intake.output_dir,
     pathReference: inputArgs.run_intake.path_reference,
     runId: reviewPayload.run_id,
@@ -1425,6 +1428,37 @@ function issuePersistenceToken(inputArgs, reviewPayload) {
     expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
   });
   return token;
+}
+
+function inputArgsWithReviewReference(inputArgs) {
+  if (isPlainObject(inputArgs?.review_payload)) return inputArgs;
+  const token = inputArgs?.persistence_token;
+  if (typeof token !== "string" || !PERSISTENCE_TOKEN_RE.test(token)) {
+    throw new Error("review_payload or a valid persistence_token is required");
+  }
+  pruneExpiredPersistenceContexts();
+  const context = PERSISTENCE_CONTEXTS.get(token);
+  if (!context || context.expiresAt <= Date.now()) {
+    throw new Error("persistence_token is unknown or expired; validate the review again");
+  }
+  const reviewPayload = readJsonFileIfPresent(path.join(context.outputDir, "review_payload.json"));
+  if (!isPlainObject(reviewPayload)
+      || reviewPayload.run_id !== context.runId
+      || canonicalSha256(reviewPayload) !== context.reviewHash) {
+    throw new Error("persistence_token review binding no longer matches the stored package");
+  }
+  return {
+    ...inputArgs,
+    client_engagement: context.clientEngagement,
+    review_payload: reviewPayload,
+    ui_decisions: readJsonFileIfPresent(path.join(context.outputDir, "ui_decisions.json")),
+    final_artifacts: readJsonFileIfPresent(path.join(context.outputDir, "final_artifacts.json")),
+    run_intake: {
+      ...(isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : {}),
+      output_dir: context.outputDir,
+      path_reference: context.pathReference,
+    },
+  };
 }
 
 function inputArgsWithPersistentOutput(inputArgs, reviewPayload) {
@@ -2302,6 +2336,7 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 }
 
 function applyDecisionPayload(inputArgs) {
+  inputArgs = inputArgsWithReviewReference(inputArgs);
   const { uiDecisions } = buildUiDecisions(inputArgs);
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
@@ -2522,6 +2557,13 @@ function applyWorkflowSpecificReviewApplication(
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
     const payload = validateReviewPayload(args);
+    let persistenceToken = null;
+    try {
+      persistenceToken = issuePersistenceToken(args, payload.review_payload);
+    } catch (_error) {
+      // Validation remains read-only and usable for non-persistent previews.
+      // Render/save/apply still fail closed when persistence was requested.
+    }
     return {
       ok: true,
       validation_type: "client_file_preparation_review",
@@ -2529,11 +2571,16 @@ function callTool(name, args = {}) {
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
       message: "New Client · File Preparation review payload is valid. It is safe to call render_client_file_preparation_review once.",
-      review_payload: payload.review_payload,
+      review_reference: persistenceToken ? {
+        persistence_token: persistenceToken,
+        run_id: payload.review_payload.run_id,
+        review_payload_sha256: canonicalSha256(payload.review_payload),
+        expires_in_seconds: Math.floor(PERSISTENCE_CONTEXT_TTL_MS / 1000),
+      } : null,
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return reviewPayloadForWidget(args);
+    return reviewPayloadForWidget(inputArgsWithReviewReference(args));
   }
   if (name === TOOL_NAMES.saveDecisions) {
     return saveDecisionPayload(args);
@@ -2545,8 +2592,15 @@ function callTool(name, args = {}) {
 }
 
 function toolResult(payload, toolName) {
+  const summary = {
+    ok: payload?.ok !== false,
+    run_id: payload?.run_id || payload?.review_payload?.run_id || null,
+    item_count: payload?.item_count ?? payload?.review_payload?.item_count ?? null,
+    status: payload?.status || payload?.application_status || payload?.review_payload?.status || null,
+    message: payload?.message || null,
+  };
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
+    content: [{ type: "text", text: JSON.stringify(summary) }],
     structuredContent: payload,
     isError: false,
   };

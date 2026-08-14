@@ -224,7 +224,7 @@ function toolDefinitions() {
       ui_decisions: { type: "object" },
       final_artifacts: { type: "object" },
     },
-    ["review_payload"],
+    [],
   );
   const decision = objectSchema(
     {
@@ -248,7 +248,7 @@ function toolDefinitions() {
       ui_decisions: { type: "object" },
       final_artifacts: { type: "object" },
     },
-    ["review_payload", "decisions"],
+    ["decisions"],
   );
   return [
     {
@@ -597,6 +597,8 @@ function issuePersistenceToken(args, review) {
   prunePersistenceContexts();
   const token = crypto.randomBytes(32).toString("base64url");
   PERSISTENCE_CONTEXTS.set(token, {
+    outputDir: context.outputDir,
+    clientEngagement: args.client_engagement,
     outputReference: context.storedRun.output_dir,
     pathReference: context.storedRun.path_reference,
     runId: review.run_id,
@@ -604,6 +606,38 @@ function issuePersistenceToken(args, review) {
     expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
   });
   return token;
+}
+
+function argsWithReviewReference(args) {
+  if (isObject(args?.review_payload)) return args;
+  const token = args?.persistence_token;
+  if (typeof token !== "string" || !PERSISTENCE_TOKEN_RE.test(token)) {
+    throw new Error("review_payload or a valid persistence_token is required");
+  }
+  prunePersistenceContexts();
+  const context = PERSISTENCE_CONTEXTS.get(token);
+  if (!context || context.expiresAt <= Date.now()) {
+    throw new Error("persistence_token is unknown or expired; validate the review again");
+  }
+  const reviewPath = path.join(context.outputDir, "review_payload.json");
+  const review = readJson(reviewPath);
+  const reviewHash = sha256Bytes(fs.readFileSync(reviewPath));
+  if (review.run_id !== context.runId || reviewHash !== context.reviewHash) {
+    throw new Error("persistence_token review binding no longer matches the stored package");
+  }
+  return {
+    ...args,
+    client_engagement: context.clientEngagement,
+    review_payload: review,
+    ui_decisions: fs.existsSync(path.join(context.outputDir, "ui_decisions.json"))
+      ? readJson(path.join(context.outputDir, "ui_decisions.json")) : null,
+    final_artifacts: readJson(path.join(context.outputDir, "final_artifacts.json")),
+    run_intake: {
+      ...(isObject(args.run_intake) ? args.run_intake : {}),
+      output_dir: context.outputDir,
+      path_reference: context.pathReference,
+    },
+  };
 }
 
 function resolvePersistenceContext(args, review) {
@@ -780,6 +814,7 @@ function buildUiDecisions(args, review) {
 }
 
 function saveDecisions(args) {
+  args = argsWithReviewReference(args);
   const widget = validateReview(args);
   const review = widget.review_payload;
   const uiDecisions = buildUiDecisions(args, review);
@@ -814,6 +849,7 @@ function saveDecisions(args) {
 }
 
 function applyDecisions(args) {
+  args = argsWithReviewReference(args);
   const widget = validateReview(args);
   const review = widget.review_payload;
   const uiDecisions = buildUiDecisions(args, review);
@@ -945,6 +981,12 @@ function applyDecisions(args) {
 function callTool(name, args) {
   if (name === TOOL_NAMES.validate) {
     const payload = validateReview(args);
+    let persistenceToken = null;
+    try {
+      persistenceToken = issuePersistenceToken(args, payload.review_payload);
+    } catch (_error) {
+      // Keep pure validation available when no valid persisted package exists.
+    }
     return {
       ok: true,
       validation_type: "registro_imprese_sari_review",
@@ -953,10 +995,16 @@ function callTool(name, args) {
       message: payload.review_payload.language === "es"
         ? `Los datos son válidos. Puede llamar a ${TOOL_NAMES.render}.`
         : `Payload valido. È possibile chiamare ${TOOL_NAMES.render}.`,
-      review_payload: payload.review_payload,
+      review_reference: persistenceToken ? {
+        persistence_token: persistenceToken,
+        run_id: payload.review_payload.run_id,
+        review_payload_sha256: sha256Bytes(fs.readFileSync(path.join(PERSISTENCE_CONTEXTS.get(persistenceToken).outputDir, "review_payload.json"))),
+        expires_in_seconds: Math.floor(PERSISTENCE_CONTEXT_TTL_MS / 1000),
+      } : null,
     };
   }
   if (name === TOOL_NAMES.render) {
+    args = argsWithReviewReference(args);
     const payload = validateReview(args);
     const persistenceToken = issuePersistenceToken(args, payload.review_payload);
     return {
@@ -971,8 +1019,15 @@ function callTool(name, args) {
 }
 
 function toolResult(payload, name) {
+  const summary = {
+    ok: payload?.ok !== false,
+    run_id: payload?.run_id || payload?.review_payload?.run_id || null,
+    item_count: payload?.item_count ?? payload?.review_payload?.item_count ?? null,
+    status: payload?.status || payload?.application_status || payload?.review_payload?.status || null,
+    message: payload?.message || null,
+  };
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
+    content: [{ type: "text", text: JSON.stringify(summary) }],
     structuredContent: payload,
     isError: false,
   };
