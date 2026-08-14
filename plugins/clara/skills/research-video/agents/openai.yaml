@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create narrated research videos"
+  short_description: "Turn approved research scenes into grounded narrated MP4s"
+  default_prompt: "Use $research-video to turn my approved ordered research images into a source-faithful 16:9 video with synchronized English voice-over, captions, a reviewable narration script, and validated local artifacts."

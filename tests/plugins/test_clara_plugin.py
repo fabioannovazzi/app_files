@@ -867,7 +867,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.143"
+    assert manifest["version"] == "0.1.144"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -911,6 +911,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "voice-note-transcription-import",
         "voice-led-pptx-correction",
         "one-command-deck-feedback-capture",
+        "narrated-research-video",
         "brand-fit-current-presence-and-owned-catalogue",
         "brand-fit-stored-snapshot-boundary",
         "reporting-engine-direct-chart-analysis",
@@ -929,6 +930,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     assert expected_routes["one-command-deck-feedback-capture"] == (
         "clara:deck-correction"
     )
+    assert expected_routes["narrated-research-video"] == "clara:research-video"
     assert expected_routes["brand-fit-current-presence-and-owned-catalogue"] == (
         "clara:brand-fit"
     )

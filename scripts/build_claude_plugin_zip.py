@@ -295,6 +295,7 @@ CLARA_COWORK_INCLUDED_SKILLS = frozenset(
         "clara",
         "html-deck",
         "reporting-engine",
+        "research-video",
     }
 )
 CLARA_COWORK_OMITTED_SKILLS = frozenset(

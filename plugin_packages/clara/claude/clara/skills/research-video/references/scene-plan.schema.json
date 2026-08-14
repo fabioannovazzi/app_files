@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara-research-video-scene-plan-v1.json",
+  "title": "Clara research video scene plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "title", "language", "scenes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "title": {"type": "string", "minLength": 1, "maxLength": 180},
+    "language": {"const": "en"},
+    "scenes": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "image", "narration", "source_basis"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9][a-z0-9-]{0,63}$"
+          },
+          "image": {"type": "string", "minLength": 1},
+          "foreground_image": {"type": "string", "minLength": 1},
+          "narration": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2500
+          },
+          "motion": {
+            "enum": [
+              "zoom_in",
+              "zoom_out",
+              "pan_left",
+              "pan_right",
+              "static",
+              "layered_parallax"
+            ]
+          },
+          "source_basis": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["reference", "supports"],
+              "properties": {
+                "reference": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                },
+                "supports": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1200
+                }
+              }
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {"motion": {"const": "layered_parallax"}},
+              "required": ["motion"]
+            },
+            "then": {"required": ["foreground_image"]}
+          },
+          {
+            "if": {"required": ["foreground_image"]},
+            "then": {
+              "properties": {"motion": {"const": "layered_parallax"}},
+              "required": ["motion"]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

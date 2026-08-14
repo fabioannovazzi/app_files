@@ -31,7 +31,7 @@ turns validated understanding into working artifacts.
 
 ## Conversation Workflows
 
-Clara keeps six related capabilities separate:
+Clara keeps its specialist workflows separate:
 
 - `interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
@@ -39,6 +39,11 @@ Clara keeps six related capabilities separate:
   preserves the local bundle, and completes transcript attribution and review;
 - `deck-correction` turns spoken or written feedback into reviewed, approved,
   rendered, and verified changes to an existing PPTX or Clara HTML deck.
+- `html-deck` builds or preservation-revises a source-faithful standalone
+  animated HTML presentation with provenance and browser QA.
+- `research-video` turns approved ordered research scenes into a source-faithful
+  16:9 MP4 with synchronized English voice-over, captions, narration review,
+  restrained motion, and mechanical media validation.
 - `attribute-reporting` maps retailer products to the central category
   taxonomy, preserves the established new-versus-rest and
   best-seller-versus-other comparisons, creates a private local HTML report,
@@ -373,6 +378,22 @@ Strict HTML deck browser QA also requires a runnable Chrome or Chromium. The
 dependency checker verifies the Python Playwright binding; it does not install
 or verify a browser executable. On a fresh environment, provide Chrome/Chromium
 or run `playwright install chromium` before browser QA.
+
+## Narrated Research Videos
+
+The `research-video` skill prepares, approves, and renders an ordered set of
+user-approved research images as a 16:9 H.264/AAC MP4. Clara writes and reviews
+English narration against an explicit source basis for every scene. The local
+renderer fingerprints the visual inputs and exact plan, binds approval to those
+bytes, sends only approved narration text to the OpenAI speech endpoint through
+the user's local API key, and assembles the voice-over, captions, poster,
+restrained motion, cross-fades, render report, and final artifact manifest.
+
+Flat images receive pan or zoom motion and are never represented as true
+parallax. Layered parallax is available only when the user supplies an aligned
+transparent foreground PNG and a separate clean background. Mechanical media
+validation does not replace final source-fidelity, pronunciation, legibility,
+and editorial review.
 
 ## Typical Flow
 
