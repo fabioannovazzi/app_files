@@ -20,6 +20,15 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
+        "id": "workflow-operations-and-professional-review",
+        "purpose": "Create and advance the case, collect professional decisions, inspect bounded review surfaces, and identify approved artifacts",
+        "content": "User instructions and model-assembled MCP arguments may contain the legal name, tax identifier, registered office, period and rule configuration used to create the case; the selected local source path or file name and ingestion options; reviewed mapping allocations and amounts; schedules; disclosure answers; narrative blocks; issue decisions; approval declarations; task selectors; and model metadata. Model-visible responses contain compact case, revision, state, period, form, validation and artifact status. Dedicated mapping and questionnaire reads and the ten requested professional-review views return at most 500 structured records per page with exact offset, total and has-more metadata; depending on the requested view these records can include document metadata and source anchors, PDF rows and OCR evidence, account codes, descriptions, current and prior balances, mapping candidates and decisions, taxonomy concepts, statement facts and totals, schedules, questions and answers, accepted facts, narrative and prior text, validation issues, review decisions, approval metadata and artifact checksums. The workpaper read returns approval and snapshot hashes plus an opaque resource identifier and exported-artifact metadata, never the immutable snapshot body, local storage paths or artifact bytes. Source files and case.json are not automatically copied into model context.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
         "id": "annual-accounts-evidence",
         "purpose": "Review accounting meaning, mapping candidates, missing disclosures, schedule evidence, narrative drafts, validation issues, and professional decisions for an Italian OIC annual-accounts case",
         "content": "User instructions; for account mapping, 1 to 50 exact trial-balance rows with account codes, descriptions, current/prior movements and balances, and source references; for pending PDF guidance, at most 20 sample rows, columns, page/table geometry summaries, OCR confidence and extraction issues; for disclosure activation, at most the first 20 accounts by stable case order plus at most 50 exact optional account, canonical-fact or schedule selectors, with value-free catalogues for discovery; direct entity name, tax identifier, registered office, tenant identifier and out-of-band case identifier are excluded from these packets.",
@@ -156,7 +165,7 @@
     },
     {
       "id": "bounded-professional-review-views",
-      "control": "The review-view service authorizes every tenant-scoped read, caps collection pages at 500 records, returns compact preview and artifact resource identifiers rather than file bytes or arbitrary host paths, and excludes the immutable approval snapshot payload from the approval/export view."
+      "control": "The review-view service authorizes every tenant-scoped read, caps collection pages at 500 records, returns compact preview and artifact resource identifiers rather than file bytes or arbitrary host paths, and excludes the immutable approval snapshot payload from the approval/export view. Dedicated mapping and questionnaire reads use the same maximum with explicit pagination. The workpaper read verifies the snapshot hash but returns only approval/hash/resource and exported-artifact metadata, not the snapshot body."
     },
     {
       "id": "authenticated-http-adapter",
@@ -192,9 +201,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-08-10",
+    "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7c998a2eb9968da2c14124698b3d8445a22495e0fe306ee2e5b4c0a37d9026be"
+    "source_fingerprint": "6c633500533bb6b5bce1dc03c119bd8cef37611b097ce1393838c774a2d44b9f"
   }
 }

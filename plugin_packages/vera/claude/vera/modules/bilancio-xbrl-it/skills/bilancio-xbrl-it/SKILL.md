@@ -381,6 +381,12 @@ approval/export surfaces. Page large grids with `offset` and `limit`; never
 replace explicit blockers and open questions with a completion percentage.
 Treat preview, workpaper, and artifact resource identifiers as references, not
 authorization to return local paths or bytes.
+`xbrl_mapping_get_review_packet` and `xbrl_questionnaire_get` likewise return
+at most 500 records with explicit pagination. `xbrl_case_get_workpaper` returns
+only approval/snapshot hashes plus resource and exported-artifact metadata; it
+must never place the immutable snapshot body in model context. Use the targeted
+review views for analysis and a separately authorized artifact grant for the
+complete exported workpaper.
 
 ## Cowork-native Run UX
 

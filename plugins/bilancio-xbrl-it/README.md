@@ -238,6 +238,12 @@ bounded to at most 500 items per request and include explicit pagination
 metadata. The approval view never returns the immutable snapshot payload, and
 preview/export views return resource identifiers and checksums rather than file
 bytes or arbitrary host paths.
+The dedicated mapping and questionnaire reads use the same 500-record maximum
+and explicit pagination. The MCP workpaper read returns only approval and
+snapshot hashes, its opaque resource identifier, and any exported artifact
+metadata; the complete immutable snapshot is not copied into model context.
+Review its contents through the targeted views or issue a separately authorized
+download grant for the exported `workpaper.json`.
 
 Approved export writes the XBRL instance, accessible HTML preview, standalone
 mapping, issue, and validation reports, the complete workpaper, and a final

@@ -272,6 +272,11 @@ Later host-specific instructions in this reference cannot override this rule.
   validation issues, preview/local-XBRL status, and approval/export metadata.
   Large collections are capped per request; approval snapshots, local paths,
   source files, and artifact bytes are not returned by the view tool.
+- Dedicated mapping and questionnaire reads are capped at 500 records with
+  exact pagination. The MCP workpaper read verifies the immutable snapshot hash
+  but returns only approval/hash/resource and exported-artifact metadata; the
+  snapshot body stays out of model context, while every professional review
+  collection remains reachable through the targeted paginated views.
 - An optional FastAPI adapter exposes the specification's case, document,
   ingestion, parser, form, mapping, statement, schedule, question, note,
   validation, approval, export, artifact, audit, review-view, and job resources.

@@ -184,7 +184,13 @@ def _dispatch(
             operation_payload,
         )
     if tool == "xbrl_mapping_get_review_packet":
-        return service.get(context, str(arguments["case_id"]), "mappings")
+        return service.get_collection_page(
+            context,
+            str(arguments["case_id"]),
+            "mappings",
+            offset=int(arguments.get("offset", 0)),
+            limit=int(arguments.get("limit", 200)),
+        )
     if tool == "xbrl_mapping_apply_decisions":
         return _mutation(
             service,
@@ -194,7 +200,13 @@ def _dispatch(
             {"decisions": arguments["decisions"]},
         )
     if tool == "xbrl_questionnaire_get":
-        return service.get(context, str(arguments["case_id"]), "questions")
+        return service.get_collection_page(
+            context,
+            str(arguments["case_id"]),
+            "questions",
+            offset=int(arguments.get("offset", 0)),
+            limit=int(arguments.get("limit", 200)),
+        )
     if tool == "xbrl_questionnaire_submit":
         return _mutation(
             service,

@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.143"
+    assert manifest["version"] == "0.1.144"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3200,14 +3200,12 @@ def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
 
     assert "OpenAI" not in bilancio_copy
     assert "Anthropic" not in bilancio_copy
-    assert "Codex e Cowork applicano gli stessi limiti" in bilancio_copy
+    assert "Codex e Cowork usano gli stessi strumenti e limiti" in bilancio_copy
+    assert "fino a 50 selettori esatti aggiuntivi complessivi" in bilancio_copy
     assert (
-        "al massimo 50 selettori esatti complessivi per conti, fatti o prospetti"
-        in (bilancio_copy)
-    )
-    assert "il modello non riceve il case.json o i file completi come ripiego" in (
-        bilancio_copy
-    )
+        "Il modello non riceve automaticamente i file sorgente, case.json o lo "
+        "snapshot completo"
+    ) in bilancio_copy
 
 
 SHARED_PRODUCT_PAGE_PATHS = {

@@ -206,6 +206,81 @@ def _summary(case: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _collection_page(
+    resource: str,
+    items: list[Mapping[str, Any]],
+    *,
+    offset: int,
+    limit: int,
+) -> dict[str, Any]:
+    """Return one exact, bounded page from a structured case collection."""
+
+    if isinstance(offset, bool) or offset < 0:
+        raise ValueError("Collection offset must be a non-negative integer")
+    if isinstance(limit, bool) or not 1 <= limit <= 500:
+        raise ValueError("Collection limit must be an integer from 1 to 500")
+    total = len(items)
+    selected = items[offset : offset + limit]
+    return {
+        "resource": resource,
+        "items": [dict(item) for item in selected],
+        "page": {
+            "offset": offset,
+            "limit": limit,
+            "returned": len(selected),
+            "total": total,
+            "has_more": offset + limit < total,
+        },
+    }
+
+
+def _workpaper_reference(case: Mapping[str, Any]) -> dict[str, Any] | None:
+    """Return approval and artifact metadata without the immutable snapshot body."""
+
+    approval = case.get("approval")
+    if not isinstance(approval, Mapping):
+        return None
+    snapshot = approval.get("snapshot")
+    snapshot_hash = str(approval.get("snapshot_hash") or "")
+    if not isinstance(snapshot, Mapping) or not re_full_sha256(snapshot_hash):
+        raise ValueError("Approved workpaper snapshot metadata is invalid")
+    if hashlib.sha256(_canonical_json(snapshot)).hexdigest() != snapshot_hash:
+        raise ValueError("Approved workpaper snapshot integrity check failed")
+    workpaper_artifacts = [
+        {
+            "file_name": str(item["file_name"]),
+            "sha256": str(item["sha256"]),
+            "size_bytes": int(item["size_bytes"]),
+        }
+        for item in case.get("artifacts", [])
+        if isinstance(item, Mapping) and item.get("file_name") == "workpaper.json"
+    ]
+    return {
+        "case_id": case["case_id"],
+        "revision_id": approval.get("revision_id"),
+        "state": case["state"],
+        "approval": {
+            key: approval.get(key)
+            for key in (
+                "snapshot_id",
+                "snapshot_hash",
+                "input_manifest_hash",
+                "approved_by",
+                "approved_at",
+                "declaration",
+            )
+        },
+        "resource_id": f"xbrl-workpaper://{case['case_id']}",
+        "artifact": workpaper_artifacts[0] if workpaper_artifacts else None,
+        "content_returned": False,
+        "review_access": {
+            "tool": "xbrl_case_get_review_view",
+            "max_items_per_page": 500,
+            "repeatable": True,
+        },
+    }
+
+
 class CaseService:
     """File-backed reference service with server-side control enforcement."""
 
@@ -551,6 +626,8 @@ class CaseService:
 
         case = load_case(self._case_dir(context.tenant_id, case_id))
         authorize(context, "READ", case)
+        if resource == "workpaper":
+            return _workpaper_reference(case)
         resources = {
             "case": _summary(case),
             "mappings": case.get("mappings", []),
@@ -570,15 +647,36 @@ class CaseService:
             "artifacts": case.get("artifacts", []),
             "xbrl_review": case.get("xbrl_review"),
             "audit_events": case.get("audit_events", []),
-            "workpaper": (
-                case.get("approval", {}).get("snapshot")
-                if case.get("approval")
-                else None
-            ),
         }
         if resource not in resources:
             raise ValueError(f"Unsupported case resource: {resource}")
         return resources[resource]
+
+    def get_collection_page(
+        self,
+        context: RequestContext,
+        case_id: str,
+        resource: str,
+        *,
+        offset: int = 0,
+        limit: int = 200,
+    ) -> dict[str, Any]:
+        """Read one bounded page from a model-visible structured collection."""
+
+        case = load_case(self._case_dir(context.tenant_id, case_id))
+        authorize(context, "READ", case)
+        collections = {
+            "mappings": case.get("mappings", []),
+            "questions": case.get("questionnaire", []),
+        }
+        if resource not in collections:
+            raise ValueError(f"Unsupported paginated case resource: {resource}")
+        return _collection_page(
+            resource,
+            list(collections[resource]),
+            offset=offset,
+            limit=limit,
+        )
 
     def _artifact_file(
         self,

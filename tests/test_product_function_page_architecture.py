@@ -530,13 +530,15 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         "Le code traite l'intégralité des comptes",
         "Der Code verarbeitet den vollständigen Abschluss",
         "El código procesa todas las cuentas",
-        "da 1 a 50 conti selezionati per la mappatura",
-        "at most 20 rows, columns, geometry summaries",
-        "at most 50 exact selectors in total for accounts, facts, or schedules",
+        "ragione sociale, codice fiscale, sede, periodo e configurazione",
+        "paginated collections return at most 500 records per page",
+        "not the snapshot body, storage paths, or bytes",
+        "1 to 50 accounts for mapping",
+        "the first 20 accounts plus at most 50 exact optional selectors",
         "jusqu'à 50 questions actives",
         "keine automatische Anonymisierung oder Pseudonymisierung",
-        "no recibe case.json ni archivos completos como alternativa",
-        "Codex and Cowork use the same limits",
+        "no recibe automáticamente los archivos fuente, case.json ni el snapshot completo",
+        "Codex and Cowork use the same tools and limits",
     ):
         assert snippet in function_copy
 
