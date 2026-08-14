@@ -156,27 +156,44 @@ def _openai_api_key() -> str:
     raise RuntimeError("Hosted narration provider credentials are unavailable.")
 
 
-def _validate_wav(audio: bytes) -> dict[str, int | float]:
-    """Validate provider output as a finite ordinary WAV file."""
+def _normalize_wav(audio: bytes) -> tuple[bytes, dict[str, int | float]]:
+    """Return finite PCM WAV bytes and mechanically verified media metadata."""
 
     if not audio or len(audio) > MAX_AUDIO_BYTES:
         raise RuntimeError("Hosted narration returned an invalid audio size.")
     try:
         with wave.open(io.BytesIO(audio), "rb") as source:
-            frame_count = source.getnframes()
             frame_rate = source.getframerate()
             channels = source.getnchannels()
             sample_width = source.getsampwidth()
+            compression_type = source.getcomptype()
+            pcm_parts: list[bytes] = []
+            while chunk := source.readframes(65_536):
+                pcm_parts.append(chunk)
     except (OSError, EOFError, wave.Error) as exc:
         raise RuntimeError("Hosted narration returned invalid WAV audio.") from exc
-    if frame_count <= 0 or frame_rate <= 0 or channels not in {1, 2}:
+    if frame_rate <= 0 or channels not in {1, 2} or compression_type != "NONE":
         raise RuntimeError("Hosted narration returned unusable WAV audio.")
     if sample_width not in {1, 2, 3, 4}:
         raise RuntimeError("Hosted narration returned an unsupported WAV sample width.")
+    pcm = b"".join(pcm_parts)
+    bytes_per_frame = channels * sample_width
+    if not pcm or len(pcm) % bytes_per_frame:
+        raise RuntimeError("Hosted narration returned unusable WAV audio.")
+    frame_count = len(pcm) // bytes_per_frame
     duration = frame_count / frame_rate
     if not 0 < duration <= 600:
         raise RuntimeError("Hosted narration returned an unsupported duration.")
-    return {
+    normalized = io.BytesIO()
+    with wave.open(normalized, "wb") as target:
+        target.setnchannels(channels)
+        target.setsampwidth(sample_width)
+        target.setframerate(frame_rate)
+        target.writeframes(pcm)
+    normalized_audio = normalized.getvalue()
+    if len(normalized_audio) > MAX_AUDIO_BYTES:
+        raise RuntimeError("Hosted narration returned an invalid audio size.")
+    return normalized_audio, {
         "frame_count": frame_count,
         "frame_rate": frame_rate,
         "channels": channels,
@@ -219,7 +236,6 @@ def _request_openai_speech(
                 timeout=SPEECH_TIMEOUT_SECONDS,
             ) as response:
                 audio = response.read(MAX_AUDIO_BYTES + 1)
-            _validate_wav(audio)
             return audio
         except urllib.error.HTTPError as exc:
             if exc.code not in TRANSIENT_HTTP_STATUS:
@@ -249,12 +265,12 @@ def _build_bundle(payload: HostedNarrationRequest) -> bytes:
     scene_records: list[dict[str, object]] = []
     generated_audio: list[tuple[str, bytes]] = []
     for index, scene in enumerate(payload.scenes, start=1):
-        audio = _request_openai_speech(
+        raw_audio = _request_openai_speech(
             api_key=api_key,
             language=payload.language,
             narration=scene.narration,
         )
-        media = _validate_wav(audio)
+        audio, media = _normalize_wav(raw_audio)
         filename = f"audio/{index:02d}-{scene.id}.wav"
         scene_records.append(
             {

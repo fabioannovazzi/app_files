@@ -263,6 +263,27 @@ is AI-generated. It produces:
 - `render_report.json` — input hashes, timing, voice, media and validation data;
 - `final_artifacts.json` — final handoff and readiness state.
 
+## Cowork-native Run UX
+
+Use a compact checklist covering dependency readiness, source and visual
+inventory, exact narration review, bound approval, hosted voice attachment,
+local rendering, and final media validation. Before preparation, show a Run
+Intake table with the audience, language, intended duration, ordered scene
+images, source basis, output directory, and missing inputs.
+
+Show a Decision Table only when a missing choice materially changes the scene
+order, narration, visual treatment, destination, or professional-review scope.
+The Default output policy is to prepare the review packet, wait for exact
+approval, attach the authenticated hosted bundle, render locally, and validate
+the final artifacts; these are not choices to propose when the user has already
+requested a complete Research Video run.
+
+End with an Artifact Card linking the MP4, poster, captions, narration script,
+hosted voice manifest, render report, and final artifact manifest. Create
+`run_review.md` only when blocked evidence or a repeated manual correction
+needs a durable developer note. Never edit generated ZIPs or packaged plugin
+copies directly; rebuild them from plugin source.
+
 ### 6. Final semantic review
 
 Watch the complete MP4 and inspect the poster, captions, narration script,
