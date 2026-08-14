@@ -60,6 +60,7 @@ from exploded_variance_bridge_chart import (
     write_exploded_variance_bridge_artifacts,
 )
 from review_session import write_review_session_artifacts, write_run_intake
+from model_use import write_model_use_manifest
 from root_cause_bridge_chart import write_root_cause_bridge_png
 from root_cause_client_report import write_root_cause_client_report
 from total_by_dimension_bridge_chart import (
@@ -1605,6 +1606,22 @@ def inspect_variance_inputs(
         input_path, df, language=language, existing_recipe=existing_recipe
     )
     mappings = recipe["mappings"]
+    candidate_columns = list(
+        dict.fromkeys(
+            value
+            for value in (
+                mappings.get("period_column"),
+                mappings.get("amount_column"),
+                mappings.get("units_column"),
+                mappings.get("discount_column"),
+                mappings.get("cogs_column"),
+                mappings.get("date_column"),
+                *(mappings.get("dimensions") or []),
+                *(mappings.get("calculation_grain") or []),
+            )
+            if isinstance(value, str) and value in columns
+        )
+    )
     source_file = _source_reference(input_path, client_engagement)
     if client_engagement is not None:
         recipe["source_file"] = source_file
@@ -1623,7 +1640,13 @@ def inspect_variance_inputs(
         "available_analysis_context": available_analysis_context(df),
         "period_values": period_values(df, mappings.get("period_column")),
         "suggested_mappings": mappings,
-        "sample_rows": df.head(10).to_dicts(),
+        "sampled_columns": candidate_columns,
+        "omitted_sample_columns": [
+            column for column in columns if column not in candidate_columns
+        ],
+        "sample_row_limit": 10,
+        "sample_behavior": "first_rows_candidate_columns_only",
+        "sample_rows": df.select(candidate_columns).head(10).to_dicts(),
         "warnings": inspection_warnings(df, mappings),
     }
     warn_if_output_dir_has_existing_files(output_dir, "Inspection")
@@ -4834,6 +4857,7 @@ def run_variance_analysis(
     artifact_mode = _normalize_artifact_mode(artifact_mode)
     try:
         df = read_table(input_path)
+        source_population_rows = df.height
         recipe = build_recipe(input_path, df, language=language)
         existing_recipe = None
         if recipe_path:
@@ -5434,10 +5458,31 @@ def run_variance_analysis(
             _relative_artifact_path(standard_context_path, output_dir)
         ] = "written"
         write_json(output_dir / "variance_audit.json", audit)
+        default_model_paths = [
+            output_dir / "variance_results.csv",
+            output_dir / "variance_summary.md",
+            output_dir / "used_recipe.json",
+            prepared_manifest_path,
+            standard_context_path,
+            *(Path(path) for path in artifact_paths),
+        ]
+        model_use_manifest_path = write_model_use_manifest(
+            input_path=input_path,
+            output_dir=output_dir,
+            recipe=recipe,
+            recipe_path=output_dir / "used_recipe.json",
+            source_population_rows=source_population_rows,
+            in_scope_rows=df.height,
+            default_artifact_paths=default_model_paths,
+        )
+        audit["outputs"][
+            _relative_artifact_path(model_use_manifest_path, output_dir)
+        ] = "written"
         artifact_paths = [
             *artifact_paths,
             str(prepared_manifest_path),
             str(standard_context_path),
+            str(model_use_manifest_path),
         ]
         review_session = write_review_session_artifacts(
             output_dir,

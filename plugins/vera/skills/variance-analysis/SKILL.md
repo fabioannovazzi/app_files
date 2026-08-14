@@ -85,11 +85,18 @@ whose data contract is unavailable. Interpret structured contexts and CSV/JSON
 results before chart pixels, and visually inspect every generated chart for
 labels, sign direction, clipping, legibility, and reconciliation.
 
-Validate and render `review_payload.json` with the module MCP tools. For a
-managed run, include the current absolute `client_engagement` context in
-validate, render, save, and apply calls so persistence resolves the portable
-`run_root_relative` output reference. Save reviewer decisions, apply them, and
-use `final_artifacts.json` as the reviewed handoff.
+Read `model_use_manifest.json` before opening mapped results and contexts. Use
+the complete source only through the module's exact-filter drilldown when a
+specific professional question remains unresolved; the deterministic engine
+still calculates every selected row.
+
+Validate `review_payload.json` once with the module MCP tools. For a managed
+run, include the current absolute `client_engagement` context in that initial
+call so persistence resolves the portable `run_root_relative` output
+reference. When validation returns a hash-bound local `persistence_token`, use
+it for render, save, and apply instead of resending the full review payload.
+Save reviewer decisions, apply them, and use `final_artifacts.json` as the
+reviewed handoff.
 
 The deterministic report is a visible professional-review draft until
 `accounting_review` records an established perimeter, passing source tie-outs,

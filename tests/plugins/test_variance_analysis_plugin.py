@@ -162,6 +162,20 @@ def _call_mcp_server(messages: list[dict[str, object]]) -> list[dict[str, object
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
 
 
+def _node_binary() -> str:
+    node = shutil.which("node")
+    if node is not None:
+        return node
+    candidates = sorted(
+        (Path.home() / ".cache" / "codex-runtimes").glob(
+            "*/dependencies/node/bin/node"
+        )
+    )
+    if not candidates:
+        pytest.skip("Node.js is required to exercise the Variance Analysis MCP server.")
+    return candidates[-1].as_posix()
+
+
 def _write_sales_fixture(path: Path) -> None:
     df = pl.DataFrame(
         {
@@ -719,6 +733,230 @@ def test_variance_mcp_localizes_spanish_success_and_error_messages() -> None:
     assert "debe coincidir" in failure["error"]
 
 
+def test_variance_model_use_keeps_full_calculation_and_targets_source_drilldown(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    input_path = tmp_path / "sales.csv"
+    output_dir = tmp_path / "variance"
+    _write_sales_fixture(input_path)
+
+    result = core.run_variance_analysis(
+        input_path,
+        output_dir,
+        language="en",
+        artifact_mode="data_only",
+        waterfall_chart=False,
+        waterfall_small_multiples=False,
+        root_cause_bridge=False,
+        root_cause_bridge_alternative_sweep=False,
+        total_by_dimension_bridge=False,
+        exploded_variance_bridge=False,
+    )
+
+    manifest = json.loads(
+        (output_dir / "model_use_manifest.json").read_text(encoding="utf-8")
+    )
+    assert manifest["source_population"]["source_input_rows"] == 4
+    assert manifest["source_population"]["in_scope_rows"] == 4
+    assert "source_file" not in manifest["source_population"]
+    assert "source_columns" not in manifest["source_population"]
+    assert "unmapped_columns" not in manifest["semantic_boundary"]
+    assert len(manifest["semantic_boundary"]["recipe_snapshot"]["sha256"]) == 64
+    assert manifest["default_model_use"]["raw_source_rows_included"] is False
+    assert result.frame.height > 0
+    assert "variance_results.csv" in {
+        artifact["path"] for artifact in manifest["default_model_use"]["artifacts"]
+    }
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "model_use.py"),
+            "--manifest",
+            str(output_dir / "model_use_manifest.json"),
+            "--input",
+            str(input_path),
+            "--recipe",
+            str(output_dir / "used_recipe.json"),
+            "--reason",
+            "Check the complete mapped source evidence for product A.",
+            "--where",
+            "product=A",
+            "--column",
+            "period",
+            "--column",
+            "sales",
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    drilldown_result = json.loads(completed.stdout)
+    drilldown = json.loads(
+        Path(drilldown_result["artifact_path"]).read_text(encoding="utf-8")
+    )
+    assert drilldown["full_source_rows_scanned_locally"] == 4
+    assert drilldown["in_scope_rows_scanned_locally"] == 4
+    assert drilldown["matched_row_count"] == 2
+    assert {tuple(sorted(row)) for row in drilldown["rows"]} == {
+        ("period", "sales")
+    }
+
+    changed_recipe_path = tmp_path / "changed_recipe.json"
+    changed_recipe = json.loads(
+        (output_dir / "used_recipe.json").read_text(encoding="utf-8")
+    )
+    changed_recipe["options"]["include_percentages"] = not changed_recipe["options"].get(
+        "include_percentages", True
+    )
+    changed_recipe_path.write_text(json.dumps(changed_recipe), encoding="utf-8")
+    rejected = subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "model_use.py"),
+            "--manifest",
+            str(output_dir / "model_use_manifest.json"),
+            "--input",
+            str(input_path),
+            "--recipe",
+            str(changed_recipe_path),
+            "--reason",
+            "Try a different recipe.",
+            "--where",
+            "product=A",
+            "--column",
+            "sales",
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert rejected.returncode == 2
+    assert "reviewed recipe" in rejected.stdout
+
+
+def test_variance_mcp_uses_hash_bound_local_reference_after_validation(
+    tmp_path: Path,
+) -> None:
+    output_dir = tmp_path / "variance"
+    output_dir.mkdir()
+    review_payload = {
+        "schema_version": "1.0",
+        "plugin": "variance-analysis",
+        "workflow": "variance-analysis",
+        "run_id": "variance-private-reference",
+        "review_type": "variance_analysis_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "driver-1",
+                "item_type": "variance_driver",
+                "title": "Private customer movement",
+                "allowed_actions": ["accept", "skip"],
+                "status": "needs_review",
+                "data": {"customer": "PRIVATE-CUSTOMER-ALPHA"},
+            }
+        ],
+    }
+    run_intake = {
+        "schema_version": "1.0",
+        "plugin": "variance-analysis",
+        "workflow": "variance-analysis",
+        "run_id": review_payload["run_id"],
+        "output_dir": str(output_dir),
+    }
+    final_artifacts = {
+        "schema_version": "1.0",
+        "plugin": "variance-analysis",
+        "workflow": "variance-analysis",
+        "run_id": review_payload["run_id"],
+        "outputs": [],
+        "status": "written_pending_review",
+    }
+    (output_dir / "review_payload.json").write_text(
+        json.dumps(review_payload), encoding="utf-8"
+    )
+    (output_dir / "run_intake.json").write_text(
+        json.dumps(run_intake), encoding="utf-8"
+    )
+    (output_dir / "final_artifacts.json").write_text(
+        json.dumps(final_artifacts), encoding="utf-8"
+    )
+
+    process = subprocess.Popen(
+        [_node_binary(), str(MCP_SERVER_PATH), "--stdio"],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+
+    def exchange(message: dict[str, Any]) -> dict[str, Any]:
+        assert process.stdin is not None
+        assert process.stdout is not None
+        process.stdin.write(json.dumps(message) + "\n")
+        process.stdin.flush()
+        return json.loads(process.stdout.readline())
+
+    try:
+        validated = exchange(
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {
+                    "name": "validate_variance_analysis_review",
+                    "arguments": {
+                        "run_intake": run_intake,
+                        "review_payload": review_payload,
+                    },
+                },
+            }
+        )["result"]
+        assert "PRIVATE-CUSTOMER-ALPHA" not in validated["content"][0]["text"]
+        assert "review_payload" not in validated["structuredContent"]
+        reference = validated["structuredContent"]["review_reference"]
+        assert reference["review_payload_sha256"]
+
+        rendered = exchange(
+            {
+                "jsonrpc": "2.0",
+                "id": 2,
+                "method": "tools/call",
+                "params": {
+                    "name": "render_variance_analysis_review",
+                    "arguments": {
+                        "persistence_token": reference["persistence_token"]
+                    },
+                },
+            }
+        )["result"]
+        assert rendered["structuredContent"]["review_payload"] == review_payload
+        assert "PRIVATE-CUSTOMER-ALPHA" not in rendered["content"][0]["text"]
+
+        saved = exchange(
+            {
+                "jsonrpc": "2.0",
+                "id": 3,
+                "method": "tools/call",
+                "params": {
+                    "name": "save_variance_analysis_decisions",
+                    "arguments": {
+                        "persistence_token": reference["persistence_token"],
+                        "decisions": [{"item_id": "driver-1", "action": "accept"}],
+                    },
+                },
+            }
+        )["result"]
+        assert saved["structuredContent"]["persisted"] is True
+        assert "PRIVATE-CUSTOMER-ALPHA" not in saved["content"][0]["text"]
+        assert (output_dir / "ui_decisions.json").is_file()
+    finally:
+        process.terminate()
+        process.wait(timeout=5)
+
+
 def test_variance_plugin_applies_like_for_like_recipe_cohort(tmp_path: Path) -> None:
     core = load_core()
     input_path = tmp_path / "sales.csv"
@@ -1228,6 +1466,7 @@ def test_variance_plugin_inspects_xlsx_dates_and_plan_actual_scenario(
             "Productline": ["R", "R"],
             "Region": ["Australia", "Australia"],
             "Product": ["Bike", "Bike"],
+            "PrivateNote": ["do-not-preview-a", "do-not-preview-b"],
             "Units": [1.0, 1.0],
             "Salesamount": [100.0, 120.0],
             "Discount": [5.0, 6.0],
@@ -1243,6 +1482,12 @@ def test_variance_plugin_inspects_xlsx_dates_and_plan_actual_scenario(
 
     assert inspection.payload["warnings"] == []
     assert inspection_payload["sample_rows"][0]["Orderdate"] == "2024-01-01"
+    assert "PrivateNote" in {
+        column["name"] for column in inspection_payload["columns"]
+    }
+    assert "PrivateNote" in inspection_payload["omitted_sample_columns"]
+    assert "PrivateNote" not in inspection_payload["sampled_columns"]
+    assert all("PrivateNote" not in row for row in inspection_payload["sample_rows"])
     assert recipe_payload["mappings"]["period_column"] == "Scenario"
     assert recipe_payload["mappings"]["baseline_period"] == "PL"
     assert recipe_payload["mappings"]["comparison_period"] == "AC"

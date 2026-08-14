@@ -20,9 +20,27 @@
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
     "classes": [
       {
-        "id": "variance-analysis-evidence",
-        "purpose": "Establish the accounting perimeter, comparison, mappings, source tie-outs, calculated variances, review status, and evidence-supported commentary for a management variance analysis",
-        "content": "User instructions; P&L, trial-balance, management-account, sales, budget, forecast, and prior-period data; entity and consolidation perimeter; accounts, cost centers, departments, products, customers, channels, and other reporting dimensions; periods and scenarios; amounts, units, discounts, COGS, currencies, FX treatment, and sign conventions; mappings and recipes; source totals and tie-outs; materiality supplied by the professional; calculated value and price-volume-mix results; bridge reconciliation; chart data and images; root-cause alternatives and drilldowns; diagnostics, audit records, review decisions, limitations, hypotheses, and final narrative",
+        "id": "variance-analysis-mapping-inspection",
+        "purpose": "Establish the comparison and candidate semantic mapping before calculation",
+        "content": "User instructions; all source column names and types; detected period or scenario values; mapping proposals and warnings; and at most the first 10 rows projected to candidate period, date, amount, units, discount, COGS, reporting-dimension and calculation-grain columns. The complete file is processed locally for inspection; unrelated columns are omitted from the built-in row preview. A separate targeted inspection may show at most 10 rows from no more than 12 explicitly named columns.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "variance-analysis-post-mapping-review",
+        "purpose": "Interpret the reconciled variance from reviewed mappings and complete deterministic calculations",
+        "content": "The complete selected population is calculated locally. The default model context contains mapped variance results, summaries, recipes, prepared-data lineage, standard and root-cause contexts, chart data and images, diagnostics, limitations and hypotheses, but not raw source rows, the original source filename or unmapped column names in the model-use manifest. Exact in-scope source matches can be produced only for a reason-recorded request using reviewed mapped filters and output columns and the exact sealed used-recipe bytes; every exact match is returned without sampling. The review widget payload contains at most the 50 largest driver rows plus artifact and follow-up metadata.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "variance-analysis-review-decisions",
+        "purpose": "Render and record review decisions without repeatedly copying the full review package through MCP calls",
+        "content": "The first validation may receive the bounded review payload. When the stored run package matches, later render, save and apply calls use an expiring local token bound to the review_payload.json hash and run ID. Vera performs no automatic anonymization or pseudonymization.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -55,12 +73,24 @@
     {
       "id": "structured-data-before-chart-review",
       "control": "The workflow requires review of structured result, context, and audit artifacts before chart pixels and treats generated plots as communication and visual-QA artifacts rather than the numerical source of truth."
+    },
+    {
+      "id": "candidate-column-inspection-preview",
+      "control": "The deterministic inspector still reads the complete input but limits its built-in row preview to the first 10 rows of candidate mapped columns; it records omitted column names and provides a separate explicitly named-column helper for unresolved mapping questions."
+    },
+    {
+      "id": "sealed-post-mapping-model-use",
+      "control": "A hash-bound model_use_manifest.json makes mapped results and contexts the default after recipe confirmation and omits the original source filename and unmapped column names. The exact-filter drilldown requires the sealed used-recipe file bytes, reapplies reviewed filters and cohort logic over the complete source locally, allows only mapped columns and returns all exact matches without sampling."
+    },
+    {
+      "id": "hash-bound-review-reference",
+      "control": "The Variance MCP server can issue an expiring in-memory token bound to the stored review payload hash and run ID. Validation returns only a summary and reference; later calls reload and recheck the local package instead of requiring another inline review payload."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-10",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "383ca0abeaad1d9d8b0a3e0904f0e63ba361a134897ea5d923d60c2e0f2649ea"
+    "source_fingerprint": "1f3365fdb114bdde1f03d7d03115475a1f0b247b445021673c443f4d18419001"
   }
 }

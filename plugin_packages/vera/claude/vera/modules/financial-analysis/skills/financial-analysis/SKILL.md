@@ -187,10 +187,33 @@ python scripts/run_pack.py \
    `customer_concentration`, `quality_of_earnings`, `net_debt`,
    `normalized_working_capital`, `capex`, and `deal_bridges`.
 
-   Read `pack_execution_receipt.json`, `reconciliation.json`, and
-   `prepared_evidence_manifest.json`. Stop on a failed reconciliation. The
-   execution receipt binds the exact case, engine, recipe, and output bytes and
-   always keeps `report_ready=false`.
+   Read `model_use_manifest.json`, `pack_execution_receipt.json`,
+   `reconciliation.json`, and `prepared_evidence_manifest.json`. Stop on a
+   failed reconciliation. The execution receipt binds the exact case, engine,
+   recipe, and output bytes and always keeps `report_ready=false`.
+
+   After the reviewed contracts and crosswalks establish the semantic mapping,
+   use the prepared artifacts listed in `model_use_manifest.json` as the
+   default model context. Do not silently reopen every declared source. If a
+   prepared result leaves a specific professional question unresolved,
+   authorize only the named sealed source for that question:
+
+```bash
+python scripts/model_use.py \
+  --manifest <client-run-output>/prepared/model_use_manifest.json \
+  --case <client-run-output>/case.json \
+  --pack <registered-pack-id> \
+  --source-artifact-id <sealed-artifact-id> \
+  --reason <specific-professional-question> \
+  --selector <optional-account-period-or-record-selector> \
+  --client-engagement <client_engagement_path>
+```
+
+   Open only the returned source path for the recorded question. The helper
+   checks the current source bytes against the manifest and writes an
+   idempotent request receipt. This is a workflow-enforced phase boundary, not
+   an operating-system claim that the model cannot access an authorized Studio
+   Archive file. It does not reduce or sample the deterministic pack input.
 4. Create or inspect these versioned case-level JSON contracts:
 
    - `data_package_manifest.json`;
@@ -253,6 +276,8 @@ not decide the transaction.
 
 - the seven contract types listed above;
 - `financial_analysis_contract_audit.json`;
+- `model_use_manifest.json` and any explicitly requested
+  `model_drilldowns/evidence_request_*.json` receipts;
 - pack-specific prepared tables, ledgers, reconciliations, and replay evidence
   only when an implemented deterministic pack produced them;
 - for due-diligence packs, `fdd_result.json`, `fdd_metrics.json`,

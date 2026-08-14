@@ -1,6 +1,7 @@
 "use strict";
 
 const fs = require("node:fs");
+const crypto = require("node:crypto");
 const path = require("node:path");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
@@ -15,6 +16,10 @@ const WIDGET_URI = "ui://widget/variance-analysis-review.html";
 const WIDGET_MIME_TYPE = "text/html;profile=mcp-app";
 const MAX_ITEMS = 2500;
 const MAX_PAYLOAD_BYTES = 2_000_000;
+const PERSISTENCE_CONTEXTS = new Map();
+const MAX_PERSISTENCE_CONTEXTS = 128;
+const PERSISTENCE_CONTEXT_TTL_MS = 4 * 60 * 60 * 1000;
+const PERSISTENCE_TOKEN_RE = /^[A-Za-z0-9_-]{43}$/;
 const TOOL_NAMES = {
   validateReview: "validate_variance_analysis_review",
   renderReview: "render_variance_analysis_review",
@@ -193,11 +198,15 @@ function toolDefinitions() {
         type: "string",
         description: "Current absolute path to the managed Vera run context.json.",
       },
+      persistence_token: {
+        type: "string",
+        description: "Expiring local reference returned by review validation.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional ui_decisions.json object." },
       final_artifacts: { type: "object", description: "Optional final_artifacts.json object." },
     },
-    ["review_payload"],
+    [],
   );
   const decisionSchema = objectSchema(
     {
@@ -220,13 +229,17 @@ function toolDefinitions() {
         type: "string",
         description: "Current absolute path to the managed Vera run context.json.",
       },
+      persistence_token: {
+        type: "string",
+        description: "Expiring local reference returned by review validation.",
+      },
       review_payload: reviewPayload,
       ui_decisions: { type: "object", description: "Optional current ui_decisions.json object." },
       decisions: { type: "array", items: decisionSchema },
       decision_source: { type: "string", description: "Decision source label. Defaults to mcp_widget." },
       reviewer: { type: "string", description: "Optional reviewer name or role." },
     },
-    ["review_payload", "decisions"],
+    ["decisions"],
   );
   return [
     {
@@ -311,6 +324,101 @@ function resourceText(uri) {
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");
+}
+
+function sha256Bytes(value) {
+  return crypto.createHash("sha256").update(value).digest("hex");
+}
+
+function canonicalJson(value) {
+  if (Array.isArray(value)) return `[${value.map((item) => canonicalJson(item)).join(",")}]`;
+  if (isPlainObject(value)) {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${canonicalJson(value[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value);
+}
+
+function prunePersistenceContexts(now = Date.now()) {
+  for (const [token, context] of PERSISTENCE_CONTEXTS.entries()) {
+    if (context.expiresAt <= now) PERSISTENCE_CONTEXTS.delete(token);
+  }
+  while (PERSISTENCE_CONTEXTS.size >= MAX_PERSISTENCE_CONTEXTS) {
+    const oldest = PERSISTENCE_CONTEXTS.keys().next().value;
+    if (oldest == null) break;
+    PERSISTENCE_CONTEXTS.delete(oldest);
+  }
+}
+
+function regularJsonFile(filePath) {
+  const stat = fs.lstatSync(filePath);
+  if (!stat.isFile() || stat.isSymbolicLink()) {
+    throw new Error(`expected a regular JSON file: ${path.basename(filePath)}`);
+  }
+  const bytes = fs.readFileSync(filePath);
+  const value = JSON.parse(bytes.toString("utf8"));
+  if (!isPlainObject(value)) throw new Error(`${path.basename(filePath)} must be an object`);
+  return { value, sha256: sha256Bytes(bytes) };
+}
+
+function issuePersistenceToken(inputArgs, reviewPayload) {
+  const outputDir = resolveRunOutputDir(inputArgs);
+  if (!outputDir) return null;
+  const runIntake = isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null;
+  if (runIntake?.run_id != null && runIntake.run_id !== reviewPayload.run_id) {
+    throw new Error("run_intake.run_id must match review_payload.run_id");
+  }
+  const reviewPath = path.join(outputDir, "review_payload.json");
+  if (!fs.existsSync(reviewPath)) return null;
+  const stored = regularJsonFile(reviewPath);
+  if (
+    stored.value.run_id !== reviewPayload.run_id ||
+    canonicalJson(stored.value) !== canonicalJson(reviewPayload)
+  ) {
+    throw new Error("review_payload does not match the stored run package");
+  }
+  prunePersistenceContexts();
+  const token = crypto.randomBytes(32).toString("base64url");
+  PERSISTENCE_CONTEXTS.set(token, {
+    outputDir,
+    clientEngagement: inputArgs.client_engagement || null,
+    runIntake,
+    runId: reviewPayload.run_id,
+    reviewSha256: stored.sha256,
+    expiresAt: Date.now() + PERSISTENCE_CONTEXT_TTL_MS,
+  });
+  return token;
+}
+
+function argsWithReviewReference(inputArgs) {
+  if (isPlainObject(inputArgs?.review_payload)) return inputArgs;
+  const token = typeof inputArgs?.persistence_token === "string"
+    ? inputArgs.persistence_token.trim()
+    : "";
+  if (!PERSISTENCE_TOKEN_RE.test(token)) {
+    throw new Error("review_payload or a valid persistence_token is required");
+  }
+  prunePersistenceContexts();
+  const context = PERSISTENCE_CONTEXTS.get(token);
+  if (!context || context.expiresAt <= Date.now()) {
+    throw new Error("persistence_token is unknown or expired; validate the review again");
+  }
+  const reviewPath = path.join(context.outputDir, "review_payload.json");
+  const stored = regularJsonFile(reviewPath);
+  if (stored.value.run_id !== context.runId || stored.sha256 !== context.reviewSha256) {
+    throw new Error("persistence_token review binding no longer matches the stored package");
+  }
+  const readOptional = (name) => {
+    const filePath = path.join(context.outputDir, name);
+    return fs.existsSync(filePath) ? regularJsonFile(filePath).value : null;
+  };
+  return {
+    ...inputArgs,
+    client_engagement: context.clientEngagement,
+    run_intake: context.runIntake,
+    review_payload: stored.value,
+    ui_decisions: readOptional("ui_decisions.json"),
+    final_artifacts: readOptional("final_artifacts.json"),
+  };
 }
 
 function requireString(value, fieldPath) {
@@ -1663,6 +1771,7 @@ function preflightClientRun(inputArgs, expectedRunId) {
 function callTool(name, args = {}) {
   if (name === TOOL_NAMES.validateReview) {
     const payload = validateReviewPayload(args);
+    const persistenceToken = issuePersistenceToken(args, payload.review_payload);
     return {
       ok: true,
       validation_type: "variance_analysis_review",
@@ -1670,25 +1779,63 @@ function callTool(name, args = {}) {
       item_count: payload.review_payload.item_count,
       review_type: payload.review_payload.review_type || null,
       message: runtimeCopy(args).validationMessage,
-      review_payload: payload.review_payload,
+      review_reference: persistenceToken
+        ? {
+            persistence_token: persistenceToken,
+            run_id: payload.review_payload.run_id,
+            review_payload_sha256:
+              PERSISTENCE_CONTEXTS.get(persistenceToken)?.reviewSha256 || null,
+            expires_in_seconds: Math.floor(PERSISTENCE_CONTEXT_TTL_MS / 1000),
+          }
+        : null,
     };
   }
   if (name === TOOL_NAMES.renderReview) {
-    return validateReviewPayload(args);
+    const resolvedArgs = argsWithReviewReference(args);
+    const payload = validateReviewPayload(resolvedArgs);
+    const persistenceToken = issuePersistenceToken(
+      resolvedArgs,
+      payload.review_payload,
+    );
+    return {
+      ...payload,
+      persistence_token: persistenceToken || args.persistence_token || null,
+    };
   }
   if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
+    return saveDecisionPayload(argsWithReviewReference(args));
   }
   if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+    return applyDecisionPayload(argsWithReviewReference(args));
   }
   throw new Error(`unknown Variance Analysis widget tool: ${name}`);
 }
 
 function toolResult(payload, toolName) {
+  const summary = {
+    ok: payload?.ok !== false,
+    validation_type: payload?.validation_type || null,
+    run_id: payload?.run_id || payload?.review_payload?.run_id || null,
+    item_count: payload?.item_count ?? payload?.review_payload?.item_count ?? null,
+    decision_count: payload?.decision_count ?? null,
+    status:
+      payload?.status ||
+      payload?.application_status ||
+      payload?.review_payload?.status ||
+      null,
+    persisted: payload?.persisted ?? null,
+    message: payload?.message || null,
+    review_reference: payload?.review_reference || null,
+    persistence_token:
+      toolName === TOOL_NAMES.renderReview ? payload?.persistence_token || null : null,
+    ui_decisions_path: payload?.ui_decisions_path || null,
+    applied_decisions_path: payload?.applied_decisions_path || null,
+    final_artifacts_path: payload?.final_artifacts_path || null,
+  };
   const result = {
-    content: [{ type: "text", text: JSON.stringify(payload) }],
-    structuredContent: payload,
+    content: [{ type: "text", text: JSON.stringify(summary) }],
+    structuredContent:
+      toolName === TOOL_NAMES.validateReview ? summary : payload,
     isError: false,
   };
   if (toolName === TOOL_NAMES.renderReview) result._meta = toolUiMeta(WIDGET_URI, toolName);

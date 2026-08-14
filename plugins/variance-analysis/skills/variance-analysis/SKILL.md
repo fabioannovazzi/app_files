@@ -185,6 +185,21 @@ inspection and execution, and pass an explicit `--currency <ISO-code>` to
 execution.
 
 4. Read `inspection.json` and `suggested_recipe.json`. Summarize columns, periods, suggested mappings, warnings, comparison basis, period comparison style, and missing required choices.
+   The inspection reads the complete file locally, but its built-in ten-row
+   preview contains only candidate mapped columns. If a mapping remains
+   ambiguous, inspect only the named columns needed to resolve it:
+
+```bash
+python scripts/inspect_column_values.py \
+  --input <input-file> \
+  --column <ambiguous-column> \
+  --output <output-dir>/targeted_column_inspection.json \
+  --client-engagement <context.json>
+```
+
+   The targeted helper accepts at most 12 named columns and returns at most the
+   first 10 rows. Do not expand the general inspection preview to every source
+   column.
 5. If a mapping or comparison decision is needed, ask the smallest business question and update the recipe JSON in the work folder yourself.
 6. Run deterministic variance:
 
@@ -202,7 +217,32 @@ The run writes `waterfall.png`, `pvm_decomposition_ladder.png`, root-cause outpu
 
 Chart colors follow the project role-color convention: Plan/Budget/Forecast opening totals are white with a dark outline, prior-period opening totals are grey, Actual/current closing totals are black, positive drivers are green, and negative drivers are red. Reject or regenerate charts that show `PL` as a grey total bar.
 
-7. Review `variance_results.csv`, `variance_audit.json`, `variance_summary.md`, `standard_variance_context.json`, `pvm_decomposition_ladder_context.json`, `exploded_variance_bridge_context.json`, root-cause context files, and small-multiple context/summary files before looking at chart images. Interpret the largest absolute drivers, explain which components reconcile to total delta, explain what changes across PVM calculation depths, explain concentration/spread across small-multiple panels when available, and call out missing mappings or zero-denominator caveats from structured source data. Inspect `waterfall.png`, `pvm_decomposition_ladder.png`, `exploded_variance_bridge.png`, root-cause PNGs, and `waterfall_small_multiples.png` afterward for visual fit; show only the charts that materially support the explanation.
+7. Read `model_use_manifest.json` first, then review its default mapped result,
+   context, lineage, and summary artifacts before chart pixels. Do not reopen
+   the complete source table by default. If a specific professional question
+   cannot be resolved from those prepared artifacts, request exact in-scope
+   source matches using only reviewed mapped columns:
+
+```bash
+python scripts/model_use.py \
+  --manifest <output-dir>/variance/model_use_manifest.json \
+  --input <input-file> \
+  --recipe <output-dir>/variance/used_recipe.json \
+  --reason <specific-professional-question> \
+  --where <mapped-column=exact-value> \
+  --column <needed-mapped-column> \
+  --client-engagement <context.json>
+```
+
+   The helper deterministically reapplies the reviewed filters and cohort,
+   scans the complete source locally, and returns every exact match without
+   sampling. Then review `variance_results.csv`, `variance_audit.json`,
+   `variance_summary.md`, `standard_variance_context.json`,
+   `pvm_decomposition_ladder_context.json`,
+   `exploded_variance_bridge_context.json`, root-cause context files, and
+   small-multiple context/summary files. Interpret the largest absolute
+   drivers, explain reconciliation and caveats, and inspect chart images only
+   afterward for visual fit.
 8. Write `codex_business_analysis.md` in the run output folder. Include an executive read, driver narrative, small-multiples takeaways when available, caveats, and recommended follow-ups. Link it from `codex_run_review.md` when that file exists.
 
 ## MCP Review Handoff
@@ -212,15 +252,19 @@ local MCP widget when the `varianceAnalysisWidgets` server is available:
 
 1. Read `variance/run_intake.json`, `variance/review_payload.json`,
    `variance/ui_decisions.json`, and `variance/final_artifacts.json`.
-2. Call `validate_variance_analysis_review` with the review payload and optional
+2. Call `validate_variance_analysis_review` once with the review payload and optional
    intake/decision/final-artifact objects. For a managed Vera run, include the
    current absolute `client_engagement` context path.
-3. If validation succeeds, call `render_variance_analysis_review` with the same
-   payload so Codex can show the HTML review widget.
+3. If validation returns a `review_reference`, call
+   `render_variance_analysis_review` with its expiring `persistence_token` so
+   the full payload is loaded from the hash-bound local run package instead of
+   being copied into every MCP request. If no reference is available, pass the
+   payload directly.
 4. Use `save_variance_analysis_decisions` to persist reviewer actions to
    `ui_decisions.json`, then `apply_variance_analysis_decisions` to write
    `applied_decisions.json` and update `final_artifacts.json` status. Include
-   `client_engagement` for managed Vera persistence.
+   `client_engagement` for the initial managed validation. The token retains
+   that local binding for later calls in the same MCP server process.
 5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
    based on `review_payload.json`; do not block the deterministic run.
 
@@ -308,6 +352,8 @@ Do not ask the user to edit JSON. Ask in business terms, then Codex updates the 
 - `variance/ui_decisions.json`;
 - `variance/final_artifacts.json`;
 - `variance/standard_variance_context.json`;
+- `variance/model_use_manifest.json` and any explicitly requested
+  `variance/model_drilldowns/source_rows_*.json` artifacts;
 - `variance/pvm_decomposition_ladder_context.json` when units are mapped;
 - `variance/waterfall.png`;
 - `variance/pvm_decomposition_ladder.png`,
