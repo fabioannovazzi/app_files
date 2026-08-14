@@ -4271,10 +4271,22 @@ def test_journal_bank_page_explains_the_bounded_model_data_flow() -> None:
         "model.local.copy",
         "model.index.copy",
         "model.context.copy",
+        "model.residual.title",
+        "model.residual.copy",
         "model.note",
     ):
         assert f'data-journey="{key}"' in page
         assert page.count(f'"{key}":') == 5
+
+    for snippet in (
+        "Solo nel runtime Codex",
+        "Cowork non esegue questo passaggio",
+        "Only in the Codex runtime",
+        "Uniquement dans l’environnement Codex",
+        "Nur in der Codex-Laufzeit",
+        "Solo en el entorno Codex",
+    ):
+        assert snippet in page
 
 
 def test_homepage_routes_journal_bank_reconciliation_through_vera() -> None:
