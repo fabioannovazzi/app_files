@@ -4375,12 +4375,12 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
         "Clara",
         "AI companion for consultants",
         "Assistente AI per consulenti",
-        "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
-        "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+        "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+        "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
         "Available functions",
         "Funzioni disponibili",
-        "Presentations and documents",
-        "Presentazioni e documenti",
+        "Presentations, videos, and documents",
+        "Presentazioni, video e documenti",
         "Interviews and recordings",
         "Interviste e registrazioni",
         "Retail analysis",
@@ -4407,7 +4407,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     assert 'id="data-handling"' not in page
     assert 'id="presentations"' not in page
     assert 'id="videos"' not in page
-    assert page.count('class="function-link"') == 7
+    assert page.count('class="function-link"') == 8
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -4548,8 +4548,8 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
         "Funzioni disponibili",
         "How to use Clara",
         "Come usare Clara",
-        "Clara adds presentations, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
-        "Clara aggiunge a Codex presentazioni, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
+        "Clara adds presentations, narrated research videos, interviews, transcription, documents, retail analysis, and data analysis to Codex.",
+        "Clara aggiunge a Codex presentazioni, video di ricerca narrati, interviste, trascrizione, documenti, analisi retail e analisi dei dati.",
     ):
         assert text in page
     for key in (
@@ -4557,6 +4557,7 @@ def test_clara_public_page_keeps_copy_corrections_in_every_locale() -> None:
         "functions.copy",
         "functions.deliverables",
         "functions.presentations",
+        "functions.researchVideo",
         "functions.documents",
         "functions.research",
         "functions.interviews",
@@ -5051,7 +5052,7 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
     assert 'class="function-directory"' in page
-    assert page.count('class="function-link"') == 7
+    assert page.count('class="function-link"') == 8
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):

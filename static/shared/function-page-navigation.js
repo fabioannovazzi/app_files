@@ -59,11 +59,11 @@
     },
     clara: {
       "area-deliverables": {
-        it: "Presentazioni e documenti",
-        en: "Presentations and documents",
-        fr: "Présentations et documents",
-        de: "Präsentationen und Dokumente",
-        es: "Presentaciones y documentos",
+        it: "Presentazioni, video e documenti",
+        en: "Presentations, videos, and documents",
+        fr: "Présentations, vidéos et documents",
+        de: "Präsentationen, Videos und Dokumente",
+        es: "Presentaciones, vídeos y documentos",
       },
       "area-recordings": {
         it: "Interviste e registrazioni",
@@ -101,6 +101,7 @@
     "clara-documents": [["clara", "area-deliverables"]],
     "clara-interview": [["clara", "area-recordings"]],
     "clara-presentations": [["clara", "area-deliverables"]],
+    "clara-research-video": [["clara", "area-deliverables"]],
     "clara-retailer-signals": [["clara", "area-retail"]],
     "clara-transcribe": [["clara", "area-recordings"]],
     "comunicazione-professionale": [["lucia", "area-studio"], ["vera", "area-outputs"]],

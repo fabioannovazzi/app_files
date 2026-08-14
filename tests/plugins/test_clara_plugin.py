@@ -56,6 +56,11 @@ CLARA_DISCOVERY_TERMS = (
             "Revise presentations from feedback",
             "clara-deck-correction",
         ),
+        (
+            "research-video",
+            "Create narrated research videos",
+            "clara-research-video",
+        ),
     ],
 )
 def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
@@ -83,6 +88,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "interview": "Prepare and conduct interviews",
         "privacy-surface-review": "Review workflow data handling",
         "reporting-engine": "Analyze business data",
+        "research-video": "Create narrated research videos",
         "transcribe": "Transcribe recordings and voice notes",
     }
     cards = json.loads(
@@ -106,6 +112,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "brand-fit",
         "interview",
         "reporting-engine",
+        "research-video",
         "transcribe",
     ):
         assert f'en: "{expected[skill_name]}"' in public_function_source
@@ -115,6 +122,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
     ).read_text(encoding="utf-8")
     public_directory = {
         "functions.presentations": "Create and revise presentations",
+        "functions.researchVideo": expected["research-video"],
         "functions.documents": "Create and revise documents",
         "functions.interviews": expected["interview"],
         "functions.transcription": expected["transcribe"],
