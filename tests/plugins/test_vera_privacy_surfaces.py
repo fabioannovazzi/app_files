@@ -271,6 +271,14 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "Organization technical references are pseudonymized",
     ):
         assert snippet in studio_page
+    for contradictory_exclusion in (
+        "hash e ID di esecuzione grezzi",
+        "raw hashes and execution IDs",
+        "empreintes et ID d’exécution bruts",
+        "rohe Hashes und Ausführungs-IDs",
+        "huellas e ID de ejecución brutos",
+    ):
+        assert contradictory_exclusion not in studio_page
     for snippet in (
         "every snapshot file, not a sample",
         "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
