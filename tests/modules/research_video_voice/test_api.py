@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import struct
 import wave
 import zipfile
 from pathlib import Path
@@ -31,6 +32,16 @@ def _wav_bytes() -> bytes:
         audio.setframerate(16_000)
         audio.writeframes(b"\0\0" * 1_600)
     return output.getvalue()
+
+
+def _streaming_wav_bytes() -> bytes:
+    """Return finite PCM with provider-style unknown RIFF and data sizes."""
+
+    audio = bytearray(_wav_bytes())
+    data_offset = audio.index(b"data")
+    struct.pack_into("<I", audio, 4, 0xFFFFFFFF)
+    struct.pack_into("<I", audio, data_offset + 4, 0xFFFFFFFF)
+    return bytes(audio)
 
 
 def _payload() -> dict[str, object]:
@@ -153,6 +164,36 @@ def test_voice_response_is_a_hash_bound_in_memory_bundle(
     assert manifest["voice"] == "marin"
     assert manifest["approval_sha256"] == "b" * 64
     assert manifest["mparanza_application_retention"] == "in_memory_response_only"
+
+
+def test_hosted_voice_normalizes_streaming_wav_sizes_before_bundle(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("openAiKey", "k" * 32)
+    monkeypatch.setattr(
+        api,
+        "_request_openai_speech",
+        lambda **_kwargs: _streaming_wav_bytes(),
+    )
+    client = _client_for("artifact-test@example.com")
+
+    response = client.post(
+        "/case-notes/api/research-video/voice",
+        json=_payload(),
+        headers={"X-Mparanza-Action": "research-video-voice-v1"},
+    )
+
+    assert response.status_code == 200
+    with zipfile.ZipFile(io.BytesIO(response.content)) as archive:
+        manifest = json.loads(archive.read("manifest.json"))
+        audio = archive.read("audio/01-quadro.wav")
+    data_offset = audio.index(b"data")
+    with wave.open(io.BytesIO(audio), "rb") as normalized:
+        assert normalized.getnframes() == 1_600
+        assert normalized.getframerate() == 16_000
+    assert struct.unpack_from("<I", audio, 4)[0] == len(audio) - 8
+    assert struct.unpack_from("<I", audio, data_offset + 4)[0] == len(audio) - 44
+    assert manifest["scenes"][0]["duration_seconds"] == 0.1
     assert manifest["scenes"][0]["sha256"] == hashlib.sha256(audio).hexdigest()
 
 
