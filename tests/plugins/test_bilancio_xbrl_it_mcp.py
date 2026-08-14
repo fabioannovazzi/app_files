@@ -125,6 +125,24 @@ def test_mcp_lists_complete_vera_facing_tool_contract() -> None:
         if item["name"] == "xbrl_case_enqueue_job"
     )
     assert "ingest_pdf" in queue["inputSchema"]["properties"]["operation"]["enum"]
+    mapping_review = next(
+        item
+        for item in responses[1]["result"]["tools"]
+        if item["name"] == "xbrl_mapping_get_review_packet"
+    )
+    questionnaire = next(
+        item
+        for item in responses[1]["result"]["tools"]
+        if item["name"] == "xbrl_questionnaire_get"
+    )
+    workpaper = next(
+        item
+        for item in responses[1]["result"]["tools"]
+        if item["name"] == "xbrl_case_get_workpaper"
+    )
+    assert mapping_review["inputSchema"]["properties"]["limit"]["maximum"] == 500
+    assert questionnaire["inputSchema"]["properties"]["limit"]["maximum"] == 500
+    assert "never the immutable snapshot body" in workpaper["description"]
 
 
 def test_mcp_create_uses_authenticated_environment_not_payload_tenant(

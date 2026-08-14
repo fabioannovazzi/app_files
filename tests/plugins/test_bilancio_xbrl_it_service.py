@@ -217,6 +217,95 @@ def test_case_service_create_is_tenant_scoped_and_idempotent(tmp_path: Path) -> 
     assert len(idempotency_checksum.strip()) == 64
 
 
+def test_case_service_collection_pages_keep_every_record_reachable(
+    tmp_path: Path,
+) -> None:
+    service = case_service.CaseService(tmp_path / "store")
+    context = _context()
+    service.create(context, _payload(), _rule_pack(), "create_1")
+    case_dir = tmp_path / "store" / "tenant_1" / "case_2025"
+    case = case_service.load_case(case_dir)
+    case["mappings"] = [
+        {"account_id": f"acc_{index:04d}", "decision": "ACCEPTED"}
+        for index in range(525)
+    ]
+    case_service.save_case(case_dir, case)
+
+    first = service.get_collection_page(
+        context, "case_2025", "mappings", offset=0, limit=500
+    )
+    second = service.get_collection_page(
+        context, "case_2025", "mappings", offset=500, limit=500
+    )
+
+    assert first["page"] == {
+        "offset": 0,
+        "limit": 500,
+        "returned": 500,
+        "total": 525,
+        "has_more": True,
+    }
+    assert second["page"]["returned"] == 25
+    assert second["page"]["has_more"] is False
+    assert [
+        item["account_id"] for page in (first, second) for item in page["items"]
+    ] == [f"acc_{index:04d}" for index in range(525)]
+
+
+def test_case_service_workpaper_returns_reference_not_snapshot(
+    tmp_path: Path,
+) -> None:
+    service = case_service.CaseService(tmp_path / "store")
+    context = _context()
+    service.create(context, _payload(), _rule_pack(), "create_1")
+    case_dir = tmp_path / "store" / "tenant_1" / "case_2025"
+    case = case_service.load_case(case_dir)
+    snapshot = {
+        "case_id": case["case_id"],
+        "entity": case["entity"],
+        "trial_balance": {
+            "entries": [
+                {
+                    "account_id": "acc_private",
+                    "account_description": "Private counterparty account",
+                    "closing_signed": "12345.67",
+                }
+            ]
+        },
+    }
+    snapshot_hash = hashlib.sha256(
+        json.dumps(
+            snapshot,
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+    case["approval"] = {
+        "snapshot_id": "snap_0001",
+        "revision_id": case["revision_id"],
+        "snapshot_hash": snapshot_hash,
+        "input_manifest_hash": "b" * 64,
+        "approved_by": "reviewer_1",
+        "approved_at": "2026-08-14T10:00:00+00:00",
+        "declaration": {"evidence_reviewed": True},
+        "snapshot": snapshot,
+    }
+    case_service.save_case(case_dir, case)
+
+    result = service.get(context, "case_2025", "workpaper")
+
+    serialized = json.dumps(result, ensure_ascii=False)
+    assert result["content_returned"] is False
+    assert result["resource_id"] == "xbrl-workpaper://case_2025"
+    assert result["approval"]["snapshot_hash"] == snapshot_hash
+    assert result["review_access"]["max_items_per_page"] == 500
+    assert "snapshot" not in result
+    assert "Rossi S.r.l." not in serialized
+    assert "Private counterparty account" not in serialized
+    assert "12345.67" not in serialized
+
+
 def test_case_service_rejects_tampered_idempotency_record(tmp_path: Path) -> None:
     service = case_service.CaseService(tmp_path / "store")
     context = _context()

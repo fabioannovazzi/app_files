@@ -90,8 +90,15 @@ const TOOLS = [
   {
     name: "xbrl_mapping_get_review_packet",
     title: "Get mapping review packet",
-    description: "Return reviewed mapping records for one authorized case.",
-    inputSchema: objectSchema({ case_id: { type: "string", minLength: 1 } }, ["case_id"]),
+    description: "Return one bounded page of reviewed mapping records for an authorized case.",
+    inputSchema: objectSchema(
+      {
+        case_id: { type: "string", minLength: 1 },
+        offset: { type: "integer", minimum: 0 },
+        limit: { type: "integer", minimum: 1, maximum: 500 },
+      },
+      ["case_id"],
+    ),
   },
   {
     name: "xbrl_mapping_apply_decisions",
@@ -105,8 +112,15 @@ const TOOLS = [
   {
     name: "xbrl_questionnaire_get",
     title: "Get Bilancio questionnaire",
-    description: "Return active structured questions and their evidence reasons.",
-    inputSchema: objectSchema({ case_id: { type: "string", minLength: 1 } }, ["case_id"]),
+    description: "Return one bounded page of structured questions and their evidence reasons.",
+    inputSchema: objectSchema(
+      {
+        case_id: { type: "string", minLength: 1 },
+        offset: { type: "integer", minimum: 0 },
+        limit: { type: "integer", minimum: 1, maximum: 500 },
+      },
+      ["case_id"],
+    ),
   },
   {
     name: "xbrl_questionnaire_submit",
@@ -161,7 +175,8 @@ const TOOLS = [
   {
     name: "xbrl_case_get_workpaper",
     title: "Get Bilancio workpaper",
-    description: "Return the authorized approved workpaper resource, not the XBRL bytes.",
+    description:
+      "Return approval hashes and the authorized workpaper resource reference, never the immutable snapshot body or artifact bytes.",
     inputSchema: objectSchema({ case_id: { type: "string", minLength: 1 } }, ["case_id"]),
   },
   {
