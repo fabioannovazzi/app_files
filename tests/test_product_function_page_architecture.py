@@ -541,6 +541,47 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         assert snippet in function_copy
 
 
+def test_answer_assurance_pages_explain_actual_model_context_bounds() -> None:
+    prompt_page = (SHARED / "prompt-optimizer" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    validator_page = (
+        SHARED / "deep-research-validator" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    assert prompt_page.count('"model.copy":') == 5
+    for snippet in (
+        "l'intero quesito, non un campione",
+        "20 URL, 30 date, 30 anni, 30 importi, 30 percentuali",
+        "No automatic anonymization or pseudonymization is applied",
+        "complete optimized brief, complete site list",
+        "termes de la question ou des faits du dossier",
+        "2.500 elementos o 2 MB",
+        "vier Stunden lang",
+        "legacy or unmanaged packages may still send the payload inline",
+    ):
+        assert snippet in prompt_page
+
+    assert validator_page.count('"model.copy":') == 5
+    for snippet in (
+        "link Markdown e note restano completi",
+        "1.000.001 byte",
+        "every distinct HTTP/S URL extracted from the document may be fetched",
+        "No automatic anonymization or pseudonymization is applied",
+        "the first 750 claim items",
+        "claims_review.json, l'audit et le paquet conservent toutes les affirmations",
+        "2 500 éléments ou 2 Mo",
+        "cuatro horas",
+        "ältere oder nicht verwaltete Pakete",
+    ):
+        assert snippet in validator_page
+
+    for page in (prompt_page, validator_page):
+        model_data_start = page.index('id="model-data"')
+        main_end = page.index("</main>", model_data_start)
+        assert "<section" not in page[model_data_start + 1 : main_end]
+
+
 def test_clara_research_video_has_a_localized_public_explanation() -> None:
     page = (SHARED / "clara-research-video" / "index.html").read_text(encoding="utf-8")
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
