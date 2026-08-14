@@ -22,10 +22,11 @@ CLARA_CLIENT = ROOT / "plugins" / "clara" / "scripts" / "change_requests.py"
 VERA_CLIENT = ROOT / "plugins" / "vera" / "scripts" / "change_requests.py"
 
 
-def load_client() -> Any:
-    spec = importlib.util.spec_from_file_location(
-        "mparanza_plugin_change_requests", CLARA_CLIENT
-    )
+def load_client(
+    client_path: Path = CLARA_CLIENT,
+    module_name: str = "mparanza_plugin_change_requests",
+) -> Any:
+    spec = importlib.util.spec_from_file_location(module_name, client_path)
     assert spec is not None
     assert spec.loader is not None
     module = importlib.util.module_from_spec(spec)
@@ -1682,13 +1683,27 @@ def test_start_interview_does_not_retry_an_injected_opener(
     assert calls == 1
 
 
+@pytest.mark.parametrize(
+    ("client_path", "plugin_name", "display_name"),
+    (
+        (CLARA_CLIENT, "clara", "Clara"),
+        (VERA_CLIENT, "vera", "Vera"),
+    ),
+)
 def test_check_fixed_requests_emits_exact_message_once(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    client_path: Path,
+    plugin_name: str,
+    display_name: str,
 ) -> None:
-    client = load_client()
+    client = load_client(
+        client_path,
+        f"mparanza_{plugin_name}_fixed_notification",
+    )
     stable_root = tmp_path / "stable"
     plugin_data = tmp_path / "plugin-data"
-    plugin_root = write_plugin(tmp_path, "clara")
+    plugin_root = write_plugin(tmp_path, plugin_name)
     request_path = tmp_path / "request.json"
     request_path.write_text(
         json.dumps(problem_report("Wrong total.")), encoding="utf-8"
@@ -1731,7 +1746,7 @@ def test_check_fixed_requests_emits_exact_message_once(
                         "status": "fixed",
                         "fixed": True,
                         "fixed_version": "1.3.0",
-                        "install_url": "https://chatgpt.com/plugins/clara",
+                        "install_url": f"https://chatgpt.com/plugins/{plugin_name}",
                     }
                 ]
             }
@@ -1745,8 +1760,12 @@ def test_check_fixed_requests_emits_exact_message_once(
         base_url="http://localhost:8080",
     )
 
-    assert message == "The problem you reported as CR-123 is fixed. Update now?"
-    stable_state = read_state(stable_root / "clara" / "state.json")
+    assert message == (
+        f"The problem you reported as CR-123 is fixed in {display_name} 1.3.0. "
+        "Update to the published version and try again. If the problem "
+        "continues, report it again and reference CR-123."
+    )
+    stable_state = read_state(stable_root / plugin_name / "state.json")
     explicit_state = read_state(plugin_data / "change-requests" / "state.json")
     assert stable_state == explicit_state
     assert stable_state["requests"][0]["fixed_notified_at"] == 500.0

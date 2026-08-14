@@ -1408,10 +1408,16 @@ def check_fixed_requests(
                     continue
                 disposition = entry.get("disposition")
                 if entry.get("status") == "fixed":
+                    fixed_version = entry.get("fixed_version")
+                    if not isinstance(fixed_version, str) or not fixed_version:
+                        continue
                     entry["fixed_notified_at"] = checked_at
                     notifications.append(
                         f"The problem you reported as {entry['change_request_id']} "
-                        "is fixed. Update now?"
+                        f"is fixed in {plugin_name.title()} {fixed_version}. "
+                        "Update to the published version and try again. If the "
+                        "problem continues, report it again and reference "
+                        f"{entry['change_request_id']}."
                     )
                 elif disposition == "needs_info":
                     question = entry.get("needs_info_question")
