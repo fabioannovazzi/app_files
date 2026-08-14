@@ -3728,22 +3728,24 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
     website_copy = function_copy.split('"presenza-digitale-studio":', 1)[1].split(
         '"apertura-pratica":', 1
     )[0]
-    assert website_copy.count('modelDataStatus: "not-relevant"') == 5
-    assert 'modelDataStatus: "relevant"' not in website_copy
+    assert website_copy.count('modelDataStatus: "relevant"') == 5
+    assert 'modelDataStatus: "not-relevant"' not in website_copy
     for expected_copy in (
-        "Non rilevante per questo processo.",
-        "Il sito e i materiali scelti per costruirlo sono destinati alla pubblicazione.",
-        "Not relevant to this process.",
-        "The website and the materials selected to build it are intended for publication.",
-        "Ce point n’est pas pertinent pour ce processus.",
-        "Le site et les éléments sélectionnés pour le construire sont destinés à être publiés.",
-        "Für diesen Prozess nicht relevant.",
-        "Die Website und die für ihre Erstellung ausgewählten Materialien sind zur Veröffentlichung bestimmt.",
-        "No es relevante para este proceso.",
-        "El sitio web y los materiales seleccionados para crearlo están destinados a publicarse.",
+        "Il modello vede i materiali approvati per il sito",
+        "il modello può leggere per intero le pagine pubbliche catturate e le fonti approvate",
+        "Dopo il brief riceve normalmente i fatti mappati",
+        "Codex usa il modello OpenAI; Cowork usa Anthropic",
+        "The model sees the materials approved for the website",
+        "After the brief, it normally receives the mapped facts",
+        "Le modèle voit les éléments approuvés pour le site",
+        "Après le brief, il reçoit normalement les faits mappés",
+        "Das Modell sieht die für die Website freigegebenen Unterlagen",
+        "Nach dem Briefing erhält es normalerweise die zugeordneten Fakten",
+        "El modelo ve los materiales aprobados para el sitio",
+        "Después del brief, normalmente recibe los hechos mapeados",
     ):
         assert expected_copy in website_copy
-    assert "Nomi, ritratti e altri dati reali destinati al sito" not in website_copy
+    assert "Non rilevante per questo processo." not in website_copy
 
 
 def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -> None:
