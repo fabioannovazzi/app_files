@@ -39,8 +39,11 @@ should make each professional step more intelligent, reviewable, and resumable
 through bounded Claude contributions attached to exact case state.
 
 The unit of intelligence is therefore one task packet, not an autonomous case
-decision. A packet contains bounded, task-oriented reviewed context for one
-semantic job and labels source material as untrusted content. It does not claim
+decision. A packet contains task-allowlisted, reference-closed reviewed context
+for one semantic job, reports included and omitted class counts and bytes, and
+labels source material as untrusted content. It never truncates the first
+arbitrary records: an over-limit closure fails so the model can request an
+explicit, fresh-session expansion. It does not claim
 automatic anonymization or legal data minimization; the professional must judge
 which case facts and excerpts are relevant. A strict response
 can propose guidance or changes, cites only packet evidence, records provider,
@@ -65,6 +68,15 @@ authority.
 - Packet bounding, exact output shape, identifier syntax, reference closure,
   input hashes, and model attribution are deterministic because they are closed
   technical contracts whose reproducibility is required for privacy and audit.
+- Task-specific input allowlists and fresh operator-attested session-reference
+  non-reuse are deterministic because permitted artifact families, ID closure,
+  and equality of opaque references are mechanically verifiable. They do not
+  decide semantic relevance, and the session reference is not provider-
+  authenticated identity.
+- Narrow credential-value patterns are deterministic because passwords, bearer
+  tokens, private keys and live session material have no legitimate grant-
+  analysis purpose. They are not a general personal-data detector and do not
+  remove names, tax identifiers or other professionally relevant facts.
 - The intelligence-output byte limit is deterministic because the case loader
   has a closed artifact-size boundary and must fail before writing an artifact
   that it cannot safely reload; it does not judge semantic relevance.

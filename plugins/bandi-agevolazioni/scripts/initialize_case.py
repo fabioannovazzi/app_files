@@ -205,7 +205,7 @@ def initialize_case(
             files["intelligence"],
             {
                 "schema_version": "1.0",
-                "contract_version": "bandi-intelligence-v1",
+                "contract_version": "bandi-intelligence-v2",
                 "plugin": PLUGIN_NAME,
                 "run_id": run_id,
                 "runs": [],

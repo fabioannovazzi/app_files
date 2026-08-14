@@ -37,10 +37,21 @@
 - Handoff registration revalidates its strict schema, client identity,
   references, source-entry hash and selected-subset hash before accepting it.
 - Eleven bounded semantic task contracts and mechanical next-task orchestration.
-- Bounded task packets that do not copy the intake applicant object or local
-  source paths by default, label evidence as untrusted, prohibit embedded
-  instructions, and disclose that relevant facts or excerpts may identify the
-  applicant without automatic anonymization.
+- Task-specific, reference-closed packets with complete class/byte inventories,
+  explicit omitted counts, no positional truncation, and fail-closed item,
+  excerpt and byte limits with a fresh-session context-expansion route.
+- Packets that do not copy the intake applicant object or local source paths by
+  default, omit project context from source-only tasks, label evidence as
+  untrusted, prohibit embedded instructions, and disclose that relevant facts
+  or excerpts may identify the applicant without automatic anonymization.
+- Required operator-attested model-session references, non-reuse across Stage B
+  contributions, client-isolated radar evidence-mapping sessions, and enforced
+  separation of those mapping references from public-source planning,
+  discovery, and portfolio matching in either direction. The workflow does not
+  claim that the provider authenticates those references.
+- Narrow fail-closed detection of unmistakable passwords, bearer/session tokens,
+  API secrets and private keys in structured model packets and radar proposals;
+  no generic PII classifier or automatic removal of professional identifiers.
 - Strict, reference-closed recommendation output with task-scoped mutation
   permissions.
 - Private `intelligence_register.json` recording exact input hashes, packet hash,

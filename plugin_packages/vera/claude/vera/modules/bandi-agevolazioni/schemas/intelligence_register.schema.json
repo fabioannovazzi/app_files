@@ -7,7 +7,7 @@
   "required": ["schema_version", "contract_version", "plugin", "run_id", "runs"],
   "properties": {
     "schema_version": {"const": "1.0"},
-    "contract_version": {"const": "bandi-intelligence-v1"},
+    "contract_version": {"enum": ["bandi-intelligence-v1", "bandi-intelligence-v2"]},
     "plugin": {"const": "bandi-agevolazioni"},
     "run_id": {"$ref": "#/$defs/id"},
     "runs": {"type": "array", "items": {"$ref": "#/$defs/run"}}
@@ -37,7 +37,9 @@
       "properties": {
         "provider": {"type": "string", "minLength": 1},
         "model": {"type": "string", "minLength": 1},
-        "prompt_template_version": {"type": "string", "minLength": 1}
+        "prompt_template_version": {"type": "string", "minLength": 1},
+        "model_session_ref": {"$ref": "#/$defs/id"},
+        "session_assurance": {"const": "operator_asserted_not_provider_authenticated"}
       }
     },
     "decision": {

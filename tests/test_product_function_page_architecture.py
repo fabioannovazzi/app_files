@@ -4,7 +4,6 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SHARED = ROOT / "static" / "shared"
 PRODUCT_PAGES = {
@@ -26,7 +25,9 @@ def _resolved_page(source: Path, href: str) -> Path:
     return (source.parent / path).resolve()
 
 
-def test_product_pages_are_directories_without_generic_method_or_data_sections() -> None:
+def test_product_pages_are_directories_without_generic_method_or_data_sections() -> (
+    None
+):
     forbidden_ids = ('id="assurance"', 'id="data-boundary"', 'id="data-handling"')
     forbidden_slogans = (
         "Metodo di assurance",
@@ -137,10 +138,10 @@ def test_lucia_and_vera_shared_studio_pages_are_product_neutral() -> None:
         assert "| Vera</title>" not in page
 
     for expected in (
-        'const isShared = page.shared === true;',
+        "const isShared = page.shared === true;",
         'isShared ? "Mparanza" : page.product',
-        'isShared ? ui.sharedRole : ui.productRole(page.product)',
-        'isShared ? text.name : `${page.product} · ${text.name}`',
+        "isShared ? ui.sharedRole : ui.productRole(page.product)",
+        "isShared ? text.name : `${page.product} · ${text.name}`",
     ):
         assert expected in renderer
 
@@ -172,7 +173,10 @@ def test_every_function_page_gets_one_clickable_work_area_breadcrumb() -> None:
         ), f"{destination}: missing breadcrumb loader"
 
     assert 'const areaLink = document.createElement("a");' in navigation
-    assert "areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;" in navigation
+    assert (
+        "areaLink.href = `../${product}/index.html?lang=${currentLanguage}#${area}`;"
+        in navigation
+    )
     assert "breadcrumb.append(areaLink, separator, current);" in navigation
     assert ".function-breadcrumb a" in navigation_css
 
@@ -339,12 +343,10 @@ def test_function_page_menus_use_literal_section_and_destination_labels() -> Non
     for (page_name, key), labels in specific_labels.items():
         page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
         for label in labels:
-            assert re.search(
-                rf'"{re.escape(key)}"\s*:\s*"{re.escape(label)}"', page
-            )
+            assert re.search(rf'"{re.escape(key)}"\s*:\s*"{re.escape(label)}"', page)
         assert re.search(
             rf'data-(?:i18n|journey)="{re.escape(key)}"[^>]*>'
-            rf'{re.escape(labels[0])}</a>',
+            rf"{re.escape(labels[0])}</a>",
             page,
         )
 
@@ -392,7 +394,9 @@ def test_lucia_and_clara_navigation_links_to_their_work_areas() -> None:
     assert "scroll-margin-top: 88px" in clara_css
 
 
-def test_all_product_directories_distinguish_area_headings_from_function_links() -> None:
+def test_all_product_directories_distinguish_area_headings_from_function_links() -> (
+    None
+):
     vera = PRODUCT_PAGES["vera"].read_text(encoding="utf-8")
     lucia_css = (SHARED / "lucia" / "lucia-page.css").read_text(encoding="utf-8")
     clara_css = (SHARED / "clara" / "clara-page.css").read_text(encoding="utf-8")
@@ -416,9 +420,7 @@ def test_product_roots_stop_after_the_function_directory() -> None:
 
 
 def test_shared_navigation_enforces_literal_titles_and_section_labels() -> None:
-    navigation = (SHARED / "function-page-navigation.js").read_text(
-        encoding="utf-8"
-    )
+    navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
 
     for task_name in (
         "Request documents and clarifications from the client",
@@ -450,15 +452,13 @@ def test_shared_navigation_enforces_literal_titles_and_section_labels() -> None:
 
 
 def test_shared_research_pages_are_product_neutral_at_render_time() -> None:
-    navigation = (SHARED / "function-page-navigation.js").read_text(
-        encoding="utf-8"
-    )
+    navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
 
     for expected in (
         'key !== "prompt-optimizer" && key !== "deep-research-validator"',
         "sharedFunctionNouns",
-        'document.title = `${title} | Mparanza`;',
-        'node.textContent.replace(/\\bVera\\b/g, replacement)',
+        "document.title = `${title} | Mparanza`;",
+        "node.textContent.replace(/\\bVera\\b/g, replacement)",
     ):
         assert expected in navigation
 
@@ -496,6 +496,25 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
         assert placeholder in function_copy
 
 
+def test_bandi_page_explains_task_specific_private_model_context() -> None:
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+    bandi_copy = function_copy.split('"bandi-agevolazioni":', 1)[1].split(
+        '"comunicazione-professionale":', 1
+    )[0]
+
+    assert bandi_copy.count('modelDataStatus: "relevant"') == 5
+    for snippet in (
+        "una sessione del modello può leggere soltanto le evidenze cliente selezionate",
+        "fonti pubbliche e il confronto di portafoglio usano una sessione separata",
+        "riferimenti cliente opachi e profili strutturati, non i documenti grezzi",
+        "Nella successiva istruttoria, ogni contributo richiede un nuovo riferimento di sessione",
+        "si ferma e richiede un ampliamento esplicito invece di inviare i primi record",
+        "Non viene applicata anonimizzazione automatica",
+        "non autenticati dal fornitore del modello",
+    ):
+        assert snippet in bandi_copy
+
+
 def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
 
@@ -517,17 +536,11 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
 
 
 def test_clara_research_video_has_a_localized_public_explanation() -> None:
-    page = (SHARED / "clara-research-video" / "index.html").read_text(
-        encoding="utf-8"
-    )
-    function_copy = (SHARED / "product-function-pages.js").read_text(
-        encoding="utf-8"
-    )
+    page = (SHARED / "clara-research-video" / "index.html").read_text(encoding="utf-8")
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
     clara = PRODUCT_PAGES["clara"].read_text(encoding="utf-8")
-    navigation = (SHARED / "function-page-navigation.js").read_text(
-        encoding="utf-8"
-    )
+    navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
     research_video = function_copy.split('"clara-research-video":', 1)[1].split(
         '"clara-retailer-signals":', 1
     )[0]
@@ -587,7 +600,10 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
     assert "pf-model-data" not in renderer
     assert "pf-model-data" not in renderer_css
     assert 'href="../function-model-data.css"' in bank_page
-    assert "grid-template-columns: minmax(240px, 0.75fr) minmax(0, 1.25fr)" in component_css
+    assert (
+        "grid-template-columns: minmax(240px, 0.75fr) minmax(0, 1.25fr)"
+        in component_css
+    )
 
     for page_path in PRODUCT_PAGES.values():
         page = page_path.read_text(encoding="utf-8")
@@ -623,7 +639,9 @@ def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> No
     assert '@import url("./function-page-scale.css")' in shell_css
     assert "var(--function-title-size)" in renderer_css
     assert "var(--function-section-title-size, 2.125rem)" in model_data_css
-    assert 'href="../function-page-scale.css?v=20260813-function-pages"' in studio_archive
+    assert (
+        'href="../function-page-scale.css?v=20260813-function-pages"' in studio_archive
+    )
     assert "clamp(3rem, 7vw, 6rem)" not in renderer_css
     assert "clamp(3.25rem, 7.4vw, 6.8rem)" not in studio_archive
 

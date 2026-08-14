@@ -135,6 +135,14 @@ Register opaque profile evidence receipts first with `record-evidence`; every
 document-observed facet must close to a same-client receipt. Record each
 proposal with exact provider, model, prompt-template and operator provenance
 using `record-profile`, `record-source`, `record-opportunity`, and `record-match`.
+Client-evidence interpretation must use one fresh, operator-attested model
+session reference for that client; code rejects reuse of that reference for a
+different client. Public-source planning, discovery, and portfolio matching
+must run in a separate model session that receives only the opaque profiles and
+public opportunity material, never the clients' raw documents; code rejects
+reuse of a client-evidence mapping session reference in either direction.
+Session references are local provenance, not provider-authenticated session
+identity.
 Record actual source checks separately with
 `record-source-check`; a planned source is not checked merely because it is in
 the plan. Use `record-scan` for resumable monitoring runs and preserve lifecycle
@@ -163,6 +171,7 @@ python scripts/opportunity_radar.py \
   --provider <provider> \
   --model <exact-model> \
   --prompt-template-version bandi-source-selection-v1 \
+  --model-session-ref <fresh-operator-attested-session-ref> \
   --recorded-by <operator>
 
 python scripts/opportunity_radar.py \
@@ -288,17 +297,34 @@ python scripts/link_sources.py \
   --target-source-id CALL-001
 ```
 
-4. Read the selected sources and client evidence. Request one bounded semantic
-   contribution at a time. Create a bounded task packet without mutating the
-   case. The intake applicant object and local paths are not copied by default,
-   but professionally relevant facts and excerpts may still identify the
-   applicant; there is no automatic anonymization:
+4. Request one bounded semantic contribution at a time. Source interpretation
+   and requirement drafting may read only the selected official sources.
+   Evidence mapping may read only the selected client evidence needed to create
+   the structured facts and document map. Every contribution uses a fresh,
+   operator-attested model session reference. Later assessment, cost, form,
+   narrative, consistency, red-flag, authority-simulation, and workflow tasks
+   receive only their task-specific, reference-closed structured packet; they
+   do not reuse the earlier evidence-reading session.
+
+   The packet builder does not truncate the first arbitrary records. It follows
+   exact subject and artifact references, reports included and omitted counts
+   and bytes, and fails closed when the complete closure exceeds its limits.
+   The model must then return `INSUFFICIENT` with a concrete context request;
+   the operator or professional chooses the exact additional subjects and
+   reruns them in another fresh session. Do not silently infer from omitted
+   material or split a holistic consistency/authority review automatically.
+
+   The intake applicant object and local paths are not copied by default, but
+   professionally relevant facts and excerpts may still identify the applicant;
+   there is no automatic anonymization. Create the packet without mutating the
+   case:
 
 ```bash
 python scripts/intelligence_workflow.py \
   --output-dir <run-output> \
   --client-engagement <client_engagement_path> \
-  packet
+  packet \
+  --model-session-ref <fresh-operator-attested-session-ref>
 ```
 
    Record the exact response and exact provider/model/template identity as a
@@ -312,7 +338,8 @@ python scripts/intelligence_workflow.py \
   --model-output <strict-output.json> \
   --provider <provider> \
   --model <exact-model> \
-  --prompt-template-version bandi-intelligence-v1 \
+  --prompt-template-version bandi-intelligence-v2 \
+  --model-session-ref <same-ref-used-to-create-this-packet> \
   --recorded-by <operator> \
   --idempotency-key <stable-request-id>
 ```
@@ -393,7 +420,12 @@ closure, workspace and handoff path binding, review freshness, source-plan
 check ratios, source-registry revision binding, exact query-dimension claim
 closure, query-scoped selection reference closure, temporal-window containment,
 direct-before-semantic execution order, cursor preservation, scan completion
-coverage, chronological lifecycle-history preservation, exact
+coverage, chronological lifecycle-history preservation, task-to-input
+allowlists, reference-closed packet construction, complete packet inventory and
+byte/item limits, non-reuse of operator-attested model-session references across
+Stage B contributions, client-isolated radar mapping-session references,
+separation of radar matching from client-evidence sessions, blocking of
+unmistakable credential/session values, exact
 economic range subtraction from supplied assumptions, the versioned
 `exact_decimal_compare` and `exact_date_compare` rule families after their
 inputs and outcome mapping are professionally confirmed, status invariants,

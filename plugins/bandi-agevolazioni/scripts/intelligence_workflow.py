@@ -17,12 +17,14 @@ from case_core import (
     load_json_object,
     load_running_context,
     prohibited_secret_paths,
+    prohibited_secret_value_paths,
     require_run_artifact,
     safe_identifier,
     write_private_json,
 )
 from intelligence_contract import (
     COLLECTION_ID_FIELDS,
+    CONTRACT_VERSION,
     IntelligenceTask,
     artifact_input_hashes,
     build_intelligence_packet,
@@ -42,6 +44,13 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 DECISIONS = {"accepted", "rejected", "returned"}
 MAX_INTELLIGENCE_OUTPUT_BYTES = 2_000_000
+
+
+def _model_session_ref(value: object) -> str:
+    reference = safe_identifier(value, field="model_session_ref")
+    if len(reference) < 8:
+        raise ValueError("model_session_ref must contain at least 8 characters")
+    return reference
 
 
 def _artifacts(
@@ -72,12 +81,25 @@ def _packet(
     *,
     task: IntelligenceTask | str | None,
     subject_ids: Sequence[str],
+    model_session_ref: str,
 ) -> dict[str, Any]:
     if task is None:
         if subject_ids:
             raise ValueError("subject_ids require an explicit intelligence task")
-        return build_next_intelligence_packet(intake, sources, workbench)
-    return build_intelligence_packet(intake, sources, workbench, task, subject_ids)
+        return build_next_intelligence_packet(
+            intake,
+            sources,
+            workbench,
+            model_session_ref=model_session_ref,
+        )
+    return build_intelligence_packet(
+        intake,
+        sources,
+        workbench,
+        task,
+        subject_ids,
+        model_session_ref=model_session_ref,
+    )
 
 
 def create_intelligence_packet(
@@ -86,9 +108,11 @@ def create_intelligence_packet(
     client_engagement: Path,
     task: IntelligenceTask | str | None = None,
     subject_ids: Sequence[str] = (),
+    model_session_ref: str,
 ) -> dict[str, Any]:
     """Return bounded task context without mutating case state."""
 
+    model_session_ref = _model_session_ref(model_session_ref)
     context = load_running_context(client_engagement, output_dir=output_dir)
     run_id = safe_identifier(context["run_id"], field="run_id")
     output_dir = output_dir.resolve()
@@ -101,13 +125,29 @@ def create_intelligence_packet(
             ("intelligence_register", register),
         ):
             _require_schema(name, payload)
-        return _packet(
+        if any(
+            item.get("model_metadata", {}).get("model_session_ref") == model_session_ref
+            for item in register.get("runs", [])
+            if isinstance(item, Mapping)
+        ):
+            raise ValueError(
+                "model_session_ref was already used; start a fresh model session"
+            )
+        packet = _packet(
             intake,
             sources,
             workbench,
             task=task,
             subject_ids=subject_ids,
+            model_session_ref=model_session_ref,
         )
+        secret_value_paths = prohibited_secret_value_paths(packet, path="packet")
+        if secret_value_paths:
+            raise ValueError(
+                "intelligence packet contains unmistakable credential/session "
+                "material at: " + ", ".join(secret_value_paths)
+            )
+        return packet
 
 
 def record_intelligence(
@@ -120,15 +160,19 @@ def record_intelligence(
     prompt_template_version: str,
     recorded_by: str,
     idempotency_key: str,
+    model_session_ref: str,
     task: IntelligenceTask | str | None = None,
     subject_ids: Sequence[str] = (),
 ) -> dict[str, Any]:
     """Seal a model response as MODEL_SUGGESTED; never apply it implicitly."""
 
+    model_session_ref = _model_session_ref(model_session_ref)
     metadata = {
         "provider": str(provider or "").strip(),
         "model": str(model or "").strip(),
         "prompt_template_version": str(prompt_template_version or "").strip(),
+        "model_session_ref": model_session_ref,
+        "session_assurance": "operator_asserted_not_provider_authenticated",
     }
     if not all(metadata.values()):
         raise ValueError(
@@ -147,6 +191,14 @@ def record_intelligence(
             "model output contains prohibited secret/session fields: "
             + ", ".join(secret_paths)
         )
+    secret_value_paths = prohibited_secret_value_paths(
+        model_output, path="model_output"
+    )
+    if secret_value_paths:
+        raise ValueError(
+            "model output contains unmistakable credential/session material at: "
+            + ", ".join(secret_value_paths)
+        )
     context = load_running_context(client_engagement, output_dir=output_dir)
     run_id = safe_identifier(context["run_id"], field="run_id")
     output_dir = output_dir.resolve()
@@ -158,7 +210,14 @@ def record_intelligence(
             workbench,
             task=task,
             subject_ids=subject_ids,
+            model_session_ref=model_session_ref,
         )
+        packet_secret_paths = prohibited_secret_value_paths(packet, path="packet")
+        if packet_secret_paths:
+            raise ValueError(
+                "intelligence packet contains unmistakable credential/session "
+                "material at: " + ", ".join(packet_secret_paths)
+            )
         normalized = validate_intelligence_output(packet, model_output)
         runs = register.get("runs")
         if not isinstance(runs, list):
@@ -188,6 +247,15 @@ def record_intelligence(
                     "idempotency key was already used for another response"
                 )
             return deepcopy(prior)
+        if any(
+            item.get("model_metadata", {}).get("model_session_ref") == model_session_ref
+            for item in runs
+            if isinstance(item, Mapping)
+        ):
+            raise ValueError(
+                "model_session_ref was already used; start a fresh model session"
+            )
+        register["contract_version"] = CONTRACT_VERSION
         event = {
             "intelligence_run_id": f"INTEL-{len(runs) + 1:06d}",
             "idempotency_key": idempotency_key,
@@ -497,6 +565,7 @@ def main(argv: list[str] | None = None) -> int:
         "--task", choices=[item.value for item in IntelligenceTask]
     )
     packet_parser.add_argument("--subject-id", action="append", default=[])
+    packet_parser.add_argument("--model-session-ref", required=True)
     record_parser = subparsers.add_parser("record")
     record_parser.add_argument("--model-output", required=True, type=Path)
     record_parser.add_argument("--provider", required=True)
@@ -504,6 +573,7 @@ def main(argv: list[str] | None = None) -> int:
     record_parser.add_argument("--prompt-template-version", required=True)
     record_parser.add_argument("--recorded-by", required=True)
     record_parser.add_argument("--idempotency-key", required=True)
+    record_parser.add_argument("--model-session-ref", required=True)
     record_parser.add_argument(
         "--task", choices=[item.value for item in IntelligenceTask]
     )
@@ -522,7 +592,10 @@ def main(argv: list[str] | None = None) -> int:
     }
     if args.command == "packet":
         payload = create_intelligence_packet(
-            **common, task=args.task, subject_ids=args.subject_id
+            **common,
+            task=args.task,
+            subject_ids=args.subject_id,
+            model_session_ref=args.model_session_ref,
         )
     elif args.command == "record":
         payload = record_intelligence(
@@ -533,6 +606,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_template_version=args.prompt_template_version,
             recorded_by=args.recorded_by,
             idempotency_key=args.idempotency_key,
+            model_session_ref=args.model_session_ref,
             task=args.task,
             subject_ids=args.subject_id,
         )

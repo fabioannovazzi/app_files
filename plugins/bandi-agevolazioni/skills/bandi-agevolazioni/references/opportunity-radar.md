@@ -26,6 +26,14 @@ schema enforces only allowed categories, dates, identifiers, provenance and
 review state. A `single_client` radar rejects a second profile; use `portfolio`
 only for an explicitly selected private portfolio scope.
 
+Interpret each client's selected evidence in a client-specific model session.
+The evidence receipt and profile may share that session reference, but code
+rejects its reuse for another client. Run public-source planning, discovery,
+and portfolio matching in a separate session over the opaque profiles and
+public opportunity material; code rejects reuse of any client-evidence mapping
+session reference in either direction. These references are operator-attested
+provenance rather than provider-authenticated session identifiers.
+
 ## Reviewed priority-source registry
 
 The model proposes a source plan from the reviewed profile and jurisdiction.

@@ -158,13 +158,16 @@ def _match(client_ref: str = "CLIENT-001") -> dict[str, object]:
     }
 
 
-def _contribution_args() -> dict[str, str]:
+def _contribution_args(
+    model_session_ref: str = "SESSION-PUBLIC-001",
+) -> dict[str, str]:
     return {
         "origin": "model_suggested",
         "provider": "openai",
         "model": "gpt-test-pinned",
         "prompt_template_version": "bandi-radar-v1",
         "recorded_by": "codex-local",
+        "model_session_ref": model_session_ref,
     }
 
 
@@ -195,19 +198,19 @@ def _record_baseline(
             workspace,
             evidence=_evidence(client_ref),
             idempotency_key=f"evidence-{index}",
-            **_contribution_args(),
+            **_contribution_args(f"SESSION-{client_ref}"),
         )
         radar.record_profile(
             workspace,
             profile=_profile(client_ref),
             idempotency_key=f"profile-{index}",
-            **_contribution_args(),
+            **_contribution_args(f"SESSION-{client_ref}"),
         )
     radar.record_source(
         workspace,
         source=_source(refs),
         idempotency_key="source-1",
-        **_contribution_args(),
+        **_contribution_args("SESSION-SOURCE-001"),
     )
 
 
@@ -221,7 +224,7 @@ def _record_evidence(
         workspace,
         evidence=_evidence(client_ref),
         idempotency_key=key,
-        **_contribution_args(),
+        **_contribution_args(f"SESSION-{client_ref}"),
     )
 
 
@@ -472,10 +475,120 @@ def test_single_client_radar_rejects_a_second_profile(tmp_path: Path) -> None:
             workspace,
             profile=_profile("CLIENT-002"),
             idempotency_key="profile-2",
-            **_contribution_args(),
+            **_contribution_args("SESSION-CLIENT-002"),
+        )
+    assert len(radar.load_validated_radar(workspace)["profiles"]) == 1
+
+
+def test_portfolio_client_mapping_sessions_cannot_cross_clients(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path, scope="portfolio")
+    radar.record_profile_evidence(
+        workspace,
+        evidence=_evidence("CLIENT-001"),
+        idempotency_key="evidence-client-1",
+        **_contribution_args("SESSION-CLIENT-MAP-001"),
+    )
+
+    with pytest.raises(ValueError, match="cannot be reused for another client"):
+        radar.record_profile_evidence(
+            workspace,
+            evidence=_evidence("CLIENT-002"),
+            idempotency_key="evidence-client-2",
+            **_contribution_args("SESSION-CLIENT-MAP-001"),
         )
 
-    assert len(radar.load_validated_radar(workspace)["profiles"]) == 1
+
+def test_portfolio_match_requires_session_separate_from_client_mapping(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path, scope="portfolio")
+    _record_baseline(radar, workspace)
+    radar.record_opportunity(
+        workspace,
+        opportunity=_opportunity(),
+        idempotency_key="opportunity-1",
+        **_contribution_args("SESSION-PUBLIC-OPPORTUNITY"),
+    )
+
+    with pytest.raises(ValueError, match="separate from client-evidence mapping"):
+        radar.record_match(
+            workspace,
+            match=_match(),
+            idempotency_key="match-1",
+            **_contribution_args("SESSION-CLIENT-001"),
+        )
+
+
+def test_public_discovery_sessions_cannot_reuse_client_mapping_sessions(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path, scope="portfolio")
+    radar.record_profile_evidence(
+        workspace,
+        evidence=_evidence("CLIENT-001"),
+        idempotency_key="evidence-client-1",
+        **_contribution_args("SESSION-CLIENT-MAP-001"),
+    )
+
+    with pytest.raises(ValueError, match="separate from client-evidence mapping"):
+        radar.record_source(
+            workspace,
+            source=_source(["CLIENT-001"]),
+            idempotency_key="source-reused-client-session",
+            **_contribution_args("SESSION-CLIENT-MAP-001"),
+        )
+
+
+def test_client_mapping_sessions_cannot_reuse_public_discovery_sessions(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path, scope="portfolio")
+    source = _source()
+    source["profile_refs"] = []
+    radar.record_source(
+        workspace,
+        source=source,
+        idempotency_key="source-public-session",
+        **_contribution_args("SESSION-PUBLIC-DISCOVERY-001"),
+    )
+
+    with pytest.raises(ValueError, match="separate from public discovery"):
+        radar.record_profile_evidence(
+            workspace,
+            evidence=_evidence("CLIENT-001"),
+            idempotency_key="evidence-reused-public-session",
+            **_contribution_args("SESSION-PUBLIC-DISCOVERY-001"),
+        )
+
+
+def test_radar_blocks_unmistakable_credentials_without_generic_pii_redaction(
+    tmp_path: Path,
+) -> None:
+    radar, workspace = _initialized_radar(tmp_path)
+    evidence = _evidence()
+    evidence["description"] = "Codice fiscale 01234567890"
+    radar.record_profile_evidence(
+        workspace,
+        evidence=evidence,
+        idempotency_key="evidence-safe",
+        **_contribution_args("SESSION-CLIENT-SAFE"),
+    )
+    profile = _profile()
+    profile["facets"][0][
+        "value"
+    ] = "Authorization: Bearer abcdefghijklmnopqrstuvwxyz123456"
+
+    with pytest.raises(ValueError, match="unmistakable credential/session"):
+        radar.record_profile(
+            workspace,
+            profile=profile,
+            idempotency_key="profile-secret",
+            **_contribution_args("SESSION-CLIENT-SAFE"),
+        )
+
+    assert radar.load_validated_radar(workspace)["profiles"] == []
 
 
 def test_source_coverage_counts_checked_plan_not_discovery_probability(
@@ -1619,7 +1732,7 @@ def test_confirmed_profile_revision_preserves_history_and_invalidates_match(
         workspace,
         profile=revised,
         idempotency_key="profile-revision",
-        **_contribution_args(),
+        **_contribution_args("SESSION-CLIENT-REVISION-002"),
     )
     current = radar.load_validated_radar(workspace)
 
@@ -1765,6 +1878,8 @@ def test_radar_cli_initializes_records_profile_and_renders_report(
             "bandi-radar-v1",
             "--recorded-by",
             "codex-local",
+            "--model-session-ref",
+            "SESSION-CLI-CLIENT-001",
         ]
     )
     recorded = radar.main(
@@ -1786,6 +1901,8 @@ def test_radar_cli_initializes_records_profile_and_renders_report(
             "bandi-radar-v1",
             "--recorded-by",
             "codex-local",
+            "--model-session-ref",
+            "SESSION-CLI-CLIENT-001",
         ]
     )
     rendered = radar.main(["--workspace", str(workspace), "report"])
@@ -1878,6 +1995,8 @@ def test_radar_cli_executes_source_first_scan_with_coverage_evidence(
                 "bandi-radar-v1",
                 "--recorded-by",
                 "codex-local",
+                "--model-session-ref",
+                "SESSION-CLI-SOURCE-001",
             ]
         )
         == 0
@@ -1960,6 +2079,8 @@ def test_radar_cli_executes_source_first_scan_with_coverage_evidence(
                         "bandi-source-selection-v1",
                         "--recorded-by",
                         "codex-local",
+                        "--model-session-ref",
+                        "SESSION-CLI-SCAN-001",
                     ]
                 )
                 == 0
