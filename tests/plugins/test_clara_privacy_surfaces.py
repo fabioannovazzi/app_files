@@ -286,6 +286,7 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
                 assert boundary["id"] in {
                     "approved-managed-ocr-runtime",
                     "consented-plugin-feedback",
+                    "openai-speech-generation",
                     "send-participant-link",
                 }
 

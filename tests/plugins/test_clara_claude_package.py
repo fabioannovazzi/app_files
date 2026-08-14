@@ -20,6 +20,7 @@ EXPECTED_ROOT_SKILLS = {
     "clara",
     "html-deck",
     "reporting-engine",
+    "research-video",
 }
 
 
@@ -54,8 +55,8 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.143"
-    assert template["version"] == manifest["version"] == "0.1.127"
+    assert source["version"] == "0.1.144"
+    assert template["version"] == manifest["version"] == "0.1.128"
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"
     assert manifest["homepage"].endswith("/clara/index.html?lang=en")
@@ -86,6 +87,7 @@ def test_clara_cowork_retains_specialist_runtime_files(clara_entries) -> None:
         "skills/html-deck/assets/deck-engine/deck.css",
         "skills/html-deck/scripts/build_html_deck.py",
         "skills/html-deck/scripts/validate_html_deck.py",
+        "skills/research-video/scripts/research_video.py",
     }
 
     assert required_runtime_files <= set(clara_entries)
@@ -199,9 +201,10 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
     assert "If the occurred time" in instruction_docs["skills/clara/SKILL.md"]
     assert "submit-problem" in instruction_docs["skills/clara/SKILL.md"]
     assert "Professional capability gap" in instruction_docs["skills/clara/SKILL.md"]
-    assert "Clara workflow: clara:<specialist-skill>" in instruction_docs[
-        "skills/clara/SKILL.md"
-    ]
+    assert (
+        "Clara workflow: clara:<specialist-skill>"
+        in instruction_docs["skills/clara/SKILL.md"]
+    )
     assert "skills/clara/references/workflow-catalog.md" not in clara_entries
     for marker in (
         "ChatGPT",
@@ -247,7 +250,7 @@ def test_marketplace_catalog_contains_configured_plugins(configured_clara) -> No
 
     assert set(entries) == {"clara", "lucia", "vera"}
     assert entries["clara"]["source"] == "./plugin_packages/clara/claude/clara"
-    assert entries["clara"]["version"] == "0.1.127"
+    assert entries["clara"]["version"] == "0.1.128"
     assert entries["clara"]["strict"] is True
     assert "version" not in catalog
     assert builder.verify_package(package) == []

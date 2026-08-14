@@ -56,6 +56,13 @@
       "must_not_route_to": ["clara:interview", "clara:transcribe"]
     },
     {
+      "id": "narrated-research-video",
+      "prompt": "Use Clara to turn these approved ordered research scene images into one 16:9 video with restrained motion, synchronized English voice-over, captions, and a reviewable narration script. Preserve every figure and do not invent claims or visuals.",
+      "required_signals": ["approved ordered research scene images", "16:9 video", "English voice-over", "narration script", "do not invent"],
+      "expected_skill": "clara:research-video",
+      "must_not_route_to": ["clara:html-deck", "clara:transcribe", "clara:deck-correction", "clara:interview"]
+    },
+    {
       "id": "one-command-deck-feedback-capture",
       "prompt": "Clara, record feedback on this deck, open the capture for me, and import it when I finish.",
       "required_signals": ["record feedback", "this deck", "open the capture", "import"],

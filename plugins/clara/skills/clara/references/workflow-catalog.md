@@ -23,6 +23,9 @@ matches the request.
   with fixed-stage rendering, motion, navigation, and browser QA.
 - `interview`: prepare and operate an adaptive hosted external interview,
   including brief selection, participant link, retrieval, and quality review.
+- `research-video`: turn an approved ordered set of research scene images into
+  a source-faithful 16:9 narrated MP4 with restrained motion, synchronized
+  English voice-over, captions, a narration script, and mechanical media QA.
 - `reporting-engine`: review dataset semantics, select meaningful business
   analysis, and prepare deterministic calculations, charts, or reporting
   evidence from CSV, XLSX, or Parquet inputs.
