@@ -6,10 +6,10 @@ meaning, audience value, Studio voice, claims, channel adaptation, and the
 `publish` or `no_publish` recommendation.
 
 When selected prior communications exist, read only the recorded
-`history_pseudonymization_record.json` and the complete pseudonymized document
-paths it binds. Never open raw history snapshots, mechanically stripped model
-inputs, the pseudonymization packet, or the local identity map in this or any
-later model pass. Prior history is not a source of claims or case examples.
+derivative paths listed in `model_task_packet.json`. Never open a history
+record, privacy-assessment record, raw history snapshot, mechanically stripped
+model input, dedicated history packet, local identity map, or either earlier
+model transcript. Prior history is not a source of claims or case examples.
 
 Do not infer semantic support from source registration. Preserve modality,
 dates, exceptions, uncertainty, and professional judgment. For every public

@@ -23,6 +23,14 @@ recorder will keep that mapping outside every downstream model packet. Never
 repeat locally stripped original identifiers, which are not present in this
 session's inputs.
 
+Outside `identity_mapping`, never repeat a contextual original in the
+pseudonymized documents, transformation summaries, residual-risk statements,
+or limitations. Do not introduce a new email address, phone number, tax or
+account identifier, or case number. After local mechanical validation, an
+independent fresh model session will review only the proposed derivatives for
+residual contextual identification risk. Generation remains blocked until that
+separate review is ready.
+
 Prior communications remain style and format evidence only. Their technical
 claims and case facts are not authority for the new communication. If a full
 pseudonymized derivative cannot preserve the style-learning purpose without

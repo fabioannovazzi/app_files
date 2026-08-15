@@ -253,12 +253,16 @@ them without changing the capability catalog:
   detectable emails, phone numbers, tax IDs, account IDs and case numbers. One
   isolated model session receives those stripped documents, produces complete
   pseudonymized derivatives and returns a contextual identity mapping that is
-  kept local. Every downstream model session receives only those derivatives,
-  and contribution recording is blocked until their hashes and separate
-  session are bound. This is pseudonymization rather than anonymization:
+  kept local. A second fresh model session sees only the candidate derivatives
+  and must clear residual contextual identification before generation. The
+  transient stripped inputs are then deleted; originals and the mapping stay
+  local. Generation receives only cleared derivatives. Claim, editorial, and
+  visual sessions receive separate phase-specific packets with no prior
+  communications. Contribution recording is blocked until those controls are
+  bound. This is pseudonymization rather than anonymization:
   contextual identities can reach the first Codex or Cowork model pass and the
   local mapping can permit re-identification.
-  It uses model-led judgment for meaning, authority, audience value, voice,
+  It uses the same mechanics in Codex and Cowork. It uses model-led judgment for meaning, authority, audience value, voice,
   claims, and `publish` versus `no_publish`; deterministic scripts own only
   input snapshots, review freshness, source-ID closure, rendering, and hashes.
   Never turn a schedule into a publication reason, mix studio profiles, copy

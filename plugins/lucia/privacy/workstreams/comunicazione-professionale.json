@@ -1,0 +1,125 @@
+{
+  "schema_version": 3,
+  "workstream": "comunicazione-professionale",
+  "display_name": "Comunicazione professionale",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "prompts",
+    "assets",
+    "evals"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "law-firm-communication-material",
+        "purpose": "Assess whether a development warrants communication and prepare source-backed law-firm drafts for lawyer review",
+        "content": "Lucia uses the same shared mechanics as Vera. The lawyer selects every current source and every optional prior communication; the workflow does not scan the firm's archive or mailbox. There is no internal sampling or row/column cap; every selected supported file is snapshotted and processed in full. Local code replaces mechanically detectable email addresses, phone numbers, tax identifiers, bank-account identifiers and case numbers in selected prior communications. A dedicated first model session sees only those stripped documents and pseudonymizes contextual identities. A fresh second session sees only the candidate derivatives and checks residual identification. Original snapshots and the identity mapping remain local; transient stripped inputs are deleted after acceptance. Generation receives selected current sources and only the cleared derivatives. Claim assurance receives the answer contract, proposed contribution and current sources. Editorial review receives only the contribution and assurance. Visual review receives only accepted copy, the exact manifest and rendered files. Claim, editorial and visual phases receive no prior communications. This is pseudonymization, not anonymization or local-only model processing. Codex and Cowork use identical core workflow controls; only Codex has the optional Creative Production boundary, which receives accepted public slide copy and minimal visual context but no sources or history. Session separation is operator-attested, not a provider-authenticated file sandbox or model-call receipt.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "optional-official-public-research",
+      "kind": "public_research",
+      "destination": "Public official legal, regulatory, bar and issuing-authority sources selected for the communication topic",
+      "purpose": "Locate current authoritative material with generic topic-level queries",
+      "content": "Generic law, authority, instrument, date and topic queries plus selected public source bytes; no client identity, private facts, prior communications, credentials, cookies or session material",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "The intake records exact route selection and destination before preparation.",
+        "Use generic queries and snapshot exact selected public evidence before confirming a claim."
+      ]
+    },
+    {
+      "id": "selected-history-connector",
+      "kind": "external_connector",
+      "destination": "No active destination: connector history intake is blocked",
+      "purpose": "Prevent connected private communications from reaching a calling model before local stripping",
+      "content": "No content is transmitted; the lawyer exports and selects each exact local file",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Preparation fails closed when the history connector is selected.",
+        "The workflow never searches or inspects connected account history."
+      ]
+    },
+    {
+      "id": "optional-creative-production-board",
+      "kind": "hosted_service",
+      "destination": "The exact Creative Production board selected by the lawyer",
+      "purpose": "Compare non-publishable art-direction references after editorial acceptance",
+      "content": "Accepted public slide copy, public source notes and minimal firm visual context; no source bytes, prior communications, client facts, recipient data, credentials or internal IDs",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "The route is used only when explicitly selected and cannot change claims or exact copy.",
+        "Final graphics are rendered and reviewed by the shared deterministic workflow."
+      ]
+    },
+    {
+      "id": "approved-send-or-publication",
+      "kind": "send_or_publish",
+      "destination": "The exact recipient set, account or website selected by the lawyer",
+      "purpose": "Send or publish the exact accepted package",
+      "content": "Accepted copy and attachments plus destination metadata; no credentials, cookies, session tokens, one-time codes or unaccepted drafts",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "controls": [
+        "Require accepted semantic, rendered and packaged scopes plus a successful validation receipt.",
+        "Do not record delivery without visible evidence bound to the exact package."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "selected-history-two-pass-pseudonymization",
+      "control": "The shared recorder validates complete coverage, stable placeholders, normalized identity removal, absence of newly introduced mechanically detectable identifiers, distinct sessions and an independent derivative-only privacy review before generation. It keeps originals and identity mappings local and deletes transient stripped inputs with a digest-bound receipt."
+    },
+    {
+      "id": "phase-specific-model-input-packets",
+      "control": "Claim, editorial and visual phases each use a digest-bound allow-list of exact files and hashes. Their recorders reject missing, stale or changed packets, and every packet excludes prior communications, identity maps and history records."
+    },
+    {
+      "id": "lawyer-profile-and-professional-review",
+      "control": "Lucia's lawyer-specific confidentiality, professional-information, audience and publication profile applies without weakening the shared answer-contract, claim-assurance, editorial, rendering, review, validation or receipt gates."
+    },
+    {
+      "id": "operator-attested-model-separation",
+      "control": "History pseudonymization, history privacy review, generation, claim assurance, editorial assessment, benchmark qualification and visual assessment use distinct host sessions and exact prompt hashes. These are operator attestations, not provider-authenticated call receipts."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-14",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "3488390ce1ddea1e692ab8759fad7f5135d5893709901f714205a96845daef53"
+  }
+}

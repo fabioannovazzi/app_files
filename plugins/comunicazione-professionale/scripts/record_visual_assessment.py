@@ -16,6 +16,7 @@ from workflow_core import (
     recompute_contribution_digest,
     utc_now,
     validate_schema,
+    verify_model_phase_packet,
     verify_visual_manifest,
     verify_visual_preview_manifest,
     workflow_lock,
@@ -54,6 +55,13 @@ def record_visual_assessment(
             if qa_preview
             else verify_visual_manifest(root)
         )
+        phase_packet = verify_model_phase_packet(root, "visual_assessment")
+        if phase_packet.get("render_state") != expected_state:
+            raise ValueError("Visual model phase packet render_state mismatch")
+        if phase_packet.get("manifest_digest") != manifest_digest:
+            raise ValueError(
+                "Visual model phase packet is stale for the current render"
+            )
         if assessment["run_id"] != workbench["run_id"]:
             raise ValueError("Visual assessment run_id does not match contribution")
         if assessment["render_state"] != expected_state:

@@ -1,6 +1,9 @@
 # Professional communication visual assessment v2
 
-In a fresh host session, inspect every exact rendered PNG and every rendered
+In a fresh host session, open only the accepted copy, exact manifest, and exact
+rendered files allowed by the current `visual_assessment` phase packet. Do not
+open current source files, prior communications, history records, identity
+maps, or earlier transcripts. Inspect every exact rendered PNG and every rendered
 document page represented by the current manifest. Compare the carousel with
 the accepted channel copy. Assess information gain, sequence, readability,
 identity placement, public source readability, pagination, clipping, and

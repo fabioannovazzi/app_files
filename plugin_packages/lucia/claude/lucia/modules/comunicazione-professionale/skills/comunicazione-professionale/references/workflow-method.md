@@ -42,9 +42,17 @@ structure and prose, and pseudonymizes or generalizes the contextual identities
 and case facts. Its contextual identity mapping is split into the same local-
 only map when recorded. The mechanical recorder checks exact history-ID
 coverage, input binding, locally inserted placeholder preservation, prompt
-hash, ready status, derivative hashes and session separation; it does not claim
-to verify semantic pseudonymization quality. Every downstream model pass reads
-only the complete recorded pseudonymized derivatives. Direct connector
+hash, normalized reappearance of mapped identities, reintroduced mechanically
+detectable identifiers, ready status, derivative hashes and session separation.
+A second fresh model session then reads only the candidate derivatives and
+checks residual contextual identification without receiving originals, maps,
+stripped inputs, or the first transcript. Generation remains blocked until that
+review is `ready`. Accepted derivatives are promoted; transient stripped inputs
+and the two dedicated history packets are deleted with a digest-bound receipt.
+Raw snapshots and the identity map remain local. Generation reads only the
+complete accepted derivatives. Claim assurance, editorial assessment, and
+visual assessment receive separate exact packets that exclude all selected
+history. Direct connector
 retrieval is unavailable under this contract because its content would enter
 the calling model before local stripping. The professional exports and selects
 exact local files instead; preparation fails closed when the history-connector
@@ -77,8 +85,11 @@ value over the channel copy. Do not record a contribution until this second
 judgment is `ready`. Code verifies the binding and state; it never decides
 interestingness with keywords, scores, or fixed rules.
 
-Run generation, claim assurance, editorial assessment, and visual assessment in
-separate host sessions using the exact bundled versioned prompts. Bind their
+Run history pseudonymization, independent history privacy review, generation,
+claim assurance, editorial assessment, and visual assessment in separate host
+sessions using the exact bundled versioned prompts. Prepare a phase-specific
+packet before claim, editorial, and visual work; open only its allowed inputs.
+Bind their
 session IDs and prompt hashes. These are auditable runtime attestations, not
 provider-authenticated API-call logs.
 

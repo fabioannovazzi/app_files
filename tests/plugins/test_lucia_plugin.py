@@ -83,7 +83,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.14"
+    assert manifest["version"] == "0.1.16"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -179,7 +179,38 @@ def test_lucia_native_matter_opening_privacy_boundary_is_current() -> None:
         manifest["governed_paths"],
         wrapper=LUCIA_ROOT / "skills" / "apertura-pratica" / "SKILL.md",
         vera_root=LUCIA_ROOT,
-        repository_paths=manifest["governed_repository_paths"],
+        repository_paths=manifest.get("governed_repository_paths", []),
+    )
+
+    assert manifest["review"]["source_fingerprint"] == actual
+
+
+def test_lucia_professional_communication_privacy_boundary_is_current() -> None:
+    validator_path = (
+        ROOT
+        / "plugins"
+        / "vera"
+        / "skills"
+        / "privacy-surface-review"
+        / "scripts"
+        / "validate_privacy_surfaces.py"
+    )
+    spec = importlib.util.spec_from_file_location(
+        "lucia_communication_privacy_validator", validator_path
+    )
+    assert spec is not None and spec.loader is not None
+    validator = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = validator
+    spec.loader.exec_module(validator)
+    manifest = _json(
+        LUCIA_ROOT / "privacy" / "workstreams" / "comunicazione-professionale.json"
+    )
+    actual = validator._fingerprint(
+        ROOT / "plugins" / "comunicazione-professionale",
+        manifest["governed_paths"],
+        wrapper=LUCIA_ROOT / "skills" / "comunicazione-professionale" / "SKILL.md",
+        vera_root=LUCIA_ROOT,
+        repository_paths=manifest.get("governed_repository_paths", []),
     )
 
     assert manifest["review"]["source_fingerprint"] == actual
@@ -412,7 +443,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.12"
+        assert manifest["version"] == "0.1.14"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")

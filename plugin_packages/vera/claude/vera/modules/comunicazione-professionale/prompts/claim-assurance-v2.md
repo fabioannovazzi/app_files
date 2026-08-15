@@ -1,7 +1,9 @@
 # Professional communication claim assurance v2
 
+Open only the allowed inputs in the current `claim_assurance` phase packet.
 Review the exact contribution against the exact answer contract and registered
-source snapshots in a fresh host session. Cover every material claim once.
+source snapshots in a fresh host session. Do not open prior communications,
+history records, identity maps, or history-session transcripts. Cover every material claim once.
 Assess source identity, semantic support, reasoning, temporal and modal scope,
 and the professional-judgment boundary separately. Review every answer-contract
 dimension, including the generation instructions. Do not let clean prose cure

@@ -336,6 +336,10 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "downstream_history_requires_complete_pseudonymized_documents": bool(
                         history
                     ),
+                    "independent_derivative_privacy_review_required": bool(history),
+                    "transient_stripped_history_deleted_before_generation": bool(
+                        history
+                    ),
                     "local_identity_map_kept_out_of_model_context": bool(history),
                     "automatic_anonymization_before_selected_runtime": False,
                     "mechanical_identifier_stripping_before_selected_runtime": bool(
@@ -385,6 +389,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
             task_packet = {
                 "schema_version": 1,
                 "workflow": "comunicazione-professionale",
+                "phase": "generation",
                 "run_id": intake["run_id"],
                 "input_digest": input_digest,
                 "objective": intake["objective"],
@@ -439,6 +444,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     for name, filename in {
                         "answer_contract": "answer_contract.schema.json",
                         "history_pseudonymization": "history_pseudonymization.schema.json",
+                        "history_privacy_assessment": "history_privacy_assessment.schema.json",
                         "model_contribution": "model_contribution.schema.json",
                         "claim_assurance": "claim_assurance.schema.json",
                         "editorial_assessment": "editorial_assessment.schema.json",
@@ -452,7 +458,8 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                         "sha256": prompt_template_digest(kind, version),
                     }
                     for kind, (version, path) in PROMPT_TEMPLATES.items()
-                    if kind != "history_pseudonymization"
+                    if kind
+                    not in {"history_pseudonymization", "history_privacy_assessment"}
                 },
                 "instructions": [
                     "Use semantic judgment for topic relevance, source authority, meaning, claims, voice, and no_publish.",
