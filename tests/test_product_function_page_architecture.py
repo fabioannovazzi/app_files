@@ -503,6 +503,11 @@ def test_professional_communication_page_explains_exact_phase_boundaries() -> No
     ].split('"presenza-digitale-studio":', 1)[0]
 
     for snippet in (
+        "Vera e Lucia usano lo stesso nucleo in Codex e Cowork",
+        "Vera and Lucia use the same core in Codex and Cowork",
+        "Vera et Lucia utilisent le même noyau dans Codex et Cowork",
+        "Vera und Lucia verwenden denselben Kern in Codex und Cowork",
+        "Vera y Lucia usan el mismo núcleo en Codex y Cowork",
         "non applica campioni o limiti di righe e colonne",
         "crea una copia completa pseudonimizzata per ogni file",
         "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
