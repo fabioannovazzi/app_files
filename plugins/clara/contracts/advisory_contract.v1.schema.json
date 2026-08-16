@@ -101,6 +101,12 @@
       "uniqueItems": true,
       "items": {"$ref": "#/$defs/id"}
     },
+    "id_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
     "text_list": {
       "type": "array",
       "uniqueItems": true,
@@ -177,8 +183,20 @@
         },
         "text": {"$ref": "#/$defs/text"},
         "source_anchor": {"$ref": "#/$defs/text"},
+        "literal_value": {"$ref": "#/$defs/text"},
         "input_id": {"$ref": "#/$defs/id"}
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {"enum": ["date", "number"]}
+            },
+            "required": ["category"]
+          },
+          "then": {"required": ["literal_value"]}
+        }
+      ]
     },
     "explicit_question": {
       "type": "object",
@@ -206,7 +224,7 @@
           "pattern": "^clara:[a-z0-9-]+$"
         },
         "objective": {"$ref": "#/$defs/text"},
-        "input_ids": {"$ref": "#/$defs/id_list"},
+        "input_ids": {"$ref": "#/$defs/id_list_nonempty"},
         "instructions": {"$ref": "#/$defs/text_list_nonempty"},
         "expected_outputs": {"$ref": "#/$defs/text_list_nonempty"},
         "preserve_specialist_authority": {"const": true}

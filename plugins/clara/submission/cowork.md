@@ -51,10 +51,10 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.136
+- **Version:** 0.1.137
 - **Files:** 845
-- **Bytes:** 4,368,056
-- **SHA-256:** `237d940f43800427bde35e0bb56693e797c32f2adacda327f5d3ebc60c8c4e65`
+- **Bytes:** 4,369,660
+- **SHA-256:** `cf50a14f39adb82503f2dd9f768a1ff23c940816ce0c612609201156e4c78ad1`
 - **ZIP integrity:** clean
 
 The generated directory and exact archive above pass the repository's package

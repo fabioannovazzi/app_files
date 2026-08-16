@@ -14,7 +14,9 @@ import argparse
 import hashlib
 import json
 import logging
+import os
 import re
+import tempfile
 from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
@@ -73,6 +75,8 @@ def load_contract(path: Path) -> dict[str, Any]:
 
     try:
         text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        raise ContractValidationError(f"cannot read {path.name}: {exc}") from exc
     except UnicodeDecodeError as exc:
         raise ContractValidationError(f"{path.name} is not valid UTF-8") from exc
     try:
@@ -207,6 +211,21 @@ def validate_advisory_contract(
         if input_id not in input_ids:
             errors.append(f"{field} references unknown available input {input_id!r}")
 
+    handoff_input_ids = set(handoff["input_ids"])
+    required_handoff_input_ids = {
+        input_id
+        for field, input_id in referenced_inputs
+        if field != "generation_handoff"
+    }
+    missing_handoff_input_ids = sorted(required_handoff_input_ids - handoff_input_ids)
+    if missing_handoff_input_ids:
+        errors.append(
+            "generation_handoff.input_ids must include every input referenced by "
+            "evidence_requirements, analysis_plan, source_facts, and "
+            "explicit_questions; missing "
+            + ", ".join(repr(input_id) for input_id in missing_handoff_input_ids)
+        )
+
     blocking_questions = [
         item for item in payload["unresolved_questions"] if item["blocking"]
     ]
@@ -229,16 +248,14 @@ def validate_literal_preservation(
     payload: Mapping[str, Any],
     source_texts: Mapping[str, str],
 ) -> tuple[list[str], dict[str, dict[str, list[str]]]]:
-    """Check declared exact anchors and mechanical date/number/question coverage."""
+    """Check model-declared exact anchors, typed literals, and questions."""
 
     errors: list[str] = []
     inventories: dict[str, dict[str, list[str]]] = {}
-    facts_by_input: dict[str, list[str]] = {}
+    facts_by_input: dict[str, list[Mapping[str, Any]]] = {}
     for fact in payload.get("source_facts", []):
         if isinstance(fact, dict):
-            facts_by_input.setdefault(str(fact.get("input_id", "")), []).append(
-                _normalized_literal(str(fact.get("source_anchor", "")))
-            )
+            facts_by_input.setdefault(str(fact.get("input_id", "")), []).append(fact)
     questions_by_input: dict[str, list[str]] = {}
     for item in payload.get("explicit_questions", []):
         if isinstance(item, dict):
@@ -248,33 +265,41 @@ def validate_literal_preservation(
 
     for input_id, source_text in source_texts.items():
         normalized_source = _normalized_literal(source_text)
-        fact_anchors = facts_by_input.get(input_id, [])
+        facts = facts_by_input.get(input_id, [])
         question_anchors = questions_by_input.get(input_id, [])
-        for anchor in fact_anchors:
+        inventory = inventory_literal_anchors(source_text)
+        inventories[input_id] = inventory
+        for fact in facts:
+            anchor = _normalized_literal(str(fact.get("source_anchor", "")))
             if anchor and anchor not in normalized_source:
                 errors.append(
                     f"source_facts anchor for {input_id!r} is not literal source text: {anchor!r}"
+                )
+                continue
+            category = str(fact.get("category", ""))
+            if category not in {"date", "number"}:
+                continue
+            literal_value = _normalized_literal(str(fact.get("literal_value", "")))
+            inventory_key = f"{category}s"
+            source_literals = {
+                _normalized_literal(value) for value in inventory[inventory_key]
+            }
+            anchor_literals = {
+                _normalized_literal(value)
+                for value in inventory_literal_anchors(anchor)[inventory_key]
+            }
+            if (
+                literal_value not in source_literals
+                or literal_value not in anchor_literals
+            ):
+                errors.append(
+                    f"source_facts {category} literal for {input_id!r} is not an "
+                    f"exact recognized literal in its source anchor: {literal_value!r}"
                 )
         for question in question_anchors:
             if question and question not in normalized_source:
                 errors.append(
                     f"explicit_questions entry for {input_id!r} is not literal source text: {question!r}"
-                )
-
-        inventory = inventory_literal_anchors(source_text)
-        inventories[input_id] = inventory
-        for category in ("dates", "numbers", "urls"):
-            for literal in inventory[category]:
-                normalized = _normalized_literal(literal)
-                if not any(normalized in anchor for anchor in fact_anchors):
-                    errors.append(
-                        f"{input_id!r} {category[:-1]} literal is not preserved in "
-                        f"source_facts: {normalized!r}"
-                    )
-        for question in inventory["explicit_questions"]:
-            if question not in question_anchors:
-                errors.append(
-                    f"{input_id!r} explicit question is not preserved exactly: {question!r}"
                 )
     return errors, inventories
 
@@ -305,13 +330,97 @@ def _sha256_bytes(value: bytes) -> str:
 
 
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
-    """Write stable UTF-8 JSON with one trailing newline."""
+    """Atomically write stable UTF-8 JSON with one trailing newline."""
 
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-        encoding="utf-8",
+    serialized = (
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     )
+    descriptor, temporary_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=path.parent
+    )
+    temporary_path = Path(temporary_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(serialized)
+            stream.flush()
+            os.fsync(stream.fileno())
+        temporary_path.replace(path)
+    finally:
+        temporary_path.unlink(missing_ok=True)
+
+
+def _invalidate_prior_canonical(canonical_path: Path) -> dict[str, Any] | None:
+    """Move a stale canonical artifact to a content-addressed recovery path."""
+
+    if not canonical_path.exists():
+        return None
+    if not canonical_path.is_file():
+        raise ContractValidationError(
+            f"cannot invalidate non-file canonical artifact: {canonical_path}"
+        )
+    try:
+        raw = canonical_path.read_bytes()
+    except OSError as exc:
+        raise ContractValidationError(
+            f"cannot read prior canonical artifact: {canonical_path}"
+        ) from exc
+    digest = _sha256_bytes(raw)
+    recovery_path = canonical_path.with_name(
+        f"{canonical_path.stem}.previous-{digest[:12]}{canonical_path.suffix}"
+    )
+    if recovery_path.exists():
+        try:
+            recovery_bytes = recovery_path.read_bytes()
+        except OSError as exc:
+            raise ContractValidationError(
+                f"cannot inspect canonical recovery artifact: {recovery_path}"
+            ) from exc
+        if recovery_bytes != raw:
+            recovery_path = canonical_path.with_name(
+                f"{canonical_path.stem}.previous-{digest}{canonical_path.suffix}"
+            )
+    if recovery_path.exists():
+        canonical_path.unlink()
+    else:
+        canonical_path.replace(recovery_path)
+    return {
+        "filename": recovery_path.name,
+        "sha256": digest,
+        "reason": "A later packaging attempt failed, so this prior contract is not current.",
+    }
+
+
+def _write_failed_validation_report(
+    output_dir: Path,
+    errors: Sequence[str],
+    *,
+    source_receipts: Sequence[Mapping[str, Any]] = (),
+    inventories: Mapping[str, Mapping[str, Sequence[str]]] | None = None,
+) -> Path:
+    """Invalidate any prior canonical contract and record the current failure."""
+
+    resolved_output_dir = output_dir.resolve()
+    resolved_output_dir.mkdir(parents=True, exist_ok=True)
+    canonical_path = resolved_output_dir / CANONICAL_FILENAME
+    report_path = resolved_output_dir / VALIDATION_FILENAME
+    invalidated = _invalidate_prior_canonical(canonical_path)
+    report: dict[str, Any] = {
+        "schema_version": "clara.advisory_contract_validation.v1",
+        "status": "failed",
+        "canonical_artifact_written": False,
+        "contract_sha256": None,
+        "invalidated_prior_canonical": invalidated,
+        "source_files": list(source_receipts),
+        "literal_inventory": dict(inventories or {}),
+        "errors": list(errors),
+        "limitations": [
+            "Schema and literal checks do not establish advisory correctness, evidence sufficiency, workflow suitability, or professional judgement.",
+            "Whole-source literal inventories are observational. Materiality and completeness remain model-led; deterministic checks gate only declared source anchors, declared date and number literal values, and declared exact questions.",
+        ],
+    }
+    _write_json(report_path, report)
+    return report_path
 
 
 def package_advisory_contract(
@@ -322,65 +431,86 @@ def package_advisory_contract(
 ) -> tuple[Path | None, Path, list[str]]:
     """Validate a model-authored draft and write canonical package artifacts."""
 
-    payload = load_contract(draft_path)
-    errors = validate_advisory_contract(payload)
-    sources = dict(source_paths or {})
-    declared_input_ids = {
-        str(item.get("id"))
-        for item in payload.get("available_inputs", [])
-        if isinstance(item, dict)
-    }
-    source_texts: dict[str, str] = {}
     source_receipts: list[dict[str, Any]] = []
-    for input_id, path in sorted(sources.items()):
-        if input_id not in declared_input_ids:
-            errors.append(
-                f"--source references undeclared available input {input_id!r}"
-            )
-        raw = path.read_bytes()
-        try:
-            source_texts[input_id] = raw.decode("utf-8")
-        except UnicodeDecodeError as exc:
-            raise ContractValidationError(
-                f"source file for {input_id!r} is not UTF-8 text: {path.name}"
-            ) from exc
-        source_receipts.append(
-            {
-                "input_id": input_id,
-                "filename": path.name,
-                "byte_count": len(raw),
-                "sha256": _sha256_bytes(raw),
-            }
-        )
-
     inventories: dict[str, dict[str, list[str]]] = {}
-    if not errors and source_texts:
-        literal_errors, inventories = validate_literal_preservation(
-            payload, source_texts
-        )
-        errors.extend(literal_errors)
-
     output_dir = output_dir.resolve()
     output_dir.mkdir(parents=True, exist_ok=True)
     canonical_path = output_dir / CANONICAL_FILENAME
     report_path = output_dir / VALIDATION_FILENAME
+    try:
+        payload = load_contract(draft_path)
+        errors = validate_advisory_contract(payload)
+        sources = dict(source_paths or {})
+        declared_input_ids = {
+            str(item.get("id"))
+            for item in payload.get("available_inputs", [])
+            if isinstance(item, dict)
+        }
+        source_texts: dict[str, str] = {}
+        for input_id, path in sorted(sources.items()):
+            if input_id not in declared_input_ids:
+                errors.append(
+                    f"--source references undeclared available input {input_id!r}"
+                )
+            try:
+                raw = path.read_bytes()
+            except OSError as exc:
+                raise ContractValidationError(
+                    f"cannot read source file for {input_id!r}: {path.name}"
+                ) from exc
+            try:
+                source_texts[input_id] = raw.decode("utf-8")
+            except UnicodeDecodeError as exc:
+                raise ContractValidationError(
+                    f"source file for {input_id!r} is not UTF-8 text: {path.name}"
+                ) from exc
+            source_receipts.append(
+                {
+                    "input_id": input_id,
+                    "filename": path.name,
+                    "byte_count": len(raw),
+                    "sha256": _sha256_bytes(raw),
+                }
+            )
+
+        if not errors and source_texts:
+            literal_errors, inventories = validate_literal_preservation(
+                payload, source_texts
+            )
+            errors.extend(literal_errors)
+    except ContractValidationError as exc:
+        _write_failed_validation_report(
+            output_dir,
+            [str(exc)],
+            source_receipts=source_receipts,
+            inventories=inventories,
+        )
+        raise
+
     canonical_written = not errors
     if canonical_written:
         _write_json(canonical_path, payload)
+    else:
+        report_path = _write_failed_validation_report(
+            output_dir,
+            errors,
+            source_receipts=source_receipts,
+            inventories=inventories,
+        )
+        return None, report_path, errors
 
     report: dict[str, Any] = {
         "schema_version": "clara.advisory_contract_validation.v1",
         "status": "passed" if canonical_written else "failed",
         "canonical_artifact_written": canonical_written,
-        "contract_sha256": (
-            _sha256_bytes(canonical_path.read_bytes()) if canonical_written else None
-        ),
+        "contract_sha256": _sha256_bytes(canonical_path.read_bytes()),
+        "invalidated_prior_canonical": None,
         "source_files": source_receipts,
         "literal_inventory": inventories,
         "errors": errors,
         "limitations": [
             "Schema and literal checks do not establish advisory correctness, evidence sufficiency, workflow suitability, or professional judgement.",
-            "Entity and constraint completeness remain part of the declared model-led review; deterministic code checks only supplied literal anchors.",
+            "Whole-source literal inventories are observational. Materiality and completeness remain model-led; deterministic checks gate only declared source anchors, declared date and number literal values, and declared exact questions.",
         ],
     }
     _write_json(report_path, report)
@@ -412,6 +542,16 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         sources = _parse_source_specs(args.source)
+    except ContractValidationError as exc:
+        try:
+            report_path = _write_failed_validation_report(args.output_dir, [str(exc)])
+        except (ContractValidationError, OSError) as report_exc:
+            LOGGER.error("%s", report_exc)
+        else:
+            LOGGER.error("validation report: %s", report_path)
+        LOGGER.error("%s", exc)
+        return 2
+    try:
         canonical_path, report_path, errors = package_advisory_contract(
             args.draft_contract.resolve(),
             args.output_dir,

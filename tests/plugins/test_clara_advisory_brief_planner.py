@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import pytest
 
 __all__: list[str] = []
 
@@ -131,18 +132,21 @@ def _representative_contract() -> dict[str, Any]:
                 "category": "date",
                 "text": "The acquisition date is 2026-09-30.",
                 "source_anchor": "2026-09-30",
+                "literal_value": "2026-09-30",
                 "input_id": "assignment",
             },
             {
                 "category": "number",
                 "text": "The acquisition price is EUR 12.5 million.",
                 "source_anchor": "EUR 12.5 million",
+                "literal_value": "EUR 12.5",
                 "input_id": "assignment",
             },
             {
                 "category": "date",
                 "text": "The decision concerns integration before 2027-01-15.",
                 "source_anchor": "2027-01-15",
+                "literal_value": "2027-01-15",
                 "input_id": "assignment",
             },
             {
@@ -233,7 +237,7 @@ def test_advisory_contract_packages_exact_facts_and_generation_handoff(
     ]
 
 
-def test_advisory_contract_rejects_missing_literal_number_before_packaging(
+def test_advisory_contract_rejects_inexact_declared_number_before_packaging(
     tmp_path: Path,
 ) -> None:
     validator = _load_validator()
@@ -245,9 +249,7 @@ def test_advisory_contract_rejects_missing_literal_number_before_packaging(
         encoding="utf-8",
     )
     payload = _representative_contract()
-    payload["source_facts"] = [
-        fact for fact in payload["source_facts"] if fact["category"] != "number"
-    ]
+    payload["source_facts"][2]["literal_value"] = "12"
     draft = tmp_path / "draft_advisory_contract.json"
     draft.write_text(json.dumps(payload), encoding="utf-8")
 
@@ -258,10 +260,177 @@ def test_advisory_contract_rejects_missing_literal_number_before_packaging(
     )
 
     assert contract_path is None
-    assert any("number literal is not preserved" in error for error in errors)
+    assert any("number literal" in error for error in errors)
     report = json.loads(report_path.read_text(encoding="utf-8"))
     assert report["status"] == "failed"
     assert report["canonical_artifact_written"] is False
+
+
+def test_advisory_contract_inventory_does_not_classify_incidental_number_as_material(
+    tmp_path: Path,
+) -> None:
+    validator = _load_validator()
+    source = tmp_path / "assignment.md"
+    source.write_text(
+        "Aurora Foods acquired Delta Retail on 2026-09-30 for EUR 12.5 million. "
+        "The board must decide whether to integrate the sales teams before 2027-01-15. "
+        "Keep France outside scope. Which customer losses could change the decision? "
+        "Document version 777.\n",
+        encoding="utf-8",
+    )
+    draft = tmp_path / "draft_advisory_contract.json"
+    draft.write_text(json.dumps(_representative_contract()), encoding="utf-8")
+
+    contract_path, report_path, errors = validator.package_advisory_contract(
+        draft,
+        tmp_path / "reviewed",
+        source_paths={"assignment": source},
+    )
+
+    assert errors == []
+    assert contract_path is not None
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert "777" in report["literal_inventory"]["assignment"]["numbers"]
+    assert "observational" in report["limitations"][1]
+
+
+def test_advisory_contract_distinguishes_exact_integer_from_decimal_literal(
+    tmp_path: Path,
+) -> None:
+    validator = _load_validator()
+    source = tmp_path / "assignment.md"
+    source.write_text(
+        "Aurora Foods acquired Delta Retail on 2026-09-30 for EUR 12.5 million. "
+        "The board must decide whether to integrate the sales teams before 2027-01-15. "
+        "Keep France outside scope. The decision threshold is 12. "
+        "Which customer losses could change the decision?\n",
+        encoding="utf-8",
+    )
+    payload = _representative_contract()
+    payload["source_facts"].append(
+        {
+            "category": "number",
+            "text": "The decision threshold is 12.",
+            "source_anchor": "decision threshold is 12",
+            "literal_value": "12",
+            "input_id": "assignment",
+        }
+    )
+    draft = tmp_path / "draft_advisory_contract.json"
+    draft.write_text(json.dumps(payload), encoding="utf-8")
+
+    contract_path, _, errors = validator.package_advisory_contract(
+        draft,
+        tmp_path / "reviewed",
+        source_paths={"assignment": source},
+    )
+
+    assert errors == []
+    assert contract_path is not None
+
+
+def test_advisory_contract_requires_nonempty_generation_handoff_inputs() -> None:
+    validator = _load_validator()
+    payload = _representative_contract()
+    payload["generation_handoff"]["input_ids"] = []
+
+    errors = validator.validate_advisory_contract(payload)
+
+    assert any(
+        error.startswith("schema generation_handoff.input_ids:") for error in errors
+    )
+
+
+def test_advisory_contract_handoff_covers_all_referenced_inputs() -> None:
+    validator = _load_validator()
+    payload = _representative_contract()
+    payload["available_inputs"].append(
+        {
+            "id": "selected-notes",
+            "description": "Selected operating notes",
+            "status": "available",
+        }
+    )
+    payload["evidence_requirements"][0]["input_ids"].append("selected-notes")
+
+    errors = validator.validate_advisory_contract(payload)
+
+    assert any(
+        "generation_handoff.input_ids must include every input referenced" in error
+        and "'selected-notes'" in error
+        for error in errors
+    )
+
+
+def test_failed_rerun_archives_prior_canonical_and_replaces_validation_report(
+    tmp_path: Path,
+) -> None:
+    validator = _load_validator()
+    draft = tmp_path / "draft_advisory_contract.json"
+    draft.write_text(json.dumps(_representative_contract()), encoding="utf-8")
+    output_dir = tmp_path / "reviewed"
+    validator.package_advisory_contract(draft, output_dir)
+    invalid_payload = _representative_contract()
+    invalid_payload["decision"] = ""
+    draft.write_text(json.dumps(invalid_payload), encoding="utf-8")
+
+    contract_path, report_path, errors = validator.package_advisory_contract(
+        draft, output_dir
+    )
+
+    assert contract_path is None
+    assert errors
+    assert not (output_dir / "advisory_contract.json").exists()
+    recovery_paths = list(output_dir.glob("advisory_contract.previous-*.json"))
+    assert len(recovery_paths) == 1
+    recovered = json.loads(recovery_paths[0].read_text(encoding="utf-8"))
+    report = json.loads(report_path.read_text(encoding="utf-8"))
+    assert recovered["decision"] == _representative_contract()["decision"]
+    assert report["status"] == "failed"
+    assert report["invalidated_prior_canonical"]["filename"] == recovery_paths[0].name
+
+
+def test_malformed_rerun_archives_prior_canonical_and_writes_current_failure(
+    tmp_path: Path,
+) -> None:
+    validator = _load_validator()
+    draft = tmp_path / "draft_advisory_contract.json"
+    draft.write_text(json.dumps(_representative_contract()), encoding="utf-8")
+    output_dir = tmp_path / "reviewed"
+    validator.package_advisory_contract(draft, output_dir)
+    draft.write_text("{not-json", encoding="utf-8")
+
+    with pytest.raises(validator.ContractValidationError):
+        validator.package_advisory_contract(draft, output_dir)
+
+    report = json.loads(
+        (output_dir / "advisory_contract_validation.json").read_text(encoding="utf-8")
+    )
+    assert report["status"] == "failed"
+    assert "invalid JSON" in report["errors"][0]
+    assert report["invalidated_prior_canonical"] is not None
+    assert not (output_dir / "advisory_contract.json").exists()
+
+
+def test_invalid_source_argument_replaces_stale_success_report(tmp_path: Path) -> None:
+    validator = _load_validator()
+    draft = tmp_path / "draft_advisory_contract.json"
+    draft.write_text(json.dumps(_representative_contract()), encoding="utf-8")
+    output_dir = tmp_path / "reviewed"
+    validator.package_advisory_contract(draft, output_dir)
+
+    exit_code = validator.main(
+        [str(draft), "--output-dir", str(output_dir), "--source", "invalid"]
+    )
+
+    report = json.loads(
+        (output_dir / "advisory_contract_validation.json").read_text(encoding="utf-8")
+    )
+    assert exit_code == 2
+    assert report["status"] == "failed"
+    assert "invalid --source" in report["errors"][0]
+    assert report["invalidated_prior_canonical"] is not None
+    assert not (output_dir / "advisory_contract.json").exists()
 
 
 def test_advisory_contract_rejects_inconsistent_ready_state_and_route() -> None:

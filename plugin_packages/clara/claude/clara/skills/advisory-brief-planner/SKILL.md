@@ -71,11 +71,13 @@ hidden model API call. Clara performs the semantic work in the active host
 model session.
 
 The local helper is deterministic because schema validation, exact ID
-references, declared workflow availability, literal source anchors, hashes, and
-stable JSON packaging are mechanically verifiable. It may inventory literal
-dates, numbers, URLs, and question sentences from supplied UTF-8 source text.
-It never calls a model API. It does not decide which entities or constraints
-are material and does not certify the contract's advisory quality.
+references, declared workflow availability, literal source anchors, declared
+date and number values, hashes, and stable JSON packaging are mechanically
+verifiable. It inventories recognizable dates, numbers, URLs, and question
+sentences from supplied UTF-8 source text for observation only. The inventory
+does not decide which source details are material and is not a completeness
+gate. The helper never calls a model API and does not certify the contract's
+advisory quality.
 
 ## Required artifact
 
@@ -159,13 +161,18 @@ output folder, and expected artifacts.
    missing inputs without requiring physical local paths in the canonical
    contract.
 5. Copy or faithfully summarize all material facts into `source_facts`, with an
-   exact `source_anchor` and the corresponding `input_id`. Preserve every
-   explicit source question verbatim in `explicit_questions`. Entity and
-   constraint completeness is a semantic review responsibility, not a keyword
-   extraction task.
+   exact `source_anchor` and the corresponding `input_id`. For each declared
+   `date` or `number`, also record `literal_value` exactly as recognized in that
+   anchor, such as `2027-01-15` or `EUR 12.5`. Preserve every explicit source
+   question verbatim in `explicit_questions`. The model-led review owns the
+   completeness and materiality of facts, dates, numbers, entities, constraints,
+   and questions; the whole-source inventory is not a keyword completeness
+   classifier.
 6. Write a generation handoff whose `workflow` exactly matches
    `selected_clara_workflow`. Name the objective, input IDs, instructions, and
-   expected outputs, and keep `preserve_specialist_authority: true`.
+   expected outputs, include every input referenced by evidence requirements,
+   analysis steps, source facts, or explicit questions, and keep
+   `preserve_specialist_authority: true`.
 7. Review the source assignment, contract, and handoff semantically. Complete
    every `model_review` dimension honestly. A contract cannot be
    `ready_for_handoff` unless every dimension conforms and no blocking question
@@ -184,10 +191,13 @@ python scripts/managed_python_runtime.py run scripts/validate_advisory_contract.
 ```
 
 The helper writes `advisory_contract.json` only after validation passes and
-always writes `advisory_contract_validation.json`. If literal preservation
-fails, repair the draft and repeat both semantic review and deterministic
-validation. Do not dismiss a missing literal because the intended meaning
-seems close.
+always writes the current `advisory_contract_validation.json` when the output
+folder is writable. If a later attempt fails, it moves the prior canonical file
+to a content-hashed `advisory_contract.previous-<hash>.json` recovery path so a
+downstream workflow cannot consume it as the current contract. If declared
+literal preservation fails, repair the draft and repeat both semantic review
+and deterministic validation. Do not dismiss a mismatched declared literal
+because the intended meaning seems close.
 
 9. Show a compact review summary with the decision, deliverable, scope,
    assumptions, blocking questions, selected workflow, and validation status.

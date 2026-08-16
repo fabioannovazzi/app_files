@@ -66,20 +66,31 @@ Every material fact must be represented in `source_facts` with:
 - `category`: `fact`, `date`, `number`, `entity`, or `constraint`;
 - `text`: the fact as it should be carried into the assignment;
 - `source_anchor`: an exact literal excerpt that preserves the source detail;
+- `literal_value`: required for a declared `date` or `number`, containing the
+  exact mechanically recognizable value within the source anchor;
 - `input_id`: the input containing that anchor.
 
 Every source question remains verbatim in `explicit_questions`. When exact
 UTF-8 sources are supplied to the helper, it checks declared anchors and
-mechanically inventories dates, numbers, URLs, and question sentences. The
-model-led review remains responsible for deciding which entities and
-constraints are material and for detecting semantic omissions or distortion.
+declared date and number values, and mechanically inventories recognizable
+dates, numbers, URLs, and question sentences. That whole-source inventory is
+observational, not a completeness gate. The model-led review remains
+responsible for deciding which facts, dates, numbers, entities, constraints,
+and questions are material and for detecting semantic omissions or distortion.
 
 ## Handoff and review
 
-`generation_handoff.workflow` must equal `selected_clara_workflow`, all input
+`generation_handoff.workflow` must equal `selected_clara_workflow`, its
+`input_ids` must be non-empty and include every input referenced by evidence
+requirements, analysis steps, source facts, or explicit questions, all input
 references must resolve, and `preserve_specialist_authority` must be `true`.
 The handoff can constrain the work but cannot replace the specialist workflow's
 evidence, review, privacy, or completion rules.
+
+If a packaging attempt fails after a prior successful run, the helper moves the
+prior canonical contract to a content-hashed recovery filename and writes a
+current failed validation report. The stable `advisory_contract.json` path is
+therefore absent until a new attempt passes.
 
 The fixed model-review dimensions cover:
 
