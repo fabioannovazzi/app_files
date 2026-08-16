@@ -1,0 +1,4 @@
+interface:
+  display_name: "Plan an advisory assignment"
+  short_description: "Turn a natural advisory request into a reviewable contract"
+  default_prompt: "Use $advisory-brief-planner to preserve this assignment's facts, define its contract, and prepare the Clara workflow handoff."

@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/advisory-contract-v1.json",
+  "title": "Clara advisory assignment contract",
+  "description": "The reviewable assignment and generation-handoff contract produced by Clara's advisory brief planner. Semantic contents are selected by Clara or confirmed by the user; deterministic code validates only the declared shape, references, literal source anchors, and status consistency.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "contract_status",
+    "decision",
+    "purpose",
+    "audience",
+    "deliverable_type",
+    "output_language",
+    "scope_included",
+    "scope_excluded",
+    "available_inputs",
+    "evidence_requirements",
+    "analysis_plan",
+    "assumptions",
+    "unresolved_questions",
+    "success_criteria",
+    "selected_clara_workflow",
+    "validation_profile",
+    "validation_scope",
+    "correction_policy",
+    "professional_judgement_policy",
+    "source_facts",
+    "explicit_questions",
+    "generation_handoff",
+    "model_review"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "contract_status": {
+      "enum": ["ready_for_handoff", "needs_clarification", "partial"]
+    },
+    "decision": {"$ref": "#/$defs/text"},
+    "purpose": {"$ref": "#/$defs/text"},
+    "audience": {"$ref": "#/$defs/text"},
+    "deliverable_type": {"$ref": "#/$defs/text"},
+    "output_language": {"enum": ["it", "en", "fr", "de", "es"]},
+    "scope_included": {"$ref": "#/$defs/text_list_nonempty"},
+    "scope_excluded": {"$ref": "#/$defs/text_list"},
+    "available_inputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/available_input"}
+    },
+    "evidence_requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/evidence_requirement"}
+    },
+    "analysis_plan": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/analysis_step"}
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/assumption"}
+    },
+    "unresolved_questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unresolved_question"}
+    },
+    "success_criteria": {"$ref": "#/$defs/text_list_nonempty"},
+    "selected_clara_workflow": {
+      "type": "string",
+      "pattern": "^clara:[a-z0-9-]+$"
+    },
+    "validation_profile": {"$ref": "#/$defs/text"},
+    "validation_scope": {"$ref": "#/$defs/text_list_nonempty"},
+    "correction_policy": {"$ref": "#/$defs/text"},
+    "professional_judgement_policy": {"$ref": "#/$defs/text"},
+    "source_facts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/source_fact"}
+    },
+    "explicit_questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/explicit_question"}
+    },
+    "generation_handoff": {"$ref": "#/$defs/generation_handoff"},
+    "model_review": {"$ref": "#/$defs/model_review"}
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "id_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "text_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "text_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "available_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "status"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "description": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["available", "planned", "missing"]},
+        "source_ref": {"$ref": "#/$defs/text"}
+      }
+    },
+    "evidence_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement", "rationale", "status", "input_ids"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "requirement": {"$ref": "#/$defs/text"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["available", "planned", "missing"]},
+        "input_ids": {"$ref": "#/$defs/id_list"}
+      }
+    },
+    "analysis_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "objective", "method", "input_ids", "output"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "objective": {"$ref": "#/$defs/text"},
+        "method": {"$ref": "#/$defs/text"},
+        "input_ids": {"$ref": "#/$defs/id_list"},
+        "output": {"$ref": "#/$defs/text"}
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "status", "materiality"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["explicit", "provisional"]},
+        "materiality": {"enum": ["material", "contextual"]}
+      }
+    },
+    "unresolved_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "why_it_matters", "blocking"],
+      "properties": {
+        "question": {"$ref": "#/$defs/text"},
+        "why_it_matters": {"$ref": "#/$defs/text"},
+        "blocking": {"type": "boolean"}
+      }
+    },
+    "source_fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "text", "source_anchor", "input_id"],
+      "properties": {
+        "category": {
+          "enum": ["fact", "date", "number", "entity", "constraint"]
+        },
+        "text": {"$ref": "#/$defs/text"},
+        "source_anchor": {"$ref": "#/$defs/text"},
+        "literal_value": {"$ref": "#/$defs/text"},
+        "input_id": {"$ref": "#/$defs/id"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {"enum": ["date", "number"]}
+            },
+            "required": ["category"]
+          },
+          "then": {"required": ["literal_value"]}
+        }
+      ]
+    },
+    "explicit_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "input_id"],
+      "properties": {
+        "question": {"$ref": "#/$defs/text"},
+        "input_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "generation_handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflow",
+        "objective",
+        "input_ids",
+        "instructions",
+        "expected_outputs",
+        "preserve_specialist_authority"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "string",
+          "pattern": "^clara:[a-z0-9-]+$"
+        },
+        "objective": {"$ref": "#/$defs/text"},
+        "input_ids": {"$ref": "#/$defs/id_list_nonempty"},
+        "instructions": {"$ref": "#/$defs/text_list_nonempty"},
+        "expected_outputs": {"$ref": "#/$defs/text_list_nonempty"},
+        "preserve_specialist_authority": {"const": true}
+      }
+    },
+    "model_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "dimensions", "overall_status"],
+      "properties": {
+        "method": {"const": "model_led_assignment_contract_review"},
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "material_facts_dates_numbers_entities_constraints_questions",
+            "decision_purpose_audience_deliverable",
+            "scope_inputs_evidence",
+            "analysis_and_success_criteria",
+            "workflow_and_generation_handoff",
+            "validation_and_professional_judgement"
+          ],
+          "properties": {
+            "material_facts_dates_numbers_entities_constraints_questions": {"$ref": "#/$defs/review_status"},
+            "decision_purpose_audience_deliverable": {"$ref": "#/$defs/review_status"},
+            "scope_inputs_evidence": {"$ref": "#/$defs/review_status"},
+            "analysis_and_success_criteria": {"$ref": "#/$defs/review_status"},
+            "workflow_and_generation_handoff": {"$ref": "#/$defs/review_status"},
+            "validation_and_professional_judgement": {"$ref": "#/$defs/review_status"}
+          }
+        },
+        "overall_status": {"$ref": "#/$defs/review_status"}
+      }
+    },
+    "review_status": {
+      "enum": ["conforms", "partially_conforms", "does_not_conform", "uncertain"]
+    }
+  }
+}

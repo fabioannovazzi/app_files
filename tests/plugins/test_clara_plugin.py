@@ -78,6 +78,7 @@ def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
 
 def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None:
     expected = {
+        "advisory-brief-planner": "Plan an advisory assignment",
         "attribute-reporting": (
             "Compare assortment, new-product, and best-seller attributes"
         ),
@@ -108,6 +109,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
     for skill_name in (
+        "advisory-brief-planner",
         "attribute-reporting",
         "brand-fit",
         "interview",
@@ -121,6 +123,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         ROOT / "static" / "shared" / "clara" / "index.html"
     ).read_text(encoding="utf-8")
     public_directory = {
+        "functions.advisoryPlanning": expected["advisory-brief-planner"],
         "functions.presentations": "Create and revise presentations",
         "functions.researchVideo": expected["research-video"],
         "functions.documents": "Create and revise documents",
@@ -875,7 +878,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.150"
+    assert manifest["version"] == "0.1.153"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
