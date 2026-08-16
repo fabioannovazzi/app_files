@@ -33,6 +33,10 @@ turns validated understanding into working artifacts.
 
 Clara keeps its specialist workflows separate:
 
+- `advisory-deliverable-validator` validates a completed advisory memo, report,
+  analysis, presentation, or other supported professional document against
+  `advisory_contract.json`, available evidence, and the applicable existing
+  Clara format checks;
 - `interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
 - `transcribe` records or uploads advisor voice notes, meetings, and calls,
@@ -59,6 +63,12 @@ Clara keeps its specialist workflows separate:
   analysis from the business question and actual fields, and runs the embedded
   distribution, funnel, mix, period, scatter, overlap, statement, or variance
   component.
+
+Advisory Deliverable Validator supports Markdown, text, standalone HTML,
+readable PDF, DOCX, and PPTX as primary deliverables. CSV, XLSX, and Parquet are
+supporting analytical evidence and retain Reporting Engine as their calculation
+and provenance authority. Corrections are separate artifacts; the original is
+never overwritten.
 
 Hosted interviews and Hosted Voice are different systems and bundle schemas.
 The first conducts an external interview; the second captures or transcribes an

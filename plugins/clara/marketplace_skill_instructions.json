@@ -7,6 +7,12 @@
       "default_prompt": "Use $clara to organize these materials, identify gaps, and prepare a reviewable analysis or deliverable.",
       "instructions": "Provide the case materials and describe the decision or deliverable you need. Clara organizes the evidence, selects the appropriate specialist workflow, and returns a reviewable analysis, report, or presentation with sources, assumptions, and unresolved questions kept visible."
     },
+    "advisory-deliverable-validator": {
+      "display_name": "Validate an advisory deliverable",
+      "short_description": "Check advisory work against evidence and scope",
+      "default_prompt": "Use $advisory-deliverable-validator to validate this completed advisory deliverable against its contract and evidence.",
+      "instructions": "Provide the completed memo, report, analysis, or presentation, its advisory_contract.json when available, and the selected evidence. Clara reviews contract conformance, factual support, calculations and provenance, reasoning, contradictions, recommendation fit, judgement boundaries, correction needs, uncertainty, and delivery readiness. Existing Clara presentation, HTML-deck, reporting, and deck-correction checks remain authoritative."
+    },
     "attribute-reporting": {
       "display_name": "Compare assortment, new-product, and best-seller attributes",
       "short_description": "Compare product attributes across retailer cohorts",

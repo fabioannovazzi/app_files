@@ -375,6 +375,7 @@ artifact card and final response.""",
 
 CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
+        "advisory-deliverable-validator",
         "attribute-reporting",
         "brand-fit",
         "claim-basis-map",

@@ -98,6 +98,7 @@
     "check-entries": [["vera", "area-accounting"]],
     "clara-brand-fit": [["clara", "area-retail"]],
     "clara-data-analysis": [["clara", "area-analysis"]],
+    "clara-advisory-deliverable-validator": [["clara", "area-deliverables"]],
     "clara-documents": [["clara", "area-deliverables"]],
     "clara-interview": [["clara", "area-recordings"]],
     "clara-presentations": [["clara", "area-deliverables"]],

@@ -155,6 +155,20 @@
       "prompt": "Revise this existing Clara HTML deck from the approved change notes, preserve every untouched slide and protected component, and prove the before/after fidelity.",
       "required_signals": ["Clara HTML deck", "change notes", "protected component", "before/after fidelity"],
       "expected_skill": "clara:html-deck"
+    },
+    {
+      "id": "validate-completed-advisory-deliverable",
+      "prompt": "Use Clara to validate this completed advisory report against advisory_contract.json and the available evidence. Check contract fit, factual support, calculations and provenance, reasoning, contradictions, recommendation fit, judgement boundaries, correction needs, uncertainty, and delivery readiness.",
+      "required_signals": ["completed advisory report", "advisory_contract.json", "available evidence", "delivery readiness"],
+      "expected_skill": "clara:advisory-deliverable-validator",
+      "must_not_route_to": ["clara:claim-basis-map", "clara:reporting-engine", "clara:deck-correction"]
+    },
+    {
+      "id": "validate-external-advisory-document-without-contract",
+      "prompt": "Use Clara to validate this external advisory memo. It has no original contract; draft advisory_contract.json from the decision, audience, and scope I supplied, ask before adding any consequential scope, and preserve the original if corrections are needed.",
+      "required_signals": ["external advisory memo", "no original contract", "advisory_contract.json", "consequential scope", "preserve the original"],
+      "expected_skill": "clara:advisory-deliverable-validator",
+      "must_not_route_to": ["clara:claim-basis-map", "clara:reporting-engine", "clara:deck-correction"]
     }
   ],
   "should_not_trigger": [

@@ -102,6 +102,11 @@ also self-contained: its local source report is not uploaded, its product images
 and HTML report stay local, and its semantic work runs in Codex through the
 user's existing ChatGPT plan without a separate model API key. Reporting Engine is also self-contained unless the
 user asks to place its reviewed chart or interpretation in an advisory output.
+Advisory Deliverable Validator is the user-facing review route for a completed
+memo, report, analysis, presentation, or other supported professional document.
+It consumes `advisory_contract.json` and composes with Claim Basis Map, HTML Deck
+validation/browser QA, Reporting Engine, and Deck Correction when their format
+conditions apply; it must not duplicate or weaken those checks.
 Hosted-interview bundles and Hosted Voice bundles use different schemas; never
 pass one to the other's importer.
 

@@ -1,0 +1,120 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Representative model/human evaluation cases for advisory-deliverable validation. Expected semantic outcomes must not be derived by deterministic keyword or scorecard logic.",
+  "cases": [
+    {
+      "id": "supported-recommendation",
+      "deliverable_format": "docx",
+      "contract_context": "The memo must recommend whether to proceed with a pilot and state evidence, conditions, and uncertainty.",
+      "deliverable_excerpt": "Proceed with a six-week pilot limited to two regions because both customer research and the observed conversion data support testing the proposition before a broader commitment.",
+      "available_evidence": "The cited interviews and reviewed conversion table support a bounded pilot; assumptions and decision conditions are explicit.",
+      "expected_dimensions": {
+        "factual_source_support": "conforms",
+        "recommendation_evidence_decision_fit": "conforms",
+        "delivery_readiness": "ready"
+      },
+      "boundary": "source_backed_advisory_recommendation"
+    },
+    {
+      "id": "partially-supported-market-claim",
+      "deliverable_format": "pdf",
+      "deliverable_excerpt": "All target customers prefer the proposed channel.",
+      "available_evidence": "Three of five interviewed target customers preferred it; the sample was not designed to represent all customers.",
+      "expected_dimensions": {
+        "factual_source_support": "partially_conforms",
+        "residual_uncertainty": "uncertain",
+        "correction_needs": "does_not_conform"
+      },
+      "boundary": "overbroad_support"
+    },
+    {
+      "id": "unsupported-claim",
+      "deliverable_format": "md",
+      "deliverable_excerpt": "The proposed operating model will reduce churn by 20%.",
+      "available_evidence": "No churn analysis, benchmark, or experiment is included.",
+      "expected_dimensions": {
+        "factual_source_support": "does_not_conform",
+        "correction_needs": "does_not_conform",
+        "delivery_readiness": "not_ready"
+      },
+      "boundary": "missing_support"
+    },
+    {
+      "id": "contradicted-recommendation-premise",
+      "deliverable_format": "html",
+      "deliverable_excerpt": "Capacity is sufficient, so the launch can begin immediately.",
+      "available_evidence": "The current capacity plan records a 15% shortfall for the launch period.",
+      "expected_dimensions": {
+        "factual_source_support": "contradicted",
+        "contradictions_missing_evidence": "contradicted",
+        "recommendation_evidence_decision_fit": "does_not_conform"
+      },
+      "boundary": "source_contradiction"
+    },
+    {
+      "id": "reasoning-gap",
+      "deliverable_format": "txt",
+      "deliverable_excerpt": "Awareness increased, therefore the premium price should be raised now.",
+      "available_evidence": "The evidence establishes awareness but contains no willingness-to-pay, elasticity, competitor-price, or margin analysis.",
+      "expected_dimensions": {
+        "reasoning_assumptions": "does_not_conform",
+        "recommendation_evidence_decision_fit": "does_not_conform"
+      },
+      "boundary": "missing_intermediate_premise"
+    },
+    {
+      "id": "calculation-provenance-gap",
+      "deliverable_format": "pptx",
+      "deliverable_excerpt": "The initiative creates EUR 4.2m of annual value.",
+      "available_evidence": "A chart shows the value but has no linked source rows, calculation method, period, or reconciliation artifact.",
+      "expected_dimensions": {
+        "calculations_data_provenance": "does_not_conform",
+        "factual_source_support": "uncertain",
+        "delivery_readiness": "not_ready"
+      },
+      "required_composition": ["clara:claim-basis-map", "clara:reporting-engine"],
+      "boundary": "calculation_and_provenance"
+    },
+    {
+      "id": "contract-failure",
+      "deliverable_format": "docx",
+      "contract_context": "A two-page board decision memo is required.",
+      "deliverable_excerpt": "A twelve-page internal project chronology without a recommendation or decision request.",
+      "available_evidence": "The chronology is accurate but does not satisfy the required audience, artifact, or purpose.",
+      "expected_dimensions": {
+        "contract_conformance": "does_not_conform",
+        "delivery_readiness": "not_ready"
+      },
+      "boundary": "advisory_contract_conformance"
+    },
+    {
+      "id": "judgment-dependent-choice",
+      "deliverable_format": "pdf",
+      "deliverable_excerpt": "Option B is the preferred path because it trades near-term disruption for greater long-term control.",
+      "available_evidence": "The trade-off is evidenced, but the acceptable disruption level and strategic preference belong to the engagement partner and decision owner.",
+      "expected_dimensions": {
+        "professional_judgement_boundaries": "judgment_required",
+        "delivery_readiness": "ready_with_residual_uncertainty"
+      },
+      "boundary": "professional_judgement"
+    },
+    {
+      "id": "external-document-without-contract",
+      "deliverable_format": "docx",
+      "contract_context": null,
+      "deliverable_excerpt": "A completed external advisory report supplied for review.",
+      "available_evidence": "The user states the decision and audience but has not defined consequential scope exclusions or correction authority.",
+      "expected_action": "Clara drafts advisory_contract.json from explicit context and asks the user to confirm consequential scope and correction fields before validation.",
+      "must_not": ["Silently invent scope", "Run semantic validation without advisory_contract.json"],
+      "boundary": "contract_creation_from_confirmed_context"
+    },
+    {
+      "id": "unsupported-primary-format",
+      "deliverable_format": "key",
+      "deliverable_excerpt": "A native Keynote presentation.",
+      "available_evidence": "No supported export is supplied.",
+      "expected_action": "Report the primary format as unsupported and request PPTX or PDF export without claiming validation.",
+      "boundary": "initial_format_limit"
+    }
+  ]
+}
