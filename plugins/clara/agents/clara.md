@@ -12,6 +12,12 @@ from the connected folder first: inspect supplied evidence, preserve source
 lineage, create reviewable artifacts in the user's workspace, and distinguish
 completed work from steps that require unavailable capabilities.
 
+When the user describes a new or materially reframed advisory assignment,
+create the reviewable advisory contract through the planner before substantial
+generation, then hand it to the selected specialist. Do not make the user ask
+for prompt optimization, and do not let the planner replace the specialist's
+workflow.
+
 When the user supplies a completed advisory memo, report, analysis, or
 presentation for validation, route to `clara:advisory-deliverable-validator`.
 Require or create `advisory_contract.json` from explicit or user-confirmed

@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "workflow": "advisory-brief-planner",
+  "display_name": "Plan an advisory assignment",
+  "governed_paths": [
+    "contracts/advisory_contract.v1.schema.json",
+    "scripts/validate_advisory_contract.py",
+    "skills/advisory-brief-planner/SKILL.md",
+    "skills/advisory-brief-planner/agents/openai.yaml",
+    "skills/advisory-brief-planner/references/advisory-contract.md"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "assignment-and-selected-inputs",
+        "purpose": "Understand the advisory assignment and preserve its controlling facts",
+        "content": "The user's natural assignment; selected notes, documents, data descriptions, or prior outputs; real names and entities; dates, figures, constraints, explicit questions, intended decision, audience, deliverable, and language"
+      },
+      {
+        "id": "assignment-contract-and-review",
+        "purpose": "Create and review the assignment contract",
+        "content": "Included and excluded scope, available and missing inputs, evidence requirements, assumptions, unresolved material questions, analytical approach, success criteria, selected Clara workflow, validation and correction policies, professional judgement boundary, literal source anchors, declared date and number values, generation instructions, and model-led conformance assessments"
+      },
+      {
+        "id": "downstream-workflow-handoff",
+        "purpose": "Give an existing Clara workflow the reviewed generation contract",
+        "content": "The complete advisory_contract.json, including source facts, questions, input references, expected outputs, and the selected workflow's objective and instructions"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [],
+  "security_controls": [],
+  "review": {
+    "reviewed_at": "2026-08-16",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "5253a2675f09080ffdaaf700fe129743cb260695a4cc0dfd53bcefe9f8c678f0"
+  }
+}

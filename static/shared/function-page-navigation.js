@@ -97,6 +97,7 @@
     "bilancio-xbrl-it": [["vera", "area-accounting"], ["vera", "jurisdiction"]],
     "check-entries": [["vera", "area-accounting"]],
     "clara-brand-fit": [["clara", "area-retail"]],
+    "clara-advisory-planning": [["clara", "area-analysis"]],
     "clara-data-analysis": [["clara", "area-analysis"]],
     "clara-advisory-deliverable-validator": [["clara", "area-deliverables"]],
     "clara-documents": [["clara", "area-deliverables"]],
@@ -141,6 +142,13 @@
   };
 
   const canonicalNames = {
+    "clara-advisory-planning": {
+      it: "Pianificare un incarico di consulenza",
+      en: "Plan an advisory assignment",
+      fr: "Planifier une mission de conseil",
+      de: "Beratungsauftrag planen",
+      es: "Planificar un encargo de consultoría",
+    },
     "archive-organization": {
       it: "Riordino della cartella cliente",
       en: "Reorganize the client folder",

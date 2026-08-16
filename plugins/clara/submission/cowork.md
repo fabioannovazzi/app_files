@@ -15,20 +15,26 @@
 
 **Public description**
 
-> AI companion for consultants. Clara helps consultants prepare commercial due
-> diligence and other advisory work. She organizes evidence from documents and
-> data, highlights gaps and contradictions, analyzes markets, customers,
-> products, competitors, and operations, and prepares presentations, reports,
-> charts, and reviewable workpapers. Sources, assumptions, and open questions
-> remain visible; the consultant keeps professional judgement.
+> AI companion for consultants. Clara plans advisory assignments as reviewable
+> contracts, routes them to the right specialist workflow, and validates
+> completed deliverables against the contract and available evidence. She organizes
+> evidence from documents and data, highlights gaps and contradictions,
+> analyzes markets, customers, products, competitors, and operations, and
+> prepares presentations, reports, charts, and reviewable workpapers. Sources,
+> assumptions, and open questions remain visible; the consultant keeps
+> professional judgement.
 
 ## Example use cases
 
-1. Organize these case files, separate evidence from judgement, surface gaps and
+1. Plan this advisory assignment, preserve its material facts and constraints,
+   and prepare the reviewable contract for the right Clara workflow.
+2. Validate this completed advisory deliverable against its contract and the
+   available evidence, preserving the original and identifying corrections.
+3. Organize these case files, separate evidence from judgement, surface gaps and
    contradictions, and prepare a reviewable advisory workpaper.
-2. Profile this dataset, document its business semantics, calculate the requested
+4. Profile this dataset, document its business semantics, calculate the requested
    analysis, and render a source-backed business chart.
-3. Turn these reviewed materials into a source-faithful standalone HTML
+5. Turn these reviewed materials into a source-faithful standalone HTML
    presentation with an evidence ledger and validation report.
 
 ## Cowork boundary
@@ -48,10 +54,10 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.127
-- **Files:** 823
-- **Bytes:** 4,264,862
-- **SHA-256:** `9e20ffc4af004416844dd4edc284abc4dd49e269014c2f5e95e37aea166ea36d`
+- **Version:** 0.1.138
+- **Files:** 850
+- **Bytes:** 4,393,946
+- **SHA-256:** `d42fe312896f1f96d49deb0ad946b1fb2a3fbdbaf40d03e118c6ddad8ea4996d`
 - **ZIP integrity:** clean
 
 The generated directory and exact archive above pass the repository's package

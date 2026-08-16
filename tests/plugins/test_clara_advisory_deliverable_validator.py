@@ -35,17 +35,47 @@ def _validator_module() -> Any:
 def _contract(*, format_checks: list[dict[str, Any]] | None = None) -> dict[str, Any]:
     return {
         "schema_version": "1.0",
+        "contract_status": "ready_for_handoff",
         "decision": "Whether to proceed with the proposed channel pilot.",
         "purpose": "Give the steering group a source-backed recommendation.",
-        "audience": ["Steering group", "Engagement partner"],
+        "audience": "Steering group and engagement partner",
         "deliverable_type": "advisory memo",
         "output_language": "en",
         "scope_included": ["Commercial evidence", "Implementation conditions"],
         "scope_excluded": ["Legal and tax advice"],
-        "available_inputs": ["advisory_memo.md", "evidence.md"],
-        "evidence_requirements": ["Material factual claims identify support"],
-        "analysis_plan": ["Review support", "Challenge the recommendation"],
-        "assumptions": ["The supplied extract is complete"],
+        "available_inputs": [
+            {
+                "id": "deliverable",
+                "description": "Completed advisory memo and selected evidence",
+                "status": "available",
+                "source_ref": "advisory_memo.md",
+            }
+        ],
+        "evidence_requirements": [
+            {
+                "id": "claim-support",
+                "requirement": "Material factual claims identify support",
+                "rationale": "Delivery readiness depends on traceable material claims.",
+                "status": "available",
+                "input_ids": ["deliverable"],
+            }
+        ],
+        "analysis_plan": [
+            {
+                "id": "validate-deliverable",
+                "objective": "Review support and challenge the recommendation",
+                "method": "Apply the advisory deliverable validation workflow",
+                "input_ids": ["deliverable"],
+                "output": "Structured validation package",
+            }
+        ],
+        "assumptions": [
+            {
+                "statement": "The supplied extract is complete",
+                "status": "provisional",
+                "materiality": "material",
+            }
+        ],
         "unresolved_questions": [],
         "success_criteria": ["The decision and conditions are explicit"],
         "selected_clara_workflow": "clara:clara",
@@ -80,6 +110,35 @@ def _contract(*, format_checks: list[dict[str, Any]] | None = None) -> dict[str,
             "owner": "Engagement partner",
             "model_role": "Identify issues and draft corrections for review",
             "approval_required_before_delivery": True,
+        },
+        "source_facts": [
+            {
+                "category": "constraint",
+                "text": "Legal and tax advice remain outside scope.",
+                "source_anchor": "Legal and tax advice",
+                "input_id": "deliverable",
+            }
+        ],
+        "explicit_questions": [],
+        "generation_handoff": {
+            "workflow": "clara:clara",
+            "objective": "Validate the completed advisory memo.",
+            "input_ids": ["deliverable"],
+            "instructions": ["Apply the declared validation profile."],
+            "expected_outputs": ["Advisory validation package"],
+            "preserve_specialist_authority": True,
+        },
+        "model_review": {
+            "method": "model_led_assignment_contract_review",
+            "dimensions": {
+                "material_facts_dates_numbers_entities_constraints_questions": "conforms",
+                "decision_purpose_audience_deliverable": "conforms",
+                "scope_inputs_evidence": "conforms",
+                "analysis_and_success_criteria": "conforms",
+                "workflow_and_generation_handoff": "conforms",
+                "validation_and_professional_judgement": "conforms",
+            },
+            "overall_status": "conforms",
         },
     }
 

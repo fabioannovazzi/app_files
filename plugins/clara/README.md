@@ -33,6 +33,10 @@ turns validated understanding into working artifacts.
 
 Clara keeps its specialist workflows separate:
 
+- `advisory-brief-planner` turns a naturally described advisory assignment into
+  `advisory_contract.json`, preserving material facts, scope, evidence needs,
+  assumptions, success criteria, validation policy, and the handoff to the
+  existing Clara workflow that will execute the work;
 - `advisory-deliverable-validator` validates a completed advisory memo, report,
   analysis, presentation, or other supported professional document against
   `advisory_contract.json`, available evidence, and the applicable existing

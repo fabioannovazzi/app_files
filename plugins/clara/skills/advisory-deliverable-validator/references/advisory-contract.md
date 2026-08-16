@@ -65,25 +65,15 @@ The required review dimensions are:
 ]
 ```
 
-## Example
+## Validation-control fragment
+
+The planner's canonical contract also carries its assignment status, structured
+input/evidence/analysis records, source facts, explicit questions, generation
+handoff, and model review. The schema is authoritative for that full shape. The
+validator-specific fields use this exact nested structure:
 
 ```json
 {
-  "schema_version": "1.0",
-  "decision": "Whether to proceed with the proposed channel expansion and under which conditions.",
-  "purpose": "Give the steering group a source-backed recommendation and the evidence needed for its decision.",
-  "audience": ["Steering group", "Engagement partner"],
-  "deliverable_type": "advisory memo",
-  "output_language": "en",
-  "scope_included": ["Commercial evidence", "Implementation conditions"],
-  "scope_excluded": ["Legal and tax advice"],
-  "available_inputs": ["draft_memo.docx", "market_evidence.pdf", "analysis.xlsx"],
-  "evidence_requirements": ["Every material factual claim identifies its source", "Recommendation conditions trace to available evidence"],
-  "analysis_plan": ["Review source support", "Reperform relevant calculations", "Challenge assumptions and recommendation fit"],
-  "assumptions": ["The supplied sales extract is complete through 30 June"],
-  "unresolved_questions": ["Implementation owner is not yet confirmed"],
-  "success_criteria": ["Decision and conditions are explicit", "Residual uncertainty is visible"],
-  "selected_clara_workflow": "clara:clara",
   "validation_profile": {
     "review_dimensions": [
       "contract_conformance",

@@ -12,6 +12,10 @@ matches the request.
 
 ## Professional workflows
 
+- `advisory-brief-planner`: turn a natural advisory assignment into the
+  reviewable `advisory_contract.json` assignment and generation-handoff
+  contract, then route execution to the existing Clara workflow that retains
+  procedural authority.
 - `advisory-deliverable-validator`: validate a completed advisory memo, report,
   analysis, presentation, or other supported professional document against
   `advisory_contract.json` and available evidence, while composing with rather

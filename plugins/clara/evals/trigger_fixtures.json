@@ -15,6 +15,13 @@
       "expected_skill": "clara:clara"
     },
     {
+      "id": "advisory-assignment-contract",
+      "prompt": "Use Clara to plan an advisory assignment for a board decision. Preserve the facts, define the evidence and analysis plan, and hand the contract to the right Clara workflow before drafting.",
+      "required_signals": ["advisory assignment", "board decision", "facts", "evidence", "analysis plan", "handoff"],
+      "expected_skill": "clara:advisory-brief-planner",
+      "must_not_route_to": ["clara:reporting-engine", "clara:html-deck", "clara:interview", "clara:privacy-surface-review"]
+    },
+    {
       "id": "succession-case-workspace",
       "prompt": "Use Clara to organize this succession case, capture advisor judgement, and produce a decision pack.",
       "required_signals": ["Clara", "succession", "judgement", "decision pack"]

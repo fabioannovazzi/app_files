@@ -20,6 +20,8 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
+from jsonschema import Draft202012Validator
+
 __all__ = [
     "AdvisoryValidationError",
     "prepare_validation",
@@ -32,6 +34,7 @@ __all__ = [
 LOGGER = logging.getLogger(__name__)
 CLARA_ROOT = Path(__file__).resolve().parents[3]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[5]
+CONTRACT_SCHEMA_PATH = CLARA_ROOT / "contracts" / "advisory_contract.v1.schema.json"
 SUPPORTED_PRIMARY_SUFFIXES = {
     ".docx",
     ".htm",
@@ -229,114 +232,37 @@ def validate_advisory_contract(payload: Any) -> list[str]:
 
     if not isinstance(payload, dict):
         return ["advisory contract must be an object"]
-    errors: list[str] = []
     missing = sorted(REQUIRED_CONTRACT_FIELDS - payload.keys())
     if missing:
-        errors.append(f"missing contract fields: {', '.join(missing)}")
-        return errors
-    if payload["schema_version"] != "1.0":
-        errors.append('schema_version must be "1.0"')
-    for field in ("decision", "purpose", "deliverable_type", "selected_clara_workflow"):
-        if not _is_non_empty_string(payload[field]):
-            errors.append(f"{field} must be a non-empty string")
-    if payload["output_language"] not in LANGUAGES:
-        errors.append("output_language must be it, en, fr, de, or es")
-    list_rules = {
-        "audience": False,
-        "scope_included": False,
-        "scope_excluded": True,
-        "available_inputs": False,
-        "evidence_requirements": False,
-        "analysis_plan": False,
-        "assumptions": True,
-        "unresolved_questions": True,
-        "success_criteria": False,
-    }
-    for field, allow_empty in list_rules.items():
-        if not _is_string_list(payload[field], allow_empty=allow_empty):
-            qualifier = "possibly empty" if allow_empty else "non-empty"
-            errors.append(f"{field} must be a {qualifier} array of non-empty strings")
-
-    profile = payload["validation_profile"]
-    if not isinstance(profile, dict):
-        errors.append("validation_profile must be an object")
-    else:
-        dimensions = profile.get("review_dimensions")
-        if not isinstance(dimensions, list) or tuple(dimensions) != REVIEW_DIMENSIONS:
-            errors.append(
-                "validation_profile.review_dimensions must use the fixed ordered set"
-            )
+        return [f"missing contract fields: {', '.join(missing)}"]
+    try:
+        schema = json.loads(CONTRACT_SCHEMA_PATH.read_text(encoding="utf-8"))
+        Draft202012Validator.check_schema(schema)
+    except (OSError, json.JSONDecodeError) as exc:
+        return [f"cannot load advisory contract schema: {exc}"]
+    validator = Draft202012Validator(schema)
+    errors = [
+        "contract schema "
+        + (".".join(str(part) for part in error.absolute_path) or "$")
+        + f": {error.message}"
+        for error in sorted(
+            validator.iter_errors(payload),
+            key=lambda item: tuple(str(part) for part in item.absolute_path),
+        )
+    ]
+    profile = payload.get("validation_profile")
+    if isinstance(profile, dict):
         format_checks = profile.get("format_checks")
-        if not isinstance(format_checks, list):
-            errors.append("validation_profile.format_checks must be an array")
-        else:
-            workflows: list[str] = []
-            for index, item in enumerate(format_checks):
-                subject = f"validation_profile.format_checks[{index}]"
-                if not isinstance(item, dict):
-                    errors.append(f"{subject} must be an object")
-                    continue
-                if not all(
-                    _is_non_empty_string(item.get(field))
-                    for field in ("workflow", "reason")
-                ):
-                    errors.append(f"{subject} requires workflow and reason")
-                if item.get("requirement") not in {
-                    "required",
-                    "if_applicable",
-                    "not_required",
-                }:
-                    errors.append(f"{subject}.requirement is invalid")
-                if not _is_string_list(item.get("artifact_refs"), allow_empty=True):
-                    errors.append(f"{subject}.artifact_refs must be a string array")
-                if _is_non_empty_string(item.get("workflow")):
-                    workflows.append(item["workflow"])
+        if isinstance(format_checks, list):
+            workflows = [
+                item.get("workflow")
+                for item in format_checks
+                if isinstance(item, dict) and _is_non_empty_string(item.get("workflow"))
+            ]
             if len(workflows) != len(set(workflows)):
                 errors.append(
                     "validation_profile.format_checks workflows must be unique"
                 )
-
-    scope = payload["validation_scope"]
-    if not isinstance(scope, dict):
-        errors.append("validation_scope must be an object")
-    else:
-        if scope.get("coverage") not in {
-            "all_material_content",
-            "selected_material_content",
-            "limited",
-        }:
-            errors.append("validation_scope.coverage is invalid")
-        for field, allow_empty in (
-            ("included_sections", False),
-            ("excluded_sections", True),
-            ("limitations", True),
-        ):
-            if not _is_string_list(scope.get(field), allow_empty=allow_empty):
-                errors.append(f"validation_scope.{field} must be a string array")
-
-    correction = payload["correction_policy"]
-    if not isinstance(correction, dict):
-        errors.append("correction_policy must be an object")
-    else:
-        if correction.get("mode") != "separate_artifact":
-            errors.append("correction_policy.mode must be separate_artifact")
-        if correction.get("preserve_original") is not True:
-            errors.append("correction_policy.preserve_original must be true")
-        for field in ("allowed", "approval_required_before_delivery"):
-            if not isinstance(correction.get(field), bool):
-                errors.append(f"correction_policy.{field} must be boolean")
-
-    judgement = payload["professional_judgement_policy"]
-    if not isinstance(judgement, dict):
-        errors.append("professional_judgement_policy must be an object")
-    else:
-        for field in ("owner", "model_role"):
-            if not _is_non_empty_string(judgement.get(field)):
-                errors.append(f"professional_judgement_policy.{field} is required")
-        if not isinstance(judgement.get("approval_required_before_delivery"), bool):
-            errors.append(
-                "professional_judgement_policy.approval_required_before_delivery must be boolean"
-            )
     return errors
 
 

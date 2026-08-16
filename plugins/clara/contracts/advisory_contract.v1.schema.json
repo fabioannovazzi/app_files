@@ -1,10 +1,13 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/advisory-contract-1.0.json",
-  "title": "Clara advisory contract",
+  "$id": "https://mparanza.com/schemas/clara/advisory-contract-v1.json",
+  "title": "Clara advisory assignment contract",
+  "description": "The reviewable assignment and generation-handoff contract produced by Clara's advisory brief planner. Semantic contents are selected by Clara or confirmed by the user; deterministic code validates only the declared shape, references, literal source anchors, and status consistency.",
   "type": "object",
+  "additionalProperties": false,
   "required": [
     "schema_version",
+    "contract_status",
     "decision",
     "purpose",
     "audience",
@@ -22,149 +25,317 @@
     "validation_profile",
     "validation_scope",
     "correction_policy",
-    "professional_judgement_policy"
+    "professional_judgement_policy",
+    "source_facts",
+    "explicit_questions",
+    "generation_handoff",
+    "model_review"
   ],
   "properties": {
     "schema_version": {"const": "1.0"},
-    "decision": {"type": "string", "minLength": 1},
-    "purpose": {"type": "string", "minLength": 1},
-    "audience": {
-      "type": "array",
-      "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
+    "contract_status": {
+      "enum": ["ready_for_handoff", "needs_clarification", "partial"]
     },
-    "deliverable_type": {"type": "string", "minLength": 1},
-    "output_language": {
-      "type": "string",
-      "enum": ["it", "en", "fr", "de", "es"]
-    },
-    "scope_included": {
-      "type": "array",
-      "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
-    },
-    "scope_excluded": {
-      "type": "array",
-      "items": {"type": "string", "minLength": 1}
-    },
+    "decision": {"$ref": "#/$defs/text"},
+    "purpose": {"$ref": "#/$defs/text"},
+    "audience": {"$ref": "#/$defs/text"},
+    "deliverable_type": {"$ref": "#/$defs/text"},
+    "output_language": {"enum": ["it", "en", "fr", "de", "es"]},
+    "scope_included": {"$ref": "#/$defs/text_list_nonempty"},
+    "scope_excluded": {"$ref": "#/$defs/text_list"},
     "available_inputs": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/available_input"}
     },
     "evidence_requirements": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/evidence_requirement"}
     },
     "analysis_plan": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/analysis_step"}
     },
     "assumptions": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/assumption"}
     },
     "unresolved_questions": {
       "type": "array",
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/unresolved_question"}
     },
-    "success_criteria": {
+    "success_criteria": {"$ref": "#/$defs/text_list_nonempty"},
+    "selected_clara_workflow": {
+      "type": "string",
+      "pattern": "^clara:[a-z0-9-]+$"
+    },
+    "validation_profile": {"$ref": "#/$defs/validation_profile"},
+    "validation_scope": {"$ref": "#/$defs/validation_scope"},
+    "correction_policy": {"$ref": "#/$defs/correction_policy"},
+    "professional_judgement_policy": {"$ref": "#/$defs/professional_judgement_policy"},
+    "source_facts": {
       "type": "array",
       "minItems": 1,
-      "items": {"type": "string", "minLength": 1}
+      "items": {"$ref": "#/$defs/source_fact"}
     },
-    "selected_clara_workflow": {"type": "string", "minLength": 1},
+    "explicit_questions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/explicit_question"}
+    },
+    "generation_handoff": {"$ref": "#/$defs/generation_handoff"},
+    "model_review": {"$ref": "#/$defs/model_review"}
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "id_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "id_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/id"}
+    },
+    "text_list": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "text_list_nonempty": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "available_input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "description", "status"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "description": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["available", "planned", "missing"]},
+        "source_ref": {"$ref": "#/$defs/text"}
+      }
+    },
+    "evidence_requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "requirement", "rationale", "status", "input_ids"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "requirement": {"$ref": "#/$defs/text"},
+        "rationale": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["available", "planned", "missing"]},
+        "input_ids": {"$ref": "#/$defs/id_list"}
+      }
+    },
+    "analysis_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "objective", "method", "input_ids", "output"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "objective": {"$ref": "#/$defs/text"},
+        "method": {"$ref": "#/$defs/text"},
+        "input_ids": {"$ref": "#/$defs/id_list"},
+        "output": {"$ref": "#/$defs/text"}
+      }
+    },
+    "assumption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["statement", "status", "materiality"],
+      "properties": {
+        "statement": {"$ref": "#/$defs/text"},
+        "status": {"enum": ["explicit", "provisional"]},
+        "materiality": {"enum": ["material", "contextual"]}
+      }
+    },
+    "unresolved_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "why_it_matters", "blocking"],
+      "properties": {
+        "question": {"$ref": "#/$defs/text"},
+        "why_it_matters": {"$ref": "#/$defs/text"},
+        "blocking": {"type": "boolean"}
+      }
+    },
+    "source_fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["category", "text", "source_anchor", "input_id"],
+      "properties": {
+        "category": {
+          "enum": ["fact", "date", "number", "entity", "constraint"]
+        },
+        "text": {"$ref": "#/$defs/text"},
+        "source_anchor": {"$ref": "#/$defs/text"},
+        "literal_value": {"$ref": "#/$defs/text"},
+        "input_id": {"$ref": "#/$defs/id"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "category": {"enum": ["date", "number"]}
+            },
+            "required": ["category"]
+          },
+          "then": {"required": ["literal_value"]}
+        }
+      ]
+    },
+    "explicit_question": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["question", "input_id"],
+      "properties": {
+        "question": {"$ref": "#/$defs/text"},
+        "input_id": {"$ref": "#/$defs/id"}
+      }
+    },
     "validation_profile": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["review_dimensions", "format_checks"],
       "properties": {
         "review_dimensions": {
           "type": "array",
           "minItems": 10,
-          "uniqueItems": true,
-          "items": {
-            "enum": [
-              "contract_conformance",
-              "factual_source_support",
-              "calculations_data_provenance",
-              "reasoning_assumptions",
-              "contradictions_missing_evidence",
-              "recommendation_evidence_decision_fit",
-              "professional_judgement_boundaries",
-              "correction_needs",
-              "residual_uncertainty",
-              "delivery_readiness"
-            ]
-          }
+          "maxItems": 10,
+          "prefixItems": [
+            {"const": "contract_conformance"},
+            {"const": "factual_source_support"},
+            {"const": "calculations_data_provenance"},
+            {"const": "reasoning_assumptions"},
+            {"const": "contradictions_missing_evidence"},
+            {"const": "recommendation_evidence_decision_fit"},
+            {"const": "professional_judgement_boundaries"},
+            {"const": "correction_needs"},
+            {"const": "residual_uncertainty"},
+            {"const": "delivery_readiness"}
+          ],
+          "items": false
         },
         "format_checks": {
           "type": "array",
           "items": {
             "type": "object",
+            "additionalProperties": false,
             "required": ["workflow", "requirement", "reason", "artifact_refs"],
             "properties": {
-              "workflow": {"type": "string", "minLength": 1},
+              "workflow": {"$ref": "#/$defs/text"},
               "requirement": {
                 "enum": ["required", "if_applicable", "not_required"]
               },
-              "reason": {"type": "string", "minLength": 1},
-              "artifact_refs": {
-                "type": "array",
-                "items": {"type": "string", "minLength": 1}
-              }
-            },
-            "additionalProperties": false
+              "reason": {"$ref": "#/$defs/text"},
+              "artifact_refs": {"$ref": "#/$defs/text_list"}
+            }
           }
         }
-      },
-      "additionalProperties": false
+      }
     },
     "validation_scope": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["coverage", "included_sections", "excluded_sections", "limitations"],
       "properties": {
         "coverage": {
           "enum": ["all_material_content", "selected_material_content", "limited"]
         },
-        "included_sections": {
-          "type": "array",
-          "minItems": 1,
-          "items": {"type": "string", "minLength": 1}
-        },
-        "excluded_sections": {
-          "type": "array",
-          "items": {"type": "string", "minLength": 1}
-        },
-        "limitations": {
-          "type": "array",
-          "items": {"type": "string", "minLength": 1}
-        }
-      },
-      "additionalProperties": false
+        "included_sections": {"$ref": "#/$defs/text_list_nonempty"},
+        "excluded_sections": {"$ref": "#/$defs/text_list"},
+        "limitations": {"$ref": "#/$defs/text_list"}
+      }
     },
     "correction_policy": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["mode", "preserve_original", "allowed", "approval_required_before_delivery"],
       "properties": {
         "mode": {"const": "separate_artifact"},
         "preserve_original": {"const": true},
         "allowed": {"type": "boolean"},
         "approval_required_before_delivery": {"type": "boolean"}
-      },
-      "additionalProperties": false
+      }
     },
     "professional_judgement_policy": {
       "type": "object",
+      "additionalProperties": false,
       "required": ["owner", "model_role", "approval_required_before_delivery"],
       "properties": {
-        "owner": {"type": "string", "minLength": 1},
-        "model_role": {"type": "string", "minLength": 1},
+        "owner": {"$ref": "#/$defs/text"},
+        "model_role": {"$ref": "#/$defs/text"},
         "approval_required_before_delivery": {"type": "boolean"}
-      },
-      "additionalProperties": false
+      }
+    },
+    "generation_handoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workflow",
+        "objective",
+        "input_ids",
+        "instructions",
+        "expected_outputs",
+        "preserve_specialist_authority"
+      ],
+      "properties": {
+        "workflow": {
+          "type": "string",
+          "pattern": "^clara:[a-z0-9-]+$"
+        },
+        "objective": {"$ref": "#/$defs/text"},
+        "input_ids": {"$ref": "#/$defs/id_list_nonempty"},
+        "instructions": {"$ref": "#/$defs/text_list_nonempty"},
+        "expected_outputs": {"$ref": "#/$defs/text_list_nonempty"},
+        "preserve_specialist_authority": {"const": true}
+      }
+    },
+    "model_review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["method", "dimensions", "overall_status"],
+      "properties": {
+        "method": {"const": "model_led_assignment_contract_review"},
+        "dimensions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "material_facts_dates_numbers_entities_constraints_questions",
+            "decision_purpose_audience_deliverable",
+            "scope_inputs_evidence",
+            "analysis_and_success_criteria",
+            "workflow_and_generation_handoff",
+            "validation_and_professional_judgement"
+          ],
+          "properties": {
+            "material_facts_dates_numbers_entities_constraints_questions": {"$ref": "#/$defs/review_status"},
+            "decision_purpose_audience_deliverable": {"$ref": "#/$defs/review_status"},
+            "scope_inputs_evidence": {"$ref": "#/$defs/review_status"},
+            "analysis_and_success_criteria": {"$ref": "#/$defs/review_status"},
+            "workflow_and_generation_handoff": {"$ref": "#/$defs/review_status"},
+            "validation_and_professional_judgement": {"$ref": "#/$defs/review_status"}
+          }
+        },
+        "overall_status": {"$ref": "#/$defs/review_status"}
+      }
+    },
+    "review_status": {
+      "enum": ["conforms", "partially_conforms", "does_not_conform", "uncertain"]
     }
-  },
-  "additionalProperties": true
+  }
 }
