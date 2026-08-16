@@ -44,6 +44,11 @@ CLARA_DISCOVERY_TERMS = (
 @pytest.mark.parametrize(
     ("skill_name", "display_name", "old_skill_name"),
     [
+        (
+            "advisory-deliverable-validator",
+            "Validate an advisory deliverable",
+            "clara-advisory-deliverable-validator",
+        ),
         ("claim-basis-map", "Verify presentation claims", "clara-claim-basis-map"),
         ("interview", "Prepare and conduct interviews", "clara-interview"),
         (
@@ -78,6 +83,7 @@ def test_clara_skill_identity_uses_namespace_without_redundant_prefix(
 
 def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None:
     expected = {
+        "advisory-deliverable-validator": "Validate an advisory deliverable",
         "advisory-brief-planner": "Plan an advisory assignment",
         "attribute-reporting": (
             "Compare assortment, new-product, and best-seller attributes"
@@ -109,6 +115,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
     for skill_name in (
+        "advisory-deliverable-validator",
         "advisory-brief-planner",
         "attribute-reporting",
         "brand-fit",
@@ -127,6 +134,9 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "functions.presentations": "Create and revise presentations",
         "functions.researchVideo": expected["research-video"],
         "functions.documents": "Create and revise documents",
+        "functions.advisoryDeliverableValidator": expected[
+            "advisory-deliverable-validator"
+        ],
         "functions.interviews": expected["interview"],
         "functions.transcription": expected["transcribe"],
         "functions.retailerSignals": expected["attribute-reporting"],
@@ -878,7 +888,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.153"
+    assert manifest["version"] == "0.1.154"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -929,6 +939,8 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         "reporting-engine-chart-contract",
         "reporting-engine-semantic-layer",
         "reporting-engine-recurring-snapshot",
+        "validate-completed-advisory-deliverable",
+        "validate-external-advisory-document-without-contract",
     }.issubset(fixture_ids)
     expected_routes = {
         item["id"]: item.get("expected_skill")
@@ -957,6 +969,12 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
     )
     assert expected_routes["reporting-engine-recurring-snapshot"] == (
         "clara:reporting-engine"
+    )
+    assert expected_routes["validate-completed-advisory-deliverable"] == (
+        "clara:advisory-deliverable-validator"
+    )
+    assert expected_routes["validate-external-advisory-document-without-contract"] == (
+        "clara:advisory-deliverable-validator"
     )
     main_description = main_skill.split("---", 2)[1]
     assert "hosted interview" not in main_description.lower()

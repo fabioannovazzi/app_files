@@ -16,6 +16,10 @@ matches the request.
   reviewable `advisory_contract.json` assignment and generation-handoff
   contract, then route execution to the existing Clara workflow that retains
   procedural authority.
+- `advisory-deliverable-validator`: validate a completed advisory memo, report,
+  analysis, presentation, or other supported professional document against
+  `advisory_contract.json` and available evidence, while composing with rather
+  than duplicating the applicable format-specific Clara checks.
 - `attribute-reporting`: map retailer products to a central taxonomy, compare a
   retailer-defined cohort with the remaining assortment, and create a checked
   private Retailer Signals report.

@@ -14,6 +14,7 @@ BUILD_SCRIPT = ROOT / "scripts" / "build_claude_plugin_zip.py"
 CLARA_SOURCE_MANIFEST = ROOT / "plugins" / "clara" / ".codex-plugin" / "plugin.json"
 CLARA_CLAUDE_MANIFEST = ROOT / "plugins" / "clara" / ".claude-plugin" / "plugin.json"
 EXPECTED_ROOT_SKILLS = {
+    "advisory-deliverable-validator",
     "advisory-brief-planner",
     "attribute-reporting",
     "brand-fit",
@@ -56,8 +57,8 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.153"
-    assert template["version"] == manifest["version"] == "0.1.137"
+    assert source["version"] == "0.1.154"
+    assert template["version"] == manifest["version"] == "0.1.138"
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"
     assert manifest["homepage"].endswith("/clara/index.html?lang=en")
@@ -84,6 +85,9 @@ def test_clara_cowork_includes_claude_agent(clara_entries) -> None:
 
 def test_clara_cowork_retains_specialist_runtime_files(clara_entries) -> None:
     required_runtime_files = {
+        "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
+        "skills/advisory-deliverable-validator/references/advisory-contract.md",
+        "skills/advisory-deliverable-validator/references/advisory_validation_review.schema.json",
         "skills/claim-basis-map/scripts/render_claim_basis_map.py",
         "skills/html-deck/assets/deck-engine/deck.css",
         "skills/html-deck/scripts/build_html_deck.py",
@@ -251,7 +255,7 @@ def test_marketplace_catalog_contains_configured_plugins(configured_clara) -> No
 
     assert set(entries) == {"clara", "lucia", "vera"}
     assert entries["clara"]["source"] == "./plugin_packages/clara/claude/clara"
-    assert entries["clara"]["version"] == "0.1.137"
+    assert entries["clara"]["version"] == "0.1.138"
     assert entries["clara"]["strict"] is True
     assert "version" not in catalog
     assert builder.verify_package(package) == []

@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/advisory-validation-review-1.0.json",
+  "title": "Clara advisory deliverable validation review",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "language",
+    "advisory_contract_sha256",
+    "deliverable_sha256",
+    "coverage_review",
+    "dimension_reviews",
+    "findings",
+    "format_specific_checks",
+    "correction",
+    "approvals",
+    "overall_assessment",
+    "delivery_readiness"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "language": {"enum": ["it", "en", "fr", "de", "es"]},
+    "advisory_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "deliverable_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "coverage_review": {
+      "type": "object",
+      "required": ["selection_method", "scope", "reviewed_sections", "omitted_sections", "limitations", "analysis"],
+      "properties": {
+        "selection_method": {"const": "model_led_materiality_review"},
+        "scope": {"enum": ["all_material_content", "selected_material_content", "limited"]},
+        "reviewed_sections": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+        "omitted_sections": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "analysis": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "dimension_reviews": {
+      "type": "object",
+      "required": [
+        "contract_conformance",
+        "factual_source_support",
+        "calculations_data_provenance",
+        "reasoning_assumptions",
+        "contradictions_missing_evidence",
+        "recommendation_evidence_decision_fit",
+        "professional_judgement_boundaries",
+        "correction_needs",
+        "residual_uncertainty",
+        "delivery_readiness"
+      ],
+      "properties": {
+        "contract_conformance": {"$ref": "#/$defs/dimensionReview"},
+        "factual_source_support": {"$ref": "#/$defs/dimensionReview"},
+        "calculations_data_provenance": {"$ref": "#/$defs/dimensionReview"},
+        "reasoning_assumptions": {"$ref": "#/$defs/dimensionReview"},
+        "contradictions_missing_evidence": {"$ref": "#/$defs/dimensionReview"},
+        "recommendation_evidence_decision_fit": {"$ref": "#/$defs/dimensionReview"},
+        "professional_judgement_boundaries": {"$ref": "#/$defs/dimensionReview"},
+        "correction_needs": {"$ref": "#/$defs/dimensionReview"},
+        "residual_uncertainty": {"$ref": "#/$defs/dimensionReview"},
+        "delivery_readiness": {"$ref": "#/$defs/dimensionReview"}
+      },
+      "additionalProperties": false
+    },
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    },
+    "format_specific_checks": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/formatCheck"}
+    },
+    "correction": {
+      "type": "object",
+      "required": ["status", "summary", "corrected_artifact", "corrected_artifact_sha256", "unresolved_changes"],
+      "properties": {
+        "status": {"enum": ["not_required", "required", "completed", "blocked"]},
+        "summary": {"type": "string", "minLength": 1},
+        "corrected_artifact": {"type": "string"},
+        "corrected_artifact_sha256": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
+        "unresolved_changes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "completed"}}},
+          "then": {
+            "properties": {
+              "corrected_artifact": {"type": "string", "minLength": 1},
+              "corrected_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          },
+          "else": {
+            "properties": {
+              "corrected_artifact": {"const": ""},
+              "corrected_artifact_sha256": {"const": ""}
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "approvals": {
+      "type": "object",
+      "required": ["professional_judgement", "correction"],
+      "properties": {
+        "professional_judgement": {"$ref": "#/$defs/approvalRecord"},
+        "correction": {"$ref": "#/$defs/approvalRecord"}
+      },
+      "additionalProperties": false
+    },
+    "overall_assessment": {
+      "type": "object",
+      "required": ["outcome", "analysis", "residual_uncertainties", "professional_review_items"],
+      "properties": {
+        "outcome": {"$ref": "#/$defs/readinessStatus"},
+        "analysis": {"type": "string", "minLength": 1},
+        "residual_uncertainties": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "professional_review_items": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "delivery_readiness": {
+      "type": "object",
+      "required": ["status", "conditions"],
+      "properties": {
+        "status": {"$ref": "#/$defs/readinessStatus"},
+        "conditions": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "dimensionName": {
+      "enum": [
+        "contract_conformance",
+        "factual_source_support",
+        "calculations_data_provenance",
+        "reasoning_assumptions",
+        "contradictions_missing_evidence",
+        "recommendation_evidence_decision_fit",
+        "professional_judgement_boundaries",
+        "correction_needs",
+        "residual_uncertainty",
+        "delivery_readiness"
+      ]
+    },
+    "dimensionStatus": {
+      "enum": ["conforms", "partially_conforms", "does_not_conform", "contradicted", "uncertain", "judgment_required", "not_applicable"]
+    },
+    "correctionStatus": {
+      "enum": ["not_needed", "proposed", "completed", "blocked", "professional_review_required"]
+    },
+    "dimensionReview": {
+      "type": "object",
+      "required": ["status", "analysis", "evidence_refs", "issues", "correction_status", "professional_review_required"],
+      "properties": {
+        "status": {"$ref": "#/$defs/dimensionStatus"},
+        "analysis": {"type": "string", "minLength": 1},
+        "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "issues": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "correction_status": {"$ref": "#/$defs/correctionStatus"},
+        "professional_review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "finding": {
+      "type": "object",
+      "required": ["id", "dimension", "finding", "status", "evidence_refs", "correction_action", "correction_status", "professional_review_required"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "dimension": {"$ref": "#/$defs/dimensionName"},
+        "finding": {"type": "string", "minLength": 1},
+        "status": {"$ref": "#/$defs/dimensionStatus"},
+        "evidence_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "correction_action": {"type": "string"},
+        "correction_status": {"$ref": "#/$defs/correctionStatus"},
+        "professional_review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "formatCheck": {
+      "type": "object",
+      "required": ["workflow", "status", "artifact_refs", "analysis"],
+      "properties": {
+        "workflow": {"type": "string", "minLength": 1},
+        "status": {"enum": ["passed", "issues_found", "blocked", "not_run", "not_applicable"]},
+        "artifact_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "analysis": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "readinessStatus": {
+      "enum": ["ready", "ready_with_residual_uncertainty", "not_ready", "blocked"]
+    },
+    "approvalRecord": {
+      "type": "object",
+      "required": ["status", "approved_by", "evidence_refs"],
+      "properties": {
+        "status": {"enum": ["approved", "pending", "not_required"]},
+        "approved_by": {"type": "string"},
+        "evidence_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "approved"}}},
+          "then": {
+            "properties": {
+              "approved_by": {"type": "string", "minLength": 1},
+              "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+            }
+          },
+          "else": {
+            "properties": {
+              "approved_by": {"const": ""},
+              "evidence_refs": {"const": []}
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

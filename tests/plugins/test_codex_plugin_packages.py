@@ -4485,7 +4485,7 @@ def test_clara_page_matches_plugin_site_pattern() -> None:
     assert 'id="data-handling"' not in page
     assert 'id="presentations"' not in page
     assert 'id="videos"' not in page
-    assert page.count('class="function-link"') == 9
+    assert page.count('class="function-link"') == 10
     for stale_snippet in (
         "Clara prepares the work. The judgment remains yours.",
         "Clara prepara il lavoro. Il giudizio resta tuo.",
@@ -5128,7 +5128,7 @@ def test_clara_public_page_uses_vera_visual_system() -> None:
     assert 'href="clara-page.css?v=' in page
     assert 'src="icon.svg"' in page
     assert 'class="function-directory"' in page
-    assert page.count('class="function-link"') == 9
+    assert page.count('class="function-link"') == 10
     for color in ("#002060", "#0070C0", "#00B0F0", "#FFFFFF"):
         assert color in stylesheet
     for black in ("#000000", "#171816"):

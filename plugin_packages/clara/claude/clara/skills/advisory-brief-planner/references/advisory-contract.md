@@ -59,6 +59,19 @@ An `analysis_plan` record contains a stable step ID, objective, method, linked
 input IDs, and expected intermediate output. The model chooses all of these.
 The plan cannot override the selected specialist skill after handoff.
 
+## Validation controls
+
+`validation_profile.review_dimensions` is the fixed ordered set of ten advisory
+review dimensions published in the JSON Schema.
+`validation_profile.format_checks` declares each existing Clara format check as
+`required`, `if_applicable`, or `not_required`, with its reason and artifact
+references. `validation_scope` records coverage, included sections, excluded
+sections, and limitations. `correction_policy` always preserves the original
+and writes corrections as a separate artifact. `professional_judgement_policy`
+names the owner, the model's bounded role, and whether explicit approval is
+required before delivery. These nested controls are the stable handoff consumed
+directly by `clara:advisory-deliverable-validator`.
+
 ## Source preservation
 
 Every material fact must be represented in `source_facts` with:

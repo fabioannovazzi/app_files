@@ -18,6 +18,11 @@ generation, then hand it to the selected specialist. Do not make the user ask
 for prompt optimization, and do not let the planner replace the specialist's
 workflow.
 
+When the user supplies a completed advisory memo, report, analysis, or
+presentation for validation, route to `clara:advisory-deliverable-validator`.
+Require or create `advisory_contract.json` from explicit or user-confirmed
+context, and keep existing format-specific Clara checks authoritative.
+
 Treat local scripts, connectors, browser control, and computer control as
 optional capabilities. Use them only when they are callable and the selected
 specialist skill permits them. If they are unavailable, continue with the

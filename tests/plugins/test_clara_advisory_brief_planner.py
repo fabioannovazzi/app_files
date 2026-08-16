@@ -114,13 +114,41 @@ def _representative_contract() -> dict[str, Any]:
             "France remains outside scope.",
         ],
         "selected_clara_workflow": "clara:clara",
-        "validation_profile": "Decision brief evidence, reasoning, and source traceability review",
-        "validation_scope": [
-            "All material recommendation claims",
-            "Dates, figures, entities, constraints, and explicit questions",
-        ],
-        "correction_policy": "Correct factual or source-supported errors before delivery; return judgement changes for consultant review.",
-        "professional_judgement_policy": "The consultant confirms the integration recommendation and any accepted risk threshold.",
+        "validation_profile": {
+            "review_dimensions": [
+                "contract_conformance",
+                "factual_source_support",
+                "calculations_data_provenance",
+                "reasoning_assumptions",
+                "contradictions_missing_evidence",
+                "recommendation_evidence_decision_fit",
+                "professional_judgement_boundaries",
+                "correction_needs",
+                "residual_uncertainty",
+                "delivery_readiness",
+            ],
+            "format_checks": [],
+        },
+        "validation_scope": {
+            "coverage": "all_material_content",
+            "included_sections": [
+                "All material recommendation claims",
+                "Dates, figures, entities, constraints, and explicit questions",
+            ],
+            "excluded_sections": [],
+            "limitations": [],
+        },
+        "correction_policy": {
+            "mode": "separate_artifact",
+            "preserve_original": True,
+            "allowed": True,
+            "approval_required_before_delivery": True,
+        },
+        "professional_judgement_policy": {
+            "owner": "Consultant",
+            "model_role": "Identify issues and draft evidence-bounded corrections",
+            "approval_required_before_delivery": True,
+        },
         "source_facts": [
             {
                 "category": "entity",

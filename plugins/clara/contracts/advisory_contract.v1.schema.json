@@ -71,10 +71,10 @@
       "type": "string",
       "pattern": "^clara:[a-z0-9-]+$"
     },
-    "validation_profile": {"$ref": "#/$defs/text"},
-    "validation_scope": {"$ref": "#/$defs/text_list_nonempty"},
-    "correction_policy": {"$ref": "#/$defs/text"},
-    "professional_judgement_policy": {"$ref": "#/$defs/text"},
+    "validation_profile": {"$ref": "#/$defs/validation_profile"},
+    "validation_scope": {"$ref": "#/$defs/validation_scope"},
+    "correction_policy": {"$ref": "#/$defs/correction_policy"},
+    "professional_judgement_policy": {"$ref": "#/$defs/professional_judgement_policy"},
     "source_facts": {
       "type": "array",
       "minItems": 1,
@@ -205,6 +205,81 @@
       "properties": {
         "question": {"$ref": "#/$defs/text"},
         "input_id": {"$ref": "#/$defs/id"}
+      }
+    },
+    "validation_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_dimensions", "format_checks"],
+      "properties": {
+        "review_dimensions": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 10,
+          "prefixItems": [
+            {"const": "contract_conformance"},
+            {"const": "factual_source_support"},
+            {"const": "calculations_data_provenance"},
+            {"const": "reasoning_assumptions"},
+            {"const": "contradictions_missing_evidence"},
+            {"const": "recommendation_evidence_decision_fit"},
+            {"const": "professional_judgement_boundaries"},
+            {"const": "correction_needs"},
+            {"const": "residual_uncertainty"},
+            {"const": "delivery_readiness"}
+          ],
+          "items": false
+        },
+        "format_checks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["workflow", "requirement", "reason", "artifact_refs"],
+            "properties": {
+              "workflow": {"$ref": "#/$defs/text"},
+              "requirement": {
+                "enum": ["required", "if_applicable", "not_required"]
+              },
+              "reason": {"$ref": "#/$defs/text"},
+              "artifact_refs": {"$ref": "#/$defs/text_list"}
+            }
+          }
+        }
+      }
+    },
+    "validation_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage", "included_sections", "excluded_sections", "limitations"],
+      "properties": {
+        "coverage": {
+          "enum": ["all_material_content", "selected_material_content", "limited"]
+        },
+        "included_sections": {"$ref": "#/$defs/text_list_nonempty"},
+        "excluded_sections": {"$ref": "#/$defs/text_list"},
+        "limitations": {"$ref": "#/$defs/text_list"}
+      }
+    },
+    "correction_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "preserve_original", "allowed", "approval_required_before_delivery"],
+      "properties": {
+        "mode": {"const": "separate_artifact"},
+        "preserve_original": {"const": true},
+        "allowed": {"type": "boolean"},
+        "approval_required_before_delivery": {"type": "boolean"}
+      }
+    },
+    "professional_judgement_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["owner", "model_role", "approval_required_before_delivery"],
+      "properties": {
+        "owner": {"$ref": "#/$defs/text"},
+        "model_role": {"$ref": "#/$defs/text"},
+        "approval_required_before_delivery": {"type": "boolean"}
       }
     },
     "generation_handoff": {

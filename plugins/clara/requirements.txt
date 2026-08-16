@@ -1,4 +1,5 @@
 imageio-ffmpeg>=0.5
+jsonschema>=4.23,<5
 Pillow>=11.1
 playwright>=1.48.0
 pymupdf>=1.24
