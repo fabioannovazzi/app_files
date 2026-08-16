@@ -1,6 +1,12 @@
 {
   "schema_version": 2,
   "skills": {
+    "advisory-brief-planner": {
+      "display_name": "Plan an advisory assignment",
+      "short_description": "Turn a natural advisory request into a reviewable contract",
+      "default_prompt": "Use $advisory-brief-planner to preserve this assignment's facts, define its contract, and prepare the Clara workflow handoff.",
+      "instructions": "Describe the advisory assignment naturally and provide any current source materials. Clara preserves the material facts, dates, numbers, entities, constraints, and explicit questions; defines the decision, deliverable, scope, evidence plan, assumptions, analytical approach, success criteria, validation, and professional judgement boundary; then prepares the reviewable advisory_contract.json handoff to the appropriate Clara workflow."
+    },
     "clara": {
       "display_name": "Clara",
       "short_description": "Turn evidence into reviewable advisory work",

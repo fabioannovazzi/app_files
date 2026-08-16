@@ -105,6 +105,16 @@ user asks to place its reviewed chart or interpretation in an advisory output.
 Hosted-interview bundles and Hosted Voice bundles use different schemas; never
 pass one to the other's importer.
 
+For a new or materially reframed advisory assignment that has no current
+reviewed assignment contract, first use `advisory-brief-planner`. The user
+describes the assignment naturally; do not ask whether to optimize a prompt.
+The planner writes `advisory_contract.json`, selects the downstream workflow
+with model-led judgement, and hands the contract to it. It does not replace the
+main advisory case loops or any specialist skill's procedural authority. A
+narrow continuation with a still-current contract, or a specialist operation
+with its own accepted intake contract, does not need duplicate planning
+ceremony.
+
 The selected specialist skill is the sole procedural authority for its domain.
 If one of those requests appears during a main Clara case run, load and follow
 the specialist skill instead of executing older detail retained later in this
@@ -394,7 +404,7 @@ names unless the facts cue them or the user must supply a missing custom value.
 Default output policy: produce the natural full package for the workflow when
 dependencies permit: `case_manifest.json`, `material_registry.json`,
 `judgement_log.json`, `open_questions.json`, `case_issues.json`, `case_brief.md`,
-`clara_mandate.json`, `clara_kickoff_deck.html`,
+`advisory_contract.json`, `clara_mandate.json`, `clara_kickoff_deck.html`,
 `clara_partner_brief.html`, `advisory_evidence_map.md`,
 `advisory_workpaper.md`, `judgement_checkpoint.md`,
 `presentation_storyline.md`, `presentation_review.md`, `decision_pack.md`,
@@ -1278,6 +1288,10 @@ local filesystem paths, and internal workpaper mechanics are not present.
 
 The case workspace owns durable JSON files and derived working artifacts:
 
+- `advisory_contract.json`: the schema-versioned assignment, evidence,
+  analysis, validation, professional-judgement, and generation-handoff contract
+  produced by `clara:advisory-brief-planner`. It feeds the selected Clara
+  workflow without replacing that workflow's authority.
 - `case_manifest.json`: client, project, objective, audience, status, output
   language, timestamps.
 - `company_profile.json` or `clara_company_profile.json` in the case folder or

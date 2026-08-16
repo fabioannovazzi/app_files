@@ -12,6 +12,10 @@ matches the request.
 
 ## Professional workflows
 
+- `advisory-brief-planner`: turn a natural advisory assignment into the
+  reviewable `advisory_contract.json` assignment and generation-handoff
+  contract, then route execution to the existing Clara workflow that retains
+  procedural authority.
 - `attribute-reporting`: map retailer products to a central taxonomy, compare a
   retailer-defined cohort with the remaining assortment, and create a checked
   private Retailer Signals report.

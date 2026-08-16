@@ -33,6 +33,10 @@ turns validated understanding into working artifacts.
 
 Clara keeps its specialist workflows separate:
 
+- `advisory-brief-planner` turns a naturally described advisory assignment into
+  `advisory_contract.json`, preserving material facts, scope, evidence needs,
+  assumptions, success criteria, validation policy, and the handoff to the
+  existing Clara workflow that will execute the work;
 - `interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
 - `transcribe` records or uploads advisor voice notes, meetings, and calls,

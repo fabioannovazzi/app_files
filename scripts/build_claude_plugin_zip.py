@@ -375,6 +375,7 @@ artifact card and final response.""",
 
 CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
+        "advisory-brief-planner",
         "attribute-reporting",
         "brand-fit",
         "claim-basis-map",
@@ -432,7 +433,8 @@ CLARA_COWORK_RUNTIME_REFERENCE = "skills/clara/references/cowork-runtime.md"
 CLARA_COWORK_README = """# Clara for Claude Cowork
 
 Clara prepares reviewable advisory work from files in the connected folder.
-Use the `clara` skill for case work or the narrowest specialist skill for
+Use the advisory planner for a new assignment, the `clara` skill for case work,
+or the narrowest specialist skill for
 Retailer Signals, Brand Fit, reporting and charting, HTML presentations, or
 claim-basis review.
 
