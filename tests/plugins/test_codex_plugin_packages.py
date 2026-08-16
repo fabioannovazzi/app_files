@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.145"
+    assert manifest["version"] == "0.1.146"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3788,7 +3788,7 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
         "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
         "gli input ripuliti e i pacchetti temporanei vengono eliminati",
         "È pseudonimizzazione, non anonimizzazione",
-        "Il nucleo è identico in Codex e Cowork",
+        "Vera e Lucia usano lo stesso nucleo in Codex e Cowork",
         "solo Codex può inviare facoltativamente a Creative Production",
     ):
         assert required_copy in function_copy
