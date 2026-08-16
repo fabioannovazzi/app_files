@@ -13,6 +13,7 @@
     "findings",
     "format_specific_checks",
     "correction",
+    "approvals",
     "overall_assessment",
     "delivery_readiness"
   ],
@@ -72,12 +73,39 @@
     },
     "correction": {
       "type": "object",
-      "required": ["status", "summary", "corrected_artifact", "unresolved_changes"],
+      "required": ["status", "summary", "corrected_artifact", "corrected_artifact_sha256", "unresolved_changes"],
       "properties": {
         "status": {"enum": ["not_required", "required", "completed", "blocked"]},
         "summary": {"type": "string", "minLength": 1},
         "corrected_artifact": {"type": "string"},
+        "corrected_artifact_sha256": {"type": "string", "pattern": "^$|^[0-9a-f]{64}$"},
         "unresolved_changes": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "completed"}}},
+          "then": {
+            "properties": {
+              "corrected_artifact": {"type": "string", "minLength": 1},
+              "corrected_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            }
+          },
+          "else": {
+            "properties": {
+              "corrected_artifact": {"const": ""},
+              "corrected_artifact_sha256": {"const": ""}
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "approvals": {
+      "type": "object",
+      "required": ["professional_judgement", "correction"],
+      "properties": {
+        "professional_judgement": {"$ref": "#/$defs/approvalRecord"},
+        "correction": {"$ref": "#/$defs/approvalRecord"}
       },
       "additionalProperties": false
     },
@@ -164,6 +192,36 @@
     },
     "readinessStatus": {
       "enum": ["ready", "ready_with_residual_uncertainty", "not_ready", "blocked"]
+    },
+    "approvalRecord": {
+      "type": "object",
+      "required": ["status", "approved_by", "evidence_refs"],
+      "properties": {
+        "status": {"enum": ["approved", "pending", "not_required"]},
+        "approved_by": {"type": "string"},
+        "evidence_refs": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1}
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "approved"}}},
+          "then": {
+            "properties": {
+              "approved_by": {"type": "string", "minLength": 1},
+              "evidence_refs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}}
+            }
+          },
+          "else": {
+            "properties": {
+              "approved_by": {"const": ""},
+              "evidence_refs": {"const": []}
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

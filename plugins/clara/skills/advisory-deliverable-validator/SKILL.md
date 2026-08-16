@@ -32,10 +32,12 @@ judgement boundaries, and drafting evidence-bounded corrections.
 Deterministic code is limited to mechanically verifiable work: supported-format
 text extraction, file hashing, citation/link/numeric-token inventory, declared
 JSON-shape validation, cross-field consistency, original-preservation checks,
-and packaging. These fixed checks are justified by reproducibility and audit
-closure. They never decide which content is material, whether evidence supports
-a claim, whether reasoning is sound, or whether a recommendation is good. The
-scripts make no model API calls. Do not replace them with a keyword classifier,
+approval-state consistency, referenced-artifact existence and hashing, and
+packaging. These fixed checks are justified by mechanically verifiable
+correctness and audit closure. They never decide which content is material,
+whether evidence supports a claim, whether reasoning is sound, whether a
+format-specific check passed semantically, or whether a recommendation is good.
+The scripts make no model API calls. Do not replace them with a keyword classifier,
 semantic scorecard, or hidden model route.
 
 ## Advisory contract
@@ -119,7 +121,10 @@ it does not duplicate or weaken them:
 Record these needs under `validation_profile.format_checks` in the advisory
 contract. Required check artifacts remain authoritative. If a required check is
 blocked, delivery readiness is blocked; the validator must not reimplement a
-weaker substitute.
+weaker substitute. A check marked `passed` must reference the actual local
+artifact files. Packaging resolves those paths relative to the advisory
+contract, verifies that they exist, and records their hashes without rejudging
+their contents.
 
 ## Workflow
 
@@ -154,13 +159,19 @@ python scripts/managed_python_runtime.py run \
 5. Write `advisory_validation_review_draft.json` against
    [references/advisory_validation_review.schema.json](references/advisory_validation_review.schema.json).
    Use `model_led_materiality_review` as the coverage selection method. Record
-   evidence references, analysis, correction state, and professional-review
-   needs separately. Do not turn the fields into a numeric score.
+   evidence references, analysis, correction state, professional-review needs,
+   and explicit approval records separately. Approval is a user or professional
+   fact: never infer it from polished output, an empty issue list, or a model
+   recommendation. Do not turn the fields into a numeric score.
 6. If correction is needed and permitted, create a separate corrected artifact.
    Preserve the original bytes. For decks, use `clara:deck-correction`; for
    calculation-backed content, rerun the authoritative Reporting Engine checks;
    for an HTML stage deck, rebuild and rerun HTML deck validation/browser QA.
-   Re-review the corrected artifact before marking correction completed.
+   Re-review the corrected artifact before marking correction completed. Record
+   its resolved path and SHA-256 in the correction record. When the contract
+   requires correction or professional-judgement approval before delivery,
+   record the explicit approver and a reference to the approval; pending
+   approval is not delivery-ready.
 7. Package and mechanically audit the review:
 
 ```bash
@@ -174,10 +185,11 @@ python scripts/managed_python_runtime.py run \
 ```
 
 8. Read `validation_audit.json`. Its `record_complete` status proves only
-   declared shape, hash binding, cross-field consistency, required format-check
-   accounting, and original preservation. Use `delivery_readiness.status` and
-   the semantic review to state whether delivery is ready, ready with residual
-   uncertainty, not ready, or blocked.
+   declared shape, original and corrected-artifact hash binding, explicit
+   approval-state consistency, cross-field consistency, existence and hashes of
+   referenced format-check artifacts, and original preservation. Use
+   `delivery_readiness.status` and the semantic review to state whether delivery
+   is ready, ready with residual uncertainty, not ready, or blocked.
 
 ## Codex and Cowork
 
@@ -251,3 +263,7 @@ links to those artifacts and the unresolved or professionally owned decisions.
 - Review-record audit failure: repair the model-authored record and rerun
   packaging; do not ignore failed checks.
 - Proposed correction without a separate artifact: keep delivery not ready.
+- Required approval still pending: keep delivery not ready; do not infer
+  approval.
+- Output path aliases an input or corrected artifact: choose a different output
+  folder or filename; never overwrite the protected file.

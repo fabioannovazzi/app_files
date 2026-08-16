@@ -15,12 +15,12 @@
       {
         "id": "deliverable-contract-and-selected-evidence",
         "purpose": "Validate the completed advisory deliverable against its declared contract and available evidence",
-        "content": "The complete selected deliverable text or visible slide content; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy"
+        "content": "The complete selected deliverable text or visible slide content; for HTML, extracted text and links excluding script, style, and template blocks while the full file bytes remain covered by the local hash; advisory_contract.json; selected source files or model-requested excerpts; filenames and local paths; citations, links, figures, calculations, data provenance, assumptions, contradictions, missing evidence, recommendations, decision context, audience, scope, and professional-judgement policy"
       },
       {
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
-        "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, model-led findings, correction drafts, residual uncertainties, professional-review items, and delivery-readiness assessment"
+        "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, referenced artifact paths and hashes, model-led findings, correction drafts and their path/hash binding, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
       }
     ]
   },
@@ -50,6 +50,6 @@
     "reviewed_at": "2026-08-16",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9c99eb18e1b32c26856fbd94747e7f8f51caef4909576ecc7af5d00022697b96"
+    "source_fingerprint": "0331daf9fd4b21a7d052ac4a5d4f9d18655608bc6c07bd880883963fdae59ac0"
   }
 }

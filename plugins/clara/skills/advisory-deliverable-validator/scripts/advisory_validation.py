@@ -106,6 +106,7 @@ READINESS_STATUSES = {
     "not_ready",
     "blocked",
 }
+APPROVAL_STATUSES = {"approved", "pending", "not_required"}
 URL_RE = re.compile(r"https?://[^\s)\]>\"']+", re.IGNORECASE)
 CITATION_RE = re.compile(r"\[(?:\^?[A-Za-z0-9_-]+|\d+(?:,\s*\d+)*)\]")
 FOOTNOTE_RE = re.compile(r"^\[\^?([A-Za-z0-9_-]+)\]:\s*(.+)$", re.MULTILINE)
@@ -123,22 +124,36 @@ class AdvisoryValidationError(ValueError):
 
 
 class _HTMLTextExtractor(HTMLParser):
+    _NON_VISIBLE_ELEMENTS = {"script", "style", "template"}
+
     def __init__(self) -> None:
         super().__init__()
         self.parts: list[str] = []
+        self._non_visible_depth = 0
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag in self._NON_VISIBLE_ELEMENTS:
+            self._non_visible_depth += 1
+            return
+        if self._non_visible_depth:
+            return
         if tag == "a":
             for key, value in attrs:
                 if key.casefold() == "href" and value:
                     self.parts.append(f" {value} ")
 
     def handle_endtag(self, tag: str) -> None:
+        if tag in self._NON_VISIBLE_ELEMENTS and self._non_visible_depth:
+            self._non_visible_depth -= 1
+            return
+        if self._non_visible_depth:
+            return
         if tag in {"p", "div", "br", "li", "section", "article", "h1", "h2", "h3"}:
             self.parts.append("\n")
 
     def handle_data(self, data: str) -> None:
-        self.parts.append(html.unescape(data))
+        if not self._non_visible_depth:
+            self.parts.append(html.unescape(data))
 
     def text(self) -> str:
         return re.sub(r"\n{3,}", "\n\n", "".join(self.parts)).strip()
@@ -191,6 +206,22 @@ def _ensure_output_location(output_dir: Path) -> None:
         raise AdvisoryValidationError(
             "validation outputs must be outside the Git workspace"
         )
+
+
+def _reject_output_collisions(
+    outputs: dict[str, Path], protected_inputs: dict[str, Path]
+) -> None:
+    """Reject exact path aliases because source preservation is mechanical."""
+
+    resolved_outputs = {name: path.resolve() for name, path in outputs.items()}
+    for input_name, input_path in protected_inputs.items():
+        resolved_input = input_path.resolve()
+        for output_name, output_path in resolved_outputs.items():
+            if resolved_input == output_path:
+                raise AdvisoryValidationError(
+                    f"refusing to overwrite {input_name} with {output_name}: "
+                    f"{output_path}"
+                )
 
 
 def validate_advisory_contract(payload: Any) -> list[str]:
@@ -490,6 +521,70 @@ def _source_inventory(paths: list[Path]) -> dict[str, Any]:
     }
 
 
+def _resolve_artifact_ref(reference: str, base_dir: Path) -> Path:
+    path = Path(reference).expanduser()
+    if not path.is_absolute():
+        path = base_dir / path
+    return path.resolve()
+
+
+def _audit_format_check_artifacts(
+    review: dict[str, Any], contract: dict[str, Any], base_dir: Path
+) -> tuple[list[dict[str, Any]], list[str]]:
+    """Verify local artifact identity without judging a check's semantics."""
+
+    metadata: list[dict[str, Any]] = []
+    errors: list[str] = []
+    checks = review.get("format_specific_checks")
+    if not isinstance(checks, list):
+        return metadata, errors
+    declared_checks = contract.get("validation_profile", {}).get("format_checks", [])
+    declared_by_workflow = {
+        item.get("workflow"): item
+        for item in declared_checks
+        if isinstance(item, dict) and _is_non_empty_string(item.get("workflow"))
+    }
+    for check in checks:
+        if not isinstance(check, dict) or check.get("status") != "passed":
+            continue
+        workflow = check.get("workflow")
+        references = check.get("artifact_refs")
+        if not _is_non_empty_string(workflow) or not isinstance(references, list):
+            continue
+        actual_paths: set[Path] = set()
+        for reference in references:
+            if not _is_non_empty_string(reference):
+                continue
+            artifact_path = _resolve_artifact_ref(reference, base_dir)
+            actual_paths.add(artifact_path)
+            if not artifact_path.is_file():
+                errors.append(
+                    f"passed format check artifact does not exist: {workflow}: "
+                    f"{artifact_path}"
+                )
+                continue
+            metadata.append(
+                {
+                    "workflow": workflow,
+                    "reference": reference,
+                    "path": str(artifact_path),
+                    "sha256": _sha256(artifact_path),
+                    "byte_count": artifact_path.stat().st_size,
+                }
+            )
+        declared = declared_by_workflow.get(workflow)
+        if not isinstance(declared, dict) or declared.get("requirement") != "required":
+            continue
+        for declared_reference in declared.get("artifact_refs", []):
+            declared_path = _resolve_artifact_ref(declared_reference, base_dir)
+            if declared_path not in actual_paths:
+                errors.append(
+                    f"required format check omitted declared artifact: {workflow}: "
+                    f"{declared_path}"
+                )
+    return metadata, errors
+
+
 def prepare_validation(
     deliverable: Path,
     advisory_contract: Path,
@@ -516,6 +611,30 @@ def prepare_validation(
             "deliverable extraction produced no readable text"
         )
 
+    paths = {
+        "advisory_contract": output_dir / "advisory_contract.json",
+        "deliverable_inventory": output_dir / "deliverable_inventory.json",
+        "extracted_deliverable": output_dir / "extracted_deliverable.md",
+        "citation_inventory": output_dir / "citation_inventory.json",
+        "calculation_inventory": output_dir / "calculation_inventory.json",
+        "source_inventory": output_dir / "source_inventory.json",
+    }
+    protected_inputs = {"primary deliverable": deliverable}
+    protected_inputs.update(
+        {
+            f"selected source {index}": source
+            for index, source in enumerate(source_files or [], start=1)
+        }
+    )
+    _reject_output_collisions(paths, protected_inputs)
+    contract_protected_outputs = dict(paths)
+    if advisory_contract.resolve() == paths["advisory_contract"].resolve():
+        contract_protected_outputs.pop("advisory_contract")
+    _reject_output_collisions(
+        contract_protected_outputs,
+        {"advisory contract": advisory_contract},
+    )
+
     output_dir.mkdir(parents=True, exist_ok=True)
     contract_copy = _copy_contract(advisory_contract, output_dir)
     source_inventory = _source_inventory(source_files or [])
@@ -541,16 +660,9 @@ def prepare_validation(
             "original_preserved": True,
         },
     }
-    extracted_path = output_dir / "extracted_deliverable.md"
+    extracted_path = paths["extracted_deliverable"]
     extracted_path.write_text(text.rstrip() + "\n", encoding="utf-8")
-    paths = {
-        "advisory_contract": contract_copy,
-        "deliverable_inventory": output_dir / "deliverable_inventory.json",
-        "extracted_deliverable": extracted_path,
-        "citation_inventory": output_dir / "citation_inventory.json",
-        "calculation_inventory": output_dir / "calculation_inventory.json",
-        "source_inventory": output_dir / "source_inventory.json",
-    }
+    paths["advisory_contract"] = contract_copy
     _write_json(paths["deliverable_inventory"], inventory)
     _write_json(paths["citation_inventory"], _citation_inventory(text))
     _write_json(paths["calculation_inventory"], _calculation_inventory(text))
@@ -588,6 +700,30 @@ def _validate_dimension_review(value: Any, *, subject: str) -> list[str]:
     return errors
 
 
+def _validate_approval_record(value: Any, *, subject: str) -> list[str]:
+    if not isinstance(value, dict):
+        return [f"{subject} must be an object"]
+    errors: list[str] = []
+    required = {"status", "approved_by", "evidence_refs"}
+    missing = sorted(required - value.keys())
+    if missing:
+        return [f"{subject} missing fields: {', '.join(missing)}"]
+    if value["status"] not in APPROVAL_STATUSES:
+        errors.append(f"{subject}.status is invalid")
+    if not isinstance(value["approved_by"], str):
+        errors.append(f"{subject}.approved_by must be a string")
+    if not _is_string_list(value["evidence_refs"], allow_empty=True):
+        errors.append(f"{subject}.evidence_refs must be a string array")
+    if value["status"] == "approved":
+        if not _is_non_empty_string(value["approved_by"]):
+            errors.append(f"{subject}.approved_by is required when approved")
+        if not value["evidence_refs"]:
+            errors.append(f"{subject}.evidence_refs is required when approved")
+    elif value["approved_by"] or value["evidence_refs"]:
+        errors.append(f"{subject} approver and evidence require approved status")
+    return errors
+
+
 def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
     """Return mechanical shape and internal-consistency errors for a review."""
 
@@ -604,6 +740,7 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
         "findings",
         "format_specific_checks",
         "correction",
+        "approvals",
         "overall_assessment",
         "delivery_readiness",
     }
@@ -734,6 +871,9 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             errors.append("correction.summary is required")
         if not isinstance(correction.get("corrected_artifact"), str):
             errors.append("correction.corrected_artifact must be a string")
+        corrected_hash = correction.get("corrected_artifact_sha256")
+        if not isinstance(corrected_hash, str):
+            errors.append("correction.corrected_artifact_sha256 must be a string")
         if not _is_string_list(correction.get("unresolved_changes"), allow_empty=True):
             errors.append("correction.unresolved_changes must be a string array")
         if (
@@ -743,6 +883,38 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             errors.append(
                 "correction completed even though the contract disallows correction"
             )
+        if correction.get("status") == "completed":
+            if not _is_non_empty_string(correction.get("corrected_artifact")):
+                errors.append(
+                    "correction.corrected_artifact is required when completed"
+                )
+            if (
+                not isinstance(corrected_hash, str)
+                or re.fullmatch(r"[0-9a-f]{64}", corrected_hash) is None
+            ):
+                errors.append(
+                    "correction.corrected_artifact_sha256 must be a lowercase SHA-256 when completed"
+                )
+        elif correction.get("corrected_artifact") or corrected_hash:
+            errors.append("correction artifact path and hash require completed status")
+
+    approvals = payload["approvals"]
+    if not isinstance(approvals, dict):
+        errors.append("approvals must be an object")
+    else:
+        approval_names = {"professional_judgement", "correction"}
+        if set(approvals) != approval_names:
+            errors.append(
+                "approvals must contain professional_judgement and correction"
+            )
+        else:
+            for approval_name in sorted(approval_names):
+                errors.extend(
+                    _validate_approval_record(
+                        approvals[approval_name],
+                        subject=f"approvals.{approval_name}",
+                    )
+                )
 
     overall = payload["overall_assessment"]
     readiness = payload["delivery_readiness"]
@@ -768,6 +940,7 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             errors.append("delivery_readiness.conditions must be a string array")
 
         attention_statuses = {
+            "partially_conforms",
             "does_not_conform",
             "contradicted",
             "uncertain",
@@ -779,9 +952,25 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
                 dimensions[dimension].get("status") in attention_statuses
                 or dimensions[dimension].get("correction_status")
                 in {"proposed", "blocked", "professional_review_required"}
+                or dimensions[dimension].get("professional_review_required") is True
             )
             for dimension in REVIEW_DIMENSIONS
         )
+        finding_review_required = isinstance(findings, list) and any(
+            isinstance(finding, dict)
+            and finding.get("professional_review_required") is True
+            for finding in findings
+        )
+        dimension_review_required = isinstance(dimensions, dict) and any(
+            isinstance(dimensions.get(dimension), dict)
+            and (
+                dimensions[dimension].get("professional_review_required") is True
+                or dimensions[dimension].get("correction_status")
+                == "professional_review_required"
+            )
+            for dimension in REVIEW_DIMENSIONS
+        )
+        delivery_ready = status in {"ready", "ready_with_residual_uncertainty"}
         if status == "ready" and unresolved_attention:
             errors.append(
                 "ready status cannot coexist with unresolved review attention"
@@ -803,6 +992,37 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             and status in {"ready", "ready_with_residual_uncertainty"}
         ):
             errors.append("unresolved correction cannot be delivery-ready")
+        if delivery_ready and finding_review_required:
+            errors.append(
+                "delivery-ready status cannot coexist with a finding requiring professional review"
+            )
+        if delivery_ready and dimension_review_required:
+            errors.append(
+                "delivery-ready status cannot coexist with a dimension requiring professional review"
+            )
+        if delivery_ready and isinstance(approvals, dict):
+            professional_approval = approvals.get("professional_judgement", {})
+            correction_approval = approvals.get("correction", {})
+            if not isinstance(professional_approval, dict):
+                professional_approval = {}
+            if not isinstance(correction_approval, dict):
+                correction_approval = {}
+            if (
+                contract["professional_judgement_policy"][
+                    "approval_required_before_delivery"
+                ]
+                and professional_approval.get("status") != "approved"
+            ):
+                errors.append(
+                    "professional-judgement approval is required before delivery"
+                )
+            if (
+                isinstance(correction, dict)
+                and correction.get("status") == "completed"
+                and contract["correction_policy"]["approval_required_before_delivery"]
+                and correction_approval.get("status") != "approved"
+            ):
+                errors.append("correction approval is required before delivery")
     return errors
 
 
@@ -812,6 +1032,8 @@ def _render_package(
     audit: dict[str, Any],
 ) -> str:
     dimensions = review.get("dimension_reviews", {})
+    if not isinstance(dimensions, dict):
+        dimensions = {}
     lines = [
         "# Advisory deliverable validation",
         "",
@@ -825,14 +1047,20 @@ def _render_package(
         "",
     ]
     for dimension in REVIEW_DIMENSIONS:
-        record = dimensions.get(dimension, {}) if isinstance(dimensions, dict) else {}
+        record = dimensions.get(dimension, {})
+        if not isinstance(record, dict):
+            record = {}
         lines.append(
             f"- **{dimension.replace('_', ' ').title()}** — {record.get('status', 'missing')}: {record.get('analysis', 'No analysis recorded.')}"
         )
     lines.extend(["", "## Findings", ""])
     findings = review.get("findings", [])
+    if not isinstance(findings, list):
+        findings = []
     if findings:
         for finding in findings:
+            if not isinstance(finding, dict):
+                continue
             lines.append(
                 f"- **{finding.get('id', 'finding')}** ({finding.get('dimension', 'unknown')}): {finding.get('finding', '')}"
             )
@@ -840,36 +1068,47 @@ def _render_package(
         lines.append("- No individual findings recorded.")
     lines.extend(["", "## Format-specific checks", ""])
     checks = review.get("format_specific_checks", [])
+    if not isinstance(checks, list):
+        checks = []
     if checks:
         for check in checks:
+            if not isinstance(check, dict):
+                continue
             lines.append(
                 f"- **{check.get('workflow', 'unknown')}** — {check.get('status', 'missing')}: {check.get('analysis', '')}"
             )
     else:
         lines.append("- No format-specific checks recorded.")
+    correction = review.get("correction", {})
+    if not isinstance(correction, dict):
+        correction = {}
     lines.extend(
         [
             "",
             "## Correction",
             "",
-            f"Status: {review.get('correction', {}).get('status', 'missing')}",
+            f"Status: {correction.get('status', 'missing')}",
             "",
-            review.get("correction", {}).get(
-                "summary", "No correction summary recorded."
-            ),
+            str(correction.get("summary", "No correction summary recorded.")),
             "",
             "## Residual uncertainty and professional review",
             "",
         ]
     )
     overall = review.get("overall_assessment", {})
-    for item in overall.get("residual_uncertainties", []) or []:
+    if not isinstance(overall, dict):
+        overall = {}
+    residual_uncertainties = overall.get("residual_uncertainties", [])
+    if not isinstance(residual_uncertainties, list):
+        residual_uncertainties = []
+    professional_review_items = overall.get("professional_review_items", [])
+    if not isinstance(professional_review_items, list):
+        professional_review_items = []
+    for item in residual_uncertainties:
         lines.append(f"- Residual uncertainty: {item}")
-    for item in overall.get("professional_review_items", []) or []:
+    for item in professional_review_items:
         lines.append(f"- Professional review: {item}")
-    if not overall.get("residual_uncertainties") and not overall.get(
-        "professional_review_items"
-    ):
+    if not residual_uncertainties and not professional_review_items:
         lines.append("- None recorded.")
     if audit["errors"]:
         lines.extend(["", "## Mechanical audit errors", ""])
@@ -891,11 +1130,12 @@ def package_validation(
     inventory = _load_json(inventory_path)
     review = _load_json(review_draft_path)
     contract = _load_json(advisory_contract_path)
-    errors = validate_advisory_contract(contract)
+    contract_errors = validate_advisory_contract(contract)
+    errors = list(contract_errors)
     if not isinstance(inventory, dict):
         errors.append("deliverable inventory must be an object")
         inventory = {}
-    if isinstance(review, dict) and isinstance(contract, dict) and not errors:
+    if isinstance(review, dict) and isinstance(contract, dict) and not contract_errors:
         errors.extend(validate_review_record(review, contract))
     elif not isinstance(review, dict):
         errors.append("review record must be an object")
@@ -916,8 +1156,21 @@ def package_validation(
     if review.get("deliverable_sha256") != expected_original_hash:
         errors.append("review is not bound to the prepared deliverable")
 
+    format_check_artifacts: list[dict[str, Any]] = []
+    artifact_errors: list[str] = []
+    if isinstance(review, dict) and isinstance(contract, dict) and not contract_errors:
+        format_check_artifacts, artifact_errors = _audit_format_check_artifacts(
+            review,
+            contract,
+            advisory_contract_path.parent,
+        )
+        errors.extend(artifact_errors)
+
     corrected_metadata: dict[str, Any] | None = None
-    correction_status = review.get("correction", {}).get("status")
+    correction_record = review.get("correction", {})
+    if not isinstance(correction_record, dict):
+        correction_record = {}
+    correction_status = correction_record.get("status")
     if correction_status == "completed":
         if corrected_deliverable is None or not corrected_deliverable.is_file():
             errors.append("completed correction requires --corrected-deliverable")
@@ -925,8 +1178,20 @@ def package_validation(
             errors.append("corrected deliverable must use a separate path")
         else:
             corrected_hash = _sha256(corrected_deliverable)
+            declared_corrected_path = _resolve_artifact_ref(
+                str(correction_record.get("corrected_artifact", "")),
+                advisory_contract_path.parent,
+            )
             if corrected_hash == expected_original_hash:
                 errors.append("completed correction has the same bytes as the original")
+            if declared_corrected_path != corrected_deliverable.resolve():
+                errors.append(
+                    "corrected deliverable does not match the path bound in the review"
+                )
+            if correction_record.get("corrected_artifact_sha256") != corrected_hash:
+                errors.append(
+                    "corrected deliverable does not match the SHA-256 bound in the review"
+                )
             corrected_metadata = {
                 "path": str(corrected_deliverable.resolve()),
                 "name": corrected_deliverable.name,
@@ -938,7 +1203,28 @@ def package_validation(
             "a corrected deliverable was supplied but correction.status is not completed"
         )
 
-    declared_readiness = review.get("delivery_readiness", {}).get("status", "blocked")
+    paths = {
+        "review": output_dir / "advisory_validation_review.json",
+        "audit": output_dir / "validation_audit.json",
+        "package": output_dir / "advisory_validation_package.md",
+    }
+    protected_inputs = {
+        "deliverable inventory": inventory_path,
+        "review draft": review_draft_path,
+        "advisory contract": advisory_contract_path,
+    }
+    if original_path.is_file():
+        protected_inputs["original deliverable"] = original_path
+    if corrected_deliverable is not None:
+        protected_inputs["corrected deliverable"] = corrected_deliverable
+    for index, artifact in enumerate(format_check_artifacts, start=1):
+        protected_inputs[f"format-check artifact {index}"] = Path(artifact["path"])
+    _reject_output_collisions(paths, protected_inputs)
+
+    delivery_readiness = review.get("delivery_readiness", {})
+    if not isinstance(delivery_readiness, dict):
+        delivery_readiness = {}
+    declared_readiness = delivery_readiness.get("status", "blocked")
     audit = {
         "schema_version": "1.0",
         "record_complete": not errors,
@@ -952,19 +1238,31 @@ def package_validation(
             "original_unchanged": original_unchanged,
             "separate_corrected_artifact": correction_status != "completed"
             or corrected_metadata is not None,
+            "corrected_artifact_path_bound": correction_status != "completed"
+            or (
+                corrected_metadata is not None
+                and _resolve_artifact_ref(
+                    str(correction_record.get("corrected_artifact", "")),
+                    advisory_contract_path.parent,
+                )
+                == Path(corrected_metadata["path"])
+            ),
+            "corrected_artifact_hash_bound": correction_status != "completed"
+            or (
+                corrected_metadata is not None
+                and correction_record.get("corrected_artifact_sha256")
+                == corrected_metadata["sha256"]
+            ),
+            "format_check_artifacts_exist": not artifact_errors,
             "hidden_model_api_calls": False,
         },
         "declared_delivery_readiness": declared_readiness,
         "effective_delivery_readiness": declared_readiness if not errors else "blocked",
         "corrected_artifact": corrected_metadata,
+        "format_check_artifacts": format_check_artifacts,
         "interpretation": "Record completeness proves mechanical consistency only; semantic support, reasoning, recommendation quality, and professional judgement remain model-led and professionally reviewed.",
     }
     output_dir.mkdir(parents=True, exist_ok=True)
-    paths = {
-        "review": output_dir / "advisory_validation_review.json",
-        "audit": output_dir / "validation_audit.json",
-        "package": output_dir / "advisory_validation_package.md",
-    }
     _write_json(paths["review"], review)
     _write_json(paths["audit"], audit)
     paths["package"].write_text(

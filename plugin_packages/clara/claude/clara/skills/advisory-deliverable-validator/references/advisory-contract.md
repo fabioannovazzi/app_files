@@ -42,6 +42,12 @@ professional-judgement boundary.
 - `professional_judgement_policy`: who owns professional judgement, the
   model's bounded role, and whether approval is required before delivery.
 
+The contract states whether approval is required; it never records approval by
+itself. The downstream advisory validation review records explicit
+`professional_judgement` and `correction` approval states, approver identity,
+and evidence references. Deterministic packaging may verify that a required
+state is `approved`, but Clara must not infer that state.
+
 The required review dimensions are:
 
 ```json
