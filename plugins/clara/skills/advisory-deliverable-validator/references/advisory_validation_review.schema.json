@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/advisory-validation-review-1.0.json",
+  "$id": "https://mparanza.com/schemas/advisory-validation-review-1.1.json",
   "title": "Clara advisory deliverable validation review",
   "type": "object",
   "required": [
@@ -9,6 +9,7 @@
     "advisory_contract_sha256",
     "deliverable_sha256",
     "coverage_review",
+    "material_review_items",
     "dimension_reviews",
     "findings",
     "format_specific_checks",
@@ -18,7 +19,7 @@
     "delivery_readiness"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.1"},
     "language": {"enum": ["it", "en", "fr", "de", "es"]},
     "advisory_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "deliverable_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
@@ -34,6 +35,11 @@
         "analysis": {"type": "string", "minLength": 1}
       },
       "additionalProperties": false
+    },
+    "material_review_items": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/materialReviewItem"}
     },
     "dimension_reviews": {
       "type": "object",
@@ -131,6 +137,108 @@
     }
   },
   "$defs": {
+    "materialReviewItem": {
+      "type": "object",
+      "required": [
+        "id",
+        "item_type",
+        "location",
+        "statement",
+        "depends_on_item_ids",
+        "evidence_refs",
+        "support_status",
+        "reasoning_status",
+        "analysis",
+        "counterevidence",
+        "decision_effect",
+        "resolution",
+        "professional_review_required"
+      ],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "item_type": {
+          "enum": [
+            "factual_claim",
+            "hypothesis",
+            "assumption",
+            "calculation",
+            "inference",
+            "recommendation",
+            "decision_condition"
+          ]
+        },
+        "location": {"type": "string", "minLength": 1},
+        "statement": {"type": "string", "minLength": 1},
+        "depends_on_item_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "evidence_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "support_status": {
+          "enum": [
+            "supported",
+            "partially_supported",
+            "not_supported",
+            "contradicted",
+            "uncertain",
+            "not_applicable"
+          ]
+        },
+        "reasoning_status": {
+          "enum": [
+            "sound",
+            "partially_sound",
+            "unsound",
+            "uncertain",
+            "not_applicable"
+          ]
+        },
+        "analysis": {"type": "string", "minLength": 1},
+        "counterevidence": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "decision_effect": {"enum": ["critical", "material", "limited"]},
+        "resolution": {"$ref": "#/$defs/materialItemResolution"},
+        "professional_review_required": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "materialItemResolution": {
+      "type": "object",
+      "required": ["action", "status", "explanation"],
+      "properties": {
+        "action": {
+          "enum": [
+            "none",
+            "qualify",
+            "correct",
+            "remove",
+            "obtain_evidence",
+            "test_hypothesis",
+            "professional_review"
+          ]
+        },
+        "status": {
+          "enum": [
+            "not_needed",
+            "resolved_in_corrected_artifact",
+            "accepted_residual_uncertainty",
+            "pending",
+            "blocked",
+            "professional_review_required"
+          ]
+        },
+        "explanation": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
     "dimensionName": {
       "enum": [
         "contract_conformance",

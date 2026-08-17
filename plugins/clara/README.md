@@ -40,7 +40,8 @@ Clara keeps its specialist workflows separate:
 - `advisory-deliverable-validator` validates a completed advisory memo, report,
   analysis, presentation, or other supported professional document against
   `advisory_contract.json`, available evidence, and the applicable existing
-  Clara format checks;
+  Clara format checks, tracing every material reasoning dependency so an
+  unresolved critical weakness blocks delivery;
 - `interview` prepares an expiring browser link for an adaptive external
   participant interview, then retrieves the completed bundle and quality review;
 - `transcribe` records or uploads advisor voice notes, meetings, and calls,
