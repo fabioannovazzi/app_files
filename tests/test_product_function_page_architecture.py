@@ -530,7 +530,7 @@ def test_professional_communication_page_explains_exact_phase_boundaries() -> No
 def test_bandi_page_explains_task_specific_private_model_context() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     bandi_copy = function_copy.split('"bandi-agevolazioni":', 1)[1].split(
-        '"comunicazione-professionale":', 1
+        '"quesito-professionale":', 1
     )[0]
 
     assert bandi_copy.count('modelDataStatus: "relevant"') == 5
@@ -613,6 +613,34 @@ def test_answer_assurance_pages_explain_actual_model_context_bounds() -> None:
         model_data_start = page.index('id="model-data"')
         main_end = page.index("</main>", model_data_start)
         assert "<section" not in page[model_data_start + 1 : main_end]
+
+
+def test_professional_question_page_explains_the_complete_answer_journey() -> None:
+    page = (SHARED / "quesito-professionale" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    function_copy = (SHARED / "product-function-pages.js").read_text(
+        encoding="utf-8"
+    )
+    workflow_copy = function_copy.split('"quesito-professionale":', 1)[1].split(
+        '"comunicazione-professionale":', 1
+    )[0]
+
+    assert 'data-function-page="quesito-professionale"' in page
+    assert workflow_copy.count('modelDataStatus: "relevant"') == 5
+    for snippet in (
+        "Risposta a quesiti legali e fiscali",
+        "Answer legal and tax questions",
+        "Répondre aux questions juridiques et fiscales",
+        "Rechtliche und steuerliche Fragen beantworten",
+        "Responder consultas jurídicas y fiscales",
+        "l'intero quesito, non un campione",
+        "separate runs in the same Studio Archive engagement",
+        "Aucune anonymisation ou pseudonymisation automatique",
+        "keine automatische Anonymisierung oder Pseudonymisierung",
+        "No se aplica anonimización ni seudonimización automática",
+    ):
+        assert snippet in workflow_copy
 
 
 def test_clara_research_video_has_a_localized_public_explanation() -> None:

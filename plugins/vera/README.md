@@ -87,7 +87,8 @@ The shared specialist workflows cover:
 - source-bound historical financial analysis and fixed due-diligence recipes,
   management variance analysis with the shared calculation and plot suite,
   plus reviewable financial reports and concordato preventivo review;
-- source-backed legal, tax, and compliance research prompts and validation;
+- complete source-backed answers to legal, tax, and compliance questions,
+  using separate prompt-planning and answer-validation stages;
 - evidence-backed INPS case review from supplied documents or official exports;
   and
 - Registro Imprese, REA, Comunicazione Unica, DIRE, and SARI preparation.

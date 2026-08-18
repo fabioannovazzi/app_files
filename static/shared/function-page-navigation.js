@@ -122,6 +122,7 @@
     "presenza-digitale-studio": [["lucia", "area-studio"], ["vera", "area-outputs"]],
     "previdenza-inps": [["vera", "area-clients"], ["vera", "jurisdiction"]],
     "prompt-optimizer": [["lucia", "area-research"], ["vera", "area-outputs"]],
+    "quesito-professionale": [["vera", "area-outputs"]],
     "registro-imprese-sari": [["vera", "area-clients"], ["vera", "jurisdiction"]],
     "report-builder": [["vera", "area-outputs"]],
     "report-enti-locali": [["vera", "jurisdiction"]],
@@ -227,6 +228,13 @@
       fr: "Préparer une question de recherche juridique ou fiscale",
       de: "Juristische oder steuerliche Recherchefrage vorbereiten",
       es: "Preparar una consulta de investigación jurídica o fiscal",
+    },
+    "quesito-professionale": {
+      it: "Risposta a quesiti legali e fiscali",
+      en: "Answer legal and tax questions",
+      fr: "Répondre aux questions juridiques et fiscales",
+      de: "Rechtliche und steuerliche Fragen beantworten",
+      es: "Responder consultas jurídicas y fiscales",
     },
     "registro-imprese-sari": {
       it: "Preparazione di pratiche Registro Imprese, REA e DIRE",

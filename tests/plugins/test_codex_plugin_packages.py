@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.146"
+    assert manifest["version"] == "0.1.147"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -725,7 +725,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         assert "this Excel file" in reporting_interface
         assert "Excel or CSV" not in reporting_interface
     if plugin_name == "vera":
-        assert len(card_bodies) == 26
+        assert len(card_bodies) == 27
         assert all("`WORKFLOW.md`" not in body for body in card_bodies.values())
         router = card_bodies["skills/vera/SKILL.md"]
         assert "No matching specialist workflow" in router
@@ -2521,6 +2521,13 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "quesito-professionale"
+            ):
+                assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
+                assert "../deep-research-validator/SKILL.md" in normalized_skill_text
+                continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
             ):
