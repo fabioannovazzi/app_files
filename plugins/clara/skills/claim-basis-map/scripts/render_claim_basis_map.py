@@ -4,8 +4,11 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.util
 import json
 import logging
+import sys
 from collections import defaultdict
 from pathlib import Path
 from typing import Any
@@ -13,6 +16,7 @@ from typing import Any
 __all__ = [
     "compare_current_deck_snapshot",
     "extract_current_deck_snapshot",
+    "audit_claim_basis_map",
     "main",
     "render_claim_basis_map",
 ]
@@ -35,6 +39,26 @@ TEXT_DRIFT_REQUIRES_REFRESH = {
     "reference-broken",
     "untracked-current-text",
 }
+CLARA_ROOT = Path(__file__).resolve().parents[3]
+LINEAGE_SCRIPT = CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"
+
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _lineage_module() -> Any:
+    module_name = "clara_claim_basis_lineage"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, LINEAGE_SCRIPT)
+    if spec is None or spec.loader is None:
+        raise ValueError(f"cannot load advisory lineage helper: {LINEAGE_SCRIPT}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def _clean_text(value: Any) -> str:
@@ -712,6 +736,124 @@ def render_claim_basis_map(
     return "\n".join(lines).rstrip() + "\n"
 
 
+def audit_claim_basis_map(
+    payload: dict[str, Any],
+    *,
+    current_snapshot: dict[str, Any] | None = None,
+    evidence_register: dict[str, Any] | None = None,
+    claim_register: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Audit explicit basis metadata, drift, and shared-lineage references."""
+
+    errors = _validate_payload(payload)
+    slides = payload.get("slides", []) if isinstance(payload, dict) else []
+    ungrounded: list[dict[str, Any]] = []
+    if not errors and isinstance(slides, list):
+        ordered = sorted(slides, key=lambda slide: slide["slide_number"])
+        by_key, by_slide_claim, index_errors = _claim_indexes(ordered)
+        errors.extend(index_errors)
+        for slide in ordered:
+            for claim in slide.get("claims", []):
+                issue = _claim_grounding_issue(claim, by_key, by_slide_claim)
+                if issue:
+                    ungrounded.append(
+                        {
+                            "slide_number": slide["slide_number"],
+                            "claim": _clean_text(claim.get("claim")),
+                            "issue": issue,
+                        }
+                    )
+
+    drift = (
+        compare_current_deck_snapshot(payload, current_snapshot)
+        if current_snapshot is not None and not errors
+        else None
+    )
+    if ungrounded:
+        errors.append("claim basis map contains ungrounded claims")
+    if isinstance(drift, dict) and drift.get("issues"):
+        errors.append("current deck contains claim drift requiring refresh")
+
+    if (evidence_register is None) != (claim_register is None):
+        errors.append("shared evidence and claim registers must be supplied together")
+    shared_checks = 0
+    if isinstance(evidence_register, dict) and isinstance(claim_register, dict):
+        evidence_ids = {
+            str(item.get("id"))
+            for item in evidence_register.get("evidence", [])
+            if isinstance(item, dict) and item.get("id")
+        }
+        claim_by_id = {
+            str(item.get("id")): item
+            for item in claim_register.get("claims", [])
+            if isinstance(item, dict) and item.get("id")
+        }
+        for slide in slides:
+            if not isinstance(slide, dict):
+                continue
+            for claim in slide.get("claims", []):
+                if not isinstance(claim, dict):
+                    continue
+                advisory_id = _clean_text(claim.get("advisory_claim_id"))
+                receipt_ids = {
+                    _clean_text(value)
+                    for value in _non_empty_list(claim.get("evidence_receipt_ids"))
+                    if _clean_text(value)
+                }
+                if not advisory_id:
+                    if receipt_ids:
+                        errors.append(
+                            f"slide {slide.get('slide_number')}: evidence_receipt_ids require advisory_claim_id"
+                        )
+                    continue
+                shared_checks += 1
+                upstream = claim_by_id.get(advisory_id)
+                if upstream is None:
+                    errors.append(
+                        f"slide {slide.get('slide_number')}: unknown advisory claim {advisory_id}"
+                    )
+                    continue
+                if _clean_text(upstream.get("statement")) != _clean_text(
+                    claim.get("claim")
+                ):
+                    errors.append(
+                        f"slide {slide.get('slide_number')}: deck claim text does not match {advisory_id}"
+                    )
+                expected_receipts = {
+                    str(link.get("evidence_id"))
+                    for link in upstream.get("evidence_links", [])
+                    if isinstance(link, dict) and link.get("evidence_id")
+                }
+                dependency = upstream.get("dependency")
+                if isinstance(dependency, dict) and dependency.get(
+                    "calculation_evidence_id"
+                ):
+                    expected_receipts.add(str(dependency["calculation_evidence_id"]))
+                if receipt_ids != expected_receipts:
+                    errors.append(
+                        f"slide {slide.get('slide_number')}: evidence receipts do not match {advisory_id}"
+                    )
+                unknown_receipts = sorted(receipt_ids - evidence_ids)
+                if unknown_receipts:
+                    errors.append(
+                        f"slide {slide.get('slide_number')}: unknown evidence receipts: "
+                        + ", ".join(unknown_receipts)
+                    )
+    return {
+        "schema_version": "1.0",
+        "source": "clara_claim_basis_map_audit",
+        "result": "pass" if not errors else "fail",
+        "deck": _clean_text(payload.get("deck")),
+        "claim_count": sum(
+            len(slide.get("claims", [])) for slide in slides if isinstance(slide, dict)
+        ),
+        "shared_lineage_claim_count": shared_checks,
+        "ungrounded_claims": ungrounded,
+        "drift": drift,
+        "errors": errors,
+    }
+
+
 def _parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Render deck.claims.md from structured deck.claims.json."
@@ -733,6 +875,10 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
         help="Optional path for the extracted current PPTX text snapshot.",
     )
+    parser.add_argument("--evidence-register", type=Path)
+    parser.add_argument("--claim-register", type=Path)
+    parser.add_argument("--case-dir", type=Path)
+    parser.add_argument("--audit-output", type=Path)
     return parser.parse_args()
 
 
@@ -758,8 +904,66 @@ def main() -> int:
     markdown = render_claim_basis_map(payload, current_snapshot=current_snapshot)
     output = args.output or args.claims_json.with_suffix(".md")
     output.write_text(markdown, encoding="utf-8")
+    evidence_register = (
+        json.loads(args.evidence_register.read_text(encoding="utf-8"))
+        if args.evidence_register
+        else None
+    )
+    claim_register = (
+        json.loads(args.claim_register.read_text(encoding="utf-8"))
+        if args.claim_register
+        else None
+    )
+    if args.case_dir is not None:
+        if args.current_pptx is None:
+            raise ValueError("--case-dir requires --current-pptx for exact appearances")
+        lineage = _lineage_module()
+        locations: list[dict[str, Any]] = []
+        for slide in payload.get("slides", []):
+            for claim in slide.get("claims", []):
+                advisory_id = _clean_text(claim.get("advisory_claim_id"))
+                if not advisory_id:
+                    continue
+                locations.append(
+                    {
+                        "claim_id": advisory_id,
+                        "locator": f"Slide {slide['slide_number']}",
+                        "format_claim_id": _clean_text(
+                            claim.get("claim_key") or advisory_id
+                        ),
+                    }
+                )
+        lineage.bind_claim_appearances(
+            args.case_dir,
+            args.current_pptx,
+            locations,
+        )
+        claim_register = json.loads(
+            (args.case_dir / "advisory_claim_register.json").read_text(encoding="utf-8")
+        )
+        if evidence_register is None:
+            evidence_register = json.loads(
+                (args.case_dir / "advisory_evidence_register.json").read_text(
+                    encoding="utf-8"
+                )
+            )
+    audit = audit_claim_basis_map(
+        payload,
+        current_snapshot=current_snapshot,
+        evidence_register=evidence_register,
+        claim_register=claim_register,
+    )
+    audit_path = args.audit_output or args.claims_json.with_suffix(".audit.json")
+    audit["claims_json_sha256"] = _sha256(args.claims_json)
+    audit["current_pptx_sha256"] = (
+        _sha256(args.current_pptx) if args.current_pptx else ""
+    )
+    audit_path.write_text(
+        json.dumps(audit, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
     LOGGER.info("Wrote %s", output)
-    return 0
+    LOGGER.info("Wrote %s", audit_path)
+    return 0 if audit["result"] == "pass" else 1
 
 
 if __name__ == "__main__":

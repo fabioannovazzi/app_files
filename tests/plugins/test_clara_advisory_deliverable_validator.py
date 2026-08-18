@@ -178,8 +178,26 @@ def _review(
     )
     considered_unit_ids = [unit["id"] for unit in coverage_inventory["units"]]
     provenance_mode = inventory["lineage"]["provenance_mode"]
+    unit_assessments = [
+        {
+            "unit_id": unit_id,
+            "status": (
+                "reviewed_material_claims"
+                if index == 0
+                else "reviewed_no_material_claims"
+            ),
+            "material_claim_ids": [],
+            "untracked_claim_ids": (["external-claim-0001"] if index == 0 else []),
+            "analysis": (
+                "The material recommendation was selected for claim review."
+                if index == 0
+                else "No additional material claim was identified in this unit."
+            ),
+        }
+        for index, unit_id in enumerate(considered_unit_ids)
+    ]
     return {
-        "schema_version": "1.2",
+        "schema_version": "1.3",
         "language": "en",
         "advisory_contract_sha256": inventory["advisory_contract_sha256"],
         "deliverable_sha256": inventory["source_sha256"],
@@ -192,6 +210,7 @@ def _review(
             "omitted_sections": [],
             "considered_unit_ids": considered_unit_ids,
             "omitted_unit_ids": [],
+            "unit_assessments": unit_assessments,
             "limitations": [],
             "analysis": "All material content was reviewed.",
         },
@@ -205,10 +224,11 @@ def _review(
                     "id": "external-claim-0001",
                     "statement": "Proceed with a bounded pilot.",
                     "deliverable_locations": ["Recommendation"],
-                    "evidence_ids": ["selected source review"],
+                    "evidence_ids": ["source-0001"],
                     "dependency_claim_ids": [],
                     "support_status": "adequate",
                     "reasoning_status": "sound",
+                    "contradiction_resolution": "",
                     "analysis": "The material recommendation and its stated basis were reviewed.",
                     "recheck": {
                         "required": False,
@@ -242,6 +262,12 @@ def _review(
                 else ""
             ),
             "corrected_artifact_sha256": corrected_hash,
+            "corrected_inventory_sha256": (
+                "0" * 64 if correction_status == "completed" else ""
+            ),
+            "corrected_review_sha256": (
+                "0" * 64 if correction_status == "completed" else ""
+            ),
             "unresolved_changes": [],
         },
         "approvals": {
@@ -313,12 +339,41 @@ def _prepare(tmp_path: Path, *, format_checks: list[dict[str, Any]] | None = Non
     contract_path = tmp_path / "advisory_contract.json"
     output_dir = tmp_path / "validation"
     _write_deliverable(deliverable)
+    support = tmp_path / "selected_support.txt"
+    support.write_text(
+        "Reviewed support for the bounded-pilot recommendation.",
+        encoding="utf-8",
+    )
     contract_path.write_text(
         json.dumps(_contract(format_checks=format_checks)), encoding="utf-8"
     )
-    paths = validator.prepare_validation(deliverable, contract_path, output_dir)
+    paths = validator.prepare_validation(
+        deliverable,
+        contract_path,
+        output_dir,
+        source_files=[support],
+    )
     inventory = json.loads(paths["deliverable_inventory"].read_text(encoding="utf-8"))
     return validator, deliverable, contract_path, output_dir, paths, inventory
+
+
+def _prepare_corrected_review(
+    validator: Any,
+    corrected: Path,
+    contract_path: Path,
+    tmp_path: Path,
+) -> tuple[Path, Path]:
+    corrected_output = tmp_path / "corrected_validation"
+    paths = validator.prepare_validation(
+        corrected,
+        contract_path,
+        corrected_output,
+        source_files=[tmp_path / "selected_support.txt"],
+    )
+    inventory = json.loads(paths["deliverable_inventory"].read_text(encoding="utf-8"))
+    corrected_review = corrected_output / "corrected_review.json"
+    corrected_review.write_text(json.dumps(_review(inventory)), encoding="utf-8")
+    return paths["deliverable_inventory"], corrected_review
 
 
 def _lineage_receipt(evidence_id: str, observation: str) -> dict[str, Any]:
@@ -411,6 +466,7 @@ def _chain_assessment(claim: dict[str, Any]) -> dict[str, Any]:
         "dependency_claim_ids": claim["dependency"]["claim_ids"],
         "support_status": "adequate",
         "reasoning_status": "sound",
+        "contradiction_resolution": "",
         "analysis": "The stated basis and dependency were challenged in context.",
         "recheck": {
             "required": False,
@@ -494,6 +550,22 @@ def test_html_extraction_excludes_non_visible_script_style_and_template_content(
     text, _ = validator.read_supported_deliverable(deliverable)
 
     assert text == "Visible"
+
+
+@pytest.mark.parametrize("suffix", [".docx", ".pptx", ".pdf"])
+def test_corrupt_supported_document_reports_a_readable_validation_error(
+    tmp_path: Path,
+    suffix: str,
+) -> None:
+    validator = _validator_module()
+    deliverable = tmp_path / f"corrupt{suffix}"
+    deliverable.write_bytes(b"not a valid document package")
+
+    with pytest.raises(
+        validator.AdvisoryValidationError,
+        match="unreadable or damaged",
+    ):
+        validator.read_supported_deliverable(deliverable)
 
 
 def test_prepare_rejects_spreadsheet_as_primary_but_allows_it_as_evidence(
@@ -622,7 +694,12 @@ def test_ready_review_requires_explicit_professional_judgement_approval(
         "evidence_refs": [],
     }
 
-    errors = validator.validate_review_record(review, contract)
+    errors = validator.validate_review_record(
+        review,
+        contract,
+        provenance_mode="matched_support",
+        matched_support_source_ids={"source-0001"},
+    )
 
     assert "professional-judgement approval is required before delivery" in errors
 
@@ -712,7 +789,12 @@ def test_partially_conforming_review_can_be_ready_with_residual_uncertainty(
     ]
     review["delivery_readiness"]["status"] = "ready_with_residual_uncertainty"
 
-    errors = validator.validate_review_record(review, contract)
+    errors = validator.validate_review_record(
+        review,
+        contract,
+        provenance_mode="matched_support",
+        matched_support_source_ids={"source-0001"},
+    )
 
     assert errors == []
 
@@ -841,17 +923,61 @@ def test_package_hashes_a_present_required_format_check_artifact(
         paths["deliverable_inventory"], review_path, contract_path, output_dir
     )
 
+    assert audit["record_complete"] is False
+    assert audit["checks"]["format_check_artifacts_exist"] is False
+    assert any(
+        "lacks authoritative result artifacts" in error for error in audit["errors"]
+    )
+
+
+def test_package_accepts_authoritative_reporting_engine_result(
+    tmp_path: Path,
+) -> None:
+    artifact_name = "render_manifest.json"
+    artifact = tmp_path / artifact_name
+    artifact.write_text(
+        json.dumps(
+            {
+                "schema_version": "0.2",
+                "owner": "clara.reporting-engine",
+                "runner": {"returncode": 0, "status": "ok"},
+                "render_proof": {"status": "rendered"},
+            }
+        ),
+        encoding="utf-8",
+    )
+    required_check = {
+        "workflow": "clara:reporting-engine",
+        "requirement": "required",
+        "reason": "The recommendation relies on spreadsheet calculations.",
+        "artifact_refs": [artifact_name],
+    }
+    validator, _, contract_path, output_dir, paths, inventory = _prepare(
+        tmp_path, format_checks=[required_check]
+    )
+    review = _review(
+        inventory,
+        format_checks=[
+            {
+                "workflow": "clara:reporting-engine",
+                "status": "passed",
+                "artifact_refs": [artifact_name],
+                "analysis": "The authoritative Reporting Engine result passed.",
+            }
+        ],
+    )
+    review_path = output_dir / "review.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+
+    _, audit = validator.package_validation(
+        paths["deliverable_inventory"], review_path, contract_path, output_dir
+    )
+
     assert audit["record_complete"] is True
-    assert audit["checks"]["format_check_artifacts_exist"] is True
-    assert audit["format_check_artifacts"] == [
-        {
-            "workflow": "clara:reporting-engine",
-            "reference": artifact_name,
-            "path": str(artifact.resolve()),
-            "sha256": hashlib.sha256(artifact.read_bytes()).hexdigest(),
-            "byte_count": artifact.stat().st_size,
-        }
-    ]
+    assert audit["format_check_artifacts"][0]["authoritative_result"] == {
+        "kind": "reporting_engine_render",
+        "passed": True,
+    }
 
 
 def test_package_rejects_an_output_path_that_aliases_a_format_check_artifact(
@@ -911,6 +1037,18 @@ def test_completed_correction_requires_a_separate_changed_artifact(
         correction_status="completed",
         corrected_artifact=corrected,
     )
+    corrected_inventory, corrected_review = _prepare_corrected_review(
+        validator,
+        corrected,
+        contract_path,
+        tmp_path,
+    )
+    review["correction"]["corrected_inventory_sha256"] = hashlib.sha256(
+        corrected_inventory.read_bytes()
+    ).hexdigest()
+    review["correction"]["corrected_review_sha256"] = hashlib.sha256(
+        corrected_review.read_bytes()
+    ).hexdigest()
     review_path = output_dir / "advisory_validation_review_draft.json"
     review_path.write_text(json.dumps(review), encoding="utf-8")
 
@@ -920,12 +1058,63 @@ def test_completed_correction_requires_a_separate_changed_artifact(
         contract_path,
         output_dir,
         corrected_deliverable=corrected,
+        corrected_deliverable_inventory=corrected_inventory,
+        corrected_review=corrected_review,
     )
 
     assert audit["record_complete"] is True
     assert audit["checks"]["original_unchanged"] is True
     assert audit["checks"]["separate_corrected_artifact"] is True
+    assert audit["checks"]["corrected_artifact_re_reviewed"] is True
     assert audit["corrected_artifact"]["path"] == str(corrected.resolve())
+
+
+def test_completed_correction_rejects_a_second_review_with_stale_coverage_hash(
+    tmp_path: Path,
+) -> None:
+    validator, deliverable, contract_path, output_dir, paths, inventory = _prepare(
+        tmp_path
+    )
+    corrected = tmp_path / "advisory_memo_corrected.md"
+    corrected.write_text(
+        deliverable.read_text(encoding="utf-8") + "\nCondition: confirm the owner.\n",
+        encoding="utf-8",
+    )
+    corrected_inventory, corrected_review = _prepare_corrected_review(
+        validator,
+        corrected,
+        contract_path,
+        tmp_path,
+    )
+    stale_review = json.loads(corrected_review.read_text(encoding="utf-8"))
+    stale_review["coverage_inventory_sha256"] = "f" * 64
+    corrected_review.write_text(json.dumps(stale_review), encoding="utf-8")
+    review = _review(
+        inventory,
+        correction_status="completed",
+        corrected_artifact=corrected,
+    )
+    review["correction"]["corrected_inventory_sha256"] = hashlib.sha256(
+        corrected_inventory.read_bytes()
+    ).hexdigest()
+    review["correction"]["corrected_review_sha256"] = hashlib.sha256(
+        corrected_review.read_bytes()
+    ).hexdigest()
+    review_path = output_dir / "advisory_validation_review_draft.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+
+    _, audit = validator.package_validation(
+        paths["deliverable_inventory"],
+        review_path,
+        contract_path,
+        output_dir,
+        corrected_deliverable=corrected,
+        corrected_deliverable_inventory=corrected_inventory,
+        corrected_review=corrected_review,
+    )
+
+    assert audit["record_complete"] is False
+    assert "corrected review is not bound to its coverage inventory" in audit["errors"]
 
 
 def test_completed_correction_is_bound_to_the_declared_path(tmp_path: Path) -> None:
@@ -1051,6 +1240,10 @@ def test_semantic_evaluation_fixtures_cover_required_cases() -> None:
         "calculation-recheck-after-input-change",
         "corrected-claim-supersedes-original",
         "two-hundred-page-coverage",
+        "zero-claim-ready-review",
+        "fake-completed-recheck",
+        "corrected-artifact-without-second-review",
+        "generic-passed-format-json",
     } <= case_ids
     assert "deterministic keyword or scorecard logic" in payload["purpose"]
 
@@ -1117,6 +1310,24 @@ def test_generation_time_lineage_walks_all_dependencies_before_ready(
     deliverable.write_text(
         "# Recommendation\n\nProceed with the pilot.", encoding="utf-8"
     )
+    lineage.add_claim_appearances(
+        case_dir,
+        [
+            {
+                "claim_id": "cl-x",
+                "appearance": {
+                    "artifact": str(deliverable.resolve()),
+                    "path_reference": "absolute",
+                    "artifact_sha256": hashlib.sha256(
+                        deliverable.read_bytes()
+                    ).hexdigest(),
+                    "artifact_byte_count": deliverable.stat().st_size,
+                    "locator": "Recommendation",
+                    "recorded_at": "2026-08-18T08:30:00+00:00",
+                },
+            }
+        ],
+    )
     contract_path = tmp_path / "advisory_contract.json"
     contract_path.write_text(json.dumps(_contract()), encoding="utf-8")
     output_dir = tmp_path / "validation"
@@ -1142,6 +1353,8 @@ def test_generation_time_lineage_walks_all_dependencies_before_ready(
         "limitations": [],
         "analysis": "The recommendation was walked back through both required premises.",
     }
+    review["coverage_review"]["unit_assessments"][0]["material_claim_ids"] = ["cl-x"]
+    review["coverage_review"]["unit_assessments"][0]["untracked_claim_ids"] = []
     review_path = tmp_path / "review.json"
     review_path.write_text(json.dumps(review), encoding="utf-8")
 
@@ -1219,6 +1432,161 @@ def test_generation_time_lineage_rejects_an_omitted_evidence_receipt() -> None:
     assert (
         "lineage_review.chain_assessments[0].evidence_ids must match lineage" in errors
     )
+
+
+def test_ready_review_cannot_pass_without_any_material_claim_review(
+    tmp_path: Path,
+) -> None:
+    validator, _, contract_path, _, paths, inventory = _prepare(tmp_path)
+    review = _review(inventory)
+    review["lineage_review"]["untracked_material_claims"] = []
+    for assessment in review["coverage_review"]["unit_assessments"]:
+        assessment["status"] = "reviewed_no_material_claims"
+        assessment["material_claim_ids"] = []
+        assessment["untracked_claim_ids"] = []
+        assessment["analysis"] = "The model declared no material claim in this unit."
+    coverage = json.loads(paths["coverage_inventory"].read_text(encoding="utf-8"))
+
+    errors = validator.validate_review_record(
+        review,
+        json.loads(contract_path.read_text(encoding="utf-8")),
+        provenance_mode="matched_support",
+        coverage_inventory=coverage,
+        matched_support_source_ids={"source-0001"},
+    )
+
+    assert (
+        "delivery-ready status requires at least one model-reviewed material claim"
+        in errors
+    )
+
+
+def test_matched_support_cannot_disguise_a_reconstructed_claim_as_lineage(
+    tmp_path: Path,
+) -> None:
+    validator, _, contract_path, _, paths, inventory = _prepare(tmp_path)
+    review = _review(inventory)
+    reconstructed = review["lineage_review"]["untracked_material_claims"].pop()
+    reconstructed["claim_id"] = reconstructed.pop("id")
+    review["lineage_review"]["chain_assessments"] = [reconstructed]
+    review["coverage_review"]["unit_assessments"][0]["untracked_claim_ids"] = []
+    coverage = json.loads(paths["coverage_inventory"].read_text(encoding="utf-8"))
+
+    errors = validator.validate_review_record(
+        review,
+        json.loads(contract_path.read_text(encoding="utf-8")),
+        provenance_mode="matched_support",
+        coverage_inventory=coverage,
+        matched_support_source_ids={"source-0001"},
+    )
+
+    assert (
+        "matched-support review must put reconstructed claims in untracked_material_claims"
+        in errors
+    )
+
+
+def test_generation_time_review_rejects_a_false_deliverable_locator() -> None:
+    validator = _validator_module()
+    receipt = _lineage_receipt("ev-a", "Management stated premise A.")
+    claim = _lineage_claim("cl-a", "Premise A", evidence_ids=["ev-a"])
+    claim["appearances"] = [
+        {
+            "artifact": "/tmp/memo.md",
+            "path_reference": "absolute",
+            "artifact_sha256": "a" * 64,
+            "artifact_byte_count": 10,
+            "locator": "Section 4",
+            "recorded_at": "2026-08-18T08:10:00+00:00",
+        }
+    ]
+    assessment = _chain_assessment(claim)
+    assessment["deliverable_locations"] = ["Section 99"]
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": ["cl-a"],
+        "chain_assessments": [assessment],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The selected claim was reviewed.",
+    }
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register={"schema_version": "1.0", "claims": [claim]},
+        evidence_register={"schema_version": "1.0", "evidence": [receipt]},
+        deliverable_sha256="a" * 64,
+    )
+
+    assert any("must match hash-bound claim appearances" in error for error in errors)
+
+
+def test_adequate_support_requires_resolution_of_contradicting_lineage() -> None:
+    validator = _validator_module()
+    receipt = _lineage_receipt("ev-a", "The source contradicts premise A.")
+    claim = _lineage_claim("cl-a", "Premise A", evidence_ids=["ev-a"])
+    claim["evidence_links"][0]["relationship"] = "contradicts"
+    assessment = _chain_assessment(claim)
+    assessment["contradiction_resolution"] = ""
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": [],
+        "chain_assessments": [assessment],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The contradiction was reviewed.",
+    }
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register={"schema_version": "1.0", "claims": [claim]},
+        evidence_register={"schema_version": "1.0", "evidence": [receipt]},
+    )
+
+    assert any(
+        "adequate support requires contradiction_resolution" in error
+        for error in errors
+    )
+
+
+def test_completed_recheck_requires_a_real_successor_receipt() -> None:
+    validator = _validator_module()
+    prior = _lineage_receipt("ev-old", "The prior web observation.")
+    fake = _lineage_receipt("ev-new", "The claimed recheck result.")
+    fake["evidence_type"] = "web_capture"
+    fake["rechecks_evidence_id"] = "ev-old"
+    claim = _lineage_claim("cl-a", "Premise A", evidence_ids=["ev-new"])
+    assessment = _chain_assessment(claim)
+    assessment["evidence_ids"] = ["ev-old", "ev-new"]
+    assessment["recheck"] = {
+        "required": True,
+        "kind": "web",
+        "status": "completed",
+        "evidence_ids": ["ev-new"],
+        "analysis": "The model declared the targeted web recheck complete.",
+    }
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": [],
+        "chain_assessments": [assessment],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The recheck was reviewed.",
+    }
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register={"schema_version": "1.0", "claims": [claim]},
+        evidence_register={"schema_version": "1.0", "evidence": [prior, fake]},
+    )
+
+    assert any("lacks completed recheck verification" in error for error in errors)
 
 
 def test_pending_model_selected_recheck_blocks_ready_and_is_packaged(

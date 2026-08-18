@@ -6,7 +6,8 @@ import argparse
 import hashlib
 import json
 import logging
-from datetime import datetime
+import tempfile
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 
@@ -18,11 +19,13 @@ __all__ = [
     "EVIDENCE_REGISTER_FILENAME",
     "LineageError",
     "add_claim_appearances",
+    "bind_claim_appearances",
     "initialize_lineage",
     "record_claims",
     "record_evidence",
     "render_evidence_map",
     "validate_lineage",
+    "validate_lineage_payloads",
 ]
 
 LOGGER = logging.getLogger(__name__)
@@ -49,10 +52,24 @@ def _read_json(path: Path) -> Any:
 
 def _write_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
-    )
+    serialized = json.dumps(payload, ensure_ascii=False, indent=2) + "\n"
+    temporary_path: Path | None = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode="w",
+            encoding="utf-8",
+            dir=path.parent,
+            prefix=f".{path.name}.",
+            suffix=".tmp",
+            delete=False,
+        ) as handle:
+            handle.write(serialized)
+            handle.flush()
+            temporary_path = Path(handle.name)
+        temporary_path.replace(path)
+    finally:
+        if temporary_path is not None:
+            temporary_path.unlink(missing_ok=True)
 
 
 def _sha256(path: Path) -> str:
@@ -91,6 +108,16 @@ def _iso_timestamp_error(value: Any, label: str, *, allow_empty: bool = False) -
     if parsed.tzinfo is None:
         return f"{label}: timestamp must include a timezone"
     return ""
+
+
+def _timestamp(value: Any) -> datetime | None:
+    if not isinstance(value, str) or not value.strip():
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    return parsed if parsed.tzinfo is not None else None
 
 
 def _resolve_artifact(case_dir: Path, receipt: Mapping[str, Any]) -> Path:
@@ -207,6 +234,30 @@ def validate_lineage(
             "counts": {"evidence": 0, "claims": 0, "active_claims": 0},
         }
 
+    return validate_lineage_payloads(
+        case_dir,
+        evidence_register,
+        claim_register,
+        verify_artifacts=verify_artifacts,
+    )
+
+
+def validate_lineage_payloads(
+    case_dir: Path,
+    evidence_register: Any,
+    claim_register: Any,
+    *,
+    verify_artifacts: bool = True,
+    known_material_ids_override: set[str] | None = None,
+) -> dict[str, Any]:
+    """Validate candidate register payloads before committing them to disk.
+
+    Candidate validation is deterministic because it checks declared shape,
+    references, timestamps, artifact bytes, and graph state only. It enables
+    callers to fail before a multi-file mutation becomes visible.
+    """
+
+    errors: list[str] = []
     errors.extend(
         _schema_errors(
             evidence_register,
@@ -251,7 +302,22 @@ def validate_lineage(
 
     known_evidence = set(evidence_ids)
     known_claims = set(claim_ids)
-    known_materials = _material_ids(case_dir)
+    evidence_by_id = {
+        str(item.get("id")): item
+        for item in evidence
+        if isinstance(item, dict) and item.get("id")
+    }
+    claim_by_id = {
+        str(item.get("id")): item
+        for item in claims
+        if isinstance(item, dict) and item.get("id")
+    }
+    known_materials = (
+        known_material_ids_override
+        if known_material_ids_override is not None
+        else _material_ids(case_dir)
+    )
+    evidence_history_graph: dict[str, list[str]] = {}
     for index, item in enumerate(evidence):
         if not isinstance(item, dict):
             continue
@@ -276,6 +342,7 @@ def validate_lineage(
                 errors.append(f"{label}: unchecked evidence cannot have checked_at")
             if status != "not_checked" and not verification.get("method"):
                 errors.append(f"{label}: checked evidence requires verification.method")
+        history_refs: list[str] = []
         for reference_field in ("rechecks_evidence_id", "supersedes_evidence_id"):
             reference = str(item.get(reference_field, ""))
             if reference and reference not in known_evidence:
@@ -284,6 +351,44 @@ def validate_lineage(
                 )
             if reference and reference == item_id:
                 errors.append(f"{label}.{reference_field}: cannot reference itself")
+            if reference:
+                history_refs.append(reference)
+                predecessor = evidence_by_id.get(reference)
+                current_time = _timestamp(item.get("recorded_at"))
+                predecessor_time = (
+                    _timestamp(predecessor.get("recorded_at"))
+                    if isinstance(predecessor, dict)
+                    else None
+                )
+                if (
+                    current_time is not None
+                    and predecessor_time is not None
+                    and current_time <= predecessor_time
+                ):
+                    errors.append(
+                        f"{label}.{reference_field}: successor must be recorded after {reference}"
+                    )
+        evidence_history_graph[item_id] = history_refs
+        if item.get("rechecks_evidence_id") and item.get("supersedes_evidence_id"):
+            errors.append(
+                f"{label}: a receipt cannot both recheck and supersede another receipt"
+            )
+        if item.get("rechecks_evidence_id"):
+            verification = item.get("verification")
+            recheck_status = (
+                verification.get("status") if isinstance(verification, dict) else None
+            )
+            if recheck_status not in {"rechecked_unchanged", "rechecked_changed"}:
+                errors.append(
+                    f"{label}: a recheck receipt requires rechecked_unchanged or rechecked_changed verification"
+                )
+            predecessor = evidence_by_id.get(str(item["rechecks_evidence_id"]))
+            if isinstance(predecessor, dict) and predecessor.get(
+                "evidence_type"
+            ) != item.get("evidence_type"):
+                errors.append(
+                    f"{label}: a recheck receipt must keep the predecessor evidence_type"
+                )
         source = item.get("source")
         if isinstance(source, dict):
             if known_materials is not None:
@@ -307,8 +412,38 @@ def validate_lineage(
                 or source.get("artifact_refs")
             ):
                 errors.append(f"{label}: captured evidence requires source identity")
+            if item.get("evidence_type") == "calculation_run":
+                artifact_paths = {
+                    str(receipt.get("path"))
+                    for receipt in artifact_refs
+                    if isinstance(receipt, dict) and receipt.get("path")
+                }
+                calculation = item.get("calculation")
+                if isinstance(calculation, dict):
+                    declared_paths = {
+                        str(path)
+                        for field in (
+                            "input_artifact_paths",
+                            "output_artifact_paths",
+                            "verification_artifact_paths",
+                        )
+                        for path in calculation.get(field, [])
+                    }
+                    missing_paths = sorted(declared_paths - artifact_paths)
+                    if missing_paths:
+                        errors.append(
+                            f"{label}: calculation paths missing from source.artifact_refs: "
+                            + ", ".join(missing_paths)
+                        )
+
+    if not any("unknown evidence id" in error for error in errors):
+        found_cycle = _cycle(evidence_history_graph)
+        if found_cycle:
+            errors.append("evidence history cycle: " + " -> ".join(found_cycle))
 
     dependency_graph: dict[str, list[str]] = {}
+    supersession_graph: dict[str, list[str]] = {}
+    successor_by_predecessor: dict[str, str] = {}
     for index, item in enumerate(claims):
         if not isinstance(item, dict):
             continue
@@ -319,7 +454,8 @@ def validate_lineage(
         )
         if timestamp_error:
             errors.append(timestamp_error)
-        for link in item.get("evidence_links", []):
+        evidence_links = item.get("evidence_links", [])
+        for link in evidence_links:
             if isinstance(link, dict) and link.get("evidence_id") not in known_evidence:
                 errors.append(f"{label}: unknown evidence id {link.get('evidence_id')}")
         dependency = item.get("dependency")
@@ -333,6 +469,17 @@ def validate_lineage(
                 errors.append(f"{label}: dependency mode none requires no claim_ids")
             if mode in {"all_of", "any_of"} and not dependency_ids:
                 errors.append(f"{label}: dependency mode {mode} requires claim_ids")
+            if mode == "none" and not evidence_links:
+                errors.append(
+                    f"{label}: a direct claim requires at least one evidence link"
+                )
+            if (
+                mode in {"all_of", "any_of"}
+                and dependency.get("derivation_type") == "direct"
+            ):
+                errors.append(
+                    f"{label}: a dependent claim cannot use direct derivation"
+                )
             for dependency_id in dependency_ids:
                 if dependency_id == item_id:
                     errors.append(f"{label}: claim cannot depend on itself")
@@ -348,16 +495,123 @@ def validate_lineage(
                 errors.append(
                     f"{label}: unknown calculation evidence id {calculation_evidence_id}"
                 )
+            claim_type = item.get("claim_type")
+            derivation_type = dependency.get("derivation_type")
+            if claim_type == "calculation" or derivation_type == "calculation":
+                if not calculation_evidence_id:
+                    errors.append(
+                        f"{label}: calculation claim requires calculation_evidence_id"
+                    )
+                calculation_receipt = evidence_by_id.get(calculation_evidence_id)
+                if (
+                    isinstance(calculation_receipt, dict)
+                    and calculation_receipt.get("evidence_type") != "calculation_run"
+                ):
+                    errors.append(
+                        f"{label}: calculation_evidence_id must reference a calculation_run receipt"
+                    )
+                linked_ids = {
+                    str(link.get("evidence_id"))
+                    for link in evidence_links
+                    if isinstance(link, dict)
+                }
+                if (
+                    calculation_evidence_id
+                    and calculation_evidence_id not in linked_ids
+                ):
+                    errors.append(
+                        f"{label}: calculation_evidence_id must also appear in evidence_links"
+                    )
+            if claim_type == "quotation" or derivation_type == "quotation":
+                transcript_links = [
+                    link
+                    for link in evidence_links
+                    if isinstance(link, dict)
+                    and isinstance(
+                        evidence_by_id.get(str(link.get("evidence_id"))), dict
+                    )
+                    and evidence_by_id[str(link.get("evidence_id"))].get(
+                        "evidence_type"
+                    )
+                    == "interview_transcript"
+                ]
+                if not transcript_links:
+                    errors.append(
+                        f"{label}: quotation claim requires an interview_transcript evidence link"
+                    )
         supersedes = str(item.get("supersedes_claim_id", ""))
         if supersedes and supersedes not in known_claims:
             errors.append(f"{label}: unknown superseded claim id {supersedes}")
         if supersedes and supersedes == item_id:
             errors.append(f"{label}: claim cannot supersede itself")
+        supersession_graph[item_id] = [supersedes] if supersedes else []
+        if supersedes:
+            previous_successor = successor_by_predecessor.get(supersedes)
+            if previous_successor and previous_successor != item_id:
+                errors.append(
+                    f"{label}: claim {supersedes} already has successor {previous_successor}"
+                )
+            successor_by_predecessor[supersedes] = item_id
+            predecessor = claim_by_id.get(supersedes)
+            if (
+                isinstance(predecessor, dict)
+                and predecessor.get("state") != "superseded"
+            ):
+                errors.append(
+                    f"{label}: superseded predecessor {supersedes} must have state superseded"
+                )
+            current_time = _timestamp(item.get("recorded_at"))
+            predecessor_time = (
+                _timestamp(predecessor.get("recorded_at"))
+                if isinstance(predecessor, dict)
+                else None
+            )
+            if (
+                current_time is not None
+                and predecessor_time is not None
+                and current_time <= predecessor_time
+            ):
+                errors.append(f"{label}: successor must be recorded after {supersedes}")
+        for appearance_index, appearance in enumerate(item.get("appearances", [])):
+            if not isinstance(appearance, dict):
+                continue
+            timestamp_error = _iso_timestamp_error(
+                appearance.get("recorded_at"),
+                f"{label}.appearances[{appearance_index}].recorded_at",
+            )
+            if timestamp_error:
+                errors.append(timestamp_error)
+            if verify_artifacts:
+                receipt = {
+                    "path": appearance.get("artifact", ""),
+                    "path_reference": appearance.get("path_reference", ""),
+                    "sha256": appearance.get("artifact_sha256", ""),
+                    "byte_count": appearance.get("artifact_byte_count", -1),
+                }
+                errors.extend(
+                    _artifact_errors(
+                        case_dir,
+                        receipt,
+                        f"{label}.appearances[{appearance_index}]",
+                    )
+                )
 
     if not any("unknown dependency claim id" in error for error in errors):
         found_cycle = _cycle(dependency_graph)
         if found_cycle:
             errors.append("claim dependency cycle: " + " -> ".join(found_cycle))
+    if not any("unknown superseded claim id" in error for error in errors):
+        found_cycle = _cycle(supersession_graph)
+        if found_cycle:
+            errors.append("claim supersession cycle: " + " -> ".join(found_cycle))
+    for claim_id, claim in claim_by_id.items():
+        if (
+            claim.get("state") == "superseded"
+            and claim_id not in successor_by_predecessor
+        ):
+            errors.append(
+                f"claim {claim_id}: superseded state requires a declared successor"
+            )
 
     active_claims = sum(
         1 for item in claims if isinstance(item, dict) and item.get("state") == "active"
@@ -380,6 +634,19 @@ def initialize_lineage(case_dir: Path, *, overwrite: bool = False) -> dict[str, 
     case_dir.mkdir(parents=True, exist_ok=True)
     evidence_path = case_dir / EVIDENCE_REGISTER_FILENAME
     claim_path = case_dir / CLAIM_REGISTER_FILENAME
+    if overwrite and (evidence_path.exists() or claim_path.exists()):
+        existing_evidence = (
+            _read_json(evidence_path).get("evidence", [])
+            if evidence_path.exists()
+            else []
+        )
+        existing_claims = (
+            _read_json(claim_path).get("claims", []) if claim_path.exists() else []
+        )
+        if existing_evidence or existing_claims:
+            raise LineageError(
+                "refusing to overwrite non-empty append-only advisory lineage"
+            )
     if overwrite or not evidence_path.exists():
         _write_json(evidence_path, {"schema_version": SCHEMA_VERSION, "evidence": []})
     if overwrite or not claim_path.exists():
@@ -437,16 +704,11 @@ def record_evidence(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int
         raise LineageError("evidence register is malformed")
     candidate = json.loads(json.dumps(payload))
     added = _append_immutable(candidate["evidence"], records, label="evidence")
-    schema_errors = _schema_errors(
-        candidate, EVIDENCE_SCHEMA_PATH, EVIDENCE_REGISTER_FILENAME
-    )
-    if schema_errors:
-        raise LineageError("; ".join(schema_errors))
-    _write_json(path, candidate)
-    audit = validate_lineage(case_dir)
+    claim_payload = _read_json(case_dir / CLAIM_REGISTER_FILENAME)
+    audit = validate_lineage_payloads(case_dir, candidate, claim_payload)
     if not audit["valid"]:
-        _write_json(path, payload)
         raise LineageError("; ".join(audit["errors"]))
+    _write_json(path, candidate)
     render_evidence_map(case_dir)
     return added
 
@@ -468,16 +730,11 @@ def record_claims(case_dir: Path, records: Sequence[Mapping[str, Any]]) -> int:
         supersedes = str(record.get("supersedes_claim_id", ""))
         if supersedes and supersedes in by_id:
             by_id[supersedes]["state"] = "superseded"
-    schema_errors = _schema_errors(
-        candidate, CLAIM_SCHEMA_PATH, CLAIM_REGISTER_FILENAME
-    )
-    if schema_errors:
-        raise LineageError("; ".join(schema_errors))
-    _write_json(path, candidate)
-    audit = validate_lineage(case_dir)
+    evidence_payload = _read_json(case_dir / EVIDENCE_REGISTER_FILENAME)
+    audit = validate_lineage_payloads(case_dir, evidence_payload, candidate)
     if not audit["valid"]:
-        _write_json(path, payload)
         raise LineageError("; ".join(audit["errors"]))
+    _write_json(path, candidate)
     render_evidence_map(case_dir)
     return added
 
@@ -513,18 +770,55 @@ def add_claim_appearances(
         if appearance not in current:
             current.append(dict(appearance))
             added += 1
-    schema_errors = _schema_errors(
-        candidate, CLAIM_SCHEMA_PATH, CLAIM_REGISTER_FILENAME
-    )
-    if schema_errors:
-        raise LineageError("; ".join(schema_errors))
-    _write_json(path, candidate)
-    audit = validate_lineage(case_dir)
+    evidence_payload = _read_json(case_dir / EVIDENCE_REGISTER_FILENAME)
+    audit = validate_lineage_payloads(case_dir, evidence_payload, candidate)
     if not audit["valid"]:
-        _write_json(path, payload)
         raise LineageError("; ".join(audit["errors"]))
+    _write_json(path, candidate)
     render_evidence_map(case_dir)
     return added
+
+
+def bind_claim_appearances(
+    case_dir: Path,
+    artifact: Path,
+    locations: Sequence[Mapping[str, Any]],
+    *,
+    recorded_at: str | None = None,
+) -> int:
+    """Hash one completed output and bind model-declared claim locations to it."""
+
+    resolved = artifact.expanduser().resolve()
+    if not resolved.is_file():
+        raise LineageError(f"claim appearance artifact does not exist: {resolved}")
+    try:
+        artifact_reference = resolved.relative_to(case_dir.resolve()).as_posix()
+        path_reference = "case_relative"
+    except ValueError:
+        artifact_reference = str(resolved)
+        path_reference = "absolute"
+    timestamp = (
+        recorded_at or datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+    )
+    records: list[dict[str, Any]] = []
+    for index, location in enumerate(locations):
+        claim_id = str(location.get("claim_id", "")).strip()
+        locator = str(location.get("locator", "")).strip()
+        if not claim_id or not locator:
+            raise LineageError(f"claim location {index} requires claim_id and locator")
+        appearance = {
+            "artifact": artifact_reference,
+            "path_reference": path_reference,
+            "artifact_sha256": _sha256(resolved),
+            "artifact_byte_count": resolved.stat().st_size,
+            "locator": locator,
+            "recorded_at": timestamp,
+        }
+        format_claim_id = str(location.get("format_claim_id", "")).strip()
+        if format_claim_id:
+            appearance["format_claim_id"] = format_claim_id
+        records.append({"claim_id": claim_id, "appearance": appearance})
+    return add_claim_appearances(case_dir, records)
 
 
 def render_evidence_map(case_dir: Path) -> Path:
@@ -584,25 +878,54 @@ def render_evidence_map(case_dir: Path) -> Path:
         dependency = (
             item.get("dependency") if isinstance(item.get("dependency"), dict) else {}
         )
-        evidence_ids = [
-            str(link.get("evidence_id"))
-            for link in item.get("evidence_links", [])
-            if isinstance(link, dict)
-        ]
         lines.extend(
             [
                 f"### {item.get('id', 'claim')} — {item.get('claim_type', 'assertion')}",
                 "",
                 f"- Statement: {item.get('statement', '')}",
                 f"- Decision use: {item.get('decision_use', '')}",
-                f"- Evidence: {', '.join(evidence_ids) or 'none recorded'}",
                 f"- Depends on ({dependency.get('mode', 'none')}): {', '.join(dependency.get('claim_ids', [])) or 'none'}",
                 f"- Derivation: {dependency.get('derivation_type', '')} — {dependency.get('explanation', '')}",
+                f"- Decision implication: {item.get('decision_implication', '') or 'not recorded'}",
+                f"- Evidence that would change the position: {item.get('missing_evidence_that_would_change_position', '') or 'not recorded'}",
                 f"- Uncertainty: {'; '.join(item.get('uncertainty', [])) or 'none recorded'}",
                 f"- State: {item.get('state', '')}",
                 "",
             ]
         )
+        links = item.get("evidence_links", [])
+        if isinstance(links, list) and links:
+            lines.extend(["#### Evidence relationships", ""])
+            for link in links:
+                if not isinstance(link, dict):
+                    continue
+                lines.extend(
+                    [
+                        f"- {link.get('evidence_id', '')} — {link.get('relationship', '')}",
+                        f"  - Analysis: {link.get('analysis', '')}",
+                        f"  - Proves: {link.get('proves', '')}",
+                        f"  - Does not prove: {link.get('does_not_prove', '')}",
+                        f"  - Directness: {link.get('directness', 'not recorded')}",
+                        f"  - Reliability: {link.get('reliability', 'not recorded')}",
+                        f"  - Corroboration: {link.get('corroboration', 'not recorded')}",
+                        f"  - Bias or limitation: {link.get('bias_or_limitation', '') or 'not recorded'}",
+                    ]
+                )
+        else:
+            lines.extend(["#### Evidence relationships", "", "- None recorded."])
+        appearances = item.get("appearances", [])
+        lines.extend(["", "#### Output appearances", ""])
+        if not isinstance(appearances, list) or not appearances:
+            lines.append("- None recorded.")
+        else:
+            for appearance in appearances:
+                if not isinstance(appearance, dict):
+                    continue
+                lines.append(
+                    f"- {appearance.get('artifact', '')} — {appearance.get('locator', '')} "
+                    f"(SHA-256 {appearance.get('artifact_sha256', '')})"
+                )
+        lines.append("")
     output = case_dir / EVIDENCE_MAP_FILENAME
     output.write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     return output
@@ -631,6 +954,13 @@ def _parser() -> argparse.ArgumentParser:
     )
     link.add_argument("case_dir", type=Path)
     link.add_argument("records_json", type=Path)
+    bind = subparsers.add_parser(
+        "bind-output",
+        help="Hash one completed output and bind declared claim locations.",
+    )
+    bind.add_argument("case_dir", type=Path)
+    bind.add_argument("artifact", type=Path)
+    bind.add_argument("locations_json", type=Path)
     validate = subparsers.add_parser("validate", help="Validate lineage records.")
     validate.add_argument("case_dir", type=Path)
     validate.add_argument("--audit", type=Path)
@@ -671,6 +1001,14 @@ def main() -> int:
                 _command_payload(args.records_json, "appearances"),
             )
             LOGGER.info("Claim appearances added: %s", added)
+            return 0
+        if args.command == "bind-output":
+            added = bind_claim_appearances(
+                args.case_dir,
+                args.artifact,
+                _command_payload(args.locations_json, "appearances"),
+            )
+            LOGGER.info("Claim appearances bound: %s", added)
             return 0
         if args.command == "render":
             path = render_evidence_map(args.case_dir)

@@ -29,7 +29,7 @@ def _id_list(value: Any) -> list[str]:
         return []
     if isinstance(value, list):
         return [str(item) for item in value]
-    raise ValueError("issue evidence/open-test fields must be lists")
+    raise ValueError("issue evidence, claim, and open-test fields must be lists")
 
 
 def main() -> int:
@@ -45,6 +45,8 @@ def main() -> int:
     parser.add_argument("--current-synthesis", default="")
     parser.add_argument("--evidence-for", action="append", default=[])
     parser.add_argument("--evidence-against", action="append", default=[])
+    parser.add_argument("--claim-for", action="append", default=[])
+    parser.add_argument("--claim-against", action="append", default=[])
     parser.add_argument("--open-test", action="append", default=[])
     parser.add_argument("--status", default="active", choices=sorted(ISSUE_STATUSES))
     args = parser.parse_args()
@@ -61,6 +63,8 @@ def main() -> int:
                 "current_synthesis": args.current_synthesis,
                 "evidence_for": args.evidence_for,
                 "evidence_against": args.evidence_against,
+                "claim_ids_for": args.claim_for,
+                "claim_ids_against": args.claim_against,
                 "open_tests": args.open_test,
                 "status": args.status,
             }
@@ -78,6 +82,8 @@ def main() -> int:
                 "current_synthesis": raw_issue.get("current_synthesis", ""),
                 "evidence_for": _id_list(raw_issue.get("evidence_for", [])),
                 "evidence_against": _id_list(raw_issue.get("evidence_against", [])),
+                "claim_ids_for": _id_list(raw_issue.get("claim_ids_for", [])),
+                "claim_ids_against": _id_list(raw_issue.get("claim_ids_against", [])),
                 "open_tests": _id_list(raw_issue.get("open_tests", [])),
                 "status": raw_issue.get("status", args.status),
             }

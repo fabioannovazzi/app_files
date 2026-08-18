@@ -221,6 +221,13 @@ python scripts/complete_deck_revision_output_review.py <case-dir> \
 Do not present the corrected PPTX as final until the completion artifact exists
 for the exact reviewed output.
 
+If the deck is part of an advisory-deliverable validation, completion here is
+one authoritative format gate, not the final advisory decision. Run the
+advisory validator's `prepare` command again on the corrected deck, complete a
+second model-led claim-chain review, and supply that corrected inventory and
+review to the original validation package. A correction is not delivery-ready
+merely because the deck-correction completion record passed.
+
 ## HTML Preservation Path
 
 For an existing HTML deck, read and follow the full `html-deck` revision

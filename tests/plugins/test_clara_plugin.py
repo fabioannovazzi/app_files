@@ -126,9 +126,9 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
     ):
         assert f'en: "{expected[skill_name]}"' in public_function_source
 
-    public_page = (
-        ROOT / "static" / "shared" / "clara" / "index.html"
-    ).read_text(encoding="utf-8")
+    public_page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
+        encoding="utf-8"
+    )
     public_directory = {
         "functions.advisoryPlanning": expected["advisory-brief-planner"],
         "functions.presentations": "Create and revise presentations",
@@ -666,6 +666,114 @@ def init_case(
         now=fixed_now(),
     )
     return core, case_dir
+
+
+def add_lineage_bound_judgements(
+    core: Any,
+    case_dir: Path,
+    entries: list[dict[str, Any]],
+    *,
+    now: datetime,
+) -> list[dict[str, Any]]:
+    """Record test judgements through the production evidence/claim spine."""
+
+    evidence_payload = json.loads(
+        (case_dir / "advisory_evidence_register.json").read_text(encoding="utf-8")
+    )
+    claim_payload = json.loads(
+        (case_dir / "advisory_claim_register.json").read_text(encoding="utf-8")
+    )
+    evidence_start = len(evidence_payload["evidence"]) + 1
+    claim_start = len(claim_payload["claims"]) + 1
+    receipts: list[dict[str, Any]] = []
+    claims: list[dict[str, Any]] = []
+    bound_entries: list[dict[str, Any]] = []
+    for offset, raw_entry in enumerate(entries):
+        entry = dict(raw_entry)
+        evidence_id = f"ev-test-{evidence_start + offset:04d}"
+        claim_id = f"cl-test-{claim_start + offset:04d}"
+        text = str(entry["text"])
+        material_ids = [str(value) for value in entry.get("source_material_ids", [])]
+        receipts.append(
+            {
+                "id": evidence_id,
+                "evidence_type": "advisor_judgement",
+                "recorded_at": now.isoformat(),
+                "recorded_by": "clara:clara",
+                "capture_status": "assertion_only",
+                "source": {
+                    "material_ids": material_ids,
+                    "url": "",
+                    "locator": "Model-authored case contribution",
+                    "artifact_refs": [],
+                },
+                "observation": text,
+                "scope": "The declared basis for this test case contribution.",
+                "limitations": [
+                    "The receipt records provenance and does not prove the statement."
+                ],
+                "verification": {
+                    "status": "not_checked",
+                    "checked_at": "",
+                    "method": "",
+                    "notes": [],
+                },
+                "rechecks_evidence_id": "",
+                "supersedes_evidence_id": "",
+            }
+        )
+        claims.append(
+            {
+                "id": claim_id,
+                "statement": text,
+                "claim_type": {
+                    "fact": "assertion",
+                    "advisor_judgement": "conclusion",
+                    "decision_implication": "recommendation",
+                }[str(entry.get("kind", "advisor_judgement"))],
+                "recorded_at": now.isoformat(),
+                "recorded_by": "clara:clara",
+                "provenance": {
+                    "workflow": "clara:clara",
+                    "step": "case analysis",
+                    "artifact": "judgement_log.json",
+                    "locator": claim_id,
+                },
+                "evidence_links": [
+                    {
+                        "evidence_id": evidence_id,
+                        "relationship": "supports",
+                        "analysis": "The declared receipt is the basis carried with this claim.",
+                        "proves": "The contribution has this declared basis.",
+                        "does_not_prove": "The statement is substantively correct.",
+                    }
+                ],
+                "dependency": {
+                    "mode": "none",
+                    "claim_ids": [],
+                    "derivation_type": "direct",
+                    "explanation": "The test contribution declares a direct basis.",
+                    "calculation_evidence_id": "",
+                },
+                "decision_use": "direct",
+                "uncertainty": [],
+                "professional_judgement_required": entry.get("kind") != "fact",
+                "appearances": [],
+                "state": "active",
+                "supersedes_claim_id": "",
+            }
+        )
+        entry["advisory_claim_id"] = claim_id
+        entry["evidence_receipt_ids"] = [evidence_id]
+        bound_entries.append(entry)
+    result = core.record_analysis_contribution(
+        case_dir,
+        evidence_receipts=receipts,
+        claims=claims,
+        judgement_entries=bound_entries,
+        now=now,
+    )
+    return result["judgement_entries"]
 
 
 def write_minimal_pptx_package(
@@ -2309,7 +2417,8 @@ def test_partner_brief_surfaces_candidates_before_voice_kickoff(
         text="The operating transition needs explicit quality ownership.",
         now=fixed_now(),
     )
-    core.add_judgement_entries(
+    add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2350,7 +2459,8 @@ def test_partner_brief_surfaces_approved_content_after_inclusion(
         text="The transition needs explicit quality ownership.",
         now=fixed_now(),
     )
-    core.add_judgement_entries(
+    add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2404,7 +2514,8 @@ def test_unapproved_judgement_is_excluded_from_decision_pack(tmp_path: Path) -> 
     source.write_text("Approved source", encoding="utf-8")
     material = core.index_materials(case_dir, [source], now=fixed_now())[0]
 
-    core.add_judgement_entries(
+    add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2466,7 +2577,8 @@ def test_decision_pack_uses_spanish_headings_and_storyline(tmp_path: Path) -> No
         text="La autoridad operativa todavía depende del fundador.",
         now=fixed_now(),
     )
-    core.add_judgement_entries(
+    add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2577,7 +2689,8 @@ def test_case_brief_updates_from_case_state_and_review_status(tmp_path: Path) ->
         now=fixed_now(),
     )
 
-    entries = core.add_judgement_entries(
+    entries = add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2631,7 +2744,8 @@ def test_set_judgement_statuses_updates_multiple_reviewed_entries(
 ) -> None:
     core, case_dir = init_case(tmp_path)
 
-    entries = core.add_judgement_entries(
+    entries = add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {"kind": "fact", "text": "The owner wants a decision pack."},
@@ -2708,7 +2822,8 @@ def test_bulk_approval_script_lists_summary_and_approves_all_pending(
         text="The transition plan needs explicit governance tests.",
         now=fixed_now(),
     )
-    core.add_judgement_entries(
+    add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -2826,7 +2941,8 @@ def test_inclusion_review_renders_status_checklist_without_mutating_entries(
         text="The transition needs an explicit mandate.",
         now=fixed_now(),
     )
-    entries = core.add_judgement_entries(
+    entries = add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {
@@ -3025,7 +3141,8 @@ def test_bulk_approval_script_updates_numbered_bundle(
     tmp_path: Path,
 ) -> None:
     core, case_dir = init_case(tmp_path)
-    entries = core.add_judgement_entries(
+    entries = add_lineage_bound_judgements(
+        core,
         case_dir,
         [
             {"kind": "fact", "text": "A delegation fact."},
@@ -4298,6 +4415,48 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
         audio_pointer_path.read_text(encoding="utf-8").count("## Trascrizione Clara")
         == 1
     )
+
+
+def test_finalize_hosted_transcript_rolls_back_when_receipt_commit_fails(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    core, case_dir = init_case(tmp_path)
+    finalizer = load_hosted_transcript_finalizer()
+    session_dir = case_dir / "voice_sessions" / "20260102T103000Z"
+    session_dir.mkdir(parents=True)
+    raw_path = session_dir / "raw_transcript.md"
+    attributed_path = session_dir / "raw_transcript_rule_attributed.md"
+    raw_path.write_text("Raw interview text.\n", encoding="utf-8")
+    attributed_path.write_text("Advisor: Reviewed text.\n", encoding="utf-8")
+    material = core.register_material(
+        case_dir,
+        raw_path,
+        material_type="transcript",
+        title="Interview transcript",
+        now=fixed_now(),
+    )
+    registry_path = case_dir / "material_registry.json"
+    brief_path = case_dir / "case_brief.md"
+    registry_before = registry_path.read_bytes()
+    brief_before = brief_path.read_bytes()
+
+    def fail_receipt(*_args, **_kwargs):
+        raise RuntimeError("simulated receipt failure")
+
+    monkeypatch.setattr(finalizer, "record_evidence", fail_receipt)
+
+    with pytest.raises(RuntimeError, match="simulated receipt failure"):
+        finalizer.finalize_hosted_transcript(
+            case_dir,
+            material["id"],
+            attributed_path,
+            now=fixed_now(),
+        )
+
+    assert registry_path.read_bytes() == registry_before
+    assert brief_path.read_bytes() == brief_before
+    assert not (session_dir / "raw_transcript_unattributed.md").exists()
 
 
 def test_import_hosted_voice_bundle_uses_explicit_companion_audio_path(
@@ -6945,7 +7104,8 @@ def test_case_update_import_appends_local_copy_and_judgement(
         text="The operating model needs an explicit veto rule.",
         now=fixed_now(),
     )
-    core.add_judgement_entries(
+    source_entries = add_lineage_bound_judgements(
+        core,
         source_case,
         [
             {
@@ -6958,10 +7118,25 @@ def test_case_update_import_appends_local_copy_and_judgement(
         ],
         now=fixed_now(),
     )
-    core.add_open_question(
+    source_question = core.add_open_question(
         source_case,
         question="Who can veto exceptions?",
         why_it_matters="It fixes the governance control owner.",
+        now=fixed_now(),
+    )
+    core.upsert_case_issues(
+        source_case,
+        [
+            {
+                "id": "governance-control",
+                "title": "Governance control",
+                "decision_area": "Exception governance",
+                "current_synthesis": "Veto ownership must be explicit.",
+                "evidence_for": [source_entries[0]["id"]],
+                "claim_ids_for": [source_entries[0]["advisory_claim_id"]],
+                "open_tests": [source_question["id"]],
+            }
+        ],
         now=fixed_now(),
     )
 
@@ -6978,11 +7153,24 @@ def test_case_update_import_appends_local_copy_and_judgement(
     target_registry = json.loads((target_case / "material_registry.json").read_text())
     target_judgement = json.loads((target_case / "judgement_log.json").read_text())
     target_questions = json.loads((target_case / "open_questions.json").read_text())
+    target_evidence = json.loads(
+        (target_case / "advisory_evidence_register.json").read_text()
+    )
+    target_claims = json.loads(
+        (target_case / "advisory_claim_register.json").read_text()
+    )
+    target_issues = json.loads((target_case / "case_issues.json").read_text())
 
     assert exported.included_file_count == 1
+    assert exported.evidence_count == 1
+    assert exported.claim_count == 1
+    assert exported.issue_count == 1
     assert imported.imported_material_count == 1
+    assert imported.imported_evidence_count == 1
+    assert imported.imported_claim_count == 1
     assert imported.imported_judgement_count == 1
     assert imported.imported_open_question_count == 1
+    assert imported.imported_issue_count == 1
     assert imported.conflict_count == 0
     assert Path(target_registry["materials"][0]["path"]).exists()
     assert target_registry["materials"][0]["availability"] == "local_copy"
@@ -6990,7 +7178,22 @@ def test_case_update_import_appends_local_copy_and_judgement(
     assert target_judgement["entries"][0]["source_material_ids"] == [
         target_registry["materials"][0]["id"]
     ]
+    assert target_judgement["entries"][0]["advisory_claim_id"] == (
+        target_claims["claims"][0]["id"]
+    )
+    assert target_judgement["entries"][0]["evidence_receipt_ids"] == [
+        target_evidence["evidence"][0]["id"]
+    ]
     assert target_questions["questions"][0]["question"] == "Who can veto exceptions?"
+    assert target_issues["issues"][0]["evidence_for"] == [
+        target_judgement["entries"][0]["id"]
+    ]
+    assert target_issues["issues"][0]["claim_ids_for"] == [
+        target_claims["claims"][0]["id"]
+    ]
+    assert target_issues["issues"][0]["open_tests"] == [
+        target_questions["questions"][0]["id"]
+    ]
 
 
 def test_case_update_import_is_idempotent(tmp_path: Path) -> None:
@@ -7025,6 +7228,64 @@ def test_case_update_import_is_idempotent(tmp_path: Path) -> None:
     assert second_import.imported_judgement_count == 0
     assert second_import.skipped_count == 2
     assert len(target_judgement["entries"]) == 1
+
+
+def test_case_update_import_rolls_back_files_and_records_on_lineage_error(
+    tmp_path: Path,
+) -> None:
+    core, source_case = init_case(tmp_path / "source")
+    _, target_case = init_case(tmp_path / "target")
+    material = core.ingest_note_text(
+        source_case,
+        title="Advisor note",
+        text="The transition has a quantified dependency.",
+        now=fixed_now(),
+    )
+    add_lineage_bound_judgements(
+        core,
+        source_case,
+        [
+            {
+                "kind": "advisor_judgement",
+                "text": "The transition has a quantified dependency.",
+                "status": "pending",
+                "source_material_ids": [material["id"]],
+            }
+        ],
+        now=fixed_now(),
+    )
+    exported = core.export_case_update(source_case, now=fixed_now())
+    tampered_package = tmp_path / "tampered-case-update.zip"
+    with ZipFile(exported.package_path) as source_archive:
+        members = {
+            name: source_archive.read(name) for name in source_archive.namelist()
+        }
+    update_payload = json.loads(members["case_update.json"])
+    update_payload["evidence_receipts"] = []
+    members["case_update.json"] = (
+        json.dumps(update_payload, indent=2, sort_keys=True) + "\n"
+    ).encode("utf-8")
+    with ZipFile(tampered_package, "w", compression=ZIP_DEFLATED) as target_archive:
+        for name, content in members.items():
+            target_archive.writestr(name, content)
+
+    before = {
+        path: path.read_bytes()
+        for path in (
+            target_case / "material_registry.json",
+            target_case / "judgement_log.json",
+            target_case / "advisory_evidence_register.json",
+            target_case / "advisory_claim_register.json",
+        )
+    }
+
+    with pytest.raises(core.CaseWorkspaceError, match="records omitted"):
+        core.import_case_update(target_case, tampered_package, now=fixed_now())
+
+    assert {path: path.read_bytes() for path in before} == before
+    assert not (
+        target_case / "exchange_imports" / str(update_payload["exchange_id"])
+    ).exists()
 
 
 def test_case_update_import_logs_conflict_without_overwriting(

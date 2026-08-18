@@ -558,22 +558,36 @@ Supported source previews include Markdown/text, Word documents, PDFs as
 registered references, and PowerPoint decks.
 
 After indexing or importing any new material that could affect a decision,
-record the evidence receipts and claims that Clara actually uses, then render
-and validate the shared lineage before revising the advisory workpaper,
+commit the evidence receipts, claims, and any judgement-log projections that
+Clara actually uses as one contribution before revising the advisory workpaper,
 storyline, deck, memo, or decision pack:
 
 ```bash
-python scripts/advisory_evidence_lineage.py add-evidence <case-dir> <model-authored-evidence-records.json>
-python scripts/advisory_evidence_lineage.py add-claims <case-dir> <model-authored-claim-records.json>
+python scripts/record_analysis_contribution.py \
+  <case-dir> <model-authored-analysis-contribution.json>
 python scripts/advisory_evidence_lineage.py validate <case-dir>
 ```
 
 The model authors observations, support relationships, what evidence proves and
-does not prove, dependencies, reasoning, uncertainty, and decision use. The
-helper only validates declared shape, references, hashes, and graph integrity.
-When a claim enters a final output, use `link-appearances` with the exact output
-and locator. Use `capture_advisory_web_evidence.py` for an explicitly selected
-public page; do not turn every URL into an automatic fetch.
+does not prove, dependencies, reasoning, uncertainty, decision use, and any
+judgement-log wording. The contribution helper validates and commits all three
+records atomically; if any binding fails it restores the prior registers and
+case files. Use the lower-level `add-evidence` and `add-claims` commands only
+for repair or migration where no coupled case mutation is required.
+When a claim enters a final output, have the model declare its claim ID and
+locator, then let the helper compute the output receipt:
+
+```bash
+python scripts/advisory_evidence_lineage.py bind-output \
+  <case-dir> <completed-output> <model-authored-claim-locations.json>
+```
+
+`claim-locations.json` uses `{"appearances": [{"claim_id": "...",
+"locator": "..."}]}`. The helper computes the exact path, SHA-256, byte count,
+and timestamp; the model remains responsible for the semantic location. Use
+`link-appearances` only to import an already complete receipt. Use
+`capture_advisory_web_evidence.py` for an explicitly selected public page; do
+not turn every URL into an automatic fetch.
 
 When a downloaded or local file must first be made durable inside the case
 workspace, use the copy helper before indexing or handoff:
@@ -1034,7 +1048,9 @@ printed by `import_hosted_voice_bundle.py` or recorded in
 `raw_transcript_unattributed.md`, updates the transcript material to the
 attributed working transcript, marks any raw-audio pointer as transcribed,
 links it visibly to the transcript material/path, and refreshes
-`case_brief.md`.
+`case_brief.md`. It also records a hash-bound `interview_transcript` evidence
+receipt automatically. That receipt proves the attributed transcript bytes and
+speaker wording, not the truth of an underlying assertion.
 
 When the reviewed transcript also requires judgement, question, and issue
 integration, prefer the deterministic integration helper over a temporary
@@ -1046,10 +1062,11 @@ python scripts/integrate_transcript_review.py <case-dir> \
 ```
 
 Codex must still inspect the transcript text and draft the semantic plan. The
-helper only applies the auditable plan: material registry metadata updates,
-review-note section fills, pending judgement entries, existing open-question
-links, case-issue evidence/synthesis updates, `case_brief.md` refresh, and a
-validation/evidence-chain summary. Do not use it to promote entries to
+plan carries `evidence_receipts`, `claims`, and judgement entries together. The
+helper applies that auditable plan atomically with material registry metadata,
+review-note section fills, existing open-question links, claim-linked
+case-issue synthesis, `case_brief.md` refresh, and a validation/evidence-chain
+summary. Do not use it to promote entries to
 decision-pack-ready unless the advisor has explicitly made the inclusion
 decision under the normal Clara rules.
 
@@ -1099,12 +1116,18 @@ These HTML files are working artifacts for the senior partner, not client
 outputs. They should summarize initial hypotheses, evidence gaps, open
 questions, and what Clara needs from the partner next.
 
-5. Codex reads the source material and drafts structured entries. Store them as
-pending by default:
+5. Codex reads the source material and drafts structured evidence, claims, and
+their judgement-log projections. Store entries as pending by default, but bind
+each one to its canonical `advisory_claim_id` and linked evidence receipt IDs:
 
 ```bash
-python scripts/add_judgement.py <case-dir> --entries-json <entries.json>
+python scripts/record_analysis_contribution.py \
+  <case-dir> <model-authored-analysis-contribution.json>
 ```
+
+`add_judgement.py` remains a low-level repair tool. It cannot make an unbound
+entry decision-pack-ready. Approval of a pending legacy entry is blocked until
+the model authors and records its evidence and claim binding.
 
 When Codex drafts targeted follow-up questions separately from judgement
 entries, store them with the same auditable JSON pattern:
@@ -1129,8 +1152,8 @@ Judgement entry kinds are:
 6. When a case has multiple interviews or source rounds, maintain live
 cross-interview issues. Use issues only for questions that matter to the client
 decision; do not turn every judgement entry into an issue. Each issue should
-name the decision area, current synthesis, evidence-for judgement IDs,
-evidence-against judgement IDs, and open-test question IDs:
+name the decision area, current synthesis, supporting and contradicting
+advisory claim IDs, related judgement IDs, and open-test question IDs:
 
 ```bash
 python scripts/upsert_case_issues.py <case-dir> --issues-json <issues.json>
@@ -1139,12 +1162,16 @@ python scripts/upsert_case_issues.py <case-dir> \
   --title "Production and quality transition" \
   --decision-area "Operating transition" \
   --current-synthesis "Quality ownership is unresolved." \
+  --claim-for cl-quality-001 \
   --evidence-for jud-0017 \
   --open-test q-0012
 ```
 
 7. For a solo advisor, do not frame this as "approval." The advisor is deciding
-which Codex-structured statements are ready to rely on in the client pack. First
+which Codex-structured statements are ready to rely on in the client pack. An
+entry can be included only when it is already bound to an active canonical
+claim whose statement matches and whose evidence IDs are declared on that
+claim. First
 build the deterministic inclusion checklist and show its pending entries in
 chat. The checklist is read-only and does not change judgement status:
 

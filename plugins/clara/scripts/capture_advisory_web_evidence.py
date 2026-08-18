@@ -9,7 +9,9 @@ import ipaddress
 import json
 import logging
 import re
+import shutil
 import socket
+import tempfile
 import urllib.parse
 import urllib.request
 from datetime import datetime, timezone
@@ -195,12 +197,25 @@ def capture_web_evidence(
         normalized = parser.text()
     else:
         normalized = decoded.strip()
-    capture_dir = case_dir / "source_materials" / "web" / evidence_id
-    capture_dir.mkdir(parents=True, exist_ok=False)
+    capture_parent = case_dir / "source_materials" / "web"
+    capture_parent.mkdir(parents=True, exist_ok=True)
+    capture_dir = capture_parent / evidence_id
+    if capture_dir.exists():
+        raise FileExistsError(capture_dir)
+    temporary_dir = Path(
+        tempfile.mkdtemp(prefix=f".{evidence_id}.", dir=capture_parent)
+    )
+    try:
+        (temporary_dir / "response.bin").write_bytes(raw)
+        (temporary_dir / "normalized.txt").write_text(
+            normalized.rstrip() + "\n", encoding="utf-8"
+        )
+        temporary_dir.replace(capture_dir)
+    finally:
+        if temporary_dir.exists():
+            shutil.rmtree(temporary_dir)
     raw_path = capture_dir / "response.bin"
     normalized_path = capture_dir / "normalized.txt"
-    raw_path.write_bytes(raw)
-    normalized_path.write_text(normalized.rstrip() + "\n", encoding="utf-8")
     timestamp = (recorded_at or datetime.now(timezone.utc)).isoformat()
     recorded_limitations = [str(item) for item in limitations if str(item).strip()]
     if truncated:
@@ -239,9 +254,7 @@ def capture_web_evidence(
     try:
         record_evidence(case_dir, [receipt])
     except (LineageError, OSError, json.JSONDecodeError):
-        for path in (normalized_path, raw_path):
-            path.unlink(missing_ok=True)
-        capture_dir.rmdir()
+        shutil.rmtree(capture_dir)
         raise
     return receipt
 

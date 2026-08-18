@@ -21,6 +21,7 @@ import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
+from zipfile import BadZipFile
 
 from jsonschema import Draft202012Validator
 
@@ -327,8 +328,11 @@ def _read_pdf(path: Path) -> tuple[str, dict[str, Any]]:
         raise AdvisoryValidationError(
             "PyMuPDF is required for PDF extraction; run Clara's dependency check"
         ) from exc
-    with fitz.open(path) as document:
-        pages = [page.get_text("text") for page in document]
+    try:
+        with fitz.open(path) as document:
+            pages = [page.get_text("text") for page in document]
+    except (fitz.FileDataError, RuntimeError) as exc:
+        raise AdvisoryValidationError(f"PDF is unreadable or damaged: {path}") from exc
     text = "\n\n".join(pages).strip()
     if not text:
         raise AdvisoryValidationError(
@@ -340,11 +344,15 @@ def _read_pdf(path: Path) -> tuple[str, dict[str, Any]]:
 def _read_docx(path: Path) -> tuple[str, dict[str, Any]]:
     try:
         from docx import Document  # type: ignore[import-not-found]
+        from docx.opc.exceptions import PackageNotFoundError
     except ImportError as exc:
         raise AdvisoryValidationError(
             "python-docx is required for DOCX extraction; run Clara's dependency check"
         ) from exc
-    document = Document(path)
+    try:
+        document = Document(path)
+    except (BadZipFile, PackageNotFoundError, KeyError) as exc:
+        raise AdvisoryValidationError(f"DOCX is unreadable or damaged: {path}") from exc
     parts = [paragraph.text for paragraph in document.paragraphs if paragraph.text]
     table_cell_count = 0
     for table in document.tables:
@@ -363,11 +371,15 @@ def _read_docx(path: Path) -> tuple[str, dict[str, Any]]:
 def _read_pptx(path: Path) -> tuple[str, dict[str, Any]]:
     try:
         from pptx import Presentation  # type: ignore[import-not-found]
+        from pptx.exc import PackageNotFoundError
     except ImportError as exc:
         raise AdvisoryValidationError(
             "python-pptx is required for PPTX extraction; run Clara's dependency check"
         ) from exc
-    presentation = Presentation(path)
+    try:
+        presentation = Presentation(path)
+    except (BadZipFile, PackageNotFoundError, KeyError) as exc:
+        raise AdvisoryValidationError(f"PPTX is unreadable or damaged: {path}") from exc
     parts: list[str] = []
     text_shape_count = 0
     table_cell_count = 0
@@ -577,14 +589,20 @@ def _prepare_lineage(
         "evidence_register": evidence_copy,
         "claim_register": claim_copy,
     }
+    has_generation_claims = audit["counts"]["claims"] > 0
     return (
         {
             "schema_version": "1.0",
-            "provenance_mode": "generation_time",
+            "provenance_mode": (
+                "generation_time" if has_generation_claims else "matched_support"
+            ),
             "purpose": (
                 "Generation-time claim and evidence lineage copied from the case "
                 "workspace after mechanical validation."
+                if has_generation_claims
+                else "Empty lineage registers were supplied. They do not establish generation-time claim provenance, so review must use matched support."
             ),
+            "empty_generation_registers_supplied": not has_generation_claims,
             "evidence_register": {
                 "source_path": str(evidence_register.resolve()),
                 "copied_path": str(evidence_copy.resolve()),
@@ -616,7 +634,7 @@ def _copy_contract(source: Path, output_dir: Path) -> Path:
 def _source_inventory(paths: list[Path]) -> dict[str, Any]:
     items: list[dict[str, Any]] = []
     seen: set[Path] = set()
-    for source in paths:
+    for source_number, source in enumerate(paths, start=1):
         resolved = source.resolve()
         if resolved in seen:
             continue
@@ -625,6 +643,7 @@ def _source_inventory(paths: list[Path]) -> dict[str, Any]:
             raise AdvisoryValidationError(f"source file does not exist: {source}")
         items.append(
             {
+                "id": f"source-{source_number:04d}",
                 "path": str(resolved),
                 "name": source.name,
                 "suffix": source.suffix.casefold(),
@@ -646,6 +665,55 @@ def _resolve_artifact_ref(reference: str, base_dir: Path) -> Path:
     if not path.is_absolute():
         path = base_dir / path
     return path.resolve()
+
+
+def _authoritative_format_result(
+    workflow: str, payload: Any
+) -> tuple[str, bool] | None:
+    """Read only workflow-owned mechanical result shapes.
+
+    This is deterministic because it verifies explicit status fields emitted by
+    the authoritative workflow. It does not reinterpret the semantic review.
+    """
+
+    if not isinstance(payload, dict):
+        return None
+    if workflow == "clara:reporting-engine":
+        if (
+            payload.get("owner") != "clara.reporting-engine"
+            or payload.get("schema_version") != "0.2"
+        ):
+            return None
+        runner = payload.get("runner")
+        render_proof = payload.get("render_proof")
+        if not isinstance(runner, dict) or not isinstance(render_proof, dict):
+            return "reporting_engine_render", False
+        return (
+            "reporting_engine_render",
+            runner.get("returncode") == 0
+            and render_proof.get("status") in {"rendered", "not_required_data_only"},
+        )
+    if workflow == "clara:html-deck":
+        if "browser" in payload and "viewports" in payload:
+            return "html_browser_qa", payload.get("result") == "pass"
+        if "deck" in payload and "checks" in payload and "summary" in payload:
+            return "html_static_validation", payload.get("result") == "pass"
+        return None
+    if workflow == "clara:deck-correction":
+        if payload.get("source") == "clara_deck_revision_output_review_completion":
+            summary = payload.get("summary")
+            return (
+                "deck_correction_completion",
+                isinstance(summary, dict)
+                and summary.get("status") == "complete"
+                and summary.get("final_delivery_allowed") is True,
+            )
+        return None
+    if workflow == "clara:claim-basis-map":
+        if payload.get("source") != "clara_claim_basis_map_audit":
+            return None
+        return "claim_basis_map_audit", payload.get("result") == "pass"
+    return None
 
 
 def _audit_format_check_artifacts(
@@ -672,6 +740,7 @@ def _audit_format_check_artifacts(
         if not _is_non_empty_string(workflow) or not isinstance(references, list):
             continue
         actual_paths: set[Path] = set()
+        authoritative_results: dict[str, bool] = {}
         for reference in references:
             if not _is_non_empty_string(reference):
                 continue
@@ -692,16 +761,58 @@ def _audit_format_check_artifacts(
                     "byte_count": artifact_path.stat().st_size,
                 }
             )
+            try:
+                artifact_payload = _load_json(artifact_path)
+            except (AdvisoryValidationError, OSError, UnicodeDecodeError):
+                artifact_payload = None
+            result = _authoritative_format_result(str(workflow), artifact_payload)
+            if result is not None:
+                result_kind, passed = result
+                authoritative_results[result_kind] = passed
+                metadata[-1]["authoritative_result"] = {
+                    "kind": result_kind,
+                    "passed": passed,
+                }
         declared = declared_by_workflow.get(workflow)
-        if not isinstance(declared, dict) or declared.get("requirement") != "required":
-            continue
-        for declared_reference in declared.get("artifact_refs", []):
-            declared_path = _resolve_artifact_ref(declared_reference, base_dir)
-            if declared_path not in actual_paths:
+        if check.get("status") == "passed":
+            required_result_kinds = {
+                "clara:claim-basis-map": {"claim_basis_map_audit"},
+                "clara:html-deck": {
+                    "html_static_validation",
+                    "html_browser_qa",
+                },
+                "clara:reporting-engine": {"reporting_engine_render"},
+                "clara:deck-correction": {"deck_correction_completion"},
+            }.get(str(workflow))
+            if required_result_kinds is None:
                 errors.append(
-                    f"required format check omitted declared artifact: {workflow}: "
-                    f"{declared_path}"
+                    f"passed format check has no authoritative result adapter: {workflow}"
                 )
+            else:
+                missing_results = sorted(
+                    required_result_kinds - set(authoritative_results)
+                )
+                if missing_results:
+                    errors.append(
+                        f"passed format check lacks authoritative result artifacts: {workflow}: "
+                        + ", ".join(missing_results)
+                    )
+                failed_results = sorted(
+                    kind for kind, passed in authoritative_results.items() if not passed
+                )
+                if failed_results:
+                    errors.append(
+                        f"passed format check contradicts authoritative failed result: {workflow}: "
+                        + ", ".join(failed_results)
+                    )
+        if isinstance(declared, dict) and declared.get("requirement") == "required":
+            for declared_reference in declared.get("artifact_refs", []):
+                declared_path = _resolve_artifact_ref(declared_reference, base_dir)
+                if declared_path not in actual_paths:
+                    errors.append(
+                        f"required format check omitted declared artifact: {workflow}: "
+                        f"{declared_path}"
+                    )
     return metadata, errors
 
 
@@ -807,6 +918,7 @@ def prepare_validation(
         },
         "coverage_inventory_path": str(paths["coverage_inventory"].resolve()),
         "coverage_inventory_sha256": _sha256(paths["coverage_inventory"]),
+        "source_inventory_path": str(paths["source_inventory"].resolve()),
     }
     extracted_path = paths["extracted_deliverable"]
     extracted_path.write_text(text.rstrip() + "\n", encoding="utf-8")
@@ -815,6 +927,8 @@ def prepare_validation(
     _write_json(paths["citation_inventory"], _citation_inventory(text))
     _write_json(paths["calculation_inventory"], _calculation_inventory(text))
     _write_json(paths["source_inventory"], source_inventory)
+    inventory["source_inventory_sha256"] = _sha256(paths["source_inventory"])
+    _write_json(paths["deliverable_inventory"], inventory)
     return paths
 
 
@@ -962,6 +1076,7 @@ def _validate_chain_item(
     subject: str,
     id_field: str,
     known_evidence_ids: set[str],
+    require_known_evidence_ids: bool = True,
 ) -> list[str]:
     if not isinstance(value, dict):
         return [f"{subject} must be an object"]
@@ -973,6 +1088,7 @@ def _validate_chain_item(
         "dependency_claim_ids",
         "support_status",
         "reasoning_status",
+        "contradiction_resolution",
         "analysis",
         "recheck",
         "resolution",
@@ -992,19 +1108,29 @@ def _validate_chain_item(
         errors.append(f"{subject}.support_status is invalid")
     if value["reasoning_status"] not in CHAIN_REASONING_STATUSES:
         errors.append(f"{subject}.reasoning_status is invalid")
+    if not isinstance(value["contradiction_resolution"], str):
+        errors.append(f"{subject}.contradiction_resolution must be a string")
     if not _is_non_empty_string(value["analysis"]):
         errors.append(f"{subject}.analysis is required")
+    if (
+        value["support_status"] == "adequate"
+        and not value["evidence_ids"]
+        and not value["dependency_claim_ids"]
+    ):
+        errors.append(
+            f"{subject}: adequate support requires declared evidence_ids or claim dependencies"
+        )
     errors.extend(_validate_recheck(value["recheck"], subject=f"{subject}.recheck"))
     errors.extend(
         _validate_resolution(value["resolution"], subject=f"{subject}.resolution")
     )
     for evidence_id in value.get("evidence_ids", []):
-        if known_evidence_ids and evidence_id not in known_evidence_ids:
+        if require_known_evidence_ids and evidence_id not in known_evidence_ids:
             errors.append(f"{subject}: unknown evidence id {evidence_id}")
     recheck = value.get("recheck")
     if isinstance(recheck, dict):
         for evidence_id in recheck.get("evidence_ids", []):
-            if known_evidence_ids and evidence_id not in known_evidence_ids:
+            if require_known_evidence_ids and evidence_id not in known_evidence_ids:
                 errors.append(f"{subject}.recheck: unknown evidence id {evidence_id}")
     return errors
 
@@ -1015,6 +1141,8 @@ def _validate_lineage_review(
     provenance_mode: str | None,
     claim_register: dict[str, Any] | None,
     evidence_register: dict[str, Any] | None,
+    deliverable_sha256: str | None = None,
+    matched_support_source_ids: set[str] | None = None,
 ) -> list[str]:
     if not isinstance(value, dict):
         return ["lineage_review must be an object"]
@@ -1067,6 +1195,11 @@ def _validate_lineage_review(
         for item in evidence
         if isinstance(item, dict) and item.get("id")
     }
+    allowed_basis_ids = (
+        set(matched_support_source_ids or set())
+        if value.get("provenance_mode") == "matched_support"
+        else evidence_ids
+    )
     evidence_by_id = {
         str(item.get("id")): item
         for item in evidence
@@ -1079,6 +1212,12 @@ def _validate_lineage_review(
         errors.append("lineage_review.reviewed_claim_ids must be unique")
     if value.get("provenance_mode") == "matched_support" and reviewed_ids:
         errors.append("matched-support review cannot claim upstream reviewed_claim_ids")
+    if value.get("provenance_mode") == "matched_support" and value.get(
+        "chain_assessments"
+    ):
+        errors.append(
+            "matched-support review must put reconstructed claims in untracked_material_claims"
+        )
     for claim_id in sorted(reviewed_ids):
         if claim_id not in claim_by_id:
             errors.append(f"lineage_review: unknown reviewed claim id {claim_id}")
@@ -1091,7 +1230,7 @@ def _validate_lineage_review(
                 assessment,
                 subject=subject,
                 id_field="claim_id",
-                known_evidence_ids=evidence_ids,
+                known_evidence_ids=allowed_basis_ids,
             )
         )
         if not isinstance(assessment, dict):
@@ -1128,6 +1267,75 @@ def _validate_lineage_review(
             )
             if set(assessment.get("evidence_ids", [])) != expected_evidence:
                 errors.append(f"{subject}.evidence_ids must match lineage")
+            relationships = {
+                str(link.get("relationship"))
+                for link in upstream_claim.get("evidence_links", [])
+                if isinstance(link, dict)
+            }
+            if (
+                relationships & {"weakens", "contradicts"}
+                and assessment.get("support_status") == "adequate"
+                and not str(assessment.get("contradiction_resolution", "")).strip()
+            ):
+                errors.append(
+                    f"{subject}: adequate support requires contradiction_resolution when lineage weakens or contradicts the claim"
+                )
+            if claim_id in reviewed_ids:
+                current_appearances = [
+                    appearance
+                    for appearance in upstream_claim.get("appearances", [])
+                    if isinstance(appearance, dict)
+                    and appearance.get("artifact_sha256") == deliverable_sha256
+                ]
+                if not current_appearances:
+                    errors.append(
+                        f"{subject}: reviewed generation-time claim has no hash-bound appearance in the prepared deliverable"
+                    )
+                appearance_locators = {
+                    str(appearance.get("locator"))
+                    for appearance in current_appearances
+                    if appearance.get("locator")
+                }
+                reviewed_locations = set(assessment.get("deliverable_locations", []))
+                if not reviewed_locations:
+                    errors.append(
+                        f"{subject}: selected material claim requires a deliverable location"
+                    )
+                elif not reviewed_locations <= appearance_locators:
+                    errors.append(
+                        f"{subject}.deliverable_locations must match hash-bound claim appearances"
+                    )
+            recheck = assessment.get("recheck")
+            if isinstance(recheck, dict) and recheck.get("status") == "completed":
+                for recheck_id in recheck.get("evidence_ids", []):
+                    receipt = evidence_by_id.get(str(recheck_id))
+                    if not isinstance(receipt, dict):
+                        continue
+                    prior_id = str(receipt.get("rechecks_evidence_id", ""))
+                    if not prior_id or prior_id not in expected_evidence:
+                        errors.append(
+                            f"{subject}.recheck: completed receipt {recheck_id} must recheck an evidence receipt in the reviewed chain"
+                        )
+                    verification = receipt.get("verification")
+                    status = (
+                        verification.get("status")
+                        if isinstance(verification, dict)
+                        else None
+                    )
+                    if status not in {"rechecked_unchanged", "rechecked_changed"}:
+                        errors.append(
+                            f"{subject}.recheck: receipt {recheck_id} lacks completed recheck verification"
+                        )
+                    expected_types = {
+                        "web": "web_capture",
+                        "calculation": "calculation_run",
+                        "transcript": "interview_transcript",
+                    }
+                    expected_type = expected_types.get(str(recheck.get("kind")))
+                    if expected_type and receipt.get("evidence_type") != expected_type:
+                        errors.append(
+                            f"{subject}.recheck: {recheck_id} must be {expected_type} evidence"
+                        )
     if len(assessment_ids) != len(set(assessment_ids)):
         errors.append("lineage_review chain assessment claim ids must be unique")
     if claim_by_id:
@@ -1138,6 +1346,23 @@ def _validate_lineage_review(
                 "lineage_review omitted dependency chain claims: "
                 + ", ".join(missing_chain)
             )
+        appeared_direct_claims = {
+            claim_id
+            for claim_id, claim in claim_by_id.items()
+            if claim.get("state") == "active"
+            and claim.get("decision_use") == "direct"
+            and any(
+                isinstance(appearance, dict)
+                and appearance.get("artifact_sha256") == deliverable_sha256
+                for appearance in claim.get("appearances", [])
+            )
+        }
+        omitted_direct_claims = sorted(appeared_direct_claims - reviewed_ids)
+        if omitted_direct_claims:
+            errors.append(
+                "lineage_review omitted active direct claims appearing in the deliverable: "
+                + ", ".join(omitted_direct_claims)
+            )
 
     untracked_ids: list[str] = []
     for index, assessment in enumerate(value.get("untracked_material_claims", [])):
@@ -1147,11 +1372,15 @@ def _validate_lineage_review(
                 assessment,
                 subject=subject,
                 id_field="id",
-                known_evidence_ids=evidence_ids,
+                known_evidence_ids=allowed_basis_ids,
             )
         )
         if isinstance(assessment, dict):
             untracked_ids.append(str(assessment.get("id", "")))
+            if not assessment.get("deliverable_locations"):
+                errors.append(
+                    f"{subject}: untracked material claim requires a deliverable location"
+                )
     if len(untracked_ids) != len(set(untracked_ids)):
         errors.append("lineage_review untracked claim ids must be unique")
     return errors
@@ -1165,6 +1394,7 @@ def validate_review_record(
     claim_register: dict[str, Any] | None = None,
     evidence_register: dict[str, Any] | None = None,
     coverage_inventory: dict[str, Any] | None = None,
+    matched_support_source_ids: set[str] | None = None,
 ) -> list[str]:
     """Return mechanical shape and internal-consistency errors for a review."""
 
@@ -1204,8 +1434,8 @@ def validate_review_record(
     missing = sorted(required - payload.keys())
     if missing:
         return [f"review record missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != "1.2":
-        errors.append('review schema_version must be "1.2"')
+    if payload["schema_version"] != "1.3":
+        errors.append('review schema_version must be "1.3"')
     if payload["language"] != contract["output_language"]:
         errors.append("review language must match the advisory contract")
     for field in (
@@ -1243,6 +1473,87 @@ def validate_review_record(
             errors.append("coverage_review.considered_unit_ids must be non-empty")
         if not _is_string_list(omitted_unit_ids, allow_empty=True):
             errors.append("coverage_review.omitted_unit_ids must be a string array")
+        unit_assessments = coverage.get("unit_assessments")
+        assessed_unit_ids: list[str] = []
+        selected_claim_ids: set[str] = set()
+        selected_untracked_ids: set[str] = set()
+        if not isinstance(unit_assessments, list) or not unit_assessments:
+            errors.append("coverage_review.unit_assessments must be non-empty")
+            unit_assessments = []
+        for index, assessment in enumerate(unit_assessments):
+            subject = f"coverage_review.unit_assessments[{index}]"
+            if not isinstance(assessment, dict):
+                errors.append(f"{subject} must be an object")
+                continue
+            unit_id = str(assessment.get("unit_id", ""))
+            assessed_unit_ids.append(unit_id)
+            status = assessment.get("status")
+            material_ids = assessment.get("material_claim_ids")
+            untracked_ids = assessment.get("untracked_claim_ids")
+            if status not in {
+                "reviewed_material_claims",
+                "reviewed_no_material_claims",
+                "omitted",
+            }:
+                errors.append(f"{subject}.status is invalid")
+            if not _is_string_list(material_ids, allow_empty=True):
+                errors.append(f"{subject}.material_claim_ids must be a string array")
+                material_ids = []
+            if not _is_string_list(untracked_ids, allow_empty=True):
+                errors.append(f"{subject}.untracked_claim_ids must be a string array")
+                untracked_ids = []
+            if not _is_non_empty_string(assessment.get("analysis")):
+                errors.append(f"{subject}.analysis is required")
+            if status == "reviewed_material_claims" and not (
+                material_ids or untracked_ids
+            ):
+                errors.append(
+                    f"{subject}: reviewed_material_claims requires a tracked or untracked claim id"
+                )
+            if status in {"reviewed_no_material_claims", "omitted"} and (
+                material_ids or untracked_ids
+            ):
+                errors.append(f"{subject}: {status} cannot carry claim ids")
+            selected_claim_ids.update(str(value) for value in material_ids)
+            selected_untracked_ids.update(str(value) for value in untracked_ids)
+        if len(assessed_unit_ids) != len(set(assessed_unit_ids)):
+            errors.append("coverage review unit assessment ids must be unique")
+        considered = set(considered_unit_ids or [])
+        omitted = set(omitted_unit_ids or [])
+        for assessment in unit_assessments:
+            if not isinstance(assessment, dict):
+                continue
+            unit_id = str(assessment.get("unit_id", ""))
+            status = assessment.get("status")
+            if status == "omitted" and unit_id not in omitted:
+                errors.append(
+                    f"coverage unit {unit_id} is assessed omitted but is not in omitted_unit_ids"
+                )
+            if status != "omitted" and unit_id not in considered:
+                errors.append(
+                    f"coverage unit {unit_id} is reviewed but is not in considered_unit_ids"
+                )
+        lineage_review_for_coverage = payload.get("lineage_review")
+        if isinstance(lineage_review_for_coverage, dict):
+            declared_selected = set(
+                str(value)
+                for value in lineage_review_for_coverage.get("reviewed_claim_ids", [])
+            )
+            declared_untracked = {
+                str(item.get("id"))
+                for item in lineage_review_for_coverage.get(
+                    "untracked_material_claims", []
+                )
+                if isinstance(item, dict) and item.get("id")
+            }
+            if selected_claim_ids != declared_selected:
+                errors.append(
+                    "coverage unit material_claim_ids must exactly match lineage_review.reviewed_claim_ids"
+                )
+            if selected_untracked_ids != declared_untracked:
+                errors.append(
+                    "coverage unit untracked_claim_ids must exactly match lineage_review.untracked_material_claims"
+                )
         if isinstance(coverage_inventory, dict):
             known_units = {
                 str(unit.get("id"))
@@ -1265,6 +1576,10 @@ def validate_review_record(
                     "coverage review does not account for units: "
                     + ", ".join(missing_units)
                 )
+            if set(assessed_unit_ids) != known_units:
+                errors.append(
+                    "coverage_review.unit_assessments must contain exactly one assessment for every coverage unit"
+                )
 
     errors.extend(
         _validate_lineage_review(
@@ -1272,6 +1587,8 @@ def validate_review_record(
             provenance_mode=provenance_mode,
             claim_register=claim_register,
             evidence_register=evidence_register,
+            deliverable_sha256=str(payload.get("deliverable_sha256", "")),
+            matched_support_source_ids=matched_support_source_ids,
         )
     )
 
@@ -1373,6 +1690,12 @@ def validate_review_record(
         corrected_hash = correction.get("corrected_artifact_sha256")
         if not isinstance(corrected_hash, str):
             errors.append("correction.corrected_artifact_sha256 must be a string")
+        corrected_inventory_hash = correction.get("corrected_inventory_sha256")
+        corrected_review_hash = correction.get("corrected_review_sha256")
+        if not isinstance(corrected_inventory_hash, str):
+            errors.append("correction.corrected_inventory_sha256 must be a string")
+        if not isinstance(corrected_review_hash, str):
+            errors.append("correction.corrected_review_sha256 must be a string")
         if not _is_string_list(correction.get("unresolved_changes"), allow_empty=True):
             errors.append("correction.unresolved_changes must be a string array")
         if (
@@ -1394,8 +1717,26 @@ def validate_review_record(
                 errors.append(
                     "correction.corrected_artifact_sha256 must be a lowercase SHA-256 when completed"
                 )
-        elif correction.get("corrected_artifact") or corrected_hash:
-            errors.append("correction artifact path and hash require completed status")
+            for field, value in (
+                ("corrected_inventory_sha256", corrected_inventory_hash),
+                ("corrected_review_sha256", corrected_review_hash),
+            ):
+                if (
+                    not isinstance(value, str)
+                    or re.fullmatch(r"[0-9a-f]{64}", value) is None
+                ):
+                    errors.append(
+                        f"correction.{field} must be a lowercase SHA-256 when completed"
+                    )
+        elif (
+            correction.get("corrected_artifact")
+            or corrected_hash
+            or corrected_inventory_hash
+            or corrected_review_hash
+        ):
+            errors.append(
+                "correction artifact path and review hashes require completed status"
+            )
 
     approvals = payload["approvals"]
     if not isinstance(approvals, dict):
@@ -1493,6 +1834,10 @@ def validate_review_record(
             )
             for item in chain_items
         )
+        if delivery_ready and not chain_items:
+            errors.append(
+                "delivery-ready status requires at least one model-reviewed material claim"
+            )
         if delivery_ready and unresolved_chain:
             errors.append(
                 "delivery-ready status cannot coexist with an unresolved claim chain"
@@ -1760,6 +2105,23 @@ def _load_preparation_context(
     )
 
 
+def _load_source_inventory(
+    inventory: dict[str, Any],
+) -> tuple[dict[str, Any], list[str]]:
+    errors: list[str] = []
+    path = Path(str(inventory.get("source_inventory_path", "")))
+    expected_hash = inventory.get("source_inventory_sha256")
+    if not path.is_file():
+        return {}, ["source inventory is missing"]
+    if _sha256(path) != expected_hash:
+        errors.append("source inventory changed since preparation")
+    payload = _load_json(path)
+    if not isinstance(payload, dict):
+        errors.append("source inventory must be an object")
+        return {}, errors
+    return payload, errors
+
+
 def _recheck_tasks(review: dict[str, Any]) -> dict[str, Any]:
     """Package model-selected rechecks without selecting or executing them."""
 
@@ -1799,6 +2161,136 @@ def _recheck_tasks(review: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def _audit_corrected_validation(
+    *,
+    corrected_deliverable: Path,
+    corrected_inventory_path: Path | None,
+    corrected_review_path: Path | None,
+    contract: dict[str, Any],
+    contract_path: Path,
+    correction_record: dict[str, Any],
+) -> tuple[dict[str, Any] | None, list[str]]:
+    """Require a complete second review bound to the corrected bytes."""
+
+    errors: list[str] = []
+    if corrected_inventory_path is None or not corrected_inventory_path.is_file():
+        errors.append(
+            "completed correction requires --corrected-deliverable-inventory from a second prepare run"
+        )
+    if corrected_review_path is None or not corrected_review_path.is_file():
+        errors.append(
+            "completed correction requires --corrected-review from a second model-led review"
+        )
+    if errors:
+        return None, errors
+    assert corrected_inventory_path is not None
+    assert corrected_review_path is not None
+    if correction_record.get("corrected_inventory_sha256") != _sha256(
+        corrected_inventory_path
+    ):
+        errors.append("corrected inventory does not match the hash bound in correction")
+    if correction_record.get("corrected_review_sha256") != _sha256(
+        corrected_review_path
+    ):
+        errors.append("corrected review does not match the hash bound in correction")
+    inventory = _load_json(corrected_inventory_path)
+    review = _load_json(corrected_review_path)
+    if not isinstance(inventory, dict):
+        return None, [*errors, "corrected deliverable inventory must be an object"]
+    if not isinstance(review, dict):
+        return None, [*errors, "corrected review must be an object"]
+    corrected_hash = _sha256(corrected_deliverable)
+    if (
+        Path(str(inventory.get("source_path", ""))).resolve()
+        != corrected_deliverable.resolve()
+    ):
+        errors.append(
+            "corrected inventory is not for the supplied corrected deliverable"
+        )
+    if inventory.get("source_sha256") != corrected_hash:
+        errors.append("corrected inventory is not bound to the corrected bytes")
+    if inventory.get("advisory_contract_sha256") != _sha256(contract_path):
+        errors.append("corrected inventory is not bound to the current contract")
+    (
+        coverage_inventory,
+        lineage_inventory,
+        claim_register,
+        evidence_register,
+        preparation_errors,
+    ) = _load_preparation_context(inventory)
+    source_inventory, source_inventory_errors = _load_source_inventory(inventory)
+    errors.extend(f"corrected review: {error}" for error in preparation_errors)
+    errors.extend(f"corrected review: {error}" for error in source_inventory_errors)
+    matched_support_source_ids = {
+        str(item.get("id"))
+        for item in source_inventory.get("sources", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    provenance_mode = (
+        str(lineage_inventory.get("provenance_mode"))
+        if isinstance(lineage_inventory, dict)
+        else None
+    )
+    errors.extend(
+        "corrected review: " + error
+        for error in validate_review_record(
+            review,
+            contract,
+            provenance_mode=provenance_mode,
+            claim_register=claim_register,
+            evidence_register=evidence_register,
+            coverage_inventory=coverage_inventory,
+            matched_support_source_ids=matched_support_source_ids,
+        )
+    )
+    if review.get("deliverable_sha256") != corrected_hash:
+        errors.append("corrected review is not bound to the corrected bytes")
+    contract_hash = _sha256(contract_path)
+    if review.get("advisory_contract_sha256") != contract_hash:
+        errors.append("corrected review is not bound to the current contract")
+    if review.get("coverage_inventory_sha256") != inventory.get(
+        "coverage_inventory_sha256"
+    ):
+        errors.append("corrected review is not bound to its coverage inventory")
+    inventory_lineage = inventory.get("lineage")
+    expected_lineage_hash = (
+        inventory_lineage.get("lineage_inventory_sha256")
+        if isinstance(inventory_lineage, dict)
+        else None
+    )
+    if review.get("lineage_inventory_sha256") != expected_lineage_hash:
+        errors.append("corrected review is not bound to its lineage inventory")
+    _, corrected_format_errors = _audit_format_check_artifacts(
+        review,
+        contract,
+        contract_path.parent,
+    )
+    errors.extend(f"corrected review: {error}" for error in corrected_format_errors)
+    corrected_correction = review.get("correction")
+    if (
+        not isinstance(corrected_correction, dict)
+        or corrected_correction.get("status") != "not_required"
+    ):
+        errors.append("corrected review must conclude correction.status not_required")
+    corrected_readiness = review.get("delivery_readiness")
+    if not isinstance(corrected_readiness, dict) or corrected_readiness.get(
+        "status"
+    ) not in {"ready", "ready_with_residual_uncertainty"}:
+        errors.append("corrected review is not delivery-ready")
+    metadata = {
+        "inventory_path": str(corrected_inventory_path.resolve()),
+        "inventory_sha256": _sha256(corrected_inventory_path),
+        "review_path": str(corrected_review_path.resolve()),
+        "review_sha256": _sha256(corrected_review_path),
+        "delivery_readiness": (
+            corrected_readiness.get("status")
+            if isinstance(corrected_readiness, dict)
+            else "blocked"
+        ),
+    }
+    return metadata, errors
+
+
 def package_validation(
     inventory_path: Path,
     review_draft_path: Path,
@@ -1806,6 +2298,8 @@ def package_validation(
     output_dir: Path,
     *,
     corrected_deliverable: Path | None = None,
+    corrected_deliverable_inventory: Path | None = None,
+    corrected_review: Path | None = None,
 ) -> tuple[dict[str, Path], dict[str, Any]]:
     """Audit a model-authored review and write the validation package."""
 
@@ -1826,6 +2320,13 @@ def package_validation(
         preparation_errors,
     ) = _load_preparation_context(inventory)
     errors.extend(preparation_errors)
+    source_inventory, source_inventory_errors = _load_source_inventory(inventory)
+    errors.extend(source_inventory_errors)
+    matched_support_source_ids = {
+        str(item.get("id"))
+        for item in source_inventory.get("sources", [])
+        if isinstance(item, dict) and item.get("id")
+    }
     provenance_mode = None
     if isinstance(lineage_inventory, dict):
         candidate_mode = lineage_inventory.get("provenance_mode")
@@ -1840,6 +2341,7 @@ def package_validation(
                 claim_register=claim_register,
                 evidence_register=evidence_register,
                 coverage_inventory=coverage_inventory,
+                matched_support_source_ids=matched_support_source_ids,
             )
         )
     elif not isinstance(review, dict):
@@ -1884,6 +2386,7 @@ def package_validation(
         errors.extend(artifact_errors)
 
     corrected_metadata: dict[str, Any] | None = None
+    corrected_validation_metadata: dict[str, Any] | None = None
     correction_record = review.get("correction", {})
     if not isinstance(correction_record, dict):
         correction_record = {}
@@ -1915,9 +2418,27 @@ def package_validation(
                 "sha256": corrected_hash,
                 "byte_count": corrected_deliverable.stat().st_size,
             }
+            (
+                candidate_corrected_validation,
+                corrected_validation_errors,
+            ) = _audit_corrected_validation(
+                corrected_deliverable=corrected_deliverable,
+                corrected_inventory_path=corrected_deliverable_inventory,
+                corrected_review_path=corrected_review,
+                contract=contract,
+                contract_path=advisory_contract_path,
+                correction_record=correction_record,
+            )
+            errors.extend(corrected_validation_errors)
+            if not corrected_validation_errors:
+                corrected_validation_metadata = candidate_corrected_validation
     elif corrected_deliverable is not None:
         errors.append(
             "a corrected deliverable was supplied but correction.status is not completed"
+        )
+    elif corrected_deliverable_inventory is not None or corrected_review is not None:
+        errors.append(
+            "corrected inventory/review were supplied but correction.status is not completed"
         )
 
     paths = {
@@ -1935,6 +2456,12 @@ def package_validation(
         protected_inputs["original deliverable"] = original_path
     if corrected_deliverable is not None:
         protected_inputs["corrected deliverable"] = corrected_deliverable
+    if corrected_deliverable_inventory is not None:
+        protected_inputs["corrected deliverable inventory"] = (
+            corrected_deliverable_inventory
+        )
+    if corrected_review is not None:
+        protected_inputs["corrected review"] = corrected_review
     for index, artifact in enumerate(format_check_artifacts, start=1):
         protected_inputs[f"format-check artifact {index}"] = Path(artifact["path"])
     _reject_output_collisions(paths, protected_inputs)
@@ -1962,6 +2489,7 @@ def package_validation(
                 else None
             ),
             "preparation_artifacts_unchanged": not preparation_errors,
+            "source_inventory_unchanged": not source_inventory_errors,
             "original_unchanged": original_unchanged,
             "separate_corrected_artifact": correction_status != "completed"
             or corrected_metadata is not None,
@@ -1980,12 +2508,15 @@ def package_validation(
                 and correction_record.get("corrected_artifact_sha256")
                 == corrected_metadata["sha256"]
             ),
+            "corrected_artifact_re_reviewed": correction_status != "completed"
+            or corrected_validation_metadata is not None,
             "format_check_artifacts_exist": not artifact_errors,
             "hidden_model_api_calls": False,
         },
         "declared_delivery_readiness": declared_readiness,
         "effective_delivery_readiness": declared_readiness if not errors else "blocked",
         "corrected_artifact": corrected_metadata,
+        "corrected_validation": corrected_validation_metadata,
         "format_check_artifacts": format_check_artifacts,
         "interpretation": "Record completeness proves mechanical consistency only; semantic support, reasoning, recommendation quality, and professional judgement remain model-led and professionally reviewed.",
     }
@@ -2019,6 +2550,8 @@ def _package_command(args: argparse.Namespace) -> int:
         args.advisory_contract,
         args.output_dir,
         corrected_deliverable=args.corrected_deliverable,
+        corrected_deliverable_inventory=args.corrected_deliverable_inventory,
+        corrected_review=args.corrected_review,
     )
     LOGGER.info("Wrote advisory validation package: %s", paths["package"])
     return 0 if audit["record_complete"] else 1
@@ -2046,6 +2579,8 @@ def _parser() -> argparse.ArgumentParser:
     package.add_argument("--advisory-contract", type=Path, required=True)
     package.add_argument("--output-dir", type=Path, required=True)
     package.add_argument("--corrected-deliverable", type=Path)
+    package.add_argument("--corrected-deliverable-inventory", type=Path)
+    package.add_argument("--corrected-review", type=Path)
     package.set_defaults(handler=_package_command)
     return parser
 

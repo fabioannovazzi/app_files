@@ -180,6 +180,11 @@ python scripts/finalize_hosted_transcript.py <case-dir> \
   --audio-pointer <source_materials/interviews/...-audio.md>
 ```
 
+Finalization also creates a content-hash-stable `interview_transcript` evidence
+receipt for the exact reviewed transcript bytes. It records that the transcript
+supports attributed wording only; it does not promote the speaker's underlying
+assertion into a fact.
+
 When the reviewed transcript also requires judgement, questions, and live-issue
 updates, Codex drafts a semantic integration plan and applies it with:
 
@@ -188,10 +193,13 @@ python scripts/integrate_transcript_review.py <case-dir> \
   --plan-json <integration-plan.json>
 ```
 
-The helper applies an auditable plan; it does not interpret the transcript.
-New judgement remains `pending` until the advisor makes the normal client-pack
-inclusion decision. Update `advisory_evidence_map.md` before the transcript
-changes a workpaper, storyline, deck, memo, or decision pack.
+The semantic plan includes any new `evidence_receipts`, `claims`, judgement
+entries, open-question links, and case-issue claim links. The helper applies the
+whole plan atomically; it does not interpret the transcript. New judgement
+remains `pending` until the advisor makes the normal client-pack inclusion
+decision, and it cannot later be approved without its canonical claim binding.
+Update `advisory_evidence_map.md` before the transcript changes a workpaper,
+storyline, deck, memo, or decision pack.
 
 ## Codex-Native Run UX
 

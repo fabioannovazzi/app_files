@@ -36,6 +36,11 @@ python plugins/clara/skills/claim-basis-map/scripts/render_claim_basis_map.py \
   --output deck.claims.md
 ```
 
+The command also writes `deck.claims.audit.json`. Its authoritative
+`source: clara_claim_basis_map_audit` and `result` fields are what the advisory
+deliverable validator consumes. An ungrounded claim, broken reference, or
+current-deck drift makes the command exit non-zero.
+
 This is not tamper-proofing and does not certify the PPTX. It is a text-drift
 check: if the deck changes later, rerun the renderer against the current PPTX.
 Changed, missing, untracked, or broken-reference claims fail closed and are
@@ -167,8 +172,15 @@ the generation-time JSON:
 python plugins/clara/skills/claim-basis-map/scripts/render_claim_basis_map.py \
   deck.claims.json \
   --current-pptx deck.pptx \
+  --case-dir <case-dir> \
+  --evidence-register <case-dir>/advisory_evidence_register.json \
+  --claim-register <case-dir>/advisory_claim_register.json \
   --output deck.claims.md
 ```
+
+With `--case-dir`, the renderer checks shared claim/evidence IDs and records
+each advisory claim's exact PPTX hash and slide appearance. It never infers or
+creates a semantic claim from slide text.
 
 Use `--snapshot-output current-deck.snapshot.json` when a local debug snapshot
 is useful. Use `--current-claims-json` only when another deck builder has

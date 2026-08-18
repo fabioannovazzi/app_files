@@ -184,6 +184,38 @@
       "available_evidence": "The preparation produces bounded coverage units. The model accounts for every unit, selects decision-relevant claims, and the validator walks their dependency closure rather than re-extracting every claim at the end.",
       "expected_action": "Reject readiness if a coverage unit is neither considered nor explicitly omitted, or if a selected claim dependency is absent from the chain review.",
       "boundary": "scaled_coverage_and_lineage"
+    },
+    {
+      "id": "zero-claim-ready-review",
+      "deliverable_format": "md",
+      "deliverable_excerpt": "A completed advisory recommendation is marked ready, but the review selects no tracked or reconstructed material claim.",
+      "available_evidence": "Coverage units are present but all are declared to contain no material claims.",
+      "expected_action": "Reject delivery readiness because a completed advisory deliverable requires at least one model-reviewed material claim.",
+      "boundary": "non_empty_semantic_review"
+    },
+    {
+      "id": "fake-completed-recheck",
+      "deliverable_format": "html",
+      "deliverable_excerpt": "A public-source claim is marked rechecked.",
+      "available_evidence": "The claimed new receipt does not point to the earlier receipt or lacks rechecked_unchanged or rechecked_changed verification.",
+      "expected_action": "Reject the completed recheck and keep delivery blocked.",
+      "boundary": "recheck_succession"
+    },
+    {
+      "id": "corrected-artifact-without-second-review",
+      "deliverable_format": "pptx",
+      "deliverable_excerpt": "A separate corrected deck and correction approval are supplied.",
+      "available_evidence": "No second preparation inventory or model-led review is bound to the corrected deck bytes.",
+      "expected_action": "Reject correction completion until the corrected artifact is prepared and reviewed again.",
+      "boundary": "corrected_artifact_re_review"
+    },
+    {
+      "id": "generic-passed-format-json",
+      "deliverable_format": "pptx",
+      "deliverable_excerpt": "A calculation-backed deck declares the Reporting Engine check passed.",
+      "available_evidence": "The only artifact is a generic JSON file containing status passed, not a Clara Reporting Engine 0.2 render manifest.",
+      "expected_action": "Reject the format check because no authoritative workflow-owned result is present.",
+      "boundary": "authoritative_format_result"
     }
   ]
 }

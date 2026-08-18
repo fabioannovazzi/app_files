@@ -30,10 +30,15 @@ def main() -> int:
     )
     LOGGER.info("Exported case update: %s", result.package_path)
     LOGGER.info(
-        "Included %s material(s), %s judgement entrie(s), %s open question(s), %s file(s).",
+        "Included %s material(s), %s evidence receipt(s), %s claim(s), "
+        "%s judgement entrie(s), %s open question(s), %s case issue(s), "
+        "%s file(s).",
         result.material_count,
+        result.evidence_count,
+        result.claim_count,
         result.judgement_count,
         result.open_question_count,
+        result.issue_count,
         result.included_file_count,
     )
     return 0

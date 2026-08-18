@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import shutil
@@ -12,11 +13,15 @@ from pathlib import Path
 from typing import Any
 
 from advisor_case_core import (
+    CASE_BRIEF_FILENAME,
     CaseWorkspaceError,
+    _restore_files,
+    _snapshot_files,
     refresh_case_brief,
     register_material,
     validate_case_workspace,
 )
+from advisory_evidence_lineage import record_evidence
 from repair_audio_pointer_links import (
     is_repairable_audio_pointer_validation_error,
     repair_audio_pointer_links,
@@ -49,6 +54,7 @@ class FinalizeHostedTranscriptResult:
     attributed_transcript_path: Path
     unattributed_transcript_backup_path: Path
     audio_pointer_material_id: str | None
+    evidence_receipt_id: str
 
 
 def _now_iso(now: datetime | None = None) -> str:
@@ -110,6 +116,73 @@ def _relative_path(case_dir: Path, path: Path) -> str:
         return str(path.resolve().relative_to(case_dir.resolve()))
     except ValueError:
         return str(path.resolve())
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _transcript_receipt(
+    *,
+    case_dir: Path,
+    material_id: str,
+    attributed_path: Path,
+    timestamp: str,
+) -> dict[str, Any]:
+    """Bind reviewed transcript bytes without asserting that a speaker is right."""
+
+    digest = _sha256(attributed_path)
+    try:
+        artifact_path = attributed_path.resolve().relative_to(case_dir.resolve())
+        path_reference = "case_relative"
+        artifact_value = artifact_path.as_posix()
+    except ValueError:
+        path_reference = "absolute"
+        artifact_value = str(attributed_path.resolve())
+    return {
+        "id": f"ev-transcript-{material_id}-{digest[:12]}",
+        "evidence_type": "interview_transcript",
+        "recorded_at": timestamp,
+        "recorded_by": "clara:transcribe",
+        "capture_status": "captured",
+        "source": {
+            "material_ids": [material_id],
+            "url": "",
+            "locator": "Reviewed attributed transcript",
+            "artifact_refs": [
+                {
+                    "path": artifact_value,
+                    "path_reference": path_reference,
+                    "sha256": digest,
+                    "byte_count": attributed_path.stat().st_size,
+                    "media_type": "text/markdown",
+                }
+            ],
+        },
+        "observation": (
+            "A reviewed attributed transcript is preserved for the registered "
+            f"transcript material {material_id}."
+        ),
+        "scope": (
+            "The exact reviewed transcript bytes and attribution recorded in the "
+            "linked artifact."
+        ),
+        "limitations": [
+            "The receipt proves the transcript record and attributed wording, not the truth of a speaker's underlying assertion."
+        ],
+        "verification": {
+            "status": "identity_verified",
+            "checked_at": timestamp,
+            "method": "SHA-256 and byte-count binding of the reviewed transcript",
+            "notes": [],
+        },
+        "rechecks_evidence_id": "",
+        "supersedes_evidence_id": "",
+    }
 
 
 def _default_raw_transcript_path(
@@ -290,24 +363,19 @@ def finalize_hosted_transcript(
     helper in the post-import Codex/Clara review loop.
     """
 
-    _validate_workspace_or_repair_audio_pointer(
-        case_dir,
-        transcript_material_id=material_id,
-        now=now,
-    )
     attributed_path = attributed_transcript_path.expanduser()
     if not attributed_path.is_file():
         raise CaseWorkspaceError(
             f"attributed transcript does not exist: {attributed_path}"
         )
 
-    registry = _read_registry(case_dir)
-    material = _find_material(registry, material_id)
+    initial_registry = _read_registry(case_dir)
+    initial_material = _find_material(initial_registry, material_id)
     raw_path = (
         raw_transcript_path.expanduser()
         if raw_transcript_path is not None
         else _default_raw_transcript_path(
-            material=material,
+            material=initial_material,
             attributed_transcript_path=attributed_path,
         )
     )
@@ -316,57 +384,114 @@ def finalize_hosted_transcript(
         if unattributed_transcript_backup_path is not None
         else raw_path.parent / "raw_transcript_unattributed.md"
     )
-    _preserve_unattributed_transcript(
-        raw_transcript_path=raw_path,
-        unattributed_transcript_backup_path=backup_path,
+    initial_metadata = initial_material.get("source_metadata")
+    initial_pointer_id = (
+        str(initial_metadata.get("raw_audio_pointer_material_id") or "").strip()
+        if isinstance(initial_metadata, dict)
+        else ""
     )
-
-    pointer_id = _resolve_audio_pointer_material_id(
-        case_dir=case_dir,
-        audio_pointer_path=(
-            audio_pointer_path.expanduser() if audio_pointer_path is not None else None
-        ),
-        audio_pointer_material_id=audio_pointer_material_id,
-        title=audio_pointer_title,
-        now=now,
+    pointer_paths: list[Path] = []
+    requested_pointer_path = (
+        audio_pointer_path.expanduser() if audio_pointer_path is not None else None
     )
-
-    registry = _read_registry(case_dir)
-    material = _find_material(registry, material_id)
-    timestamp = _now_iso(now)
-    material["path"] = str(attributed_path.resolve())
-    material["material_type"] = "transcript"
-    material["status"] = "indexed"
-    material["summary"] = summary
-    material["updated_at"] = timestamp
-    metadata = dict(material.get("source_metadata") or {})
-    metadata["speaker_attribution"] = speaker_attribution_note
-    metadata["unattributed_transcript_backup"] = _relative_path(case_dir, backup_path)
-    if pointer_id is None:
-        existing_pointer_id = str(
-            metadata.get("raw_audio_pointer_material_id") or ""
-        ).strip()
-        pointer_id = existing_pointer_id or None
-    if pointer_id is not None:
-        metadata["raw_audio_pointer_material_id"] = pointer_id
-    material["source_metadata"] = metadata
-    if pointer_id is not None:
-        _reconcile_audio_pointer(
+    if requested_pointer_path is not None:
+        pointer_paths.append(requested_pointer_path)
+    pointer_id_before = audio_pointer_material_id.strip() or initial_pointer_id
+    if pointer_id_before:
+        try:
+            pointer_material = _find_material(initial_registry, pointer_id_before)
+        except CaseWorkspaceError:
+            pointer_material = None
+        if isinstance(pointer_material, dict):
+            candidate = Path(str(pointer_material.get("path", ""))).expanduser()
+            pointer_paths.append(
+                candidate if candidate.is_absolute() else case_dir / candidate
+            )
+    mutation_paths = [
+        case_dir / "material_registry.json",
+        case_dir / "case_manifest.json",
+        case_dir / CASE_BRIEF_FILENAME,
+        case_dir / "advisory_evidence_register.json",
+        case_dir / "advisory_evidence_map.md",
+        backup_path,
+        *pointer_paths,
+    ]
+    snapshot = _snapshot_files(mutation_paths)
+    completed = False
+    pointer_id: str | None = None
+    transcript_receipt: dict[str, Any] = {}
+    try:
+        _validate_workspace_or_repair_audio_pointer(
             case_dir=case_dir,
-            registry=registry,
-            pointer_id=pointer_id,
             transcript_material_id=material_id,
-            attributed_transcript_path=attributed_path,
+            now=now,
+        )
+        _preserve_unattributed_transcript(
+            raw_transcript_path=raw_path,
+            unattributed_transcript_backup_path=backup_path,
+        )
+
+        pointer_id = _resolve_audio_pointer_material_id(
+            case_dir=case_dir,
+            audio_pointer_path=requested_pointer_path,
+            audio_pointer_material_id=audio_pointer_material_id,
+            title=audio_pointer_title,
+            now=now,
+        )
+
+        registry = _read_registry(case_dir)
+        material = _find_material(registry, material_id)
+        timestamp = _now_iso(now)
+        material["path"] = str(attributed_path.resolve())
+        material["material_type"] = "transcript"
+        material["status"] = "indexed"
+        material["summary"] = summary
+        material["updated_at"] = timestamp
+        metadata = dict(material.get("source_metadata") or {})
+        metadata["speaker_attribution"] = speaker_attribution_note
+        metadata["unattributed_transcript_backup"] = _relative_path(
+            case_dir, backup_path
+        )
+        if pointer_id is None:
+            existing_pointer_id = str(
+                metadata.get("raw_audio_pointer_material_id") or ""
+            ).strip()
+            pointer_id = existing_pointer_id or None
+        if pointer_id is not None:
+            metadata["raw_audio_pointer_material_id"] = pointer_id
+        material["source_metadata"] = metadata
+        transcript_receipt = _transcript_receipt(
+            case_dir=case_dir,
+            material_id=material_id,
+            attributed_path=attributed_path,
             timestamp=timestamp,
         )
-    _write_registry(case_dir, registry)
-    refresh_case_brief(case_dir, now=now)
+        record_evidence(case_dir, [transcript_receipt])
+        if pointer_id is not None:
+            _reconcile_audio_pointer(
+                case_dir=case_dir,
+                registry=registry,
+                pointer_id=pointer_id,
+                transcript_material_id=material_id,
+                attributed_transcript_path=attributed_path,
+                timestamp=timestamp,
+            )
+        _write_registry(case_dir, registry)
+        refresh_case_brief(case_dir, now=now)
+        final_errors = validate_case_workspace(case_dir)
+        if final_errors:
+            raise CaseWorkspaceError("; ".join(final_errors))
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
 
     return FinalizeHostedTranscriptResult(
         material_id=material_id,
         attributed_transcript_path=attributed_path,
         unattributed_transcript_backup_path=backup_path,
         audio_pointer_material_id=pointer_id,
+        evidence_receipt_id=str(transcript_receipt["id"]),
     )
 
 
@@ -413,6 +538,7 @@ def main() -> int:
     )
     if result.audio_pointer_material_id is not None:
         LOGGER.info("Audio pointer material: %s", result.audio_pointer_material_id)
+    LOGGER.info("Transcript evidence receipt: %s", result.evidence_receipt_id)
     return 0
 
 

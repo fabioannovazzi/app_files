@@ -39,6 +39,47 @@
         "media_type": {"type": "string"}
       }
     },
+    "origin": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_case_id", "source_id", "exchange_id"],
+      "properties": {
+        "source_case_id": {"$ref": "#/$defs/text"},
+        "source_id": {"$ref": "#/$defs/id"},
+        "exchange_id": {"$ref": "#/$defs/text"}
+      }
+    },
+    "calculation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "input_artifact_paths",
+        "output_artifact_paths",
+        "verification_artifact_paths"
+      ],
+      "properties": {
+        "method": {"$ref": "#/$defs/text"},
+        "input_artifact_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "output_artifact_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        },
+        "verification_artifact_paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
     "source": {
       "type": "object",
       "additionalProperties": false,
@@ -118,8 +159,47 @@
         "limitations": {"$ref": "#/$defs/textList"},
         "verification": {"$ref": "#/$defs/verification"},
         "rechecks_evidence_id": {"type": "string"},
-        "supersedes_evidence_id": {"type": "string"}
-      }
+        "supersedes_evidence_id": {"type": "string"},
+        "calculation": {"$ref": "#/$defs/calculation"},
+        "origin": {"$ref": "#/$defs/origin"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"evidence_type": {"const": "calculation_run"}},
+            "required": ["evidence_type"]
+          },
+          "then": {
+            "required": ["calculation"],
+            "properties": {
+              "capture_status": {"const": "captured"},
+              "source": {
+                "properties": {
+                  "artifact_refs": {"type": "array", "minItems": 3}
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "evidence_type": {"const": "interview_transcript"},
+              "capture_status": {"const": "captured"}
+            },
+            "required": ["evidence_type", "capture_status"]
+          },
+          "then": {
+            "properties": {
+              "source": {
+                "properties": {
+                  "artifact_refs": {"type": "array", "minItems": 1}
+                }
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

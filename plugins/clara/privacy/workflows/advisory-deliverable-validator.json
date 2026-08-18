@@ -6,12 +6,19 @@
     "contracts/advisory_contract.v1.schema.json",
     "contracts/advisory_claim_register.v1.schema.json",
     "contracts/advisory_evidence_register.v1.schema.json",
+    "scripts/advisor_case_core.py",
     "scripts/advisory_evidence_lineage.py",
     "scripts/capture_advisory_web_evidence.py",
+    "scripts/finalize_hosted_transcript.py",
+    "scripts/integrate_transcript_review.py",
+    "scripts/record_analysis_contribution.py",
+    "scripts/record_reporting_contribution.py",
     "skills/advisory-deliverable-validator/SKILL.md",
     "skills/advisory-deliverable-validator/evals",
     "skills/advisory-deliverable-validator/references",
-    "skills/advisory-deliverable-validator/scripts"
+    "skills/advisory-deliverable-validator/scripts",
+    "skills/claim-basis-map/scripts/render_claim_basis_map.py",
+    "skills/html-deck/scripts/build_html_deck.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -24,12 +31,12 @@
       {
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
-        "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, referenced artifact paths and hashes, model-led findings, correction drafts and their path/hash binding, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
+        "content": "Claim Basis Map audit records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction completion records, referenced artifact paths and hashes, one model-authored assessment per bounded coverage unit, model-led findings, correction drafts, the corrected artifact's second preparation inventory and second review, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
       },
       {
         "id": "advisory-claim-and-evidence-lineage",
         "purpose": "Preserve and review the evidence, dependencies, derivations and output appearances of advisory claims",
-        "content": "advisory_evidence_register.json and advisory_claim_register.json; source observations and limitations; management and interview assertions; public capture URLs and normalized text; local artifact paths, hashes and byte counts; calculation receipts; claim statements, evidence relationships, dependency graphs, reasoning, uncertainty, judgement boundaries, deliverable locations, model-selected chain assessments, coverage units and targeted recheck decisions"
+        "content": "advisory_evidence_register.json and advisory_claim_register.json; source observations and limitations; management and interview assertions; public capture URLs and normalized text; exact transcript, calculation input/output/verification and output-appearance paths, hashes and byte counts; claim statements, evidence relationships, dependency and supersession graphs, reasoning, uncertainty, judgement boundaries, model-selected chain assessments, coverage units and targeted recheck decisions"
       }
     ]
   },
@@ -79,6 +86,6 @@
     "reviewed_at": "2026-08-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4dfbbf833a0082e93fb1d93a7f41a07923c19c8ab3d9c5e752d722acc5d78f94"
+    "source_fingerprint": "7f60586712a75074323523bb8aa089909daa61d43a1c3b9e6309a2093c7a6ea6"
   }
 }

@@ -201,10 +201,12 @@ format-specific artifact.
 Record these needs under `validation_profile.format_checks` in the advisory
 contract. Required check artifacts remain authoritative. If a required check is
 blocked, delivery readiness is blocked; the validator must not reimplement a
-weaker substitute. A check marked `passed` must reference the actual local
-artifact files. Packaging resolves those paths relative to the advisory
-contract, verifies that they exist, and records their hashes without rejudging
-their contents.
+weaker substitute. A check marked `passed` must reference the workflow-owned
+result artifact: Claim Basis Map audit, both HTML static and browser-QA reports,
+Reporting Engine 0.2 render manifest, or Deck Correction completion record.
+Packaging resolves the paths relative to the advisory contract, verifies their
+bytes, and consumes only the owning workflow's explicit pass/fail fields. A
+generic file containing `{"status":"passed"}` is not an authoritative result.
 
 ## Workflow
 
@@ -252,9 +254,14 @@ provenance.
 5. Perform the model-led review across all ten dimensions. Preserve the
    contract's scope and explicitly record reviewed sections, omitted sections,
    every considered or deliberately omitted coverage unit, missing evidence,
-   and judgement-dependent points. The coverage inventory makes a long report
-   auditable in bounded units; it does not reduce a two-hundred-page review to a
-   single prompt or a deterministic claim extractor.
+   and judgement-dependent points. Write one `unit_assessments` entry for every
+   coverage unit. Each entry must say whether it contains selected tracked
+   claims, selected reconstructed claims, no material claim after model review,
+   or was omitted. The union of those claim IDs must exactly match the lineage
+   review. The coverage inventory makes a long report auditable in bounded
+   units; it does not reduce a two-hundred-page review to a single prompt or a
+   deterministic claim extractor. A delivery-ready review must contain at least
+   one model-reviewed material claim.
 6. For each reviewed claim chain, decide whether a final targeted recheck is
    required. Recheck public evidence when the original capture is missing,
    inaccessible, stale for the decision, contradicted, or insufficiently
@@ -267,7 +274,7 @@ provenance.
    `recheck_tasks.json`; it never chooses or performs them secretly.
 7. Write `advisory_validation_review_draft.json` against
    [references/advisory_validation_review.schema.json](references/advisory_validation_review.schema.json).
-   Use schema version `"1.2"`, `model_led_materiality_review` for document
+   Use schema version `"1.3"`, `model_led_materiality_review` for document
    coverage, and `model_led_claim_chain_review` for lineage selection. Bind the
    review to the contract, deliverable, coverage inventory, and lineage
    inventory hashes. Record evidence references, analysis, rechecks, correction
@@ -282,8 +289,11 @@ provenance.
    An unchanged claim keeps its claim ID and gains a new appearance. A changed
    claim gets a new claim record whose `supersedes_claim_id` points to the prior
    claim; withdrawn wording remains in the history rather than being erased.
-   Re-review the corrected artifact before marking correction completed. Record
-   its resolved path and SHA-256 in the correction record. When the contract
+   Re-run `prepare` on the corrected artifact and complete a second model-led
+   review whose correction status is `not_required` and whose delivery status
+   is ready or ready with explicit residual uncertainty. Record the corrected
+   artifact, corrected inventory, and corrected review SHA-256 values in the
+   original correction record. When the contract
    requires correction or professional-judgement approval before delivery,
    record the explicit approver and a reference to the approval; pending
    approval is not delivery-ready.
@@ -296,7 +306,9 @@ python scripts/managed_python_runtime.py run \
   <work-folder>/validation/advisory_validation_review_draft.json \
   --advisory-contract <work-folder>/advisory_contract.json \
   --output-dir <work-folder>/validation \
-  [--corrected-deliverable <separate-corrected-file>]
+  [--corrected-deliverable <separate-corrected-file> \
+   --corrected-deliverable-inventory <corrected-validation>/deliverable_inventory.json \
+   --corrected-review <corrected-validation>/advisory_validation_review_draft.json]
 ```
 
 10. Read `validation_audit.json` and `recheck_tasks.json`. Its `record_complete` status proves only
@@ -370,7 +382,8 @@ links to those artifacts and the unresolved or professionally owned decisions.
 - `validation_audit.json`;
 - `recheck_tasks.json`;
 - `advisory_validation_package.md`;
-- a separate corrected artifact only when correction was completed.
+- a separate corrected artifact, corrected preparation inventory, and corrected
+  model review only when correction was completed.
 
 ## Failure modes
 
