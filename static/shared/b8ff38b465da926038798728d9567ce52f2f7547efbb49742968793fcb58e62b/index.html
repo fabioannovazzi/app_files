@@ -1,0 +1,762 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kangoo Z.E. d'occasion — contrat batterie et thèse d'investissement</title>
+  <style>
+    :root {
+      --navy: #0b1f3a;
+      --blue: #1769aa;
+      --cyan: #19a9c6;
+      --ink: #18212b;
+      --muted: #5f6b78;
+      --line: #dce3e9;
+      --soft: #f4f7f9;
+      --risk: #9d3d35;
+      --good: #1f6b52;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #fff;
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body { display: grid; place-items: center; }
+
+    .deck {
+      position: relative;
+      width: min(100vw, calc(100vh * 16 / 9));
+      height: min(100vh, calc(100vw * 9 / 16));
+      background: #fff;
+      box-shadow: 0 0 0 1px #e8edf1;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: none;
+      flex-direction: column;
+      padding: 5.2% 6.2% 4.5%;
+      background: #fff;
+    }
+
+    .slide.active { display: flex; }
+
+    .eyebrow {
+      margin-bottom: 1.2%;
+      color: var(--blue);
+      font-size: clamp(11px, 1.15vw, 20px);
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      max-width: 88%;
+      margin-bottom: 2.4%;
+      color: var(--navy);
+      font-size: clamp(30px, 4.2vw, 72px);
+      line-height: 1.02;
+      letter-spacing: -.035em;
+    }
+
+    h2 {
+      max-width: 92%;
+      margin-bottom: 2.2%;
+      color: var(--navy);
+      font-size: clamp(25px, 3.05vw, 52px);
+      line-height: 1.08;
+      letter-spacing: -.025em;
+    }
+
+    h3 {
+      margin-bottom: .7em;
+      color: var(--navy);
+      font-size: clamp(15px, 1.45vw, 25px);
+      line-height: 1.16;
+    }
+
+    p, li {
+      font-size: clamp(13px, 1.35vw, 23px);
+      line-height: 1.42;
+    }
+
+    .lead {
+      max-width: 90%;
+      color: #2e3a46;
+      font-size: clamp(18px, 2.05vw, 35px);
+      line-height: 1.35;
+    }
+
+    .subtle { color: var(--muted); }
+    .small { font-size: clamp(11px, 1.05vw, 18px); }
+    .strong { color: var(--navy); font-weight: 700; }
+    .blue { color: var(--blue); }
+    .good { color: var(--good); }
+    .risk { color: var(--risk); }
+
+    .rule {
+      width: 74px;
+      height: 5px;
+      margin: .5% 0 2.4%;
+      background: var(--cyan);
+    }
+
+    .content { flex: 1; min-height: 0; }
+
+    .grid-2, .grid-3, .grid-4 {
+      display: grid;
+      gap: 2.2%;
+      align-items: stretch;
+    }
+
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    .card {
+      padding: 5.2%;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .card.soft { background: var(--soft); }
+    .card.accent { border-top: 5px solid var(--blue); }
+    .card.cyan { border-top: 5px solid var(--cyan); }
+    .card.risk-card { border-top: 5px solid var(--risk); }
+
+    .card p:last-child, .card ul:last-child { margin-bottom: 0; }
+
+    ul.clean {
+      margin: 0;
+      padding-left: 1.15em;
+    }
+
+    ul.clean li { margin-bottom: .52em; }
+
+    .metric {
+      display: block;
+      margin-bottom: .12em;
+      color: var(--navy);
+      font-size: clamp(26px, 3.2vw, 55px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-bottom: 1em;
+      padding: .38em .65em;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: clamp(10px, .85vw, 15px);
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 1.4%;
+      align-items: center;
+      margin-top: 2%;
+    }
+
+    .flow-box {
+      min-height: 190px;
+      padding: 9% 8%;
+      border: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .arrow {
+      color: var(--blue);
+      font-size: clamp(24px, 2.8vw, 46px);
+      font-weight: 700;
+    }
+
+    .contract-map {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3%;
+      margin-top: 1.5%;
+    }
+
+    .owner-box {
+      min-height: 250px;
+      padding: 6%;
+      border: 1px solid var(--line);
+      position: relative;
+    }
+
+    .owner-box.vehicle { border-top: 6px solid var(--navy); }
+    .owner-box.battery { border-top: 6px solid var(--cyan); }
+
+    .owner-label {
+      color: var(--muted);
+      font-size: clamp(10px, .9vw, 16px);
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .owner-title {
+      margin: .35em 0 .7em;
+      color: var(--navy);
+      font-size: clamp(21px, 2.2vw, 38px);
+      font-weight: 700;
+    }
+
+    .equation {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1.15fr;
+      gap: 1.3%;
+      align-items: center;
+      margin: 2% 0 2.2%;
+    }
+
+    .number-box {
+      min-height: 185px;
+      padding: 8% 6%;
+      border: 1px solid var(--line);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .number-box.total {
+      border: 2px solid var(--blue);
+      background: #f6fafe;
+    }
+
+    .operator {
+      color: var(--muted);
+      font-size: clamp(24px, 3vw, 50px);
+      font-weight: 400;
+      text-align: center;
+    }
+
+    .decomposition {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 3%;
+      margin-top: 1.5%;
+    }
+
+    .stack { display: grid; gap: 10px; }
+
+    .stack-row {
+      display: grid;
+      grid-template-columns: 34% 1fr;
+      min-height: 70px;
+      border: 1px solid var(--line);
+    }
+
+    .stack-row .label {
+      padding: 6%;
+      background: var(--soft);
+      color: var(--navy);
+      font-weight: 700;
+      font-size: clamp(12px, 1.1vw, 19px);
+    }
+
+    .stack-row .desc {
+      padding: 4.3%;
+      color: #394550;
+      font-size: clamp(12px, 1.05vw, 18px);
+      line-height: 1.34;
+    }
+
+    .callout {
+      margin-top: 2%;
+      padding: 1.2em 1.4em;
+      border-left: 6px solid var(--cyan);
+      background: var(--soft);
+      color: var(--navy);
+      font-size: clamp(17px, 1.7vw, 29px);
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .formula {
+      margin: 2.4% 0;
+      padding: 1em 1.2em;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--navy);
+      font-size: clamp(18px, 2vw, 34px);
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 2%;
+      border-top: 2px solid var(--line);
+    }
+
+    .phase {
+      position: relative;
+      padding: 8% 7% 0 0;
+    }
+
+    .phase::before {
+      content: "";
+      position: absolute;
+      width: 13px;
+      height: 13px;
+      top: -8px;
+      left: 0;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .phase + .phase { padding-left: 7%; }
+    .phase + .phase::before { left: 7%; }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3%;
+      margin-top: 1.5%;
+    }
+
+    .decision .go { border-left: 7px solid var(--good); }
+    .decision .stop { border-left: 7px solid var(--risk); }
+
+    .source {
+      margin-top: auto;
+      padding-top: 1.2%;
+      border-top: 1px solid #edf0f2;
+      color: #6c7782;
+      font-size: clamp(8px, .72vw, 12px);
+      line-height: 1.3;
+    }
+
+    .source a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+    .footer {
+      position: absolute;
+      left: 2.1%;
+      right: 2.1%;
+      bottom: 1.3%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #8a949d;
+      font-size: clamp(8px, .7vw, 12px);
+      pointer-events: none;
+    }
+
+    .progress {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      background: var(--blue);
+      transition: width 150ms ease-out;
+    }
+
+    .controls {
+      position: absolute;
+      right: 1.7%;
+      bottom: 2.2%;
+      z-index: 5;
+      display: flex;
+      gap: 6px;
+    }
+
+    .controls button {
+      width: 34px;
+      height: 30px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.92);
+      color: var(--navy);
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .title-slide { justify-content: center; }
+    .title-slide .source { margin-top: 7%; }
+
+    @media (max-aspect-ratio: 4/3) {
+      .slide { padding-left: 5%; padding-right: 5%; }
+    }
+
+    @media print {
+      html, body { width: auto; height: auto; overflow: visible; }
+      body { display: block; }
+      .deck { width: auto; height: auto; box-shadow: none; }
+      .slide {
+        position: relative;
+        display: flex !important;
+        width: 13.333in;
+        height: 7.5in;
+        page-break-after: always;
+      }
+      .controls, .progress { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="deck" aria-label="Présentation sur le marché des Kangoo Z.E. d'occasion">
+
+    <section class="slide title-slide active" data-title="Introduction">
+      <div class="eyebrow">Revue initiale · acheteur</div>
+      <h1>Le contrat batterie était différent et les sorties de flotte étaient concentrées</h1>
+      <div class="rule"></div>
+      <p class="lead">Ce sont les seules différences que nous avons identifiées par rapport aux véhicules comparables. Elles expliquent peut-être la forte marge de revente.</p>
+      <p class="subtle small">Analyse externe — aucune donnée comptable ou transactionnelle du revendeur n’a encore été examinée.</p>
+      <div class="source">Périmètre : Kangoo Z.E. anciens, contrats de location de batterie, véhicules utilitaires électriques d’occasion.</div>
+    </section>
+
+    <section class="slide" data-title="Entreprise">
+      <div class="eyebrow">Le point de départ</div>
+      <h2>GB Automobiles s’est construit autour d’une niche très concentrée en Kangoo Z.E.</h2>
+      <div class="content grid-4">
+        <article class="card accent">
+          <span class="tag">Société</span>
+          <h3>Un spécialiste français</h3>
+          <p class="small">G.B. Automobiles, SIREN 819 001 702, est une SAS créée en 2016 et établie à Gardonne.</p>
+        </article>
+        <article class="card">
+          <span class="tag">Activité</span>
+          <h3>Utilitaires électriques</h3>
+          <p class="small">Vente et réparation de véhicules, avec plusieurs implantations et une offre orientée vers les utilitaires électriques d’occasion.</p>
+        </article>
+        <article class="card cyan">
+          <span class="tag">Offre visible</span>
+          <h3>Une forte concentration Kangoo</h3>
+          <p class="small">Huit des dix annonces initialement visibles étaient des Kangoo Z.E. anciens. Le canal public comptait treize annonces au total.</p>
+        </article>
+        <article class="card risk-card">
+          <span class="tag">Comptes publics</span>
+          <h3>Résultat net positif</h3>
+          <p class="small">1,33 M€ en 2023, 1,29 M€ en 2024 et 0,85 M€ en 2025. La trésorerie atteint 4,79 M€ en 2025.</p>
+        </article>
+      </div>
+      <div class="callout">Les comptes publics montrent une entreprise profitable et liquide. La concentration Kangoo et l’hypothèse d’un EBITDA proche de 30 % motivent l’analyse du mécanisme.</div>
+      <div class="source">Sources : <a href="https://pros.lacentrale.fr/C061585/mentions-legales">mentions légales La Centrale</a> ; <a href="https://rubypayeur.com/societe/g-b-automobiles-819001702">RubyPayeur</a> ; <a href="https://www.leboncoin.fr/boutique/7381540/gb_automobiles.htm">boutique publique GB Automobiles</a>, observée le 16 août 2026 ; dossier projet pour l’hypothèse d’EBITDA.</div>
+    </section>
+
+    <section class="slide" data-title="Réponse">
+      <div class="eyebrow">Réponse en une page</div>
+      <h2>La technologie était comparable ; le contrat et la concentration de l’offre ne l’étaient pas</h2>
+      <div class="content grid-3">
+        <article class="card accent">
+          <span class="tag">Commun au marché</span>
+          <h3>Une technologie de première génération</h3>
+          <p>Autonomie et batterie proches du Berlingo électrique contemporain : le Kangoo n’était pas techniquement exceptionnel.</p>
+        </article>
+        <article class="card cyan">
+          <span class="tag">Distinctif</span>
+          <h3>Le véhicule était acheté, la batterie louée</h3>
+          <p>Généralement, on achetait le Kangoo et on louait sa batterie séparément. Cette structure distinguait la cohorte des véhicules à batterie incluse.</p>
+        </article>
+        <article class="card risk-card">
+          <span class="tag">Amplificateur</span>
+          <h3>Des sorties de flotte concentrées</h3>
+          <p>Des lots homogènes importants arrivaient simultanément sur le marché secondaire.</p>
+        </article>
+      </div>
+      <div class="callout">Le contrat batterie séparé et les sorties de flotte concentrées sont les seules différences identifiées. Elles expliquent peut-être la forte marge de revente.</div>
+      <div class="source">Conclusion analytique à partir des documents Renault, conditions DIAC/enchères et observations publiques de marché.</div>
+    </section>
+
+    <section class="slide" data-title="Contrat">
+      <div class="eyebrow">L’asymétrie créée par le contrat</div>
+      <h2>Un acheteur français et un acheteur export ne supportaient pas le même coût d’entrée</h2>
+      <div class="content contract-map">
+        <article class="owner-box vehicle">
+          <div class="owner-label">Revente en France</div>
+          <div class="owner-title">Continuer la location</div>
+          <ul class="clean">
+            <li>Acheter le véhicule au prix d’enchère</li>
+            <li>Signer le contrat DIAC et payer le loyer batterie</li>
+            <li>Dans l’exemple contractuel : 54 € HT par mois pour 7 500 km par an</li>
+          </ul>
+        </article>
+        <article class="owner-box battery">
+          <div class="owner-label">Revente à l’export</div>
+          <div class="owner-title">Racheter la batterie</div>
+          <ul class="clean">
+            <li>Acheter le même véhicule au prix d’enchère</li>
+            <li>Payer immédiatement le rachat de la batterie</li>
+            <li>Dans l’exemple observé : 6 854,40 € TTC supplémentaires</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout">Le revendeur français pouvait conserver un faible coût initial et transférer ensuite la location au client. Mais les autres acheteurs français pouvaient faire de même.</div>
+      <div class="source">Sources : <a href="https://www.interencheres.com/vehicules/vehicule-utilitaire-et-tourisme-alcopa-auction-marseille-654563/lot-82132390.html">enchère 2013 — location en France, rachat obligatoire à l’export</a> ; <a href="https://bcautoenchere.com/PDF/CGV_Vehiposte.pdf">conditions DIAC — 54 € HT par mois</a>.</div>
+    </section>
+
+    <section class="slide" data-title="Hypothèse batterie">
+      <div class="eyebrow">Hypothèse spécifique au contrat DIAC</div>
+      <h2>Une batterie faible pouvait devenir une source de valeur si DIAC prenait en charge sa remise en état</h2>
+      <div class="content grid-4">
+        <article class="card accent">
+          <span class="tag">1 · Acheter</span>
+          <h3>Véhicule décoté</h3>
+          <p class="small">Une faible autonomie rendait le Kangoo moins attractif et pouvait peser sur son prix.</p>
+        </article>
+        <article class="card">
+          <span class="tag">2 · Tester</span>
+          <h3>Seuil contractuel</h3>
+          <p class="small">Dans le contrat observé, la batterie 22 kWh était garantie jusqu’à un état de santé minimal de 60 %.</p>
+        </article>
+        <article class="card cyan">
+          <span class="tag">3 · Réclamer</span>
+          <h3>Prise en charge DIAC</h3>
+          <p class="small">Sous le seuil, le contrat prévoyait la réparation ou le remplacement de la batterie louée.</p>
+        </article>
+        <article class="card">
+          <span class="tag">4 · Revendre</span>
+          <h3>Utilité restaurée</h3>
+          <p class="small">Une batterie remise en état pouvait améliorer l’autonomie et la valeur sans achat d’un pack neuf par le revendeur.</p>
+        </article>
+      </div>
+      <div class="callout">Ce mécanisme n’est pas générique aux véhicules électriques d’occasion : il dépend d’une batterie louée et d’une garantie contractuelle encore applicable.</div>
+      <div class="source">Hypothèse à tester : le revendeur sélectionnait-il des batteries proches ou sous le seuil et obtenait-il effectivement leur remise en état ? Sources : <a href="https://media.renault.com/renault-reaches-milestone-of-100000-ev-batteries-leased/?lang=eng">garantie des batteries louées Renault</a> ; <a href="https://bcautoenchere.com/PDF/CGV_Vehiposte.pdf">conditions DIAC</a>.</div>
+    </section>
+
+    <section class="slide" data-title="Avantage concurrentiel">
+      <div class="eyebrow">Le point qui reste à expliquer</div>
+      <h2>Le contrat distinguait la cohorte ; il ne créait pas à lui seul un avantage concurrentiel</h2>
+      <div class="content grid-2">
+        <article class="card accent">
+          <span class="tag">Accessible aux acheteurs français</span>
+          <h3>Les effets du contrat</h3>
+          <ul class="clean">
+            <li>Acheter le véhicule sans acheter la batterie</li>
+            <li>Continuer la location au lieu de financer le rachat</li>
+            <li>Bénéficier de la garantie DIAC sous le seuil contractuel</li>
+            <li>Éviter le surcoût imposé aux acheteurs export</li>
+          </ul>
+        </article>
+        <article class="card cyan">
+          <span class="tag">À faire mieux que les concurrents</span>
+          <h3>L’avantage possible du revendeur</h3>
+          <ul class="clean">
+            <li>Sélectionner les bons lots et refuser les mauvaises unités</li>
+            <li>Identifier les batteries éligibles à une prise en charge</li>
+            <li>Obtenir rapidement la réparation ou le remplacement</li>
+            <li>Trouver l’utilisateur pour lequel l’autonomie limitée n’était pas un problème</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout">Un EBITDA exceptionnel exige la deuxième colonne. La première était accessible aux autres acheteurs français.</div>
+      <div class="source">Conclusion analytique : le contrat définit une configuration de marché particulière ; son effet sur la performance du revendeur reste à établir.</div>
+    </section>
+
+    <section class="slide" data-title="Création de valeur">
+      <div class="eyebrow">Comment un spécialiste pouvait gagner de l’argent</div>
+      <h2>La marge éventuelle venait de la résolution du problème — pas d’une batterie « gratuite »</h2>
+      <div class="content flow">
+        <article class="flow-box">
+          <h3>1. Acheter sélectivement</h3>
+          <p class="small">Lots homogènes, prix de sortie faibles, rejet des unités défavorables.</p>
+        </article>
+        <div class="arrow">→</div>
+        <article class="flow-box">
+          <h3>2. Rendre l’actif lisible</h3>
+          <p class="small">Propriété/rachat de batterie, fiscalité, diagnostic, réparation et garantie.</p>
+        </article>
+        <div class="arrow">→</div>
+        <article class="flow-box">
+          <h3>3. Trouver le bon usage</h3>
+          <p class="small">Vendre un véhicule complet à un acheteur dont la tournée, la charge utile et la recharge sont compatibles.</p>
+        </article>
+      </div>
+      <div class="formula">Marge nette × rotations annuelles ÷ capital immobilisé = rendement économique réel</div>
+      <p class="subtle small">Une marge unitaire élevée peut être médiocre si le stock reste longtemps immobilisé ou génère des coûts de garantie.</p>
+      <div class="source">Lecture économique du mécanisme : l’avantage vient de la sélection, de la normalisation du contrat et de la re-commercialisation.</div>
+    </section>
+
+    <section class="slide" data-title="Valeur d'usage">
+      <div class="eyebrow">Pourquoi quelqu’un achetait encore le véhicule</div>
+      <h2>Faible valeur pour le marché général, valeur réelle pour une mission étroite</h2>
+      <div class="content grid-3">
+        <article class="card accent">
+          <span class="metric">170 km</span>
+          <h3>Autonomie NEDC annoncée</h3>
+          <p class="small">Kangoo Z.E. pré-2017 ; une autonomie réelle et chargée pouvait être nettement inférieure.</p>
+        </article>
+        <article class="card cyan">
+          <span class="metric">≈ 35 km</span>
+          <h3>Distance quotidienne observée</h3>
+          <p class="small">Cas de flotte urbaine Gnewt à Londres : illustration d’une mission où la portée pouvait suffire.</p>
+        </article>
+        <article class="card">
+          <span class="metric">5 000</span>
+          <h3>Kangoo Z.E. livrés à La Poste</h3>
+          <p class="small">Dès 2014 : preuve d’une flotte institutionnelle susceptible d’alimenter des lots homogènes.</p>
+        </article>
+      </div>
+      <div class="callout">Autonomie courte et recharge lente limitaient le nombre d’utilisateurs. Il fallait trouver l’utilisateur pour lequel l’autonomie limitée n’était pas un problème.</div>
+      <div class="source">Sources : <a href="https://media.renault.com/renault-continues-ev-momentum-with-two-new-electric-light-commercial-vehicles/?lang=eng">Renault Z.E.33</a> ; étude de flotte urbaine synthétisée dans le workpaper ; <a href="https://media.renaultgroup.com/le-groupe-la-poste-et-le-groupe-renault-developpent-leur-cooperation-sur-les-nouvelles-mobilites-a-loccasion-de-la-livraison-du-5-000eme-kangoo-ze/?lang=fra">Renault / La Poste</a>.</div>
+    </section>
+
+    <section class="slide" data-title="Caractère temporaire">
+      <div class="eyebrow">Pourquoi cette opportunité se réduit</div>
+      <h2>Le mécanisme historique est un gisement à récolter, pas une rente perpétuelle</h2>
+      <div class="content timeline">
+        <article class="phase">
+          <span class="tag">Ancien Kangoo</span>
+          <h3>Configuration particulière</h3>
+          <p class="small">Batterie louée, faible autonomie, contrats variables, flotte concentrée et marché encore peu familier.</p>
+        </article>
+        <article class="phase">
+          <span class="tag">Transition</span>
+          <h3>Contrats progressivement résolus</h3>
+          <p class="small">Rachats de batterie, réseau de réparation, expérience accrue des acheteurs et disparition naturelle du parc.</p>
+        </article>
+        <article class="phase">
+          <span class="tag">Nouvelles cohortes</span>
+          <h3>Batterie incluse, plus de capital</h3>
+          <p class="small">Meilleure autonomie, garanties plus fortes, données batterie plus accessibles — mais prix d’achat et risque résiduel plus élevés.</p>
+        </article>
+      </div>
+      <div class="callout">Le contrat Kangoo explique peut-être l’origine de la marge. Il ne peut pas, seul, expliquer sa pérennité.</div>
+      <div class="source">Sources : Renault Kangoo Van E-Tech ; règlement européen sur les batteries et futur passeport batterie à compter de 2027 pour les batteries concernées.</div>
+    </section>
+
+    <section class="slide" data-title="Thèse transférable">
+      <div class="eyebrow">La seule thèse durable possible</div>
+      <h2>Passer d’une spécialisation Kangoo à une machine de re-commercialisation</h2>
+      <div class="content grid-4">
+        <article class="card accent">
+          <h3>Identifier</h3>
+          <p class="small">Quelle cohorte est rejetée et pour quelle raison précise ?</p>
+        </article>
+        <article class="card">
+          <h3>Normaliser</h3>
+          <p class="small">Prix, TVA, batterie, garantie, transport, immatriculation et réparations.</p>
+        </article>
+        <article class="card">
+          <h3>Qualifier</h3>
+          <p class="small">Autonomie réellement utilisable, charge utile, recharge, disponibilité et mission client.</p>
+        </article>
+        <article class="card cyan">
+          <h3>Tourner</h3>
+          <p class="small">Vendre rapidement, contrôler les retours et migrer vers la cohorte suivante.</p>
+        </article>
+      </div>
+      <div class="callout">L’actif éventuel n’est pas « l’expertise Kangoo ». C’est la capacité à expliquer et résoudre la prochaine décote.</div>
+      <div class="source">Autres cohortes examinées : e-NV200, Berlingo électrique, plates-formes compactes Stellantis et StreetScooter comme contre-exemple.</div>
+    </section>
+
+    <section class="slide" data-title="Ce qui reste à prouver">
+      <div class="eyebrow">Les preuves à demander</div>
+      <h2>Le prochain travail consiste à reconstruire l’économie véhicule par véhicule</h2>
+      <div class="content grid-2">
+        <article class="card accent">
+          <h3>Pour chaque achat</h3>
+          <ul class="clean">
+            <li>Prix adjugé, source et état du véhicule.</li>
+            <li>Propriété, location ou rachat de la batterie.</li>
+            <li>TVA, transport, préparation et réparations.</li>
+            <li>Raisons d’achat — et unités refusées.</li>
+          </ul>
+        </article>
+        <article class="card risk-card">
+          <h3>Pour chaque revente</h3>
+          <ul class="clean">
+            <li>Prix encaissé et contrat batterie transféré.</li>
+            <li>Type d’acheteur et usage prévu du véhicule.</li>
+            <li>Jours de stock, rabais, garantie et retours.</li>
+            <li>Résultat sur les cohortes récentes et non-Kangoo.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="source">Objectif : distinguer le déplacement mécanique du prix, la véritable décote contractuelle et la valeur ajoutée opérationnelle du revendeur.</div>
+    </section>
+
+    <section class="slide" data-title="Décision">
+      <div class="eyebrow">Recommandation pour la prochaine étape</div>
+      <h2>Continuer — pour tester une mécanique précise, pas pour valider une marge déclarée</h2>
+      <div class="content decision">
+        <article class="card go">
+          <h3 class="good">Continuer si les données montrent</h3>
+          <ul class="clean">
+            <li>une marge après batterie, TVA, préparation, garantie et transport</li>
+            <li>une rotation rapide et des unités défavorables effectivement rejetées</li>
+            <li>une adéquation documentée entre véhicule et usage client</li>
+            <li>des résultats reproductibles sur une cohorte plus récente.</li>
+          </ul>
+        </article>
+        <article class="card stop">
+          <h3 class="risk">Arrêter ou décoter fortement si</h3>
+          <ul class="clean">
+            <li>la marge disparaît après normalisation de la batterie</li>
+            <li>les véhicules restent longtemps en stock ou génèrent des reprises</li>
+            <li>le profit dépend uniquement des anciens Kangoo à batterie louée</li>
+            <li>aucune capacité de transition n’est démontrée.</li>
+          </ul>
+        </article>
+      </div>
+      <div class="callout">Question finale : ces différences ont-elles créé une marge historique, ou le revendeur sait-il systématiquement transformer une décote en véhicule revendable ?</div>
+      <div class="source">Prochaine demande de données : registre véhicule par véhicule — acquisition, batterie/contrat, TVA, travaux, vente, jours de stock, garantie et cohorte.</div>
+    </section>
+
+    <div class="footer" aria-hidden="true">
+      <span>Véhicules utilitaires électriques d’occasion · revue initiale</span>
+      <span id="counter">1 / 12</span>
+    </div>
+    <div class="controls" aria-label="Navigation">
+      <button id="prev" type="button" aria-label="Diapositive précédente">←</button>
+      <button id="next" type="button" aria-label="Diapositive suivante">→</button>
+    </div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+  </main>
+
+  <script>
+    (() => {
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progress');
+      let index = 0;
+
+      function show(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        counter.textContent = `${index + 1} / ${slides.length}`;
+        progress.style.width = `${((index + 1) / slides.length) * 100}%`;
+        document.title = `${slides[index].dataset.title} — Kangoo Z.E.`;
+      }
+
+      document.getElementById('prev').addEventListener('click', () => show(index - 1));
+      document.getElementById('next').addEventListener('click', () => show(index + 1));
+      document.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'PageDown', ' '].includes(event.key)) {
+          event.preventDefault();
+          show(index + 1);
+        }
+        if (['ArrowLeft', 'PageUp'].includes(event.key)) {
+          event.preventDefault();
+          show(index - 1);
+        }
+        if (event.key === 'Home') show(0);
+        if (event.key === 'End') show(slides.length - 1);
+      });
+
+      show(0);
+    })();
+  </script>
+</body>
+</html>
