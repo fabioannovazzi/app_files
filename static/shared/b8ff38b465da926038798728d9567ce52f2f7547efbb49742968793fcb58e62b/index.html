@@ -282,6 +282,61 @@
       line-height: 1.34;
     }
 
+    .price-comparison {
+      display: grid;
+      grid-template-columns: 1.08fr .92fr;
+      gap: 2.5%;
+      align-items: stretch;
+    }
+
+    .price-list {
+      display: grid;
+      gap: 0;
+      margin-top: .4em;
+      border-top: 1px solid var(--line);
+    }
+
+    .price-row {
+      display: grid;
+      grid-template-columns: 25% 1fr auto;
+      gap: 3%;
+      align-items: center;
+      min-height: 66px;
+      padding: 2.6% 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .price-row .vehicle {
+      color: var(--navy);
+      font-size: clamp(11px, 1vw, 17px);
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .price-row .detail {
+      color: #46515c;
+      font-size: clamp(10px, .91vw, 16px);
+      line-height: 1.3;
+    }
+
+    .price-row .amount {
+      color: var(--navy);
+      font-size: clamp(17px, 1.65vw, 28px);
+      font-weight: 700;
+      line-height: 1;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .price-row .amount small {
+      display: block;
+      margin-top: .35em;
+      color: var(--muted);
+      font-size: clamp(8px, .6vw, 11px);
+      font-weight: 400;
+      letter-spacing: .02em;
+    }
+
     .callout {
       margin-top: 2%;
       padding: 1.2em 1.4em;
@@ -506,6 +561,60 @@
       <div class="source">Sources : <a href="https://www.interencheres.com/vehicules/vehicule-utilitaire-et-tourisme-alcopa-auction-marseille-654563/lot-82132390.html">enchère 2013 — location en France, rachat obligatoire à l’export</a> ; <a href="https://bcautoenchere.com/PDF/CGV_Vehiposte.pdf">conditions DIAC — 54 € HT par mois</a>.</div>
     </section>
 
+    <section class="slide" data-title="Prix observés">
+      <div class="eyebrow">Premiers points de prix publics</div>
+      <h2>Un départ à 200 € s’est adjugé 770 € ; les prix varient ensuite jusqu’à 3 800 €</h2>
+      <div class="content price-comparison">
+        <article class="card accent">
+          <span class="tag">Enchères publiques 2024 · prix adjugés</span>
+          <div class="price-list">
+            <div class="price-row">
+              <div class="vehicle">Kangoo II Z.E. 60 ch</div>
+              <div class="detail">Vente réservée aux professionnels</div>
+              <div class="amount">770 €<small>départ 200 €</small></div>
+            </div>
+            <div class="price-row">
+              <div class="vehicle">2011 · 30 420 km</div>
+              <div class="detail">Batterie changée en 2022, carrosserie et plancher à reprendre</div>
+              <div class="amount">610 €<small>départ 600 €</small></div>
+            </div>
+            <div class="price-row">
+              <div class="vehicle">2013 · 97 555 km</div>
+              <div class="detail">Sans clé ni certificat, transfert de la location DIAC</div>
+              <div class="amount">1 150 €<small>départ 700 €</small></div>
+            </div>
+            <div class="price-row">
+              <div class="vehicle">2014 · 35 626 km</div>
+              <div class="detail">Batterie incluse, bon état général, révision à prévoir</div>
+              <div class="amount">3 800 €<small>+ taxe de 11 %</small></div>
+            </div>
+          </div>
+        </article>
+        <article class="card cyan">
+          <span class="tag">GB Automobiles 2026 · prix affichés</span>
+          <div class="price-list">
+            <div class="price-row">
+              <div class="vehicle">2014 · 99 000 km</div>
+              <div class="detail">Contrôle technique, batterie garantie six mois</div>
+              <div class="amount">3 295 €<small>prix affiché</small></div>
+            </div>
+            <div class="price-row">
+              <div class="vehicle">2017 · 109 000 km</div>
+              <div class="detail">Batterie louée dès 63 € HT par mois ou rachetée séparément</div>
+              <div class="amount">4 295 € HT<small>hors rachat batterie</small></div>
+            </div>
+            <div class="price-row">
+              <div class="vehicle">33 kWh · 70 000 km</div>
+              <div class="detail">Batterie 33 kWh en propriété, garantie véhicule six mois</div>
+              <div class="amount">8 495 € TTC<small>batterie incluse</small></div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div class="callout">Les anciens Kangoo Z.E. s’achètent et se revendent à bas prix : quelques milliers d’euros, et parfois moins de 1 000 € aux enchères.</div>
+      <div class="source">Les enchères datent de 2024 et les annonces GB de 2026 : la comparaison montre des ordres de grandeur, pas un même cycle d’achat-revente. Sources : <a href="https://encheres-domaine.gouv.fr/hermes/ventes-passees/230?items_per_page=60&amp;mini=2027-04&amp;page=260">départ 200 € — adjugé 770 €</a> ; <a href="https://encheres-domaine.gouv.fr/hermes/ventes-passees/230?items_per_page=40&amp;mini=2024-07&amp;page=297">adjudication 2011 à 610 €</a> ; <a href="https://encheres-domaine.gouv.fr/hermes/lots/recherche?activated_categories=0&amp;body_value=&amp;departement=All&amp;field_indicateurs_tid=All&amp;field_lot_erratum_value=&amp;field_lot_miseaprix_value%5Bmax%5D=50000&amp;field_lot_miseaprix_value%5Bmin%5D=0&amp;field_seances_value2%5Bvalue%5D%5Bdate%5D=&amp;field_seances_value%5Bvalue%5D%5Bdate%5D=&amp;field_ville_de_la_vente_value=&amp;field_vte_typevente_tid=All&amp;items_per_page=20&amp;mini=2024-02&amp;page=337&amp;sort_by=field_seances_value2&amp;sort_order=ASC">adjudication 2013 à 1 150 €</a> ; <a href="https://encheres-domaine.gouv.fr/hermes/biens-mobiliers/vehicules/utilitaires/683681">adjudication 2014 à 3 800 €</a> ; <a href="https://occasion.largus.fr/nouvelle-aquitaine/dordogne/gardonne/renault/kangoo/">annonces GB</a> ; <a href="https://occasion.largus.fr/auto/annonce-68a77ce0-e524-40d0-98ee-7943d52f385a-renault-kangoo-2017-100000km">batterie louée — 4 295 € HT</a> ; <a href="https://occasion.largus.fr/auto/annonce-e9f4cbbd-edba-4757-95f3-48c2378cffe3-renault-kangoo-70000km">batterie en propriété — 8 495 € TTC</a>.</div>
+    </section>
+
     <section class="slide" data-title="Hypothèse batterie">
       <div class="eyebrow">Hypothèse spécifique au contrat DIAC</div>
       <h2>Une batterie faible pouvait devenir une source de valeur si DIAC prenait en charge sa remise en état</h2>
@@ -716,7 +825,7 @@
 
     <div class="footer" aria-hidden="true">
       <span>Véhicules utilitaires électriques d’occasion · revue initiale</span>
-      <span id="counter">1 / 12</span>
+      <span id="counter">1 / 13</span>
     </div>
     <div class="controls" aria-label="Navigation">
       <button id="prev" type="button" aria-label="Diapositive précédente">←</button>
