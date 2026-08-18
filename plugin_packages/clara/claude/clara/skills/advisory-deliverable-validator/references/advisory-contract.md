@@ -65,30 +65,6 @@ The required review dimensions are:
 ]
 ```
 
-## Downstream material reasoning chain
-
-The contract defines what must be reviewed. The validator's separate
-`advisory_validation_review.json` schema version `"1.1"` records how the
-deliverable's material reasoning holds together. Its `material_review_items`
-array is model-authored and contains every material fact, hypothesis,
-assumption, calculation, inference, recommendation, and decision condition.
-Each item declares:
-
-- its exact location and statement;
-- upstream `depends_on_item_ids`;
-- evidence references and counterevidence;
-- separate support and reasoning statuses;
-- whether its effect on the decision is `critical`, `material`, or `limited`;
-- the correction, evidence, qualification, or professional-review resolution;
-- whether professional review remains required.
-
-Deterministic packaging validates identifiers, dependency existence and
-acyclicity, evidence-reference presence for declared support, resolution-state
-consistency, and delivery-readiness consequences. The model selects the items,
-assigns decision effect, assesses evidence and reasoning, and decides whether a
-qualification or correction is substantively sufficient. A critical weakness
-cannot be averaged against sound sections or accepted as residual uncertainty.
-
 ## Validation-control fragment
 
 The planner's canonical contract also carries its assignment status, structured

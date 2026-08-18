@@ -174,7 +174,7 @@ def _review(
         else ""
     )
     return {
-        "schema_version": "1.1",
+        "schema_version": "1.0",
         "language": "en",
         "advisory_contract_sha256": inventory["advisory_contract_sha256"],
         "deliverable_sha256": inventory["source_sha256"],
@@ -186,46 +186,6 @@ def _review(
             "limitations": [],
             "analysis": "All material content was reviewed.",
         },
-        "material_review_items": [
-            {
-                "id": "claim-pilot-evidence",
-                "item_type": "factual_claim",
-                "location": "Recommendation",
-                "statement": "The selected evidence supports a bounded pilot.",
-                "depends_on_item_ids": [],
-                "evidence_refs": ["extracted_deliverable.md", "source_inventory.json"],
-                "support_status": "supported",
-                "reasoning_status": "not_applicable",
-                "analysis": "The claim is linked to the selected evidence.",
-                "counterevidence": [],
-                "decision_effect": "critical",
-                "resolution": {
-                    "action": "none",
-                    "status": "not_needed",
-                    "explanation": "No support defect was identified.",
-                },
-                "professional_review_required": False,
-            },
-            {
-                "id": "recommendation-bounded-pilot",
-                "item_type": "recommendation",
-                "location": "Recommendation",
-                "statement": "Proceed with a bounded pilot.",
-                "depends_on_item_ids": ["claim-pilot-evidence"],
-                "evidence_refs": ["advisory_contract.json"],
-                "support_status": "not_applicable",
-                "reasoning_status": "sound",
-                "analysis": "The recommendation follows from the supported claim and contract.",
-                "counterevidence": [],
-                "decision_effect": "critical",
-                "resolution": {
-                    "action": "none",
-                    "status": "not_needed",
-                    "explanation": "No reasoning defect was identified.",
-                },
-                "professional_review_required": False,
-            },
-        ],
         "dimension_reviews": dimensions,
         "findings": [],
         "format_specific_checks": format_checks or [],
@@ -498,13 +458,11 @@ def test_package_accepts_a_complete_model_led_review(tmp_path: Path) -> None:
 
     assert audit["record_complete"] is True
     assert audit["effective_delivery_readiness"] == "ready"
-    assert audit["checks"]["material_reasoning_chain_consistent"] is True
     assert package_paths["review"].is_file()
     assert package_paths["audit"].is_file()
-    package_text = package_paths["package"].read_text(encoding="utf-8")
-    assert "Delivery readiness: ready" in package_text
-    assert "## Material reasoning chain" in package_text
-    assert "recommendation-bounded-pilot" in package_text
+    assert "Delivery readiness: ready" in package_paths["package"].read_text(
+        encoding="utf-8"
+    )
 
 
 def test_ready_review_requires_explicit_professional_judgement_approval(
@@ -537,20 +495,6 @@ def test_ready_review_rejects_partially_conforming_dimension(
     errors = validator.validate_review_record(review, contract)
 
     assert "ready status cannot coexist with unresolved review attention" in errors
-
-
-def test_conforming_dimension_requires_an_evidence_reference(tmp_path: Path) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    review["dimension_reviews"]["reasoning_assumptions"]["evidence_refs"] = []
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "dimension_reviews.reasoning_assumptions.evidence_refs is required for conforms"
-        in errors
-    )
 
 
 def test_delivery_ready_review_rejects_unresolved_professional_review_flag(
@@ -626,158 +570,6 @@ def test_partially_conforming_review_can_be_ready_with_residual_uncertainty(
     errors = validator.validate_review_record(review, contract)
 
     assert errors == []
-
-
-def test_ready_review_rejects_an_unresolved_unsupported_material_claim(
-    tmp_path: Path,
-) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    item = review["material_review_items"][0]
-    item["support_status"] = "not_supported"
-    item["evidence_refs"] = []
-    item["resolution"] = {
-        "action": "obtain_evidence",
-        "status": "pending",
-        "explanation": "The decisive source has not been supplied.",
-    }
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "delivery-ready status cannot coexist with an unresolved material support or reasoning weakness"
-        in errors
-    )
-
-
-def test_critical_material_uncertainty_cannot_be_accepted_as_residual(
-    tmp_path: Path,
-) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    item = review["material_review_items"][0]
-    item["item_type"] = "hypothesis"
-    item["support_status"] = "uncertain"
-    item["resolution"] = {
-        "action": "test_hypothesis",
-        "status": "accepted_residual_uncertainty",
-        "explanation": "The hypothesis has not been tested.",
-    }
-    review["overall_assessment"]["outcome"] = "ready_with_residual_uncertainty"
-    review["overall_assessment"]["residual_uncertainties"] = [
-        "The critical hypothesis remains untested."
-    ]
-    review["delivery_readiness"]["status"] = "ready_with_residual_uncertainty"
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "material_review_items[0] cannot accept a critical support or reasoning weakness as residual uncertainty"
-        in errors
-    )
-
-
-def test_noncritical_hypothesis_can_be_explicit_residual_uncertainty(
-    tmp_path: Path,
-) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    item = review["material_review_items"][0]
-    item["item_type"] = "hypothesis"
-    item["support_status"] = "uncertain"
-    item["decision_effect"] = "material"
-    item["resolution"] = {
-        "action": "qualify",
-        "status": "accepted_residual_uncertainty",
-        "explanation": "The recommendation remains bounded if the hypothesis fails.",
-    }
-    review["overall_assessment"]["outcome"] = "ready_with_residual_uncertainty"
-    review["overall_assessment"]["residual_uncertainties"] = [
-        "The noncritical hypothesis remains to be tested during the pilot."
-    ]
-    review["delivery_readiness"]["status"] = "ready_with_residual_uncertainty"
-    review["dimension_reviews"]["factual_source_support"]["status"] = "uncertain"
-    review["dimension_reviews"]["residual_uncertainty"]["status"] = "uncertain"
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert errors == []
-
-
-def test_dimension_summary_cannot_hide_a_material_support_weakness(
-    tmp_path: Path,
-) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    item = review["material_review_items"][0]
-    item["support_status"] = "partially_supported"
-    item["decision_effect"] = "material"
-    item["resolution"] = {
-        "action": "qualify",
-        "status": "accepted_residual_uncertainty",
-        "explanation": "The limitation is explicit and does not control the decision.",
-    }
-    review["dimension_reviews"]["residual_uncertainty"]["status"] = "uncertain"
-    review["overall_assessment"]["outcome"] = "ready_with_residual_uncertainty"
-    review["overall_assessment"]["residual_uncertainties"] = [
-        "The supporting sample remains limited."
-    ]
-    review["delivery_readiness"]["status"] = "ready_with_residual_uncertainty"
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "factual-source-support dimension cannot conform while a material support weakness remains"
-        in errors
-    )
-
-
-def test_material_recommendation_requires_a_declared_dependency(
-    tmp_path: Path,
-) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    review["material_review_items"][1]["depends_on_item_ids"] = []
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "material_review_items[1].depends_on_item_ids is required for recommendation"
-        in errors
-    )
-
-
-def test_material_review_item_dependencies_must_be_acyclic(tmp_path: Path) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    review["material_review_items"][0]["depends_on_item_ids"] = [
-        "recommendation-bounded-pilot"
-    ]
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert (
-        "material review item dependencies must be acyclic: "
-        "claim-pilot-evidence -> recommendation-bounded-pilot -> claim-pilot-evidence"
-        in errors
-    )
-
-
-def test_supported_material_claim_requires_evidence_references(tmp_path: Path) -> None:
-    validator, _, contract_path, _, _, inventory = _prepare(tmp_path)
-    contract = json.loads(contract_path.read_text(encoding="utf-8"))
-    review = _review(inventory)
-    review["material_review_items"][0]["evidence_refs"] = []
-
-    errors = validator.validate_review_record(review, contract)
-
-    assert "material_review_items[0].evidence_refs is required for supported" in errors
 
 
 def test_completed_correction_requires_explicit_correction_approval(
@@ -1103,11 +895,6 @@ def test_semantic_evaluation_fixtures_cover_required_cases() -> None:
         "unsupported-claim",
         "contradicted-recommendation-premise",
         "reasoning-gap",
-        "hidden-critical-hypothesis",
-        "correlation-presented-as-causation",
-        "counterevidence-omitted",
-        "supported-analysis-wrong-decision-fit",
-        "stale-evidence-changes-recommendation",
         "calculation-provenance-gap",
         "contract-failure",
         "judgment-dependent-choice",
@@ -1115,13 +902,6 @@ def test_semantic_evaluation_fixtures_cover_required_cases() -> None:
         "unsupported-primary-format",
     } <= case_ids
     assert "deterministic keyword or scorecard logic" in payload["purpose"]
-    assert payload["evaluation_protocol"]["selection_method"] == (
-        "model_led_materiality_review"
-    )
-    assert any(
-        "Critical uncertainty cannot be accepted" in condition
-        for condition in payload["evaluation_protocol"]["pass_conditions"]
-    )
 
 
 def test_skill_and_public_page_keep_format_checks_and_model_data_explicit() -> None:
@@ -1157,15 +937,3 @@ def test_skill_and_public_page_keep_format_checks_and_model_data_explicit() -> N
     assert "keyword classifier" in skill
     assert "semantic scorecard" in skill
     assert "scripts make no model API calls" in skill
-    assert "Material reasoning-chain invariant" in skill
-    assert "weakest material dependency, not an average score" in skill
-    assert "material_review_items" in skill
-    assert "an unresolved critical weakness blocks delivery" in workflow_copy
-    for localized_weakest_link in (
-        "collegamento materiale più debole",
-        "weakest material link",
-        "maillon important le plus faible",
-        "schwächsten wesentlichen Glied",
-        "eslabón material más débil",
-    ):
-        assert localized_weakest_link in workflow_copy

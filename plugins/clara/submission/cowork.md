@@ -29,8 +29,7 @@
 1. Plan this advisory assignment, preserve its material facts and constraints,
    and prepare the reviewable contract for the right Clara workflow.
 2. Validate this completed advisory deliverable against its contract and the
-   available evidence, tracing every material reasoning dependency, preserving
-   the original, and blocking delivery while a critical weakness is unresolved.
+   available evidence, preserving the original and identifying corrections.
 3. Organize these case files, separate evidence from judgement, surface gaps and
    contradictions, and prepare a reviewable advisory workpaper.
 4. Profile this dataset, document its business semantics, calculate the requested
@@ -55,7 +54,7 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.139
+- **Version:** 0.1.138
 - **Files:** 850
 - **Bytes:** 4,393,946
 - **SHA-256:** `d42fe312896f1f96d49deb0ad946b1fb2a3fbdbaf40d03e118c6ddad8ea4996d`

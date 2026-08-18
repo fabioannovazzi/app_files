@@ -106,34 +106,6 @@ Do not collapse these into one score. `not_applicable` is allowed only with a
 specific explanation. A structurally complete review record is not proof that
 the deliverable is correct.
 
-## Material reasoning-chain invariant
-
-Build `material_review_items` before assigning the ten dimension summaries.
-Select every material factual claim, hypothesis, assumption, calculation,
-inference, recommendation, and decision condition through model-led review of
-the complete deliverable. This is not a sentence inventory: omit immaterial
-copy, but never omit a premise whose failure could change a conclusion,
-recommendation, condition, or delivery decision.
-
-For each material item, record its exact location and statement, upstream
-material-item dependencies, evidence references, support status, reasoning
-status, counterevidence, decision effect, resolution, and professional-review
-need. Recommendations and material inferences must identify the material items
-they depend on. Explicitly distinguish a hypothesis from a fact. A hypothesis
-may remain when it is labelled, bounded, decision-useful, and its uncertainty
-does not control the decision; an untested critical hypothesis cannot be
-accepted as residual uncertainty.
-
-Use the weakest material dependency, not an average score, to determine
-readiness. An unsupported or contradicted material claim, an unsound material
-inference, or an unresolved critical weakness keeps delivery not ready until it
-is corrected, removed, supported, or otherwise resolved in a separate reviewed
-artifact. A bounded noncritical uncertainty may support
-`ready_with_residual_uncertainty` only when the review records the qualification
-and the overall assessment states the residual uncertainty. Do not let polished
-prose, many sound sections, or an empty issue list compensate for one decisive
-weak premise.
-
 ## Format-specific composition
 
 The validator coordinates existing Clara checks and consumes their artifacts;
@@ -184,15 +156,13 @@ python scripts/managed_python_runtime.py run \
 4. Perform the model-led review across all ten dimensions. Preserve the
    contract's scope and explicitly record reviewed sections, omitted sections,
    limitations, missing evidence, and judgement-dependent points.
-5. Write `advisory_validation_review_draft.json` with review schema version
-   `"1.1"` against
+5. Write `advisory_validation_review_draft.json` against
    [references/advisory_validation_review.schema.json](references/advisory_validation_review.schema.json).
    Use `model_led_materiality_review` as the coverage selection method. Record
-   the complete material reasoning chain before the dimension summaries, then
-   record evidence references, analysis, correction state, professional-review
-   needs, and explicit approval records separately. Approval is a user or
-   professional fact: never infer it from polished output, an empty issue list,
-   or a model recommendation. Do not turn the fields into a numeric score.
+   evidence references, analysis, correction state, professional-review needs,
+   and explicit approval records separately. Approval is a user or professional
+   fact: never infer it from polished output, an empty issue list, or a model
+   recommendation. Do not turn the fields into a numeric score.
 6. If correction is needed and permitted, create a separate corrected artifact.
    Preserve the original bytes. For decks, use `clara:deck-correction`; for
    calculation-backed content, rerun the authoritative Reporting Engine checks;
@@ -221,14 +191,13 @@ python scripts/managed_python_runtime.py run \
    `delivery_readiness.status` and the semantic review to state whether delivery
    is ready, ready with residual uncertainty, not ready, or blocked.
 
-## ChatGPT, Codex and Cowork
+## Codex and Cowork
 
-In ChatGPT or Codex, use the packaged workflow and, when local execution is
-available, the helpers, exact files, hashes, and format-specific checks. Cowork
-follows the same semantic dimensions, material reasoning chain, and contract.
-When the host can execute the packaged scripts, use the same mechanical
-artifacts and limits. When it cannot, the model may review only the files
-explicitly connected by the user; schema/hash/package closure and
+In Codex, use the packaged helpers and exact local files, hashes, and
+format-specific checks. Cowork follows the same semantic dimensions and
+contract. When Cowork can execute the packaged scripts, use the same
+mechanical artifacts and limits. When it cannot, the model may review only the
+files explicitly connected by the user; schema/hash/package closure and
 original-preservation proof remain unavailable, so report the mechanical state
 as partial rather than claiming an equivalent verified package.
 

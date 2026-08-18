@@ -1,4 +1,4 @@
 interface:
   display_name: "Validate an advisory deliverable"
   short_description: "Check advisory work against evidence and scope"
-  default_prompt: "Use $advisory-deliverable-validator to validate this completed advisory deliverable against advisory_contract.json and the available evidence, trace every material reasoning dependency, compose with the applicable Clara format checks, and prepare a separate corrected artifact if needed."
+  default_prompt: "Use $advisory-deliverable-validator to validate this completed advisory deliverable against advisory_contract.json and the available evidence, compose with the applicable Clara format checks, and prepare a separate corrected artifact if needed."

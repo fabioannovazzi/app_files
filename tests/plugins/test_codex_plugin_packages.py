@@ -690,7 +690,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             if name.startswith(skill_prefix)
         }
         assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
-        if plugin_name not in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
+        if plugin_name == "clara":
             assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
         else:
             assert "WORKFLOW.md" not in packaged_skill_files
@@ -707,7 +707,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             )
         )
         assert entries[interface_name] == expected_interface
-        if plugin_name not in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
+        if plugin_name == "clara":
             assert "\n\n" not in body, name
             assert builder.REQUIRED_CHATGPT_HEADING not in body, name
             assert builder.REQUIRED_CODEX_RECOMMENDATION not in body, name
@@ -715,17 +715,10 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
             assert builder.CODEX_DOWNLOAD_URL not in body, name
             assert not body.startswith("#"), name
     if plugin_name == "clara":
-        validator = card_bodies["skills/advisory-deliverable-validator/SKILL.md"]
-        assert "Material reasoning-chain invariant" in validator
-        assert "material_review_items" in validator
-        assert (
-            "skills/advisory-deliverable-validator/scripts/advisory_validation.py"
-            in entries
-        )
-        deck_card = instruction_config["skills"]["deck-correction"]["instructions"]
-        assert deck_card.startswith("Attach the current presentation")
-        assert "protects untouched content" in deck_card
-        assert "verification findings" in deck_card
+        deck_correction = card_bodies["skills/deck-correction/SKILL.md"]
+        assert deck_correction.startswith("Attach the current presentation")
+        assert "protects untouched content" in deck_correction
+        assert "verification findings" in deck_correction
         reporting_interface = entries[
             "skills/reporting-engine/agents/openai.yaml"
         ].decode("utf-8")
@@ -828,7 +821,7 @@ def test_committed_chatgpt_upload_uses_approved_card_copy(
                 if name.startswith(skill_prefix) and not name.endswith("/")
             }
             assert {"SKILL.md", "agents/openai.yaml"} <= packaged_skill_files
-            if plugin_name not in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
+            if plugin_name == "clara":
                 assert packaged_skill_files == {"SKILL.md", "agents/openai.yaml"}
             else:
                 assert "WORKFLOW.md" not in packaged_skill_files

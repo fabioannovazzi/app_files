@@ -20,7 +20,7 @@
       {
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
-        "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, referenced artifact paths and hashes, model-led material review items for facts, hypotheses, assumptions, calculations, inferences, recommendations, and decision conditions, their declared dependencies, evidence references, counterevidence, support and reasoning assessments, decision effects and resolution states, correction drafts and their path/hash binding, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
+        "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, referenced artifact paths and hashes, model-led findings, correction drafts and their path/hash binding, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
       }
     ]
   },
@@ -50,6 +50,6 @@
     "reviewed_at": "2026-08-16",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "1bc9ea6b288bfe4060e6f8d6a2a585874a061ea9375c915860e9fcec73775229"
+    "source_fingerprint": "77102465198dc2e55cecd8898239452beea4dcabaeaa016c86f71ffb6a598aca"
   }
 }

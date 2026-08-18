@@ -18,9 +18,8 @@ matches the request.
   procedural authority.
 - `advisory-deliverable-validator`: validate a completed advisory memo, report,
   analysis, presentation, or other supported professional document against
-  `advisory_contract.json` and available evidence, trace every material
-  reasoning dependency, and compose with rather than duplicate the applicable
-  format-specific Clara checks; unresolved critical weaknesses block delivery.
+  `advisory_contract.json` and available evidence, while composing with rather
+  than duplicating the applicable format-specific Clara checks.
 - `attribute-reporting`: map retailer products to a central taxonomy, compare a
   retailer-defined cohort with the remaining assortment, and create a checked
   private Retailer Signals report.

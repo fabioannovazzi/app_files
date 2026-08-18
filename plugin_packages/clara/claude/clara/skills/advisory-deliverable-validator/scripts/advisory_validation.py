@@ -110,48 +110,6 @@ READINESS_STATUSES = {
     "blocked",
 }
 APPROVAL_STATUSES = {"approved", "pending", "not_required"}
-MATERIAL_ITEM_TYPES = {
-    "factual_claim",
-    "hypothesis",
-    "assumption",
-    "calculation",
-    "inference",
-    "recommendation",
-    "decision_condition",
-}
-SUPPORT_STATUSES = {
-    "supported",
-    "partially_supported",
-    "not_supported",
-    "contradicted",
-    "uncertain",
-    "not_applicable",
-}
-REASONING_STATUSES = {
-    "sound",
-    "partially_sound",
-    "unsound",
-    "uncertain",
-    "not_applicable",
-}
-DECISION_EFFECTS = {"critical", "material", "limited"}
-MATERIAL_RESOLUTION_ACTIONS = {
-    "none",
-    "qualify",
-    "correct",
-    "remove",
-    "obtain_evidence",
-    "test_hypothesis",
-    "professional_review",
-}
-MATERIAL_RESOLUTION_STATUSES = {
-    "not_needed",
-    "resolved_in_corrected_artifact",
-    "accepted_residual_uncertainty",
-    "pending",
-    "blocked",
-    "professional_review_required",
-}
 URL_RE = re.compile(r"https?://[^\s)\]>\"']+", re.IGNORECASE)
 CITATION_RE = re.compile(r"\[(?:\^?[A-Za-z0-9_-]+|\d+(?:,\s*\d+)*)\]")
 FOOTNOTE_RE = re.compile(r"^\[\^?([A-Za-z0-9_-]+)\]:\s*(.+)$", re.MULTILINE)
@@ -661,232 +619,10 @@ def _validate_dimension_review(value: Any, *, subject: str) -> list[str]:
     for field in ("evidence_refs", "issues"):
         if not _is_string_list(value[field], allow_empty=True):
             errors.append(f"{subject}.{field} must be a string array")
-    if (
-        value["status"]
-        in {
-            "conforms",
-            "partially_conforms",
-            "contradicted",
-        }
-        and not value["evidence_refs"]
-    ):
-        errors.append(f"{subject}.evidence_refs is required for {value['status']}")
     if value["correction_status"] not in CORRECTION_STATUSES:
         errors.append(f"{subject}.correction_status is invalid")
     if not isinstance(value["professional_review_required"], bool):
         errors.append(f"{subject}.professional_review_required must be boolean")
-    return errors
-
-
-def _dependency_cycle(dependencies: dict[str, list[str]]) -> list[str]:
-    """Return one dependency cycle when the declared material graph is cyclic."""
-
-    visiting: set[str] = set()
-    visited: set[str] = set()
-    path: list[str] = []
-
-    def visit(item_id: str) -> list[str]:
-        if item_id in visited:
-            return []
-        if item_id in visiting:
-            cycle_start = path.index(item_id)
-            return [*path[cycle_start:], item_id]
-        visiting.add(item_id)
-        path.append(item_id)
-        for dependency_id in dependencies.get(item_id, []):
-            cycle = visit(dependency_id)
-            if cycle:
-                return cycle
-        path.pop()
-        visiting.remove(item_id)
-        visited.add(item_id)
-        return []
-
-    for candidate in dependencies:
-        cycle = visit(candidate)
-        if cycle:
-            return cycle
-    return []
-
-
-def _validate_material_review_items(
-    value: Any,
-    *,
-    correction_status: str,
-) -> list[str]:
-    """Validate declared material items without judging their semantic contents."""
-
-    if not isinstance(value, list) or not value:
-        return ["material_review_items must be a non-empty array"]
-    errors: list[str] = []
-    required = {
-        "id",
-        "item_type",
-        "location",
-        "statement",
-        "depends_on_item_ids",
-        "evidence_refs",
-        "support_status",
-        "reasoning_status",
-        "analysis",
-        "counterevidence",
-        "decision_effect",
-        "resolution",
-        "professional_review_required",
-    }
-    item_ids: list[str] = []
-    dependencies: dict[str, list[str]] = {}
-    for index, item in enumerate(value):
-        subject = f"material_review_items[{index}]"
-        if not isinstance(item, dict):
-            errors.append(f"{subject} must be an object")
-            continue
-        missing = sorted(required - item.keys())
-        if missing:
-            errors.append(f"{subject} missing fields: {', '.join(missing)}")
-            continue
-        item_id = item["id"]
-        if not _is_non_empty_string(item_id):
-            errors.append(f"{subject}.id is required")
-        else:
-            item_ids.append(item_id)
-        if item["item_type"] not in MATERIAL_ITEM_TYPES:
-            errors.append(f"{subject}.item_type is invalid")
-        for field in ("location", "statement", "analysis"):
-            if not _is_non_empty_string(item[field]):
-                errors.append(f"{subject}.{field} is required")
-        for field in ("depends_on_item_ids", "evidence_refs", "counterevidence"):
-            if not _is_string_list(item[field], allow_empty=True):
-                errors.append(f"{subject}.{field} must be a string array")
-            elif len(item[field]) != len(set(item[field])):
-                errors.append(f"{subject}.{field} must not contain duplicates")
-        if isinstance(item_id, str) and isinstance(item["depends_on_item_ids"], list):
-            dependencies[item_id] = item["depends_on_item_ids"]
-        support_status = item["support_status"]
-        reasoning_status = item["reasoning_status"]
-        if support_status not in SUPPORT_STATUSES:
-            errors.append(f"{subject}.support_status is invalid")
-        if reasoning_status not in REASONING_STATUSES:
-            errors.append(f"{subject}.reasoning_status is invalid")
-        if item["decision_effect"] not in DECISION_EFFECTS:
-            errors.append(f"{subject}.decision_effect is invalid")
-        if not isinstance(item["professional_review_required"], bool):
-            errors.append(f"{subject}.professional_review_required must be boolean")
-
-        if (
-            support_status in {"supported", "partially_supported", "contradicted"}
-            and not item["evidence_refs"]
-        ):
-            errors.append(f"{subject}.evidence_refs is required for {support_status}")
-        if (
-            item["item_type"] in {"factual_claim", "hypothesis", "calculation"}
-            and support_status == "not_applicable"
-        ):
-            errors.append(
-                f"{subject}.support_status cannot be not_applicable for {item['item_type']}"
-            )
-        if item["item_type"] in {"inference", "recommendation"}:
-            if reasoning_status == "not_applicable":
-                errors.append(
-                    f"{subject}.reasoning_status cannot be not_applicable for {item['item_type']}"
-                )
-            if not item["depends_on_item_ids"]:
-                errors.append(
-                    f"{subject}.depends_on_item_ids is required for {item['item_type']}"
-                )
-
-        resolution = item["resolution"]
-        if not isinstance(resolution, dict):
-            errors.append(f"{subject}.resolution must be an object")
-            continue
-        resolution_required = {"action", "status", "explanation"}
-        resolution_missing = sorted(resolution_required - resolution.keys())
-        if resolution_missing:
-            errors.append(
-                f"{subject}.resolution missing fields: {', '.join(resolution_missing)}"
-            )
-            continue
-        action = resolution["action"]
-        status = resolution["status"]
-        if action not in MATERIAL_RESOLUTION_ACTIONS:
-            errors.append(f"{subject}.resolution.action is invalid")
-        if status not in MATERIAL_RESOLUTION_STATUSES:
-            errors.append(f"{subject}.resolution.status is invalid")
-        if not _is_non_empty_string(resolution["explanation"]):
-            errors.append(f"{subject}.resolution.explanation is required")
-        if status == "not_needed" and action != "none":
-            errors.append(f"{subject}.resolution action must be none when not needed")
-        if status != "not_needed" and action == "none":
-            errors.append(f"{subject}.resolution action is required for {status}")
-        if (
-            status == "resolved_in_corrected_artifact"
-            and correction_status != "completed"
-        ):
-            errors.append(
-                f"{subject} cannot be resolved in a corrected artifact unless correction is completed"
-            )
-        if (
-            status == "professional_review_required"
-            and item["professional_review_required"] is not True
-        ):
-            errors.append(
-                f"{subject}.professional_review_required must be true for professional-review resolution"
-            )
-        if (
-            item["professional_review_required"] is True
-            and status != "professional_review_required"
-        ):
-            errors.append(
-                f"{subject}.resolution.status must be professional_review_required when professional review is required"
-            )
-
-        imperfect_support = support_status in {
-            "partially_supported",
-            "not_supported",
-            "contradicted",
-            "uncertain",
-        }
-        imperfect_reasoning = reasoning_status in {
-            "partially_sound",
-            "unsound",
-            "uncertain",
-        }
-        if (imperfect_support or imperfect_reasoning) and status == "not_needed":
-            errors.append(f"{subject} has an unresolved support or reasoning weakness")
-        if (
-            support_status in {"not_supported", "contradicted"}
-            or reasoning_status == "unsound"
-        ) and status == "accepted_residual_uncertainty":
-            errors.append(
-                f"{subject} cannot accept unsupported, contradicted, or unsound content as residual uncertainty"
-            )
-        if (
-            item["decision_effect"] == "critical"
-            and (imperfect_support or imperfect_reasoning)
-            and status == "accepted_residual_uncertainty"
-        ):
-            errors.append(
-                f"{subject} cannot accept a critical support or reasoning weakness as residual uncertainty"
-            )
-
-    if len(item_ids) != len(set(item_ids)):
-        errors.append("material review item ids must be unique")
-    known_item_ids = set(item_ids)
-    for item_id, dependency_ids in dependencies.items():
-        for dependency_id in dependency_ids:
-            if dependency_id == item_id:
-                errors.append(f"material review item {item_id} cannot depend on itself")
-            elif dependency_id not in known_item_ids:
-                errors.append(
-                    f"material review item {item_id} has unknown dependency: {dependency_id}"
-                )
-    if not any("unknown dependency" in error for error in errors):
-        cycle = _dependency_cycle(dependencies)
-        if cycle:
-            errors.append(
-                "material review item dependencies must be acyclic: "
-                + " -> ".join(cycle)
-            )
     return errors
 
 
@@ -926,7 +662,6 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
         "advisory_contract_sha256",
         "deliverable_sha256",
         "coverage_review",
-        "material_review_items",
         "dimension_reviews",
         "findings",
         "format_specific_checks",
@@ -938,8 +673,8 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
     missing = sorted(required - payload.keys())
     if missing:
         return [f"review record missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != "1.1":
-        errors.append('review schema_version must be "1.1"')
+    if payload["schema_version"] != "1.0":
+        errors.append('review schema_version must be "1.0"')
     if payload["language"] != contract["output_language"]:
         errors.append("review language must match the advisory contract")
     for field in ("advisory_contract_sha256", "deliverable_sha256"):
@@ -966,18 +701,6 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
                 errors.append(f"coverage_review.{field} must be a string array")
         if not _is_non_empty_string(coverage.get("analysis")):
             errors.append("coverage_review.analysis is required")
-
-    correction_record = payload.get("correction")
-    correction_status = (
-        correction_record.get("status") if isinstance(correction_record, dict) else ""
-    )
-    material_items = payload["material_review_items"]
-    errors.extend(
-        _validate_material_review_items(
-            material_items,
-            correction_status=correction_status,
-        )
-    )
 
     dimensions = payload["dimension_reviews"]
     if not isinstance(dimensions, dict) or set(dimensions) != set(REVIEW_DIMENSIONS):
@@ -1174,119 +897,6 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             for dimension in REVIEW_DIMENSIONS
         )
         delivery_ready = status in {"ready", "ready_with_residual_uncertainty"}
-        material_items_list = material_items if isinstance(material_items, list) else []
-        material_resolution_statuses: set[str] = set()
-        unresolved_material_weakness = False
-        material_support_attention = False
-        material_reasoning_attention = False
-        recommendation_attention = False
-        for item in material_items_list:
-            if not isinstance(item, dict):
-                continue
-            resolution = item.get("resolution")
-            resolution_status = (
-                resolution.get("status") if isinstance(resolution, dict) else None
-            )
-            if isinstance(resolution_status, str):
-                material_resolution_statuses.add(resolution_status)
-            resolved_in_correction = (
-                resolution_status == "resolved_in_corrected_artifact"
-            )
-            severe_weakness = (
-                item.get("support_status") in {"not_supported", "contradicted"}
-                or item.get("reasoning_status") == "unsound"
-            )
-            if (
-                severe_weakness
-                and resolution_status != "resolved_in_corrected_artifact"
-            ) or resolution_status in {
-                "pending",
-                "blocked",
-                "professional_review_required",
-            }:
-                unresolved_material_weakness = True
-            support_attention = item.get("support_status") in {
-                "partially_supported",
-                "not_supported",
-                "contradicted",
-                "uncertain",
-            }
-            reasoning_attention = item.get("reasoning_status") in {
-                "partially_sound",
-                "unsound",
-                "uncertain",
-            }
-            if not resolved_in_correction:
-                material_support_attention = (
-                    material_support_attention or support_attention
-                )
-                material_reasoning_attention = (
-                    material_reasoning_attention or reasoning_attention
-                )
-                if item.get("item_type") == "recommendation" and (
-                    support_attention
-                    or reasoning_attention
-                    or resolution_status
-                    in {"pending", "blocked", "professional_review_required"}
-                ):
-                    recommendation_attention = True
-        accepted_material_uncertainty = (
-            "accepted_residual_uncertainty" in material_resolution_statuses
-        )
-        if isinstance(dimensions, dict):
-
-            def dimension_status(dimension_name: str) -> Any:
-                dimension_record = dimensions.get(dimension_name)
-                return (
-                    dimension_record.get("status")
-                    if isinstance(dimension_record, dict)
-                    else None
-                )
-
-            if (
-                material_support_attention
-                and dimension_status("factual_source_support") == "conforms"
-            ):
-                errors.append(
-                    "factual-source-support dimension cannot conform while a material support weakness remains"
-                )
-            if (
-                material_reasoning_attention
-                and dimension_status("reasoning_assumptions") == "conforms"
-            ):
-                errors.append(
-                    "reasoning-assumptions dimension cannot conform while a material reasoning weakness remains"
-                )
-            if (
-                recommendation_attention
-                and dimension_status("recommendation_evidence_decision_fit")
-                == "conforms"
-            ):
-                errors.append(
-                    "recommendation-fit dimension cannot conform while a material recommendation weakness remains"
-                )
-            if accepted_material_uncertainty and dimension_status(
-                "residual_uncertainty"
-            ) not in {"partially_conforms", "uncertain"}:
-                errors.append(
-                    "residual-uncertainty dimension must record accepted material uncertainty"
-                )
-        if delivery_ready and unresolved_material_weakness:
-            errors.append(
-                "delivery-ready status cannot coexist with an unresolved material support or reasoning weakness"
-            )
-        if status == "ready" and accepted_material_uncertainty:
-            errors.append(
-                "ready status cannot coexist with accepted material residual uncertainty"
-            )
-        if (
-            status == "ready_with_residual_uncertainty"
-            and accepted_material_uncertainty
-            and not overall.get("residual_uncertainties")
-        ):
-            errors.append(
-                "accepted material residual uncertainty must be stated in the overall assessment"
-            )
         if status == "ready" and unresolved_attention:
             errors.append(
                 "ready status cannot coexist with unresolved review attention"
@@ -1359,45 +969,9 @@ def _render_package(
         f"Record complete: {'yes' if audit['record_complete'] else 'no'}",
         f"Delivery readiness: {audit['effective_delivery_readiness']}",
         "",
-        "## Material reasoning chain",
+        "## Review dimensions",
         "",
     ]
-    material_items = review.get("material_review_items", [])
-    if not isinstance(material_items, list):
-        material_items = []
-    if material_items:
-        for item in material_items:
-            if not isinstance(item, dict):
-                continue
-            dependencies = item.get("depends_on_item_ids", [])
-            if not isinstance(dependencies, list):
-                dependencies = []
-            resolution = item.get("resolution", {})
-            if not isinstance(resolution, dict):
-                resolution = {}
-            lines.extend(
-                [
-                    f"### {item.get('id', 'material-item')} — {item.get('item_type', 'unknown')}",
-                    "",
-                    f"Location: {item.get('location', 'unknown')}",
-                    f"Statement: {item.get('statement', '')}",
-                    f"Depends on: {', '.join(dependencies) if dependencies else 'none'}",
-                    f"Support: {item.get('support_status', 'missing')}",
-                    f"Reasoning: {item.get('reasoning_status', 'missing')}",
-                    f"Decision effect: {item.get('decision_effect', 'missing')}",
-                    f"Resolution: {resolution.get('status', 'missing')}",
-                    f"Analysis: {item.get('analysis', '')}",
-                    "",
-                ]
-            )
-    else:
-        lines.extend(["- No material review items recorded.", ""])
-    lines.extend(
-        [
-            "## Review dimensions",
-            "",
-        ]
-    )
     for dimension in REVIEW_DIMENSIONS:
         record = dimensions.get(dimension, {})
         if not isinstance(record, dict):
@@ -1606,10 +1180,6 @@ def package_validation(
                 == corrected_metadata["sha256"]
             ),
             "format_check_artifacts_exist": not artifact_errors,
-            "material_reasoning_chain_consistent": not _validate_material_review_items(
-                review.get("material_review_items"),
-                correction_status=correction_status,
-            ),
             "hidden_model_api_calls": False,
         },
         "declared_delivery_readiness": declared_readiness,

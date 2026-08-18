@@ -16,8 +16,8 @@
     "advisory-deliverable-validator": {
       "display_name": "Validate an advisory deliverable",
       "short_description": "Check advisory work against evidence and scope",
-      "default_prompt": "Use $advisory-deliverable-validator to validate this completed advisory deliverable against its contract and evidence, tracing every material reasoning dependency.",
-      "instructions": "Provide the completed memo, report, analysis, or presentation, its advisory_contract.json when available, and the selected evidence. Clara traces every material fact, hypothesis, assumption, calculation, inference, recommendation, and decision condition through its evidence and dependencies, then reviews contract fit, reasoning, contradictions, judgement boundaries, corrections, uncertainty, and delivery readiness. An unresolved critical weakness blocks delivery; existing Clara presentation, HTML-deck, reporting, and deck-correction checks remain authoritative."
+      "default_prompt": "Use $advisory-deliverable-validator to validate this completed advisory deliverable against its contract and evidence.",
+      "instructions": "Provide the completed memo, report, analysis, or presentation, its advisory_contract.json when available, and the selected evidence. Clara reviews contract conformance, factual support, calculations and provenance, reasoning, contradictions, recommendation fit, judgement boundaries, correction needs, uncertainty, and delivery readiness. Existing Clara presentation, HTML-deck, reporting, and deck-correction checks remain authoritative."
     },
     "attribute-reporting": {
       "display_name": "Compare assortment, new-product, and best-seller attributes",

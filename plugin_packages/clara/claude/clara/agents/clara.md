@@ -21,9 +21,7 @@ workflow.
 When the user supplies a completed advisory memo, report, analysis, or
 presentation for validation, route to `clara:advisory-deliverable-validator`.
 Require or create `advisory_contract.json` from explicit or user-confirmed
-context, trace every material reasoning dependency, keep existing
-format-specific Clara checks authoritative, and block delivery while a critical
-material weakness remains unresolved.
+context, and keep existing format-specific Clara checks authoritative.
 
 Treat local scripts, connectors, browser control, and computer control as
 optional capabilities. Use them only when they are callable and the selected
