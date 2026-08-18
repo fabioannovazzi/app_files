@@ -214,6 +214,31 @@ boundary). Multi-source analytical work must first use reviewed semantic and
 relationship decisions to materialize deterministic evidence tables; the
 renderer must not infer cross-source joins.
 
+When a Reporting Engine result introduces or updates a claim in a Clara case,
+record the model-authored claim and calculation meaning through the shared
+handoff helper:
+
+```bash
+python scripts/record_reporting_contribution.py \
+  --case-dir <case-dir> \
+  --render-manifest <run>/render_manifest.json \
+  --contribution <model-authored-reporting-contribution.json> \
+  --verification-artifact <run>/semantic_validation.json \
+  --verification-artifact <run>/compatibility.json
+```
+
+The contribution JSON supplies the semantic observation, scope, limitations,
+method, full claim record, and optional judgement projection. The helper does
+not infer them. It verifies the authoritative Reporting Engine 0.2 result,
+input, recipe, current-run outputs, output-set digest, and added verification
+files, then creates the `calculation_run` receipt and commits the receipt,
+claim, and judgement projection atomically. The claim must reference that
+receipt in both `evidence_links` and `calculation_evidence_id` and names any
+upstream claim dependencies. This cross-workflow receipt lets the advisory
+validator find and selectively rerun the exact calculation; it does not replace
+Reporting Engine's semantic review, compatibility checks, calculation logic,
+or render proof.
+
 ## Cowork-native Run UX
 
 For any reporting-engine run, keep a short checklist in chat or in the run

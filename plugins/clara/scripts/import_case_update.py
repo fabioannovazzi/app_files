@@ -25,11 +25,16 @@ def main() -> int:
     result = import_case_update(args.case_dir, args.package)
     LOGGER.info("Imported exchange: %s", result.exchange_id)
     LOGGER.info(
-        "Added %s material(s), %s judgement entrie(s), %s open question(s); "
+        "Added %s material(s), %s evidence receipt(s), %s claim(s), updated %s claim(s), "
+        "%s judgement entrie(s), %s open question(s), %s case issue(s); "
         "skipped %s duplicate(s); logged %s conflict(s).",
         result.imported_material_count,
+        result.imported_evidence_count,
+        result.imported_claim_count,
+        result.updated_claim_count,
         result.imported_judgement_count,
         result.imported_open_question_count,
+        result.imported_issue_count,
         result.skipped_count,
         result.conflict_count,
     )

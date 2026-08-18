@@ -37,6 +37,8 @@ def main() -> int:
         "--status", default="pending", choices=sorted(JUDGEMENT_STATUSES)
     )
     parser.add_argument("--source-material-id", action="append", default=[])
+    parser.add_argument("--advisory-claim-id", default="")
+    parser.add_argument("--evidence-receipt-id", action="append", default=[])
     parser.add_argument("--rationale", default="")
     args = parser.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
@@ -52,6 +54,8 @@ def main() -> int:
                 "text": args.text,
                 "status": args.status,
                 "source_material_ids": args.source_material_id,
+                "advisory_claim_id": args.advisory_claim_id,
+                "evidence_receipt_ids": args.evidence_receipt_id,
                 "rationale": args.rationale,
             }
         ]

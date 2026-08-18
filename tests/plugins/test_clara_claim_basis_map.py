@@ -75,6 +75,30 @@ def test_render_claim_basis_map_surfaces_claim_link_to_prior_slide() -> None:
     )
 
 
+def test_render_claim_basis_map_preserves_shared_advisory_lineage_ids() -> None:
+    renderer = _load_renderer()
+    payload = {
+        "slides": [
+            {
+                "slide_number": 1,
+                "claims": [
+                    {
+                        "claim": "Thirteen listings were visible on the captured page.",
+                        "advisory_claim_id": "cl-visible-13",
+                        "evidence_receipt_ids": ["ev-web-13"],
+                        "source_refs": [{"title": "Captured inventory page"}],
+                    }
+                ],
+            }
+        ]
+    }
+
+    markdown = renderer.render_claim_basis_map(payload)
+
+    assert "Advisory claim: cl-visible-13" in markdown
+    assert "Evidence receipts: ev-web-13" in markdown
+
+
 def test_render_claim_basis_map_surfaces_unresolved_upstream_claim() -> None:
     renderer = _load_renderer()
     payload = {

@@ -17,8 +17,10 @@
 
 > AI companion for consultants. Clara plans advisory assignments as reviewable
 > contracts, routes them to the right specialist workflow, and validates
-> completed deliverables against the contract and available evidence. She organizes
-> evidence from documents and data, highlights gaps and contradictions,
+> completed deliverables against the contract and available evidence. During
+> Clara-created work she carries evidence receipts, stable claims, dependencies,
+> calculations, quotations, and output appearances forward from the step where
+> they arise. She organizes evidence from documents and data, highlights gaps and contradictions,
 > analyzes markets, customers, products, competitors, and operations, and
 > prepares presentations, reports, charts, and reviewable workpapers. Sources,
 > assumptions, and open questions remain visible; the consultant keeps
@@ -44,6 +46,16 @@ voice interviews, transcription, hosted deck capture, plugin feedback, custom
 updates, developer privacy tooling, hooks, OpenAI agent descriptors, and
 Beautify Deck. It does not claim image-generation capability.
 
+Cowork follows the same `evidence -> claim -> inference -> recommendation ->
+decision` review model. Semantic claim selection and support, reasoning,
+recommendation, and correction judgement remain model-led. When packaged local
+helpers can execute, use the canonical evidence and claim registers, bounded
+coverage-unit assessments, authoritative format results, and corrected-artifact
+second review. When they cannot execute, state that hash/schema/package closure
+is partial; do not claim an equivalent verified package. The validator does not
+silently browse, rerun calculations, or treat a generic `passed` JSON file as a
+specialist result.
+
 The marketplace source path is:
 
 `plugin_packages/clara/claude/clara`
@@ -54,10 +66,10 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.138
-- **Files:** 850
-- **Bytes:** 4,393,946
-- **SHA-256:** `d42fe312896f1f96d49deb0ad946b1fb2a3fbdbaf40d03e118c6ddad8ea4996d`
+- **Version:** 0.1.139
+- **Files:** 856
+- **Bytes:** 4,440,276
+- **SHA-256:** `03348df76f213aadfac14eca41e5f6b59a7c352c74e79336b2e474ddbaffaecd`
 - **ZIP integrity:** clean
 
 The generated directory and exact archive above pass the repository's package

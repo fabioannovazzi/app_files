@@ -18,6 +18,17 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile
 
+from advisory_evidence_lineage import (
+    CLAIM_REGISTER_FILENAME,
+    EVIDENCE_REGISTER_FILENAME,
+    bind_claim_appearances,
+    initialize_lineage,
+    record_claims,
+    record_evidence,
+    render_evidence_map,
+    validate_lineage,
+    validate_lineage_payloads,
+)
 from html_deck_runtime import (
     apply_fixed_16_9_deck_runtime,
     assert_fixed_16_9_deck_runtime,
@@ -79,6 +90,7 @@ __all__ = [
     "prepare_clara_kickoff",
     "prepare_support_package",
     "register_material",
+    "record_analysis_contribution",
     "refresh_case_brief",
     "render_clara_kickoff_deck",
     "render_clara_partner_brief",
@@ -91,7 +103,7 @@ __all__ = [
 ]
 
 SCHEMA_VERSION = 1
-EXCHANGE_SCHEMA_VERSION = 1
+EXCHANGE_SCHEMA_VERSION = 2
 EXCHANGE_SOURCE = "case_notes_case_update"
 SUPPORTED_LANGUAGES = {"it", "en", "fr", "de", "es"}
 CASE_STATUSES = {"active", "paused", "complete", "archived"}
@@ -318,6 +330,9 @@ class CaseExchangeExportResult:
     judgement_count: int
     open_question_count: int
     included_file_count: int
+    evidence_count: int = 0
+    claim_count: int = 0
+    issue_count: int = 0
 
 
 @dataclass(frozen=True)
@@ -379,6 +394,10 @@ class CaseExchangeImportResult:
     imported_open_question_count: int
     skipped_count: int
     conflict_count: int
+    imported_evidence_count: int = 0
+    imported_claim_count: int = 0
+    imported_issue_count: int = 0
+    updated_claim_count: int = 0
 
 
 @dataclass(frozen=True)
@@ -463,6 +482,42 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
         json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
         encoding="utf-8",
     )
+
+
+def _snapshot_files(paths: Sequence[Path]) -> dict[Path, bytes | None]:
+    return {path: path.read_bytes() if path.exists() else None for path in paths}
+
+
+def _restore_files(snapshot: Mapping[Path, bytes | None]) -> None:
+    for path, content in snapshot.items():
+        if content is None:
+            path.unlink(missing_ok=True)
+            continue
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+
+
+def _snapshot_tree(root: Path) -> dict[Path, bytes]:
+    """Capture regular files below one exchange root for rollback."""
+
+    if not root.exists():
+        return {}
+    return {
+        path.relative_to(root): path.read_bytes()
+        for path in root.rglob("*")
+        if path.is_file()
+    }
+
+
+def _restore_tree(root: Path, snapshot: Mapping[Path, bytes]) -> None:
+    """Replace one exchange root with its pre-mutation regular files."""
+
+    if root.exists():
+        shutil.rmtree(root)
+    for relative_path, content in snapshot.items():
+        path = root / relative_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
 
 
 def _read_json(path: Path) -> dict[str, Any]:
@@ -567,7 +622,7 @@ def initialize_case(
     overwrite: bool = False,
     now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Create or load the four durable case workspace files."""
+    """Create or load the durable case workspace and advisory lineage files."""
 
     _validate_choice(output_language, SUPPORTED_LANGUAGES, "output_language")
     _validate_choice(status, CASE_STATUSES, "status")
@@ -575,6 +630,19 @@ def initialize_case(
     case_dir.mkdir(parents=True, exist_ok=True)
     timestamp = _now_iso(now)
     manifest_path = _case_path(case_dir, "manifest")
+    existing_case_state = [
+        path
+        for path in (
+            *(_case_path(case_dir, key) for key in CASE_FILES),
+            case_dir / EVIDENCE_REGISTER_FILENAME,
+            case_dir / CLAIM_REGISTER_FILENAME,
+        )
+        if path.exists()
+    ]
+    if overwrite and existing_case_state:
+        raise CaseWorkspaceError(
+            "refusing to overwrite existing Clara case state; append-only evidence, claims, materials, and judgement must be preserved"
+        )
     if overwrite or not manifest_path.exists():
         manifest = {
             "schema_version": SCHEMA_VERSION,
@@ -602,6 +670,8 @@ def initialize_case(
         path = _case_path(case_dir, key)
         if overwrite or not path.exists():
             _write_json(path, payload)
+
+    initialize_lineage(case_dir, overwrite=overwrite)
 
     errors = validate_case_workspace(case_dir)
     if errors:
@@ -774,6 +844,161 @@ def validate_case_workspace(case_dir: Path) -> list[str]:
                 errors.append(f"{filename}: source_material_ids must be a list")
             if not isinstance(payload.get("voice_session_paths"), list):
                 errors.append(f"{filename}: voice_session_paths must be a list")
+    lineage_paths = (
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+    )
+    if any(path.exists() for path in lineage_paths):
+        lineage_audit = validate_lineage(case_dir)
+        errors.extend(f"advisory lineage: {error}" for error in lineage_audit["errors"])
+    required_reference_paths = [
+        _case_path(case_dir, "materials"),
+        _case_path(case_dir, "judgement"),
+        _case_path(case_dir, "open_questions"),
+        _case_path(case_dir, "issues"),
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+    ]
+    if all(path.is_file() for path in required_reference_paths):
+        materials = _read_json(_case_path(case_dir, "materials")).get("materials", [])
+        judgement_entries = _read_json(_case_path(case_dir, "judgement")).get(
+            "entries", []
+        )
+        questions = _read_json(_case_path(case_dir, "open_questions")).get(
+            "questions", []
+        )
+        issues = _read_json(_case_path(case_dir, "issues")).get("issues", [])
+        evidence_records = _read_json(case_dir / EVIDENCE_REGISTER_FILENAME).get(
+            "evidence", []
+        )
+        claim_records = _read_json(case_dir / CLAIM_REGISTER_FILENAME).get("claims", [])
+        known_material_ids = {
+            str(item.get("id"))
+            for item in materials
+            if isinstance(item, dict) and item.get("id")
+        }
+        known_judgement_ids = {
+            str(item.get("id"))
+            for item in judgement_entries
+            if isinstance(item, dict) and item.get("id")
+        }
+        known_question_ids = {
+            str(item.get("id"))
+            for item in questions
+            if isinstance(item, dict) and item.get("id")
+        }
+        known_evidence_ids = {
+            str(item.get("id"))
+            for item in evidence_records
+            if isinstance(item, dict) and item.get("id")
+        }
+        claims_by_id = {
+            str(item.get("id")): item
+            for item in claim_records
+            if isinstance(item, dict) and item.get("id")
+        }
+        for entry in judgement_entries:
+            if not isinstance(entry, dict):
+                continue
+            entry_id = str(entry.get("id", "judgement"))
+            unknown_materials = sorted(
+                set(entry.get("source_material_ids", [])) - known_material_ids
+            )
+            if unknown_materials:
+                errors.append(
+                    f"judgement_log.json: {entry_id} has unknown material ids: "
+                    + ", ".join(unknown_materials)
+                )
+            claim_id = str(entry.get("advisory_claim_id", ""))
+            claim = claims_by_id.get(claim_id)
+            if claim_id and claim is None:
+                errors.append(
+                    f"judgement_log.json: {entry_id} has unknown advisory claim {claim_id}"
+                )
+            receipt_ids = {
+                str(value) for value in entry.get("evidence_receipt_ids", [])
+            }
+            unknown_receipts = sorted(receipt_ids - known_evidence_ids)
+            if unknown_receipts:
+                errors.append(
+                    f"judgement_log.json: {entry_id} has unknown evidence receipts: "
+                    + ", ".join(unknown_receipts)
+                )
+            if isinstance(claim, dict):
+                linked_receipts = {
+                    str(link.get("evidence_id"))
+                    for link in claim.get("evidence_links", [])
+                    if isinstance(link, dict) and link.get("evidence_id")
+                }
+                if receipt_ids != linked_receipts:
+                    errors.append(
+                        f"judgement_log.json: {entry_id} evidence receipts do not exactly match {claim_id}"
+                    )
+                normalized_claim = re.sub(
+                    r"\s+", " ", str(claim.get("statement", ""))
+                ).strip()
+                normalized_entry = re.sub(
+                    r"\s+", " ", str(entry.get("text", ""))
+                ).strip()
+                if normalized_claim != normalized_entry:
+                    errors.append(
+                        f"judgement_log.json: {entry_id} text does not match {claim_id}"
+                    )
+            if entry.get("status") == "approved" and (
+                not claim_id
+                or not isinstance(claim, dict)
+                or claim.get("state") != "active"
+            ):
+                errors.append(
+                    f"judgement_log.json: approved {entry_id} requires a matching active advisory claim"
+                )
+        for question in questions:
+            if not isinstance(question, dict):
+                continue
+            unknown_entries = sorted(
+                set(question.get("source_entry_ids", [])) - known_judgement_ids
+            )
+            if unknown_entries:
+                errors.append(
+                    f"open_questions.json: {question.get('id', 'question')} has unknown judgement ids: "
+                    + ", ".join(unknown_entries)
+                )
+        for issue in issues:
+            if not isinstance(issue, dict):
+                continue
+            issue_id = str(issue.get("id", "issue"))
+            unknown_entries = sorted(
+                (
+                    set(issue.get("evidence_for", []))
+                    | set(issue.get("evidence_against", []))
+                )
+                - known_judgement_ids
+            )
+            unknown_claims = sorted(
+                (
+                    set(issue.get("claim_ids_for", []))
+                    | set(issue.get("claim_ids_against", []))
+                )
+                - set(claims_by_id)
+            )
+            unknown_questions = sorted(
+                set(issue.get("open_tests", [])) - known_question_ids
+            )
+            if unknown_entries:
+                errors.append(
+                    f"case_issues.json: {issue_id} has unknown judgement ids: "
+                    + ", ".join(unknown_entries)
+                )
+            if unknown_claims:
+                errors.append(
+                    f"case_issues.json: {issue_id} has unknown advisory claim ids: "
+                    + ", ".join(unknown_claims)
+                )
+            if unknown_questions:
+                errors.append(
+                    f"case_issues.json: {issue_id} has unknown open-question ids: "
+                    + ", ".join(unknown_questions)
+                )
     return errors
 
 
@@ -1032,6 +1257,31 @@ def delete_materials(
     ]
     removed_ids = tuple(str(item["id"]) for item in removed_materials)
     removed_id_set = set(removed_ids)
+    evidence_path = case_dir / EVIDENCE_REGISTER_FILENAME
+    if evidence_path.is_file() and removed_id_set:
+        evidence_payload = _read_json(evidence_path)
+        referenced_by: dict[str, list[str]] = {}
+        for receipt in evidence_payload.get("evidence", []):
+            if not isinstance(receipt, dict):
+                continue
+            source = receipt.get("source")
+            if not isinstance(source, dict):
+                continue
+            for material_id in source.get("material_ids", []):
+                if material_id in removed_id_set:
+                    referenced_by.setdefault(str(material_id), []).append(
+                        str(receipt.get("id", "unknown"))
+                    )
+        if referenced_by:
+            details = "; ".join(
+                f"{material_id} is cited by {', '.join(receipt_ids)}"
+                for material_id, receipt_ids in sorted(referenced_by.items())
+            )
+            raise CaseWorkspaceError(
+                "cannot delete material with advisory evidence lineage; "
+                "supersede or withdraw the linked claims and preserve the source record: "
+                + details
+            )
     if not removed_materials:
         brief_result = refresh_case_brief(case_dir, now=now)
         return MaterialDeleteResult(
@@ -1812,6 +2062,54 @@ def _known_judgement_ids(case_dir: Path) -> set[str]:
     return {str(item["id"]) for item in judgement["entries"]}
 
 
+def _claim_records_by_id(case_dir: Path) -> dict[str, dict[str, Any]]:
+    path = case_dir / CLAIM_REGISTER_FILENAME
+    payload = _read_json(path)
+    return {
+        str(item["id"]): item
+        for item in payload.get("claims", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+
+
+def _assert_judgement_claim_binding(
+    case_dir: Path,
+    *,
+    text: str,
+    advisory_claim_id: str,
+    evidence_receipt_ids: Sequence[Any],
+) -> None:
+    if not advisory_claim_id:
+        raise CaseWorkspaceError(
+            "approved judgement requires advisory_claim_id so client-pack content cannot bypass advisory lineage"
+        )
+    claim = _claim_records_by_id(case_dir).get(advisory_claim_id)
+    if claim is None:
+        raise CaseWorkspaceError(f"unknown advisory_claim_id: {advisory_claim_id}")
+    if claim.get("state") != "active":
+        raise CaseWorkspaceError(
+            f"approved judgement references non-active claim: {advisory_claim_id}"
+        )
+
+    def normalize(value: Any) -> str:
+        return re.sub(r"\s+", " ", str(value)).strip()
+
+    if normalize(claim.get("statement", "")) != normalize(text):
+        raise CaseWorkspaceError(
+            f"judgement text must exactly carry advisory claim {advisory_claim_id}"
+        )
+    linked_receipts = {
+        str(link.get("evidence_id"))
+        for link in claim.get("evidence_links", [])
+        if isinstance(link, dict) and link.get("evidence_id")
+    }
+    declared_receipts = {str(value) for value in evidence_receipt_ids}
+    if declared_receipts != linked_receipts:
+        raise CaseWorkspaceError(
+            f"judgement evidence_receipt_ids must exactly match {advisory_claim_id}"
+        )
+
+
 def _known_open_question_ids(case_dir: Path) -> set[str]:
     payload = _read_json(_case_path(case_dir, "open_questions"))
     return {str(item["id"]) for item in payload["questions"]}
@@ -1827,6 +2125,7 @@ def add_judgement_entries(
 
     timestamp = _now_iso(now)
     known_material_ids = _known_material_ids(case_dir)
+    known_claims = _claim_records_by_id(case_dir)
     judgement_path = _case_path(case_dir, "judgement")
     judgement = _read_json(judgement_path)
     existing_ids = [item["id"] for item in judgement["entries"]]
@@ -1846,6 +2145,34 @@ def add_judgement_entries(
             raise CaseWorkspaceError(
                 "unknown source_material_ids: " + ", ".join(unknown_sources)
             )
+        advisory_claim_id = str(raw_entry.get("advisory_claim_id", "")).strip()
+        if advisory_claim_id and advisory_claim_id not in known_claims:
+            raise CaseWorkspaceError(f"unknown advisory_claim_id: {advisory_claim_id}")
+        evidence_receipt_ids = [
+            str(value).strip()
+            for value in raw_entry.get("evidence_receipt_ids", [])
+            if str(value).strip()
+        ]
+        if len(evidence_receipt_ids) != len(set(evidence_receipt_ids)):
+            raise CaseWorkspaceError("evidence_receipt_ids must be unique")
+        if advisory_claim_id:
+            claim_evidence_ids = {
+                str(link.get("evidence_id"))
+                for link in known_claims[advisory_claim_id].get("evidence_links", [])
+                if isinstance(link, dict) and link.get("evidence_id")
+            }
+            if set(evidence_receipt_ids) != claim_evidence_ids:
+                raise CaseWorkspaceError(
+                    "judgement evidence_receipt_ids must exactly match claim "
+                    f"{advisory_claim_id}"
+                )
+        if status == "approved":
+            _assert_judgement_claim_binding(
+                case_dir,
+                text=text,
+                advisory_claim_id=advisory_claim_id,
+                evidence_receipt_ids=evidence_receipt_ids,
+            )
 
         entry = {
             "id": _next_id("jud", [*existing_ids, *(item["id"] for item in added)]),
@@ -1858,6 +2185,8 @@ def add_judgement_entries(
             "reviewed_at": timestamp if status != "pending" else None,
             "reviewer": str(raw_entry.get("reviewer", "")).strip() or None,
             "review_note": str(raw_entry.get("review_note", "")).strip(),
+            "advisory_claim_id": advisory_claim_id,
+            "evidence_receipt_ids": evidence_receipt_ids,
         }
         judgement["entries"].append(entry)
         added.append(entry)
@@ -1866,6 +2195,53 @@ def add_judgement_entries(
     _touch_manifest(case_dir, timestamp)
     refresh_case_brief(case_dir, now=now)
     return added
+
+
+def record_analysis_contribution(
+    case_dir: Path,
+    *,
+    evidence_receipts: Sequence[Mapping[str, Any]],
+    claims: Sequence[Mapping[str, Any]],
+    judgement_entries: Sequence[Mapping[str, Any]] = (),
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Commit one model-authored evidence/claim contribution atomically.
+
+    Semantic contents are supplied by Clara or the advisor. This helper is
+    deterministic because it only validates and commits declared records and
+    restores the prior files if any later step fails.
+    """
+
+    paths = [
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+        case_dir / "advisory_evidence_map.md",
+        _case_path(case_dir, "judgement"),
+        _case_path(case_dir, "manifest"),
+        case_dir / CASE_BRIEF_FILENAME,
+    ]
+    snapshot = _snapshot_files(paths)
+    completed = False
+    try:
+        evidence_added = record_evidence(case_dir, evidence_receipts)
+        claims_added = record_claims(case_dir, claims)
+        added_judgements = add_judgement_entries(
+            case_dir,
+            judgement_entries,
+            now=now,
+        )
+        errors = validate_case_workspace(case_dir)
+        if errors:
+            raise CaseWorkspaceError("; ".join(errors))
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
+    return {
+        "evidence_added": evidence_added,
+        "claims_added": claims_added,
+        "judgement_entries": added_judgements,
+    }
 
 
 def set_judgement_status(
@@ -1926,6 +2302,13 @@ def set_judgement_statuses(
     selected_ids = set(requested_ids)
     for entry in judgement["entries"]:
         if entry["id"] in selected_ids:
+            if status == "approved":
+                _assert_judgement_claim_binding(
+                    case_dir,
+                    text=str(entry.get("text", "")),
+                    advisory_claim_id=str(entry.get("advisory_claim_id", "")).strip(),
+                    evidence_receipt_ids=entry.get("evidence_receipt_ids", []),
+                )
             entry["status"] = status
             entry["reviewed_at"] = None if status == "pending" else timestamp
             entry["reviewer"] = reviewer.strip() or None
@@ -2002,6 +2385,7 @@ def upsert_case_issues(
 
     timestamp = _now_iso(now)
     known_judgement_ids = _known_judgement_ids(case_dir)
+    known_claim_ids = set(_claim_records_by_id(case_dir))
     known_question_ids = _known_open_question_ids(case_dir)
     issues_path = _case_path(case_dir, "issues")
     payload = _read_json(issues_path)
@@ -2033,12 +2417,33 @@ def upsert_case_issues(
             raw_issue.get("open_tests", []),
             field_name="open_tests",
         )
+        claim_ids_for = _clean_id_list(
+            raw_issue.get(
+                "claim_ids_for",
+                existing_by_id.get(issue_id, {}).get("claim_ids_for", []),
+            ),
+            field_name="claim_ids_for",
+        )
+        claim_ids_against = _clean_id_list(
+            raw_issue.get(
+                "claim_ids_against",
+                existing_by_id.get(issue_id, {}).get("claim_ids_against", []),
+            ),
+            field_name="claim_ids_against",
+        )
         unknown_judgement_ids = sorted(
             (set(evidence_for) | set(evidence_against)) - known_judgement_ids
         )
         if unknown_judgement_ids:
             raise CaseWorkspaceError(
                 "unknown judgement entry ids: " + ", ".join(unknown_judgement_ids)
+            )
+        unknown_claim_ids = sorted(
+            (set(claim_ids_for) | set(claim_ids_against)) - known_claim_ids
+        )
+        if unknown_claim_ids:
+            raise CaseWorkspaceError(
+                "unknown advisory claim ids: " + ", ".join(unknown_claim_ids)
             )
         unknown_question_ids = sorted(set(open_tests) - known_question_ids)
         if unknown_question_ids:
@@ -2065,6 +2470,8 @@ def upsert_case_issues(
             "status": status,
             "evidence_for": evidence_for,
             "evidence_against": evidence_against,
+            "claim_ids_for": claim_ids_for,
+            "claim_ids_against": claim_ids_against,
             "open_tests": open_tests,
             "created_at": (
                 existing.get("created_at", timestamp) if existing else timestamp
@@ -3875,6 +4282,9 @@ def export_case_update(
     materials = _read_json(_case_path(case_dir, "materials"))["materials"]
     entries = _read_json(_case_path(case_dir, "judgement"))["entries"]
     questions = _read_json(_case_path(case_dir, "open_questions"))["questions"]
+    issues = _read_json(_case_path(case_dir, "issues"))["issues"]
+    evidence = _read_json(case_dir / EVIDENCE_REGISTER_FILENAME)["evidence"]
+    claims = _read_json(case_dir / CLAIM_REGISTER_FILENAME)["claims"]
     source_case_id = str(manifest.get("case_id") or _case_fingerprint(manifest))
     exchange_id = _exchange_id(source_case_id, timestamp, exporter)
 
@@ -3891,6 +4301,72 @@ def export_case_update(
                 "archive_path": archive_path,
             }
         )
+
+    included_lineage_files: list[dict[str, Any]] = []
+    lineage_archive_by_source: dict[Path, str] = {}
+
+    def include_lineage_artifact(
+        *,
+        record_type: str,
+        record_id: str,
+        artifact_index: int,
+        receipt: Mapping[str, Any],
+    ) -> None:
+        raw_path = Path(str(receipt.get("path", ""))).expanduser()
+        source_path = (
+            (case_dir / raw_path).resolve()
+            if receipt.get("path_reference") == "case_relative"
+            else raw_path.resolve()
+        )
+        if not source_path.is_file():
+            raise CaseWorkspaceError(
+                f"lineage artifact is missing during export: {source_path}"
+            )
+        archive_path = lineage_archive_by_source.get(source_path)
+        if archive_path is None:
+            archive_path = (
+                f"lineage_files/artifacts/{len(lineage_archive_by_source) + 1:04d}-"
+                f"{source_path.name}"
+            )
+            lineage_archive_by_source[source_path] = archive_path
+        included_lineage_files.append(
+            {
+                "record_type": record_type,
+                "record_id": record_id,
+                "artifact_index": artifact_index,
+                "source_path": str(source_path),
+                "archive_path": archive_path,
+            }
+        )
+
+    for receipt in evidence:
+        if not isinstance(receipt, dict):
+            continue
+        source = receipt.get("source")
+        if not isinstance(source, dict):
+            continue
+        for artifact_index, artifact in enumerate(source.get("artifact_refs", [])):
+            if isinstance(artifact, dict):
+                include_lineage_artifact(
+                    record_type="evidence",
+                    record_id=str(receipt["id"]),
+                    artifact_index=artifact_index,
+                    receipt=artifact,
+                )
+    for claim in claims:
+        if not isinstance(claim, dict):
+            continue
+        for artifact_index, appearance in enumerate(claim.get("appearances", [])):
+            if isinstance(appearance, dict):
+                include_lineage_artifact(
+                    record_type="claim_appearance",
+                    record_id=str(claim["id"]),
+                    artifact_index=artifact_index,
+                    receipt={
+                        "path": appearance.get("artifact", ""),
+                        "path_reference": appearance.get("path_reference", ""),
+                    },
+                )
 
     update_payload = {
         "schema_version": EXCHANGE_SCHEMA_VERSION,
@@ -3933,7 +4409,21 @@ def export_case_update(
             }
             for question in questions
         ],
+        "case_issues": [
+            {
+                **issue,
+                "origin_key": _record_origin_key(
+                    issue,
+                    source_case_id=source_case_id,
+                    record_type="case_issue",
+                ),
+            }
+            for issue in issues
+        ],
+        "evidence_receipts": evidence,
+        "claims": claims,
         "included_files": included_files,
+        "included_lineage_files": included_lineage_files,
     }
 
     target_path = package_path
@@ -3955,6 +4445,15 @@ def export_case_update(
                 case_dir / file_item["relative_path"],
                 file_item["archive_path"],
             )
+        written_lineage_paths: set[str] = set()
+        for file_item in included_lineage_files:
+            if file_item["archive_path"] in written_lineage_paths:
+                continue
+            archive.write(
+                file_item["source_path"],
+                file_item["archive_path"],
+            )
+            written_lineage_paths.add(file_item["archive_path"])
 
     return CaseExchangeExportResult(
         package_path=target_path,
@@ -3962,7 +4461,10 @@ def export_case_update(
         material_count=len(materials),
         judgement_count=len(entries),
         open_question_count=len(questions),
-        included_file_count=len(included_files),
+        included_file_count=len(included_files) + len(lineage_archive_by_source),
+        evidence_count=len(evidence),
+        claim_count=len(claims),
+        issue_count=len(issues),
     )
 
 
@@ -4008,12 +4510,110 @@ def _judgement_compare_fields(record: Mapping[str, Any]) -> dict[str, Any]:
             "rationale",
             "reviewer",
             "review_note",
+            "source_material_ids",
+            "advisory_claim_id",
+            "evidence_receipt_ids",
         )
     }
 
 
 def _question_compare_fields(record: Mapping[str, Any]) -> dict[str, Any]:
-    return {key: record.get(key) for key in ("question", "why_it_matters", "status")}
+    return {
+        key: record.get(key)
+        for key in ("question", "why_it_matters", "status", "source_entry_ids")
+    }
+
+
+def _issue_compare_fields(record: Mapping[str, Any]) -> dict[str, Any]:
+    return {
+        key: record.get(key)
+        for key in (
+            "title",
+            "decision_area",
+            "current_synthesis",
+            "status",
+            "evidence_for",
+            "evidence_against",
+            "claim_ids_for",
+            "claim_ids_against",
+            "open_tests",
+        )
+    }
+
+
+def _evidence_compare_fields(record: Mapping[str, Any]) -> dict[str, Any]:
+    """Normalize imported-path differences while preserving receipt meaning."""
+
+    normalized = json.loads(json.dumps(dict(record)))
+    normalized.pop("id", None)
+    normalized.pop("origin", None)
+    source = normalized.get("source")
+    artifact_identity_by_path: dict[str, tuple[Any, ...]] = {}
+    if isinstance(source, dict):
+        normalized_artifacts: list[dict[str, Any]] = []
+        for artifact in source.get("artifact_refs", []):
+            if not isinstance(artifact, dict):
+                continue
+            identity = (
+                artifact.get("sha256"),
+                artifact.get("byte_count"),
+                artifact.get("media_type"),
+            )
+            artifact_identity_by_path[str(artifact.get("path", ""))] = identity
+            normalized_artifacts.append(
+                {
+                    "sha256": identity[0],
+                    "byte_count": identity[1],
+                    "media_type": identity[2],
+                }
+            )
+        source["artifact_refs"] = normalized_artifacts
+    calculation = normalized.get("calculation")
+    if isinstance(calculation, dict):
+        for field in (
+            "input_artifact_paths",
+            "output_artifact_paths",
+            "verification_artifact_paths",
+        ):
+            calculation[field] = [
+                artifact_identity_by_path.get(str(path), ("missing", str(path)))
+                for path in calculation.get(field, [])
+            ]
+    return normalized
+
+
+def _claim_compare_fields(record: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the immutable semantic part of an advisory claim."""
+
+    normalized = json.loads(json.dumps(dict(record)))
+    for field in ("id", "origin", "state", "appearances"):
+        normalized.pop(field, None)
+    return normalized
+
+
+def _appearance_identity(record: Mapping[str, Any]) -> tuple[Any, ...]:
+    return (
+        record.get("artifact_sha256"),
+        record.get("artifact_byte_count"),
+        record.get("locator"),
+        record.get("format_claim_id", ""),
+    )
+
+
+def _remap_declared_ids(
+    values: Sequence[Any],
+    mapping: Mapping[str, str],
+    *,
+    subject: str,
+) -> list[str]:
+    source_ids = [str(value) for value in values]
+    unknown = sorted(set(source_ids) - set(mapping))
+    if unknown:
+        raise CaseWorkspaceError(
+            f"{subject} references records omitted from the case update: "
+            + ", ".join(unknown)
+        )
+    return [mapping[value] for value in source_ids]
 
 
 def _append_conflict_question(
@@ -4085,7 +4685,41 @@ def _append_exchange_log(
     _write_json(log_path, payload)
 
 
-def import_case_update(
+def _lineage_origin_index(
+    records: Sequence[Mapping[str, Any]],
+) -> dict[tuple[str, str], Mapping[str, Any]]:
+    index: dict[tuple[str, str], Mapping[str, Any]] = {}
+    for record in records:
+        origin = record.get("origin")
+        if not isinstance(origin, Mapping):
+            continue
+        source_case_id = str(origin.get("source_case_id", ""))
+        source_id = str(origin.get("source_id", ""))
+        if source_case_id and source_id:
+            index[(source_case_id, source_id)] = record
+    return index
+
+
+def _mapped_lineage_id(
+    source_id: str,
+    *,
+    source_case_id: str,
+    known_ids: set[str],
+) -> str:
+    if source_id not in known_ids:
+        known_ids.add(source_id)
+        return source_id
+    suffix = sha256(source_case_id.encode("utf-8")).hexdigest()[:10]
+    candidate = f"{source_id}-{suffix}"
+    serial = 2
+    while candidate in known_ids:
+        candidate = f"{source_id}-{suffix}-{serial}"
+        serial += 1
+    known_ids.add(candidate)
+    return candidate
+
+
+def _import_case_update_unprotected(
     case_dir: Path,
     package_path: Path,
     *,
@@ -4105,16 +4739,26 @@ def import_case_update(
     materials_path = _case_path(case_dir, "materials")
     judgement_path = _case_path(case_dir, "judgement")
     questions_path = _case_path(case_dir, "open_questions")
+    issues_path = _case_path(case_dir, "issues")
+    evidence_path = case_dir / EVIDENCE_REGISTER_FILENAME
+    claims_path = case_dir / CLAIM_REGISTER_FILENAME
     material_payload = _read_json(materials_path)
     judgement_payload = _read_json(judgement_path)
     questions_payload = _read_json(questions_path)
+    issues_payload = _read_json(issues_path)
+    evidence_payload = _read_json(evidence_path)
+    claims_payload = _read_json(claims_path)
     materials = material_payload["materials"]
     entries = judgement_payload["entries"]
     questions = questions_payload["questions"]
+    issues = issues_payload["issues"]
+    evidence = evidence_payload["evidence"]
+    claims = claims_payload["claims"]
 
     material_origins = _origin_index(materials)
     judgement_origins = _origin_index(entries)
     question_origins = _origin_index(questions)
+    issue_origins = _origin_index(issues)
     included_by_material_id = {
         str(item["material_id"]): item
         for item in update_payload.get("included_files", [])
@@ -4124,6 +4768,10 @@ def import_case_update(
     imported_materials = 0
     imported_entries = 0
     imported_questions = 0
+    imported_issues = 0
+    imported_evidence = 0
+    imported_claims = 0
+    updated_claims = 0
     skipped = 0
     conflicts = 0
     material_id_map: dict[str, str] = {}
@@ -4193,6 +4841,267 @@ def import_case_update(
             material_id_map[source_material_id] = new_id
             imported_materials += 1
 
+    included_lineage_files = {
+        (
+            str(item.get("record_type", "")),
+            str(item.get("record_id", "")),
+            int(item.get("artifact_index", -1)),
+        ): item
+        for item in update_payload.get("included_lineage_files", [])
+        if isinstance(item, Mapping)
+    }
+    extracted_lineage_paths: dict[str, Path] = {}
+
+    def extract_lineage_artifact(
+        archive: ZipFile,
+        included: Mapping[str, Any],
+    ) -> Path:
+        archive_path = str(included["archive_path"])
+        existing_path = extracted_lineage_paths.get(archive_path)
+        if existing_path is not None:
+            return existing_path
+        imported_path = (
+            case_dir
+            / "exchange_imports"
+            / exchange_id
+            / "lineage"
+            / "artifacts"
+            / Path(archive_path).name
+        )
+        _safe_extract_archive_file(
+            archive,
+            archive_path=archive_path,
+            target_path=imported_path,
+        )
+        extracted_lineage_paths[archive_path] = imported_path
+        return imported_path
+
+    evidence_origins = _lineage_origin_index(evidence)
+    evidence_id_map: dict[str, str] = {}
+    known_evidence_ids = {
+        str(item.get("id"))
+        for item in evidence
+        if isinstance(item, Mapping) and item.get("id")
+    }
+    raw_evidence = [
+        item
+        for item in update_payload.get("evidence_receipts", [])
+        if isinstance(item, Mapping)
+    ]
+    for raw_receipt in raw_evidence:
+        source_id = str(raw_receipt.get("id", ""))
+        existing = evidence_origins.get((source_case_id, source_id))
+        if existing is not None:
+            evidence_id_map[source_id] = str(existing["id"])
+            continue
+        evidence_id_map[source_id] = _mapped_lineage_id(
+            source_id,
+            source_case_id=source_case_id,
+            known_ids=known_evidence_ids,
+        )
+
+    with ZipFile(package_path) as archive:
+        for raw_receipt in raw_evidence:
+            source_id = str(raw_receipt.get("id", ""))
+            mapped_id = evidence_id_map[source_id]
+            receipt = json.loads(json.dumps(dict(raw_receipt)))
+            receipt["id"] = mapped_id
+            receipt["origin"] = {
+                "source_case_id": source_case_id,
+                "source_id": source_id,
+                "exchange_id": exchange_id,
+            }
+            source = receipt.get("source")
+            if not isinstance(source, dict):
+                raise CaseWorkspaceError(
+                    f"invalid imported evidence source: {source_id}"
+                )
+            source["material_ids"] = _remap_declared_ids(
+                source.get("material_ids", []),
+                material_id_map,
+                subject=f"evidence {source_id} material_ids",
+            )
+            for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
+                source_reference = str(receipt.get(field, ""))
+                if source_reference:
+                    receipt[field] = _remap_declared_ids(
+                        [source_reference],
+                        evidence_id_map,
+                        subject=f"evidence {source_id} {field}",
+                    )[0]
+            existing = evidence_origins.get((source_case_id, source_id))
+            if existing is not None:
+                if _evidence_compare_fields(existing) != _evidence_compare_fields(
+                    receipt
+                ):
+                    raise CaseWorkspaceError(
+                        f"imported evidence changed immutable source record: {source_id}"
+                    )
+                skipped += 1
+                continue
+            artifact_path_map: dict[str, str] = {}
+            for artifact_index, artifact in enumerate(source.get("artifact_refs", [])):
+                if not isinstance(artifact, dict):
+                    continue
+                included = included_lineage_files.get(
+                    ("evidence", source_id, artifact_index)
+                )
+                if included is None:
+                    raise CaseWorkspaceError(
+                        f"case update omitted evidence artifact {source_id}[{artifact_index}]"
+                    )
+                imported_path = extract_lineage_artifact(archive, included)
+                old_path = str(artifact.get("path", ""))
+                new_path = imported_path.relative_to(case_dir).as_posix()
+                artifact_path_map[old_path] = new_path
+                artifact["path"] = new_path
+                artifact["path_reference"] = "case_relative"
+            calculation = receipt.get("calculation")
+            if isinstance(calculation, dict):
+                for field in (
+                    "input_artifact_paths",
+                    "output_artifact_paths",
+                    "verification_artifact_paths",
+                ):
+                    calculation[field] = [
+                        artifact_path_map.get(str(path), str(path))
+                        for path in calculation.get(field, [])
+                    ]
+            evidence.append(receipt)
+            evidence_origins[(source_case_id, source_id)] = receipt
+            imported_evidence += 1
+
+    claim_origins = _lineage_origin_index(claims)
+    claim_id_map: dict[str, str] = {}
+    known_claim_ids = {
+        str(item.get("id"))
+        for item in claims
+        if isinstance(item, Mapping) and item.get("id")
+    }
+    raw_claims = [
+        item for item in update_payload.get("claims", []) if isinstance(item, Mapping)
+    ]
+    for raw_claim in raw_claims:
+        source_id = str(raw_claim.get("id", ""))
+        existing = claim_origins.get((source_case_id, source_id))
+        if existing is not None:
+            claim_id_map[source_id] = str(existing["id"])
+            continue
+        claim_id_map[source_id] = _mapped_lineage_id(
+            source_id,
+            source_case_id=source_case_id,
+            known_ids=known_claim_ids,
+        )
+
+    with ZipFile(package_path) as archive:
+        for raw_claim in raw_claims:
+            source_id = str(raw_claim.get("id", ""))
+            claim = json.loads(json.dumps(dict(raw_claim)))
+            claim["id"] = claim_id_map[source_id]
+            claim["origin"] = {
+                "source_case_id": source_case_id,
+                "source_id": source_id,
+                "exchange_id": exchange_id,
+            }
+            for link in claim.get("evidence_links", []):
+                if isinstance(link, dict):
+                    link["evidence_id"] = _remap_declared_ids(
+                        [str(link["evidence_id"])],
+                        evidence_id_map,
+                        subject=f"claim {source_id} evidence_links",
+                    )[0]
+            dependency = claim.get("dependency")
+            if isinstance(dependency, dict):
+                dependency["claim_ids"] = _remap_declared_ids(
+                    dependency.get("claim_ids", []),
+                    claim_id_map,
+                    subject=f"claim {source_id} dependency claim_ids",
+                )
+                calculation_id = str(dependency.get("calculation_evidence_id", ""))
+                if calculation_id:
+                    dependency["calculation_evidence_id"] = _remap_declared_ids(
+                        [calculation_id],
+                        evidence_id_map,
+                        subject=(
+                            f"claim {source_id} dependency calculation_evidence_id"
+                        ),
+                    )[0]
+            supersedes = str(claim.get("supersedes_claim_id", ""))
+            if supersedes:
+                claim["supersedes_claim_id"] = _remap_declared_ids(
+                    [supersedes],
+                    claim_id_map,
+                    subject=f"claim {source_id} supersedes_claim_id",
+                )[0]
+            existing = claim_origins.get((source_case_id, source_id))
+            if existing is not None and _claim_compare_fields(
+                existing
+            ) != _claim_compare_fields(claim):
+                raise CaseWorkspaceError(
+                    f"imported claim changed immutable source record: {source_id}"
+                )
+            target_appearances = (
+                existing.get("appearances", [])
+                if isinstance(existing, dict)
+                else claim.get("appearances", [])
+            )
+            if not isinstance(target_appearances, list):
+                raise CaseWorkspaceError(
+                    f"imported claim appearances must be an array: {source_id}"
+                )
+            existing_appearance_ids = (
+                {
+                    _appearance_identity(item)
+                    for item in target_appearances
+                    if isinstance(item, dict)
+                }
+                if existing is not None
+                else set()
+            )
+            changed = False
+            for artifact_index, appearance in enumerate(claim.get("appearances", [])):
+                if not isinstance(appearance, dict):
+                    continue
+                appearance_id = _appearance_identity(appearance)
+                if appearance_id in existing_appearance_ids:
+                    continue
+                included = included_lineage_files.get(
+                    ("claim_appearance", source_id, artifact_index)
+                )
+                if included is None:
+                    raise CaseWorkspaceError(
+                        f"case update omitted claim appearance {source_id}[{artifact_index}]"
+                    )
+                imported_path = extract_lineage_artifact(archive, included)
+                appearance["artifact"] = imported_path.relative_to(case_dir).as_posix()
+                appearance["path_reference"] = "case_relative"
+                if existing is not None:
+                    target_appearances.append(appearance)
+                    existing_appearance_ids.add(appearance_id)
+                    changed = True
+            if existing is not None:
+                source_state = str(claim.get("state", ""))
+                target_state = str(existing.get("state", ""))
+                if target_state == "active" and source_state in {
+                    "superseded",
+                    "withdrawn",
+                }:
+                    existing["state"] = source_state
+                    changed = True
+                elif source_state != "active" and target_state != source_state:
+                    raise CaseWorkspaceError(
+                        f"imported claim has incompatible append-only state transition: {source_id}"
+                    )
+                if changed:
+                    updated_claims += 1
+                else:
+                    skipped += 1
+                continue
+            claims.append(claim)
+            claim_origins[(source_case_id, source_id)] = claim
+            imported_claims += 1
+
+    judgement_id_map: dict[str, str] = {}
     for raw_entry in update_payload.get("judgement_entries", []):
         if not isinstance(raw_entry, Mapping):
             continue
@@ -4201,10 +5110,37 @@ def import_case_update(
             source_case_id=source_case_id,
             record_type="judgement",
         )
+        source_ids = _remap_declared_ids(
+            raw_entry.get("source_material_ids", []),
+            material_id_map,
+            subject=f"judgement {raw_entry.get('id')} source_material_ids",
+        )
+        source_claim_id = str(raw_entry.get("advisory_claim_id", ""))
+        mapped_claim_id = (
+            _remap_declared_ids(
+                [source_claim_id],
+                claim_id_map,
+                subject=f"judgement {raw_entry.get('id')} advisory_claim_id",
+            )[0]
+            if source_claim_id
+            else ""
+        )
+        mapped_receipt_ids = _remap_declared_ids(
+            raw_entry.get("evidence_receipt_ids", []),
+            evidence_id_map,
+            subject=f"judgement {raw_entry.get('id')} evidence_receipt_ids",
+        )
+        mapped_raw_entry = {
+            **dict(raw_entry),
+            "source_material_ids": source_ids,
+            "advisory_claim_id": mapped_claim_id,
+            "evidence_receipt_ids": mapped_receipt_ids,
+        }
         existing = judgement_origins.get(origin_key)
         if existing is not None:
+            judgement_id_map[str(raw_entry["id"])] = str(existing["id"])
             if _judgement_compare_fields(existing) != _judgement_compare_fields(
-                raw_entry
+                mapped_raw_entry
             ):
                 added_conflict = _append_conflict_question(
                     questions,
@@ -4218,15 +5154,10 @@ def import_case_update(
                 skipped += 1
             continue
 
-        source_ids = [
-            material_id_map[source_id]
-            for source_id in raw_entry.get("source_material_ids", [])
-            if source_id in material_id_map
-        ]
+        new_judgement_id = _next_id("jud", [item["id"] for item in entries])
         entry = {
-            **dict(raw_entry),
-            "id": _next_id("jud", [item["id"] for item in entries]),
-            "source_material_ids": source_ids,
+            **mapped_raw_entry,
+            "id": new_judgement_id,
             "imported_at": timestamp,
             "origin_key": origin_key,
             "origin_case_id": source_case_id,
@@ -4236,9 +5167,11 @@ def import_case_update(
         _validate_choice(str(entry["kind"]), JUDGEMENT_KINDS, "kind")
         _validate_choice(str(entry["status"]), JUDGEMENT_STATUSES, "status")
         entries.append(entry)
+        judgement_id_map[str(raw_entry["id"])] = new_judgement_id
         judgement_origins[origin_key] = entry
         imported_entries += 1
 
+    question_id_map: dict[str, str] = {}
     for raw_question in update_payload.get("open_questions", []):
         if not isinstance(raw_question, Mapping):
             continue
@@ -4247,10 +5180,20 @@ def import_case_update(
             source_case_id=source_case_id,
             record_type="open_question",
         )
+        mapped_source_entry_ids = _remap_declared_ids(
+            raw_question.get("source_entry_ids", []),
+            judgement_id_map,
+            subject=f"open question {raw_question.get('id')} source_entry_ids",
+        )
+        mapped_raw_question = {
+            **dict(raw_question),
+            "source_entry_ids": mapped_source_entry_ids,
+        }
         existing = question_origins.get(origin_key)
         if existing is not None:
+            question_id_map[str(raw_question["id"])] = str(existing["id"])
             if _question_compare_fields(existing) != _question_compare_fields(
-                raw_question
+                mapped_raw_question
             ):
                 added_conflict = _append_conflict_question(
                     questions,
@@ -4263,9 +5206,10 @@ def import_case_update(
             else:
                 skipped += 1
             continue
+        new_question_id = _next_id("q", [item["id"] for item in questions])
         question = {
-            **dict(raw_question),
-            "id": _next_id("q", [item["id"] for item in questions]),
+            **mapped_raw_question,
+            "id": new_question_id,
             "imported_at": timestamp,
             "updated_at": timestamp,
             "origin_key": origin_key,
@@ -4275,17 +5219,107 @@ def import_case_update(
         }
         _validate_choice(str(question["status"]), OPEN_QUESTION_STATUSES, "status")
         questions.append(question)
+        question_id_map[str(raw_question["id"])] = new_question_id
         question_origins[origin_key] = question
         imported_questions += 1
+
+    for raw_issue in update_payload.get("case_issues", []):
+        if not isinstance(raw_issue, Mapping):
+            continue
+        origin_key = _record_origin_key(
+            raw_issue,
+            source_case_id=source_case_id,
+            record_type="case_issue",
+        )
+        mapped_issue = {
+            **dict(raw_issue),
+            "evidence_for": _remap_declared_ids(
+                raw_issue.get("evidence_for", []),
+                judgement_id_map,
+                subject=f"case issue {raw_issue.get('id')} evidence_for",
+            ),
+            "evidence_against": _remap_declared_ids(
+                raw_issue.get("evidence_against", []),
+                judgement_id_map,
+                subject=f"case issue {raw_issue.get('id')} evidence_against",
+            ),
+            "claim_ids_for": _remap_declared_ids(
+                raw_issue.get("claim_ids_for", []),
+                claim_id_map,
+                subject=f"case issue {raw_issue.get('id')} claim_ids_for",
+            ),
+            "claim_ids_against": _remap_declared_ids(
+                raw_issue.get("claim_ids_against", []),
+                claim_id_map,
+                subject=f"case issue {raw_issue.get('id')} claim_ids_against",
+            ),
+            "open_tests": _remap_declared_ids(
+                raw_issue.get("open_tests", []),
+                question_id_map,
+                subject=f"case issue {raw_issue.get('id')} open_tests",
+            ),
+        }
+        existing = issue_origins.get(origin_key)
+        if existing is not None:
+            if _issue_compare_fields(existing) != _issue_compare_fields(mapped_issue):
+                added_conflict = _append_conflict_question(
+                    questions,
+                    origin_key=origin_key,
+                    record_type="case issue",
+                    label=str(raw_issue.get("title", raw_issue["id"]))[:120],
+                    timestamp=timestamp,
+                )
+                conflicts += int(added_conflict)
+            else:
+                skipped += 1
+            continue
+        issue = {
+            **mapped_issue,
+            "id": _next_id("issue", [item["id"] for item in issues]),
+            "imported_at": timestamp,
+            "updated_at": timestamp,
+            "origin_key": origin_key,
+            "origin_case_id": source_case_id,
+            "origin_issue_id": str(raw_issue["id"]),
+            "exchange_id": exchange_id,
+        }
+        _validate_choice(str(issue["status"]), ISSUE_STATUSES, "status")
+        issues.append(issue)
+        issue_origins[origin_key] = issue
+        imported_issues += 1
+
+    lineage_audit = validate_lineage_payloads(
+        case_dir,
+        evidence_payload,
+        claims_payload,
+        known_material_ids_override={
+            str(item.get("id"))
+            for item in materials
+            if isinstance(item, Mapping) and item.get("id")
+        },
+    )
+    if not lineage_audit["valid"]:
+        raise CaseWorkspaceError(
+            "imported advisory lineage is invalid: "
+            + "; ".join(lineage_audit["errors"])
+        )
 
     _write_json(materials_path, material_payload)
     _write_json(judgement_path, judgement_payload)
     _write_json(questions_path, questions_payload)
+    _write_json(issues_path, issues_payload)
+    _write_json(evidence_path, evidence_payload)
+    _write_json(claims_path, claims_payload)
+    render_evidence_map(case_dir)
     _touch_manifest(case_dir, timestamp)
     counts = {
         "imported_materials": imported_materials,
         "imported_judgement_entries": imported_entries,
         "imported_open_questions": imported_questions,
+        "imported_case_issues": imported_issues,
+        "imported_evidence_receipts": imported_evidence,
+        "imported_claims": imported_claims,
+        "updated_claims": updated_claims,
         "skipped": skipped,
         "conflicts": conflicts,
     }
@@ -4310,7 +5344,51 @@ def import_case_update(
         imported_open_question_count=imported_questions,
         skipped_count=skipped,
         conflict_count=conflicts,
+        imported_evidence_count=imported_evidence,
+        imported_claim_count=imported_claims,
+        imported_issue_count=imported_issues,
+        updated_claim_count=updated_claims,
     )
+
+
+def import_case_update(
+    case_dir: Path,
+    package_path: Path,
+    *,
+    now: datetime | None = None,
+) -> CaseExchangeImportResult:
+    """Import a case update atomically across JSON records and extracted files."""
+
+    update_payload = _load_case_update(package_path)
+    exchange_id = str(update_payload["exchange_id"])
+    exchange_root = case_dir / "exchange_imports" / exchange_id
+    exchange_root_existed = exchange_root.exists()
+    exchange_root_snapshot = _snapshot_tree(exchange_root)
+    mutation_paths = [
+        *(_case_path(case_dir, key) for key in CASE_FILES),
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+        case_dir / "advisory_evidence_map.md",
+        case_dir / "exchange_log.json",
+        case_dir / CASE_BRIEF_FILENAME,
+    ]
+    snapshot = _snapshot_files(mutation_paths)
+    completed = False
+    try:
+        result = _import_case_update_unprotected(
+            case_dir,
+            package_path,
+            now=now,
+        )
+        completed = True
+        return result
+    finally:
+        if not completed:
+            _restore_files(snapshot)
+            if exchange_root_existed:
+                _restore_tree(exchange_root, exchange_root_snapshot)
+            elif exchange_root.exists():
+                shutil.rmtree(exchange_root)
 
 
 def _entry_source_suffix(
@@ -6051,25 +7129,63 @@ def build_decision_pack(
     )
     target_dir.mkdir(parents=True, exist_ok=True)
 
+    approved_entries = [entry for entry in entries if entry.get("status") == "approved"]
+    for entry in approved_entries:
+        _assert_judgement_claim_binding(
+            case_dir,
+            text=str(entry.get("text", "")),
+            advisory_claim_id=str(entry.get("advisory_claim_id", "")).strip(),
+            evidence_receipt_ids=entry.get("evidence_receipt_ids", []),
+        )
+
     markdown_path = target_dir / "decision_pack.md"
     docx_path = target_dir / "decision_pack.docx"
     workpaper_markdown_path = target_dir / "decision_pack_workpaper.md"
     workpaper_docx_path = target_dir / "decision_pack_workpaper.docx"
-    markdown_text = _render_markdown(manifest, materials, entries, questions)
-    _assert_human_visible_document_quality(markdown_text, label="decision_pack.md")
-    markdown_path.write_text(markdown_text, encoding="utf-8")
-    workpaper_markdown_path.write_text(
-        _render_workpaper_markdown(manifest, materials, entries, questions),
-        encoding="utf-8",
-    )
-    _render_docx(docx_path, manifest, materials, entries, questions)
-    _render_workpaper_docx(
+    output_paths = (
+        markdown_path,
+        docx_path,
+        workpaper_markdown_path,
         workpaper_docx_path,
-        manifest,
-        materials,
-        entries,
-        questions,
     )
+    snapshot = _snapshot_files(
+        [
+            *output_paths,
+            case_dir / CLAIM_REGISTER_FILENAME,
+            case_dir / "advisory_evidence_map.md",
+        ]
+    )
+    completed = False
+    try:
+        markdown_text = _render_markdown(manifest, materials, entries, questions)
+        _assert_human_visible_document_quality(markdown_text, label="decision_pack.md")
+        markdown_path.write_text(markdown_text, encoding="utf-8")
+        workpaper_markdown_path.write_text(
+            _render_workpaper_markdown(manifest, materials, entries, questions),
+            encoding="utf-8",
+        )
+        _render_docx(docx_path, manifest, materials, entries, questions)
+        _render_workpaper_docx(
+            workpaper_docx_path,
+            manifest,
+            materials,
+            entries,
+            questions,
+        )
+        claim_locations = [
+            {
+                "claim_id": str(entry["advisory_claim_id"]),
+                "locator": f"Decision-pack statement: {entry['text']}",
+            }
+            for entry in approved_entries
+        ]
+        for artifact_path in output_paths:
+            if claim_locations:
+                bind_claim_appearances(case_dir, artifact_path, claim_locations)
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
 
     return DecisionPackResult(
         markdown_path=markdown_path,

@@ -11,6 +11,7 @@
     "skills/reporting-engine/SKILL.md",
     "contracts/reporting_evidence_handoff_receipt.v1.schema.json",
     "scripts/build_monthly_pnl_reporting_handoff.py",
+    "scripts/record_reporting_contribution.py",
     "modules/reporting-engine/README.md",
     "modules/reporting-engine/references",
     "modules/reporting-engine/requirements.txt",
@@ -27,7 +28,7 @@
       {
         "id": "semantic-and-reporting-artifacts",
         "purpose": "Author reusable dataset semantics and choose a source-backed analysis",
-        "content": "Dataset profiles, intake receipts, semantic layers, evidence, reviewed Sales/Discount/COGS mapping states, role bindings, snapshot attachments, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, validation results, and interpretations"
+        "content": "Dataset profiles, intake receipts, semantic layers, evidence, reviewed Sales/Discount/COGS mapping states, role bindings, snapshot attachments, analysis policies, chart plans, exact input and output byte hashes, effective recipe records, rendered charts, authoritative calculation and report validation results, model-authored interpretations, and calculation evidence receipts with stable claim identifiers, dependency edges, verification runs, and shared case-register bindings"
       }
     ]
   },
@@ -73,6 +74,6 @@
     "reviewed_at": "2026-07-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f04f95d681be419c30f4d37d9e950414897df7363af12c244c6adb05797c4d5a"
+    "source_fingerprint": "df910eeca667eb452925c71935370ceaa81a4f3bd6d51066faeef282be027279"
   }
 }

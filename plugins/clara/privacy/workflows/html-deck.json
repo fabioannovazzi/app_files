@@ -19,7 +19,7 @@
       {
         "id": "deck-work",
         "purpose": "Plan, compose, revise, and review the presentation",
-        "content": "Storyline, claims, evidence references, evidence bundle and binding records, resolved values, slide titles and text, speaker notes, layout choices, content and evidence ledgers, HTML/CSS, screenshots, and QA findings"
+        "content": "Storyline, claims, stable claim and evidence receipt identifiers, dependency edges, evidence bundle and binding records, source hashes, resolved values, slide titles and text, speaker notes, layout choices, content and evidence ledgers, exact hash-bound output appearances written to the shared advisory claim register, HTML/CSS, screenshots, and QA findings"
       }
     ]
   },
@@ -54,6 +54,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7589253c2f1491d71fa773c74ddf95e05d50cf2c660be47f2bc50bc41a444fc1"
+    "source_fingerprint": "cdb11ff85e55a31882c42d6b42274d1e625bad6c077b240bf0c6f67f5c837cbb"
   }
 }

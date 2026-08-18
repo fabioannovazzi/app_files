@@ -23,7 +23,7 @@
       {
         "id": "transcript-and-review",
         "purpose": "Attribute speakers, review evidence, and integrate the transcript",
-        "content": "Raw and reviewed transcripts, speaker identities or labels, timing and media metadata, uncertainty notes, transcription corrections, review findings, judgement proposals, questions, issues, and evidence-map updates"
+        "content": "Raw and reviewed transcripts, speaker identities or labels, timing and media metadata, uncertainty notes, transcription corrections, review findings, exact transcript artifact hashes, quotation evidence receipts, stable claims and dependency edges, judgement proposals bound to their direct evidence, questions, issues, and shared evidence- and claim-register updates"
       }
     ]
   },
@@ -71,6 +71,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "24bafb886bfa448a605050bb674924e0a8ac9e0a6e50e51cc801a9221e6b7108"
+    "source_fingerprint": "d7a1b49def8a6d6799e1235280027c32b8fd8e9b9540829130cf21ec5d4c5e64"
   }
 }

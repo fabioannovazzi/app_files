@@ -42,6 +42,8 @@ TOKENS = {
 }
 LEGACY_QUANTITATIVE_TEXT_RE = re.compile(r"\d")
 UNRESOLVED_TEMPLATE_TOKEN_RE = re.compile(r"\{\{[A-Z][A-Z0-9_]*\}\}")
+CLARA_ROOT = Path(__file__).resolve().parents[3]
+LINEAGE_SCRIPT = CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"
 
 
 @dataclass(frozen=True)
@@ -59,6 +61,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--output-root", required=True, type=Path)
     parser.add_argument("--package", type=Path)
     parser.add_argument("--report", type=Path)
+    parser.add_argument(
+        "--case-dir",
+        type=Path,
+        help="Bind every content-ledger claim to the shared Clara claim register and record exact published appearances.",
+    )
     parser.add_argument("--runtime", type=Path, default=default_runtime_path())
     parser.add_argument("--allow-template-examples", action="store_true")
     parser.add_argument(
@@ -81,6 +88,67 @@ def load_runtime(path: Path) -> Any:
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
     return module
+
+
+def load_lineage_runtime() -> Any:
+    spec = importlib.util.spec_from_file_location(
+        "clara_html_deck_lineage", LINEAGE_SCRIPT
+    )
+    if not spec or not spec.loader:
+        raise RuntimeError(f"Unable to load Clara lineage runtime: {LINEAGE_SCRIPT}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def bind_advisory_appearances(
+    *, case_dir: Path, ledger: dict[str, Any], deck_path: Path
+) -> int:
+    """Bind declared ledger claims to exact deck bytes without semantic inference."""
+
+    lineage = load_lineage_runtime()
+    claim_path = case_dir / "advisory_claim_register.json"
+    if not claim_path.is_file():
+        raise ValueError(f"missing advisory claim register: {claim_path}")
+    claim_register = json.loads(claim_path.read_text(encoding="utf-8"))
+    claim_by_id = {
+        str(item.get("id")): item
+        for item in claim_register.get("claims", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    locations: list[dict[str, Any]] = []
+    for slide in ledger.get("slides", []):
+        if not isinstance(slide, dict):
+            continue
+        slide_id = str(slide.get("slide_id", ""))
+        for claim in slide.get("claims", []):
+            if not isinstance(claim, dict):
+                continue
+            claim_id = str(claim.get("id", ""))
+            upstream = claim_by_id.get(claim_id)
+            if upstream is None:
+                raise ValueError(
+                    f"HTML content-ledger claim is absent from shared advisory lineage: {claim_id}"
+                )
+            if " ".join(str(upstream.get("statement", "")).split()) != " ".join(
+                str(claim.get("statement", "")).split()
+            ):
+                raise ValueError(
+                    f"HTML content-ledger claim text does not match shared claim {claim_id}"
+                )
+            locations.append(
+                {
+                    "claim_id": claim_id,
+                    "locator": f"Slide {slide_id}",
+                    "format_claim_id": claim_id,
+                }
+            )
+    if not locations:
+        raise ValueError(
+            "--case-dir requires at least one content-ledger claim to bind"
+        )
+    return int(lineage.bind_claim_appearances(case_dir, deck_path, locations))
 
 
 def read_metadata(path: Path) -> dict[str, str]:
@@ -591,6 +659,14 @@ def main() -> int:
         else:
             atomic_write(target_path, html_bytes)
 
+        lineage_appearance_count = 0
+        if args.case_dir is not None:
+            lineage_appearance_count = bind_advisory_appearances(
+                case_dir=args.case_dir.expanduser().resolve(),
+                ledger=prepared.ledger,
+                deck_path=target_path,
+            )
+
         package_path = args.package.expanduser().resolve() if args.package else None
         if package_path:
             canonical_zip(package_path, publication_id, html_bytes)
@@ -613,6 +689,7 @@ def main() -> int:
             "package_sha256": (
                 sha256_bytes(package_path.read_bytes()) if package_path else None
             ),
+            "advisory_lineage_appearance_count": lineage_appearance_count,
         }
         rendered_report = (
             json.dumps(report, ensure_ascii=False, indent=2, sort_keys=True) + "\n"

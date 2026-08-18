@@ -175,7 +175,8 @@ python skills/html-deck/scripts/build_html_deck.py \
   <project-output-folder>/html-deck-work \
   --output-root <project-output-folder> \
   --package <project-output-folder>/<descriptive-name>.zip \
-  --report <project-output-folder>/<descriptive-name>-validation.json
+  --report <project-output-folder>/<descriptive-name>-validation.json \
+  --case-dir <case-dir>
 ```
 
 The builder recompiles a source-bound v2 deck and requires byte equality with
@@ -185,6 +186,11 @@ embeds the publication-safe content and evidence ledgers, computes SHA-256, writ
 `<output-root>/<64-hex-sha256>/index.html`, validates those exact bytes, and
 creates a canonical ZIP. Errors block delivery. Rebuild ZIPs from work sources;
 never edit generated packages.
+
+When `--case-dir` is supplied, every content-ledger claim must already exist in
+the shared advisory claim register with the same statement. After the
+content-addressed standalone HTML is written, the builder records its exact hash
+and claim locator as an output appearance. It does not infer claims from HTML.
 
 Legacy v1 quantitative content fails by default. The
 `--allow-unverified-quantitative-content` flag exists only for explicit

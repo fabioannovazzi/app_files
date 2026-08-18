@@ -11,12 +11,16 @@ from pathlib import Path
 from typing import Any, Mapping, Sequence
 
 from advisor_case_core import (
+    CASE_BRIEF_FILENAME,
     CaseWorkspaceError,
+    _restore_files,
+    _snapshot_files,
     add_judgement_entries,
     refresh_case_brief,
     upsert_case_issues,
     validate_case_workspace,
 )
+from advisory_evidence_lineage import record_claims, record_evidence
 
 __all__ = ["integrate_transcript_review", "main"]
 
@@ -242,6 +246,29 @@ def _known_judgement_ids(case_dir: Path) -> set[str]:
     }
 
 
+def _known_claim_ids(case_dir: Path) -> set[str]:
+    payload = _read_json(case_dir / "advisory_claim_register.json")
+    return {
+        str(claim.get("id"))
+        for claim in payload.get("claims", [])
+        if isinstance(claim, dict) and claim.get("id")
+    }
+
+
+def _resolve_claim_refs(refs: Any, known_claim_ids: set[str]) -> list[str]:
+    if refs is None:
+        return []
+    if not isinstance(refs, list):
+        raise CaseWorkspaceError("advisory claim references must be a list")
+    resolved = _merge_ids([], [str(ref).strip() for ref in refs])
+    unknown = sorted(set(resolved) - known_claim_ids)
+    if unknown:
+        raise CaseWorkspaceError(
+            "unknown advisory claim references: " + ", ".join(unknown)
+        )
+    return resolved
+
+
 def _resolve_entry_ref(
     ref: Any,
     key_to_id: Mapping[str, str],
@@ -332,6 +359,7 @@ def _update_case_issues(
         return []
 
     known_judgement_ids = _known_judgement_ids(case_dir)
+    known_claim_ids = _known_claim_ids(case_dir)
     issues_payload = _read_json(_case_file(case_dir, "issues"))
     existing_by_id = {
         str(item.get("id")): item
@@ -364,6 +392,14 @@ def _update_case_issues(
                 known_judgement_ids,
             ),
         )
+        claim_ids_for = _merge_ids(
+            existing.get("claim_ids_for", []) if existing else [],
+            _resolve_claim_refs(update.get("claim_ids_for", []), known_claim_ids),
+        )
+        claim_ids_against = _merge_ids(
+            existing.get("claim_ids_against", []) if existing else [],
+            _resolve_claim_refs(update.get("claim_ids_against", []), known_claim_ids),
+        )
         open_tests = _merge_ids(
             existing.get("open_tests", []) if existing else [],
             [str(item).strip() for item in update.get("open_test_ids", [])],
@@ -384,6 +420,8 @@ def _update_case_issues(
                 ),
                 "evidence_for": evidence_for,
                 "evidence_against": evidence_against,
+                "claim_ids_for": claim_ids_for,
+                "claim_ids_against": claim_ids_against,
                 "open_tests": open_tests,
                 "status": update.get(
                     "status", existing.get("status", "active") if existing else "active"
@@ -397,6 +435,8 @@ def _update_case_issues(
             "issue_id": item["id"],
             "evidence_for": item["evidence_for"],
             "evidence_against": item["evidence_against"],
+            "claim_ids_for": item["claim_ids_for"],
+            "claim_ids_against": item["claim_ids_against"],
         }
         for item in updated
     ]
@@ -418,47 +458,79 @@ def integrate_transcript_review(
         )
 
     timestamp = _now_iso(now)
-    material_updates = _update_material_registry(
-        case_dir,
-        _list_from_plan(plan, "material_registry_updates"),
-        timestamp=timestamp,
-    )
-    review_notes = _update_review_notes(case_dir, _list_from_plan(plan, "review_notes"))
-    key_to_id, added_judgements = _add_judgements(
-        case_dir,
-        _list_from_plan(plan, "judgements"),
-    )
-    open_question_links = _update_open_question_links(
-        case_dir,
-        _list_from_plan(plan, "open_question_links"),
-        key_to_id=key_to_id,
-        timestamp=timestamp,
-    )
-    case_issue_links = _update_case_issues(
-        case_dir,
-        _list_from_plan(plan, "case_issue_updates"),
-        key_to_id=key_to_id,
-    )
+    review_updates = _list_from_plan(plan, "review_notes")
+    review_paths: list[Path] = []
+    for update in review_updates:
+        raw_review_path = str(update.get("path", "")).strip()
+        if not raw_review_path:
+            raise CaseWorkspaceError("review note updates require path")
+        review_paths.append(_case_owned_path(case_dir, raw_review_path))
+    mutation_paths = [
+        *(_case_file(case_dir, key) for key in CASE_FILES),
+        case_dir / "advisory_evidence_register.json",
+        case_dir / "advisory_claim_register.json",
+        case_dir / "advisory_evidence_map.md",
+        case_dir / CASE_BRIEF_FILENAME,
+        *review_paths,
+    ]
+    snapshot = _snapshot_files(mutation_paths)
+    completed = False
+    try:
+        material_updates = _update_material_registry(
+            case_dir,
+            _list_from_plan(plan, "material_registry_updates"),
+            timestamp=timestamp,
+        )
+        review_notes = _update_review_notes(case_dir, review_updates)
+        evidence_added = record_evidence(
+            case_dir,
+            _list_from_plan(plan, "evidence_receipts"),
+        )
+        claims_added = record_claims(
+            case_dir,
+            _list_from_plan(plan, "claims"),
+        )
+        key_to_id, added_judgements = _add_judgements(
+            case_dir,
+            _list_from_plan(plan, "judgements"),
+        )
+        open_question_links = _update_open_question_links(
+            case_dir,
+            _list_from_plan(plan, "open_question_links"),
+            key_to_id=key_to_id,
+            timestamp=timestamp,
+        )
+        case_issue_links = _update_case_issues(
+            case_dir,
+            _list_from_plan(plan, "case_issue_updates"),
+            key_to_id=key_to_id,
+        )
 
-    if material_updates or review_notes or open_question_links:
-        _touch_manifest(case_dir, timestamp)
-    refresh_case_brief(case_dir, now=now)
+        if material_updates or review_notes or open_question_links:
+            _touch_manifest(case_dir, timestamp)
+        refresh_case_brief(case_dir, now=now)
+        after_errors = validate_case_workspace(case_dir)
+        if after_errors:
+            raise CaseWorkspaceError(
+                "workspace invalid after integration: " + "; ".join(after_errors)
+            )
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
 
-    after_errors = validate_case_workspace(case_dir)
     summary = {
         "updated_at": timestamp,
-        "validation_errors": after_errors,
+        "validation_errors": [],
         "material_updates": material_updates,
         "review_notes": review_notes,
+        "evidence_added": evidence_added,
+        "claims_added": claims_added,
         "judgement_key_map": key_to_id,
         "added_judgement_ids": [item["id"] for item in added_judgements],
         "open_question_links": open_question_links,
         "case_issue_links": case_issue_links,
     }
-    if after_errors:
-        raise CaseWorkspaceError(
-            "workspace invalid after integration: " + "; ".join(after_errors)
-        )
     return summary
 
 
@@ -467,6 +539,8 @@ def _load_plan(path: Path) -> dict[str, Any]:
     allowed = {
         "material_registry_updates",
         "review_notes",
+        "evidence_receipts",
+        "claims",
         "judgements",
         "open_question_links",
         "case_issue_updates",

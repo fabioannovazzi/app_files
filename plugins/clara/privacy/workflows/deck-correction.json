@@ -28,7 +28,7 @@
       {
         "id": "revision-plan-and-output",
         "purpose": "Plan, apply, and verify only the understood changes",
-        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, and final audience-facing review"
+        "content": "Interpretation packets, requested changes, uncertainty, targets, success criteria, approval state, patches, corrected deck, rendered slides, verification findings, corrected-output hashes, claim and evidence bindings, correction and recheck succession, and the required second audience-facing advisory validation of the corrected artifact"
       }
     ]
   },
@@ -76,6 +76,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "98a787301225d4534a2e8e0725b4365f6a1d9b2651309efa7b315f36c5992442"
+    "source_fingerprint": "5d320c215a966c0e08d24c997f3633ac124fc1cd1e21ac482834f59ac19fce68"
   }
 }

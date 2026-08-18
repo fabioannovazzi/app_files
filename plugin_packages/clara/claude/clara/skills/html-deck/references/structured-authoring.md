@@ -100,6 +100,14 @@ ledger so numeric claim text can contain the same binding objects and templates
 as the plan. Every deck slide appears exactly once. Every claim has an explicit
 classification and basis.
 
+For a deck generated inside a Clara advisory case, reuse the matching
+`advisory_claim_register.json` claim ID as the content-ledger claim `id` when it
+meets this ledger's safe-ID contract. After composition, add the exact deck and
+slide appearance to that upstream claim. Keep `source_ids`, evidence-bundle
+bindings, resolved ledgers, and evidence-ledger hashes unchanged: shared
+advisory lineage connects workflows but never replaces HTML Deck's stricter
+format and numeric-binding checks.
+
 ```json
 {
   "schema_version": "clara.html_deck_ledger.v1",

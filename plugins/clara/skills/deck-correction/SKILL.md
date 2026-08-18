@@ -41,6 +41,15 @@ reviewed transcript exists. A hosted external interview is not a deck-correction
 input until its bundle has been retrieved and the user explicitly asks to use
 that evidence.
 
+When the deck belongs to a case with advisory lineage, preserve that history as
+well as the original file. An unchanged claim keeps its upstream claim ID and
+gains an appearance for the corrected deck. Changed wording creates a new claim
+whose `supersedes_claim_id` points to the old claim; removed wording leaves the
+old claim withdrawn or superseded rather than deleting it. New or changed
+evidence gets a new receipt. Rerun Claim Basis Map, HTML Deck, or Reporting
+Engine checks as applicable. These lineage updates do not replace this skill's
+approval, copy, render, visual QA, or before/after verification gates.
+
 Run dependency checks from the plugin directory:
 
 ```bash
@@ -211,6 +220,13 @@ python scripts/complete_deck_revision_output_review.py <case-dir> \
 
 Do not present the corrected PPTX as final until the completion artifact exists
 for the exact reviewed output.
+
+If the deck is part of an advisory-deliverable validation, completion here is
+one authoritative format gate, not the final advisory decision. Run the
+advisory validator's `prepare` command again on the corrected deck, complete a
+second model-led claim-chain review, and supply that corrected inventory and
+review to the original validation package. A correction is not delivery-ready
+merely because the deck-correction completion record passed.
 
 ## HTML Preservation Path
 
