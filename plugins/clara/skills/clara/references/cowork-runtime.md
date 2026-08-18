@@ -61,6 +61,11 @@ user-facing paths, headings, labels, or status summaries.
 
 Use the narrowest matching specialist skill:
 
+- `advisory-brief-planner` when a new or materially reframed assignment needs
+  an explicit `advisory_contract.json` before substantive work begins;
+- `advisory-deliverable-validator` to validate a completed advisory memo,
+  report, analysis, or presentation against its contract and available
+  evidence before delivery;
 - `attribute-reporting` for Retailer Signals, retailer taxonomy mapping,
   new-versus-rest or best-seller-versus-other analysis, and private HTML
   reporting;
@@ -104,20 +109,36 @@ workflow ran when it did not.
    `scripts/validate_workspace.py` when appropriate.
 4. Register source material with `scripts/index_materials.py`. Preserve exact
    source paths and never silently rewrite source evidence.
-5. Maintain `advisory_evidence_map.md`. For each material claim or decision,
-   record supporting, weakening, contradictory, and missing evidence; what the
-   evidence proves; what it does not prove; and the decision implication.
-6. Prepare or update `advisory_workpaper.md` with Clara's provisional point of
+5. Create one receipt in `advisory_evidence_register.json` when evidence first
+   enters the analysis, and one entry in `advisory_claim_register.json` when a
+   claim first enters it. Record the evidence's exact source or artifact,
+   observation, scope, limitations, verification state, and what it does and
+   does not prove. A management assertion or interview statement may remain
+   evidence that a named person stated something without becoming proof that
+   the statement is true.
+6. Carry each claim's stable identifier, evidence-receipt identifiers, and
+   declared `all_of` or `any_of` claim dependencies into every downstream
+   reasoning step and deliverable appearance. Do not replace a structured
+   receipt with a prose citation. Treat `advisory_evidence_map.md` as a derived
+   readable view of the two registers, not as the source of record.
+7. Prepare or update `advisory_workpaper.md` with Clara's provisional point of
    view, options evaluated, implementation conditions, risks, reversibility,
    evidence gaps, and the few decisions that require consultant judgement.
-7. Record consultant notes and approved judgement through the case scripts when
+8. Record consultant notes and approved judgement through the case scripts when
    callable. Pending or rejected judgement must not enter a client-facing
    output.
-8. Build the requested memo, decision pack, report, chart, or HTML deck from the
+9. Build the requested memo, decision pack, report, chart, or HTML deck from the
    reviewed evidence. Use the specialist workflow when one applies.
-9. Validate the exact delivered files. Return an artifact card listing outputs,
-   source coverage, checks run, missing evidence, and remaining professional
-   review.
+10. Validate the exact delivered files with
+    `clara:advisory-deliverable-validator`. Where generation-time registers are
+    available, select decision-relevant claims with model judgment, walk every
+    declared dependency and evidence receipt, and request bounded rechecks for
+    source identity or reproducible calculations when the review needs them.
+    Where they are absent, label any reconstructed relationship `matched_support`;
+    do not present it as original provenance. Keep the format-specific
+    `claim-basis-map`, HTML-deck, Reporting Engine, and deck-correction checks.
+    Return an artifact card listing outputs, source coverage, checks run,
+    missing evidence, and remaining professional review.
 
 ## Working rules
 
@@ -129,6 +150,10 @@ workflow ran when it did not.
   user's explicit request and the required professional review.
 - Keep quantitative values bound to inspected sources and deterministic
   calculations.
+- A captured web page proves only what was observed at the recorded URL and
+  time within the stated scope. It does not turn a bounded result, such as 13
+  visible listings, into evidence for a broader total, such as 300 vehicles in
+  company stock.
 - Treat scripts as mechanical helpers, not semantic authorities.
 - Preserve reusable project files in the connected folder and keep temporary
   work out of the plugin installation directory.

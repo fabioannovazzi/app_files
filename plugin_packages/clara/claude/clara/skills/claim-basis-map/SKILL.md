@@ -98,6 +98,8 @@ Use this minimal shape:
         {
           "claim": "Premiumization is likely to remain the main growth vector.",
           "claim_key": "claim-4",
+          "advisory_claim_id": "claim-4",
+          "evidence_receipt_ids": ["ev-category-growth", "ev-sell-out-run"],
           "reasoning_inputs": [
             {
               "label": "Example Market Research category growth table",
@@ -134,6 +136,14 @@ Use this minimal shape:
   ]
 }
 ```
+
+When the deck is generated inside a Clara case with
+`advisory_claim_register.json`, use the existing upstream claim ID as
+`claim_key` and `advisory_claim_id` when the PowerPoint safe-ID contract allows
+it, and carry the linked `evidence_receipt_ids`. After generation, add the exact
+slide appearance to the shared claim register. These cross-workflow IDs do not
+replace this workflow's `source_refs`, `calculation_ref`, `claim_refs`,
+reasoning, drift checks, or PPTX verification.
 
 When the deck generator can control PPTX shape metadata, set the invisible
 PowerPoint shape name for the textbox that carries a claim to:

@@ -115,6 +115,75 @@
       "available_evidence": "No supported export is supplied.",
       "expected_action": "Report the primary format as unsupported and request PPTX or PDF export without claiming validation.",
       "boundary": "initial_format_limit"
+    },
+    {
+      "id": "web-listings-do-not-prove-total-stock",
+      "deliverable_format": "html",
+      "deliverable_excerpt": "The company has only 13 vehicles in stock.",
+      "available_evidence": "A hash-bound public-page capture shows 13 visible listings. A separate assertion-only interview receipt records management saying total stock is 300 vehicles.",
+      "expected_lineage": ["ev-web-13 -> cl-visible-13", "ev-management-300 -> cl-management-300"],
+      "expected_dimensions": {
+        "factual_source_support": "contradicted",
+        "contradictions_missing_evidence": "contradicted",
+        "delivery_readiness": "not_ready"
+      },
+      "must_not": ["Use the 13-listing capture as proof of total company stock", "Merge the two claims into one evidence item"],
+      "boundary": "web_capture_scope"
+    },
+    {
+      "id": "interview-quote-versus-underlying-truth",
+      "deliverable_format": "docx",
+      "deliverable_excerpt": "Giovanni believes that the new site will double conversion. The site will double conversion.",
+      "available_evidence": "The reviewed transcript supports the attributed quote. No experiment, forecast, or calculation supports the second sentence as a factual prediction.",
+      "expected_dimensions": {
+        "factual_source_support": "partially_conforms",
+        "reasoning_assumptions": "does_not_conform",
+        "delivery_readiness": "not_ready"
+      },
+      "boundary": "quotation_is_not_truth"
+    },
+    {
+      "id": "derived-claim-requires-a-and-b",
+      "deliverable_format": "md",
+      "deliverable_excerpt": "Proceed with acquisition X.",
+      "available_evidence": "The upstream register declares that recommendation X depends on claim A and claim B through all_of. A is supported; B is contradicted by a later receipt.",
+      "expected_chain_walk": ["cl-x", "cl-a", "cl-b"],
+      "expected_dimensions": {
+        "contradictions_missing_evidence": "contradicted",
+        "recommendation_evidence_decision_fit": "does_not_conform",
+        "delivery_readiness": "not_ready"
+      },
+      "boundary": "dependency_propagation"
+    },
+    {
+      "id": "calculation-recheck-after-input-change",
+      "deliverable_format": "pptx",
+      "deliverable_excerpt": "Annual contribution is EUR 4.2m.",
+      "available_evidence": "The claim references a Reporting Engine calculation receipt, but the source dataset hash changed after the recorded run.",
+      "expected_recheck": {"kind": "calculation", "status": "pending"},
+      "expected_dimensions": {
+        "calculations_data_provenance": "uncertain",
+        "delivery_readiness": "not_ready"
+      },
+      "required_composition": ["clara:reporting-engine", "clara:claim-basis-map"],
+      "boundary": "targeted_calculation_rerun"
+    },
+    {
+      "id": "corrected-claim-supersedes-original",
+      "deliverable_format": "pptx",
+      "deliverable_excerpt": "A corrected recommendation replaces an overbroad original statement.",
+      "available_evidence": "The original file and claim remain preserved. The new claim points to supersedes_claim_id and the corrected deck has a separate path and completed format checks.",
+      "expected_action": "Review the new chain, preserve the old claim history, and bind the new appearance to the separate corrected artifact.",
+      "required_composition": ["clara:deck-correction", "clara:claim-basis-map"],
+      "boundary": "correction_lineage"
+    },
+    {
+      "id": "two-hundred-page-coverage",
+      "deliverable_format": "pdf",
+      "deliverable_excerpt": "A readable 200-page commercial due-diligence report with generation-time claim appearances.",
+      "available_evidence": "The preparation produces bounded coverage units. The model accounts for every unit, selects decision-relevant claims, and the validator walks their dependency closure rather than re-extracting every claim at the end.",
+      "expected_action": "Reject readiness if a coverage unit is neither considered nor explicitly omitted, or if a selected claim dependency is absent from the chain review.",
+      "boundary": "scaled_coverage_and_lineage"
     }
   ]
 }

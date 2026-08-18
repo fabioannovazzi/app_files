@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/advisory-claim-register-v1.json",
+  "title": "Clara advisory claim register",
+  "description": "Append-only claims used in advisory analysis, with generation-time evidence and dependency references. Semantic contents are model-authored; deterministic code validates the declared graph.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "claims"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "claims": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/claim"}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$"
+    },
+    "textList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["workflow", "step", "artifact", "locator"],
+      "properties": {
+        "workflow": {"type": "string", "pattern": "^clara:[a-z0-9-]+$"},
+        "step": {"$ref": "#/$defs/text"},
+        "artifact": {"type": "string"},
+        "locator": {"$ref": "#/$defs/text"}
+      }
+    },
+    "evidenceLink": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_id",
+        "relationship",
+        "analysis",
+        "proves",
+        "does_not_prove"
+      ],
+      "properties": {
+        "evidence_id": {"$ref": "#/$defs/id"},
+        "relationship": {"enum": ["supports", "weakens", "contradicts", "context"]},
+        "analysis": {"$ref": "#/$defs/text"},
+        "proves": {"$ref": "#/$defs/text"},
+        "does_not_prove": {"$ref": "#/$defs/text"}
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "claim_ids", "derivation_type", "explanation", "calculation_evidence_id"],
+      "properties": {
+        "mode": {"enum": ["none", "all_of", "any_of"]},
+        "claim_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "derivation_type": {
+          "enum": ["direct", "calculation", "reasoning", "aggregation", "quotation"]
+        },
+        "explanation": {"$ref": "#/$defs/text"},
+        "calculation_evidence_id": {"type": "string"}
+      }
+    },
+    "appearance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact", "locator", "recorded_at"],
+      "properties": {
+        "artifact": {"$ref": "#/$defs/text"},
+        "locator": {"$ref": "#/$defs/text"},
+        "recorded_at": {"$ref": "#/$defs/text"}
+      }
+    },
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "statement",
+        "claim_type",
+        "recorded_at",
+        "recorded_by",
+        "provenance",
+        "evidence_links",
+        "dependency",
+        "decision_use",
+        "uncertainty",
+        "professional_judgement_required",
+        "appearances",
+        "state",
+        "supersedes_claim_id"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "statement": {"$ref": "#/$defs/text"},
+        "claim_type": {
+          "enum": [
+            "observation",
+            "assertion",
+            "quotation",
+            "calculation",
+            "inference",
+            "conclusion",
+            "recommendation",
+            "decision_condition"
+          ]
+        },
+        "recorded_at": {"$ref": "#/$defs/text"},
+        "recorded_by": {"$ref": "#/$defs/text"},
+        "provenance": {"$ref": "#/$defs/provenance"},
+        "evidence_links": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/evidenceLink"}
+        },
+        "dependency": {"$ref": "#/$defs/dependency"},
+        "decision_use": {"enum": ["direct", "supporting", "contextual"]},
+        "uncertainty": {"$ref": "#/$defs/textList"},
+        "professional_judgement_required": {"type": "boolean"},
+        "appearances": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/appearance"}
+        },
+        "state": {"enum": ["active", "superseded", "withdrawn"]},
+        "supersedes_claim_id": {"type": "string"}
+      }
+    }
+  }
+}

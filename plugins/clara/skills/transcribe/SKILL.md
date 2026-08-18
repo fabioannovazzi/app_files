@@ -34,6 +34,15 @@ which conducts an adaptive conversation with an external participant.
 - **Spoken feedback that should change a deck:** complete transcription and
   attribution here, then route the reviewed evidence to `deck-correction`.
 
+In a case using advisory lineage, the reviewed transcript creates an
+`interview_transcript` receipt with the transcript path, locator, and hash.
+Each quote or attribution used downstream becomes a claim linked to that
+receipt. The receipt can establish that the named speaker said the quoted
+words; it does not by itself establish that the speaker's underlying assertion
+is true. Create a separate claim and basis when Clara relies on the assertion
+as a fact. Preserve the same claim and evidence IDs when the quote moves into a
+workpaper, memo, decision pack, Claim Basis Map, or HTML content ledger.
+
 Run dependency checks from the plugin directory before substantive work:
 
 ```bash

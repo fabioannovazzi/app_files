@@ -173,18 +173,58 @@ def _review(
         if corrected_artifact is not None
         else ""
     )
+    coverage_inventory = json.loads(
+        Path(inventory["coverage_inventory_path"]).read_text(encoding="utf-8")
+    )
+    considered_unit_ids = [unit["id"] for unit in coverage_inventory["units"]]
+    provenance_mode = inventory["lineage"]["provenance_mode"]
     return {
-        "schema_version": "1.0",
+        "schema_version": "1.2",
         "language": "en",
         "advisory_contract_sha256": inventory["advisory_contract_sha256"],
         "deliverable_sha256": inventory["source_sha256"],
+        "coverage_inventory_sha256": inventory["coverage_inventory_sha256"],
+        "lineage_inventory_sha256": inventory["lineage"]["lineage_inventory_sha256"],
         "coverage_review": {
             "selection_method": "model_led_materiality_review",
             "scope": "all_material_content",
             "reviewed_sections": ["Entire deliverable"],
             "omitted_sections": [],
+            "considered_unit_ids": considered_unit_ids,
+            "omitted_unit_ids": [],
             "limitations": [],
             "analysis": "All material content was reviewed.",
+        },
+        "lineage_review": {
+            "provenance_mode": provenance_mode,
+            "selection_method": "model_led_claim_chain_review",
+            "reviewed_claim_ids": [],
+            "chain_assessments": [],
+            "untracked_material_claims": [
+                {
+                    "id": "external-claim-0001",
+                    "statement": "Proceed with a bounded pilot.",
+                    "deliverable_locations": ["Recommendation"],
+                    "evidence_ids": ["selected source review"],
+                    "dependency_claim_ids": [],
+                    "support_status": "adequate",
+                    "reasoning_status": "sound",
+                    "analysis": "The material recommendation and its stated basis were reviewed.",
+                    "recheck": {
+                        "required": False,
+                        "kind": "none",
+                        "status": "not_required",
+                        "evidence_ids": [],
+                        "analysis": "No targeted recheck was required for this fixture.",
+                    },
+                    "resolution": {
+                        "status": "no_change",
+                        "explanation": "No material weakness was identified in the fixture.",
+                    },
+                }
+            ],
+            "limitations": [],
+            "analysis": "The review matched the final claim to the supplied support because no generation-time lineage was supplied.",
         },
         "dimension_reviews": dimensions,
         "findings": [],
@@ -279,6 +319,111 @@ def _prepare(tmp_path: Path, *, format_checks: list[dict[str, Any]] | None = Non
     paths = validator.prepare_validation(deliverable, contract_path, output_dir)
     inventory = json.loads(paths["deliverable_inventory"].read_text(encoding="utf-8"))
     return validator, deliverable, contract_path, output_dir, paths, inventory
+
+
+def _lineage_receipt(evidence_id: str, observation: str) -> dict[str, Any]:
+    return {
+        "id": evidence_id,
+        "evidence_type": "management_assertion",
+        "recorded_at": "2026-08-18T08:00:00+00:00",
+        "recorded_by": "clara:clara",
+        "capture_status": "assertion_only",
+        "source": {
+            "material_ids": [],
+            "url": "",
+            "locator": "management interview",
+            "artifact_refs": [],
+        },
+        "observation": observation,
+        "scope": "What management stated in the interview.",
+        "limitations": ["The assertion is not independent verification."],
+        "verification": {
+            "status": "not_checked",
+            "checked_at": "",
+            "method": "",
+            "notes": [],
+        },
+        "rechecks_evidence_id": "",
+        "supersedes_evidence_id": "",
+    }
+
+
+def _lineage_claim(
+    claim_id: str,
+    statement: str,
+    *,
+    evidence_ids: list[str] | None = None,
+    dependency_ids: list[str] | None = None,
+    claim_type: str = "assertion",
+) -> dict[str, Any]:
+    evidence_ids = evidence_ids or []
+    dependency_ids = dependency_ids or []
+    return {
+        "id": claim_id,
+        "statement": statement,
+        "claim_type": claim_type,
+        "recorded_at": "2026-08-18T08:00:00+00:00",
+        "recorded_by": "clara:clara",
+        "provenance": {
+            "workflow": "clara:clara",
+            "step": "analysis",
+            "artifact": "analysis.md",
+            "locator": claim_id,
+        },
+        "evidence_links": [
+            {
+                "evidence_id": evidence_id,
+                "relationship": "supports",
+                "analysis": "The receipt records the stated premise.",
+                "proves": statement,
+                "does_not_prove": "Any broader or downstream conclusion.",
+            }
+            for evidence_id in evidence_ids
+        ],
+        "dependency": {
+            "mode": "all_of" if dependency_ids else "none",
+            "claim_ids": dependency_ids,
+            "derivation_type": "reasoning" if dependency_ids else "direct",
+            "explanation": (
+                "Every named premise is required for this conclusion."
+                if dependency_ids
+                else "Directly stated premise."
+            ),
+            "calculation_evidence_id": "",
+        },
+        "decision_use": "direct" if dependency_ids else "supporting",
+        "uncertainty": [],
+        "professional_judgement_required": False,
+        "appearances": [],
+        "state": "active",
+        "supersedes_claim_id": "",
+    }
+
+
+def _chain_assessment(claim: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "claim_id": claim["id"],
+        "statement": claim["statement"],
+        "deliverable_locations": ["Recommendation"],
+        "evidence_ids": [
+            link["evidence_id"] for link in claim.get("evidence_links", [])
+        ],
+        "dependency_claim_ids": claim["dependency"]["claim_ids"],
+        "support_status": "adequate",
+        "reasoning_status": "sound",
+        "analysis": "The stated basis and dependency were challenged in context.",
+        "recheck": {
+            "required": False,
+            "kind": "none",
+            "status": "not_required",
+            "evidence_ids": [],
+            "analysis": "No targeted recheck was required.",
+        },
+        "resolution": {
+            "status": "no_change",
+            "explanation": "No material weakness was detected.",
+        },
+    }
 
 
 def test_advisory_contract_schema_covers_the_stable_cross_workflow_boundary() -> None:
@@ -900,6 +1045,12 @@ def test_semantic_evaluation_fixtures_cover_required_cases() -> None:
         "judgment-dependent-choice",
         "external-document-without-contract",
         "unsupported-primary-format",
+        "web-listings-do-not-prove-total-stock",
+        "interview-quote-versus-underlying-truth",
+        "derived-claim-requires-a-and-b",
+        "calculation-recheck-after-input-change",
+        "corrected-claim-supersedes-original",
+        "two-hundred-page-coverage",
     } <= case_ids
     assert "deterministic keyword or scorecard logic" in payload["purpose"]
 
@@ -926,6 +1077,10 @@ def test_skill_and_public_page_keep_format_checks_and_model_data_explicit() -> N
     assert "No automatic anonymization is applied" in workflow_copy
     assert "mechanical closure remains partial" in workflow_copy
     assert "does not automatically open URLs" in workflow_copy
+    assert "advisory_evidence_register.json" in workflow_copy
+    assert "advisory_claim_register.json" in workflow_copy
+    assert "walks every declared dependency" in workflow_copy
+    assert "matched support" in workflow_copy
     assert "extraction omits script, style, and template blocks" in workflow_copy
     for workflow in (
         "clara:claim-basis-map",
@@ -937,3 +1092,200 @@ def test_skill_and_public_page_keep_format_checks_and_model_data_explicit() -> N
     assert "keyword classifier" in skill
     assert "semantic scorecard" in skill
     assert "scripts make no model API calls" in skill
+
+
+def test_generation_time_lineage_walks_all_dependencies_before_ready(
+    tmp_path: Path,
+) -> None:
+    validator = _validator_module()
+    case_dir = tmp_path / "case"
+    lineage = validator._lineage_module()
+    lineage.initialize_lineage(case_dir)
+    evidence_a = _lineage_receipt("ev-a", "Management stated premise A.")
+    evidence_b = _lineage_receipt("ev-b", "Management stated premise B.")
+    claim_a = _lineage_claim("cl-a", "Premise A", evidence_ids=["ev-a"])
+    claim_b = _lineage_claim("cl-b", "Premise B", evidence_ids=["ev-b"])
+    claim_x = _lineage_claim(
+        "cl-x",
+        "Proceed with the pilot.",
+        dependency_ids=["cl-a", "cl-b"],
+        claim_type="recommendation",
+    )
+    lineage.record_evidence(case_dir, [evidence_a, evidence_b])
+    lineage.record_claims(case_dir, [claim_a, claim_b, claim_x])
+    deliverable = tmp_path / "memo.md"
+    deliverable.write_text(
+        "# Recommendation\n\nProceed with the pilot.", encoding="utf-8"
+    )
+    contract_path = tmp_path / "advisory_contract.json"
+    contract_path.write_text(json.dumps(_contract()), encoding="utf-8")
+    output_dir = tmp_path / "validation"
+    paths = validator.prepare_validation(
+        deliverable,
+        contract_path,
+        output_dir,
+        evidence_register=case_dir / "advisory_evidence_register.json",
+        claim_register=case_dir / "advisory_claim_register.json",
+    )
+    inventory = json.loads(paths["deliverable_inventory"].read_text())
+    review = _review(inventory)
+    review["lineage_review"] = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": ["cl-x"],
+        "chain_assessments": [
+            _chain_assessment(claim_a),
+            _chain_assessment(claim_b),
+            _chain_assessment(claim_x),
+        ],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The recommendation was walked back through both required premises.",
+    }
+    review_path = tmp_path / "review.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+
+    package_paths, audit = validator.package_validation(
+        paths["deliverable_inventory"],
+        review_path,
+        paths["advisory_contract"],
+        output_dir,
+    )
+
+    assert audit["record_complete"] is True
+    assert audit["effective_delivery_readiness"] == "ready"
+    assert package_paths["recheck_tasks"].is_file()
+
+
+def test_generation_time_lineage_rejects_an_omitted_dependency(tmp_path: Path) -> None:
+    validator = _validator_module()
+    claim_a = _lineage_claim("cl-a", "Premise A")
+    claim_x = _lineage_claim(
+        "cl-x", "Conclusion X", dependency_ids=["cl-a"], claim_type="conclusion"
+    )
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": ["cl-x"],
+        "chain_assessments": [_chain_assessment(claim_x)],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "Only the conclusion was reviewed.",
+    }
+    claim_register = {"schema_version": "1.0", "claims": [claim_a, claim_x]}
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register=claim_register,
+        evidence_register={"schema_version": "1.0", "evidence": []},
+    )
+
+    assert "lineage_review omitted dependency chain claims: cl-a" in errors
+
+
+def test_generation_time_lineage_rejects_an_omitted_evidence_receipt() -> None:
+    validator = _validator_module()
+    evidence_a = _lineage_receipt("ev-a", "Management stated premise A.")
+    evidence_b = _lineage_receipt("ev-b", "Management stated premise B.")
+    evidence_b["rechecks_evidence_id"] = "ev-a"
+    claim = _lineage_claim(
+        "cl-a",
+        "Premise A",
+        evidence_ids=["ev-b"],
+    )
+    assessment = _chain_assessment(claim)
+    assessment["evidence_ids"] = ["ev-b"]
+    review = {
+        "provenance_mode": "generation_time",
+        "selection_method": "model_led_claim_chain_review",
+        "reviewed_claim_ids": ["cl-a"],
+        "chain_assessments": [assessment],
+        "untracked_material_claims": [],
+        "limitations": [],
+        "analysis": "The claim was reviewed without its prior evidence receipt.",
+    }
+
+    errors = validator._validate_lineage_review(
+        review,
+        provenance_mode="generation_time",
+        claim_register={"schema_version": "1.0", "claims": [claim]},
+        evidence_register={
+            "schema_version": "1.0",
+            "evidence": [evidence_a, evidence_b],
+        },
+    )
+
+    assert (
+        "lineage_review.chain_assessments[0].evidence_ids must match lineage" in errors
+    )
+
+
+def test_pending_model_selected_recheck_blocks_ready_and_is_packaged(
+    tmp_path: Path,
+) -> None:
+    validator, _deliverable, contract_path, output_dir, paths, inventory = _prepare(
+        tmp_path
+    )
+    review = _review(inventory)
+    item = review["lineage_review"]["untracked_material_claims"][0]
+    item["support_status"] = "uncertain"
+    item["recheck"] = {
+        "required": True,
+        "kind": "web",
+        "status": "pending",
+        "evidence_ids": [],
+        "analysis": "Reopen the captured public page because the observation may be stale.",
+    }
+    item["resolution"] = {
+        "status": "pending",
+        "explanation": "The claim remains unresolved until the targeted recheck.",
+    }
+    review_path = tmp_path / "review.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+
+    package_paths, audit = validator.package_validation(
+        paths["deliverable_inventory"],
+        review_path,
+        contract_path,
+        output_dir,
+    )
+
+    tasks = json.loads(package_paths["recheck_tasks"].read_text())
+    assert audit["record_complete"] is False
+    assert audit["effective_delivery_readiness"] == "blocked"
+    assert tasks["tasks"][0]["kind"] == "web"
+    assert tasks["tasks"][0]["status"] == "pending"
+
+
+def test_two_hundred_page_scale_uses_bounded_coverage_units(tmp_path: Path) -> None:
+    validator = _validator_module()
+    deliverable = tmp_path / "long_report.md"
+    deliverable.write_text(
+        "\n\n".join(
+            f"# Page {page:03d}\n\n" + (f"Reviewed content for page {page}. " * 45)
+            for page in range(1, 201)
+        ),
+        encoding="utf-8",
+    )
+    contract_path = tmp_path / "advisory_contract.json"
+    contract_path.write_text(json.dumps(_contract()), encoding="utf-8")
+    output_dir = tmp_path / "validation"
+
+    paths = validator.prepare_validation(deliverable, contract_path, output_dir)
+    inventory = json.loads(paths["deliverable_inventory"].read_text())
+    coverage = json.loads(paths["coverage_inventory"].read_text())
+    review = _review(inventory)
+
+    assert len(coverage["units"]) >= 20
+    assert review["coverage_review"]["considered_unit_ids"] == [
+        unit["id"] for unit in coverage["units"]
+    ]
+    review["coverage_review"]["considered_unit_ids"].pop()
+    errors = validator.validate_review_record(
+        review,
+        _contract(),
+        provenance_mode="matched_support",
+        coverage_inventory=coverage,
+    )
+    assert any("does not account for units" in error for error in errors)

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/advisory-validation-review-1.0.json",
+  "$id": "https://mparanza.com/schemas/advisory-validation-review-1.2.json",
   "title": "Clara advisory deliverable validation review",
   "type": "object",
   "required": [
@@ -8,7 +8,10 @@
     "language",
     "advisory_contract_sha256",
     "deliverable_sha256",
+    "coverage_inventory_sha256",
+    "lineage_inventory_sha256",
     "coverage_review",
+    "lineage_review",
     "dimension_reviews",
     "findings",
     "format_specific_checks",
@@ -18,23 +21,28 @@
     "delivery_readiness"
   ],
   "properties": {
-    "schema_version": {"const": "1.0"},
+    "schema_version": {"const": "1.2"},
     "language": {"enum": ["it", "en", "fr", "de", "es"]},
     "advisory_contract_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "deliverable_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "coverage_inventory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "lineage_inventory_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "coverage_review": {
       "type": "object",
-      "required": ["selection_method", "scope", "reviewed_sections", "omitted_sections", "limitations", "analysis"],
+      "required": ["selection_method", "scope", "reviewed_sections", "omitted_sections", "considered_unit_ids", "omitted_unit_ids", "limitations", "analysis"],
       "properties": {
         "selection_method": {"const": "model_led_materiality_review"},
         "scope": {"enum": ["all_material_content", "selected_material_content", "limited"]},
         "reviewed_sections": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
         "omitted_sections": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "considered_unit_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "omitted_unit_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
         "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
         "analysis": {"type": "string", "minLength": 1}
       },
       "additionalProperties": false
     },
+    "lineage_review": {"$ref": "#/$defs/lineageReview"},
     "dimension_reviews": {
       "type": "object",
       "required": [
@@ -186,6 +194,75 @@
         "workflow": {"type": "string", "minLength": 1},
         "status": {"enum": ["passed", "issues_found", "blocked", "not_run", "not_applicable"]},
         "artifact_refs": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "analysis": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "recheck": {
+      "type": "object",
+      "required": ["required", "kind", "status", "evidence_ids", "analysis"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "kind": {"enum": ["none", "web", "calculation", "file", "transcript", "other"]},
+        "status": {"enum": ["not_required", "completed", "pending", "blocked"]},
+        "evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "analysis": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "resolution": {
+      "type": "object",
+      "required": ["status", "explanation"],
+      "properties": {
+        "status": {"enum": ["no_change", "corrected", "removed", "qualified", "pending", "professional_review_required"]},
+        "explanation": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "chainAssessment": {
+      "type": "object",
+      "required": ["claim_id", "statement", "deliverable_locations", "evidence_ids", "dependency_claim_ids", "support_status", "reasoning_status", "analysis", "recheck", "resolution"],
+      "properties": {
+        "claim_id": {"type": "string", "minLength": 1},
+        "statement": {"type": "string", "minLength": 1},
+        "deliverable_locations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "dependency_claim_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "support_status": {"enum": ["adequate", "partial", "unsupported", "contradicted", "uncertain", "not_applicable"]},
+        "reasoning_status": {"enum": ["sound", "gap", "contradicted", "uncertain", "not_applicable"]},
+        "analysis": {"type": "string", "minLength": 1},
+        "recheck": {"$ref": "#/$defs/recheck"},
+        "resolution": {"$ref": "#/$defs/resolution"}
+      },
+      "additionalProperties": false
+    },
+    "untrackedClaimAssessment": {
+      "type": "object",
+      "required": ["id", "statement", "deliverable_locations", "evidence_ids", "dependency_claim_ids", "support_status", "reasoning_status", "analysis", "recheck", "resolution"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "statement": {"type": "string", "minLength": 1},
+        "deliverable_locations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "evidence_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "dependency_claim_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "support_status": {"enum": ["adequate", "partial", "unsupported", "contradicted", "uncertain", "not_applicable"]},
+        "reasoning_status": {"enum": ["sound", "gap", "contradicted", "uncertain", "not_applicable"]},
+        "analysis": {"type": "string", "minLength": 1},
+        "recheck": {"$ref": "#/$defs/recheck"},
+        "resolution": {"$ref": "#/$defs/resolution"}
+      },
+      "additionalProperties": false
+    },
+    "lineageReview": {
+      "type": "object",
+      "required": ["provenance_mode", "selection_method", "reviewed_claim_ids", "chain_assessments", "untracked_material_claims", "limitations", "analysis"],
+      "properties": {
+        "provenance_mode": {"enum": ["generation_time", "matched_support"]},
+        "selection_method": {"const": "model_led_claim_chain_review"},
+        "reviewed_claim_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "chain_assessments": {"type": "array", "items": {"$ref": "#/$defs/chainAssessment"}},
+        "untracked_material_claims": {"type": "array", "items": {"$ref": "#/$defs/untrackedClaimAssessment"}},
+        "limitations": {"type": "array", "items": {"type": "string", "minLength": 1}},
         "analysis": {"type": "string", "minLength": 1}
       },
       "additionalProperties": false

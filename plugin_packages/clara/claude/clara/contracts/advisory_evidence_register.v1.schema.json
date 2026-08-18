@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://mparanza.com/schemas/clara/advisory-evidence-register-v1.json",
+  "title": "Clara advisory evidence register",
+  "description": "Append-only evidence receipts captured while advisory work is performed. The register records identity and provenance; it does not decide semantic support.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "evidence"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "evidence": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceReceipt"}
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "text": {
+      "type": "string",
+      "pattern": "^(?:\\S|\\S[\\s\\S]*\\S)$"
+    },
+    "textList": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/$defs/text"}
+    },
+    "artifactReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "path_reference", "sha256", "byte_count"],
+      "properties": {
+        "path": {"$ref": "#/$defs/text"},
+        "path_reference": {"enum": ["case_relative", "absolute"]},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "byte_count": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string"}
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["material_ids", "url", "locator", "artifact_refs"],
+      "properties": {
+        "material_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/id"}
+        },
+        "url": {"type": "string"},
+        "locator": {"$ref": "#/$defs/text"},
+        "artifact_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/artifactReceipt"}
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "checked_at", "method", "notes"],
+      "properties": {
+        "status": {
+          "enum": [
+            "not_checked",
+            "identity_verified",
+            "rechecked_unchanged",
+            "rechecked_changed",
+            "unavailable"
+          ]
+        },
+        "checked_at": {"type": "string"},
+        "method": {"type": "string"},
+        "notes": {"$ref": "#/$defs/textList"}
+      }
+    },
+    "evidenceReceipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "evidence_type",
+        "recorded_at",
+        "recorded_by",
+        "capture_status",
+        "source",
+        "observation",
+        "scope",
+        "limitations",
+        "verification",
+        "rechecks_evidence_id",
+        "supersedes_evidence_id"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "evidence_type": {
+          "enum": [
+            "local_document",
+            "web_capture",
+            "interview_transcript",
+            "dataset",
+            "calculation_run",
+            "management_assertion",
+            "advisor_judgement",
+            "prior_clara_output",
+            "other"
+          ]
+        },
+        "recorded_at": {"$ref": "#/$defs/text"},
+        "recorded_by": {"$ref": "#/$defs/text"},
+        "capture_status": {"enum": ["captured", "assertion_only", "unavailable"]},
+        "source": {"$ref": "#/$defs/source"},
+        "observation": {"$ref": "#/$defs/text"},
+        "scope": {"$ref": "#/$defs/text"},
+        "limitations": {"$ref": "#/$defs/textList"},
+        "verification": {"$ref": "#/$defs/verification"},
+        "rechecks_evidence_id": {"type": "string"},
+        "supersedes_evidence_id": {"type": "string"}
+      }
+    }
+  }
+}

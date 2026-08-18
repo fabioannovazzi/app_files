@@ -29,6 +29,21 @@ assumptions, identifying contradictions and missing evidence, judging whether
 recommendations fit the evidence and decision, identifying professional-
 judgement boundaries, and drafting evidence-bounded corrections.
 
+For Clara-created work, validation begins upstream rather than reconstructing a
+claim list after the document is finished. When a source, interview, calculation,
+or Clara analysis introduces a claim, record the evidence receipt and claim at
+that step. When another claim depends on it, carry the claim ID, evidence IDs,
+dependency mode (`all_of` or `any_of`), and the stated derivation forward. When
+the claim appears in a memo, report, deck, or recommendation, record that exact
+appearance. The final validator selects the decision-relevant claims through
+model judgement and walks each selected claim back through every declared
+dependency and evidence receipt.
+
+For an external completed document with no generation-time registers, use
+`matched_support`. Clara may identify material claims and match them to supplied
+or newly inspected evidence, but must not describe that reconstruction as
+original provenance.
+
 Deterministic code is limited to mechanically verifiable work: supported-format
 text extraction, file hashing, citation/link/numeric-token inventory, declared
 JSON-shape validation, cross-field consistency, original-preservation checks,
@@ -39,6 +54,62 @@ whether evidence supports a claim, whether reasoning is sound, whether a
 format-specific check passed semantically, or whether a recommendation is good.
 The scripts make no model API calls. Do not replace them with a keyword classifier,
 semantic scorecard, or hidden model route.
+
+## Evidence and claim lineage
+
+The canonical case records are:
+
+- `advisory_evidence_register.json` (`schema_version: "1.0"`): append-only
+  receipts for local documents, public web captures, interview transcripts,
+  datasets, calculation runs, management assertions, advisor judgement, prior
+  Clara outputs, and other explicitly identified evidence;
+- `advisory_claim_register.json` (`schema_version: "1.0"`): model-authored
+  claims with evidence relationships, what each receipt proves and does not
+  prove, downstream dependencies, uncertainty, judgement boundaries, and
+  deliverable appearances;
+- `advisory_evidence_map.md`: deterministic readable rendering of those two
+  registers, not a separate source of truth.
+
+Use `scripts/advisory_evidence_lineage.py` to initialize, append, validate, and
+render these records. The helper enforces schema, immutable IDs, literal
+references, timestamps, file hashes, and an acyclic dependency graph. It does
+not decide whether an observation is true, whether evidence supports a claim,
+or whether a conclusion follows.
+
+Evidence must travel with the claim:
+
+- A public page capture records the requested/final URL, captured bytes,
+  normalized text, hashes, capture scope, and explicit limitations. The model
+  inspects that capture and authors the observation. For example, thirteen
+  visible listings support only that captured observation; they do not support
+  a claim that the company holds thirteen or three hundred vehicles in total.
+- A management or interview statement may remain an `assertion_only` receipt.
+  “Giovanni believes X” can be properly supported by the transcript even when X
+  itself is not independently established. A separate truth claim about X needs
+  its own basis.
+- A calculation claim references a `calculation_run` receipt containing the
+  Reporting Engine inputs, method, output, reconciliation or render manifest,
+  and hashes. The final validator may require a targeted rerun, but does not
+  replace the Reporting Engine.
+- A derived claim records all required upstream claim IDs and the reasoning,
+  aggregation, quotation, or calculation that connects them. If claim X needs
+  both A and B, use `all_of`; the final review cannot assess X while omitting A
+  or B.
+
+Capture a public page only when the workflow actually uses it:
+
+```bash
+python scripts/capture_advisory_web_evidence.py <case-dir> <public-url> \
+  --evidence-id ev-web-001 \
+  --observation "The model-authored observation from the inspected capture" \
+  --scope "The exact page and capture time" \
+  --limitation "What this capture does not establish"
+```
+
+This direct local fetch is opt-in. It checks public-network destinations and
+redirects, preserves the response and normalized text under
+`source_materials/web/`, and verifies source identity. It does not infer the
+observation or certify its completeness or truth.
 
 ## Advisory contract
 
@@ -118,6 +189,15 @@ it does not duplicate or weaken them:
 | Claims based on CSV/XLSX/Parquet calculations | Use `clara:reporting-engine` with a reviewed semantic layer and its calculation/render evidence. |
 | Correction of an existing PPTX or Clara HTML deck | Use `clara:deck-correction`; preserve the original and complete its approval, render, and verification gates. |
 
+During generation, reuse the same upstream claim ID in the Claim Basis Map
+`claim_key`/`advisory_claim_id` and in the HTML content ledger claim `id` when
+its safe-ID contract permits. Add the corresponding deliverable appearance to
+the shared claim register. The format ledgers remain authoritative for their
+own text drift, visual binding, calculation binding, rendering, and browser QA;
+the shared registers remain authoritative for the cross-workflow evidence and
+dependency chain. A shared receipt never substitutes for a missing
+format-specific artifact.
+
 Record these needs under `validation_profile.format_checks` in the advisory
 contract. Required check artifacts remain authoritative. If a required check is
 blocked, delivery readiness is blocked; the validator must not reimplement a
@@ -146,33 +226,68 @@ python scripts/managed_python_runtime.py run \
   prepare <deliverable> \
   --advisory-contract <work-folder>/advisory_contract.json \
   --output-dir <work-folder>/validation \
-  --source-file <selected-evidence>
+  --source-file <selected-evidence> \
+  --evidence-register <case-dir>/advisory_evidence_register.json \
+  --claim-register <case-dir>/advisory_claim_register.json
 ```
 
-3. Read the complete `extracted_deliverable.md`, not only the mechanical
-   inventories. Read the selected source material and the required existing
-   format-check artifacts. Citation markers, links, and numeric tokens are
-   navigation aids only; they must not select or assess material claims.
-4. Perform the model-led review across all ten dimensions. Preserve the
+Supply both lineage registers or neither. Omit them only for an external
+document or a legacy run that genuinely has no generation-time lineage. The
+preparation then records `matched_support` and does not create fake empty
+provenance.
+
+3. Read the complete `extracted_deliverable.md`, the bounded
+   `coverage_inventory.json`, the lineage registers when supplied, the selected
+   source material, and the required existing format-check artifacts. Citation
+   markers, links, numeric tokens, and coverage-unit boundaries are navigation
+   aids only; they must not select or assess material claims.
+4. Use model judgement to select the claims that affect the deliverable's
+   decision, recommendation, material conclusion, or material limitation. In
+   generation-time mode, walk each selected claim through every declared
+   dependency. Compare its final wording with what its receipts prove and do
+   not prove. Record any material final claim missing from the upstream
+   register as `untracked_material_claims`; do not silently retrofit it into
+   original provenance. In matched-support mode, review material claims against
+   the evidence now available and preserve the reconstruction limitation.
+5. Perform the model-led review across all ten dimensions. Preserve the
    contract's scope and explicitly record reviewed sections, omitted sections,
-   limitations, missing evidence, and judgement-dependent points.
-5. Write `advisory_validation_review_draft.json` against
+   every considered or deliberately omitted coverage unit, missing evidence,
+   and judgement-dependent points. The coverage inventory makes a long report
+   auditable in bounded units; it does not reduce a two-hundred-page review to a
+   single prompt or a deterministic claim extractor.
+6. For each reviewed claim chain, decide whether a final targeted recheck is
+   required. Recheck public evidence when the original capture is missing,
+   inaccessible, stale for the decision, contradicted, or insufficiently
+   scoped. Rerun a calculation through its authoritative calculation workflow
+   when inputs, method, version, or reconciliation are missing or changed. A
+   completed recheck creates a new evidence receipt linked to the earlier one.
+   Rerun preparation after adding the receipt so the final review binds the
+   updated registers and hashes.
+   The deterministic packager only records these model-selected tasks in
+   `recheck_tasks.json`; it never chooses or performs them secretly.
+7. Write `advisory_validation_review_draft.json` against
    [references/advisory_validation_review.schema.json](references/advisory_validation_review.schema.json).
-   Use `model_led_materiality_review` as the coverage selection method. Record
-   evidence references, analysis, correction state, professional-review needs,
-   and explicit approval records separately. Approval is a user or professional
-   fact: never infer it from polished output, an empty issue list, or a model
-   recommendation. Do not turn the fields into a numeric score.
-6. If correction is needed and permitted, create a separate corrected artifact.
+   Use schema version `"1.2"`, `model_led_materiality_review` for document
+   coverage, and `model_led_claim_chain_review` for lineage selection. Bind the
+   review to the contract, deliverable, coverage inventory, and lineage
+   inventory hashes. Record evidence references, analysis, rechecks, correction
+   state, professional-review needs, and explicit approval records separately.
+   Approval is a user or professional fact: never infer it from polished output,
+   an empty issue list, or a model recommendation. Do not turn the fields into a
+   numeric score.
+8. If correction is needed and permitted, create a separate corrected artifact.
    Preserve the original bytes. For decks, use `clara:deck-correction`; for
    calculation-backed content, rerun the authoritative Reporting Engine checks;
    for an HTML stage deck, rebuild and rerun HTML deck validation/browser QA.
+   An unchanged claim keeps its claim ID and gains a new appearance. A changed
+   claim gets a new claim record whose `supersedes_claim_id` points to the prior
+   claim; withdrawn wording remains in the history rather than being erased.
    Re-review the corrected artifact before marking correction completed. Record
    its resolved path and SHA-256 in the correction record. When the contract
    requires correction or professional-judgement approval before delivery,
    record the explicit approver and a reference to the approval; pending
    approval is not delivery-ready.
-7. Package and mechanically audit the review:
+9. Package and mechanically audit the review:
 
 ```bash
 python scripts/managed_python_runtime.py run \
@@ -184,7 +299,7 @@ python scripts/managed_python_runtime.py run \
   [--corrected-deliverable <separate-corrected-file>]
 ```
 
-8. Read `validation_audit.json`. Its `record_complete` status proves only
+10. Read `validation_audit.json` and `recheck_tasks.json`. Its `record_complete` status proves only
    declared shape, original and corrected-artifact hash binding, explicit
    approval-state consistency, cross-field consistency, existence and hashes of
    referenced format-check artifacts, and original preservation. Use
@@ -203,7 +318,9 @@ as partial rather than claiming an equivalent verified package.
 
 The workflow does not automatically fetch links, search legal or other source
 domains, call connectors, upload material, publish, or send the deliverable.
-Those are separate user-selected actions and workflows.
+The explicit public-page capture helper is used only when Clara is already
+collecting or model-selects a targeted recheck of that exact public source.
+Those external actions remain visible, bounded workflow steps.
 
 ## Codex-Native Run UX
 
@@ -245,8 +362,13 @@ links to those artifacts and the unresolved or professionally owned decisions.
 - `citation_inventory.json`;
 - `calculation_inventory.json`;
 - `source_inventory.json`;
+- `coverage_inventory.json`;
+- `lineage_inventory.json`;
+- copied `advisory_evidence_register.json` and
+  `advisory_claim_register.json` when generation-time lineage exists;
 - `advisory_validation_review.json`;
 - `validation_audit.json`;
+- `recheck_tasks.json`;
 - `advisory_validation_package.md`;
 - a separate corrected artifact only when correction was completed.
 
@@ -260,6 +382,13 @@ links to those artifacts and the unresolved or professionally owned decisions.
   duplicate the missing check.
 - Missing source or calculation evidence: assess what is available, identify
   the gap, and do not invent support.
+- Missing generation-time lineage: use `matched_support`; never label a
+  reconstructed source match as original provenance.
+- Omitted dependency claim: complete the declared chain review before claiming
+  readiness.
+- Pending or blocked targeted recheck for a material claim: keep delivery
+  blocked until the recheck is completed or the claim is removed, corrected, or
+  explicitly qualified within the contract and professional boundary.
 - Review-record audit failure: repair the model-authored record and rerun
   packaging; do not ignore failed checks.
 - Proposed correction without a separate artifact: keep delivery not ready.

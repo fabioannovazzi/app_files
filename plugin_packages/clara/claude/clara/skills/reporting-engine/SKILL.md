@@ -214,6 +214,17 @@ boundary). Multi-source analytical work must first use reviewed semantic and
 relationship decisions to materialize deterministic evidence tables; the
 renderer must not infer cross-source joins.
 
+When a Reporting Engine result introduces or updates a claim in a Clara case,
+also create a `calculation_run` receipt in
+`advisory_evidence_register.json`. Bind the input dataset or prepared table,
+semantic-layer validation, calculation or effective recipe, reconciliation or
+compatibility evidence, `render_manifest.json`, and their hashes. The related
+claim in `advisory_claim_register.json` references that receipt through
+`calculation_evidence_id` and names any upstream claim dependencies. This
+cross-workflow receipt lets the advisory validator find and selectively rerun
+the exact calculation; it does not replace Reporting Engine's semantic review,
+compatibility checks, calculation logic, or render proof.
+
 ## Cowork-native Run UX
 
 For any reporting-engine run, keep a short checklist in chat or in the run

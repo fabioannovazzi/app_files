@@ -4,6 +4,10 @@
   "display_name": "Advisory Deliverable Validator",
   "governed_paths": [
     "contracts/advisory_contract.v1.schema.json",
+    "contracts/advisory_claim_register.v1.schema.json",
+    "contracts/advisory_evidence_register.v1.schema.json",
+    "scripts/advisory_evidence_lineage.py",
+    "scripts/capture_advisory_web_evidence.py",
     "skills/advisory-deliverable-validator/SKILL.md",
     "skills/advisory-deliverable-validator/evals",
     "skills/advisory-deliverable-validator/references",
@@ -21,6 +25,11 @@
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
         "content": "Claim Basis Map records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction change and verification records, referenced artifact paths and hashes, model-led findings, correction drafts and their path/hash binding, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
+      },
+      {
+        "id": "advisory-claim-and-evidence-lineage",
+        "purpose": "Preserve and review the evidence, dependencies, derivations and output appearances of advisory claims",
+        "content": "advisory_evidence_register.json and advisory_claim_register.json; source observations and limitations; management and interview assertions; public capture URLs and normalized text; local artifact paths, hashes and byte counts; calculation receipts; claim statements, evidence relationships, dependency graphs, reasoning, uncertainty, judgement boundaries, deliverable locations, model-selected chain assessments, coverage units and targeted recheck decisions"
       }
     ]
   },
@@ -44,12 +53,32 @@
     "per_case_record_required": false
   },
   "hosted_service_ids": [],
-  "boundaries_beyond_codex": [],
-  "security_controls": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "selected-public-source-capture",
+      "kind": "public_research",
+      "destination": "The exact public HTTP or HTTPS source selected for evidence collection or a targeted final recheck",
+      "purpose": "Preserve a time-bound public response and normalized text so the model can author and later recheck a scoped advisory observation",
+      "content": "The exact selected public URL and ordinary request metadata; the public response is stored locally with requested and final URL, byte count, capture scope and hashes; no case files, prompts, transcripts, credentials or unrelated browsing data are sent",
+      "optional": true,
+      "requires_confirmation": false,
+      "controls": [
+        "The helper runs only for an exact source explicitly selected during evidence collection or by the model-led recheck decision; it does not crawl, search, or open every URL in a deliverable.",
+        "Only credential-free public HTTP or HTTPS destinations on standard ports are allowed; DNS results and every redirect destination must be globally routable.",
+        "The response is capped at one million bytes, stored locally with hashes, and described as source identity rather than proof that the model-authored observation is true or complete."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "lineage-artifact-binding",
+      "control": "Evidence artifacts, lineage inventories, the deliverable, contract and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references and dependency closure without making semantic support decisions."
+    }
+  ],
   "review": {
-    "reviewed_at": "2026-08-16",
+    "reviewed_at": "2026-08-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "77102465198dc2e55cecd8898239452beea4dcabaeaa016c86f71ffb6a598aca"
+    "source_fingerprint": "4dfbbf833a0082e93fb1d93a7f41a07923c19c8ab3d9c5e752d722acc5d78f94"
   }
 }

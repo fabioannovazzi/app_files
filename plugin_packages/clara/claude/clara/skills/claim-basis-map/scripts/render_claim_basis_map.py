@@ -521,6 +521,19 @@ def _validate_payload(payload: Any) -> list[str]:
                 errors.append(
                     f"slides[{slide_index}].claims[{claim_index}].claim is required."
                 )
+            advisory_claim_id = claim.get("advisory_claim_id", "")
+            if advisory_claim_id and not isinstance(advisory_claim_id, str):
+                errors.append(
+                    f"slides[{slide_index}].claims[{claim_index}].advisory_claim_id must be text."
+                )
+            evidence_receipt_ids = claim.get("evidence_receipt_ids", [])
+            if not isinstance(evidence_receipt_ids, list) or any(
+                not isinstance(item, str) or not _clean_text(item)
+                for item in evidence_receipt_ids
+            ):
+                errors.append(
+                    f"slides[{slide_index}].claims[{claim_index}].evidence_receipt_ids must be a text array."
+                )
     if not errors:
         _, _, index_errors = _claim_indexes(slides)
         errors.extend(index_errors)
@@ -531,6 +544,16 @@ def _claim_block(claim: dict[str, Any]) -> list[str]:
     claim_text = _clean_text(claim["claim"])
     basis = _basis_type(claim)
     lines = [f'- "{claim_text}"']
+    advisory_claim_id = _clean_text(claim.get("advisory_claim_id"))
+    if advisory_claim_id:
+        lines.append(f"  Advisory claim: {advisory_claim_id}")
+    evidence_receipt_ids = [
+        _clean_text(item)
+        for item in _non_empty_list(claim.get("evidence_receipt_ids"))
+        if _clean_text(item)
+    ]
+    if evidence_receipt_ids:
+        lines.append(f"  Evidence receipts: {', '.join(evidence_receipt_ids)}")
     if basis == "source-backed":
         for ref in _non_empty_list(claim.get("source_refs")):
             text = _source_ref_text(ref)

@@ -193,9 +193,10 @@ scenarios, source materials, or possible options. It must state the responsible
 decision posture now, and what must be tested, evidenced, or decided before
 moving further.
 
-Before the advisory workpaper, Clara must create or update
-`advisory_evidence_map.md`. This is a living Loop 1 control artifact. Clara
-weighs evidence claim-by-claim, not source-by-source: the same interview,
+Before the advisory workpaper, Clara must update
+`advisory_evidence_register.json` and `advisory_claim_register.json`, then
+render `advisory_evidence_map.md` from them. These are the living Loop 1 control
+artifacts. Clara weighs evidence claim-by-claim, not source-by-source: the same interview,
 presentation, document, metric, or external reference can be strong evidence
 for one claim and weak evidence for another. For each material claim, option,
 implementation condition, or decision point, the evidence map must record:
@@ -211,15 +212,26 @@ implementation condition, or decision point, the evidence map must record:
 - the decision implication and the missing evidence that would change the
   position.
 
-Update `advisory_evidence_map.md` whenever new material is indexed, notes are
-ingested, a transcript is imported, a case-update package is imported, or a
+Update the structured registers and rerender `advisory_evidence_map.md` whenever
+new material is used, notes are ingested, a transcript is imported, a web page
+is captured, a calculation is run, a case-update package is imported, or a
 prior output is corrected in a way that could affect the decision. The update
-must preserve existing claims, add new evidence items, mark whether new
+must preserve existing claims, add new evidence receipts, mark whether new
 evidence supports, weakens, contradicts, or creates a claim, close or open
 questions when appropriate, and change Clara's advisory posture only when the
 weight of evidence changes. Do not reduce this to a mechanical scorecard unless
 the user explicitly asks for a scoring model and the basis for scoring is
 auditable.
+
+Evidence travels with a claim from the moment that claim enters the analysis.
+Use stable claim IDs and evidence IDs in subsequent reasoning and output
+appearances. Record `all_of` or `any_of` dependencies and the actual derivation
+when a conclusion depends on earlier claims. A transcript receipt proves that a
+speaker made the recorded statement, not that the statement is true. A public
+capture proves the captured page and scope, not a broader population. A
+calculation claim carries the Reporting Engine run and its inputs, method, and
+hash-bound outputs. Do not reconstruct this chain only after a deliverable is
+finished when generation-time provenance was available.
 
 Loop 1 is the Advisory Intelligence Loop. Before building an HTML deck, memo, or
 decision pack, Clara must inspect the case workspace, source materials, notes,
@@ -411,6 +423,7 @@ dependencies permit: `case_manifest.json`, `material_registry.json`,
 `judgement_log.json`, `open_questions.json`, `case_issues.json`, `case_brief.md`,
 `advisory_contract.json`, `clara_mandate.json`, `clara_kickoff_deck.html`,
 `clara_partner_brief.html`, `advisory_evidence_map.md`,
+`advisory_evidence_register.json`, `advisory_claim_register.json`,
 `advisory_workpaper.md`, `judgement_checkpoint.md`,
 `presentation_storyline.md`, `presentation_review.md`, `decision_pack.md`,
 `decision_pack.docx`,
@@ -545,8 +558,22 @@ Supported source previews include Markdown/text, Word documents, PDFs as
 registered references, and PowerPoint decks.
 
 After indexing or importing any new material that could affect a decision,
-update `advisory_evidence_map.md` before revising the advisory workpaper,
-storyline, deck, memo, or decision pack.
+record the evidence receipts and claims that Clara actually uses, then render
+and validate the shared lineage before revising the advisory workpaper,
+storyline, deck, memo, or decision pack:
+
+```bash
+python scripts/advisory_evidence_lineage.py add-evidence <case-dir> <model-authored-evidence-records.json>
+python scripts/advisory_evidence_lineage.py add-claims <case-dir> <model-authored-claim-records.json>
+python scripts/advisory_evidence_lineage.py validate <case-dir>
+```
+
+The model authors observations, support relationships, what evidence proves and
+does not prove, dependencies, reasoning, uncertainty, and decision use. The
+helper only validates declared shape, references, hashes, and graph integrity.
+When a claim enters a final output, use `link-appearances` with the exact output
+and locator. Use `capture_advisory_web_evidence.py` for an explicitly selected
+public page; do not turn every URL into an automatic fetch.
 
 When a downloaded or local file must first be made durable inside the case
 workspace, use the copy helper before indexing or handoff:
@@ -565,6 +592,7 @@ filename, reuses an identical existing copy, and avoids overwriting a different
 file by adding a numeric suffix. Use `--register` only when the copied file
 should be recorded in `material_registry.json`; registration refreshes
 `case_brief.md`. If the registered material could affect a decision, update
+the structured evidence and claim registers and rerender
 `advisory_evidence_map.md` before relying on it in any workpaper, storyline,
 deck, memo, or decision pack.
 
@@ -1054,7 +1082,8 @@ also creates `voice_sessions/<timestamp>/codex_discussion_review.md`. Use the lo
 pack when Codex should perform the second-pass advisory review of the full
 discussion: weak assumptions, contradictions, missed questions, and proposed
 local Clara entries. Before any imported transcript changes the deck, memo, or
-decision pack, reconcile it into `advisory_evidence_map.md`. Direct access to
+decision pack, create the transcript receipt and linked quote/assertion claims,
+then rerender `advisory_evidence_map.md`. Direct access to
 the hosted voice URL without a plugin-created launch token and authenticated
 Mparanza session is not a valid run.
 
@@ -1220,9 +1249,9 @@ to local IDs, extracts packaged case-owned files under `exchange_imports/`, and
 does not overwrite local records. If an already imported record arrives with
 changed fields, the script logs an open conflict question for manual review.
 Do not use Codex to merge conflicting judgement silently. After importing new
-materials, judgement, open questions, or conflicts, update
-`advisory_evidence_map.md` before relying on the imported content in a
-deliverable.
+materials, judgement, open questions, or conflicts, update the structured
+evidence and claim registers and rerender `advisory_evidence_map.md` before
+relying on the imported content in a deliverable.
 
 10. Refresh the derived working brief when the case files were edited manually or
 when the user asks "where are we?":
@@ -1311,12 +1340,21 @@ The case workspace owns durable JSON files and derived working artifacts:
 - `clara_kickoff_deck.html`: first quiet partner-facing HTML deck with initial
   hypotheses, evidence gaps, open questions, and next partner inputs.
 - `clara_partner_brief.html`: local HTML working brief for the senior partner.
-- `advisory_evidence_map.md`: living Loop 1 evidence navigation map. It links
+- `advisory_evidence_register.json`: append-only source receipts captured when
+  evidence enters the analysis, including type, source identity, artifact
+  hashes, explicit observation, scope, limitations, and verification state.
+- `advisory_claim_register.json`: append-only model-authored claims with stable
+  IDs, evidence relationships, what each receipt proves and does not prove,
+  upstream claim dependencies, derivation, uncertainty, judgement boundary,
+  and exact output appearances.
+- `advisory_evidence_map.md`: derived Loop 1 evidence navigation map rendered
+  from the two structured registers. It links
   claims, options, and implementation conditions to evidence that supports,
   weakens, contradicts, or creates them; records what each source proves and
   does not prove; and tracks directness, reliability, corroboration, bias,
   limitations, source gaps, decision implications, and evidence that would
-  change the position. Update it whenever material evidence changes.
+  change the position. Rerender it whenever material evidence changes; do not
+  hand-edit it as a competing source of truth.
 - `advisory_workpaper.md`: Codex-authored Loop 1 advisory reasoning, option
   evaluation, evidence weighing, contradictions, implementation conditions, and
   Clara defaults. This is a working artifact, not the polished client document.

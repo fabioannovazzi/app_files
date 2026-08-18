@@ -57,7 +57,7 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.154"
+    assert source["version"] == "0.1.156"
     assert template["version"] == manifest["version"] == "0.1.138"
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"

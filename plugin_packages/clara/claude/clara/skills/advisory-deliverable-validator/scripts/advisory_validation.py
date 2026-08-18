@@ -12,10 +12,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import html
+import importlib.util
 import json
 import logging
 import re
 import shutil
+import sys
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
@@ -35,6 +37,14 @@ LOGGER = logging.getLogger(__name__)
 CLARA_ROOT = Path(__file__).resolve().parents[3]
 REPOSITORY_ROOT = Path(__file__).resolve().parents[5]
 CONTRACT_SCHEMA_PATH = CLARA_ROOT / "contracts" / "advisory_contract.v1.schema.json"
+REVIEW_SCHEMA_PATH = (
+    Path(__file__).resolve().parents[1]
+    / "references"
+    / "advisory_validation_review.schema.json"
+)
+LINEAGE_SCRIPT_PATH = CLARA_ROOT / "scripts" / "advisory_evidence_lineage.py"
+EVIDENCE_REGISTER_FILENAME = "advisory_evidence_register.json"
+CLAIM_REGISTER_FILENAME = "advisory_claim_register.json"
 SUPPORTED_PRIMARY_SUFFIXES = {
     ".docx",
     ".htm",
@@ -110,6 +120,32 @@ READINESS_STATUSES = {
     "blocked",
 }
 APPROVAL_STATUSES = {"approved", "pending", "not_required"}
+PROVENANCE_MODES = {"generation_time", "matched_support"}
+CHAIN_SUPPORT_STATUSES = {
+    "adequate",
+    "partial",
+    "unsupported",
+    "contradicted",
+    "uncertain",
+    "not_applicable",
+}
+CHAIN_REASONING_STATUSES = {
+    "sound",
+    "gap",
+    "contradicted",
+    "uncertain",
+    "not_applicable",
+}
+RECHECK_KINDS = {"none", "web", "calculation", "file", "transcript", "other"}
+RECHECK_STATUSES = {"not_required", "completed", "pending", "blocked"}
+CHAIN_RESOLUTION_STATUSES = {
+    "no_change",
+    "corrected",
+    "removed",
+    "qualified",
+    "pending",
+    "professional_review_required",
+}
 URL_RE = re.compile(r"https?://[^\s)\]>\"']+", re.IGNORECASE)
 CITATION_RE = re.compile(r"\[(?:\^?[A-Za-z0-9_-]+|\d+(?:,\s*\d+)*)\]")
 FOOTNOTE_RE = re.compile(r"^\[\^?([A-Za-z0-9_-]+)\]:\s*(.+)$", re.MULTILINE)
@@ -182,6 +218,24 @@ def _load_json(path: Path) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         raise AdvisoryValidationError(f"invalid JSON in {path}: {exc}") from exc
+
+
+def _lineage_module() -> Any:
+    """Load the shared Clara lineage helper without changing import paths."""
+
+    module_name = "clara_advisory_evidence_lineage"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    spec = importlib.util.spec_from_file_location(module_name, LINEAGE_SCRIPT_PATH)
+    if spec is None or spec.loader is None:
+        raise AdvisoryValidationError(
+            f"cannot load advisory evidence lineage helper: {LINEAGE_SCRIPT_PATH}"
+        )
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
 
 
 def _is_non_empty_string(value: Any) -> bool:
@@ -407,6 +461,146 @@ def _calculation_inventory(text: str) -> dict[str, Any]:
     }
 
 
+def _coverage_inventory(
+    text: str, *, target_characters: int = 12_000
+) -> dict[str, Any]:
+    """Split extracted text into bounded navigation units without classifying it."""
+
+    units: list[dict[str, Any]] = []
+    start = 0
+    unit_number = 1
+    text_length = len(text)
+    while start < text_length:
+        candidate_end = min(text_length, start + target_characters)
+        end = candidate_end
+        if candidate_end < text_length:
+            paragraph_break = text.rfind("\n\n", start, candidate_end)
+            if paragraph_break > start + target_characters // 2:
+                end = paragraph_break
+        if end <= start:
+            end = candidate_end
+        unit_text = text[start:end]
+        unit_id = f"unit-{unit_number:04d}"
+        units.append(
+            {
+                "id": unit_id,
+                "character_start": start,
+                "character_end": end,
+                "character_count": len(unit_text),
+                "sha256": hashlib.sha256(unit_text.encode("utf-8")).hexdigest(),
+            }
+        )
+        start = end
+        while start < text_length and text[start].isspace():
+            start += 1
+        unit_number += 1
+    return {
+        "schema_version": "1.0",
+        "purpose": (
+            "Mechanical coverage units for scalable review; units do not identify "
+            "claims, importance, support, or meaning."
+        ),
+        "extracted_text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        "target_characters_per_unit": target_characters,
+        "units": units,
+    }
+
+
+def _copy_declared_file(source: Path, target: Path, *, label: str) -> Path:
+    if source.resolve() == target.resolve():
+        return target
+    if target.exists() and target.read_bytes() != source.read_bytes():
+        raise AdvisoryValidationError(
+            f"refusing to overwrite a different {label}: {target}"
+        )
+    shutil.copyfile(source, target)
+    return target
+
+
+def _prepare_lineage(
+    output_dir: Path,
+    evidence_register: Path | None,
+    claim_register: Path | None,
+) -> tuple[dict[str, Any], dict[str, Path]]:
+    """Validate and copy a complete generation-time lineage pair when supplied."""
+
+    if (evidence_register is None) != (claim_register is None):
+        raise AdvisoryValidationError(
+            "evidence and claim registers must be supplied together"
+        )
+    paths: dict[str, Path] = {}
+    if evidence_register is None or claim_register is None:
+        return (
+            {
+                "schema_version": "1.0",
+                "provenance_mode": "matched_support",
+                "purpose": (
+                    "No generation-time lineage was supplied. Clara must match "
+                    "material deliverable claims to available support without "
+                    "calling the result original provenance."
+                ),
+                "evidence_register": None,
+                "claim_register": None,
+                "counts": {"evidence": 0, "claims": 0, "active_claims": 0},
+            },
+            paths,
+        )
+    if not evidence_register.is_file():
+        raise AdvisoryValidationError(
+            f"evidence register does not exist: {evidence_register}"
+        )
+    if not claim_register.is_file():
+        raise AdvisoryValidationError(
+            f"claim register does not exist: {claim_register}"
+        )
+    if evidence_register.parent.resolve() != claim_register.parent.resolve():
+        raise AdvisoryValidationError(
+            "evidence and claim registers must come from the same case directory"
+        )
+    lineage = _lineage_module()
+    audit = lineage.validate_lineage(evidence_register.parent)
+    if not audit["valid"]:
+        raise AdvisoryValidationError(
+            "invalid advisory evidence lineage: " + "; ".join(audit["errors"])
+        )
+    evidence_copy = _copy_declared_file(
+        evidence_register,
+        output_dir / EVIDENCE_REGISTER_FILENAME,
+        label="advisory evidence register",
+    )
+    claim_copy = _copy_declared_file(
+        claim_register,
+        output_dir / CLAIM_REGISTER_FILENAME,
+        label="advisory claim register",
+    )
+    paths = {
+        "evidence_register": evidence_copy,
+        "claim_register": claim_copy,
+    }
+    return (
+        {
+            "schema_version": "1.0",
+            "provenance_mode": "generation_time",
+            "purpose": (
+                "Generation-time claim and evidence lineage copied from the case "
+                "workspace after mechanical validation."
+            ),
+            "evidence_register": {
+                "source_path": str(evidence_register.resolve()),
+                "copied_path": str(evidence_copy.resolve()),
+                "sha256": _sha256(evidence_register),
+            },
+            "claim_register": {
+                "source_path": str(claim_register.resolve()),
+                "copied_path": str(claim_copy.resolve()),
+                "sha256": _sha256(claim_register),
+            },
+            "counts": audit["counts"],
+        },
+        paths,
+    )
+
+
 def _copy_contract(source: Path, output_dir: Path) -> Path:
     target = output_dir / "advisory_contract.json"
     if source.resolve() == target.resolve():
@@ -517,6 +711,8 @@ def prepare_validation(
     output_dir: Path,
     *,
     source_files: list[Path] | None = None,
+    evidence_register: Path | None = None,
+    claim_register: Path | None = None,
 ) -> dict[str, Path]:
     """Write deterministic preparation artifacts for a validator run."""
 
@@ -544,7 +740,13 @@ def prepare_validation(
         "citation_inventory": output_dir / "citation_inventory.json",
         "calculation_inventory": output_dir / "calculation_inventory.json",
         "source_inventory": output_dir / "source_inventory.json",
+        "coverage_inventory": output_dir / "coverage_inventory.json",
+        "lineage_inventory": output_dir / "lineage_inventory.json",
     }
+    if evidence_register is not None:
+        paths["evidence_register"] = output_dir / EVIDENCE_REGISTER_FILENAME
+    if claim_register is not None:
+        paths["claim_register"] = output_dir / CLAIM_REGISTER_FILENAME
     protected_inputs = {"primary deliverable": deliverable}
     protected_inputs.update(
         {
@@ -552,6 +754,10 @@ def prepare_validation(
             for index, source in enumerate(source_files or [], start=1)
         }
     )
+    if evidence_register is not None:
+        protected_inputs["advisory evidence register"] = evidence_register
+    if claim_register is not None:
+        protected_inputs["advisory claim register"] = claim_register
     _reject_output_collisions(paths, protected_inputs)
     contract_protected_outputs = dict(paths)
     if advisory_contract.resolve() == paths["advisory_contract"].resolve():
@@ -564,6 +770,15 @@ def prepare_validation(
     output_dir.mkdir(parents=True, exist_ok=True)
     contract_copy = _copy_contract(advisory_contract, output_dir)
     source_inventory = _source_inventory(source_files or [])
+    lineage_inventory, lineage_paths = _prepare_lineage(
+        output_dir,
+        evidence_register,
+        claim_register,
+    )
+    paths.update(lineage_paths)
+    coverage_inventory = _coverage_inventory(text)
+    _write_json(paths["coverage_inventory"], coverage_inventory)
+    _write_json(paths["lineage_inventory"], lineage_inventory)
     deliverable_hash = _sha256(deliverable)
     inventory = {
         "schema_version": "1.0",
@@ -585,6 +800,13 @@ def prepare_validation(
             "hidden_model_api_calls": False,
             "original_preserved": True,
         },
+        "lineage": {
+            "provenance_mode": lineage_inventory["provenance_mode"],
+            "lineage_inventory_path": str(paths["lineage_inventory"].resolve()),
+            "lineage_inventory_sha256": _sha256(paths["lineage_inventory"]),
+        },
+        "coverage_inventory_path": str(paths["coverage_inventory"].resolve()),
+        "coverage_inventory_sha256": _sha256(paths["coverage_inventory"]),
     }
     extracted_path = paths["extracted_deliverable"]
     extracted_path.write_text(text.rstrip() + "\n", encoding="utf-8")
@@ -650,18 +872,327 @@ def _validate_approval_record(value: Any, *, subject: str) -> list[str]:
     return errors
 
 
-def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
+def _claim_dependency_closure(
+    selected_ids: set[str],
+    claim_by_id: dict[str, dict[str, Any]],
+) -> set[str]:
+    closure = set(selected_ids)
+    pending = list(selected_ids)
+    while pending:
+        claim_id = pending.pop()
+        claim = claim_by_id.get(claim_id, {})
+        dependency = claim.get("dependency")
+        if not isinstance(dependency, dict):
+            continue
+        for dependency_id in dependency.get("claim_ids", []):
+            dependency_id = str(dependency_id)
+            if dependency_id not in closure:
+                closure.add(dependency_id)
+                pending.append(dependency_id)
+    return closure
+
+
+def _evidence_reference_closure(
+    selected_ids: set[str],
+    evidence_by_id: dict[str, dict[str, Any]],
+) -> set[str]:
+    """Return every receipt in the declared history of selected evidence."""
+
+    closure = set(selected_ids)
+    pending = list(selected_ids)
+    while pending:
+        evidence_id = pending.pop()
+        receipt = evidence_by_id.get(evidence_id, {})
+        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
+            referenced_id = str(receipt.get(field, ""))
+            if referenced_id and referenced_id not in closure:
+                closure.add(referenced_id)
+                pending.append(referenced_id)
+    return closure
+
+
+def _validate_recheck(value: Any, *, subject: str) -> list[str]:
+    if not isinstance(value, dict):
+        return [f"{subject} must be an object"]
+    errors: list[str] = []
+    required = {"required", "kind", "status", "evidence_ids", "analysis"}
+    missing = sorted(required - value.keys())
+    if missing:
+        return [f"{subject} missing fields: {', '.join(missing)}"]
+    if not isinstance(value["required"], bool):
+        errors.append(f"{subject}.required must be boolean")
+    if value["kind"] not in RECHECK_KINDS:
+        errors.append(f"{subject}.kind is invalid")
+    if value["status"] not in RECHECK_STATUSES:
+        errors.append(f"{subject}.status is invalid")
+    if not _is_string_list(value["evidence_ids"], allow_empty=True):
+        errors.append(f"{subject}.evidence_ids must be a string array")
+    if not _is_non_empty_string(value["analysis"]):
+        errors.append(f"{subject}.analysis is required")
+    if value["required"]:
+        if value["kind"] == "none" or value["status"] == "not_required":
+            errors.append(f"{subject} required recheck needs a kind and active status")
+        if value["status"] == "completed" and not value["evidence_ids"]:
+            errors.append(f"{subject} completed recheck requires evidence_ids")
+    elif (
+        value["kind"] != "none"
+        or value["status"] != "not_required"
+        or value["evidence_ids"]
+    ):
+        errors.append(f"{subject} non-required recheck must use none/not_required")
+    return errors
+
+
+def _validate_resolution(value: Any, *, subject: str) -> list[str]:
+    if not isinstance(value, dict):
+        return [f"{subject} must be an object"]
+    if set(value) != {"status", "explanation"}:
+        return [f"{subject} must contain status and explanation"]
+    errors: list[str] = []
+    if value["status"] not in CHAIN_RESOLUTION_STATUSES:
+        errors.append(f"{subject}.status is invalid")
+    if not _is_non_empty_string(value["explanation"]):
+        errors.append(f"{subject}.explanation is required")
+    return errors
+
+
+def _validate_chain_item(
+    value: Any,
+    *,
+    subject: str,
+    id_field: str,
+    known_evidence_ids: set[str],
+) -> list[str]:
+    if not isinstance(value, dict):
+        return [f"{subject} must be an object"]
+    required = {
+        id_field,
+        "statement",
+        "deliverable_locations",
+        "evidence_ids",
+        "dependency_claim_ids",
+        "support_status",
+        "reasoning_status",
+        "analysis",
+        "recheck",
+        "resolution",
+    }
+    missing = sorted(required - value.keys())
+    if missing:
+        return [f"{subject} missing fields: {', '.join(missing)}"]
+    errors: list[str] = []
+    if not _is_non_empty_string(value[id_field]):
+        errors.append(f"{subject}.{id_field} is required")
+    if not _is_non_empty_string(value["statement"]):
+        errors.append(f"{subject}.statement is required")
+    for field in ("deliverable_locations", "evidence_ids", "dependency_claim_ids"):
+        if not _is_string_list(value[field], allow_empty=True):
+            errors.append(f"{subject}.{field} must be a string array")
+    if value["support_status"] not in CHAIN_SUPPORT_STATUSES:
+        errors.append(f"{subject}.support_status is invalid")
+    if value["reasoning_status"] not in CHAIN_REASONING_STATUSES:
+        errors.append(f"{subject}.reasoning_status is invalid")
+    if not _is_non_empty_string(value["analysis"]):
+        errors.append(f"{subject}.analysis is required")
+    errors.extend(_validate_recheck(value["recheck"], subject=f"{subject}.recheck"))
+    errors.extend(
+        _validate_resolution(value["resolution"], subject=f"{subject}.resolution")
+    )
+    for evidence_id in value.get("evidence_ids", []):
+        if known_evidence_ids and evidence_id not in known_evidence_ids:
+            errors.append(f"{subject}: unknown evidence id {evidence_id}")
+    recheck = value.get("recheck")
+    if isinstance(recheck, dict):
+        for evidence_id in recheck.get("evidence_ids", []):
+            if known_evidence_ids and evidence_id not in known_evidence_ids:
+                errors.append(f"{subject}.recheck: unknown evidence id {evidence_id}")
+    return errors
+
+
+def _validate_lineage_review(
+    value: Any,
+    *,
+    provenance_mode: str | None,
+    claim_register: dict[str, Any] | None,
+    evidence_register: dict[str, Any] | None,
+) -> list[str]:
+    if not isinstance(value, dict):
+        return ["lineage_review must be an object"]
+    required = {
+        "provenance_mode",
+        "selection_method",
+        "reviewed_claim_ids",
+        "chain_assessments",
+        "untracked_material_claims",
+        "limitations",
+        "analysis",
+    }
+    missing = sorted(required - value.keys())
+    if missing:
+        return [f"lineage_review missing fields: {', '.join(missing)}"]
+    errors: list[str] = []
+    if value["provenance_mode"] not in PROVENANCE_MODES:
+        errors.append("lineage_review.provenance_mode is invalid")
+    if provenance_mode and value["provenance_mode"] != provenance_mode:
+        errors.append("lineage_review.provenance_mode must match preparation")
+    if value["selection_method"] != "model_led_claim_chain_review":
+        errors.append(
+            "lineage_review.selection_method must be model_led_claim_chain_review"
+        )
+    for field in ("reviewed_claim_ids", "limitations"):
+        if not _is_string_list(value[field], allow_empty=True):
+            errors.append(f"lineage_review.{field} must be a string array")
+    if not isinstance(value["chain_assessments"], list):
+        errors.append("lineage_review.chain_assessments must be an array")
+    if not isinstance(value["untracked_material_claims"], list):
+        errors.append("lineage_review.untracked_material_claims must be an array")
+    if not _is_non_empty_string(value["analysis"]):
+        errors.append("lineage_review.analysis is required")
+
+    claims = (
+        claim_register.get("claims", []) if isinstance(claim_register, dict) else []
+    )
+    evidence = (
+        evidence_register.get("evidence", [])
+        if isinstance(evidence_register, dict)
+        else []
+    )
+    claim_by_id = {
+        str(item.get("id")): item
+        for item in claims
+        if isinstance(item, dict) and item.get("id")
+    }
+    evidence_ids = {
+        str(item.get("id"))
+        for item in evidence
+        if isinstance(item, dict) and item.get("id")
+    }
+    evidence_by_id = {
+        str(item.get("id")): item
+        for item in evidence
+        if isinstance(item, dict) and item.get("id")
+    }
+    reviewed_ids = {
+        str(item) for item in value.get("reviewed_claim_ids", []) if str(item)
+    }
+    if len(reviewed_ids) != len(value.get("reviewed_claim_ids", [])):
+        errors.append("lineage_review.reviewed_claim_ids must be unique")
+    if value.get("provenance_mode") == "matched_support" and reviewed_ids:
+        errors.append("matched-support review cannot claim upstream reviewed_claim_ids")
+    for claim_id in sorted(reviewed_ids):
+        if claim_id not in claim_by_id:
+            errors.append(f"lineage_review: unknown reviewed claim id {claim_id}")
+
+    assessment_ids: list[str] = []
+    for index, assessment in enumerate(value.get("chain_assessments", [])):
+        subject = f"lineage_review.chain_assessments[{index}]"
+        errors.extend(
+            _validate_chain_item(
+                assessment,
+                subject=subject,
+                id_field="claim_id",
+                known_evidence_ids=evidence_ids,
+            )
+        )
+        if not isinstance(assessment, dict):
+            continue
+        claim_id = str(assessment.get("claim_id", ""))
+        assessment_ids.append(claim_id)
+        upstream_claim = claim_by_id.get(claim_id)
+        if upstream_claim is None and claim_by_id:
+            errors.append(f"{subject}: unknown claim id {claim_id}")
+            continue
+        if upstream_claim is not None:
+            if assessment.get("statement") != upstream_claim.get("statement"):
+                errors.append(f"{subject}.statement must match the upstream claim")
+            dependency = upstream_claim.get("dependency", {})
+            expected_dependencies = (
+                dependency.get("claim_ids", []) if isinstance(dependency, dict) else []
+            )
+            if set(assessment.get("dependency_claim_ids", [])) != set(
+                expected_dependencies
+            ):
+                errors.append(f"{subject}.dependency_claim_ids must match lineage")
+            directly_linked_evidence = {
+                str(link.get("evidence_id"))
+                for link in upstream_claim.get("evidence_links", [])
+                if isinstance(link, dict) and link.get("evidence_id")
+            }
+            if isinstance(dependency, dict) and dependency.get(
+                "calculation_evidence_id"
+            ):
+                directly_linked_evidence.add(str(dependency["calculation_evidence_id"]))
+            expected_evidence = _evidence_reference_closure(
+                directly_linked_evidence,
+                evidence_by_id,
+            )
+            if set(assessment.get("evidence_ids", [])) != expected_evidence:
+                errors.append(f"{subject}.evidence_ids must match lineage")
+    if len(assessment_ids) != len(set(assessment_ids)):
+        errors.append("lineage_review chain assessment claim ids must be unique")
+    if claim_by_id:
+        required_chain = _claim_dependency_closure(reviewed_ids, claim_by_id)
+        missing_chain = sorted(required_chain - set(assessment_ids))
+        if missing_chain:
+            errors.append(
+                "lineage_review omitted dependency chain claims: "
+                + ", ".join(missing_chain)
+            )
+
+    untracked_ids: list[str] = []
+    for index, assessment in enumerate(value.get("untracked_material_claims", [])):
+        subject = f"lineage_review.untracked_material_claims[{index}]"
+        errors.extend(
+            _validate_chain_item(
+                assessment,
+                subject=subject,
+                id_field="id",
+                known_evidence_ids=evidence_ids,
+            )
+        )
+        if isinstance(assessment, dict):
+            untracked_ids.append(str(assessment.get("id", "")))
+    if len(untracked_ids) != len(set(untracked_ids)):
+        errors.append("lineage_review untracked claim ids must be unique")
+    return errors
+
+
+def validate_review_record(
+    payload: Any,
+    contract: dict[str, Any],
+    *,
+    provenance_mode: str | None = None,
+    claim_register: dict[str, Any] | None = None,
+    evidence_register: dict[str, Any] | None = None,
+    coverage_inventory: dict[str, Any] | None = None,
+) -> list[str]:
     """Return mechanical shape and internal-consistency errors for a review."""
 
     if not isinstance(payload, dict):
         return ["review record must be an object"]
-    errors: list[str] = []
+    try:
+        review_schema = _load_json(REVIEW_SCHEMA_PATH)
+        Draft202012Validator.check_schema(review_schema)
+        errors = [
+            "review schema "
+            + (".".join(str(part) for part in error.absolute_path) or "$")
+            + f": {error.message}"
+            for error in sorted(
+                Draft202012Validator(review_schema).iter_errors(payload),
+                key=lambda item: tuple(str(part) for part in item.absolute_path),
+            )
+        ]
+    except (OSError, AdvisoryValidationError) as exc:
+        errors = [f"cannot load advisory review schema: {exc}"]
     required = {
         "schema_version",
         "language",
         "advisory_contract_sha256",
         "deliverable_sha256",
+        "coverage_inventory_sha256",
+        "lineage_inventory_sha256",
         "coverage_review",
+        "lineage_review",
         "dimension_reviews",
         "findings",
         "format_specific_checks",
@@ -673,11 +1204,16 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
     missing = sorted(required - payload.keys())
     if missing:
         return [f"review record missing fields: {', '.join(missing)}"]
-    if payload["schema_version"] != "1.0":
-        errors.append('review schema_version must be "1.0"')
+    if payload["schema_version"] != "1.2":
+        errors.append('review schema_version must be "1.2"')
     if payload["language"] != contract["output_language"]:
         errors.append("review language must match the advisory contract")
-    for field in ("advisory_contract_sha256", "deliverable_sha256"):
+    for field in (
+        "advisory_contract_sha256",
+        "deliverable_sha256",
+        "coverage_inventory_sha256",
+        "lineage_inventory_sha256",
+    ):
         value = payload[field]
         if not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None:
             errors.append(f"{field} must be a lowercase SHA-256")
@@ -701,6 +1237,43 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
                 errors.append(f"coverage_review.{field} must be a string array")
         if not _is_non_empty_string(coverage.get("analysis")):
             errors.append("coverage_review.analysis is required")
+        considered_unit_ids = coverage.get("considered_unit_ids")
+        omitted_unit_ids = coverage.get("omitted_unit_ids")
+        if not _is_string_list(considered_unit_ids, allow_empty=False):
+            errors.append("coverage_review.considered_unit_ids must be non-empty")
+        if not _is_string_list(omitted_unit_ids, allow_empty=True):
+            errors.append("coverage_review.omitted_unit_ids must be a string array")
+        if isinstance(coverage_inventory, dict):
+            known_units = {
+                str(unit.get("id"))
+                for unit in coverage_inventory.get("units", [])
+                if isinstance(unit, dict) and unit.get("id")
+            }
+            considered = set(considered_unit_ids or [])
+            omitted = set(omitted_unit_ids or [])
+            if considered & omitted:
+                errors.append("coverage units cannot be both considered and omitted")
+            unknown_units = sorted((considered | omitted) - known_units)
+            if unknown_units:
+                errors.append(
+                    "coverage review references unknown units: "
+                    + ", ".join(unknown_units)
+                )
+            missing_units = sorted(known_units - considered - omitted)
+            if missing_units:
+                errors.append(
+                    "coverage review does not account for units: "
+                    + ", ".join(missing_units)
+                )
+
+    errors.extend(
+        _validate_lineage_review(
+            payload["lineage_review"],
+            provenance_mode=provenance_mode,
+            claim_register=claim_register,
+            evidence_register=evidence_register,
+        )
+    )
 
     dimensions = payload["dimension_reviews"]
     if not isinstance(dimensions, dict) or set(dimensions) != set(REVIEW_DIMENSIONS):
@@ -844,6 +1417,7 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
 
     overall = payload["overall_assessment"]
     readiness = payload["delivery_readiness"]
+    lineage_review = payload["lineage_review"]
     if not isinstance(overall, dict):
         errors.append("overall_assessment must be an object")
     if not isinstance(readiness, dict):
@@ -897,6 +1471,32 @@ def validate_review_record(payload: Any, contract: dict[str, Any]) -> list[str]:
             for dimension in REVIEW_DIMENSIONS
         )
         delivery_ready = status in {"ready", "ready_with_residual_uncertainty"}
+        chain_items: list[dict[str, Any]] = []
+        if isinstance(lineage_review, dict):
+            for field in ("chain_assessments", "untracked_material_claims"):
+                values = lineage_review.get(field, [])
+                if isinstance(values, list):
+                    chain_items.extend(
+                        item for item in values if isinstance(item, dict)
+                    )
+        unresolved_chain = any(
+            item.get("support_status") in {"unsupported", "contradicted", "uncertain"}
+            or item.get("reasoning_status") in {"gap", "contradicted", "uncertain"}
+            or (
+                isinstance(item.get("recheck"), dict)
+                and item["recheck"].get("status") in {"pending", "blocked"}
+            )
+            or (
+                isinstance(item.get("resolution"), dict)
+                and item["resolution"].get("status")
+                in {"pending", "professional_review_required"}
+            )
+            for item in chain_items
+        )
+        if delivery_ready and unresolved_chain:
+            errors.append(
+                "delivery-ready status cannot coexist with an unresolved claim chain"
+            )
         if status == "ready" and unresolved_attention:
             errors.append(
                 "ready status cannot coexist with unresolved review attention"
@@ -992,6 +1592,38 @@ def _render_package(
             )
     else:
         lines.append("- No individual findings recorded.")
+    lines.extend(["", "## Claim and evidence chains", ""])
+    lineage_review = review.get("lineage_review", {})
+    if not isinstance(lineage_review, dict):
+        lineage_review = {}
+    lines.append(f"Provenance mode: {lineage_review.get('provenance_mode', 'missing')}")
+    chain_items: list[tuple[str, dict[str, Any]]] = []
+    for field, label in (
+        ("chain_assessments", "Tracked"),
+        ("untracked_material_claims", "Untracked"),
+    ):
+        values = lineage_review.get(field, [])
+        if isinstance(values, list):
+            chain_items.extend(
+                (label, item) for item in values if isinstance(item, dict)
+            )
+    if not chain_items:
+        lines.append("- No claim-chain assessment recorded.")
+    for label, item in chain_items:
+        item_id = item.get("claim_id") or item.get("id") or "claim"
+        recheck = item.get("recheck")
+        if not isinstance(recheck, dict):
+            recheck = {}
+        resolution = item.get("resolution")
+        if not isinstance(resolution, dict):
+            resolution = {}
+        lines.append(
+            f"- **{label} {item_id}** — support: {item.get('support_status', 'missing')}; "
+            f"reasoning: {item.get('reasoning_status', 'missing')}; "
+            f"recheck: {recheck.get('status', 'missing')}; "
+            f"resolution: {resolution.get('status', 'missing')}. "
+            f"{item.get('statement', '')}"
+        )
     lines.extend(["", "## Format-specific checks", ""])
     checks = review.get("format_specific_checks", [])
     if not isinstance(checks, list):
@@ -1042,6 +1674,131 @@ def _render_package(
     return "\n".join(lines).rstrip() + "\n"
 
 
+def _load_preparation_context(
+    inventory: dict[str, Any],
+) -> tuple[
+    dict[str, Any],
+    dict[str, Any],
+    dict[str, Any] | None,
+    dict[str, Any] | None,
+    list[str],
+]:
+    """Load hash-bound coverage and lineage artifacts recorded at preparation."""
+
+    errors: list[str] = []
+    coverage_inventory: dict[str, Any] = {}
+    lineage_inventory: dict[str, Any] = {}
+    claim_register: dict[str, Any] | None = None
+    evidence_register: dict[str, Any] | None = None
+
+    coverage_path = Path(str(inventory.get("coverage_inventory_path", "")))
+    if not coverage_path.is_file():
+        errors.append("coverage inventory is missing")
+    else:
+        if _sha256(coverage_path) != inventory.get("coverage_inventory_sha256"):
+            errors.append("coverage inventory changed since preparation")
+        loaded = _load_json(coverage_path)
+        if isinstance(loaded, dict):
+            coverage_inventory = loaded
+        else:
+            errors.append("coverage inventory must be an object")
+
+    lineage_record = inventory.get("lineage")
+    if not isinstance(lineage_record, dict):
+        errors.append("deliverable inventory has no lineage record")
+        return (
+            coverage_inventory,
+            lineage_inventory,
+            claim_register,
+            evidence_register,
+            errors,
+        )
+    lineage_path = Path(str(lineage_record.get("lineage_inventory_path", "")))
+    if not lineage_path.is_file():
+        errors.append("lineage inventory is missing")
+    else:
+        if _sha256(lineage_path) != lineage_record.get("lineage_inventory_sha256"):
+            errors.append("lineage inventory changed since preparation")
+        loaded = _load_json(lineage_path)
+        if isinstance(loaded, dict):
+            lineage_inventory = loaded
+        else:
+            errors.append("lineage inventory must be an object")
+
+    if lineage_record.get("provenance_mode") == "generation_time" and lineage_inventory:
+        for label, filename in (
+            ("evidence_register", EVIDENCE_REGISTER_FILENAME),
+            ("claim_register", CLAIM_REGISTER_FILENAME),
+        ):
+            record = lineage_inventory.get(label)
+            if not isinstance(record, dict):
+                errors.append(f"lineage inventory has no {label}")
+                continue
+            copied_path = Path(str(record.get("copied_path", "")))
+            source_path = Path(str(record.get("source_path", "")))
+            expected_hash = record.get("sha256")
+            if copied_path.name != filename or not copied_path.is_file():
+                errors.append(f"prepared {label} is missing")
+                continue
+            if _sha256(copied_path) != expected_hash:
+                errors.append(f"prepared {label} changed since preparation")
+            if not source_path.is_file() or _sha256(source_path) != expected_hash:
+                errors.append(f"source {label} changed since preparation")
+            loaded = _load_json(copied_path)
+            if not isinstance(loaded, dict):
+                errors.append(f"prepared {label} must be an object")
+            elif label == "claim_register":
+                claim_register = loaded
+            else:
+                evidence_register = loaded
+    return (
+        coverage_inventory,
+        lineage_inventory,
+        claim_register,
+        evidence_register,
+        errors,
+    )
+
+
+def _recheck_tasks(review: dict[str, Any]) -> dict[str, Any]:
+    """Package model-selected rechecks without selecting or executing them."""
+
+    tasks: list[dict[str, Any]] = []
+    lineage_review = review.get("lineage_review")
+    if isinstance(lineage_review, dict):
+        for field, id_field in (
+            ("chain_assessments", "claim_id"),
+            ("untracked_material_claims", "id"),
+        ):
+            values = lineage_review.get(field, [])
+            if not isinstance(values, list):
+                continue
+            for item in values:
+                if not isinstance(item, dict):
+                    continue
+                recheck = item.get("recheck")
+                if not isinstance(recheck, dict) or recheck.get("required") is not True:
+                    continue
+                tasks.append(
+                    {
+                        "claim_review_id": str(item.get(id_field, "")),
+                        "statement": str(item.get("statement", "")),
+                        "kind": recheck.get("kind"),
+                        "status": recheck.get("status"),
+                        "evidence_ids": recheck.get("evidence_ids", []),
+                        "analysis": recheck.get("analysis", ""),
+                    }
+                )
+    return {
+        "schema_version": "1.0",
+        "purpose": (
+            "Model-selected final rechecks. This file does not choose sources, "
+            "browse, rerun calculations, or decide whether evidence supports a claim."
+        ),
+        "tasks": tasks,
+    }
+
+
 def package_validation(
     inventory_path: Path,
     review_draft_path: Path,
@@ -1061,8 +1818,30 @@ def package_validation(
     if not isinstance(inventory, dict):
         errors.append("deliverable inventory must be an object")
         inventory = {}
+    (
+        coverage_inventory,
+        lineage_inventory,
+        claim_register,
+        evidence_register,
+        preparation_errors,
+    ) = _load_preparation_context(inventory)
+    errors.extend(preparation_errors)
+    provenance_mode = None
+    if isinstance(lineage_inventory, dict):
+        candidate_mode = lineage_inventory.get("provenance_mode")
+        if isinstance(candidate_mode, str):
+            provenance_mode = candidate_mode
     if isinstance(review, dict) and isinstance(contract, dict) and not contract_errors:
-        errors.extend(validate_review_record(review, contract))
+        errors.extend(
+            validate_review_record(
+                review,
+                contract,
+                provenance_mode=provenance_mode,
+                claim_register=claim_register,
+                evidence_register=evidence_register,
+                coverage_inventory=coverage_inventory,
+            )
+        )
     elif not isinstance(review, dict):
         errors.append("review record must be an object")
         review = {}
@@ -1081,6 +1860,18 @@ def package_validation(
         errors.append("review is not bound to the current advisory contract")
     if review.get("deliverable_sha256") != expected_original_hash:
         errors.append("review is not bound to the prepared deliverable")
+    if review.get("coverage_inventory_sha256") != inventory.get(
+        "coverage_inventory_sha256"
+    ):
+        errors.append("review is not bound to the prepared coverage inventory")
+    inventory_lineage = inventory.get("lineage")
+    expected_lineage_hash = (
+        inventory_lineage.get("lineage_inventory_sha256")
+        if isinstance(inventory_lineage, dict)
+        else None
+    )
+    if review.get("lineage_inventory_sha256") != expected_lineage_hash:
+        errors.append("review is not bound to the prepared lineage inventory")
 
     format_check_artifacts: list[dict[str, Any]] = []
     artifact_errors: list[str] = []
@@ -1133,6 +1924,7 @@ def package_validation(
         "review": output_dir / "advisory_validation_review.json",
         "audit": output_dir / "validation_audit.json",
         "package": output_dir / "advisory_validation_package.md",
+        "recheck_tasks": output_dir / "recheck_tasks.json",
     }
     protected_inputs = {
         "deliverable inventory": inventory_path,
@@ -1161,6 +1953,15 @@ def package_validation(
             == contract_hash,
             "deliverable_hash_bound": review.get("deliverable_sha256")
             == expected_original_hash,
+            "coverage_inventory_hash_bound": review.get("coverage_inventory_sha256")
+            == inventory.get("coverage_inventory_sha256"),
+            "lineage_inventory_hash_bound": review.get("lineage_inventory_sha256")
+            == (
+                inventory.get("lineage", {}).get("lineage_inventory_sha256")
+                if isinstance(inventory.get("lineage"), dict)
+                else None
+            ),
+            "preparation_artifacts_unchanged": not preparation_errors,
             "original_unchanged": original_unchanged,
             "separate_corrected_artifact": correction_status != "completed"
             or corrected_metadata is not None,
@@ -1191,6 +1992,7 @@ def package_validation(
     output_dir.mkdir(parents=True, exist_ok=True)
     _write_json(paths["review"], review)
     _write_json(paths["audit"], audit)
+    _write_json(paths["recheck_tasks"], _recheck_tasks(review))
     paths["package"].write_text(
         _render_package(inventory, review, audit), encoding="utf-8"
     )
@@ -1203,6 +2005,8 @@ def _prepare_command(args: argparse.Namespace) -> int:
         args.advisory_contract,
         args.output_dir,
         source_files=args.source_file,
+        evidence_register=args.evidence_register,
+        claim_register=args.claim_register,
     )
     LOGGER.info("Prepared advisory validation: %s", paths["deliverable_inventory"])
     return 0
@@ -1230,6 +2034,8 @@ def _parser() -> argparse.ArgumentParser:
     prepare.add_argument("--advisory-contract", type=Path, required=True)
     prepare.add_argument("--output-dir", type=Path, required=True)
     prepare.add_argument("--source-file", type=Path, action="append", default=[])
+    prepare.add_argument("--evidence-register", type=Path)
+    prepare.add_argument("--claim-register", type=Path)
     prepare.set_defaults(handler=_prepare_command)
 
     package = subparsers.add_parser(

@@ -847,13 +847,13 @@ def test_manifest_and_skill_are_generic() -> None:
     assert "responsible decision posture now" in normalized_skill
     assert "The first deck is not a summary" in normalized_skill
     assert "advisory_evidence_map.md" in skill
-    assert "living Loop 1 control artifact" in skill
+    assert "living Loop 1 control artifacts" in normalized_skill
     assert "claim-by-claim, not source-by-source" in skill
     assert "supports, weakens, contradicts, or creates" in skill
     assert "what this evidence proves" in skill
     assert "what this evidence does not prove" in skill
     assert "directness, reliability, corroboration, bias or limitation" in skill
-    assert "Update `advisory_evidence_map.md` whenever new material is indexed" in skill
+    assert "Evidence travels with a claim from the moment that claim enters" in skill
     assert "Evidence-navigation test" in skill
     assert "Default advisor-time assumption: the advisor has no time." in skill
     assert "advisory_workpaper.md" in skill
@@ -888,7 +888,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.154"
+    assert manifest["version"] == "0.1.156"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]
@@ -1099,6 +1099,8 @@ def test_initialize_case_creates_schema_files(tmp_path: Path) -> None:
     questions = json.loads((case_dir / "open_questions.json").read_text())
     issues = json.loads((case_dir / "case_issues.json").read_text())
     clara_mandate = json.loads((case_dir / "clara_mandate.json").read_text())
+    evidence = json.loads((case_dir / "advisory_evidence_register.json").read_text())
+    claims = json.loads((case_dir / "advisory_claim_register.json").read_text())
     brief = (case_dir / "case_brief.md").read_text(encoding="utf-8")
 
     assert errors == []
@@ -1110,6 +1112,8 @@ def test_initialize_case_creates_schema_files(tmp_path: Path) -> None:
     assert issues["issues"] == []
     assert clara_mandate["persona"] == "Clara"
     assert clara_mandate["status"] == "not_started"
+    assert evidence == {"schema_version": "1.0", "evidence": []}
+    assert claims == {"schema_version": "1.0", "claims": []}
     assert "Derived working brief" in brief
     assert "The source of truth remains the JSON case files." in brief
     assert "Pending judgement entries: 0" in brief

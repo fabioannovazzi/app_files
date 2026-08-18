@@ -18,6 +18,13 @@ from pathlib import Path
 from typing import Any, Iterable, Mapping, Sequence
 from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile
 
+from advisory_evidence_lineage import (
+    CLAIM_REGISTER_FILENAME,
+    EVIDENCE_REGISTER_FILENAME,
+    initialize_lineage,
+    validate_lineage,
+)
+
 from html_deck_runtime import (
     apply_fixed_16_9_deck_runtime,
     assert_fixed_16_9_deck_runtime,
@@ -567,7 +574,7 @@ def initialize_case(
     overwrite: bool = False,
     now: datetime | None = None,
 ) -> dict[str, Any]:
-    """Create or load the four durable case workspace files."""
+    """Create or load the durable case workspace and advisory lineage files."""
 
     _validate_choice(output_language, SUPPORTED_LANGUAGES, "output_language")
     _validate_choice(status, CASE_STATUSES, "status")
@@ -602,6 +609,8 @@ def initialize_case(
         path = _case_path(case_dir, key)
         if overwrite or not path.exists():
             _write_json(path, payload)
+
+    initialize_lineage(case_dir, overwrite=overwrite)
 
     errors = validate_case_workspace(case_dir)
     if errors:
@@ -774,6 +783,13 @@ def validate_case_workspace(case_dir: Path) -> list[str]:
                 errors.append(f"{filename}: source_material_ids must be a list")
             if not isinstance(payload.get("voice_session_paths"), list):
                 errors.append(f"{filename}: voice_session_paths must be a list")
+    lineage_paths = (
+        case_dir / EVIDENCE_REGISTER_FILENAME,
+        case_dir / CLAIM_REGISTER_FILENAME,
+    )
+    if any(path.exists() for path in lineage_paths):
+        lineage_audit = validate_lineage(case_dir)
+        errors.extend(f"advisory lineage: {error}" for error in lineage_audit["errors"])
     return errors
 
 
@@ -1032,6 +1048,31 @@ def delete_materials(
     ]
     removed_ids = tuple(str(item["id"]) for item in removed_materials)
     removed_id_set = set(removed_ids)
+    evidence_path = case_dir / EVIDENCE_REGISTER_FILENAME
+    if evidence_path.is_file() and removed_id_set:
+        evidence_payload = _read_json(evidence_path)
+        referenced_by: dict[str, list[str]] = {}
+        for receipt in evidence_payload.get("evidence", []):
+            if not isinstance(receipt, dict):
+                continue
+            source = receipt.get("source")
+            if not isinstance(source, dict):
+                continue
+            for material_id in source.get("material_ids", []):
+                if material_id in removed_id_set:
+                    referenced_by.setdefault(str(material_id), []).append(
+                        str(receipt.get("id", "unknown"))
+                    )
+        if referenced_by:
+            details = "; ".join(
+                f"{material_id} is cited by {', '.join(receipt_ids)}"
+                for material_id, receipt_ids in sorted(referenced_by.items())
+            )
+            raise CaseWorkspaceError(
+                "cannot delete material with advisory evidence lineage; "
+                "supersede or withdraw the linked claims and preserve the source record: "
+                + details
+            )
     if not removed_materials:
         brief_result = refresh_case_brief(case_dir, now=now)
         return MaterialDeleteResult(
