@@ -68,6 +68,11 @@
       "required_signals": ["Vera", "Deep Research", "siti", "validalo"]
     },
     {
+      "id": "vera-ordinary-legal-question",
+      "prompt": "@vera devo fare un contratto di locazione transitorio di 18 mesi, ma il lavoratore mi chiede che sia di 12 mesi: si può fare?",
+      "required_signals": ["vera:quesito-professionale", "vera:prompt-optimizer", "vera:deep-research-validator", "risposta riveduta"]
+    },
+    {
       "id": "implicit-legal-question-journey",
       "prompt": "Secondo il diritto italiano, quali rimedi ha il conduttore per questi vizi dell'immobile?",
       "required_signals": ["quesito legale", "contratto di risposta", "risposta validata"]

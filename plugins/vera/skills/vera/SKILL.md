@@ -178,6 +178,12 @@ The catalog distinguishes user-facing workflows, cross-cutting assurance
 skills, subordinate intake skills, and developer governance. A cross-cutting
 skill is not a substitute for a missing operational workflow.
 
+For an ordinary substantive legal, tax, or compliance question or source-backed
+professional drafting request, `quesito-professionale` is the matching
+specialist workflow. Prompt Optimizer and Deep Research Validator are its
+sequential internal assurance stages; the user does not need to invoke either
+one.
+
 After selecting a workflow, open `../<skill-name>/SKILL.md` using the exact bare
 skill name from the catalog, read that file completely, and follow it before
 doing substantive work. That registered specialist skill resolves the full
@@ -283,6 +289,11 @@ them without changing the capability catalog:
   unlisted preview hosting and final publication are independent optional
   routes. Never invent services, credentials, testimonials, legal text or
   brand history, and never publish without the exact route and current review.
+- `quesito-professionale`: client-bound orchestration for one substantive
+  legal, tax, or compliance question or source-backed professional draft. It
+  prepares the answer contract, generates or hands off the answer, and validates
+  the completed answer. It never turns an unsupported operational return,
+  declaration, filing, or form into a generic answer workflow.
 
 ## Workflow provenance
 
@@ -302,12 +313,14 @@ result or claim that a workflow ran when it did not.
 ## Question To Validated Answer Journey
 
 When the user gives Vera a substantive legal, tax, or compliance question,
-start one question-to-validated-answer journey. Do not require the user to ask
-for prompt optimization, choose an internal module, or restate the question.
+select `quesito-professionale` as the matching specialist workflow and start one question-to-validated-answer journey.
+Do not require the user to ask for prompt optimization, choose an internal
+module, or restate the question.
 Identify the professional intent semantically; do not route from keywords or a
 deterministic classifier.
 
-This journey supports questions, analysis, and professional drafting whose
+The registered `quesito-professionale` workflow supports questions, analysis,
+and professional drafting whose
 quality can be assessed through an answer contract, current sources, reasoning,
 and professional-judgment boundaries. It does not by itself support an
 operational filing, statutory return, tax declaration, or form whose correctness
@@ -316,10 +329,10 @@ or submission controls. Use a dedicated workflow for that artifact. If none is
 available, stop under the no-matching-specialist-workflow outcome instead of
 treating Prompt Optimizer and Deep Research Validator as a substitute.
 
-The registered studio-wide `comunicazione-professionale` workflow is the only
-in-workstream implementation of this journey. Its exact answer-contract and
-claim-assurance schemas preserve the same validation dimensions without
-placing studio-wide editorial work in one client's Studio Archive engagement.
+The registered studio-wide `comunicazione-professionale` workflow implements
+the same journey inside its own workstream. Its exact answer-contract and claim-
+assurance schemas preserve the same validation dimensions without placing
+studio-wide editorial work in one client's Studio Archive engagement.
 Treat those artifacts as the prompt-optimizer and deep-research-validator
 stages for that contribution; do not run the client-bound modules again.
 
@@ -397,10 +410,10 @@ Offer an ordinary source-backed web-research run only as a clearly labelled
 alternative with its own evidence limits; never imply that it is the same
 product mode.
 
-This orchestration does not create a new external data route. The preparation
-stage remains governed by the `prompt-optimizer` workstream record, and the
-answer-review stage remains governed by the `deep-research-validator`
-workstream record.
+`quesito-professionale` does not create a third Studio Archive workstream or a
+new external data route. The preparation stage remains governed by the
+`prompt-optimizer` workstream record, and the answer-review stage remains
+governed by the `deep-research-validator` workstream record.
 
 For a selected local workflow module that actually needs scripts, files, or MCP,
 resolve its root in this order:

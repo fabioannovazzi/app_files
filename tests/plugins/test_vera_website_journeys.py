@@ -789,7 +789,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     core = _section_markup(page, "core")
     jurisdiction = _article_markup(page, "jurisdiction")
     common_workstreams = core.replace(jurisdiction, "")
-    expected_common_module_count = 24
+    expected_common_module_count = 25
     expected_jurisdiction_module_count = 10
 
     assert core.count('class="module-row"') == (
@@ -823,6 +823,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../bandi-agevolazioni/index.html",
         "../concordato-plan-review/index.html",
         "../report-builder/index.html",
+        "../quesito-professionale/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
     ):
@@ -901,6 +902,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Comunicazione professionale",
         "Sito dello studio",
         "Preparazione report finanziario",
+        "Risposta a quesiti legali e fiscali",
         "Ottimizzazione prompt",
         "Validazione ricerca",
         "Bilancio OIC e XBRL",
@@ -926,6 +928,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.communication.title": "Comunicazione professionale",
         "module.website.title": "Sito dello studio",
         "module.report.title": "Preparazione report finanziario",
+        "module.question.title": "Risposta a quesiti legali e fiscali",
         "module.prompt.title": "Ottimizzazione prompt",
         "module.research.title": "Validazione ricerca",
     }
@@ -951,6 +954,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
+        "quesito-professionale": "Risposta a quesiti legali e fiscali",
         "registro-imprese-sari": "Pratiche Registro Imprese",
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
@@ -964,7 +968,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 31
+    assert len(labels) == 32
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1415,7 +1419,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 34
+    expected_module_link_count = 35
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

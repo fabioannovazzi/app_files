@@ -90,6 +90,9 @@ def test_vera_routes_paolo_agenzia_teaching_request_to_studio_archive() -> None:
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:
     router = _read_text(ROUTER_PATH)
+    question_workflow = _read_text(
+        VERA_ROOT / "skills" / "quesito-professionale" / "SKILL.md"
+    )
     prompt_optimizer = _read_text(
         VERA_ROOT / "skills" / "prompt-optimizer" / "SKILL.md"
     )
@@ -99,13 +102,17 @@ def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() ->
 
     required_contracts = (
         "start one question-to-validated-answer journey",
+        "select `quesito-professionale`",
+        "vera:quesito-professionale -> vera:prompt-optimizer",
         "operational filing, statutory return, tax declaration, or form",
         "stop under the no-matching-specialist-workflow outcome",
         "Use automatically before Vera answers",
         "Use automatically before Vera delivers",
     )
 
-    combined_contract = "\n".join((router, prompt_optimizer, validator))
+    combined_contract = "\n".join(
+        (router, question_workflow, prompt_optimizer, validator)
+    )
     assert all(contract in combined_contract for contract in required_contracts)
 
 
@@ -119,7 +126,16 @@ def test_vera_trigger_fixtures_cover_explicit_scope_boundaries() -> None:
 
     assert "vera-explicit-unrelated" in trigger_ids
     assert "vera-explicit-no-matching-workflow" in trigger_ids
+    assert "vera-ordinary-legal-question" in trigger_ids
     assert "generic-pizza" in non_trigger_ids
+
+    tenancy_case = next(
+        case
+        for case in fixtures["should_trigger"]
+        if case["id"] == "vera-ordinary-legal-question"
+    )
+    assert tenancy_case["prompt"].startswith("@vera")
+    assert "vera:quesito-professionale" in tenancy_case["required_signals"]
 
 
 def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
@@ -142,4 +158,22 @@ def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
     assert all(
         f"`{skill_name}`" in instructions
         for skill_name in expected_specialists - {"privacy-surface-review"}
+    )
+
+
+def test_professional_question_is_an_orchestrator_not_a_third_data_workstream() -> None:
+    components = json.loads(
+        (VERA_ROOT / "components.json").read_text(encoding="utf-8")
+    )
+    workflow = _read_text(
+        VERA_ROOT / "skills" / "quesito-professionale" / "SKILL.md"
+    )
+
+    assert "quesito-professionale" not in components["plugins"]
+    assert not (
+        VERA_ROOT / "privacy" / "workstreams" / "quesito-professionale.json"
+    ).exists()
+    assert "does not create a third client workstream" in workflow
+    assert "does not create a third Studio Archive workstream" in _read_text(
+        ROUTER_PATH
     )
