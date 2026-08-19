@@ -3925,10 +3925,10 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         'data-model-data-status="relevant"',
         "Quali dati arrivano al modello",
         "What data reaches the model",
-        "Il codice deterministico elabora l’intera popolazione riveduta nel perimetro",
-        "senza ripetere i nomi originali dei file",
-        "una fonte originale viene riaperta solo per una domanda professionale specifica",
-        "Vera non anonimizza né pseudonimizza automaticamente",
+        "I calcoli non sono eseguiti dal modello",
+        "tutti i dati approvati e inclusi nell’analisi, non a un campione",
+        "Una fonte originale viene riaperta solo per chiarire una questione specifica",
+        "Vera non anonimizza né pseudonimizza i dati",
         'id="prompt-example"',
         'href="../vera/index.html?lang=it"',
     ):
@@ -3938,12 +3938,18 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
     for copy_key in visible_copy_keys:
         assert page.count(f'"{copy_key}":') == 5, copy_key
 
+    assert page.count('class="function-model-data__copy" data-i18n="model.copy.') == 3
+
     for stale_snippet in (
         "Tre analisi finanziarie",
         "Three financial analyses",
         "Trois analyses financières",
         "Drei Finanzanalysen",
         "Tres análisis financieros",
+        "Vera non anonimizza né pseudonimizza automaticamente",
+        "Le fonti selezionate vengono importate in una run Studio Archive",
+        "L’account del modello è scelto",
+        "il processo non ha altre destinazioni esterne",
     ):
         assert stale_snippet not in page
 
