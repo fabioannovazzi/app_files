@@ -57,7 +57,7 @@
     },
     {
       "id": "hash-bound-canonical-review",
-      "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex, MCP validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Cowork consumes the same canonical local review records without the Codex MCP handoff; unmanaged or legacy runs may still use an inline payload."
+      "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex or Cowork, when local MCP is callable, validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Without local MCP, both runtimes consume the same canonical local review records and keep decisions pending unless persisted artifacts prove save and apply; unmanaged or legacy runs may still use an inline payload."
     }
   ],
   "review": {

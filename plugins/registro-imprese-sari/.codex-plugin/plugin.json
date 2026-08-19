@@ -1,6 +1,6 @@
 {
   "name": "registro-imprese-sari",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "description": "Prepara una pratica Registro Imprese/DIRE da fonti ufficiali SARI e CCIAA, con provenienza e revisione professionale.",
   "author": {
     "name": "Mparanza",
@@ -26,7 +26,7 @@
   "interface": {
     "displayName": "Registro Imprese e SARI",
     "shortDescription": "Imposta pratiche CCIAA da fonti ufficiali, senza accesso o invio.",
-    "longDescription": "Vera raccoglie il perimetro della posizione da aprire, collega fonti pubbliche SARI, CCIAA, Registro Imprese, DIRE e gli altri enti pertinenti, e prepara una bozza della pratica con passaggi, campi, allegati, dubbi e citazioni. La consultazione ordinaria di SARI avviene in sola lettura nel browser e la scheda rilevante viene scelta da una persona; il connettore JSON non documentato resta bloccato senza un riferimento di autorizzazione scritta. Gli script controllano soltanto struttura, date, provenienza, hash e completezza: forma giuridica, ATECO, posizioni RI/REA/INPS/INAIL/SUAP/RUI e compilazione DIRE restano proposte da confermare professionalmente. Il modulo non riceve credenziali, non accede a DIRE, non firma e non invia pratiche.",
+    "longDescription": "Vera raccoglie il perimetro della posizione da aprire, collega fonti pubbliche SARI, CCIAA, Registro Imprese, DIRE e gli altri enti pertinenti, e prepara una bozza della pratica con passaggi, campi, allegati, dubbi e citazioni. Quando web o browser sono disponibili, la consultazione di SARI avviene in sola lettura e la scheda rilevante viene scelta da una persona; altrimenti Vera usa fonti ufficiali fornite e segnala come incompleta la copertura corrente. Il connettore JSON non documentato resta bloccato senza un riferimento di autorizzazione scritta. Gli script controllano soltanto struttura, date, provenienza, hash e completezza: forma giuridica, ATECO, posizioni RI/REA/INPS/INAIL/SUAP/RUI e compilazione DIRE restano proposte da confermare professionalmente. Il modulo non riceve credenziali, non accede a DIRE, non firma e non invia pratiche.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",

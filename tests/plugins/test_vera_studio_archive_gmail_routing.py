@@ -107,8 +107,16 @@ def test_client_profile_is_private_normalized_and_idempotent(
 
     assert first["status"] == "configured"
     assert second["status"] == "unchanged"
-    assert second["client"]["email_addresses"] == ["amministrazione@rossi.it"]
-    assert second["client"]["legal_names"] == ["Rossi SRL"]
+    assert second["client"]["identity_counts"] == {
+        "email_addresses": 1,
+        "legal_names": 1,
+        "tax_identifiers": 1,
+    }
+    assert "email_addresses" not in second["client"]
+    assert "legal_names" not in second["client"]
+    stored_client = json.loads(before)["clients"][0]
+    assert stored_client["email_addresses"] == ["amministrazione@rossi.it"]
+    assert stored_client["legal_names"] == ["Rossi SRL"]
     assert registry_path.read_bytes() == before
     assert stat.S_IMODE(configured_clients.state.stat().st_mode) == 0o700
     if os.name == "posix":
@@ -487,7 +495,11 @@ def test_vera_marketplace_wrapper_routes_gmail_without_local_dependencies() -> N
     reference = " ".join(MARKETPLACE_REFERENCE_PATH.read_text(encoding="utf-8").split())
 
     assert "references/marketplace-gmail.md" in wrapper
-    assert wrapper.index("get_profile") < wrapper.index("resolve `../../modules")
+    gmail_branch = wrapper.index("When the user asks to search Gmail or email")
+    local_branch = wrapper.index(
+        "When the user asks to identify/create a client workspace"
+    )
+    assert gmail_branch < wrapper.index("get_profile", gmail_branch) < local_branch
     assert "Do not resolve the local module" in wrapper
     assert "separately distributed OpenAI Gmail connector" in wrapper
     assert "on the current surface" in wrapper
@@ -514,7 +526,7 @@ def test_vera_marketplace_wrapper_routes_gmail_without_local_dependencies() -> N
     assert (
         "no local archive, local ZIP, MCP tool, script, or saved registry" in reference
     )
-    assert "max_results: 10" in reference
+    assert "max_results: 20" in reference
     assert "at most 20 results per page" in reference
     assert "absent optional Cc or Bcc field" in reference
     assert "cannot prove the absence of an undisclosed Bcc recipient" in reference
@@ -632,7 +644,7 @@ def test_privacy_manifest_records_marketplace_gmail_and_optional_local_registry(
     )
     joined_controls = " ".join(boundary["controls"])
     assert "Call get_profile before every search" in joined_controls
-    assert "at most ten results for address discovery" in joined_controls
+    assert "at most 20 results for address discovery" in joined_controls
     assert "current conversation" in joined_controls
     assert "absence of an optional Cc or Bcc field alone is not incomplete" in (
         joined_controls

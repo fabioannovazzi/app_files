@@ -86,7 +86,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.135"
+    assert manifest["version"] == "0.1.136"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
@@ -110,7 +110,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     assert "mcpServers" not in manifest
 
 
-def test_only_root_anthropic_manifest_is_discoverable_and_root_app_is_omitted(
+def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     vera_entries,
 ) -> None:
     claude_manifests = sorted(
@@ -127,8 +127,17 @@ def test_only_root_anthropic_manifest_is_discoverable_and_root_app_is_omitted(
     assert "hooks/hooks.json" not in vera_entries
     assert "scripts/check_for_update.py" not in vera_entries
     assert "scripts/change_requests.py" not in vera_entries
-    assert "scripts/run_component_mcp.cjs" not in vera_entries
-    assert ".mcp.json" not in vera_entries
+    assert "scripts/run_component_mcp.cjs" in vera_entries
+    assert ".mcp.json" in vera_entries
+    cowork_mcp = json.loads(vera_entries[".mcp.json"])
+    assert len(cowork_mcp["mcpServers"]) == 18
+    assert all(
+        server["args"][0] == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+        for server in cowork_mcp["mcpServers"].values()
+    )
+    assert '"archive-organization"' in vera_entries[
+        "scripts/run_component_mcp.cjs"
+    ].decode("utf-8")
     assert "skills/vera/references/cowork-runtime.md" not in vera_entries
     assert "skills/studio-archive/references/cowork-runtime.md" not in vera_entries
     assert "skills/studio-archive/references/marketplace-gmail.md" not in vera_entries
@@ -623,7 +632,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         assert local_studio_action in journal or local_studio_action in check_entries
     assert "The normal Cowork completion point is delivery" in audit
     assert "Its absence never blocks delivery" in " ".join(audit.split())
-    assert "### Optional public SARI lookup" in sari
+    assert "### Capability-based public SARI lookup" in sari
     assert "If public web access is unavailable, continue from official" in sari
     references = {
         name: content
@@ -972,7 +981,18 @@ def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:
     assert '"review_in_codex": "Professional Review"' in review_session
     assert '"execution_location": "cowork_connected_folder"' in review_session
     assert "Claude-written answer-generation instructions" in validate_prompt
-    assert "REQUIRE_VERA_CUSTOMER_RUN = False" in review_server
+    assert "REQUIRE_VERA_CUSTOMER_RUN = True" in review_server
+    assert (
+        sum(
+            "REQUIRE_VERA_CUSTOMER_RUN = True" in content
+            for content in runtime_entries.values()
+        )
+        == 10
+    )
+    assert not any(
+        "REQUIRE_VERA_CUSTOMER_RUN = False" in content
+        for content in runtime_entries.values()
+    )
 
 
 def test_marketplace_catalog_points_to_generated_vera_and_matches_manifest(

@@ -295,10 +295,114 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "every snapshot file, not a sample",
         "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
         "random hash-bound reference valid for four hours",
-        "for a plan supplied in Cowork or ChatGPT, the reference is review-only",
+        "when the local MCP interface is available for a bound run",
+        "canonical files remain reviewable and decisions stay pending",
         "Technical references are pseudonymized; document content is not automatically anonymized",
     ):
         assert snippet in organization_page
+
+
+def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
+    studio_page = (
+        ROOT / "static" / "shared" / "studio-archive" / "index.html"
+    ).read_text(encoding="utf-8")
+    inps_page = (
+        ROOT / "static" / "shared" / "previdenza-inps" / "index.html"
+    ).read_text(encoding="utf-8")
+    sari_page = (
+        ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    assert studio_page.count('"model.gmail.copy":') == 5
+    for snippet in (
+        "Codex and Cowork apply the same limits",
+        "one initial search of up to 20 candidates",
+        "searches in batches of at most 10 addresses",
+        "up to 20 results per page",
+        "local MCP applies the same run binding when available",
+        "no decision is reported as saved or applied without a persisted artifact",
+    ):
+        assert snippet in studio_page
+    for stale_source_copy in (
+        "Connect OpenAI’s Gmail connector separately",
+        "Colleghi separatamente il connector Gmail di OpenAI",
+        "Connectez séparément le connecteur Gmail d’OpenAI",
+        "Verbinden Sie den Gmail-Connector von OpenAI separat",
+        "Conecta por separado el conector de Gmail de OpenAI",
+    ):
+        assert stale_source_copy not in studio_page
+
+    for snippet in (
+        "Only in Codex Desktop",
+        "Cowork uses only connected documents and registered official exports",
+        "does not capture a live INPS session",
+    ):
+        assert snippet in inps_page
+    for snippet in (
+        "public SARI search in Codex or Cowork runs only when web or browser access is available",
+        "current-source coverage is marked incomplete",
+    ):
+        assert snippet in sari_page
+
+    for workflow in ("prompt-optimizer", "deep-research-validator"):
+        page = (ROOT / "static" / "shared" / workflow / "index.html").read_text(
+            encoding="utf-8"
+        )
+        assert "In a managed local-MCP review in Codex or Cowork" in page
+        assert "When local MCP is unavailable, Codex and Cowork read" in page
+        assert "Cowork reads the same canonical files without MCP" not in page
+
+
+def test_runtime_parity_privacy_manifests_match_the_implemented_routes() -> None:
+    manifests = {
+        name: json.loads(
+            (VERA_ROOT / "privacy" / "workstreams" / f"{name}.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        for name in (
+            "studio-archive",
+            "archive-organization",
+            "prompt-optimizer",
+            "deep-research-validator",
+        )
+    }
+    studio_classes = {
+        item["id"]: item
+        for item in manifests["studio-archive"]["model_context"]["classes"]
+    }
+    for class_id in (
+        "studio-archive-access-diagnostic",
+        "studio-client-folder-binding",
+        "studio-client-selection-directory",
+        "studio-client-engagement-intake",
+    ):
+        assert studio_classes[class_id]["runtime_profiles"] == [
+            "openai-codex",
+            "anthropic-cowork",
+        ]
+
+    cowork_gmail = next(
+        boundary
+        for boundary in manifests["studio-archive"]["external_boundaries"]
+        if boundary["id"] == "anthropic-cowork-gmail-client-search"
+    )
+    assert "at most 20 candidates" in cowork_gmail["content"]
+    assert (
+        "at most ten complete client email or PEC addresses" in cowork_gmail["content"]
+    )
+    assert "at most 20 results per page" in cowork_gmail["content"]
+
+    for workflow in (
+        "archive-organization",
+        "prompt-optimizer",
+        "deep-research-validator",
+    ):
+        controls = " ".join(
+            item["control"] for item in manifests[workflow]["security_controls"]
+        )
+        assert "local MCP" in controls
+        assert "Without local MCP" in controls
 
 
 def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
@@ -326,7 +430,9 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         if path.parent.name == "journal-bank-reconciliation":
             assert "Solo nel runtime Codex" in model_block
             assert "Cowork non esegue questo passaggio" in model_block
-            assert "l’intero insieme rientra in un unico pacchetto limitato" in model_block
+            assert (
+                "l’intero insieme rientra in un unico pacchetto limitato" in model_block
+            )
             assert "non può modificare gli abbinamenti deterministici" in model_block
         else:
             assert "Codex" not in model_block
@@ -335,9 +441,9 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
     check_entries = (
         ROOT / "static" / "shared" / "check-entries" / "index.html"
     ).read_text(encoding="utf-8")
-    model_block = check_entries.split(
-        'data-model-data-status="relevant"', 1
-    )[1].split("</section>", 1)[0]
+    model_block = check_entries.split('data-model-data-status="relevant"', 1)[1].split(
+        "</section>", 1
+    )[0]
     for snippet in (
         "le prime 20 righe della popolazione normalizzata",
         "per tutti i PDF",
@@ -349,8 +455,8 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         "al massimo 25 per chiamata",
         "500.000 byte",
         "metadati riservati al componente",
-        "Codex persiste il run",
-        "Cowork usa gli stessi limiti",
+        "Codex e Cowork usano lo stesso indice, gli stessi limiti e lo stesso run",
+        "MCP quando disponibile verifica, salva e applica la revisione",
         "non vengono anonimizzati né pseudonimizzati automaticamente",
     ):
         assert snippet in model_block
