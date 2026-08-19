@@ -692,7 +692,7 @@ LANDING_CONTENT: Dict[str, Dict[str, Any]] = {
             "principles": [
                 {
                     "title": "Usa Python in locale quando serve",
-                    "blurb": "Filtri e aggregazioni possono essere eseguiti sul tuo computer quando migliorano il lavoro. Non sono anonimizzazione automatica.",
+                    "blurb": "Filtri e aggregazioni possono essere eseguiti sul tuo computer quando rendono il lavoro più efficace. Clara, Vera e Lucia non anonimizzano automaticamente i dati.",
                 },
                 {
                     "title": "I dati reali possono arrivare al modello",
