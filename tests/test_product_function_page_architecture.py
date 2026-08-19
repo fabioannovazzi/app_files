@@ -113,6 +113,7 @@ def test_lucia_and_vera_share_the_research_function_pages() -> None:
     lucia = PRODUCT_PAGES["lucia"].read_text(encoding="utf-8")
 
     for href in (
+        "../quesito-legale-fiscale/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
     ):
@@ -124,7 +125,11 @@ def test_lucia_and_vera_shared_studio_pages_are_product_neutral() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
 
-    for page_name in ("comunicazione-professionale", "presenza-digitale-studio"):
+    for page_name in (
+        "comunicazione-professionale",
+        "presenza-digitale-studio",
+        "quesito-legale-fiscale",
+    ):
         page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
         configuration = re.search(
             rf'"{page_name}"\s*:\s*\{{(?P<body>.*?)\n\s*\}},\n\s*"',

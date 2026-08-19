@@ -483,6 +483,8 @@ LUCIA_NATIVE_COWORK_COMPONENTS = frozenset({"apertura-pratica"})
 LUCIA_COWORK_COMPONENTS = (
     LUCIA_SHARED_COWORK_COMPONENTS | LUCIA_NATIVE_COWORK_COMPONENTS
 )
+LUCIA_ORCHESTRATION_COWORK_SKILLS = frozenset({"quesito-legale-fiscale"})
+LUCIA_COWORK_SKILLS = LUCIA_COWORK_COMPONENTS | LUCIA_ORCHESTRATION_COWORK_SKILLS
 LUCIA_COWORK_README = """# Lucia for Claude Cowork
 
 Lucia helps lawyers frame and validate legal work, prepare a new client matter
@@ -491,11 +493,14 @@ communications, and create or refresh an informational law-firm website from
 verified material. Use the `lucia` skill to route the work, or invoke one
 registered workflow directly.
 
-The two assurance workflows are projected from the same canonical components
-used by Vera. Communication and digital-presence workflows reuse Vera's
-mechanical components through a lawyer-specific Lucia profile. Lucia works in
-Italian by default, keeps jurisdiction separate from language, and leaves
-strategy, conclusions, approval, sending, and publication with the lawyer.
+The unified legal-and-tax-question skill takes one question through planning,
+generation, and validation. Its two assurance stages are projected from the
+same canonical components used by Vera; the orchestration skill does not create
+a third data workstream. Communication and digital-presence workflows reuse
+Vera's mechanical components through a lawyer-specific Lucia profile. Lucia
+works in Italian by default, keeps jurisdiction separate from language, and
+leaves strategy, conclusions, approval, sending, and publication with the
+lawyer.
 
 Matter Opening is Lucia-native and has its own legal intake schema, validator,
 and lawyer-review receipts. It reuses private lifecycle mechanics without
@@ -2324,7 +2329,7 @@ def _lucia_package_entries(
         f"{runtime_path.read_text(encoding='utf-8').strip()}\n"
     ).encode("utf-8")
 
-    for component in sorted(LUCIA_COWORK_COMPONENTS):
+    for component in sorted(LUCIA_COWORK_SKILLS):
         wrapper_name = f"skills/{component}/SKILL.md"
         wrapper = source_entries.get(wrapper_name)
         if wrapper is None:

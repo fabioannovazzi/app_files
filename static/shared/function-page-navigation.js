@@ -122,7 +122,7 @@
     "presenza-digitale-studio": [["lucia", "area-studio"], ["vera", "area-outputs"]],
     "previdenza-inps": [["vera", "area-clients"], ["vera", "jurisdiction"]],
     "prompt-optimizer": [["lucia", "area-research"], ["vera", "area-outputs"]],
-    "quesito-legale-fiscale": [["vera", "area-outputs"]],
+    "quesito-legale-fiscale": [["lucia", "area-research"], ["vera", "area-outputs"]],
     "registro-imprese-sari": [["vera", "area-clients"], ["vera", "jurisdiction"]],
     "report-builder": [["vera", "area-outputs"]],
     "report-enti-locali": [["vera", "jurisdiction"]],

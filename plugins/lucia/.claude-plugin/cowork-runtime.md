@@ -36,11 +36,12 @@ whole request semantically and select the narrowest registered workflow:
 | Outcome | Required route |
 | --- | --- |
 | A question to frame, an answer to plan, or research to start | Read `../prompt-optimizer/SKILL.md` completely and follow it. |
+| A legal, tax-law, or compliance question to take from the initial request to a reviewed answer | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
 | An existing answer, opinion, memorandum, letter, or report to check | Read `../deep-research-validator/SKILL.md` completely and follow it. |
 | A legal or professional development to assess and turn into an email, circular, article, post, FAQ, alert, or visual | Read `../comunicazione-professionale/SKILL.md` completely and follow it. Do not duplicate its embedded answer-contract and claim-assurance stages. |
 | An informational law-firm website to create, refresh, review, preview, or publish after approval | Read `../presenza-digitale-studio/SKILL.md` completely and follow it. |
 | A new client matter or a new matter for an existing client to intake and prepare for opening | Read `../apertura-pratica/SKILL.md` completely and follow it. Use its dedicated matter-opening validator and lawyer review contract. |
-| A complete route from question to delivery | Run Prompt Optimizer first, prepare the answer with model-led reasoning and qualified sources, then run Deep Research Validator before delivery. |
+| A complete route from question to delivery | Read `../quesito-legale-fiscale/SKILL.md` completely and follow it. |
 | No registered workflow covers the request | Stop and say only that Lucia does not yet have a suitable workflow; do not answer the substance through a generic route. |
 
 The user can describe the work normally and does not need to know internal
@@ -57,6 +58,10 @@ Prompt Optimizer and Deep Research Validator are the canonical implementations
 shared with Vera. Their Lucia wrappers resolve the embedded modules, read each
 module's complete `SKILL.md`, and follow it without summarizing, replacing, or
 forking the workflow.
+
+Quesito legale e fiscale orchestrates those two stages and answer generation
+as one user journey. It does not create a third data workstream, duplicate
+artifacts, or introduce another external destination.
 
 Professional Communication and Studio Digital Presence reuse Vera's canonical
 mechanical components through Lucia wrappers. Each wrapper adds Lucia's
