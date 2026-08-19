@@ -261,27 +261,38 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         ROOT / "static" / "shared" / "archive-organization" / "index.html"
     ).read_text(encoding="utf-8")
 
-    assert studio_page.count('"model.engagement.copy":') == 5
+    for key in (
+        "model.engagement.selection",
+        "model.engagement.run",
+        "model.engagement.organization",
+        "model.engagement.agenzia",
+        "model.engagement.agenzia-exclusions",
+    ):
+        assert studio_page.count(f'"{key}":') == 5
+        assert f'data-i18n="{key}"' in studio_page
+    assert '"model.engagement.copy":' not in studio_page
     assert organization_page.count('"model.inventory.copy":') == 5
     assert organization_page.count('"model.review.copy":') == 5
     for snippet in (
-        "stored emails, legal names, and tax identifiers stay local",
-        "code performs an exact match and returns only matching safe rows",
-        "every snapshot file within 5,000 files and 2 GB",
-        "raw hashes, Drive IDs, versions, capabilities, and absolute source paths stay local",
+        "the number of stored email addresses, legal names, and tax identifiers",
+        "but not the values",
+        "code returns only exact matches",
+        "the entire snapshot, within 5,000 files and 2 GB",
+        "Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local",
         "Organization technical references are pseudonymized",
-        "only after operator review and approval",
-        "sanitized control roles and labels outside tables",
+        "After operator review and approval",
+        "the model receives a sanitized map",
+        "roles and labels for controls outside tables",
         "Typed or selected values, credentials and one-time codes",
-        "sanitization does not guarantee anonymization",
+        "Sanitization reduces exposure but does not guarantee anonymization",
     ):
         assert snippet in studio_page
     for localized_agenzia_gate in (
-        "solo dopo revisione e approvazione dell’operatore",
-        "only after operator review and approval",
-        "seulement après examen et approbation par l’opérateur",
-        "erst nach Prüfung und Freigabe durch den Bediener",
-        "solo después de la revisión y aprobación del operador",
+        "Dopo la revisione e l’approvazione dell’operatore",
+        "After operator review and approval",
+        "Après examen et approbation par l’opérateur",
+        "Nach Prüfung und Freigabe durch den Bediener",
+        "Tras la revisión y aprobación del operador",
     ):
         assert localized_agenzia_gate in studio_page
     for contradictory_exclusion in (
@@ -320,8 +331,8 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
         "one initial search of up to 20 candidates",
         "searches in batches of at most 10 addresses",
         "up to 20 results per page",
-        "When local MCP is available, it applies the run binding",
-        "no decision is reported as saved or applied without a persisted artifact",
+        "With local MCP, operations remain bound to the correct run",
+        "does not report a decision as saved or applied without a persisted artifact",
     ):
         assert snippet in studio_page
     for stale_source_copy in (
