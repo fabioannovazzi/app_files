@@ -294,9 +294,10 @@ def test_clara_external_confirmations_are_only_for_unselected_optional_actions()
             if boundary["requires_confirmation"]:
                 assert boundary["optional"] is True
                 assert boundary["id"] in {
-                        "approved-managed-ocr-runtime",
-                        "approved-research-video-voice",
-                        "consented-plugin-feedback",
+                    "approved-managed-ocr-runtime",
+                    "approved-research-video-voice",
+                    "bounded-authorized-public-research",
+                    "consented-plugin-feedback",
                     "openai-speech-generation",
                     "send-participant-link",
                 }

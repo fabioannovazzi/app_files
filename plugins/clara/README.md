@@ -37,6 +37,10 @@ Clara keeps its specialist workflows separate:
   `advisory_contract.json`, preserving material facts, scope, evidence needs,
   assumptions, success criteria, validation policy, and the handoff to the
   existing Clara workflow that will execute the work;
+- `advisory-case-director` owns the living answer after assignment framing. It
+  maintains the case-specific analytical spine, cumulative evidence lineage,
+  partner judgement, open questions, next work, and the timing of working
+  deliverable updates;
 - `advisory-deliverable-validator` validates a completed advisory memo, report,
   analysis, presentation, or other supported professional document by walking
   generation-time evidence and claim dependencies when available, or by
@@ -310,59 +314,34 @@ needed and reuse them across restarts. Run core or component helpers through
 `scripts/managed_python_runtime.py` so the selected environment is bound to the
 helper process. The optional shared OCR runtime remains separate.
 
-## Two-Loop Advisory Delivery
+## Advisory Case Direction
 
-Clara's default delivery model has two loops. The first loop is advisory
-intelligence; the second loop is presentation excellence.
+`advisory-case-director` owns durable case direction. It states the best current
+answer first, builds the smallest case-specific analytical structure needed to
+explain and test that answer, chooses the next decision-relevant work, and
+revises the position when new evidence or partner judgement warrants it. Clara
+does not impose separate inner and outer loops or a universal analysis schema.
 
-For a first deck or brief, Clara's governing question is the best current
-advisory position the advisor can responsibly take into the next decision
-conversation, given the evidence available, the evidence missing, and the
-decisions that cannot be postponed. The first deck is not a summary of scenarios
-or materials; it states the responsible decision posture now and what must be
-tested, evidenced, or decided before moving further.
+`advisory_workpaper.md` is the current partner-readable semantic spine. The
+structured material, evidence, claim, judgement, question, issue, mandate, and
+manifest files preserve durable traceability. Prior evidence and materially
+different workpaper versions remain available; a new research report does not
+replace the cumulative case with only the latest iteration.
 
-Before the advisory workpaper, Clara maintains
-`advisory_evidence_map.md`: a living claim-by-claim evidence map. It records
-which evidence supports, weakens, contradicts, or creates each claim or option;
-the source type; what the evidence proves and does not prove; directness,
-reliability, corroboration, bias or limitation, decision implication, and
-missing evidence that would change the position. New indexed materials, notes,
-transcripts, case-update imports, or corrected prior outputs must update this
-map before Clara revises the workpaper, storyline, deck, memo, or decision pack.
+Research, interviews, data analysis, reporting, and presentations are bounded
+contributions. The case director gives each specialist the current answer,
+exact question, relevant evidence and limitations, expected return, and the
+result that would disconfirm the working view. It then decides how the returned
+work changes the overall answer and next questions.
 
-In Loop 1, Codex/Clara inspects the case folder and relevant source materials,
-then produces an `advisory_workpaper.md` before building a deck, memo, or HTML
-brief. The workpaper should define the real decision, Clara's default point of
-view, evaluated options, implementation steps and conditions, owners, timing,
-risks, failure modes, evidence for and against, contradictions, weak
-assumptions, critical questions, and an advisor talk track. Clara critiques this
-artifact until it cannot identify a materially stronger advisory structure from
-the available evidence.
+A deck, memo, or brief is a milestone view of the spine rather than the memory
+of the case. It may be created early to make the answer visible and improve
+partner challenge. Semantic feedback returns to the workpaper and evidence
+lineage before the deliverable is revised; pure wording or layout feedback stays
+with the relevant presentation workflow.
 
-The Loop 1 output also includes `judgement_checkpoint.md`: a compressed set of
-advisor judgement calls with Clara's default answers. The default assumption is
-that the advisor has no time. Unless the user explicitly asks Clara to wait,
-Clara proceeds using its defaults and marks unresolved points as
-advisor-unconfirmed in the workpaper or control notes.
-
-In Loop 2, Clara builds the human-visible deliverable from the Loop 1 workpaper
-and any supplied advisor judgement, then critiques the deck or document for
-structure, page value, insight, clarity, evidence weight, advisor usability,
-anti-BS quality, and visual readability. The objective is not a fixed number of
-slides or pages. The objective is the best Clara can produce from the available
-materials and judgement.
-
-If Loop 1 shows that the honest answer is that further evidence, a test,
-interview, decision, or data request is needed, the deliverable should say that
-cleanly when it matters to the decision. Clara should not produce polished HTML
-that hides material uncertainty, missing implementation conditions, or required
-next steps. The deck or memo should carry the best current point of view and the
-specific evidence gaps or actions that govern the next decision.
-
-Use `/goal` for major phase gates only: evidence exhaustion and advisory
-workpaper, judgement checkpoint, deliverable build, and deliverable excellence
-review. Use ordinary checklists inside each goal.
+Use `/goal` for major phase gates only. Use ordinary checklists inside each
+goal.
 
 Deck correction is always a goal-level workflow. When Clara/Codex corrects,
 revises, or rebuilds a PPTX from a call, transcript, screen video, review notes,

@@ -16,7 +16,10 @@
 **Public description**
 
 > AI companion for consultants. Clara plans advisory assignments as reviewable
-> contracts, routes them to the right specialist workflow, and validates
+> contracts, then directs the living case: she states the current answer,
+> maintains its evidence and assumptions, chooses the next decision-relevant
+> work, and revises the position when new evidence or partner judgement changes
+> it. She routes bounded contributions to the right specialist and validates
 > completed deliverables against the contract and available evidence. During
 > Clara-created work she carries evidence receipts, stable claims, dependencies,
 > calculations, quotations, and output appearances forward from the step where
@@ -32,8 +35,9 @@
    and prepare the reviewable contract for the right Clara workflow.
 2. Validate this completed advisory deliverable against its contract and the
    available evidence, preserving the original and identifying corrections.
-3. Organize these case files, separate evidence from judgement, surface gaps and
-   contradictions, and prepare a reviewable advisory workpaper.
+3. Direct this case from its current answer: preserve the cumulative evidence,
+   surface the assumption most likely to change the decision, and choose the
+   next research, interview, data, or deliverable branch.
 4. Profile this dataset, document its business semantics, calculate the requested
    analysis, and render a source-backed business chart.
 5. Turn these reviewed materials into a source-faithful standalone HTML

@@ -5,10 +5,12 @@ task; Clara selects the workflow. Use semantic judgment, then read the selected
 skill completely. Do not select from keywords or use a cross-cutting assurance
 skill to imitate a missing operational workflow.
 
-The main `clara` skill owns durable advisory-case work: organizing evidence,
-maintaining case notes and judgement, weighing options, and preparing reviewed
-decision outputs. Use the specialist workflows below when their bounded purpose
-matches the request.
+`advisory-case-director` owns durable advisory-case direction: the current
+answer, the case-specific analytical spine, the next decision-relevant work,
+the integration of returned evidence and partner judgement, and the timing of
+working deliverable updates. The main `clara` skill routes work and provides
+shared case-workspace mechanics. Use the other specialist workflows below when
+their bounded purpose matches the requested contribution.
 
 ## Professional workflows
 
@@ -16,6 +18,11 @@ matches the request.
   reviewable `advisory_contract.json` assignment and generation-handoff
   contract, then route execution to the existing Clara workflow that retains
   procedural authority.
+- `advisory-case-director`: direct a durable advisory case after assignment
+  framing; state the answer first, maintain the partner-readable analytical
+  spine and cumulative evidence lineage, choose the next research, interview,
+  data, or deliverable branch, integrate what returns, and revise the position
+  when evidence or partner judgement warrants it.
 - `advisory-deliverable-validator`: validate a completed advisory memo, report,
   analysis, presentation, or other supported professional document by walking
   generation-time evidence and claim dependencies when available, or by

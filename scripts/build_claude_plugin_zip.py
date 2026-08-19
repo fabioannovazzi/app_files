@@ -377,6 +377,7 @@ CLARA_COWORK_INCLUDED_SKILLS = frozenset(
     {
         "advisory-deliverable-validator",
         "advisory-brief-planner",
+        "advisory-case-director",
         "attribute-reporting",
         "brand-fit",
         "claim-basis-map",

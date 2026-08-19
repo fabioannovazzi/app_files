@@ -16,6 +16,7 @@ CLARA_CLAUDE_MANIFEST = ROOT / "plugins" / "clara" / ".claude-plugin" / "plugin.
 EXPECTED_ROOT_SKILLS = {
     "advisory-deliverable-validator",
     "advisory-brief-planner",
+    "advisory-case-director",
     "attribute-reporting",
     "brand-fit",
     "claim-basis-map",
@@ -57,7 +58,7 @@ def test_clara_manifest_matches_canonical_identity_and_listing(clara_entries) ->
     template = json.loads(CLARA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(clara_entries[".claude-plugin/plugin.json"])
 
-    assert source["version"] == "0.1.157"
+    assert source["version"] == "0.1.158"
     assert template["version"] == manifest["version"] == "0.1.139"
     assert manifest["name"] == "clara"
     assert manifest["displayName"] == "Clara"

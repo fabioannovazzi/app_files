@@ -7,6 +7,12 @@
       "default_prompt": "Use $advisory-brief-planner to preserve this assignment's facts, define its contract, and prepare the Clara workflow handoff.",
       "instructions": "Describe the advisory assignment naturally and provide any current source materials. Clara preserves the material facts, dates, numbers, entities, constraints, and explicit questions; defines the decision, deliverable, scope, evidence plan, assumptions, analytical approach, success criteria, validation, and professional judgement boundary; then prepares the reviewable advisory_contract.json handoff to the appropriate Clara workflow."
     },
+    "advisory-case-director": {
+      "display_name": "Direct an advisory case",
+      "short_description": "Keep the answer, evidence, and next work current",
+      "default_prompt": "Use $advisory-case-director to direct this case, update the current answer from new evidence, and choose the next work.",
+      "instructions": "Provide the case folder or current case materials and state the decision being supported. Clara states the best current answer first, maintains a case-specific partner-readable spine and cumulative evidence lineage, chooses the next decision-relevant research, interview, data, or deliverable branch, integrates what returns, and makes partner judgement and unresolved questions visible."
+    },
     "clara": {
       "display_name": "Clara",
       "short_description": "Turn evidence into reviewable advisory work",
