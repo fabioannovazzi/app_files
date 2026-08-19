@@ -49,6 +49,11 @@
   font: 400 1.06rem/1.58 "Instrument Sans", "Aptos", "Segoe UI", sans-serif;
 }
 
+.function-model-data__paragraphs {
+  display: grid;
+  gap: 1rem;
+}
+
 .function-model-data__conclusion {
   max-width: 28ch;
   margin: 0 0 14px;
