@@ -1,0 +1,4 @@
+interface:
+  display_name: "Direct an advisory case"
+  short_description: "Keep the answer, evidence, and next work current"
+  default_prompt: "Use $advisory-case-director to direct this case, update the current answer from new evidence, and choose the next work."

@@ -19,7 +19,28 @@
       "prompt": "Use Clara to plan an advisory assignment for a board decision. Preserve the facts, define the evidence and analysis plan, and hand the contract to the right Clara workflow before drafting.",
       "required_signals": ["advisory assignment", "board decision", "facts", "evidence", "analysis plan", "handoff"],
       "expected_skill": "clara:advisory-brief-planner",
-      "must_not_route_to": ["clara:reporting-engine", "clara:html-deck", "clara:interview", "clara:privacy-surface-review"]
+      "must_not_route_to": ["clara:advisory-case-director", "clara:reporting-engine", "clara:html-deck", "clara:interview", "clara:privacy-surface-review"]
+    },
+    {
+      "id": "advisory-case-current-answer-and-next-work",
+      "prompt": "Use Clara to direct this ongoing commercial due-diligence case. We have a working hypothesis and external market evidence but no target accounts yet. State the best current answer, show what supports and could overturn it, and choose the next research or target-data question.",
+      "required_signals": ["ongoing commercial due-diligence case", "working hypothesis", "external market evidence", "best current answer", "overturn", "next research or target-data question"],
+      "expected_skill": "clara:advisory-case-director",
+      "must_not_route_to": ["clara:advisory-brief-planner", "clara:advisory-deliverable-validator", "clara:reporting-engine"]
+    },
+    {
+      "id": "advisory-case-integrate-contradictory-research",
+      "prompt": "The deep-research report contradicts one cause in our current workpaper and creates two new questions. Use Clara to preserve the old evidence, update the claim relationships and current answer, and tell the partner what should happen next.",
+      "required_signals": ["deep-research report", "contradicts", "current workpaper", "preserve the old evidence", "claim relationships", "current answer", "partner"],
+      "expected_skill": "clara:advisory-case-director",
+      "must_not_route_to": ["clara:advisory-brief-planner", "clara:advisory-deliverable-validator", "clara:claim-basis-map"]
+    },
+    {
+      "id": "advisory-case-semantic-deck-feedback",
+      "prompt": "My comments on the working deck show that our causal story may be wrong, not just badly worded. Return the challenge to the case spine, decide what evidence would resolve it, and revise the deck only after the current answer is updated.",
+      "required_signals": ["working deck", "causal story may be wrong", "case spine", "evidence", "current answer", "revise the deck"],
+      "expected_skill": "clara:advisory-case-director",
+      "must_not_route_to": ["clara:advisory-brief-planner", "clara:deck-correction", "clara:advisory-deliverable-validator"]
     },
     {
       "id": "succession-case-workspace",

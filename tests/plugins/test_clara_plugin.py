@@ -49,6 +49,11 @@ CLARA_DISCOVERY_TERMS = (
             "Validate an advisory deliverable",
             "clara-advisory-deliverable-validator",
         ),
+        (
+            "advisory-case-director",
+            "Direct an advisory case",
+            "clara-advisory-case-director",
+        ),
         ("claim-basis-map", "Verify presentation claims", "clara-claim-basis-map"),
         ("interview", "Prepare and conduct interviews", "clara-interview"),
         (
@@ -85,6 +90,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
     expected = {
         "advisory-deliverable-validator": "Validate an advisory deliverable",
         "advisory-brief-planner": "Plan an advisory assignment",
+        "advisory-case-director": "Direct an advisory case",
         "attribute-reporting": (
             "Compare assortment, new-product, and best-seller attributes"
         ),
@@ -934,7 +940,9 @@ def test_manifest_and_skill_are_generic() -> None:
         (PLUGIN_ROOT / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
     skill = (PLUGIN_ROOT / "skills" / "clara" / "SKILL.md").read_text(encoding="utf-8")
-    normalized_skill = " ".join(skill.split())
+    director = (
+        PLUGIN_ROOT / "skills" / "advisory-case-director" / "SKILL.md"
+    ).read_text(encoding="utf-8")
     plugin_text = "\n".join(
         path.read_text(encoding="utf-8")
         for path in PLUGIN_ROOT.rglob("*")
@@ -948,36 +956,31 @@ def test_manifest_and_skill_are_generic() -> None:
     assert "run repeated model-led" in skill
     assert "looking for bullshit" in skill
     assert "idiotic style figures" in skill
-    assert "Two-Loop Advisory Delivery Model" in skill
-    assert "Advisory Intelligence Loop" in skill
-    assert "Presentation Excellence Loop" in skill
-    assert "best current advisory position" in normalized_skill
-    assert "responsible decision posture now" in normalized_skill
-    assert "The first deck is not a summary" in normalized_skill
-    assert "advisory_evidence_map.md" in skill
-    assert "living Loop 1 control artifacts" in normalized_skill
-    assert "claim-by-claim, not source-by-source" in skill
-    assert "supports, weakens, contradicts, or creates" in skill
-    assert "what this evidence proves" in skill
-    assert "what this evidence does not prove" in skill
-    assert "directness, reliability, corroboration, bias or limitation" in skill
-    assert "Evidence travels with a claim from the moment that claim enters" in skill
+    assert "Advisory case direction and deliverable cycle" in skill
+    assert "advisory-case-director" in skill
+    assert "Two-Loop Advisory Delivery Model" not in skill
+    assert "Advisory Intelligence Loop" not in skill
+    assert "Presentation Excellence Loop" not in skill
+    assert "best current answer" in director
+    assert "case-specific reasoning structure" in director
+    assert "advisory_evidence_map.md" in director
+    assert "claim-by-claim" in director
+    assert "supports, weakens, contradicts, or reframes" in director
+    assert "preserve contradictory evidence" in director
+    assert "market-level conclusion and target-specific execution" in director
     assert "Evidence-navigation test" in skill
-    assert "Default advisor-time assumption: the advisor has no time." in skill
-    assert "advisory_workpaper.md" in skill
-    assert "judgement_checkpoint.md" in skill
+    assert "The senior partner owns professional judgement." in director
+    assert "advisory_workpaper.md" in director
     assert "presentation_storyline.md" in skill
     assert "presentation_review.md" in skill
     assert "Use `/goal` only for major phase gates" in skill
-    assert "A beautiful" in skill
-    assert "suppresses critical unknowns" in skill
     assert "Evidence-gap test" in skill
     assert "Do not turn unresolved evidence needs into generic" in skill
     default_prompts = manifest["interface"]["defaultPrompt"]
     default_prompt = "\n".join(default_prompts)
     assert all(len(prompt) <= 128 for prompt in default_prompts)
     assert "organize the evidence" in default_prompt
-    assert "decisions that cannot wait" in default_prompt
+    assert "choose the next work" in default_prompt
     assert "interactive HTML presentation" in default_prompt
     assert "supporting charts and recommendations" in default_prompt
     forbidden_terms = ("Al" + "fredo", "Car" + "lo", "Gal" + "loni")
@@ -996,7 +999,7 @@ def test_conversation_capabilities_are_separate_and_discoverable() -> None:
         encoding="utf-8"
     )
 
-    assert manifest["version"] == "0.1.157"
+    assert manifest["version"] == "0.1.158"
     assert manifest["interface"]["shortDescription"] == ("AI companion for consultants")
     assert len(manifest["interface"]["defaultPrompt"]) == 3
     assert "hosted-interviews" in manifest["keywords"]

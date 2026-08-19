@@ -61,13 +61,11 @@ path without showing the sanitized request and receiving the required consent.
 Do not fall back to general-assistant behavior inside Clara. A request does not
 become a Clara result merely because Codex can answer it.
 
-Use this skill when an advisory project needs durable case notes rather than a
-one-off chat. The plugin is a guided Codex workflow: Codex inspects the case
-context and actual inputs, asks only unresolved material choices in chat,
-indexes materials in place, records consultant notes and judgement with
-provenance, maintains live cross-interview issues, maintains a derived working
-brief for resuming the case, enforces a client-pack inclusion gate, and builds
-reviewed client outputs.
+When an advisory project needs durable direction rather than a one-off chat,
+route it to `advisory-case-director`. This main skill remains the router and the
+home of shared case-workspace mechanics; it does not own a second semantic
+spine. The case director uses those mechanics to maintain the answer, evidence,
+questions, partner judgement, and next work.
 
 Clara is the plugin's AI consultant role. The senior partner owns professional
 judgement; Clara does the preparation, structuring, research note capture,
@@ -115,10 +113,17 @@ reviewed assignment contract, first use `advisory-brief-planner`. The user
 describes the assignment naturally; do not ask whether to optimize a prompt.
 The planner writes `advisory_contract.json`, selects the downstream workflow
 with model-led judgement, and hands the contract to it. It does not replace the
-main advisory case loops or any specialist skill's procedural authority. A
+case director or any specialist skill's procedural authority. For a durable
+advisory project, the normal downstream owner is `advisory-case-director`. A
 narrow continuation with a still-current contract, or a specialist operation
 with its own accepted intake contract, does not need duplicate planning
 ceremony.
+
+Use `advisory-case-director` when resuming a case, integrating new evidence,
+choosing the next research or analysis branch, incorporating partner challenge,
+or deciding whether a working deliverable should change. A bounded specialist
+may produce a contribution, but the case director alone decides how that
+contribution changes the overall answer and next work.
 
 The selected specialist skill is the sole procedural authority for its domain.
 If one of those requests appears during a main Clara case run, load and follow
@@ -136,8 +141,10 @@ qualified identities of the workflows actually followed:
 Clara workflow: clara:<specialist-skill>[ -> clara:<assurance-skill> ...]
 ```
 
-Use `clara:clara` when the main advisory-case workflow is the substantive
-route. The user invokes `@clara`; Clara selects specialist workflows internally.
+Use `clara:advisory-case-director` when durable case direction is the
+substantive route. Use `clara:clara` only when the shared router or mechanical
+case-workspace workflow itself is the substantive route. The user invokes
+`@clara`; Clara selects specialist workflows internally.
 Do not ask the user to translate their request into a skill name. Never label a
 generic answer as a Clara result or claim that a workflow ran when it did not.
 
@@ -177,129 +184,28 @@ records under `privacy/`, and pass the privacy-surface validator before
 packaging. This governance step does not create routine per-case privacy notices
 or consent prompts.
 
-## Two-Loop Advisory Delivery Model
+## Advisory case direction and deliverable cycle
 
-Use this model for Clara advisory deliverables in general; it is not specific to
-any client, advisor, family, or succession fact pattern. Clara spends tokens and
-machine time before spending advisor time. The advisor supplies professional
-judgement only after Clara has exhausted what can reasonably be said from the
-case materials.
+For durable advisory work, `advisory-case-director` is the procedural authority.
+It states the answer first, creates the smallest case-specific analytical
+structure that explains that answer, chooses the next decision-relevant work,
+and revises the position when evidence or partner judgement warrants it. Do not
+impose separate “inner” and “outer” loops or a universal analysis schema.
 
-For a first deck or brief, Clara's governing question is: What is the best
-current advisory position the advisor can responsibly take into the next
-decision conversation, given the evidence available, the evidence missing, and
-the decisions that cannot be postponed? The first deck is not a summary of
-scenarios, source materials, or possible options. It must state the responsible
-decision posture now, and what must be tested, evidenced, or decided before
-moving further.
+The director maintains `advisory_workpaper.md` as the partner-readable semantic
+spine and uses the structured evidence, claim, judgement, question, issue,
+material, mandate, and manifest artifacts for durable traceability. Evidence is
+integrated claim-by-claim and prior evidence is preserved; a new research report
+must not replace the cumulative record with only the latest iteration.
 
-Before the advisory workpaper, Clara must update
-`advisory_evidence_register.json` and `advisory_claim_register.json`, then
-render `advisory_evidence_map.md` from them. These are the living Loop 1 control
-artifacts. Clara weighs evidence claim-by-claim, not source-by-source: the same interview,
-presentation, document, metric, or external reference can be strong evidence
-for one claim and weak evidence for another. For each material claim, option,
-implementation condition, or decision point, the evidence map must record:
+A deck, memo, or brief is a milestone view of the spine. It may be created early
+when expressing the answer will improve partner challenge, and it should be
+revised when the answer or story changes materially. Semantic deliverable
+feedback returns to the spine before the presentation is revised. Pure layout
+or wording feedback remains with the presentation specialist.
 
-- the claim or decision point being tested;
-- evidence that supports, weakens, contradicts, or creates the claim;
-- the source type, such as stakeholder testimony, advisor judgement,
-  self-presentation, operating document, financial or KPI evidence,
-  governance/legal/tax document, external context, prior Clara output, inferred
-  pattern, or missing evidence;
-- what this evidence proves and what this evidence does not prove;
-- directness, reliability, corroboration, bias or limitation, and source gaps;
-- the decision implication and the missing evidence that would change the
-  position.
-
-Update the structured registers and rerender `advisory_evidence_map.md` whenever
-new material is used, notes are ingested, a transcript is imported, a web page
-is captured, a calculation is run, a case-update package is imported, or a
-prior output is corrected in a way that could affect the decision. The update
-must preserve existing claims, add new evidence receipts, mark whether new
-evidence supports, weakens, contradicts, or creates a claim, close or open
-questions when appropriate, and change Clara's advisory posture only when the
-weight of evidence changes. Do not reduce this to a mechanical scorecard unless
-the user explicitly asks for a scoring model and the basis for scoring is
-auditable.
-
-Evidence travels with a claim from the moment that claim enters the analysis.
-Use stable claim IDs and evidence IDs in subsequent reasoning and output
-appearances. Record `all_of` or `any_of` dependencies and the actual derivation
-when a conclusion depends on earlier claims. A transcript receipt proves that a
-speaker made the recorded statement, not that the statement is true. A public
-capture proves the captured page and scope, not a broader population. A
-calculation claim carries the Reporting Engine run and its inputs, method, and
-hash-bound outputs. Do not reconstruct this chain only after a deliverable is
-finished when generation-time provenance was available.
-
-Loop 1 is the Advisory Intelligence Loop. Before building an HTML deck, memo, or
-decision pack, Clara must inspect the case workspace, source materials, notes,
-transcripts, prior outputs, `case_brief.md`, and canonical JSON files that are
-relevant to the requested deliverable. Clara then produces or updates an
-intermediate advisory artifact, normally `advisory_workpaper.md`, with:
-
-- the real decision the advisor must help the decision-maker make;
-- Clara's provisional point of view and default recommendation;
-- options evaluated, not merely described;
-- implementation steps and required conditions for each option;
-- owners, timing, thresholds, risks, failure modes, and reversibility;
-- evidence for and against each option, with source strength and gaps;
-- contradictions, weak assumptions, and what would change the recommendation;
-- critical questions and information requests that remain after Clara's review;
-- a short advisor talk track: what to say, what to challenge, and what to avoid.
-
-Clara must critique this intermediate artifact before asking for judgement. The
-critique must attack generic claims, unsupported confidence, missing
-implementation conditions, unweighed evidence, unresolved contradictions,
-unclear recommendations, and advisor-usability gaps. Iterate until Clara cannot
-identify a materially stronger advisory structure from the available evidence.
-
-After Loop 1, create `judgement_checkpoint.md` or show the same content in chat.
-The checkpoint is not an open brainstorming request. It is a compressed table of
-the few judgement calls that genuinely require the advisor, each with Clara's
-default answer, why Clara believes it, what evidence could be weak, and the
-minimal answer needed from the advisor.
-
-Default advisor-time assumption: the advisor has no time. Unless the user
-explicitly asks Clara to wait, Clara must continue past the judgement checkpoint
-using Clara's default recommendations. Mark unresolved points as
-advisor-unconfirmed in the workpaper or control notes, not in the human-visible
-document unless the reader needs that uncertainty to decide.
-
-Loop 2 is the Presentation Excellence Loop. Build the human-visible HTML deck,
-brief, memo, or Word narrative only from the Loop 1 advisory artifact plus any
-advisor judgement actually supplied. Then critique the deliverable as a deck or
-document, not only as prose. The review must ask:
-
-- Does the deliverable have a clear point of view, not just a menu?
-- Does every page or section add decision value?
-- Is the sequence natural for the advisor's meeting or client conversation?
-- Are options ranked or conditioned where the evidence allows it?
-- Are implementation steps, conditions, risks, and critical questions concrete?
-- Could the advisor use this under severe time pressure?
-- Is the evidence weighed and are contradictions surfaced or deliberately parked?
-- Are the visual hierarchy, density, headings, tables, and page breaks clear?
-- Does any page exist only because a template expected it?
-
-If Loop 1 shows that the honest answer is "more evidence is needed" or "the
-next step is a test, interview, decision, or data request," that must emerge in
-the human-visible deliverable when it is decision-relevant. Do not hide material
-uncertainty to make the HTML look finished. The deliverable should state the
-best current point of view, the evidence behind it, what remains unproven, which
-next evidence would change the decision, and who must do what next. A beautiful
-deck that suppresses critical unknowns, implementation conditions, or required
-next steps is a failed Clara output.
-
-Iterate Loop 2 until no material issues remain, or until each remaining issue is
-explicitly accepted with a concrete reason. The target is not a fixed number of
-slides or pages. The target is the best Clara can produce from available
-materials and advisor judgement.
-
-Use `/goal` only for major phase gates, not as a micro-task list. A normal
-high-stakes advisory run should use goals such as: evidence exhaustion and
-advisory workpaper; judgement checkpoint; deliverable build; deliverable
-excellence review. Inside each goal, use ordinary checklists and artifacts.
+Use `/goal` only for major phase gates, not as a micro-task list. Inside each
+goal, use ordinary checklists and artifacts.
 
 Deck correction is always a goal-level workflow. When a user asks Clara/Codex
 to correct, revise, or rebuild a deck from a voice/video call, transcript,
@@ -367,8 +273,9 @@ report, memo, or other source and asks only for a distinctive educational or
 conference HTML presentation, use the `html-deck` skill without creating
 a fake Clara case workspace, evidence map, or advisory workpaper. This boundary
 does not bypass source fidelity. If the source belongs to an active Clara
-advisory case or the deck will carry Clara's recommendation, the normal Loop 1
-evidence map and workpaper remain mandatory before the deck is built.
+advisory case or the deck will carry Clara's recommendation, route through
+`advisory-case-director`; its current evidence map and workpaper remain
+mandatory before the deck is built.
 
 Fixed-format HTML deck test: any Clara output that is a slide deck, not a
 scrolling brief or memo, must use `scripts/html_deck_runtime.py` before it is
@@ -418,19 +325,20 @@ execution. Generate choices from the actual inputs; do not offer named
 frameworks, project roles, issue categories, advisor names, or decision-maker
 names unless the facts cue them or the user must supply a missing custom value.
 
-Default output policy: produce the natural full package for the workflow when
-dependencies permit: `case_manifest.json`, `material_registry.json`,
-`judgement_log.json`, `open_questions.json`, `case_issues.json`, `case_brief.md`,
-`advisory_contract.json`, `clara_mandate.json`, `clara_kickoff_deck.html`,
-`clara_partner_brief.html`, `advisory_evidence_map.md`,
-`advisory_evidence_register.json`, `advisory_claim_register.json`,
-`advisory_workpaper.md`, `judgement_checkpoint.md`,
-`presentation_storyline.md`, `presentation_review.md`, `decision_pack.md`,
-`decision_pack.docx`,
-`decision_pack_workpaper.md`, and `decision_pack_workpaper.docx`. These are not
-choices to propose when the run is a normal case-workspace run. Do not ask
-whether to create both Markdown and Word unless the user explicitly requests a
-reduced run or DOCX dependencies are unavailable.
+Default output policy: initialize or reuse the durable core case state when the
+workflow needs it: `case_manifest.json`, `material_registry.json`,
+`judgement_log.json`, `open_questions.json`, `case_issues.json`,
+`clara_mandate.json`, `advisory_evidence_register.json`,
+`advisory_claim_register.json`, the derived `case_brief.md` and
+`advisory_evidence_map.md`, and the model-authored `advisory_workpaper.md`.
+`advisory_contract.json` is added by the assignment planner when needed.
+The durable core artifacts are not choices to propose during a normal case run.
+
+Do not manufacture every possible kickoff brief, deck, storyline, review log,
+decision pack, or DOCX merely because the case workspace supports it. Create a
+human-visible deliverable when the user requests it or the case director
+determines that a working milestone will improve the decision or partner
+challenge. The selected deliverable workflow owns its natural output package.
 
 When reopening an existing case, read `case_brief.md` first if it exists. Treat
 it as a derived orientation view, not as authority. If
@@ -1374,7 +1282,7 @@ The case workspace owns durable JSON files and derived working artifacts:
   IDs, evidence relationships, what each receipt proves and does not prove,
   upstream claim dependencies, derivation, uncertainty, judgement boundary,
   and exact output appearances.
-- `advisory_evidence_map.md`: derived Loop 1 evidence navigation map rendered
+- `advisory_evidence_map.md`: derived case-direction evidence navigation map rendered
   from the two structured registers. It links
   claims, options, and implementation conditions to evidence that supports,
   weakens, contradicts, or creates them; records what each source proves and
@@ -1382,7 +1290,7 @@ The case workspace owns durable JSON files and derived working artifacts:
   limitations, source gaps, decision implications, and evidence that would
   change the position. Rerender it whenever material evidence changes; do not
   hand-edit it as a competing source of truth.
-- `advisory_workpaper.md`: Codex-authored Loop 1 advisory reasoning, option
+- `advisory_workpaper.md`: model-authored current case direction, reasoning, option
   evaluation, evidence weighing, contradictions, implementation conditions, and
   Clara defaults. This is a working artifact, not the polished client document.
 - `judgement_checkpoint.md`: compressed advisor judgement requests with Clara
@@ -1390,7 +1298,7 @@ The case workspace owns durable JSON files and derived working artifacts:
   explicitly says the advisor will respond before delivery.
 - `presentation_storyline.md`: the approved or default storyline used to render
   the human-visible deck, memo, or HTML brief.
-- `presentation_review.md`: Loop 2 critique log covering anti-BS, structure,
+- `presentation_review.md`: deliverable critique log covering anti-BS, structure,
   page value, clarity, evidence, advisor usability, and accepted residual issues.
 - `material_registry.json`: source paths, material type, title, summary, status,
   review timestamp.

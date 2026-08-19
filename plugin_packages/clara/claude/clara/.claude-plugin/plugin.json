@@ -3,7 +3,7 @@
   "name": "clara",
   "displayName": "Clara",
   "version": "0.1.139",
-  "description": "AI companion for consultants. Clara plans advisory assignments, validates completed advisory deliverables, organizes evidence, analyzes business data, and prepares reviewable work, reports, presentations, and narrated research videos.",
+  "description": "AI companion for consultants. Clara plans and directs advisory cases, validates completed deliverables, organizes evidence, analyzes business data, and prepares reviewable work, reports, presentations, and narrated research videos.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -18,6 +18,8 @@
     "advisory",
     "advisory-assignment-planning",
     "advisory-contract",
+    "advisory-case-direction",
+    "living-analytical-spine",
     "advisory-review",
     "deliverable-validation",
     "commercial-due-diligence",

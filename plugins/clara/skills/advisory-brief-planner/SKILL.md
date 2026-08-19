@@ -31,9 +31,10 @@ replace a specialist workflow's own accepted intake contract merely to add
 ceremony.
 
 The planner owns only the assignment contract. After handoff, the selected
-`clara:*` workflow is the procedural authority. Existing Clara case loops,
-specialist evidence gates, validation, presentation review, and professional
-approval boundaries remain in force.
+`clara:*` workflow is the procedural authority. For a durable advisory case,
+handoff normally goes to `clara:advisory-case-director`; bounded specialist
+evidence gates, validation, presentation review, and professional approval
+boundaries remain in force.
 
 ## Meaning and mechanical boundary
 
@@ -134,8 +135,9 @@ output folder, and expected artifacts.
    tools are available, preserve the natural assignment text as one UTF-8 file
    in the run folder so literal anchors can be checked.
 2. Read `../clara/references/workflow-catalog.md` and choose the narrowest
-   supported handoff with model-led judgement. The handoff may be
-   `clara:clara` for the main advisory case workflow. It must not point back to
+   supported handoff with model-led judgement. Use
+   `clara:advisory-case-director` for a durable advisory case that must evolve
+   across several contributions. It must not point back to
    `clara:advisory-brief-planner` or to developer governance.
 3. Identify only material unresolved questions. Ask when they block responsible
    handoff; otherwise state and record provisional assumptions.

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "workflow": "advisory-case-director",
+  "display_name": "Direct an advisory case",
+  "governed_paths": [
+    "skills/advisory-case-director/SKILL.md",
+    "skills/advisory-case-director/agents/openai.yaml",
+    "skills/advisory-case-director/references/operating-model.md"
+  ],
+  "codex_context": {
+    "policy": "real_professional_data_may_enter_codex_context",
+    "classes": [
+      {
+        "id": "complete-case-state",
+        "purpose": "Understand the current answer and direct the advisory case",
+        "content": "Assignment contract, case manifest and mandate, real client and stakeholder identities, source materials, interviews, financial or commercial data, material registry, evidence and claim registers, judgement log, open questions, case issues, case brief, current and prior advisory workpapers, and working deliverables"
+      },
+      {
+        "id": "case-direction-judgement",
+        "purpose": "Choose and explain the next decision-relevant work",
+        "content": "Current answer, case-specific reasoning structure, assumptions, contradictions, confidence and conditions, alternative explanations, decision-changing unknowns, ranked next questions, research and analysis briefs, partner-originated questions and judgement, specialist contributions, and the stated effect of new evidence"
+      },
+      {
+        "id": "working-deliverable-round-trip",
+        "purpose": "Keep milestone outputs consistent with the living case direction",
+        "content": "Working deck, memo, brief, storyline, partner feedback, semantic revisions, residual uncertainty, and the decision to create or revise an output"
+      }
+    ]
+  },
+  "ordinary_codex_model_processing": {
+    "scope": "content_supplied_to_the_codex_model",
+    "account_arrangement": "user_selected_chatgpt_or_codex_account",
+    "separate_clara_recipient_or_arrangement": false,
+    "automatic_anonymisation": false,
+    "local_filter_or_aggregate": "only_when_useful_for_professional_work",
+    "plan_visibility": "not_inspected_or_enforced_by_clara"
+  },
+  "codex_account_boundary": {
+    "selected_by": "firm_or_user",
+    "clara_runtime_enforcement": "none",
+    "review_timing": "before_professional_use_and_when_account_or_terms_change",
+    "review_items": [
+      "account_or_workspace_plan",
+      "model_training_data_controls",
+      "retention_and_deletion_controls"
+    ],
+    "per_case_record_required": false
+  },
+  "hosted_service_ids": [],
+  "boundaries_beyond_codex": [
+    {
+      "id": "bounded-authorized-public-research",
+      "kind": "public_research",
+      "destination": "Public or otherwise authorized external sources selected for the case",
+      "purpose": "Answer one bounded decision-relevant question when external evidence can improve the case direction",
+      "content": "Research question, search terms, the minimum non-proprietary case context needed to frame it, selected URLs, retrieved public material, and source-level findings and limitations",
+      "optional": true,
+      "requires_confirmation": true,
+      "controls": [
+        "Obtain the user's explicit authorization before launching the external research branch.",
+        "Use public or otherwise authorized sources only.",
+        "Do not copy proprietary source material into a public query.",
+        "Separate market-level findings from unproven target execution or capability claims.",
+        "Register the returned report and controlling sources in the case before revising the workpaper."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "cumulative-case-history",
+      "control": "Preserve prior evidence, claim states, partner judgement, and materially different workpaper versions; do not replace the cumulative case record with only the newest contribution."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-19",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "d6684693d4c42c7e83eaaf800b33062b41acbe6adeb9dbfec73c7a029bdd2739"
+  }
+}

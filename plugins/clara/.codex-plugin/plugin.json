@@ -1,6 +1,6 @@
 {
   "name": "clara",
-  "version": "0.1.157",
+  "version": "0.1.158",
   "description": "Clara supports consultants with commercial due diligence, evidence synthesis, interviews, business analysis, reports and presentations.",
   "author": {
     "name": "Mparanza",
@@ -21,6 +21,8 @@
     "evidence-register",
     "advisory-assignment-planning",
     "advisory-contract",
+    "advisory-case-direction",
+    "living-analytical-spine",
     "management-consulting",
     "strategy-consulting",
     "due-diligence",
@@ -72,7 +74,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts, routes them to the right workflow, and validates deliverables against contract and evidence. She organizes documents, interviews and data, surfaces gaps and contradictions, and analyzes markets, customers, products, competitors and operations.\n\nShe turns the work into presentations, reports and reviewable workpapers. She also creates research videos from scenes and grounded scripts. Retailer Signals and Brand Fit compare retailer requirements with a brand’s current presence and product catalogue.\n\nSources, assumptions, unresolved questions and decisions remain visible. Professional judgement stays with the consultant.",
+    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts and direct the living case. She states the current answer, keeps evidence, assumptions and contradictions visible, chooses the next decision-relevant work, and revises the position when research, data, interviews or partner judgement change it.\n\nShe analyzes markets, customers, products, competitors and operations, then creates presentations, reports and reviewable workpapers. She also validates completed deliverables against contract and evidence, creates grounded research videos, and supports Retailer Signals and Brand Fit.\n\nProfessional judgement stays with the consultant.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -85,7 +87,7 @@
     "privacyPolicyURL": "https://mparanza.com/privacy",
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
-      "Use Clara to plan this assignment, organize the evidence, preserve decisions that cannot wait, or validate a deliverable.",
+      "Use Clara to plan or direct this case, organize the evidence, choose the next work, or validate a deliverable.",
       "Use Clara to run an interview, transcribe a recording, correct a deck, or narrate approved research scenes as a grounded video.",
       "Use this Excel file to prepare an interactive HTML presentation with key findings, supporting charts and recommendations."
     ],

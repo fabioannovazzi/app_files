@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Representative model and human evaluation cases for advisory case direction. Expected semantic outcomes must not be derived by deterministic keywords, a fixed issue tree, or a scorecard.",
+  "cases": [
+    {
+      "id": "initial-market-answer-without-target-data",
+      "decision": "Whether to continue diligence on a specialist reseller before target accounts are available",
+      "starting_material": "Public evidence suggests unusually cheap procurement of an obsolete commercial product cohort and continuing demand from a narrow user segment. No target purchase ledger, refurbishment data, stock history, or realized resale margin is available.",
+      "expected_current_answer": "External evidence can establish whether a plausible and sufficiently durable market profit pool exists. It cannot establish whether the target captures that pool or owns transferable capabilities.",
+      "expected_next_branch": "Test the procurement mechanism, technical usability, comparable products and markets, and then derive the few target-data questions needed for a continue or stop decision.",
+      "must_not": [
+        "Pretend to evaluate target execution",
+        "Refuse to form any current answer merely because target accounts are unavailable",
+        "Start from a universal due-diligence checklist"
+      ]
+    },
+    {
+      "id": "new-evidence-weakens-single-cause",
+      "decision": "Whether an unusual contract explains an observed resale spread",
+      "prior_answer": "The contract difference is the leading explanation for low acquisition prices.",
+      "new_evidence": "Comparable products used a similar contract, but they do not show the same observed resale spread. Concentrated fleet disposals and narrow end-user fit are also documented.",
+      "expected_effect": "Weaken the single-cause claim, preserve it as one possible contributor, and revise the causal chain to consider the combined effect of fleet supply, transaction friction, technical usability, and buyer matching.",
+      "expected_history": "Keep the prior claim and evidence relationships visible as weakened or superseded rather than deleting them.",
+      "must_not": [
+        "Keep the answer unchanged because the new source is only external",
+        "Replace the complete evidence record with the newest report",
+        "Claim that the target captured the spread"
+      ]
+    },
+    {
+      "id": "deep-research-answer-opens-target-question",
+      "decision": "Whether a historical market profit pool is worth further target diligence",
+      "research_return": "The research supports a temporary procurement dislocation and identifies a user segment that can tolerate the product constraint. It finds no evidence that the dislocation persists for newer cohorts and no direct evidence about the target's sourcing or refurbishment economics.",
+      "expected_effect": "Condition the answer by product cohort, close the market-mechanism question to the extent supported, and open target questions on purchase lots, all-in acquisition cost, refurbishment yield, time to sale, realized price, and repeatability.",
+      "expected_next_branch": "Request the smallest target evidence package capable of testing capture and transferability.",
+      "must_not": [
+        "Treat historical market evidence as proof of current target margin",
+        "Launch broader research without explaining what decision it could change"
+      ]
+    },
+    {
+      "id": "partner-question-changes-the-analysis",
+      "decision": "Whether the current causal explanation is durable",
+      "partner_challenge": "Even if the observed margin is real, why should it persist after the abnormal supply cohort disappears?",
+      "expected_effect": "Record the question as partner-originated, identify that it attacks the durability link rather than the existence of historical margin, and redirect the next work toward cohort renewal, replacement sourcing pools, capability transfer, and margin persistence.",
+      "must_not": [
+        "Attribute the question to Clara",
+        "Answer only whether the historical margin was EBITDA or gross margin",
+        "Continue the prior work plan without testing durability"
+      ]
+    },
+    {
+      "id": "semantic-deck-feedback-round-trip",
+      "decision": "Whether to recommend continuing diligence",
+      "deck_feedback": "The deck says the market mechanism is proven, but the evidence supports only plausibility and one important alternative explanation remains open.",
+      "expected_effect": "Update claim states and the workpaper first, then revise the deck's conclusion, support, uncertainty, and next work.",
+      "must_not": [
+        "Treat the feedback as wording only",
+        "Edit the deck while leaving the spine inconsistent",
+        "Use the deck as the case's evidence store"
+      ]
+    },
+    {
+      "id": "bounded-data-contribution",
+      "decision": "Whether customer concentration makes the current recommendation fragile",
+      "branch_request": "Analyze two customer datasets with different periods and definitions to determine concentration, retention, and whether the apparent change is comparable.",
+      "expected_handoff": "Give the data specialist the current answer, exact decision question, dataset boundaries, definitions needing review, required calculations and provenance, and the result that would change the recommendation.",
+      "expected_return": "Findings, calculation lineage, comparability limits, contradictions, and questions created by the analysis.",
+      "must_not": [
+        "Make the data orchestrator owner of the overall case thesis",
+        "Treat a mechanically valid chart manifest as a business conclusion"
+      ]
+    }
+  ]
+}

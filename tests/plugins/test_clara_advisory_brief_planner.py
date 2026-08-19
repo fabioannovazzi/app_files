@@ -113,7 +113,7 @@ def _representative_contract() -> dict[str, Any]:
             "The brief states whether to integrate and what customer evidence would reverse the recommendation.",
             "France remains outside scope.",
         ],
-        "selected_clara_workflow": "clara:clara",
+        "selected_clara_workflow": "clara:advisory-case-director",
         "validation_profile": {
             "review_dimensions": [
                 "contract_conformance",
@@ -191,7 +191,7 @@ def _representative_contract() -> dict[str, Any]:
             }
         ],
         "generation_handoff": {
-            "workflow": "clara:clara",
+            "workflow": "clara:advisory-case-director",
             "objective": "Prepare the board's integration decision brief.",
             "input_ids": ["assignment"],
             "instructions": [
@@ -251,7 +251,7 @@ def test_advisory_contract_packages_exact_facts_and_generation_handoff(
     assert report_path == output_dir / "advisory_contract_validation.json"
     packaged = json.loads(contract_path.read_text(encoding="utf-8"))
     report = json.loads(report_path.read_text(encoding="utf-8"))
-    assert packaged["selected_clara_workflow"] == "clara:clara"
+    assert packaged["selected_clara_workflow"] == "clara:advisory-case-director"
     assert packaged["generation_handoff"]["preserve_specialist_authority"] is True
     assert packaged["scope_excluded"] == ["France"]
     assert packaged["explicit_questions"][0]["question"] == (
