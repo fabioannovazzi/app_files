@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import shutil
 import subprocess
 import sys
@@ -295,7 +296,7 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "every snapshot file, not a sample",
         "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
         "random hash-bound reference valid for four hours",
-        "when the local MCP interface is available for a bound run",
+        "When the local MCP interface is available for a bound run",
         "canonical files remain reviewable and decisions stay pending",
         "Technical references are pseudonymized; document content is not automatically anonymized",
     ):
@@ -315,11 +316,11 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
 
     assert studio_page.count('"model.gmail.copy":') == 5
     for snippet in (
-        "Codex and Cowork apply the same limits",
+        "The model receives, with the same limits",
         "one initial search of up to 20 candidates",
         "searches in batches of at most 10 addresses",
         "up to 20 results per page",
-        "local MCP applies the same run binding when available",
+        "When local MCP is available, it applies the run binding",
         "no decision is reported as saved or applied without a persisted artifact",
     ):
         assert snippet in studio_page
@@ -339,7 +340,7 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
     ):
         assert snippet in inps_page
     for snippet in (
-        "public SARI search in Codex or Cowork runs only when web or browser access is available",
+        "public SARI search runs only when web or browser access is available",
         "current-source coverage is marked incomplete",
     ):
         assert snippet in sari_page
@@ -348,9 +349,71 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
         page = (ROOT / "static" / "shared" / workflow / "index.html").read_text(
             encoding="utf-8"
         )
-        assert "In a managed local-MCP review in Codex or Cowork" in page
-        assert "When local MCP is unavailable, Codex and Cowork read" in page
+        assert "In a managed local-MCP review, validation sends" in page
+        assert "When local MCP is unavailable, the model reads" in page
         assert "Cowork reads the same canonical files without MCP" not in page
+
+
+def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
+    """Keep host names only for genuine capability-specific boundaries."""
+
+    workflows = (
+        "archive-organization",
+        "check-entries",
+        "concordato-plan-review",
+        "deep-research-validator",
+        "financial-analysis",
+        "journal-sampling",
+        "new-client",
+        "prompt-optimizer",
+        "registro-imprese-sari",
+        "report-builder",
+        "sales-plan",
+        "studio-archive",
+    )
+    runtime_pairs = (
+        "Codex and Cowork",
+        "Codex or Cowork",
+        "Codex e Cowork",
+        "Codex o Cowork",
+        "Codex et Cowork",
+        "Codex ou Cowork",
+        "Codex und Cowork",
+        "Codex oder Cowork",
+        "Codex y Cowork",
+        "Codex- oder Cowork",
+    )
+
+    pages: dict[str, str] = {}
+    for workflow in workflows:
+        page = (ROOT / "static" / "shared" / workflow / "index.html").read_text(
+            encoding="utf-8"
+        )
+        if workflow == "concordato-plan-review":
+            pages[workflow] = page
+        else:
+            localized_model_values = re.findall(r'"model\.[^"]+":\s*"([^"]*)"', page)
+            visible_model_values = re.findall(
+                r'data-(?:i18n|journey)="model\.[^"]+"[^>]*>([^<]*)<', page
+            )
+            pages[workflow] = "\n".join(localized_model_values + visible_model_values)
+
+    for workflow, model_copy in pages.items():
+        for runtime_pair in runtime_pairs:
+            assert runtime_pair not in model_copy, (workflow, runtime_pair)
+
+    assert "Only in Codex" in pages["studio-archive"]
+    assert "not enabled as a Cowork route" in pages["archive-organization"]
+
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
+    vera_function_copy = function_copy.split('"clara-advisory-planning":', 1)[0]
+    vera_function_copy += function_copy.split("const bilancioModelData =", 1)[1].split(
+        "Object.entries(bilancioModelData)", 1
+    )[0]
+    for runtime_pair in runtime_pairs:
+        assert runtime_pair not in vera_function_copy, runtime_pair
 
 
 def test_runtime_parity_privacy_manifests_match_the_implemented_routes() -> None:
@@ -455,8 +518,8 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         "al massimo 25 per chiamata",
         "500.000 byte",
         "metadati riservati al componente",
-        "Codex e Cowork usano lo stesso indice, gli stessi limiti e lo stesso run",
-        "MCP quando disponibile verifica, salva e applica la revisione",
+        "Stesso indice, stessi limiti e stesso run",
+        "Quando disponibile, MCP verifica, salva e applica la revisione",
         "non vengono anonimizzati né pseudonimizzati automaticamente",
     ):
         assert snippet in model_block

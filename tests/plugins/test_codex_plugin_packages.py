@@ -3207,7 +3207,7 @@ def test_bilancio_model_data_copy_omits_provider_mapping() -> None:
 
     assert "OpenAI" not in bilancio_copy
     assert "Anthropic" not in bilancio_copy
-    assert "Codex e Cowork usano gli stessi strumenti e limiti" in bilancio_copy
+    assert "Il modello usa gli stessi strumenti e limiti" in bilancio_copy
     assert "fino a 50 selettori esatti aggiuntivi complessivi" in bilancio_copy
     assert (
         "Il modello non riceve automaticamente i file sorgente, case.json o lo "
@@ -3795,7 +3795,7 @@ def test_vera_page_explains_selected_history_pseudonymization_boundary() -> None
         "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
         "gli input ripuliti e i pacchetti temporanei vengono eliminati",
         "È pseudonimizzazione, non anonimizzazione",
-        "Vera e Lucia usano lo stesso nucleo in Codex e Cowork",
+        "Il nucleo condiviso di Vera e Lucia applica lo stesso perimetro",
         "solo Codex può inviare facoltativamente a Creative Production",
     ):
         assert required_copy in function_copy
@@ -3851,11 +3851,11 @@ def test_vera_page_explains_studio_website_quality_contract() -> None:
         "Il n'accède pas aux archives générales du cabinet, aux dossiers clients",
         "Es greift nicht auf das allgemeine Kanzleiarchiv, Mandantenakten, das Postfach",
         "No accede al archivo general del despacho, a expedientes de clientes, al correo",
-        "Gli stessi limiti sulle fonti valgono in Codex e Cowork",
-        "The same source limits apply in Codex and Cowork",
-        "Les mêmes limites sur les sources s'appliquent dans Codex et Cowork",
-        "In Codex und Cowork gelten dieselben Quellengrenzen",
-        "En Codex y Cowork se aplican los mismos límites sobre las fuentes",
+        "Il modello riceve le fonti entro gli stessi limiti",
+        "The model receives sources within the same limits",
+        "Le modèle reçoit les sources dans les mêmes limites",
+        "Das Modell erhält Quellen innerhalb derselben Grenzen",
+        "El modelo recibe las fuentes dentro de los mismos límites",
     ):
         assert expected_copy in website_copy
     for removed_copy in (
@@ -4044,25 +4044,32 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         ROOT / "static" / "shared" / "concordato-plan-review" / "index.html"
     ).read_text(encoding="utf-8")
 
-    for page in (financial, sales, function_copy):
-        assert "In Codex and Cowork" in page
+    for page in (financial, sales):
+        assert "In Codex and Cowork" not in page
         assert "portable Studio Archive" in page
+    variance_copy = function_copy.split('"variance-analysis":', 1)[1].split(
+        '"bandi-agevolazioni":', 1
+    )[0]
+    assert "In Codex and Cowork" not in variance_copy
+    assert "Selected data is imported into a portable Studio Archive run" in (
+        variance_copy
+    )
     assert (
         "Studio Archive run and connected-file search work in Codex and Cowork"
         in studio
     )
-    assert "The selected model in Codex or Cowork" in studio
-    assert "Codex and Cowork use the same reduced sample and run" in journal
-    assert "Codex and Cowork use the same index, limits, and run" in check_entries
-    assert "Codex and Cowork scan" in archive_organization
+    assert "For client selection, the model receives every directory row" in studio
+    assert "The same reduced sample and run" in journal
+    assert "One index, the same limits, and the same run" in check_entries
+    assert "The local-folder route scans" in archive_organization
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
     )
-    assert "when the local MCP interface is available for a bound run" in (
+    assert "When the local MCP interface is available for a bound run" in (
         archive_organization
     )
     assert "not enabled as a Cowork route" in archive_organization
-    assert "Codex and Cowork use this path when MCP is available" in concordato
+    assert "When MCP is available, the model uses this path" in concordato
     assert "Local-folder mode runs in Codex Desktop and Cowork" in (
         ROOT
         / "plugins"
@@ -4494,8 +4501,8 @@ def test_report_builder_page_explains_bounded_model_data_flow() -> None:
         "L'inventaire complet reste dans le contrôle local privé",
         "keine automatische Anonymisierung oder Pseudonymisierung",
         "No hay anonimización ni seudonimización automática",
-        "Codex e Cowork applicano gli stessi limiti",
-        "Cowork does not replace the helper with a direct read",
+        "Gli stessi limiti si applicano in ogni ambiente supportato",
+        "the helper is not replaced by a direct read",
     ):
         assert snippet in page
     for key in ("model.label", "model.title", "model.conclusion", "model.copy"):
