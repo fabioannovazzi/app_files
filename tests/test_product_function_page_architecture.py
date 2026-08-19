@@ -177,6 +177,20 @@ def test_lucia_and_vera_shared_studio_pages_are_product_neutral() -> None:
         assert expected in renderer
 
 
+def test_starting_prompts_invoke_the_selected_product() -> None:
+    navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
+
+    for expected in (
+        'const assistantNames = { vera: "Vera", lucia: "Lucia", clara: "Clara" };',
+        '#prompt-example, [data-journey="prompt.text"], '
+        '[data-i18n="example.prompt"], .pf-prompt',
+        "renderStartingPrompts(product, currentLanguage);",
+        "return `@${assistant} ${directCommand}`;",
+        'it: ["Usa Vera per preparare", "Prepara"]',
+    ):
+        assert expected in navigation
+
+
 def test_every_function_page_gets_one_clickable_work_area_breadcrumb() -> None:
     navigation = (SHARED / "function-page-navigation.js").read_text(encoding="utf-8")
     navigation_css = (SHARED / "function-page-navigation.css").read_text(

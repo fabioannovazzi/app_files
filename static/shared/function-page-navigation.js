@@ -3,6 +3,7 @@
 
   const currentScript = document.currentScript;
   const languages = new Set(["it", "en", "fr", "de", "es"]);
+  const assistantNames = { vera: "Vera", lucia: "Lucia", clara: "Clara" };
   const areaLabels = {
     vera: {
       "area-clients": {
@@ -459,6 +460,50 @@
     if (node && value) node.textContent = value;
   }
 
+  function directPrompt(prompt, assistant, currentLanguage) {
+    let trimmed = prompt.trim();
+    for (const [opening, closing] of [["“", "”"], ["«", "»"], ["„", "“"]]) {
+      if (trimmed.startsWith(opening) && trimmed.endsWith(closing)) {
+        trimmed = trimmed.slice(opening.length, -closing.length).trim();
+        break;
+      }
+    }
+    if (!trimmed) return trimmed;
+    if (/^@(Vera|Lucia|Clara)\b/.test(trimmed)) {
+      return trimmed.replace(/^@(Vera|Lucia|Clara)\b/, `@${assistant}`);
+    }
+
+    const financialAnalysisOpeners = {
+      it: ["Usa Vera per preparare", "Prepara"],
+      en: ["Use Vera to prepare", "Prepare"],
+      fr: ["Utilise Vera pour préparer", "Prépare"],
+      de: [
+        "Verwende Vera, um die Finanzanalyse oder Financial Due Diligence für diesen Ordner vorzubereiten.",
+        "Bereite die Finanzanalyse oder Financial Due Diligence für diesen Ordner vor.",
+      ],
+      es: ["Usa Vera para preparar", "Prepara"],
+    };
+    const [opener, replacement] = financialAnalysisOpeners[currentLanguage];
+    const command = trimmed.startsWith(opener)
+      ? `${replacement}${trimmed.slice(opener.length)}`
+      : trimmed;
+    const directCommand = `${command.charAt(0).toLocaleLowerCase(currentLanguage)}${command.slice(1)}`;
+    return `@${assistant} ${directCommand}`;
+  }
+
+  function renderStartingPrompts(product, currentLanguage) {
+    const assistant = assistantNames[product];
+    if (!assistant) return;
+
+    document
+      .querySelectorAll(
+        '#prompt-example, [data-journey="prompt.text"], [data-i18n="example.prompt"], .pf-prompt',
+      )
+      .forEach((node) => {
+        node.textContent = directPrompt(node.textContent, assistant, currentLanguage);
+      });
+  }
+
   function neutralizeSharedResearchPage(key, currentLanguage) {
     if (key !== "prompt-optimizer" && key !== "deep-research-validator") return;
 
@@ -602,6 +647,7 @@
 
     const currentLanguage = language();
     const [product, area] = context;
+    renderStartingPrompts(product, currentLanguage);
     const existing = document.querySelector(
       ".function-breadcrumb, .pf-breadcrumb, .journey-breadcrumb, main > .breadcrumb, .page > .breadcrumb, body > .breadcrumb",
     );
@@ -635,7 +681,7 @@
     main.parentNode.insertBefore(breadcrumb, main);
   }
 
-  window.MPARANZA_FUNCTION_NAVIGATION = { render };
+  window.MPARANZA_FUNCTION_NAVIGATION = { directPrompt, render };
   render();
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", render, { once: true });
