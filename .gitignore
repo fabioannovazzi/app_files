@@ -132,3 +132,4 @@ static/shared/**/variance_results.csv
 
 # Published advisory decks are deployment outputs, not application source.
 static/shared/advisory-decks/
+static/shared/b8ff38b465da926038798728d9567ce52f2f7547efbb49742968793fcb58e62b/
