@@ -129,3 +129,6 @@ brand_report_podcasts/
 static/shared/**/*_canonical.csv
 static/shared/png-gallery/
 static/shared/**/variance_results.csv
+
+# Published advisory decks are deployment outputs, not application source.
+static/shared/advisory-decks/
