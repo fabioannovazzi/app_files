@@ -2578,7 +2578,7 @@ def test_static_page_exposes_concordato_specific_outputs() -> None:
         "Die Prüfung vermeidet eine zweite vollständige Kopie",
         "La revisión evita una segunda copia completa",
         "al massimo 25 elementi per volta",
-        "Il limite di 25 elementi non si applica a quel fallback",
+        "Il limite di 25 elementi non si applica a questo fallback",
         "The 25-item limit does not apply to that fallback",
         "La limite de 25 éléments ne s'applique pas à ce parcours de repli",
         "Die Grenze von 25 Elementen gilt für diesen Ausweichpfad nicht",

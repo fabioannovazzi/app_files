@@ -1,6 +1,6 @@
 {
   "name": "archive-organization",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Analizza una cartella cliente, propone classificazione, rinomina e spostamenti, e applica solo decisioni revisionate con journal e rollback.",
   "author": {
     "name": "Mparanza",

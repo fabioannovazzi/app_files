@@ -63,8 +63,9 @@ customer folder at
 
 ## Runtime and dependency check
 
-This workflow requires Claude Desktop because it reads and, after approval,
-changes local files or an explicitly bound Google Drive folder. ChatGPT may
+Local-folder mode runs in Claude Desktop and Cowork against the exact user-bound
+folder. Native Google Drive mode uses the current guarded desktop OAuth adapter
+and is not an enabled Cowork route. A text-only chat may
 explain or review a supplied plan but must not claim to scan or change the
 client archive. Before execution, run:
 
@@ -75,7 +76,8 @@ python scripts/check_dependencies.py
 Do not install packages at runtime. `requirements.txt` declares the Google
 client and OAuth dependencies used by native Drive mode.
 
-For first-time Drive setup, the user or Workspace administrator must provide a
+In Claude native Drive mode, for first-time setup the user or Workspace
+administrator must provide a
 Google Cloud desktop OAuth client and explicitly authorize the restricted
 `https://www.googleapis.com/auth/drive` scope with Studio Archive's
 `authorize-google-drive --client-secrets <path>` command. Explain that public

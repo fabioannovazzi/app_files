@@ -47,17 +47,12 @@ Do not use WhatsApp, live INPS browser capture, hosted feedback or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract.
 
-## Client boundary in Cowork
+## Client workflow gate
 
-Cowork does not package Studio Archive, so it cannot select or register its
-local clients, import controlled snapshots, prepare or start customer-folder
-runs, or finalize their artifact manifests. Use a product CLI only when a
-compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for this exact workflow and its complete
-customer-folder ledger paths are available. Otherwise work from the exact
-connected files, preserve a reviewable file-based handoff, and state that the
-sealed customer-folder run remains pending. Never invent an ID, receipt,
-lifecycle state, or completed artifact declaration.
+Resolve the exact Studio Archive client and engagement before reading or writing
+case material. Resume or prepare a `client-file-preparation` run, use only its
+managed input folder and `output_dir`, and pass its absolute context path as
+`--client-engagement`. Do not invent a sibling output folder.
 
 # Avviso Intake
 

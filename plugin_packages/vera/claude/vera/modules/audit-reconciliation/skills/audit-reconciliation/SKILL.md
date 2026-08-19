@@ -197,20 +197,37 @@ Skipped sources, unsupported layouts, and parser failures must be visible as
 review items, on the workbook's `Source processing issues` sheet, and in
 `source_processing.extraction_errors` in the canonical record.
 
-## Client boundary in Cowork
+## Client folder gate
 
-Cowork v1 does not package the local Studio Archive index or its
-`get_studio_client_folder` tool, so it cannot prepare or start a customer-folder
-run or issue its workflow context.
-For connected-folder work, select and retain one explicit client folder and do
-not mix material from another client. Run `scripts/raw_input_runner.py` only
-when a compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for Audit Reconciliation and its complete
-customer-folder ledger paths are available in the current workspace. Otherwise
-continue with the useful connected-folder review and preparation that Cowork
-can perform, and state that the sealed local raw run remains pending. Never
-invent a client, engagement, run, receipt, or lifecycle state from a name or
-document content.
+Every raw-input run must be bound to one exact Studio Archive client folder.
+Do not infer the client from a person's name, a filename, an engagement label,
+or the contents of an accounting file.
+
+1. Call `studio_archive_status`, select one exact client and engagement, and
+   refresh first if Studio Archive reports changed top-level scopes.
+2. Import the reviewed sources into that engagement, then call
+   `prepare_studio_client_workflow` with workflow ID `audit-reconciliation`.
+   Pass its returned `client_engagement_path` unchanged as
+   `--client-engagement` to `raw_input_runner.py`.
+3. Start that run before executing the helper. The portable context fixes the
+   execution inputs as `Vera/engagements/<engagement-id>/runs/<run-id>/inputs`
+   and the only permitted output path as the sibling `outputs` directory in
+   the selected customer folder. Never substitute a freely chosen directory.
+4. Stop when the context, input receipt, execution copy, lifecycle, or customer
+   manifest is stale or edited. Do not copy, merge, or relabel another
+   customer's files to make validation pass.
+
+Call `finalize_studio_client_workflow` after the last output write and declare
+every physical file with a stable artifact ID, relative path, concrete purpose,
+audience, and media type. Review that closed declaration, then call
+`complete_studio_client_workflow`; record `failed` or explicitly cancel an
+abandoned run instead of treating a partial directory as a result.
+
+The same client/engagement context must appear in `run_intake.json`,
+`review_payload.json`, `run_manifest.json`, `prepared_records.json`, the
+canonical reconciliation record, and `assurance_receipts.json`. The portable
+folder binding intentionally excludes email addresses, legal names, tax
+identifiers, document content, and mailbox content.
 
 ## Cowork review handoff
 

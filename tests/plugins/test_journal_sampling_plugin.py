@@ -2027,10 +2027,10 @@ def test_static_page_exposes_five_localized_model_data_flows() -> None:
         "Eine reproduzierbare Stichprobe aus einem uneinheitlichen Journal erstellen.",
         "Cree una muestra reproducible a partir de un diario desordenado.",
         "up to 750 selected rows with all 17 canonical columns",
-        "Codex and Cowork use the same reduced sample with different persistence",
+        "Codex and Cowork use the same reduced sample and run",
         "Les alias ref-* pseudonymisent les références techniques, pas les données professionnelles",
         "keine automatische Anonymisierung oder Nur-lokal-Garantie",
-        "Cowork parte del mismo model_review_context.json",
+        "En Codex y Cowork, el modelo parte del mismo model_review_context.json",
     ):
         assert snippet in page
 

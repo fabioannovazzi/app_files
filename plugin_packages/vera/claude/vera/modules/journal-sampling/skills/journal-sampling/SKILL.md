@@ -49,12 +49,12 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside the plugin installation or a published/static
-folder. Cowork cannot issue a Studio Archive client-engagement context. Use the
-context's exact normalization and sample paths only when a compatible local
-Vera installation supplied a digest-valid context whose paths are available.
-Without it, write only useful connected-workspace review or preparation
-artifacts and state that the sealed client-bound run remains pending.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive `client_engagement` context. Inspection and normalization use its `normalization` child; sampling uses its `sample` child. Do not invent a sibling output folder or run an unbound product CLI.
+
+The context is a portable customer-folder run record, not a machine-local
+workspace pointer. Load it through the workflow gate so current absolute paths
+are hydrated after a folder rename. Use only its exact journal binding as input
+and only its exact `output_dir` for writes.
 
 # Journal Sampling
 
@@ -102,8 +102,23 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 
 ## First Run Workflow
 
-1. Confirm one exact client and connected-folder scope. Cowork cannot list or register local Studio clients, create a customer folder or engagement, import a journal, prepare or start a run, or issue a client-engagement context. Never infer the client from the journal filename.
-2. If a compatible local Vera installation supplied a digest-valid running context and every bound path is available, use that context unchanged for the CLI steps below. Use only its one exact immutable journal binding and exact output directory; never scan other connected files. Otherwise inspect the selected connected journal, prepare mappings and sampling assumptions, and state that the sealed client-bound run remains pending.
+1. Start with Studio Archive client intake. Call `list_studio_archive_clients`;
+   do not infer the client from the journal filename. Resolve an existing
+   registered client, explicitly register a confirmed existing customer folder,
+   or create a client only after the user chooses New client. Create or select
+   one engagement. Explain that the external original is preserved, obtain
+   authorization, and call `import_studio_client_document` with that
+   `engagement_id` and role `journal`. Retain its immutable `input_id` and
+   receipt. Import does not prepare or start Journal Sampling. If New Client
+   onboarding is pending, preserve that status while preparing the journal; do
+   not claim the relationship is active.
+2. Call `prepare_studio_client_workflow` for `journal-sampling` with that exact
+   journal `input_id`, a concrete label, and a purpose. Use the idempotent
+   returned run unless the user explicitly requests `new_run=true`. Call
+   `start_studio_client_workflow` before any helper script. Load the returned
+   `client_engagement_path` through the workflow gate and use the one
+   `input_bindings` item with role `journal`; do not use an unbound live file or
+   scan the engagement's other imports.
 3. Ask for working language, source-document language, and any known filters
    only if they are not already provided or inferable. Do not ask for output
    richness. If the audit plan does not specify sample size or method, default
@@ -200,7 +215,16 @@ python -I -B scripts/review_successor.py context <client-run-output> \
   --client-engagement <customer-run>/context.json
 ```
 
-11. After the last output write, do not treat the output directory as an available or completed Studio artifact. Cowork does not package Studio Archive and cannot finalize, complete, fail, or cancel its customer-folder run. Report every physical output with its intended artifact ID, relative path, concrete purpose, audience, and media type. The declaration must include `prepared.normalized_journal`, `internal.normalization_diagnostics`, and `prepared.journal_sample_csv`. A compatible local Vera installation must verify and declare the exact tree, move it to `ready_for_review`, and record completion or a terminal failure/cancellation. Until then, state that the sealed client-bound run remains pending.
+11. After the last output write, call `finalize_studio_client_workflow` and
+   declare every physical output with a unique artifact ID, relative path,
+   concrete purpose, audience, and media type. The downstream handoff must
+   include `prepared.normalized_journal`,
+   `internal.normalization_diagnostics`, and
+   `prepared.journal_sample_csv`. Finalization moves the run to
+   `ready_for_review`; an undeclared or empty output tree is not available.
+   Review the final declaration, then call `complete_studio_client_workflow`.
+   If execution fails, record the run as `failed`; explicitly cancel an
+   abandoned run rather than deleting it.
 
 ## Check Entries handoff
 

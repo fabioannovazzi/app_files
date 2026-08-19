@@ -299,12 +299,12 @@ on-demand read tool. The complete `review_payload.json`, run intake, current
 decisions, final-artifact index, source labels, paths, hashes, and review rows
 are hydrated from the persisted run and delivered to the review component in
 tool-result metadata rather than model-visible `content` or
-`structuredContent`. The same component-only payload contract applies in
-Codex/ChatGPT and, when that optional interface is callable and used,
-Cowork/MCP Apps. Cowork's normal connected-folder fallback remains file-based:
-begin with the delivered semantic review and open only the exact review or
-source files needed for the professional question. The 25-item tool limit does
-not apply to that fallback.
+`structuredContent`. The same component-only payload contract applies in Codex
+and Cowork when the optional interface is callable and used. If it is
+unavailable in either runtime, use the same file-based fallback: begin with the
+delivered semantic review and open only the exact review or source files needed
+for the professional question. The 25-item tool limit does not apply to that
+fallback.
 
 If a specific professional question still needs model analysis after semantic
 confirmation, call `read_concordato_plan_review_items` by exact item id or item

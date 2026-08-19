@@ -58,7 +58,7 @@
       {
         "id": "professional-review-decisions-cowork",
         "purpose": "Record review questions, issues, evidence requests, reviewer decisions, and professional handoff material in Cowork",
-        "content": "During substantive analysis, Cowork may read the same semantic case-model decisions, judgment bases, issues, requested documents, reviewer notes, generated workpapers, summaries, and review memos needed for the professional task. When the packaged MCP interface and a compatible local Vera customer-run context are callable and used, the reference-bound component-only result and at-most-25-item on-demand projection apply as in Codex. Cowork's normal completion path remains a connected-folder, file-based handoff when that optional interface or context is unavailable: the model begins with the delivered semantic review and may open the exact review or source files needed for an unresolved professional question. The 25-item MCP limit does not apply to that fallback, and no sealed Studio Archive run is claimed without the compatible context.",
+        "content": "During substantive analysis, Cowork may read the same semantic case-model decisions, judgment bases, issues, requested documents, reviewer notes, generated workpapers, summaries, and review memos needed for the professional task. Studio Archive supplies the same portable customer-run context as in Codex. When the packaged MCP interface is callable and used, the same reference-bound component-only result and at-most-25-item on-demand projection apply. If MCP is unavailable in either runtime, the same file-based handoff begins with the delivered semantic review and may open only the exact review or source files needed for an unresolved professional question; the 25-item MCP limit does not apply to that symmetric fallback.",
         "runtime_profiles": [
           "anthropic-cowork"
         ]
@@ -108,6 +108,6 @@
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "e19ec079e408edc9b111570dfd355dd065ff57ba8d41b88dca049bf24be3806e"
+    "source_fingerprint": "99a32d74d49a8ee0fa108dc3ffc2a9053bf520fc10c32f5ea7769bc985d3e526"
   }
 }

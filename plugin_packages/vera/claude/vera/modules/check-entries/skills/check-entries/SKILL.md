@@ -49,12 +49,12 @@ override this Cowork contract.
 
 ## Output Location Rule
 
-Never write run outputs inside the plugin installation or a published/static
-folder. Cowork cannot issue a Studio Archive Check Entries context. Use the
-context's exact inspection and checks paths only when a compatible local Vera
-installation supplied a digest-valid context whose local paths are available.
-Without it, write only useful connected-workspace support-review artifacts and
-state that the sealed client-bound run remains pending.
+Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive Check Entries `client_engagement` context. Inspection uses its `inspection` child and checks use its `checks` child. Do not invent a sibling output folder or run an unbound product CLI.
+
+The context is a portable customer-folder run record, not a machine-local
+workspace pointer. Load it through the workflow gate so current absolute paths
+are hydrated after a folder rename. Use only its exact upstream and support
+bindings; never scan all files imported into the engagement.
 
 # Check Entries
 
@@ -141,9 +141,44 @@ Entries context or automatically add itself to an existing run.
 
 ## First Run Workflow
 
-1. Confirm one exact client and connected-folder scope. Cowork cannot list or resume local Studio engagements, import support, prepare or start a run, or issue a Check Entries context. Never infer the client, engagement, or sampling run from filenames or recency.
-2. Ask first for the relevant FatturaPA ZIP in the connected folder; if unavailable, use an authorized accounting-system export already materialized there, then targeted PDFs for unresolved sampled entries. Never request credentials, tokens, cookies, or one-time codes. Without a compatible local context, inspect only the smallest useful connected support scope and state that the sealed client-bound check remains pending.
-3. Run the sealed Check Entries CLI only when a compatible local Vera installation supplied a digest-valid running context whose paths are available. It must bind the exact `prepared.normalized_journal`, `internal.normalization_diagnostics`, and `prepared.journal_sample_csv` artifacts from one finalized same-engagement Journal Sampling run, plus only the immutable support receipts for this evidence batch. Use those bindings unchanged, check only the bound sample, and never scan later connected or engagement files. A later evidence delivery remains a separate pending local run.
+1. Resume the exact client engagement before acquiring support. Call
+   `list_studio_archive_clients`, select the stable client without inferring it
+   from a filename, then call `list_studio_client_engagements`. The latter
+   reads the customer-folder ledger, so the initiating chat is not required.
+   Select one review-ready or completed Journal Sampling run whose artifact
+   manifest contains the exact normalized population, diagnostics, sample, and
+   six normalization companions required for assurance replay.
+   If more than one engagement or sampling run could apply, show the choices
+   and ask; never pick by recency or filename alone.
+2. Apply this acquisition ladder: ask first for the ZIP containing all relevant
+   FatturaPA XMLs; if unavailable, offer an authorized accounting-system
+   connection that materializes a local ZIP/folder export; otherwise request
+   PDFs only for unresolved sampled entries. Never request credentials, tokens,
+   cookies, or one-time codes. Ask for working language, source-document
+   language, and evidence assumptions only when unresolved.
+   When the user chooses connection, use a callable provider-specific connector
+   only after confirming the studio/client has authorized access. Restrict the
+   connector action to read/export for the selected client and period, record
+   the connector name, and pass its local ZIP/folder result to Check Entries.
+   If no connector for the named accounting system is callable, say so rather
+   than simulating a connection; ask which provider must be integrated or move
+   to the targeted-PDF fallback at the user's direction.
+   Explain that each external original is preserved. After the user authorizes
+   a controlled copy, call `import_studio_client_document` with role `support`
+   and the selected `engagement_id` for each file. Retain the returned immutable
+   `input_ids`; import does not prepare or start Check Entries. Do not accept
+   support from another customer folder or engagement directly.
+3. Call `start_check_entries_from_sample` with the selected `client_id`,
+   `engagement_id`, completed Journal Sampling `sample_run_id`, and only the
+   current evidence-batch `support_input_ids`. This operation resolves and
+   validates the complete internal handoff, prepares an idempotent Check
+   Entries run, and starts it. Do not ask the user to identify internal files
+   or assemble artifact references. Load the returned `client_engagement_path`
+   and use only its hydrated bound paths. A later ZIP or PDF delivery must be
+   imported and started as another run; it cannot mutate this run's input
+   manifest. If its exact byte selection repeats an earlier run, set
+   `new_run=true` only after the user confirms that it is intentionally a
+   separate evidence batch.
 4. Run dependency checks from the plugin directory:
 
 ```bash
@@ -178,7 +213,13 @@ python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-c
    input IDs, support matching coverage, status counts, unresolved/manual-review
    rows, mismatches, and output paths. Complete every write-producing MCP save
    or apply transaction before sealing the outer customer-folder run.
-10. After the last output write, do not treat the output directory as an available or completed Studio artifact. Cowork does not package Studio Archive and cannot finalize, complete, fail, or cancel its customer-folder run. Report every physical output with its intended artifact ID, relative path, concrete purpose, audience, and media type. A compatible local Vera installation must verify and declare the exact tree, move it to `ready_for_review`, and record completion or a terminal failure/cancellation. Until then, state that the sealed client-bound check remains pending.
+10. After the last output write, call `finalize_studio_client_workflow` and
+   declare every physical output with a unique artifact ID, relative path,
+   concrete purpose, audience, and media type. Finalization moves the run to
+   `ready_for_review`; an undeclared, changed, partial, or empty output tree is
+   not available. Review the final declaration, then call
+   `complete_studio_client_workflow`. If execution fails, record `failed`;
+   explicitly cancel an abandoned run rather than deleting it.
 
 ## Prepared-Evidence Contract
 

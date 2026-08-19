@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.148"
+    assert manifest["version"] == "0.1.149"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -4016,6 +4016,76 @@ def test_sales_plan_page_explains_actual_to_plan_and_review_boundary() -> None:
         "Financial analysis and due diligence",
     ):
         assert forbidden_financial_analysis_copy not in page
+
+
+def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
+    financial = (
+        ROOT / "static" / "shared" / "financial-analysis" / "index.html"
+    ).read_text(encoding="utf-8")
+    sales = (ROOT / "static" / "shared" / "sales-plan" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
+    studio = (ROOT / "static" / "shared" / "studio-archive" / "index.html").read_text(
+        encoding="utf-8"
+    )
+    journal = (
+        ROOT / "static" / "shared" / "journal-sampling" / "index.html"
+    ).read_text(encoding="utf-8")
+    check_entries = (
+        ROOT / "static" / "shared" / "check-entries" / "index.html"
+    ).read_text(encoding="utf-8")
+    archive_organization = (
+        ROOT / "static" / "shared" / "archive-organization" / "index.html"
+    ).read_text(encoding="utf-8")
+    concordato = (
+        ROOT / "static" / "shared" / "concordato-plan-review" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    for page in (financial, sales, function_copy):
+        assert "In Codex and Cowork" in page
+        assert "portable Studio Archive" in page
+    assert (
+        "Studio Archive run and connected-file search work in Codex and Cowork"
+        in studio
+    )
+    assert "The selected model in Codex or Cowork" in studio
+    assert "Codex and Cowork use the same reduced sample and run" in journal
+    assert "Codex and Cowork use the same index, limits, and run" in check_entries
+    assert "Codex and Cowork scan" in archive_organization
+    assert "Codex and Cowork use this path when MCP is available" in concordato
+    assert "Local-folder mode runs in Codex Desktop and Cowork" in (
+        ROOT
+        / "plugins"
+        / "archive-organization"
+        / "skills"
+        / "archive-organization"
+        / "SKILL.md"
+    ).read_text(encoding="utf-8")
+
+    all_public_copy = "\n".join(
+        (
+            function_copy,
+            studio,
+            journal,
+            check_entries,
+            archive_organization,
+            concordato,
+        )
+    )
+    for stale_copy in (
+        "in Cowork, they use the exact files connected by the user",
+        "in Cowork they run only when the scripts are callable",
+        "Cowork cannot scan or reorganize a local client folder",
+        "Cowork cannot operate the Studio Archive ledger",
+        "cannot create or finalize the Studio Archive run",
+        "does not create that Studio Archive context",
+        "Cowork and ChatGPT do not scan or apply",
+        "compatible Vera context",
+    ):
+        assert stale_copy not in all_public_copy
 
 
 def test_unlinked_family_explainer_pages_are_removed() -> None:

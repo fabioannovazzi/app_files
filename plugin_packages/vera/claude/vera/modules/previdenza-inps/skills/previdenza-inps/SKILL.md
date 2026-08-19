@@ -52,17 +52,26 @@ override this Cowork contract.
 Never write run outputs inside this Git workspace or a published folder. Use
 only the Studio Archive run path described below.
 
-## Client boundary in Cowork
+## Client engagement gate
 
-Cowork does not package Studio Archive, so it cannot select or register its
-local clients, import controlled snapshots, prepare or start customer-folder
-runs, or finalize their artifact manifests. Use a product CLI only when a
-compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for this exact workflow and its complete
-customer-folder ledger paths are available. Otherwise work from the exact
-connected files, preserve a reviewable file-based handoff, and state that the
-sealed customer-folder run remains pending. Never invent an ID, receipt,
-lifecycle state, or completed artifact declaration.
+Select one Studio Archive client and engagement. Import every externally
+downloaded file separately, select its exact receipt, then call
+`prepare_studio_client_workflow` with workflow ID `previdenza-inps` and start
+that prepared run. Prepared inputs are closed execution copies: never add a
+registered export, portal capture, draft, or other generated file to them.
+Write acquisition and analysis artifacts only below the returned
+`client-run-output`. Pass the returned `client_engagement_path` as
+`--client-engagement` to every mutating command: export registration, portal
+capture, inventory, record validation, contribution reconciliation, and
+packaging. Cross-engagement inputs, unreceipted external files, stopped runs,
+and arbitrary outputs are rejected.
+
+Start the prepared run before inventory. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Previdenza INPS
 
