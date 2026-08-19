@@ -646,13 +646,23 @@ def test_answer_assurance_pages_explain_actual_model_context_bounds() -> None:
         "1.000.001 byte",
         "every distinct HTTP/S URL extracted from the document may be fetched",
         "No automatic anonymization or pseudonymization is applied",
-        "the first 750 claim items",
-        "claims_review.json, l'audit et le paquet conservent toutes les affirmations",
+        "The screen shows up to 750 claims",
+        "toutes les affirmations et tous les contrôles restent disponibles",
         "2 500 éléments ou 2 Mo",
         "cuatro horas",
         "ältere oder nicht verwaltete Pakete",
     ):
         assert snippet in validator_page
+
+    for jargon in (
+        "Nella revisione gestita con MCP locale",
+        "riferimento SHA-256",
+        "record canonico",
+        "managed local-MCP review",
+        "canonical record",
+        "payload inline",
+    ):
+        assert jargon not in validator_page
 
     for page in (prompt_page, validator_page):
         model_data_start = page.index('id="model-data"')
