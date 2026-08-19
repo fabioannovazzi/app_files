@@ -70,7 +70,7 @@
     {
       "id": "vera-ordinary-legal-question",
       "prompt": "@vera devo fare un contratto di locazione transitorio di 18 mesi, ma il lavoratore mi chiede che sia di 12 mesi: si può fare?",
-      "required_signals": ["vera:quesito-professionale", "vera:prompt-optimizer", "vera:deep-research-validator", "risposta riveduta"]
+      "required_signals": ["vera:quesito-legale-fiscale", "vera:prompt-optimizer", "vera:deep-research-validator", "risposta riveduta"]
     },
     {
       "id": "implicit-legal-question-journey",

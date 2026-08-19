@@ -1,5 +1,5 @@
 ---
-name: quesito-professionale
+name: quesito-legale-fiscale
 description: Use when Vera receives a substantive legal, tax, or compliance question, analysis request, or source-backed professional drafting request and must take it through one complete question-to-reviewed-answer journey. Do not use for returns, declarations, filings, or forms whose correctness requires a dedicated operational workflow.
 ---
 
@@ -43,7 +43,7 @@ specialist-workflow outcome.
 Before substantive delivery, disclose:
 
 ```text
-Vera workflow: vera:quesito-professionale -> vera:prompt-optimizer -> vera:deep-research-validator
+Vera workflow: vera:quesito-legale-fiscale -> vera:prompt-optimizer -> vera:deep-research-validator
 ```
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.

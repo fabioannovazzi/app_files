@@ -823,7 +823,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../bandi-agevolazioni/index.html",
         "../concordato-plan-review/index.html",
         "../report-builder/index.html",
-        "../quesito-professionale/index.html",
+        "../quesito-legale-fiscale/index.html",
         "../prompt-optimizer/index.html",
         "../deep-research-validator/index.html",
     ):
@@ -954,7 +954,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
-        "quesito-professionale": "Risposta a quesiti legali e fiscali",
+        "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "registro-imprese-sari": "Pratiche Registro Imprese",
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
