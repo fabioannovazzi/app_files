@@ -345,12 +345,19 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
     ):
         assert snippet in sari_page
 
-    for workflow in ("prompt-optimizer", "deep-research-validator"):
-        page = (ROOT / "static" / "shared" / workflow / "index.html").read_text(
-            encoding="utf-8"
-        )
-        assert "In a managed local-MCP review, validation sends" in page
-        assert "When local MCP is unavailable, the model reads" in page
+    prompt_page = (
+        ROOT / "static" / "shared" / "prompt-optimizer" / "index.html"
+    ).read_text(encoding="utf-8")
+    validator_page = (
+        ROOT / "static" / "shared" / "deep-research-validator" / "index.html"
+    ).read_text(encoding="utf-8")
+
+    assert "In a managed local-MCP review, validation sends" in prompt_page
+    assert "When local MCP is unavailable, the model reads" in prompt_page
+    assert "the review data reaches the model only once" in validator_page
+    assert "If the review screen is unavailable" in validator_page
+
+    for page in (prompt_page, validator_page):
         assert "Cowork reads the same canonical files without MCP" not in page
 
 
