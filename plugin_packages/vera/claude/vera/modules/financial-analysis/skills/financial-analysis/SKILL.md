@@ -52,17 +52,21 @@ override this Cowork contract.
 Never write run outputs inside this Git workspace or a published folder. Use
 only the Studio Archive run path described below.
 
-## Client boundary in Cowork
+## Client engagement gate
 
-Cowork does not package Studio Archive, so it cannot select or register its
-local clients, import controlled snapshots, prepare or start customer-folder
-runs, or finalize their artifact manifests. Use a product CLI only when a
-compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for this exact workflow and its complete
-customer-folder ledger paths are available. Otherwise work from the exact
-connected files, preserve a reviewable file-based handoff, and state that the
-sealed customer-folder run remains pending. Never invent an ID, receipt,
-lifecycle state, or completed artifact declaration.
+Select one Studio Archive client and engagement, import the reviewed datasets
+and case contract, then call `prepare_studio_client_workflow` with workflow ID
+`financial-analysis`. Pass the returned `client_engagement_path` as
+`--client-engagement` to `run_pack.py` and every directly invoked preparation
+or contract-validation writer. Use only the context's run folder or its
+documented children; cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before execution. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Vera Financial Analysis
 

@@ -18,8 +18,8 @@ modules produce separate generated packages for:
 
 Generated package directories and ZIP files are build artifacts. They are not
 separate implementations and must not be edited by hand. A release is valid
-only when both packages are built from the same source commit and carry the same
-version.
+only when both packages are built from the same source commit. Each surface
+keeps its own manifest version.
 
 ## Skill identities
 
@@ -50,17 +50,18 @@ optional local capability is unavailable and must state which operation remains
 pending. It must never claim that a script, connector, MCP tool, or durable
 write ran when it did not.
 
-The initial Cowork package does not claim or execute:
+The Cowork package does not claim or execute:
 
 - WhatsApp Desktop inspection;
 - live INPS browser capture;
-- persistent local archive indexing;
 - hosted feedback or voice-interview submission; or
 - Vera's custom update checker.
 
-For Studio Archive, Cowork v1 supports connected files and a callable,
-read-only Anthropic Gmail connector for one confirmed client. It does not send
-or modify mail.
+Studio Archive is included in Cowork. Its portable customer-folder ledger uses
+the connected studio folder for durable client, engagement, input, run,
+lifecycle, and artifact records. Local indexing is available when its declared
+dependencies are already callable. A read-only Anthropic Gmail connector may
+add evidence for one confirmed client; Vera does not send or modify mail.
 
 ## Shared implementation
 
@@ -97,11 +98,11 @@ Each workflow preserves its deterministic checks, evidence trail, and review
 surfaces. A host-specific adapter may gate a tool or interaction, but it does
 not fork the professional method.
 
-## Portable customer-folder runs in Codex
+## Portable customer-folder runs in Codex and Cowork
 
-When local Studio Archive capabilities are available, every Vera workflow uses
-one explicit customer-folder ledger. The customer folder—not ChatGPT history or
-a machine-local directory pointer—holds the stable client manifest,
+Every client-bound Vera workflow uses one explicit Studio Archive
+customer-folder ledger. The customer folder—not chat history or a session-local
+directory pointer—holds the stable client manifest,
 engagements, immutable input receipts, exact run input manifests, lifecycle,
 outputs, and artifact manifests.
 
@@ -120,10 +121,10 @@ immutable support receipts; an intentionally separate identical selection uses
 the explicit new-run option. It checks only the bound sample, and later imports
 do not expand an existing run.
 
-Cowork v1 does not package the local Studio Archive module. It may continue
-useful connected-folder work, but it must not claim to have created or advanced
-this local customer-folder lifecycle unless a compatible, valid context and
-paths were supplied.
+In Cowork, the packaged Studio Archive CLI creates and advances the same
+portable lifecycle in the exact connected folder. Session-local configuration
+is rebuildable; a later task reconfigures and recovers the same durable ledger
+rather than relying on chat history.
 
 ## Runtime capability policy
 

@@ -130,17 +130,16 @@ review package when the tooling can do so. These are not choices to propose.
 When useful, save the visible run summary as `run_review.md` beside the
 package. Never edit plugin source or generated ZIPs during a customer case run.
 
-## Client boundary in Cowork
+## Client engagement gate
 
-Cowork does not package Studio Archive, so it cannot select or register its
-local clients, import controlled snapshots, prepare or start customer-folder
-runs, or finalize their artifact manifests. Use a product CLI only when a
-compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for this exact workflow and its complete
-customer-folder ledger paths are available. Otherwise work from the exact
-connected files, preserve a reviewable file-based handoff, and state that the
-sealed customer-folder run remains pending. Never invent an ID, receipt,
-lifecycle state, or completed artifact declaration.
+Select one Studio Archive client and engagement, import the official sources
+and client evidence as immutable receipts, then prepare and start workflow
+`bandi-agevolazioni`. Pass the returned `client_engagement_path` to every
+mutating command. Write only to the exact run output directory.
+
+After the outputs are reviewed, finalize every file with a stable artifact ID,
+purpose, audience, and media type; then complete the run. Record `failed` or
+cancel an abandoned run instead of treating partial files as a result.
 
 ## Workflow
 

@@ -32,7 +32,7 @@
       {
         "id": "minimized-sample-review",
         "purpose": "Review the sampling basis and at most 750 selected entries without transporting the complete local assurance envelope",
-        "content": "model_review_context.json: method, seed, filters, requested size, complete-population counts, the population assurance proof, sampling-control evidence, allowed review actions, artifact statuses and at most 750 selected rows with the 17 canonical journal columns. Names, descriptions, dates, amounts, identifiers and other row content remain when they are part of the professional review. Exact known file and directory references are replaced by stable opaque ref-* aliases; the full run_intake.json, review_payload.json, ui_decisions.json, final_artifacts.json, source-path list, filesystem paths, timestamps and client-engagement object remain local. In Codex, a current Studio Archive context path is still supplied to the MCP tool when persisted review is requested, so the local server can resolve and verify those complete records. Cowork begins from the same minimized file, treats MCP as optional, opens complete artifacts only for a specific unresolved question, and cannot issue or finalize the Studio Archive run itself.",
+        "content": "model_review_context.json: method, seed, filters, requested size, complete-population counts, the population assurance proof, sampling-control evidence, allowed review actions, artifact statuses and at most 750 selected rows with the 17 canonical journal columns. Names, descriptions, dates, amounts, identifiers and other row content remain when they are part of the professional review. Exact known file and directory references are replaced by stable opaque ref-* aliases; the full run_intake.json, review_payload.json, ui_decisions.json, final_artifacts.json, source-path list, filesystem paths, timestamps and client-engagement object remain local. Codex and Cowork begin from the same minimized file and portable Studio Archive run. When MCP is available, the current context path lets the local server resolve and verify complete records and persist the bounded review; otherwise the packaged files and Studio Archive CLI preserve the same limits and run lifecycle. Complete artifacts are opened only for a specific unresolved question.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -75,6 +75,6 @@
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "25ca339b5e734be2821cd49257bedf0a745c9a1f4be7edf4d372c7d533885540"
+    "source_fingerprint": "775b757f3aca42430b85a0aec7a5881850599dc09ed23a13e81557c194f5cd11"
   }
 }

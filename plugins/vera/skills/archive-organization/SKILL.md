@@ -7,10 +7,10 @@ description: Use when Vera must screen one registered client folder, find duplic
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.
 
-This is a Codex Desktop workflow. In ChatGPT, review supplied plans or explain
-the method, recommend Codex using the localized wording in `../vera/SKILL.md`,
-and continue with useful preparation; never claim to scan or change a local or
-Google Drive folder.
+Local-folder mode runs in Codex Desktop and Cowork against the exact user-bound
+folder. Native Google Drive mode uses the current guarded desktop OAuth adapter
+and is not an enabled Cowork route. In a text-only chat, review
+supplied plans or explain the method; never claim to scan or change a folder.
 
 Resolve `../../modules/archive-organization` from this skill directory when it
 exists; otherwise resolve `../../../archive-organization` in the repository.

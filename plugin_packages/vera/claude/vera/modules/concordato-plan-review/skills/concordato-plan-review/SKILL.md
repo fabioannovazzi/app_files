@@ -52,17 +52,21 @@ override this Cowork contract.
 Never write run outputs inside this Git workspace or a published folder. Use
 only the Studio Archive run path described below.
 
-## Client boundary in Cowork
+## Client engagement gate
 
-Cowork does not package Studio Archive, so it cannot select or register its
-local clients, import controlled snapshots, prepare or start customer-folder
-runs, or finalize their artifact manifests. Use a product CLI only when a
-compatible local Vera installation supplied a digest-valid, running
-`vera.client_workflow_context.v2` for this exact workflow and its complete
-customer-folder ledger paths are available. Otherwise work from the exact
-connected files, preserve a reviewable file-based handoff, and state that the
-sealed customer-folder run remains pending. Never invent an ID, receipt,
-lifecycle state, or completed artifact declaration.
+Select one Studio Archive client and engagement, import the case sources, then
+call `prepare_studio_client_workflow` with workflow ID
+`concordato-plan-review`. Pass the returned `client_engagement_path` as
+`--client-engagement` to the review runner, reviewer-confirmation helpers,
+assurance replay, and every review writer. Include the same path in MCP review
+calls. Cross-engagement inputs and arbitrary outputs are rejected.
+
+Start the prepared run before execution. After the last output write, call
+`finalize_studio_client_workflow` and declare every physical file with a stable
+artifact ID, relative path, concrete purpose, audience, and media type. Review
+the closed declaration, then call `complete_studio_client_workflow`; record
+`failed` or explicitly cancel an abandoned run instead of treating a partial
+directory as a result.
 
 # Revisione del Concordato Preventivo
 
@@ -326,8 +330,9 @@ Treat `concordato_tie_out_workpaper.xlsx` and
 
 The normal Cowork completion point is delivery
 of the reviewable draft, artifact card, and source/review files in the connected
-folder. When `concordatoPlanReviewWidgets` and a compatible local Vera customer-
-run context are callable, prefer the reference-bound review route: read
+folder. Studio Archive supplies the same portable customer-run context as in
+Claude. When `concordatoPlanReviewWidgets` is callable, prefer the reference-bound
+review route: read
 `review_reference` from `final_artifacts.json`, validate and render with only
 that reference and the customer-run context, then request no more than 25
 purpose-selected review items at a time through
@@ -337,11 +342,11 @@ removed from selected model items and source filenames are replaced by stable
 aliases. Exact source files may still be opened for a specific evidence
 question; do not reopen the entire case by default.
 
-If the optional interface or compatible context is unavailable, continue with
-the file-based handoff. Begin with the delivered semantic review and open only
-the exact review or source files needed for the unresolved professional
-question. The 25-item tool limit does not apply to that connected-folder
-fallback, so do not describe it as tool-bounded. Report the package as
+If the optional interface is unavailable, use the same file-based handoff that
+applies in either runtime. Begin with the delivered semantic review and open
+only the exact review or source files needed for the unresolved professional
+question. The 25-item tool limit does not apply to that file fallback, so do
+not describe it as tool-bounded. Report the package as
 `ready_for_professional_review` where that status exists, otherwise as
 `pending_review`.
 

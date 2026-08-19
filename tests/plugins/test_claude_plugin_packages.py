@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import re
 import subprocess
 import sys
 from dataclasses import replace
 from pathlib import Path
+from typing import Any
 from zipfile import ZipFile
 
 import pytest
@@ -84,7 +86,7 @@ def test_claude_manifest_uses_canonical_vera_identity_and_template_version(
     template = json.loads(VERA_CLAUDE_MANIFEST.read_text(encoding="utf-8"))
     manifest = json.loads(vera_entries[".claude-plugin/plugin.json"])
 
-    assert manifest["version"] == "0.1.134"
+    assert manifest["version"] == "0.1.135"
     assert "modules/new-client/scripts/delivery_manifest.py" in vera_entries
     assert "skills/vera/references/public-process-page-contract.md" in vera_entries
     assert manifest == {
@@ -131,7 +133,15 @@ def test_only_root_anthropic_manifest_is_discoverable_and_root_app_is_omitted(
     assert "skills/studio-archive/references/cowork-runtime.md" not in vera_entries
     assert "skills/studio-archive/references/marketplace-gmail.md" not in vera_entries
     assert "skills/studio-archive/references/whatsapp-desktop.md" not in vera_entries
-    assert not any(name.startswith("modules/studio-archive/") for name in vera_entries)
+    assert "modules/studio-archive/scripts/studio_archive.py" in vera_entries
+    assert "modules/studio-archive/scripts/client_ledger.py" in vera_entries
+    assert (
+        "modules/studio-archive/scripts/record_agenzia_invoice_flow.py"
+        not in vera_entries
+    )
+    assert (
+        "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs" not in vera_entries
+    )
     assert (
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py" not in vera_entries
     )
@@ -196,10 +206,6 @@ def test_claude_package_vendors_every_registered_vera_component(
 
     for component in components:
         component_prefix = f"modules/{component}/"
-        if component == "studio-archive":
-            assert not any(name.startswith(component_prefix) for name in vera_entries)
-            assert "skills/studio-archive/SKILL.md" in vera_entries
-            continue
         assert any(name.startswith(component_prefix) for name in vera_entries)
         descriptors = {
             f"{component_prefix}.app.json",
@@ -231,8 +237,7 @@ def test_claude_package_vendors_every_registered_vera_component(
     projected_components = json.loads(vera_entries["components.json"].decode("utf-8"))[
         "plugins"
     ]
-    assert "studio-archive" not in projected_components
-    assert set(projected_components) == set(components) - {"studio-archive"}
+    assert set(projected_components) == set(components)
 
 
 def test_sites_handoff_remains_openai_only_in_cowork(vera_entries) -> None:
@@ -271,12 +276,14 @@ def test_sites_handoff_remains_openai_only_in_cowork(vera_entries) -> None:
     )
 
 
-def test_cowork_privacy_register_omits_unavailable_routes(vera_entries) -> None:
+def test_cowork_privacy_register_keeps_studio_archive_and_omits_openai_services(
+    vera_entries,
+) -> None:
     projected_components = json.loads(vera_entries["components.json"])
 
     assert projected_components["shared_services"] == []
     assert not any(name.startswith("privacy/services/") for name in vera_entries)
-    assert "privacy/workstreams/studio-archive.json" not in vera_entries
+    assert "privacy/workstreams/studio-archive.json" in vera_entries
 
 
 def test_cowork_privacy_register_validates_projected_bytes(
@@ -324,10 +331,15 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
     assert skills
     main = skills["skills/vera/SKILL.md"]
     studio_archive = skills["skills/studio-archive/SKILL.md"]
+    archive_organization = skills["skills/archive-organization/SKILL.md"]
     assert "## Cowork Runtime" in main
     assert "## ChatGPT and Codex Runtime" not in main
     assert "Cowork" in studio_archive
-    assert "does not support WhatsApp" in studio_archive
+    assert "Studio Archive is available in Cowork" in studio_archive
+    assert "portable customer-folder ledger" in " ".join(studio_archive.split())
+    assert "Local-folder mode runs in Claude Desktop and Cowork" in archive_organization
+    assert "not an enabled Cowork route" in archive_organization
+    assert "cannot scan or reorganize" not in archive_organization
     assert "privacy-surface-review/SKILL.md" not in main
     for name, content in skills.items():
         assert "## Cowork execution contract" in content, name
@@ -541,6 +553,12 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     readme = cowork_instruction_docs["README.md"]
     main = cowork_instruction_docs["skills/vera/SKILL.md"]
     studio = cowork_instruction_docs["skills/studio-archive/SKILL.md"]
+    archive_organization = cowork_instruction_docs[
+        "skills/archive-organization/SKILL.md"
+    ]
+    archive_organization_module = cowork_instruction_docs[
+        "modules/archive-organization/skills/archive-organization/SKILL.md"
+    ]
     audit = cowork_instruction_docs[
         "modules/audit-reconciliation/skills/audit-reconciliation/SKILL.md"
     ]
@@ -558,18 +576,21 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "- live INPS browser capture;" in readme
     assert "do not offer or execute WhatsApp Desktop inspection" in main
     assert "do not capture a live INPS browser session" in " ".join(main.split())
-    assert "It does not support WhatsApp" in studio
+    assert "Guarded WhatsApp Desktop review" in studio
+    assert "not enabled as Cowork routes" in studio
+    assert "Studio Archive is available in Cowork" in studio
+    assert "Local-folder mode runs in Claude Desktop and Cowork" in archive_organization
+    assert "explicitly approved" in archive_organization
+    assert "explicit apply approval" in " ".join(archive_organization_module.split())
+    assert "rollback" in archive_organization_module
     assert "## Cowork review handoff" in audit
-    assert "## Client boundary in Cowork" in audit
-    assert "cannot prepare or start a customer-folder" in audit
-    assert "`vera.client_workflow_context.v2`" in audit
-    assert "Never invent a client, engagement, run, receipt" in " ".join(audit.split())
-    assert "vera.studio_client_folder.v2" not in audit
-    assert "Call `studio_archive_status`" not in audit
-    assert "Cowork cannot issue a Studio Archive client-engagement context" in journal
-    assert "sealed client-bound run remains pending" in journal
-    assert "Cowork cannot issue a Studio Archive Check Entries context" in check_entries
-    assert "sealed client-bound check remains pending" in check_entries
+    assert "## Client folder gate" in audit
+    assert "prepare_studio_client_workflow" in audit
+    assert "Call `studio_archive_status`" in audit
+    assert "Start with Studio Archive client intake" in journal
+    assert "finalize_studio_client_workflow" in journal
+    assert "Resume the exact client engagement" in check_entries
+    assert "finalize_studio_client_workflow" in check_entries
     assert "`sample/model_review_context.json`" in journal
     normalized_journal = " ".join(journal.split())
     normalized_check_entries = " ".join(check_entries.split())
@@ -582,7 +603,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         in normalized_check_entries
     )
     assert "only for a specific unresolved review question" in normalized_journal
-    assert "one exact immutable journal binding" in journal
+    assert "one `input_bindings` item with role `journal`" in normalized_journal
     for artifact_id in (
         "prepared.normalized_journal",
         "internal.normalization_diagnostics",
@@ -590,22 +611,16 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     ):
         assert artifact_id in journal
         assert artifact_id in check_entries
-    assert "check only the bound sample" in check_entries
+    assert "complete internal handoff" in check_entries
+    assert "cannot mutate this run's input manifest" in normalized_check_entries
     for local_studio_action in (
         "list_studio_archive_clients",
-        "import_studio_client_document",
         "prepare_studio_client_workflow",
         "start_studio_client_workflow",
         "finalize_studio_client_workflow",
         "complete_studio_client_workflow",
     ):
-        for name, content in cowork_instruction_docs.items():
-            if name.startswith("modules/") and name.endswith("/SKILL.md"):
-                assert local_studio_action not in content, name
-    assert "cannot finalize, complete, fail, or cancel" in journal
-    assert "cannot finalize, complete, fail, or cancel" in check_entries
-    assert "move it to `ready_for_review`" in journal
-    assert "move it to `ready_for_review`" in check_entries
+        assert local_studio_action in journal or local_studio_action in check_entries
     assert "The normal Cowork completion point is delivery" in audit
     assert "Its absence never blocks delivery" in " ".join(audit.split())
     assert "### Optional public SARI lookup" in sari
@@ -733,7 +748,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-            "All 19 Vera modules are available.",
+            "All 20 Vera modules are available.",
         ),
         (
             isolated.output_directory
@@ -743,6 +758,15 @@ def test_projected_cowork_runtime_entrypoints_execute(
             / "inventory_case.py",
             ("--help",),
             "--portal-export-manifest",
+        ),
+        (
+            isolated.output_directory
+            / "modules"
+            / "archive-organization"
+            / "scripts"
+            / "archive_organization.py",
+            ("--help",),
+            "prepare-review",
         ),
     )
     for script, args, expected_output in commands:
@@ -757,6 +781,160 @@ def test_projected_cowork_runtime_entrypoints_execute(
         assert completed.returncode == 0, combined_output
         assert expected_output in combined_output
         assert "--portal-capture-manifest" not in combined_output
+
+
+@pytest.mark.parametrize(
+    "workflow_id",
+    ("financial-analysis", "variance-analysis", "sales-plan"),
+)
+def test_projected_cowork_studio_archive_portable_ledger_round_trip(
+    configured,
+    tmp_path: Path,
+    workflow_id: str,
+) -> None:
+    builder, _, package = configured
+    isolated = replace(
+        package,
+        output_directory=tmp_path / "vera",
+        output_zip=tmp_path / "vera-claude-plugin.zip",
+    )
+    builder.build_package(isolated)
+    script = (
+        isolated.output_directory
+        / "modules"
+        / "studio-archive"
+        / "scripts"
+        / "studio_archive.py"
+    )
+    archive_root = tmp_path / "connected-studio"
+    client_root = archive_root / "Rossi SRL"
+    client_root.mkdir(parents=True)
+    incoming = tmp_path / "actuals.csv"
+    incoming.write_text("period,amount\n2026-01,100\n", encoding="utf-8")
+    environment = os.environ.copy()
+    environment["PYTHONNOUSERSITE"] = "1"
+    environment["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(tmp_path / "state-one")
+
+    def run(*arguments: str, env: dict[str, str] = environment) -> dict[str, Any]:
+        completed = subprocess.run(
+            [sys.executable, "-S", str(script), *arguments],
+            cwd=script.parent,
+            env=env,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 0, completed.stdout + completed.stderr
+        return json.loads(completed.stdout)
+
+    configured_archive = run("configure", "--archive-root", str(archive_root))
+    directory = run("clients")
+    scope_id = directory["clients"][0]["scope_id"]
+    registered = run(
+        "configure-client",
+        "--scope-id",
+        str(scope_id),
+        "--legal-name",
+        "Rossi SRL",
+    )
+    client_id = registered["client"]["client_id"]
+    engagement = run(
+        "create-engagement",
+        "--client-id",
+        str(client_id),
+        "--engagement-label",
+        f"2026 {workflow_id}",
+    )
+    engagement_id = engagement["engagement"]["engagement_id"]
+    imported = run(
+        "import-document",
+        "--client-id",
+        str(client_id),
+        "--engagement-id",
+        str(engagement_id),
+        "--source-path",
+        str(incoming),
+        "--role",
+        "source",
+    )
+    prepared = run(
+        "prepare-workflow",
+        "--engagement-id",
+        str(engagement_id),
+        "--workflow-id",
+        workflow_id,
+        "--input-id",
+        str(imported["input_id"]),
+    )
+    run_id = prepared["run"]["run_id"]
+    active = run(
+        "start-workflow",
+        "--client-id",
+        str(client_id),
+        "--engagement-id",
+        str(engagement_id),
+        "--run-id",
+        str(run_id),
+    )
+    output_dir = Path(prepared["client_engagement"]["output_dir"])
+    result_path = output_dir / "result.md"
+    result_path.write_text("# Reviewed result\n", encoding="utf-8")
+    finalized = run(
+        "finalize-workflow",
+        "--client-id",
+        str(client_id),
+        "--engagement-id",
+        str(engagement_id),
+        "--run-id",
+        str(run_id),
+        "--artifacts-json",
+        json.dumps(
+            [
+                {
+                    "artifact_id": "deliverable.result",
+                    "path": "result.md",
+                    "purpose": f"Reviewable {workflow_id} result",
+                    "audience": "review",
+                    "media_type": "text/markdown",
+                }
+            ]
+        ),
+    )
+    completed = run(
+        "complete-workflow",
+        "--client-id",
+        str(client_id),
+        "--engagement-id",
+        str(engagement_id),
+        "--run-id",
+        str(run_id),
+    )
+
+    recovered_environment = {**environment}
+    recovered_environment["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(tmp_path / "state-two")
+    run(
+        "configure",
+        "--archive-root",
+        str(archive_root),
+        env=recovered_environment,
+    )
+    recovered = run("recover-ledger", env=recovered_environment)
+    recovered_engagements = run(
+        "engagements",
+        "--client-id",
+        str(client_id),
+        env=recovered_environment,
+    )
+
+    assert configured_archive["configured"] is True
+    assert active["status"] == "running"
+    assert finalized["status"] == "ready_for_review"
+    assert completed["status"] == "completed"
+    assert recovered["client_count"] == 1
+    assert (
+        recovered_engagements["engagements"][0]["workflow_runs"][0]["status"]
+        == "completed"
+    )
 
 
 def test_cowork_vendored_runtime_text_is_host_neutral(vera_entries) -> None:

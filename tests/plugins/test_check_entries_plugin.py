@@ -5446,7 +5446,7 @@ def test_static_page_exposes_five_language_switch() -> None:
         "at most 25 per call",
         "500,000 bytes",
         "component-only metadata",
-        "Codex persists the run; Cowork uses the same limits",
+        "Codex and Cowork use the same index, limits, and run",
         "without reading the complete review_payload.json",
     ):
         assert snippet in page

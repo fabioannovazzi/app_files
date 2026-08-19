@@ -68,9 +68,13 @@ The files referenced below are synthetic and live under `samples/cowork/`.
 - Each prompt completes with only a connected folder and Cowork file tools.
 - Local MCP servers may improve review interaction but are not required for the
   three review prompts.
-- No plugin updater, feedback transmission, WhatsApp control, local archive
-  indexing, live INPS capture, filing, sending, signing, payment, or submission
-  occurs.
+- No plugin updater, feedback transmission, guarded WhatsApp control, visible
+  Agenzia recorder, native Google Drive OAuth, live INPS capture, filing,
+  sending, signing, payment, or submission occurs.
+- Studio Archive can create and resume its portable client, engagement, input,
+  run, lifecycle, and artifact ledger in the exact connected studio folder.
+- Local Studio Archive indexing runs only when its declared dependencies are
+  already callable; missing extraction dependencies do not block the ledger.
 - Missing dependencies or permissions produce a useful file-first fallback and
   an explicit limitation rather than a false success claim.
 - Review uses only the synthetic files in this package.
@@ -109,11 +113,11 @@ so this pack does not claim that local CLI validation ran.
 
 ## Final candidate
 
-- **Version:** 0.1.90
+- **Version:** 0.1.135
 - **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
-- **SHA-256:** `4e1143be2cfbfec190a21cf6febb7182a80912455d70772adf2b44f8d2557517`
-- **Size:** 3,050,584 bytes
-- **Archive entries:** 519
+- **SHA-256:** `21941a231a1e2c1a6308fbb0c5e504df2b7c6c5052f7f5e5118f8f39205fdf8c`
+- **Size:** 4,477,917 bytes
+- **Archive entries:** 800
 
 Two consecutive builds produced the same SHA-256. The archive has a direct
 plugin root, deterministic timestamps, no duplicate or traversal paths, no

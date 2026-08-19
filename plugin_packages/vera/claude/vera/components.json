@@ -20,7 +20,8 @@
     "previdenza-inps",
     "registro-imprese-sari",
     "bandi-agevolazioni",
-    "bilancio-xbrl-it"
+    "bilancio-xbrl-it",
+    "studio-archive"
   ],
   "shared_services": [],
   "workflow_roles": {

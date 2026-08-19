@@ -117,9 +117,7 @@ with the commercialista.
 Every Cowork-vendored Vera module has a developer-maintained record in
 `../../privacy/workstreams/` describing what the current model may read, the
 runtime account boundary selected by the firm or user, any additional data
-boundary, and concrete security controls. The Studio Archive Cowork wrapper
-is governed directly by its connected-folder and read-only Gmail instructions
-in this skill. Real client and case data may enter
+boundary, and concrete security controls. Real client and case data may enter
 the current model context when the professional task requires it. Ordinary Vera
 work does not show a privacy notice or ask for privacy consent merely because
 the model reads that material.
@@ -132,16 +130,18 @@ do not ask again.
 
 ## Client-bound work in Cowork
 
-Cowork v1 omits the local Studio Archive module. It cannot list or register
-stable local clients, create client folders, copy files into managed
-engagements, or issue and resume client-engagement contexts. Confirm one exact
-connected client folder and continue with useful work on its sources. Run a
-client-bound Vera product CLI only when a digest-valid running context for that
-exact workflow was supplied by a compatible local Vera installation and every
-bound local path is available in the current workspace. Otherwise state that
-the client-bound local run remains pending. Never invent a client, scope,
-engagement, workflow, or run ID from a name, filename, folder, or document
-content.
+Every client-bound workflow uses Studio Archive's portable ledger in the exact
+connected studio folder. Select or register one client, create or resume one
+engagement, import immutable source receipts, prepare and start the exact
+workflow run, write only below its bound output root, then finalize and complete
+the declared artifacts. The customer folder remains the durable source of truth;
+Cowork's session-local configuration is only a rebuildable pointer to it.
+
+Use the packaged Studio Archive CLI when its optional MCP interface is not
+callable. Reconfigure and recover the exact connected archive root at the start
+of a later task when session-local routing state is unavailable. Never invent a
+client, scope, engagement, workflow, run, receipt, or lifecycle state from a
+name, filename, folder, or document content.
 
 ## Workflow routing
 
@@ -186,7 +186,7 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
-- `studio-archive`: connected-folder evidence and one client's callable, read-only Anthropic Gmail connector. Cowork v1 does not support WhatsApp or local archive indexing;
+- `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp, visible Agenzia recorder, and native Google Drive OAuth routes remain unavailable;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed
@@ -382,8 +382,10 @@ resolve its root in this order:
 
 Read the selected module's relevant `skills/<skill>/SKILL.md` completely and
 follow it. Treat the resolved module root as the working directory for every
-module command, script, requirement file, and local review server. The connected-file and Gmail routes of `studio-archive` are handled
-directly by its Cowork wrapper and do not require local module resolution.
+module command, script, requirement file, and local review server. The Gmail route of `studio-archive` is handled directly by its Cowork
+wrapper. Its portable connected-folder ledger and optional local index
+resolve the packaged Studio Archive module and use its callable CLI or
+optional MCP interface.
 
 Before running helper scripts or write-heavy local work, identify material choices
 that would change execution. Ask only those unresolved choices in chat and wait

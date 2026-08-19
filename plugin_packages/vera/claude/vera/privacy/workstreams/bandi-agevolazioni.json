@@ -47,7 +47,7 @@
       {
         "id": "cowork-application-instruction",
         "purpose": "Prepare a reviewable application dossier from user-connected files",
-        "content": "When the bundled scripts are callable and a digest-valid Vera client-workflow context is available, Cowork uses the same selected-source, task-packet, exact-ID expansion, hash and operator-attested session-reference controls as Codex. Otherwise Cowork works from the exact files connected or supplied by the user and produces a file-based review handoff; those selected files and their client, financial, project, quotation, declaration and application content may be read by the model, and the 500-item, 200-excerpt, 2,000,000-byte packet limits and local non-reuse check for session references are not mechanically enforced. Cowork must not claim a sealed Studio Archive run in that fallback. There is no automatic anonymization or pseudonymization.",
+        "content": "Cowork uses the portable Studio Archive run and the same bundled selected-source, task-packet, exact-ID expansion, hash and operator-attested session-reference controls as Codex. If code execution is unavailable, the workflow does not claim that those controls ran or that durable artifacts were created; it does not substitute an unbounded connected-file analysis. There is no automatic anonymization or pseudonymization.",
         "runtime_profiles": [
           "anthropic-cowork"
         ]
@@ -80,7 +80,7 @@
   "security_controls": [
     {
       "id": "private-workspace-and-bound-case-folder",
-      "control": "When the local workflow scripts are used, pre-client radar initialization requires explicit user confirmation, records asserted operator and retention ownership, binds owner-only files to one exact local path, and rejects Git or published roots. Codex application initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root. Cowork without that valid context may produce only a connected-file review handoff and cannot claim this bound-run control."
+      "control": "When the local workflow scripts are used, pre-client radar initialization requires explicit user confirmation, records asserted operator and retention ownership, binds owner-only files to one exact local path, and rejects Git or published roots. In Codex and Cowork, application initialization, source registration, review, validation, and packaging require a digest-valid Studio Archive bandi-agevolazioni context, accept files only from its exact run boundary, and write generated artifacts only inside its output root. Without that valid context the workflow stops and cannot claim this bound-run control."
     },
     {
       "id": "reject-secret-and-session-material",
@@ -104,7 +104,7 @@
     },
     {
       "id": "sealed-model-contribution-boundary",
-      "control": "In Codex, and in Cowork only when the bundled scripts are callable with a digest-valid Vera run, each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating above 500 items per collection, 200 stored excerpts or 2,000,000 packet bytes. Exact professional-selected IDs scope an over-limit global collection while the other required collections remain complete. The contribution is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests an exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write. Cowork's connected-file fallback does not claim these mechanical controls."
+      "control": "In Codex and Cowork, each model contribution uses a task-specific input allowlist and exact subject/reference closure, publishes included and omitted class counts and bytes, and fails rather than truncating above 500 items per collection, 200 stored excerpts or 2,000,000 packet bytes. Exact professional-selected IDs scope an over-limit global collection while the other required collections remain complete. The contribution is sealed with exact input and packet hashes, model and prompt-template identity and a fresh operator-attested model-session reference; code rejects reuse of that reference across contributions, while explicitly not treating it as provider-authenticated identity. An insufficient packet stops without substantive recommendations and requests an exact expansion in another fresh session. Every suggestion starts as MODEL_SUGGESTED, requires explicit professional disposition, cannot overwrite confirmed or blocked work, becomes stale when authoritative inputs change, and enters the workbench only as proposed through a crash-recoverable two-phase write."
     },
     {
       "id": "opaque-portfolio-radar-boundary",
@@ -123,6 +123,6 @@
     "reviewed_at": "2026-08-14",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "807d3c90404c284f2f2c1c34631ad6dbe60defc73646ae5d2a5deb2508a9f070"
+    "source_fingerprint": "e34eba880503bba3c752b671f60b520e1268ce3c1b36a1b6fcbd40c5d8f435b8"
   }
 }
