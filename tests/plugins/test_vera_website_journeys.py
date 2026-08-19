@@ -1204,7 +1204,7 @@ def test_archive_organization_page_explains_reviewed_local_and_drive_changes() -
         "ID, link, permissions, and revision history remain in Google Workspace.",
         "Approve the plan first. Authorize execution second.",
         "It does not overwrite or automatically delete.",
-        "a second explicit approval in Codex Desktop",
+        "it applies changes only after a second explicit approval",
         "A proposal is never authorization to move files.",
         "ChatGPT can explain the method or review a prepared plan",
         "but it does not scan or change the folder.",

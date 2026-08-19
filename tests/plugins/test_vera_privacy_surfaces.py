@@ -306,9 +306,9 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
     for snippet in (
         "every snapshot file, not a sample",
         "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
-        "random hash-bound reference valid for four hours",
-        "When the local MCP interface is available for a bound run",
-        "canonical files remain reviewable and decisions stay pending",
+        "random reference tied to the payload hash for four hours",
+        "With local MCP and a linked run",
+        "canonical files remain available for review, but decisions stay pending",
         "Technical references are pseudonymized; document content is not automatically anonymized",
     ):
         assert snippet in organization_page
