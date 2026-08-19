@@ -535,9 +535,9 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         "la referenza casuale dura quattro ore",
         "al massimo 25 per chiamata",
         "500.000 byte",
-        "metadati riservati al componente",
-        "Stesso indice, stessi limiti e stesso run",
-        "Quando disponibile, MCP verifica, salva e applica la revisione",
+        "senza inviarlo al modello",
+        "Stesso indice e stessi limiti in ogni modalità",
+        "gli strumenti integrati verificano, salvano e applicano la revisione",
         "non vengono anonimizzati né pseudonimizzati automaticamente",
     ):
         assert snippet in model_block
