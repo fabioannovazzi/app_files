@@ -35,13 +35,6 @@
       border-bottom-color: var(--vj-line-strong);
     }
 
-    .related-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
     .financial-model-data-copy {
       display: grid;
       gap: 1rem;
@@ -239,27 +232,10 @@
     <section class="content-section" id="prompt">
       <div class="prompt-layout">
         <div class="prompt-copy">
-          <p class="section-kicker" data-i18n="prompt.kicker">Provalo in Vera</p>
           <h2 data-i18n="prompt.title">Parti dalla cartella contabile e dalla domanda.</h2>
           <p data-i18n="prompt.copy">Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.</p>
         </div>
         <pre><code id="prompt-example">Usa Vera per preparare l’analisi finanziaria o la financial due diligence di questa cartella. Identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Chiedimi di confermare mapping, adjustment, classificazioni, target e relazioni che possono cambiare il risultato. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Se pertinente, prepara separatamente il registro delle passività potenziali o delle issue finanziarie. Mantieni le evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.</code></pre>
-      </div>
-    </section>
-
-    <section class="content-section" id="related">
-      <div class="section-head">
-        <div class="section-title">
-          <p class="section-kicker" data-i18n="related.kicker">Nel percorso Vera</p>
-          <h2 data-i18n="related.title">Collega l’analisi ai controlli e al documento finale.</h2>
-        </div>
-        <div>
-          <p data-i18n="related.copy">Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.</p>
-          <div class="related-actions">
-            <a class="button secondary" href="../journal-bank-reconciliation/index.html?lang=it" data-localized-link data-i18n="related.bank">Riconcilia banca e contabilità</a>
-            <a class="button secondary" href="../report-builder/index.html?lang=it" data-localized-link data-i18n="related.report">Genera il report</a>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -336,12 +312,9 @@
         "boundary.professional.title": "Professionista", "boundary.professional.copy": "Perimetro, significato contabile, adjustment, classificazioni, target, materialità, conclusioni e decisioni di deal",
         "boundary.code.title": "Controlli", "boundary.code.copy": "Hash, chiavi, cardinalità, duplicati, quadrature, tolleranze e ripetibilità",
         "boundary.result.title": "Risultato", "boundary.result.copy": "Evidenza preparata e qualificata, non approvazione automatica del giudizio finanziario o della decisione di deal",
-        "prompt.kicker": "Provalo in Vera", "prompt.title": "Parti dalla cartella contabile e dalla domanda.",
+        "prompt.title": "Parti dalla cartella contabile e dalla domanda.",
         "prompt.copy": "Vera identifica il pack pertinente e chiede soltanto le scelte irrisolte che possono cambiare il risultato.",
         "prompt": "Usa Vera per preparare l’analisi finanziaria o la financial due diligence di questa cartella. Identifica la domanda — conto economico mensile, capitale circolante, concentrazione clienti, Quality of Earnings e adjusted EBITDA, PFN, capitale circolante normalizzato, Capex o bridge di deal — e qualifica fonti, data o periodo, valuta e perimetro. Chiedimi di confermare mapping, adjustment, classificazioni, target e relazioni che possono cambiare il risultato. Esegui un solo pack e consegna evidenze, riconciliazione e ricevuta riproducibile. Se pertinente, prepara separatamente il registro delle passività potenziali o delle issue finanziarie. Mantieni le evidenze preparate separate dalle conclusioni professionali e dalle decisioni di deal.",
-        "related.kicker": "Nel percorso Vera", "related.title": "Collega l’analisi ai controlli e al documento finale.",
-        "related.copy": "Usa una riconciliazione contabile quando devi prima chiudere le relazioni tra fonti. Porta poi le tabelle confermate nel report.",
-        "related.bank": "Riconcilia banca e contabilità", "related.report": "Genera il report",
         "model.label": "Trattamento dei dati", "model.title": "Quali dati arrivano al modello",
         "model.copy.1": "Per preparare l’analisi, il modello può leggere le istruzioni e i dati contabili pertinenti. Questi possono comprendere nomi di società, clienti e gruppi; conti, transazioni e saldi; periodi, valute, importi, unità, rettifiche e classificazioni; informazioni su cassa, debito, leasing, factoring, immobilizzazioni, investimenti e capitale circolante; contratti e documenti di supporto.",
         "model.copy.2": "I calcoli non sono eseguiti dal modello. Il codice applica regole definite a tutti i dati approvati e inclusi nell’analisi, non a un campione, e controlla totali, riconciliazioni e integrità delle fonti. Successivamente il modello usa normalmente le tabelle e i risultati preparati, invece dei file originali. Una fonte originale viene riaperta solo per chiarire una questione specifica e soltanto se non è cambiata.",
@@ -393,12 +366,9 @@
         "boundary.professional.title": "Professional", "boundary.professional.copy": "Scope, accounting meaning, adjustments, classifications, targets, materiality, conclusions and deal decisions",
         "boundary.code.title": "Controls", "boundary.code.copy": "Hashes, keys, cardinality, duplicates, tie-outs, tolerances and replayability",
         "boundary.result.title": "Result", "boundary.result.copy": "Prepared and qualified evidence, not automatic approval of the financial judgment or deal decision",
-        "prompt.kicker": "Try it in Vera", "prompt.title": "Start with the accounting folder and the question.",
+        "prompt.title": "Start with the accounting folder and the question.",
         "prompt.copy": "Vera identifies the relevant pack and asks only for unresolved choices that can change the result.",
         "prompt": "Use Vera to prepare the financial analysis or financial due diligence for this folder. Identify the question — monthly P&L, working capital, customer concentration, Quality of Earnings and adjusted EBITDA, net debt, normalized working capital, Capex or deal bridges — and qualify sources, date or period, currency and scope. Ask me to confirm mappings, adjustments, classifications, targets and relationships that can change the result. Run one pack and deliver evidence, reconciliation and a reproducible receipt. When relevant, prepare the contingent-liability or financial-issue register separately. Keep prepared evidence separate from professional conclusions and deal decisions.",
-        "related.kicker": "In the Vera workflow", "related.title": "Connect the analysis to controls and the final document.",
-        "related.copy": "Use an accounting reconciliation when relationships between sources must be closed first. Then carry confirmed tables into the report.",
-        "related.bank": "Reconcile bank and ledger", "related.report": "Build the report",
         "model.label": "Data handling", "model.title": "What data reaches the model",
         "model.copy.1": "To prepare the analysis, the model may read the instructions and relevant accounting data. This may include names of companies, customers and groups; accounts, transactions and balances; periods, currencies, amounts, units, adjustments and classifications; information about cash, debt, leases, factoring, fixed assets, investments and working capital; contracts and supporting documents.",
         "model.copy.2": "The calculations are not performed by the model. Code applies defined rules to all approved data included in the analysis, not to a sample, and checks totals, reconciliations and source integrity. The model then normally uses the prepared tables and results instead of the original files. An original source is reopened only to clarify a specific question and only if it has not changed.",
@@ -450,12 +420,9 @@
         "boundary.professional.title": "Professionnel", "boundary.professional.copy": "Périmètre, sens comptable, ajustements, classifications, cibles, matérialité, conclusions et décisions de transaction",
         "boundary.code.title": "Contrôles", "boundary.code.copy": "Empreintes, clés, cardinalité, doublons, quadratures, tolérances et reproductibilité",
         "boundary.result.title": "Résultat", "boundary.result.copy": "Éléments préparés et qualifiés, sans approbation automatique du jugement financier ni de la décision de transaction",
-        "prompt.kicker": "Essayez dans Vera", "prompt.title": "Partez du dossier comptable et de la question.",
+        "prompt.title": "Partez du dossier comptable et de la question.",
         "prompt.copy": "Vera identifie le pack pertinent et ne demande que les choix non résolus susceptibles de changer le résultat.",
         "prompt": "Utilise Vera pour préparer l’analyse financière ou la due diligence financière de ce dossier. Identifie la question — compte de résultat mensuel, fonds de roulement, concentration clients, qualité des résultats et EBITDA ajusté, dette nette, fonds de roulement normalisé, Capex ou passerelles de transaction — puis qualifie les sources, la date ou période, la devise et le périmètre. Demande-moi de confirmer les correspondances, ajustements, classifications, cibles et relations susceptibles de changer le résultat. Exécute un seul pack et livre les éléments, le rapprochement et un reçu reproductible. Si pertinent, prépare séparément le registre des passifs éventuels ou des points financiers. Sépare les éléments préparés des conclusions professionnelles et des décisions de transaction.",
-        "related.kicker": "Dans le parcours Vera", "related.title": "Reliez l’analyse aux contrôles et au document final.",
-        "related.copy": "Utilisez un rapprochement comptable si les relations entre sources doivent d’abord être closes. Portez ensuite les tableaux confirmés dans le rapport.",
-        "related.bank": "Rapprocher banque et comptabilité", "related.report": "Générer le rapport",
         "model.label": "Traitement des données", "model.title": "Quelles données parviennent au modèle",
         "model.copy.1": "Pour préparer l’analyse, le modèle peut lire les instructions et les données comptables pertinentes. Il peut s’agir des noms de sociétés, de clients et de groupes ; des comptes, transactions et soldes ; des périodes, devises, montants, unités, ajustements et classifications ; des informations sur la trésorerie, la dette, les contrats de location, l’affacturage, les immobilisations, les investissements et le fonds de roulement ; des contrats et pièces justificatives.",
         "model.copy.2": "Les calculs ne sont pas effectués par le modèle. Le code applique des règles définies à toutes les données approuvées et incluses dans l’analyse, et non à un échantillon, puis contrôle les totaux, les rapprochements et l’intégrité des sources. Le modèle utilise ensuite normalement les tableaux et résultats préparés plutôt que les fichiers d’origine. Une source originale n’est rouverte que pour clarifier une question précise et seulement si elle n’a pas changé.",
@@ -507,12 +474,9 @@
         "boundary.professional.title": "Profi", "boundary.professional.copy": "Umfang, buchhalterische Bedeutung, Anpassungen, Klassifikationen, Zielwerte, Wesentlichkeit, Schlussfolgerungen und Transaktionsentscheidungen",
         "boundary.code.title": "Kontrollen", "boundary.code.copy": "Hashes, Schlüssel, Kardinalität, Duplikate, Abstimmungen, Toleranzen und Wiederholbarkeit",
         "boundary.result.title": "Ergebnis", "boundary.result.copy": "Vorbereitete und qualifizierte Nachweise, keine automatische Freigabe des Finanzurteils oder der Transaktionsentscheidung",
-        "prompt.kicker": "In Vera ausprobieren", "prompt.title": "Mit dem Buchhaltungsordner und der Frage beginnen.",
+        "prompt.title": "Mit dem Buchhaltungsordner und der Frage beginnen.",
         "prompt.copy": "Vera erkennt das passende Paket und fragt nur nach offenen Entscheidungen, die das Ergebnis ändern können.",
         "prompt": "Verwende Vera, um die Finanzanalyse oder Financial Due Diligence für diesen Ordner vorzubereiten. Bestimme die Fragestellung — monatliche GuV, Working Capital, Kundenkonzentration, Ergebnisqualität und bereinigtes EBITDA, Nettoverschuldung, normalisiertes Working Capital, Capex oder Transaktionsüberleitungen — und qualifiziere Quellen, Stichtag oder Zeitraum, Währung und Umfang. Bitte mich, Zuordnungen, Anpassungen, Klassifikationen, Zielwerte und Beziehungen zu bestätigen, die das Ergebnis ändern können. Führe ein Paket aus und liefere Nachweise, Abstimmung und einen reproduzierbaren Beleg. Bereite bei Bedarf das Register der Eventualverbindlichkeiten oder finanziellen Themen separat vor. Halte vorbereitete Nachweise von fachlichen Schlussfolgerungen und Transaktionsentscheidungen getrennt.",
-        "related.kicker": "Im Vera-Ablauf", "related.title": "Analyse mit Kontrollen und Abschlussdokument verbinden.",
-        "related.copy": "Nutzen Sie eine Buchhaltungsabstimmung, wenn Beziehungen zwischen Quellen zuerst geschlossen werden müssen. Übernehmen Sie dann bestätigte Tabellen in den Bericht.",
-        "related.bank": "Bank und Buchhaltung abstimmen", "related.report": "Bericht erstellen",
         "model.label": "Datenverarbeitung", "model.title": "Welche Daten das Modell erhält",
         "model.copy.1": "Zur Vorbereitung der Analyse kann das Modell die Anweisungen und relevanten Buchhaltungsdaten lesen. Dazu können Namen von Unternehmen, Kunden und Gruppen gehören; Konten, Transaktionen und Salden; Zeiträume, Währungen, Beträge, Einheiten, Anpassungen und Klassifikationen; Angaben zu Zahlungsmitteln, Schulden, Leasing, Factoring, Anlagevermögen, Investitionen und Working Capital; Verträge und unterstützende Unterlagen.",
         "model.copy.2": "Die Berechnungen werden nicht vom Modell durchgeführt. Der Code wendet festgelegte Regeln auf alle genehmigten und in die Analyse einbezogenen Daten an, nicht auf eine Stichprobe, und prüft Summen, Abstimmungen und die Integrität der Quellen. Anschließend verwendet das Modell normalerweise die vorbereiteten Tabellen und Ergebnisse anstelle der Originaldateien. Eine Originalquelle wird nur zur Klärung einer konkreten Frage und nur dann erneut geöffnet, wenn sie nicht verändert wurde.",
@@ -564,12 +528,9 @@
         "boundary.professional.title": "Profesional", "boundary.professional.copy": "Alcance, significado contable, ajustes, clasificaciones, objetivos, materialidad, conclusiones y decisiones sobre la operación",
         "boundary.code.title": "Controles", "boundary.code.copy": "Hashes, claves, cardinalidad, duplicados, cuadre, tolerancias y reproducibilidad",
         "boundary.result.title": "Resultado", "boundary.result.copy": "Evidencia preparada y cualificada, no aprobación automática del juicio financiero ni de la decisión sobre la operación",
-        "prompt.kicker": "Pruébelo en Vera", "prompt.title": "Empiece por la carpeta contable y la pregunta.",
+        "prompt.title": "Empiece por la carpeta contable y la pregunta.",
         "prompt.copy": "Vera identifica el paquete pertinente y pregunta solo por decisiones abiertas que pueden cambiar el resultado.",
         "prompt": "Usa Vera para preparar el análisis financiero o la due diligence financiera de esta carpeta. Identifica la pregunta — cuenta de resultados mensual, capital circulante, concentración de clientes, calidad de resultados y EBITDA ajustado, deuda neta, capital circulante normalizado, Capex o puentes de transacción — y cualifica fuentes, fecha o periodo, moneda y alcance. Pídeme confirmar mapeos, ajustes, clasificaciones, objetivos y relaciones que pueden cambiar el resultado. Ejecuta un solo paquete y entrega evidencia, conciliación y un recibo reproducible. Cuando corresponda, prepara por separado el registro de pasivos contingentes o de cuestiones financieras. Mantén la evidencia preparada separada de las conclusiones profesionales y de las decisiones sobre la operación.",
-        "related.kicker": "En el recorrido de Vera", "related.title": "Conecte el análisis con los controles y el documento final.",
-        "related.copy": "Utilice una conciliación contable cuando primero deban cerrarse las relaciones entre fuentes. Lleve después las tablas confirmadas al informe.",
-        "related.bank": "Conciliar banco y contabilidad", "related.report": "Generar el informe",
         "model.label": "Tratamiento de datos", "model.title": "Qué datos llegan al modelo",
         "model.copy.1": "Para preparar el análisis, el modelo puede leer las instrucciones y los datos contables pertinentes. Estos pueden incluir nombres de sociedades, clientes y grupos; cuentas, transacciones y saldos; periodos, monedas, importes, unidades, ajustes y clasificaciones; información sobre caja, deuda, arrendamientos, factoring, inmovilizado, inversiones y capital circulante; contratos y documentos de soporte.",
         "model.copy.2": "Los cálculos no los realiza el modelo. El código aplica reglas definidas a todos los datos aprobados e incluidos en el análisis, no a una muestra, y comprueba totales, conciliaciones e integridad de las fuentes. Después, el modelo utiliza normalmente las tablas y los resultados preparados en lugar de los archivos originales. Una fuente original solo se vuelve a abrir para aclarar una cuestión concreta y únicamente si no ha cambiado.",
@@ -614,11 +575,6 @@
       document.getElementById("home-link").href = `/?lang=${lang}`;
       document.getElementById("footer-vera-link").href = localizedHref("../vera/index.html", lang);
       document.getElementById("data-link").href = `/data-handling?lang=${lang}`;
-      document.querySelectorAll("[data-localized-link]").forEach((link) => {
-        if (!link.dataset.baseHref) link.dataset.baseHref = link.getAttribute("href");
-        link.href = localizedHref(link.dataset.baseHref, lang);
-      });
-
       if (updateHistory) {
         const next = new URL(window.location.href);
         next.searchParams.set("lang", lang);

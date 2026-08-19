@@ -3950,6 +3950,19 @@ def test_financial_analysis_page_explains_accounting_fdd_and_review_boundary() -
         "Le fonti selezionate vengono importate in una run Studio Archive",
         "L’account del modello è scelto",
         "il processo non ha altre destinazioni esterne",
+        "Provalo in Vera",
+        "Try it in Vera",
+        "Essayez dans Vera",
+        "In Vera ausprobieren",
+        "Pruébelo en Vera",
+        "Nel percorso Vera",
+        "In the Vera workflow",
+        "Dans le parcours Vera",
+        "Im Vera-Ablauf",
+        "En el recorrido de Vera",
+        'id="related"',
+        'data-i18n="prompt.kicker"',
+        'data-i18n="related.',
     ):
         assert stale_snippet not in page
 
