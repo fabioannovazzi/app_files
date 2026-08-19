@@ -66,7 +66,7 @@ skill to imitate a missing operational workflow.
   produce a working responsive implementation, unlisted review preview and
   approval-bound release package without inventing professional claims or
   autonomously publishing.
-- `quesito-professionale`: answer a substantive legal, tax, or compliance
+- `quesito-legale-fiscale`: answer a substantive legal, tax, or compliance
   question, or prepare source-backed professional drafting, through one
   question-to-reviewed-answer journey. It orchestrates prompt preparation,
   direct generation or an explicit Deep Research handoff, and answer
@@ -110,7 +110,7 @@ only when the request is specifically limited to their bounded output.
   that contract, sources, reasoning, and professional-judgment boundary.
 
 Use these two skills automatically for accepted source-backed question and
-drafting work through `quesito-professionale` or another registered workflow.
+drafting work through `quesito-legale-fiscale` or another registered workflow.
 They are sequential internal stages, not the specialist workflow the user must
 select. They do not establish the completeness or correctness of an
 operational return, declaration, filing, or other unsupported professional

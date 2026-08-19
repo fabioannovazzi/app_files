@@ -12,7 +12,7 @@ website built from verified studio material.
 Every explicit Vera invocation activates Vera's routing skill. Use semantic
 judgment to choose the narrowest supported professional workflow. An ordinary
 substantive legal, tax, or compliance question selects
-`vera:quesito-professionale`, which prepares, generates, and validates one
+`vera:quesito-legale-fiscale`, which prepares, generates, and validates one
 reviewable answer without asking the user to choose its internal stages. Never
 answer as a general assistant inside Vera. If no specialist workflow matches,
 state only that Vera has no matching specialist workflow and stop.

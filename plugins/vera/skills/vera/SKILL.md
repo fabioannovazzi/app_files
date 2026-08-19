@@ -179,7 +179,7 @@ skills, subordinate intake skills, and developer governance. A cross-cutting
 skill is not a substitute for a missing operational workflow.
 
 For an ordinary substantive legal, tax, or compliance question or source-backed
-professional drafting request, `quesito-professionale` is the matching
+professional drafting request, `quesito-legale-fiscale` is the matching
 specialist workflow. Prompt Optimizer and Deep Research Validator are its
 sequential internal assurance stages; the user does not need to invoke either
 one.
@@ -289,7 +289,7 @@ them without changing the capability catalog:
   unlisted preview hosting and final publication are independent optional
   routes. Never invent services, credentials, testimonials, legal text or
   brand history, and never publish without the exact route and current review.
-- `quesito-professionale`: client-bound orchestration for one substantive
+- `quesito-legale-fiscale`: client-bound orchestration for one substantive
   legal, tax, or compliance question or source-backed professional draft. It
   prepares the answer contract, generates or hands off the answer, and validates
   the completed answer. It never turns an unsupported operational return,
@@ -313,13 +313,13 @@ result or claim that a workflow ran when it did not.
 ## Question To Validated Answer Journey
 
 When the user gives Vera a substantive legal, tax, or compliance question,
-select `quesito-professionale` as the matching specialist workflow and start one question-to-validated-answer journey.
+select `quesito-legale-fiscale` as the matching specialist workflow and start one question-to-validated-answer journey.
 Do not require the user to ask for prompt optimization, choose an internal
 module, or restate the question.
 Identify the professional intent semantically; do not route from keywords or a
 deterministic classifier.
 
-The registered `quesito-professionale` workflow supports questions, analysis,
+The registered `quesito-legale-fiscale` workflow supports questions, analysis,
 and professional drafting whose
 quality can be assessed through an answer contract, current sources, reasoning,
 and professional-judgment boundaries. It does not by itself support an
@@ -410,7 +410,7 @@ Offer an ordinary source-backed web-research run only as a clearly labelled
 alternative with its own evidence limits; never imply that it is the same
 product mode.
 
-`quesito-professionale` does not create a third Studio Archive workstream or a
+`quesito-legale-fiscale` does not create a third Studio Archive workstream or a
 new external data route. The preparation stage remains governed by the
 `prompt-optimizer` workstream record, and the answer-review stage remains
 governed by the `deep-research-validator` workstream record.

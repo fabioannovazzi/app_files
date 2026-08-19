@@ -285,7 +285,7 @@
         },
       },
     },
-    "quesito-professionale": {
+    "quesito-legale-fiscale": {
       product: "Vera",
       defaultLanguage: "it",
       copy: {
@@ -1358,7 +1358,7 @@
     "comunicazione-professionale": {
       it: "Comunicazione professionale", en: "Assess and prepare firm communications", fr: "Évaluer et préparer les communications du cabinet", de: "Kanzleimitteilungen bewerten und vorbereiten", es: "Evaluar y preparar comunicaciones del despacho",
     },
-    "quesito-professionale": {
+    "quesito-legale-fiscale": {
       it: "Risposta a quesiti legali e fiscali", en: "Answer legal and tax questions", fr: "Répondre aux questions juridiques et fiscales", de: "Rechtliche und steuerliche Fragen beantworten", es: "Responder consultas jurídicas y fiscales",
     },
     "presenza-digitale-studio": {

@@ -530,7 +530,7 @@ def test_professional_communication_page_explains_exact_phase_boundaries() -> No
 def test_bandi_page_explains_task_specific_private_model_context() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     bandi_copy = function_copy.split('"bandi-agevolazioni":', 1)[1].split(
-        '"quesito-professionale":', 1
+        '"quesito-legale-fiscale":', 1
     )[0]
 
     assert bandi_copy.count('modelDataStatus: "relevant"') == 5
@@ -616,17 +616,17 @@ def test_answer_assurance_pages_explain_actual_model_context_bounds() -> None:
 
 
 def test_professional_question_page_explains_the_complete_answer_journey() -> None:
-    page = (SHARED / "quesito-professionale" / "index.html").read_text(
+    page = (SHARED / "quesito-legale-fiscale" / "index.html").read_text(
         encoding="utf-8"
     )
     function_copy = (SHARED / "product-function-pages.js").read_text(
         encoding="utf-8"
     )
-    workflow_copy = function_copy.split('"quesito-professionale":', 1)[1].split(
+    workflow_copy = function_copy.split('"quesito-legale-fiscale":', 1)[1].split(
         '"comunicazione-professionale":', 1
     )[0]
 
-    assert 'data-function-page="quesito-professionale"' in page
+    assert 'data-function-page="quesito-legale-fiscale"' in page
     assert workflow_copy.count('modelDataStatus: "relevant"') == 5
     for snippet in (
         "Risposta a quesiti legali e fiscali",

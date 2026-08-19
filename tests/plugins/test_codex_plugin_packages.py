@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.147"
+    assert manifest["version"] == "0.1.148"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -2523,7 +2523,7 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
             normalized_skill_text = " ".join(skill_text.split())
             if (
                 plugin_root.name == "vera"
-                and skill_file.parent.name == "quesito-professionale"
+                and skill_file.parent.name == "quesito-legale-fiscale"
             ):
                 assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
                 assert "../deep-research-validator/SKILL.md" in normalized_skill_text
