@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -11,6 +12,31 @@ PRODUCT_PAGES = {
     "lucia": SHARED / "lucia" / "index.html",
     "clara": SHARED / "clara" / "index.html",
 }
+
+
+def _javascript_string_values(source: str, key: str) -> list[str]:
+    pattern = rf'{re.escape(key)}\s*:\s*("(?:\\.|[^"\\])*")'
+    return [json.loads(match) for match in re.findall(pattern, source)]
+
+
+def _function_page_copy(source: str, page_name: str) -> str:
+    if page_name == "bilancio-xbrl-it":
+        return source.split("const bilancioModelData =", 1)[1].split(
+            "Object.entries(bilancioModelData)", 1
+        )[0]
+
+    marker = f'    "{page_name}": {{'
+    blocks: list[str] = []
+    for match in re.finditer(re.escape(marker), source):
+        start = match.start()
+        following = re.search(r'\n    "[^"]+": \{', source[start + len(marker) :])
+        end = (
+            len(source)
+            if following is None
+            else start + len(marker) + following.start()
+        )
+        blocks.append(source[start:end])
+    return max(blocks, key=lambda block: block.count("modelData:"))
 
 
 def _directory_links(page: str) -> list[str]:
@@ -508,11 +534,11 @@ def test_professional_communication_page_explains_exact_phase_boundaries() -> No
     ].split('"presenza-digitale-studio":', 1)[0]
 
     for snippet in (
-        "Vera e Lucia usano lo stesso nucleo in Codex e Cowork",
-        "Vera and Lucia use the same core in Codex and Cowork",
-        "Vera et Lucia utilisent le même noyau dans Codex et Cowork",
-        "Vera und Lucia verwenden denselben Kern in Codex und Cowork",
-        "Vera y Lucia usan el mismo núcleo en Codex y Cowork",
+        "Il nucleo condiviso di Vera e Lucia applica lo stesso perimetro",
+        "Vera and Lucia’s shared core applies the same boundary",
+        "Le noyau partagé de Vera et Lucia applique le même périmètre",
+        "Der gemeinsame Kern von Vera und Lucia wendet dieselbe Grenze an",
+        "El núcleo compartido de Vera y Lucia aplica el mismo límite",
         "non applica campioni o limiti di righe e colonne",
         "crea una copia completa pseudonimizzata per ogni file",
         "La verifica delle affermazioni riceve contratto, bozza e tutte le fonti correnti",
@@ -545,13 +571,13 @@ def test_bandi_page_explains_task_specific_private_model_context() -> None:
         "Il modulo iniziale del richiedente e i percorsi locali restano fuori",
         "500 elementi per collezione, 200 estratti e 2.000.000 byte",
         "gli ID esatti scelti dal professionista per la collezione eccedente",
-        "In Codex questi controlli operano nel run Studio Archive vincolato",
-        "in Cowork operano solo se gli script sono eseguibili con un run Vera valido",
+        "Questi controlli operano nel run Studio Archive vincolato",
         "Non c’è anonimizzazione o pseudonimizzazione automatica",
         "500 items per collection, 200 excerpts, and 2,000,000 bytes",
-        "Dans Codex, ces contrôles s’exécutent dans le run Studio Archive lié",
-        "In Codex gelten diese Kontrollen im gebundenen Studio-Archive-Run",
-        "En Codex estos controles operan en el run vinculado de Studio Archive",
+        "These controls run inside the bound Studio Archive run",
+        "Ces contrôles s’exécutent dans le run Studio Archive lié",
+        "Diese Kontrollen gelten im gebundenen Studio-Archive-Run",
+        "Estos controles operan en la ejecución vinculada de Studio Archive",
     ):
         assert snippet in bandi_copy
 
@@ -574,7 +600,7 @@ def test_bilancio_page_explains_task_specific_model_data_flow() -> None:
         "jusqu'à 50 questions actives",
         "keine automatische Anonymisierung oder Pseudonymisierung",
         "no recibe automáticamente los archivos fuente, case.json ni el snapshot completo",
-        "Codex and Cowork use the same tools and limits",
+        "The model uses the same tools and limits",
     ):
         assert snippet in function_copy
 
@@ -583,9 +609,9 @@ def test_answer_assurance_pages_explain_actual_model_context_bounds() -> None:
     prompt_page = (SHARED / "prompt-optimizer" / "index.html").read_text(
         encoding="utf-8"
     )
-    validator_page = (
-        SHARED / "deep-research-validator" / "index.html"
-    ).read_text(encoding="utf-8")
+    validator_page = (SHARED / "deep-research-validator" / "index.html").read_text(
+        encoding="utf-8"
+    )
 
     assert prompt_page.count('"model.copy":') == 5
     for snippet in (
@@ -624,9 +650,7 @@ def test_professional_question_page_explains_the_complete_answer_journey() -> No
     page = (SHARED / "quesito-legale-fiscale" / "index.html").read_text(
         encoding="utf-8"
     )
-    function_copy = (SHARED / "product-function-pages.js").read_text(
-        encoding="utf-8"
-    )
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     workflow_copy = function_copy.split('"quesito-legale-fiscale":', 1)[1].split(
         '"comunicazione-professionale":', 1
     )[0]
@@ -728,6 +752,44 @@ def test_every_function_page_uses_one_shared_model_data_component() -> None:
                 or "product-function-page.js" in explanation
                 or 'class="function-model-data"' in explanation
             ), f"{destination}: does not use the shared model-data component"
+
+
+def test_long_vera_model_data_explanations_render_as_three_paragraphs() -> None:
+    function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
+    renderer = (SHARED / "product-function-page.js").read_text(encoding="utf-8")
+    injector = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
+
+    for page_name in (
+        "variance-analysis",
+        "bilancio-xbrl-it",
+        "bandi-agevolazioni",
+        "quesito-legale-fiscale",
+        "comunicazione-professionale",
+        "presenza-digitale-studio",
+    ):
+        values = _javascript_string_values(
+            _function_page_copy(function_copy, page_name), "modelData"
+        )
+        assert len(values) == 5
+        assert all(len(value.split("\n\n")) == 3 for value in values)
+
+    for page_name in (
+        "deep-research-validator",
+        "previdenza-inps",
+        "prompt-optimizer",
+        "registro-imprese-sari",
+        "report-builder",
+        "sales-plan",
+    ):
+        page = (SHARED / page_name / "index.html").read_text(encoding="utf-8")
+        values = _javascript_string_values(page, '"model.copy"')
+        assert len(values) == 5
+        assert all(len(value.split("\n\n")) == 3 for value in values)
+
+    assert "modelDataParagraphs.map" in renderer
+    assert 'class="function-model-data__copy"' in renderer
+    assert "initializeParagraphs" in injector
+    assert 'paragraph.className = "function-model-data__copy";' in injector
 
 
 def test_all_function_page_systems_use_the_shared_quiet_typography_scale() -> None:

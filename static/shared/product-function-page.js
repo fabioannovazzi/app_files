@@ -114,6 +114,11 @@
   const isShared = page.shared === true;
   const homeUrl = `/?lang=${language}`;
 
+  const modelDataParagraphs = (Array.isArray(text.modelData) ? text.modelData : [text.modelData])
+    .flatMap((value) => String(value || "").split(/\n\s*\n/))
+    .map((value) => value.trim())
+    .filter(Boolean);
+
   document.documentElement.lang = language;
   document.title = `${text.name} | ${isShared ? "Mparanza" : page.product}`;
   const description = document.querySelector('meta[name="description"]');
@@ -173,9 +178,9 @@
       <section class="function-model-data" data-model-data-workflow="${pageKey}" data-model-data-status="${text.modelDataStatus}" aria-labelledby="${pageKey}-model-data-title">
         <div class="function-model-data__head">
           <div class="function-model-data__heading"><p class="function-model-data__label">${ui.modelDataLabel}</p><h2 id="${pageKey}-model-data-title">${ui.modelDataTitle}</h2></div>
-          <div class="function-model-data__body">
+          <div class="function-model-data__body function-model-data__paragraphs">
             ${text.modelDataConclusion ? `<h3 class="function-model-data__conclusion">${text.modelDataConclusion}</h3>` : ""}
-            <p class="function-model-data__copy">${text.modelData}</p>
+            ${modelDataParagraphs.map((paragraph) => `<p class="function-model-data__copy">${paragraph}</p>`).join("")}
           </div>
         </div>
       </section>

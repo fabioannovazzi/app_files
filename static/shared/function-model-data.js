@@ -37,6 +37,50 @@
     .slice(0, 2)
     .toLowerCase();
   const language = Object.hasOwn(copy, requestedLanguage) ? requestedLanguage : "en";
+  const paragraphSeparator = /\n\s*\n/;
+
+  const renderParagraphs = (target) => {
+    const paragraphs = target.textContent
+      .split(paragraphSeparator)
+      .map((value) => value.trim())
+      .filter(Boolean);
+    if (paragraphs.length < 2) return null;
+
+    let container = target;
+    if (target.tagName === "P") {
+      container = document.createElement("div");
+      for (const attribute of target.attributes) {
+        if (attribute.name !== "class") {
+          container.setAttribute(attribute.name, attribute.value);
+        }
+      }
+      target.replaceWith(container);
+    }
+    container.className = "function-model-data__body function-model-data__paragraphs";
+    const fragment = document.createDocumentFragment();
+    for (const value of paragraphs) {
+      const paragraph = document.createElement("p");
+      paragraph.className = "function-model-data__copy";
+      paragraph.textContent = value;
+      fragment.append(paragraph);
+    }
+    container.replaceChildren(fragment);
+    return container;
+  };
+
+  const initializeParagraphs = () => {
+    document.querySelectorAll(".function-model-data__copy").forEach((target) => {
+      const container = renderParagraphs(target);
+      if (!container) return;
+
+      const observer = new MutationObserver(() => {
+        if (paragraphSeparator.test(container.textContent)) {
+          renderParagraphs(container);
+        }
+      });
+      observer.observe(container, { childList: true, characterData: true, subtree: true });
+    });
+  };
 
   if (!document.querySelector('link[data-function-model-data-style]')) {
     const stylesheet = document.createElement("link");
@@ -86,6 +130,11 @@
     main.append(section);
   };
 
+  const initialize = () => {
+    appendPlaceholder();
+    initializeParagraphs();
+  };
+
   const loadNavigation = () => {
     if (window.MPARANZA_FUNCTION_NAVIGATION) {
       window.MPARANZA_FUNCTION_NAVIGATION.render();
@@ -99,9 +148,9 @@
   };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", appendPlaceholder, { once: true });
+    document.addEventListener("DOMContentLoaded", initialize, { once: true });
   } else {
-    appendPlaceholder();
+    initialize();
   }
   loadNavigation();
 })();
