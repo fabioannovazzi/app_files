@@ -35,7 +35,7 @@
       {
         "id": "archive-review-and-execution-evidence",
         "purpose": "Prepare a dry-run filing plan, collect professional decisions, and execute only a separately approved mechanically safe path plan",
-        "content": "Versioned studio policy; storage mode; projected current and proposed client-relative paths; opaque exact-duplicate relationships; semantic reasons, confidence, anomalies, collisions and blocked reasons; review payload; reviewer alias, actions, notes and edited paths; approved-plan summary; and execution limitations. Deterministic raw source identities, hashes, byte counts, Drive IDs, versions, capabilities and checksums remain in the local executable plan and journals. The full review is exposed once; later phases use a random hash-bound reference that expires after four hours instead of resending the payload. In Codex and Cowork local-folder mode, a bound stored review can persist decisions without repeating the absolute context path and can execute only after a separate explicit approval. A text-only unbound supplied review can be rendered through an in-memory review-only reference but cannot persist or execute changes",
+        "content": "Versioned studio policy; storage mode; projected current and proposed client-relative paths; opaque exact-duplicate relationships; semantic reasons, confidence, anomalies, collisions and blocked reasons; review payload; reviewer alias, actions, notes and edited paths; approved-plan summary; and execution limitations. Deterministic raw source identities, hashes, byte counts, Drive IDs, versions, capabilities and checksums remain in the local executable plan and journals. In Codex and Cowork local-folder mode, when local MCP is callable, the full review is exposed once and later phases use a random hash-bound reference that expires after four hours instead of resending the payload; a bound stored review can persist decisions without repeating the absolute context path and can execute only after a separate explicit approval. Without local MCP, canonical files remain reviewable and decisions remain pending unless persisted artifacts prove save and apply. A text-only unbound supplied review cannot persist or execute changes",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -79,7 +79,7 @@
     },
     {
       "id": "persistent-professional-review",
-      "control": "The workflow always writes a dry-run plan and pending ui_decisions.json first. The model-facing review excludes raw source identities, hashes, byte counts, Drive IDs and absolute paths while preserving every semantic field and duplicate relationship. Validation binds the review to a random four-hour hash-checked reference so the full payload is not repeated. In Codex and Cowork local-folder mode, a reference bound to the stored customer run supports render, save and approval without repeating the absolute context path; a text-only unbound supplied-plan reference remains review-only and cannot persist or execute changes. Every proposed move, quarantine, or blocked item requires a persisted collaborator decision before approved_plan.json can be created; the reviewer alias is an accountability label and not an authentication claim."
+      "control": "The workflow always writes a dry-run plan and pending ui_decisions.json first. The model-facing review excludes raw source identities, hashes, byte counts, Drive IDs and absolute paths while preserving every semantic field and duplicate relationship. In Codex and Cowork local-folder mode, when local MCP is callable, validation binds the review to a random four-hour hash-checked reference so the full payload is not repeated and a reference bound to the stored customer run supports render, save and approval without repeating the absolute context path. Without local MCP, canonical files remain reviewable and decisions remain pending unless persisted artifacts prove save and apply. A text-only unbound supplied plan remains review-only and cannot persist or execute changes. Every proposed move, quarantine, or blocked item requires a persisted collaborator decision before approved_plan.json can be created; the reviewer alias is an accountability label and not an authentication claim."
     },
     {
       "id": "separate-explicit-filesystem-approval",
@@ -98,6 +98,6 @@
     "reviewed_at": "2026-08-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "abfddb88c3349f7e4b5a78fde97f9581e5c04658accc2cfe7f5a7978b30121cc"
+    "source_fingerprint": "00b166ff1af3d892038c1f56967593de683c711e3e3fbae799dfbb674fef5f9e"
   }
 }

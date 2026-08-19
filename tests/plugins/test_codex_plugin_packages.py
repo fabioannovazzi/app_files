@@ -531,7 +531,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.149"
+    assert manifest["version"] == "0.1.150"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -4058,7 +4058,9 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
     )
-    assert "for a bound local-folder run" in archive_organization
+    assert "when the local MCP interface is available for a bound run" in (
+        archive_organization
+    )
     assert "not enabled as a Cowork route" in archive_organization
     assert "Codex and Cowork use this path when MCP is available" in concordato
     assert "Local-folder mode runs in Codex Desktop and Cowork" in (

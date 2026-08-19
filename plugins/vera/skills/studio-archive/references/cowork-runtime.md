@@ -125,11 +125,23 @@ bounds, or unsupported formats remain.
 
 Use Gmail only when the user asks for it. Confirm the mailbox, process exactly
 one client, and construct the address set only from complete email or PEC
-addresses supplied or explicitly confirmed in the current task. Search narrowly
-with those addresses and user-supplied topic or date bounds; read the smallest
-useful shortlist. Include a message automatically only when returned participant
-metadata matches the confirmed client exactly and no other-client or ambiguous
-participant appears.
+addresses supplied or explicitly confirmed in the current task. When no full
+address is confirmed, run one discovery-only query using the supplied client
+name or identifier and return at most 20 candidates. Read only the smallest
+useful candidate shortlist, propose complete participant addresses from the
+returned metadata, and obtain one explicit confirmation before using any
+candidate message as client evidence.
+
+After confirmation, search only the confirmed addresses, in batches of at most
+ten, with the user's topic or date bounds when useful. Request at most 20
+results per page and paginate only when the requested coverage materially
+requires older messages. Read only the scoped shortlist. For every message,
+compare all available From, To, Cc, and Bcc values case-insensitively against
+the confirmed address set. Automatic routing requires a parseable From value,
+parseable returned recipient values, exactly one selected client, and no visible
+other-client or ambiguous external participant. Inspect Cc and Bcc whenever
+exposed; an absent optional field alone is not incomplete, and returned fields
+cannot prove the absence of an undisclosed Bcc recipient.
 
 Use read actions only. Never send, draft, forward, archive, trash, delete,
 label, move, download, or otherwise mutate mail. Do not use IMAP or browser

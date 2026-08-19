@@ -61,12 +61,10 @@ LOGGER = logging.getLogger(__name__)
 ROOT_OMITTED_PATHS = frozenset(
     {
         ".app.json",
-        ".mcp.json",
         "hooks/hooks.json",
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py",
         "scripts/change_requests.py",
         "scripts/check_for_update.py",
-        "scripts/run_component_mcp.cjs",
     }
 )
 COWORK_OMITTED_PATHS = frozenset(
@@ -1364,33 +1362,6 @@ def _project_presenza_digitale_cowork_skill(text: str) -> str:
     return text
 
 
-def _project_registro_imprese_sari_cowork_skill(text: str) -> str:
-    text = text.replace(
-        "### Default: browser-assisted public SARI lookup",
-        "### Optional public SARI lookup",
-    )
-    text = text.replace(
-        "Use the current SARI public directory or the institutional link "
-        "published by\n"
-        "the competent Camera. Operate in read-only public pages only:",
-        "When public web or browser access is callable, use the current SARI "
-        "public\n"
-        "directory or the institutional link published by the competent Camera. "
-        "Operate\n"
-        "in read-only public pages only:",
-    )
-    text = text.replace(
-        "Register a browser-selected source without fetching it from a script:",
-        "If public web access is unavailable, continue from official pages or "
-        "source\n"
-        "copies supplied in the connected folder and mark current-source "
-        "coverage\n"
-        "pending. When the optional lookup is used, register the selected source\n"
-        "without fetching it from a script:",
-    )
-    return text
-
-
 def _project_client_file_preparation_reference(text: str) -> str:
     return _replace_section(
         text,
@@ -1575,6 +1546,7 @@ def _project_cowork_runtime_text(
     content: bytes,
     *,
     relative_path: str,
+    preserve_vera_customer_run: bool = False,
 ) -> bytes:
     """Neutralize user-visible host names in vendored Cowork runtime text."""
 
@@ -1586,10 +1558,11 @@ def _project_cowork_runtime_text(
         ) from exc
     text = _project_natural_language_runtime(text)
     text = text.replace("local_codex_workspace", "cowork_connected_folder")
-    text = text.replace(
-        "REQUIRE_VERA_CUSTOMER_RUN = True",
-        "REQUIRE_VERA_CUSTOMER_RUN = False",
-    )
+    if not preserve_vera_customer_run:
+        text = text.replace(
+            "REQUIRE_VERA_CUSTOMER_RUN = True",
+            "REQUIRE_VERA_CUSTOMER_RUN = False",
+        )
     return text.encode("utf-8")
 
 
@@ -1651,11 +1624,6 @@ def project_cowork_skill(
         text = _project_client_file_preparation_cowork_skill(text)
     elif relative_path == "modules/new-client/skills/new-client/SKILL.md":
         text = _project_new_client_cowork_skill(text)
-    elif (
-        relative_path
-        == "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md"
-    ):
-        text = _project_registro_imprese_sari_cowork_skill(text)
     review_section = COWORK_REVIEW_SECTIONS.get(relative_path)
     if review_section is not None:
         source_heading, projected_heading = review_section
@@ -2523,7 +2491,9 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             continue
         if relative == ".codex-plugin/plugin.json":
             continue
-        if relative.endswith("/SKILL.md"):
+        if relative == ".mcp.json":
+            content = project_claude_mcp(content)
+        elif relative.endswith("/SKILL.md"):
             content = project_cowork_skill(
                 content,
                 relative_path=relative,
@@ -2548,6 +2518,7 @@ def claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _project_cowork_runtime_text(
                 content,
                 relative_path=relative,
+                preserve_vera_customer_run=True,
             )
         entries[relative] = content
 

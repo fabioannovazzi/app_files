@@ -43,7 +43,7 @@ Never infer exact client membership from:
 - model confidence.
 
 When no full address is confirmed, run one discovery-only `search_emails` query
-with `max_results: 10`, for example:
+with `max_results: 20`, for example:
 
 ```text
 in:anywhere -in:spam -in:trash "Rossi SRL"

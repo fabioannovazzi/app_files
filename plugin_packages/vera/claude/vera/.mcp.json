@@ -1,0 +1,130 @@
+{
+  "mcpServers": {
+    "archiveOrganizationWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "archive-organization"
+      ]
+    },
+    "auditReconciliationWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "audit-reconciliation"
+      ]
+    },
+    "bilancioXbrlIt": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "bilancio-xbrl-it"
+      ]
+    },
+    "checkEntriesWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "check-entries"
+      ]
+    },
+    "concordatoPlanReviewWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "concordato-plan-review"
+      ]
+    },
+    "deepResearchValidatorWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "deep-research-validator"
+      ]
+    },
+    "financialAnalysisContracts": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "financial-analysis"
+      ]
+    },
+    "journalBankWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "journal-bank-reconciliation"
+      ]
+    },
+    "journalSamplingWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "journal-sampling"
+      ]
+    },
+    "newClientFilePreparation": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "client-file-preparation"
+      ]
+    },
+    "newClientProfessionalSetup": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "new-client"
+      ]
+    },
+    "previdenzaInpsReview": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "previdenza-inps"
+      ]
+    },
+    "promptOptimizerWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "prompt-optimizer"
+      ]
+    },
+    "registroImpreseSariReview": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "registro-imprese-sari"
+      ]
+    },
+    "reportBuilderWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "report-builder"
+      ]
+    },
+    "varianceAnalysisWidgets": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "variance-analysis"
+      ]
+    },
+    "veraSalesPlan": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "sales-plan"
+      ]
+    },
+    "veraStudioArchive": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "studio-archive"
+      ]
+    }
+  }
+}

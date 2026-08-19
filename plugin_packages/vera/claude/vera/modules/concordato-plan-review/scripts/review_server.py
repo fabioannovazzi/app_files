@@ -46,7 +46,7 @@ ALLOWED_ACTIONS = {
 LOGGER = logging.getLogger(__name__)
 NODE_OVERRIDE_ENV = "MPARANZA_REVIEW_NODE"
 REVIEW_TOKEN_HEADER = "X-Mparanza-Review-Token"
-REQUIRE_VERA_CUSTOMER_RUN = False
+REQUIRE_VERA_CUSTOMER_RUN = True
 VERA_REVIEW_WORKFLOW_IDS = frozenset(
     {
         "audit-reconciliation",

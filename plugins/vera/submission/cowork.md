@@ -113,7 +113,7 @@ so this pack does not claim that local CLI validation ran.
 
 ## Final candidate
 
-- **Version:** 0.1.135
+- **Version:** 0.1.136
 - **Archive:** `plugin_packages/vera/vera-claude-plugin.zip`
 - **SHA-256:** `21941a231a1e2c1a6308fbb0c5e504df2b7c6c5052f7f5e5118f8f39205fdf8c`
 - **Size:** 4,477,917 bytes

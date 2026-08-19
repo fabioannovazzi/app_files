@@ -180,10 +180,11 @@ Visually compare every OCR passage used in a proposal with its source image.
 
 ## 4. Consult current official sources
 
-### Default: browser-assisted public SARI lookup
+### Capability-based public SARI lookup
 
-Use the current SARI public directory or the institutional link published by
-the competent Camera. Operate in read-only public pages only:
+When public web or browser access is callable, use the current SARI public
+directory or the institutional link published by the competent Camera. Operate
+in read-only public pages only:
 
 1. choose the chamber explicitly and check the page title;
 2. search with a generic topical query, never a name, tax code, VAT number,
@@ -192,7 +193,10 @@ the competent Camera. Operate in read-only public pages only:
 4. capture the metadata needed for provenance;
 5. do not export session cookies or use login/contact/assistance forms.
 
-Register a browser-selected source without fetching it from a script:
+If public web access is unavailable, continue from official pages or source
+copies supplied in the connected folder and mark current-source coverage
+pending. When the lookup is used, register the selected source without fetching
+it from a script:
 
 ```bash
 python scripts/register_official_source.py \
