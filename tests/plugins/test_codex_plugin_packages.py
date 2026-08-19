@@ -4108,14 +4108,14 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         "Studio Archive run and connected-file search work in Codex and Cowork"
         in studio
     )
-    assert "For client selection, the model receives every directory row" in studio
+    assert "To choose a client, the model receives every record’s label" in studio
     assert "The same reduced sample and run" in journal
     assert "One index, the same limits, and the same run" in check_entries
     assert "The local-folder route scans" in archive_organization
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
     )
-    assert "When the local MCP interface is available for a bound run" in (
+    assert "With local MCP and a linked run" in (
         archive_organization
     )
     assert "not enabled as a Cowork route" in archive_organization
