@@ -4049,6 +4049,9 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
     sales = (ROOT / "static" / "shared" / "sales-plan" / "index.html").read_text(
         encoding="utf-8"
     )
+    report_builder = (
+        ROOT / "static" / "shared" / "report-builder" / "index.html"
+    ).read_text(encoding="utf-8")
     function_copy = (
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
@@ -4070,14 +4073,28 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
 
     for page in (financial, sales):
         assert "In Codex and Cowork" not in page
-        assert "portable Studio Archive" in page
+        assert "portable Studio Archive" not in page
     variance_copy = function_copy.split('"variance-analysis":', 1)[1].split(
         '"bandi-agevolazioni":', 1
     )[0]
     assert "In Codex and Cowork" not in variance_copy
-    assert "Selected data is imported into a portable Studio Archive run" in (
+    assert "Selected data is imported into a portable Studio Archive run" not in (
         variance_copy
     )
+    for public_copy in (financial, sales, report_builder, variance_copy):
+        for global_boundary_copy in (
+            "L’account del modello è scelto",
+            "The firm or user selects the model account",
+            "Le cabinet ou l’utilisateur choisit le compte du modèle",
+            "Kanzlei oder Nutzer wählen das Modellkonto",
+            "El despacho o usuario elige la cuenta del modelo",
+            "Questo processo non ha altre destinazioni esterne",
+            "This process has no other external destination",
+            "Ce processus n'a pas d'autre destination externe",
+            "Dieser Prozess hat kein weiteres externes Ziel",
+            "Este proceso no tiene otros destinos externos",
+        ):
+            assert global_boundary_copy not in public_copy
     assert (
         "Studio Archive run and connected-file search work in Codex and Cowork"
         in studio
