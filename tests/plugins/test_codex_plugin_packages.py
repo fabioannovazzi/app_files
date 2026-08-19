@@ -3694,12 +3694,21 @@ def test_vera_page_explains_variance_analysis_and_review_boundary() -> None:
         "I calcoli restano separati dall'interpretazione gestionale.",
         "le prime 10 righe delle sole colonne candidate",
         "al massimo 10 righe di non più di 12 colonne nominate",
-        "tutte le corrispondenze esatte, senza campionamento",
-        "il nome originale del file o i nomi delle colonne non mappate",
-        "Il pacchetto MCP contiene al massimo i 50 driver principali",
+        "Il codice esamina l’intero file",
+        "la somma degli scostamenti coincida con la variazione totale",
+        "non tutte le righe del file né le colonne escluse",
+        "può recuperare tutte le righe pertinenti",
+        "al massimo i 50 scostamenti principali",
         "Vera non anonimizza né pseudonimizza automaticamente",
     ):
         assert required_concept in variance_copy
+    for technical_term in (
+        "manifest con hash",
+        "ricetta sigillata",
+        "pacchetto MCP",
+        "token locale",
+    ):
+        assert technical_term not in variance_copy
     assert variance_copy.count('modelDataStatus: "relevant"') == 5
     assert 'modelDataStatus: "placeholder"' not in variance_copy
     for localized_title in (
