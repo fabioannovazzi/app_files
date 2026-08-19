@@ -4055,6 +4055,11 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
     assert "Codex and Cowork use the same reduced sample and run" in journal
     assert "Codex and Cowork use the same index, limits, and run" in check_entries
     assert "Codex and Cowork scan" in archive_organization
+    assert "Local-folder organization works in Codex and Cowork" in (
+        archive_organization
+    )
+    assert "for a bound local-folder run" in archive_organization
+    assert "not enabled as a Cowork route" in archive_organization
     assert "Codex and Cowork use this path when MCP is available" in concordato
     assert "Local-folder mode runs in Codex Desktop and Cowork" in (
         ROOT
@@ -4084,6 +4089,9 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         "does not create that Studio Archive context",
         "Cowork and ChatGPT do not scan or apply",
         "compatible Vera context",
+        "Organization requires Codex Desktop",
+        "for a plan supplied in Cowork or ChatGPT",
+        "not included in Cowork",
     ):
         assert stale_copy not in all_public_copy
 
