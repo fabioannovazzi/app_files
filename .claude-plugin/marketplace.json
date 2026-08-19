@@ -112,7 +112,7 @@
       "displayName": "Lucia",
       "source": "./plugin_packages/lucia/claude/lucia",
       "description": "Assistente AI per avvocati. Lucia affianca avvocati indipendenti e studi legali. Ottimizza prompt e struttura incarichi, analizza materiali e fonti, verifica affermazioni e ragionamento e prepara ricerche, documenti e risultati rivedibili.\n\nSupporta il lavoro legale attraverso workflow specialistici adattati al contesto, alla giurisdizione e al risultato atteso. Aiuta a strutturare attività, controllare documenti e fonti e mantenere collegati materiali, passaggi e decisioni.\n\nLucia mostra fonti, passaggi, ambiguità e informazioni mancanti prima di consegnare il risultato. Firma, approvazione, deposito, invio, pubblicazione e giudizio professionale restano all’avvocato.",
-      "version": "0.1.14",
+      "version": "0.1.15",
       "author": {
         "name": "Mparanza",
         "email": "fabio@mparanza.com",

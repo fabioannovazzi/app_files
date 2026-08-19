@@ -17,6 +17,9 @@ responsabilità restano al professionista.
 Il catalogo cresce attraverso workflow specialistici registrati. Le funzioni
 attualmente pubbliche sono:
 
+- **Risposta a quesiti legali e fiscali** — Porta un quesito legale, fiscale o
+  di compliance dalla domanda iniziale a una risposta con fonti, ragionamento
+  e limiti professionali verificati.
 - **Ottimizzazione prompt** — Trasforma un quesito legale, fiscale o di conformità
   in una ricerca con perimetro, fonti e verifiche definite.
 - **Validazione ricerca** — Controlla le affermazioni rispetto alle fonti
@@ -37,6 +40,11 @@ canoniche incorporate in Vera. Lucia non ne mantiene copie divergenti: il
 builder include gli stessi file sorgente e i test verificano l’uguaglianza dei
 byte nei pacchetti generati.
 
+Risposta a quesiti legali e fiscali è una skill di orchestrazione: usa quei due
+componenti come fasi separate e prepara la risposta tra le due. Non crea un
+terzo workstream, non duplica gli artefatti e non cambia le destinazioni dei
+dati.
+
 Comunicazione professionale e Presenza digitale riusano la stessa macchina
 canonica di Vera per evidenze, review, rendering, preview, hash e packaging, ma
 passano da wrapper Lucia con un profilo distinto per avvocati. Il profilo
@@ -51,10 +59,11 @@ validatore e ricevute di revisione specifici per l’apertura della pratica.
 
 1. Lucia interpreta semanticamente la richiesta e la instrada al workflow
    specialistico registrato appropriato.
-2. Prompt Optimizer definisce il contratto della risposta, il perimetro, le
-   fonti necessarie e i controlli da superare.
-3. Deep Research Validator verifica identità e accessibilità delle fonti,
-   supporto delle affermazioni e tenuta del ragionamento.
+2. Per una risposta completa, Risposta a quesiti legali e fiscali coordina
+   contratto della risposta, ricerca o generazione e verifica finale.
+3. Prompt Optimizer e Deep Research Validator restano invocabili separatamente
+   quando serve soltanto preparare il quesito o controllare una risposta già
+   prodotta.
 4. Il risultato resta una bozza rivedibile. Lucia non firma pareri, deposita
    atti, invia comunicazioni o assume decisioni professionali.
 

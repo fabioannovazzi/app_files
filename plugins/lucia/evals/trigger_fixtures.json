@@ -5,7 +5,7 @@
     {
       "id": "lucia-explicit-full-journey",
       "prompt": "@lucia imposta questo quesito sulla risoluzione del contratto, prepara la risposta e validala prima di consegnarmela.",
-      "required_signals": ["Lucia", "prompt-optimizer", "deep-research-validator", "italiano"]
+      "required_signals": ["Lucia", "quesito-legale-fiscale", "prompt-optimizer", "deep-research-validator", "italiano"]
     },
     {
       "id": "lucia-legal-question",
@@ -20,7 +20,7 @@
     {
       "id": "lucia-foreign-law-italian-output",
       "prompt": "@lucia prepara in italiano una risposta sul diritto francese applicabile al caso, usando fonti francesi qualificate, poi validala.",
-      "required_signals": ["italiano", "diritto francese", "fonti francesi", "validazione"]
+      "required_signals": ["quesito-legale-fiscale", "italiano", "diritto francese", "fonti francesi", "validazione"]
     },
     {
       "id": "lucia-one-page-letter",

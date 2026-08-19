@@ -740,6 +740,7 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
     if plugin_name == "lucia":
         assert set(card_bodies) == {
             "skills/lucia/SKILL.md",
+            "skills/quesito-legale-fiscale/SKILL.md",
             "skills/prompt-optimizer/SKILL.md",
             "skills/deep-research-validator/SKILL.md",
             "skills/comunicazione-professionale/SKILL.md",
@@ -2521,9 +2522,8 @@ def test_all_repo_plugin_skills_include_codex_native_run_ux_contract() -> None:
         for skill_file in skill_files:
             skill_text = skill_file.read_text(encoding="utf-8")
             normalized_skill_text = " ".join(skill_text.split())
-            if (
-                plugin_root.name == "vera"
-                and skill_file.parent.name == "quesito-legale-fiscale"
+            if plugin_root.name in {"lucia", "vera"} and (
+                skill_file.parent.name == "quesito-legale-fiscale"
             ):
                 assert "../prompt-optimizer/SKILL.md" in normalized_skill_text
                 assert "../deep-research-validator/SKILL.md" in normalized_skill_text

@@ -63,11 +63,12 @@ funzione Lucia:
 | Esito | Percorso obbligatorio |
 | --- | --- |
 | Quesito da impostare, risposta da pianificare o ricerca da avviare | Leggi integralmente `../prompt-optimizer/SKILL.md` e seguilo. |
+| Quesito legale, fiscale o di compliance da portare dalla domanda a una risposta verificata | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
 | Risposta, parere, memoria, lettera o report già prodotto da controllare | Leggi integralmente `../deep-research-validator/SKILL.md` e seguilo. |
 | Novità giuridica o professionale da valutare e trasformare in email, circolare, articolo, post, FAQ, alert o visuale | Leggi integralmente `../comunicazione-professionale/SKILL.md` e seguilo. Non duplicare i passaggi di answer contract e claim assurance già incorporati nel workflow. |
 | Sito informativo dello studio legale da creare, rinnovare, revisionare, preparare in preview o pubblicare dopo approvazione | Leggi integralmente `../presenza-digitale-studio/SKILL.md` e seguilo. |
 | Nuova pratica per un nuovo cliente o per un cliente esistente da raccogliere e preparare all'apertura | Leggi integralmente `../apertura-pratica/SKILL.md` e seguilo. Usa il suo validatore specifico e il contratto di revisione dell'avvocato. |
-| Percorso completo dal quesito alla consegna | Esegui prima `../prompt-optimizer/SKILL.md`, prepara la risposta con ragionamento model-led e fonti qualificate, poi esegui `../deep-research-validator/SKILL.md` prima della consegna. |
+| Percorso completo dal quesito alla consegna | Leggi integralmente `../quesito-legale-fiscale/SKILL.md` e seguilo. |
 | Nessun workflow registrato copre la richiesta | Fermati. Dì soltanto che Lucia non dispone di un workflow adatto; non rispondere al merito e non offrire un percorso generico. |
 
 L'utente descrive il lavoro normalmente e non deve conoscere i nomi interni.
@@ -90,6 +91,10 @@ condivise con Vera. Le wrapper skill non ne riassumono né ne sostituiscono le i
 il modulo incorporato, leggono il suo `SKILL.md` completo e lo seguono. Non
 modificare la logica del Prompt Optimizer o del Deep Research Validator dentro
 Lucia.
+
+`quesito-legale-fiscale` orchestra quelle due fasi e la generazione della
+risposta come un solo percorso per l'utente. Non crea un terzo workstream Studio
+Archive, non duplica artefatti e non introduce una nuova destinazione dei dati.
 
 Comunicazione professionale e Presenza digitale dello studio riusano invece
 la macchina canonica di Vera attraverso wrapper Lucia. Le wrapper leggono il

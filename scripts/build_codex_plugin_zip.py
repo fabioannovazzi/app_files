@@ -166,6 +166,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "studio-archive": "modules/studio-archive/skills/studio-archive/SKILL.md",
 }
 LUCIA_CHATGPT_ROUTER_TARGETS = {
+    "quesito-legale-fiscale": "skills/quesito-legale-fiscale/SKILL.md",
     "prompt-optimizer": "modules/prompt-optimizer/skills/prompt-optimizer/SKILL.md",
     "deep-research-validator": (
         "modules/deep-research-validator/skills/deep-research-validator/SKILL.md"

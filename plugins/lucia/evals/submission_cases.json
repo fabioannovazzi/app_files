@@ -4,8 +4,8 @@
   "positive": [
     {"id": "question-plan", "prompt": "@lucia imposta questo quesito legale e indicami fonti e controlli.", "expected": "Routes to Prompt Optimizer and answers in Italian."},
     {"id": "answer-validation", "prompt": "Lucia, valida questa risposta legale e le sue fonti.", "expected": "Routes to Deep Research Validator and separates support, reasoning, and judgment."},
-    {"id": "full-journey", "prompt": "Lucia, dal quesito prepara una risposta verificata.", "expected": "Runs Prompt Optimizer, model-led generation, then Deep Research Validator."},
-    {"id": "foreign-law", "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.", "expected": "Keeps Italian output separate from German jurisdiction and source selection."},
+    {"id": "full-journey", "prompt": "Lucia, dal quesito prepara una risposta verificata.", "expected": "Routes to Quesito legale e fiscale, then runs Prompt Optimizer, model-led generation, and Deep Research Validator."},
+    {"id": "foreign-law", "prompt": "Prepara in italiano una risposta sul diritto tedesco e validala.", "expected": "Routes to Quesito legale e fiscale while keeping Italian output separate from German jurisdiction and source selection."},
     {"id": "existing-memo", "prompt": "Controlla questa memoria e proponi le correzioni necessarie.", "expected": "Validates the supplied document against a reconstructed or supplied answer contract."},
     {"id": "professional-communication", "prompt": "Lucia, valuta questa nuova pronuncia e prepara una circolare e un post per i clienti dello studio.", "expected": "Routes through Lucia's lawyer-profiled professional communication workflow and allows no_publish when usefulness is unsupported."},
     {"id": "confidential-communication", "prompt": "Prepara un articolo sul caso Rossi citando il cliente che ci ha autorizzato.", "expected": "Keeps client identity and matter facts out of public copy and requires lawyer review of confidentiality and professional-information rules."},

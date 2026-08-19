@@ -27,9 +27,11 @@ LAWYER_PROFILED_WORKFLOWS = {
     "presenza-digitale-studio",
 }
 LUCIA_NATIVE_WORKFLOWS = {"apertura-pratica"}
+ORCHESTRATION_WORKFLOWS = {"quesito-legale-fiscale"}
 PUBLIC_WORKFLOWS = (
     SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 )
+PUBLIC_SKILLS = PUBLIC_WORKFLOWS | ORCHESTRATION_WORKFLOWS
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
 
@@ -83,7 +85,7 @@ def test_lucia_manifest_is_italian_and_does_not_freeze_catalog_size() -> None:
     interface = manifest["interface"]
 
     assert manifest["name"] == "lucia"
-    assert manifest["version"] == "0.1.16"
+    assert manifest["version"] == "0.1.17"
     assert interface["displayName"] == "Lucia"
     assert interface["developerName"] == "Fabio Annovazzi · Mparanza"
     assert manifest["author"]["name"] == interface["developerName"]
@@ -138,9 +140,30 @@ def test_lucia_current_catalog_has_registered_public_workflows_and_one_hidden_ru
         "kind": "internal_runtime",
         "supports": ["prompt-optimizer", "deep-research-validator", "apertura-pratica"],
     }
-    assert skill_names == PUBLIC_WORKFLOWS | {"lucia"}
-    assert set(cards) == PUBLIC_WORKFLOWS | {"lucia"}
+    assert skill_names == PUBLIC_SKILLS | {"lucia"}
+    assert set(cards) == PUBLIC_SKILLS | {"lucia"}
     assert "studio-archive" not in cards
+
+
+def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() -> (
+    None
+):
+    components = _json(LUCIA_ROOT / "components.json")
+    workflow = (
+        LUCIA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+
+    assert "quesito-legale-fiscale" not in components["plugins"]
+    assert not (
+        LUCIA_ROOT / "privacy" / "workstreams" / "quesito-legale-fiscale.json"
+    ).exists()
+    assert "does not create a third client workstream" in workflow
+    assert "../prompt-optimizer/SKILL.md" in workflow
+    assert "../deep-research-validator/SKILL.md" in workflow
+    assert (
+        "lucia:quesito-legale-fiscale -> lucia:prompt-optimizer"
+        in workflow
+    )
 
 
 def test_lucia_native_matter_opening_uses_its_own_validator_contract() -> None:
@@ -384,11 +407,13 @@ def test_lucia_submission_fixture_covers_all_current_public_workflows() -> None:
     assert {
         "question-plan",
         "answer-validation",
+        "full-journey",
         "professional-communication",
         "law-firm-site-refresh",
         "matter-opening",
     } <= positive_ids
     assert {
+        "lucia-explicit-full-journey",
         "lucia-professional-communication",
         "lucia-law-firm-site-refresh",
         "lucia-matter-opening",
@@ -410,6 +435,11 @@ def test_lucia_marketplace_cards_use_vera_canonical_assurance_copy() -> None:
             "instructions"
         ].replace("Vera", "Lucia")
 
+    for field in ("display_name", "short_description", "default_prompt"):
+        assert lucia_cards["quesito-legale-fiscale"][field] == vera_cards[
+            "quesito-legale-fiscale"
+        ][field]
+
 
 def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
     upload = ROOT / "plugin_packages" / "lucia" / "lucia-chatgpt-upload.zip"
@@ -423,6 +453,7 @@ def test_lucia_chatgpt_upload_matches_current_public_catalog() -> None:
     assert not any(name.startswith("modules/studio-archive/") for name in names)
     assert any(name.startswith("modules/prompt-optimizer/") for name in names)
     assert any(name.startswith("modules/deep-research-validator/") for name in names)
+    assert "skills/quesito-legale-fiscale/SKILL.md" in names
     assert any(
         name.startswith("modules/comunicazione-professionale/") for name in names
     )
@@ -443,7 +474,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
 
         assert manifest["name"] == "lucia"
         assert manifest["displayName"] == "Lucia"
-        assert manifest["version"] == "0.1.14"
+        assert manifest["version"] == "0.1.15"
         approved_description = (
             (ROOT / "docs" / "marketplace_copy" / "lucia-long-description.txt")
             .read_text(encoding="utf-8")
@@ -454,6 +485,7 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
         assert manifest["skills"] == "./skills/"
         assert set(components["plugins"]) == PUBLIC_WORKFLOWS
         assert "skills/lucia/SKILL.md" in lucia_names
+        assert "skills/quesito-legale-fiscale/SKILL.md" in lucia_names
         assert not any(".codex-plugin" in name for name in lucia_names)
         assert not any(
             name.startswith("modules/studio-archive/") for name in lucia_names
@@ -500,7 +532,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'class="section-block" id="core"' in page
     assert 'class="workstreams"' in page
     assert 'class="module-directory"' in page
-    assert page.count('class="module-row"') == len(PUBLIC_WORKFLOWS)
+    assert page.count('class="module-row"') == len(PUBLIC_SKILLS)
     assert 'id="assurance"' not in page
     assert 'id="data-boundary"' not in page
     assert "data-language-summary" in page
@@ -511,12 +543,14 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'href="../comunicazione-professionale/index.html?lang=it"' in page
     assert 'href="../presenza-digitale-studio/index.html?lang=it"' in page
     assert 'href="../apertura-pratica/index.html?lang=it"' in page
+    assert 'href="../quesito-legale-fiscale/index.html?lang=it"' in page
     assert "Comunicazione professionale" in page
     assert "Sito dello studio" in page
     assert "Ottimizzazione prompt" in page
     assert "Assistente Ai per avvocati indipendenti" in page
     assert "Validazione ricerca" in page
-    assert page.count('class="module-row"') == 5
+    assert "Risposta a quesiti legali e fiscali" in page
+    assert page.count('class="module-row"') == 6
     for module in re.findall(r'<a class="module-row".*?</a>', page, flags=re.DOTALL):
         assert "<p" not in module
     assert "Solo due" not in page
@@ -584,6 +618,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     """Exact labels should match mechanically across the two public surfaces."""
 
     canonical_labels = {
+        "quesito-legale-fiscale": "Risposta a quesiti legali e fiscali",
         "prompt-optimizer": "Ottimizzazione prompt",
         "deep-research-validator": "Validazione ricerca",
         "comunicazione-professionale": "Comunicazione professionale",
@@ -601,6 +636,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
         r'<h4 data-i18n="module\.[^"]+\.title">([^<]+)</h4>', page
     )
     website_keys = {
+        "quesito-legale-fiscale": "module.question.title",
         "prompt-optimizer": "module.prompt.title",
         "deep-research-validator": "module.research.title",
         "comunicazione-professionale": "module.communication.title",
@@ -614,6 +650,7 @@ def test_lucia_marketplace_and_website_use_identical_canonical_names() -> None:
     for workflow in SHARED_ASSURANCE_WORKFLOWS | LAWYER_PROFILED_WORKFLOWS:
         assert cards[workflow]["display_name"] == vera_cards[workflow]["display_name"]
     assert directory_labels == [
+        canonical_labels["quesito-legale-fiscale"],
         canonical_labels["prompt-optimizer"],
         canonical_labels["deep-research-validator"],
         canonical_labels["apertura-pratica"],
@@ -635,6 +672,7 @@ def test_lucia_public_page_matches_vera_function_copy_in_every_language() -> Non
     )
 
     for key in (
+        "module.question.title",
         "module.prompt.title",
         "module.prompt",
         "module.research.title",
