@@ -62,6 +62,7 @@ _WINDOW_LEFT = 40
 _WINDOW_TOP = 40
 _WINDOW_WIDTH = 1200
 _WINDOW_HEIGHT = 800
+_MAX_TOP_LEVEL_WINDOWS = 10_000
 
 _ELEMENT_KEYS = {
     "event_type",
@@ -603,9 +604,52 @@ def _windows_top_level_chrome_windows() -> set[int]:
         error_code = ctypes.get_last_error()
         if error_code:
             raise OSError(error_code, "Impossibile enumerare le finestre di Windows")
+        user32.GetDesktopWindow.argtypes = []
+        user32.GetDesktopWindow.restype = wintypes.HWND
+        user32.FindWindowExW.argtypes = [
+            wintypes.HWND,
+            wintypes.HWND,
+            wintypes.LPCWSTR,
+            wintypes.LPCWSTR,
+        ]
+        user32.FindWindowExW.restype = wintypes.HWND
+        desktop = user32.GetDesktopWindow()
+        raw_desktop = getattr(desktop, "value", desktop)
+        if not raw_desktop:
+            raise RuntimeError("Windows non ha restituito il desktop interattivo")
+        previous = wintypes.HWND(0)
+        fallback_handles: set[int] = set()
+        seen_handles: set[int] = set()
+        for _window_index in range(_MAX_TOP_LEVEL_WINDOWS):
+            ctypes.set_last_error(0)
+            handle = user32.FindWindowExW(
+                wintypes.HWND(int(raw_desktop)),
+                previous,
+                None,
+                None,
+            )
+            raw_handle = getattr(handle, "value", handle)
+            if not raw_handle:
+                fallback_error = ctypes.get_last_error()
+                if fallback_error:
+                    raise OSError(
+                        fallback_error,
+                        "Impossibile cercare le finestre del desktop Windows",
+                    )
+                return fallback_handles
+            native_handle = int(raw_handle)
+            if native_handle in seen_handles:
+                raise RuntimeError(
+                    "Windows ha ripetuto una finestra durante la ricerca desktop"
+                )
+            seen_handles.add(native_handle)
+            class_name = ctypes.create_unicode_buffer(256)
+            if user32.GetClassNameW(handle, class_name, len(class_name)) > 0:
+                if class_name.value.startswith("Chrome_WidgetWin_"):
+                    fallback_handles.add(native_handle)
+            previous = wintypes.HWND(native_handle)
         raise RuntimeError(
-            "Windows ha interrotto l'enumerazione delle finestre senza un codice "
-            "di errore"
+            "Windows ha superato il limite di finestre durante la ricerca desktop"
         )
     return handles
 
