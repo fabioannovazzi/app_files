@@ -323,6 +323,99 @@ def test_present_browser_window_accepts_pointer_wrapped_native_window_handles(
     assert restored == [77]
 
 
+def test_present_browser_window_falls_back_when_enum_windows_has_no_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    restored: list[int] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            return None
+
+    class Session:
+        async def send(
+            self, command: str, _arguments: object | None = None
+        ) -> dict[str, int]:
+            if command == "Browser.getWindowForTarget":
+                return {"windowId": 41}
+            return {}
+
+        async def detach(self) -> None:
+            return None
+
+    class Context:
+        async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+    class NativeFunction:
+        def __init__(self, implementation: object) -> None:
+            self.implementation = implementation
+            self.argtypes: object | None = None
+            self.restype: object | None = None
+
+        def __call__(self, *args: object) -> object:
+            return self.implementation(*args)  # type: ignore[operator]
+
+    class PointerHandle:
+        def __init__(self, value: int | None) -> None:
+            self.value = value
+
+    def find_window(
+        _desktop: object,
+        previous: object,
+        _class_name: object,
+        _window_name: object,
+    ) -> PointerHandle:
+        previous_value = getattr(previous, "value", previous)
+        if not previous_value:
+            return PointerHandle(12)
+        if previous_value == 12:
+            return PointerHandle(77)
+        return PointerHandle(None)
+
+    def get_class_name(
+        handle: object,
+        class_name: object,
+        _length: object,
+    ) -> int:
+        raw_handle = getattr(handle, "value", handle)
+        class_name.value = (  # type: ignore[attr-defined]
+            "Chrome_WidgetWin_1" if raw_handle == 77 else "OtherWindow"
+        )
+        return len(class_name.value)  # type: ignore[attr-defined]
+
+    class User32:
+        EnumWindows = NativeFunction(lambda *_args: False)
+        GetClassNameW = NativeFunction(get_class_name)
+        GetDesktopWindow = NativeFunction(lambda: PointerHandle(1))
+        FindWindowExW = NativeFunction(find_window)
+
+    import ctypes
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(
+        ctypes, "WinDLL", lambda *_args, **_kwargs: User32(), raising=False
+    )
+    monkeypatch.setattr(
+        ctypes,
+        "WINFUNCTYPE",
+        lambda *_args, **_kwargs: lambda callback: callback,
+        raising=False,
+    )
+    monkeypatch.setattr(ctypes, "set_last_error", lambda _value: None, raising=False)
+    monkeypatch.setattr(ctypes, "get_last_error", lambda: 0, raising=False)
+    monkeypatch.setattr(
+        recorder,
+        "_restore_windows_chrome_window",
+        lambda handle: restored.append(handle) or True,
+    )
+
+    asyncio.run(recorder.present_browser_window(Context(), Page(), set()))
+
+    assert restored == [77]
+
+
 def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -453,7 +546,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.22"
+    assert manifest["version"] == "0.1.23"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(
