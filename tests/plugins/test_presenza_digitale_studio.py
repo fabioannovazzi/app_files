@@ -587,6 +587,60 @@ def test_record_site_brief_rejects_unknown_evidence_id(tmp_path: Path) -> None:
         )
 
 
+def test_record_site_brief_accepts_snapshot_paths_prepared_on_windows(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    workflow = _load_workflow_core()
+    source_path = tmp_path / "facts.txt"
+    source_path.write_text("Dottore commercialista", encoding="utf-8")
+    workspace = tmp_path / "workspace"
+    workflow.initialize_workspace(
+        workspace,
+        workspace_id="studio-example",
+        owner="Studio Esempio",
+        retention_owner="Studio Esempio",
+    )
+    intake_path = _write_json(
+        tmp_path / "intake.json", _intake(source_path=source_path)
+    )
+    original_relative_to = workflow.Path.relative_to
+
+    class WindowsRelativePath:
+        def __init__(self, relative: Path) -> None:
+            self.relative = relative
+
+        def __str__(self) -> str:
+            return "\\".join(self.relative.parts)
+
+        def as_posix(self) -> str:
+            return self.relative.as_posix()
+
+    def windows_relative_to(path: Path, other: Path) -> Path | WindowsRelativePath:
+        relative = original_relative_to(path, other)
+        if relative.parts[:1] == ("inputs",):
+            return WindowsRelativePath(relative)
+        return relative
+
+    with monkeypatch.context() as windows_paths:
+        windows_paths.setattr(workflow.Path, "relative_to", windows_relative_to)
+        run_dir = workflow.prepare_run(workspace, intake_path)
+
+    record_path = workflow.record_site_brief(
+        run_dir,
+        _write_json(tmp_path / "brief.json", _valid_brief()),
+        provider="test-provider",
+        model="test-model",
+        recorded_by="test-operator",
+    )
+
+    source_register = json.loads(
+        (run_dir / "source_register.json").read_text(encoding="utf-8")
+    )
+    assert source_register["sources"][0]["snapshot_path"] == "inputs/studio-facts.txt"
+    assert record_path.is_file()
+
+
 def test_validate_run_detects_site_change_after_release(tmp_path: Path) -> None:
     workflow, run_dir = _prepare_run(tmp_path)
     _accept_release_reviews(workflow, run_dir)
