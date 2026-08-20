@@ -574,18 +574,39 @@ def _windows_top_level_chrome_windows() -> set[int]:
     ]
     user32.GetClassNameW.restype = ctypes.c_int
     handles: set[int] = set()
+    callback_errors: list[OSError | OverflowError | TypeError | ValueError] = []
 
     @enum_callback
-    def collect(handle: int, _parameter: int) -> bool:
-        class_name = ctypes.create_unicode_buffer(256)
-        if user32.GetClassNameW(handle, class_name, len(class_name)) > 0:
-            if class_name.value.startswith("Chrome_WidgetWin_"):
-                handles.add(int(handle))
+    def collect(handle: Any, _parameter: int) -> bool:
+        try:
+            class_name = ctypes.create_unicode_buffer(256)
+            if user32.GetClassNameW(handle, class_name, len(class_name)) > 0:
+                if class_name.value.startswith("Chrome_WidgetWin_"):
+                    raw_handle = getattr(handle, "value", handle)
+                    if raw_handle is None:
+                        raise ValueError(
+                            "Windows ha restituito un handle finestra nullo"
+                        )
+                    handles.add(int(raw_handle))
+        except (OSError, OverflowError, TypeError, ValueError) as exc:
+            callback_errors.append(exc)
+            return False
         return True
 
-    if not user32.EnumWindows(collect, 0):
+    ctypes.set_last_error(0)
+    enumerated = user32.EnumWindows(collect, 0)
+    if callback_errors:
+        raise RuntimeError(
+            "Windows non ha restituito un handle finestra Chrome utilizzabile"
+        ) from callback_errors[0]
+    if not enumerated:
         error_code = ctypes.get_last_error()
-        raise OSError(error_code, "Impossibile enumerare le finestre di Windows")
+        if error_code:
+            raise OSError(error_code, "Impossibile enumerare le finestre di Windows")
+        raise RuntimeError(
+            "Windows ha interrotto l'enumerazione delle finestre senza un codice "
+            "di errore"
+        )
     return handles
 
 

@@ -246,6 +246,83 @@ def test_visible_chrome_session_explicitly_creates_headed_page_and_closes_state(
     ]
 
 
+def test_present_browser_window_accepts_pointer_wrapped_native_window_handles(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    restored: list[int] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            return None
+
+    class Session:
+        async def send(
+            self, command: str, _arguments: object | None = None
+        ) -> dict[str, int]:
+            if command == "Browser.getWindowForTarget":
+                return {"windowId": 41}
+            return {}
+
+        async def detach(self) -> None:
+            return None
+
+    class Context:
+        async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+    class NativeFunction:
+        def __init__(self, implementation: object) -> None:
+            self.implementation = implementation
+            self.argtypes: object | None = None
+            self.restype: object | None = None
+
+        def __call__(self, *args: object) -> object:
+            return self.implementation(*args)  # type: ignore[operator]
+
+    class PointerHandle:
+        value = 77
+
+    def enum_windows(callback: object, parameter: object) -> object:
+        return callback(PointerHandle(), parameter)  # type: ignore[operator]
+
+    def get_class_name(
+        _handle: object,
+        class_name: object,
+        _length: object,
+    ) -> int:
+        class_name.value = "Chrome_WidgetWin_1"  # type: ignore[attr-defined]
+        return len(class_name.value)  # type: ignore[attr-defined]
+
+    class User32:
+        EnumWindows = NativeFunction(enum_windows)
+        GetClassNameW = NativeFunction(get_class_name)
+
+    import ctypes
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(
+        ctypes, "WinDLL", lambda *_args, **_kwargs: User32(), raising=False
+    )
+    monkeypatch.setattr(
+        ctypes,
+        "WINFUNCTYPE",
+        lambda *_args, **_kwargs: lambda callback: callback,
+        raising=False,
+    )
+    monkeypatch.setattr(ctypes, "set_last_error", lambda _value: None, raising=False)
+    monkeypatch.setattr(ctypes, "get_last_error", lambda: 0, raising=False)
+    monkeypatch.setattr(
+        recorder,
+        "_restore_windows_chrome_window",
+        lambda handle: restored.append(handle) or True,
+    )
+
+    asyncio.run(recorder.present_browser_window(Context(), Page(), set()))
+
+    assert restored == [77]
+
+
 def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -376,7 +453,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.21"
+    assert manifest["version"] == "0.1.22"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(
