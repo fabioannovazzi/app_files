@@ -3,6 +3,10 @@
   "workflow": "advisory-case-director",
   "display_name": "Direct an advisory case",
   "governed_paths": [
+    "scripts/advisor_case_core.py",
+    "scripts/commit_advisory_workpaper.py",
+    "scripts/record_analysis_contribution.py",
+    "scripts/verify_advisory_html_delivery.py",
     "skills/advisory-case-director/SKILL.md",
     "skills/advisory-case-director/agents/openai.yaml",
     "skills/advisory-case-director/references/operating-model.md"
@@ -13,7 +17,7 @@
       {
         "id": "complete-case-state",
         "purpose": "Understand the current answer and direct the advisory case",
-        "content": "Assignment contract, case manifest and mandate, real client and stakeholder identities, source materials, interviews, financial or commercial data, material registry, evidence and claim registers, judgement log, open questions, case issues, case brief, current and prior advisory workpapers, and working deliverables"
+        "content": "Assignment contract, case manifest and mandate, real client and stakeholder identities, source materials, interviews, financial or commercial data, material registry, evidence and claim registers, judgement log, open questions, case issues, case brief, current and prior advisory workpapers, the workpaper checkpoint, and working deliverables"
       },
       {
         "id": "case-direction-judgement",
@@ -68,13 +72,13 @@
   "security_controls": [
     {
       "id": "cumulative-case-history",
-      "control": "Preserve prior evidence, claim states, partner judgement, and materially different workpaper versions; do not replace the cumulative case record with only the newest contribution."
+      "control": "Preserve prior evidence, claim states, partner judgement, and materially different workpaper versions; bind the current workpaper checkpoint to exact bytes and current semantic lineage; do not replace the cumulative case record with only the newest contribution."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-19",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d6684693d4c42c7e83eaaf800b33062b41acbe6adeb9dbfec73c7a029bdd2739"
+    "source_fingerprint": "949f17832874c9daf3d0c155c724cede7045455ac148890762af92eebbfec79c"
   }
 }

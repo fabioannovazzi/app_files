@@ -230,8 +230,10 @@ weaker substitute. A check marked `passed` must reference the workflow-owned
 result artifact: Claim Basis Map audit, both HTML static and browser-QA reports,
 Reporting Engine 0.2 render manifest, or Deck Correction completion record.
 Packaging resolves the paths relative to the advisory contract, verifies their
-bytes, and consumes only the owning workflow's explicit pass/fail fields. A
-generic file containing `{"status":"passed"}` is not an authoritative result.
+bytes, verifies that HTML static and browser-QA results name the exact prepared
+deliverable SHA-256, and consumes only the owning workflow's explicit pass/fail
+fields. A generic file containing `{"status":"passed"}` is not an authoritative
+result.
 
 ## Workflow
 
@@ -336,12 +338,27 @@ python scripts/managed_python_runtime.py run \
    --corrected-review <corrected-validation>/advisory_validation_review_draft.json]
 ```
 
-10. Read `validation_audit.json` and `recheck_tasks.json`. Its `record_complete` status proves only
-   declared shape, original and corrected-artifact hash binding, explicit
-   approval-state consistency, cross-field consistency, existence and hashes of
-   referenced format-check artifacts, and original preservation. Use
-   `delivery_readiness.status` and the semantic review to state whether delivery
-   is ready, ready with residual uncertainty, not ready, or blocked.
+10. Read `validation_audit.json` and `recheck_tasks.json`. Its `record_complete`
+   status proves only declared shape, original and corrected-artifact hash
+   binding, explicit approval-state consistency, cross-field consistency,
+   existence and hashes of referenced format-check artifacts, and original
+   preservation. Use `delivery_readiness.status` and the semantic review to
+   state whether delivery is ready, ready with residual uncertainty, not ready,
+   or blocked.
+11. For a generation-time Clara case HTML deck, run the final mechanical case
+   gate after packaging:
+
+```bash
+python scripts/managed_python_runtime.py run \
+  scripts/verify_advisory_html_delivery.py \
+  <case-dir> <final-index.html> <work-folder>/validation/validation_audit.json \
+  --output <work-folder>/advisory_html_delivery_receipt.json
+```
+
+   A `ready` receipt is required before the exact HTML is described as ready to
+   deliver or publish. It binds the current workpaper checkpoint, registers,
+   hash-bound direct claim appearances, HTML checks, and this model-led review;
+   it does not add a second semantic assessment.
 
 ## Claude and Cowork
 

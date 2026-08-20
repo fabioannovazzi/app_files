@@ -46,7 +46,9 @@ def test_case_director_owns_semantic_direction_without_a_universal_schema() -> N
 def test_case_director_uses_markdown_spine_and_structured_cumulative_lineage() -> None:
     text = _normalized(_skill() + "\n" + _operating_model())
 
-    assert "`advisory_workpaper.md` is the current human-readable semantic spine" in text
+    assert (
+        "`advisory_workpaper.md` is the current human-readable semantic spine" in text
+    )
     assert "required meanings, not required headings" in text
     for filename in (
         "case_manifest.json",
@@ -76,8 +78,11 @@ def test_case_director_integrates_evidence_before_revising_the_story() -> None:
     )
     assert "register the artifact or source" in operating_model
     assert "preserve claims that have been superseded or weakened" in operating_model
-    assert "archive and update the workpaper only after" in operating_model
+    assert "commit the staged workpaper" in operating_model
     assert "silently drops prior evidence" in skill
+    assert "commit_advisory_workpaper.py" in skill
+    assert "advisory_workpaper_checkpoint.json" in operating_model
+    assert "Do not edit the canonical `advisory_workpaper.md` directly" in skill
 
 
 def test_case_director_binds_deep_research_to_one_decision_question() -> None:
@@ -107,6 +112,7 @@ def test_case_director_treats_specialists_and_decks_as_bounded_contributions() -
     assert "Do not rebuild the deliverable after every research action" in skill
     assert "Semantic feedback always returns to the spine" in operating_model
     assert "not separate inner and outer loops" in operating_model
+    assert "verify_advisory_html_delivery.py" in operating_model
 
 
 def test_case_director_routing_and_privacy_contract_are_registered() -> None:
@@ -117,9 +123,9 @@ def test_case_director_routing_and_privacy_contract_are_registered() -> None:
         item["id"]: item.get("expected_skill") for item in fixture["should_trigger"]
     }
     privacy = json.loads(
-        (CLARA_ROOT / "privacy" / "workflows" / "advisory-case-director.json").read_text(
-            encoding="utf-8"
-        )
+        (
+            CLARA_ROOT / "privacy" / "workflows" / "advisory-case-director.json"
+        ).read_text(encoding="utf-8")
     )
 
     assert routes["advisory-case-current-answer-and-next-work"] == (
@@ -140,9 +146,7 @@ def test_case_director_routing_and_privacy_contract_are_registered() -> None:
 
 def test_case_director_semantic_evals_cover_the_learned_failure_modes() -> None:
     suite = json.loads(
-        (SKILL_ROOT / "evals" / "case_direction_cases.json").read_text(
-            encoding="utf-8"
-        )
+        (SKILL_ROOT / "evals" / "case_direction_cases.json").read_text(encoding="utf-8")
     )
     cases = {case["id"]: case for case in suite["cases"]}
 
@@ -156,27 +160,28 @@ def test_case_director_semantic_evals_cover_the_learned_failure_modes() -> None:
         "semantic-deck-feedback-round-trip",
         "bounded-data-contribution",
     }
-    assert "target captures that pool" in cases[
-        "initial-market-answer-without-target-data"
-    ]["expected_current_answer"]
-    assert "weaken" in cases["new-evidence-weakens-single-cause"][
-        "expected_effect"
-    ].lower()
-    assert "workpaper first" in cases["semantic-deck-feedback-round-trip"][
-        "expected_effect"
-    ]
+    assert (
+        "target captures that pool"
+        in cases["initial-market-answer-without-target-data"]["expected_current_answer"]
+    )
+    assert (
+        "weaken"
+        in cases["new-evidence-weakens-single-cause"]["expected_effect"].lower()
+    )
+    assert (
+        "workpaper first"
+        in cases["semantic-deck-feedback-round-trip"]["expected_effect"]
+    )
     assert "owner of the overall case thesis" in " ".join(
         cases["bounded-data-contribution"]["must_not"]
     )
 
 
 def test_planner_hands_durable_case_to_case_director_once() -> None:
-    planner = (
-        CLARA_ROOT / "skills" / "advisory-brief-planner" / "SKILL.md"
-    ).read_text(encoding="utf-8")
-    router = (CLARA_ROOT / "skills" / "clara" / "SKILL.md").read_text(
+    planner = (CLARA_ROOT / "skills" / "advisory-brief-planner" / "SKILL.md").read_text(
         encoding="utf-8"
     )
+    router = (CLARA_ROOT / "skills" / "clara" / "SKILL.md").read_text(encoding="utf-8")
 
     assert "handoff normally goes to `clara:advisory-case-director`" in planner
     assert "It is not rerun for each case iteration" in _skill()

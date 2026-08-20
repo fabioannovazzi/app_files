@@ -241,6 +241,12 @@ There is no PPTX-style hash approval helper for HTML. Still show the interpreted
 change ledger before a materially ambiguous or broad revision and keep the
 goal-level checkpoint in chat.
 
+When the HTML deck belongs to a Clara advisory case, rebuild with `--case-dir`,
+rerun the model-led advisory validator for the corrected bytes, and rerun
+`verify_advisory_html_delivery.py`. The prior delivery receipt is stale by
+definition; unchanged claims gain a new exact appearance, while changed claims
+must already have been recorded as new or superseding claims upstream.
+
 ## Codex-Native Run UX
 
 Use a short checklist covering intake, transcript/evidence readiness,

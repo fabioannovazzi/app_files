@@ -796,3 +796,48 @@ def test_skill_assets_are_generic_and_match_clara_quality_gate() -> None:
         "compare_html_deck_revision.py",
     ):
         assert required in skill
+
+
+def test_case_bound_build_rejects_a_superseded_advisory_claim(
+    tmp_path: Path,
+) -> None:
+    build = load_build_module()
+    case_dir = tmp_path / "case"
+    case_dir.mkdir()
+    (case_dir / "advisory_claim_register.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "1.0",
+                "claims": [
+                    {
+                        "id": "claim-decision",
+                        "statement": "The next move needs explicit governance.",
+                        "state": "superseded",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    deck = tmp_path / "index.html"
+    deck.write_text("<html></html>", encoding="utf-8")
+    ledger = {
+        "slides": [
+            {
+                "slide_id": "decision",
+                "claims": [
+                    {
+                        "id": "claim-decision",
+                        "statement": "The next move needs explicit governance.",
+                    }
+                ],
+            }
+        ]
+    }
+
+    with pytest.raises(ValueError, match="is not active"):
+        build.bind_advisory_appearances(
+            case_dir=case_dir,
+            ledger=ledger,
+            deck_path=deck,
+        )

@@ -70,7 +70,7 @@ The local smoke-test archive is:
 
 ## Release candidate
 
-- **Version:** 0.1.139
+- **Version:** 0.1.140
 - **Files:** 856
 - **Bytes:** 4,440,276
 - **SHA-256:** `03348df76f213aadfac14eca41e5f6b59a7c352c74e79336b2e474ddbaffaecd`

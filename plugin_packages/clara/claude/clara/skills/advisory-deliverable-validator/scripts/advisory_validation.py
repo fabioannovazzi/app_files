@@ -669,7 +669,7 @@ def _resolve_artifact_ref(reference: str, base_dir: Path) -> Path:
 
 def _authoritative_format_result(
     workflow: str, payload: Any
-) -> tuple[str, bool] | None:
+) -> tuple[str, bool, str | None] | None:
     """Read only workflow-owned mechanical result shapes.
 
     This is deterministic because it verifies explicit status fields emitted by
@@ -687,17 +687,28 @@ def _authoritative_format_result(
         runner = payload.get("runner")
         render_proof = payload.get("render_proof")
         if not isinstance(runner, dict) or not isinstance(render_proof, dict):
-            return "reporting_engine_render", False
+            return "reporting_engine_render", False, None
         return (
             "reporting_engine_render",
             runner.get("returncode") == 0
             and render_proof.get("status") in {"rendered", "not_required_data_only"},
+            None,
         )
     if workflow == "clara:html-deck":
+        input_record = payload.get("input")
+        input_sha256 = (
+            str(input_record.get("sha256"))
+            if isinstance(input_record, dict) and input_record.get("sha256")
+            else None
+        )
         if "browser" in payload and "viewports" in payload:
-            return "html_browser_qa", payload.get("result") == "pass"
+            return "html_browser_qa", payload.get("result") == "pass", input_sha256
         if "deck" in payload and "checks" in payload and "summary" in payload:
-            return "html_static_validation", payload.get("result") == "pass"
+            return (
+                "html_static_validation",
+                payload.get("result") == "pass",
+                input_sha256,
+            )
         return None
     if workflow == "clara:deck-correction":
         if payload.get("source") == "clara_deck_revision_output_review_completion":
@@ -707,17 +718,22 @@ def _authoritative_format_result(
                 isinstance(summary, dict)
                 and summary.get("status") == "complete"
                 and summary.get("final_delivery_allowed") is True,
+                None,
             )
         return None
     if workflow == "clara:claim-basis-map":
         if payload.get("source") != "clara_claim_basis_map_audit":
             return None
-        return "claim_basis_map_audit", payload.get("result") == "pass"
+        return "claim_basis_map_audit", payload.get("result") == "pass", None
     return None
 
 
 def _audit_format_check_artifacts(
-    review: dict[str, Any], contract: dict[str, Any], base_dir: Path
+    review: dict[str, Any],
+    contract: dict[str, Any],
+    base_dir: Path,
+    *,
+    deliverable_sha256: str,
 ) -> tuple[list[dict[str, Any]], list[str]]:
     """Verify local artifact identity without judging a check's semantics."""
 
@@ -767,12 +783,22 @@ def _audit_format_check_artifacts(
                 artifact_payload = None
             result = _authoritative_format_result(str(workflow), artifact_payload)
             if result is not None:
-                result_kind, passed = result
+                result_kind, passed, input_sha256 = result
                 authoritative_results[result_kind] = passed
                 metadata[-1]["authoritative_result"] = {
                     "kind": result_kind,
                     "passed": passed,
                 }
+                if input_sha256 is not None:
+                    metadata[-1]["authoritative_result"]["input_sha256"] = input_sha256
+                if (
+                    result_kind in {"html_static_validation", "html_browser_qa"}
+                    and input_sha256 != deliverable_sha256
+                ):
+                    errors.append(
+                        "passed HTML Deck result is not bound to the prepared "
+                        f"deliverable: {result_kind}"
+                    )
         declared = declared_by_workflow.get(workflow)
         if check.get("status") == "passed":
             required_result_kinds = {
@@ -2264,6 +2290,7 @@ def _audit_corrected_validation(
         review,
         contract,
         contract_path.parent,
+        deliverable_sha256=corrected_hash,
     )
     errors.extend(f"corrected review: {error}" for error in corrected_format_errors)
     corrected_correction = review.get("correction")
@@ -2382,6 +2409,7 @@ def package_validation(
             review,
             contract,
             advisory_contract_path.parent,
+            deliverable_sha256=str(expected_original_hash),
         )
         errors.extend(artifact_errors)
 
@@ -2470,10 +2498,47 @@ def package_validation(
     if not isinstance(delivery_readiness, dict):
         delivery_readiness = {}
     declared_readiness = delivery_readiness.get("status", "blocked")
+    lineage_review = review.get("lineage_review", {})
+    if not isinstance(lineage_review, dict):
+        lineage_review = {}
+    evidence_lineage = lineage_inventory.get("evidence_register")
+    claim_lineage = lineage_inventory.get("claim_register")
     audit = {
-        "schema_version": "1.0",
+        "schema_version": "1.1",
         "record_complete": not errors,
         "errors": errors,
+        "deliverable": {
+            "path": str(original_path.resolve()),
+            "sha256": expected_original_hash,
+            "byte_count": (
+                original_path.stat().st_size if original_path.is_file() else 0
+            ),
+        },
+        "lineage": {
+            "provenance_mode": provenance_mode,
+            "evidence_register": (
+                {
+                    "source_path": evidence_lineage.get("source_path"),
+                    "sha256": evidence_lineage.get("sha256"),
+                }
+                if isinstance(evidence_lineage, dict)
+                else None
+            ),
+            "claim_register": (
+                {
+                    "source_path": claim_lineage.get("source_path"),
+                    "sha256": claim_lineage.get("sha256"),
+                }
+                if isinstance(claim_lineage, dict)
+                else None
+            ),
+            "reviewed_claim_ids": lineage_review.get("reviewed_claim_ids", []),
+            "assessed_claim_ids": [
+                str(item.get("claim_id"))
+                for item in lineage_review.get("chain_assessments", [])
+                if isinstance(item, dict) and item.get("claim_id")
+            ],
+        },
         "checks": {
             "advisory_contract_shape": not validate_advisory_contract(contract),
             "contract_hash_bound": review.get("advisory_contract_sha256")

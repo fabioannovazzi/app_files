@@ -6,7 +6,8 @@
     "skills/html-deck/SKILL.md",
     "skills/html-deck/assets",
     "skills/html-deck/references",
-    "skills/html-deck/scripts"
+    "skills/html-deck/scripts",
+    "scripts/verify_advisory_html_delivery.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -19,7 +20,7 @@
       {
         "id": "deck-work",
         "purpose": "Plan, compose, revise, and review the presentation",
-        "content": "Storyline, claims, stable claim and evidence receipt identifiers, dependency edges, evidence bundle and binding records, source hashes, resolved values, slide titles and text, speaker notes, layout choices, content and evidence ledgers, exact hash-bound output appearances written to the shared advisory claim register, HTML/CSS, screenshots, and QA findings"
+        "content": "Storyline, claims, stable claim and evidence receipt identifiers, dependency edges, evidence bundle and binding records, source hashes, resolved values, slide titles and text, speaker notes, layout choices, content and evidence ledgers, exact hash-bound output appearances written to the shared advisory claim register, workpaper and delivery checkpoints, HTML/CSS, screenshots, and QA findings"
       }
     ]
   },
@@ -54,6 +55,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cdb11ff85e55a31882c42d6b42274d1e625bad6c077b240bf0c6f67f5c837cbb"
+    "source_fingerprint": "667bf404676c6a56802c2ec9e173d027504c1715de65d6ed446307b744e2499e"
   }
 }
