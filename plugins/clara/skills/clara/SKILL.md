@@ -497,6 +497,20 @@ and timestamp; the model remains responsible for the semantic location. Use
 `capture_advisory_web_evidence.py` for an explicitly selected public page; do
 not turn every URL into an automatic fetch.
 
+After the contribution is committed, stage the model-authored workpaper outside
+the canonical path and commit it against the model-selected current claims:
+
+```bash
+python scripts/commit_advisory_workpaper.py \
+  <case-dir> <staged-advisory-workpaper.md> \
+  --claim-id <claim-id> [--claim-id <claim-id> ...] \
+  --change-summary "<what changed in the case direction>"
+```
+
+This writes `advisory_workpaper_checkpoint.json` and preserves a changed prior
+workpaper under `history/`. It validates declared mechanics only; the model
+remains responsible for the prose, the selected claim IDs, and completeness.
+
 When a downloaded or local file must first be made durable inside the case
 workspace, use the copy helper before indexing or handoff:
 
@@ -1293,6 +1307,10 @@ The case workspace owns durable JSON files and derived working artifacts:
 - `advisory_workpaper.md`: model-authored current case direction, reasoning, option
   evaluation, evidence weighing, contradictions, implementation conditions, and
   Clara defaults. This is a working artifact, not the polished client document.
+- `advisory_workpaper_checkpoint.json`: exact workpaper bytes, prior-version
+  archive reference, current evidence hash, semantic claim-register hash, and
+  the model-selected claim/evidence closure used by the workpaper. It proves
+  mechanical currency, not semantic completeness or correctness.
 - `judgement_checkpoint.md`: compressed advisor judgement requests with Clara
   defaults. Default behavior is to continue without waiting unless the user
   explicitly says the advisor will respond before delivery.

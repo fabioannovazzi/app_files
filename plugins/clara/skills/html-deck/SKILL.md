@@ -162,10 +162,13 @@ embeds the publication-safe content and evidence ledgers, computes SHA-256, writ
 creates a canonical ZIP. Errors block delivery. Rebuild ZIPs from work sources;
 never edit generated packages.
 
-When `--case-dir` is supplied, every content-ledger claim must already exist in
-the shared advisory claim register with the same statement. After the
-content-addressed standalone HTML is written, the builder records its exact hash
-and claim locator as an output appearance. It does not infer claims from HTML.
+For a deck that belongs to a Clara advisory case, `--case-dir` is mandatory.
+Every content-ledger claim must already exist as an active claim in the shared
+advisory claim register with the same statement. After the content-addressed
+standalone HTML is written, the builder records its exact hash and claim locator
+as an output appearance. It does not infer claims from HTML. The option remains
+optional only for a standalone talk deck that does not belong to an advisory
+case.
 
 Legacy v1 quantitative content fails by default. The
 `--allow-unverified-quantitative-content` flag exists only for explicit
@@ -239,6 +242,22 @@ slide-local provenance, declared global resources, order, IDs, and actual
 target changes. It applies only to Clara stage decks/work folders. After a pass,
 build and browser-QA the revised deck exactly as above.
 
+For a case-bound deck, HTML checks are not the final advisory gate. After the
+model-led `clara:advisory-deliverable-validator` package is complete for the
+exact final HTML, write the delivery receipt:
+
+```bash
+python scripts/verify_advisory_html_delivery.py \
+  <case-dir> <64-hex-slug>/index.html \
+  <project-output-folder>/validation/validation_audit.json \
+  --output <project-output-folder>/advisory_html_delivery_receipt.json
+```
+
+The receipt fails closed unless the current workpaper checkpoint and registers,
+exact deck appearances, static report, browser-QA report, and advisory validator
+audit all refer to the same current bytes. It does not judge support or
+recommendation quality.
+
 ## Codex-Native Run UX
 
 Before write-heavy work, show a compact Run Intake table with sources, audience,
@@ -263,6 +282,7 @@ Return an Artifact Card with:
 - for quantitative work, the sealed evidence bundle, resolved plan/ledger, and
   `evidence-ledger.json`;
 - static validation and browser-QA reports;
+- for a case-bound deck, the `advisory_html_delivery_receipt.json` ready result;
 - screenshot index and print preview;
 - revision inventory/map/comparison when revision mode was used;
 - slide count and source materials used;
@@ -273,7 +293,9 @@ this deck? Tell Clara: ‘Record feedback on this deck.’”** When the user in
 it, route to `deck-correction`; do not ask them to open the hosted capture URL or
 import its download manually.
 
-State that the deck is ready to publish, not already published, unless an
-authorized publishing step actually occurred. Create `codex_run_review.md` only
-when a run is blocked, a fallback was accepted, or a repeated failure needs a
-local handoff note.
+For a case-bound deck, do not state that it is ready to publish or deliver
+without a `ready` delivery receipt for the exact final bytes. State that the
+deck is ready to publish, not already published, unless an authorized
+publishing step actually occurred. Create `codex_run_review.md` only when a run
+is blocked, a fallback was accepted, or a repeated failure needs a local
+handoff note.

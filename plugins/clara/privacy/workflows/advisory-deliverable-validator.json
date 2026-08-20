@@ -9,10 +9,12 @@
     "scripts/advisor_case_core.py",
     "scripts/advisory_evidence_lineage.py",
     "scripts/capture_advisory_web_evidence.py",
+    "scripts/commit_advisory_workpaper.py",
     "scripts/finalize_hosted_transcript.py",
     "scripts/integrate_transcript_review.py",
     "scripts/record_analysis_contribution.py",
     "scripts/record_reporting_contribution.py",
+    "scripts/verify_advisory_html_delivery.py",
     "skills/advisory-deliverable-validator/SKILL.md",
     "skills/advisory-deliverable-validator/evals",
     "skills/advisory-deliverable-validator/references",
@@ -31,7 +33,7 @@
       {
         "id": "format-check-and-review-artifacts",
         "purpose": "Compose the advisory review with authoritative Clara format-specific checks and prepare any correction",
-        "content": "Claim Basis Map audit records, HTML deck plans and ledgers, static and browser-QA reports, Reporting Engine semantic/calculation/render artifacts, Deck Correction completion records, referenced artifact paths and hashes, one model-authored assessment per bounded coverage unit, model-led findings, correction drafts, the corrected artifact's second preparation inventory and second review, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, and delivery-readiness assessment"
+        "content": "Claim Basis Map audit records, HTML deck plans and ledgers, static and browser-QA reports bound to the reviewed deliverable bytes, Reporting Engine semantic/calculation/render artifacts, Deck Correction completion records, referenced artifact paths and hashes, one model-authored assessment per bounded coverage unit, model-led findings, correction drafts, the corrected artifact's second preparation inventory and second review, explicit professional-judgement and correction approval records including approver and evidence references, residual uncertainties, professional-review items, workpaper checkpoint, and delivery-readiness receipt"
       },
       {
         "id": "advisory-claim-and-evidence-lineage",
@@ -79,13 +81,13 @@
   "security_controls": [
     {
       "id": "lineage-artifact-binding",
-      "control": "Evidence artifacts, lineage inventories, the deliverable, contract and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references and dependency closure without making semantic support decisions."
+      "control": "Evidence artifacts, lineage inventories, the deliverable, contract, HTML static and browser-QA results, workpaper checkpoint, and corrected output are bound by local paths, byte counts and SHA-256; deterministic checks validate references and dependency closure without making semantic support decisions."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-18",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "7f60586712a75074323523bb8aa089909daa61d43a1c3b9e6309a2093c7a6ea6"
+    "source_fingerprint": "0f01d3a6251939f089a94269fadcb5111e7811c8c027bfe1246e8dd3854b9884"
   }
 }

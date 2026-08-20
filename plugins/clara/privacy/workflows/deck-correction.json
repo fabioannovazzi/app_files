@@ -15,7 +15,8 @@
     "scripts/approve_deck_revision_plan.py",
     "scripts/apply_deck_revision_plan.py",
     "scripts/verify_deck_revision_output.py",
-    "scripts/complete_deck_revision_output_review.py"
+    "scripts/complete_deck_revision_output_review.py",
+    "scripts/verify_advisory_html_delivery.py"
   ],
   "codex_context": {
     "policy": "real_professional_data_may_enter_codex_context",
@@ -76,6 +77,6 @@
     "reviewed_at": "2026-07-22",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5d320c215a966c0e08d24c997f3633ac124fc1cd1e21ac482834f59ac19fce68"
+    "source_fingerprint": "c331e7ae9426aaff5584ac2bd4f363dbc499b8ab4743e937c3b4a34cf4b4c3d0"
   }
 }

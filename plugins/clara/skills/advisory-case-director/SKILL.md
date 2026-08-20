@@ -172,6 +172,24 @@ position, or the current answer no longer identifies useful next work.
    stated default unless the user asks Clara to wait or the choice changes
    scope, authority, or external action.
 
+In a durable Codex workspace, commit each model-authored workpaper revision
+through the controlled checkpoint after the contribution has been recorded:
+
+```bash
+python scripts/record_analysis_contribution.py \
+  <case-dir> <model-authored-analysis-contribution.json>
+python scripts/commit_advisory_workpaper.py \
+  <case-dir> <staged-advisory-workpaper.md> \
+  --claim-id <claim-id> [--claim-id <claim-id> ...] \
+  --change-summary "<what changed in the case direction>"
+```
+
+The active model still authors the prose and selects the claim IDs. The helper
+only validates those IDs, resolves their declared dependency/evidence closure,
+preserves the prior workpaper, and binds the new bytes to current claim meaning
+and evidence. Do not edit the canonical `advisory_workpaper.md` directly and
+then manufacture a checkpoint afterward.
+
 ## External research branch
 
 Use external or deep research when a material question can be informed without
@@ -252,10 +270,10 @@ milestone outputs governed by the working-deliverable policy, not automatic
 scaffolding.
 
 End a durable iteration with an Artifact Card listing the current workpaper,
-newly registered material and claim IDs, changed question states, preserved
-history path when applicable, current-answer effect, and next action. When a
-compact audit index is useful, write `codex_run_review.md` beside the case
-artifacts. Do not edit generated ZIPs during a case run.
+its checkpoint, newly registered material and claim IDs, changed question
+states, preserved history path when applicable, current-answer effect, and next
+action. When a compact audit index is useful, write `codex_run_review.md` beside
+the case artifacts. Do not edit generated ZIPs during a case run.
 
 ## Completion and handoff
 
@@ -268,7 +286,10 @@ The case is ready for a delivery milestone only when the workpaper and
 structured registers support the intended message and all material residual
 uncertainty is visible. Route the completed deliverable to
 `clara:advisory-deliverable-validator`; that validator reviews the output but
-does not replace this workflow's case direction.
+does not replace this workflow's case direction. For a case-bound HTML deck,
+delivery or publication readiness additionally requires a `ready` receipt from
+`scripts/verify_advisory_html_delivery.py` for the exact final HTML and current
+case state.
 
 ## Data boundary
 

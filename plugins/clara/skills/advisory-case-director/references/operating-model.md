@@ -32,6 +32,7 @@ orchestrators.
 | `case_brief.md` | Derived resume and orientation view | Mechanically rendered | The authoritative case direction |
 | `advisory_evidence_map.md` | Readable navigation across claim lineage | Mechanically rendered | The full analytical story |
 | `advisory_workpaper.md` | Current answer and case-specific semantic spine | Model-authored | The evidence database or polished client deck |
+| `advisory_workpaper_checkpoint.json` | Exact workpaper bytes and model-declared current claim/evidence closure | Mechanically committed from model-authored inputs | Proof that the prose is semantically complete or correct |
 | `history/advisory_workpaper.<timestamp>.md` | Prior meaningful versions of the spine | Mechanical copy of model-authored work | A second current workpaper |
 | deck, memo, or brief | Milestone view for a specific audience and decision | Specialist-authored from the spine | The memory or controller of the case |
 
@@ -44,8 +45,11 @@ When no workpaper exists:
 2. state a provisional answer even if the answer is conditional;
 3. invent the smallest analytical structure that makes the reasoning visible;
 4. identify the few unknowns that could change the decision;
-5. propose the first bounded work branch; and
-6. write the workpaper, marking assumptions and target-data limits explicitly.
+5. propose the first bounded work branch;
+6. stage the model-authored workpaper, marking assumptions and target-data
+   limits explicitly; and
+7. commit it through `commit_advisory_workpaper.py` against the model-selected
+   current claim IDs.
 
 Do not start by populating a generic industry framework. Start from the
 decision and the evidence already available.
@@ -71,7 +75,9 @@ For each returned contribution:
    their history;
 6. update related open questions and optional issue groupings;
 7. decide the contribution's effect on the current answer; and
-8. archive and update the workpaper only after those lineage updates.
+8. commit the staged workpaper through `commit_advisory_workpaper.py` only after
+   those lineage updates; the helper archives the prior version and writes the
+   current checkpoint.
 
 A report can answer its bounded research question while opening a more
 decision-relevant target question. That is a valid result, not a failure.
@@ -120,6 +126,13 @@ This is one case-direction cycle with milestone outputs, not separate inner and
 outer loops. The deliverable may be created early to make the answer testable.
 Semantic feedback always returns to the spine. Pure design or wording feedback
 does not need to reopen the case thesis.
+
+For a case-bound HTML milestone, the final handoff adds one mechanical closure
+step after HTML static/browser QA and the model-led advisory validator:
+`verify_advisory_html_delivery.py` binds the exact HTML bytes to the current
+workpaper checkpoint, current evidence and claim registers, reviewed direct
+claims, and unchanged format-check artifacts. It does not decide whether the
+claims are true or the recommendation is good.
 
 ## Partner checkpoint
 

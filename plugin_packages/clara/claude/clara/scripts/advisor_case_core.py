@@ -38,6 +38,8 @@ LOGGER = logging.getLogger(__name__)
 
 __all__ = [
     "CASE_BRIEF_FILENAME",
+    "ADVISORY_WORKPAPER_CHECKPOINT_FILENAME",
+    "ADVISORY_WORKPAPER_FILENAME",
     "CLARA_KICKOFF_PREPARATION_FILENAME",
     "CLARA_KICKOFF_DECK_FILENAME",
     "CLARA_MANDATE_FILENAME",
@@ -74,6 +76,7 @@ __all__ = [
     "build_decision_pack",
     "build_inclusion_review",
     "copy_case_file",
+    "commit_advisory_workpaper",
     "delete_materials",
     "discover_material_paths",
     "export_case_update",
@@ -186,6 +189,8 @@ CASE_FILES = {
     "clara_mandate": "clara_mandate.json",
 }
 CASE_BRIEF_FILENAME = "case_brief.md"
+ADVISORY_WORKPAPER_FILENAME = "advisory_workpaper.md"
+ADVISORY_WORKPAPER_CHECKPOINT_FILENAME = "advisory_workpaper_checkpoint.json"
 CLARA_MANDATE_FILENAME = "clara_mandate.json"
 CLARA_KICKOFF_PREPARATION_FILENAME = "clara_kickoff_preparation.md"
 CLARA_KICKOFF_DECK_FILENAME = "clara_kickoff_deck.html"
@@ -2242,6 +2247,219 @@ def record_analysis_contribution(
         "claims_added": claims_added,
         "judgement_entries": added_judgements,
     }
+
+
+def _semantic_claim_register_sha256(payload: Mapping[str, Any]) -> str:
+    """Hash claim meaning while excluding output appearances.
+
+    Exact output appearances are added after a workpaper is committed. Excluding
+    only that field keeps the checkpoint current across deck builds while every
+    claim, dependency, state, limitation, and supersession change invalidates it.
+    """
+
+    semantic_payload = json.loads(json.dumps(payload))
+    claims = semantic_payload.get("claims", [])
+    if isinstance(claims, list):
+        for claim in claims:
+            if isinstance(claim, dict):
+                claim["appearances"] = []
+    canonical = json.dumps(
+        semantic_payload,
+        ensure_ascii=True,
+        separators=(",", ":"),
+        sort_keys=True,
+    ).encode("utf-8")
+    return sha256(canonical).hexdigest()
+
+
+def _claim_and_evidence_closure(
+    claim_by_id: Mapping[str, Mapping[str, Any]],
+    evidence_by_id: Mapping[str, Mapping[str, Any]],
+    selected_claim_ids: Sequence[str],
+) -> tuple[list[str], list[str]]:
+    """Resolve declared claim dependencies and evidence history mechanically."""
+
+    claim_ids = _dedupe_preserve_order(selected_claim_ids)
+    pending_claims = list(claim_ids)
+    while pending_claims:
+        claim_id = pending_claims.pop(0)
+        dependency = claim_by_id[claim_id].get("dependency", {})
+        dependencies = (
+            dependency.get("claim_ids", []) if isinstance(dependency, dict) else []
+        )
+        for dependency_id in dependencies:
+            normalized = str(dependency_id).strip()
+            if normalized and normalized not in claim_ids:
+                claim_ids.append(normalized)
+                pending_claims.append(normalized)
+
+    evidence_ids: list[str] = []
+    for claim_id in claim_ids:
+        claim = claim_by_id[claim_id]
+        for link in claim.get("evidence_links", []):
+            if not isinstance(link, dict):
+                continue
+            evidence_id = str(link.get("evidence_id", "")).strip()
+            if evidence_id and evidence_id not in evidence_ids:
+                evidence_ids.append(evidence_id)
+        dependency = claim.get("dependency", {})
+        if isinstance(dependency, dict):
+            calculation_id = str(dependency.get("calculation_evidence_id", "")).strip()
+            if calculation_id and calculation_id not in evidence_ids:
+                evidence_ids.append(calculation_id)
+
+    pending_evidence = list(evidence_ids)
+    while pending_evidence:
+        evidence_id = pending_evidence.pop(0)
+        receipt = evidence_by_id[evidence_id]
+        for field in ("rechecks_evidence_id", "supersedes_evidence_id"):
+            referenced_id = str(receipt.get(field, "")).strip()
+            if referenced_id and referenced_id not in evidence_ids:
+                evidence_ids.append(referenced_id)
+                pending_evidence.append(referenced_id)
+    return claim_ids, evidence_ids
+
+
+def commit_advisory_workpaper(
+    case_dir: Path,
+    authored_workpaper: Path,
+    *,
+    referenced_claim_ids: Sequence[str],
+    change_summary: str,
+    now: datetime | None = None,
+) -> dict[str, Any]:
+    """Commit one model-authored workpaper against current declared lineage.
+
+    This helper does not read the prose semantically or decide whether the
+    selected claims are complete. It validates the model-declared claim IDs,
+    resolves their declared dependency/evidence closure, preserves the prior
+    workpaper, and binds the new bytes to the current semantic lineage state.
+    """
+
+    source = authored_workpaper.expanduser().resolve()
+    target = (case_dir / ADVISORY_WORKPAPER_FILENAME).resolve()
+    checkpoint_path = case_dir / ADVISORY_WORKPAPER_CHECKPOINT_FILENAME
+    if not source.is_file():
+        raise CaseWorkspaceError(f"authored workpaper does not exist: {source}")
+    if source == target:
+        raise CaseWorkspaceError(
+            "authored workpaper must be staged separately before it is committed"
+        )
+    try:
+        workpaper_text = source.read_text(encoding="utf-8")
+    except UnicodeDecodeError as exc:
+        raise CaseWorkspaceError("authored workpaper must be UTF-8 Markdown") from exc
+    if not workpaper_text.strip():
+        raise CaseWorkspaceError("authored workpaper cannot be empty")
+    if source.suffix.casefold() not in {".md", ".markdown"}:
+        raise CaseWorkspaceError("authored workpaper must be Markdown")
+    if not change_summary.strip():
+        raise CaseWorkspaceError("change_summary cannot be empty")
+
+    workspace_errors = validate_case_workspace(case_dir)
+    if workspace_errors:
+        raise CaseWorkspaceError("; ".join(workspace_errors))
+    evidence_path = case_dir / EVIDENCE_REGISTER_FILENAME
+    claim_path = case_dir / CLAIM_REGISTER_FILENAME
+    evidence_register = _read_json(evidence_path)
+    claim_register = _read_json(claim_path)
+    evidence_by_id = {
+        str(item.get("id")): item
+        for item in evidence_register.get("evidence", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    claim_by_id = {
+        str(item.get("id")): item
+        for item in claim_register.get("claims", [])
+        if isinstance(item, dict) and item.get("id")
+    }
+    selected_claim_ids = _dedupe_preserve_order(
+        str(value).strip() for value in referenced_claim_ids if str(value).strip()
+    )
+    if not selected_claim_ids:
+        raise CaseWorkspaceError(
+            "at least one model-declared referenced claim id is required"
+        )
+    unknown_claim_ids = sorted(set(selected_claim_ids) - set(claim_by_id))
+    if unknown_claim_ids:
+        raise CaseWorkspaceError(
+            "unknown referenced claim ids: " + ", ".join(unknown_claim_ids)
+        )
+    claim_ids, evidence_ids = _claim_and_evidence_closure(
+        claim_by_id,
+        evidence_by_id,
+        selected_claim_ids,
+    )
+
+    timestamp = _now_iso(now)
+    prior_bytes = target.read_bytes() if target.is_file() else None
+    prior_sha256 = sha256(prior_bytes).hexdigest() if prior_bytes is not None else None
+    new_bytes = workpaper_text.encode("utf-8")
+    new_sha256 = sha256(new_bytes).hexdigest()
+    history_path: Path | None = None
+    if prior_bytes is not None and prior_bytes != new_bytes:
+        history_dir = case_dir / "history"
+        compact = re.sub(r"[^0-9A-Za-z]", "", timestamp)
+        history_path = history_dir / (
+            f"advisory_workpaper.{compact}.{prior_sha256[:8]}.md"
+        )
+
+    snapshot_paths = [target, checkpoint_path]
+    if history_path is not None:
+        snapshot_paths.append(history_path)
+    snapshot = _snapshot_files(snapshot_paths)
+    completed = False
+    try:
+        if history_path is not None:
+            history_path.parent.mkdir(parents=True, exist_ok=True)
+            if history_path.exists() and history_path.read_bytes() != prior_bytes:
+                raise CaseWorkspaceError(
+                    f"refusing to overwrite different workpaper history: {history_path}"
+                )
+            history_path.write_bytes(prior_bytes or b"")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.NamedTemporaryFile(dir=target.parent, delete=False) as handle:
+            temporary_path = Path(handle.name)
+            handle.write(new_bytes)
+        os.replace(temporary_path, target)
+        checkpoint = {
+            "schema_version": "clara.advisory_workpaper_checkpoint.v1",
+            "committed_at": timestamp,
+            "change_summary": change_summary.strip(),
+            "workpaper": {
+                "path": ADVISORY_WORKPAPER_FILENAME,
+                "path_reference": "case_relative",
+                "sha256": new_sha256,
+                "byte_count": len(new_bytes),
+            },
+            "prior_workpaper": {
+                "sha256": prior_sha256,
+                "history_path": (
+                    history_path.relative_to(case_dir).as_posix()
+                    if history_path is not None
+                    else None
+                ),
+            },
+            "lineage": {
+                "evidence_register_sha256": _file_sha256(evidence_path),
+                "claim_register_sha256": _file_sha256(claim_path),
+                "claim_semantic_sha256": _semantic_claim_register_sha256(
+                    claim_register
+                ),
+                "referenced_claim_ids": claim_ids,
+                "referenced_evidence_ids": evidence_ids,
+            },
+            "boundary": (
+                "The active model authored the workpaper and selected the claim IDs. "
+                "This checkpoint proves file and declared-lineage consistency only."
+            ),
+        }
+        _write_json(checkpoint_path, checkpoint)
+        completed = True
+    finally:
+        if not completed:
+            _restore_files(snapshot)
+    return checkpoint
 
 
 def set_judgement_status(

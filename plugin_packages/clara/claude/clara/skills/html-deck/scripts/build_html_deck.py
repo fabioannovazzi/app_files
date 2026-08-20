@@ -131,6 +131,10 @@ def bind_advisory_appearances(
                 raise ValueError(
                     f"HTML content-ledger claim is absent from shared advisory lineage: {claim_id}"
                 )
+            if upstream.get("state") != "active":
+                raise ValueError(
+                    f"HTML content-ledger claim is not active in shared advisory lineage: {claim_id}"
+                )
             if " ".join(str(upstream.get("statement", "")).split()) != " ".join(
                 str(claim.get("statement", "")).split()
             ):

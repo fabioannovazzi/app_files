@@ -980,6 +980,71 @@ def test_package_accepts_authoritative_reporting_engine_result(
     }
 
 
+def test_package_rejects_html_qa_reports_for_different_deliverable_bytes(
+    tmp_path: Path,
+) -> None:
+    static_name = "html-build-report.json"
+    browser_name = "browser-qa.json"
+    required_check = {
+        "workflow": "clara:html-deck",
+        "requirement": "required",
+        "reason": "The completed deliverable is an HTML deck.",
+        "artifact_refs": [static_name, browser_name],
+    }
+    validator, _, contract_path, output_dir, paths, inventory = _prepare(
+        tmp_path, format_checks=[required_check]
+    )
+    wrong_sha256 = "0" * 64
+    (tmp_path / static_name).write_text(
+        json.dumps(
+            {
+                "schema_version": "clara.html_deck_build.v1",
+                "result": "pass",
+                "input": {"sha256": inventory["source_sha256"]},
+                "deck": {},
+                "checks": [],
+                "summary": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / browser_name).write_text(
+        json.dumps(
+            {
+                "schema_version": "clara.html_deck_browser_qa.v1",
+                "result": "pass",
+                "input": {"sha256": wrong_sha256},
+                "browser": {},
+                "viewports": [],
+            }
+        ),
+        encoding="utf-8",
+    )
+    review = _review(
+        inventory,
+        format_checks=[
+            {
+                "workflow": "clara:html-deck",
+                "status": "passed",
+                "artifact_refs": [static_name, browser_name],
+                "analysis": "Static and browser checks were supplied.",
+            }
+        ],
+    )
+    review_path = output_dir / "review.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+
+    _, audit = validator.package_validation(
+        paths["deliverable_inventory"], review_path, contract_path, output_dir
+    )
+
+    assert audit["record_complete"] is False
+    assert (
+        "passed HTML Deck result is not bound to the prepared deliverable: "
+        "html_browser_qa"
+    ) in audit["errors"]
+
+
 def test_package_rejects_an_output_path_that_aliases_a_format_check_artifact(
     tmp_path: Path,
 ) -> None:
