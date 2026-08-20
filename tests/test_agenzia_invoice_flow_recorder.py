@@ -351,14 +351,22 @@ def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime(
     wrapper = (VERA_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
         encoding="utf-8"
     )
+    normalized_wrapper = " ".join(wrapper.split())
 
     assert "playwright>=1.48.0" in requirements.splitlines()
-    assert "--module studio-archive --requirements" in wrapper
-    assert "requirements-portal-recorder.txt run" in wrapper
-    assert "a missing-Playwright result is not a completed preflight" in wrapper
-    assert "MPARANZA_NETWORK_PERMISSION_REQUIRED" in wrapper
-    assert "Codex host network approval" in wrapper
-    assert "Do not stop with a missing-Playwright diagnosis" in wrapper
+    assert "--module studio-archive --requirements" in normalized_wrapper
+    assert "requirements-portal-recorder.txt run" in normalized_wrapper
+    assert "without requiring a second Codex command" in normalized_wrapper
+    assert "split setup and recorder launch into separate commands" in (
+        normalized_wrapper
+    )
+    assert "scripts/check_dependencies.py\n   --module studio-archive" not in wrapper
+    assert "missing-Playwright result is not a completed preflight" in (
+        normalized_wrapper
+    )
+    assert "MPARANZA_NETWORK_PERMISSION_REQUIRED" in normalized_wrapper
+    assert "Codex host network approval" in normalized_wrapper
+    assert "Do not stop with a missing-Playwright diagnosis" in normalized_wrapper
 
 
 def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
@@ -368,7 +376,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
         )
     )
 
-    assert manifest["version"] == "0.1.19"
+    assert manifest["version"] == "0.1.21"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(
