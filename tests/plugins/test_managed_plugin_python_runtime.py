@@ -464,3 +464,43 @@ def test_managed_launcher_imports_ready_component_target(
 
     assert completed.returncode == 0, completed.stderr
     assert completed.stdout.strip() == "managed"
+
+
+def test_managed_launcher_installs_optional_requirements_and_runs_helper_once(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    component = make_packaged_component(plugin_root)
+    optional_name = "requirements-portal-recorder.txt"
+    (component / optional_name).write_text(
+        "# Synthetic empty optional environment.\n",
+        encoding="utf-8",
+    )
+    marker = tmp_path / "recorder-started.txt"
+    script = component / "scripts" / "record_probe.py"
+    script.write_text(
+        "from pathlib import Path\n"
+        "import sys\n"
+        "Path(sys.argv[1]).write_text('started', encoding='utf-8')\n",
+        encoding="utf-8",
+    )
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("PLUGIN_DATA", str(tmp_path / "plugin-data"))
+
+    result = runtime.main(
+        plugin_root,
+        [
+            "--module",
+            "studio-archive",
+            "--requirements",
+            optional_name,
+            "run",
+            "scripts/record_probe.py",
+            str(marker),
+        ],
+    )
+
+    assert result == 0
+    assert marker.read_text(encoding="utf-8") == "started"

@@ -35,23 +35,22 @@ Choose the route before resolving any module:
    module's `skills/studio-archive/SKILL.md` completely and follow its
    `Teach Vera the Agenzia invoice-download flow` section, with this packaged
    Vera runtime override: resolve the Vera root as `../..` from this wrapper
-   directory, then run `python <vera-root>/scripts/check_dependencies.py
-   --module studio-archive --requirements
-   requirements-portal-recorder.txt`. This command must install the selected
-   optional requirements into CR-19's managed runtime before it validates
-   them; a missing-Playwright result is not a completed preflight. If setup
-   reports `MPARANZA_NETWORK_PERMISSION_REQUIRED`, immediately rerun that exact
+   directory. Start one PTY command with `python
+   <vera-root>/scripts/managed_python_runtime.py --module
+   studio-archive --requirements requirements-portal-recorder.txt run
+   scripts/record_agenzia_invoice_flow.py --output-dir
+   <fresh-private-directory>`. The managed launcher installs and validates the
+   selected optional requirements and, without requiring a second Codex command,
+   starts the recorder in that same process. A missing-Playwright result is not
+   a completed preflight. If setup reports
+   `MPARANZA_NETWORK_PERMISSION_REQUIRED`, immediately rerun that exact PTY
    command with Codex host network approval (escalated sandbox permission).
    This approval may retrieve only the published requirement file selected by
    the command. Do not stop with a missing-Playwright diagnosis, ask the
-   operator to install it manually, or start the recorder until this approved
-   retry succeeds. If the operator denies the approval, report that denial as
-   the blocker. Start the
-   PTY with `python <vera-root>/scripts/managed_python_runtime.py --module
-   studio-archive --requirements requirements-portal-recorder.txt run
-   scripts/record_agenzia_invoice_flow.py --output-dir
-   <fresh-private-directory>`. Never look for `requirements.txt` or `scripts/`
-   inside this wrapper directory. On another surface, explain that the privacy-bounded
+   operator to install it manually, or split setup and recorder launch into
+   separate commands. If the operator denies the approval, report that denial
+   as the blocker. Never look for `requirements.txt` or `scripts/` inside this
+   wrapper directory. On another surface, explain that the privacy-bounded
    recorder requires Codex Desktop and a local visible Chrome session; never
    request credentials or substitute a video or browser session controlled by
    Vera.
