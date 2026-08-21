@@ -235,6 +235,12 @@ def _source_snapshot_name(source_id: str, source_path: Path) -> str:
     return f"{source_id}{suffix}"
 
 
+def _portable_relative_path(path: Path, root: Path) -> str:
+    """Serialize a bounded relative path consistently across operating systems."""
+
+    return path.relative_to(root).as_posix()
+
+
 def prepare_run(workspace: Path, intake_path: Path) -> Path:
     """Validate intake, snapshot selected files, and create one immutable run."""
 
@@ -272,7 +278,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "origin": "selected_file",
                     "approved_for_website_use": item["approved_for_website_use"],
                     "original_path": str(source_path),
-                    "snapshot_path": str(target.relative_to(staging)),
+                    "snapshot_path": _portable_relative_path(target, staging),
                     "bytes": target.stat().st_size,
                     "sha256": _sha256_file(target),
                 }
@@ -296,7 +302,7 @@ def prepare_run(workspace: Path, intake_path: Path) -> Path:
                     "origin": "confirmed_chat",
                     "approved_for_website_use": fact["approved_for_website_use"],
                     "original_path": None,
-                    "snapshot_path": str(target.relative_to(staging)),
+                    "snapshot_path": _portable_relative_path(target, staging),
                     "bytes": target.stat().st_size,
                     "sha256": _sha256_file(target),
                 }

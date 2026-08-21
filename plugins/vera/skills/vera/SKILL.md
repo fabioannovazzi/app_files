@@ -208,14 +208,17 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
+- `browser-automation`: a Codex Desktop-only recording workflow for an
+  authorized operator to show or teach Vera the Agenzia delle Entrate
+  active/passive invoice-request and ZIP-retrieval journey in a visible local
+  Chrome session after personal authentication. It records only a sanitized,
+  review-required implementation map and does not acquire invoices, retain
+  credentials, or create an executable automation;
 - `studio-archive`: durable local client IDs and engagements plus four
   independent evidence routes for one client's Gmail, one verified local
   WhatsApp Desktop chat, an optional local document archive, or one bound
-  Google Drive client folder, including an authorized Shared Drive. It also
-  owns the separate Codex Desktop route for an authorized operator to show or
-  teach Vera the Agenzia delle Entrate active/passive invoice-download and ZIP-
-  retrieval flow through a privacy-bounded post-authentication recording.
-  Gmail uses a callable read-only connector, task-scoped confirmed addresses,
+  Google Drive client folder, including an authorized Shared Drive. Gmail uses
+  a callable read-only connector, task-scoped confirmed addresses,
   bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
   is capability-gated and excluded from Cowork v1; on another supported local
   runtime it requires one confirmed complete phone number and a verified

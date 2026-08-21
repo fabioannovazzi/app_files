@@ -12,8 +12,7 @@
     "mcp",
     ".mcp.json",
     "requirements.txt",
-    "requirements-ocr.txt",
-    "requirements-portal-recorder.txt"
+    "requirements-ocr.txt"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -87,40 +86,10 @@
         "runtime_profiles": [
           "openai-codex"
         ]
-      },
-      {
-        "id": "agenzia-flow-implementation-recording",
-        "purpose": "Review an operator-approved sanitized map of the post-login Agenzia invoice-download journey so the guided automation can be implemented from observed controls and transitions",
-        "content": "Only after the operator reviews and approves the JSON: sanitized control roles and labels outside tabular data, Agenzia HTTPS origins and paths with queries, fragments and identifier-shaped path segments removed, sanitized interactive-control inventories, hashed suggested download names, filename suffixes, timestamps, capture warnings and the declared capture boundary. The recording excludes typed or selected values, credentials, one-time codes, cookies, browser storage, HTML, screenshots, request and response bodies, download paths, invoice bytes and invoice contents; human review remains required because deterministic redaction does not guarantee anonymization",
-        "runtime_profiles": [
-          "openai-codex"
-        ]
       }
     ]
   },
   "external_boundaries": [
-    {
-      "id": "codex-agenzia-invoice-flow-teaching",
-      "kind": "external_connector",
-      "destination": "The authorized operator's Agenzia delle Entrate account in a dedicated temporary visible Google Chrome profile controlled locally through Playwright after personal authentication",
-      "purpose": "Let an authorized operator demonstrate the post-login invoice mass-request and ZIP-retrieval journey once so Vera can implement a stable guided acquisition path from observed UI structure",
-      "content": "The human's own authentication and taxpayer or delegated-profile selection remain inside the visible browser before recording starts. During recording, the operator's clicks, changes, navigations and download action are sent to the Agenzia portal in the ordinary browser session; locally, the recorder retains only sanitized control metadata, origin-and-path page transitions, bounded interactive-control inventories, hashed suggested download names, filename suffixes, timestamps and boundary warnings. It does not retain entered values, credentials, cookies, storage, HTML, screenshots, network bodies, invoice files or invoice contents",
-      "optional": true,
-      "requires_confirmation": true,
-      "runtime_profiles": [
-        "openai-codex"
-      ],
-      "controls": [
-        "Use this route only after the operator explicitly asks to show or teach Vera the Agenzia invoice-download flow; that choice confirms the optional route but not any separate sharing of the resulting recording.",
-        "Require the human to authenticate personally and select the correct taxpayer or delegated profile in visible Chrome. Vera never requests, enters, reads or stores credentials, PINs, SPID/CIE/CNS material, QR codes, one-time codes, cookies, tokens or session URLs.",
-        "Create an explicit headed Playwright page before showing authentication instructions. On Windows, normalize its Chrome DevTools window bounds and require a newly created visible non-empty top-level Chrome window on the current desktop; background-only Chrome processes stop the recorder before authentication.",
-        "Start recording only after the operator says authentication is complete and no credential screen is visible; automatically stop the recording if an observed page or control event leaves the exact Agenzia delle Entrate HTTPS host boundary.",
-        "Record only fixed value-free control metadata, query-free and fragment-free sanitized page paths, bounded control inventories, and hashed suggested download names. Suppress text inside tables and grids and never persist HTML, screenshots, traces, HAR, browser state, typed or selected values, network headers or bodies, download paths or invoice bytes.",
-        "Use a fresh temporary Chrome profile and Playwright-managed downloads, close the browser under recorder control, and delete the temporary profile and download bytes when the session ends.",
-        "Write one owner-only JSON file outside the Git workspace, mark it as requiring human review, and do not read it into model context or share it until the operator has reviewed and explicitly approved it. Treat deterministic redaction as exposure reduction, not guaranteed anonymization.",
-        "Treat the approved recording only as implementation evidence. It never establishes taxpayer authority, invoice completeness, professional relevance, an authenticated reusable session, or Check Entries support evidence."
-      ]
-    },
     {
       "id": "codex-google-drive-client-archive",
       "kind": "external_connector",
@@ -214,10 +183,6 @@
   ],
   "security_controls": [
     {
-      "id": "privacy-bounded-agenzia-flow-recording",
-      "control": "The local recorder creates an explicit headed page and, on Windows, proves a new visible Chrome top-level desktop window before authentication. It accepts only exact Agenzia HTTPS origins after authentication, strips URL queries and fragments and identifier-shaped path segments, captures a fixed allowlist of value-free control metadata, suppresses tabular text, hashes suggested download names, never requests download paths or bytes, uses a disposable Chrome profile, rejects forbidden output keys and writes one owner-only review-required JSON file without overwriting an earlier recording."
-    },
-    {
       "id": "private-per-user-index",
       "control": "Each professional keeps only archive configuration, the optional client identity mapping, and the derived SQLite search cache in an owner-only local state directory outside the archive. Engagements, input receipts, run contexts, lifecycle, and artifact records do not depend on that cache as their operational source of truth."
     },
@@ -282,6 +247,6 @@
     "reviewed_at": "2026-08-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ee834d4ded8b059bf51a38872f836498d85c2080c61149d9124874d5c8a1eddf"
+    "source_fingerprint": "402f8b1de2fd8a45883d417275e106d9d90059cf0ffe1eccb7c56bc8ba60b9f1"
   }
 }

@@ -42,6 +42,13 @@ SPECS = (
         "organize",
     ),
     IconSpec(
+        "browser-automation",
+        "Vera · Automazione web",
+        "#002060",
+        "#00B0F0",
+        "browser_automation",
+    ),
+    IconSpec(
         "audit-reconciliation",
         "Riconciliazione partite",
         "#17365D",
@@ -449,6 +456,14 @@ def _body(spec: IconSpec) -> str:
   <path d="M19 32h16M19 38h11" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
   <rect x="38" y="30" width="9" height="13" rx="2" fill="{accent}"/>
   <path d="M22 53h20" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>""",
+        "browser_automation": f"""
+  <rect x="11" y="14" width="42" height="35" rx="5" fill="{paper}"/>
+  <path d="M11 24h42" stroke="{color}" stroke-width="3"/>
+  <circle cx="18" cy="19" r="2" fill="{accent}"/>
+  <circle cx="24" cy="19" r="2" fill="{color}"/>
+  <path d="M19 32h16M19 38h10" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <path d="m38 31 3 17 4-5 6 7 4-4-6-7 6-3z" fill="{accent}" stroke="#171816" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M21 54h22" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>""",
         "registry": f"""
   <path d="M31 12 12 23h38z" fill="{paper}"/>
   <path d="M16 27h28M17 47h26" stroke="{paper}" stroke-width="5" stroke-linecap="round"/>

@@ -12,7 +12,9 @@ VERA_ROOT = ROOT / "plugins" / "vera"
 ROUTER_PATH = VERA_ROOT / "skills" / "vera" / "SKILL.md"
 CATALOG_PATH = VERA_ROOT / "skills" / "vera" / "references" / "workflow-catalog.md"
 MARKETPLACE_CARDS_PATH = VERA_ROOT / "marketplace_skill_instructions.json"
-STUDIO_ARCHIVE_WRAPPER_PATH = VERA_ROOT / "skills" / "studio-archive" / "SKILL.md"
+BROWSER_AUTOMATION_WRAPPER_PATH = (
+    VERA_ROOT / "skills" / "browser-automation" / "SKILL.md"
+)
 
 
 def _read_text(path: Path) -> str:
@@ -63,10 +65,10 @@ def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     assert catalogued_skills == expected_skills
 
 
-def test_vera_routes_paolo_agenzia_teaching_request_to_studio_archive() -> None:
+def test_vera_routes_paolo_agenzia_teaching_request_to_browser_automation() -> None:
     router = _read_text(ROUTER_PATH)
     catalog = _read_text(CATALOG_PATH)
-    wrapper = _read_text(STUDIO_ARCHIVE_WRAPPER_PATH)
+    wrapper = _read_text(BROWSER_AUTOMATION_WRAPPER_PATH)
     cards = json.loads(_read_text(MARKETPLACE_CARDS_PATH))["skills"]
 
     exact_request = (
@@ -74,18 +76,19 @@ def test_vera_routes_paolo_agenzia_teaching_request_to_studio_archive() -> None:
         "e passive dall’Agenzia delle Entrate"
     )
 
-    assert "show or\n  teach Vera the Agenzia delle Entrate" in router
-    assert "active/passive invoice-download and ZIP-retrieval" in catalog
-    assert exact_request in " ".join(wrapper.split())
+    assert "show or teach Vera the Agenzia delle Entrate" in " ".join(router.split())
+    assert "active/passive invoice-request and ZIP-retrieval" in catalog
+    assert "Agenzia procedure" in wrapper
     assert (
-        "select Studio Archive instead of the\n   no-matching-workflow outcome"
-        in wrapper
+        "registratore locale del modulo Automazione web"
+        in cards["browser-automation"]["instructions"]
     )
-    assert (
-        "registratore privacy-bounded di Codex Desktop"
-        in cards["studio-archive"]["instructions"]
+    assert exact_request in _read_text(
+        ROOT / "plugins" / "browser-automation" / "evals" / "trigger_fixtures.json"
     )
-    assert "Never look for `requirements.txt` or `scripts/`" in wrapper
+    assert "Never look for `requirements.txt` or `scripts/`" in " ".join(
+        wrapper.split()
+    )
 
 
 def test_vera_validated_answer_route_is_automatic_but_not_a_filing_fallback() -> None:
@@ -162,12 +165,8 @@ def test_vera_chatgpt_root_card_is_router_only_and_catalog_complete() -> None:
 
 
 def test_professional_question_is_an_orchestrator_not_a_third_data_workstream() -> None:
-    components = json.loads(
-        (VERA_ROOT / "components.json").read_text(encoding="utf-8")
-    )
-    workflow = _read_text(
-        VERA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md"
-    )
+    components = json.loads((VERA_ROOT / "components.json").read_text(encoding="utf-8"))
+    workflow = _read_text(VERA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md")
 
     assert "quesito-legale-fiscale" not in components["plugins"]
     assert not (

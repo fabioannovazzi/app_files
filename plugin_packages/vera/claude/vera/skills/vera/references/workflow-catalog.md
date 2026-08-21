@@ -93,12 +93,14 @@ skill to imitate a missing operational workflow.
   price-volume-mix variances when the data contract supports them; and produce
   reviewable waterfall, bridge, small-multiple, and drilldown plots without
   assigning semantic causes or materiality automatically.
+- `browser-automation`: in Claude Desktop, record a review-required sanitized
+  implementation map while an authorized operator demonstrates the supported
+  post-login Agenzia active/passive invoice-request and ZIP-retrieval journey
+  in visible Chrome; this does not acquire invoices or create an executable
+  automation.
 - `studio-archive`: create or resume a durable client engagement; use its
   authorized local-document, Google Drive or Shared Drive, Gmail, or
-  capability-gated WhatsApp evidence routes without mixing clients; or, in
-  Claude Desktop, record a privacy-bounded post-authentication demonstration of
-  the Agenzia delle Entrate active/passive invoice-download and ZIP-retrieval
-  flow without retaining credentials or invoice files.
+  capability-gated WhatsApp evidence routes without mixing clients.
 
 ## Subordinate intake workflows
 

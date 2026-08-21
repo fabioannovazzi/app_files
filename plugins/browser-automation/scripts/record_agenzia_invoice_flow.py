@@ -551,8 +551,14 @@ def _private_redactions() -> tuple[str, ...]:
     return tuple(term.strip() for term in entered.split("|") if term.strip())
 
 
-def _windows_top_level_chrome_windows() -> set[int]:
-    """Return Chrome top-level window handles on the interactive Windows desktop."""
+def _windows_top_level_chrome_windows(
+    browser_process_ids: set[int] | None = None,
+) -> set[int]:
+    """Return matching Chrome top-level windows on the current Windows desktop.
+
+    Process ownership is a mechanical OS identity check. When supplied, it keeps
+    an unrelated Chrome window from satisfying the recorder's visibility gate.
+    """
 
     if sys.platform != "win32":
         return set()
@@ -574,8 +580,27 @@ def _windows_top_level_chrome_windows() -> set[int]:
         ctypes.c_int,
     ]
     user32.GetClassNameW.restype = ctypes.c_int
+    user32.GetWindowThreadProcessId.argtypes = [
+        wintypes.HWND,
+        ctypes.POINTER(wintypes.DWORD),
+    ]
+    user32.GetWindowThreadProcessId.restype = wintypes.DWORD
     handles: set[int] = set()
     callback_errors: list[OSError | OverflowError | TypeError | ValueError] = []
+
+    def scoped_handles(candidates: set[int]) -> set[int]:
+        if browser_process_ids is None:
+            return candidates
+        matches: set[int] = set()
+        for native_handle in candidates:
+            process_id = wintypes.DWORD()
+            thread_id = user32.GetWindowThreadProcessId(
+                wintypes.HWND(native_handle),
+                ctypes.byref(process_id),
+            )
+            if thread_id and int(process_id.value) in browser_process_ids:
+                matches.add(native_handle)
+        return matches
 
     @enum_callback
     def collect(handle: Any, _parameter: int) -> bool:
@@ -636,7 +661,7 @@ def _windows_top_level_chrome_windows() -> set[int]:
                         fallback_error,
                         "Impossibile cercare le finestre del desktop Windows",
                     )
-                return fallback_handles
+                return scoped_handles(fallback_handles)
             native_handle = int(raw_handle)
             if native_handle in seen_handles:
                 raise RuntimeError(
@@ -651,7 +676,7 @@ def _windows_top_level_chrome_windows() -> set[int]:
         raise RuntimeError(
             "Windows ha superato il limite di finestre durante la ricerca desktop"
         )
-    return handles
+    return scoped_handles(handles)
 
 
 def _restore_windows_chrome_window(handle: int) -> bool:
@@ -708,6 +733,7 @@ def _restore_windows_chrome_window(handle: int) -> bool:
 
 async def _require_windows_desktop_window(
     preexisting_windows: set[int],
+    browser_process_ids: set[int],
     *,
     attempts: int = 30,
     interval_seconds: float = 0.1,
@@ -717,7 +743,9 @@ async def _require_windows_desktop_window(
     if sys.platform != "win32":
         return
     for _attempt in range(attempts):
-        new_windows = _windows_top_level_chrome_windows() - preexisting_windows
+        new_windows = (
+            _windows_top_level_chrome_windows(browser_process_ids) - preexisting_windows
+        )
         if any(_restore_windows_chrome_window(handle) for handle in new_windows):
             return
         await asyncio.sleep(interval_seconds)
@@ -738,6 +766,7 @@ async def present_browser_window(
     if sys.platform != "win32":
         return
     session = await context.new_cdp_session(page)
+    browser_process_ids: set[int] = set()
     try:
         result = await session.send("Browser.getWindowForTarget")
         window_id = result.get("windowId") if isinstance(result, Mapping) else None
@@ -759,9 +788,32 @@ async def present_browser_window(
                 },
             },
         )
+        process_result = await session.send("SystemInfo.getProcessInfo")
+        process_info = (
+            process_result.get("processInfo")
+            if isinstance(process_result, Mapping)
+            else None
+        )
+        if isinstance(process_info, list):
+            browser_process_ids = {
+                process_id
+                for item in process_info
+                if isinstance(item, Mapping)
+                and item.get("type") == "browser"
+                and isinstance((process_id := item.get("id")), int)
+                and process_id > 0
+            }
+        if not browser_process_ids:
+            raise RuntimeError(
+                "Chrome non ha restituito l'identità del processo della finestra; "
+                "la registrazione si è fermata prima dell'accesso."
+            )
     finally:
         await session.detach()
-    await _require_windows_desktop_window(preexisting_windows)
+    await _require_windows_desktop_window(
+        preexisting_windows,
+        browser_process_ids,
+    )
 
 
 @asynccontextmanager

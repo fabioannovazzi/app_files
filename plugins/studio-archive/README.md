@@ -1,15 +1,13 @@
 # Vera · Archivio dello Studio
 
 This Vera component owns the portable customer-folder ledger used by local
-Codex workflows. It has five independent routes. In ChatGPT or Codex,
+Codex workflows. It has four independent routes. In ChatGPT or Codex,
 the separately connected OpenAI Gmail connector searches one selected client's
 correspondence. Codex Desktop can additionally inspect one verified one-to-one
 chat in the local WhatsApp application through Computer Use, make one shared
 studio folder searchable without a shared ChatGPT account or central database,
-bind one client to a My Drive or Shared Drive folder for native Drive snapshots
-and transient evidence opening, or let an authorized operator teach Vera the
-post-login Agenzia invoice-download flow through a privacy-bounded local
-Playwright recording.
+or bind one client to a My Drive or Shared Drive folder for native Drive
+snapshots and transient evidence opening.
 
 Fabio and Paolo each configure the same shared or synced source folder from
 their own Vera installation in Codex Desktop. Each computer builds its own
@@ -104,32 +102,6 @@ bytes. Riordino archivio performs any later parent/name changes only after its
 persistent review and separate explicit apply approval. A public or
 multi-tenant deployment must complete Google's applicable OAuth verification
 and security assessment.
-
-The Agenzia teaching route is implementation discovery, not invoice evidence
-or a reusable authenticated connection. Vera opens a dedicated visible Chrome
-session; the operator authenticates personally, selects the correct taxpayer or
-delegated profile, and demonstrates the active/passive invoice request and ZIP
-retrieval. The recorder retains only sanitized page paths, control identities,
-transitions, and a hash plus suffix for a suggested download name. It excludes
-credentials, typed and selected values, cookies, browser storage, HTML,
-screenshots, traces, network bodies, download paths, invoice files, and invoice
-contents. The resulting JSON remains outside model context until the operator
-has reviewed and explicitly approved it.
-
-Install and check the optional recorder dependency only when this route is
-needed:
-
-```bash
-python -m pip install -r requirements-portal-recorder.txt
-python scripts/check_dependencies.py --requirements requirements-portal-recorder.txt
-python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-directory>
-```
-
-Detailed operator and review instructions are in
-`references/agenzia_invoice_flow_recording.md`.
-All operator-facing prompts are in Italian. The operator can say aloud or type
-`pronto` (`ready` also works) after login, and `fatto` (`done` also works) after
-the demonstration.
 
 For a Gmail question, Vera first verifies the connected account, selects one
 client, and either uses an address supplied by the user or runs a bounded

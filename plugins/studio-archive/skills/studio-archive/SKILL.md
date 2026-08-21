@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, record a privacy-bounded Agenzia invoice-download demonstration, bind and snapshot one Google Drive client folder, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
+description: Use when Vera must identify or create one client workspace, import source, journal, or support files into a durable engagement, bind and snapshot one Google Drive client folder, search one client's connected Gmail, inspect one verified local WhatsApp Desktop chat, or search a shared local studio archive without mixing clients.
 ---
 
 ## Surface routing
@@ -13,7 +13,7 @@ not reduce the whole workflow to a redirect.
 
 ## Runtime split
 
-This component has five independent routes:
+This component has four independent routes:
 
 - **Gmail:** works in ChatGPT or Codex with the separately installed and
   connected OpenAI Gmail connector. It uses Gmail read tools
@@ -33,89 +33,8 @@ This component has five independent routes:
   client ID to one exact My Drive or Shared Drive folder, snapshots remote
   identity and version state, and supplies the controlled input for Riordino
   archivio. It does not make Google Drive a general search backend.
-- **Agenzia invoice-flow teaching:** works only in Codex Desktop through a
-  dedicated visible Google Chrome session controlled by local Playwright. The
-  authorized human authenticates personally and demonstrates the invoice
-  request and ZIP-retrieval journey after authentication. Vera records only a
-  sanitized implementation map; it does not retain invoice files or treat the
-  map as Check Entries evidence.
-
 Never require local archive configuration before running the Gmail or WhatsApp
 Desktop route.
-
-## Teach Vera the Agenzia invoice-download flow
-
-Use this route when an authorized operator asks to “show Vera”, “teach Vera”,
-or record how invoices are downloaded from the Agenzia delle Entrate portal.
-This is implementation discovery, not invoice acquisition. It does not create
-a client, engagement, support receipt, Check Entries run, or reusable portal
-connection.
-
-Prefer the structured recorder to a video. A video can be a separately reviewed
-supplement when an important visual transition is absent from the recording,
-but it is not a selector contract and can expose credentials, taxpayer names,
-invoice facts, notifications, or unrelated screen content.
-
-Follow this exact Codex-native interaction:
-
-Use Italian for every user-facing message in this route.
-
-1. State that the operator must use their own authority, login, taxpayer
-   profile, and delegation. Vera never asks for or enters a username, password,
-   PIN, SPID/CIE/CNS material, QR code, one-time code, cookie, token, or session
-   URL.
-2. From this plugin directory, run the optional dependency check:
-
-```bash
-python scripts/check_dependencies.py --requirements requirements-portal-recorder.txt
-```
-
-3. Create a fresh owner-only temporary output directory outside the Git
-   workspace. Start the recorder in a PTY so Codex can keep the process alive
-   across the operator's `pronto`/`ready` and `fatto`/`done` messages:
-
-```bash
-python scripts/record_agenzia_invoice_flow.py --output-dir <fresh-private-directory>
-```
-
-4. At the optional private-term prompt, send an empty line by default. Never
-   ask the operator to put private redaction terms in chat. If they want custom
-   redaction, they must type it directly into the local terminal without
-   exposing it to Codex.
-5. The script opens a dedicated ephemeral Chrome context and must create an
-   explicit page before the authentication checkpoint. On Windows it also
-   restores and positions that new Chrome top-level window and verifies that
-   Windows exposes a visible non-empty desktop window. A background Chrome
-   process is not a completed launch: stop before authentication if this gate
-   fails. The operator
-   authenticates and selects the correct taxpayer or delegated profile. Tell
-   them: “Quando hai completato l'accesso, di' a voce oppure scrivi `pronto`;
-   va bene anche `ready`.” Accept either a spoken/transcribed or typed message.
-   Then send one newline to the still-running PTY. Do not inspect or operate
-   the authentication screens.
-6. Ask the operator to perform one representative mass-download journey in the
-   visible browser, including active/passive scope and a completed ZIP retrieval
-   when available. Tell them: “Quando hai finito, di' a voce oppure scrivi
-   `fatto`; va bene anche `done`.” Accept either a spoken/transcribed or typed
-   message, then send one newline to stop. If submission and later retrieval
-   cannot occur in one session, make two separate recordings.
-7. The recorder closes its Playwright-managed temporary browser profile and
-   deletes Playwright-managed download bytes. It writes only
-   `agenzia_invoice_flow_recording.json`, with owner-only permissions. Never
-   save or request a Playwright trace, HAR, storage state, cookies, screenshots,
-   HTML, or invoice ZIP for this teaching route.
-8. Do not read the JSON into model context until the operator has opened it,
-   reviewed it for private information, and explicitly said it is safe to use.
-   If they do not approve it, leave it unread and explain how to delete it.
-   After approval, use the recording only as implementation evidence for page
-   paths, control identities, transitions, and download shape.
-
-The recorder automatically strips URL queries and fragments, blocks
-non-Agenzia origins after recording starts, suppresses table-cell text, hashes
-suggested download names, excludes typed/selected values and downloaded bytes,
-and marks every result as requiring human review. These controls reduce
-exposure; they do not guarantee anonymization. Full operator instructions are
-in `references/agenzia_invoice_flow_recording.md`.
 
 ## Output Location Rule
 

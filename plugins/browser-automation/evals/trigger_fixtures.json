@@ -1,0 +1,29 @@
+{
+  "plugin": "browser-automation",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "teach-agenzia-invoice-flow",
+      "prompt": "Mostra a Vera come scaricare le fatture attive e passive dall’Agenzia delle Entrate",
+      "required_signals": [
+        "Mostra a Vera",
+        "fatture attive e passive",
+        "Agenzia delle Entrate"
+      ]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "search-studio-archive",
+      "prompt": "Cerca nell'archivio dello studio i documenti del cliente Rossi."
+    },
+    {
+      "id": "ordinary-web-research",
+      "prompt": "Cerca online le ultime circolari dell'Agenzia delle Entrate."
+    },
+    {
+      "id": "desktop-app-automation",
+      "prompt": "Automatizza l'inserimento dati nella mia applicazione desktop."
+    }
+  ]
+}
