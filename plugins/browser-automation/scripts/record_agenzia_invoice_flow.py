@@ -765,17 +765,18 @@ async def present_browser_window(
     await page.bring_to_front()
     if sys.platform != "win32":
         return
-    session = await context.new_cdp_session(page)
+    page_session = await context.new_cdp_session(page)
+    browser_session = None
     browser_process_ids: set[int] = set()
     try:
-        result = await session.send("Browser.getWindowForTarget")
+        result = await page_session.send("Browser.getWindowForTarget")
         window_id = result.get("windowId") if isinstance(result, Mapping) else None
         if not isinstance(window_id, int):
             raise RuntimeError(
                 "Chrome non ha restituito una finestra controllabile; la "
                 "registrazione si è fermata prima dell'accesso."
             )
-        await session.send(
+        await page_session.send(
             "Browser.setWindowBounds",
             {
                 "windowId": window_id,
@@ -788,7 +789,14 @@ async def present_browser_window(
                 },
             },
         )
-        process_result = await session.send("SystemInfo.getProcessInfo")
+        browser = context.browser
+        if browser is None:
+            raise RuntimeError(
+                "Chrome non ha restituito una sessione browser controllabile; "
+                "la registrazione si è fermata prima dell'accesso."
+            )
+        browser_session = await browser.new_browser_cdp_session()
+        process_result = await browser_session.send("SystemInfo.getProcessInfo")
         process_info = (
             process_result.get("processInfo")
             if isinstance(process_result, Mapping)
@@ -809,7 +817,9 @@ async def present_browser_window(
                 "la registrazione si è fermata prima dell'accesso."
             )
     finally:
-        await session.detach()
+        if browser_session is not None:
+            await browser_session.detach()
+        await page_session.detach()
     await _require_windows_desktop_window(
         preexisting_windows,
         browser_process_ids,

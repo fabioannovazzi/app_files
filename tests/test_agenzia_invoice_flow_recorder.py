@@ -271,7 +271,13 @@ def test_present_browser_window_accepts_pointer_wrapped_native_window_handles(
             return None
 
     class Context:
+        def __init__(self) -> None:
+            self.browser = self
+
         async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+        async def new_browser_cdp_session(self) -> Session:
             return Session()
 
     class NativeFunction:
@@ -353,7 +359,13 @@ def test_present_browser_window_falls_back_when_enum_windows_has_no_error(
             return None
 
     class Context:
+        def __init__(self) -> None:
+            self.browser = self
+
         async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+        async def new_browser_cdp_session(self) -> Session:
             return Session()
 
     class NativeFunction:
@@ -451,7 +463,13 @@ def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
             commands.append(("detach", None))
 
     class Context:
+        def __init__(self) -> None:
+            self.browser = self
+
         async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+        async def new_browser_cdp_session(self) -> Session:
             return Session()
 
     monkeypatch.setattr(recorder.sys, "platform", "win32")
@@ -489,8 +507,75 @@ def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
         ),
         ("SystemInfo.getProcessInfo", None),
         ("detach", None),
+        ("detach", None),
     ]
     assert restored == [11]
+
+
+def test_present_browser_window_uses_browser_target_for_process_info(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    page_commands: list[str] = []
+    browser_commands: list[str] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            return None
+
+    class PageSession:
+        async def send(
+            self, command: str, _arguments: object | None = None
+        ) -> dict[str, object]:
+            page_commands.append(command)
+            if command == "SystemInfo.getProcessInfo":
+                raise RuntimeError(
+                    "SystemInfo.getProcessInfo is only supported on the browser target"
+                )
+            return {"windowId": 41}
+
+        async def detach(self) -> None:
+            return None
+
+    class BrowserSession:
+        async def send(
+            self, command: str, _arguments: object | None = None
+        ) -> dict[str, object]:
+            browser_commands.append(command)
+            return {"processInfo": [{"type": "browser", "id": 321}]}
+
+        async def detach(self) -> None:
+            return None
+
+    class Browser:
+        async def new_browser_cdp_session(self) -> BrowserSession:
+            return BrowserSession()
+
+    class Context:
+        browser = Browser()
+
+        async def new_cdp_session(self, _page: Page) -> PageSession:
+            return PageSession()
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(
+        recorder,
+        "_windows_top_level_chrome_windows",
+        lambda _browser_process_ids=None: {11},
+    )
+    monkeypatch.setattr(
+        recorder,
+        "_restore_windows_chrome_window",
+        lambda _handle: True,
+    )
+
+    asyncio.run(recorder.present_browser_window(Context(), Page(), set()))
+
+    assert page_commands == [
+        "Browser.getWindowForTarget",
+        "Browser.setWindowBounds",
+    ]
+    assert browser_commands == ["SystemInfo.getProcessInfo"]
 
 
 def test_windows_background_process_without_window_fails_before_authentication(
@@ -539,7 +624,13 @@ def test_unrelated_chrome_window_cannot_satisfy_visibility_gate(
             return None
 
     class Context:
+        def __init__(self) -> None:
+            self.browser = self
+
         async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+        async def new_browser_cdp_session(self) -> Session:
             return Session()
 
     monkeypatch.setattr(recorder.sys, "platform", "win32")
@@ -616,7 +707,7 @@ def test_browser_automation_manifest_advertises_agenzia_teaching_route() -> None
         )
     )
 
-    assert manifest["version"] == "0.1.0"
+    assert manifest["version"] == "0.1.1"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(
