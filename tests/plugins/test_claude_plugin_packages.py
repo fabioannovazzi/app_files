@@ -586,7 +586,7 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
     assert "do not offer or execute WhatsApp Desktop inspection" in main
     assert "do not capture a live INPS browser session" in " ".join(main.split())
     assert "Guarded WhatsApp Desktop review" in studio
-    assert "not enabled as Cowork routes" in studio
+    assert "not enabled as Cowork routes" in " ".join(studio.split())
     assert "Studio Archive is available in Cowork" in studio
     assert "Local-folder mode runs in Claude Desktop and Cowork" in archive_organization
     assert "explicitly approved" in archive_organization
@@ -757,7 +757,7 @@ def test_projected_cowork_runtime_entrypoints_execute(
         (
             isolated.output_directory / "scripts" / "check_dependencies.py",
             (),
-            "All 20 Vera modules are available.",
+            "All 21 Vera modules are available.",
         ),
         (
             isolated.output_directory
