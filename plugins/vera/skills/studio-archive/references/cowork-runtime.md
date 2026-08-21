@@ -31,8 +31,8 @@ run, lifecycle, or artifact records under `Vera/`.
   separate explicit apply approval, verification journal, and rollback checks.
 - **Gmail:** available when a read-only Anthropic Gmail connector exposes
   mailbox confirmation, search, and bounded message reading.
-- **Guarded WhatsApp Desktop review, the visible Agenzia invoice-flow recorder,
-  and native Google Drive OAuth:** not enabled as Cowork routes. Do
+- **Guarded WhatsApp Desktop review and native Google Drive OAuth:** not enabled
+  as Cowork routes. Do
   not substitute an unguarded screen-control flow, browser login, copied token,
   or generic Drive access. Continue with the portable ledger and connected
   files.

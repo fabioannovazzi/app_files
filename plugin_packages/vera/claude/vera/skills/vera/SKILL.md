@@ -186,7 +186,13 @@ them without changing the capability catalog:
   parents, capabilities, and available checksums. It never overwrites or automatically deletes files; exact
   duplicates are quarantine candidates and every applied move has a journal
   and rollback path;
-- `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp, visible Agenzia recorder, and native Google Drive OAuth routes remain unavailable;
+- `browser-automation`: a Claude Desktop-only recording workflow for an
+  authorized operator to show or teach Vera the Agenzia delle Entrate
+  active/passive invoice-request and ZIP-retrieval journey in a visible local
+  Chrome session after personal authentication. It records only a sanitized,
+  review-required implementation map and does not acquire invoices, retain
+  credentials, or create an executable automation;
+- `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
 - `audit-reconciliation`: open-item and accounting-evidence reconciliation;
 - `variance-analysis`: client-bound Actual/Budget/Forecast or period variance
   analysis using the shared calculation and plot suite. It requires reviewed

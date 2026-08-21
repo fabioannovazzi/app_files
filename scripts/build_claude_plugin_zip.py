@@ -71,9 +71,9 @@ COWORK_OMITTED_PATHS = frozenset(
     {
         "modules/client-file-preparation/COME_USARE_LO_ZIP.md",
         "modules/client-file-preparation/INSTALLA_PLUGIN_CODEX.md",
-        "modules/studio-archive/references/agenzia_invoice_flow_recording.md",
-        "modules/studio-archive/requirements-portal-recorder.txt",
-        "modules/studio-archive/scripts/record_agenzia_invoice_flow.py",
+        "modules/browser-automation/references/agenzia_invoice_flow_recording.md",
+        "modules/browser-automation/requirements-portal-recorder.txt",
+        "modules/browser-automation/scripts/record_agenzia_invoice_flow.py",
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
     }
 )
@@ -922,6 +922,21 @@ def _studio_archive_cowork_skill(source: str, reference: bytes) -> str:
     return f"{_skill_frontmatter(source)}\n\n{reference_text}\n"
 
 
+def _browser_automation_cowork_skill(source: str) -> str:
+    """Project the current local-browser recorder as an explicit unavailable route."""
+
+    return (
+        f"{_skill_frontmatter(source)}\n\n"
+        "# Automazione web\n\n"
+        "The current Agenzia teaching recorder requires a local visible Chrome "
+        "session and the packaged Playwright script, which are not included in "
+        "this Cowork package. Explain that boundary and continue only with useful "
+        "scope preparation. Do not request credentials, substitute a video, claim "
+        "that a recording or executable automation was created, or operate an "
+        "authenticated portal session.\n"
+    )
+
+
 def _project_main_cowork_scope(text: str) -> str:
     text = _replace_section(
         text,
@@ -979,8 +994,8 @@ name, filename, folder, or document content.""",
         "lifecycle, and artifact ledger in the connected studio folder; "
         "optional local indexing when its declared dependencies are already "
         "callable; and one client's callable, read-only Anthropic Gmail "
-        "connector. The current guarded WhatsApp, visible Agenzia recorder, "
-        "and native Google Drive OAuth routes remain unavailable;\n"
+        "connector. The current guarded WhatsApp and native Google Drive OAuth "
+        "routes remain unavailable;\n"
         "- `audit-reconciliation`:",
         text,
         count=1,
@@ -1525,6 +1540,10 @@ def _project_vera_components(content: bytes) -> bytes:
         raise ValueError(
             "Vera components.json must contain studio-archive exactly once"
         )
+    if payload["plugins"].count("browser-automation") != 1:
+        raise ValueError(
+            "Vera components.json must contain browser-automation exactly once"
+        )
     shared_services = payload.get("shared_services")
     if not isinstance(shared_services, list):
         raise ValueError("Vera components.json must contain a shared_services list")
@@ -1598,6 +1617,11 @@ def project_cowork_skill(
             text,
             studio_archive_reference,
         )
+    elif relative_path in {
+        "skills/browser-automation/SKILL.md",
+        "modules/browser-automation/skills/browser-automation/SKILL.md",
+    }:
+        text = _browser_automation_cowork_skill(text)
     elif relative_path == "skills/new-client/SKILL.md":
         text = _project_new_client_wrapper_cowork_skill(text)
     elif relative_path == "modules/previdenza-inps/skills/previdenza-inps/SKILL.md":

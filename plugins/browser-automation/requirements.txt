@@ -1,0 +1,1 @@
+# No third-party dependency is required for the core component.

@@ -96,6 +96,7 @@
     "avviso-intake": [["vera", "area-clients"]],
     "bandi-agevolazioni": [["vera", "area-outputs"], ["vera", "jurisdiction"]],
     "bilancio-xbrl-it": [["vera", "area-accounting"], ["vera", "jurisdiction"]],
+    "browser-automation": [["vera", "area-clients"]],
     "check-entries": [["vera", "area-accounting"]],
     "clara-brand-fit": [["clara", "area-retail"]],
     "clara-advisory-planning": [["clara", "area-analysis"]],
@@ -134,6 +135,13 @@
   };
 
   const fallbackNames = {
+    "browser-automation": {
+      it: "Automazione web",
+      en: "Web automation",
+      fr: "Automatisation web",
+      de: "Web-Automatisierung",
+      es: "Automatización web",
+    },
     "studio-archive": {
       it: "Ricerca nei documenti, nelle email e in WhatsApp",
       en: "Studio archive",

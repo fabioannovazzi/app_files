@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Vera · Automazione web" data-theme="mparanza-plugin-icon-v1">
+  <rect width="64" height="64" rx="14" fill="#171816"/>
+  <path d="M49 0h1l14 14v1H49z" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="7" fill="#00B0F0"/>
+  <circle cx="51" cy="50" r="3" fill="#171816"/>
+
+  <rect x="11" y="14" width="42" height="35" rx="5" fill="#F7F0DF"/>
+  <path d="M11 24h42" stroke="#1F211D" stroke-width="3"/>
+  <circle cx="18" cy="19" r="2" fill="#00B0F0"/>
+  <circle cx="24" cy="19" r="2" fill="#1F211D"/>
+  <path d="M19 32h16M19 38h10" stroke="#1F211D" stroke-width="3" stroke-linecap="round"/>
+  <path d="m38 31 3 17 4-5 6 7 4-4-6-7 6-3z" fill="#00B0F0" stroke="#171816" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M21 54h22" stroke="#F7F0DF" stroke-width="4" stroke-linecap="round"/>
+</svg>

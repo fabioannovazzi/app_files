@@ -35,6 +35,7 @@ COMPONENTS = (
     "registro-imprese-sari",
     "bandi-agevolazioni",
     "bilancio-xbrl-it",
+    "browser-automation",
     "studio-archive",
 )
 

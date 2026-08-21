@@ -1,0 +1,68 @@
+{
+  "schema_version": 3,
+  "workstream": "browser-automation",
+  "display_name": "Vera · Automazione web",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "requirements.txt"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "agenzia-flow-implementation-recording",
+        "purpose": "Review an operator-approved sanitized map of the supported post-login Agenzia invoice journey so an automation can later be developed from observed controls and transitions",
+        "content": "Only after the operator reviews and approves the JSON: sanitized control roles and labels outside tabular data, Agenzia HTTPS origins and paths with queries, fragments and identifier-shaped path segments removed, sanitized interactive-control inventories, hashed suggested download names, filename suffixes, timestamps, capture warnings and the declared capture boundary. The recording excludes typed or selected values, credentials, one-time codes, cookies, browser storage, HTML, screenshots, request and response bodies, download paths, invoice bytes and invoice contents; human review remains required because deterministic redaction does not guarantee anonymization",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [
+    {
+      "id": "codex-agenzia-invoice-flow-teaching",
+      "kind": "external_connector",
+      "destination": "The authorized operator's Agenzia delle Entrate account in a dedicated temporary visible Google Chrome profile controlled locally through Playwright after personal authentication",
+      "purpose": "Let an authorized operator demonstrate the supported post-login invoice request and ZIP-retrieval journey so a later automation can be developed from observed UI structure",
+      "content": "The human's authentication and taxpayer or delegated-profile selection remain inside the visible browser before recording starts. During recording, the operator's clicks, changes, navigations and download action are sent to the Agenzia portal in the ordinary browser session; locally, the recorder retains only sanitized control metadata, origin-and-path page transitions, bounded interactive-control inventories, hashed suggested download names, filename suffixes, timestamps and boundary warnings. It does not retain entered values, credentials, cookies, storage, HTML, screenshots, network bodies, invoice files or invoice contents",
+      "optional": true,
+      "requires_confirmation": true,
+      "runtime_profiles": [
+        "openai-codex"
+      ],
+      "controls": [
+        "Use this route only after the operator explicitly asks to show or teach Vera the supported Agenzia invoice flow; that route choice does not approve separate sharing of the resulting recording.",
+        "Require the human to authenticate personally and select the correct taxpayer or delegated profile in visible Chrome. Vera never requests, enters, reads or stores credentials, PINs, SPID/CIE/CNS material, QR codes, one-time codes, cookies, tokens or session URLs.",
+        "Create an explicit headed Playwright page before authentication instructions. On Windows, normalize its Chrome DevTools window bounds and require a visible non-empty top-level Chrome window owned by the browser process launched for this recorder; unrelated or background-only Chrome processes stop the recorder before authentication.",
+        "Start recording only after the operator says authentication is complete and no credential screen is visible; stop if an observed page or control event leaves the exact Agenzia HTTPS host boundary.",
+        "Record only fixed value-free control metadata, query-free and fragment-free sanitized page paths, bounded control inventories and hashed suggested download names. Suppress text inside tables and grids and never persist HTML, screenshots, traces, HAR, browser state, typed or selected values, network headers or bodies, download paths or invoice bytes.",
+        "Use a fresh temporary Chrome profile and Playwright-managed downloads, close the browser under recorder control, and delete the temporary profile and download bytes when the session ends.",
+        "Write one owner-only JSON file outside the Git workspace, mark it as requiring human review, and do not read it into model context or share it until the operator has reviewed and explicitly approved it.",
+        "Treat the approved recording only as implementation evidence. It does not establish authority, invoice completeness, professional relevance, a reusable authenticated session, or an executable automation."
+      ]
+    }
+  ],
+  "security_controls": [
+    {
+      "id": "privacy-bounded-agenzia-flow-recording",
+      "control": "The local recorder creates an explicit headed page and, on Windows, proves a visible Chrome top-level desktop window owned by the launched browser process before authentication. It accepts only exact Agenzia HTTPS origins after authentication, strips URL queries, fragments and identifier-shaped path segments, captures a fixed allowlist of value-free control metadata, suppresses tabular text, hashes suggested download names, never requests download paths or bytes, uses a disposable Chrome profile, rejects forbidden output keys and writes one owner-only review-required JSON file without overwriting an earlier recording."
+    },
+    {
+      "id": "recording-is-not-executable-automation",
+      "control": "The workflow and manifest consistently describe the JSON as reviewed implementation evidence only. No command consumes it to authenticate, navigate, request, retrieve, sign, submit, or download on the operator's behalf."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-21",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "5c1749d32a406e203185ec397b18aff2dd3f0aa1c59f68aa699d61ff9d917806"
+  }
+}

@@ -1,7 +1,7 @@
 {
   "name": "studio-archive",
-  "version": "0.1.23",
-  "description": "Gmail, WhatsApp Desktop, flussi Agenzia e archivi cliente locali o Google Workspace tramite Codex.",
+  "version": "0.1.24",
+  "description": "Gmail, WhatsApp Desktop e archivi cliente locali o Google Workspace tramite Vera.",
   "author": {
     "name": "Mparanza",
     "email": "fabio@mparanza.com",
@@ -22,8 +22,6 @@
     "whatsapp-desktop",
     "google-workspace",
     "google-drive",
-    "fatture-e-corrispettivi",
-    "playwright",
     "shared-drives",
     "computer-use",
     "codex-desktop",
@@ -38,7 +36,7 @@
   "interface": {
     "displayName": "Vera · Archivio dello Studio",
     "shortDescription": "Cerca un cliente in Gmail, WhatsApp Desktop, file locali o Google Drive.",
-    "longDescription": "In ChatGPT o Codex, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Codex Desktop aggiunge l'accesso diretto a una cartella cliente locale oppure Google Drive, compresi gli Shared Drives autorizzati, e può consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use. Un percorso Playwright locale consente inoltre a un operatore autorizzato di mostrare a Vera il flusso post-login di download fatture dell'Agenzia senza registrare credenziali, valori digitati, cookie, HTML, schermate o contenuti delle fatture. Il perimetro Drive è legato all'ID stabile della cartella; snapshot e aperture ricontrollano ID, versione, parent, capacità e checksum disponibili. I contenuti vengono letti solo quando richiesti e non sono copiati nell'indice permanente. Se Codex non è installato, Vera spiega il vantaggio, fornisce il link ufficiale e continua comunque il lavoro possibile in ChatGPT.",
+    "longDescription": "In ChatGPT o Codex, Vera usa il connector Gmail di OpenAI installato e collegato separatamente per cercare la corrispondenza di un solo cliente con indirizzi confermati nella conversazione, query circoscritte e controlli sui messaggi ambigui. Codex Desktop aggiunge l'accesso diretto a una cartella cliente locale oppure Google Drive, compresi gli Shared Drives autorizzati, e può consultare una chat uno-a-uno verificata nell'app WhatsApp Desktop locale tramite Computer Use. Il perimetro Drive è legato all'ID stabile della cartella; snapshot e aperture ricontrollano ID, versione, parent, capacità e checksum disponibili. I contenuti vengono letti solo quando richiesti e non sono copiati nell'indice permanente. Se Codex non è installato, Vera spiega il vantaggio, fornisce il link ufficiale e continua comunque il lavoro possibile in ChatGPT.",
     "developerName": "Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -54,7 +52,6 @@
       "Cerca in Gmail le email di un cliente usando solo indirizzi confermati e senza mescolare altri clienti.",
       "Consulta WhatsApp Desktop per un solo cliente confermato, in sola lettura e senza inviare nulla.",
       "Collega la cartella Google Drive di questo cliente e prepara uno snapshot verificabile senza modificare i file.",
-      "Mostra a Vera come richiedere e scaricare le fatture dal portale Agenzia dopo che ho effettuato personalmente l'accesso.",
       "Chiedi a Vera di cercare una pratica locale e citare solo fonti aperte e verificate."
     ],
     "brandColor": "#002060",

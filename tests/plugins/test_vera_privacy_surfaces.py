@@ -260,13 +260,14 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
     organization_page = (
         ROOT / "static" / "shared" / "archive-organization" / "index.html"
     ).read_text(encoding="utf-8")
+    browser_automation_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
     for key in (
         "model.engagement.selection",
         "model.engagement.run",
         "model.engagement.organization",
-        "model.engagement.agenzia",
-        "model.engagement.agenzia-exclusions",
     ):
         assert studio_page.count(f'"{key}":') == 5
         assert f'data-i18n="{key}"' in studio_page
@@ -280,21 +281,17 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "the entire snapshot, within 5,000 files and 2 GB",
         "Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local",
         "Organization technical references are pseudonymized",
-        "After operator review and approval",
-        "the model receives a sanitized map",
-        "roles and labels for controls outside tables",
-        "Typed or selected values, credentials and one-time codes",
-        "Sanitization reduces exposure but does not guarantee anonymization",
     ):
         assert snippet in studio_page
-    for localized_agenzia_gate in (
-        "Dopo la revisione e l’approvazione dell’operatore",
-        "After operator review and approval",
-        "Après examen et approbation par l’opérateur",
-        "Nach Prüfung und Freigabe durch den Bediener",
-        "Tras la revisión y aprobación del operador",
+    assert "model.engagement.agenzia" not in studio_page
+    for snippet in (
+        '"browser-automation"',
+        "Only after the operator opens and reviews the file",
+        "control roles and labels outside tables",
+        "credentials, PINs, one-time codes, cookies",
+        "Sanitization reduces exposure but does not guarantee anonymization",
     ):
-        assert localized_agenzia_gate in studio_page
+        assert snippet in browser_automation_copy
     for contradictory_exclusion in (
         "hash e ID di esecuzione grezzi",
         "raw hashes and execution IDs",

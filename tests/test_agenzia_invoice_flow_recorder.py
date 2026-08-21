@@ -10,9 +10,10 @@ from types import ModuleType
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
+BROWSER_AUTOMATION_ROOT = ROOT / "plugins" / "browser-automation"
 STUDIO_ARCHIVE_ROOT = ROOT / "plugins" / "studio-archive"
 VERA_ROOT = ROOT / "plugins" / "vera"
-RECORDER_PATH = STUDIO_ARCHIVE_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
+RECORDER_PATH = BROWSER_AUTOMATION_ROOT / "scripts" / "record_agenzia_invoice_flow.py"
 
 
 def _load_recorder() -> ModuleType:
@@ -259,9 +260,11 @@ def test_present_browser_window_accepts_pointer_wrapped_native_window_handles(
     class Session:
         async def send(
             self, command: str, _arguments: object | None = None
-        ) -> dict[str, int]:
+        ) -> dict[str, object]:
             if command == "Browser.getWindowForTarget":
                 return {"windowId": 41}
+            if command == "SystemInfo.getProcessInfo":
+                return {"processInfo": [{"type": "browser", "id": 321}]}
             return {}
 
         async def detach(self) -> None:
@@ -297,6 +300,9 @@ def test_present_browser_window_accepts_pointer_wrapped_native_window_handles(
     class User32:
         EnumWindows = NativeFunction(enum_windows)
         GetClassNameW = NativeFunction(get_class_name)
+        GetWindowThreadProcessId = NativeFunction(
+            lambda _handle, process_id: setattr(process_id._obj, "value", 321) or 1  # type: ignore[attr-defined]
+        )
 
     import ctypes
 
@@ -336,9 +342,11 @@ def test_present_browser_window_falls_back_when_enum_windows_has_no_error(
     class Session:
         async def send(
             self, command: str, _arguments: object | None = None
-        ) -> dict[str, int]:
+        ) -> dict[str, object]:
             if command == "Browser.getWindowForTarget":
                 return {"windowId": 41}
+            if command == "SystemInfo.getProcessInfo":
+                return {"processInfo": [{"type": "browser", "id": 321}]}
             return {}
 
         async def detach(self) -> None:
@@ -388,6 +396,9 @@ def test_present_browser_window_falls_back_when_enum_windows_has_no_error(
     class User32:
         EnumWindows = NativeFunction(lambda *_args: False)
         GetClassNameW = NativeFunction(get_class_name)
+        GetWindowThreadProcessId = NativeFunction(
+            lambda _handle, process_id: setattr(process_id._obj, "value", 321) or 1  # type: ignore[attr-defined]
+        )
         GetDesktopWindow = NativeFunction(lambda: PointerHandle(1))
         FindWindowExW = NativeFunction(find_window)
 
@@ -430,8 +441,10 @@ def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
     class Session:
         async def send(
             self, command: str, arguments: object | None = None
-        ) -> dict[str, int]:
+        ) -> dict[str, object]:
             commands.append((command, arguments))
+            if command == "SystemInfo.getProcessInfo":
+                return {"processInfo": [{"type": "browser", "id": 321}]}
             return {"windowId": 41}
 
         async def detach(self) -> None:
@@ -445,7 +458,9 @@ def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
     monkeypatch.setattr(
         recorder,
         "_windows_top_level_chrome_windows",
-        lambda: {7, 11},
+        lambda browser_process_ids=None: (
+            {7, 11} if browser_process_ids is None else {11}
+        ),
     )
 
     def restore(handle: int) -> bool:
@@ -472,6 +487,7 @@ def test_windows_browser_window_is_normalized_and_native_visibility_is_proven(
                 },
             },
         ),
+        ("SystemInfo.getProcessInfo", None),
         ("detach", None),
     ]
     assert restored == [11]
@@ -485,29 +501,81 @@ def test_windows_background_process_without_window_fails_before_authentication(
     monkeypatch.setattr(
         recorder,
         "_windows_top_level_chrome_windows",
-        lambda: {7},
+        lambda _browser_process_ids=None: {7},
     )
 
     with pytest.raises(RuntimeError, match="prima dell'accesso"):
         asyncio.run(
             recorder._require_windows_desktop_window(
                 {7},
+                {321},
                 attempts=1,
                 interval_seconds=0,
             )
         )
 
 
-def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
-    skill = (STUDIO_ARCHIVE_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
-        encoding="utf-8"
+def test_unrelated_chrome_window_cannot_satisfy_visibility_gate(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    recorder = _load_recorder()
+    observed_process_filters: list[set[int] | None] = []
+
+    class Page:
+        async def bring_to_front(self) -> None:
+            return None
+
+    class Session:
+        async def send(
+            self, command: str, _arguments: object | None = None
+        ) -> dict[str, object]:
+            if command == "Browser.getWindowForTarget":
+                return {"windowId": 41}
+            if command == "SystemInfo.getProcessInfo":
+                return {"processInfo": [{"type": "browser", "id": 321}]}
+            return {}
+
+        async def detach(self) -> None:
+            return None
+
+    class Context:
+        async def new_cdp_session(self, _page: Page) -> Session:
+            return Session()
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+
+    def windows(browser_process_ids: set[int] | None = None) -> set[int]:
+        observed_process_filters.append(browser_process_ids)
+        return {91} if browser_process_ids is None else set()
+
+    async def no_wait(_seconds: float) -> None:
+        return None
+
+    monkeypatch.setattr(recorder, "_windows_top_level_chrome_windows", windows)
+    monkeypatch.setattr(recorder.asyncio, "sleep", no_wait)
+    monkeypatch.setattr(
+        recorder,
+        "_restore_windows_chrome_window",
+        lambda _handle: True,
     )
 
-    assert "Teach Vera the Agenzia invoice-download flow" in skill
-    assert "di' a voce oppure scrivi `pronto`" in skill
-    assert "va bene anche `ready`" in skill
-    assert "di' a voce oppure scrivi\n   `fatto`" in skill
-    assert "va bene anche `done`" in skill
+    with pytest.raises(RuntimeError, match="prima dell'accesso"):
+        asyncio.run(recorder.present_browser_window(Context(), Page(), set()))
+
+    assert observed_process_filters == [{321}] * 30
+
+
+def test_browser_automation_skill_exposes_two_checkpoint_teaching_flow() -> None:
+    skill = (
+        BROWSER_AUTOMATION_ROOT / "skills" / "browser-automation" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    normalized_skill = " ".join(skill.split())
+
+    assert "Supported procedure: Agenzia invoice flow" in skill
+    assert "di' a voce oppure scrivi `pronto`" in normalized_skill
+    assert "va bene anche `ready`" in normalized_skill
+    assert "di' a voce oppure scrivi `fatto`" in normalized_skill
+    assert "va bene anche `done`" in normalized_skill
     assert "Do not read the JSON into model context" in skill
     assert "requirements-portal-recorder.txt" in skill
 
@@ -515,22 +583,24 @@ def test_studio_archive_skill_exposes_two_checkpoint_teaching_flow() -> None:
 def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime() -> (
     None
 ):
-    requirements = (STUDIO_ARCHIVE_ROOT / "requirements-portal-recorder.txt").read_text(
-        encoding="utf-8"
-    )
-    wrapper = (VERA_ROOT / "skills" / "studio-archive" / "SKILL.md").read_text(
+    requirements = (
+        BROWSER_AUTOMATION_ROOT / "requirements-portal-recorder.txt"
+    ).read_text(encoding="utf-8")
+    wrapper = (VERA_ROOT / "skills" / "browser-automation" / "SKILL.md").read_text(
         encoding="utf-8"
     )
     normalized_wrapper = " ".join(wrapper.split())
 
     assert "playwright>=1.48.0" in requirements.splitlines()
-    assert "--module studio-archive --requirements" in normalized_wrapper
+    assert "--module browser-automation --requirements" in normalized_wrapper
     assert "requirements-portal-recorder.txt run" in normalized_wrapper
-    assert "without requiring a second Codex command" in normalized_wrapper
+    assert "starts the recorder in the same process" in normalized_wrapper
     assert "split setup and recorder launch into separate commands" in (
         normalized_wrapper
     )
-    assert "scripts/check_dependencies.py\n   --module studio-archive" not in wrapper
+    assert (
+        "scripts/check_dependencies.py\n   --module browser-automation" not in wrapper
+    )
     assert "missing-Playwright result is not a completed preflight" in (
         normalized_wrapper
     )
@@ -539,14 +609,14 @@ def test_vera_installs_recorder_optional_requirements_in_managed_module_runtime(
     assert "Do not stop with a missing-Playwright diagnosis" in normalized_wrapper
 
 
-def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
+def test_browser_automation_manifest_advertises_agenzia_teaching_route() -> None:
     manifest = json.loads(
-        (STUDIO_ARCHIVE_ROOT / ".codex-plugin" / "plugin.json").read_text(
+        (BROWSER_AUTOMATION_ROOT / ".codex-plugin" / "plugin.json").read_text(
             encoding="utf-8"
         )
     )
 
-    assert manifest["version"] == "0.1.23"
+    assert manifest["version"] == "0.1.0"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(
@@ -554,7 +624,7 @@ def test_studio_archive_manifest_advertises_agenzia_teaching_route() -> None:
     )
 
 
-def test_studio_archive_privacy_register_covers_agenzia_recording() -> None:
+def test_browser_automation_privacy_register_covers_agenzia_recording() -> None:
     privacy = json.loads(
         (
             ROOT
@@ -562,7 +632,7 @@ def test_studio_archive_privacy_register_covers_agenzia_recording() -> None:
             / "vera"
             / "privacy"
             / "workstreams"
-            / "studio-archive.json"
+            / "browser-automation.json"
         ).read_text(encoding="utf-8")
     )
     boundaries = {item["id"]: item for item in privacy["external_boundaries"]}
@@ -575,3 +645,20 @@ def test_studio_archive_privacy_register_covers_agenzia_recording() -> None:
     assert boundary["runtime_profiles"] == ["openai-codex"]
     assert "agenzia-flow-implementation-recording" in classes
     assert "privacy-bounded-agenzia-flow-recording" in controls
+
+
+def test_studio_archive_no_longer_owns_agenzia_recorder() -> None:
+    studio_skill = (
+        STUDIO_ARCHIVE_ROOT / "skills" / "studio-archive" / "SKILL.md"
+    ).read_text(encoding="utf-8")
+    studio_manifest = json.loads(
+        (STUDIO_ARCHIVE_ROOT / ".codex-plugin" / "plugin.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+    assert "Agenzia invoice-flow teaching" not in studio_skill
+    assert "record_agenzia_invoice_flow.py" not in studio_skill
+    assert not (STUDIO_ARCHIVE_ROOT / "requirements-portal-recorder.txt").exists()
+    assert not (STUDIO_ARCHIVE_ROOT / "scripts" / RECORDER_PATH.name).exists()
+    assert "playwright" not in studio_manifest["keywords"]

@@ -145,7 +145,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert "modules/studio-archive/scripts/studio_archive.py" in vera_entries
     assert "modules/studio-archive/scripts/client_ledger.py" in vera_entries
     assert (
-        "modules/studio-archive/scripts/record_agenzia_invoice_flow.py"
+        "modules/browser-automation/scripts/record_agenzia_invoice_flow.py"
         not in vera_entries
     )
     assert (

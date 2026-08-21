@@ -144,6 +144,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "bandi-agevolazioni": "modules/bandi-agevolazioni/skills/bandi-agevolazioni/SKILL.md",
     "avviso-intake": "modules/client-file-preparation/skills/avviso-intake/SKILL.md",
     "bilancio-xbrl-it": "modules/bilancio-xbrl-it/skills/bilancio-xbrl-it/SKILL.md",
+    "browser-automation": "modules/browser-automation/skills/browser-automation/SKILL.md",
     "check-entries": "modules/check-entries/skills/check-entries/SKILL.md",
     "concordato-plan-review": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
     "comunicazione-professionale": "modules/comunicazione-professionale/skills/comunicazione-professionale/SKILL.md",
