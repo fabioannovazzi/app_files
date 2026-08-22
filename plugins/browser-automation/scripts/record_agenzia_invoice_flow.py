@@ -14,6 +14,7 @@ __all__ = [
     "ALLOWED_HOST_SUFFIX",
     "PORTAL_URL",
     "build_download_record",
+    "confirm_operator_visible_browser",
     "is_allowed_url",
     "present_browser_window",
     "redact_text",
@@ -826,6 +827,27 @@ async def present_browser_window(
     )
 
 
+async def confirm_operator_visible_browser() -> None:
+    """Require human confirmation that the Windows Chrome window is visible."""
+
+    if sys.platform != "win32":
+        return
+    LOGGER.info(
+        "Prima dell'accesso, verifica di vedere la finestra Chrome vuota aperta "
+        "per questa registrazione. Di' o scrivi 'visibile' a Vera; va bene anche "
+        "'visible'. Se non la vedi, di' o scrivi 'stop'."
+    )
+    confirmation = await asyncio.to_thread(
+        input,
+        "Vera è in attesa di 'visibile' o 'visible' prima dell'accesso: ",
+    )
+    if confirmation.strip().casefold() not in {"visibile", "visible"}:
+        raise RuntimeError(
+            "La finestra Chrome non è stata confermata come visibile "
+            "dall'operatore. La registrazione si è fermata prima dell'accesso."
+        )
+
+
 @asynccontextmanager
 async def _visible_chrome_session(
     playwright: Any,
@@ -877,6 +899,7 @@ async def _run(args: argparse.Namespace) -> Path:
                 playwright,
                 args.browser_channel,
             ) as (context, page):
+                await confirm_operator_visible_browser()
                 await page.goto(PORTAL_URL, wait_until="domcontentloaded")
                 LOGGER.info(
                     "Accedi personalmente, seleziona il contribuente o la delega "
