@@ -600,6 +600,39 @@ def test_windows_background_process_without_window_fails_before_authentication(
         )
 
 
+@pytest.mark.parametrize("confirmation", ["visibile", "VISIBLE"])
+def test_operator_visibility_confirmation_accepts_explicit_visible_response(
+    monkeypatch: pytest.MonkeyPatch,
+    confirmation: str,
+) -> None:
+    recorder = _load_recorder()
+
+    async def respond(_function: object, _prompt: str) -> str:
+        return confirmation
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(recorder.asyncio, "to_thread", respond)
+
+    asyncio.run(recorder.confirm_operator_visible_browser())
+
+
+@pytest.mark.parametrize("confirmation", ["", "stop"])
+def test_operator_visibility_confirmation_stops_before_authentication(
+    monkeypatch: pytest.MonkeyPatch,
+    confirmation: str,
+) -> None:
+    recorder = _load_recorder()
+
+    async def respond(_function: object, _prompt: str) -> str:
+        return confirmation
+
+    monkeypatch.setattr(recorder.sys, "platform", "win32")
+    monkeypatch.setattr(recorder.asyncio, "to_thread", respond)
+
+    with pytest.raises(RuntimeError, match="prima dell'accesso"):
+        asyncio.run(recorder.confirm_operator_visible_browser())
+
+
 def test_unrelated_chrome_window_cannot_satisfy_visibility_gate(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -665,6 +698,8 @@ def test_browser_automation_skill_exposes_two_checkpoint_teaching_flow() -> None
     assert "Supported procedure: Agenzia invoice flow" in skill
     assert "di' a voce oppure scrivi `pronto`" in normalized_skill
     assert "va bene anche `ready`" in normalized_skill
+    assert "di' `visibile`" in normalized_skill
+    assert "never infer visibility" in normalized_skill
     assert "di' a voce oppure scrivi `fatto`" in normalized_skill
     assert "va bene anche `done`" in normalized_skill
     assert "Do not read the JSON into model context" in skill
@@ -707,7 +742,7 @@ def test_browser_automation_manifest_advertises_agenzia_teaching_route() -> None
         )
     )
 
-    assert manifest["version"] == "0.1.1"
+    assert manifest["version"] == "0.1.2"
     assert "fatture-e-corrispettivi" in manifest["keywords"]
     assert "playwright" in manifest["keywords"]
     assert any(

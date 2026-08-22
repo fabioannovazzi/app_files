@@ -39,9 +39,14 @@ Agenzia delle Entrate portal.
    explicit page before authentication. On Windows it restores and positions
    that Chrome window and verifies that Windows exposes a visible, non-empty
    desktop window owned by the browser process launched for this recording.
-   An unrelated or background Chrome process cannot satisfy the gate; stop
-   before authentication when it fails. The operator authenticates and selects
-   the correct taxpayer or delegated profile. Say: “Quando hai completato
+   An unrelated or background Chrome process cannot satisfy the gate. The
+   operator must then confirm that the blank Chrome window is actually visible:
+   say “Se vedi la finestra Chrome, di' `visibile`; va bene anche `visible`. Se
+   non la vedi, di' `stop`.” Send the exact confirmed word to the running PTY;
+   never infer visibility or send a bare newline. Anything except `visibile` or
+   `visible` stops before portal navigation and authentication. The operator
+   then authenticates and selects the correct taxpayer or delegated profile.
+   Say: “Quando hai completato
    l'accesso, di' a voce oppure scrivi `pronto`; va bene anche `ready`.” Then
    send one newline to the still-running PTY. Do not inspect or operate the
    authentication screens.

@@ -1,6 +1,6 @@
 {
   "name": "browser-automation",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Registra in modo controllato un flusso web mostrato dall'operatore per preparare un'automazione verificabile.",
   "author": {
     "name": "Mparanza",
