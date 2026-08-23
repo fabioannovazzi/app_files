@@ -32,6 +32,11 @@
       "uniqueItems": true,
       "items": {"type": "string", "minLength": 1}
     },
+    "governed_repository_paths": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
     "runtime_profiles": {
       "const": [
         "openai-codex",

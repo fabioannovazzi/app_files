@@ -98,6 +98,13 @@ SPECS = (
         "bank",
     ),
     IconSpec(
+        "passive-invoice-audit",
+        "Vera · Intelligent Passive-Invoice Audit",
+        "#002060",
+        "#00B0F0",
+        "invoice_audit",
+    ),
+    IconSpec(
         "report-builder",
         "Build Report",
         "#5D685C",
@@ -365,6 +372,13 @@ def _body(spec: IconSpec) -> str:
   <path d="M22 29v16M32 29v16M42 29v16" stroke="{paper}" stroke-width="4" stroke-linecap="round"/>
   <path d="M17 36h-3a4 4 0 0 1 0-8h5M47 36h3a4 4 0 0 0 0-8h-5" fill="none" stroke="{accent}" stroke-width="3" stroke-linecap="round"/>
   <path d="m24 52 5 5 12-14" fill="none" stroke="{accent}" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>""",
+        "invoice_audit": f"""
+  <path d="M15 13h27l8 8v31H15z" fill="{paper}"/>
+  <path d="M42 13v9h8" fill="#DCE5E8"/>
+  <path d="M22 27h19M22 35h16M22 43h10" stroke="{color}" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="43" cy="43" r="9" fill="{accent}"/>
+  <circle cx="43" cy="43" r="4" fill="#171816"/>
+  <path d="m49 49 6 6" stroke="{accent}" stroke-width="4" stroke-linecap="round"/>""",
         "report": f"""
   <path d="M17 13h27l7 8v31H17z" fill="{paper}"/>
   <path d="M44 13v9h7" fill="#E8E0D2"/>

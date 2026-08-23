@@ -22,6 +22,7 @@ ASSURANCE_CONSUMERS = {
     "journal-bank-reconciliation",
     "journal-sampling",
     "new-client",
+    "passive-invoice-audit",
     "previdenza-inps",
     "prompt-optimizer",
     "registro-imprese-sari",

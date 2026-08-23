@@ -933,14 +933,14 @@ def _write_semantic_worker_result(
             "codex_path": "/Applications/ChatGPT.app/Contents/Resources/codex",
             "codex_sha256": semantic_review.PINNED_CODEX_SHA256,
             "codex_bytes": 1,
-            "codex_version": "codex-cli 0.146.0-alpha.3.1",
+            "codex_version": semantic_review.PINNED_CODEX_VERSION,
             "sandbox_exec_path": "/usr/bin/sandbox-exec",
             "sandbox_exec_sha256": semantic_review.PINNED_SANDBOX_EXEC_SHA256,
             "canary_reader_sha256": semantic_review.PINNED_CAT_SHA256,
             "canaries": {
                 "exact_schema_read_succeeded": True,
                 "outside_capsule_read_denied": True,
-                "codex_version_inside_boundary": "codex-cli 0.146.0-alpha.3.1",
+                "codex_version_inside_boundary": semantic_review.PINNED_CODEX_VERSION,
             },
             "global_instructions_absent_or_empty": True,
             "auth_file_readable_by_codex_process": True,
@@ -9316,27 +9316,75 @@ def test_semantic_validate_rejects_worker_tool_events(tmp_path: Path) -> None:
         )
 
 
+def test_worker_events_accept_current_codex_fail_closed_notice_and_turn(
+    tmp_path: Path,
+) -> None:
+    semantic_review = load_semantic_review()
+    response = {"status": "bounded"}
+    events = [
+        {"type": "thread.started", "thread_id": "thread_current_codex"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "item_notice",
+                "type": "error",
+                "message": (
+                    "Code Mode is unavailable because code-mode host is disabled. "
+                    "Code mode will fail closed; enable `features.code_mode_host` "
+                    "and install `codex-code-mode-host`."
+                ),
+            },
+        },
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "item_response",
+                "type": "agent_message",
+                "text": json.dumps(response),
+            },
+        },
+        {
+            "type": "turn.completed",
+            "usage": {"input_tokens": 120, "output_tokens": 80},
+        },
+    ]
+    events_text = "".join(json.dumps(event) + "\n" for event in events)
+
+    summary = semantic_review._validate_worker_events(events_text, response)
+
+    assert summary["administrative_notice_count"] == 1
+    assert summary["turn_start_event_observed"] is True
+
+
+def test_worker_events_accept_current_codex_implicit_turn() -> None:
+    semantic_review = load_semantic_review()
+    response = {"status": "bounded"}
+    events = [
+        {"type": "thread.started", "thread_id": "thread_implicit_turn"},
+        {
+            "type": "item.completed",
+            "item": {
+                "id": "item_response",
+                "type": "agent_message",
+                "text": json.dumps(response),
+            },
+        },
+        {
+            "type": "turn.completed",
+            "usage": {"input_tokens": 120, "output_tokens": 80},
+        },
+    ]
+    events_text = "".join(json.dumps(event) + "\n" for event in events)
+
+    summary = semantic_review._validate_worker_events(events_text, response)
+
+    assert summary["turn_start_event_observed"] is False
+
+
 @pytest.mark.parametrize(
     "events_builder",
     [
-        pytest.param(
-            lambda message: [
-                {"type": "thread.started", "thread_id": "thread_luna_test"},
-                {
-                    "type": "item.completed",
-                    "item": {
-                        "id": "item_0",
-                        "type": "agent_message",
-                        "text": message,
-                    },
-                },
-                {
-                    "type": "turn.completed",
-                    "usage": {"input_tokens": 120, "output_tokens": 80},
-                },
-            ],
-            id="missing-turn-start",
-        ),
         pytest.param(
             lambda message: [
                 {"type": "thread.started", "thread_id": "thread_luna_test"},

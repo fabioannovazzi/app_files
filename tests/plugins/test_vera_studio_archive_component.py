@@ -34,6 +34,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
     "journal-sampling",
     "check-entries",
     "journal-bank-reconciliation",
+    "passive-invoice-audit",
     "sales-plan",
     "variance-analysis",
     "financial-analysis",

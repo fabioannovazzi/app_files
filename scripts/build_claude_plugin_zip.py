@@ -1891,6 +1891,31 @@ def _project_cowork_privacy_register(entries: dict[str, bytes]) -> None:
                 raise ValueError(
                     f"{workstream}: projected package has no governed implementation"
                 )
+            repository_paths = payload.get("governed_repository_paths", [])
+            if not isinstance(repository_paths, list) or not all(
+                isinstance(path, str) and path for path in repository_paths
+            ):
+                raise ValueError(
+                    f"{workstream}: projected repository paths are invalid"
+                )
+            projected_shared_paths = list(payload.get("governed_shared_paths", []))
+            for repository_path in repository_paths:
+                parts = Path(repository_path).parts
+                if len(parts) < 3 or parts[0] != "plugins":
+                    raise ValueError(
+                        f"{workstream}: unsupported projected repository path "
+                        f"{repository_path}"
+                    )
+                projected_relative = Path("modules", *parts[1:]).as_posix()
+                if projected_relative not in entries:
+                    raise ValueError(
+                        f"{workstream}: governed source is absent from Cowork package: "
+                        f"{projected_relative}"
+                    )
+                projected_shared_paths.append(projected_relative)
+            if repository_paths:
+                payload["governed_shared_paths"] = projected_shared_paths
+                payload.pop("governed_repository_paths", None)
             wrapper = (
                 projected_root / "skills" / workstream / "SKILL.md"
                 if role != "internal_engine"

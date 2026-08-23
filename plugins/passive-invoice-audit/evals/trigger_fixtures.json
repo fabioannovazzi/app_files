@@ -1,0 +1,35 @@
+{
+  "plugin": "passive-invoice-audit",
+  "version": 1,
+  "should_trigger": [
+    {
+      "id": "passive_invoice_population_audit",
+      "prompt": "Audit these passive FatturaPA invoices against the actual ledger and show me only accounting-treatment exceptions.",
+      "required_signals": ["passive FatturaPA", "actual ledger", "exceptions"]
+    },
+    {
+      "id": "audit_fatture_passive_prima_nota",
+      "prompt": "Confronta tutte queste fatture passive XML con la prima nota già registrata e prepara la carta di lavoro delle eccezioni.",
+      "required_signals": ["fatture passive XML", "prima nota", "eccezioni"]
+    },
+    {
+      "id": "semantic_account_classification_screen",
+      "prompt": "Screen the full booked supplier-invoice population for economically implausible expense or fixed-asset accounts.",
+      "required_signals": ["supplier-invoice population", "booked", "accounts"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "id": "book_invoice",
+      "prompt": "Post these supplier invoices into the accounting ERP."
+    },
+    {
+      "id": "sampled_entry_support_check",
+      "prompt": "Compare this selected journal sample with its supporting PDFs."
+    },
+    {
+      "id": "xml_metadata_only",
+      "prompt": "Extract FatturaPA XML metadata and list malformed files."
+    }
+  ]
+}

@@ -154,6 +154,7 @@ VERA_CHATGPT_ROUTER_TARGETS = {
     "fatture-xml-check": "modules/client-file-preparation/skills/fatture-xml-check/SKILL.md",
     "financial-analysis": "modules/financial-analysis/skills/financial-analysis/SKILL.md",
     "journal-bank-reconciliation": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+    "passive-invoice-audit": "modules/passive-invoice-audit/skills/passive-invoice-audit/SKILL.md",
     "journal-sampling": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
     "new-client": "modules/new-client/skills/new-client/SKILL.md",
     "previdenza-inps": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
