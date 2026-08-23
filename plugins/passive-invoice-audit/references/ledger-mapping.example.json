@@ -1,0 +1,20 @@
+{
+  "movement_id": "Numero movimento",
+  "line_number": "Riga",
+  "entry_date": "Data registrazione",
+  "document_date": "Data documento",
+  "supplier_tax_id": "Partita IVA fornitore",
+  "supplier_name": "Fornitore",
+  "invoice_number": "Numero fattura",
+  "document_reference": "Riferimento documento",
+  "account_code": "Conto",
+  "account_description": "Descrizione conto",
+  "account_type": "Tipo conto",
+  "line_description": "Descrizione riga",
+  "debit": "Dare",
+  "credit": "Avere",
+  "currency": "Divisa",
+  "gross_amount": "Totale documento",
+  "taxable_amount": "Imponibile",
+  "vat_amount": "IVA"
+}

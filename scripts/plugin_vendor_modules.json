@@ -86,6 +86,11 @@
         "vera_assurance"
       ]
     },
+    "passive-invoice-audit": {
+      "module_roots": [
+        "vera_assurance"
+      ]
+    },
     "sales-plan": {
       "module_roots": [
         "vera_assurance"

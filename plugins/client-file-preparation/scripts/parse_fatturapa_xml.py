@@ -33,6 +33,7 @@ from vera_assurance import (  # noqa: E402
 __all__ = [
     "InvoiceXmlRecord",
     "localize_formal_anomaly",
+    "parse_fatturapa_audit_file",
     "parse_fatturapa_file",
     "parse_xml_files",
     "write_duplicate_candidates_csv",
@@ -429,6 +430,153 @@ def parse_fatturapa_file(
         malformed=False,
         anomalies=tuple(anomalies),
     )
+
+
+def parse_fatturapa_audit_file(
+    path: Path | str,
+    base_dir: Path | str | None = None,
+) -> tuple[dict[str, object], ...]:
+    """Extract accounting-relevant evidence from every FatturaPA body.
+
+    This extends the existing bounded FatturaPA parser for the passive-invoice
+    audit.  It remains mechanical: descriptions and structured values are
+    extracted here, while accounting meaning is left to the later reviewer.
+    """
+
+    xml_path = Path(path)
+    base_path = Path(base_dir).resolve() if base_dir else xml_path.parent.resolve()
+    relative = xml_path.resolve().relative_to(base_path).as_posix()
+    root = _safe_xml_root(xml_path)
+    header = _find_first(root, "FatturaElettronicaHeader")
+    supplier = _find_first(header, "CedentePrestatore")
+    customer = _find_first(header, "CessionarioCommittente")
+    bodies = _find_all(root, "FatturaElettronicaBody")
+    extracted: list[dict[str, object]] = []
+    for body_index, body in enumerate(bodies, start=1):
+        general_data = _find_first(body, "DatiGeneraliDocumento")
+        lines: list[dict[str, str]] = []
+        for line in _find_all(body, "DettaglioLinee"):
+            lines.append(
+                {
+                    "line_number": _first_text(line, ["NumeroLinea"]),
+                    "description": _first_text(line, ["Descrizione"]),
+                    "quantity": _normalize_amount(_first_text(line, ["Quantita"])),
+                    "unit": _first_text(line, ["UnitaMisura"]),
+                    "unit_price": _normalize_amount(
+                        _first_text(line, ["PrezzoUnitario"])
+                    ),
+                    "line_total": _normalize_amount(
+                        _first_text(line, ["PrezzoTotale"])
+                    ),
+                    "vat_rate": _normalize_amount(_first_text(line, ["AliquotaIVA"])),
+                    "vat_nature": _first_text(line, ["Natura"]),
+                    "administrative_reference": _first_text(
+                        line, ["RiferimentoAmministrazione"]
+                    ),
+                }
+            )
+        vat_summaries: list[dict[str, str]] = []
+        for row in _find_all(body, "DatiRiepilogo"):
+            vat_summaries.append(
+                {
+                    "vat_rate": _normalize_amount(_first_text(row, ["AliquotaIVA"])),
+                    "vat_nature": _first_text(row, ["Natura"]),
+                    "taxable_amount": _normalize_amount(
+                        _first_text(row, ["ImponibileImporto"])
+                    ),
+                    "vat_amount": _normalize_amount(_first_text(row, ["Imposta"])),
+                    "collectability": _first_text(row, ["EsigibilitaIVA"]),
+                    "legal_reference": _first_text(row, ["RiferimentoNormativo"]),
+                }
+            )
+        payments: list[dict[str, str]] = []
+        for payment in _find_all(body, "DettaglioPagamento"):
+            payments.append(
+                {
+                    "method": _first_text(payment, ["ModalitaPagamento"]),
+                    "due_date": _first_text(payment, ["DataScadenzaPagamento"]),
+                    "amount": _normalize_amount(
+                        _first_text(payment, ["ImportoPagamento"])
+                    ),
+                    "iban": _first_text(payment, ["IBAN"]),
+                }
+            )
+        withholdings: list[dict[str, str]] = []
+        for withholding in _find_all(body, "DatiRitenuta"):
+            withholdings.append(
+                {
+                    "type": _first_text(withholding, ["TipoRitenuta"]),
+                    "amount": _normalize_amount(
+                        _first_text(withholding, ["ImportoRitenuta"])
+                    ),
+                    "rate": _normalize_amount(
+                        _first_text(withholding, ["AliquotaRitenuta"])
+                    ),
+                    "payment_reason": _first_text(withholding, ["CausalePagamento"]),
+                }
+            )
+        stamp = _find_first(body, "DatiBollo")
+        related_documents: list[dict[str, str]] = []
+        for tag in (
+            "DatiOrdineAcquisto",
+            "DatiContratto",
+            "DatiConvenzione",
+            "DatiRicezione",
+            "DatiFattureCollegate",
+        ):
+            for related in _find_all(body, tag):
+                related_documents.append(
+                    {
+                        "type": tag,
+                        "document_id": _first_text(related, ["IdDocumento"]),
+                        "date": _first_text(related, ["Data"]),
+                        "line_reference": _join_unique(
+                            _text(value)
+                            for value in _find_all(related, "RiferimentoNumeroLinea")
+                        ),
+                    }
+                )
+        document_type = _first_text(general_data, ["TipoDocumento"])
+        extracted.append(
+            {
+                "source_relative_path": relative,
+                "source_file_name": xml_path.name,
+                "body_index": body_index,
+                "supplier_vat": _party_vat(supplier),
+                "supplier_name": _party_name(supplier),
+                "customer_tax_id": _party_vat(customer),
+                "customer_name": _party_name(customer),
+                "invoice_date": _first_text(general_data, ["Data"]),
+                "invoice_number": _first_text(general_data, ["Numero"]),
+                "document_type": document_type,
+                "currency": _first_text(general_data, ["Divisa"]),
+                "gross_amount": _normalize_amount(
+                    _first_text(general_data, ["ImportoTotaleDocumento"])
+                ),
+                "causale": [
+                    _text(value) for value in _find_all(general_data, "Causale")
+                ],
+                "lines": lines,
+                "vat_summaries": vat_summaries,
+                "withholdings": withholdings,
+                "stamp_duty": {
+                    "virtual": _first_text(stamp, ["BolloVirtuale"]),
+                    "amount": _normalize_amount(_first_text(stamp, ["ImportoBollo"])),
+                },
+                "payments": payments,
+                "related_documents": related_documents,
+                "credit_note": document_type in {"TD04", "TD08"},
+                "split_payment": any(
+                    row["collectability"] == "S" for row in vat_summaries
+                ),
+                "reverse_charge": any(
+                    str(row["vat_nature"]).startswith("N6") for row in vat_summaries
+                ),
+            }
+        )
+    if not extracted:
+        raise ET.ParseError("FatturaElettronicaBody not found")
+    return tuple(extracted)
 
 
 def parse_xml_files(

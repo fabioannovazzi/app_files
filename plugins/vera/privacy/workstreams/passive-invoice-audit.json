@@ -1,0 +1,85 @@
+{
+  "schema_version": 3,
+  "workstream": "passive-invoice-audit",
+  "display_name": "Intelligent Passive-Invoice Audit",
+  "role": "workflow",
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "references"
+  ],
+  "governed_shared_paths": [
+    "vendor/modules/vera_assurance"
+  ],
+  "governed_repository_paths": [
+    "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",
+    "plugins/journal-bank-reconciliation/scripts/semantic_review.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "ledger-mapping-and-run-review",
+        "purpose": "Review the supplied ledger structure, exact source-to-canonical field mapping, run scope, outputs and limitations",
+        "content": "User instructions; source filenames and metadata; exact ledger headers and a bounded source sample needed to review the map; population, matching, deterministic exception and performance summaries; output paths and limitations",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "compact-luna-invoice-review-packets",
+        "purpose": "Determine whether each matched invoice has a concrete material reason for professional review",
+        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five reviewed relevant historical treatments. Raw XML, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
+      }
+    ]
+  },
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "managed-client-run-boundary",
+      "control": "The audit entrypoint requires a portable Studio Archive context for the exact passive-invoice-audit workflow, verifies every external input against its immutable run receipt, and confines outputs to that customer run. Evaluation discovers the owning run from the result artifact and applies the same input and output boundary."
+    },
+    {
+      "id": "immutable-sources-and-output-isolation",
+      "control": "The workflow reads supplied invoice and ledger files without modifying them, writes only below the selected audit output directory, stages archive XML as content-addressed copies, and never exposes an ERP, filing, payment, or posting operation."
+    },
+    {
+      "id": "reviewed-ledger-map-and-non-forced-matching",
+      "control": "Ledger rows enter only through an explicit canonical-to-source header map. Matching requires exact structured invoice references with corroborating supplier, date or amount evidence, or the exact supplier-date-amount combination; multiple candidates, duplicates, missing invoices and ledger orphans remain explicit instead of being forced."
+    },
+    {
+      "id": "deterministic-accounting-check-boundary",
+      "control": "Bounded XML parsing extracts structured FatturaPA fields and Decimal code performs invoice, VAT, ledger-total, balance, currency, duplicate and reference checks before semantic review; Luna is not used to replace mechanically exact arithmetic."
+    },
+    {
+      "id": "qualified-native-luna-worker",
+      "control": "The semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, fixes the model to gpt-5.6-luna, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
+    },
+    {
+      "id": "content-bound-restartable-job",
+      "control": "SQLite binds the audit to source, ledger, mapping, workflow and control digests; packet changes fail closed, completed content-addressed chunks are not repeated, interrupted chunks become pending, results are upserted by invoice ID, and failed chunks remain resumable without duplicating population rows."
+    },
+    {
+      "id": "exception-focused-advisory-output",
+      "control": "The XLSX workpaper contains professional-review exceptions and ledger orphans while full-population JSONL retains reconstruction evidence. The only non-exception label is no_issue_detected, which the workflow explicitly prevents from being described as correct, approved, verified or audit passed."
+    },
+    {
+      "id": "isolated-synthetic-corruption",
+      "control": "Synthetic evaluation accepts only an explicit mutation plan, copies an existing semantic packet to a separate output with a synthetic identifier, retains original and replacement treatment, and never mutates the real ledger, packet, job database or source file."
+    }
+  ],
+  "review": {
+    "reviewed_at": "2026-08-23",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_workflow_source",
+    "source_fingerprint": "e9004edef22a64891f58ed6d0a489135cfedf645773c96c81864c8ab4309cee5"
+  }
+}

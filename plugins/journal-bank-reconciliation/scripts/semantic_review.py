@@ -68,6 +68,7 @@ import json
 import logging
 import os
 import platform
+import re
 import secrets
 import selectors
 import shutil
@@ -123,6 +124,7 @@ __all__ = [
     "STATUS_NAME",
     "VALIDATED_SUGGESTIONS_NAME",
     "WORKER_RUN_NAME",
+    "run_isolated_luna_worker",
     "main",
     "prepare_semantic_review",
     "run_semantic_resolution_pipeline",
@@ -180,8 +182,8 @@ DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 
 WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
 PINNED_DARWIN_BUILD = "25F84"
-PINNED_CODEX_VERSION = "codex-cli 0.146.0-alpha.3.1"
-PINNED_CODEX_SHA256 = "6d8be49e49751554df16572369e636cbe02c84b208cad3dc35528c846eeca223"
+PINNED_CODEX_VERSION = "codex-cli 0.148.0-alpha.21"
+PINNED_CODEX_SHA256 = "5e508bd40c1bdd2d9798a269839c16935c71941e5709c097b0a527bee52977ab"
 PINNED_SANDBOX_EXEC_SHA256 = (
     "8290e4be7387a0df83cd1559e86afd880464f269450573d012795761fe298f16"
 )
@@ -255,6 +257,8 @@ DISABLED_WORKER_FEATURES = (
     "browser_use",
     "browser_use_external",
     "browser_use_full_cdp_access",
+    "chronicle",
+    "code_mode",
     "code_mode_host",
     "computer_use",
     "goals",
@@ -2435,6 +2439,8 @@ def _worker_inner_argv(
     schema_path: Path,
     state_dir: Path,
     log_dir: Path,
+    model: str = "gpt-5.6-luna",
+    reasoning_effort: str = "max",
 ) -> list[str]:
     command = [
         "exec",
@@ -2451,9 +2457,9 @@ def _worker_inner_argv(
     command.extend(
         [
             "--model",
-            "gpt-5.6-luna",
+            model,
             "--config",
-            'model_reasoning_effort="max"',
+            f"model_reasoning_effort={json.dumps(reasoning_effort)}",
             "--config",
             "project_doc_max_bytes=0",
             "--config",
@@ -2471,7 +2477,11 @@ def _worker_inner_argv(
     return command
 
 
-def _redacted_worker_argv() -> list[str]:
+def _redacted_worker_argv(
+    *,
+    model: str = "gpt-5.6-luna",
+    reasoning_effort: str = "max",
+) -> list[str]:
     command = [
         "sandbox-exec",
         "<exact-boundary-parameters>",
@@ -2490,9 +2500,9 @@ def _redacted_worker_argv() -> list[str]:
     command.extend(
         [
             "--model",
-            "gpt-5.6-luna",
+            model,
             "--config",
-            'model_reasoning_effort="max"',
+            f"model_reasoning_effort={json.dumps(reasoning_effort)}",
             "--config",
             "project_doc_max_bytes=0",
             "--config",
@@ -2508,6 +2518,315 @@ def _redacted_worker_argv() -> list[str]:
         ]
     )
     return command
+
+
+def _worker_banner_attestation(
+    stderr_bytes: bytes,
+    *,
+    model: str,
+    reasoning_effort: str,
+) -> dict[str, Any]:
+    """Record any Codex CLI worker configuration banner without overstating it.
+
+    The banner is a CLI self-report rather than a provider-signed attestation.
+    JSONL mode in Codex CLI 0.148 does not currently emit the normal banner.
+    The pinned executable and exact argv remain the execution evidence. If a
+    banner is present, fail closed on any conflicting report.
+    """
+
+    try:
+        stderr_text = stderr_bytes.decode("utf-8")
+    except UnicodeDecodeError as exc:
+        raise ValueError("Worker stderr is not UTF-8") from exc
+    model_reports = re.findall(r"(?m)^model:\s*(\S+)\s*$", stderr_text)
+    effort_reports = re.findall(r"(?m)^reasoning effort:\s*(\S+)\s*$", stderr_text)
+    if model_reports and set(model_reports) != {model}:
+        raise ValueError("Codex worker reported another model")
+    if effort_reports and set(effort_reports) != {reasoning_effort}:
+        raise ValueError("Codex worker reported another reasoning effort")
+    return {
+        "model_requested_in_pinned_cli_argv": model,
+        "reasoning_effort_requested_in_pinned_cli_argv": reasoning_effort,
+        "cli_banner_observed": bool(model_reports and effort_reports),
+        "model_self_reported_by_pinned_cli": model if model_reports else None,
+        "reasoning_effort_self_reported_by_pinned_cli": (
+            reasoning_effort if effort_reports else None
+        ),
+        "provider_attestation": False,
+    }
+
+
+def run_isolated_luna_worker(
+    *,
+    prompt: str,
+    output_schema: Mapping[str, Any],
+    output_dir: Path,
+    workflow_id: str,
+    packet_sha256: str,
+    reasoning_effort: str = "low",
+    codex_bin: Path | None = None,
+    timeout_seconds: int = WORKER_TIMEOUT_SECONDS,
+) -> dict[str, Any]:
+    """Run one generic structured Luna task through the qualified capsule.
+
+    This is the reusable native-Codex boundary. Domain-specific callers own
+    packet construction and semantic validation; this function owns only the
+    pinned executable, read boundary, exact model/effort request, bounded
+    process capture, event lifecycle, and content-bound launch receipt.
+    """
+
+    if reasoning_effort not in {"none", "low", "medium", "high", "xhigh", "max"}:
+        raise ValueError("Unsupported Luna reasoning effort")
+    if (
+        not workflow_id
+        or len(workflow_id) > 80
+        or not re.fullmatch(r"[a-z0-9][a-z0-9_-]*", workflow_id)
+    ):
+        raise ValueError("Invalid Luna workflow identifier")
+    if not re.fullmatch(r"[0-9a-f]{64}", packet_sha256):
+        raise ValueError("Invalid Luna packet digest")
+    if not isinstance(prompt, str) or not prompt.strip():
+        raise ValueError("Luna prompt must be non-empty")
+    prompt_bytes = prompt.encode("utf-8")
+    if len(prompt_bytes) > MAX_PROMPT_BYTES:
+        raise ValueError("Luna prompt exceeds the bounded packet limit")
+    if not isinstance(output_schema, Mapping):
+        raise ValueError("Luna output schema must be an object")
+    schema_bytes = _json_bytes(dict(output_schema))
+    if len(schema_bytes) > MAX_PROMPT_BYTES:
+        raise ValueError("Luna output schema exceeds the bounded packet limit")
+
+    output = output_dir.expanduser().resolve()
+    if output.is_symlink() or not output.is_dir():
+        raise ValueError("Luna output directory must already be an ordinary directory")
+    artifact_names = (RESPONSE_NAME, EVENTS_NAME, STDERR_NAME, LAUNCH_RECEIPT_NAME)
+    for name in artifact_names:
+        _new_output_path(output, name)
+
+    boundary_inputs = _codex_home_boundary_inputs()
+    executables = _qualified_executables(codex_bin)
+    profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
+    if profile_sha256 != PINNED_SEATBELT_PROFILE_SHA256:
+        raise ValueError("Seatbelt profile does not match the qualified boundary")
+
+    model = "gpt-5.6-luna"
+    capsule = Path(
+        tempfile.mkdtemp(prefix=".luna-worker-capsule.", dir=output)
+    ).resolve()
+    capsule.chmod(0o700)
+    artifacts_published = False
+    try:
+        capsule_schema = capsule / OUTPUT_SCHEMA_NAME
+        capsule_prompt = capsule / "prompt.stdin"
+        profile_path = capsule / "seatbelt.sb"
+        state_dir = capsule / "state"
+        log_dir = capsule / "log"
+        state_dir.mkdir(mode=0o700)
+        log_dir.mkdir(mode=0o700)
+        capsule_schema.write_bytes(schema_bytes)
+        capsule_prompt.write_bytes(prompt_bytes)
+        profile_path.write_text(SEATBELT_PROFILE, encoding="utf-8")
+        for path in (capsule_schema, capsule_prompt, profile_path):
+            path.chmod(0o600)
+
+        canaries = _qualification_canaries(
+            semantic_dir=output,
+            profile_path=profile_path,
+            schema_path=capsule_schema,
+            schema_bytes=schema_bytes,
+            capsule=capsule,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+            executables=executables,
+        )
+        worker_prefix = _seatbelt_prefix(
+            executable=executables["codex_path"],
+            profile_path=profile_path,
+            schema_path=capsule_schema,
+            work_dir=capsule,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+        )
+        worker_inner = _worker_inner_argv(
+            capsule=capsule,
+            schema_path=capsule_schema,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            model=model,
+            reasoning_effort=reasoning_effort,
+        )
+        process_result = _run_captured_process(
+            [*worker_prefix, *worker_inner],
+            cwd=capsule,
+            stdin_path=capsule_prompt,
+            stdout_limit=MAX_EVENTS_BYTES,
+            stderr_limit=MAX_STDERR_BYTES,
+            timeout_seconds=timeout_seconds,
+        )
+        if process_result["return_code"] != 0:
+            raise ValueError("The isolated Luna worker returned a nonzero status")
+        try:
+            events_text = process_result["stdout"].decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Worker JSONL output is not UTF-8") from exc
+        event_summary = _validate_worker_events(events_text, response=None)
+        response = event_summary["final_response"]
+        banner = _worker_banner_attestation(
+            process_result["stderr"],
+            model=model,
+            reasoning_effort=reasoning_effort,
+        )
+        response_bytes = _json_bytes(response)
+        response_sha256 = hashlib.sha256(response_bytes).hexdigest()
+        events_bytes = process_result["stdout"]
+        events_sha256 = hashlib.sha256(events_bytes).hexdigest()
+        stderr_bytes = process_result["stderr"]
+        stderr_sha256 = hashlib.sha256(stderr_bytes).hexdigest()
+
+        if _codex_home_boundary_inputs()["bindings"] != boundary_inputs["bindings"]:
+            raise ValueError("Codex boundary inputs changed while Luna was running")
+        for path, label, digest, binding in (
+            (
+                executables["codex_path"],
+                "Codex CLI",
+                PINNED_CODEX_SHA256,
+                executables["codex_binding"],
+            ),
+            (
+                SANDBOX_EXEC_PATH,
+                "macOS sandbox-exec",
+                PINNED_SANDBOX_EXEC_SHA256,
+                executables["sandbox_exec_binding"],
+            ),
+            (
+                SANDBOX_CANARY_PATH,
+                "macOS sandbox canary reader",
+                PINNED_CAT_SHA256,
+                executables["canary_binding"],
+            ),
+        ):
+            if (
+                _stable_executable_binding(
+                    path,
+                    label=label,
+                    expected_sha256=digest,
+                )
+                != binding
+            ):
+                raise ValueError(f"{label} changed while Luna was running")
+
+        prompt_sha256 = hashlib.sha256(prompt_bytes).hexdigest()
+        schema_sha256 = hashlib.sha256(schema_bytes).hexdigest()
+        receipt_content = {
+            "schema_version": "vera.luna_launch_receipt.v1",
+            "workflow_id": workflow_id,
+            "packet_sha256": packet_sha256,
+            "packet": {
+                "prompt_sha256": prompt_sha256,
+                "prompt_bytes": len(prompt_bytes),
+                "output_schema_sha256": schema_sha256,
+                "output_schema_bytes": len(schema_bytes),
+            },
+            "requested_worker_configuration": {
+                "model": model,
+                "reasoning_effort": reasoning_effort,
+                "sandbox": "read-only",
+                "ephemeral": True,
+                "project_rules_ignored": True,
+                "direct_model_api": False,
+            },
+            "boundary": {
+                "contract_id": WORKER_BOUNDARY_CONTRACT_ID,
+                "platform": "Darwin",
+                "darwin_build": executables["darwin_build"],
+                "profile_sha256": profile_sha256,
+                "codex_path": str(executables["codex_path"]),
+                "codex_sha256": executables["codex_binding"]["sha256"],
+                "codex_bytes": executables["codex_binding"]["byte_count"],
+                "codex_version": PINNED_CODEX_VERSION,
+                "sandbox_exec_path": str(SANDBOX_EXEC_PATH),
+                "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
+                "canary_reader_sha256": executables["canary_binding"]["sha256"],
+                "canaries": canaries,
+                "global_instructions_absent_or_empty": True,
+                "auth_file_readable_by_codex_process": True,
+                "installation_id_preexisting_and_unchanged": True,
+                "outbound_network_allowed": True,
+                "filesystem_scope": "capsule_plus_exact_codex_runtime_files",
+            },
+            "process": {
+                "return_code": process_result["return_code"],
+                "timed_out": False,
+                "duration_ms": process_result["duration_ms"],
+                "redacted_argv": _redacted_worker_argv(
+                    model=model,
+                    reasoning_effort=reasoning_effort,
+                ),
+                "response_sha256": response_sha256,
+                "response_bytes": len(response_bytes),
+                "events_sha256": events_sha256,
+                "events_bytes": len(events_bytes),
+                "stderr_sha256": stderr_sha256,
+                "stderr_bytes": len(stderr_bytes),
+            },
+            "jsonl_observation": {
+                "visibility_complete": False,
+                "visible_forbidden_item_count": 0,
+                "tool_use_absence_observed": False,
+                "thread_id": event_summary["thread_id"],
+                "usage": event_summary["usage"],
+                "completed_item_counts": event_summary["completed_item_counts"],
+                "administrative_notice_count": event_summary[
+                    "administrative_notice_count"
+                ],
+            },
+            "runtime_attestation": {
+                **banner,
+                "main_chat_model_change": False,
+            },
+            "advisory_only": True,
+        }
+        receipt = {
+            **receipt_content,
+            "content_sha256": canonical_json_sha256(receipt_content),
+        }
+        _publish_worker_artifacts(
+            output,
+            capsule,
+            {
+                RESPONSE_NAME: response_bytes,
+                EVENTS_NAME: events_bytes,
+                STDERR_NAME: stderr_bytes,
+                LAUNCH_RECEIPT_NAME: _json_bytes(receipt),
+            },
+        )
+        artifacts_published = True
+        return {
+            "response": output / RESPONSE_NAME,
+            "events": output / EVENTS_NAME,
+            "stderr": output / STDERR_NAME,
+            "launch_receipt": output / LAUNCH_RECEIPT_NAME,
+            "response_payload": response,
+            "usage": event_summary["usage"],
+            "duration_ms": process_result["duration_ms"],
+            "model": model,
+            "reasoning_effort": reasoning_effort,
+            "main_chat_model_change": False,
+        }
+    except (OSError, ValueError):
+        if artifacts_published:
+            _remove_published_worker_artifacts(output)
+            artifacts_published = False
+        raise
+    finally:
+        try:
+            _cleanup_worker_capsule(output, capsule)
+        except (OSError, ValueError):
+            if artifacts_published:
+                _remove_published_worker_artifacts(output)
+            raise
 
 
 def _publish_worker_artifacts(
@@ -3083,7 +3402,9 @@ def _validate_worker_events(
     thread_id: str | None = None
     usage: dict[str, int] | None = None
     turn_started = False
+    turn_start_event_observed = False
     turn_completed = False
+    administrative_notice_count = 0
     item_types: dict[str, str] = {}
     started_item_ids: set[str] = set()
     completed_item_ids: set[str] = set()
@@ -3109,11 +3430,20 @@ def _validate_worker_events(
         if thread_id is None:
             raise ValueError("Worker event occurred before thread start")
         if event_type == "turn.started":
-            if turn_started or turn_completed or line_number != 2:
+            if (
+                turn_started
+                or turn_completed
+                or line_number != 2 + administrative_notice_count
+            ):
                 raise ValueError("Worker turn must start exactly once after its thread")
             turn_started = True
+            turn_start_event_observed = True
             continue
         if event_type in {"item.started", "item.updated", "item.completed"}:
+            if not turn_started and line_number == 2 and not turn_completed:
+                # Codex CLI 0.148 may begin the turn implicitly with its first
+                # item event.  Earlier qualified clients emitted turn.started.
+                turn_started = True
             if not turn_started or turn_completed:
                 raise ValueError("Worker item event occurred outside the active turn")
             item = event.get("item")
@@ -3123,6 +3453,19 @@ def _validate_worker_events(
             if not isinstance(item_id, str) or not item_id:
                 raise ValueError("Worker item event has no stable item ID")
             item_type = item.get("type")
+            if item_type == "error" and not turn_start_event_observed:
+                message = item.get("message")
+                if (
+                    event_type == "item.completed"
+                    and isinstance(message, str)
+                    and message.startswith("Code Mode is unavailable because ")
+                    and message.endswith(
+                        "Code mode will fail closed; enable `features.code_mode_host` and install `codex-code-mode-host`."
+                    )
+                ):
+                    administrative_notice_count += 1
+                    turn_started = False
+                    continue
             if item_type not in MODEL_ITEM_TYPES:
                 raise ValueError(f"Worker used a forbidden item type: {item_type}")
             prior_type = item_types.setdefault(item_id, item_type)
@@ -3185,6 +3528,8 @@ def _validate_worker_events(
         "jsonl_visibility_complete": False,
         "visible_forbidden_item_count": 0,
         "tool_use_absence_observed": False,
+        "turn_start_event_observed": turn_start_event_observed,
+        "administrative_notice_count": administrative_notice_count,
         "final_response": final_message,
     }
 

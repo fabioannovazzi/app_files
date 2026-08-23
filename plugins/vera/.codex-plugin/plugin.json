@@ -1,6 +1,6 @@
 {
   "name": "vera",
-  "version": "0.1.157",
+  "version": "0.1.158",
   "description": "Vera affianca commercialisti e studi professionali in contabilità, analisi degli scostamenti, bilanci OIC/XBRL, riconciliazioni, ricerche e comunicazioni rivedibili.",
   "author": {
     "name": "Mparanza",
@@ -49,6 +49,8 @@
     "scenario-planning",
     "forecast-assumptions",
     "journal",
+    "fatture-passive",
+    "invoice-audit",
     "reporting",
     "concordato",
     "research",

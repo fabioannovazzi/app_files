@@ -64,6 +64,10 @@ skill to imitate a missing operational workflow.
   fixed financial due-diligence calculations.
 - `journal-bank-reconciliation`: reconcile bank statements with journal or
   ledger exports using reviewed mappings and matching evidence.
+- `passive-invoice-audit`: screen passive FatturaPA XML populations against
+  actual booked ledger movements, apply deterministic arithmetic and matching
+  checks, then use native Claude GPT-5.6 Luna on compact matched-invoice packets
+  to produce an exception-focused professional workpaper.
 - `journal-sampling`: qualify and normalize journal entries and generate
   reproducible audit samples with diagnostics.
 - `new-client`: prepare a source-bound client setup covering files, identity,
