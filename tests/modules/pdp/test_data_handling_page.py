@@ -69,10 +69,13 @@ def _copy_shape(value: Any) -> Any:
         ),
         (
             "it",
-            "Come vengono gestiti i tuoi dati.",
+            "Come vengono gestiti i dati.",
             "Come Vera e Clara gestiscono i dati.",
-            "Il confine principale è l'ambiente AI scelto.",
-            "Un confine globale. I dettagli del processo restano con il processo.",
+            "Operazioni locali e trattamento del modello.",
+            (
+                "Ogni processo spiega quali dati restano locali, quali arrivano al "
+                "modello e quali raggiungono altre destinazioni."
+            ),
         ),
         (
             "fr",
@@ -149,6 +152,34 @@ def test_data_handling_template_links_localized_accessible_youtube_video() -> No
     }
     for language, youtube_id in expected_ids.items():
         assert get_data_handling_content(language)["video"]["youtube_id"] == youtube_id
+
+
+def test_italian_data_handling_copy_states_the_shared_boundaries_directly() -> None:
+    page = get_data_handling_content("it")
+    sections = {section["id"]: section for section in page["sections"]}
+
+    assert page["boundary"]["intro"] == (
+        "Il plugin esegue localmente e in modo deterministico ordinamenti, calcoli, "
+        "riconciliazioni, filtri e aggregazioni. Il modello riceve i dati necessari "
+        "al singolo processo."
+    )
+    assert page["boundary"]["exclusion"] == (
+        "Ogni processo dichiara che cosa viene elaborato localmente, che cosa arriva "
+        "al modello e che cosa resta escluso."
+    )
+    assert sections["local-execution"]["paragraphs"][1] == (
+        "Per questo i nostri plugin, in generale, non anonimizzano i dati; lo fanno "
+        "solo quando ciò non incide sul processo."
+    )
+    assert sections["workflow-boundaries"]["paragraphs"][1] == (
+        "Se si caricano dati personali, è necessario avere un DPA con il provider "
+        "del modello."
+    )
+    assert sections["hosted-features"]["paragraphs"][0] == (
+        "Il normale funzionamento dei plugin non invia né conserva sul server di "
+        "Mparanza LLC i dati del cliente o del lavoro. Per il normale funzionamento "
+        "dei plugin non è quindi necessario un DPA con Mparanza LLC."
+    )
 
 
 def test_spanish_public_content_has_recursive_key_parity_with_english() -> None:

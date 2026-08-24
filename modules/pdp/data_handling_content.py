@@ -172,106 +172,107 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     },
     "it": {
         "meta_description": (
-            "Come i plugin Mparanza usano l'ambiente AI scelto, l'elaborazione locale, "
-            "i servizi hosted e le destinazioni esterne."
+            "Come i plugin di Mparanza LLC distinguono elaborazione locale, dati "
+            "inviati al modello, destinazioni esterne e funzioni sul server."
         ),
         "skip_label": "Vai al contenuto principale",
         "home_label": "Torna a Mparanza",
         "language_selector_label": "Selettore della lingua",
         "eyebrow": "Sicurezza, privacy e dati",
-        "title": "Come vengono gestiti i tuoi dati.",
+        "title": "Come vengono gestiti i dati.",
         "summary": (
-            "Vera, Clara e Lucia lavorano nell'ambiente AI scelto dall'utente. "
-            "I servizi hosted di Mparanza e le altre destinazioni esterne sono separati."
+            "I nostri plugin combinano operazioni locali e trattamento del modello. "
+            "Ogni processo dichiara che cosa resta locale, che cosa arriva al modello "
+            "e che cosa viene escluso."
         ),
         "video": {
             "eyebrow": "Vera + Clara · Video",
             "title": "Come Vera e Clara gestiscono i dati.",
             "description": (
-                "Guarda la differenza tra preparazione locale, trattamento del modello "
-                "nell'ambiente scelto e un servizio hosted da Mparanza."
+                "Guarda la differenza tra operazioni locali, trattamento del modello e "
+                "funzioni che utilizzano il server di Mparanza LLC."
             ),
             "youtube_id": "q3nS9YBaEP8",
             "watch_label": "Guarda su YouTube",
         },
         "boundary": {
-            "title": "Il confine principale è l'ambiente AI scelto.",
+            "title": "Operazioni locali e trattamento del modello.",
             "intro": (
-                "I dati necessari al lavoro possono entrare nel contesto del modello "
-                "dell'account OpenAI ChatGPT o Codex, oppure Anthropic Claude o Cowork, "
-                "scelto dall'utente. Mparanza non è un destinatario separato del normale "
-                "lavoro dei plugin."
+                "Il plugin esegue localmente e in modo deterministico ordinamenti, "
+                "calcoli, riconciliazioni, filtri e aggregazioni. Il modello riceve i "
+                "dati necessari al singolo processo."
             ),
-            "local_label": "Il tuo computer",
-            "local_detail": "File locali · Python locale · risultati locali",
-            "account_label": "Il tuo ambiente AI scelto",
-            "account_detail": "OpenAI ChatGPT o Codex · Anthropic Claude o Cowork",
-            "exclusion": "Il normale lavoro dei plugin non invia a Mparanza contenuti del cliente o del lavoro.",
+            "local_label": "Elaborazione locale",
+            "local_detail": (
+                "Ordinamenti · calcoli · riconciliazioni · filtri · aggregazioni"
+            ),
+            "account_label": "Trattamento del modello",
+            "account_detail": "Dati necessari al singolo processo",
+            "exclusion": (
+                "Ogni processo dichiara che cosa viene elaborato localmente, che cosa "
+                "arriva al modello e che cosa resta escluso."
+            ),
         },
         "sections": [
             {
                 "id": "local-execution",
-                "title": "La preparazione locale è utile, non è anonimizzazione automatica.",
+                "title": "Anonimizzazione e finalità del processo.",
                 "paragraphs": [
                     (
-                        "Python in locale può ordinare, calcolare, riconciliare, filtrare, "
-                        "aggregare e creare risultati. Un workflow può usarlo prima di un "
-                        "passaggio del modello quando migliora il lavoro."
+                        "Anonimizzare può rendere più difficile proprio l'analisi che il "
+                        "modello deve svolgere."
                     ),
                     (
-                        "I plugin non anonimizzano né pseudonimizzano automaticamente i dati. "
-                        "Nomi, documenti, testo originale e fatti del caso restano quando "
-                        "sono utili alla finalità professionale."
+                        "Per questo i nostri plugin, in generale, non anonimizzano i dati; "
+                        "lo fanno solo quando ciò non incide sul processo."
                     ),
                 ],
             },
             {
                 "id": "workflow-boundaries",
-                "title": "Il confine dettagliato appartiene al workflow.",
+                "title": "Dati personali e DPA.",
                 "paragraphs": [
                     (
-                        "Ogni workflow può usare i dati in modo diverso. La sua pagina spiega "
-                        "la sequenza operativa: che cosa vede il modello, che cosa elabora il "
-                        "codice e quando il processo si ferma. Questa pagina non duplica tali "
-                        "dichiarazioni specifiche."
+                        "I dati vengono filtrati e aggregati localmente quando il processo "
+                        "lo consente, ma alcuni dati personali possono comunque essere "
+                        "trattati dal modello."
                     ),
                     (
-                        "Non inserire mai password, chiavi API, cookie di autenticazione, "
-                        "token di accesso o dati di sessione nei prompt o nei file che "
-                        "l'ambiente AI scelto può leggere."
+                        "Se si caricano dati personali, è necessario avere un DPA con il "
+                        "provider del modello."
                     ),
                 ],
             },
             {
                 "id": "connected-sources",
-                "title": "Connector e invii usano la propria destinazione.",
+                "title": "Destinazioni esterne.",
                 "paragraphs": [
                     (
-                        "Un'app collegata, una ricerca pubblica, un portale o un invio viene "
-                        "usato soltanto quando quel percorso fa parte del lavoro scelto. "
-                        "Si applicano separatamente le condizioni e i controlli della "
-                        "destinazione."
+                        "Se un processo usa un'app collegata, una ricerca pubblica, un "
+                        "portale o un invio, i dati necessari raggiungono anche quella "
+                        "destinazione. Si applicano le condizioni e i controlli del relativo "
+                        "servizio."
                     ),
                     (
-                        "Usare una destinazione esterna non rende Mparanza il destinatario. "
-                        "Il workflow o l'informativa mostrata al momento dell'uso identifica "
-                        "un percorso hosted da Mparanza quando è coinvolto."
+                        "La pagina del singolo processo indica se viene utilizzata una "
+                        "destinazione esterna."
                     ),
                 ],
             },
             {
                 "id": "hosted-features",
-                "title": "I servizi hosted di Mparanza hanno un confine separato.",
+                "title": "Server di Mparanza LLC.",
                 "paragraphs": [
                     (
-                        "Quando una funzione usa un servizio hosted di Mparanza, i contenuti "
-                        "necessari raggiungono sistemi controllati da Mparanza. Interviste "
-                        "hosted, acquisizione vocale e dati retail sono alcuni esempi."
+                        "Il normale funzionamento dei plugin non invia né conserva sul "
+                        "server di Mparanza LLC i dati del cliente o del lavoro. Per il "
+                        "normale funzionamento dei plugin non è quindi necessario un DPA "
+                        "con Mparanza LLC."
                     ),
                     (
-                        "L'informativa mostrata nel punto in cui il servizio viene usato "
-                        "indica che cosa lo raggiunge e le modalità applicabili di accesso, "
-                        "conservazione e cancellazione."
+                        "Alcune elaborazioni particolari, richieste espressamente, possono "
+                        "utilizzare il server di Mparanza LLC. La documentazione della "
+                        "funzione indica quali dati vengono inviati e come sono trattati."
                     ),
                 ],
             },
@@ -288,7 +289,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                     "external": False,
                 },
                 {
-                    "label": "Leggi il GDPR (articolo 5)",
+                    "label": "Leggi il GDPR (articoli 5 e 28)",
                     "href": _GDPR_URL,
                     "external": True,
                 },
@@ -314,7 +315,10 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 },
             ],
         },
-        "closing": "Un confine globale. I dettagli del processo restano con il processo.",
+        "closing": (
+            "Ogni processo spiega quali dati restano locali, quali arrivano al modello "
+            "e quali raggiungono altre destinazioni."
+        ),
     },
     "fr": {
         "meta_description": (
