@@ -164,10 +164,10 @@
       "instructions": "Un operatore autorizzato effettua personalmente l'accesso e mostra in una finestra Chrome visibile il percorso Agenzia supportato. Vera usa in Codex Desktop il registratore locale del modulo Automazione web e conserva soltanto una mappa tecnica sanificata e da rivedere, mai credenziali, cookie, valori digitati, schermate, HTML, fatture o ZIP. La registrazione è materiale per sviluppare e verificare un'automazione futura: non acquisisce fatture, non crea una sessione riutilizzabile e non costituisce ancora un'automazione eseguibile."
     },
     "studio-archive": {
-      "display_name": "Ricerca nel fascicolo cliente",
-      "short_description": "Collega le fonti e cerca evidenze senza modificare i documenti",
-      "default_prompt": "Usa $studio-archive per cercare le evidenze di questo cliente nei file, in Gmail o in una chat WhatsApp verificata.",
-      "instructions": "Usa questa funzione per delimitare un solo cliente e ritrovare le sue evidenze senza riordinare la cartella. Indica il cliente e la fonte da consultare: file locali o Google Drive e Shared Drive autorizzati, Gmail connesso oppure una chat WhatsApp Desktop verificata. Vera lega fonti e lavorazioni al cliente e all'incarico, ricontrolla identità e versione quando disponibili e restituisce evidenze tracciabili. La ricerca non rinomina, sposta, invia o elimina documenti."
+      "display_name": "Archiviazione e ricerca nel fascicolo cliente",
+      "short_description": "Salva il lavoro nel fascicolo e ritrova le evidenze senza modificare i documenti",
+      "default_prompt": "Usa $studio-archive per archiviare questo lavoro nel fascicolo cliente e cercare le evidenze nei file, in Gmail o in una chat WhatsApp verificata.",
+      "instructions": "Usa questa funzione per registrare e riprendere il lavoro di un solo cliente e ritrovare le sue evidenze senza riordinare la cartella. Indica il cliente, l'incarico e la fonte da consultare: file locali o Google Drive e Shared Drive autorizzati, Gmail connesso oppure una chat WhatsApp Desktop verificata. Vera registra nel fascicolo le fonti importate, le lavorazioni, le decisioni e gli output verificati, ricontrolla identità e versione quando disponibili e restituisce evidenze tracciabili. La consultazione non copia automaticamente le fonti cercate nel fascicolo e non rinomina, sposta, invia o elimina documenti."
     },
     "presenza-digitale-studio": {
       "display_name": "Sito dello studio",

@@ -545,7 +545,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.159"
+    assert manifest["version"] == "0.1.162"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "
@@ -3623,6 +3623,11 @@ def test_vera_page_groups_client_file_workflows_and_explains_boundaries() -> Non
     group_markup = group.group(0)
     assert 'data-i18n="group.clientFile.title"' in group_markup
     assert 'data-i18n="group.clientFile.copy"' in group_markup
+    assert "Archiviazione e ricerca nel fascicolo cliente" in group_markup
+    assert "fonti importate" in group_markup
+    assert "decisioni" in group_markup
+    assert "output verificati" in group_markup
+    assert "non vengono copiate o modificate" in group_markup
     assert group_markup.index('id="new-client"') < group_markup.index(
         'id="studio-archive"'
     )

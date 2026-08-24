@@ -881,7 +881,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     ]
     expected_labels = [
         "Apertura del fascicolo cliente",
-        "Ricerca nel fascicolo cliente",
+        "Archiviazione e ricerca nel fascicolo cliente",
         "Riordino della cartella cliente",
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
@@ -921,7 +921,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.notice.title": "Esame avvisi e cartelle",
         "module.archiveOrganization.title": "Riordino della cartella cliente",
-        "module.archive.title": "Ricerca nel fascicolo cliente",
+        "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
@@ -961,7 +961,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
         "variance-analysis": "Analisi scostamenti",
-        "studio-archive": "Ricerca nel fascicolo cliente",
+        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
