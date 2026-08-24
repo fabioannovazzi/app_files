@@ -94,6 +94,11 @@ def load_analysis_context() -> Any:
     if shared_text in sys.path:
         sys.path.remove(shared_text)
     sys.path.insert(0, shared_text)
+    modules_package = importlib.import_module("modules")
+    shared_modules_text = str(SHARED_VENDOR / "modules")
+    if shared_modules_text in modules_package.__path__:
+        modules_package.__path__.remove(shared_modules_text)
+    modules_package.__path__.insert(0, shared_modules_text)
     importlib.invalidate_caches()
     return importlib.import_module("modules.chart_harness.analysis_context")
 

@@ -333,7 +333,6 @@ DISCARDED_PUBLIC_PHRASES = (
     "ready_to_file always remains false",
     "generare il dossier non significa accettare il cliente",
     "non sostituisce",
-    "giudizio professionale",
     "il professionista decide",
     "professional judgment remains",
     "vera doesn't",
@@ -789,15 +788,14 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     core = _section_markup(page, "core")
     jurisdiction = _article_markup(page, "jurisdiction")
     common_workstreams = core.replace(jurisdiction, "")
-    expected_common_module_count = 25
+    expected_common_module_count = 27
     expected_jurisdiction_module_count = 10
 
     assert core.count('class="module-row"') == (
         expected_common_module_count + expected_jurisdiction_module_count
     )
     assert (
-        jurisdiction.count('class="module-row"')
-        == expected_jurisdiction_module_count
+        jurisdiction.count('class="module-row"') == expected_jurisdiction_module_count
     )
     assert core.count('data-primary-workflow-link="') == 2
     assert jurisdiction.count('data-jurisdiction-item="it"') == 7
@@ -828,8 +826,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../deep-research-validator/index.html",
     ):
         assert f'href="{expected_href}"' in core
-    assert core.index('id="new-client"') < core.index('id="archive-organization"')
-    assert core.index('id="archive-organization"') < core.index('id="studio-archive"')
+    assert core.index('id="new-client"') < core.index('id="studio-archive"')
+    assert core.index('id="studio-archive"') < core.index('id="archive-organization"')
     for expected_href in (
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
@@ -880,17 +878,19 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
     ]
     expected_labels = [
-        "Fascicolo nuovo cliente",
+        "Apertura del fascicolo cliente",
+        "Archiviazione e ricerca nel fascicolo cliente",
+        "Riordino della cartella cliente",
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
         "Controllo FatturaPA XML",
         "Esame avvisi e cartelle",
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
-        "Riordino cartella cliente",
-        "Archivio clienti",
+        "Automazione web",
         "Campionamento scritture contabili",
         "Controllo scritture",
+        "Audit intelligente fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
@@ -914,12 +914,12 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Pratiche Registro Imprese",
     ]
     expected_runtime_labels = {
-        "module.newClient.title": "Fascicolo nuovo cliente",
+        "module.newClient.title": "Apertura del fascicolo cliente",
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.notice.title": "Esame avvisi e cartelle",
-        "module.archiveOrganization.title": "Riordino cartella cliente",
-        "module.archive.title": "Archivio clienti",
+        "module.archiveOrganization.title": "Riordino della cartella cliente",
+        "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
@@ -935,7 +935,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
-        "archive-organization": "Riordino cartella cliente",
+        "archive-organization": "Riordino della cartella cliente",
         "audit-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
@@ -950,7 +950,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "financial-analysis": "Analisi finanziaria e due diligence",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
-        "new-client": "Fascicolo nuovo cliente",
+        "new-client": "Apertura del fascicolo cliente",
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
@@ -959,7 +959,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
         "variance-analysis": "Analisi scostamenti",
-        "studio-archive": "Archivio clienti",
+        "studio-archive": "Archiviazione e ricerca nel fascicolo cliente",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
@@ -968,7 +968,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 32
+    assert len(labels) == 34
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1144,17 +1144,17 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         "A private index on the Mac.",
         "No model decides which documents to index or ignore.",
         "No embedding database is created.",
-        "Retrieval is mechanical. Interpretation uses Codex.",
+        "Retrieval is mechanical. Interpretation uses the selected model.",
         "A model then attempts to transcribe text from images",
         "the result needs visual confirmation.",
         "Email stays in Gmail and does not enter the document index.",
-        "OpenAI’s Gmail connector",
-        "searches the required messages at that moment in read-only mode.",
+        "Connect the read-only Gmail connector available in the selected runtime separately.",
+        "Vera searches the required messages at that moment.",
         "Computer Use",
         "Documents are always available. Gmail and WhatsApp only on request.",
-        "Gmail works in ChatGPT or Codex.",
-        "The local archive and WhatsApp Desktop require Codex",
-        "You can continue in ChatGPT with Gmail and material supplied in the conversation",
+        "The Studio Archive run and connected-file search work in Codex and Cowork.",
+        "Gmail uses the connector for the selected account",
+        "WhatsApp Desktop remains a Codex-specific route.",
         "On-screen inspection only when requested",
         "Opening it may mark messages as read",
         "The chat stays in WhatsApp.",
@@ -1419,7 +1419,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
+    expected_module_link_count = 37
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',

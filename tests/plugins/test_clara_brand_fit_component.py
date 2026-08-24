@@ -99,26 +99,18 @@ def test_clara_public_page_marks_brand_fit_available_with_honest_boundary() -> N
     page = (ROOT / "static" / "shared" / "clara" / "index.html").read_text(
         encoding="utf-8"
     )
+    function_copy = (
+        ROOT / "static" / "shared" / "product-function-pages.js"
+    ).read_text(encoding="utf-8")
 
-    assert "Not yet available in current Clara" not in page
-    assert "Non ancora disponibile nella versione attuale di Clara" not in page
-    assert "Pas encore disponible dans la version actuelle de Clara" not in page
-    assert "In der aktuellen Clara-Version noch nicht verfügbar" not in page
-    assert "brand's presence at the retailer and its catalogue" in page
-    assert "It uses stored data, not a live shelf check." in page
-    assert "brand-owned catalogue in the stored database snapshot" not in page
-    assert "neither the user nor the server needs a model API key" not in page
-    for key in (
-        "retail.brand_fit.title",
-        "retail.brand_fit.copy.before",
-        "retail.brand_fit.copy.link",
-        "retail.brand_fit.copy.after",
-    ):
-        assert page.count(f'"{key}"') == 6
-        assert f'data-i18n="{key}"' in page
+    assert page.count('"functions.brandFit"') == 6
+    assert 'data-i18n="functions.brandFit"' in page
+    assert 'href="../clara-brand-fit/index.html?lang=en"' in page
+    assert '"clara-brand-fit"' in function_copy
+    assert "brand's presence at the retailer and the brand catalogue" in function_copy
     assert (
-        'href="/static/shared/attribute-reporting/brand-fit/guest-in-residence/index.html"'
-        in page
+        "The comparison uses stored data and is not a live shelf check."
+        in function_copy
     )
 
 

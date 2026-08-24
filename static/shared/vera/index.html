@@ -209,6 +209,35 @@
     .workstream-head p { max-width: 650px; color: var(--blue); }
     .module-directory { border-top: 2px solid var(--navy); }
 
+    .module-cluster {
+      margin-bottom: clamp(30px, 4vw, 46px);
+    }
+
+    .module-cluster__head {
+      display: grid;
+      grid-template-columns: minmax(230px, 0.72fr) minmax(0, 1.28fr) 32px;
+      gap: 28px;
+      align-items: baseline;
+      padding: 20px 4px 18px;
+      border-bottom: 1px solid var(--cyan);
+    }
+
+    .module-cluster__head h4 {
+      color: var(--navy);
+      font-size: 0.78rem;
+      font-weight: 750;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    .module-cluster__head p {
+      max-width: 690px;
+      color: var(--blue);
+      font-size: 0.95rem;
+    }
+
+    .module-cluster .module-row:last-child { border-bottom-color: var(--navy); }
+
     .module-row {
       min-height: 104px;
       padding: 24px 4px;
@@ -941,6 +970,7 @@
       .comms-step::before { margin-bottom: 28px; }
       .data-position__facts { grid-template-columns: 1fr; }
       .data-position__fact, .data-position__fact:nth-child(even) { padding: 24px 0; border-left: 0; }
+      .module-cluster__head { grid-template-columns: 1fr; gap: 8px; }
       .module-row { grid-template-columns: 1fr 28px; gap: 10px 18px; }
       .module-row p { grid-column: 1; }
       .module-row__arrow { grid-column: 2; grid-row: 1 / span 2; }
@@ -1062,10 +1092,27 @@
             <h3 data-i18n="stream.clients.title">Clienti e fascicoli</h3>
           </header>
           <div class="module-directory">
-            <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
-              <h4 data-i18n="module.newClient.title">Fascicolo nuovo cliente</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
+            <div class="module-cluster" role="group" aria-labelledby="client-file-group-title" data-vera-workflow-group="client-file">
+              <header class="module-cluster__head">
+                <h4 id="client-file-group-title" data-i18n="group.clientFile.title">Gestione del fascicolo cliente</h4>
+                <p data-i18n="group.clientFile.copy">Tre funzioni distinte per aprire e conservare il fascicolo, ritrovare le fonti e modificare l’ordine dei file.</p>
+              </header>
+              <a class="module-row" id="new-client" href="../new-client/index.html#journey" data-module-link data-vera-workflow="new-client">
+                <h4 data-i18n="module.newClient.title">Apertura del fascicolo cliente</h4>
+                <p data-i18n="module.newClient">Prepara il fascicolo di avvio dai documenti ricevuti: identità, incarico, privacy, antiriciclaggio, informazioni mancanti e monitoraggio. Il professionista rivede il dossier; Vera non firma o invia documenti e non attiva il rapporto.</p>
+                <span class="module-row__arrow" aria-hidden="true">↗</span>
+              </a>
+              <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
+                <h4 data-i18n="module.archive.title">Archiviazione e ricerca nel fascicolo cliente</h4>
+                <p data-i18n="module.archive">Registra cliente, incarico, fonti importate, lavorazioni, decisioni e output verificati in un fascicolo che può essere ripreso. Cerca anche nei file locali o Google Drive, in Gmail e in una chat WhatsApp verificata; le fonti consultate non vengono copiate o modificate.</p>
+                <span class="module-row__arrow" aria-hidden="true">↗</span>
+              </a>
+              <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
+                <h4 data-i18n="module.archiveOrganization.title">Riordino della cartella cliente</h4>
+                <p data-i18n="module.archiveOrganization">Parte da uno snapshot del fascicolo e propone categorie, nomi, spostamenti, duplicati e anomalie. Modifica i file soltanto dopo revisione e approvazione separata; registra ogni operazione e può ripristinarla.</p>
+                <span class="module-row__arrow" aria-hidden="true">↗</span>
+              </a>
+            </div>
             <a class="module-row" href="../dati-fiscali-strutturati/index.html" data-module-link data-vera-subordinate-workflow="dati-fiscali-strutturati">
               <h4 data-i18n="module.newClient.includes.data">Estrazione dati fiscali</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
@@ -1090,16 +1137,8 @@
               <h4>Pratiche Registro Imprese</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
-            <a class="module-row" id="archive-organization" href="../archive-organization/index.html" data-module-link data-vera-workflow="archive-organization">
-              <h4 data-i18n="module.archiveOrganization.title">Riordino cartella cliente</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
             <a class="module-row" id="browser-automation" href="../browser-automation/index.html" data-module-link data-vera-workflow="browser-automation">
               <h4 data-i18n="module.browserAutomation.title">Automazione web</h4>
-              <span class="module-row__arrow" aria-hidden="true">↗</span>
-            </a>
-            <a class="module-row" id="studio-archive" href="../studio-archive/index.html" data-module-link data-vera-workflow="studio-archive">
-              <h4 data-i18n="module.archive.title">Archivio clienti</h4>
               <span class="module-row__arrow" aria-hidden="true">↗</span>
             </a>
           </div>
@@ -1285,6 +1324,8 @@
         "stream.clients.index": "Area 1",
         "stream.clients.title": "Clienti e fascicoli",
         "stream.clients.copy": "Dalla corrispondenza e dai documenti ricevuti a un primo fascicolo riutilizzabile.",
+        "group.clientFile.title": "Gestione del fascicolo cliente",
+        "group.clientFile.copy": "Tre funzioni distinte per aprire e conservare il fascicolo, ritrovare le fonti e modificare l’ordine dei file.",
         "stream.accounting.index": "Area 2",
         "stream.accounting.title": "Controlli e analisi",
         "stream.accounting.copy": "Dal giornale alle scritture, alle banche, alle partite aperte, al Plan, all’analisi degli scostamenti e all’analisi finanziaria.",
@@ -1293,19 +1334,19 @@
         "stream.outputs.copy": "Dalle fonti al report, dalla richiesta alla validazione.",
         "stream.research.title": "Formula e verifica la ricerca",
         "stream.research.copy": "Dalla richiesta iniziale a una base di ricerca controllabile.",
-        "module.newClient.title": "Fascicolo nuovo cliente",
-        "module.newClient": "Dalla cartella ricevuta al fascicolo operativo: documenti, anagrafica, incarico, privacy, AML e monitoraggio in un solo percorso.",
+        "module.newClient.title": "Apertura del fascicolo cliente",
+        "module.newClient": "Prepara il fascicolo di avvio dai documenti ricevuti: identità, incarico, privacy, antiriciclaggio, informazioni mancanti e monitoraggio. Il professionista rivede il dossier; Vera non firma o invia documenti e non attiva il rapporto.",
         "module.newClient.includesLabel": "Funzioni incluse",
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.newClient.includes.xml": "Controllo FatturaPA XML",
         "module.notice.title": "Esame avvisi e cartelle",
         "module.notice": "Organizza avvisi, cartelle e comunicazioni fiscali in un primo fascicolo con fonti, scadenze, importi e punti da chiarire.",
-        "module.archiveOrganization.title": "Riordino cartella cliente",
-        "module.archiveOrganization": "Analizza una cartella cliente locale o su Google Workspace e propone categorie, nomi, spostamenti, duplicati e anomalie. Il collaboratore approva prima di ogni modifica; Vera registra ciò che applica e può ripristinarlo.",
+        "module.archiveOrganization.title": "Riordino della cartella cliente",
+        "module.archiveOrganization": "Parte da uno snapshot del fascicolo e propone categorie, nomi, spostamenti, duplicati e anomalie. Modifica i file soltanto dopo revisione e approvazione separata; registra ogni operazione e può ripristinarla.",
         "module.browserAutomation.title": "Automazione web",
-        "module.archive.title": "Archivio clienti",
-        "module.archive": "Trova la corrispondenza e le evidenze di un cliente. Gmail collegato può funzionare in ChatGPT o Codex; WhatsApp Desktop e le cartelle locali o Google Workspace richiedono Codex.",
+        "module.archive.title": "Archiviazione e ricerca nel fascicolo cliente",
+        "module.archive": "Registra cliente, incarico, fonti importate, lavorazioni, decisioni e output verificati in un fascicolo che può essere ripreso. Cerca anche nei file locali o Google Drive, in Gmail e in una chat WhatsApp verificata; le fonti consultate non vengono copiate o modificate.",
         "module.sampling.title": "Campionamento scritture contabili",
         "module.sampling": "Qualifica il layout del giornale, poi normalizza la popolazione e costruisce un campione riproducibile. Se i campi non sono affidabili, si ferma.",
         "module.entries.title": "Controllo scritture",
@@ -1440,6 +1481,8 @@
         "stream.clients.index": "Area 1",
         "stream.clients.title": "Clients and files",
         "stream.clients.copy": "From live correspondence and incoming documents to a reusable work file.",
+        "group.clientFile.title": "Client file management",
+        "group.clientFile.copy": "Three separate functions to open and preserve the file, find evidence in it, and change how its documents are arranged.",
         "stream.accounting.index": "Area 2",
         "stream.accounting.title": "Checks and analysis",
         "stream.accounting.copy": "From the journal to entries, banks, open items, the Plan, variance analysis and financial analysis.",
@@ -1448,8 +1491,8 @@
         "stream.outputs.copy": "From sources to a report, from the question to validation.",
         "stream.research.title": "Frame and verify research",
         "stream.research.copy": "From the initial question to a controllable research base.",
-        "module.newClient.title": "Prepare a new client file · United Kingdom",
-        "module.newClient": "Organize an incoming UK tax folder, identify missing material, and prepare a firm memo and client request.",
+        "module.newClient.title": "Open a new client file · United Kingdom",
+        "module.newClient": "Prepare the initial file from the documents received: identity, engagement, privacy, AML, missing evidence, and monitoring. The professional reviews the dossier; Vera does not sign or send documents and does not activate the relationship.",
         "module.newClient.includesLabel": "Included workflows",
         "module.newClient.includes.data": "Extract tax data from documents",
         "module.newClient.includes.email": "Request documents and clarifications from the client",
@@ -1457,10 +1500,10 @@
         "module.notice.title": "Initial review of tax and collection notices",
         "module.notice": "Organizes tax notices, collection notices, HMRC letters or cantonal tax letters into a first file with sources, deadlines, amounts and open questions.",
         "module.archiveOrganization.title": "Reorganize the client folder",
-        "module.archiveOrganization": "Analyze a local or Google Workspace client folder and propose categories, names, moves, duplicates, and anomalies. The collaborator approves before any change; Vera records what it applies and can roll it back.",
+        "module.archiveOrganization": "Start from a snapshot of the file and propose categories, names, moves, duplicates, and anomalies. Documents change only after review and a separate approval; Vera records every operation and can undo it safely.",
         "module.browserAutomation.title": "Web automation",
-        "module.archive.title": "Search documents, email, and WhatsApp",
-        "module.archive": "Find a client’s correspondence and evidence. Connected Gmail can work in ChatGPT or Codex; WhatsApp Desktop and local or Google Workspace folders require Codex.",
+        "module.archive.title": "Archive and search the client file",
+        "module.archive": "Record the client, engagement, imported sources, runs, decisions, and verified outputs in a file that can be resumed. Also search local or Google Drive files, Gmail, and one verified WhatsApp chat; consulted sources are not copied or changed.",
         "module.sampling.title": "Sample the accounting journal",
         "module.sampling": "Qualifies the journal layout, then normalizes the population and builds a reproducible sample. Unreliable fields stop the run.",
         "module.entries.title": "Check entries against supporting documents",
@@ -1595,6 +1638,8 @@
         "stream.clients.index": "Domaine 1",
         "stream.clients.title": "Clients et dossiers",
         "stream.clients.copy": "Des échanges et documents reçus à un dossier de travail réutilisable.",
+        "group.clientFile.title": "Gestion du dossier client",
+        "group.clientFile.copy": "Trois fonctions distinctes pour ouvrir et conserver le dossier, retrouver ses sources et modifier le classement des documents.",
         "stream.accounting.index": "Domaine 2",
         "stream.accounting.title": "Contrôles et analyses",
         "stream.accounting.copy": "Du journal aux écritures, aux banques, aux postes ouverts, au Plan, à l’analyse des écarts et à l’analyse financière.",
@@ -1603,8 +1648,8 @@
         "stream.outputs.copy": "Des sources au rapport, de la question à la validation.",
         "stream.research.title": "Cadrer et vérifier la recherche",
         "stream.research.copy": "De la question initiale à une base de recherche contrôlable.",
-        "module.newClient.title": "Préparer le dossier d’un nouveau client · Genève",
-        "module.newClient": "Organise un dossier fiscal genevois, relève les pièces manquantes et prépare le mémo du cabinet et la demande au client.",
+        "module.newClient.title": "Ouvrir le dossier d’un nouveau client · Genève",
+        "module.newClient": "Prépare le dossier initial à partir des documents reçus : identité, mission, confidentialité, AML, pièces manquantes et suivi. Le professionnel revoit le dossier ; Vera ne signe ni n’envoie de documents et n’active pas la relation.",
         "module.newClient.includesLabel": "Fonctions incluses",
         "module.newClient.includes.data": "Extraire les données fiscales des documents",
         "module.newClient.includes.email": "Demander des documents et des précisions au client",
@@ -1612,10 +1657,10 @@
         "module.notice.title": "Examiner les avis fiscaux et actes de recouvrement",
         "module.notice": "Organise les avis fiscaux, lettres de recouvrement ou courriers fiscaux cantonaux dans un premier dossier avec sources, échéances, montants et questions ouvertes.",
         "module.archiveOrganization.title": "Réorganiser le dossier client",
-        "module.archiveOrganization": "Analysez un dossier client local ou Google Workspace et proposez catégories, noms, déplacements, doublons et anomalies. Le collaborateur approuve avant toute modification ; Vera consigne ce qu’elle applique et peut le rétablir.",
+        "module.archiveOrganization": "Part d’un instantané du dossier et propose catégories, noms, déplacements, doublons et anomalies. Les documents ne changent qu’après revue et approbation séparée ; Vera consigne chaque opération et peut l’annuler de manière contrôlée.",
         "module.browserAutomation.title": "Automatisation web",
-        "module.archive.title": "Rechercher dans les documents, les e-mails et WhatsApp",
-        "module.archive": "Retrouvez la correspondance et les justificatifs d’un client. Gmail connecté peut fonctionner dans ChatGPT ou Codex ; WhatsApp Desktop et les dossiers locaux ou Google Workspace nécessitent Codex.",
+        "module.archive.title": "Archiver et rechercher dans le dossier client",
+        "module.archive": "Consigne le client, la mission, les sources importées, les traitements, les décisions et les livrables vérifiés dans un dossier qui peut être repris. Recherche aussi dans les fichiers locaux ou Google Drive, Gmail et une conversation WhatsApp vérifiée ; les sources consultées ne sont ni copiées ni modifiées.",
         "module.sampling.title": "Échantillonner le journal comptable",
         "module.sampling": "Qualifie la structure du journal, puis normalise la population et construit un échantillon reproductible. Des champs non fiables arrêtent le traitement.",
         "module.entries.title": "Vérifier les écritures avec les justificatifs",
@@ -1750,6 +1795,8 @@
         "stream.clients.index": "Bereich 1",
         "stream.clients.title": "Mandanten und Akten",
         "stream.clients.copy": "Von Korrespondenz und eingegangenen Dokumenten zur wiederverwendbaren Arbeitsakte.",
+        "group.clientFile.title": "Mandantenakte verwalten",
+        "group.clientFile.copy": "Drei getrennte Funktionen, um die Akte anzulegen und zu erhalten, Nachweise darin zu finden und die Ablage der Dokumente zu ändern.",
         "stream.accounting.index": "Bereich 2",
         "stream.accounting.title": "Kontrollen und Analysen",
         "stream.accounting.copy": "Vom Journal zu Buchungen, Banken, offenen Posten, zum Plan, zur Abweichungsanalyse und zur Finanzanalyse.",
@@ -1758,8 +1805,8 @@
         "stream.outputs.copy": "Von den Quellen zum Bericht, von der Frage zur Validierung.",
         "stream.research.title": "Recherche eingrenzen und prüfen",
         "stream.research.copy": "Von der Ausgangsfrage zu einer kontrollierbaren Recherchegrundlage.",
-        "module.newClient.title": "Neue Mandantenakte vorbereiten · Zürich",
-        "module.newClient": "Ordnet eine Zürcher Steuerakte, erkennt fehlende Unterlagen und erstellt Kanzleivermerk und Mandantenanfrage.",
+        "module.newClient.title": "Neue Mandantenakte anlegen · Zürich",
+        "module.newClient": "Bereitet aus den eingegangenen Unterlagen die Anfangsakte vor: Identität, Mandat, Datenschutz, AML, fehlende Nachweise und Überwachung. Der Berufsträger prüft das Dossier; Vera unterschreibt oder versendet keine Dokumente und aktiviert das Mandat nicht.",
         "module.newClient.includesLabel": "Enthaltene Workflows",
         "module.newClient.includes.data": "Steuerdaten aus Dokumenten extrahieren",
         "module.newClient.includes.email": "Unterlagen und Rückfragen beim Mandanten anfordern",
@@ -1767,10 +1814,10 @@
         "module.notice.title": "Steuerbescheide und Zahlungsaufforderungen erstprüfen",
         "module.notice": "Ordnet Steuerbescheide, Inkassomitteilungen oder kantonale Steuerschreiben in einer ersten Akte mit Quellen, Fristen, Beträgen und offenen Fragen.",
         "module.archiveOrganization.title": "Mandantenordner neu ordnen",
-        "module.archiveOrganization": "Analysiert einen lokalen Mandantenordner oder einen Ordner in Google Workspace und schlägt Kategorien, Namen, Verschiebungen, Duplikate und Auffälligkeiten vor. Der zuständige Mitarbeiter genehmigt vor jeder Änderung; Vera protokolliert die Ausführung und kann sie zurücksetzen.",
+        "module.archiveOrganization": "Beginnt mit einer Momentaufnahme der Akte und schlägt Kategorien, Namen, Verschiebungen, Duplikate und Auffälligkeiten vor. Dokumente ändern sich erst nach Prüfung und gesonderter Genehmigung; Vera protokolliert jeden Vorgang und kann ihn kontrolliert rückgängig machen.",
         "module.browserAutomation.title": "Web-Automatisierung",
-        "module.archive.title": "Dokumente, E-Mails und WhatsApp durchsuchen",
-        "module.archive": "Findet die Korrespondenz und Nachweise eines Mandanten. Verbundenes Gmail funktioniert in ChatGPT oder Codex; WhatsApp Desktop und lokale Ordner oder Google Workspace erfordern Codex.",
+        "module.archive.title": "Mandantenakte archivieren und durchsuchen",
+        "module.archive": "Speichert Mandant, Mandat, importierte Quellen, Läufe, Entscheidungen und geprüfte Ergebnisse in einer fortsetzbaren Akte. Durchsucht auch lokale oder Google-Drive-Dateien, Gmail und einen verifizierten WhatsApp-Chat; eingesehene Quellen werden weder kopiert noch verändert.",
         "module.sampling.title": "Buchungsjournal stichprobenartig prüfen",
         "module.sampling": "Qualifiziert das Journalformat, normalisiert danach die Grundgesamtheit und erstellt eine reproduzierbare Stichprobe. Unzuverlässige Felder stoppen den Lauf.",
         "module.entries.title": "Buchungen mit Belegen prüfen",
@@ -1905,6 +1952,8 @@
         "stream.clients.index": "Área 1",
         "stream.clients.title": "Clientes y expedientes",
         "stream.clients.copy": "De la correspondencia y los documentos recibidos a un expediente de trabajo reutilizable.",
+        "group.clientFile.title": "Gestión del expediente del cliente",
+        "group.clientFile.copy": "Tres funciones distintas para abrir y conservar el expediente, encontrar sus fuentes y cambiar cómo se ordenan los documentos.",
         "stream.accounting.index": "Área 2",
         "stream.accounting.title": "Controles y análisis",
         "stream.accounting.copy": "Del diario a los asientos, los bancos, las partidas abiertas, el Plan, el análisis de desviaciones y el análisis financiero.",
@@ -1913,8 +1962,8 @@
         "stream.outputs.copy": "De las fuentes al informe, de la pregunta a la validación.",
         "stream.research.title": "Delimitar y verificar la investigación",
         "stream.research.copy": "De la pregunta inicial a una base de investigación controlable.",
-        "module.newClient.title": "Preparar el expediente del nuevo cliente",
-        "module.newClient": "Organiza la carpeta recibida, identifica lo que falta y prepara un primer expediente de trabajo.",
+        "module.newClient.title": "Abrir el expediente de un nuevo cliente",
+        "module.newClient": "Prepara el expediente inicial a partir de los documentos recibidos: identidad, encargo, privacidad, AML, evidencias que faltan y seguimiento. El profesional revisa el dossier; Vera no firma ni envía documentos y no activa la relación.",
         "module.newClient.includesLabel": "Flujos incluidos",
         "module.newClient.includes.data": "Extraer datos fiscales de documentos",
         "module.newClient.includes.email": "Solicitar documentos y aclaraciones al cliente",
@@ -1922,10 +1971,10 @@
         "module.notice.title": "Examen inicial de notificaciones y requerimientos fiscales",
         "module.notice": "Organiza avisos fiscales, requerimientos de cobro o cartas tributarias cantonales en un primer expediente con fuentes, plazos, importes y preguntas abiertas.",
         "module.archiveOrganization.title": "Reorganizar la carpeta del cliente",
-        "module.archiveOrganization": "Analiza una carpeta de cliente local o de Google Workspace y propone categorías, nombres, traslados, duplicados y anomalías. El colaborador aprueba antes de cada cambio; Vera registra lo que aplica y puede revertirlo.",
+        "module.archiveOrganization": "Parte de una instantánea del expediente y propone categorías, nombres, traslados, duplicados y anomalías. Los documentos solo cambian después de la revisión y una aprobación separada; Vera registra cada operación y puede deshacerla de forma controlada.",
         "module.browserAutomation.title": "Automatización web",
-        "module.archive.title": "Buscar en documentos, correos y WhatsApp",
-        "module.archive": "Encuentra la correspondencia y las evidencias de un cliente. Gmail conectado puede funcionar en ChatGPT o Codex; WhatsApp Desktop y las carpetas locales o de Google Workspace requieren Codex.",
+        "module.archive.title": "Archivar y buscar en el expediente del cliente",
+        "module.archive": "Registra el cliente, el encargo, las fuentes importadas, las ejecuciones, las decisiones y los resultados verificados en un expediente que puede retomarse. También busca en archivos locales o de Google Drive, Gmail y un chat de WhatsApp verificado; las fuentes consultadas no se copian ni se modifican.",
         "module.sampling.title": "Muestrear el diario contable",
         "module.sampling": "Cualifica el formato del diario, normaliza después la población y construye una muestra reproducible. Los campos no fiables detienen la ejecución.",
         "module.entries.title": "Comprobar los asientos con los documentos justificativos",
