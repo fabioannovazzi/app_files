@@ -73,8 +73,8 @@ def _copy_shape(value: Any) -> Any:
             "Come Vera e Clara gestiscono i dati.",
             "Operazioni locali e trattamento del modello.",
             (
-                "Ogni processo spiega quali dati restano locali, quali arrivano al "
-                "modello e quali restano esclusi."
+                "Ogni processo spiega quali dati restano locali e quali arrivano al "
+                "modello."
             ),
         ),
         (
