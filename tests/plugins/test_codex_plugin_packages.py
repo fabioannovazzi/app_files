@@ -3603,11 +3603,14 @@ def test_vera_page_localizes_every_module_title() -> None:
         assert untranslated_italian_copy not in page
 
 
-def test_vera_page_places_reviewed_archive_organization_between_intake_and_search() -> (
-    None
-):
+def test_vera_page_groups_client_file_workflows_and_explains_boundaries() -> None:
     page = (ROOT / "static" / "shared" / "vera" / "index.html").read_text(
         encoding="utf-8"
+    )
+    group = re.search(
+        r'<div class="module-cluster"[^>]+data-vera-workflow-group="client-file".*?</div>',
+        page,
+        flags=re.DOTALL,
     )
     organization = re.search(
         r'<a[^>]+id="archive-organization".*?</a>',
@@ -3615,12 +3618,21 @@ def test_vera_page_places_reviewed_archive_organization_between_intake_and_searc
         flags=re.DOTALL,
     )
 
+    assert group is not None
     assert organization is not None
+    group_markup = group.group(0)
+    assert 'data-i18n="group.clientFile.title"' in group_markup
+    assert 'data-i18n="group.clientFile.copy"' in group_markup
+    assert group_markup.index('id="new-client"') < group_markup.index(
+        'id="studio-archive"'
+    )
+    assert group_markup.index('id="studio-archive"') < group_markup.index(
+        'id="archive-organization"'
+    )
+    assert 'id="browser-automation"' not in group_markup
     assert 'href="../archive-organization/index.html"' in organization.group(0)
     assert 'data-i18n="module.archiveOrganization.title"' in organization.group(0)
-    assert page.index('id="new-client"') < page.index('id="archive-organization"')
-    assert page.index('id="archive-organization"') < page.index('id="studio-archive"')
-    assert "<p" not in organization.group(0)
+    assert 'data-i18n="module.archiveOrganization"' in organization.group(0)
 
 
 def test_vera_page_links_plan_separately_from_financial_analysis() -> None:

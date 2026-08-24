@@ -789,7 +789,7 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
     core = _section_markup(page, "core")
     jurisdiction = _article_markup(page, "jurisdiction")
     common_workstreams = core.replace(jurisdiction, "")
-    expected_common_module_count = 25
+    expected_common_module_count = 27
     expected_jurisdiction_module_count = 10
 
     assert core.count('class="module-row"') == (
@@ -828,8 +828,8 @@ def test_vera_hub_keeps_market_specific_work_locale_scoped() -> None:
         "../deep-research-validator/index.html",
     ):
         assert f'href="{expected_href}"' in core
-    assert core.index('id="new-client"') < core.index('id="archive-organization"')
-    assert core.index('id="archive-organization"') < core.index('id="studio-archive"')
+    assert core.index('id="new-client"') < core.index('id="studio-archive"')
+    assert core.index('id="studio-archive"') < core.index('id="archive-organization"')
     for expected_href in (
         "../fatture-xml-check/index.html",
         "../report-enti-locali/index.html",
@@ -880,17 +880,19 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         if (match := re.search(r"<h4[^>]*>([^<]+)</h4>", row)) is not None
     ]
     expected_labels = [
-        "Fascicolo nuovo cliente",
+        "Apertura del fascicolo cliente",
+        "Ricerca nel fascicolo cliente",
+        "Riordino della cartella cliente",
         "Estrazione dati fiscali",
         "Richiesta documenti e chiarimenti",
         "Controllo FatturaPA XML",
         "Esame avvisi e cartelle",
         "Revisione pratica INPS",
         "Pratiche Registro Imprese",
-        "Riordino cartella cliente",
-        "Archivio clienti",
+        "Automazione web",
         "Campionamento scritture contabili",
         "Controllo scritture",
+        "Audit intelligente fatture passive",
         "Riconciliazione banca-contabilità",
         "Riconciliazione partite aperte",
         "Preparazione piano vendite",
@@ -914,12 +916,12 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "Pratiche Registro Imprese",
     ]
     expected_runtime_labels = {
-        "module.newClient.title": "Fascicolo nuovo cliente",
+        "module.newClient.title": "Apertura del fascicolo cliente",
         "module.newClient.includes.data": "Estrazione dati fiscali",
         "module.newClient.includes.email": "Richiesta documenti e chiarimenti",
         "module.notice.title": "Esame avvisi e cartelle",
-        "module.archiveOrganization.title": "Riordino cartella cliente",
-        "module.archive.title": "Archivio clienti",
+        "module.archiveOrganization.title": "Riordino della cartella cliente",
+        "module.archive.title": "Ricerca nel fascicolo cliente",
         "module.sampling.title": "Campionamento scritture contabili",
         "module.entries.title": "Controllo scritture",
         "module.reconciliation.title": "Riconciliazione partite aperte",
@@ -935,7 +937,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
 
     # The public directory and marketplace use one canonical naming contract.
     canonical_skill_labels = {
-        "archive-organization": "Riordino cartella cliente",
+        "archive-organization": "Riordino della cartella cliente",
         "audit-reconciliation": "Riconciliazione partite aperte",
         "bandi-agevolazioni": "Bandi e agevolazioni",
         "avviso-intake": "Esame avvisi e cartelle",
@@ -950,7 +952,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "financial-analysis": "Analisi finanziaria e due diligence",
         "journal-bank-reconciliation": "Riconciliazione banca-contabilità",
         "journal-sampling": "Campionamento scritture contabili",
-        "new-client": "Fascicolo nuovo cliente",
+        "new-client": "Apertura del fascicolo cliente",
         "previdenza-inps": "Revisione pratica INPS",
         "presenza-digitale-studio": "Sito dello studio",
         "prompt-optimizer": "Ottimizzazione prompt",
@@ -959,7 +961,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
         "report-builder": "Preparazione report finanziario",
         "sales-plan": "Preparazione piano vendite",
         "variance-analysis": "Analisi scostamenti",
-        "studio-archive": "Archivio clienti",
+        "studio-archive": "Ricerca nel fascicolo cliente",
     }
     marketplace_cards = json.loads(
         (VERA_PLUGIN_ROOT / "marketplace_skill_instructions.json").read_text(
@@ -968,7 +970,7 @@ def test_vera_italian_directory_matches_marketplace_capability_names() -> None:
     )["skills"]
 
     assert labels == expected_labels
-    assert len(labels) == 32
+    assert len(labels) == 34
     assert {
         workflow: marketplace_cards[workflow]["display_name"]
         for workflow in canonical_skill_labels
@@ -1419,7 +1421,7 @@ def test_vera_hub_explains_work_area_numbers_in_every_language(
 def test_vera_hub_module_fragments_resolve_to_real_page_sections() -> None:
     hub_path = SHARED_ROOT / "vera" / "index.html"
     page = hub_path.read_text(encoding="utf-8")
-    expected_module_link_count = 35
+    expected_module_link_count = 37
     module_hrefs = re.findall(
         r'<a\b(?=[^>]*\bclass="module-row")(?=[^>]*\bdata-module-link)[^>]*'
         r'\bhref="([^"]+)"',
