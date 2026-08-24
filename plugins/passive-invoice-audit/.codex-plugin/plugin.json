@@ -1,9 +1,9 @@
 {
   "name": "passive-invoice-audit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Exception-focused audit of passive FatturaPA invoices against booked ledger entries, with deterministic checks and native Codex/Luna semantic review.",
   "author": {
-    "name": "Mparanza",
+    "name": "Fabio Annovazzi · Mparanza",
     "email": "fabio@mparanza.com",
     "url": "https://mparanza.com"
   },
@@ -23,7 +23,7 @@
     "displayName": "Passive-Invoice Audit",
     "shortDescription": "Screen booked passive invoices and surface only review exceptions.",
     "longDescription": "Vera workflow for read-only full-population review of Italian passive invoices already booked in accounting. Deterministic code extracts structured FatturaPA evidence, matches ledger movements without forcing uncertainty, checks arithmetic and accounting mechanics, and persists a restartable audit trail. Compact matched-invoice packets are reviewed only by gpt-5.6-luna through the native Codex client and its existing authenticated session; scripts make no direct model API calls and require no API key. The primary XLSX workpaper contains exceptions, while machine-readable JSONL retains one record per invoice.",
-    "developerName": "Fabio",
+    "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "websiteURL": "https://mparanza.com",
     "privacyPolicyURL": "https://mparanza.com/privacy",

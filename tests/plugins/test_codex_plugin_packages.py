@@ -528,13 +528,24 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
     assert "screenshots" not in manifest["interface"]
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
+    assert manifest["author"]["name"] == "Fabio Annovazzi · Mparanza"
+    assert manifest["interface"]["developerName"] == "Fabio Annovazzi · Mparanza"
+    passive_invoice_manifest = projected_manifests[
+        "modules/passive-invoice-audit/.codex-plugin/plugin.json"
+    ]
+    assert passive_invoice_manifest["author"]["name"] == (
+        "Fabio Annovazzi · Mparanza"
+    )
+    assert passive_invoice_manifest["interface"]["developerName"] == (
+        "Fabio Annovazzi · Mparanza"
+    )
     assert entries["LICENSE"] == (ROOT / "LICENSE").read_bytes()
     assert manifest["interface"]["shortDescription"] == (
         "Assistente AI x commercialisti"
     )
     assert len(prompts) == 3
     assert all(len(prompt) <= 128 for prompt in prompts)
-    assert manifest["version"] == "0.1.158"
+    assert manifest["version"] == "0.1.159"
     assert manifest["interface"]["supportURL"] == "https://mparanza.com/support"
     assert prompts[0] == (
         "Studia il formato dello studio e prepara email, articolo web e grafica "

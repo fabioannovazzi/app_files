@@ -11,13 +11,17 @@ review workflow: it never posts to an ERP and never books an invoice.
 - a reviewed JSON column map; use `references/ledger-mapping.example.json` as
   the contract, substituting the exact source headers;
 - optionally, a reviewed JSONL history with prior invoice description, account
-  code, account description, and treatment state; and a JSON object mapping
+  code, account description, treatment state, and an explicit
+  `relevant_to_invoice_ids` array linking each treatment to the current invoices
+  for which the professional considers it relevant; and a JSON object mapping
   account codes to client-specific chart descriptions.
 
 The ledger map must provide `movement_id`, `entry_date`, `account_code`, and
 `account_description`, plus either `amount_signed` or both `debit` and
 `credit`. Supplier tax ID, invoice number/reference, document date, gross,
 taxable, VAT and currency fields materially strengthen matching and checks.
+When supplied directly, `amount_signed` must use debit minus credit. Map
+`account_type` when credit-note polarity should be checked mechanically.
 
 ## Run or resume
 
@@ -40,7 +44,10 @@ Verbose packets are split earlier when the encoded prompt would exceed the
 240 KiB workflow limit.
 Reuse the same output directory to resume. The content-bound SQLite job rejects
 different inputs or controls, skips completed chunks, and resets interrupted
-`running` chunks to `pending`.
+`running` chunks to `pending`. A content-bound chunk checkpoint and the native
+Luna receipt allow a result published immediately before an interruption to be
+recovered without invoking Luna again; incomplete attempt files are preserved
+under the chunk's `recovery_attempts` directory before a retry.
 
 Outputs are `full_population.jsonl`, `exception_workpaper.xlsx`,
 `ledger_entries_without_invoice.jsonl`, `run_summary.json`, `run_summary.md`,
@@ -63,7 +70,24 @@ The report prioritizes exception recall, false-positive rate, human review
 rate, and the complete list of missed material issues.
 
 Synthetic test copies are created only from explicit mutation plans and are
-written separately; real packets and ledger data are never changed.
+written separately; real packets and ledger data are never changed. Every
+mutation must include `source_review_label: "acceptable"`, and the source
+invoice must already be matched, free of deterministic exceptions, and have a
+`no_issue_detected` baseline. Only the account code and descriptions are
+replaced; the original line description is retained so the packet does not tell
+Luna that it is synthetic.
+
+```json
+[
+  {
+    "invoice_id": "reviewed-source-invoice-id",
+    "source_review_label": "acceptable",
+    "replacement_account_code": "CANC",
+    "replacement_account_description": "Cancelleria",
+    "label": "telecom_to_stationery"
+  }
+]
+```
 
 ```bash
 python scripts/evaluate_audit.py synthetic \
@@ -96,3 +120,17 @@ service, model substitution, or global Codex configuration change.
 
 `no_issue_detected` means only that the screen found no concrete review reason.
 It does not mean correct, verified correct, approved, or audit passed.
+
+## Optional native Luna acceptance test
+
+Use a fresh empty output directory. This opt-in test sends one compact batch
+containing ordinary telecom and software controls, an unrelated telecom account,
+an equipment/expense case, and an instruction embedded in invoice text. It
+verifies that the intended native Luna worker runs and that the ordinary packets
+are not contaminated by the embedded instruction.
+
+```bash
+VERA_RUN_REAL_LUNA_INTEGRATION=1 \
+VERA_REAL_LUNA_OUTPUT_DIR=/path/to/fresh-luna-test \
+python -m pytest -q tests/test_passive_invoice_audit.py::test_real_luna_integration_is_opt_in
+```
