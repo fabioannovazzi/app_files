@@ -1342,6 +1342,514 @@
     Object.assign(window.MPARANZA_FUNCTION_PAGES["bilancio-xbrl-it"].copy[language], modelData);
   });
 
+  const reviewedFunctionModelData = {
+    "dati-fiscali-strutturati": {
+      it: {
+        modelDataConclusion: "Il codice estrae i campi da tutti i documenti selezionati; il modello riceve tutti i campi fiscali mappati, non un campione.",
+        modelData: [
+          "Il passaggio al modello comprende ogni campo fiscale estratto, con il valore esatto, il riferimento al documento e una citazione di massimo 600 caratteri. Possono quindi comparire codici fiscali, anni, importi, righi, quadri, valute e altri identificativi presenti nei modelli F24, CU, 730, Redditi PF o nei documenti fiscali svizzeri e britannici supportati.",
+          "Il file originale o il testo integrale non viene inviato automaticamente al modello: viene aperta la fonte locale esatta solo quando occorre verificare impaginazione o prova. Non viene applicata anonimizzazione automatica. L'eventuale OCR scarica solo pacchetti e pesi dichiarati; i documenti del cliente non sono inviati ai relativi host.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code extracts fields from every selected document; the model receives every mapped tax field, not a sample.",
+        modelData: [
+          "The model handoff includes every extracted tax field with its exact value, source-document reference, and a citation of up to 600 characters. It can therefore contain tax identifiers, years, amounts, form rows and sections, currencies, and other identifiers found in supported F24, CU, 730, Redditi PF, Swiss, and UK tax documents.",
+          "The original file or full extracted text is not sent to the model automatically: the exact local source is opened only when layout or evidence must be checked. No automatic anonymization is applied. Optional OCR downloads only declared packages and model weights; client documents are not sent to those hosts.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code extrait les champs de tous les documents sélectionnés ; le modèle reçoit tous les champs fiscaux mappés, sans échantillonnage.",
+        modelData: [
+          "Le transfert au modèle comprend chaque champ fiscal extrait avec sa valeur exacte, la référence du document source et une citation de 600 caractères au maximum. Il peut donc contenir identifiants fiscaux, années, montants, lignes et rubriques, devises et autres identifiants présents dans les documents F24, CU, 730, Redditi PF, suisses ou britanniques pris en charge.",
+          "Le fichier original ou le texte intégral n'est pas transmis automatiquement au modèle : la source locale exacte n'est ouverte que pour vérifier la mise en page ou la preuve. Aucune anonymisation automatique n'est appliquée. L'OCR facultatif ne télécharge que les paquets et poids déclarés ; les documents du client ne sont pas envoyés à ces hôtes.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code extrahiert Felder aus allen ausgewählten Dokumenten; das Modell erhält alle zugeordneten Steuerfelder, keine Stichprobe.",
+        modelData: [
+          "Die Übergabe an das Modell enthält jedes extrahierte Steuerfeld mit genauem Wert, Quelldokument-Referenz und einem Belegauszug von höchstens 600 Zeichen. Dazu können Steuerkennungen, Jahre, Beträge, Formularzeilen und -abschnitte, Währungen und andere Kennungen aus unterstützten F24-, CU-, 730-, Redditi-PF-, schweizerischen und britischen Steuerdokumenten gehören.",
+          "Die Originaldatei oder der vollständige Text wird dem Modell nicht automatisch übergeben: Die genaue lokale Quelle wird nur zur Prüfung von Layout oder Nachweis geöffnet. Es findet keine automatische Anonymisierung statt. Optionales OCR lädt nur deklarierte Pakete und Modellgewichte herunter; Mandantendokumente werden nicht an diese Hosts gesendet.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código extrae los campos de todos los documentos seleccionados; el modelo recibe todos los campos fiscales mapeados, no una muestra.",
+        modelData: [
+          "La entrega al modelo incluye cada campo fiscal extraído con su valor exacto, la referencia al documento de origen y una cita de hasta 600 caracteres. Puede contener identificadores fiscales, años, importes, filas y secciones de formularios, monedas y otros identificadores presentes en documentos F24, CU, 730, Redditi PF, suizos y británicos compatibles.",
+          "El archivo original o el texto completo no se envía automáticamente al modelo: la fuente local exacta solo se abre cuando es necesario comprobar la maquetación o la evidencia. No se aplica anonimización automática. El OCR opcional solo descarga paquetes y pesos declarados; los documentos del cliente no se envían a esos servidores.",
+        ],
+      },
+    },
+    "email-cliente": {
+      it: {
+        modelDataConclusion: "Il modello riceve solo le richieste di documenti e chiarimenti già confermate dal professionista.",
+        modelData: [
+          "La bozza usa gli elementi `email_request` applicati dopo la revisione: richiesta confermata, tono, scadenza e destinatari quando necessari. Il passaggio usa il riferimento generico CLIENT-001; un identificativo esatto resta nella bozza solo se la richiesta rivista lo richiede.",
+          "Le richieste ancora candidate, il nome inferito della cartella e l'anteprima locale della bozza non entrano nel testo prima della conferma. I documenti sorgente completi non vengono trasmessi automaticamente al modello. Il risultato resta una bozza locale e non viene inviato al cliente automaticamente.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The model receives only document and clarification requests already confirmed by the professional.",
+        modelData: [
+          "The draft uses reviewed `email_request` items after they have been applied: the confirmed request, tone, deadline, and recipients when needed. The handoff uses the generic CLIENT-001 reference; an exact identifier remains in the draft only when the reviewed request requires it.",
+          "Unreviewed request candidates, the inferred folder name, and the existing local draft preview do not enter the email before confirmation. Full source documents are not sent to the model automatically. The result remains a local draft and is never sent to the client automatically.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle reçoit uniquement les demandes de pièces et de précisions déjà confirmées par le professionnel.",
+        modelData: [
+          "Le projet utilise les éléments `email_request` appliqués après revue : demande confirmée, ton, échéance et destinataires lorsque nécessaire. Le transfert emploie la référence générique CLIENT-001 ; un identifiant exact ne reste dans le projet que si la demande révisée l'exige.",
+          "Les demandes encore candidates, le nom de dossier déduit et l'aperçu local du projet n'entrent pas dans l'e-mail avant confirmation. Les documents sources complets ne sont pas transmis automatiquement au modèle. Le résultat reste un projet local et n'est jamais envoyé automatiquement au client.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das Modell erhält nur Unterlagen- und Rückfragen, die der Berufsträger bereits bestätigt hat.",
+        modelData: [
+          "Der Entwurf verwendet nach der Prüfung angewandte `email_request`-Einträge: bestätigte Anfrage, Ton, Frist und bei Bedarf Empfänger. Die Übergabe nutzt die allgemeine Referenz CLIENT-001; eine genaue Kennung bleibt nur dann im Entwurf, wenn die geprüfte Anfrage sie benötigt.",
+          "Noch nicht geprüfte Anfragekandidaten, der abgeleitete Ordnername und die lokale Entwurfsvorschau fließen vor der Bestätigung nicht in die E-Mail ein. Vollständige Quelldokumente werden dem Modell nicht automatisch übergeben. Das Ergebnis bleibt ein lokaler Entwurf und wird nie automatisch versendet.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo recibe solo las solicitudes de documentos y aclaraciones ya confirmadas por el profesional.",
+        modelData: [
+          "El borrador usa los elementos `email_request` aplicados tras la revisión: solicitud confirmada, tono, plazo y destinatarios cuando sean necesarios. La entrega utiliza la referencia genérica CLIENT-001; un identificador exacto solo permanece si la solicitud revisada lo requiere.",
+          "Las solicitudes aún candidatas, el nombre de carpeta inferido y la vista previa local no entran en el correo antes de la confirmación. Los documentos fuente completos no se transmiten automáticamente al modelo. El resultado sigue siendo un borrador local y nunca se envía automáticamente al cliente.",
+        ],
+      },
+    },
+    "avviso-intake": {
+      it: {
+        modelDataConclusion: "Il codice esamina il fascicolo; il modello riceve i dati dell'avviso necessari a preparare il memo e le eccezioni da rivedere.",
+        modelData: [
+          "Possono arrivare al modello nome e riferimento del documento, ente emittente, date, importi, valuta, protocollo, possibili scadenze, documenti mancanti e punti incerti. Le righe ordinarie già classificate conservano metadati e riferimento locale senza ripetere il testo; le eccezioni possono includere un estratto di massimo 600 caratteri.",
+          "Il modello può aprire il documento locale esatto o il testo estratto quando il professionista deve verificare una data, un importo o un riferimento. Il documento completo non entra automaticamente in ogni fase e non viene applicata anonimizzazione automatica. Nessuna risposta all'ente viene inviata da questa funzione.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code examines the file; the model receives the notice data needed for the intake memo and exceptions requiring review.",
+        modelData: [
+          "The model may receive the document name and reference, issuing authority, dates, amounts, currency, protocol references, possible deadlines, missing documents, and uncertain points. Routine classified rows retain metadata and an exact local reference without repeating extracted text; exception rows may include an excerpt of up to 600 characters.",
+          "The model can open the exact local document or extracted text when the professional must verify a date, amount, or reference. The full document does not enter every model phase automatically, and no automatic anonymization is applied. This function sends no response to the authority.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code examine le dossier ; le modèle reçoit les données de l'avis nécessaires au mémo initial et les exceptions à réviser.",
+        modelData: [
+          "Le modèle peut recevoir le nom et la référence du document, l'autorité émettrice, les dates, montants, devise, références de protocole, échéances possibles, pièces manquantes et points incertains. Les lignes ordinaires déjà classées conservent métadonnées et référence locale exacte sans répéter le texte ; les exceptions peuvent inclure un extrait de 600 caractères au maximum.",
+          "Le modèle peut ouvrir le document local exact ou le texte extrait lorsque le professionnel doit vérifier une date, un montant ou une référence. Le document complet n'entre pas automatiquement dans chaque phase du modèle et aucune anonymisation automatique n'est appliquée. Cette fonction n'envoie aucune réponse à l'autorité.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code prüft die Akte; das Modell erhält die für den Erstvermerk nötigen Bescheiddaten und zu prüfende Ausnahmen.",
+        modelData: [
+          "Das Modell kann Dokumentname und -referenz, ausstellende Behörde, Daten, Beträge, Währung, Aktenzeichen, mögliche Fristen, fehlende Unterlagen und unsichere Punkte erhalten. Bereits klassifizierte Routinezeilen behalten Metadaten und genaue lokale Referenz, ohne den Text erneut zu übertragen; Ausnahmen können einen Auszug von höchstens 600 Zeichen enthalten.",
+          "Das Modell kann das genaue lokale Dokument oder den extrahierten Text öffnen, wenn Datum, Betrag oder Referenz fachlich geprüft werden müssen. Das vollständige Dokument gelangt nicht automatisch in jede Modellphase; eine automatische Anonymisierung findet nicht statt. Diese Funktion sendet keine Antwort an die Behörde.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código examina el expediente; el modelo recibe los datos de la notificación necesarios para el memo inicial y las excepciones que deben revisarse.",
+        modelData: [
+          "El modelo puede recibir el nombre y referencia del documento, organismo emisor, fechas, importes, moneda, referencias de protocolo, posibles plazos, documentos faltantes y puntos inciertos. Las filas ordinarias ya clasificadas conservan metadatos y una referencia local exacta sin repetir el texto; las excepciones pueden incluir un extracto de hasta 600 caracteres.",
+          "El modelo puede abrir el documento local exacto o el texto extraído cuando el profesional deba comprobar una fecha, un importe o una referencia. El documento completo no entra automáticamente en cada fase y no se aplica anonimización automática. Esta función no envía ninguna respuesta al organismo.",
+        ],
+      },
+    },
+    "fatture-xml-check": {
+      it: {
+        modelDataConclusion: "Il codice controlla l'intera popolazione XML; il modello riceve per impostazione predefinita solo anomalie e gruppi di possibili duplicati.",
+        modelData: [
+          "Il passaggio al modello include, per tutte le pagine dichiarate, riferimenti ai documenti, descrizione dell'anomalia e riferimenti opachi ai gruppi di duplicati. Esclude nomi di fornitori e clienti, identificativi fiscali del cliente e chiavi grezze usate per individuare i duplicati.",
+          "Il modello apre un XML locale o un riepilogo esatto solo se il controllo professionale richiede un dato di controparte o la prova sorgente. In quel caso possono comparire numero, data, imponibile, IVA, totale, valuta, ritenute, bollo, pagamenti e dati delle parti. Nessuna fattura viene registrata, modificata o inviata da questa funzione.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code checks the full XML population; by default the model receives only anomalies and possible-duplicate groups.",
+        modelData: [
+          "Across every declared handoff page, the model receives document references, anomaly text, and opaque duplicate-group references. Supplier and customer names, customer tax identifiers, and the raw keys used to identify duplicates are excluded.",
+          "The model opens an exact local XML file or summary only when the professional check needs a party field or the source evidence. In that case invoice number, date, taxable amount, VAT, total, currency, withholding, stamp duty, payment, and party data may appear. This function does not post, change, or send any invoice.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code contrôle toute la population XML ; par défaut, le modèle ne reçoit que les anomalies et groupes de doublons possibles.",
+        modelData: [
+          "Pour toutes les pages de transfert déclarées, le modèle reçoit les références des documents, le texte des anomalies et des références opaques aux groupes de doublons. Les noms des fournisseurs et clients, les identifiants fiscaux du client et les clés brutes utilisées pour repérer les doublons sont exclus.",
+          "Le modèle n'ouvre un fichier XML local exact ou une synthèse que si le contrôle professionnel exige un champ de partie ou la preuve source. Numéro, date, base imposable, TVA, total, devise, retenue, timbre, paiement et données des parties peuvent alors apparaître. Cette fonction ne comptabilise, ne modifie et n'envoie aucune facture.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code prüft die gesamte XML-Population; standardmäßig erhält das Modell nur Anomalien und mögliche Duplikatgruppen.",
+        modelData: [
+          "Über alle deklarierten Übergabeseiten erhält das Modell Dokumentreferenzen, Anomalietext und undurchsichtige Duplikatgruppen-Referenzen. Namen von Lieferanten und Kunden, Steuerkennungen des Kunden und rohe Schlüssel zur Duplikaterkennung sind ausgeschlossen.",
+          "Das Modell öffnet eine genaue lokale XML-Datei oder Zusammenfassung nur, wenn die fachliche Prüfung ein Parteienfeld oder den Quelldokumentnachweis benötigt. Dann können Rechnungsnummer, Datum, Bemessungsgrundlage, Umsatzsteuer, Gesamtbetrag, Währung, Einbehalt, Stempelsteuer, Zahlung und Parteiendaten erscheinen. Diese Funktion verbucht, ändert oder versendet keine Rechnung.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código comprueba toda la población XML; por defecto, el modelo solo recibe anomalías y grupos de posibles duplicados.",
+        modelData: [
+          "En todas las páginas de entrega declaradas, el modelo recibe referencias de documentos, texto de anomalías y referencias opacas a grupos de duplicados. Se excluyen los nombres de proveedores y clientes, los identificadores fiscales del cliente y las claves sin tratar utilizadas para detectar duplicados.",
+          "El modelo solo abre un XML local exacto o un resumen cuando la revisión profesional necesita un dato de parte o la evidencia de origen. En ese caso pueden aparecer número, fecha, base imponible, IVA, total, moneda, retención, timbre, pago y datos de las partes. Esta función no contabiliza, modifica ni envía ninguna factura.",
+        ],
+      },
+    },
+    "report-enti-locali": {
+      it: {
+        modelDataConclusion: "Il codice ispeziona tutte le fonti; il modello lavora prima su un inventario limitato e riceve più righe solo con una richiesta mirata.",
+        modelData: [
+          "Il pacchetto iniziale può contenere istruzioni, nomi di file e fogli, identificativi delle tabelle, conteggi di righe e colonne, intestazioni candidate, posizioni delle righe numeriche, diagnostica e fino a otto righe di anteprima per tabella; i valori numerici candidati sono oscurati. L'inventario completo delle celle resta nel controllo deterministico privato.",
+          "Quando l'anteprima non basta, il modello può ricevere una tabella esatta con al massimo 16 colonne selezionate e 100 righe sorgente, comprese coordinate, testo delle celle, formati numerici e stato formula/cache. Vede poi mapping, ricetta narrativa, bozze, diagnostica e decisioni di revisione. I calcoli sull'intera popolazione restano al codice e nessun report viene pubblicato o inviato automaticamente.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code inspects every source; the model starts with a bounded inventory and receives more rows only through a targeted request.",
+        modelData: [
+          "The initial packet may contain instructions, file and sheet names, table identifiers, row and column counts, header candidates, numeric-candidate row positions, diagnostics, and up to eight preview rows per table; candidate numeric values are redacted. The complete cell inventory remains in private deterministic control state.",
+          "When the preview is insufficient, the model can receive one exact table with at most 16 selected columns and 100 source rows, including coordinates, cell text, number formats, and formula/cache status. It then sees mappings, the narrative recipe, drafts, diagnostics, and review decisions. Code performs full-population calculations, and no report is published or sent automatically.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code inspecte toutes les sources ; le modèle commence par un inventaire limité et ne reçoit davantage de lignes que sur demande ciblée.",
+        modelData: [
+          "Le paquet initial peut contenir instructions, noms de fichiers et feuilles, identifiants de tableaux, nombres de lignes et colonnes, en-têtes candidats, positions des lignes numériques, diagnostics et jusqu'à huit lignes d'aperçu par tableau ; les valeurs numériques candidates sont masquées. L'inventaire complet des cellules reste dans l'état de contrôle déterministe privé.",
+          "Si l'aperçu ne suffit pas, le modèle peut recevoir un tableau exact avec au plus 16 colonnes sélectionnées et 100 lignes source, y compris coordonnées, texte des cellules, formats numériques et état formule/cache. Il voit ensuite mappings, recette narrative, projets, diagnostics et décisions de revue. Le code effectue les calculs sur toute la population et aucun rapport n'est publié ou envoyé automatiquement.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code prüft alle Quellen; das Modell beginnt mit einem begrenzten Inventar und erhält weitere Zeilen nur durch eine gezielte Abfrage.",
+        modelData: [
+          "Das Anfangspaket kann Anweisungen, Datei- und Blattnamen, Tabellenkennungen, Zeilen- und Spaltenzahlen, mögliche Überschriften, Positionen numerischer Zeilen, Diagnosen und bis zu acht Vorschauzeilen je Tabelle enthalten; mögliche Zahlenwerte sind unkenntlich gemacht. Das vollständige Zellinventar bleibt im privaten deterministischen Kontrollzustand.",
+          "Reicht die Vorschau nicht aus, kann das Modell eine genaue Tabelle mit höchstens 16 ausgewählten Spalten und 100 Quellzeilen erhalten, einschließlich Koordinaten, Zelltext, Zahlenformaten und Formel-/Cache-Status. Danach sieht es Zuordnungen, Textrezept, Entwürfe, Diagnosen und Prüfentscheidungen. Berechnungen über die ganze Population führt der Code aus; kein Bericht wird automatisch veröffentlicht oder versendet.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código inspecciona todas las fuentes; el modelo empieza con un inventario limitado y solo recibe más filas mediante una solicitud dirigida.",
+        modelData: [
+          "El paquete inicial puede contener instrucciones, nombres de archivos y hojas, identificadores de tablas, recuentos de filas y columnas, encabezados candidatos, posiciones de filas numéricas, diagnósticos y hasta ocho filas de vista previa por tabla; los valores numéricos candidatos se ocultan. El inventario completo de celdas permanece en el estado de control determinista privado.",
+          "Si la vista previa no basta, el modelo puede recibir una tabla exacta con un máximo de 16 columnas seleccionadas y 100 filas de origen, incluidas coordenadas, texto de celdas, formatos numéricos y estado de fórmula/caché. Después ve mapeos, receta narrativa, borradores, diagnósticos y decisiones de revisión. El código realiza los cálculos sobre toda la población y ningún informe se publica ni se envía automáticamente.",
+        ],
+      },
+    },
+    "apertura-pratica": {
+      it: {
+        modelDataConclusion: "Il modello può leggere i materiali selezionati per preparare il fascicolo legale; conflitti, termini, antiriciclaggio e accettazione restano decisioni dell'avvocato.",
+        modelData: [
+          "Possono arrivare identità e contatti; nomi, alias e identificativi di cliente, assistito, controparti e altri soggetti; incarico richiesto, fatti, giurisdizione e stato del procedimento; ambito, esclusioni, poteri e compensi; riferimenti e candidati della ricerca conflitti; possibili termini e fonti; vincoli di riservatezza; dati per valutare se si applichi l'antiriciclaggio; privacy, conservazione, elementi mancanti, nomi e hash delle evidenze, decisioni di revisione e stato del pacchetto.",
+          "Non c'è anonimizzazione automatica né garanzia di elaborazione solo locale. L'eventuale ricerca su fonti ufficiali usa domande generiche e non deve contenere identità, fatti privati, documenti, credenziali o dati del registro conflitti. Il piano cartelle è solo proposto: i file non vengono spostati o rinominati automaticamente.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The model can read selected material used to prepare the legal matter file; conflicts, deadlines, AML, and acceptance remain lawyer decisions.",
+        modelData: [
+          "This may include identity and contact material; names, aliases, and identifiers for the client, assisted party, counterparties, and other relevant parties; requested work, facts, jurisdiction, and procedural posture; scope, exclusions, authority, and fee status; conflict-search references and candidate matches; possible deadlines and sources; confidentiality restrictions; conditional AML material; privacy and retention posture; missing items; evidence names and hashes; review decisions; and package status.",
+          "There is no automatic anonymization or local-only processing guarantee. Optional official-source research uses generic queries and must exclude identities, private facts, documents, credentials, and conflict-register data. The folder plan is a proposal only: files are not moved or renamed automatically.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle peut lire les éléments sélectionnés pour préparer le dossier juridique ; conflits, délais, LBC et acceptation restent des décisions de l'avocat.",
+        modelData: [
+          "Cela peut comprendre identités et contacts ; noms, alias et identifiants du client, de la partie assistée, des contreparties et autres personnes pertinentes ; mission demandée, faits, juridiction et état de la procédure ; périmètre, exclusions, pouvoirs et honoraires ; références et candidats de la recherche de conflits ; délais possibles et sources ; restrictions de confidentialité ; éléments pour apprécier l'application de la LBC ; posture de confidentialité et conservation ; pièces manquantes ; noms et empreintes des preuves ; décisions de revue et état du paquet.",
+          "Il n'y a ni anonymisation automatique ni garantie de traitement exclusivement local. La recherche facultative de sources officielles utilise des requêtes génériques et doit exclure identités, faits privés, documents, identifiants de connexion et données du registre des conflits. Le plan de classement reste une proposition : les fichiers ne sont ni déplacés ni renommés automatiquement.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das Modell kann ausgewähltes Material zur Vorbereitung der Mandatsakte lesen; Konflikte, Fristen, Geldwäscheprüfung und Annahme entscheidet der Anwalt.",
+        modelData: [
+          "Dazu können Identitäts- und Kontaktdaten, Namen, Aliasnamen und Kennungen von Mandant, vertretener Partei, Gegenparteien und weiteren Beteiligten gehören; Auftrag, Sachverhalt, Rechtsordnung und Verfahrensstand; Umfang, Ausschlüsse, Vollmacht und Honorarstatus; Referenzen und Trefferkandidaten der Konfliktprüfung; mögliche Fristen und Quellen; Vertraulichkeitsbeschränkungen; Angaben zur bedingten Geldwäscheprüfung; Datenschutz- und Aufbewahrungslage; fehlende Elemente; Namen und Hashes von Nachweisen; Prüfentscheidungen und Paketstatus.",
+          "Es gibt keine automatische Anonymisierung und keine Garantie ausschließlich lokaler Verarbeitung. Optionale Recherchen in amtlichen Quellen verwenden allgemeine Anfragen und müssen Identitäten, private Fakten, Dokumente, Zugangsdaten und Inhalte des Konfliktregisters ausschließen. Der Ordnerplan ist nur ein Vorschlag; Dateien werden nicht automatisch verschoben oder umbenannt.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo puede leer los materiales seleccionados para preparar el expediente jurídico; conflictos, plazos, PBC y aceptación siguen siendo decisiones del abogado.",
+        modelData: [
+          "Pueden incluir identidad y contacto; nombres, alias e identificadores del cliente, parte asistida, contrapartes y otros sujetos relevantes; trabajo solicitado, hechos, jurisdicción y estado procesal; alcance, exclusiones, poderes y honorarios; referencias y candidatos de la búsqueda de conflictos; posibles plazos y fuentes; restricciones de confidencialidad; datos para valorar la aplicación de PBC; privacidad y conservación; elementos faltantes; nombres y hashes de las evidencias; decisiones de revisión y estado del paquete.",
+          "No hay anonimización automática ni garantía de procesamiento solo local. La investigación opcional en fuentes oficiales usa consultas genéricas y debe excluir identidades, hechos privados, documentos, credenciales y datos del registro de conflictos. El plan de carpetas es solo una propuesta: los archivos no se mueven ni se renombran automáticamente.",
+        ],
+      },
+    },
+  };
+
+  Object.entries(reviewedFunctionModelData).forEach(([page, translations]) => {
+    Object.entries(translations).forEach(([language, modelData]) => {
+      Object.assign(window.MPARANZA_FUNCTION_PAGES[page].copy[language], {
+        modelDataStatus: "relevant",
+        ...modelData,
+      });
+    });
+  });
+
+  const reviewedClaraModelData = {
+    "clara-presentations": {
+      it: {
+        modelDataConclusion: "Il modello legge le fonti e il materiale di revisione necessari a creare o correggere la presentazione.",
+        modelData: [
+          "Possono arrivare al modello le istruzioni, i documenti e i file dati selezionati, il workpaper, la storyline, i valori e le qualificazioni, le evidenze e i relativi riferimenti, il piano delle slide, le affermazioni e la mappa che le collega alle fonti. In una revisione possono entrare anche la presentazione esistente, le slide renderizzate, il feedback, la trascrizione e l'elenco delle modifiche richieste.",
+          "Il codice compone, renderizza e verifica file, hash, collegamenti delle evidenze e vincoli meccanici; non decide la validità professionale delle affermazioni. La presentazione generata può essere riletta dal modello per il controllo editoriale e visivo. Pubblicazione, upload o condivisione sono passaggi separati e avvengono solo su richiesta esplicita.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The model reads the sources and review material needed to create or correct the presentation.",
+        modelData: [
+          "The model may receive instructions, selected documents and data files, the workpaper, storyline, values and qualifications, evidence and source references, the slide plan, claims, and the map linking claims to sources. For a revision, it may also receive the existing deck, rendered slides, feedback, transcript, and requested-change list.",
+          "Code composes, renders, and verifies files, hashes, evidence bindings, and mechanical constraints; it does not decide whether professional claims are valid. The generated presentation may be read again by the model for editorial and visual review. Publishing, uploading, or sharing is a separate step performed only when explicitly requested.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle lit les sources et les éléments de revue nécessaires pour créer ou corriger la présentation.",
+        modelData: [
+          "Le modèle peut recevoir les instructions, documents et fichiers de données sélectionnés, le workpaper, la trame, les valeurs et réserves, les preuves et leurs références, le plan des diapositives, les affirmations et la carte qui les relie aux sources. Pour une révision, il peut aussi recevoir la présentation existante, les diapositives rendues, le feedback, la transcription et la liste des modifications demandées.",
+          "Le code compose, rend et vérifie fichiers, empreintes, liens de preuve et contraintes mécaniques ; il ne décide pas de la validité professionnelle des affirmations. La présentation générée peut être relue par le modèle pour le contrôle éditorial et visuel. Publication, envoi ou partage constituent une étape distincte, uniquement sur demande explicite.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das Modell liest die Quellen und Prüfunterlagen, die zum Erstellen oder Korrigieren der Präsentation nötig sind.",
+        modelData: [
+          "Das Modell kann Anweisungen, ausgewählte Dokumente und Datendateien, Workpaper, Storyline, Werte und Einschränkungen, Nachweise und Quellenreferenzen, Folienplan, Aussagen und deren Quellenzuordnung erhalten. Bei einer Überarbeitung können außerdem bestehende Präsentation, gerenderte Folien, Feedback, Transkript und Liste der gewünschten Änderungen einfließen.",
+          "Der Code setzt Dateien zusammen, rendert und prüft Hashes, Nachweisbindungen und mechanische Vorgaben; er entscheidet nicht über die fachliche Gültigkeit der Aussagen. Die erzeugte Präsentation kann für redaktionelle und visuelle Prüfung erneut vom Modell gelesen werden. Veröffentlichung, Upload oder Weitergabe sind getrennte Schritte und erfolgen nur auf ausdrückliche Anfrage.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo lee las fuentes y el material de revisión necesarios para crear o corregir la presentación.",
+        modelData: [
+          "El modelo puede recibir instrucciones, documentos y archivos de datos seleccionados, el papel de trabajo, la narrativa, valores y salvedades, evidencias y referencias, el plan de diapositivas, las afirmaciones y el mapa que las vincula a las fuentes. En una revisión también puede recibir la presentación existente, diapositivas renderizadas, comentarios, transcripción y lista de cambios solicitados.",
+          "El código compone, renderiza y verifica archivos, hashes, vínculos de evidencia y restricciones mecánicas; no decide la validez profesional de las afirmaciones. El modelo puede volver a leer la presentación generada para la revisión editorial y visual. Publicar, cargar o compartir es un paso separado que solo se realiza a petición explícita.",
+        ],
+      },
+    },
+    "clara-retailer-signals": {
+      it: {
+        modelDataConclusion: "Il codice calcola coorti e confronti; il modello vede le schede prodotto e le evidenze necessarie per mapping, interpretazione e revisione.",
+        modelData: [
+          "Possono arrivare al modello retailer, categoria, tassonomia, nomi e brand dei prodotti, descrizioni, attributi, appartenenza alle coorti, righe sorgente, URL e immagini locali selezionate. Il modello esamina ogni attività di mapping non risolta e una seconda revisione indipendente controlla ogni decisione; vede poi le tabelle di confronto già calcolate, le affermazioni scelte, il report e i materiali di revisione.",
+          "I calcoli su novità, resto dell'assortimento, best seller e altri prodotti sono eseguiti dal codice sull'intero pacchetto. Immagini e report HTML restano locali e non vengono caricati su Mparanza. Solo gli artefatti di mapping previsti possono attraversare il servizio autenticato; il lavoro del modello usa il piano ChatGPT dell'utente e gli script non effettuano una chiamata API separata.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code calculates cohorts and comparisons; the model sees product records and evidence needed for mapping, interpretation, and review.",
+        modelData: [
+          "The model may receive retailer, category, taxonomy, product and brand names, descriptions, attributes, cohort membership, source rows, URLs, and selected local images. It reviews every unresolved mapping task, and a second independent review checks every decision; it then sees the calculated comparison tables, selected claims, report, and review material.",
+          "Code performs new-versus-rest, best-seller-versus-other, and related calculations across the complete package. Images and HTML reports remain local and are not uploaded to Mparanza. Only the defined mapping artifacts may cross the authenticated service boundary; model work uses the user's ChatGPT plan, and helper scripts make no separate model API call.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code calcule cohortes et comparaisons ; le modèle voit les fiches produit et preuves nécessaires au mapping, à l'interprétation et à la revue.",
+        modelData: [
+          "Le modèle peut recevoir distributeur, catégorie, taxonomie, noms de produits et marques, descriptions, attributs, appartenance aux cohortes, lignes source, URL et images locales sélectionnées. Il examine chaque tâche de mapping non résolue, puis une seconde revue indépendante contrôle chaque décision ; il voit ensuite les tableaux comparatifs déjà calculés, les affirmations choisies, le rapport et les éléments de revue.",
+          "Le code effectue les calculs nouveautés-reste, meilleures ventes-autres produits et les calculs associés sur tout le paquet. Les images et rapports HTML restent locaux et ne sont pas envoyés à Mparanza. Seuls les artefacts de mapping prévus peuvent franchir le service authentifié ; le travail du modèle utilise le forfait ChatGPT de l'utilisateur et les scripts n'effectuent aucun appel API séparé.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code berechnet Kohorten und Vergleiche; das Modell sieht Produktdaten und Nachweise für Zuordnung, Interpretation und Prüfung.",
+        modelData: [
+          "Das Modell kann Händler, Kategorie, Taxonomie, Produkt- und Markennamen, Beschreibungen, Merkmale, Kohortenzugehörigkeit, Quellzeilen, URLs und ausgewählte lokale Bilder erhalten. Es prüft jede ungelöste Zuordnungsaufgabe; eine zweite unabhängige Prüfung kontrolliert jede Entscheidung. Danach sieht es berechnete Vergleichstabellen, ausgewählte Aussagen, Bericht und Prüfmaterial.",
+          "Der Code berechnet Neuheiten gegenüber Restsortiment, Bestseller gegenüber anderen Produkten und verwandte Vergleiche über das gesamte Paket. Bilder und HTML-Berichte bleiben lokal und werden nicht zu Mparanza hochgeladen. Nur die vorgesehenen Zuordnungsartefakte dürfen die authentifizierte Dienstgrenze überschreiten; die Modellarbeit nutzt den ChatGPT-Plan des Nutzers, die Hilfsskripte rufen keine separate Modell-API auf.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código calcula cohortes y comparaciones; el modelo ve fichas de producto y evidencias necesarias para el mapeo, la interpretación y la revisión.",
+        modelData: [
+          "El modelo puede recibir minorista, categoría, taxonomía, nombres de productos y marcas, descripciones, atributos, pertenencia a cohortes, filas de origen, URL e imágenes locales seleccionadas. Examina cada tarea de mapeo no resuelta y una segunda revisión independiente comprueba cada decisión; después ve las tablas comparativas ya calculadas, las afirmaciones elegidas, el informe y el material de revisión.",
+          "El código realiza los cálculos de novedades frente al resto, superventas frente a otros productos y cálculos relacionados sobre todo el paquete. Las imágenes y los informes HTML permanecen locales y no se cargan en Mparanza. Solo los artefactos de mapeo previstos pueden cruzar el servicio autenticado; el trabajo del modelo usa el plan ChatGPT del usuario y los scripts no realizan una llamada API separada.",
+        ],
+      },
+    },
+    "clara-brand-fit": {
+      it: {
+        modelDataConclusion: "Il modello confronta segnali retailer già verificati, presenza corrente del brand presso quel retailer e catalogo proprietario del brand.",
+        modelData: [
+          "Possono arrivare il report Retailer Signals controllato, le righe della fotografia corrente del database per la presenza del brand, il catalogo proprietario mappato, tassonomia e mapping accettati, prodotti candidati, attributi, metriche di perimetro, immagini locali, evidenze collegate alle affermazioni e materiali di revisione. I candidati ordinati sono spunti da valutare, non raccomandazioni automatiche.",
+          "Il report Retailer Signals e i suoi contenuti non vengono caricati sul server: la richiesta autenticata invia solo hash SHA-256, verdetto esatto e identificativo del job di evidenza posseduto dall'utente. Il pacchetto dati viene scaricato e controllato; report Brand Fit e immagini restano locali. Gli script non chiamano una API del modello separata, ma i file letti da Codex possono entrare nel contesto del modello del piano ChatGPT dell'utente.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The model compares checked retailer signals, the brand's current presence at that retailer, and the brand-owned catalogue.",
+        modelData: [
+          "It may receive the checked Retailer Signals report, current-database rows for the brand's retailer presence, the mapped owned catalogue, accepted taxonomy and mapping state, candidate products, attributes, scope metrics, local images, claim-linked evidence, and review material. Ranked candidates are leads for evaluation, not automatic recommendations.",
+          "The Retailer Signals report and its contents are not uploaded to the server: the authenticated request sends only its SHA-256, exact verdict, and the actor-owned evidence-job identifier. The data package is downloaded and verified; Brand Fit reports and images remain local. Helper scripts make no separate model API call, but files Codex reads may enter model context through the user's ChatGPT plan.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle compare les signaux distributeur déjà contrôlés, la présence actuelle de la marque chez ce distributeur et le catalogue propre de la marque.",
+        modelData: [
+          "Il peut recevoir le rapport Retailer Signals contrôlé, les lignes de la photographie actuelle de la base pour la présence de la marque, le catalogue propre mappé, la taxonomie et l'état de mapping acceptés, les produits candidats, attributs, métriques de périmètre, images locales, preuves liées aux affirmations et éléments de revue. Les candidats classés sont des pistes à évaluer, pas des recommandations automatiques.",
+          "Le rapport Retailer Signals et son contenu ne sont pas envoyés au serveur : la requête authentifiée transmet seulement son SHA-256, le verdict exact et l'identifiant du job de preuve détenu par l'utilisateur. Le paquet de données est téléchargé et vérifié ; rapports Brand Fit et images restent locaux. Les scripts n'appellent pas d'API de modèle séparée, mais les fichiers lus par Codex peuvent entrer dans le contexte du modèle via le forfait ChatGPT de l'utilisateur.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das Modell vergleicht geprüfte Händlersignale, die aktuelle Präsenz der Marke bei diesem Händler und den markeneigenen Katalog.",
+        modelData: [
+          "Es kann den geprüften Retailer-Signals-Bericht, aktuelle Datenbankzeilen zur Markenpräsenz beim Händler, den zugeordneten eigenen Katalog, angenommene Taxonomie und Zuordnungen, Produktkandidaten, Merkmale, Umfangskennzahlen, lokale Bilder, aussagengebundene Nachweise und Prüfmaterial erhalten. Geordnete Kandidaten sind Prüfansätze, keine automatischen Empfehlungen.",
+          "Der Retailer-Signals-Bericht und sein Inhalt werden nicht zum Server hochgeladen: Die authentifizierte Anfrage übermittelt nur SHA-256, genauen Prüfstatus und die dem Nutzer gehörende Evidence-Job-Kennung. Das Datenpaket wird heruntergeladen und geprüft; Brand-Fit-Berichte und Bilder bleiben lokal. Hilfsskripte rufen keine separate Modell-API auf, doch von Codex gelesene Dateien können über den ChatGPT-Plan des Nutzers in den Modellkontext gelangen.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo compara señales del minorista ya comprobadas, la presencia actual de la marca en ese minorista y el catálogo propio de la marca.",
+        modelData: [
+          "Puede recibir el informe Retailer Signals comprobado, las filas de la instantánea actual de la base para la presencia de la marca, el catálogo propio mapeado, la taxonomía y el estado de mapeo aceptados, productos candidatos, atributos, métricas de alcance, imágenes locales, evidencias vinculadas a afirmaciones y material de revisión. Los candidatos ordenados son pistas para evaluar, no recomendaciones automáticas.",
+          "El informe Retailer Signals y su contenido no se cargan al servidor: la solicitud autenticada solo envía su SHA-256, el veredicto exacto y el identificador del trabajo de evidencia propiedad del usuario. El paquete se descarga y verifica; los informes Brand Fit y las imágenes permanecen locales. Los scripts no llaman a una API de modelo separada, pero los archivos que Codex lee pueden entrar en el contexto del modelo mediante el plan ChatGPT del usuario.",
+        ],
+      },
+    },
+    "clara-interview": {
+      it: {
+        modelDataConclusion: "Il modello intervistatore ospitato riceve il brief e la conversazione; Codex vede il risultato solo quando viene recuperato e aperto.",
+        modelData: [
+          "Per preparare l'intervista arrivano al servizio campagna o brief, scopo, contesto, ipotesi, temi prioritari, domande, segnali d'allarme, limiti, lingua e durata. Nome partecipante, nome caso, titolo e introduzione sono visibili al partecipante; nome caso e titolo sono esposti anche dallo stato senza login, quindi devono restare non sensibili. Durante la sessione il modello ospitato elabora l'audio del microfono e il contenuto della conversazione per condurre l'intervista adattiva.",
+          "Il bundle recuperato contiene record preparato, eventi della sessione, trascrizione, metadati media e revisione, ma non i byte audio o video grezzi. Quando Codex lo esamina, questi contenuti possono entrare nel suo contesto per distinguere affermazioni, incertezze, contraddizioni e domande successive. Non c'è cattura dello schermo né importazione automatica nel fascicolo Clara.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The hosted interviewer model receives the brief and conversation; Codex sees the result only when it is retrieved and opened.",
+        modelData: [
+          "To prepare the interview, the service receives the campaign or brief, purpose, background, hypotheses, priority topics, questions, red flags, boundaries, language, and duration. Participant name, case name, title, and introduction are participant-visible; case name and title are also exposed by the no-login status endpoint, so they must remain non-sensitive. During the session, the hosted model processes microphone audio and conversation content to conduct the adaptive interview.",
+          "The retrieved bundle contains the prepared record, session events, transcript, media metadata, and review, but no raw audio or video bytes. When Codex inspects it, those contents may enter its context to distinguish claims, uncertainty, contradictions, and follow-up questions. There is no screen capture and no automatic import into a Clara case.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle d'entretien hébergé reçoit le brief et la conversation ; Codex ne voit le résultat que lorsqu'il est récupéré et ouvert.",
+        modelData: [
+          "Pour préparer l'entretien, le service reçoit campagne ou brief, objectif, contexte, hypothèses, thèmes prioritaires, questions, signaux d'alerte, limites, langue et durée. Nom du participant, nom du cas, titre et introduction sont visibles par le participant ; le nom du cas et le titre sont aussi exposés par l'état sans connexion et doivent donc rester non sensibles. Pendant la session, le modèle hébergé traite l'audio du microphone et le contenu de la conversation pour conduire l'entretien adaptatif.",
+          "Le bundle récupéré contient enregistrement préparé, événements de session, transcription, métadonnées média et revue, mais aucun octet audio ou vidéo brut. Lorsque Codex l'examine, ces contenus peuvent entrer dans son contexte afin de distinguer affirmations, incertitudes, contradictions et questions de suivi. Il n'y a ni capture d'écran ni import automatique dans un dossier Clara.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das gehostete Interviewmodell erhält Briefing und Gespräch; Codex sieht das Ergebnis erst, wenn es abgerufen und geöffnet wird.",
+        modelData: [
+          "Zur Vorbereitung erhält der Dienst Kampagne oder Briefing, Zweck, Hintergrund, Hypothesen, Schwerpunktthemen, Fragen, Warnsignale, Grenzen, Sprache und Dauer. Teilnehmername, Fallname, Titel und Einführung sind für den Teilnehmer sichtbar; Fallname und Titel erscheinen auch im Status ohne Anmeldung und müssen daher nicht sensibel sein. Während der Sitzung verarbeitet das gehostete Modell Mikrofon-Audio und Gesprächsinhalt für das adaptive Interview.",
+          "Das abgerufene Bundle enthält vorbereiteten Datensatz, Sitzungsereignisse, Transkript, Medienmetadaten und Prüfung, jedoch keine rohen Audio- oder Videobytes. Wenn Codex es prüft, können diese Inhalte zur Einordnung von Aussagen, Unsicherheiten, Widersprüchen und Folgefragen in seinen Kontext gelangen. Es gibt weder Bildschirmaufzeichnung noch automatischen Import in eine Clara-Akte.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo entrevistador alojado recibe el brief y la conversación; Codex solo ve el resultado cuando se recupera y se abre.",
+        modelData: [
+          "Para preparar la entrevista, el servicio recibe campaña o brief, finalidad, contexto, hipótesis, temas prioritarios, preguntas, señales de alerta, límites, idioma y duración. Nombre del participante, nombre del caso, título e introducción son visibles para el participante; el nombre del caso y el título también aparecen en el estado sin inicio de sesión, por lo que deben ser no sensibles. Durante la sesión, el modelo alojado procesa el audio del micrófono y el contenido de la conversación para realizar la entrevista adaptativa.",
+          "El paquete recuperado contiene el registro preparado, eventos de sesión, transcripción, metadatos multimedia y revisión, pero no bytes de audio o vídeo sin tratar. Cuando Codex lo examina, esos contenidos pueden entrar en su contexto para distinguir afirmaciones, incertidumbres, contradicciones y preguntas de seguimiento. No hay captura de pantalla ni importación automática en un expediente Clara.",
+        ],
+      },
+    },
+  };
+
+  Object.assign(reviewedClaraModelData, {
+    "clara-transcribe": {
+      it: {
+        modelDataConclusion: "Il servizio ospitato riceve l'audio da trascrivere; Codex riceve trascrizione e metadati necessari alla revisione.",
+        modelData: [
+          "Per una registrazione esistente, il servizio riceve il file audio e i metadati forniti, come titolo, data, partecipanti, intervistatore e lingua. Per una cattura avviata da un fascicolo autenticato riceve anche un contesto compatto ricavato da `case_brief.md` nel corpo HTTPS, mai nell'URL; il fallback senza autenticazione esplicita non allega quel brief. Il modello ospitato produce la trascrizione ma non decide l'attribuzione finale dei parlanti.",
+          "Per attribuzione e revisione, Codex può leggere trascrizione grezza, metadati sorgente, note utili, elenco dei parlanti noti e versione attribuita. L'originale non attribuito viene conservato e le correzioni devono limitarsi a errori evidenti. Audio, bundle e trascrizioni restano nei file locali dopo l'importazione; l'inserimento nel workpaper o in un deliverable richiede un passaggio separato e tracciato.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The hosted service receives the audio to transcribe; Codex receives the transcript and metadata needed for review.",
+        modelData: [
+          "For an existing recording, the service receives the audio file and supplied metadata such as title, date, participants, interviewer, and language. For authenticated capture launched from a case, it also receives compact context derived from `case_brief.md` in the HTTPS request body, never in the URL; the explicit unauthenticated fallback does not attach that brief. The hosted model produces the transcript but is not the final speaker-attribution authority.",
+          "For attribution and review, Codex may read the raw transcript, source metadata, useful notes, known-speaker list, and attributed version. The original unattributed transcript is preserved, and corrections are limited to clear transcription errors. Audio, bundles, and transcripts remain in local files after import; using them in the workpaper or a deliverable requires a separate, recorded step.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le service hébergé reçoit l'audio à transcrire ; Codex reçoit la transcription et les métadonnées nécessaires à la revue.",
+        modelData: [
+          "Pour un enregistrement existant, le service reçoit le fichier audio et les métadonnées fournies, telles que titre, date, participants, interviewer et langue. Pour une capture authentifiée lancée depuis un dossier, il reçoit aussi un contexte compact issu de `case_brief.md` dans le corps HTTPS, jamais dans l'URL ; le fallback explicite sans authentification n'attache pas ce brief. Le modèle hébergé produit la transcription mais n'est pas l'autorité finale d'attribution des locuteurs.",
+          "Pour l'attribution et la revue, Codex peut lire transcription brute, métadonnées source, notes utiles, liste des locuteurs connus et version attribuée. L'original non attribué est conservé et les corrections se limitent aux erreurs de transcription évidentes. Audio, bundles et transcriptions restent dans les fichiers locaux après import ; leur utilisation dans le workpaper ou un livrable exige une étape séparée et tracée.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der gehostete Dienst erhält das zu transkribierende Audio; Codex erhält Transkript und Metadaten für die Prüfung.",
+        modelData: [
+          "Bei einer bestehenden Aufnahme erhält der Dienst die Audiodatei und bereitgestellte Metadaten wie Titel, Datum, Teilnehmer, Interviewer und Sprache. Bei authentifizierter Aufnahme aus einer Akte erhält er zusätzlich kompakten Kontext aus `case_brief.md` im HTTPS-Anfragekörper, nie in der URL; der ausdrückliche Fallback ohne Authentifizierung fügt dieses Briefing nicht bei. Das gehostete Modell erzeugt das Transkript, entscheidet aber nicht endgültig über Sprecherzuordnungen.",
+          "Für Zuordnung und Prüfung kann Codex Rohtranskript, Quellenmetadaten, hilfreiche Notizen, bekannte Sprecher und zugeordnete Fassung lesen. Das ursprüngliche nicht zugeordnete Transkript bleibt erhalten; Korrekturen beschränken sich auf eindeutige Transkriptionsfehler. Audio, Bundles und Transkripte bleiben nach dem Import in lokalen Dateien; ihre Nutzung im Workpaper oder Deliverable erfordert einen getrennten, protokollierten Schritt.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El servicio alojado recibe el audio que debe transcribir; Codex recibe la transcripción y los metadatos necesarios para revisarla.",
+        modelData: [
+          "Para una grabación existente, el servicio recibe el archivo de audio y los metadatos aportados, como título, fecha, participantes, entrevistador e idioma. Para una captura autenticada iniciada desde un expediente, también recibe contexto compacto derivado de `case_brief.md` en el cuerpo HTTPS, nunca en la URL; el modo alternativo explícito sin autenticación no adjunta ese brief. El modelo alojado produce la transcripción, pero no es la autoridad final para atribuir hablantes.",
+          "Para la atribución y revisión, Codex puede leer la transcripción sin tratar, metadatos de origen, notas útiles, lista de hablantes conocidos y versión atribuida. Se conserva el original sin atribuir y las correcciones se limitan a errores evidentes. Audio, paquetes y transcripciones permanecen en archivos locales tras la importación; usarlos en el papel de trabajo o en un entregable requiere un paso separado y registrado.",
+        ],
+      },
+    },
+    "clara-documents": {
+      it: {
+        modelDataConclusion: "Il modello legge le fonti selezionate e le istruzioni necessarie a scrivere e rivedere il documento.",
+        modelData: [
+          "Possono arrivare obiettivo, pubblico, struttura o modello, documenti e analisi selezionati, tabelle, immagini, note, affermazioni, evidenze e riferimenti. Se le fonti contengono nomi, informazioni sul cliente, dati commerciali, legali o finanziari, tali elementi possono essere letti quando sono necessari al testo o alla verifica delle prove.",
+          "La bozza, le tabelle generate e il documento renderizzato possono essere riletti dal modello per correggere contenuto, riferimenti e coerenza. Gli strumenti documentali producono e controllano DOCX o PDF e la resa meccanica; non approvano le conclusioni professionali. Condivisione, upload o consegna al cliente non sono automatici.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "The model reads selected sources and instructions needed to write and review the document.",
+        modelData: [
+          "It may receive the objective, audience, structure or template, selected documents and analyses, tables, images, notes, claims, evidence, and references. If the sources contain names, client information, or commercial, legal, or financial data, those elements may be read when needed for the text or evidence review.",
+          "The draft, generated tables, and rendered document may be read again by the model to correct content, references, and coherence. Document tools create and mechanically inspect DOCX or PDF output; they do not approve professional conclusions. Sharing, uploading, or delivering the document to a client is not automatic.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le modèle lit les sources sélectionnées et les instructions nécessaires pour rédiger et réviser le document.",
+        modelData: [
+          "Il peut recevoir objectif, public, structure ou modèle, documents et analyses sélectionnés, tableaux, images, notes, affirmations, preuves et références. Si les sources contiennent des noms, informations client ou données commerciales, juridiques ou financières, ces éléments peuvent être lus lorsqu'ils sont nécessaires au texte ou à la vérification des preuves.",
+          "Le projet, les tableaux générés et le document rendu peuvent être relus par le modèle afin de corriger contenu, références et cohérence. Les outils documentaires créent et contrôlent mécaniquement les sorties DOCX ou PDF ; ils n'approuvent pas les conclusions professionnelles. Partage, envoi ou remise au client ne sont pas automatiques.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Das Modell liest ausgewählte Quellen und Anweisungen, die zum Schreiben und Prüfen des Dokuments nötig sind.",
+        modelData: [
+          "Es kann Ziel, Zielgruppe, Struktur oder Vorlage, ausgewählte Dokumente und Analysen, Tabellen, Bilder, Notizen, Aussagen, Nachweise und Referenzen erhalten. Enthalten die Quellen Namen, Mandanteninformationen oder geschäftliche, rechtliche oder finanzielle Daten, können diese gelesen werden, wenn sie für Text oder Nachweisprüfung nötig sind.",
+          "Entwurf, erzeugte Tabellen und gerendertes Dokument können zur Korrektur von Inhalt, Referenzen und Kohärenz erneut vom Modell gelesen werden. Dokumentwerkzeuge erstellen und prüfen DOCX- oder PDF-Ausgaben mechanisch; sie genehmigen keine fachlichen Schlussfolgerungen. Weitergabe, Upload oder Lieferung an den Mandanten erfolgen nicht automatisch.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El modelo lee las fuentes seleccionadas y las instrucciones necesarias para redactar y revisar el documento.",
+        modelData: [
+          "Puede recibir objetivo, público, estructura o plantilla, documentos y análisis seleccionados, tablas, imágenes, notas, afirmaciones, evidencias y referencias. Si las fuentes contienen nombres, información del cliente o datos comerciales, jurídicos o financieros, esos elementos pueden leerse cuando sean necesarios para el texto o la revisión de evidencias.",
+          "El modelo puede volver a leer el borrador, las tablas generadas y el documento renderizado para corregir contenido, referencias y coherencia. Las herramientas documentales crean y comprueban mecánicamente DOCX o PDF; no aprueban conclusiones profesionales. Compartir, cargar o entregar el documento al cliente no es automático.",
+        ],
+      },
+    },
+    "clara-data-analysis": {
+      it: {
+        modelDataConclusion: "Il codice profila e calcola sui file selezionati; il modello riceve il contesto necessario a definire significato, analisi e spiegazione.",
+        modelData: [
+          "Possono arrivare domanda di business, nomi e tipi delle colonne, profilo del dataset, valori e membri rilevanti, periodi, metriche e dimensioni candidate, definizioni ed evidenze usate per il livello semantico, righe o colonne necessarie all'interpretazione, risultati aggregati, tabelle, grafici, assunzioni e controlli. Se Codex apre direttamente un file sorgente, anche il contenuto letto di quel file entra nel contesto del modello.",
+          "Gli script locali elaborano il dataset selezionato per profiling, compatibilità, calcoli e rendering; non scelgono da soli il significato commerciale o il grafico finale. Il flusso non usa una route FastAPI di upload e gli script non effettuano chiamate a un'API del modello. Pubblicare un report o un dashboard è un passaggio separato richiesto esplicitamente.",
+        ],
+      },
+      en: {
+        modelDataConclusion: "Code profiles and calculates across selected files; the model receives context needed to define meaning, analysis, and explanation.",
+        modelData: [
+          "It may receive the business question, column names and types, dataset profile, relevant values and members, candidate periods, metrics and dimensions, definitions and evidence used for the semantic layer, rows or columns needed for interpretation, aggregates, tables, charts, assumptions, and checks. If Codex opens a source file directly, the content it reads from that file also enters model context.",
+          "Local scripts process the selected dataset for profiling, compatibility, calculations, and rendering; they do not decide commercial meaning or the final chart by themselves. The workflow uses no FastAPI upload route, and helper scripts make no model API call. Publishing a report or dashboard is a separate, explicitly requested step.",
+        ],
+      },
+      fr: {
+        modelDataConclusion: "Le code profile et calcule sur les fichiers sélectionnés ; le modèle reçoit le contexte nécessaire pour définir sens, analyse et explication.",
+        modelData: [
+          "Il peut recevoir la question métier, noms et types des colonnes, profil du dataset, valeurs et membres pertinents, périodes, métriques et dimensions candidates, définitions et preuves du niveau sémantique, lignes ou colonnes nécessaires à l'interprétation, agrégats, tableaux, graphiques, hypothèses et contrôles. Si Codex ouvre directement un fichier source, le contenu lu dans ce fichier entre aussi dans le contexte du modèle.",
+          "Les scripts locaux traitent le dataset sélectionné pour profilage, compatibilité, calculs et rendu ; ils ne décident pas seuls du sens commercial ni du graphique final. Le flux n'utilise aucune route FastAPI d'upload et les scripts n'appellent pas d'API de modèle. Publier un rapport ou un tableau de bord est une étape séparée demandée explicitement.",
+        ],
+      },
+      de: {
+        modelDataConclusion: "Der Code profiliert und berechnet ausgewählte Dateien; das Modell erhält Kontext zur Bestimmung von Bedeutung, Analyse und Erläuterung.",
+        modelData: [
+          "Es kann Geschäftsfrage, Spaltennamen und -typen, Datensatzprofil, relevante Werte und Elemente, mögliche Zeiträume, Kennzahlen und Dimensionen, Definitionen und Nachweise der semantischen Ebene, für die Interpretation nötige Zeilen oder Spalten, Aggregate, Tabellen, Diagramme, Annahmen und Prüfungen erhalten. Öffnet Codex eine Quelldatei direkt, gelangt auch der daraus gelesene Inhalt in den Modellkontext.",
+          "Lokale Skripte verarbeiten den ausgewählten Datensatz für Profiling, Kompatibilität, Berechnungen und Rendering; sie entscheiden nicht allein über geschäftliche Bedeutung oder das endgültige Diagramm. Der Ablauf nutzt keine FastAPI-Upload-Route, und die Hilfsskripte rufen keine Modell-API auf. Die Veröffentlichung eines Berichts oder Dashboards ist ein getrennter, ausdrücklich angeforderter Schritt.",
+        ],
+      },
+      es: {
+        modelDataConclusion: "El código perfila y calcula sobre los archivos seleccionados; el modelo recibe el contexto necesario para definir significado, análisis y explicación.",
+        modelData: [
+          "Puede recibir la pregunta de negocio, nombres y tipos de columnas, perfil del dataset, valores y miembros relevantes, periodos, métricas y dimensiones candidatos, definiciones y evidencias de la capa semántica, filas o columnas necesarias para interpretar, agregados, tablas, gráficos, supuestos y controles. Si Codex abre directamente un archivo fuente, el contenido que lea de ese archivo también entra en el contexto del modelo.",
+          "Los scripts locales procesan el dataset seleccionado para perfilado, compatibilidad, cálculos y renderizado; no deciden por sí solos el significado comercial ni el gráfico final. El flujo no usa una ruta FastAPI de carga y los scripts no llaman a una API de modelo. Publicar un informe o panel es un paso separado solicitado explícitamente.",
+        ],
+      },
+    },
+  });
+
+  Object.entries(reviewedClaraModelData).forEach(([page, translations]) => {
+    Object.entries(translations).forEach(([language, modelData]) => {
+      Object.assign(window.MPARANZA_FUNCTION_PAGES[page].copy[language], {
+        modelDataStatus: "relevant",
+        ...modelData,
+      });
+    });
+  });
+
   const clearNames = {
     "dati-fiscali-strutturati": {
       it: "Estrazione dei dati fiscali dai documenti", en: "Extract tax data from documents", fr: "Extraire les données fiscales des documents", de: "Steuerdaten aus Dokumenten extrahieren", es: "Extraer datos fiscales de documentos",
