@@ -508,7 +508,7 @@ def test_shared_research_pages_are_product_neutral_at_render_time() -> None:
         assert expected in navigation
 
 
-def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> None:
+def test_function_pages_use_specific_data_copy_and_keep_future_page_fallback() -> None:
     function_copy = (SHARED / "product-function-pages.js").read_text(encoding="utf-8")
     placeholder_script = (SHARED / "function-model-data.js").read_text(encoding="utf-8")
     bank_page = (SHARED / "journal-bank-reconciliation" / "index.html").read_text(
@@ -529,6 +529,47 @@ def test_function_pages_use_specific_data_copy_and_placeholders_elsewhere() -> N
     assert 'data-model-data-status="relevant"' in bank_page
     assert "Quali dati arrivano al modello" in bank_page
     assert "modelDataConclusion" in function_copy
+
+    reviewed_vera_lucia = function_copy.split("const reviewedFunctionModelData =", 1)[
+        1
+    ].split("Object.entries(reviewedFunctionModelData)", 1)[0]
+    reviewed_clara = function_copy.split("const reviewedClaraModelData =", 1)[1].split(
+        "Object.entries(reviewedClaraModelData)", 1
+    )[0]
+    vera_lucia_workflows = (
+        "dati-fiscali-strutturati",
+        "email-cliente",
+        "avviso-intake",
+        "fatture-xml-check",
+        "report-enti-locali",
+        "apertura-pratica",
+    )
+    clara_workflows = (
+        "clara-presentations",
+        "clara-retailer-signals",
+        "clara-brand-fit",
+        "clara-interview",
+        "clara-transcribe",
+        "clara-documents",
+        "clara-data-analysis",
+    )
+    for workflow in vera_lucia_workflows:
+        assert f'"{workflow}": {{' in reviewed_vera_lucia
+    for workflow in clara_workflows:
+        assert f'"{workflow}": {{' in reviewed_clara
+    assert (
+        reviewed_vera_lucia.count("modelDataConclusion:")
+        == len(vera_lucia_workflows) * 5
+    )
+    assert reviewed_clara.count("modelDataConclusion:") == len(clara_workflows) * 5
+    assert (
+        'modelDataStatus: "relevant"'
+        in function_copy.split("Object.entries(reviewedFunctionModelData)", 1)[1]
+    )
+    assert (
+        'modelDataStatus: "relevant"'
+        in function_copy.split("Object.entries(reviewedClaraModelData)", 1)[1]
+    )
 
     for placeholder in (
         "Informazioni specifiche per questa funzione in preparazione.",
