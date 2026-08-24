@@ -32,7 +32,7 @@
       {
         "id": "compact-luna-invoice-review-packets",
         "purpose": "Determine whether each matched invoice has a concrete material reason for professional review",
-        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five reviewed relevant historical treatments. Raw XML, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt.",
+        "content": "Batched but independently judged compact records for matched invoices: opaque invoice ID and source reference, supplier name and tax identifier, date, number, document type, currency, invoice-line descriptions and values, VAT summaries and structured flags, bounded causale and related-document references, withholding and stamp summaries, actual booked account codes, descriptions, line descriptions and amounts, ledger reference, deterministic findings, and at most five professional-linked reviewed historical treatments. Raw XML, payment instructions and IBAN, the complete ledger population, unmapped ledger columns, credentials and unrelated client files are omitted from the worker prompt.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -63,7 +63,7 @@
     },
     {
       "id": "content-bound-restartable-job",
-      "control": "SQLite binds the audit to source, ledger, mapping, workflow and control digests; packet changes fail closed, completed content-addressed chunks are not repeated, interrupted chunks become pending, results are upserted by invoice ID, and failed chunks remain resumable without duplicating population rows."
+      "control": "SQLite binds the audit to source, ledger, mapping, workflow and control digests; packet changes fail closed, completed content-addressed chunks are not repeated, interrupted chunks become pending, results are upserted by invoice ID, and content-bound chunk checkpoints plus validated native Luna artifacts recover results published immediately before interruption. Incomplete ordinary artifacts are preserved before retry and unsafe links fail closed."
     },
     {
       "id": "exception-focused-advisory-output",
@@ -71,13 +71,13 @@
     },
     {
       "id": "isolated-synthetic-corruption",
-      "control": "Synthetic evaluation accepts only an explicit mutation plan, copies an existing semantic packet to a separate output with a synthetic identifier, retains original and replacement treatment, and never mutates the real ledger, packet, job database or source file."
+      "control": "Synthetic evaluation accepts only an explicit mutation plan whose source is professionally labelled acceptable and already matched, unflagged and free of deterministic exceptions; it copies the packet to a separate output with a synthetic identifier, changes only booked account identifiers and descriptions while preserving ordinary line descriptions, retains original and replacement treatment, and never mutates the real ledger, packet, job database or source file."
     }
   ],
   "review": {
     "reviewed_at": "2026-08-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "2deba8eb0703a9981e799fe8ecd367516da465846b8ea8c22bf224bf1e7695ee"
+    "source_fingerprint": "b79710955dfbde5a0412e27575ff2a808dbf8f0fd16f85924d4f0941b4611a27"
   }
 }
