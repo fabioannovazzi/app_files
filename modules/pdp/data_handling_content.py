@@ -173,7 +173,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
     "it": {
         "meta_description": (
             "Come i plugin di Mparanza LLC distinguono elaborazione locale, dati "
-            "inviati al modello, destinazioni esterne e funzioni sul server."
+            "inviati al modello e funzioni sul server."
         ),
         "skip_label": "Vai al contenuto principale",
         "home_label": "Torna a Mparanza",
@@ -244,22 +244,6 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
                 ],
             },
             {
-                "id": "connected-sources",
-                "title": "Destinazioni esterne.",
-                "paragraphs": [
-                    (
-                        "Se un processo usa un'app collegata, una ricerca pubblica, un "
-                        "portale o un invio, i dati necessari raggiungono anche quella "
-                        "destinazione. Si applicano le condizioni e i controlli del relativo "
-                        "servizio."
-                    ),
-                    (
-                        "La pagina del singolo processo indica se viene utilizzata una "
-                        "destinazione esterna."
-                    ),
-                ],
-            },
-            {
                 "id": "hosted-features",
                 "title": "Server di Mparanza LLC.",
                 "paragraphs": [
@@ -317,7 +301,7 @@ _DATA_HANDLING_CONTENT: dict[str, dict[str, Any]] = {
         },
         "closing": (
             "Ogni processo spiega quali dati restano locali, quali arrivano al modello "
-            "e quali raggiungono altre destinazioni."
+            "e quali restano esclusi."
         ),
     },
     "fr": {

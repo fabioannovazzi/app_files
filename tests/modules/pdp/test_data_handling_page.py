@@ -74,7 +74,7 @@ def _copy_shape(value: Any) -> Any:
             "Operazioni locali e trattamento del modello.",
             (
                 "Ogni processo spiega quali dati restano locali, quali arrivano al "
-                "modello e quali raggiungono altre destinazioni."
+                "modello e quali restano esclusi."
             ),
         ),
         (
